@@ -31,7 +31,7 @@
   ;Name and file
   Name "Compose* beta"
 	Icon cstar.ico
-  OutFile "ComposeStar_0.1b.exe"
+  OutFile "ComposeStar_0.3b.exe"
 	
 	XPStyle "on"
 	ShowInstDetails show
@@ -109,6 +109,8 @@ Section "Compose* beta" Compose
   ;ADD YOUR OWN FILES HERE...
   File ABOUT.txt
 	File ComposeStarSyntaxHighlighting.reg
+	File filterdesc.xml
+	File secret.css
 	File /nonfatal /r compilers
 	File /nonfatal /r binaries
 	File /nonfatal /r documentation
@@ -186,7 +188,7 @@ Section "Uninstall"
 
 	;DeleteRegKey /ifempty HKCU "Software\Software\ComposeStar"
 
-SectionEnd
+;SectionEnd
 
 ;--------------------------------
 Function writeComposeStarINIFile
@@ -201,11 +203,10 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileWrite $INI_FILE '#Installer generated stuff:$\n$\n'
 	FileWrite $INI_FILE 'ComposestarPath=$INSTDIR\$\n$\n'
-	FileWrite $INI_FILE 'VerifyAssemblies=true$\n$\n'
 	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\Composestar.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar$\n$\n'
-	FileWrite $INI_FILE 'DebugLevel=1$\n$\n'
 	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
 	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
+	FileWrite $INI_FILE 'SECRETMode=2$\n$\n'
 	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
 	FileWrite $INI_FILE 'EmbeddedSourcesFolder=embedded\$\n$\n'
 	FileWrite $INI_FILE 'RequiredDlls=ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
@@ -215,6 +216,10 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
 	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
 	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n'
+	FileWrite $INI_FILE '[Common]'
+	FileWrite $INI_FILE 'RunDebugLevel=1$\n$\n'
+	FileWrite $INI_FILE 'BuildDebugLevel=1$\n$\n'
+	FileWrite $INI_FILE 'VerifyAssemblies=true$\n$\n'
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileClose $INI_FILE
 FunctionEnd
