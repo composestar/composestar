@@ -51,7 +51,7 @@
 
 ;--------------------------------
 ;Pages
-	!insertmacro MUI_PAGE_WELCOME
+  !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "ABOUT.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
@@ -68,6 +68,18 @@
 
 ;--------------------------------
 ;Installer Sections
+
+Function .onInit
+  SetOutPath $TEMP
+  File /oname=spltmp.bmp "appel.bmp"
+
+	advsplash::show 3000 600 400 -1 $TEMP\spltmp
+
+  Pop $0
+
+  Delete $TEMP\spltmp.bmp
+FunctionEnd
+
 Section "Checks" Checks
 	
 	Call IsUserAdmin

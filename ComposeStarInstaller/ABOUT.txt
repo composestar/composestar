@@ -1,4 +1,4 @@
-This is the first public beta release of the Compose* project [http://composestar.sf.net]. 
+Welcome to the second beta also known as "Karel Appel" release of the Compose* project [http://composestar.sf.net]. 
 
 Compose* (or: ComposeStar) is a project that aims at enhancing the power of component- and object-based programming, so that software becomes easier to structure and modularize, hence easier to develop, maintain and extend. In particular, Compose* offers aspect-oriented programming (http://aosd.net) through the composition filters model (http://trese.cs.utwente.nl/composition_filters).
 
@@ -11,11 +11,11 @@ This Compose* beta requires:
  * Microsoft .NET Framework Version 1.1 (included with Visual Studio .NET 2003) [http://msdn.microsoft.com/netframework/]
  * Microsoft .NET Framework Software Development Kit Version 1.1 (included with Visual Studio .NET 2003) [http://msdn.microsoft.com/netframework/]
 	
-For more information about using the Compose* tool please see the included README.html file.
-
 Compose* is licensed under LGPL v2.1 or (at your option) any later version.
 [http://www.fsf.org/copyleft/lgpl.html]
 Copyright (C) 2003,2004 University of Twente.
 
 Credits go to:
-Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir and Wilke Havinga.
+Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkel en Rolf Huisman.
+
+The splash screen is taken from: http://www.woltjenart.ab.ca/appk.htm
