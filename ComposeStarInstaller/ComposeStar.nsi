@@ -31,7 +31,7 @@
   ;Name and file
   Name "Compose* beta"
 	Icon cstar.ico
-  OutFile "ComposeStar_0.3b.exe"
+  OutFile "ComposeStar_0.4a.exe"
 	
 	XPStyle "on"
 	ShowInstDetails show
@@ -110,10 +110,10 @@ Section "Compose* beta" Compose
   File ABOUT.txt
 	File ComposeStarSyntaxHighlighting.reg
 	File filterdesc.xml
-	File secret.css
-	File /nonfatal /r compilers
+	File /nonfatal secret.css
+	File /nonfatal /r /x CVS compilers
 	File /nonfatal /r binaries
-	File /nonfatal /r documentation
+	File /nonfatal /r /x CVS documentation
 	File /nonfatal /r ComposestarVSAddin
 	File /nonfatal /r examples
   
@@ -188,7 +188,7 @@ Section "Uninstall"
 
 	;DeleteRegKey /ifempty HKCU "Software\Software\ComposeStar"
 
-;SectionEnd
+SectionEnd
 
 ;--------------------------------
 Function writeComposeStarINIFile
