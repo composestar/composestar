@@ -26,7 +26,8 @@
 
   ;Name and file
   Name "Compose* beta"
-  OutFile "ComposeStar_Installer_v0.1b.exe"
+	Icon cstar.ico
+  OutFile "ComposeStar_0.1b.exe"
 	
 	XPStyle "on"
 	ShowInstDetails show
@@ -161,7 +162,7 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
 	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
 	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
-	FileWrite $INI_FILE 'RequiredDlls=ComposeStar.dll,ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
+	FileWrite $INI_FILE 'RequiredDlls=ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
 	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
 	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
 	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
