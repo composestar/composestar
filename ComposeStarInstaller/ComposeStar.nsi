@@ -107,6 +107,9 @@ Section "Compose* beta" SecDummy
 	
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
+	
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Product" "Compose*" "$INSTDIR\Uninstall.exe"
+	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Product" "Compose*" "$INSTDIR\Uninstall.exe"
 
 SectionEnd
 
