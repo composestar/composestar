@@ -31,7 +31,7 @@
   ;Name and file
   Name "Compose* beta"
 	Icon cstar.ico
-  OutFile "ComposeStar_0.4a.exe"
+  OutFile "ComposeStar_0.3b.exe"
 	
 	XPStyle "on"
 	ShowInstDetails show
@@ -71,7 +71,7 @@
 
 Function .onInit
   SetOutPath $TEMP
-  File /oname=spltmp.bmp "appel.bmp"
+  File /oname=spltmp.bmp "mondriaan.bmp"
 
 	advsplash::show 3000 600 400 -1 $TEMP\spltmp
 
@@ -116,7 +116,7 @@ Section "Compose* beta" Compose
 	File /nonfatal /r binaries
 	File /nonfatal /r /x CVS documentation
 	File /nonfatal /r ComposestarVSAddin
-	File /nonfatal /r examples
+	File /nonfatal /r /x CVS examples
   
   ;Call website for the install times!
 	;NSISdl::download http://flatliner.student.utwente.nl/composestar_install
@@ -213,11 +213,11 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
 	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
 	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
-	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n'
-	FileWrite $INI_FILE '[Common]'
-	FileWrite $INI_FILE 'RunDebugLevel=1$\n$\n'
-	FileWrite $INI_FILE 'BuildDebugLevel=1$\n$\n'
-	FileWrite $INI_FILE 'VerifyAssemblies=true$\n$\n'
+	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
+	FileWrite $INI_FILE '[Common]$\n'
+	FileWrite $INI_FILE 'RunDebugLevel=1$\n'
+	FileWrite $INI_FILE 'BuildDebugLevel=1$\n'
+	FileWrite $INI_FILE 'VerifyAssemblies=true$\n'
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileClose $INI_FILE
 FunctionEnd

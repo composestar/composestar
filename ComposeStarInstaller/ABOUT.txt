@@ -1,4 +1,4 @@
-Welcome to the 'Karel Appel' release of Compose*.
+Welcome to the 'Mondriaan' release of Compose*.
 
 Please visit [http://composestar.sourceforge.net/] for more information.
 
@@ -15,9 +15,9 @@ This Compose* beta requires:
 	
 Compose* is licensed under LGPL v2.1 or (at your option) any later version.
 [http://www.fsf.org/copyleft/lgpl.html]
-Copyright (C) 2003,2004 University of Twente.
+Copyright (C) 2003,2004,2005 University of Twente.
 
 Credits go to:
-Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkel en Rolf Huisman.
+Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkelink en Rolf Huisman, Wim Minnen, Michiel van Oudheusden.
 
-The splash screen is taken from: http://www.woltjenart.ab.ca/appk.htm
+The splash screen is taken from: http://www.mondriaan.net/
