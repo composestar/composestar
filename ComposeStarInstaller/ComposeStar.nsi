@@ -139,14 +139,8 @@ Section "Settings" Settings
 	
 	; Set environment variables, for Java, .NET and .NET sdk!
 	Push "PATH"
-  Push "$REAL_JAVA_HOME\bin"
-  Call WriteEnvStr
-	Push "PATH"
-  Push "$NET_SDK_PATH"
-  Call WriteEnvStr
-	Push "PATH"
-  Push "\$NET_RUN_PATH"
-  Call WriteEnvStr
+  	Push "%PATH%;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
+  	Call WriteEnvStr
 
 SectionEnd
 

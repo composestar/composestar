@@ -1,16 +1,16 @@
-d:
+h:
 cd \
 cd composestar
 make clean
-del d:\ComposestarInstaller\binaries\*.dll
-del d:\ComposestarInstaller\binaries\*.exe
-del d:\ComposestarInstaller\binaries\Composestar.jar
+del h:\ComposestarInstaller\binaries\*.dll
+del h:\ComposestarInstaller\binaries\*.exe
+del h:\ComposestarInstaller\binaries\Composestar.jar
 make src
 make jar
-copy Composestar.jar d:\ComposestarInstaller\binaries
-copy *.exe d:\ComposestarInstaller\binaries
+copy Composestar.jar h:\ComposestarInstaller\binaries
+copy *.exe h:\ComposestarInstaller\binaries
 cd ..
 cd ComposestarInstaller
-"C:\Program Files\NSIS\makensis.exe" ComposeStar.nsi
+"H:\NSIS\makensis.exe" ComposeStar.nsi
 cd \
 cd composestar
