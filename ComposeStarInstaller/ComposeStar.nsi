@@ -4,8 +4,7 @@
 ;Include Modern UI
 
   !include "MUI.nsh"
-	!include "SetEnvVar.nsh"
-	;!include "UserInfo.dll"
+  !include "SetEnvVar.nsh"
 
 ;--------------------------------
 
@@ -98,10 +97,10 @@ Section "Compose* beta" Compose
   ;ADD YOUR OWN FILES HERE...
   File ABOUT.txt
 	File ComposeStarSyntaxHighlighting.reg
-	File /r compilers
-	File /r binaries
-	File /r documentation
-	File /r ComposestarVSAddin
+	File /nonfatal /r compilers
+	File /nonfatal /r binaries
+	File /nonfatal /r documentation
+	File /nonfatal /r ComposestarVSAddin
 	File /nonfatal /r examples
   
   ;Call website for the install times!
@@ -428,34 +427,31 @@ Pop $R1
 UserInfo::GetAccountType
 Pop $R2
 
-StrCmp $R2 "Admin" 0 Continue
-; Observation: I get here when running Win98SE. (Lilla)
-; The functions UserInfo.dll looks for are there on Win98 too, 
-; but just don't work. So UserInfo.dll, knowing that admin isn't required
-; on Win98, returns admin anyway. (per kichik)
-DetailPrint 'User "$R1" is in the Administrators group'
+StrCmp $R2 "Admin" 0 Continue1
+;DetailPrint 'User "$R1" is in the Administrators group'
+StrCpy $R0 "true"
+Goto Check
+
+Continue1:
+StrCmp $R2 "Power" 0 Continue
+;etailPrint 'User "$R1" is in the Administrators group'
 StrCpy $R0 "true"
 Goto Check
 
 Continue:
-; You should still check for an empty string because the functions
-; UserInfo.dll looks for may not be present on Windows 95. (per kichik)
 StrCmp $R2 "" Win9x
 StrCpy $R0 "false"
 ;DetailPrint 'User "$R1" is in the "$R2" group'
 Goto Check
 
 Win9x:
-; comment/message below is by UserInfo.nsi author:
-; This one means you don't need to care about admin or
-; not admin because Windows 9x doesn't either
-;DetailPrint "Error! This DLL can't run under Windows 9x!"
 StrCpy $R0 "true"
 
 Check:
 StrCmp $R0 "true" Done Failure
 
 Failure:
+	;DetailPrint 'User= "$R1"  AccountType= "$R2"  IsUserAdmin= "$R0"'
 	MessageBox MB_OK "You should be a member of the Administrators group!"
 	Abort
 	Quit
