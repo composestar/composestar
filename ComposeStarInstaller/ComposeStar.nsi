@@ -78,6 +78,7 @@ Section "Compose* beta" SecDummy
 	File /r binaries
 	File /r documentation
 	File /r ComposestarVSAddin
+	File /nonfatal /r examples
 	File CompostarSyntaxHighlighting.reg
   
   ;Store installation folder
