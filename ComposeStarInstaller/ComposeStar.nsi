@@ -207,6 +207,7 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
 	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
 	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
+	FileWrite $INI_FILE 'EmbeddedSourcesFolder=embedded\$\n$\n'
 	FileWrite $INI_FILE 'RequiredDlls=ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
 	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
 	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
