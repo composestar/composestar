@@ -4,14 +4,15 @@ Compose* (or: ComposeStar) is a project that aims at enhancing the power of comp
 
 This Compose* beta requires:
  * Java Runtime Environment 1.4.2 or higher [http://java.sun.com/]
- * Microsoft .NET Framework Version 1.1 [http://msdn.microsoft.com/netframework/]
- * Microsoft .NET Framework Software Development Kit Version 1.1 (Included with Visual Studio .NET) [http://msdn.microsoft.com/netframework/]
+ * Microsoft Visual Studio .NET 2003
+ * Microsoft .NET Framework Version 1.1 (included with Visual Studio .NET 2003) [http://msdn.microsoft.com/netframework/]
+ * Microsoft .NET Framework Software Development Kit Version 1.1 (included with Visual Studio .NET 2003) [http://msdn.microsoft.com/netframework/]
 	
 For more information about using the Compose* tool please see the included README.html file.
 
 Compose* is licensed under LGPL v2.1 or (at your option) any later version.
 [http://www.fsf.org/copyleft/lgpl.html]
-Copyright (C) 2004 University of Twente.
+Copyright (C) 2003,2004 University of Twente.
 
 Credits go to:
 Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir and Wilke Havinga.

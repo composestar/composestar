@@ -17,6 +17,7 @@
 	Var NET_RUN_PATH
 	Var NET_VER
 	Var INI_FILE
+	Var UNIX_DIR
 	Var VS_PATH
 	Var KEY_FILE
 
@@ -72,11 +73,12 @@ Section "Compose* beta" SecDummy
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
-  ;File ABOUT.txt
-	;File /r compilers
-	;File /r binaries
-	;File /r documentation
-	;File /r ComposestarVSAddin
+  File ABOUT.txt
+	File /r compilers
+	File /r binaries
+	File /r documentation
+	File /r ComposestarVSAddin
+	File CompostarSyntaxHighlighting.reg
   
   ;Store installation folder
   ReadRegStr $NET_SDK_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "sdkInstallRootv1.1"
@@ -95,8 +97,10 @@ Section "Compose* beta" SecDummy
 	
 	ExecWait 'regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
 	
+	ExecWait 'regedit /s $INSTDIR\CompostarSyntaxHighlighting.reg'
+	
 	; Call website for the install times!
-	NSISdl::download http://flatliner.student.utwente.nl/composestar_install
+	;NSISdl::download http://flatliner.student.utwente.nl/composestar_install
 	;Pop $R0 ;Get the return value
   ;StrCmp $R0 "success" +2
 	;MessageBox MB_OK "Download failed: $R0"
@@ -125,6 +129,7 @@ Section "Uninstall"
   ExecWait '$NET_RUN_PATH/regasm /unregister "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
 	
 	DeleteRegKey HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect"
+	DeleteRegKey HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps"
 	
 	;ADD YOUR OWN FILES HERE...
   RMDir /r "$INSTDIR"
@@ -135,6 +140,13 @@ SectionEnd
 
 ;--------------------------------
 Function writeComposeStarINIFile
+	
+	Push "$INSTDIR\binaries\ComposeStarRuntimeInterpreter.dll"
+  Push "\" ;needs to be replaced
+  Push "/" ;will replace wrong characters
+  Call StrReplace
+  Pop $UNIX_DIR
+	
 	FileOpen  $INI_FILE "$INSTDIR\Composestar.ini" w
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileWrite $INI_FILE '#Installer generated stuff:$\n$\n'
@@ -147,11 +159,11 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
 	FileWrite $INI_FILE 'RequiredDlls=ComposeStar.dll,ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
 	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
-	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n$\n'
+	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:$UNIX_DIR$\n$\n'
 	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
-	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n$\n'
+	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:$UNIX_DIR$\n$\n'
 	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
-	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n'
+	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:$UNIX_DIR$\n'
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileClose $INI_FILE
 FunctionEnd
@@ -165,7 +177,7 @@ Function writeRegistryKeys
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "ComposestarPath" "$INSTDIR\"
 	
 	;Set the cps file stuff!
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps" "(Default)" "{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
+	;WriteRegStr HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps" "@" "{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
 FunctionEnd
 
 Function writeKeyWordFile
@@ -299,4 +311,51 @@ Function IsDotNETInstalled
      Pop $2
      Pop $1
      Exch $0
+FunctionEnd
+
+Function StrReplace
+  Exch $0 ;this will replace wrong characters
+  Exch
+  Exch $1 ;needs to be replaced
+  Exch
+  Exch 2
+  Exch $2 ;the orginal string
+  Push $3 ;counter
+  Push $4 ;temp character
+  Push $5 ;temp string
+  Push $6 ;length of string that need to be replaced
+  Push $7 ;length of string that will replace
+  Push $R0 ;tempstring
+  Push $R1 ;tempstring
+  Push $R2 ;tempstring
+  StrCpy $3 "-1"
+  StrCpy $5 ""
+  StrLen $6 $1
+  StrLen $7 $0
+  Loop:
+  IntOp $3 $3 + 1
+  StrCpy $4 $2 $6 $3
+  StrCmp $4 "" ExitLoop
+  StrCmp $4 $1 Replace
+  Goto Loop
+  Replace:
+  StrCpy $R0 $2 $3
+  IntOp $R2 $3 + $6
+  StrCpy $R1 $2 "" $R2
+  StrCpy $2 $R0$0$R1
+  IntOp $3 $3 + $7
+  Goto Loop
+  ExitLoop:
+  StrCpy $0 $2
+  Pop $R2
+  Pop $R1
+  Pop $R0
+  Pop $7
+  Pop $6
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Exch $0
 FunctionEnd
