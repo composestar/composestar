@@ -4,9 +4,12 @@
 ;Include Modern UI
 
   !include "MUI.nsh"
+	!include "SetEnvVar.nsh"
+	;!include "UserInfo.dll"
 
 ;--------------------------------
 
+; Variables
 ; Variables
 ;--------------------------------
   Var JAVA_HOME
@@ -21,6 +24,7 @@
 	Var UNIX_DIR
 	Var VS_PATH
 	Var KEY_FILE
+	Var RESULT
 
 ;--------------------------------
 ;General
@@ -65,25 +69,16 @@
 
 ;--------------------------------
 ;Installer Sections
-
-Section "Compose* beta" SecDummy
-
+Section "Checks" Checks
+	
+	Call IsUserAdmin
+	
 	Call LocateJVM
 	
 	Call IsDotNETInstalled
 	
   SetOutPath "$INSTDIR"
-  
-  ;ADD YOUR OWN FILES HERE...
-  File ABOUT.txt
-	File /r compilers
-	File /r binaries
-	File /r documentation
-	File /r ComposestarVSAddin
-	File /nonfatal /r examples
-	File ComposestarSyntaxHighlighting.reg
-  
-  ;Store installation folder
+	;Store installation folder
   ReadRegStr $NET_SDK_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "sdkInstallRootv1.1"
 	StrCpy $NET_SDK_PATH "$NET_SDK_PATHBin"
 	
@@ -92,17 +87,24 @@ Section "Compose* beta" SecDummy
 	StrCpy $NET_RUN_PATH "$NET_RUN_PATHv1.1.$NET_VER"
 	DetailPrint "Found Microsoft .NET Framework: $NET_RUN_PATH"
 	DetailPrint "Found Microsoft .NET SDK at: $NET_SDK_PATH"
+	DetailPrint "Found Java Virtual Machine $REAL_JAVA_VER in: $REAL_JAVA_HOME."
 	
-	Call writeComposeStarINIFile
-	Call writeRegistryKeys
-	Call writeKeyWordFile
-	
-	
-	ExecWait 'regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
-	
-	ExecWait 'regedit /s $INSTDIR\CompostarSyntaxHighlighting.reg'
-	
-	; Call website for the install times!
+SectionEnd
+
+Section "Compose* beta" Compose
+
+	SetOutPath "$INSTDIR"
+  
+  ;ADD YOUR OWN FILES HERE...
+  File ABOUT.txt
+	File ComposeStarSyntaxHighlighting.reg
+	File /r compilers
+	File /r binaries
+	File /r documentation
+	File /r ComposestarVSAddin
+	File /nonfatal /r examples
+  
+  ;Call website for the install times!
 	;NSISdl::download http://flatliner.student.utwente.nl/composestar_install
 	;Pop $R0 ;Get the return value
   ;StrCmp $R0 "success" +2
@@ -116,15 +118,52 @@ Section "Compose* beta" SecDummy
 
 SectionEnd
 
+Section "Settings" Settings
+	
+	Call writeComposeStarINIFile
+	Call writeRegistryKeys
+	Call writeKeyWordFile
+	
+	ExecWait '$NET_RUN_PATH/regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"' $RESULT
+	IntCmp 0 $RESULT OK
+	StrCpy $JAVA_INSTALLATION_MSG "Could not register the Compose* Visual Studio AddIn!"
+	MessageBox MB_OK $JAVA_INSTALLATION_MSG
+	
+	OK:
+	
+	ExecWait '$WINDIR/regedit /s $INSTDIR\ComposeStarSyntaxHighlighting.reg' $RESULT
+	IntCmp 0 $RESULT OKK
+	StrCpy $JAVA_INSTALLATION_MSG "Could not add the Compose* syntax highlighting, please rerun it manually!"
+	MessageBox MB_OK $JAVA_INSTALLATION_MSG
+	
+	OKK:
+	
+	; Set environment variables, for Java, .NET and .NET sdk!
+	Push "PATH"
+  Push "$REAL_JAVA_HOME\bin"
+  Call WriteEnvStr
+	Push "PATH"
+  Push "$NET_SDK_PATH"
+  Call WriteEnvStr
+	Push "PATH"
+  Push "\$NET_RUN_PATH"
+  Call WriteEnvStr
+
+SectionEnd
+
 ;--------------------------------
 ;Descriptions
 
   ;Language strings
-  LangString DESC_SecDummy ${LANG_ENGLISH} "The Compose* package."
+  LangString DESC_Checks ${LANG_ENGLISH} "The checks for the Compose* package, this will check your current system to see if it meets some of the requirements."
+	LangString DESC_Settings ${LANG_ENGLISH} "The Compose* package."
+	LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose* package, it can must be used for the first install and can be used for resque purposes."
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
+    !insertmacro MUI_DESCRIPTION_TEXT ${Checks} $(DESC_Checks)
+		!insertmacro MUI_DESCRIPTION_TEXT ${Compose} $(DESC_Settings)
+		!insertmacro MUI_DESCRIPTION_TEXT ${Settings} $(DESC_Compose)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
  
 ;--------------------------------
@@ -140,7 +179,7 @@ Section "Uninstall"
 	;ADD YOUR OWN FILES HERE...
   RMDir /r "$INSTDIR"
 
-;  ;DeleteRegKey /ifempty HKCU "Software\Software\ComposeStar"
+	;DeleteRegKey /ifempty HKCU "Software\Software\ComposeStar"
 
 SectionEnd
 
@@ -248,8 +287,7 @@ Function LocateJVM
         
     FoundCorrectJavaVer:
         IfFileExists "$JAVA_HOME\bin\javaw.exe" 0 JavaNotPresent
-				DetailPrint "Found Java Virtual Machine $REAL_JAVA_VER in $REAL_JAVA_HOME."
-        ;MessageBox MB_OK "Found Java: $JAVA_VER at $JAVA_HOME"
+				;MessageBox MB_OK "Found Java: $JAVA_VER at $JAVA_HOME"
         Goto Done
         
     JavaVerNotCorrect:
@@ -368,3 +406,67 @@ Function StrReplace
   Pop $1
   Exch $0
 FunctionEnd
+
+; Author: Lilla (lilla@earthlink.net) 2003-06-13
+; function IsUserAdmin uses plugin \NSIS\PlusgIns\UserInfo.dll
+; This function is based upon code in \NSIS\Contrib\UserInfo\UserInfo.nsi
+; This function was tested under NSIS 2 beta 4 (latest CVS as of this writing).
+;
+; Usage:
+;   Call IsUserAdmin
+;   Pop $R0   ; at this point $R0 is "true" or "false"
+;
+Function IsUserAdmin
+Push $R0
+Push $R1
+Push $R2
+
+ClearErrors
+UserInfo::GetName
+IfErrors Win9x
+Pop $R1
+UserInfo::GetAccountType
+Pop $R2
+
+StrCmp $R2 "Admin" 0 Continue
+; Observation: I get here when running Win98SE. (Lilla)
+; The functions UserInfo.dll looks for are there on Win98 too, 
+; but just don't work. So UserInfo.dll, knowing that admin isn't required
+; on Win98, returns admin anyway. (per kichik)
+DetailPrint 'User "$R1" is in the Administrators group'
+StrCpy $R0 "true"
+Goto Check
+
+Continue:
+; You should still check for an empty string because the functions
+; UserInfo.dll looks for may not be present on Windows 95. (per kichik)
+StrCmp $R2 "" Win9x
+StrCpy $R0 "false"
+;DetailPrint 'User "$R1" is in the "$R2" group'
+Goto Check
+
+Win9x:
+; comment/message below is by UserInfo.nsi author:
+; This one means you don't need to care about admin or
+; not admin because Windows 9x doesn't either
+;DetailPrint "Error! This DLL can't run under Windows 9x!"
+StrCpy $R0 "true"
+
+Check:
+StrCmp $R0 "true" Done Failure
+
+Failure:
+	MessageBox MB_OK "You should be a member of the Administrators group!"
+	Abort
+	Quit
+
+Done:
+
+;DetailPrint 'User= "$R1"  AccountType= "$R2"  IsUserAdmin= "$R0"'
+
+Pop $R2
+Pop $R1
+Pop $R0
+
+FunctionEnd
+
