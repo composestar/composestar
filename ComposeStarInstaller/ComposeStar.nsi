@@ -159,11 +159,11 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
 	FileWrite $INI_FILE 'RequiredDlls=ComposeStar.dll,ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
 	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
-	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:$UNIX_DIR$\n$\n'
+	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
 	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
-	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:$UNIX_DIR$\n$\n'
+	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
 	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
-	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:$UNIX_DIR$\n'
+	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n'
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileClose $INI_FILE
 FunctionEnd
@@ -173,7 +173,8 @@ Function writeRegistryKeys
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandPreload" "0"
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "Description" "Compose* VS AddIn"
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "FriendlyName" "Compose*"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "LoadBehavior" "0"
+	;WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "LoadBehavior" "0"
+	WriteRegDWORD HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "LoadBehavior" 3
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "ComposestarPath" "$INSTDIR\"
 	
 	;Set the cps file stuff!
