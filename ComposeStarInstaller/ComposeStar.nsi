@@ -17,6 +17,8 @@
 	Var NET_RUN_PATH
 	Var NET_VER
 	Var INI_FILE
+	Var VS_PATH
+	Var KEY_FILE
 
 ;--------------------------------
 ;General
@@ -63,23 +65,21 @@
 
 Section "Compose* beta" SecDummy
 
-	;Call LocateJVM
+	Call LocateJVM
 	
 	Call IsDotNETInstalled
 	
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
-  File ABOUT.txt
-	File /r compilers
-	File /r binaries
-	File /r documentation
-	File /r ComposestarVSAddin
+  ;File ABOUT.txt
+	;File /r compilers
+	;File /r binaries
+	;File /r documentation
+	;File /r ComposestarVSAddin
   
   ;Store installation folder
-  ;WriteRegStr HKCU "Software\ComposeStar" "" $INSTDIR
-	;WriteINIStr "$INSTDIR\project.ini" "" "cstarinstpath" "$INSTDIR"
-	ReadRegStr $NET_SDK_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "sdkInstallRootv1.1"
+  ReadRegStr $NET_SDK_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "sdkInstallRootv1.1"
 	StrCpy $NET_SDK_PATH "$NET_SDK_PATHBin"
 	
 	ReadRegStr $NET_RUN_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "InstallRoot"
@@ -88,34 +88,10 @@ Section "Compose* beta" SecDummy
 	DetailPrint "Found Microsoft .NET Framework: $NET_RUN_PATH"
 	DetailPrint "Found Microsoft .NET SDK at: $NET_SDK_PATH"
 	
-	FileOpen  $INI_FILE "$INSTDIR\Composestar.ini" w
-	FileWrite $INI_FILE '################################################################################$\n'
-	FileWrite $INI_FILE '#Installer generated stuff:$\n$\n'
-	FileWrite $INI_FILE 'ComposestarPath=$INSTDIR\$\n$\n'
-	FileWrite $INI_FILE 'VerifyAssemblies=true$\n$\n'
-	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\Composestar.jar;$INSTDIR\binaries\antlr.jar$\n$\n'
-	FileWrite $INI_FILE 'DebugLevel=1$\n$\n'
-	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
-	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
-	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
-	FileWrite $INI_FILE 'RequiredDlls=ComposeStar.dll,ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
-	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
-	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n$\n'
-	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
-	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n$\n'
-	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
-	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n'
-	FileWrite $INI_FILE '################################################################################$\n'
-	FileClose $INI_FILE
+	Call writeComposeStarINIFile
+	Call writeRegistryKeys
+	Call writeKeyWordFile
 	
-	
-	; ComposestarVSAddin.dll install stuff:
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandLineSafe" "0"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandPreload" "0"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "Description" "Compose* VS AddIn"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "FriendlyName" "Compose*"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "LoadBehavior" "0"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "ComposestarPath" "$INSTDIR\"
 	
 	ExecWait 'regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
 	
@@ -156,6 +132,65 @@ Section "Uninstall"
 ;  ;DeleteRegKey /ifempty HKCU "Software\Software\ComposeStar"
 
 SectionEnd
+
+;--------------------------------
+Function writeComposeStarINIFile
+	FileOpen  $INI_FILE "$INSTDIR\Composestar.ini" w
+	FileWrite $INI_FILE '################################################################################$\n'
+	FileWrite $INI_FILE '#Installer generated stuff:$\n$\n'
+	FileWrite $INI_FILE 'ComposestarPath=$INSTDIR\$\n$\n'
+	FileWrite $INI_FILE 'VerifyAssemblies=true$\n$\n'
+	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\Composestar.jar;$INSTDIR\binaries\antlr.jar$\n$\n'
+	FileWrite $INI_FILE 'DebugLevel=1$\n$\n'
+	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
+	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
+	FileWrite $INI_FILE 'MainClass=Composestar.CTCommon.Master.Master$\n$\n'
+	FileWrite $INI_FILE 'RequiredDlls=ComposeStar.dll,ComposeStarRepository.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll$\n$\n'
+	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
+	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n$\n'
+	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
+	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n$\n'
+	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
+	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:ComposeStarRuntimeInterpreter.dll$\n'
+	FileWrite $INI_FILE '################################################################################$\n'
+	FileClose $INI_FILE
+FunctionEnd
+
+Function writeRegistryKeys
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandLineSafe" "0"
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandPreload" "0"
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "Description" "Compose* VS AddIn"
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "FriendlyName" "Compose*"
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "LoadBehavior" "0"
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "ComposestarPath" "$INSTDIR\"
+	
+	;Set the cps file stuff!
+	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps" "(Default)" "{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
+FunctionEnd
+
+Function writeKeyWordFile
+	ReadRegStr $VS_PATH HKLM "SOFTWARE\Microsoft\VisualStudio\7.1" "InstallDir"
+	StrCpy $VS_PATH "$VS_PATH\usertype.dat"
+	FileOpen  $KEY_FILE "$VS_PATH" a
+	FileWrite $KEY_FILE 'concern$\n'
+	FileWrite $KEY_FILE 'filtermodule$\n'
+	FileWrite $KEY_FILE 'inputfilters$\n'
+	FileWrite $KEY_FILE 'outputfilters$\n'
+	FileWrite $KEY_FILE 'internals$\n'
+	FileWrite $KEY_FILE 'externals$\n'
+	FileWrite $KEY_FILE 'conditions$\n'
+	FileWrite $KEY_FILE 'superimposition$\n'
+	FileWrite $KEY_FILE 'selectors$\n'
+	FileWrite $KEY_FILE 'methods$\n'
+	FileWrite $KEY_FILE 'filtermodules$\n'
+	FileWrite $KEY_FILE 'implementation$\n'
+	FileWrite $KEY_FILE 'by$\n'
+	FileWrite $KEY_FILE 'in$\n'
+	FileWrite $KEY_FILE 'Dispatch$\n'
+	FileWrite $KEY_FILE 'Error$\n'
+	FileWrite $KEY_FILE 'Meta$\n'
+	FileClose $KEY_FILE
+FunctionEnd
 
 ;--------------------------------
 Function LocateJVM
