@@ -112,6 +112,7 @@ Section "Compose* beta" Compose
 	File filterdesc.xml
 	File /nonfatal secret.css
 	File /nonfatal /r /x CVS compilers
+	File cstar.ico
 	File /nonfatal /r binaries
 	File /nonfatal /r /x CVS documentation
 	File /nonfatal /r ComposestarVSAddin
@@ -125,9 +126,6 @@ Section "Compose* beta" Compose
 	
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
-	
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Product" "Compose*" "$INSTDIR\Uninstall.exe"
-	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Product" "Compose*" "$INSTDIR\Uninstall.exe"
 
 SectionEnd
 
@@ -235,6 +233,15 @@ Function writeRegistryKeys
 	
 	;Set the cps file stuff!
 	;WriteRegStr HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps" "@" "{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
+	
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayIcon" "$INSTDIR\cstar.ico"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayName" "Compose*"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "UninstallString" "$INSTDIR\Uninstall.exe"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "Publisher" "University of Twente"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLUpdateInfo" "http://composestar.sourceforge.net"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "HelpLink" "http://composestar.sourceforge.net"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLInfoAbout" "http://composestar.sourceforge.net"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "beta 3"
 FunctionEnd
 
 Function writeKeyWordFile
