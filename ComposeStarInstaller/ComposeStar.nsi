@@ -185,10 +185,16 @@ Function writeKeyWordFile
 	FileWrite $KEY_FILE 'filtermodules$\n'
 	FileWrite $KEY_FILE 'implementation$\n'
 	FileWrite $KEY_FILE 'by$\n'
+	FileWrite $KEY_FILE 'as$\n'
 	FileWrite $KEY_FILE 'in$\n'
+	FileWrite $KEY_FILE 'begin$\n'
+	FileWrite $KEY_FILE 'end$\n'
+	FileWrite $KEY_FILE 'True$\n'
+	FileWrite $KEY_FILE 'False$\n'
 	FileWrite $KEY_FILE 'Dispatch$\n'
 	FileWrite $KEY_FILE 'Error$\n'
 	FileWrite $KEY_FILE 'Meta$\n'
+	FileWrite $KEY_FILE 'inner$\n'
 	FileClose $KEY_FILE
 FunctionEnd
 
