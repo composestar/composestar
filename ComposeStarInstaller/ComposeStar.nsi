@@ -10,6 +10,7 @@
 ; Variables
 ;--------------------------------
   Var JAVA_HOME
+	Var REAL_JAVA_HOME
   Var JAVA_VER
 	Var REAL_JAVA_VER
   Var JAVA_INSTALLATION_MSG
@@ -80,7 +81,7 @@ Section "Compose* beta" SecDummy
 	File /r documentation
 	File /r ComposestarVSAddin
 	File /nonfatal /r examples
-	File CompostarSyntaxHighlighting.reg
+	File ComposestarSyntaxHighlighting.reg
   
   ;Store installation folder
   ReadRegStr $NET_SDK_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "sdkInstallRootv1.1"
@@ -237,6 +238,7 @@ Function LocateJVM
 
     CheckJavaVer:
         ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\JavaSoft\Java Runtime Environment\$JAVA_VER" "JavaHome"
+        ReadRegStr $REAL_JAVA_HOME HKEY_LOCAL_MACHINE "SOFTWARE\JavaSoft\Java Runtime Environment\$JAVA_VER" "JavaHome"
         GetFullPathName /SHORT $JAVA_HOME "$0"
 				StrCpy $0 $JAVA_VER 1 0
         StrCpy $1 $JAVA_VER 1 2
@@ -246,6 +248,7 @@ Function LocateJVM
         
     FoundCorrectJavaVer:
         IfFileExists "$JAVA_HOME\bin\javaw.exe" 0 JavaNotPresent
+				DetailPrint "Found Java Virtual Machine $REAL_JAVA_VER in $REAL_JAVA_HOME."
         ;MessageBox MB_OK "Found Java: $JAVA_VER at $JAVA_HOME"
         Goto Done
         
