@@ -1,4 +1,6 @@
-Welcome to the second beta also known as "Karel Appel" release of the Compose* project [http://composestar.sf.net]. 
+Welcome to the 'Karel Appel' release of Compose*.
+
+Please visit [http://composestar.sourceforge.net/] for more information.
 
 Compose* (or: ComposeStar) is a project that aims at enhancing the power of component- and object-based programming, so that software becomes easier to structure and modularize, hence easier to develop, maintain and extend. In particular, Compose* offers aspect-oriented programming (http://aosd.net) through the composition filters model (http://trese.cs.utwente.nl/composition_filters).
 

@@ -142,7 +142,7 @@ Section "Settings" Settings
 	
 	OK:
 	
-	ExecWait '$WINDIR/regedit /s $INSTDIR\ComposeStarSyntaxHighlighting.reg' $RESULT
+	ExecWait '$WINDIR/regedit /s "$INSTDIR\ComposeStarSyntaxHighlighting.reg"' $RESULT
 	IntCmp 0 $RESULT OKK
 	StrCpy $JAVA_INSTALLATION_MSG "Could not add the Compose* syntax highlighting, please rerun it manually!"
 	MessageBox MB_OK $JAVA_INSTALLATION_MSG
