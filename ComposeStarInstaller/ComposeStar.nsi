@@ -197,7 +197,7 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE '#Installer generated stuff:$\n$\n'
 	FileWrite $INI_FILE 'ComposestarPath=$INSTDIR\$\n$\n'
 	FileWrite $INI_FILE 'VerifyAssemblies=true$\n$\n'
-	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\Composestar.jar;$INSTDIR\binaries\antlr.jar$\n$\n'
+	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\Composestar.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar$\n$\n'
 	FileWrite $INI_FILE 'DebugLevel=1$\n$\n'
 	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
 	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
