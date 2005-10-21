@@ -17,7 +17,7 @@
 
   ;Name and file
   Name "Compose* Add In Fixer"
-	OutFile "ComposeStarAddIn.exe"
+	OutFile "ComposeStarAddInFixer.exe"
 	
 	XPStyle "on"
 	ShowInstDetails show
