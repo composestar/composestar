@@ -1,23 +1,26 @@
-Welcome to the 'Mondriaan' release of Compose*.
+Welcome to the 'Rembrandt' maintenance release of Compose*.
 
 Please visit [http://composestar.sourceforge.net/] for more information.
 
 Compose* (or: ComposeStar) is a project that aims at enhancing the power of component- and object-based programming, so that software becomes easier to structure and modularize, hence easier to develop, maintain and extend. In particular, Compose* offers aspect-oriented programming (http://aosd.net) through the composition filters model (http://trese.cs.utwente.nl/composition_filters).
 
 !!!Important!!!
-You should be at least a Windows Power User on your system in order to install Compose*.
+* You should be at least a Windows Power User on your system in order to install Compose*.
+* Compose* is not (yet) compatible with Visual Studio 2005 or the Microsoft .NET framework 2.
+* There are some localization issues, Compose* will NOT run on a German localized version of Visual Studio.
 
 This Compose* beta requires:
  * Java Runtime Environment 1.4.2 or higher [http://java.sun.com/]
  * Microsoft Visual Studio .NET 2003
  * Microsoft .NET Framework Version 1.1 (included with Visual Studio .NET 2003) [http://msdn.microsoft.com/netframework/]
  * Microsoft .NET Framework Software Development Kit Version 1.1 (included with Visual Studio .NET 2003) [http://msdn.microsoft.com/netframework/]
-	
+
 Compose* is licensed under LGPL v2.1 or (at your option) any later version.
 [http://www.fsf.org/copyleft/lgpl.html]
 Copyright (C) 2003,2004,2005 University of Twente.
 
 Credits go to:
-Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkelink en Rolf Huisman, Wim Minnen, Michiel van Oudheusden.
+Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkelink, Rolf Huisman, Wim Minnen, Michiel van Oudheusden, Olaf Conradi, Stephan Huttenhuis, Dirk Doornenbal, and Arjan de Roo.
 
-The splash screen is taken from: http://www.mondriaan.net/
+
+The splash screen is taken from: http://nl.wikipedia.org/wiki/Afbeelding:RembrandtNightwatch.jpg
