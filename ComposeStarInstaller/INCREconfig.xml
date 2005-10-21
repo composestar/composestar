@@ -1,0 +1,285 @@
+<modules>
+	<module name="COPPER" fulltype="Composestar.CTCommon.COPPER.COPPER" input="java.lang.String" enabled="true" incremental="false" summary="Parsing cps sources">	
+		<dependencies>
+			<dependency type="FILE" name="cpsfile"></dependency>
+		</dependencies>
+	</module>
+	<module name="EMBEX" fulltype="Composestar.CTCommon.EMBEX.EMBEX" phase="one" enabled="true" incremental="false" summary="Extracting embedded sources">
+		<dependencies></dependencies>	
+	</module>
+	<module name="HARVESTER" fulltype="Composestar.CTAdaption.TYM.TypeHarvester.HarvestRunner" input="java.lang.String" phase="two" enabled="true" incremental="false" summary="Harvesting type information">
+		<dependencies>
+			<dependency type="FILE" name="assembly"></dependency>
+		</dependencies>		
+	</module>
+	<module name="COLLECTOR" fulltype="Composestar.CTAdaption.TYM.TypeCollector.CollectorRunner" phase="two" enabled="true" incremental="false" summary="Collecting type information">
+		<dependencies>
+			<dependency type="FILE" name="assembly"></dependency>
+		</dependencies>		
+	</module>
+	<module name="AttributeCollector" fulltype="Composestar.CTAdaption.TYM.TypeCollector.AttributeCollector" phase="two" enabled="true" incremental="false" summary="Inserting annotations into DataStore">
+		<dependencies></dependencies>	
+	</module>
+	<module name="REXREF" fulltype="Composestar.CTCommon.REXREF.Main" phase="two" enabled="true" incremental="false" summary="Resolving external references">
+		<dependencies></dependencies>	
+	</module>
+	<module name="LOLA" fulltype="Composestar.CTCommon.LOLA.LOLA" phase="two" enabled="true" incremental="false" summary="Interpreting Logic Language superimposition expressons">
+		<dependencies></dependencies>
+		<comparisons>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.PrimitiveConcern">
+				<field name="platformRepr"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.LOLA.metamodel.UnitResult">
+				<field name="multiRes"></field>
+				<field name="singleRes"></field>
+			</type>
+		</comparisons>		
+	</module>
+	<module name="SANE" fulltype="Composestar.CTCommon.SANE.SANE" phase="two" enabled="true" incremental="false" summary="Calculating joinpoints">
+		<dependencies></dependencies>	
+	</module>
+	<module name="FILTH" fulltype="Composestar.CTCommon.FILTH.FILTH" input="Composestar.CTCommon.CpsProgramRepository.PrimitiveConcern" phase="two" enabled="true" incremental="false" summary="Calculating filtermodule orders">
+		<dependencies>
+			<dependency type="OBJECT" name="fmodules">
+				<path>
+					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
+					<node type="FIELD" nodevalue="theFmSIinfo"></node>
+				</path>
+			</dependency>	
+		</dependencies>	
+		<comparisons>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="SIGN" fulltype="Composestar.CTAdaption.SIGN.SIGN" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="false" summary="Calculating signatures" >
+		<dependencies>
+			<dependency type="OBJECT" name="signature" store="true" lookup="true">
+				<path>
+					<node type="FIELD" nodevalue="platformRepr"></node>
+					<node type="FIELD" nodevalue="Methods"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="zmodules" store="true" lookup="true">
+				<path>
+					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
+					<node type="FIELD" nodevalue="theFmSIinfo"></node>
+				</path>
+			</dependency>
+		</dependencies>
+		<comparisons>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+				<field name="ref"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+				<field name="internals"></field>
+				<field name="externals"></field>
+				<field name="inputFilters"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.Internal">
+				<path>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getType"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.External">
+				<path>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getType"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+				<field name="filterElements"></field>
+				<path>
+					<field name="type"></field>
+					<method name="getType"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+				<field name="conditionPart"></field>
+				<field name="enableOperatorType"></field>
+				<field name="matchingPatterns"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+				<field name="left"></field>
+				<field name="right"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+				<field name="matchType"></field>
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETMethodInfo">
+				<field name="CallingConvention"></field>
+				<field name="IsAbstract"></field>
+				<field name="IsAssembly"></field>
+				<field name="IsConstructor"></field>
+				<field name="IsFamily"></field>
+				<field name="IsFamilyAndAssembly"></field>
+				<field name="IsFamilyOrAssembly"></field>
+				<field name="IsFinal"></field>
+				<field name="IsHideBySig"></field>
+				<field name="IsPrivate"></field>
+				<field name="IsPublic"></field>
+				<field name="IsStatic"></field>
+				<field name="IsVirtual"></field>
+				<field name="IsDeclaredHere"></field>
+				<field name="Name"></field>
+				<field name="ReturnTypeString"></field>
+				<field name="Parameters"></field>
+			</type>
+			<type fullname="Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETParameterInfo">
+				<field name="Name"></field>
+				<field name="Position"></field>
+				<field name="IsIn"></field>
+				<field name="IsLcid"></field>
+				<field name="IsOptional"></field>
+				<field name="IsOut"></field>
+				<field name="IsRetval"></field>
+				<field name="ParameterTypeString"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="SECRET" fulltype="Composestar.CTCommon.CKRET.SECRET" input="Composestar.CTCommon.CpsProgramRepository.PrimitiveConcern" phase="two" enabled="true" incremental="false" summary="Semantic reasoning about filters">
+		<dependencies>
+			<dependency type="FILE" name="SECRETConfigFile">
+				<path>
+					<node type="CONFIG" nodevalue="SECRETConfigFile"></node>
+				</path>
+			</dependency>
+			<dependency type="FILE" name="SECRETCss">
+				<path>
+					<node type="CONFIG" nodevalue="SECRETCssFile"></node>
+				</path>
+			</dependency>
+			<dependency type="Object" name="SECRETMode">
+				<path>
+					<node type="CONFIG" nodevalue="SECRETMode"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="filtermoduleorders">
+				<path>
+					<node type="DYNAMIC" nodevalue="FilterModuleOrders"></node>
+				</path>		
+			</dependency>
+		</dependencies>	
+		<comparisons>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+				<field name="ref"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+				<field name="inputFilters"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+				<field name="filterElements"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+				<field name="conditionPart"></field>
+				<field name="matchingPatterns"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
+				<path>
+					<method name="getCondition"></method>
+					<method name="getRef"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+				<field name="left"></field>
+				<field name="right"></field>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.CTCommon.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
+				<field name="typeList"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="ASTRA" fulltype="Composestar.CTAdaption.TYM.AssemblyTransformer.AssemblyTransformer" phase="two" enabled="true" incremental="false" summary="Updating dummy sources according to full signatures">
+		<dependencies></dependencies>	
+	</module>
+	<module name="RECOMA" fulltype="Composestar.CTAdaption.TYM.SrcCompiler.RealSourceManager" input="java.lang.String" phase="two" enabled="true" incremental="false" summary="Compiling user sources">
+		<dependencies>
+			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
+				<path>
+					<node type="CONFIG" nodevalue="ApplicationStart"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="ConcernsWithFMO" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.CTAdaption.TYM.SrcCompiler.RealSourceManager.getConcernsWithFMO"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="CastingInterceptions" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.CTAdaption.TYM.SrcCompiler.RealSourceManager.castingInterceptions"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="InstantiationClasses" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.CTAdaption.TYM.SrcCompiler.RealSourceManager.getAfterInstantiationClasses"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="ConcernsWithOutputFilters" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.CTAdaption.TYM.SrcCompiler.RealSourceManager.getConcernsWithOutputFilters"></node>
+				</path>
+			</dependency>
+			<dependency type="FILE" name="source"></dependency>
+			<dependency type="FILE" name="xternals">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.CTAdaption.TYM.SrcCompiler.RealSourceManager.externalSources"></node>
+				</path>
+			</dependency>
+		</dependencies>
+	</module>
+	<module name="CONE" fulltype="Composestar.CTAdaption.CONE.CONE" phase="two" enabled="true" incremental="false" summary="Storing datastore and weave specifications">
+		<dependencies></dependencies>	
+	</module>
+	<module name="ILICIT" fulltype="Composestar.CTAdaption.ILICIT.ILICIT" phase="two" enabled="true" incremental="false" summary="Weaving assemblies according to weave specifications">
+		<dependencies></dependencies>	
+	</module>
+</modules>

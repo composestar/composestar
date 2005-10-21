@@ -31,7 +31,7 @@
   ;Name and file
   Name "Compose* beta"
 	Icon cstar.ico
-  OutFile "ComposeStar_0.3b.exe"
+  OutFile "ComposeStar_0.5.exe"
 	
 	XPStyle "on"
 	ShowInstDetails show
@@ -71,7 +71,7 @@
 
 Function .onInit
   SetOutPath $TEMP
-  File /oname=spltmp.bmp "mondriaan.bmp"
+  File /oname=spltmp.bmp "RembrandtNightwatch.bmp"
 
 	advsplash::show 3000 600 400 -1 $TEMP\spltmp
 
@@ -110,6 +110,9 @@ Section "Compose* beta" Compose
   File ABOUT.txt
 	File ComposeStarSyntaxHighlighting.reg
 	File filterdesc.xml
+	File ComposeStarAddInFixer.exe
+	File INCREconfig.xml
+	File INCRE.css
 	File /nonfatal secret.css
 	File /nonfatal /r /x CVS compilers
 	File cstar.ico
