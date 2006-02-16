@@ -1,0 +1,111 @@
+<VisualStudioProject>
+    <VISUALJSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{8F63D32A-299D-45A5-8B8F-85FB87639EEA}"
+    >
+        <Build>
+            <Settings
+                AssemblyKeyContainerName = ""
+                AssemblyName = "ComposeStarDotNETRuntimeInterpreter"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "ComposeStarDotNETRuntimeInterpreter"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    BaseAddress = "285212672"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DebugSymbols = "true"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                    AdditionalOptions = ""
+                />
+                <Config
+                    Name = "Release"
+                    BaseAddress = "285212672"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DebugSymbols = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                    AdditionalOptions = ""
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "ComposeStarRuntimeInterpreter"
+                    Project = "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETPlatformInterface"
+                    Project = "{5C1D7A8F-5EF0-4633-8283-D4017C0F88FE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "ComposestarCore"
+                    Project = "{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
+                <Reference
+                    Name = "ComposeStarUtilities"
+                    Project = "{21F8C6D6-B067-4E11-B414-B66EB60BEC26}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETUtilities"
+                    Project = "{50342189-4B39-4980-8CE7-E75BD1066B47}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
+                <Reference
+                    Name = "ComposeStarFilterDebugger"
+                    Project = "{227D8FE5-F6DA-4D40-BADB-C19320F6BD01}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "AssemblyInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DotNETFilterFactory.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DotNETMessageHandlingFacility.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DotNETPlatformProvider.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </VISUALJSHARP>
+</VisualStudioProject>
+
