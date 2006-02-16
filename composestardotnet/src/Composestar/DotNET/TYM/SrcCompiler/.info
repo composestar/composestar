@@ -1,0 +1,1 @@
+SrcCompiler is responsible for compiling any .NET sources. It containts both a wrapper around the real compilers and master modules that handle compiling of both dummies and real user sources for a user project.

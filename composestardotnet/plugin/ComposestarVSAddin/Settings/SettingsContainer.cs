@@ -1,0 +1,301 @@
+using System;
+using System.ComponentModel;
+using System.Windows.Forms.Design;
+using System.Drawing.Design;
+
+namespace ComposestarVSAddin
+{
+	/// <summary>
+	/// SettingsContainer to be displayed in the property grid. 
+	/// Use custom attributes to indicate how to save the settings to the ini files.
+	/// </summary>
+	[DefaultPropertyAttribute("BuildDebugLevel")]
+	public class SettingsContainer
+	{
+		private string _composestarPath;
+		private string _classPath;
+		private string _dotnetPath;
+		private string _dotnetSDKPath;
+		private string _mainClass;
+		private string _embeddedSourcesFolder;
+		private string _requiredDlls;
+		private string _JSCompiler;
+		private string _JSCompilerOptions;
+		private string _VBCompiler;
+		private string _VBCompilerOptions;
+		private string _CSCompiler;
+		private string _CSCompilerOptions;
+		private SecretModes _secretMode = SecretModes.NotSet;
+		private TriStateBooleanModes _verifyAssemblies = TriStateBooleanModes.NotSet;
+		private DebugModes _buildDebugLevel = DebugModes.NotSet;
+		private DebugModes _runDebugLevel = DebugModes.NotSet;
+
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("SECRET mode"),
+		IniSettingFieldAttribute("SECRETMode", "Global Composestar configuration")]
+		public SecretModes SecretMode
+		{
+			get
+			{
+				return this._secretMode;
+			}
+			set 
+			{
+				this._secretMode = value;
+			}
+		}
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("Build debug level."),
+		IniSettingFieldAttribute("BuildDebugLevel", "Common")]
+		public DebugModes BuildDebugLevel
+		{
+			get
+			{
+				return this._buildDebugLevel;
+			}
+			set 
+			{
+				this._buildDebugLevel = value;
+			}
+		}
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("Run debug level."),
+		IniSettingFieldAttribute("RunDebugLevel", "Common")]
+		public DebugModes RunDebugLevel
+		{
+			get
+			{
+				return this._runDebugLevel;
+			}
+			set 
+			{
+				this._runDebugLevel = value;
+			}
+		}
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("Verify generated assemblies after compilation."),
+		IniSettingFieldAttribute("VerifyAssemblies", "Common")]
+		public TriStateBooleanModes VerifyAssemblies
+		{
+			get
+			{
+				return this._verifyAssemblies;
+			}
+			set 
+			{
+				this._verifyAssemblies = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("Path of the Composestar installation."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute("ComposestarPath", "Global Composestar configuration")]
+		public string ComposestarPath
+		{
+			get
+			{
+				return this._composestarPath;
+			}
+			set 
+			{
+				this._composestarPath = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("Classpath of the Java binaries of Composestar."),
+		IniSettingFieldAttribute("ClassPath", "Global Composestar configuration")]
+		public string Classpath
+		{
+			get
+			{
+				return this._classPath;
+			}
+			set 
+			{
+				this._classPath = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("Path to the .NET framework."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute(".NETPath", "Global Composestar configuration")]
+		public string dotNETPath
+		{
+			get
+			{
+				return this._dotnetPath;
+			}
+			set 
+			{
+				this._dotnetPath = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("Path to the .NET SDK."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute(".NETSDKPath", "Global Composestar configuration")]
+		public string dotNETSDKPath
+		{
+			get
+			{
+				return this._dotnetSDKPath;
+			}
+			set 
+			{
+				this._dotnetSDKPath = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("Main class."),
+		IniSettingFieldAttribute("MainClass", "Global Composestar configuration")]
+		public string MainClass
+		{
+			get
+			{
+				return this._mainClass;
+			}
+			set 
+			{
+				this._mainClass = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("Path to the embedded sources folder."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute("EmbeddedSourcesFolder", "Global Composestar configuration")]
+		public string EmbeddedSourcesFolder
+		{
+			get
+			{
+				return this._embeddedSourcesFolder;
+			}
+			set 
+			{
+				this._embeddedSourcesFolder = value;
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("DLL names required by the compiler."),
+		IniSettingFieldAttribute("RequiredDlls", "Global Composestar configuration")]
+		public string RequiredDlls
+		{
+			get
+			{
+				return this._requiredDlls;
+			}
+			set 
+			{
+				this._requiredDlls = value;
+			}
+		}
+
+		[CategoryAttribute("Native Compiler settings"),  
+		DescriptionAttribute("J# compiler location."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute("JSCompiler", "Global Composestar configuration")]
+		public string JSCompiler
+		{
+			get
+			{
+				return this._JSCompiler;
+			}
+			set 
+			{
+				this._JSCompiler = value;
+			}
+		}
+
+		[CategoryAttribute("Native Compiler settings"),  
+		DescriptionAttribute("J# compiler options."),
+		IniSettingFieldAttribute("JSCompilerOptions", "Global Composestar configuration")]
+		public string JSCompilerOptions
+		{
+			get
+			{
+				return this._JSCompilerOptions;
+			}
+			set 
+			{
+				this._JSCompilerOptions = value;
+			}
+		}
+		
+		[CategoryAttribute("Native Compiler settings"),  
+		DescriptionAttribute("VB compiler location."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute("VBCompiler", "Global Composestar configuration")]
+		public string VBCompiler
+		{
+			get
+			{
+				return this._VBCompiler;
+			}
+			set 
+			{
+				this._VBCompiler = value;
+			}
+		}
+
+		[CategoryAttribute("Native Compiler settings"),  
+		DescriptionAttribute("VB.NET compiler options."),
+		IniSettingFieldAttribute("VBCompilerOptions", "Global Composestar configuration")]
+		public string VBCompilerOptions
+		{
+			get
+			{
+				return this._VBCompilerOptions;
+			}
+			set 
+			{
+				this._VBCompilerOptions = value;
+			}
+		}
+		[CategoryAttribute("Native Compiler settings"),  
+		DescriptionAttribute("C# compiler location."),
+		EditorAttribute(typeof(FolderNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute("CSCompiler", "Global Composestar configuration")]
+		public string CSCompiler
+		{
+			get
+			{
+				return this._CSCompiler;
+			}
+			set 
+			{
+				this._CSCompiler = value;
+			}
+		}
+
+		[CategoryAttribute("Native Compiler settings"),  
+		DescriptionAttribute("C# compiler options."),
+		IniSettingFieldAttribute("CSCompilerOptions", "Global Composestar configuration")]
+		public string CSCompilerOptions
+		{
+			get
+			{
+				return this._CSCompilerOptions;
+			}
+			set 
+			{
+				this._CSCompilerOptions = value;
+			}
+		}
+
+		public SettingsContainer()
+		{
+ 		} 
+
+	} 
+
+}
