@@ -24,9 +24,6 @@ namespace Rot13Filter
 				Console.WriteLine("The file could not be read:");
 				Console.WriteLine(e.Message);
 			}
-
-			Console.Write("\nPress enter to exit...");
-			Console.ReadLine();
 		}
 	}
 }

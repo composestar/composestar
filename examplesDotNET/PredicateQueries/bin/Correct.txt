@@ -1,0 +1,3 @@
+Usage:
+PredicateQueries <port> - waits to receive a message on UDP port <port>
+PredicateQueries <host> <port> <msg string> - Sends msg to host:port
