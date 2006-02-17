@@ -2,7 +2,6 @@ Compose* VenusFlyTrap example
 *******************************
 
 We put our little VenusFlyTrap in the sun and give it some water. Will it grow?:
-
 Plant does photosynthesis...
 Growing on water and sunlight...
 
