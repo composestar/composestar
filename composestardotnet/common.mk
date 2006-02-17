@@ -1,4 +1,4 @@
-ifeq (${OS}, linux)
+ifeq ($(OS), Darwin)
 	SEP=:
 	MAKE=make
 	RECURSE_MAKE_RULE=if [ "$(SUBDIRS)" != "" ]; then for a in $(SUBDIRS); do cd $$a && $(MAKE) && cd ..; done fi
@@ -11,8 +11,9 @@ ifeq (${OS}, linux)
 	NULL=
 	INSTALLDIR=/var/bin/
 	INSTALLFINDER=$(MAKE) installit
+	PATHSEP=/
 else 
-ifeq (${OS_ARCH}, Darwin)
+ifeq ($(OS), linux)
 	SEP=:
 	MAKE=make
 	RECURSE_MAKE_RULE=if [ "$(SUBDIRS)" != "" ]; then for a in $(SUBDIRS); do cd $$a && $(MAKE) && cd ..; done fi
@@ -25,6 +26,7 @@ ifeq (${OS_ARCH}, Darwin)
 	NULL=
 	INSTALLDIR=/var/bin/
 	INSTALLFINDER=$(MAKE) installit
+	PATHSEP=/
 else
 	SEP=;
 	MAKE=make.exe
@@ -36,17 +38,18 @@ else
 	fileCopy=copy /Y
 	RMDIR=rmdir /s /q
 	NULL=2>NUL
-	INSTALLFINDER=installIt.bat ${MAKE}
+	INSTALLFINDER=installIt.bat $(MAKE)
+	PATHSEP=\\
 endif
 endif
 
 
-CLASSPATH=../${ROOTDIR}composestarcore/src${SEP}${ROOTDIR}binaries/junit/junit.jar${SEP}${ROOTDIR}binaries/prolog/prolog.jar
-JAVAC_RULE=javac -target 1.4 -source 1.4 -sourcepath $(ROOTDIR)src${SEP}$(ROOTDIR) -classpath $(CLASSPATH)  $<
+CLASSPATH=.$(SEP)../$(ROOTDIR)composestarcore/src$(SEP)$(ROOTDIR)binaries/junit/junit.jar$(SEP)$(ROOTDIR)binaries/prolog/prolog.jar
+JAVAC_RULE=javac -target 1.4 -source 1.4 -sourcepath $(ROOTDIR)src$(SEP)$(ROOTDIR) -classpath $(CLASSPATH)  $<
 
 ANTLR_RULE=java -classpath $(CLASSPATH) antlr.Tool 
-RUN=java -classpath $(CLASSPATH)${SEP}../../../
+RUN=java -classpath $(CLASSPATH)$(SEP)../../../
 
-CSHARP_ICON_SWITCH=/win32icon:${ICON}
-CSHARP_EXE_RULE=csc /t:exe /nologo ${ICONSWITCH} /out:${ROOTDIR}$@ /recurse:*.cs
-CSHARP_DLL_RULE=csc /t:library /nologo ${ICONSWITCH} /out:${ROOTDIR}$@ /recurse:*.cs
+CSHARP_ICON_SWITCH=/win32icon:$(ICON)
+CSHARP_EXE_RULE=csc /t:exe /nologo $(ICONSWITCH) /out:$(ROOTDIR)$@ /recurse:*.cs
+CSHARP_DLL_RULE=csc /t:library /nologo $(ICONSWITCH) /out:$(ROOTDIR)$@ /recurse:*.cs

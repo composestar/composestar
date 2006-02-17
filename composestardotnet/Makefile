@@ -1,4 +1,5 @@
 ROOTDIR=./
+INSTALLDIR=C:\Program Files\Composestar
 
 include ${ROOTDIR}common.mk
 
@@ -21,17 +22,15 @@ help:
 	@echo       jar (Builds the system and generates a binary jar file)
 	@echo       src (Just builds the system)
 	@echo       install (Installs the system)
-	@echo	      runtime (Builds the runtime)
-	@echo       test (RBuilds and runs the unit tests)
+	@echo       test (Builds and runs the unit tests)
 	@echo       build_test (Builds the unit tests)
 	@echo       run_test (runs the unit tests)
 
 rebuild: clean build
 
-build: src 
+build: jar install
 
-
-jar:	src
+jar: src
 	-${RMDIR} jarsource ${NULL}
 	${MKDIR} jarsource
 	${COPY} "src\*.class" "jarsource\"
@@ -52,11 +51,10 @@ clean:
 	cd src && ${MAKE} clean && cd ..
 
 install:
-	@$(INSTALLFINDER)
-
-installit:
 	@echo **************************************************************
 	@echo  Installing to ${INSTALLDIR};                                 
 	@echo ************************************************************** 
-	@$(COPY) *.exe "${INSTALLDIR}binaries"
-	@$(COPY) *.dll "${INSTALLDIR}binaries"
+	@$(fileCopy) "ComposestarDotNET.jar" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "AttributeHarvester.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "TypeHarvester.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
+	

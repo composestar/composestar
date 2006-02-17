@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.6 2006/02/16 17:21:38 composer Exp $
+ * $Id: DotNETMaster.java,v 1.1 2006/02/16 23:11:00 pascal_durr Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -30,7 +30,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  * and executes them in the order they are added.
  */
 public class DotNETMaster extends Master  {
-	public static final String RESOURCES_KEY = "Composestar.core.Master.CommonResources";
+	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
 	public static String phase = "";
 
     private Iterator concern_iterator;
