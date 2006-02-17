@@ -1,0 +1,190 @@
+//Source file: H:\\cvs\\home\\staijen\\Pacman\\src\\pacman\\View.java
+
+//Source file: C:\\Documents and Settings\\StaijenT\\My Documents\\cvs\\home\\staijen\\Pacman\\src\\pacman\\gui\\View.java
+
+package pacman;
+
+import java.awt.Panel;
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+
+public class View extends Panel implements Runnable 
+{
+	public static int BLOCKSIZE = 32;
+	private PacmanView pacmanView;
+	public Graphics bufferGraphics;
+	public Image bufferImage;
+	private GhostView ghostView;
+	public Game game;
+	private ViewInterface viewInterface;
+   
+	public static int getBLOCKSIZE()
+	{
+		return View.BLOCKSIZE;
+	}
+
+	/**
+	 @roseuid 402B6023033E
+	 */
+	public View() 
+	{
+		super();
+		this.setBackground(Color.black);
+		this.viewInterface = new ViewInterface(this);
+		this.pacmanView = new PacmanView(this);
+		this.ghostView = new GhostView(this);    
+		
+		game = new Game(this);
+
+		game.getPacman().setPacmanView(pacmanView);
+		game.setPacmanView(pacmanView);
+		for( java.util.Enumeration e = game.getGhosts(); e.hasMoreElements(); )
+		{
+			((Ghost)e.nextElement()).setGhostView(this.ghostView);
+		}
+
+		this.addKeyListener(
+			new KeyAdapter() 
+		{
+			public void keyPressed(KeyEvent e)
+			{
+				if( e.getKeyCode() == KeyEvent.VK_SPACE )
+				{
+					View.this.game.play();
+				}
+			}
+		}
+			);
+
+		new Thread(this).start();    
+	}
+      
+
+	
+	/**
+	 @return java.awt.Graphics
+	 @roseuid 403B6A710335
+	 */
+	public Graphics getBuffer() 
+	{
+		return bufferGraphics;    
+	}
+   
+	/**
+	 @roseuid 403C8AA3000B
+	 */
+	public void clearBuffer() 
+	{
+		if( bufferGraphics != null )
+		{
+			bufferGraphics.setColor(Color.black);
+			bufferGraphics.fillRect(0 , 0, this.getSize().width, this.getSize().height);
+			game.world.paint(bufferGraphics);
+		}
+	}
+   
+	/**
+	 @roseuid 403C8AAF0337
+	 */
+	public void paintBuffer() 
+	{
+		Graphics g = this.getGraphics();
+		paint(g);    
+	}
+   
+   
+	/**
+	 @roseuid 40488476003E
+	 */
+	public void run() 
+	{
+		Graphics g = getGraphics();
+		while( true )
+		{
+			if( g == null )
+				g = getGraphics();
+			else
+				this.viewInterface.paint(g);
+	    	
+			try
+			{
+				Thread.yield();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}	
+}
+/**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void View.paint(java.lang.String){
+   }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ */
