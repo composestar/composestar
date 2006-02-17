@@ -1,0 +1,13 @@
+We contracted an animal caretaker: John
+We caught a female platypus: Mary
+
+Platypus 'Mary' has laid an egg: Egg#1
+Caretaker 'John' has collected the egg 'Egg#1'
+
+Caretaker 'John' is waiting for 'Egg#1' to hatch...
+Hatchling 'Kevin' has hatched from 'Egg#1'.
+Mother platypus 'Mary' proudly looks at her young 'Kevin'.
+
+Is young 'Kevin' hungry? true
+Caretaker 'John' is feeding 'Kevin' with a bottle of milk...
+Is young 'Kevin' still hungry? true
