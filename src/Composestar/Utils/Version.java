@@ -86,12 +86,12 @@ public class Version {
      * The command name normally used to invoke this program
      */
     public final static String getProgramName(){ 
-		return "Composestar.core.Master.Master";
+		return "Composestar.Core.Master.Master";
 	}
     
     private Version(){
     	try {
-    		String archiveFile = "composestar.jar";
+    		String archiveFile = "ComposestarCORE.jar";
     		String versionFileName = "Composestar/.version";
     		
     		File versionFile = null;

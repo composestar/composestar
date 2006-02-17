@@ -1,4 +1,5 @@
 ROOTDIR=./
+INSTALLDIR=C:\Program Files\ComposeStar
 
 include ${ROOTDIR}common.mk
 
@@ -22,18 +23,17 @@ help:
 	@echo       jar (Builds the system and generates a binary jar file)
 	@echo       src (Just builds the system)
 	@echo       install (Installs the system)
-	@echo	      runtime (Builds the runtime)
-	@echo       test (RBuilds and runs the unit tests)
+	@echo       test (Builds and runs the unit tests)
 	@echo       build_test (Builds the unit tests)
 	@echo       run_test (runs the unit tests)
 
 rebuild: clean build
 
-build: src 
+build: jar install
 
 test: build_test run_test
 	
-jar:	
+jar: src
 	-${RMDIR} jarsource ${NULL}
 	${MKDIR} jarsource
 	${COPY} "src\*.class" "jarsource\"
@@ -52,12 +52,15 @@ clean:
 	cd test && ${MAKE} clean && cd ..
 
 install:
-	@$(INSTALLFINDER)
-
-installit:
 	@echo **************************************************************
 	@echo  Installing to ${INSTALLDIR};                                 
 	@echo ************************************************************** 
-	@$(COPY) Composestar.jar "$(INSTALLDIR)binaries"
-	@$(fileCopy) src\Composestar\CTCommon\INCRE\INCRE.css "$(INSTALLDIR)"
-	@$(fileCopy) src\Composestar\CTCommon\INCRE\INCREconfig.xml "$(INSTALLDIR)"
+	@$(fileCopy) "binaries$(PATHSEP)antlr$(PATHSEP)antlr.jar" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "binaries$(PATHSEP)prolog$(PATHSEP)prolog.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)prolog"
+	@$(fileCopy) "binaries$(PATHSEP)prolog$(PATHSEP)lib.pro" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)prolog"
+	@$(fileCopy) "binaries$(PATHSEP)prolog$(PATHSEP)connector.pro" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)prolog"
+	@$(fileCopy) "ComposestarCORE.jar" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "src$(PATHSEP)Composestar$(PATHSEP)Core$(PATHSEP)INCRE$(PATHSEP)INCRE.css" "$(INSTALLDIR)"
+	@$(fileCopy) "src$(PATHSEP)Composestar$(PATHSEP)Core$(PATHSEP)INCRE$(PATHSEP)INCREconfig.xml" "$(INSTALLDIR)"
+	@$(fileCopy) "src$(PATHSEP)Composestar$(PATHSEP)Core$(PATHSEP)CKRET$(PATHSEP)SECRET.css" "$(INSTALLDIR)"
+	@$(fileCopy) "src$(PATHSEP)Composestar$(PATHSEP)Core$(PATHSEP)CKRET$(PATHSEP)filterdesc.xml" "$(INSTALLDIR)"
