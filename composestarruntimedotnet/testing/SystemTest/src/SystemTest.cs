@@ -35,7 +35,7 @@ namespace SystemTest
 
 		private String EXECUTION_AND_SAVE = "";
 		private String BUILD_LOG = "buildlog.txt";
-		private String EXECUTION_LOG = "";
+		private String EXECUTION_LOG = "runlog.txt";
 		private String CORRECT_EXECUTION_LOG = "";
 
 		public SystemTest(String inifile)
@@ -88,7 +88,7 @@ namespace SystemTest
 			Process p = new Process();
 
 			p.StartInfo.FileName= "devenv"; 
-			p.StartInfo.Arguments= "/command Macros.MyMacros.SystemTest.BuildWithComposeStarAndExit "+ example; 
+			p.StartInfo.Arguments= "/command Macros.MyMacros.SystemTest.BuildWithComposeStarAndExit \""+ example+ '\"'; 
 			p.StartInfo.CreateNoWindow= true; 
 			p.StartInfo.UseShellExecute = false;
 			try
@@ -123,7 +123,7 @@ namespace SystemTest
 		 */
 		public void executeExample(String example)
 		{
-			int index = example.LastIndexOf("\\");
+			int index = example.LastIndexOf("/");
 			
 			String binDir = ".";
 			if(index > 0)
@@ -133,8 +133,8 @@ namespace SystemTest
 
 			String exec = example.Substring(index+1);
            	Process p = new Process();
-			p.StartInfo.FileName = this.EXECUTION_AND_SAVE;  
-			p.StartInfo.Arguments= exec + " "+binDir+" "+this.EXECUTION_LOG; 
+			p.StartInfo.FileName = this.EXECUTION_AND_SAVE;
+			p.StartInfo.Arguments= exec + " \"" + binDir+ "\" \"" +binDir+'/'+this.EXECUTION_LOG + "\""; 
 			p.StartInfo.CreateNoWindow= true; 
 			p.StartInfo.RedirectStandardError= false; 
 			
@@ -143,9 +143,15 @@ namespace SystemTest
 				Console.WriteLine("running example: "+example);
 				p.WaitForExit();
 			}
-			catch (System.ComponentModel.Win32Exception wn)
+			catch (Exception wn)
 			{
-				Console.WriteLine(wn.Message);
+				String inner = "";
+				while(wn != null)
+				{
+					Console.WriteLine(inner + "Exception:" + wn.Message);
+					inner += "Inner";
+					wn = wn.InnerException;
+				}
 			}
 			
 			this.onExecutionDone(example);
@@ -276,18 +282,20 @@ namespace SystemTest
 			FileManager fm = new FileManager();
 
 			// Get bin directory of example
-			int index = example.LastIndexOf("\\");	
-			String binDir = ".\\";
+			int index = example.LastIndexOf('/');
+			
+			String binDir = ".";
 			if(index > 0)
 			{
-				binDir = example.Substring(0, index+1);
+				binDir = example.Substring(0, index);
 			}
 
+
 			// Get log of execution
-			string log = fm.getContents(binDir+this.EXECUTION_LOG);
+			string log = fm.getContents(binDir+ '/' + this.EXECUTION_LOG);
 
 			// Get the 'correct' output
-			string correct = fm.getContents(binDir+this.CORRECT_EXECUTION_LOG);
+			string correct = fm.getContents(binDir+ '/' + this.CORRECT_EXECUTION_LOG);
 
 			if(log.Equals(correct))
 			{
@@ -331,7 +339,7 @@ namespace SystemTest
 			while(! "".Equals(examplefile)) 
 			{
 				Console.WriteLine("Specified example:" + examplefile);
-				examples.Add("\""+examplefile+"\"");
+				examples.Add(examplefile);
 				exampleIndex++;
 				examplefile = ini.IniReadValue("EXAMPLES", "Example" + exampleIndex);
 			}
@@ -360,8 +368,7 @@ namespace SystemTest
 					FileInfo[] projects = exampleDir.GetDirectories()[i].GetFiles("*.sln");
 					for(int k=0;k<projects.Length;k++)
 					{
-						// added " because \Pacman Demo.sln could not be found
-						this.examples.Add("\""+projects[k].FullName+"\"");
+						this.examples.Add(projects[k].FullName);
 					}
 				}	
 			}
