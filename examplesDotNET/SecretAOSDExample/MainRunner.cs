@@ -13,8 +13,6 @@ namespace SecretAOSDExample
 			client.sentData(server,proc.sendData("Hallo?"));
 
 			client.receiveData(server,proc.receiveData(new Encryptor().textEncrypt("Hallo!")));
-
-			Console.ReadLine();
 		}
 
 		// D:\examples\SecretAOSDExample\FilterOrderingSpec.xml
