@@ -47,7 +47,7 @@ public class DotNETFilterFactory extends FilterFactory
 			for( int j = 0; j < ts.length; j++ ) 
 			{
 				String name = ts[j].get_Name();
-				boolean isFilter = ts[j].IsSubclassOf( Type.GetType( "Composestar.RuntimeCore.FLIRT.Filtertypes.CustomFilter" ) );
+				boolean isFilter = ts[j].IsSubclassOf( Class.ToType(CustomFilter.class) );
 				if( isFilter )
 				{
 					if(Debug.SHOULD_DEBUG) Debug.out( Debug.MODE_INFORMATION, "FLIRT", "Found a custom filter in class '" +name+ "'." );
