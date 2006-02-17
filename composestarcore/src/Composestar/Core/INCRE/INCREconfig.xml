@@ -1,47 +1,47 @@
 <modules>
-	<module name="COPPER" fulltype="Composestar.core.COPPER.COPPER" input="java.lang.String" enabled="true" incremental="true" summary="Parsing concerns...">	
+	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="java.lang.String" enabled="true" incremental="true" summary="Parsing concerns...">
 		<dependencies>
 			<dependency type="FILE" name="cpsfile"></dependency>
 		</dependencies>
 	</module>
-	<module name="EMBEX" fulltype="Composestar.core.EMBEX.EMBEX" phase="one" enabled="true" incremental="false" summary="Extracting embedded sources...">
+	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" phase="one" enabled="true" incremental="false" summary="Extracting embedded sources...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.dotnet.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" phase="two" enabled="true" incremental="true" summary="Harvesting type information...">
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" phase="two" enabled="true" incremental="true" summary="Harvesting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="COLLECTOR" fulltype="Composestar.dotnet.TYM.TypeCollector.DotNETCollectorRunner" phase="two" enabled="true" incremental="true" summary="Collecting type information...">
+	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" phase="two" enabled="true" incremental="true" summary="Collecting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="AttributeCollector" fulltype="Composestar.dotnet.TYM.TypeCollector.AttributeCollector" phase="two" enabled="true" incremental="false" summary="Collecting attributes...">
+	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" phase="two" enabled="true" incremental="false" summary="Collecting attributes...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="REXREF" fulltype="Composestar.core.REXREF.Main" phase="two" enabled="true" incremental="false" summary="Resolving references...">
+	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" phase="two" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="LOLA" fulltype="Composestar.dotnet.LOLA.DotNETLOLA" phase="two" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
+	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" phase="two" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
-			<type fullname="Composestar.core.CpsProgramRepository.PrimitiveConcern">
+			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
 				<field name="platformRepr"></field>
 			</type>
-			<type fullname="Composestar.core.LOLA.metamodel.UnitResult">
+			<type fullname="Composestar.Core.LOLA.metamodel.UnitResult">
 				<field name="multiRes"></field>
 				<field name="singleRes"></field>
 			</type>
 		</comparisons>		
 	</module>
-	<module name="CHKREP" fulltype="Composestar.core.CHKREP.Main" phase="two" enabled="true" incremental="false" summary="Checking repository...">
+	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" phase="two" enabled="true" incremental="false" summary="Checking repository...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="SANE" fulltype="Composestar.core.SANE.SANE" phase="two" enabled="true" incremental="false" summary="Resolving superimpositions...">
+	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" phase="two" enabled="true" incremental="false" summary="Resolving superimpositions...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="FILTH" fulltype="Composestar.core.FILTH.FILTH" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
 		<dependencies>
 			<dependency type="OBJECT" name="fmodules">
 				<path>
@@ -51,12 +51,12 @@
 			</dependency>	
 		</dependencies>	
 		<comparisons>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
 				<field name="name"></field>
 			</type>
 		</comparisons>
 	</module>
-	<module name="SIGN" fulltype="Composestar.core.SIGN.SIGN" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Computing full signatures..." >
+	<module name="SIGN" fulltype="Composestar.Core.SIGN.SIGN" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Computing full signatures..." >
 		<dependencies>
 			<dependency type="OBJECT" name="signature" store="true" lookup="true">
 				<path>
@@ -72,16 +72,16 @@
 			</dependency>
 		</dependencies>
 		<comparisons>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
 				<field name="name"></field>
 				<field name="ref"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
 				<field name="internals"></field>
 				<field name="externals"></field>
 				<field name="inputFilters"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.Internal">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal">
 				<path>
 					<method name="getName"></method>
 				</path>
@@ -90,7 +90,7 @@
 					<method name="getQualifiedName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.External">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External">
 				<path>
 					<method name="getName"></method>
 				</path>
@@ -99,23 +99,23 @@
 					<method name="getQualifiedName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
 				<field name="filterElements"></field>
 				<path>
 					<field name="type"></field>
 					<method name="getType"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
 				<field name="conditionPart"></field>
 				<field name="enableOperatorType"></field>
 				<field name="matchingPatterns"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
 				<field name="left"></field>
 				<field name="right"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
 				<field name="matchType"></field>
 				<path>
 					<method name="getTarget"></method>
@@ -126,7 +126,7 @@
 					<method name="getName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
 				<path>
 					<method name="getTarget"></method>
 					<method name="getName"></method>
@@ -136,18 +136,18 @@
 					<method name="getName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.dotnet.TYM.TypeCollector.DotNETTypes.DotNETMethodInfo">
+			<type fullname="Composestar.DotNET.TYM.TypeCollector.DotNETTypes.DotNETMethodInfo">
 				<field name="Name"></field>
 				<field name="ReturnTypeString"></field>
 				<field name="Parameters"></field>
 			</type>
-			<type fullname="Composestar.dotnet.TYM.TypeCollector.DotNETTypes.DotNETParameterInfo">
+			<type fullname="Composestar.DotNET.TYM.TypeCollector.DotNETTypes.DotNETParameterInfo">
 				<field name="Name"></field>
 				<field name="ParameterTypeString"></field>
 			</type>
 		</comparisons>
 	</module>
-	<module name="SECRET" fulltype="Composestar.core.CKRET.SECRET" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
 			<dependency type="FILE" name="SECRETConfigFile">
 				<path>
@@ -166,32 +166,32 @@
 			</dependency>
 		</dependencies>	
 		<comparisons>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
 				<field name="name"></field>
 				<field name="ref"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
 				<field name="inputFilters"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
 				<field name="filterElements"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
 				<field name="conditionPart"></field>
 				<field name="matchingPatterns"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
 				<path>
 					<method name="getCondition"></method>
 					<method name="getRef"></method>
 					<method name="getQualifiedName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
 				<field name="left"></field>
 				<field name="right"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
 				<path>
 					<method name="getTarget"></method>
 					<method name="getName"></method>
@@ -201,7 +201,7 @@
 					<method name="getName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
 				<path>
 					<method name="getTarget"></method>
 					<method name="getName"></method>
@@ -211,15 +211,15 @@
 					<method name="getName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
 				<field name="typeList"></field>
 			</type>
 		</comparisons>
 	</module>
-	<module name="ASTRA" fulltype="Composestar.dotnet.TYM.SignatureTransformer.DotNETSignatureTransformer" phase="two" enabled="true" incremental="false" summary="">
+	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" phase="two" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>	
 	</module>
-	<module name="RECOMA" fulltype="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager" input="java.lang.String" phase="two" enabled="true" incremental="true" summary="Compiling all sources...">
+	<module name="RECOMA" fulltype="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager" input="java.lang.String" phase="two" enabled="true" incremental="true" summary="Compiling all sources...">
 		<dependencies>
 			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
 				<path>
@@ -234,48 +234,48 @@
 			<dependency type="FILE" name="source"></dependency>
 			<dependency type="FILE" name="xternals">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager.externalSources"></node>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.externalSources"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="fullsignatures">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager.fullSignatures"></node>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.fullSignatures"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="ConcernsWithFMO">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager.getConcernsWithFMO"></node>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.getConcernsWithFMO"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="CastingInterceptions">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager.castingInterceptions"></node>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.castingInterceptions"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="InstantiationClasses">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager.getAfterInstantiationClasses"></node>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.getAfterInstantiationClasses"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="ConcernsWithOutputFilters">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.dotnet.TYM.SrcCompiler.DotNETRealSourceManager.getConcernsWithOutputFilters"></node>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.getConcernsWithOutputFilters"></node>
 				</path>
 			</dependency>
 		</dependencies>
 		<comparisons>
-			<type fullname="Composestar.core.CpsProgramRepository.Signature">
+			<type fullname="Composestar.Core.CpsProgramRepository.Signature">
 				<field name="methodByKey"></field>
 			</type>
-			<type fullname="Composestar.core.CpsProgramRepository.MethodWrapper">
+			<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
 				<field name="RelationType"></field>
 			</type>
 		</comparisons>
 	</module>
-	<module name="CONE" fulltype="Composestar.dotnet.CONE.DotNETCONE" phase="two" enabled="true" incremental="false" summary="">
+	<module name="CONE" fulltype="Composestar.DotNET.CONE.DotNETCONE" phase="two" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>	
 	</module>
-	<module name="ILICIT" fulltype="Composestar.dotnet.ILICIT.ILICIT" phase="two" enabled="true" incremental="false" summary="Weaving assemblies...">
+	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" phase="two" enabled="true" incremental="false" summary="Weaving assemblies...">
 		<dependencies></dependencies>	
 	</module>
 </modules>
