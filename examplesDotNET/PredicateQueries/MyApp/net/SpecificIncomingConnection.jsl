@@ -1,0 +1,48 @@
+package MyApp.net;
+
+import java.net.*;
+import java.io.IOException;
+
+public class SpecificIncomingConnection extends IncomingConnection
+{
+	public SpecificIncomingConnection()
+	{
+		this(12345);
+	}
+
+	public SpecificIncomingConnection(int port)
+	{
+		super(port);
+	}
+
+	// Override the receive method, in a way that will make it check for
+	// a specific sender (host).
+	public String receive()
+	{
+		byte[] buffer = new byte[1024];
+		DatagramPacket packet = new DatagramPacket(buffer, 1024);
+
+		/* Blocking call! */
+		try
+		{
+			boolean interested = false;
+			while (!interested)
+			{
+				peer.receive(packet);
+				// Discard all messages that where not sent by this specific party
+				if (packet.getAddress().getHostName().equals(otherHost))
+					interested = true;
+				else
+					System.err.println("Discarding message from " + 
+						packet.getAddress().getHostName() + "\nI'm only listening to messages from " + otherHost);
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return "<error>";
+		}
+		return new String(buffer, 0, 0, packet.getLength());
+
+	}
+}
