@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: cps.g,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 
 /**
@@ -170,9 +170,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     /*---------------------------------------------------------------------------*/
     inputFilters : "inputfilters"^ (generalFilterSet)* ;
 
-      generalFilterSet : singleInputFilter (SEMICOLON singleInputFilter)* ;
+      generalFilterSet : singleInputFilter (SEMICOLON singleInputFilter)*;
 
-        singleInputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? (EQUALS! LCURLY! (filterElements)? RCURLY!)?
+        singleInputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! (filterElements)? RCURLY!
         { #singleInputFilter = #([IFILTER_, "inputfilter"], #singleInputFilter );} ;
 
           actualParameters : NAME (COMMA! NAME)*
