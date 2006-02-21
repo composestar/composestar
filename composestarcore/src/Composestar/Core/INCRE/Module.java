@@ -194,7 +194,10 @@ public class Module
 				throw new ModuleException("Cannot find class "+this.fulltype, this.name);
 			}
 			catch(InvocationTargetException ex4){
-				throw new ModuleException(ex4.getCause().getMessage(), this.name);
+				if (ex4.getCause() instanceof ModuleException)
+					throw (ModuleException)ex4.getCause();
+				else
+					throw new ModuleException(ex4.getCause().getMessage(), this.name);
 			}
 			catch(IllegalAccessException ex5){
 				throw new ModuleException(ex5.getMessage(), this.name);
