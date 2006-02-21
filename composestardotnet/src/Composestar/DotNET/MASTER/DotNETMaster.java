@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.1 2006/02/16 23:11:00 pascal_durr Exp $
+ * $Id: DotNETMaster.java,v 1.2 2006/02/17 16:43:33 oohlaf Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -228,8 +228,8 @@ public class DotNETMaster extends Master  {
 				error = e.toString();
 			}
 
-			if (e.getErrorLocation() != null)
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocation());
+			if (!e.getErrorLocationFilename().equals(""))
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e.getErrorLocationLineNumber());
 			else
 				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
 			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
