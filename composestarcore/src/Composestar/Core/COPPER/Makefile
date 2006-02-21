@@ -49,4 +49,4 @@ CpsSrcLexer.java CpsSrcParser.java CpsSrcTokenTypes.java: grammar/cpssrc.g
 	${ANTLR_RULE} -o . grammar/cpssrc.g
 	
 	
-EXTRA_CLEAN= ${DEL} CpsLexer.java CpsParser.java CpsTokenTypes.* CpsTreeWalker.java CpsTreeWalkerTokenTypes.* CpsSrcLexer.java CpsSrcParser.java CpsSrcLexer.java  CpsSrcTokenTypes.* grammar/*.java grammar/*.txt grammar/*.class *~ grammar/*~ *.smap ${NULL}
+EXTRA_CLEAN=${DEL} CpsLexer.java CpsParser.java CpsTokenTypes.* CpsTreeWalker.java CpsTreeWalkerTokenTypes.* CpsSrcLexer.java CpsSrcParser.java CpsSrcLexer.java  CpsSrcTokenTypes.* *.smap ${NULL}
