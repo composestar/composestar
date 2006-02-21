@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: cpsw.g,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -157,7 +157,7 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
     /*---------------------------------------------------------------------------*/
     conditionBind : #("conditions" (singleConditionBind)*);
 
-      singleConditionBind : #(CONDITION_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addConditionBinding(namev);} conditionNameSet);
+      singleConditionBind : #(CONDITION_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addConditionBinding(namev, n.getLine());} conditionNameSet);
 
         conditionNameSet : #(CONDNAMESET_ (#(CONDNAME_ {namev.clear();} conditionName))+);
 
@@ -168,8 +168,8 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
     /*---------------------------------------------------------------------------*/
     methodBind : #("methods" (singleMethodBind)*);
 
-      singleMethodBind : #(METHOD2_ (event)? (bindCondition)? {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev);} methodNameSet);
-      //singleMethodBind : #(METHOD2_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev);} methodNameSet);
+      singleMethodBind : #(METHOD2_ (event)? (bindCondition)? {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
+      //singleMethodBind : #(METHOD2_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
 
         methodNameSet : #(METHODNAMESET_ (#(METHODNAME_ methodName))+);
 
@@ -196,16 +196,16 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
     /*---------------------------------------------------------------------------*/
     filtermoduleBind : #("filtermodules" (singleFmBind)*);
 
-      singleFmBind : #(FM_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addFilterModuleBinding(namev);}  filterModuleSet);
+      singleFmBind : #(FM_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addFilterModuleBinding(namev, n.getLine());}  filterModuleSet);
 
         filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} filterModuleElement))+);
 
-          filterModuleElement : (n:NAME {namev.add(n.getText());})+ { b.addFilterModuleName(namev); } ;
+          filterModuleElement : (n:NAME {namev.add(n.getText());})+ { b.addFilterModuleName(namev, n.getLine()); } ;
           
     /*---------------------------------------------------------------------------*/
     annotationBind : #("annotations" (singleAnnotBind)*);
 
-      singleAnnotBind : #(ANNOT_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addAnnotationBinding(namev);}  annotationSet);
+      singleAnnotBind : #(ANNOT_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addAnnotationBinding(namev, n.getLine());}  annotationSet);
 
         annotationSet : #(ANNOTSET_ (#(ANNOTELEM_ {namev.clear();} annotationElement))+);
 
