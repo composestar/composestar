@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: COPPER.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+ * $Id: COPPER.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -44,45 +44,34 @@ public class COPPER implements CTCommonModule
   
   public void parseCpsFile(String filename, int phase) throws ModuleException
   {
-  	try
-	{
-  		//1. parsing
-  		Debug.out(Debug.MODE_DEBUG,"COPPER","Parsing phase");
-		CpsASTFactory factory = new CpsASTFactory();
-  		CPSFileParser fileparser = new CPSFileParser();
-		fileparser.setCpsASTFactory(factory);
-        fileparser.parseCpsFileWithName(filename);
-
-  		if(phase == ALL_PHASES)
-  		{
-	  		//2.source extraction
-	  		Debug.out(Debug.MODE_DEBUG,"COPPER","Source extraction phase");
-	  		SourceExtractor se = new SourceExtractor();
-	  		se.extractSource();
+	  //1. parsing
+	  Debug.out(Debug.MODE_DEBUG,"COPPER","Parsing phase");
+	  CpsASTFactory factory = new CpsASTFactory();
+	  CPSFileParser fileparser = new CPSFileParser();
+	  fileparser.setCpsASTFactory(factory);
+	  fileparser.parseCpsFileWithName(filename);
 	
-	  		//3. create first version of objects
-	  		Debug.out(Debug.MODE_DEBUG,"COPPER","Parse building phase");
-	  		CpsParseTreeWalker db = new CpsParseTreeWalker();
-			db.setCpsASTFactory(factory);
-			Composestar.Core.COPPER.CpsRepositoryBuilder.filename = filename;
-	  		db.walkTree();
-	  		
-	  		//somewhere:
-	  		SyntacticSugarExpander sse = new SyntacticSugarExpander();
-	  		sse.expand();
-  		}
-    }
-  	catch (ModuleException e)
-	{
-  	  //e.printStackTrace();
-      //System.err.println(e.getMessage());
-      //System.exit(-1);
-  		throw e;
-    }
+	  if(phase == ALL_PHASES)
+	  {
+		  //2.source extraction
+		  Debug.out(Debug.MODE_DEBUG,"COPPER","Source extraction phase");
+		  SourceExtractor se = new SourceExtractor();
+		  se.extractSource();
+		  
+		  //3. create first version of objects
+		  Debug.out(Debug.MODE_DEBUG,"COPPER","Parse building phase");
+		  CpsParseTreeWalker db = new CpsParseTreeWalker();
+		  db.setCpsASTFactory(factory);
+		  Composestar.Core.COPPER.CpsRepositoryBuilder.filename = filename;
+		  db.walkTree();
+		
+		  //somewhere:
+		  SyntacticSugarExpander sse = new SyntacticSugarExpander();
+		  sse.expand();
+	  }
   }
-
   
-  public void copyOperation(String filename)
+  public void copyOperation(String filename) throws ModuleException
   {
 	  INCRE inc = INCRE.instance();
 	  int addedObjects = 0; 
@@ -158,11 +147,7 @@ public class COPPER implements CTCommonModule
 	   */
 	  if(addedObjects==0)
 	  {
-		  try 
-		  {
-			  this.parseCpsFile(filename,ALL_PHASES);	
-		  }
-		  catch (ModuleException e){ System.exit(1); }
+		  this.parseCpsFile(filename,ALL_PHASES);
 	  }
   }
 
@@ -184,16 +169,9 @@ public class COPPER implements CTCommonModule
 			}
 			else 
 			{
-				try 
-				{
-					INCRETimer copperrun = incre.getReporter().openProcess("COPPER",concern,INCRETimer.TYPE_NORMAL);
-					copper.parseCpsFile(concern,ALL_PHASES);
-					copperrun.stop();
-				}
-				catch (ModuleException e)
-				{
-					System.exit(1);
-				}
+				INCRETimer copperrun = incre.getReporter().openProcess("COPPER",concern,INCRETimer.TYPE_NORMAL);
+				copper.parseCpsFile(concern,ALL_PHASES);
+				copperrun.stop();
 			}
 		}
   }

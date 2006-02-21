@@ -5,13 +5,12 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsParseTreeWalker.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+ * $Id: CpsParseTreeWalker.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.COPPER;
 
-import Composestar.Utils.*;
 import Composestar.Core.Exception.ModuleException;
-import antlr.*;
+import antlr.RecognitionException;
 
 
 /**
@@ -32,12 +31,9 @@ public class CpsParseTreeWalker {
       walker = new CpsTreeWalker();
 	  walker.setASTFactory(factory);
       walker.concern(COPPER.getParseTree());
-    } catch (ANTLRException e) {
-        Debug.out(Debug.MODE_WARNING, "COPPER", "AST Error: " + e);
-        throw new ModuleException("AST Error: " + e, "COPPER");
-    	//Debug.out(Debug.MODE_WARNING,"COPPER","AST Error: " + e);
-        //e.printStackTrace();
-        //System.exit(-1);
+    } catch (RecognitionException r)
+    {
+		throw new ModuleException("AST Error: " + r.getMessage(), "COPPER", r.getFilename(), r.getLine());
     }
   }
 }
