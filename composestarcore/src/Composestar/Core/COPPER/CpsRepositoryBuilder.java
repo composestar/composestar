@@ -5,17 +5,13 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.18 2005/10/24 08:11:08 oohlaf Exp $
  */
 package Composestar.Core.COPPER;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
-import Composestar.Utils.*;
-import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
@@ -69,6 +65,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImp
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClassAndSubClasses;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Utils.Debug;
+import Composestar.Utils.StringConverter;
+import antlr.SemanticException;
 
 /**
  * Class to create objects from the parse tree
@@ -217,8 +218,9 @@ public class CpsRepositoryBuilder
    *
    * @param namev the names of the internals
    * @param typev the type shared by the internals (can contain a package e.g. x.y.z.int)
+   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
    */
-  public void addInternals(Vector namev, Vector typev,int lineNumber) {
+  public void addInternals(Vector namev, Vector typev,int lineNumber) throws SemanticException {
     for (int j = 0; j < namev.size(); j++) {
       Internal in = new Internal();
 		in.setDescriptionFileName(filename);
@@ -226,8 +228,10 @@ public class CpsRepositoryBuilder
       in.setName((String) namev.elementAt(j));
       in.setType(addConcernReference(typev));    //fixme: instead of recreating the concernreference here, we could just create it once and reuse for all internals
       in.setParent(fm);
-      fm.addInternal(in);
-      this.addToRepository(in);
+      if (fm.addInternal(in) )
+    	  this.addToRepository(in);
+      else
+    	  throw new SemanticException("Identifier not unique within filtermodule", in.getDescriptionFileName(), in.descriptionLineNumber, 0);
     }
   }
 
@@ -238,8 +242,9 @@ public class CpsRepositoryBuilder
 * @param namev The names of the internals
 * @param typev The type shared by the internals (can contain a package e.g. x.y.z.int)
 * @param init  Common initialization expression (can be an internal / external)
+* @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
 */
-public void addExternals(Vector namev, Vector typev, Vector init, int type,int lineNumber)
+public void addExternals(Vector namev, Vector typev, Vector init, int type,int lineNumber) throws SemanticException
 {
 	for (int j = 0; j < namev.size(); j++)
 	{
@@ -287,8 +292,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 		//String bla = null;
 		//bla.toCharArray();
 		ex.setParent(fm);
-		fm.addExternal(ex);
-		this.addToRepository(ex);
+		if (fm.addExternal(ex))
+			this.addToRepository(ex);
+		else
+    	  throw new SemanticException("Identifier not unique within filtermodule", ex.getDescriptionFileName(), ex.descriptionLineNumber, 0);
 	}
 }
 
@@ -420,8 +427,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name name of the inputfilter
    * @param type the type of the filter (e.g. a.b.c.Meta)
+   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers  
    */
-  public void addInputFilter(String name, Vector type,int lineNumber) {
+  public void addInputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = true;
     inf = new Filter();
     inf.setName(name);
@@ -430,8 +438,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     inf.setDescriptionLineNumber(lineNumber);
     inf.setTypeImplementation(addConcernReference(type));   //fixme: we do the same thing twice here basically
     addFilterType((String) type.lastElement(),lineNumber);              //
-    fm.addInputFilter(inf);
-    this.addToRepository(inf);
+    if (fm.addInputFilter(inf))
+    	this.addToRepository(inf);
+    else
+    	throw new SemanticException("Identifier not unique within filtermodule", inf.getDescriptionFileName(), inf.descriptionLineNumber, 0);
   }
 
 
@@ -753,7 +763,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     else if (filterop.equals("~>"))
       eot = new DisableOperator();
     else
-      Debug.out(Debug.MODE_WARNING,"COPPER", "Filter operation must be => or ~>");
+      Debug.out(Debug.MODE_ERROR,"COPPER", "Filter operation must be => or ~>");
     eot.setParent(fe);
 	  eot.setDescriptionFileName(filename);
 	  eot.setDescriptionLineNumber(lineNumber);
@@ -1002,8 +1012,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name name of the inputfilter
    * @param type the type of the filter (e.g. Meta)
+   * @throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers  
    */
-  public void addOutputFilter(String name, Vector type,int lineNumber) {
+  public void addOutputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = false;
     of = new Filter();
     of.setName(name);
@@ -1012,8 +1023,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     of.setParent(fm);
     of.setTypeImplementation(addConcernReference(type));
     addFilterType((String) type.lastElement(),lineNumber);
-    fm.addOutputFilter(of);
-    this.addToRepository(of);
+    if (fm.addOutputFilter(of))
+    	this.addToRepository(of);
+    else
+    	throw new SemanticException("Identifier not unique within filtermodule", of.getDescriptionFileName(), of.descriptionLineNumber, 0);
   }
 
 
@@ -1118,10 +1131,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name the selector (can include package + concern)
    */
-  public void addConditionBinding(Vector name) {
+  public void addConditionBinding(Vector name, int line) {
     cb = new ConditionBinding();
     split.splitConcernElemReference(name, true);
-    cb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem()));
+    cb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
     cb.setParent(si);
     si.addConditionBinding(cb);
     this.addToRepository(cb);
@@ -1156,10 +1169,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name the selector (can include package + concern)
    */
-  public void addMethodBinding(Vector name) {
+  public void addMethodBinding(Vector name, int line) {
     mb = new MethodBinding();
     split.splitConcernElemReference(name, true);
-    mb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem()));
+    mb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
     mb.setParent(si);
     si.addMethodBinding(mb);
     this.addToRepository(mb);
@@ -1195,14 +1208,14 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name the selector (can include package + concern)
    */
-  public void addFilterModuleBinding(Vector name) {
+  public void addFilterModuleBinding(Vector name, int line) {
     fmb = new FilterModuleBinding();
 	fmb.setDescriptionFileName(filename);
-
+	fmb.setDescriptionLineNumber(line);
 
     split.splitConcernElemReference(name, true);
 
-    fmb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem()));
+    fmb.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
     fmb.setParent(si);
     si.addFilterModuleBinding(fmb);
     this.addToRepository(fmb);
@@ -1214,8 +1227,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name Name of the fm (may include package + concern)
    */
-  public void addFilterModuleName(Vector name) {
+  public void addFilterModuleName(Vector name, int line) {
     FilterModuleReference fmref = new FilterModuleReference();
+    fmref.setDescriptionFileName(filename);
+    fmref.setDescriptionLineNumber(line);
     split.splitConcernElemReference(name, true);
     fmref.setPackage(split.getPack());
     fmref.setConcern(split.getConcern());
@@ -1229,12 +1244,12 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name the selector (can include package + concern)
    */
-  public void addAnnotationBinding(Vector name)
+  public void addAnnotationBinding(Vector name, int line)
   {
     annotBinding = new AnnotationBinding();
     
     split.splitConcernElemReference(name, true);
-    annotBinding.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem()));
+    annotBinding.setSelector(addSelectorRef(split.getPack(), split.getConcern(), split.getConcernelem(), line));
     annotBinding.setParent(si);
     si.addAnnotationBinding(annotBinding);
     this.addToRepository(annotBinding);
@@ -1400,7 +1415,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param sname Name of the selector
    * @return the created reference
    */
-  public SelectorReference addSelectorRef(Vector pack, String cname, String sname) {
+  public SelectorReference addSelectorRef(Vector pack, String cname, String sname, int line) {
     if ("self".equals(sname)) {    //fixme: should not happen here, but in the syntactic sugar part
       //      if(selfAdded == false) {
       //        //we use it, so add it to the repository
@@ -1412,6 +1427,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       //      }
     }
     SelectorReference sref = new SelectorReference();
+    sref.setDescriptionFileName(filename);
+    sref.setDescriptionLineNumber(line);
     sref.setPackage(pack);
     sref.setConcern(cname);
     sref.setName(sname);
