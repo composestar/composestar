@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModule.java,v 1.3 2006/02/16 12:51:21 composer Exp $
+ * $Id: FilterModule.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -20,7 +20,7 @@ import java.util.*;
 public class FilterModule extends DeclaredRepositoryEntity {
     public Vector conditions;
     public Vector internals;
-    public  Vector externals;
+    public Vector externals;
     public Vector methods;
     public Vector inputFilters;
     public Vector outputFilters;
@@ -104,8 +104,12 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640041
    */
   public boolean addInternal(Internal internal) {
-    internals.addElement(internal);
-    return (true);
+	  if (isIdentifierUnique(internal.getName()))
+	  {
+	    internals.addElement(internal);
+	    return true;
+	  }
+	  return false;
   }
 
 
@@ -156,8 +160,12 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640091
    */
   public boolean addExternal(External external) {
-    externals.addElement(external);
-    return (true);
+	if (isIdentifierUnique(external.getName()))
+	{
+		externals.addElement(external);
+		return true;
+	}
+	return false;
   }
 
 
@@ -260,8 +268,12 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640127
    */
   public boolean addInputFilter(Filter inputfilter) {
-    inputFilters.addElement(inputfilter);
-    return (true);
+	  if (isIdentifierUnique(inputfilter.getName()))
+	  {
+		  inputFilters.addElement(inputfilter);
+		  return true;
+	  }
+	  return false;
   }
 
 
@@ -312,8 +324,11 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640177
    */
   public boolean addOutputFilter(Filter outputfilter) {
-    outputFilters.addElement(outputfilter);
-    return (true);
+	  if (isIdentifierUnique(outputfilter.getName())) {
+		  outputFilters.addElement(outputfilter);
+		  return true;
+	  }
+	  return false;
   }
 
 
@@ -351,6 +366,21 @@ public class FilterModule extends DeclaredRepositoryEntity {
    */
   public Iterator getOutputFilterIterator() {
     return (new CPSIterator(outputFilters));
+  }
+  
+  /* Returns true when this identifier has not been used yet, within this filtermodule. */
+  
+  private boolean isIdentifierUnique(String identifier)
+  { // Not sure if methods and conditions should also be included here? - WH
+	  Vector allIdentifiers[] = {internals, externals, inputFilters, outputFilters };
+	  
+	  for (int i = 0; i < allIdentifiers.length; i++)
+	  {
+		  for (int j = 0; j < allIdentifiers[i].size(); j++)
+			  if (((DeclaredRepositoryEntity)allIdentifiers[i].elementAt(j)).getName().equals(identifier))
+				  return false;
+	  }
+	  return true;
   }
 }
 
