@@ -29,7 +29,7 @@ help:
 
 rebuild: clean build
 
-build: jar install
+build: src jar install
 
 test: build_test run_test
 	
@@ -49,7 +49,7 @@ clean:
 	${DEL} *~ ${NULL}
 	${DEL} ComposestarCORE.jar ${NULL}
 	cd src && ${MAKE} clean && cd ..
-	cd test && ${MAKE} clean && cd ..
+#	cd test && ${MAKE} clean && cd ..
 
 install:
 	@echo **************************************************************
