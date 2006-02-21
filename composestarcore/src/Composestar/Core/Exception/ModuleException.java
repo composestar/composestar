@@ -7,7 +7,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ModuleException.java,v 1.1 2006/02/13 11:16:55 pascal Exp $
+ * $Id: ModuleException.java,v 1.1 2006/02/16 23:03:51 pascal_durr Exp $
  */
 package Composestar.Core.Exception;
 
@@ -18,7 +18,9 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class ModuleException extends Exception {
   private String module;
-  private RepositoryEntity errorLocation; 
+
+  private String errorLocationFilename;
+  private int errorLocationLineNumber; 
 
   /**
    * @param message
@@ -28,15 +30,25 @@ public class ModuleException extends Exception {
   public ModuleException(String message, String module) {
     super(message);
     this.module = module;
-    this.errorLocation = null;
+    this.errorLocationLineNumber = 0;
+    this.errorLocationFilename = "";
   }
 
   public ModuleException(String message, String module, RepositoryEntity errorLocation)
   {
 	  this(message,module);
-	  this.errorLocation = errorLocation;
+	  this.errorLocationFilename = errorLocation.getDescriptionFileName();
+	  this.errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
+	  //this.errorLocation = errorLocation;
   }
 
+  public ModuleException(String message, String module, String errorLocationFilename, int errorLocationLineNumber)
+  {
+	this(message, module);
+	this.errorLocationFilename = errorLocationFilename;
+	this.errorLocationLineNumber = errorLocationLineNumber;
+  }
+  
   /**
    * the <message> will be shown on std.error.
    *
@@ -64,11 +76,17 @@ public class ModuleException extends Exception {
   public String getModule() {
     return module;
   }
-
-  public RepositoryEntity getErrorLocation()
+  
+  public String getErrorLocationFilename()
   {
-	  return errorLocation;
+	  return this.errorLocationFilename;
   }
+  
+  public int getErrorLocationLineNumber()
+  {
+	  return this.errorLocationLineNumber;
+  }
+  
   
   public String toString()
   {
