@@ -82,7 +82,7 @@ public class DoResolve {
         ref.setRef(concern);
         ref.setResolved(true);
       } else {
-        throw new ModuleException("ConcernReference " + ref.getQualifiedName() + " cannot be resolved (are you referencing a non-existent concern?)", "REXREF", ref);
+        throw new ModuleException("ConcernReference '" + ref.getQualifiedName() + "' cannot be resolved (are you referencing a non-existent concern?)", "REXREF", ref);
       }
     }
   }
@@ -103,7 +103,7 @@ public class DoResolve {
         ref.setRef(reffedConcern);
         ref.setResolved(true);
       } else {
-          throw new ModuleException("LabeledConcernReference " + ref.getName() + " cannot be resolved (are you referencing a non-existent concern?)", "REXREF", ref);
+          throw new ModuleException("LabeledConcernReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent concern?)", "REXREF", ref);
       }
     }
   }
@@ -121,7 +121,7 @@ public class DoResolve {
         ref.setRef(fm);
         ref.setResolved(true);
       } else {
-        throw new ModuleException("FilterModuleReference " + ref.getName() + " cannot be resolved (are you referencing a non-existent filtermodule?)", "REXREF", ref);
+        throw new ModuleException("FilterModuleReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent filtermodule?)", "REXREF", ref);
       }
     }
   }
@@ -205,7 +205,7 @@ public class DoResolve {
           }
         }
         if (!ref.getResolved()) {
-          throw new ModuleException("SelectorReference " + ref.getName() + " cannot be resolved (are you referencing a non-existent selector?)", "REXREF", ref);
+          throw new ModuleException("SelectorReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent selector?)", "REXREF", ref);
         }
       }
     }
@@ -372,7 +372,7 @@ public class DoResolve {
           }
         }
         if (!ref.getResolved()) {
-            throw new ModuleException("FilterReference " + ref.getName() + " cannot be resolved (are you referencing a non-existent filter?)", "REXREF", ref);
+            throw new ModuleException("FilterReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent filter?)", "REXREF", ref);
         }
       }
     }
@@ -477,7 +477,7 @@ public class DoResolve {
 	        }
         if (!ref.getResolved()) {
 			if (!ref.getName().equals("*") && !ref.getName().equals("inner"))
-                throw new ModuleException("DeclaredObjectReference " + ref.getName() + " cannot be resolved (are you referencing a non-existent object?)", "REXREF", ref);
+                throw new ModuleException("DeclaredObjectReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent object?)", "REXREF", ref);
           }
       }
   }
