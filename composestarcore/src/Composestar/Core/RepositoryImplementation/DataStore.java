@@ -5,14 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DataStore.java,v 1.3 2006/02/16 12:51:22 composer Exp $
+ * $Id: DataStore.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
  */
 /**
  *   The Repository part of the Compose* project.
  *   It supports reading and writing objects.
  *   It allows for basic store and restore operations
  *   @author Pascal DŸrr
- *   @version $Id: DataStore.java,v 1.3 2006/02/16 12:51:22 composer Exp $
+ *   @version $Id: DataStore.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -381,6 +381,22 @@ public class DataStore implements Serializable, Cloneable {
       }
     }
     return list.iterator();
+  }
+  
+  /**
+   * @param theclass
+   * @return java.util.ArrayList
+   */
+  public ArrayList getListOfAllInstances(Class theclass){
+      java.util.Enumeration enumer = this.map.values.elements();
+      ArrayList list = new ArrayList();
+      while (enumer.hasMoreElements()) {
+          Object obj = enumer.nextElement();
+          if (theclass.isInstance(obj)) {
+              list.add(obj);
+          }
+      }
+      return list;
   }
 
   /**
