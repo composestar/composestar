@@ -4,19 +4,30 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 public class DynamicNode extends Node
 {
-	public DynamicNode(String objectref)
+	public DynamicNode(String ref)
 	{
-		super(objectref);
+		super(ref);
 	}
-
+ 
+	/**
+	 * @return the referenced dynamic object of input
+	 * @param Object obj
+	 */
 	public Object visit(Object obj)
 	{
-		// return the dynamic object
 		if(obj instanceof RepositoryEntity)
 		{
-			String objtype = ((RepositoryEntity)obj).getDynObject(objectref).getClass().getName();
-			return ((RepositoryEntity)obj).getDynObject(objectref);
+			String objtype = ((RepositoryEntity)obj).getDynObject(reference).getClass().getName();
+			return ((RepositoryEntity)obj).getDynObject(reference);
 		}
-		else return null;
+		else 
+			return null;
+	}
+	
+	/**
+	 * @return an unique id for a referenced dynamic object
+	 */
+	public String getUniqueID(Object obj){
+		return obj.hashCode()+"."+this.reference;
 	}
 }

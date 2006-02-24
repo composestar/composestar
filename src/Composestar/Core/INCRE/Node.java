@@ -4,28 +4,24 @@ import java.io.Serializable;
 
 import Composestar.Core.Exception.ModuleException;
 
-public class Node implements Serializable
+public abstract class Node implements Serializable
 {
-	protected String objectref = "";
+	// Serves as a reference to a field
+	// dynamic object, method or configuration
+	protected String reference = "";
 
-	public Node(String objectref)
+	public Node(String ref)
 	{
-		this.objectref = objectref;
-	}
-
-	public String getObjectRef()
-	{
-		return objectref;
+		this.reference = ref;
 	}
 
-	public Object visit(Object obj) throws ModuleException
+	public String getReference()
 	{
-		return null;
+		return this.reference;
 	}
-	
-	public String getUniqueID(Object obj){
-		return "";
-	}
+
+	// Gathers the referenced object (reference) from the input object (obj)
+	abstract Object visit(Object obj) throws ModuleException;
+		 
+	abstract String getUniqueID(Object obj);
 }
-
-	

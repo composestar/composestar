@@ -23,13 +23,13 @@
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" phase="two" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" phase="two" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
+	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" phase="two" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
 			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
 				<field name="platformRepr"></field>
 			</type>
-			<type fullname="Composestar.Core.LOLA.metamodel.UnitResult">
+			<type fullname="Composestar.Core.LAMA.UnitResult">
 				<field name="multiRes"></field>
 				<field name="singleRes"></field>
 			</type>
@@ -41,8 +41,13 @@
 	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" phase="two" enabled="true" incremental="false" summary="Resolving superimpositions...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
 		<dependencies>
+			<dependency type="FILE" name="specfile">
+				<path>
+					<node type="CONFIG" nodevalue="FILTH_INPUT"></node>
+				</path>
+			</dependency>
 			<dependency type="OBJECT" name="fmodules">
 				<path>
 					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
@@ -56,7 +61,7 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="SIGN" fulltype="Composestar.Core.SIGN.SIGN" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Computing full signatures..." >
+	<module name="SIGN" fulltype="Composestar.Core.SIGN.SIGN" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Computing full signatures..." >
 		<dependencies>
 			<dependency type="OBJECT" name="signature" store="true" lookup="true">
 				<path>
@@ -136,25 +141,25 @@
 					<method name="getName"></method>
 				</path>
 			</type>
-			<type fullname="Composestar.DotNET.TYM.TypeCollector.DotNETTypes.DotNETMethodInfo">
+			<type fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
 				<field name="Name"></field>
 				<field name="ReturnTypeString"></field>
 				<field name="Parameters"></field>
-			</type>
-			<type fullname="Composestar.DotNET.TYM.TypeCollector.DotNETTypes.DotNETParameterInfo">
+			</type> 
+			<type fullname="Composestar.DotNET.LAMA.DotNETParameterInfo">
 				<field name="Name"></field>
 				<field name="ParameterTypeString"></field>
 			</type>
 		</comparisons>
 	</module>
-	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.CTCommon.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
 			<dependency type="FILE" name="SECRETConfigFile">
 				<path>
 					<node type="CONFIG" nodevalue="SECRETConfigFile"></node>
 				</path>
 			</dependency>
-			<dependency type="OBJECT" name="SECRETMode">
+			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
 				<path>
 					<node type="CONFIG" nodevalue="SECRETMode"></node>
 				</path>
@@ -235,6 +240,11 @@
 			<dependency type="FILE" name="xternals">
 				<path>
 					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.externalSources"></node>
+				</path>
+			</dependency>
+			<dependency type="FILE" name="CompileLibsDependencies">
+				<path>
+					<node type="CONFIG" nodevalue="Dependencies"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="fullsignatures">
