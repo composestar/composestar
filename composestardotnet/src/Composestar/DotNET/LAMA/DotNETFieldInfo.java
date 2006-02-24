@@ -11,12 +11,12 @@
 package Composestar.DotNET.LAMA;
 
 import Composestar.Core.LAMA.*;
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 import Composestar.Core.LAMA.FieldInfo;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,14 +28,14 @@ import java.io.ObjectOutputStream;
  * See documentation of .NET System.Reflection.FieldInfo (on MSDN).
  */
 
-public class DotNETFieldInfo extends FieldInfo implements SerializableRepositoryEntity
+public class DotNETFieldInfo extends FieldInfo
 {
   /**
 	 * 
 	 */
-	private static final long serialVersionUID = 235924601234730641L;
+  private static final long serialVersionUID = 235924601234730641L;
 	
-public int HashCode;                // .NET hashcode
+  public int HashCode;                // .NET hashcode
   public String FieldTypeString;      // FQN of field type (class name incl. package) 
   private DotNETType FieldType;        // The actual .NET type
   public boolean IsAssembly;          // Visible on Assembly level?
@@ -50,16 +50,12 @@ public int HashCode;                // .NET hashcode
   public boolean IsPublic;            // Public field?
   public boolean IsStatic;            // Static field ('global')?
   public boolean IsDeclaredHere;	  // Declared in this Type, or inherited from parent type?
-  
-  
-  // moved to supertype FieldInfo 
-  //public String Name;                 // Field name
-  
+    
   private DotNETType Parent;           // Type that this field belongs to.
   
   public DotNETFieldInfo()
   {
-    UnitRegister.instance().registerLanguageUnit(this);    
+    super();
   }
   
   public int getHashCode()
@@ -213,19 +209,10 @@ public int HashCode;                // .NET hashcode
     IsDeclaredHere = isDeclaredHere;
   }
   
-  /****** Implementation of Language Unit interface **********/  
+  /** Stuff for LOLA**/  
   
   /* (non-Javadoc)
-   * @see Composestar.CTCommon.LogicLang.metamodel.LanguageUnit#getUnitName()
-   */
-  //move to supertype FieldInfo
-  /*public String getUnitName()
-  {
-    return Name;
-  }*/
-
-  /* (non-Javadoc)
-   * @see Composestar.CTCommon.LogicLang.metamodel.LanguageUnit#getUnitRelation(java.lang.String)
+   * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
    */
   public UnitResult getUnitRelation(String argumentName)
   {
@@ -250,25 +237,7 @@ public int HashCode;                // .NET hashcode
   }
 
   /* (non-Javadoc)
-   * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitType()
-   */
-  //moved to supertype FieldInfo
-  /*public String getUnitType()
-  {
-    return "Field";
-  }*/
-
-  /* (non-Javadoc)
-   * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#hasAttribute(java.lang.String)
-   */
-  //moved to supertype FieldInfo
-  /*public boolean hasUnitAttribute(String attribute)
-  {
-    return getUnitAttributes().contains(attribute);
-  }*/
-
-  /* (non-Javadoc)
-   * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitAttributes()
+   * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
    */
   public Collection getUnitAttributes()
   {
@@ -300,7 +269,6 @@ public int HashCode;                // .NET hashcode
 		IsPublic = in.readBoolean();
 		IsStatic = in.readBoolean();
 		IsDeclaredHere = in.readBoolean();
-		Name = in.readUTF();
 		Parent = (DotNETType)in.readObject();
 	}
 	 
@@ -321,7 +289,7 @@ public int HashCode;                // .NET hashcode
 		out.writeBoolean(IsPublic);
 		out.writeBoolean(IsStatic);
 		out.writeBoolean(IsDeclaredHere);
-		out.writeUTF(Name);
 		out.writeObject(Parent);
 	}
 }
+

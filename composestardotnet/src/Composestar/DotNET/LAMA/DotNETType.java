@@ -5,12 +5,11 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETType.java,v 1.2 2006/02/16 12:58:05 composer Exp $
+ * $Id: DotNETType.java,v 1.5 2006/02/01 15:29:38 composer Exp $
  */
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LOLA.metamodel.*;
 import Composestar.Core.LAMA.*;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,8 +32,7 @@ import java.io.ObjectOutputStream;
  * note that the name may be redundant, but should be consistent with the name of 
  * the concern.
  */
-public class DotNETType extends Type 
-{
+public class DotNETType extends Type {
     /**
 	 * 
 	 */
@@ -53,11 +52,6 @@ public class DotNETType extends Type
     public boolean IsMarshalByRef;
     public boolean IsNestedAssembly;
     public boolean IsNestedFamOrAssem;
-    
-    //moved to supertype Type
-    /*public boolean IsNestedPrivate;
-    public boolean IsNestedPublic;*/
-    
     public boolean IsPointer;
     public boolean IsPrimitive;
     public boolean IsPublic;
@@ -66,8 +60,6 @@ public class DotNETType extends Type
     public boolean IsValueType;
     public boolean IsNotPublic;
     
-    //moved to supertype Type: public ArrayList Methods;
-    
     public ArrayList ImplementedInterfaceNames; // List of Strings
     private ArrayList ImplementedInterfaces; // List of DotNETTypes
     public DotNETType theDotNETType;
@@ -75,9 +67,7 @@ public class DotNETType extends Type
     public String NameSpace;
     public String AssemblyQualifiedName;
     private DotNETType BaseType;
-    // moved to supertype Type: public String FullName;
     public DotNETModule Module;
-    // moved to supertype: public String Name;
     private DotNETType UnderlyingType;
     public String UnderlyingTypeString;
     public String BaseTypeString;
@@ -99,8 +89,6 @@ public class DotNETType extends Type
     public DotNETType()
     {
     	super();
-        //Methods = new ArrayList();
-        Fields = new ArrayList();
         ImplementedInterfaceNames = new ArrayList();
         ImplementedInterfaces = null;
         childTypes = new HashSet();
@@ -127,7 +115,7 @@ public class DotNETType extends Type
     }
     
     /**
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETType
+     * @return Composestar.dotnet.LAMA.DotNETType
      * @roseuid 401B84CF01D9
      */
     public DotNETType baseType() {
@@ -145,24 +133,6 @@ public class DotNETType extends Type
     public void setBaseType(String type) {
         BaseTypeString = type;     
     }
-    
-    /**
-     * @return java.lang.String
-     * @roseuid 401B84CF01DA
-     */
-    //moved to supertype Type
-    /*public String fullName() {
-        return FullName;     
-    }*/
-    
-    /**
-     * @param name
-     * @roseuid 4029F62E03B6
-     */
-    //moved to supertype Type
-    /*public void setFullName(String name) {
-        FullName = name;     
-    }*/
     
     /**
      * @return boolean
@@ -389,30 +359,12 @@ public class DotNETType extends Type
     }
     
     /**
-     * @return boolean
-     * @roseuid 401B84CF01E9
-     */
-    //moved to supertype Type
-    /*public boolean isNestedPrivate() {
-        return IsNestedPrivate;     
-    }*/
-    
-    /**
      * @param isNested
      * @roseuid 4029F794018A
      */
     public void setIsNestedPrivate(boolean isNested) {
         IsNestedPrivate = isNested;     
     }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01EA
-     */
-    //moved to sypertype Type
-    /*public boolean isNestedPublic() {
-        return IsNestedPublic;     
-    }*/
     
     /**
      * @param isNested
@@ -535,7 +487,7 @@ public class DotNETType extends Type
     }
     
     /**
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETModule
+     * @return Composestar.DotNET.LAMA.DotNETModule
      * @roseuid 401B84CF01F2
      */
     public DotNETModule module() {
@@ -549,15 +501,6 @@ public class DotNETType extends Type
     public void setModule(DotNETModule mod) {
         Module = mod;     
     }
-    
-    /**
-     * @return java.lang.String
-     * @roseuid 401B84CF01F3
-     */
-    //moved to supertype Type
-    /*public String name() {
-        return Name;     
-    }*/
     
     /**
      * @param name
@@ -584,7 +527,7 @@ public class DotNETType extends Type
     }
     
     /**
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETType
+     * @return Composestar.DotNET.LAMA.DotNETType
      * @roseuid 401B84CF01F5
      */
     public DotNETType underlyingSystemType() {
@@ -605,7 +548,7 @@ public class DotNETType extends Type
     
     /**
      * @param types
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETMethodInfo
+     * @return Composestar.DotNET.LAMA.DotNETMethodInfo
      * @roseuid 401B84CF01F6
      */
     public DotNETMethodInfo getConstructor(String[] types) {
@@ -651,35 +594,6 @@ public class DotNETType extends Type
         HashCode = code;     
     }
     
-    /**
-     * @param name
-     * @param types
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETMethodInfo
-     * @roseuid 401B84CF01F9
-     */
-    //moved to supertype Type
-    /*public DotNETMethodInfo getMethod(String name, String[] types) {
-        DotNETMethodInfo method = null;
-        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); ) 
-        {
-        	method = (DotNETMethodInfo)iter.next();
-            // if same name && param length
-            if( method.name().equals( name ) && method.hasParameters( types ) ) {
-                return method;
-            }
-        }
-        return null;     
-    }*/
-    
-    /**
-     * @return java.util.List
-     * @roseuid 401B84CF01FA
-     */
-    //moved to supertype Type
-    /*public List getMethods() {
-        return Methods;     
-    }*/
-
     public DotNETFieldInfo getField(String name) {
       DotNETFieldInfo field = null;
       for (ListIterator iter = Fields.listIterator();
@@ -804,7 +718,7 @@ public class DotNETType extends Type
 			return this.FullName;
     }
     
-    /****** Implementation of Language Unit interface **********/
+    /** Stuff for LOLA **/
     
     private HashSet toHashSet(Collection c)
     {
@@ -838,12 +752,6 @@ public class DotNETType extends Type
       return out;
     }
     
-    //moved to supertype Type
-    /*public String getUnitName()
-    {
-      return FullName;
-    }*/
-
     public UnitResult getUnitRelationForClass(String argumentName)
     {
       if (argumentName.equals("ParentNamespace"))
@@ -997,7 +905,7 @@ public class DotNETType extends Type
     }
     
     /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitType()
+     * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
      */
     public String getUnitType()
     {
@@ -1011,20 +919,6 @@ public class DotNETType extends Type
 
     /** Stuff for annotations **/
     
-    //moved to supertype Type
-	//private List attributeInstances = new ArrayList();
-    
-    //moved to supertype Type
-    /*public void addAttributeInstance(DotNETAttribute attribute)
-    {
-    	this.attributeInstances.add(attribute);
-    }
-    
-    public void removeAttributeInstance(DotNETAttribute attribute)
-    {
-    	this.attributeInstances.remove(attribute);
-    }*/
-
     // A class is an annotation (attribute) type, if it inherits from System.Attribute.
     public boolean isAttribute()
     {
@@ -1039,23 +933,8 @@ public class DotNETType extends Type
     	//return (0!=attributeInstances.size());
     }
     
-    //moved to supertype Type
-	/*public List getAttributeInstances()
-	{
-		return this.attributeInstances;
-	}*/
-
     /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#hasUnitAttribute(java.lang.String)
-     */
-    //moved to supertype Type
-    /*public boolean hasUnitAttribute(String attribute)
-    {
-      return getUnitAttributes().contains(attribute);
-    }*/
-
-    /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitAttributes()
+     * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
      */
     public Collection getUnitAttributes()
     {
@@ -1121,8 +1000,6 @@ public class DotNETType extends Type
 		IsMarshalByRef = in.readBoolean();
 		IsNestedAssembly = in.readBoolean();
 		IsNestedFamOrAssem = in.readBoolean();
-		IsNestedPrivate = in.readBoolean();
-		IsNestedPublic = in.readBoolean();
 		IsPointer = in.readBoolean();
 		IsPrimitive = in.readBoolean();
 		IsPublic = in.readBoolean();
@@ -1130,8 +1007,6 @@ public class DotNETType extends Type
 		IsSerializable = in.readBoolean();
 		IsValueType = in.readBoolean();
 		IsNotPublic = in.readBoolean();
-		Methods = (ArrayList)in.readObject();
-		Fields = (ArrayList)in.readObject();
 		ImplementedInterfaceNames = (ArrayList)in.readObject();
 		theDotNETType = (DotNETType)in.readObject();
 		Assembly = (DotNETModule)in.readObject();
@@ -1139,9 +1014,7 @@ public class DotNETType extends Type
 		if(NameSpace.equals(""))
 			NameSpace = null;
 		AssemblyQualifiedName = in.readUTF();
-		FullName = in.readUTF();	
 		Module = (DotNETModule)in.readObject();
-		Name = in.readUTF();
 		UnderlyingTypeString = in.readUTF();
 		BaseTypeString = in.readUTF();
 		if(BaseTypeString.equals(""))
@@ -1170,8 +1043,6 @@ public class DotNETType extends Type
 		out.writeBoolean(IsMarshalByRef);
 		out.writeBoolean(IsNestedAssembly);
 		out.writeBoolean(IsNestedFamOrAssem);
-		out.writeBoolean(IsNestedPrivate);
-		out.writeBoolean(IsNestedPublic);
 		out.writeBoolean(IsPointer);
 		out.writeBoolean(IsPrimitive);
 		out.writeBoolean(IsPublic);
@@ -1179,8 +1050,6 @@ public class DotNETType extends Type
 		out.writeBoolean(IsSerializable);
 		out.writeBoolean(IsValueType);
 		out.writeBoolean(IsNotPublic);
-		out.writeObject(Methods);
-		out.writeObject(Fields);
 		out.writeObject(ImplementedInterfaceNames);
 		out.writeObject(theDotNETType);
 		out.writeObject(Assembly);
@@ -1189,9 +1058,7 @@ public class DotNETType extends Type
 		else
 			out.writeUTF("");
 		out.writeUTF(AssemblyQualifiedName);
-		out.writeUTF(FullName);	
 		out.writeObject(Module);
-		out.writeUTF(Name);
 		out.writeUTF(UnderlyingTypeString);
 			
 		if(BaseTypeString!=null)

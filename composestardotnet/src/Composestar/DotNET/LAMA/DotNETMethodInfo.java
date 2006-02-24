@@ -5,20 +5,17 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMethodInfo.java,v 1.3 2006/02/16 12:58:05 composer Exp $
+ * $Id: DotNETMethodInfo.java,v 1.3 2006/02/01 15:29:38 composer Exp $
  */
 
-//
 package Composestar.DotNET.LAMA;
 
 import Composestar.Core.LAMA.*;
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,29 +26,33 @@ import java.io.ObjectOutputStream;
  * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
  * fsystemreflectionmethodinfoclasstopic.asp
  */
-public class DotNETMethodInfo extends MethodInfo /*implements SerializableRepositoryEntity, LanguageUnit*/ 
-{
+public class DotNETMethodInfo extends MethodInfo {
     /**
 	 * 
 	 */
+	private static final long serialVersionUID = -1303615818393508196L;
 	public int CallingConvention;
     private int HashCode;
-    // moved to supertype Method: public String Name;
-    
-    //moved to supertype Method: public String ReturnTypeString;
-    //moved to supertype Method: private DotNETType ReturnType;
-    //moved to supertype Method: private ArrayList Parameters;
-    //moved to supertype Method: private DotNETType Parent;
-    
+    public boolean IsAbstract;
+    public boolean IsAssembly;
+    public boolean IsConstructor;
+    public boolean IsFamily;
+    public boolean IsFamilyAndAssembly;
+    public boolean IsFamilyOrAssembly;
+    public boolean IsFinal;
+    public boolean IsHideBySig;
+    public boolean IsPrivate;
+    public boolean IsPublic;
+    public boolean IsStatic;
+    public boolean IsVirtual;
+    public boolean IsDeclaredHere;
+        
     /**
      * @roseuid 401B84CF0212
      */
-    public DotNETMethodInfo() {
-       
-    	//moved to supertype Method
-    	//Parameters = new ArrayList();
-    	
-    	UnitRegister.instance().registerLanguageUnit(this);       
+    public DotNETMethodInfo() 
+	{
+    	super();
     }
     
     /**
@@ -166,7 +167,21 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
        IsFamilyOrAssembly = isFamOrAsm;     
     }
     
-
+    /**
+     * @return boolean
+     * @roseuid 401B84CF0208
+     */
+    public boolean isFinal() {
+       return IsFinal;     
+    }
+    
+    /**
+     * @param isFinal
+     * @roseuid 402A01FB02A1
+     */
+    public void setIsFinal(boolean isFinal) {
+       IsFinal = isFinal;     
+    }
     
     /**
      * @return boolean
@@ -183,40 +198,71 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
     public void setIsHideBySig(boolean isHide) {
        IsHideBySig = isHide;     
     }
-
     
     /**
-     * @return java.lang.String
-     * @roseuid 401B84CF020E
+     * @return boolean
+     * @roseuid 401B84CF020A
      */
-    //moved to supertype Method
-    /*public String name() {
-    return Name;     
-    }*/
+    public boolean isPrivate() {
+    return IsPrivate;     
+    }
     
     /**
-     * @param name
-     * @roseuid 402A028601CF
+     * @param isPrivate
+     * @roseuid 402A0240034B
      */
-    
-    //moved to supertype Method
-    /*public void setName(String name) {
-    		Name = name;     
-    }*/
+    public void setIsprivate(boolean isPrivate) {
+       IsPrivate = isPrivate;     
+    }
     
     /**
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETType
-     * @roseuid 401B84CF020F
+     * @return boolean
+     * @roseuid 401B84CF020B
      */
-    //moved to supertype MethodInfo
-    /*public DotNETType returnType() {
-        if( ReturnType == null ) {
-            TypeMap map = TypeMap.instance();
-			ReturnType = map.getType( ReturnTypeString );
-        }
-        return ReturnType;     
-    }*/
+    public boolean isPublic() {
+    return IsPublic;     
+    }
     
+    /**
+     * @param isPublic
+     * @roseuid 402A024C0280
+     */
+    public void setIsPublic(boolean isPublic) {
+       IsPublic = isPublic;     
+    }
+    
+    /**
+     * @return boolean
+     * @roseuid 401B84CF020C
+     */
+    public boolean isStatic() {
+    return IsStatic;     
+    }
+    
+    /**
+     * @param isStatic
+     * @roseuid 402A026E02BB
+     */
+    public void setIsStatic(boolean isStatic) {
+       IsStatic = isStatic;     
+    }
+    
+    /**
+     * @return boolean
+     * @roseuid 401B84CF020D
+     */
+    public boolean isVirtual() {
+    return IsVirtual;     
+    }
+    
+    /**
+     * @param isVirtual
+     * @roseuid 402A027A03E4
+     */
+    public void setIsVirtual(boolean isVirtual) {
+       IsVirtual = isVirtual;     
+    }
+            
     /**
      * @param type
      * @roseuid 402A02D60328
@@ -242,15 +288,6 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
     }
     
     /**
-     * @return java.util.List
-     * @roseuid 401B84CF0211
-     */
-    //moved to supertype Parameters
-    /*public List getParameters() {
-    	return Parameters;     
-    }*/
-    
-    /**
      * @param param
      * @roseuid 402A032A02F7
      */
@@ -260,25 +297,6 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
     }
     
     /**
-     * @param types Check if the methods has these types
-     * @return true if there is a signature match. False otherwise
-     * @roseuid 402C9CE401C5
-     */
-    //moved to supertype Method
-    /*public boolean hasParameters(String[] types) {
-     return true;
-    }*/
-    
-    /**
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETType
-     * @roseuid 4050689303BD
-     */
-    //moved to supertype Method
-    /*public DotNETType parent() {
-     	return Parent;     
-    }*/
-    
-    /**
      * @param parent
      * @roseuid 405068A401B0
      */
@@ -286,49 +304,46 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
      	Parent = parent;     
     }
     
-    /**
-     * This class represents the CallingConventions Enum in the .NET framework.
-     */
+    /** Stuff for LOLA**/
     
-	/*
-	public class DotNETCallingConventions {
-        public static final int Standard = 1;
-        public static final int VarArgs = 2;
-        public static final int Any = 3;
-        public static final int HasThis = 32;
-        public static final int ExplicitThis = 64;
-        
-        /**
-         * @roseuid 402A33A201F8
-         */
-        /*
-		public DotNETCallingConventions() {
-         
-        }
+    private HashSet toHashSet(Collection c)
+    {
+      HashSet result = new HashSet();
+      Iterator iter = c.iterator();
+      while (iter.hasNext())
+        result.add(iter.next());
+      return result;
     }
-	*/
-
-
     
     /* (non-Javadoc)
-     * @see Composestar.CTCommon.LogicLang.metamodel.LanguageUnit#getUnitName()
+     * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
      */
-    
-    //moved to supertype MethodInfo
-    /*public String getUnitName()
+    public UnitResult getUnitRelation(String argumentName)
     {
-      return Name;
-    }*/
+      if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class"))
+        return new UnitResult(Parent);
+      else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface"))
+        return new UnitResult(Parent);      
+      else if (argumentName.equals("ChildParameters"))
+        return new UnitResult(toHashSet(Parameters));
+      else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class"))
+        return new UnitResult(returnType());
+      else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface"))
+        return new UnitResult(returnType());
+      else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation"))
+          return new UnitResult(returnType());
+      else if (argumentName.equals("Annotations"))
+      {
+        Iterator i = getAnnotations().iterator();
+        HashSet res = new HashSet();
+        while (i.hasNext())
+          res.add(((DotNETAttribute)i.next()).getType());
+        return new UnitResult(res);
+      }        
+      
+      return null;
+    }
 
-    /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitType()
-     */
-    //moved to supertype MethodInfo
-    /*public String getUnitType()
-    {
-      return "Method";
-    }*/    
-	
     public boolean isDeclaredHere()
     {
       return IsDeclaredHere;
@@ -340,13 +355,23 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
     }
 
     /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#hasAttribute(java.lang.String)
+     * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
      */
-    //moved to supertype MethodInfo
-    /*public boolean hasUnitAttribute(String attribute)
+    public Collection getUnitAttributes()
     {
-      return getUnitAttributes().contains(attribute);
-    }*/
+      HashSet result = new HashSet();
+      if (isPublic())
+        result.add("public");
+      if (isPrivate())
+        result.add("private");
+      /*if (isProtected())
+        result.add("protected");*/
+      if (isStatic())
+        result.add("static");
+      if (isFinal())
+        result.add("final");
+      return result;
+    }
 
 	/**
 	 * Custom deserialization of this object
@@ -368,10 +393,6 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
 		IsStatic = in.readBoolean();
 		IsVirtual = in.readBoolean();
 		IsDeclaredHere = in.readBoolean();
-		Name = in.readUTF();
-		ReturnTypeString = in.readUTF();
-		Parameters = (ArrayList)in.readObject();   
-		Parent = (DotNETType)in.readObject();
 	}
 	 
 	/**
@@ -394,9 +415,5 @@ public class DotNETMethodInfo extends MethodInfo /*implements SerializableReposi
 		out.writeBoolean(IsStatic);
 		out.writeBoolean(IsVirtual);
 		out.writeBoolean(IsDeclaredHere);
-		out.writeUTF(Name);
-		out.writeUTF(ReturnTypeString);
-		out.writeObject(Parameters);
-		out.writeObject(Parent);
 	}
 }

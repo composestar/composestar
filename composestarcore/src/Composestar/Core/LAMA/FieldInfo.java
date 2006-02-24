@@ -2,7 +2,7 @@ package Composestar.Core.LAMA;
 
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
-public abstract class FieldInfo extends ProgramElement{
+public abstract class FieldInfo extends ProgramElement implements SerializableRepositoryEntity{
 
 	public String Name;
 
@@ -22,7 +22,7 @@ public abstract class FieldInfo extends ProgramElement{
 	}
 	
 	/* (non-Javadoc)
-	 * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitType()
+	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
 	 */
 	public String getUnitType()
 	{
@@ -30,7 +30,7 @@ public abstract class FieldInfo extends ProgramElement{
 	}
 	
 	/* (non-Javadoc)
-	 * @see Composestar.Core.LAMA.ProgramElement#hasAttribute(java.lang.String)
+	 * @see Composestar.core.LAMA.ProgramElement#hasAttribute(java.lang.String)
 	 */
 	public boolean hasUnitAttribute(String attribute)
 	{

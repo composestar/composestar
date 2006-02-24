@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETParameterInfo.java,v 1.2 2006/02/16 12:58:05 composer Exp $
+ * $Id: DotNETParameterInfo.java,v 1.2 2006/02/01 13:33:43 composer Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -15,6 +15,7 @@ import Composestar.Core.LAMA.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,14 +27,12 @@ import java.io.ObjectOutputStream;
  * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
  * fsystemreflectionparameterinfoclasstopic.asp
  */
-public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit*/ 
-{
+public class DotNETParameterInfo extends ParameterInfo {
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = -527486572514730318L;
 	private int HashCode;
-    //moved to supertype ParameterInfo: public String Name;
     public int Position;
     public boolean IsIn;
     public boolean IsLcid;
@@ -41,18 +40,15 @@ public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit
     public boolean IsOut;
     public boolean IsRetval;
     
-    //moved to superType Parameter
-    /*public String ParameterTypeString;
-    
-    private DotNETType ParameterType;*/
     public DotNETMethodInfo Parent;
     
     /**
      * @roseuid 401B84CF0220
      */
-    public DotNETParameterInfo() {
-      UnitRegister.instance().registerLanguageUnit(this);
-    }
+    public DotNETParameterInfo() 
+	{      
+		super();
+	}
     
     /**
      * @return boolean
@@ -135,44 +131,12 @@ public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit
     }
     
     /**
-     * @return java.lang.String
-     * @roseuid 401B84CF021C
-     */
-    //moved to supertype ParameterInfo
-    /*public String name() {
-        return Name;     
-    }*/
-    
-    /**
      * @param name
      * @roseuid 402A072800EE
      */
     public void setName(String name) {
         Name = name;     
     }
-    
-    /**
-     * @return Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes.DotNETType
-     * @roseuid 401B84CF021D
-     */
-    //moved to supertype ParameterInfo
-    /*public DotNETType parameterType() {
-      if( ParameterType == null ) {
-            TypeMap map = TypeMap.instance();
-            ParameterType = map.getType( ParameterTypeString );
-		}
-        return ParameterType;     
-    }*/
-    
-    /**
-     * @param paramType
-     * @roseuid 402A0736033D
-     */
-    //moved to supertype 
-    /*
-    public void setParameterType(String paramType) {
-        ParameterTypeString = paramType;     
-    }*/
     
     /**
      * @return int
@@ -222,19 +186,10 @@ public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit
       Parent = parent;
     }
     
-    /****** Implementation of Language Unit interface **********/  
+    /** Stuff for LOLA **/  
     
     /* (non-Javadoc)
-     * @see Composestar.CTCommon.LogicLang.metamodel.LanguageUnit#getUnitName()
-     */
-    //moved to supertype ParameterInfo
-    /*public String getUnitName()
-    {
-      return Name;
-    }*/
-
-    /* (non-Javadoc)
-     * @see Composestar.CTCommon.LogicLang.metamodel.LanguageUnit#getUnitRelation(java.lang.String)
+     * @see Composestar.Core.LAMA.ProgramElement#getUnitRelation(java.lang.String)
      */
     public UnitResult getUnitRelation(String argumentName)
     {
@@ -259,25 +214,7 @@ public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit
     }
 
     /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitType()
-     */
-    //moved to supertype ParameterInfo
-    /*public String getUnitType()
-    {
-      return "Parameter";
-    }*/
-
-    /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#hasUnitAttribute(java.lang.String)
-     */
-    //move to supertype ParameterInfo
-    /*public boolean hasUnitAttribute(String attribute)
-    {
-      return false;
-    }*/
-
-    /* (non-Javadoc)
-     * @see Composestar.CTCommon.LOLA.metamodel.LanguageUnit#getUnitAttributes()
+     * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
      */
     public Collection getUnitAttributes()
     {
@@ -290,14 +227,12 @@ public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		HashCode = in.readInt();
-		Name = in.readUTF();
 		Position = in.readInt();
 		IsIn = in.readBoolean();
 		IsLcid = in.readBoolean();
 		IsOptional = in.readBoolean();
 		IsOut = in.readBoolean();
 		IsRetval = in.readBoolean();
-		ParameterTypeString = in.readUTF();
 		Parent = (DotNETMethodInfo)in.readObject();
 	}
 	 
@@ -307,14 +242,12 @@ public class DotNETParameterInfo extends ParameterInfo /*implements LanguageUnit
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);
-		out.writeUTF(Name);
 		out.writeInt(Position);
 		out.writeBoolean(IsIn);
 		out.writeBoolean(IsLcid);
 		out.writeBoolean(IsOptional);
 		out.writeBoolean(IsOut);
 		out.writeBoolean(IsRetval);
-		out.writeUTF(ParameterTypeString);
 		out.writeObject(Parent);
 	}
 }
