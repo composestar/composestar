@@ -6,10 +6,11 @@
  */
 package Composestar.Core.TYM;
 
-import Composestar.Utils.*;
-import Composestar.Utils.*;
+import Composestar.Utils.Debug;
+import Composestar.Utils.StringConverter;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.HashSet;
@@ -107,6 +108,24 @@ public class TypeLocations {
 			return (String)this.sourceByType.get(type);
 		else
 			return null;
+	}
+	
+	/**
+	 * Returns all types declared in a source
+	 * @param source Absolute path of a source
+	 * @return ArrayList 
+	 */
+	public ArrayList getTypesBySource(String source){
+		ArrayList types = new ArrayList();
+		Iterator keys = this.sourceByType.keySet().iterator();
+		while(keys.hasNext()){
+			String key = (String)keys.next();
+			String src = (String)this.sourceByType.get(key);
+			if(src.equals(source)){
+				types.add(key);
+			}
+		}
+		return types;
 	}
 	
 	private Source getSource(String name)
