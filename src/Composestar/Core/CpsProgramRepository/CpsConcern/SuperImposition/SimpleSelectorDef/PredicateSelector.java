@@ -111,12 +111,10 @@ public class PredicateSelector extends SimpleSelExpression
       else
       {
     	  ProgramElement unit = (ProgramElement)element;
-        //System.out.println("Found matching unit: " + unit.getUnitName());
-        
-        Reference ref = null;
-        ref = resolveUnit(unit);
-        result.add(ref);
-        resultSet.add(unit);      
+          Reference ref = null;
+          ref = resolveUnit(unit);
+          result.add(ref);
+          resultSet.add(unit);      
       }
     }
     
@@ -328,9 +326,8 @@ public class PredicateSelector extends SimpleSelExpression
 		if(this.TYMInfo.containsKey(key))
 			list = (HashMap)TYMInfo.get(key);
 				
-		list.put(method.getObjectRef(),method);
+		list.put(method.getReference(),method);
 		this.TYMInfo.put(key,list);
-		//System.out.println("Adding TYM info "+method.getUniqueID("")+" with key "+key);
   }
   
   /**
