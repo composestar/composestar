@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: COPPER.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+ * $Id: COPPER.java,v 1.2 2006/02/21 16:37:03 whavinga Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -53,7 +53,7 @@ public class COPPER implements CTCommonModule
 	
 	  if(phase == ALL_PHASES)
 	  {
-		  //2.source extraction
+	  	  //2.source extraction
 		  Debug.out(Debug.MODE_DEBUG,"COPPER","Source extraction phase");
 		  SourceExtractor se = new SourceExtractor();
 		  se.extractSource();
@@ -73,93 +73,79 @@ public class COPPER implements CTCommonModule
   
   public void copyOperation(String filename) throws ModuleException
   {
-	  INCRE inc = INCRE.instance();
-	  int addedObjects = 0; 
-	  
-	  /* collect and iterate over all objects from previous compilation runs */
-	  Object[] objects = inc.history.getAllObjects();
-	  for(int i=0;i<objects.length;i++)
-	  {
-		  Object obj = (Object)objects[i];
-		  if(obj instanceof RepositoryEntity)
-		  {
-			  // COPPER only adds RepositoryEntities
-			  RepositoryEntity entity = (RepositoryEntity)obj;
-			  
-			  if(!entity.dynamicmap.isEmpty())
-			  {
-					// remove dynamic object REFERENCED
-					if(entity.getDynObject("REFERENCED")!=null)
-						entity.dynamicmap.remove("REFERENCED");	
-			  }
+  	  INCRE inc = INCRE.instance();
+	   
+  	  /* collect and iterate over all objects from previous compilation runs */
+  	  Object[] objects = inc.history.getAllObjects();
+  	  for(int i=0;i<objects.length;i++)
+  	  {
+  	  	  Object obj = (Object)objects[i];
+  	  	  if(obj instanceof RepositoryEntity)
+  	  	  {
+  	  	  		// COPPER only adds RepositoryEntities
+  	  			RepositoryEntity entity = (RepositoryEntity)obj;
+		  
+  	  			if(!entity.dynamicmap.isEmpty())
+  	  			{
+  	  				// remove dynamic object REFERENCED
+  	  				if(entity.getDynObject("REFERENCED")!=null)
+  	  					entity.dynamicmap.remove("REFERENCED");	
+  	  			}
 
-			  if(obj instanceof Reference)
-			  {
-			  	  // references need to be resolved again by REXREF
-				  Reference ref = (Reference)obj;
-				  ref.setResolved(false);
-			  }
-			  
-			  if(obj instanceof DeclaredObjectReference)
-			  {	
-				  DeclaredObjectReference decl = (DeclaredObjectReference)obj;
-			  	  if(decl.getDescriptionFileName()== null)
-				  {
-					  if(decl.getName().equals("inner")){}
-					  else 
-					  {
-							DataStore.instance().addObject(obj);
-							entity.repositoryKey = entity.getUniqueID();
-					  }
-				  }
-			  } 
-			  
-			  if(obj instanceof FilterType)
-			  {
-				  //FilterType ft = (FilterType)obj;
-				  DataStore.instance().addObject(obj);		
-				  // fixme: somehow filename is not persistent for FilterType	
-				 
-			  }	
-			  else if(entity.getDescriptionFileName()!=null && entity.getDescriptionFileName().equals(filename))
-			  {
-				  if(obj instanceof CpsConcern)
-				  {
-					  CpsConcern cps = (CpsConcern)obj;
-					  CpsConcern cpsclone = (CpsConcern)cps.clone();
-					  DataStore.instance().addObject(cpsclone.getQualifiedName(),cpsclone);
-					  addedObjects++;
-				  }
-				  else if(obj!=null)
-				  {
-					  DataStore.instance().addObject(obj);
-					  entity.repositoryKey = entity.getUniqueID();
-					  // don't forget to update repositoryKey due to different hashcodes
-					  addedObjects++;
-				  }
-			  }
-		  }
-	  }
-	  
-	  /**
-	   * Verify if we have copied something
-	   * If not then parse file
-	   */
-	  if(addedObjects==0)
-	  {
-		  this.parseCpsFile(filename,ALL_PHASES);
-	  }
-  }
+  	  			if(obj instanceof Reference)
+  	  			{
+  	  				// references need to be resolved again by REXREF
+  	  				Reference ref = (Reference)obj;
+  	  				ref.setResolved(false);
+  	  			}
+		  
+  	  			if(obj instanceof DeclaredObjectReference)
+  	  			{	
+  	  				DeclaredObjectReference decl = (DeclaredObjectReference)obj;
+  	  				if(decl.getDescriptionFileName()== null)
+  	  				{
+  	  					if(decl.getName().equals("inner")){}
+  	  					else 
+  	  					{
+  	  						DataStore.instance().addObject(obj);
+  	  						entity.repositoryKey = entity.getUniqueID();
+  	  					}
+  	  				}
+  	  			} 
+		  
+  	  			if(obj instanceof FilterType)
+  	  			{
+  	  				DataStore.instance().addObject(obj);		
+  	  				// fixme: somehow filename is not persistent for FilterType	
+  	  			}	
+  	  			else if(entity.getDescriptionFileName()!=null && entity.getDescriptionFileName().equals(filename))
+  	  			{
+  	  				if(obj instanceof CpsConcern)
+  	  				{
+  	  					CpsConcern cps = (CpsConcern)obj;
+  	  					CpsConcern cpsclone = (CpsConcern)cps.clone();
+  	  					DataStore.instance().addObject(cpsclone.getQualifiedName(),cpsclone);
+  	  				}
+  	  				else if(obj!=null)
+  	  				{
+  	  					DataStore.instance().addObject(obj);
+  	  					entity.repositoryKey = entity.getUniqueID();
+  	  					// don't forget to update repositoryKey due to different hashcodes
+  	  				}
+  	  			} 
+  	  		}
+  	  	}
+	}
 
-  public void run(CommonResources resources) throws ModuleException 
+  	public void run(CommonResources resources) throws ModuleException 
 	{
-	    COPPER copper = new COPPER();
-		INCRE incre = INCRE.instance();
-		Iterator cpsIterator = (Iterator)resources.getResource("CpsIterator");
+	   COPPER copper = new COPPER();
+	   INCRE incre = INCRE.instance();
+	   Iterator cpsIterator = (Iterator)resources.getResource("CpsIterator");
 		
-		while(cpsIterator.hasNext()) 
-		{
-			String concern = (String)cpsIterator.next();
+	   while(cpsIterator.hasNext()) 
+	   {
+	   		String concern = (String)cpsIterator.next();
 	   
 			if(incre.isProcessedByModule(concern,"COPPER"))
 			{
@@ -174,7 +160,7 @@ public class COPPER implements CTCommonModule
 				copperrun.stop();
 			}
 		}
-  }
+	}
 
 	public static void setParseTree(CommonAST theParseTree) {
 		parseTree = theParseTree;
