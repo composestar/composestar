@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: SIGN.java,v 1.1 2006/02/16 23:04:06 pascal_durr Exp $
  * 
 **/
 
@@ -128,6 +128,7 @@ public class SIGN implements CTCommonModule
 										 // remove concern from alreadyProcessed and put in toBeProcessed
 										 this.alreadyProcessed.remove(concern.getUniqueID());
 										 this.toBeProcessed.put(concern.getUniqueID(),concern);	
+										 concIter = this.alreadyProcessed.values().iterator();
 										 modified = true; // others concerns may depend on this => repeat loop
 									 }			
 								 }	
