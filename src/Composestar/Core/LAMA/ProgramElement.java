@@ -3,13 +3,11 @@ package Composestar.Core.LAMA;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ProgramElement extends PlatformRepresentation implements SerializableRepositoryEntity
-{
+public abstract class ProgramElement extends PlatformRepresentation implements SerializableRepositoryEntity {
 
 	/*
 	   * @return the name of this program element
@@ -17,7 +15,7 @@ public abstract class ProgramElement extends PlatformRepresentation implements S
 	  public abstract String getUnitName();
 
 	  /**
-	   * @return the type of this program eklement (e.g. class, method etc.) 
+	   * @return the type of this program element (e.g. class, method etc.) 
 	   */
 	  public abstract String getUnitType();
 

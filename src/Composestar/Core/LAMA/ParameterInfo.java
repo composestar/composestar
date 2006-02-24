@@ -1,9 +1,8 @@
 package Composestar.Core.LAMA;
-//package Composestar.CTAdaption.TYM.TypeCollector.DotNETTypes;
 
-//changed LanguageUnit interface to abstract class ProgramElement
-//import Composestar.CTCommon.LOLA.metamodel.ProgramElement;
-//import Composestar.Core.LAMA.ProgramElement;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public abstract class ParameterInfo extends ProgramElement
 {
@@ -73,5 +72,23 @@ public abstract class ParameterInfo extends ProgramElement
 	public boolean hasUnitAttribute(String attribute)
 	{
 		return false;
+	}
+	
+	/**
+	 * Custom deserialization of this object
+	 */
+	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	{
+		Name = in.readUTF();
+		ParameterTypeString = in.readUTF();
+	}
+	 
+	/**
+	 * Custom serialization of this object
+	 */
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		out.writeUTF(Name);
+		out.writeUTF(ParameterTypeString);
 	}
 }
