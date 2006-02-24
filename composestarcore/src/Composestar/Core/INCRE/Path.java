@@ -9,9 +9,7 @@ public class Path
 {
 	private ArrayList nodes = new ArrayList();
 
-	public Path(){
-
-	}
+	public Path(){}
 
 	/**
 	 * Adds a node to the vector containing nodes 
@@ -19,6 +17,10 @@ public class Path
 	public void addNode(Node n)
 	{
 		this.nodes.add(n);	
+	}
+	
+	public Node getFirstNode(){
+		return (Node)this.nodes.get(0);
 	}
 
 	public Object follow(Object obj) throws ModuleException
@@ -34,10 +36,11 @@ public class Path
 				try 
 				{
 					Node currentnode = (Node)pathnodes.next();
-					//System.out.println("Node: "+currentnode.objectref);
 					nextobject = currentnode.visit(nextobject);
 				}
-				catch(NullPointerException npe){ return null; }
+				catch(NullPointerException npe){ 
+					return null; 
+				}
 			}
 
 			return nextobject;
@@ -50,20 +53,4 @@ public class Path
 	{
 		return nodes.isEmpty();
 	}
-	
-	/*public String getUniqueID(Object obj){
-	
-		String uniqueID = "";
-		
-		if(!nodes.isEmpty())
-		{
-			Iterator pathnodes = nodes.iterator();
-			while(pathnodes.hasNext()){
-				Node n = (Node)pathnodes.next();
-				uniqueID += n.getUniqueID(obj);
-			}
-		}
-		
-		return uniqueID;
-	}*/
 }

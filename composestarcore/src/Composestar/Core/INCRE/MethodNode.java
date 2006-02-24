@@ -4,29 +4,34 @@ import Composestar.Core.Exception.ModuleException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class MethodNode extends Node
 {
 	private ArrayList parameters;
 	
-	public MethodNode(String objectref)
+	public MethodNode(String ref)
 	{
-		super(objectref);
+		super(ref);
 		parameters = new ArrayList();
 	}
 
+	/**
+	 * Calls referenced method with obj as input
+	 * @return object returned by the called method
+	 * @param Object obj
+	 */
 	public Object visit(Object obj) throws ModuleException
 	{
 		try 
 		{
 			Method mymethod = null;
 			
-            if(objectref.indexOf(".")>0)
-            {
-            	// objectref = FULLNAME_OF_CLASS.NAME_OF_METHOD
-            	String fullclassname = objectref.substring(0,objectref.lastIndexOf("."));
-            	String methodname = objectref.substring(objectref.lastIndexOf(".")+1);
+            if(reference.indexOf(".")>0){
+            	// reference => FULLNAME_OF_CLASS.NAME_OF_METHOD
+            	String fullclassname = reference.substring(0,reference.lastIndexOf("."));
+            	String methodname = reference.substring(reference.lastIndexOf(".")+1);
             	Class myclass = Class.forName(fullclassname);
             	Class[] paramclasses = {obj.getClass()};
             	mymethod = myclass.getMethod(methodname,paramclasses);
@@ -34,13 +39,21 @@ public class MethodNode extends Node
             	return mymethod.invoke(myclass.newInstance(),paramobjects);
             }
             else {
-            	// objectref = NAME_OF_METHOD
-            	//System.out.println("Visiting method: "+objectref+" for "+obj.getClass().getName());
-            	mymethod = obj.getClass().getMethod(objectref,getParameterTypes());
+            	// reference => NAME_OF_METHOD
+            	mymethod = obj.getClass().getMethod(reference,getParameterTypes());
             	return mymethod.invoke(obj,parameters.toArray());
             }
 		} 
-		catch(Exception excep){throw new ModuleException("Cannot visit method node "+objectref+" "+excep.toString(),"INCRE");}
+		catch(InvocationTargetException ex){
+			String error = ex.getCause().getMessage();
+			if(error==null)
+				error = ex.getCause().toString();
+			
+			throw new ModuleException(error, "INCRE");
+		}
+		catch(Exception excep){
+			throw new ModuleException("Cannot visit method node "+reference+" "+excep.toString(),"INCRE");
+		}
 	}
 	
 	public void setParameters(ArrayList params){
@@ -68,8 +81,11 @@ public class MethodNode extends Node
 		return null;	
 	}
 	
+	/**
+	 * @return an unique id for a referenced method
+	 */
 	public String getUniqueID(Object obj){
-		String uniqueID = obj.hashCode()+"."+this.objectref;
+		String uniqueID = obj.hashCode()+"."+this.reference;
 		if(parameters.size()>0){
 			Iterator params = parameters.iterator();
 			while(params.hasNext()){
