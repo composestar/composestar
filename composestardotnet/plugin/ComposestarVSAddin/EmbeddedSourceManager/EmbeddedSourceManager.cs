@@ -48,7 +48,14 @@ namespace ComposestarVSAddin
 				FileInfo[] sources = di.GetFiles("*.*");
 				if(sources.Length>0)
 				{
-					addedDirectory = p.ProjectItems.AddFolder(embFolder,Constants.vsProjectItemKindPhysicalFolder);
+					bool hasDir = false;
+					foreach (EnvDTE.ProjectItem item in p.ProjectItems)
+					{
+						hasDir |= item.Name.Equals(embFolder);
+					}
+					
+					if(!hasDir) p.ProjectItems.AddFolder(embFolder,Constants.vsProjectItemKindPhysicalFolder);
+
 					foreach(FileInfo src in sources)
 					{
 						ProjectItem pitem = p.ProjectItems.AddFromFile(src.FullName);   

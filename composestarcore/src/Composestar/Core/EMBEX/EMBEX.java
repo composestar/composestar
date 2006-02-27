@@ -6,6 +6,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.*;
 
 import java.util.Iterator;
 
@@ -63,7 +64,14 @@ public class EMBEX implements CTCommonModule
 		if(fileDir.exists())
 		{
 			// bad news
-			throw new ModuleException( "Cannot create directory for embedded sources. Directory exists!", "EMBEX");	
+			Debug.out(Debug.MODE_WARNING,"EMBEX","Cannot create directory for embedded sources. Directory exists! Removing files in directory");	
+			try
+			{
+				fileDir.delete();
+			}
+			catch(Exception e)
+			{
+			}
 		}
 		/*else 
 		{ 

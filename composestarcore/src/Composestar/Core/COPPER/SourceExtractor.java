@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: SourceExtractor.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: SourceExtractor.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -22,9 +22,18 @@ public class SourceExtractor {
   
 	public void extractSource() {
 	   if (COPPER.getParser().sourceIncluded) {
-	      StringBuffer b = new StringBuffer();
-	      b.append(COPPER.getCpscontents());
-	      int endpos = b.length() - getEndPos(b);
+	      String b = COPPER.getCpscontents();
+		   int endpos = b.lastIndexOf("}"); //Closing tag cps
+		   if(endpos > 0)
+		   {
+			   endpos = b.lastIndexOf("}",endpos -1); //Closing tag implementation by
+		   }
+		   if(endpos <= 0)
+		   {
+			   Debug.out(Debug.MODE_WARNING,"COPPER","Expecting closing '}' at end of cps file and after embedded source");
+			   Debug.out(Debug.MODE_WARNING,"COPPER","Ignoring embedded source");
+			   return;
+			}
 	      COPPER.setEmbeddedSource(b.substring(COPPER.getParser().startPos, endpos));
 	      Debug.out(Debug.MODE_DEBUG,"COPPER",COPPER.getEmbeddedSource());
 	   }
@@ -35,7 +44,9 @@ public class SourceExtractor {
    * using a special parser to find 'the beginning of the end'. The starting position is already known
    * from the regular parsing.
    */
-  private int getEndPos(StringBuffer b) {
+	/*
+  private int getEndPos(String b) {
+	 
     CpsSrcPosLexer srclexer;
     CpsSrcParser srcparser;
     
@@ -56,5 +67,7 @@ public class SourceExtractor {
       e.printStackTrace();
       return (-1);
     }
+	  return b.lastIndexOf("}");
   }
+  */
 }
