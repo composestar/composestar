@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.5 2006/02/27 15:57:11 reddog33hummer Exp $
+ * $Id: cps.g,v 1.6 2006/02/27 15:59:33 reddog33hummer Exp $
  */
 
 /**
@@ -344,7 +344,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;
 
-	implementationInner : "in"! l2:NAME "by"! fqn "as"! f2:FILENAME lcurly:LCURLY! { sourceLang=l2.getText(); sourceFile=f2.getText(); sourceIncluded=true; if(lcurly != null) startPos=((PosToken)lcurly).getBytePos() + 4;}
+	implementationInner : "in"! l2:NAME "by"! fqn "as"! f2:FILENAME lcurly:LCURLY! { sourceLang=l2.getText(); sourceFile=f2.getText(); sourceIncluded=true; if(lcurly != null) startPos=((PosToken)lcurly).getBytePos() + 1;}
                       	| "by"! fqn SEMICOLON;   //assemblyname
 
 
