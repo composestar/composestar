@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.2 2006/02/20 08:28:38 reddog33hummer Exp $
+ * $Id: cps.g,v 1.3 2006/02/27 14:31:08 whavinga Exp $
  */
 
 /**
@@ -139,7 +139,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                            | NAME);                                               //n  //fixme: don't allow this for bindings
 
         fmElemReferenceCond : (((NAME|COLON)* DOUBLE_COLON) => fqnDCNameCName     //n.n.n.n::n:n
-                            |  (NAME COLON!) => nameCName                  	  //n:n
+                            |  (NAME COLON) => nameCName                  	  //n:n
                             | 	NAME);                                            //n  //fixme: don't allow this for bindings
                             
         fmElemReferenceStar : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCStar       //n.n.n.n::n:*
@@ -205,7 +205,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                | targetSelector)
                                { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
 
-                  targetSelector : (target DOT!) => target DOT! selector      //extra rule to help parse target.selector correctly
+                  targetSelector : (target DOT) => target DOT! selector      //extra rule to help parse target.selector correctly
                                  | selector;
 
                     target : (NAME                      //removed inner
