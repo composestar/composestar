@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.4 2006/02/27 15:31:55 reddog33hummer Exp $
+ * $Id: cps.g,v 1.5 2006/02/27 15:57:11 reddog33hummer Exp $
  */
 
 /**
@@ -410,6 +410,6 @@ WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.S
 PROLOG_EXPRESSION       :   '|'  (PROLOG_SUB_EXPRESSION)* RCURLY!;
 
 protected PROLOG_SUB_EXPRESSION : (~ ('{'|'}'|'\n'|'\r'))
-					| (LCURLY PROLOG_SUB_EXPRESSION RCURLY)
+					| (LCURLY (PROLOG_SUB_EXPRESSION)* RCURLY)
 					| NEWLINE
 					;
