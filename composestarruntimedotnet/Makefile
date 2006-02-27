@@ -1,5 +1,4 @@
 ROOTDIR=./
-INSTALLDIR=C:\Program Files\ComposeStar
 
 include ${ROOTDIR}common.mk
 
@@ -42,6 +41,9 @@ clean:
 	${DEL} error.log ${NULL}
 
 install:
+	@$(INSTALLFINDER)
+
+installit:
 	@echo **************************************************************
 	@echo  Installing to ${INSTALLDIR};                                 
 	@echo ************************************************************** 

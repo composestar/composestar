@@ -16,5 +16,7 @@ SET INSTALLDIR=%INSTALLDIR:###"=%
 SET INSTALLDIR=%INSTALLDIR:###=%
 
 REM CLEANUP
-del setter.bat
 del setter.txt
+del setter.bat
+
+call %1 installit

@@ -1,5 +1,4 @@
 ROOTDIR=./
-INSTALLDIR=C:\Program Files\Composestar
 
 include ${ROOTDIR}common.mk
 
@@ -51,6 +50,9 @@ clean:
 	cd src && ${MAKE} clean && cd ..
 
 install:
+	@$(INSTALLFINDER)
+
+installit:
 	@echo **************************************************************
 	@echo  Installing to ${INSTALLDIR};                                 
 	@echo ************************************************************** 
