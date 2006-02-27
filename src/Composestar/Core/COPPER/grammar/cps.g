@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.3 2006/02/27 14:31:08 whavinga Exp $
+ * $Id: cps.g,v 1.4 2006/02/27 15:31:55 reddog33hummer Exp $
  */
 
 /**
@@ -356,7 +356,6 @@ class CpsLexer extends Lexer;
 options {
         k = 2;
         exportVocab = Cps;
-        charVocabulary = '\3'..'\377'; // just handle ASCII not Unicode
 }
 
 AND                     : '&';
@@ -408,12 +407,9 @@ NAME                    : (LETTER | SPECIAL) (LETTER | DIGIT | SPECIAL)*;
 WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
                           | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
 
-PROLOG_EXPRESSION       : 
-  '|' 
-    (
-      options { greedy=false; } : // Have to turn off greediness, otherwise the rest of the input would match
-      NEWLINE
-      | .                    // Match everything (ungreedy) until the '}'
-    ) *
-  RCURLY!;
+PROLOG_EXPRESSION       :   '|'  (PROLOG_SUB_EXPRESSION)* RCURLY!;
 
+protected PROLOG_SUB_EXPRESSION : (~ ('{'|'}'|'\n'|'\r'))
+					| (LCURLY PROLOG_SUB_EXPRESSION RCURLY)
+					| NEWLINE
+					;
