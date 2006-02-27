@@ -1,3 +1,4 @@
+echo OFF
 regedit /e export.reg HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect
 type export.reg | find """ComposestarPath""" > setter.txt
 del export.reg
@@ -15,5 +16,7 @@ SET INSTALLDIR=%INSTALLDIR:###"=%
 SET INSTALLDIR=%INSTALLDIR:###=%
 
 REM CLEANUP
-del setter.bat
 del setter.txt
+del setter.bat
+
+call %1 installit

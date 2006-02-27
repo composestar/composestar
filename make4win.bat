@@ -24,3 +24,4 @@ IF %ERRORLEVEL% == 0 (
 ) ELSE (
 	ECHO Please specify a free drive letter.
 )
+pause
