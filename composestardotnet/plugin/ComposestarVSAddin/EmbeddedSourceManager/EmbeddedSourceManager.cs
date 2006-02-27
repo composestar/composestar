@@ -51,10 +51,14 @@ namespace ComposestarVSAddin
 					bool hasDir = false;
 					foreach (EnvDTE.ProjectItem item in p.ProjectItems)
 					{
-						hasDir |= item.Name.Equals(embFolder);
+						if(item.Name.Equals(embFolder))
+						{
+							addedDirectory = item;
+							hasDir = true;
+						}
 					}
 					
-					if(!hasDir) p.ProjectItems.AddFolder(embFolder,Constants.vsProjectItemKindPhysicalFolder);
+					if(!hasDir) addedDirectory = p.ProjectItems.AddFolder(embFolder,Constants.vsProjectItemKindPhysicalFolder);
 
 					foreach(FileInfo src in sources)
 					{
