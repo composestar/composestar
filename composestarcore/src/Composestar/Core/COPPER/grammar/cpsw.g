@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+ * $Id: cpsw.g,v 1.2 2006/02/21 16:34:11 whavinga Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -59,7 +59,7 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
     /*---------------------------------------------------------------------------*/
     internals : #("internals" (singleInternal)*);
 
-      singleInternal : #(INTERNAL_ {namev.clear();} n:variableSet {typev.clear();} type {b.addInternals(namev, typev,n.getLine());} );
+      singleInternal : #(INTERNAL_ {namev.clear();} n:variableSet {typev.clear();} type {b.addInternals(namev, typev, n.getFirstChild().getLine());} );
 
         variableSet : #(VAR_ (n:NAME {namev.add(n.getText());})+ );
 
@@ -68,8 +68,8 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
     /*---------------------------------------------------------------------------*/
     externals : #("externals" (singleExternal)*);
 
-      singleExternal : #(EXTERNAL_ {namev.clear();} variableSet {typev.clear();} type {tempnames.clear();} {s = null;} (s:EQUALS)? (n2:NAME {tempnames.add(n2.getText());} )*  
-      {if(s == null) b.addExternals(namev, typev, tempnames, 0,n2 == null ? 0 : n2.getLine()); else b.addExternals(namev, typev, tempnames, 1,n2 == null ? 0 :n2.getLine()); });
+      singleExternal : #(EXTERNAL_ {namev.clear();} n:variableSet {typev.clear();} type {tempnames.clear();} {s = null;} (s:EQUALS)? (n2:NAME {tempnames.add(n2.getText());} )*  
+      {b.addExternals(namev, typev, tempnames, s == null ? 0 : 1, n.getFirstChild().getLine()); });
      
 
     /*---------------------------------------------------------------------------*/
