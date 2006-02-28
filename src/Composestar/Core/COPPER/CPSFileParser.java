@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CPSFileParser.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+ * $Id: CPSFileParser.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -23,12 +23,6 @@ import java.io.*;
 public class CPSFileParser {
 	
   private CpsParser parser;
-	private CpsASTFactory factory = null;
-
-	public void setCpsASTFactory(CpsASTFactory factory)
-	{
-		this.factory = factory;
-	}
 
   public void parseCpsFileWithName(String file)  throws ModuleException
   {
@@ -84,7 +78,7 @@ public class CPSFileParser {
 			  sr = new StringReader(COPPER.getCpscontents());
 			  lexer = new CpsPosLexer(sr);
 			  parser = new CpsParser(lexer);
-			  parser.setASTFactory(factory);
+			  parser.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
 			  parser.concern();
 		  }
 		  catch (NoViableAltException e)
