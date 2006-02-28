@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.2 2006/02/21 16:34:11 whavinga Exp $
+ * $Id: cpsw.g,v 1.3 2006/02/28 08:43:31 whavinga Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -41,6 +41,12 @@ options {
   public int t=0;                         //flag for selectorexpression
   public int matching=0;                  //flag for name / signature matching (0=signature, 1=name)
   public Vector typel = new Vector();     //temp vector for type list (in methods)
+  
+  public CpsRepositoryBuilder getRepositoryBuilder()
+  {
+    return this.b;
+  }
+  
 }
 
 concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalParameters)? (namespace {b.finalizeNamespace();})? (filterModule)* (superImposition)? (implementation)? {b.finish();});
