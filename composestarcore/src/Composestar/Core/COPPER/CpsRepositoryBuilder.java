@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.18 2005/10/24 08:11:08 oohlaf Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.2 2006/02/21 16:37:03 whavinga Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -111,7 +111,7 @@ public class CpsRepositoryBuilder
   
   private String namespace;
   public static final int MESSAGEP = 99;
-  public static String filename = "";
+  private String filename = ""; // Filename of file currently being parsed, for reference in case of parsing errors.
 	
   /**
    * Constructor
@@ -1635,5 +1635,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   //used by splitter
   public String getCpsc() {
     return cpsc.getName();
+  }
+
+  public void setFilename(String filename) {
+	  this.filename = filename;
   }
 }
