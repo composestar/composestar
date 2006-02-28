@@ -18,7 +18,6 @@ CLASSES=CpsRepositoryBuilder.class \
 	SyntacticSugarExpander.class \
 	Piece.class \
 	CpsAST.class \
-	CpsASTFactory.class \
 	PathHelper.class
 	
 
