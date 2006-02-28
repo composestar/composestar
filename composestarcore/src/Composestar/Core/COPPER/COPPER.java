@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: COPPER.java,v 1.2 2006/02/21 16:37:03 whavinga Exp $
+ * $Id: COPPER.java,v 1.3 2006/02/24 15:54:33 dspenkel Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -46,9 +46,7 @@ public class COPPER implements CTCommonModule
   {
 	  //1. parsing
 	  Debug.out(Debug.MODE_DEBUG,"COPPER","Parsing phase");
-	  CpsASTFactory factory = new CpsASTFactory();
 	  CPSFileParser fileparser = new CPSFileParser();
-	  fileparser.setCpsASTFactory(factory);
 	  fileparser.parseCpsFileWithName(filename);
 	
 	  if(phase == ALL_PHASES)
@@ -60,16 +58,29 @@ public class COPPER implements CTCommonModule
 		  
 		  //3. create first version of objects
 		  Debug.out(Debug.MODE_DEBUG,"COPPER","Parse building phase");
-		  CpsParseTreeWalker db = new CpsParseTreeWalker();
-		  db.setCpsASTFactory(factory);
-		  Composestar.Core.COPPER.CpsRepositoryBuilder.filename = filename;
-		  db.walkTree();
+		  walkTree(filename);
 		
 		  //somewhere:
 		  SyntacticSugarExpander sse = new SyntacticSugarExpander();
 		  sse.expand();
 	  }
   }
+  
+  public void walkTree(String filename) throws ModuleException
+  {
+		try
+		{
+			CpsTreeWalker walker = new CpsTreeWalker();
+			walker.getRepositoryBuilder().setFilename(filename);
+			walker.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
+			walker.concern(COPPER.getParseTree());
+		}
+		catch (RecognitionException r)
+		{
+			throw new ModuleException("AST Error: " + r.getMessage(), "COPPER",
+					r.getFilename(), r.getLine());
+		}
+  }  
   
   public void copyOperation(String filename) throws ModuleException
   {
