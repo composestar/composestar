@@ -1,6 +1,8 @@
 using EnvDTE;
-using System.IO;
 using Ini;
+using System;
+using System.IO;
+using System.Collections;
 
 namespace ComposestarVSAddin
 {
@@ -10,7 +12,7 @@ namespace ComposestarVSAddin
 	public class EmbeddedSourceManager : AbstractManager
 	{
 		private IniFile inifile;
-		private ProjectItem addedDirectory = null;
+		private ProjectItem addedDirectory= null;
 
 		public EmbeddedSourceManager(IniFile inifile) : base (inifile)
 		{
@@ -41,42 +43,37 @@ namespace ComposestarVSAddin
 			// path to embedded sources
 			string embPath = tempfolder + embFolder ;
 			
-            DirectoryInfo di = new DirectoryInfo(embPath);
+			DirectoryInfo di = new DirectoryInfo(embPath);
 			
 			if(di.Exists)
 			{
 				FileInfo[] sources = di.GetFiles("*.*");
 				if(sources.Length>0)
 				{
-					bool hasDir = false;
-					foreach (EnvDTE.ProjectItem item in p.ProjectItems)
+					try
 					{
-						if(item.Name.Equals(embFolder))
-						{
-							addedDirectory = item;
-							hasDir = true;
-						}
+						addedDirectory = p.ProjectItems.AddFolder(embFolder,Constants.vsProjectItemKindPhysicalFolder);
+					} 
+					catch (Exception)
+					{
+						//Cannot check it because a bug in visual studio 2003
 					}
-					
-					if(!hasDir) addedDirectory = p.ProjectItems.AddFolder(embFolder,Constants.vsProjectItemKindPhysicalFolder);
 
 					foreach(FileInfo src in sources)
 					{
-						ProjectItem pitem = p.ProjectItems.AddFromFile(src.FullName);   
+						try
+						{
+							p.ProjectItems.AddFromFile(src.FullName);
+						}
+						catch (Exception)
+						{
+						}
 					}
 				}
 			}
 		}
 
 		public void removeEmbeddedSources()
-		{
-			foreach(Project project in this.mApplicationObject.Solution.Projects)
-			{
-				this.removeEmbeddedSources(project);
-			}	
-		}
-
-		public void removeEmbeddedSources(Project p)
 		{
 			string tempfolder = inifile.IniReadValue("COMMON", "TempFolder");
 			tempfolder = tempfolder.Replace("/","\\");
@@ -89,14 +86,44 @@ namespace ComposestarVSAddin
 
 			DirectoryInfo di = new DirectoryInfo(embPath);
 
-			if(di.Exists)
+			if(addedDirectory != null)
 			{
-				// remove directory from project and storage
-				if(this.addedDirectory!=null)
-					this.addedDirectory.Delete();
-				else
-					di.Delete();	
+				addedDirectory.Delete();
 			}
+			else
+			{
+				deleteDirectory(di);
+			}
+		}
+
+		public void deleteDirectory(DirectoryInfo di)
+		{
+			if(!di.Exists)
+			{
+				return;
+			}
+
+			foreach(DirectoryInfo subdir in di.GetDirectories())
+			{
+				deleteDirectory(subdir);
+			}
+			foreach(FileInfo file in di.GetFiles())
+			{
+				try
+				{
+					file.Delete();
+				}
+				catch(Exception)
+				{
+				}
+			}
+			try
+			{
+				di.Delete();
+			}
+			catch(Exception)
+			{
+			}		
 		}
 	}
 }
