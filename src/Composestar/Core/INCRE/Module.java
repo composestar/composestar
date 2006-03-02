@@ -179,6 +179,9 @@ public class Module
 				Class[] methodparams = {resources.getClass()};
 				Method runmethod = myclass.getMethod("run",methodparams);
 				Object[] myparams = {resources};
+				if(myparams == null){
+					myparams = new Object[0];
+				}
 				INCRE incre = INCRE.instance();
 				INCRETimer module = incre.getReporter().openProcess(this.name,this.name,INCRETimer.TYPE_ALL);
 				runmethod.invoke(myclass.newInstance(),myparams);
@@ -196,11 +199,13 @@ public class Module
 			catch(InvocationTargetException ex4){
 				if (ex4.getCause() instanceof ModuleException)
 					throw (ModuleException)ex4.getCause();
+				else if(ex4.getTargetException()  instanceof ModuleException)
+					throw (ModuleException)ex4.getTargetException();
 				else
-					throw new ModuleException(ex4.getCause().getMessage(), "INCRE running " + this.name);
+					throw new ModuleException(ex4.getMessage(), "INCRE running " + this.name);
 			}
 			catch(IllegalAccessException ex5){
-				throw new ModuleException(ex5.getMessage(), "INCRE running " + this.name);
+				throw new ModuleException(ex5.getMessage() + " Caused by:" + ex5.getCause().getMessage(), "INCRE running " + this.name);
 			}
 			catch(NoSuchMethodException ex6){
 				throw new ModuleException(ex6.getMessage(), "INCRE running " + this.name);
