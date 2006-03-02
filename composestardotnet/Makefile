@@ -2,6 +2,8 @@ ROOTDIR=./
 
 include ${ROOTDIR}common.mk
 
+WEAVER=src$(PATHSEP)Composestar$(PATHSEP)DotNET$(PATHSEP)ILICIT$(PATHSEP)Weaver
+
 all: build 
 
 .PHONY: src \
@@ -59,4 +61,6 @@ installit:
 	@$(fileCopy) "ComposestarDotNET.jar" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "AttributeHarvester.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "TypeHarvester.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
-	
+	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)WeaveLibrary.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)IlWeaver.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)PeWeaver.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
