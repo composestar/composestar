@@ -90,21 +90,6 @@
                     HintPath = "vjslib.dll"
                 />
                 <Reference
-                    Name = "ComposeStarDotNETRuntimeInterpreter"
-                    AssemblyName = "ComposeStarDotNETRuntimeInterpreter"
-                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarDotNETRuntimeInterpreter.dll"
-                />
-                <Reference
-                    Name = "ComposestarCoreDotNET"
-                    AssemblyName = "ComposestarCoreDotNET"
-                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposestarCoreDotNET.dll"
-                />
-                <Reference
-                    Name = "ComposestarCore"
-                    AssemblyName = "ComposestarCore"
-                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposestarCore.dll"
-                />
-                <Reference
                     Name = "mscorlib"
                     AssemblyName = "mscorlib"
                     HintPath = "mscorlib.dll"
