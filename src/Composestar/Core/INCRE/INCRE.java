@@ -11,6 +11,7 @@ import Composestar.Core.LAMA.*;
 //import Composestar.dotnet.LAMA.*;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Master;
 //import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
@@ -48,7 +49,7 @@ public class INCRE implements CTCommonModule
 	private static INCRE Instance = null;
 	private DataStore currentRepository;
 	public DataStore history;
-	private boolean enabled = true;
+	private boolean enabled = false;
 	private boolean searchingHistory = false;
 	
 	private String historyfile = "";
@@ -96,6 +97,17 @@ public class INCRE implements CTCommonModule
     */
    public void run(CommonResources resources) throws ModuleException 
    {
+       this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
+    
+   	   // ability to turn INCRE on
+   	   if ("True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
+			this.enabled = true;
+	   }
+   	   else {
+   			// non-incremental compilation so clean history
+   			this.deleteHistory();
+   	   }
+   	
    	   // time this initialization process	
 	   INCRETimer incretotal = this.getReporter().openProcess("INCRE","",INCRETimer.TYPE_ALL);
 	   
@@ -113,14 +125,6 @@ public class INCRE implements CTCommonModule
 		   ioe.printStackTrace();
 	   }
 	   
-	   this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
-	 
-	   // Need for development, ability to turn INCRE off
-	   if("OFF".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED")))
-	   { 
-	   		this.enabled = false;
-	   }
-	
 	   /* parse the XML configuration file containing the modules 
 	    	time the parsing process */
 	   INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);			
@@ -387,8 +391,8 @@ public class INCRE implements CTCommonModule
 		// As an optimalization: 
 		// do not look in all configurations but only in the interesting part(s)
 		// thus set searchstring dependent of type of file
-		if(fixedFile.endsWith(".cs") || fixedFile.endsWith(".jsl") || fixedFile.endsWith(".vb")){
-			// TODO: use configurable SupportedLanguages
+		if(fixedFile.endsWith(".cs") || fixedFile.endsWith(".jsl") || fixedFile.endsWith(".vb") || fixedFile.endsWith(".java")){
+			//TODO: use configurable SupportedLanguages (xml)
 			searchStr = this.projectSources;// look in project sources
 		}
 		else if(fixedFile.endsWith(".cps")){
@@ -712,9 +716,20 @@ public class INCRE implements CTCommonModule
 		/* all dependencies have not been modified 
 			thus input has already been processed */
 		overhead.stop();
+		
+		//TODO: call copy operation of module
 		return true;
    }
    
+   public void deleteHistory()
+   {
+   	    File f = new File(this.historyfile);
+   	    if(f.exists()){
+   	   		f.delete();
+   	    }
+   }
+	
+	
    /**
     * Loads the history repository specified by the filename. Uses objectinputstream.
     * @param filename
@@ -774,14 +789,19 @@ public class INCRE implements CTCommonModule
    public void storeHistory() throws ModuleException
    {
 	   Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
-	   	   
+	   
+	   DataStore ds = DataStore.instance();
+	   CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
+	   if (!"True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
+	   		return;
+	   }
+		
 	   try
 	   {
 		   FileOutputStream fos = new FileOutputStream(this.historyfile);
 		   BufferedOutputStream bos = new BufferedOutputStream(fos);
 		   ObjectOutputStream oos = new ObjectOutputStream(bos);
-		   DataStore ds = DataStore.instance();
-		   
+		   		   
 		   // write current date = last compilation date
 		   oos.writeObject(new Date());
 		   
