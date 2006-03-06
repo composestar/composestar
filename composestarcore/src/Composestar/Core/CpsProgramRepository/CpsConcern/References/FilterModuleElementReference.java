@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModuleElementReference.java,v 1.2 2006/02/16 12:51:21 composer Exp $
+ * $Id: FilterModuleElementReference.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
@@ -43,7 +43,7 @@ public class FilterModuleElementReference extends ConcernElementReference {
 
 
   public String getQualifiedName() {
-    String fname = new String();
+    String fname = "";
     int i;
 
     for (i = 0; i < pack.size(); i++) {

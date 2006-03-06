@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CPSFileParser.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+ * $Id: CPSFileParser.java,v 1.2 2006/02/28 09:56:19 whavinga Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -53,7 +53,7 @@ public class CPSFileParser {
     BufferedReader d;
     try
 	{
-	    COPPER.setCpscontents(new String());
+	    COPPER.setCpscontents("");
 	    d = new BufferedReader(new InputStreamReader((new FileInputStream(file))));
         String line = d.readLine();
 	    while (line != null){

@@ -100,6 +100,6 @@ public class FilterActionDescription {
      * @roseuid 404C7DF9014A
      */
     public String toString() {
-     	return new String("/"+this.action+"/"+this.filtertype+"/"+this.ACCEPT_REJECT);     
+     	return "/" + this.action + "/" + this.filtertype + "/" + this.ACCEPT_REJECT;
     }
 }

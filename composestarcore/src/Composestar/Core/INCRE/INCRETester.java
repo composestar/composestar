@@ -53,7 +53,7 @@ public class INCRETester
 		
 	public void write(){
 		buffer.append("<html><head><title>INCRE Report</title></head>");
-		buffer.append("<body bgcolor=#EEEEEE><b>INCRETEST REPORT</b><br><b>Date: </b>"+new java.util.Date().toString()+"<br>");
+        buffer.append("<body bgcolor=#EEEEEE><b>INCRETEST REPORT</b><br><b>Date: </b>").append(new Date().toString()).append("<br>");
 		buffer.append("<br>Testing number of instances [per type]<hr><table cellspacing=0 cellpadding=2 width=100% border=0><tr>");
 		buffer.append("<td width=50% align=center><b>Data1</b></td><td width=50% align=center><b>Data2</b></td></tr><tr>");
 		createCell("["+record1.instances.size()+"] Instances");
@@ -127,19 +127,19 @@ public class INCRETester
 	}
 	
 	public void createCell(String s){
-		buffer.append("<td width=50%>"+s+"</td>");
+        buffer.append("<td width=50%>").append(s).append("</td>");
 	}
 	
 	public void createCell(String s,int colspan){
-		buffer.append("<td width=50% colspan="+colspan+">"+s+"</td>");
+        buffer.append("<td width=50% colspan=").append(colspan).append(">").append(s).append("</td>");
 	}
 	
 	public void openTag(String tag){
-		buffer.append("<"+tag+">");
+        buffer.append("<").append(tag).append(">");
 	}
 	
 	public void closeTag(String tag){
-		buffer.append("</"+tag+">");
+        buffer.append("</").append(tag).append(">");
 	}
 	
 	public static void main(String args[])

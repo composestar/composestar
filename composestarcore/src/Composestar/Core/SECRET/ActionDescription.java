@@ -61,6 +61,6 @@ public class ActionDescription {
      * @roseuid 404C7E210172
      */
     public String toString() {
-    	return new String("ActionDescription["+this.action+"] is done by: "+this.actor);     
+    	return "ActionDescription[" + this.action + "] is done by: " + this.actor;
     }
 }

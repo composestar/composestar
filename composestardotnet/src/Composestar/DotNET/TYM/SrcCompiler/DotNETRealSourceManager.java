@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRealSourceManager.java,v 1.1 2006/02/16 23:11:01 pascal_durr Exp $
+ * $Id: DotNETRealSourceManager.java,v 1.2 2006/02/24 16:00:18 dspenkel Exp $
  */
 
 package Composestar.DotNET.TYM.SrcCompiler;
@@ -111,7 +111,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 				Debug.out(Debug.MODE_DEBUG, "RECOMA","compiling "+sourceFile);
 				INCRETimer compsource = incre.getReporter().openProcess("RECOMA",sourceFile,INCRETimer.TYPE_NORMAL);
 				Debug.out(Debug.MODE_DEBUG, "RECOMA","compiling " + source[0] +  "  " + buildPath + "\\" + targetFile + "  "+ targetFile.endsWith( "dll" ));
-				Debug.out(Debug.MODE_DEBUG, "RECOMA","depends " + depends[0].toString()  + " co: " + compilerOptions + " compilerpath " + compilerPath);
+				Debug.out(Debug.MODE_DEBUG, "RECOMA","depends " + depends[0]  + " co: " + compilerOptions + " compilerpath " + compilerPath);
 				comp.compile( source, '\"' + buildPath + targetFile + '\"', targetFile.endsWith( "dll" ),
 					depends, compilerOptions, compilerPath );
 				builtAssemblies.add('\"' + buildPath + targetFile + '\"');

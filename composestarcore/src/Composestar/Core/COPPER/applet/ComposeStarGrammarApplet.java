@@ -88,7 +88,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 						String line = tmp.substring(startline,endline);
 						try
 						{
-							errline = new Integer(line).intValue();
+							errline = Integer.parseInt(line);
 						}
 						catch(Exception ex)
 						{

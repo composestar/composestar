@@ -74,6 +74,6 @@ public class SECRETFilter {
      * @roseuid 404C81CC01BA
      */
     public String toString() {
-     	return new String("Filter with name: "+this.name+" and with type: "+this.type);
+     	return "Filter with name: " + this.name + " and with type: " + this.type;
     }
 }

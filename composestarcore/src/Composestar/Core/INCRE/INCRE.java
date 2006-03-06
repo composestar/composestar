@@ -422,7 +422,7 @@ public class INCRE implements CTCommonModule
 		}
 		
 		// file in old project configurations?
-		searchStr = FileUtils.fixFilename(searchStr.toString()).toLowerCase();
+		searchStr = FileUtils.fixFilename(searchStr).toLowerCase();
 		if(searchStr.indexOf(fixedFile)>=0)
 			isAdded = false; // file not added to project
 		

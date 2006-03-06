@@ -50,7 +50,7 @@ public abstract class FILTHService {
 	}
 
 	public static void printTab(int n, String mesg){
-		String s=new String();
+		String s= "";
 		for (int i=0; i<n; i++)
 			if (printMode==FILTHService.HTML)
 				s+="&nbsp;";

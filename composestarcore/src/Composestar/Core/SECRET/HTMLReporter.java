@@ -33,7 +33,7 @@ public class HTMLReporter extends ConflictReporter {
      */
     public HTMLReporter(ArrayList filters, String filename, SecretRepository sr, String concern) {
     	this.filters = filters;
-    	buffer = new String();     
+    	buffer = "";
     	this.filename = filename;
 		this.concern = concern;
     	this.sr = sr;     

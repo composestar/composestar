@@ -42,7 +42,7 @@ public class HTMLReporter implements Reporter {
 	 */
 	public void openConcern(Concern concern) {
 		// TODO Auto-generated method stub
-		buffer.append("<div class=\"concern\"><h2>Concern " + concern.getName() + "</h2>");
+        buffer.append("<div class=\"concern\"><h2>Concern ").append(concern.getName()).append("</h2>");
 	}
 
 	/* (non-Javadoc)
@@ -75,15 +75,15 @@ public class HTMLReporter implements Reporter {
 			buffer.append("<div class=\"filterorder\">");
 		else
 			buffer.append("<div class=\"green\">");
-		
-		buffer.append("<h3>" + (selected?"Selected":"Alternative") + " filtermodule-order analysis<BR>" + order.toString() + "</h3>");
+
+        buffer.append("<h3>").append(selected ? "Selected" : "Alternative").append(" filtermodule-order analysis<BR>").append(order.toString()).append("</h3>");
 		
 		buffer.append("<b>Filters:</b><BR>");
 		int i = 0;
 		for( Iterator it = analysis.getFilters().iterator(); it.hasNext(); )
 		{
 			i++;
-			buffer.append( "" + i + ". " + ((Filter) it.next()).getQualifiedName() + "<BR>" );
+            buffer.append("").append(i).append(". ").append(((Filter) it.next()).getQualifiedName()).append("<BR>");
 		}
 		buffer.append("<BR>");
 		
@@ -108,13 +108,13 @@ public class HTMLReporter implements Reporter {
 				for( Iterator actionIterator = ea.getActions().iterator(); actionIterator.hasNext(); )
 				{
 					i++;
-					buffer.append("" + i + ". " + actionIterator.next().toString() + "<BR>");
+                    buffer.append("").append(i).append(". ").append(actionIterator.next().toString()).append("<BR>");
 				}
 				buffer.append("</td><td align=left valign=top><b>Conflicts</b><BR>");
 				
 				for( Iterator conflictIterator = conflicts.iterator(); conflictIterator.hasNext(); )
 				{
-					buffer.append(conflictIterator.next().toString()+"<BR>");
+                    buffer.append(conflictIterator.next().toString()).append("<BR>");
 				}
 								
 				buffer.append("</td></tr>");
@@ -126,10 +126,10 @@ public class HTMLReporter implements Reporter {
 
 	public void open()
 	{
-		buffer.append("<html><head><title>SECRET Report</title><link rel=\"stylesheet\" href=\"" + cssFile + "\" type=\"text/css\"></head><body><H1>SECRET Report</h1><h3>");
+        buffer.append("<html><head><title>SECRET Report</title><link rel=\"stylesheet\" href=\"").append(cssFile).append("\" type=\"text/css\"></head><body><H1>SECRET Report</h1><h3>");
 		buffer.append((new java.util.Date()).toString());
 		buffer.append("<BR>");
-		buffer.append("Runmode: " + SECRET.MODES[SECRET.MODE]);
+        buffer.append("Runmode: ").append(SECRET.MODES[SECRET.MODE]);
 		buffer.append("</h3>");
 	}
 

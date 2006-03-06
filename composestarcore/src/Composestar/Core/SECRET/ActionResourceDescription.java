@@ -68,6 +68,6 @@ public class ActionResourceDescription {
      * @roseuid 405072E301D7
      */
     public String toString() {
-    	return new String("ARD{/"+this.action+"/"+this.resource+"/"+this.operation+"}");     
+    	return "ARD{/" + this.action + "/" + this.resource + "/" + this.operation + "}";
     }
 }
