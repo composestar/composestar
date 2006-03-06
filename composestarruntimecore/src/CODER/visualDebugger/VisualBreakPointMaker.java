@@ -23,9 +23,12 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 		public VisualBreakPointMakerFrame() 
 		{
 			setTitle("Composition filter debugger");
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			Dimension d = tk.getScreenSize();
-			setSize(d);
+			setSize(800,250);
+			
+			Dimension dim = getToolkit().getScreenSize();
+			Rectangle abounds = getBounds();
+			setLocation((dim.width - abounds.width) / 2,
+				(dim.height - abounds.height) / 2);
 
 			addWindowListener(new WindowAdapter() 
 			{
@@ -60,26 +63,40 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 	public VisualBreakPointMaker(VisualDebugger debugger)
 	{
 		this.debugger = debugger;
-		setLayout(new GridLayout(6,2));
+		setLayout(new BorderLayout());
 
-		add(new Label("Selectors"));
-		add(new Label("Targets"));
+		Panel top = new Panel();
+		top.setLayout(new BorderLayout());
+		Panel one = new Panel();
+		one.setLayout(new BorderLayout());
+		one.add(new Label("Selectors"),BorderLayout.WEST);
+		one.add(new Label("Targets"),BorderLayout.EAST);
+		top.add(one,BorderLayout.NORTH);
 
-		add(selectors);
-		add(targets);
+		one = new Panel();
+		one.add(selectors,BorderLayout.WEST);
+		one.add(targets,BorderLayout.EAST);
+		top.add(one,BorderLayout.SOUTH);
 
-		add(new Label("LTL Condition Formula"));
+		add(top,BorderLayout.NORTH);
+
+/*		Panel center = new Panel();
+		panel.setLayout(new BorderLayout());
+ 		one = new Panel();
+		add(new Label("LTL Condition Formula",BorderLayout.WEST));
+		add(ltlValueExpression,BorderLayout.WEST);
 		add(new Label("Regular Stop Sequence"));
+		add(regularStopExpression,BorderLayout.EAST);
+		add(one,BorderLayout.CENTER,BorderLayout.EAST);		
+		add(one,BorderLayout.CENTER);*/
 
-		add(ltlValueExpression);
-		add(regularStopExpression);
-		
+		one = new Panel();
 		Button button = new Button("Proceed");
 		button.addActionListener(this);
-		add(button);
-
+		one.add(button,BorderLayout.WEST);
 		button = new Button("Cancel");
-		add(button);
+		one.add(button,BorderLayout.EAST);
+		add(one,BorderLayout.SOUTH);
 
 		frame.add(this);
 		frame.show();

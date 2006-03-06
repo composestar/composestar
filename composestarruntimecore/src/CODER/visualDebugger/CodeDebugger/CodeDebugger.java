@@ -30,12 +30,12 @@ public class CodeDebugger  extends Visualizer implements  ActionListener{
 	public CodeDebugger(VisualDebugger debugger)
 	{
 		super(debugger);
-		setLayout(new GridLayout(2,1));
 		component = new CodeExecutionGuiComponent();
-		add(component);
+		setLayout(new BorderLayout());
+		add(component,BorderLayout.NORTH);
 		Button button = new Button("Next");
 		button.addActionListener(this);
-		add(button);
+		add(button,BorderLayout.SOUTH);
 		repaint();
 	}
 

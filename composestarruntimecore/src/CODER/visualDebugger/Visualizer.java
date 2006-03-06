@@ -15,11 +15,12 @@ import java.util.Dictionary;
 public abstract class Visualizer extends Panel
 {
 	protected VisualDebugger debugger;
+	protected Frame frame;
 
 	public Visualizer(VisualDebugger debugger)
 	{
 		this.debugger = debugger;
-		Frame frame = new VisualizerFrame();
+		frame = new VisualizerFrame();
 		frame.add(this);
 		frame.show();
 	}
@@ -41,7 +42,19 @@ public abstract class Visualizer extends Panel
 				}
 			});
 		}
+
+		public void center()
+		{
+			Dimension dim = getToolkit().getScreenSize();
+			Rectangle abounds = getBounds();
+			setLocation((dim.width - abounds.width) / 2,
+				(dim.height - abounds.height) / 2);
+		}
 	}
 
+	public void center()
+	{
+		((VisualizerFrame)frame).center();
+	}
 	public abstract void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context);
 }

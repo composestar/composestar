@@ -18,10 +18,12 @@ import java.util.Vector;
  * @author: Administrator
  */
 public class CodeExecutionGuiComponent extends Panel {
-	private TextArea[] components = {};
+	private TextArea[] components = {new TextArea("Waiting for filter")};
 
 	public CodeExecutionGuiComponent()
 	{
+		setLayout(new BorderLayout());
+		add(components[0],BorderLayout.NORTH);
 	}
 
 	public void fill(Object source, Object target, DebuggableMessage message, ArrayList filters) 
@@ -39,10 +41,10 @@ public class CodeExecutionGuiComponent extends Panel {
 			for(int i = old.length + 1; i < components.length -1;i++)
 			{
 				components[i] = new TextArea();
-				add(components[i]);
+				add(components[i],BorderLayout.NORTH);
 			}
 			components[components.length-1] = new TextArea();
-			add(components[components.length-1]);
+			add(components[components.length-1],BorderLayout.NORTH);
 		} 
 		else
 		{

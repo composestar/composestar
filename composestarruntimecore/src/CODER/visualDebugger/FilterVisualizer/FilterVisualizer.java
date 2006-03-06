@@ -19,12 +19,14 @@ public class FilterVisualizer extends Visualizer implements  ActionListener
 	public FilterVisualizer(VisualDebugger debugger)
 	{
 		super(debugger);
-		setLayout(new GridLayout(2,1));
+		frame.setSize(1024,250);
+		center();
+		setLayout(new BorderLayout());
 		component = new FilterExecutionGuiComponent();
-		add(component);
+		add(component,BorderLayout.CENTER);
 		Button button = new Button("Next");
 		button.addActionListener(this);
-		add(button);
+		add(button,BorderLayout.SOUTH);
 		repaint();
 	}
 
