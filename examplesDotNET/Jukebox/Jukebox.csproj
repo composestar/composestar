@@ -110,6 +110,11 @@
                     AssemblyName = "ComposeStarRuntimeInterpreter"
                     HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
+                <Reference
+                    Name = "Song"
+                    AssemblyName = "Song"
+                    HintPath = "Song.dll"
+                />
             </References>
         </Build>
         <Files>
