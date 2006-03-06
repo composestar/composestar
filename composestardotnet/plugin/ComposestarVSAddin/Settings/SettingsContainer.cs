@@ -29,6 +29,7 @@ namespace ComposestarVSAddin
 		private TriStateBooleanModes _verifyAssemblies = TriStateBooleanModes.NotSet;
 		private DebugModes _buildDebugLevel = DebugModes.NotSet;
 		private DebugModes _runDebugLevel = DebugModes.NotSet;
+		private TriStateBooleanModes _incremental = TriStateBooleanModes.NotSet;
 
 
 		[CategoryAttribute("User defined settings"),  
@@ -88,6 +89,21 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._verifyAssemblies = value;
+			}
+		}
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("Incremental compilation."),
+		IniSettingFieldAttribute("INCRE_ENABLED", "Common")]
+		public TriStateBooleanModes Incremental
+		{
+			get
+			{
+				return this._incremental;
+			}
+			set 
+			{
+				this._incremental = value;
 			}
 		}
 
