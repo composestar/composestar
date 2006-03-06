@@ -16,10 +16,10 @@ header {
  * Parser / lexer class for LTL files
  */
 package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL;
-import Composestar.Runtime.CODER.Halter;
+import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
-import Composestar.Runtime.CODER.BreakPoint.*;
-import Composestar.Runtime.CODER.Value.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.*;
+import Composestar.RuntimeCore.CODER.Value.*;
 }
 
 class LtlParser extends Parser;

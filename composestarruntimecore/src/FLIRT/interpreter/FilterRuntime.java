@@ -18,7 +18,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterRuntime.java,v 1.5 2006/02/15 14:16:14 composer Exp $
+ * $Id: FilterRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
 public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable, DebuggableFilter
 {
@@ -115,4 +115,13 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
 		return this.theFilterTypeRuntime;
 	}
 
+	public String getDeclerationFileName()
+	{
+		return getReference().getDescriptionFileName();
+	}
+
+	public int getDeclerationLineNumber()
+	{
+		return getReference().getDescriptionLineNumber();
+	}
 }

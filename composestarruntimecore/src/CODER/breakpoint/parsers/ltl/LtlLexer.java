@@ -64,6 +64,7 @@ public Token nextToken() throws TokenStreamException {
 	Token theRetToken=null;
 tryAgain:
 	for (;;) {
+		Token _token = null;
 		int _ttype = Token.INVALID_TYPE;
 		resetText();
 		try {   // for char stream error handling
@@ -234,6 +235,7 @@ tryAgain:
 	public final void mAND(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = AND;
+		int _saveIndex;
 		
 		match('&');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -246,6 +248,7 @@ tryAgain:
 	public final void mOR(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = OR;
+		int _saveIndex;
 		
 		match('|');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -258,6 +261,7 @@ tryAgain:
 	public final void mEQ(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = EQ;
+		int _saveIndex;
 		
 		match("==");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -270,6 +274,7 @@ tryAgain:
 	public final void mNOTEQ(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = NOTEQ;
+		int _saveIndex;
 		
 		match("!=");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -282,6 +287,7 @@ tryAgain:
 	public final void mBIGGEREQ(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = BIGGEREQ;
+		int _saveIndex;
 		
 		match("=>");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -294,6 +300,7 @@ tryAgain:
 	public final void mBIGGEREQI(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = BIGGEREQI;
+		int _saveIndex;
 		
 		match(">=");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -306,6 +313,7 @@ tryAgain:
 	public final void mBIGERTHEN(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = BIGERTHEN;
+		int _saveIndex;
 		
 		match(">");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -318,6 +326,7 @@ tryAgain:
 	public final void mSMALLERTHEN(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SMALLERTHEN;
+		int _saveIndex;
 		
 		match("=<");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -330,6 +339,7 @@ tryAgain:
 	public final void mSMALLERTHENI(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SMALLERTHENI;
+		int _saveIndex;
 		
 		match("<=");
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -342,6 +352,7 @@ tryAgain:
 	public final void mTIMES(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = TIMES;
+		int _saveIndex;
 		
 		match('*');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -354,6 +365,7 @@ tryAgain:
 	public final void mADD(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = ADD;
+		int _saveIndex;
 		
 		match('+');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -366,6 +378,7 @@ tryAgain:
 	public final void mMINUS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = MINUS;
+		int _saveIndex;
 		
 		match('-');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -378,6 +391,7 @@ tryAgain:
 	public final void mMOD(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = MOD;
+		int _saveIndex;
 		
 		match('%');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -390,6 +404,7 @@ tryAgain:
 	public final void mDIVIDE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DIVIDE;
+		int _saveIndex;
 		
 		match('/');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -402,6 +417,7 @@ tryAgain:
 	public final void mLPARENTHESIS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = LPARENTHESIS;
+		int _saveIndex;
 		
 		match('(');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -414,6 +430,7 @@ tryAgain:
 	public final void mRPARENTHESIS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = RPARENTHESIS;
+		int _saveIndex;
 		
 		match(')');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -426,6 +443,7 @@ tryAgain:
 	public final void mGLOBAL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = GLOBAL;
+		int _saveIndex;
 		
 		switch ( LA(1)) {
 		case 'G':
@@ -453,6 +471,7 @@ tryAgain:
 	protected final void mG(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = G;
+		int _saveIndex;
 		
 		match('G');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -465,6 +484,7 @@ tryAgain:
 	public final void mFUTURE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = FUTURE;
+		int _saveIndex;
 		
 		switch ( LA(1)) {
 		case 'F':
@@ -492,6 +512,7 @@ tryAgain:
 	protected final void mF(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = F;
+		int _saveIndex;
 		
 		match('F');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -504,6 +525,7 @@ tryAgain:
 	public final void mNEXT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = NEXT;
+		int _saveIndex;
 		
 		switch ( LA(1)) {
 		case 'X':
@@ -531,6 +553,7 @@ tryAgain:
 	protected final void mX(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = X;
+		int _saveIndex;
 		
 		match('X');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -543,6 +566,7 @@ tryAgain:
 	protected final void mN(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = N;
+		int _saveIndex;
 		
 		match('N');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -555,6 +579,7 @@ tryAgain:
 	public final void mUNTIL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = UNTIL;
+		int _saveIndex;
 		
 		mU(false);
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -567,6 +592,7 @@ tryAgain:
 	protected final void mU(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = U;
+		int _saveIndex;
 		
 		match('U');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -579,6 +605,7 @@ tryAgain:
 	public final void mRELEASE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = RELEASE;
+		int _saveIndex;
 		
 		mR(false);
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -591,6 +618,7 @@ tryAgain:
 	protected final void mR(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = R;
+		int _saveIndex;
 		
 		match('R');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -603,6 +631,7 @@ tryAgain:
 	protected final void mDIGIT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DIGIT;
+		int _saveIndex;
 		
 		matchRange('0','9');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -615,6 +644,7 @@ tryAgain:
 	protected final void mSLETTER(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SLETTER;
+		int _saveIndex;
 		
 		matchRange('a','z');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -627,6 +657,7 @@ tryAgain:
 	protected final void mBLETTER(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = BLETTER;
+		int _saveIndex;
 		
 		matchRange('A','Z');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -639,6 +670,7 @@ tryAgain:
 	protected final void mDOT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DOT;
+		int _saveIndex;
 		
 		match('.');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -651,6 +683,7 @@ tryAgain:
 	protected final void mSPECIAL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SPECIAL;
+		int _saveIndex;
 		
 		match('_');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -663,6 +696,7 @@ tryAgain:
 	protected final void mALL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = ALL;
+		int _saveIndex;
 		
 		{
 		switch ( LA(1)) {
@@ -716,6 +750,7 @@ tryAgain:
 	protected final void mWORD(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = WORD;
+		int _saveIndex;
 		
 		{
 		_loop39:
@@ -739,6 +774,7 @@ tryAgain:
 	protected final void mUSED(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = USED;
+		int _saveIndex;
 		
 		{
 		switch ( LA(1)) {
@@ -788,6 +824,7 @@ tryAgain:
 	protected final void mFREE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = FREE;
+		int _saveIndex;
 		
 		matchRange('A','E');
 		matchRange('H','M');
@@ -808,6 +845,7 @@ tryAgain:
 	protected final void mNEWLINE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = NEWLINE;
+		int _saveIndex;
 		
 		{
 		boolean synPredMatched52 = false;
@@ -853,6 +891,7 @@ inputState.guessing--;
 	public final void mWS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = WS;
+		int _saveIndex;
 		
 		switch ( LA(1)) {
 		case '\n':  case '\r':
@@ -908,7 +947,8 @@ inputState.guessing--;
 	public final void mNAME(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = NAME;
-
+		int _saveIndex;
+		
 		{
 		switch ( LA(1)) {
 		case '0':  case '1':  case '2':  case '3':

@@ -21,7 +21,7 @@ IF "%1"=="" (
 
 SUBST %DRIVE% .
 IF %ERRORLEVEL% == 0 (
-	CMD /C "%DRIVE% && cd composestarcore && make && cd .. && cd composestardotnet && make && cd .. && cd composestarruntimedotnet && make && cd .."
+	CMD /C "%DRIVE% && cd composestarcore && make && cd .. && cd composestardotnet && make && cd .. && cd composestarruntimecore && make && cd .. && cd composestarruntimedotnet && make && cd .."
 	IF not %ERRORLEVEL% == 0 (
 		pause
 	)

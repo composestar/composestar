@@ -13,7 +13,7 @@
  * Parser / lexer class for LTL files
  */
 package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg;
-import omposestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 
 import java.io.InputStream;
 import antlr.TokenStreamException;
@@ -61,6 +61,7 @@ public Token nextToken() throws TokenStreamException {
 	Token theRetToken=null;
 tryAgain:
 	for (;;) {
+		Token _token = null;
 		int _ttype = Token.INVALID_TYPE;
 		resetText();
 		try {   // for char stream error handling
@@ -165,6 +166,7 @@ tryAgain:
 	public final void mOPTIONAL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = OPTIONAL;
+		int _saveIndex;
 		
 		match('?');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -177,6 +179,7 @@ tryAgain:
 	public final void mPLUS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = PLUS;
+		int _saveIndex;
 		
 		match('+');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -189,6 +192,7 @@ tryAgain:
 	public final void mSTAR(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = STAR;
+		int _saveIndex;
 		
 		match('*');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -201,6 +205,7 @@ tryAgain:
 	public final void mNEXT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = NEXT;
+		int _saveIndex;
 		
 		{
 		switch ( LA(1)) {
@@ -240,6 +245,7 @@ tryAgain:
 	public final void mOR(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = OR;
+		int _saveIndex;
 		
 		match('|');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -252,6 +258,7 @@ tryAgain:
 	public final void mLPARENTHESIS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = LPARENTHESIS;
+		int _saveIndex;
 		
 		match('(');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -264,6 +271,7 @@ tryAgain:
 	public final void mRPARENTHESIS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = RPARENTHESIS;
+		int _saveIndex;
 		
 		match(')');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -276,6 +284,7 @@ tryAgain:
 	protected final void mDIGIT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DIGIT;
+		int _saveIndex;
 		
 		matchRange('0','9');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -288,6 +297,7 @@ tryAgain:
 	protected final void mSLETTER(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SLETTER;
+		int _saveIndex;
 		
 		matchRange('a','z');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -300,6 +310,7 @@ tryAgain:
 	protected final void mBLETTER(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = BLETTER;
+		int _saveIndex;
 		
 		matchRange('A','Z');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -312,6 +323,7 @@ tryAgain:
 	protected final void mDOT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = DOT;
+		int _saveIndex;
 		
 		match('.');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -324,6 +336,7 @@ tryAgain:
 	protected final void mSPECIAL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = SPECIAL;
+		int _saveIndex;
 		
 		match('_');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -336,6 +349,7 @@ tryAgain:
 	protected final void mALL(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = ALL;
+		int _saveIndex;
 		
 		{
 		switch ( LA(1)) {
@@ -388,7 +402,9 @@ tryAgain:
 	
 	public final void mNAME(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
-		_ttype = NAME;	
+		_ttype = NAME;
+		int _saveIndex;
+		
 		{
 		int _cnt24=0;
 		_loop24:
@@ -413,6 +429,7 @@ tryAgain:
 	public final void mNEWLINE(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = NEWLINE;
+		int _saveIndex;
 		
 		{
 		boolean synPredMatched28 = false;
