@@ -1,4 +1,4 @@
-package Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.Reg;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg;
 
 /**
  * Summary description for RegularExpression.

@@ -1,9 +1,9 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger;
 
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
-import Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.*;
-import Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.LTL.*;
-import Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.Reg.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg.*;
 
 import Composestar.RuntimeCore.Utils.Debug;
 

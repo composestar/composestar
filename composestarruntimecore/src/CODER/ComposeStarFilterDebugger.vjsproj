@@ -205,6 +205,86 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "breakpoint\parsers\BreakPointParseException.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\BreakPointParser.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\ltl\BreakPointLTLParser.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\ltl\LtlLexer.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\ltl\LtlParser.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\ltl\LtlParserTokenTypes.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\BreakPointRegParser.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegLexer.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegParser.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegParserTokenTypes.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegularExpression.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegularExpressionName.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegularExpressionOperator.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegularExpressionOptional.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegularExpressionPlus.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "breakpoint\parsers\reg\RegularExpressionStar.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "consoleDebugger\ConsolePrinterDebugger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -285,11 +365,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\FilterVisualizer.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "visualDebugger\VisualBreakPointMaker.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -300,47 +375,57 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\CustomGuiComponent.java"
+                    RelPath = "visualDebugger\CodeDebugger\CodeDebugger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\DebugGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\FilterVisualizer.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\DispatchGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\CustomGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\ErrorGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\DebugGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\FilterExecutionGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\DispatchGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\FilterGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\ErrorGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\MessageGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\FilterExecutionGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\MetaGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\FilterGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "visualDebugger\GuiComponents\ObjectGuiComponent.java"
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\MessageGuiComponent.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\MetaGuiComponent.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "visualDebugger\FilterVisualizer\GuiComponents\ObjectGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -356,86 +441,6 @@
                 />
                 <File
                     RelPath = "visualDebugger\Inspectors\ObjectInspector.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\BreakPointParseException.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\BreakPointParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\ltl\BreakPointLTLParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\ltl\LtlLexer.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\ltl\LtlParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\ltl\LtlParserTokenTypes.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\BreakPointRegParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegLexer.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegParserTokenTypes.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegularExpression.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegularExpressionName.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegularExpressionOperator.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegularExpressionOptional.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegularExpressionPlus.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\parsers\reg\RegularExpressionStar.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

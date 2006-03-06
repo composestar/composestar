@@ -1,4 +1,4 @@
-package Composestar.RuntimeCore.CODER.VisualDebugger;
+package Composestar.RuntimeCore.CODER.CodeDebugger;
 
 import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.BreakPoint.AlwaysBreakBreakPoint;
@@ -9,8 +9,9 @@ import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
 import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.FilterExecutionGuiComponent;
-import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
+
+import Composestar.RuntimeCore.CODER.VisualDebugger.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,13 +23,12 @@ import java.util.Dictionary;
 
 
 /**
- * Summary description for VisualDebugger.
+ * Summary description for CodeDebugger.
  */
-public class VisualDebugger implements Debugger, BreakPointListener{
-	private FilterVisualizer filterscreen;
+public class CodeDebugger implements Debugger, BreakPointListener{
 	private DebuggerProvider provider = null;
 
-    public VisualDebugger(DebuggerProvider provider) {
+    public CodeDebugger(DebuggerProvider provider) {
         this.provider = provider;
     }
 
@@ -36,12 +36,10 @@ public class VisualDebugger implements Debugger, BreakPointListener{
         provider.HaltRuntime();
         provider.clearBreakPoints();
 
-		new VisualBreakPointMaker(this);
 	}
 
 	public void startVisualizer()
 	{
-		filterscreen = new FilterVisualizer(this);
 		provider.ResumeRuntime();
 	}
 
@@ -57,10 +55,7 @@ public class VisualDebugger implements Debugger, BreakPointListener{
     }
 
     public void breakEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context) {
-		if(filterscreen != null)
-		{
-			filterscreen.renderFilterEvent(eventType, handler, currentFilter, source, message, target, filters, context);
-		}
+
     }
 
 	public void setBreakPoint(BreakPoint breakPoint)

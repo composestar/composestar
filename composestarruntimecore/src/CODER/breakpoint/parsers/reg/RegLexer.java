@@ -12,8 +12,8 @@
 /**
  * Parser / lexer class for LTL files
  */
-package Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.Reg;
-import Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.*;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg;
+import omposestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 
 import java.io.InputStream;
 import antlr.TokenStreamException;

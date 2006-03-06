@@ -50,7 +50,7 @@ public class ConsolePrinterDebugger implements Debugger, BreakPointListener {
     }
 
     public void breakEvent(int eventType, StateHandler handler,DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context) {
-        switch (eventType) {
+	    switch (eventType) {
             case DebuggerProvider.FILTER_ACCEPTED:
                 Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFilter is accepted.");
                 break;

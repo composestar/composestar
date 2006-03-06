@@ -15,8 +15,8 @@ header {
 /**
  * Parser / lexer class for LTL files
  */
-package Composestar.Runtime.CODER.VisualDebugger.Parsers.Reg;
-import Composestar.Runtime.CODER.VisualDebugger.Parsers.*;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 }
 
 class RegParser extends Parser;

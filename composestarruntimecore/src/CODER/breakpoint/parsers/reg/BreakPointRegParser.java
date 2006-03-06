@@ -1,6 +1,6 @@
-package Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.Reg;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg;
 
-import Composestar.RuntimeCore.CODER.VisualDebugger.Parsers.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.CODER.Halter;
 import java.io.StringReader;

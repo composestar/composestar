@@ -1,7 +1,7 @@
-package Composestar.RuntimeCore.CODER.VisualDebugger.Parsers;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers;
 
 import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
+import Composestar.RuntimeCore.CODER.BreakPoint.*;
 /**
  * Summary description for BreakPointParser.
  */

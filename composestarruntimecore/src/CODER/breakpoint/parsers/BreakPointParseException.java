@@ -1,4 +1,4 @@
-package Composestar.RuntimeCore.CODER.VisualDebugger.Parsers;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers;
 
 /**
  * Summary description for BreakPointParseException.

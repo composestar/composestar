@@ -1,6 +1,7 @@
-package Composestar.RuntimeCore.CODER.VisualDebugger;
+package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer;
 
-import Composestar.RuntimeCore.CODER.VisualDebugger.GuiComponents.FilterExecutionGuiComponent;
+import Composestar.RuntimeCore.CODER.VisualDebugger.*;
+import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.*;
 import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.DebuggerProvider;

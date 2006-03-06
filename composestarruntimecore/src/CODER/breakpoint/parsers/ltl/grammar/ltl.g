@@ -15,9 +15,9 @@ header {
 /**
  * Parser / lexer class for LTL files
  */
-package Composestar.Runtime.CODER.VisualDebugger.Parsers.LTL;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL;
 import Composestar.Runtime.CODER.Halter;
-import Composestar.Runtime.CODER.VisualDebugger.Parsers.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
 import Composestar.Runtime.CODER.BreakPoint.*;
 import Composestar.Runtime.CODER.Value.*;
 }
