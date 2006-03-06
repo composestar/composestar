@@ -38,7 +38,7 @@ public class ResourceDescription {
      * @roseuid 40474745038F
      */
     public String getAlphabet() {
-    	return new String("");     
+    	return "";
     }
     
     /**
@@ -69,6 +69,6 @@ public class ResourceDescription {
      * @roseuid 404C7E18026E
      */
     public String toString() {
-     	return new String("Resource description: "+this.ok_regex);     
+     	return "Resource description: " + this.ok_regex;
     }
 }

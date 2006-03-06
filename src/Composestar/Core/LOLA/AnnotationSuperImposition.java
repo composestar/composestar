@@ -201,8 +201,8 @@ public class AnnotationSuperImposition
 	  			msg.append("as the order of superimposing annotations is arbitrary, this would make the compilation process ambiguous.\n");
 	  			msg.append("The problem was detected while applying the following annotation superimposition:\n");
 		  		AnnotationAction act = (AnnotationAction)annotationActions.elementAt(action);
-	  			msg.append("Attaching annotation " + act.annotation.getUnitName() + " to the program elements selected by " + act.selector.name + "\n");
-	  			msg.append("This action shrunk the resultset of selector " + ((Selector)selectors.elementAt(errorLocation)).name);
+                  msg.append("Attaching annotation ").append(act.annotation.getUnitName()).append(" to the program elements selected by ").append(act.selector.name).append("\n");
+                  msg.append("This action shrunk the resultset of selector ").append(((Selector) selectors.elementAt(errorLocation)).name);
 	  		 // At least one of the result sets shrunk, this is not allowed
 	  			throw new ModuleException(msg.toString(), "LOLA");
 	  		}

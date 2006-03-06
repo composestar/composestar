@@ -145,7 +145,7 @@ public class Module
 	 */ 
 	protected boolean isEnabled(String phase)
 	{
-		if(this.phase!="" && !this.phase.equals(phase))
+		if(!"".equals(this.phase) && !this.phase.equals(phase))
 			return false;
 		else 
 			return enabled;

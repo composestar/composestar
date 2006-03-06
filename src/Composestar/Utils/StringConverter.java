@@ -31,7 +31,7 @@ public class StringConverter extends Object implements Cloneable, Serializable {
      * @roseuid 404DCD030066
      */
     public static String intToString(String value) {
-    	return(new String(value+""));     
+    	return(value + "");
     }
     
     /**

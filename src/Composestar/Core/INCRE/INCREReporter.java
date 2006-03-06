@@ -80,9 +80,9 @@ public class INCREReporter
 
 		buffer.append("<html><head><title>INCRE Report</title></head>");
 		buffer.append("<link rel=stylesheet href=");
-		buffer.append("\"file://"+this.cssFile+"\"");
+        buffer.append("\"file://").append(this.cssFile).append("\"");
 		buffer.append(" type=\"text/css\">");
-		buffer.append("<body bgcolor=#EEEEEE><b>INCRE REPORT</b><br><b>Date: </b>"+new java.util.Date().toString()+"<br><b>Project:</b> "+tempPath+"<br><br><table width=90% border=0 cellspacing=0 cellpadding=2>");
+        buffer.append("<body bgcolor=#EEEEEE><b>INCRE REPORT</b><br><b>Date: </b>").append(new Date().toString()).append("<br><b>Project:</b> ").append(tempPath).append("<br><br><table width=90% border=0 cellspacing=0 cellpadding=2>");
 		buffer.append("<tr><td class=maincell colspan=3></td></tr>");
 	}
 	
@@ -112,7 +112,7 @@ public class INCREReporter
 			
 			// append header
 			buffer.append("<tr class=startmodulerow><td><b>");
-			buffer.append("PROCESSES OF "+modulename);
+            buffer.append("PROCESSES OF ").append(modulename);
 			buffer.append("</b></td><td align=center><b>TYPE");
 			buffer.append("</b></td><td align=center><b>ELAPSED");
 			buffer.append("</b></td></tr>");
@@ -140,16 +140,16 @@ public class INCREReporter
 			long normal = elapsed-incremental-overhead;
 						
 			buffer.append("<tr class=endmodulerow><td align=right>Total Overhead</td><td></td><td>");
-			buffer.append(""+overhead);
+            buffer.append("").append(overhead);
 			buffer.append("	ms</td></tr>");
 			buffer.append("<tr class=endmodulerow><td align=right>Total Normal</td><td></td><td>");
-			buffer.append(""+normal);
+            buffer.append("").append(normal);
 			buffer.append("	ms</td></tr>");
 			buffer.append("<tr class=endmodulerow><td align=right>Total Incremental</td><td></td><td>");
-			buffer.append(""+incremental);
+            buffer.append("").append(incremental);
 			buffer.append("	ms</td></tr>");
 			buffer.append("<tr class=endmodulerow><td align=right>Total Elapsed</td><td></td><td>");
-			buffer.append(""+elapsed);
+            buffer.append("").append(elapsed);
 			buffer.append("	ms</td></tr>");
 		}
 		

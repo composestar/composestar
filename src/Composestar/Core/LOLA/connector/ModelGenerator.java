@@ -76,27 +76,27 @@ public class ModelGenerator
   	
     StringBuffer res = new StringBuffer();
     // Definition of isSomething(Unit) predicate
-    res.append("is" + typeName + "(Unit) :-\n");
-    res.append("  check_or_gen1(isUnitTypeBuiltin(Unit, '" + typeName + "')).\n\n");
+      res.append("is").append(typeName).append("(Unit) :-\n");
+      res.append("  check_or_gen1(isUnitTypeBuiltin(Unit, '").append(typeName).append("')).\n\n");
     
     // Definition of isSomethingWithName(Unit, Name) predicate
-    res.append("is" + typeName + "WithName(Unit, Name) :-\n  ");
+      res.append("is").append(typeName).append("WithName(Unit, Name) :-\n  ");
     if (!type.isNameUnique()) // Since the name is not unique, we need to apply the Source->answer generator
       res.append("check_or_gen1(");
-    res.append("isUnitNameBuiltin(Unit, Name, '" + typeName + "')");
+      res.append("isUnitNameBuiltin(Unit, Name, '").append(typeName).append("')");
     if (!type.isNameUnique())
       res.append(')');
     res.append(".\n\n");
     
     // Definition of isSomethingWithAttribute predicate (many-to-many relation)
-    res.append("is" + typeName + "WithAttribute(Unit, Attr) :-\n");
-    res.append("  check_or_gen12(hasAttributeBuiltin(Unit, Attr, '" + typeName + "')).\n\n");
+      res.append("is").append(typeName).append("WithAttribute(Unit, Attr) :-\n");
+      res.append("  check_or_gen12(hasAttributeBuiltin(Unit, Attr, '").append(typeName).append("')).\n\n");
 
-    res.append("is" + typeName + "WithNameInList(Unit, [Name|Ns]) :-\n");
-    res.append("  or(is" + typeName + "WithName(Unit, Name), is" + typeName + "WithNameInList(Unit,Ns)).\n\n");
-    
-    res.append(typeLower + "HasAnnotationWithName(Unit, AnnotName) :-\n");
-    res.append("  isAnnotationWithName(A, AnnotName), " + typeLower + "HasAnnotation(Unit, A).\n\n");
+      res.append("is").append(typeName).append("WithNameInList(Unit, [Name|Ns]) :-\n");
+      res.append("  or(is").append(typeName).append("WithName(Unit, Name), is").append(typeName).append("WithNameInList(Unit,Ns)).\n\n");
+
+      res.append(typeLower).append("HasAnnotationWithName(Unit, AnnotName) :-\n");
+      res.append("  isAnnotationWithName(A, AnnotName), ").append(typeLower).append("HasAnnotation(Unit, A).\n\n");
     
     return res.toString();
   }
@@ -111,8 +111,8 @@ public class ModelGenerator
     while (iter.hasNext())
     {
       LanguageUnitType containedType = (LanguageUnitType)iter.next();
-      res.append("is" + type.getType() + "(Unit) :-\n");
-      res.append("  is" + containedType.getType() + "(Unit).\n");
+        res.append("is").append(type.getType()).append("(Unit) :-\n");
+        res.append("  is").append(containedType.getType()).append("(Unit).\n");
     }
     res.append('\n');
 
@@ -121,8 +121,8 @@ public class ModelGenerator
     while (iter.hasNext())
     {
       LanguageUnitType containedType = (LanguageUnitType)iter.next();
-      res.append("is" + type.getType() + "WithName(Unit, Name) :-\n");
-      res.append("  is" + containedType.getType() + "WithName(Unit, Name).\n");
+        res.append("is").append(type.getType()).append("WithName(Unit, Name) :-\n");
+        res.append("  is").append(containedType.getType()).append("WithName(Unit, Name).\n");
     }
     res.append('\n');
     
@@ -171,7 +171,7 @@ public class ModelGenerator
     var1unique = rel.getRelationType(2).isUnique();
     StringBuffer res = new StringBuffer();
     // Definition of relation predicate
-    res.append(rel.getPredicateName() + "(" + commaSeparated(varList) + ") :-\n  ");
+      res.append(rel.getPredicateName()).append("(").append(commaSeparated(varList)).append(") :-\n  ");
 
     if (!var1unique && !var2unique) // It is a (*,*)-relation
     { /* Because both sides can have multiple answers, we have to put
@@ -192,9 +192,9 @@ public class ModelGenerator
        * This reduces the number of cases we have to handle on the prolog-side of the connector (which is slow!) */   
     }
     // else: it is a (1,1)-relation so we don't need an answer generator (the answers are already unique)
-    
-    res.append(rel.getPredicateName() + "Builtin");
-    res.append("(" + commaSeparated(varList) + ")");
+
+      res.append(rel.getPredicateName()).append("Builtin");
+      res.append("(").append(commaSeparated(varList)).append(")");
     if (!(var1unique && var2unique)) // Some generator was included, so we have to add the closing ')'
       res.append(')');
     res.append(".\n\n");
@@ -212,8 +212,8 @@ public class ModelGenerator
     {
       RelationPredicate containedRel = (RelationPredicate)iter.next();
       Vector varList = getVarList(containedRel);
-      res.append(rel.getPredicateName() + "(" + commaSeparated(varList) + ") :-\n  ");
-      res.append(containedRel.getPredicateName() + "(" + commaSeparated(varList) + ").\n");
+        res.append(rel.getPredicateName()).append("(").append(commaSeparated(varList)).append(") :-\n  ");
+        res.append(containedRel.getPredicateName()).append("(").append(commaSeparated(varList)).append(").\n");
     }
     res.append('\n');
     
