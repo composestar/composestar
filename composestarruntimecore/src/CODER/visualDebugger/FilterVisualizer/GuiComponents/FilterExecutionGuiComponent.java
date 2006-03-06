@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents;
 
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,7 +27,7 @@ public class FilterExecutionGuiComponent extends Panel {
     private ArrayList filters;
     private Object source;
     private Object target;
-    private DebuggableMessage message;
+    private DebuggableMessageList message;
     private Dictionary context;
 
     private Object deveredTarget = null;
@@ -44,12 +44,12 @@ public class FilterExecutionGuiComponent extends Panel {
         });
     }
 
-    public void fill(Object source, Object target, DebuggableMessage message, ArrayList filters) {
+    public void fill(Object source, Object target, DebuggableMessageList message, ArrayList filters) {
         fillIt(source, target, message, filters);
         repaint();
     }
 
-    private synchronized void fillIt(Object source, Object target, DebuggableMessage message, ArrayList filters) {
+    private synchronized void fillIt(Object source, Object target, DebuggableMessageList message, ArrayList filters) {
         this.source = source;
         this.target = target;
         this.message = message;
@@ -121,18 +121,18 @@ public class FilterExecutionGuiComponent extends Panel {
         }
     }
 
-    public void paintMessage(Graphics g, DebuggableMessage message, int x, int y, int width, int height) {
+    public void paintMessage(Graphics g, DebuggableMessageList message, int x, int y, int width, int height) {
         g.drawLine(x, y, x + width, y);
         g.drawLine(x + width, y, x + width - height, y - height);
         g.drawLine(x + width, y, x + width - height, y + height);
     }
 
-    public void updateFilterAccepted(DebuggableFilter f, DebuggableMessage modifiedMessage, Dictionary context) {
+    public void updateFilterAccepted(DebuggableFilter f, DebuggableMessageList modifiedMessage, Dictionary context) {
         updateFilterAck(f, modifiedMessage, context);
         repaint();
     }
 
-    private synchronized void updateFilterAck(DebuggableFilter f, DebuggableMessage modifiedMessage, Dictionary context) {
+    private synchronized void updateFilterAck(DebuggableFilter f, DebuggableMessageList modifiedMessage, Dictionary context) {
         this.message = modifiedMessage;
         this.context = context;
         int i = items.size();

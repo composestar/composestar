@@ -7,7 +7,7 @@ import Composestar.RuntimeCore.CODER.Debugger;
 import Composestar.RuntimeCore.CODER.DebuggerProvider;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents.*;
 
@@ -47,7 +47,7 @@ public class CodeDebugger  extends Visualizer implements  ActionListener{
 	}
 
 	private StateHandler handler;
-	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context)
+	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
 	{
 		this.handler = handler;
 		if(eventType == DebuggerProvider.FILTER_REJECTED || eventType == DebuggerProvider.FILTER_ACCEPTED)

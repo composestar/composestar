@@ -1,6 +1,6 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents;
 
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 import Composestar.RuntimeCore.CODER.VisualDebugger.Inspectors.ObjectInspector;
 
 import java.awt.*;
@@ -24,7 +24,7 @@ public class ObjectGuiComponent extends DebugGuiComponent {
         new ObjectInspector("", object);
     }
 
-    public void paint(Graphics g, DebuggableMessage message, Dictionary context) {
+    public void paint(Graphics g, DebuggableMessageList message, Dictionary context) {
         g.setColor(Color.black);
         g.drawOval(x, y, xi, yi);
         String text = object == null ? "Null" : object.getClass().getName();

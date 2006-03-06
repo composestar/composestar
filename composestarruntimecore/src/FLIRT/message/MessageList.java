@@ -13,7 +13,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageList.java,v 1.3 2006/02/15 11:46:23 composer Exp $
+ * $Id: MessageList.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -30,80 +30,7 @@ public class MessageList implements DebuggableMessageList
 	public static int OUTGOING = 0;
 	public static int INCOMING = 1;
 	
-	//public int direction;
 
-	//public int getDirection()
-	//{
-	//	return this.direction;
-	//}
-	//public void setDirection(int direction)
-	//{
-	//	this.direction = direction;
-	//}
-
-	/**
-	 *  This buffer is used to lock execution of the MessageHandlingFacility 
-	 *  until a return value or an executable action is written to the same buffer
-	 * 
-	 */
-	//ResponseBuffer responseBuffer;
-
-	/**
-	 * Original Sender of the message -as os this version this is not used
-	 * due to constraints of the message interception layer
-	 */
-	//private Object sender;
-    
-	/**
-	 * Object to whom the message is directed
-	 */
-	//private Object target;
-    
-	/**
-	 * Inner
-	 */
-	//private Object inner;
-	//private Object server;
-    
-	/**
-	 * Name of the message
-	 */
-	//private String selector;
-    
-	/**
-	 * Arguments of the message
-	 */
-	//private Object args[];
-
-	/**
-	 * Internals of the current FilterModule
-	 */
-	//private Dictionary internals = new Hashtable();
-    
-	/**
-	 * Externals of the current FilterModule
-	 */
-	//private Dictionary externals = new Hashtable();
-	//private Dictionary filterParams = new Hashtable();
-
-	/*
-	private int STATE = 0;
-	public static final int MESSAGE_NONSTATIC_NONSTATIC_VOID   = 1; // A message from non static to a non static method
-	public static final int MESSAGE_NONSTATIC_NONSTATIC_RETURN = 2; // A message from non static to a non static method with return
-	
-	public static final int MESSAGE_STATIC_NONSTATIC_VOID      = 3; // A message from static to a non static method
-	public static final int MESSAGE_STATIC_NONSTATIC_RETURN    = 4; // A message from static to a non static method with return
-	
-	public static final int MESSAGE_NONSTATIC_STATIC_VOID      = 5; // A message from non static to a static method
-	public static final int MESSAGE_NONSTATIC_STATIC_RETURN	   = 6; // A message from non static to a static method with return
-	
-	public static final int MESSAGE_STATIC_STATIC_VOID         = 7; // A message from static to a static method
-	public static final int MESSAGE_STATIC_STATIC_RETURN       = 8; // A message from static to a static method with return
-
-	public static final int MESSAGE_CONSTRUCTOR				   = 9; // A construction message
-	*/
-  
-	//private Message getOrgMessage();
 	private int orgMessagePointer;
 	private LinkedList messages;
 
@@ -114,23 +41,12 @@ public class MessageList implements DebuggableMessageList
 		messages = new LinkedList();
 		messages.add( newMessage );
 		orgMessagePointer = messages.size() - 1;
-		
-		/* testing...
-		if( m.getSelector().equals( "getLevelData" ) ) 
-		{
-			Message x = new Message( "sayHello" );
-			x.STATE = x.MESSAGE_NONSTATIC_NONSTATIC_VOID;
-			x.setTarget( m.getInternals().get( "hello" ) );
-			messages.add( x );
-		}
-		*/
+	
 	}
     
 	public MessageList(MessageList ml)
 	{
-		//getOrgMessage() = new Message( ml.getOrgMessage() );
 		orgMessagePointer = ml.getOrgMessagePointer();
-		//this.STATE = ml.STATE;
 
 		messages = new LinkedList();
 		LinkedList othermessages = ml.getMessages();
@@ -351,18 +267,6 @@ public class MessageList implements DebuggableMessageList
 	public Object getResponse()
 	{
 		return getOrgMessage().getResponse();
-		/*
-		Object response = this.getResponseBuffer().consume();
-
-		if( response instanceof DispatchAction )
-			response = ((DispatchAction)response).execute();
-		else if( response instanceof DispatchToInnerAction )
-			response = ((DispatchToInnerAction)response).execute();
-		else if( response instanceof SendAction )
-			response = ((SendAction)response).execute();
-
-		return response;
-		*/
 	}
 
 	public Message getOrgMessage() 

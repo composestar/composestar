@@ -6,7 +6,7 @@ import java.util.Dictionary;
  * Summary description for DebuggableFilter.
  */
 public interface DebuggableFilter {
-    public boolean canAccept(DebuggableMessage message, Dictionary context);
+    public boolean canAccept(DebuggableMessageList message, Dictionary context);
 
     public DebuggableFilterType getDebuggableFilterType();
 

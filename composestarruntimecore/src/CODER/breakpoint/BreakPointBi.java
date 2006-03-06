@@ -38,7 +38,7 @@ public abstract class BreakPointBi extends BreakPointMono
 		return left.threadSpecific() || right.threadSpecific();
 	}
 
-	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context)
+	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
 	{
 		//Calculate everything, things can change
 		boolean isLeft = left.matchEvent(eventType, currentFilter, source, message, target, filters, context);

@@ -55,5 +55,5 @@ public abstract class Visualizer extends Panel
 	{
 		((VisualizerFrame)frame).center();
 	}
-	public abstract void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context);
+	public abstract void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context);
 }

@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents;
 
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 
 import java.awt.*;
 import java.util.Dictionary;
@@ -14,7 +14,7 @@ public class MetaGuiComponent extends FilterGuiComponent {
         super(x, y, xi, yi, filter);
     }
 
-    public void paint(Graphics g, DebuggableMessage message, Dictionary context) {
+    public void paint(Graphics g, DebuggableMessageList message, Dictionary context) {
         g.setColor(getFilterColor(message, context));
         g.fillRect(x, y, this.xi, this.yi);
         g.setColor(Color.white);

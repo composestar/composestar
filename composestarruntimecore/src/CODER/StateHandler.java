@@ -39,7 +39,7 @@ public class StateHandler {
 		this.breakpoint = breakpoint;
 	}
 	
-	public void event(int eventType,DebuggableFilter currentFilter, Object source,DebuggableMessage message, Object target, ArrayList filters, Dictionary context)
+	public void event(int eventType,DebuggableFilter currentFilter, Object source,DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
 	{
 		halter.halting();
 		Debug.out(Debug.MODE_DEBUG,"FLIRT(RuntimeStateHandler)","Having event");

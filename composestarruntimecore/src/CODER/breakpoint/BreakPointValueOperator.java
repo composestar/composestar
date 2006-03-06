@@ -4,7 +4,7 @@ import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 import Composestar.RuntimeCore.CODER.Value.Value;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -114,7 +114,7 @@ public class BreakPointValueOperator extends BreakPoint implements Value
 		return false;
 	}
 
-	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context)
+	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
 	{
 		//Just check the last one.
 		return getValue() == oTrue;

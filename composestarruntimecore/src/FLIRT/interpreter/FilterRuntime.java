@@ -18,7 +18,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: FilterRuntime.java,v 1.2 2006/03/06 11:36:09 reddog33hummer Exp $
  */
 public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable, DebuggableFilter
 {
@@ -105,7 +105,7 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
 		filterElements.add(filterElement);
 	}
 
-	public boolean canAccept(DebuggableMessage message,Dictionary context)
+	public boolean canAccept(DebuggableMessageList message,Dictionary context)
 	{
 		return canAccept((MessageList) message,context);
 	}

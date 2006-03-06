@@ -21,7 +21,7 @@ public abstract class FilterGuiComponent extends DebugGuiComponent {
         new FilterInspector("", filter);
     }
 
-    public Color getFilterColor(DebuggableMessage message, Dictionary context) {
+    public Color getFilterColor(DebuggableMessageList message, Dictionary context) {
         return filter.canAccept(message, context) ? Color.green : Color.red;
     }
 

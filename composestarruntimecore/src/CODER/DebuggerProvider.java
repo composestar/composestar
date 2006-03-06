@@ -1,7 +1,6 @@
 package Composestar.RuntimeCore.CODER;
 
-import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -37,9 +36,9 @@ public abstract class DebuggerProvider {
 	public static final int FILTER_EVALUATION_START = 2;
     public static final int MESSAGE_INTERCEPTED = 3;
 
-    public static void event(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context) {
+    public static void event(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
         instance.fireEvent(eventType, currentFilter, source, message, target, filters, context);
     }
 
-    public abstract void fireEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context);
+    public abstract void fireEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context);
 }

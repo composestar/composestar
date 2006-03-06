@@ -4,7 +4,7 @@ import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -19,9 +19,9 @@ public abstract class BreakPoint {
         this.halt = halt; //Next stop, Project HALT
     }
 
-    public abstract boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context);
+    public abstract boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context);
 
-    public void testEvent(StateHandler handler, int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context) {
+    public void testEvent(StateHandler handler, int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
         if (matchEvent(eventType, currentFilter, source, message, target, filters, context)) {
             event(eventType, handler, currentFilter, source, message, target, filters, context);
         }
@@ -49,7 +49,7 @@ public abstract class BreakPoint {
 
     protected static BreakPointListener[] listeners = new BreakPointListener[0];
 
-    public void event(int eventType, StateHandler handler ,DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context) {
+    public void event(int eventType, StateHandler handler ,DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
         for (int i = 0; i < listeners.length; i++) {
             listeners[i].breakEvent(eventType, handler,currentFilter, source, message, target, filters, context);
         }
