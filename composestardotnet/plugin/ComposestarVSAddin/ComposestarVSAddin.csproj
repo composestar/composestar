@@ -225,6 +225,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Settings\ISettingsContainer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Settings\RegistryAccess.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -7,11 +7,11 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 [assembly: AssemblyTitle("Compose* VS add-in")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Visual Studio 2003 Add-in for Compose*.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("University of Twente")]
 [assembly: AssemblyProduct("Compose*")]
-[assembly: AssemblyCopyright("2003, 2004, 2005 University of Twente")]
+[assembly: AssemblyCopyright("2003, 2004, 2005, 2006 University of Twente")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 

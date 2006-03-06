@@ -81,21 +81,26 @@ namespace ComposestarVSAddin
 		private readonly string   m_commandNameBuild;
 		private readonly string   m_commandNameRun;
 		private readonly string   m_commandNameSettings;
+		private readonly string   m_commandNameClean;
 
 		private const string ADDIN_BUILD        = "Build";
 		private const string ADDIN_RUN          = "Run";
+		private const string ADDIN_CLEAN        = "Clean";
 		private const string ADDIN_SETTINGS     = "Settings";
 
 		private const int    BITMAP_ID_BUILD    = 5830;
+		private const int    BITMAP_ID_CLEAN    = 1786;    // 1088 1786 67 
 		private const int    BITMAP_ID_RUN      = 2945; // alternatives: 186 2997 3820
 		private const int    BITMAP_ID_SETTINGS = 642;  // alternatives: 1951 2597 2770
 
 		private string m_captionBuild ="Build with Compose*" ;
 		private string m_captionRun = "Run with Compose*";
 		private string m_captionSettings = "Compose* Settings";
+        private string m_captionClean = "Clean with Compose*";
 		private string m_toolTipBuild = "Will invoke Compose* to build the current solution";
 		private string m_toolTipRun = "Will invoke application build with Compose*";
 		private string m_toolTipSettings = "Opens the Compose* settings dialog";
+        private string m_toolTipClean = "Cleans the previous Compose* build information";
 
 		/// <summary>
 		///     References to <c>Command</c>s which are used to 
@@ -125,6 +130,7 @@ namespace ComposestarVSAddin
 			m_commandNameBuild = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_BUILD;
 			m_commandNameRun = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_RUN;
 			m_commandNameSettings = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_SETTINGS;
+			m_commandNameClean = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_CLEAN;
 		}
 
 		#region Add in
@@ -191,9 +197,11 @@ namespace ComposestarVSAddin
 						_dispTaskListEvents_TaskNavigatedEventHandler(this.TaskNavigated);
  
 					// Adds commands to the environment
-					AddCommand((AddIn)addInInst, ADDIN_BUILD, m_captionBuild, m_toolTipBuild, true, BITMAP_ID_BUILD, false);
-					AddCommand((AddIn)addInInst, ADDIN_RUN, m_captionRun, m_toolTipRun, true, BITMAP_ID_RUN, false);
-					AddCommand((AddIn)addInInst, ADDIN_SETTINGS, m_captionSettings, m_toolTipSettings, true, BITMAP_ID_SETTINGS, true);
+					AddCommand((AddIn)addInInst, ADDIN_BUILD, m_captionBuild, m_toolTipBuild, true, BITMAP_ID_BUILD, false, true);
+					AddCommand((AddIn)addInInst, ADDIN_RUN, m_captionRun, m_toolTipRun, true, BITMAP_ID_RUN, false, true);
+					AddCommand((AddIn)addInInst, ADDIN_CLEAN, m_captionClean, m_toolTipClean, true, BITMAP_ID_CLEAN, false, false);
+					AddCommand((AddIn)addInInst, ADDIN_SETTINGS, m_captionSettings, m_toolTipSettings, true, BITMAP_ID_SETTINGS, true, true);
+	
 					UpdateAddinControlStatus();
 				}
 				catch (Exception e) 
@@ -228,7 +236,7 @@ namespace ComposestarVSAddin
 		{
 			if (neededText == EnvDTE.vsCommandStatusTextWanted.vsCommandStatusTextWantedNone) 
 			{
-				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameSettings) 
+				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameSettings || commandName == m_commandNameClean) 
 				{
 					UpdateStatus(commandName, ref status);
 				}
@@ -245,6 +253,7 @@ namespace ComposestarVSAddin
 			QueryStatus(m_commandNameBuild, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameSettings, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
+			QueryStatus(m_commandNameClean, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 		}
 
 		/// <summary>
@@ -296,19 +305,25 @@ namespace ComposestarVSAddin
 			{
 				if(commandName == m_commandNameBuild)
 				{
-					this.onBuildBegin(EnvDTE.vsBuildScope.vsBuildScopeSolution,EnvDTE.vsBuildAction.vsBuildActionBuild);
+					this.OnBuildBegin(EnvDTE.vsBuildScope.vsBuildScopeSolution,EnvDTE.vsBuildAction.vsBuildActionBuild);
 					handled = true;
 					return;
 				}
 				else if(commandName ==  m_commandNameRun)
 				{
-					this.onRun();
+					this.OnRun();
 					handled = true;
 					return;
 				}
 				else if(commandName == m_commandNameSettings)
 				{
-					this.onSettings();
+					this.OnSettings();
+					handled = true;
+					return;
+				}
+				else if(commandName == m_commandNameClean)
+				{
+					this.OnClean();
 					handled = true;
 					return;
 				}
@@ -347,6 +362,7 @@ namespace ComposestarVSAddin
 				this.DeleteCommand( m_commandNameBuild );
 				this.DeleteCommand( m_commandNameRun );
 				this.DeleteCommand( m_commandNameSettings ); 
+				this.DeleteCommand( m_commandNameClean ); 
 
                 Debug.Instance.Log(DebugModes.Information, "AddIn", "Unloaded the Compose* Add-In.");   
 				
@@ -425,6 +441,22 @@ namespace ComposestarVSAddin
 			}
 			catch (Exception)
 			{}
+		}
+
+		/// <summary>
+		/// Safe delete a file.
+		/// </summary>
+		/// <param name="fileName"></param>
+		private void DeleteFile(string fileName)
+		{
+			if (File.Exists(fileName) )
+				try
+				{
+					File.Delete(fileName);
+				}
+				catch (IOException ex)
+				{
+				}
 		}
 
 		/// <summary>
@@ -651,7 +683,7 @@ namespace ComposestarVSAddin
 		/// <param name="bitmap">
 		///   ID of the bitmap used for the command.
 		/// </param>
-		private void AddCommand(AddIn addInInst, string name, string buttonText, string toolTip, bool msoButton, int bitmap, bool beginGroup) 
+		private void AddCommand(AddIn addInInst, string name, string buttonText, string toolTip, bool msoButton, int bitmap, bool beginGroup, bool addToToolBar) 
 		{
 			object[] contextGUIDS = new object[] { };
 			// search if command is already added to commands collection
@@ -673,7 +705,7 @@ namespace ComposestarVSAddin
 			{
 				command = commands.AddNamedCommand(addInInst, name, buttonText, toolTip, msoButton, bitmap, ref contextGUIDS, (int)vsCommandStatus.vsCommandStatusSupported+(int)vsCommandStatus.vsCommandStatusEnabled);
 			}
-			AddCommandToToolbar(command, buttonText, toolTip, beginGroup);
+			if (addToToolBar) AddCommandToToolbar(command, buttonText, toolTip, beginGroup);
 			AddCommandToMenubar(command, buttonText, toolTip, beginGroup);
 		}
 
@@ -873,7 +905,7 @@ namespace ComposestarVSAddin
 			}
 		} 
 
-		public void onBuildBegin(vsBuildScope scope, vsBuildAction action) 
+		public void OnBuildBegin(vsBuildScope scope, vsBuildAction action) 
 		{
 			this.buildSuccess = false;
 
@@ -928,8 +960,8 @@ namespace ComposestarVSAddin
 					string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
 					string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");
 
-					System.IO.File.Delete(tempfolder + "build.ini");
-					iniconfig = new IniFile(tempfolder + "build.ini");
+					DeleteFile(Path.Combine (tempfolder,  "build.ini"));
+					iniconfig = new IniFile(Path.Combine (tempfolder , "build.ini"));
 				
 					iniconfig.IniWriteValue("Common", "TempFolder", tempfolder);
 					iniconfig.IniWriteValue("Master", "CompilePhase", "one");
@@ -1088,16 +1120,90 @@ namespace ComposestarVSAddin
 		/// <summary>
 		/// Display a modal settings form.
 		/// </summary>
-		public void onSettings()
+		private void OnSettings()
 		{
 			SettingsForm sf = new SettingsForm(this.applicationObject);
 			sf.ShowDialog(); 
 		}
 
 		/// <summary>
+		/// Cleans the previous build information
+		/// </summary>
+		private void OnClean()
+		{
+
+			// Setup the statusbar
+			Debug.Instance.ClearOutputWindowPane();
+			Debug.Instance.ClearTaskListWindow();
+			Debug.Instance.ShowProgress("Cleaning previous information for Compose*", 0);
+			Debug.Instance.ShowAnimation(vsStatusAnimation.vsStatusAnimationGeneral );
+			Debug.Instance.ResetWarnings();
+
+			// Prints the start text
+			Debug.Instance.Log("------ Composestar clean started: Solution: " + applicationObject.Solution.Properties.Item("Name").Value.ToString() + " ------\n");
+			
+			Application.DoEvents();
+
+			string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
+			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");
+
+			Debug.Instance.Log("  cleaning build.ini");
+			DeleteFile(Path.Combine(tempfolder, "build.ini") );
+
+			Debug.Instance.Log("  cleaning incre.html");
+			DeleteFile(Path.Combine(tempfolder, "incre.html") );
+
+			Debug.Instance.Log("  cleaning weavespec.xml");
+			DeleteFile(Path.Combine(tempfolder, "weavespec.xml") );
+
+			Debug.Instance.Log("  cleaning repository.xml");
+			DeleteFile(Path.Combine(tempfolder, "repository.xml") );
+
+			Debug.Instance.Log("  cleaning history.dat");
+			DeleteFile(Path.Combine(tempfolder, "history.dat") );
+
+			Debug.Instance.Log("  cleaning filth.html");
+			DeleteFile(Path.Combine(tempfolder, "filth.html") );
+
+			Debug.Instance.Log("  cleaning filelist.peweaver");
+			DeleteFile(Path.Combine(tempfolder, "filelist.peweaver") );
+
+			Debug.Instance.Log("  cleaning SECRET.html");
+			DeleteFile(Path.Combine(tempfolder, "SECRET.html") );
+
+			Debug.Instance.Log("  cleaning langmap.pro");
+			DeleteFile(Path.Combine(tempfolder, "langmap.pro") );
+
+			Debug.Instance.Log("  cleaning attributes.xml");
+			DeleteFile(Path.Combine(tempfolder, "attributes.xml") );
+
+			Debug.Instance.Log("  cleaning types.xml");
+			DeleteFile(Path.Combine(tempfolder, "types.xml") );
+
+			Debug.Instance.Log("  cleaning object folder");
+			string[] files = Directory.GetFiles(Path.Combine(tempfolder, "obj") , "*.*");
+			foreach (string f in files)
+			{
+				Debug.Instance.Log(String.Format("    cleaning {0}", Path.GetFileName( f)));
+				DeleteFile( f );
+			}
+			
+
+			// Done
+			Debug.Instance.Log("");
+			Debug.Instance.Log("---------------------- Done ----------------------");
+			Debug.Instance.Log("");
+			Debug.Instance.Log("  Cleaning is completed.\n");
+			Debug.Instance.HideProgress("Compose* cleaned");
+			Debug.Instance.HideAnimation();
+			Debug.Instance.ActivateOutputWindowPane();
+
+		}
+
+		/// <summary>
 		/// Run the compiled application.
 		/// </summary>
-		private void onRun()
+		private void OnRun()
 		{
 			//			if (iniconfig == null) 
 			//			{

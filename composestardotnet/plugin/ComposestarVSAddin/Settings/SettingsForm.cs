@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Globalization; 
 using System.Reflection; 
 using System.IO;
+using System.Text;
 using EnvDTE;
 using Ini;
 
@@ -326,12 +327,6 @@ namespace ComposestarVSAddin
 				}
 			}
 		
-			if (Result == false)
-			{
-				string msg;
-				msg = String.Format("Could not save the settings into file {0}.", iniFilename);
-				System.Windows.Forms.MessageBox.Show( msg, "Composestar Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-  			}
 
 			return Result;
 		}
@@ -342,10 +337,28 @@ namespace ComposestarVSAddin
 		/// <returns></returns>
 		private bool SaveAllSettings()
 		{
+			StringBuilder sb = new StringBuilder();
+
 			for (int i = 0 ; i < settingsProjects.Count ; i++)
 			{
-				if (SaveSettings(((ProjectItem)settingsProjects[i]).Settings, ((ProjectItem)settingsProjects[i]).IniFile ) == false) return false;
+				ProjectItem pj = (ProjectItem)settingsProjects[i];
+
+				// Only save when the data is dirty
+				if (pj.Settings.IsDirty) 
+				{
+					bool saveSettings = SaveSettings(pj.Settings, pj.IniFile );
+					if (saveSettings == false) 
+					{
+						sb.AppendFormat("Could not save the file '{0}' for project {1}{2}.",pj.IniFile, pj.ProjectName, Environment.NewLine    ) ;
+					}
+				}
 			}
+			if (sb.Length > 0)
+			{
+				sb.AppendFormat("{0}Not all the files could be saved. Try again or close the form.", Environment.NewLine );
+				MessageBox.Show(sb.ToString(), "Composestar Settings", MessageBoxButtons.OK, MessageBoxIcon.Exclamation ) ;
+			}
+
 			return true;
 		}
 
@@ -449,6 +462,8 @@ namespace ComposestarVSAddin
 					}
 				}
 			}
+			// Just loaded all the settings, so set the dirty state to false.
+			settings.SetIsDirty(false);
 		}
 
 	

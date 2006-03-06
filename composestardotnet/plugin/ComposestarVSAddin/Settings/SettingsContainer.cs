@@ -10,7 +10,7 @@ namespace ComposestarVSAddin
 	/// Use custom attributes to indicate how to save the settings to the ini files.
 	/// </summary>
 	[DefaultPropertyAttribute("BuildDebugLevel")]
-	public class SettingsContainer
+	public class SettingsContainer : ISettingsContainer
 	{
 		private string _composestarPath;
 		private string _classPath;
@@ -44,6 +44,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._secretMode = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -59,6 +60,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._buildDebugLevel = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -74,6 +76,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._runDebugLevel = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -89,6 +92,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._verifyAssemblies = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -104,6 +108,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._incremental = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -120,6 +125,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._composestarPath = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -135,6 +141,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._classPath = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -151,6 +158,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._dotnetPath = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -167,6 +175,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._dotnetSDKPath = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -182,6 +191,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._mainClass = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -198,6 +208,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._embeddedSourcesFolder = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -213,6 +224,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._requiredDlls = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -229,6 +241,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._JSCompiler = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -244,6 +257,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._JSCompilerOptions = value;
+				SetIsDirty(true);
 			}
 		}
 		
@@ -260,6 +274,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._VBCompiler = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -275,6 +290,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._VBCompilerOptions = value;
+				SetIsDirty(true);
 			}
 		}
 		[CategoryAttribute("Native Compiler settings"),  
@@ -290,6 +306,7 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._CSCompiler = value;
+				SetIsDirty(true);
 			}
 		}
 
@@ -305,13 +322,32 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._CSCompilerOptions = value;
+				SetIsDirty(true);
 			}
 		}
 
 		public SettingsContainer()
 		{
- 		} 
+		}
+ 
+		#region ISettingsContainer Members
+		private bool _isDirty;
 
+		public void SetIsDirty(bool IsDirty)
+		{
+			_isDirty = IsDirty;
+		}
+
+		[Browsable(false)]
+		public bool IsDirty
+		{
+			get
+			{
+				return _isDirty;
+			}
+		}
+
+		#endregion
 	} 
 
 }
