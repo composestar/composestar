@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.6 2006/02/13 15:44:40 composer Exp $
+ * $Id: ObjectManager.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -61,7 +61,27 @@ public class ObjectManager
 		while( !this.messageQueue.isEmpty() ) 
 		{
 			Message msg = (Message) this.messageQueue.consume();
-			Object reply = this.receiveMessage(msg);
+			Object reply = null;
+			try 
+			{
+				reply = this.receiveMessage(msg);
+			}
+			catch (ErrorFilterException e)
+			{
+				// Report error filter rejection and exit.
+				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message from `" + msg.getSender() + "' rejected by error filter.");
+				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message has target `" + msg.getTarget() + "' and selector `" + msg.getSelector() + "'.");
+				System.exit(1);
+			}
+			catch (Exception e)
+			{
+				// Should not happen, otherwise catch FilterExceptions like above.
+				Debug.out(Debug.MODE_ERROR, "FLIRT", "An exception was thrown from within a filter.");
+				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message was `" + msg.getSelector() + "' for target `" + msg.getTarget() + "' from sender `" + msg.getSender() + "'.");
+				Debug.out(Debug.MODE_ERROR, "FLIRT", "Internal Compose* stack trace:");
+				e.printStackTrace();
+				System.exit(1);
+			}
 			msg.setResponse(reply);
 		}
 		this.working = false;
