@@ -27,7 +27,7 @@ public class FilterVisualizer extends Visualizer implements  ActionListener
 		Button button = new Button("Next");
 		button.addActionListener(this);
 		add(button,BorderLayout.SOUTH);
-		repaint();
+		frame.show();
 	}
 
 	public void actionPerformed(ActionEvent evt) 

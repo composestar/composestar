@@ -22,7 +22,6 @@ public abstract class Visualizer extends Panel
 		this.debugger = debugger;
 		frame = new VisualizerFrame();
 		frame.add(this);
-		frame.show();
 	}
 
 	private class VisualizerFrame extends Frame 

@@ -30,13 +30,15 @@ public class CodeDebugger  extends Visualizer implements  ActionListener{
 	public CodeDebugger(VisualDebugger debugger)
 	{
 		super(debugger);
+		frame.setSize(1024,800);
+		center();
 		component = new CodeExecutionGuiComponent();
 		setLayout(new BorderLayout());
 		add(component,BorderLayout.NORTH);
 		Button button = new Button("Next");
 		button.addActionListener(this);
 		add(button,BorderLayout.SOUTH);
-		repaint();
+		frame.show();
 	}
 
 	public void actionPerformed(ActionEvent evt) 
@@ -53,5 +55,6 @@ public class CodeDebugger  extends Visualizer implements  ActionListener{
 			handler.threadSuspend();
 		}
 		component.fill(source,target,message,filters);
+		frame.show();
 	}
 }

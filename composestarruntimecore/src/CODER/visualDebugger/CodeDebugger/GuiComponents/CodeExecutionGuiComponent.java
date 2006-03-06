@@ -3,6 +3,7 @@ package Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
 
+import java.io.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
@@ -18,18 +19,20 @@ import java.util.Vector;
  * @author: Administrator
  */
 public class CodeExecutionGuiComponent extends Panel {
-	private TextArea[] components = {new TextArea("Waiting for filter")};
+	private TextArea[] components;
 
 	public CodeExecutionGuiComponent()
 	{
-		setLayout(new BorderLayout());
-		add(components[0],BorderLayout.NORTH);
+		setLayout(new GridLayout(0,1));
+		components = new TextArea[1];
+		components[0] = new TextArea("Waiting for filter");
+		components[0].setEditable(false);
+		add(components[0]);
 	}
 
 	public void fill(Object source, Object target, DebuggableMessage message, ArrayList filters) 
 	{
 		fillIt(source, target, message, filters);
-		repaint();
 	}
 
     private synchronized void fillIt(Object source, Object target, DebuggableMessage message, ArrayList filters) {
@@ -38,13 +41,12 @@ public class CodeExecutionGuiComponent extends Panel {
 			TextArea[] old = components;
 			components = new TextArea[filters.size()+2];
 			System.arraycopy(old,0,components,0,old.length);
-			for(int i = old.length + 1; i < components.length -1;i++)
+			for(int i = old.length; i < components.length;i++)
 			{
-				components[i] = new TextArea();
-				add(components[i],BorderLayout.NORTH);
+				components[i] = new TextArea("");
+				components[i].setEditable(false);
+				add(components[i]);
 			}
-			components[components.length-1] = new TextArea();
-			add(components[components.length-1],BorderLayout.NORTH);
 		} 
 		else
 		{
@@ -54,12 +56,39 @@ public class CodeExecutionGuiComponent extends Panel {
 			}
 		}
 
-		components[0].setText("SOURCE CODE");
+		components[0].setText(source == null ? "Null Source" : source.toString());
 		for(int i =0 ; i < filters.size();i++)
 		{
-			components[i+1].setText(filters.get(i).toString());
+			components[i+1].setText(getCode((DebuggableFilter) filters.get(i)));
 			components[i+1].setVisible(true);
 		}
-		components[components.length-1].setText("TARGET");
+		components[components.length-1].setVisible(true);
+		components[components.length-1].setText(target == null ? "Null Target" : target.toString());
     }
+
+	public String getCode(DebuggableFilter filter)
+	{
+		final String fail = "Failure to read filterspecification:";
+		try
+		{
+			FileInputStream fstream = new FileInputStream(filter.getDeclerationFileName());
+			DataInputStream in = new DataInputStream(fstream);
+			int lines = filter.getDeclerationLineNumber();
+			String line = in.readLine();
+			lines--;
+			while(lines > 0 )
+			{
+				lines--;
+				line = in.readLine();
+				if(line == null)
+					return fail + filter.toString();
+			}
+			return filter.getDeclerationFileName() + ":" + filter.getDeclerationLineNumber() + '\n' + line;
+		}
+		catch(Exception e)
+		{
+
+		}
+		return fail + filter.toString();
+	}
 }
