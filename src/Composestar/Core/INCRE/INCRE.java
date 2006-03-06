@@ -343,7 +343,7 @@ public class INCRE implements CTCommonModule
 		else { 
 			File f = new File(filename);  			
 			boolean modified = isFileModified(f);
-			filesCheckedOnTimeStamp.put(filename,new Boolean(modified));
+			filesCheckedOnTimeStamp.put(filename, Boolean.valueOf(modified));
 			return modified;
 		}	
    }
@@ -430,7 +430,7 @@ public class INCRE implements CTCommonModule
 			Debug.out(Debug.MODE_DEBUG,"INCRE","File "+fixedFile+" added to project since last compilation run");
 		}
 		
-		this.filesCheckedOnProjectConfig.put(filename,new Boolean(isAdded));
+		this.filesCheckedOnProjectConfig.put(filename, Boolean.valueOf(isAdded));
 		return isAdded;
 	}
    /**

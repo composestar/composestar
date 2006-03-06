@@ -191,7 +191,7 @@ public class FILTHServiceImpl extends FILTHService{
 		/* add the name of each filtermodule into the graph */
 		for (Iterator i=fmsi.getIter();i.hasNext();){
 			FilterModuleReference fr = (FilterModuleReference)i.next();
-			Action a = new Action(fr.getName(), new Boolean(true),true);
+			Action a = new Action(fr.getName(), Boolean.TRUE,true);
 			Action.insert(a,g);
 			
 			FILTHService.print("FILTH::adding module> "+fr.getName()+"|");

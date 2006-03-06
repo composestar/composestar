@@ -24,8 +24,8 @@ public class HardPreRule extends Rule {
 	 */
 	public void apply() {
 		//System.out.print(" *applying: HardPre <"+(Action)_left+","+(Action)_right+">*\n");
-		if ( 
-			 ((Action)_left).isExecuted()==false 
+		if (
+                !((Action) _left).isExecuted()
 			  )
 						((Action)_right).setExecutable(false);		}
 

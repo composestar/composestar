@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.1 2006/02/16 23:04:06 pascal_durr Exp $
+ * $Id: SIGN.java,v 1.2 2006/02/24 16:02:38 dspenkel Exp $
  * 
 **/
 
@@ -596,7 +596,7 @@ public class SIGN implements CTCommonModule
 			}
 		}
 	 
-		 resources.addResource("signaturesmodified",new Boolean(signaturesmodified));
+		 resources.addResource("signaturesmodified", Boolean.valueOf(signaturesmodified));
 	 }
 	 
 	 public void markSignatures()

@@ -28,7 +28,7 @@ public class SoftCondRule extends Rule {
 		System.out.print(" *applying: SoftCond <"+(Action)_left+","+(Action)_right+">*\n");
 		if ( (_left.evaluate()!=null) &&
 			 (((Action)_left).isExecuted()) && 
-			 (_left.evaluate().booleanValue()==false) )
+			 (!_left.evaluate().booleanValue()) )
 						((Action)_right).setExecutable(false);	
 
 	}

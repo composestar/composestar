@@ -23,10 +23,10 @@ import java.io.*;
 
 public class Run {
 	public void test1(){
-		Action c=new Action("c",new Boolean(true),true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
-		Action u=new Action("u",new Boolean(true),true);
+		Action c=new Action("c", Boolean.TRUE,true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
+		Action u=new Action("u", Boolean.TRUE,true);
 		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
 		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
 		
@@ -45,10 +45,10 @@ public class Run {
 
 	/* testing cycles */
 	public void test2(){
-		Action c=new Action("c",new Boolean(true),true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
-		Action u=new Action("u",new Boolean(true),true);
+		Action c=new Action("c", Boolean.TRUE,true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
+		Action u=new Action("u", Boolean.TRUE,true);
 
 		/* 1. cycle */
 		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
@@ -85,9 +85,9 @@ public class Run {
 	/* the example of the paper */	
 	public void test3(){
 		Action c=new Action("c",null,true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
-		Action u=new Action("u",new Boolean(true),true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
+		Action u=new Action("u", Boolean.TRUE,true);
 		Rule p1=new SoftCondRule((Parameter)c, (Parameter)p);
 		Rule p2=new SoftSkipRule((Parameter)p, (Parameter)u, new True());
 		Rule p3=new SoftPreRule((Parameter)p, (Parameter)m);
@@ -118,10 +118,10 @@ public class Run {
 
 	public void test33()
 	{
-		Action c=new Action("c",new Boolean(true),true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
-		Action u=new Action("u",new Boolean(true),true);
+		Action c=new Action("c", Boolean.TRUE,true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
+		Action u=new Action("u", Boolean.TRUE,true);
 		Rule p1=new IncludeRule((Parameter)c, (Parameter)p);
 		Rule p2=new IncludeRule((Parameter)p, (Parameter)m);
 		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
@@ -141,9 +141,9 @@ public class Run {
 	/* testing cond-cond */
 	public void test4()
 	{
-		Action a=new Action("a",new Boolean(true),true);
-		Action b=new Action("b",new Boolean(false),true);
-		Action c=new Action("c",new Boolean(true),true);
+		Action a=new Action("a", Boolean.TRUE,true);
+		Action b=new Action("b", Boolean.FALSE,true);
+		Action c=new Action("c", Boolean.TRUE,true);
 		Rule p1=new HardCondRule((Parameter)a, (Parameter)c);
 		Rule p2=new HardCondRule((Parameter)b, (Parameter)c);
 
@@ -172,9 +172,9 @@ public class Run {
 
 	/* testing cond-skip */
 	public void test5(){
-		Action a=new Action("a",new Boolean(true),true);
-		Action b=new Action("b",new Boolean(false),true);
-		Action c=new Action("c",new Boolean(true),true);
+		Action a=new Action("a", Boolean.TRUE,true);
+		Action b=new Action("b", Boolean.FALSE,true);
+		Action c=new Action("c", Boolean.TRUE,true);
 		Rule p1=new HardSkipRule((Parameter)a, (Parameter)c, new False());
 		Rule p2=new HardCondRule((Parameter)b, (Parameter)c);
 
@@ -203,9 +203,9 @@ public class Run {
 
 	/* testing skip-skip conflict*/
 	public void test6(){
-		Action a=new Action("a",new Boolean(true),true);
-		Action b=new Action("b",new Boolean(true),true);
-		Action c=new Action("c",new Boolean(true),true);
+		Action a=new Action("a", Boolean.TRUE,true);
+		Action b=new Action("b", Boolean.TRUE,true);
+		Action c=new Action("c", Boolean.TRUE,true);
 		Rule p1=new HardSkipRule((Parameter)a, (Parameter)c, new False());
 		Rule p2=new HardSkipRule((Parameter)b, (Parameter)c, new True());
 
@@ -233,9 +233,9 @@ public class Run {
 	}	
 
 	public void test7(){
-		Action a=new Action("a",new Boolean(true),true);
-		Action b=new Action("b",new Boolean(true),false);
-		Action c=new Action("c",new Boolean(true),true);
+		Action a=new Action("a", Boolean.TRUE,true);
+		Action b=new Action("b", Boolean.TRUE,false);
+		Action c=new Action("c", Boolean.TRUE,true);
 		Rule p1=new HardPreRule((Parameter)b, (Parameter)c);
 //		Rule p2=new HardSkipRule((Parameter)b, (Parameter)c, new True());
 
@@ -264,10 +264,10 @@ public class Run {
 	
 	//test for providing all the possible orders
 	public void test8(){
-		Action c=new Action("c",new Boolean(true),true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
-		Action u=new Action("u",new Boolean(true),true);
+		Action c=new Action("c", Boolean.TRUE,true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
+		Action u=new Action("u", Boolean.TRUE,true);
 		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
 		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
 		
@@ -291,9 +291,9 @@ public class Run {
 
 	//test for providing all the possible orders (without any ordering spec.)
 	public void test9(){
-		Action c=new Action("c",new Boolean(true),true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
+		Action c=new Action("c", Boolean.TRUE,true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
 //		Action u=new Action("u",new Boolean(true),true);
 //		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
 //		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
@@ -318,10 +318,10 @@ public class Run {
 
 	//test for providing all the possible orders (with CYCLE)
 	public void test10(){
-		Action c=new Action("c",new Boolean(true),true);
-		Action p=new Action("p",new Boolean(true),true);
-		Action m=new Action("m",new Boolean(true),true);
-		Action u=new Action("u",new Boolean(true),true);
+		Action c=new Action("c", Boolean.TRUE,true);
+		Action p=new Action("p", Boolean.TRUE,true);
+		Action m=new Action("m", Boolean.TRUE,true);
+		Action u=new Action("u", Boolean.TRUE,true);
 		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
 		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
 		Rule p3=new SoftPreRule((Parameter)u, (Parameter)m); //cycle
@@ -374,7 +374,7 @@ public class Run {
 	public void test12(){
 		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
 		
-		Action a=new Action("a", new Boolean(true), true);		
+		Action a=new Action("a", Boolean.TRUE, true);
 		Action.insert(a,g);
 		
 		//System.out.println(Action.lookupByName("a",g));

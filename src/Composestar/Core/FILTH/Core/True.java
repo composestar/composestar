@@ -19,7 +19,7 @@ public class True implements Parameter {
 	 */
 	public Boolean evaluate() {
 
-		return new Boolean(true);
+		return Boolean.TRUE;
 	}
 
 }

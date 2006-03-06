@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: SyntacticSugarExpander.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+* $Id: SyntacticSugarExpander.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
 */
 package Composestar.Core.COPPER;
 
@@ -58,11 +58,11 @@ public class SyntacticSugarExpander {
         int i = 0;
 	    while(check) {
 	      check = am.checkifExists("concern\\filtermodule@" + i);
-	      if (check == false) break;
+	      if (!check) break;
 	      fmName = am.getValue("concern\\filtermodule@" + i + "\\@0");        //get the name
 	
 	      check = am.checkifExists("concern\\filtermodule@" + i + "\\@1");
-	      if (check == false) break;    //fixme: don't show error msg
+	      if (!check) break;    //fixme: don't show error msg
 	      if ("on".equals(am.getValue("concern\\filtermodule@" + i + "\\@1"))) {    	//we have "on self"
 	        am.add("concern\\superimposition\\filtermodule@lastnew\\self");    //maak een nieuwe
 	        am.add("concern\\superimposition\\filtermodule@last\\filtermodule set\\filtermodule element\\" + fmName);

@@ -122,12 +122,12 @@ public class ExecutionManager {
 							//and both should be skipped
 							if (
 						   		( ((r1.getLeft().evaluate()!=null) && (r2.getLeft().evaluate()!=null)) &&
-						     	((r1.getLeft().evaluate().booleanValue()==true) && (r2.getLeft().evaluate().booleanValue()==true))  
+						     	((r1.getLeft().evaluate().booleanValue()) && (r2.getLeft().evaluate().booleanValue()))
 						     	) ||
-				     	   		( ((r1.getLeft().evaluate()!=null) && (r1.getLeft().evaluate().booleanValue()==true)) &&
+				     	   		( ((r1.getLeft().evaluate()!=null) && (r1.getLeft().evaluate().booleanValue())) &&
 				     	     	((r2.getLeft().evaluate()==null) && (r2 instanceof SoftSkipRule))
 				     	    	) ||
-						   		( ((r2.getLeft().evaluate()!=null) && (r2.getLeft().evaluate().booleanValue()==true)) &&
+						   		( ((r2.getLeft().evaluate()!=null) && (r2.getLeft().evaluate().booleanValue())) &&
 							 	((r1.getLeft().evaluate()==null) && (r1 instanceof SoftSkipRule))
 								)  )
 								throw new RuntimeException("Conflict between two skips");
