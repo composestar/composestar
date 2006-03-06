@@ -1,4 +1,4 @@
-package Composestar.RuntimeCore.CODER.CodeDebugger;
+package Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger;
 
 import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.BreakPoint.AlwaysBreakBreakPoint;
@@ -8,8 +8,8 @@ import Composestar.RuntimeCore.CODER.DebuggerProvider;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
-import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.FilterExecutionGuiComponent;
 import Composestar.RuntimeCore.CODER.StateHandler;
+import Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents.*;
 
 import Composestar.RuntimeCore.CODER.VisualDebugger.*;
 
@@ -25,60 +25,33 @@ import java.util.Dictionary;
 /**
  * Summary description for CodeDebugger.
  */
-public class CodeDebugger implements Debugger, BreakPointListener{
-	private DebuggerProvider provider = null;
-
-    public CodeDebugger(DebuggerProvider provider) {
-        this.provider = provider;
-    }
-
-    public void start() {
-        provider.HaltRuntime();
-        provider.clearBreakPoints();
-
+public class CodeDebugger  extends Visualizer implements  ActionListener{
+	private CodeExecutionGuiComponent component;
+	public CodeDebugger(VisualDebugger debugger)
+	{
+		super(debugger);
+		setLayout(new GridLayout(2,1));
+		component = new CodeExecutionGuiComponent();
+		add(component);
+		Button button = new Button("Next");
+		button.addActionListener(this);
+		add(button);
+		repaint();
 	}
 
-	public void startVisualizer()
+	public void actionPerformed(ActionEvent evt) 
 	{
-		provider.ResumeRuntime();
+		if(handler!= null) handler.threadResume();
 	}
 
-    public void stop() {
-        provider.HaltRuntime();
-        provider.clearBreakPoints();
-        provider.removeBreakPointListener(this);
-    }
-
-    public void reset() {
-        stop();
-		start();
-    }
-
-    public void breakEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context) {
-
-    }
-
-	public void setBreakPoint(BreakPoint breakPoint)
+	private StateHandler handler;
+	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessage message, Object target, ArrayList filters, Dictionary context)
 	{
-		provider.clearBreakPoints();
-		if(breakPoint == null)
+		this.handler = handler;
+		if(eventType == DebuggerProvider.FILTER_REJECTED || eventType == DebuggerProvider.FILTER_ACCEPTED)
 		{
-			provider.addBreakPoint(new AlwaysBreakBreakPoint(getHalter()));
+			handler.threadSuspend();
 		}
-		else
-		{
-			provider.addBreakPoint(breakPoint);
-		} 
-		provider.addBreakPointListener(this);
-	}
-
-	public void resume()
-	{
-		provider.ResumeRuntime();
-	}
-
-	public Halter getHalter()
-	{
-		return provider.getHalter();
+		component.fill(source,target,message,filters);
 	}
 }

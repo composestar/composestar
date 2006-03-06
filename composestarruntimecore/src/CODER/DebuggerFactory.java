@@ -17,7 +17,8 @@ public class DebuggerFactory {
     public static Debugger getDebugger(DebuggerProvider provider) {
 		if(Debug.DEBUGGER_INTERFACE)
 		{
-			return new VisualDebugger(provider);
+			String debugger = getDebugger();
+			return new VisualDebugger(provider,debugger);
 		}
 		else
 		{
@@ -40,5 +41,34 @@ public class DebuggerFactory {
 			//Ignore
 		}
 		return result;
+	}
+
+	public static String getDebugger()
+	{
+		final String fail = "Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.FilterVisualizer";
+		try
+		{
+			FileInputStream fstream = new FileInputStream(DEBUGGER_CONFIG_FILE);
+			DataInputStream in = new DataInputStream(fstream);
+			String line = in.readLine();
+			line = in.readLine();
+			int index = line.toUpperCase().indexOf("<DEBUGGER>");
+			if(index < 0)
+			{
+				return fail;
+			}
+			index += 10;
+			int end = line.indexOf("/>");
+			if(end <= index + 9)
+			{
+				return fail;
+			}
+			return line.substring(index,end-9);
+		}
+		catch(Exception e)
+		{
+
+		}
+		return fail;
 	}
 }

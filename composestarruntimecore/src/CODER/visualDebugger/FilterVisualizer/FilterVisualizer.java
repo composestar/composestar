@@ -13,44 +13,19 @@ import java.util.Dictionary;
 /**
  * Summary description for FilterVisualizer.
  */
-public class FilterVisualizer extends Panel implements ActionListener
+public class FilterVisualizer extends Visualizer implements  ActionListener
 {
-	private class FilterVisualizerFrame extends Frame 
-	{
-		public FilterVisualizerFrame() 
-		{
-			setTitle("Composition filter debugger");
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			Dimension d = tk.getScreenSize();
-			setSize(d);
-
-			addWindowListener(new WindowAdapter() 
-			{
-				public void windowClosing(WindowEvent e) 
-				{
-					System.exit(0);
-				}
-			});
-		}
-	}
-
 	private FilterExecutionGuiComponent component;
-	private VisualDebugger debugger;
-
 	public FilterVisualizer(VisualDebugger debugger)
 	{
-		this.debugger = debugger;
-		Frame frame = new FilterVisualizerFrame();
-		frame.add(this);
-
+		super(debugger);
 		setLayout(new GridLayout(2,1));
 		component = new FilterExecutionGuiComponent();
 		add(component);
 		Button button = new Button("Next");
 		button.addActionListener(this);
 		add(button);
-
-		frame.show();
+		repaint();
 	}
 
 	public void actionPerformed(ActionEvent evt) 

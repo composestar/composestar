@@ -375,7 +375,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "visualDebugger\Visualizer.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "visualDebugger\CodeDebugger\CodeDebugger.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "visualDebugger\CodeDebugger\GuiComponents\CodeExecutionGuiComponent.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

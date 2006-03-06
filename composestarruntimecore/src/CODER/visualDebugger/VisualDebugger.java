@@ -8,8 +8,6 @@ import Composestar.RuntimeCore.CODER.DebuggerProvider;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
 import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
-import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.FilterExecutionGuiComponent;
-import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
 
 import java.awt.*;
@@ -25,11 +23,13 @@ import java.util.Dictionary;
  * Summary description for VisualDebugger.
  */
 public class VisualDebugger implements Debugger, BreakPointListener{
-	private FilterVisualizer filterscreen;
+	private Visualizer filterscreen;
 	private DebuggerProvider provider = null;
+	private String visualizer;
 
-    public VisualDebugger(DebuggerProvider provider) {
+    public VisualDebugger(DebuggerProvider provider, String visualizer) {
         this.provider = provider;
+		this.visualizer = visualizer;
     }
 
     public void start() {
@@ -41,7 +41,17 @@ public class VisualDebugger implements Debugger, BreakPointListener{
 
 	public void startVisualizer()
 	{
-		filterscreen = new FilterVisualizer(this);
+		try
+		{
+			Class[] arg = { this.getClass()};
+			Object[] iarg = {this};
+			filterscreen = (Visualizer) Class.forName(visualizer).getConstructor(arg).newInstance(iarg);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
 		provider.ResumeRuntime();
 	}
 
