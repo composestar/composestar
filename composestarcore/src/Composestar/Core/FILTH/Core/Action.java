@@ -28,14 +28,14 @@ public class Action implements Parameter{
 	public void setReturnValue(Boolean rvalue){ _rvalue = rvalue; }
 	
 	private boolean _present;
-	public boolean isPresent(){ return _present==true; }
+	public boolean isPresent(){ return _present; }
 	
 	private boolean _executed = false;
-	public boolean isExecuted(){ return _executed==true; }
+	public boolean isExecuted(){ return _executed; }
 	public void setExecuted(){ _executed=true; }
 		
 	private boolean _executable = false;
-	public boolean isExecutable() { return _executable==true; }
+	public boolean isExecutable() { return _executable; }
 	public void setExecutable(boolean executable) { _executable=executable; }
 	
 	protected LinkedList _rules=new LinkedList();

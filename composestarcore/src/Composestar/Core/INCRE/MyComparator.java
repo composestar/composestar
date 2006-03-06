@@ -190,7 +190,7 @@ public class MyComparator {
      */
     public void addComparison(String id, boolean result) {
         if (id != null) {
-            Boolean b = new Boolean(result);
+            Boolean b = Boolean.valueOf(result);
             comparisons.put(id, b);
         } else {
             Debug.out(Debug.MODE_DEBUG, "INCRE::Comparator", "Key of comparison is null!");

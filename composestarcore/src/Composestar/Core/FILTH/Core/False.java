@@ -21,7 +21,7 @@ public class False implements Parameter {
 	 */
 	public Boolean evaluate() {
 
-		return new Boolean(false);
+		return Boolean.FALSE;
 	}
 
 }

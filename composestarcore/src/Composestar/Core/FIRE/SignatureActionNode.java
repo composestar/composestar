@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SignatureActionNode.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: SignatureActionNode.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -142,7 +142,7 @@ public class SignatureActionNode extends ActionNode
 		}
 			
 		// We know the path. Please continue.
-		boolean boolResult = (result == FilterReasoningEngine.TRUE ? true : false); 
+		boolean boolResult = result == FilterReasoningEngine.TRUE;
 		return getChild(boolResult).search(dependencies, match, selector, concernName);
 	}
 	

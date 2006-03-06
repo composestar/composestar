@@ -23,8 +23,8 @@ public class HardCondRule extends Rule{
 	public void apply(){
 		//System.out.print(" *applying: HardCond <"+(Action)_left+","+(Action)_right+">*\n");
 		if ( (_left.evaluate()==null) ||
-			 (((Action)_left).isExecuted()==false) || 
-			 (_left.evaluate().booleanValue()==false) )
+			 (!((Action) _left).isExecuted()) ||
+			 (!_left.evaluate().booleanValue()) )
 						((Action)_right).setExecutable(false);	
 	}
 }

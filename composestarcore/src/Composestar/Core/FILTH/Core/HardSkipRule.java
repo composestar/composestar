@@ -27,7 +27,7 @@ public class HardSkipRule extends SkipRule {
 
 		//System.out.print(" *applying: HardSkip <"+(Action)_left+","+(Action)_right+">*\n");
 		if ( (_left.evaluate()!=null) &&
-			 (_left.evaluate().booleanValue()==true) ){
+			 (_left.evaluate().booleanValue()) ){
 				((Action)_right).setExecutable(false);
 				((Action)_right).setReturnValue( _newValue.evaluate() );
 				((Action)_right).setExecuted();

@@ -302,7 +302,7 @@ public class DoResolve {
       l = (LabeledConcernReference) it.next();
       c = (ConcernReference) it2.next();
 
-      if (l.getName().equals(c.getName()) == false) return (false);
+      if (!l.getName().equals(c.getName())) return (false);
     }
 
     //ok, passed all the parameters
