@@ -36,8 +36,8 @@ public class BreakPointValueOperator extends BreakPoint implements Value
 	public static final byte NOTEQ = 1;
 	public static final byte EQ = 0;
 
-	private final static Boolean oTrue = new Boolean(true);
-	private final static Boolean oFalse = new Boolean(false);
+	private final static Boolean oTrue = Boolean.TRUE;
+	private final static Boolean oFalse = Boolean.FALSE;
 
 
 	public Object getValue() 
