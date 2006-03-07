@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.3 2006/02/16 15:42:57 composer Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.1 2006/02/16 23:10:57 pascal_durr Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -29,7 +29,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
-
 import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
@@ -84,6 +83,33 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
         else {
         	throw new ModuleException("Application has no startup object defined!","CONE_IS");
         }
+     
+        String dependencyList = resources.ProjectConfiguration.getProperty("Dependencies");
+        String[] dependencyPaths = dependencyList.split(",");
+        
+        for( int i = 0; i < dependencyPaths.length; i++ ) 
+		{
+			String dep = dependencyPaths[i];
+			// Do not add the dependency when it is a .NET assembly or a composestar assembly
+			if( dep.indexOf("Microsoft.NET/Framework/") >= 0 )
+			{
+				continue;
+			}
+			if( dep.indexOf("ComposeStarRuntimeInterpreter") >= 0 )
+			{
+				continue;
+			}
+			if( dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0 )
+			{
+				continue;
+			}
+			File f = new File( dep );
+			
+				String filename = f.getName();
+				String dllname  = filename.substring( 0, filename.lastIndexOf( "." ) );
+				writeAssemblyDefinitionRecord( dllname, "0.0.0.0", entryAssembly );
+			
+		}
         
         java.util.Enumeration cfNames = resources.CustomFilters.propertyNames();
         while( cfNames.hasMoreElements() ) {
