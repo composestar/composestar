@@ -3,10 +3,6 @@ Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "jukeboxframe", "jukeboxfram
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Song", "..\Song.csproj", "{9A9A9E7C-0008-4C75-A0D4-56CBB897DCCD}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -17,10 +13,6 @@ Global
 		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Debug.Build.0 = Debug|.NET
 		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Release.ActiveCfg = Release|.NET
 		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Release.Build.0 = Release|.NET
-		{9A9A9E7C-0008-4C75-A0D4-56CBB897DCCD}.Debug.ActiveCfg = Debug|.NET
-		{9A9A9E7C-0008-4C75-A0D4-56CBB897DCCD}.Debug.Build.0 = Debug|.NET
-		{9A9A9E7C-0008-4C75-A0D4-56CBB897DCCD}.Release.ActiveCfg = Release|.NET
-		{9A9A9E7C-0008-4C75-A0D4-56CBB897DCCD}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
