@@ -13,7 +13,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageList.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: MessageList.java,v 1.2 2006/03/06 16:37:53 reddog33hummer Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -31,7 +31,7 @@ public class MessageList implements DebuggableMessageList
 	public static int INCOMING = 1;
 	
 
-	private int orgMessagePointer;
+	private Message orgMessage;
 	private LinkedList messages;
 
 	public MessageList(Message m)
@@ -40,13 +40,13 @@ public class MessageList implements DebuggableMessageList
 		
 		messages = new LinkedList();
 		messages.add( newMessage );
-		orgMessagePointer = messages.size() - 1;
+		orgMessage = newMessage;
 	
 	}
     
 	public MessageList(MessageList ml)
 	{
-		orgMessagePointer = ml.getOrgMessagePointer();
+		orgMessage = ml.orgMessage;
 
 		messages = new LinkedList();
 		LinkedList othermessages = ml.getMessages();
@@ -271,12 +271,7 @@ public class MessageList implements DebuggableMessageList
 
 	public Message getOrgMessage() 
 	{
-		return (Message) messages.get( orgMessagePointer );
-	}
-
-	public int getOrgMessagePointer() 
-	{
-		return orgMessagePointer;
+		return orgMessage;
 	}
 
 	public LinkedList getMessages() 
