@@ -20,7 +20,7 @@
                 PostBuildEvent = ""
                 RootNamespace = "DotNETPlatformInterface"
                 RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = ""
+                StartupObject = "Composestar.Runtime.FLIRT.FLIRT"
             >
                 <Config
                     Name = "Debug"

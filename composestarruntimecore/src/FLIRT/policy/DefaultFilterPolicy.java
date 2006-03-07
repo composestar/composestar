@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DefaultFilterPolicy.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: DefaultFilterPolicy.java,v 1.2 2006/03/07 13:45:47 reddog33hummer Exp $
  * 
  * Filter policy with support for the Dispatch, Error and Substitution filters.
  */
@@ -48,7 +48,7 @@ class DefaultFilterPolicy extends FilterPolicy
 		if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
 		{
 			Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tProcessing default filter policy...");
-			DebuggerProvider.event(DebuggerProvider.MESSAGE_PROCESSING_START, null, aMessage, aMessage, filterList, context);
+			DebuggerProvider.event(DebuggerProvider.MESSAGE_PROCESSING_START, null, null, aMessage, filterList, context);
 		}
 
 		for (int j = 0; (j < filterList.size()) && !exit; j++) 

@@ -12,4 +12,6 @@ public interface DebuggableFilter {
 
 	public String getDeclerationFileName();
 	public int getDeclerationLineNumber();
+
+	public boolean isDummy();
 }

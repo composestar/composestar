@@ -44,13 +44,13 @@ public class FilterExecutionGuiComponent extends Panel {
         });
     }
 
-    public void fill(DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters,Dictionary context) {
-        fillIt("source", "target", beforeMessage, filters,context);
+    public void fill(DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage,DebuggableFilter current, ArrayList filters,Dictionary context) {
+        fillIt("source", "target", beforeMessage, current,filters,context);
         repaint();
 		show();
     }
 
-    private synchronized void fillIt(Object source, Object target, DebuggableMessageList message, ArrayList filters, Dictionary context) {
+    private synchronized void fillIt(Object source, Object target, DebuggableMessageList message, DebuggableFilter current,ArrayList filters, Dictionary context) {
         this.source = source;
         this.target = target;
         this.message = message;

@@ -43,7 +43,7 @@ public class FilterVisualizer extends Visualizer implements  ActionListener
 		{
 			handler.threadSuspend();
 		}
-		component.fill(beforeMessage, afterMessage,filters,context);
+		component.fill(beforeMessage, afterMessage,currentFilter,filters,context);
 	}
 	
 }

@@ -18,7 +18,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterRuntime.java,v 1.2 2006/03/06 11:36:09 reddog33hummer Exp $
+ * $Id: FilterRuntime.java,v 1.3 2006/03/06 16:37:52 reddog33hummer Exp $
  */
 public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable, DebuggableFilter
 {
@@ -28,6 +28,11 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
     private ArrayList filterElements = null;
     public FilterTypeRuntime theFilterTypeRuntime;
     
+	public boolean isDummy()
+	{
+		return reference.repositoryKey.equalsIgnoreCase("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule.CpsDefaultInnerDispatchFilter");
+	}
+
     /**
      * @roseuid 40DEA09803A0
      */
