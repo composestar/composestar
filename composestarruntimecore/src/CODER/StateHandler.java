@@ -39,7 +39,7 @@ public class StateHandler {
 		this.breakpoint = breakpoint;
 	}
 	
-	public void event(int eventType,DebuggableFilter currentFilter, Object source,DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
+	public void event(int eventType,DebuggableFilter currentFilter,DebuggableMessageList beforeMessage ,DebuggableMessageList afterMessage, ArrayList filters, Dictionary context)
 	{
 		halter.halting();
 		Debug.out(Debug.MODE_DEBUG,"FLIRT(RuntimeStateHandler)","Having event");
@@ -47,7 +47,7 @@ public class StateHandler {
 		this.target= target;
 		this.filters = filters;
 		this.context = context;
-		breakpoint.event(eventType,this,currentFilter,source,message,target,filters,context);
+		breakpoint.event(eventType,this,currentFilter,beforeMessage,afterMessage,filters,context);
 	}
 
 	public boolean isTreadHalted()

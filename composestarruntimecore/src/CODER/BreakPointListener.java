@@ -10,5 +10,5 @@ import java.util.Dictionary;
  * Summary description for BreakPointListener.
  */
 public interface BreakPointListener {
-    public void breakEvent(int eventType, StateHandler handler,DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context);
+    public void breakEvent(int eventType, StateHandler handler,DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context);
 }

@@ -49,7 +49,7 @@ public class ConsolePrinterDebugger implements Debugger, BreakPointListener {
         provider.ResumeRuntime();
     }
 
-    public void breakEvent(int eventType, StateHandler handler,DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
+    public void breakEvent(int eventType, StateHandler handler,DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context) {
 	    switch (eventType) {
             case DebuggerProvider.FILTER_ACCEPTED:
                 Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFilter is accepted.");

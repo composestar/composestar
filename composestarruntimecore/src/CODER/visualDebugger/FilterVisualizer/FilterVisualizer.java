@@ -36,14 +36,14 @@ public class FilterVisualizer extends Visualizer implements  ActionListener
 	}
 
 	private StateHandler handler;
-	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
+	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context)
 	{
 		this.handler = handler;
 		if(eventType == DebuggerProvider.FILTER_REJECTED || eventType == DebuggerProvider.FILTER_ACCEPTED)
 		{
 			handler.threadSuspend();
 		}
-		component.fill(source,target,message,filters);
+		component.fill(beforeMessage, afterMessage,filters,context);
 	}
 	
 }

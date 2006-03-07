@@ -15,8 +15,8 @@ public class NeverBreakBreakPoint extends BreakPoint {
         super(halt);
     }
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
-        return false;
+    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
+		return false;
     }
 
     public boolean threadSpecific() {

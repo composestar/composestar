@@ -9,9 +9,9 @@ import java.util.*;
 /**
  * Summary description for AlwaysBreakBreakPoint.
  */
-public class TargetBreakPoint extends ObjectBreakPoint {
+public class SenderBreakPoint extends ObjectBreakPoint {
 
-    public TargetBreakPoint(Halter halt,String targetList) throws BreakPointParseException{
+    public SenderBreakPoint(Halter halt,String targetList) throws BreakPointParseException {
         super(halt,targetList);
     }
 
@@ -19,7 +19,7 @@ public class TargetBreakPoint extends ObjectBreakPoint {
 		LinkedList list = afterMessage.getMessages();
 		for(int i = 0; i < list.size();i++)
 		{
-			if(matchObject(((DebuggableMessage)list.get(i)).getTarget()))
+			if(matchObject(((DebuggableMessage)list.get(i)).getSender()))
 			{
 				return true;
 			}

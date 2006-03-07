@@ -25,11 +25,10 @@ public class MultiBreakPoint extends BreakPoint {
         addBreakpoint(breakpoint);
     }
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
-
+    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
         Iterator i = breakpoints.iterator();
         while (i.hasNext()) {
-            if (((BreakPoint) i.next()).matchEvent(eventType, currentFilter, source, message, target, filters, context)) return true;
+            if (((BreakPoint) i.next()).matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context)) return true;
         }
         return false;
     }

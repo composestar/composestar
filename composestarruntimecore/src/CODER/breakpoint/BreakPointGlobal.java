@@ -17,9 +17,8 @@ public class BreakPointGlobal extends BreakPointMono
 		super(halt, right);
 	}
 
-	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
-	{
-		stillOn &= right.matchEvent(eventType, currentFilter, source, message, target, filters, context);
+    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
+		stillOn &= right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
 		return stillOn;
 	}
 }

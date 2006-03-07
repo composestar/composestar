@@ -117,8 +117,8 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 		String wasBussyWith = "Selector Expression";
 		try
 		{
-			ObjectBreakPoint selector = new SelectorBreakPoint(debugger.getHalter(),selectors.getText());
-			Debug.out(Debug.MODE_DEBUG,"CODER","Selector list:" + selector.toString());
+			ObjectBreakPoint selector = new SenderBreakPoint(debugger.getHalter(),selectors.getText());
+			Debug.out(Debug.MODE_DEBUG,"CODER","Sender list:" + selector.toString());
 
 			wasBussyWith = "Target Expression";
 

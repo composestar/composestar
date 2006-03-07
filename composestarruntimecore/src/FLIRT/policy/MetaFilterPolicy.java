@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.6 2006/02/15 14:16:14 composer Exp $
+ * $Id: MetaFilterPolicy.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -57,14 +57,18 @@ class MetaFilterPolicy extends FilterPolicy
 		if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
 		{
 			Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tProcessing meta filter policy...");
-			DebuggerProvider.event(DebuggerProvider.FILTER_EVALUATION_START, null, aMessage.getSender(), aMessage, aMessage.getTarget(), filterList, context);
+			DebuggerProvider.event(DebuggerProvider.MESSAGE_PROCESSING_START, null, aMessage, aMessage, filterList, context);
 		}
 		for (int j = 0; (j < filterList.size()) && !exit; j++) 
 		{
 			FilterRuntime f = (FilterRuntime) filterList.get(j);
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tEvaluating filter '"+((Filter)f.getReference()).getName()+"' of type '"+((Filter)f.getReference()).getFilterType().getType()+"'...");
-
 			MessageList originalMessage = new MessageList(aMessage);
+
+			if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
+			{
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tEvaluating filter '"+((Filter)f.getReference()).getName()+"' of type '"+((Filter)f.getReference()).getFilterType().getType()+"'...");
+				DebuggerProvider.event(DebuggerProvider.FILTER_EVALUATION_START, f, aMessage, originalMessage, filterList, context);
+			}
 			// Update the message!
             MessageInfoProxy.updateMessage(originalMessage);
 
@@ -75,7 +79,7 @@ class MetaFilterPolicy extends FilterPolicy
 			{
 				if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
 				{
-					DebuggerProvider.event(DebuggerProvider.FILTER_ACCEPTED, f, aMessage.getSender(), modifiedMessage, modifiedMessage.getTarget(), filterList, context);
+					DebuggerProvider.event(DebuggerProvider.FILTER_ACCEPTED, f, originalMessage, modifiedMessage, filterList, context);
 				}
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			} 
@@ -83,7 +87,7 @@ class MetaFilterPolicy extends FilterPolicy
 			{
 				if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
 				{
-					DebuggerProvider.event(DebuggerProvider.FILTER_REJECTED, f, aMessage.getSender(), modifiedMessage, modifiedMessage.getTarget(), filterList, context);
+					DebuggerProvider.event(DebuggerProvider.FILTER_REJECTED, f, originalMessage, modifiedMessage, filterList, context);
 				}
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}

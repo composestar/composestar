@@ -41,10 +41,17 @@ public class DotNETInvoker extends Invoker
 				null, target, args);
 		}
 		catch(System.Reflection.TargetInvocationException e) {
-			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation failed.");
-			Console.WriteLine(e.get_InnerException().getClass().getName() + ": " + e.get_InnerException().get_Message());
+			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation on instance "+ target + ":" + selector + " failed.");
+			String inner = "";
+			System.Exception ex = e;
+			while(ex != null)
+			{
+				Console.WriteLine(inner + "exception:" + ex.getClass().getName() + ":" + ex.get_Message());
+				inner += "inner";
+				ex = ex.get_InnerException();
+			}
 			Console.WriteLine(e.get_InnerException().get_StackTrace());
-			System.exit(0);
+			System.exit(1);
 		}
 		return reply;
 	}
@@ -69,10 +76,17 @@ public class DotNETInvoker extends Invoker
 		}
 		catch(System.Reflection.TargetInvocationException e) 
 		{ 
-			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation failed.");
-			Console.WriteLine(e.get_InnerException().getClass().getName() + ": " + e.get_InnerException().get_Message());
+			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation of static "+ target + ":" + selector + " failed.");
+			String inner = "";
+			System.Exception ex = e;
+			while(ex != null)
+			{
+				Console.WriteLine(inner + "exception:" + ex.getClass().getName() + ":" + ex.get_Message());
+				inner += "inner";
+				ex = ex.get_InnerException();
+			}
 			Console.WriteLine(e.get_InnerException().get_StackTrace());
-			System.exit(0);
+			System.exit(1);
 		}
 		return reply;
 	}

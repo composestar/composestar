@@ -81,10 +81,10 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
         }
     }
 
-    public void fireEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
+    public void fireEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context) {
         Debug.out(Debug.MODE_DEBUG, MODULENAME, "Having event");
         StateHandler handler = getStateHandler();
-        handler.event(eventType, currentFilter, source, message, target, filters, context);
+        handler.event(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
     }
 
     private HashMap statepool = new HashMap();

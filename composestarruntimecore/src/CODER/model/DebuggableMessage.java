@@ -8,4 +8,10 @@ public interface DebuggableMessage {
 
     public static final int OUTGOING = 0;
     public static final int INCOMING = 1;
+
+	public Object getInner();
+	public Object getTarget();
+	public String getSelector();
+	public Object getSender();
+
 }

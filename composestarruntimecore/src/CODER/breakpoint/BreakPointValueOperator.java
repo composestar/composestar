@@ -114,8 +114,7 @@ public class BreakPointValueOperator extends BreakPoint implements Value
 		return false;
 	}
 
-	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context)
-	{
+    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
 		//Just check the last one.
 		return getValue() == oTrue;
 	}

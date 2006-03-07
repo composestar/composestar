@@ -66,10 +66,10 @@ public class VisualDebugger implements Debugger, BreakPointListener{
 		start();
     }
 
-    public void breakEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, Object source, DebuggableMessageList message, Object target, ArrayList filters, Dictionary context) {
+    public void breakEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters,Dictionary context) {
 		if(filterscreen != null)
 		{
-			filterscreen.renderFilterEvent(eventType, handler, currentFilter, source, message, target, filters, context);
+			filterscreen.renderFilterEvent(eventType, handler, currentFilter, beforeMessage, afterMessage, filters, context);
 		}
     }
 

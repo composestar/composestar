@@ -200,6 +200,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "breakpoint\SenderBreakPoint.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "breakpoint\TargetBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
