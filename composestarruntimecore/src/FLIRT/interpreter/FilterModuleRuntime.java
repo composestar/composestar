@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleRuntime.java,v 1.4 2006/02/13 13:42:24 composer Exp $
+ * $Id: FilterModuleRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
 public class FilterModuleRuntime extends ReferenceEntityRuntime implements Interpretable, ConditionResolver, Cloneable 
 {
@@ -231,15 +231,6 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 				new  FilterModuleException("error while dispatching a message " + message.getSelector());
 			throw fme;
 		}
-		catch (System.Exception netE) 
-		{
-			//needed to catch .Net exceptions.
-
-			FilterModuleException fme =
-				new FilterModuleException("error while dispatching a message " + message.getSelector());
-			throw fme;
-		}
-		//return null;     
     }
     
     /**
@@ -326,17 +317,6 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 			ex.setConditionResolver(this);
 			throw ex;
 		}
-		
-		catch (System.Exception netE) 
-		{
-			//needed to catch .Net exceptions.
-			System.Console.WriteLine(netE.get_StackTrace());
-			InvalidConditionException ex =
-				new InvalidConditionException(".NET: invalid condition invocation");
-			ex.setConditionResolver(this);
-			throw ex;
-		}
-		//return false;     
     }
     
     /**

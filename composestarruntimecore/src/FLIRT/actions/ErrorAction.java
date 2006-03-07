@@ -10,7 +10,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ErrorAction.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: ErrorAction.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
  * 
  * Models the action that is produced when a message is rejected by an Error Filter
  * The action defined is the throw of a ErrorFilterException.
@@ -42,7 +42,6 @@ public class ErrorAction extends ComposeStarAction {
      * @roseuid 3F3652CA0031
      */
     public Object execute() {
-		//System.out.println(this.theErrorFilterException.getMessage());
 		throw theErrorFilterException;     
     }
 
