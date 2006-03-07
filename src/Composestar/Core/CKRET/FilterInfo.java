@@ -36,11 +36,11 @@ public class FilterInfo {
 	{
 		List l = new ArrayList();
 		if( targetmatching )
-			l.add(new Operation("r","target"));
+			l.add(new Operation("read","target"));
 		if( selectormatching )
-			l.add(new Operation("r","selector"));
+			l.add(new Operation("read","selector"));
 		for( int i = 0; i < conditions.size(); i++ )
-			l.add(new Operation("r", conditions.get(i).toString()));
+			l.add(new Operation("read", conditions.get(i).toString()));
 		return l;
 	}
 

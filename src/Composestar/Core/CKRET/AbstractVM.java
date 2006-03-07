@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
@@ -45,13 +47,17 @@ public class AbstractVM {
 			res.add(op.getName());
 		}
 		//System.err.println("AVM: printing resources...");
-		/*
+		
+		//String msg = "";
 		for( Iterator ri = getResources().iterator(); ri.hasNext(); )
 		{
 			Resource res = (Resource) ri.next();
-			System.err.println(res);
+			Debug.out(Debug.MODE_DEBUG,"SECRET","Resource-op["+res.getName()+"]: "+res.sequence());
+			//System.err.println(res);
+			//msg+=res.toString()+"\n";
 		}
-		*/
+		//JOptionPane.showMessageDialog(null,msg);
+		
 		//System.err.println("AVM: checking constraints...");
 		for( Iterator ci = Repository.instance().getConstraints().iterator(); ci.hasNext(); )
 		{
@@ -64,7 +70,13 @@ public class AbstractVM {
 				{
 					if( constraint.conflicts(res.sequence()))
 					{
-						conflicts.add("Resource " + res.getName() + ": " + constraint.getMessage() + " (" + res.sequence() + ")" );
+						Conflict conflict = new Conflict();
+						conflict.setResource(res.getName());
+						conflict.setMsg(constraint.getMessage());
+						conflict.setSequence(res.sequence());
+						conflict.setExpr(constraint.getPattern());
+						conflicts.add(conflict);
+						//conflicts.add("Resource " + res.getName() + ": " + constraint.getMessage() + " (" + res.sequence() + ")" );
 					}
 				}
 			}

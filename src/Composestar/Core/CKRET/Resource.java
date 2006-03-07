@@ -6,6 +6,7 @@
  */
 package Composestar.Core.CKRET;
 
+import java.util.ArrayList;
 /**
  * @author Administrator
  *
@@ -15,6 +16,7 @@ package Composestar.Core.CKRET;
 public class Resource {
 
 	private String name;
+	private ArrayList alphabet = new ArrayList();
 	private StringBuffer history;
 
 	public Resource(String name)
@@ -25,7 +27,8 @@ public class Resource {
 
 	public void add(String operation)
 	{
-		this.history.append(operation.charAt(0));
+		//this.history.append(operation.charAt(0));
+		this.history.append(operation);
 	}
 
 	public String toString()
@@ -42,5 +45,20 @@ public class Resource {
 	{
 		return history.toString();
 	}
-
+	
+	public boolean operationIsInAlphabet(String operation)
+	{
+		for(int i=0; i<this.alphabet.size(); i++)
+		{
+			String str = (String)this.alphabet.get(i);
+			if(str.equals(operation))
+				return true;
+		}
+		return false;
+	}
+	
+	public void addToAlphabet(String operation)
+	{
+		this.alphabet.add(operation);
+	}
 }

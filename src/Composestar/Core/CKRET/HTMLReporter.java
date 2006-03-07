@@ -110,13 +110,17 @@ public class HTMLReporter implements Reporter {
 					i++;
                     buffer.append("").append(i).append(". ").append(actionIterator.next().toString()).append("<BR>");
 				}
-				buffer.append("</td><td align=left valign=top><b>Conflicts</b><BR>");
 				
+				buffer.append("</td><td align=left valign=top><b>Conflicts</b>");
+				
+				buffer.append("<table border=0 cellpadding=0 cellspacing=0 width=100%>");
+				buffer.append("<tr><td><i>Resource:</i></td><td width=200><i>Sequence:</i></td><td width=150><i>Pattern:</i></td><td><i>Message:</i></td></tr>");
 				for( Iterator conflictIterator = conflicts.iterator(); conflictIterator.hasNext(); )
 				{
-                    buffer.append(conflictIterator.next().toString()).append("<BR>");
+					Conflict conflict = (Conflict)conflictIterator.next();
+					buffer.append("<tr><td>"+conflict.getResource()+"</td><td>"+conflict.getSequence()+"</td><td>"+conflict.getExpr()+"</td><td>"+conflict.getMsg()+"</td></tr>");
 				}
-								
+				buffer.append("</table>");
 				buffer.append("</td></tr>");
 			}
 			buffer.append("</table>");

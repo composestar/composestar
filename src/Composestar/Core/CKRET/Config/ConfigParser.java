@@ -70,7 +70,12 @@ public class ConfigParser extends DefaultHandler {
 			ConstraintsHandler nonconflicthandler = new ConstraintsHandler(this,parser,this.repository);
 			this.parser.setContentHandler(nonconflicthandler);
 		}
-    
+		else if(local_name.equalsIgnoreCase("resources"))
+		{
+			//System.err.println("Found resources section...");
+			ResourceHandler nonconflicthandler = new ResourceHandler(this,parser,this.repository);
+			this.parser.setContentHandler(nonconflicthandler);
+		}
     }
     
     /**
