@@ -18,6 +18,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
 /**
  * @author Administrator
@@ -97,14 +98,16 @@ public class FilterSetAnalysis implements Serializable {
 		while (itr.hasNext())
 		{
 			String name = (String) itr.next();
-		
-			FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
-			Iterator ifItr = fm.inputFilters.iterator();
-	
-			while (ifItr.hasNext())
+			//if( !(name.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
 			{
-				Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter f = (Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter) ifItr.next();
-				list.add(f);
+				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
+				Iterator ifItr = fm.inputFilters.iterator();
+		
+				while (ifItr.hasNext())
+				{
+					Filter f = (Filter) ifItr.next();
+					list.add(f);
+				}
 			}
 		}
 		return list;
