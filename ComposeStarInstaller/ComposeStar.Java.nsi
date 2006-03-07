@@ -11,11 +11,11 @@
 ; Variables
 ; Variables
 ;--------------------------------
-  Var JAVA_HOME
+  	Var JAVA_HOME
 	Var REAL_JAVA_HOME
-  Var JAVA_VER
+  	Var JAVA_VER
 	Var REAL_JAVA_VER
-  Var JAVA_INSTALLATION_MSG
+  	Var JAVA_INSTALLATION_MSG
 	Var NET_SDK_PATH
 	Var NET_RUN_PATH
 	Var NET_VER
@@ -30,9 +30,9 @@
 ;General
 
   ;Name and file
-  Name "Compose* beta"
+  Name "Compose* Java Edition"
 	Icon cstar.ico
-  OutFile "ComposeStar.NET_0.5.2.exe"
+  OutFile "ComposeStar.Java_0.5.2.exe"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -54,7 +54,7 @@
 ;--------------------------------
 ;Pages
   !insertmacro MUI_PAGE_WELCOME
-  !insertmacro MUI_PAGE_LICENSE "ABOUT.txt"
+  !insertmacro MUI_PAGE_LICENSE "AboutComposeStar.Java.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
@@ -85,21 +85,10 @@ FunctionEnd
 
 Section "Checks" Checks
 	
-	Call IsUserAdmin
-	
 	Call LocateJVM
 	
-	Call IsDotNETInstalled
-	
   	SetOutPath "$INSTDIR"
-  	ReadRegStr $NET_SDK_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "sdkInstallRootv1.1"
-	StrCpy $NET_SDK_PATH "$NET_SDK_PATHBin"
 	
-	ReadRegStr $NET_RUN_PATH HKLM "SOFTWARE\Microsoft\.NETFramework" "InstallRoot"
-	ReadRegStr $NET_VER HKLM "SOFTWARE\Microsoft\.NETFramework\policy\standards\v1.0.0" "v1.1.4322"
-	StrCpy $NET_RUN_PATH "$NET_RUN_PATHv1.1.$NET_VER"
-	DetailPrint "Found Microsoft .NET Framework: $NET_RUN_PATH"
-	DetailPrint "Found Microsoft .NET SDK at: $NET_SDK_PATH"
 	DetailPrint "Found Java Virtual Machine $REAL_JAVA_VER in: $REAL_JAVA_HOME."
 	
 SectionEnd
@@ -110,9 +99,7 @@ Section "Compose* beta" Compose
   
   	;ADD YOUR OWN FILES HERE...
   	File ABOUT.txt
-	File ComposeStarSyntaxHighlighting.reg
 	File filterdesc.xml
-	File ComposeStarAddInFixer.exe
 	File INCREconfig.xml
 	File INCRE.css
 	File /nonfatal secret.css
@@ -120,8 +107,8 @@ Section "Compose* beta" Compose
 	File cstar.ico
 	File /nonfatal /r binaries
 	File /nonfatal /r /x CVS documentation
-	File /nonfatal /r ComposestarVSAddin
-	File /nonfatal /r /x CVS examplesDotNET
+	;File /nonfatal /r ComposestarEclipsePlugin
+	File /nonfatal /r /x CVS examplesJava
   
   	;Call website for the install times!
 	;NSISdl::download http://flatliner.student.utwente.nl/composestar_install
@@ -138,25 +125,10 @@ Section "Settings" Settings
 	
 	Call writeComposeStarINIFile
 	Call writeRegistryKeys
-	Call writeKeyWordFile
-	
-	ExecWait '$NET_RUN_PATH/regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"' $RESULT
-	IntCmp 0 $RESULT OK
-	StrCpy $JAVA_INSTALLATION_MSG "Could not register the Compose* Visual Studio AddIn!"
-	MessageBox MB_OK $JAVA_INSTALLATION_MSG
-	
-	OK:
-	
-	ExecWait '$WINDIR/regedit /s "$INSTDIR\ComposeStarSyntaxHighlighting.reg"' $RESULT
-	IntCmp 0 $RESULT OKK
-	StrCpy $JAVA_INSTALLATION_MSG "Could not add the Compose* syntax highlighting, please rerun it manually!"
-	MessageBox MB_OK $JAVA_INSTALLATION_MSG
-	
-	OKK:
 	
 	; Set environment variables, for Java, .NET and .NET sdk!
 	Push "PATH"
-  	Push "%PATH%;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
+  	Push "%PATH%;$REAL_JAVA_HOME\bin"
   	Call WriteEnvStr
 
 SectionEnd
@@ -165,9 +137,9 @@ SectionEnd
 ;Descriptions
 
   	;Language strings
-  	LangString DESC_Checks ${LANG_ENGLISH} "The checks for the Compose*.NET package, this will check your current system to see if it meets some of the requirements."
-	LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."
-	LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*.NET package, it can must be used for the first install and can be used for resque purposes."
+  	LangString DESC_Checks ${LANG_ENGLISH} "The checks for the Compose*/Java package, this will check your current system to see if it meets some of the requirements."
+	LangString DESC_Settings ${LANG_ENGLISH} "The Compose*/Java package."
+	LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*/Java package, it can must be used for the first install and can be used for rescue purposes."
 
   	;Assign language strings to sections
   	!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
@@ -181,18 +153,9 @@ SectionEnd
 
 Section "Uninstall"
 
-  	ExecWait '$NET_RUN_PATH/regasm /unregister "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
-	
-	DeleteRegKey HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect"
-	DeleteRegKey HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps"
-	
 	;ADD YOUR OWN FILES HERE...
   	RMDir /r "$INSTDIR"
 	
-	ExecWait '$NET_RUN_PATH/regasm /unregister "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"' $RESULT
-	IntCmp 0 $RESULT OK
-	StrCpy $JAVA_INSTALLATION_MSG "Could not unregister the Compose* Visual Studio AddIn!"
-	MessageBox MB_OK $JAVA_INSTALLATION_MSG
 OK:
 	;DeleteRegKey /ifempty HKCU "Software\Software\ComposeStar"
 
@@ -201,30 +164,17 @@ SectionEnd
 ;--------------------------------
 Function writeComposeStarINIFile
 	
-	Push "$INSTDIR\binaries\ComposeStarRuntimeInterpreter.dll"
-  	Push "\" ;needs to be replaced
-  	Push "/" ;will replace wrong characters
-  	Call StrReplace
-  	Pop $UNIX_DIR
-	
 	FileOpen  $INI_FILE "$INSTDIR\Composestar.ini" w
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileWrite $INI_FILE '#Installer generated stuff:$\n$\n'
 	FileWrite $INI_FILE '[Global Composestar configuration]$\n'
 	FileWrite $INI_FILE 'ComposestarPath=$INSTDIR\$\n$\n'
-	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\ComposestarCORE.jar;$INSTDIR\binaries\ComposestarDotNET.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar$\n$\n'
-	FileWrite $INI_FILE '.NETPath=$NET_RUN_PATH$\n$\n'
-	FileWrite $INI_FILE '.NETSDKPath=$NET_SDK_PATH$\n$\n'
+	FileWrite $INI_FILE 'ClassPath=$INSTDIR\binaries\ComposestarCORE.jar;$INSTDIR\binaries\ComposestarJava.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar$\n$\n'
+	;FileWrite $INI_FILE 'JDKPath=$JAVADK_PATH$\n$\n'
 	FileWrite $INI_FILE 'SECRETMode=2$\n$\n'
-	FileWrite $INI_FILE 'MainClass=Composestar.DotNET.MASTER.DotNETMaster$\n$\n'
+	FileWrite $INI_FILE 'MainClass=Composestar.Java.MASTER.JavaMaster$\n$\n'
 	FileWrite $INI_FILE 'EmbeddedSourcesFolder=embedded\$\n$\n'
-	FileWrite $INI_FILE 'RequiredDlls=AntlrDotNet.dll,ComposestarCore.dll,ComposestarCoreDotNET.dll,ComposeStarDotNETRuntimeInterpreter.dll,ComposeStarDotNETUtilities.dll,ComposeStarFilterDebugger.dll,ComposeStarRuntimeInterpreter.dll,ComposeStarUtilities.dll,DotNETPlatformInterface.dll$\n$\n'
-	FileWrite $INI_FILE 'JSCompiler=$INSTDIR\compilers\msjsharp$\n'
-	FileWrite $INI_FILE 'JSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
-	FileWrite $INI_FILE 'VBCompiler=$INSTDIR\compilers\msvbnet$\n'
-	FileWrite $INI_FILE 'VBCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
-	FileWrite $INI_FILE 'CSCompiler=$INSTDIR\compilers\mscsharp$\n'
-	FileWrite $INI_FILE 'CSCompilerOptions=/debug /nologo /r:\"$UNIX_DIR\"$\n$\n'
+	FileWrite $INI_FILE 'RequiredJars=ComposestarCORE.jar,ComposestarJava.jar,ComposestarRuntimeJava.jar,ComposestarRuntimeCore.jar$\n$\n'
 	FileWrite $INI_FILE '[Common]$\n'
 	FileWrite $INI_FILE 'RunDebugLevel=1$\n'
 	FileWrite $INI_FILE 'BuildDebugLevel=1$\n'
@@ -234,12 +184,7 @@ Function writeComposeStarINIFile
 FunctionEnd
 
 Function writeRegistryKeys
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandLineSafe" "0"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandPreload" "0"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "Description" "Compose* VS AddIn"
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "FriendlyName" "Compose*"
-	WriteRegDWORD HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "LoadBehavior" 3
-	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "ComposestarPath" "$INSTDIR\"
+	WriteRegStr HKCU "SOFTWARE\ComposeStar\Java" "ComposestarPath" "$INSTDIR\"
 	
 	;Set the cps file stuff!
 	;WriteRegStr HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps" "@" "{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
@@ -290,13 +235,13 @@ Function LocateJVM
     	Push $0
     	Push $1
     
-	ReadRegStr $JAVA_VER HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
-	ReadRegStr $REAL_JAVA_VER HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" "CurrentVersion"
+	ReadRegStr $JAVA_VER HKLM "SOFTWARE\JavaSoft\Java Development Kit" "CurrentVersion"
+	ReadRegStr $REAL_JAVA_VER HKLM "SOFTWARE\JavaSoft\Java Development Kit" "CurrentVersion"
 	;MessageBox MB_OK "Found Java: $JAVA_VER"
     	StrCmp "$JAVA_VER" "" JavaNotPresent CheckJavaVer
 
     	JavaNotPresent:
-        StrCpy $JAVA_INSTALLATION_MSG "Java Runtime Environment is not installed on your computer. You need version 1.4 or newer to run this program."
+        StrCpy $JAVA_INSTALLATION_MSG "Java Development Kit is not installed on your computer. You need version 1.4 or newer to run this program."
 	MessageBox MB_OK $JAVA_INSTALLATION_MSG
 	DetailPrint $JAVA_INSTALLATION_MSG
 	DetailPrint "Installation aborted!"
@@ -304,8 +249,8 @@ Function LocateJVM
 	Quit
 
     	CheckJavaVer:
-       	ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\JavaSoft\Java Runtime Environment\$JAVA_VER" "JavaHome"
-       	ReadRegStr $REAL_JAVA_HOME HKEY_LOCAL_MACHINE "SOFTWARE\JavaSoft\Java Runtime Environment\$JAVA_VER" "JavaHome"
+       	ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\JavaSoft\Java Development Kit\$JAVA_VER" "JavaHome"
+       	ReadRegStr $REAL_JAVA_HOME HKEY_LOCAL_MACHINE "SOFTWARE\JavaSoft\Java Development Kit\$JAVA_VER" "JavaHome"
        	GetFullPathName /SHORT $JAVA_HOME "$0"
 	StrCpy $0 $JAVA_VER 1 0
         StrCpy $1 $JAVA_VER 1 2
@@ -319,9 +264,9 @@ Function LocateJVM
         Goto Done
         
     JavaVerNotCorrect:
-        StrCpy $JAVA_INSTALLATION_MSG "The version of Java Runtime Environment installed on your computer is $REAL_JAVA_VER. Version 1.4 or newer is required to run this program."
+        StrCpy $JAVA_INSTALLATION_MSG "The version of Java Development Kit installed on your computer is $REAL_JAVA_VER. Version 1.4 or newer is required to run this program."
 	MessageBox MB_OK $JAVA_INSTALLATION_MSG
-	DetailPrint "The version of Java Runtime Environment installed on your computer is $REAL_JAVA_VER."
+	DetailPrint "The version of Java Development Kit installed on your computer is $REAL_JAVA_VER."
 	DetailPrint "Version 1.4 or newer is required to run this program."
 	DetailPrint "Installation aborted!"
 	Abort
@@ -330,62 +275,6 @@ Function LocateJVM
     Done:
 	Pop $1
         Pop $0
-FunctionEnd
-
-;--------------------------------
-Function IsDotNETInstalled
-   Push $0
-   Push $1
-   Push $2
-   Push $3
-   Push $4
-
-   ReadRegStr $4 HKEY_LOCAL_MACHINE "Software\Microsoft\.NETFramework" "InstallRoot"
-   # remove trailing back slash
-   Push $4
-   Exch $EXEDIR
-   Exch $EXEDIR
-   Pop $4
-   # if the root directory doesn't exist .NET is not installed
-   IfFileExists $4 0 noDotNET
-
-   StrCpy $0 0
-
-   EnumStart:
-
-     EnumRegKey $2 HKEY_LOCAL_MACHINE "Software\Microsoft\.NETFramework\Policy"  $0
-     IntOp $0 $0 + 1
-     StrCmp $2 "" noDotNET
-
-     StrCpy $1 0
-
-     EnumPolicy:
-
-       EnumRegValue $3 HKEY_LOCAL_MACHINE "Software\Microsoft\.NETFramework\Policy\$2" $1
-       IntOp $1 $1 + 1
-        StrCmp $3 "" EnumStart
-         IfFileExists "$4\$2.$3" foundDotNET EnumPolicy
-
-   noDotNET:
-     StrCpy $0 0
-		 StrCpy $JAVA_INSTALLATION_MSG "The Microsoft .NET Framework is not installed on your computer. You need version 1.1, .NET 2 is not supported, to run this program."
-		 MessageBox MB_OK $JAVA_INSTALLATION_MSG
-		 DetailPrint "The Microsoft .NET Framework is not installed on your computer."
-		 DetailPrint "You need version 1.1 to run this program."
-		 DetailPrint "Installation aborted!"
-		 Abort
-		 Quit
-     Goto done
-
-   foundDotNET:
-     StrCpy $0 1
-
-   done:
-     Pop $4
-     Pop $3
-     Pop $2
-     Pop $1
-     Exch $0
 FunctionEnd
 
 Function StrReplace
