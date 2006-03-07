@@ -95,12 +95,6 @@
                     HintPath = "vjslib.dll"
                 />
                 <Reference
-                    Name = "jukeboxframe"
-                    AssemblyName = "jukeboxframe"
-                    HintPath = "jukeboxframe.dll"
-                    Private = "True"
-                />
-                <Reference
                     Name = "DotNETPlatformInterface"
                     AssemblyName = "DotNETPlatformInterface"
                     HintPath = "C:\Program Files\ComposeStar\binaries\DotNETPlatformInterface.dll"
@@ -114,6 +108,11 @@
                     Name = "Song"
                     AssemblyName = "Song"
                     HintPath = "Song.dll"
+                />
+                <Reference
+                    Name = "jukeboxframe"
+                    AssemblyName = "jukeboxframe"
+                    HintPath = "jukeboxframe\bin\Debug\jukeboxframe.dll"
                 />
             </References>
         </Build>

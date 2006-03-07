@@ -56,9 +56,9 @@
                     HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
                 <Reference
-                    Name = "Jukebox.Song"
-                    AssemblyName = "Jukebox.Song"
-                    HintPath = "..\obj\Jukebox.Song.dll"
+                    Name = "Song"
+                    AssemblyName = "Song"
+                    HintPath = "..\Song.dll"
                 />
             </References>
         </Build>
