@@ -1147,47 +1147,56 @@ namespace ComposestarVSAddin
 			string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
 			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");
 
-			Debug.Instance.Log("  cleaning build.ini");
+			Debug.Instance.Log("  removing build.ini");
 			DeleteFile(Path.Combine(tempfolder, "build.ini") );
 
-			Debug.Instance.Log("  cleaning incre.html");
+			Debug.Instance.Log("  removing incre.html");
 			DeleteFile(Path.Combine(tempfolder, "incre.html") );
 
-			Debug.Instance.Log("  cleaning weavespec.xml");
+			Debug.Instance.Log("  removing weavespec.xml");
 			DeleteFile(Path.Combine(tempfolder, "weavespec.xml") );
 
-			Debug.Instance.Log("  cleaning repository.xml");
+			Debug.Instance.Log("  removing repository.xml");
 			DeleteFile(Path.Combine(tempfolder, "repository.xml") );
 
-			Debug.Instance.Log("  cleaning history.dat");
+			Debug.Instance.Log("  removing history.dat");
 			DeleteFile(Path.Combine(tempfolder, "history.dat") );
 
-			Debug.Instance.Log("  cleaning filth.html");
+			Debug.Instance.Log("  removing filth.html");
 			DeleteFile(Path.Combine(tempfolder, "filth.html") );
 
-			Debug.Instance.Log("  cleaning filelist.peweaver");
+			Debug.Instance.Log("  removing filelist.peweaver");
 			DeleteFile(Path.Combine(tempfolder, "filelist.peweaver") );
 
-			Debug.Instance.Log("  cleaning SECRET.html");
+			Debug.Instance.Log("  removing filelist.ilweaver");
+			DeleteFile(Path.Combine(tempfolder, "filelist.ilweaver") );
+
+			Debug.Instance.Log("  removing SECRET.html");
 			DeleteFile(Path.Combine(tempfolder, "SECRET.html") );
 
-			Debug.Instance.Log("  cleaning langmap.pro");
+			Debug.Instance.Log("  removing langmap.pro");
 			DeleteFile(Path.Combine(tempfolder, "langmap.pro") );
 
-			Debug.Instance.Log("  cleaning attributes.xml");
+			Debug.Instance.Log("  removing attributes.xml");
 			DeleteFile(Path.Combine(tempfolder, "attributes.xml") );
 
-			Debug.Instance.Log("  cleaning types.xml");
+			Debug.Instance.Log("  removing types.xml");
 			DeleteFile(Path.Combine(tempfolder, "types.xml") );
 
 			Debug.Instance.Log("  cleaning object folder");
-			string[] files = Directory.GetFiles(Path.Combine(tempfolder, "obj") , "*.*");
-			foreach (string f in files)
+			string[] filesObj = Directory.GetFiles(Path.Combine(tempfolder, "obj") , "*.*");
+			foreach (string f in filesObj)
 			{
-				Debug.Instance.Log(String.Format("    cleaning {0}", Path.GetFileName( f)));
+				Debug.Instance.Log(String.Format("    removing {0}", Path.GetFileName( f)));
 				DeleteFile( f );
 			}
-			
+			Debug.Instance.Log("  cleaning object/weaver folder");
+			string[] filesWeaver = Directory.GetFiles(Path.Combine(tempfolder, "obj/weaver") , "*.*");
+			foreach (string f in filesWeaver)
+			{
+				Debug.Instance.Log(String.Format("    removing {0}", Path.GetFileName( f)));
+				DeleteFile( f );
+			}
 
 			// Done
 			Debug.Instance.Log("");
