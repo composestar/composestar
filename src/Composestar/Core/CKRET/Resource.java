@@ -18,17 +18,21 @@ public class Resource {
 	private String name;
 	private ArrayList alphabet = new ArrayList();
 	private StringBuffer history;
+	private StringBuffer fancyhistory;
 
 	public Resource(String name)
 	{
 		this.name = name;
 		this.history = new StringBuffer();
+		this.fancyhistory = new StringBuffer();
 	}
 
 	public void add(String operation)
 	{
 		//this.history.append(operation.charAt(0));
 		this.history.append(operation);
+		this.fancyhistory.append(" ");
+		this.fancyhistory.append(operation);
 	}
 
 	public String toString()
@@ -44,6 +48,11 @@ public class Resource {
 	public String sequence()
 	{
 		return history.toString();
+	}
+	
+	public String fancySequence()
+	{
+		return fancyhistory.toString();
 	}
 	
 	public boolean operationIsInAlphabet(String operation)

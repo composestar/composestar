@@ -75,7 +75,7 @@ public class MetaFilterAction extends FilterAction {
 					Type dnt = (Type) pr;
 					String selector = sp.getSelector().getName();
 			
-					String[] params = {"Composestar.Runtime.FLIRT.message.ReifiedMessage"};
+					String[] params = {"Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage"};
 					MethodInfo method = dnt.getMethod(selector,params);
 					if( method != null )
 					{

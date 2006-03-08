@@ -123,7 +123,7 @@ public class HTMLReporter implements Reporter {
 				buffer.append("</table>");
 				buffer.append("</td></tr>");
 			}
-			buffer.append("</table>");
+			buffer.append("</table><br/>");
 		}
 		buffer.append("</div>");
 	}
