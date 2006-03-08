@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.2 2006/02/17 16:43:33 oohlaf Exp $
+ * $Id: DotNETMaster.java,v 1.3 2006/02/21 16:42:41 whavinga Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -37,7 +37,7 @@ public class DotNETMaster extends Master  {
     private CommonResources Resources;
     private String configfile;
 
-   
+    
     /**
      * Default ctor.
      * @param configurationFile
@@ -144,7 +144,7 @@ public class DotNETMaster extends Master  {
      * @roseuid 401B89E70233
      */
     public static void main(String[] args) {
-
+    	
 		if(args.length == 0) {
     		System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
     		return;
@@ -215,8 +215,7 @@ public class DotNETMaster extends Master  {
 				Debug.out(Debug.MODE_DEBUG, "Master", "Updating configuration file...");
 				this.SaveModifiedConfigurationKeys(Resources);
 
-				// close incre report file
-		        incre.getReporter().close();
+				incre.getReporter().close();
 		        
 				if (Debug.getMode() >= Debug.MODE_WARNING ) Debug.outWarnings();
 			}
@@ -263,15 +262,9 @@ public class DotNETMaster extends Master  {
 
 	public void SaveModifiedConfigurationKeys(CommonResources resources) {
   	  ArrayList builtAssemblies = (ArrayList) resources.getResource("BuiltAssemblies");
-		if(builtAssemblies == null) builtAssemblies = new ArrayList();
-  	  String execAssembly = (String)DataStore.instance().getObjectByID("Executable");
-  	  if(!builtAssemblies.contains(execAssembly)){
-  	  	/* add the executable */
-  	  	builtAssemblies.add(execAssembly);
-  	  }
 	  java.util.ArrayList configlines = new java.util.ArrayList();
   	  
-	  try {
+	  try { 
 		BufferedReader br = new BufferedReader(new FileReader(configfile));
 		String line = br.readLine();
     	while ( line != null) {
@@ -290,8 +283,8 @@ public class DotNETMaster extends Master  {
     		}
 			line = br.readLine();
     	}
-    	br.close();
-
+    	br.close(); 
+ 
 	  	BufferedWriter bw = new BufferedWriter(new FileWriter(configfile));
 	  	Iterator iterLines = configlines.iterator();
 	  	while (iterLines.hasNext()) {
