@@ -25,12 +25,28 @@ namespace ComposestarVSAddin
 		private string _VBCompilerOptions;
 		private string _CSCompiler;
 		private string _CSCompilerOptions;
+		private string _JVMOptions;
 		private SecretModes _secretMode = SecretModes.NotSet;
 		private TriStateBooleanModes _verifyAssemblies = TriStateBooleanModes.NotSet;
 		private DebugModes _buildDebugLevel = DebugModes.NotSet;
 		private DebugModes _runDebugLevel = DebugModes.NotSet;
 		private TriStateBooleanModes _incremental = TriStateBooleanModes.NotSet;
 
+		[CategoryAttribute("Java Virtual Machine settings"),  
+		DescriptionAttribute("JVM Options"),
+		IniSettingFieldAttribute("JVMOptions", "JVM")]
+		public string JVMOptions
+		{
+			get
+			{
+				return this._JVMOptions;
+			}
+			set 
+			{
+				this._JVMOptions = value;
+				SetIsDirty(true);
+			}
+		}
 
 		[CategoryAttribute("User defined settings"),  
 		DescriptionAttribute("SECRET mode"),
