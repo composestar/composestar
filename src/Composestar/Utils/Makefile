@@ -7,6 +7,7 @@ CLASSES=CommandLineExecutor.class \
 	CPSIterator.class \
 	Debug.class \
 	FileUtils.class \
+	INIFile.class \
 	PropertyManager.class \
 	StreamGobbler.class \
 	StringConverter.class \
