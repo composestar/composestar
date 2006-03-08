@@ -5,12 +5,11 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRealSourceManager.java,v 1.2 2006/02/24 16:00:18 dspenkel Exp $
+ * $Id: DotNETRealSourceManager.java,v 1.3 2006/03/06 09:08:22 reddog33hummer Exp $
  */
 
 package Composestar.DotNET.TYM.SrcCompiler;
 
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CommonResources;
@@ -23,13 +22,9 @@ import Composestar.Core.TYM.SrcCompiler.CompilerFactory;
 import Composestar.Core.TYM.SrcCompiler.RealSourceManager;
 
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringConverter;
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
 
 import java.io.BufferedReader;
@@ -56,7 +51,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
     
     private TypeLocations typeLocations;
     
-    private ArrayList builtAssemblies = new ArrayList ();
+    private ArrayList compiledSources = new ArrayList ();
     
     protected List Assemblies = new ArrayList();
     
@@ -102,10 +97,10 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 				throw new ModuleException( "Error in configuration file: No such property \""
 					+ "ouputPath\"" );
 			}
-			File finaltarget = new File(outputPath + targetFile);
+			
 			File buildtarget = new File(buildPath + targetFile);
 						
-			if(!incre.isProcessedByModule(sourceFile,"RECOMA") || !buildtarget.exists() || !finaltarget.exists() )
+			if(!buildtarget.exists()/* add to config.xml */  || !incre.isProcessedByModule(sourceFile,"RECOMA"))
 			{
 				// INCRE has decided that we still need to recompile the source
 				Debug.out(Debug.MODE_DEBUG, "RECOMA","compiling "+sourceFile);
@@ -114,16 +109,15 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 				Debug.out(Debug.MODE_DEBUG, "RECOMA","depends " + depends[0]  + " co: " + compilerOptions + " compilerpath " + compilerPath);
 				comp.compile( source, '\"' + buildPath + targetFile + '\"', targetFile.endsWith( "dll" ),
 					depends, compilerOptions, compilerPath );
-				builtAssemblies.add('\"' + buildPath + targetFile + '\"');
+				compiledSources.add(buildPath+targetFile);
 				compsource.stop();
-			}
+			} 
 			else 
 			{
 				// INCRE has decided that we don't have to recompile this source
 				Debug.out(Debug.MODE_DEBUG, "INCRE","No need to recompile "+sourceFile);
 				INCRETimer skipsource = incre.getReporter().openProcess("RECOMA",sourceFile,INCRETimer.TYPE_INCREMENTAL);
-				if(targetFile.endsWith(".exe"))
-					DataStore.instance().addObject("Executable",'\"' + buildPath + targetFile + '\"');
+				compiledSources.add(buildPath+targetFile);
 				skipsource.stop();
 			}
 		} 
@@ -292,7 +286,6 @@ public class DotNETRealSourceManager implements RealSourceManager  {
     	else
     		targetFile += ".dll";
     	
-    	Debug.out(Debug.MODE_DEBUG, "RECOMA","Target of "+sourcefile+" set to "+targetFile); 
     	return targetFile; 
     }
     
@@ -308,7 +301,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
       	   if (!"".equals(assArray[i]))
       	 	deps.add('\"' + assArray[i] + '\"');
       	 }
-      	 
+      	  
       	 String dependencies = resources.ProjectConfiguration.getProperty("Dependencies");
       	 String[] depArray = dependencies.split(",");
       	 for( int i = 0; i < depArray.length; i++ )
@@ -324,7 +317,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
      * @roseuid 40FD28650122
      */
     public void finish(CommonResources resources) {
-    	resources.addResource("BuiltAssemblies", builtAssemblies);
+       	resources.addResource("CompiledSources", compiledSources);
     }
     
     /**
@@ -356,15 +349,11 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 		DataStore ds = DataStore.instance();
 		CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
 		String buildPath = resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
-		if(buildPath.equals("ERROR"))
-		{
-			return extSources;
-		}
-
+		
 		//	step 1: open il code of source
-		String ilFile = createTargetFile(src,false);
-		ilFile = ilFile.replaceAll( ".dll", ".il" );
-		ilFile = buildPath + ilFile;
+		String targetFile = createTargetFile(src,false);
+		String ilFile = targetFile.replaceAll( ".dll", ".il" );
+		ilFile = buildPath + "Weaver\\" + ilFile;
 		
 		// step 2: extract all external assemblies
 		BufferedReader in = null;
@@ -405,7 +394,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 				extSources.add(source);
 		}
 			
-		incre.externalSourcesBySource.put(src,extSources);
+		incre.externalSourcesBySource.put(FileUtils.removeExtension(buildPath+targetFile),extSources);
 		return extSources;
 	}
 
@@ -417,12 +406,15 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 	public ArrayList fullSignatures(String src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();
-     	DataStore ds = incre.getCurrentRepository();
-		ArrayList extSources = new ArrayList();
+     	ArrayList extSources = new ArrayList();
 		ArrayList signatures = new ArrayList();
 		ArrayList concernsToCheck = new ArrayList();
 		HashSet concernsCheckedByKey = new HashSet();
-				
+		
+		DataStore ds = DataStore.instance();
+		CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
+		String buildPath = resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
+		
 		/* first gather all concerns with SingleOrder */
 		concernsToCheck = incre.getConcernsWithFMO();
 		
@@ -443,10 +435,12 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 		if(!concernsToCheck.isEmpty())
 		{	
 			/* add full signatures of external linked sources */
-			extSources = (ArrayList)incre.externalSourcesBySource.get(src);
-			if(extSources == null)		
+			String target = buildPath+createTargetFile(src,false);
+			extSources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(target));
+			if(extSources == null){		
 				extSources = this.externalSources(src);
-			
+			}
+					
 			Iterator externals = extSources.iterator();
 			while(externals.hasNext()){
 				String external = (String)externals.next();
@@ -468,177 +462,6 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 		}
 		
 		return signatures;
-	}
-	
-	/**
-	 * @param src Absolute path of a sourcefile 
-	 * @return ArrayList containing all concerns with FMO and extracted from 
-	 * the source and its external linked sources
-	 */
-	public ArrayList getConcernsWithFMO(String src)
-	{
-		INCRE incre = INCRE.instance();
-		ArrayList concerns = new ArrayList();
-		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(src);
-		sources.add(0,src);
-		
-		if(!concernsWithFMO.isEmpty()){
-			Iterator iterConcerns = concernsWithFMO.iterator();
-
-			while( iterConcerns.hasNext() )
-			{
-				Concern c = (Concern)iterConcerns.next();
-				if(incre.declaredInSources(c,sources)){
-					concerns.add(c.getQualifiedName());
-				}
-			}
-		}
-		
-		return concerns;
-	}
-	
-	/**
-	 * @param src Absolute path of a sourcefile 
-	 * @return ArrayList containing all concerns recognized as a casting interception 
-	 * Only concerns extracted from the source and its external linked sources are returned
-	 */
-	public ArrayList castingInterceptions(String src) throws ModuleException
-	{
-		ArrayList list = new ArrayList();
-     	INCRE incre = INCRE.instance();
-     	DataStore ds = incre.getCurrentRepository();
-     	ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(src);
-		sources.add(0,src);
-     	
-		if(!concernsWithFMO.isEmpty())
-		{
-     		Iterator iterConcerns = concernsWithFMO.iterator();
-			while ( iterConcerns.hasNext() )
-			{
-				Concern c = (Concern)iterConcerns.next();
-				boolean castConcern = false;
-				
-				if(incre.declaredInSources(c,sources))
-				{
-					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
-			
-					Iterator iterFilterModules = fmo.orderAsList().iterator();
-					while ( iterFilterModules.hasNext() )
-					{
-						String fmref = (String)iterFilterModules.next();
-						FilterModule fm = (FilterModule) ds.getObjectByID(fmref);
-				  	  			
-						Iterator iterInternals = fm.getInternalIterator() ;
-						while ( iterInternals.hasNext() )
-						{
-							Internal internal = (Internal)iterInternals.next();
-							if ( !list.contains(internal.type.getQualifiedName()) )
-							{
-								castConcern = true;
-								list.add( internal.type.getQualifiedName() );
-							}
-						}
-					}
-								  	  		
-					if ( castConcern ) 
-					{
-						if(!list.contains( c.getQualifiedName() ))
-							list.add( c.getQualifiedName() );
-					}
-				}
-			}
-		}
-		
-		return list;
-	}
-
-	/**
-	 * @param src Absolute path of a sourcefile 
-	 * @return ArrayList containing all concerns which instantiation should be intercepted 
-	 * Only concerns extracted from the source and its external linked sources are returned
-	 */
-	public ArrayList getAfterInstantiationClasses(String src) throws ModuleException 
-	{
-		INCRE incre = INCRE.instance();
-		ArrayList result = new ArrayList();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(src);
-		sources.add(0,src);
-		
-		DataStore ds = incre.getCurrentRepository();
-    	//Iterator it = ds.getAllInstancesOf(CompiledImplementation.class);
-		Iterator it = incre.getAllInstancesOfOrdered(CompiledImplementation.class);
-		while(it.hasNext())
-		{
-			CompiledImplementation ci = (CompiledImplementation)it.next();
-			String className = ci.getClassName();
-			if(className != null)
-				result.add(className);
-		}
-		
-		//it = ds.getAllInstancesOf(CpsConcern.class);
-		it = incre.getAllInstancesOfOrdered(CpsConcern.class);
-		while (it.hasNext()) {
-			CpsConcern c = (CpsConcern)it.next();
-			Object o = c.getDynObject("IMPLEMENTATION");
-			if ( o != null) {
-				
-				PrimitiveConcern pc = (PrimitiveConcern)o;
-				result.add(pc.getQualifiedName());
-			}
-		}
-		
-		//it = ds.getAllInstancesOf(Concern.class);
-		it = incre.getAllInstancesOfOrdered(Concern.class);
-		while (it.hasNext()) {
-			Concern c = (Concern)it.next();
-			if(incre.declaredInSources(c,sources)){
-				if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
-				{
-						result.add(c.getQualifiedName());
-				}
-			}
-		}
-			
-		return result;
-	}
-
-	/**
-	 * @param src Absolute path of a sourcefile 
-	 * @return ArrayList containing all concerns with outputfilter(s) 
-	 * Only concerns extracted from the source and its external linked sources are returned
-	 */
-	public ArrayList getConcernsWithOutputFilters(String src) throws ModuleException
-	{
-		ArrayList concerns = new ArrayList();
-		INCRE incre = INCRE.instance();
-		DataStore ds = incre.getCurrentRepository();
-		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(src);
-		sources.add(0,src);
-		
-		if(!concernsWithFMO.isEmpty()){
-     	Iterator iterConcerns = concernsWithFMO.iterator();
-			while ( iterConcerns.hasNext() )
-			{
-				Concern c = (Concern)iterConcerns.next();
-				if(incre.declaredInSources(c,sources)){
-					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
-			
-					Iterator iterFilterModules = fmo.orderAsList().iterator();
-					while ( iterFilterModules.hasNext() )
-					{
-						FilterModule fm = (FilterModule) ds.getObjectByID((String)iterFilterModules.next());
-			
-						if ( !fm.outputFilters.isEmpty() )
-							concerns.add( c.getQualifiedName() );
-					}
-				}
-			} 
-		}
-
-		return concerns;
 	}
 }
 /**
