@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRealSourceManager.java,v 1.3 2006/03/06 09:08:22 reddog33hummer Exp $
+ * $Id: DotNETRealSourceManager.java,v 1.4 2006/03/08 09:30:39 dspenkel Exp $
  */
 
 package Composestar.DotNET.TYM.SrcCompiler;
@@ -415,8 +415,8 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 		CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
 		String buildPath = resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
 		
-		/* first gather all concerns with SingleOrder */
 		concernsToCheck = incre.getConcernsWithFMO();
+		//concernsToCheck = incre.getConcernsWithModifiedSignature();
 		
 		/* add full signatures of src */
 		/* When compiling a source the compiler does not use 

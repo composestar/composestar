@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.5 2006/03/08 11:58:43 stephan_h Exp $
+ * $Id: SIGN.java,v 1.6 2006/03/08 12:15:12 stephan_h Exp $
  * 
 **/
 
@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.HashMap;
 
 import Composestar.Core.RepositoryImplementation.TypedDeclaration;
@@ -741,6 +742,18 @@ public class SIGN implements CTCommonModule
 					if (mw.getRelationType() == MethodWrapper.ADDED)
 					{
 						mw.setRelationType(MethodWrapper.NORMAL);										
+					}
+				}
+				
+				List removed = signature.getMethodWrappers(MethodWrapper.REMOVED);
+				Iterator removeItr = removed.iterator();
+				while(removeItr.hasNext())
+				{
+					MethodWrapper mw = (MethodWrapper)removeItr.next();
+					MethodInfo minfo = mw.getMethodInfo();
+					if(!dnmi.contains(minfo)){
+						// not in original signature
+						signature.removeMethodWrapper(mw);
 					}
 				}
 			}
