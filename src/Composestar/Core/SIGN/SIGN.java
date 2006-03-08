@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.4 2006/03/08 11:18:08 stephan_h Exp $
+ * $Id: SIGN.java,v 1.5 2006/03/08 11:58:43 stephan_h Exp $
  * 
 **/
 
@@ -617,16 +617,20 @@ public class SIGN implements CTCommonModule
 										//the method must not be implemented in the inner already
 										if(!signature.hasMethod(matchingSelectorName)){	
 											
-											//retrieve internal
+											//retrieve internal and external
 											Iterator internalIter = fm.getInternalIterator();
-											TypedDeclaration internal=null;
-											while(internalIter.hasNext()){
-												internal = (TypedDeclaration)internalIter.next();
-												if(internal.getName().equals(substitutionTargetName)){
+											Iterator externalIter = fm.getExternalIterator();
+											TypedDeclaration internalOrExternal=null;
+											while(internalIter.hasNext() || externalIter.hasNext()){
+												if(internalIter.hasNext())
+													internalOrExternal = (TypedDeclaration)internalIter.next();
+												 else
+													internalOrExternal = (TypedDeclaration)externalIter.next();
+												if(internalOrExternal.getName().equals(substitutionTargetName)){
 													break;
 												}
 											}
-											Concern foundConcern = internal.getType().getRef();
+											Concern foundConcern = internalOrExternal.getType().getRef();
 											if (foundConcern != null){
 												//retrieve methodinfo from internal
 												LinkedList methods = getMethodList(foundConcern);
