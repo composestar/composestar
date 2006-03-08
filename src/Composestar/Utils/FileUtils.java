@@ -6,6 +6,13 @@
  */
 package Composestar.Utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import Composestar.Core.Exception.ModuleException;
 
 public class FileUtils
 {
@@ -23,5 +30,39 @@ public class FileUtils
   public static String fixFilename(String name)
   {
     return name.replace('\\', '/');
+  } 
+  
+  public static void copyFile(String dst, String src) throws ModuleException 
+  {
+	try  
+	{
+		FileInputStream fis = new FileInputStream(src);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		FileOutputStream fos = new FileOutputStream(dst);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+	    
+	    // transfer bytes from in to out
+	    byte[] buf = new byte[1024];
+	    int len;
+	    while ((len = bis.read(buf)) > 0) {
+	        bos.write(buf, 0, len);
+	    }
+	    bis.close();
+	    bos.close();
+	}
+	catch(IOException e)
+	{
+		throw new ModuleException( "Error while copying file!:\n" + e.getMessage());
+	}
+  }
+  
+  public static String removeExtension(String filename)
+  {
+	  int lastdot = filename.lastIndexOf(".");
+	  if(lastdot>0){
+		  return filename.substring(0,lastdot);
+	  }
+	  
+	  return filename;
   }
 }
