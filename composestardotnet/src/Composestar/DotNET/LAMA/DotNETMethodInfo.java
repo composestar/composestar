@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMethodInfo.java,v 1.3 2006/02/01 15:29:38 composer Exp $
+ * $Id: DotNETMethodInfo.java,v 1.2 2006/02/24 14:35:40 roy_ Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -55,6 +55,36 @@ public class DotNETMethodInfo extends MethodInfo {
     	super();
     }
     
+    //add clone: currently used to support selector name conversion
+    //copy only stuff that applies to a method signature, this excludes e.g. the parent
+    public MethodInfo getClone(String n, Type actualParent){
+    	DotNETMethodInfo mi = new DotNETMethodInfo();
+    	mi.setName(n);
+    	//set MethodInfo variables
+    	//mi.Parent = this.Parent;
+    	mi.Parent = actualParent;
+    	mi.Parameters = this.Parameters;
+    	mi.ReturnType = this.ReturnType;
+    	mi.ReturnTypeString = this.ReturnTypeString;
+    	
+    	//set DotNETMethodInfo variables
+    	mi.CallingConvention = this.CallingConvention;
+    	mi.IsAbstract = this.IsAbstract;
+    	mi.IsAssembly = this.IsAssembly;
+    	mi.IsConstructor = this.IsConstructor;
+    	mi.IsDeclaredHere = this.IsDeclaredHere;
+    	mi.IsFamily = this.IsFamily;
+    	mi.IsFamilyAndAssembly = this.IsFamilyAndAssembly;
+    	mi.IsFamilyOrAssembly = this.IsFamilyOrAssembly;
+    	mi.IsFinal = this.IsFinal;
+    	mi.IsHideBySig = this.IsHideBySig;
+    	mi.IsPrivate = this.IsPrivate;
+    	mi.IsPublic = this.IsPublic;
+    	mi.IsStatic = this.IsStatic;
+    	mi.IsVirtual = this.IsVirtual;
+    	return mi;
+    }
+
     /**
      * @return int
      * @roseuid 401B84CF0201
