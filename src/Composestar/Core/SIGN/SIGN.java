@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.2 2006/02/24 16:02:38 dspenkel Exp $
+ * $Id: SIGN.java,v 1.3 2006/03/06 09:25:51 reddog33hummer Exp $
  * 
 **/
 
@@ -36,6 +36,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.Exception.ModuleException;
 
 public class SIGN implements CTCommonModule 
@@ -194,6 +195,8 @@ public class SIGN implements CTCommonModule
 		 markSignatures(); // for all concerns
 		 marksignatures.stop();	
 	
+		 selectorNameConversion(); // look for selector name conversion when using Dispatch-filter
+		 
 		 INCRETimer printsignatures = incre.getReporter().openProcess("SIGN","Printing signatures",INCRETimer.TYPE_INCREMENTAL);	
 		 printConcernMethods(resources); // for all concerns
 		 printsignatures.stop();			
@@ -542,7 +545,121 @@ public class SIGN implements CTCommonModule
 	 	
 	 	return fireTree.exists(dependencies, startWith, match, concernName);
 	  }
+	 
+	 /*
+	  * A selector name X in the matching part can be dispatched to a selector name Y in the subtitution part.
+	  * This means that selector name converion is applied (this occurs only with name matching with Dispatch filter).
+	  * This means a signature must be added based on information in the inputfilters.
+	  * 
+	  * If the selector name is different in the matching part and the substitution part then
+	  * the method signature is not part of an internal or external and probably not of the inner.
+	  * The signature of the internal or external is taken and the selector name is changed.
+	  * 
+	  * This is done for all concerns with superimposed filtermodules
+	  * 
+	  */
+	 protected void selectorNameConversion() throws ModuleException{
+		 
+		 //put all concerns with filtermodules in a map
+		 HashMap withFilter = new HashMap();
+		 withFilter.putAll(this.alreadyProcessed);
+		 withFilter.putAll(this.toBeProcessed);
+		 Iterator conIter = withFilter.values().iterator();
+		 
+		 //iterate over the concerns
+		 while( conIter.hasNext() )
+		 {
+			Concern concern = (Concern)conIter.next();
+			Signature signature = concern.getSignature();
+			Iterator filterModulesItr = getSIFilterModuleIterator(concern);
 
+			//iterate over filtermodules
+			while(filterModulesItr.hasNext()){
+				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID((String)filterModulesItr.next());
+				Iterator inputItr = fm.getInputFilterIterator();
+				
+			 	//iterate over inputfilters
+				while(inputItr.hasNext()){
+					Filter inputfilter = (Filter) inputItr.next();
+					
+					//only Dispatch filters should be converted
+					if(inputfilter.getFilterType().getType().equals("Dispatch")){
+						Iterator elementIter = inputfilter.getFilterElementIterator();
+						
+						//iterate over filter elements
+						while(elementIter.hasNext()){
+							FilterElement element = (FilterElement) elementIter.next();
+							Iterator matchingItr = element.getMatchingPatternIterator();
+							
+							//iterate over matching patterns
+							while(matchingItr.hasNext()){
+								MatchingPattern pattern = (MatchingPattern) matchingItr.next();
+								
+								//get matching and substitution part
+								MatchingPart matching = pattern.getMatchingPart();
+								SubstitutionPart substitution = pattern.getSubstitutionPart();
+								
+								//both matching and substitution must be present
+								if(matching!= null && substitution!=null){
+									//get matching and substitution selector
+									MessageSelector matchingSelector = matching.getSelector();
+									MessageSelector substitutionSelector = substitution.getSelector();
+									
+									//get matching and substitution selector names
+									String matchingSelectorName = matchingSelector.getName();
+									String substitutionSelectorName = substitutionSelector.getName();
+									
+									String substitutionTargetName = substitution.getTarget().getName();
+									
+									//only add signature if selector names are different
+									if(!matchingSelectorName.equals(substitutionSelectorName)){
+										
+										//the method must not be implemented in the inner already
+										if(!signature.hasMethod(matchingSelectorName)){	
+											
+											//retrieve internal
+											Iterator internalIter = fm.getInternalIterator();
+											TypedDeclaration internal=null;
+											while(internalIter.hasNext()){
+												internal = (TypedDeclaration)internalIter.next();
+												if(internal.getName().equals(substitutionTargetName)){
+													break;
+												}
+											}
+											Concern foundConcern = internal.getType().getRef();
+											if (foundConcern != null){
+												//retrieve methodinfo from internal
+												LinkedList methods = getMethodList(foundConcern);
+												MethodInfo mi;
+												for (int i = 0; i < methods.size(); i++){
+													mi = (MethodInfo)methods.get(i);
+													if(mi.Name.equals(substitutionSelectorName)){
+														
+														//clone methodinfo an use a different selector name and parent
+														MethodInfo miClone;
+														try{
+															//inner is the parent
+															Type innerObject = (Type) concern.getPlatformRepresentation();
+															miClone = mi.getClone(matchingSelectorName, innerObject);
+														}
+														catch(Exception e){
+															throw new ModuleException(e.getMessage());
+														}
+														signature.add (miClone, MethodWrapper.ADDED);
+														break;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	 }
 	 
 	 public void printConcernMethods(CommonResources resources)
 	 {
