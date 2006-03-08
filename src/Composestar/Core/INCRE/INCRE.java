@@ -172,10 +172,11 @@ public class INCRE implements CTCommonModule
 
 	   increparse.stop();  	
 	   
-	   // TODO: only load history once
-	   //if(!Master.phase.equals("two")){
-	   //		this.enabled = false; // no need to load history in MASTER phase one
-	   //}
+	   // only load history once
+	   String phase = resources.ProjectConfiguration.getProperty("CompilePhase");
+	   if(!phase.equals("two")){
+	   		this.enabled = false; // no need to load history in MASTER phase one
+	   }
 	   
 	   if(this.enabled){	
 	   		/* load data of previous compilation run (history)
@@ -315,7 +316,6 @@ public class INCRE implements CTCommonModule
    				return obj;
    			}
    	    
-   			String type = obj.getClass().getName();
    			Iterator objIter = history.getAllInstancesOf(obj.getClass());
    			while( objIter.hasNext() ){
    				Object nextobject = (Object)objIter.next();
@@ -398,7 +398,7 @@ public class INCRE implements CTCommonModule
 		else if(fixedFile.endsWith(".cps")){
 			searchStr = prop.getProperty("ConcernSources");// look in concern sources
 		}
-		else if(fixedFile.endsWith(".dll")){
+		else if(fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe")){
 			// TODO: use SupportedLanguages and move/replace .NET specific code
 			// special case, never added to project configurations
 			// TODO: add to project configurations
@@ -408,12 +408,27 @@ public class INCRE implements CTCommonModule
 			if(fixedFile.indexOf("/gac/")>0){// Global Assembly Cache
 					fixedFile = fixedFile.substring(fixedFile.lastIndexOf("/")+1);
 			}
-					
-			// look in configurations "Dependencies" and "Assemblies"	
+			
+			// TODO: make this configurable for filedependencies in config.xml
+			CommonResources resources = (CommonResources)DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
+			try {
+				// no need to check 'added to project' for these files
+				if(filename.indexOf("/obj/Weaver/")>0){
+					return false;
+				}
+				
+				ArrayList compSources = (ArrayList)resources.getResource("CompiledSources");
+				if(compSources.contains(filename)){
+					return false;
+				}
+			}
+			catch(Exception e){/*ignore*/}
+			
+			// look in configurations "Dependencies" and "Assemblies"
 			// TODO: possible naming conflict when JAVA platform is there
 			searchStr = prop.getProperty("Dependencies");
 			searchStr += prop.getProperty("Assemblies");
-		}
+		} 
 		else {
 			// file could be referenced by a ConfigNode of the FileDependency
 			Path p = fdep.getPath();
@@ -580,14 +595,13 @@ public class INCRE implements CTCommonModule
 	 */
 	public boolean isProcessedByModule(Object input, String modulename) throws ModuleException  
 	{
-	   	comparator = new MyComparator(modulename);
+		comparator = new MyComparator(modulename);
 	   	currentRepository = DataStore.instance();
 	   	searchingHistory = false;
 	   	Object inputobject = input;
 		Object historyobject = null;
 		Object depofinputobject = null;
 		Object depofhistoryobject = null; 
-		boolean processed = false;
 		INCRETimer overhead = getReporter().openProcess(modulename,"INCRE::isProcessedBy("+input+")",INCRETimer.TYPE_OVERHEAD);
 		
 	   	if(!isModuleInc(modulename))
@@ -613,6 +627,7 @@ public class INCRE implements CTCommonModule
 				currentRepository = DataStore.instance();
 				searchingHistory = false;
 				Dependency dep = (Dependency)dependencies.next();
+				
 				try {
 					depofinputobject = (Object)dep.getDepObject(inputobject);
 				}
@@ -752,7 +767,8 @@ public class INCRE implements CTCommonModule
 		   history.addObject("config",ois.readObject());
 		   
 		   int numberofobjects = ois.readInt();	
-		   for(int i=0;i<numberofobjects;i++)
+		   
+		   for(int i=1;i<numberofobjects;i++)
 		   {
 			   try 
 			   {
