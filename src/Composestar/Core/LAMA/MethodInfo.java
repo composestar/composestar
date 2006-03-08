@@ -22,6 +22,11 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		UnitRegister.instance().registerLanguageUnit(this);
 		Parameters = new ArrayList();
 	}
+	
+	public MethodInfo getClone(String n, Type actualParent) throws Exception{
+		throw new Exception("MethodInfo.getClone(String n) should only be called on subtypes");
+	}
+
 
 	/**
 	 * @return java.lang.String
