@@ -118,6 +118,8 @@ public class Repository {
 	public static FilterAction getAction(Filter filter, boolean accept)
 	{
 		String type = filter.getFilterType().getType();
+		if(type.equalsIgnoreCase("Custom"))
+			type = filter.getFilterType().getName();
 		Repository repository = Repository.instance;
 		return repository.getAction(repository.getDescription(type).getAction(accept));
 	}

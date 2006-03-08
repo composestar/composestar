@@ -72,6 +72,21 @@ public class FILTH implements CTCommonModule
 				if(list.size() > 1)
 				{
 					Debug.out(Debug.MODE_INFORMATION, "FILTH", "Encountered shared join point: "+c.getQualifiedName(),c.getDescriptionFileName());
+					FilterModuleOrder singleOrder = (FilterModuleOrder) c.getDynObject("SingleOrder");
+					String tmpstr="";
+					if(singleOrder!=null)
+					{
+						List tmplist = singleOrder.orderAsList();
+						for(int i=0; i<tmplist.size(); i++)
+						{
+							String fmr = (String)tmplist.get(i);
+							if(i != (tmplist.size()-1))
+								tmpstr+=fmr+" --> ";
+							else
+								tmpstr+=fmr;
+						}
+					}
+					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: "+tmpstr);
 				}
 			}
 		}

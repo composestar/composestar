@@ -52,7 +52,7 @@ public class AbstractVM {
 		for( Iterator ri = getResources().iterator(); ri.hasNext(); )
 		{
 			Resource res = (Resource) ri.next();
-			Debug.out(Debug.MODE_DEBUG,"SECRET","Resource-op["+res.getName()+"]: "+res.sequence());
+			Debug.out(Debug.MODE_DEBUG,"SECRET","Resource-op["+res.getName()+"]: "+res.fancySequence());
 			//System.err.println(res);
 			//msg+=res.toString()+"\n";
 		}
@@ -73,7 +73,7 @@ public class AbstractVM {
 						Conflict conflict = new Conflict();
 						conflict.setResource(res.getName());
 						conflict.setMsg(constraint.getMessage());
-						conflict.setSequence(res.sequence());
+						conflict.setSequence(res.fancySequence());
 						conflict.setExpr(constraint.getPattern());
 						conflicts.add(conflict);
 						//conflicts.add("Resource " + res.getName() + ": " + constraint.getMessage() + " (" + res.sequence() + ")" );
