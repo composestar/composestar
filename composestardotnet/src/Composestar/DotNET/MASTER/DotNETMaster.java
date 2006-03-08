@@ -5,12 +5,13 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.3 2006/02/21 16:42:41 whavinga Exp $
+ * $Id: DotNETMaster.java,v 1.4 2006/03/08 09:28:19 dspenkel Exp $
  */
 
 package Composestar.DotNET.MASTER;
 
 import java.io.*;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -18,6 +19,7 @@ import java.util.Properties;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
 import Composestar.Utils.StringConverter;
+import Composestar.Utils.INIFile; 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
@@ -37,7 +39,6 @@ public class DotNETMaster extends Master  {
     private CommonResources Resources;
     private String configfile;
 
-    
     /**
      * Default ctor.
      * @param configurationFile
@@ -59,61 +60,128 @@ public class DotNETMaster extends Master  {
 	    Resources.ProjectConfiguration = new Properties();
 	    Resources.CustomFilters = new Properties();
 
-	    try {
-	    	//FileInputStream fis = new FileInputStream();
-	    	//StreamReader sr = File.OpenText(configurationFile);
-	    	//File f = new File("e");
-
-			String line;
-	    	BufferedReader br = new BufferedReader(new FileReader(configurationFile));
-	    	String section = "";
-	    	while ( (line = br.readLine()) != null) {
+	    try {	    	
+	    	// Open the ini file
+	    	INIFile iniFile = new INIFile(configfile);
+	    	
+	    	// Get all the sectionnames
+	    	String[] sections = iniFile.getAllSectionNames();
+	    	
+	    	// For each of the sections
+	    	for (int i=0; i < sections.length; i++)
+	    	{
+	    		// Get a single section name
+	    		String section = sections[i];
 	    		
-	    		if( line.startsWith( "[" ) ) {
-	    			section = line.substring( line.indexOf( "[" ) + 1, line.indexOf( "]" ) );
-	    		} else 	if ( !line.startsWith("#") && !line.equalsIgnoreCase("") ) {
-					if (line.indexOf("=") > 0) {
-						String key = line.substring(0, line.indexOf("="));
-						String value = "";
-						if (line.indexOf("=")+1 != line.length()) {
-							value = line.substring(line.indexOf("=") + 1, line.length());
-						}
-						
-						
-
-						if ( value.matches("^([0-5]?\\d?\\d?\\d?\\d|6[0-4]\\d\\d\\d|65[0-4]\\d\\d|655[0-2]\\d|6553[0-5])$") &&
-								(key.indexOf("Sources")>=0 || key.indexOf("Dependencies")>=0 || key.indexOf("TypeSources")>=0) )
-						{
-								int count = Integer.parseInt(value);
-								value = "";
-
-								for (int i=0; i<count; i++) {
-									line = br.readLine();
-									if (line.indexOf("=")+1 != line.length()) {
-										if (!value.equalsIgnoreCase("")) {
-											value += ",";
-										}
-										value += line.substring(line.indexOf("=") + 1, line.length());
-									}
-
-								}
-						}
-						
-						
-						
-						//System.out.println(key);
-						if( section.equals( "CustomFilters" ) )
-							Resources.CustomFilters.setProperty( key, value );
-						else 
-							Resources.ProjectConfiguration.put(key, value);
-					}
+	    		// Retrieve all the settings in the section
+	    		String[] keysInSection = iniFile.getPropertyNames(section);
+	    		
+	    		// Store the settings
+	    		for (int keys =0; keys < keysInSection.length; keys++ )
+	    		{
+	    			String key = keysInSection[keys];
+	    			String value = iniFile.getStringProperty(section, key);
+	    			if (value != null)
+	    			{
+	    				// Some items are placed in a different resource element
+	    				if (section.equalsIgnoreCase("CustomFilters"))
+	    				{
+	    					Resources.CustomFilters.put(key, value);
+	    				}
+	    				else
+	    				{
+	    					Resources.ProjectConfiguration.put(key, value);
+	    				}
+	    			}
+	    		}
+	    		
+	    		// Retrieve the sources, concernsources and dependencies
+	    		if (section.equalsIgnoreCase("TYM"))
+	    		{
+	    			// Get the number of items
+	    			Integer numberOfItems = iniFile.getIntegerProperty(section, "Dependencies");
+	    			String value = "";
+	    			// And retrieve all those items, placing them in a single string delimited by commas
+	    			if (numberOfItems != null)
+	    			{  				
+	    				for (int c=0; c < numberOfItems.intValue(); c++)
+	    				{
+	    					String iniValue = iniFile.getStringProperty(section, "Dependency" + c );
+	    					if (iniValue != null)
+	    					{
+	    						if (value.length() != 0)
+	    							value = value + ",";
+	    						value = value + iniValue;
+	    					}
+	    				}
+	    			}
+	    			Resources.ProjectConfiguration.put("Dependencies", value);
+	    			
+	    			numberOfItems = iniFile.getIntegerProperty(section, "TypeSources");
+	    			value = "";
+	    			if (numberOfItems != null)
+	    			{ 
+	    				for (int c=0; c < numberOfItems.intValue(); c++)
+	    				{
+	    					String iniValue = iniFile.getStringProperty(section, "TypeSource" + c );
+	    					if (iniValue != null)
+	    					{
+	    						if (value.length() != 0)
+	    							value = value + ",";
+	    						value = value + iniValue;
+	    					}
+	    				}
+	    			}
+	    			Resources.ProjectConfiguration.put("TypeSources", value);
+	    		}
+	    		else if (section.equalsIgnoreCase("sources"))
+	    		{
+	    			Integer numberOfItems = iniFile.getIntegerProperty(section, "ConcernSources");
+	    			String value = "";
+	    			if (numberOfItems != null)
+	    			{ 
+	    				for (int c=0; c < numberOfItems.intValue(); c++)
+	    				{
+	    					String iniValue = iniFile.getStringProperty(section, "ConcernSource" + c );
+	    					if (iniValue != null)
+	    					{
+	    						if (value.length() != 0)
+	    							value = value + ",";
+	    						value = value + iniValue;
+	    					}
+	    				}
+	    			}
+	    			Resources.ProjectConfiguration.put("ConcernSources", value);
+	    			
+	    			// Determine the compiler
+	    			String compiler = iniFile.getStringProperty( "Common","Compilers");
+	    			String sourcesKey = compiler + "Source";
+	    			
+	    			// Get the sources based on the CS or JS prefix
+	    			numberOfItems = iniFile.getIntegerProperty(section, sourcesKey + "s");
+	    			value = "";
+	    			if (numberOfItems != null)
+	    			{ 
+	    				for (int c=0; c < numberOfItems.intValue(); c++)
+	    				{
+	    					String iniValue = iniFile.getStringProperty(section, sourcesKey + c );
+	    					if (iniValue != null)
+	    					{
+	    						if (value.length() != 0)
+	    							value = value + ",";
+	    						value = value + iniValue;
+	    					}
+	    				}
+	    			}
+	    			Resources.ProjectConfiguration.put(sourcesKey + "s", value);
 	    		}
 	    	}
-	    	br.close();
+	    	
+	    	
 			ds.addObject("config",Resources.ProjectConfiguration);
 			ds.addObject(Master.RESOURCES_KEY,Resources);
 			
-	    } catch(IOException e) {
+	    } catch(Exception e) {
 	    	throw new ModuleException();
 	    }
 
