@@ -26,24 +26,27 @@ namespace ComposestarVSAddin
 		private string _CSCompiler;
 		private string _CSCompilerOptions;
 		private string _JVMOptions;
+		private string _FILTHInput;
 		private SecretModes _secretMode = SecretModes.NotSet;
 		private TriStateBooleanModes _verifyAssemblies = TriStateBooleanModes.NotSet;
 		private DebugModes _buildDebugLevel = DebugModes.NotSet;
 		private DebugModes _runDebugLevel = DebugModes.NotSet;
 		private TriStateBooleanModes _incremental = TriStateBooleanModes.NotSet;
 
-		[CategoryAttribute("Java Virtual Machine settings"),  
-		DescriptionAttribute("JVM Options"),
-		IniSettingFieldAttribute("JVMOptions", "JVM")]
-		public string JVMOptions
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("FilterModule Order specification file"),
+		EditorAttribute(typeof(FileNameEditor), typeof(UITypeEditor)),
+		IniSettingFieldAttribute("FILTH_INPUT", "Global Composestar configuration")]
+		public string FilterModuleOrder
 		{
 			get
 			{
-				return this._JVMOptions;
+				return this._FILTHInput;
 			}
 			set 
 			{
-				this._JVMOptions = value;
+				this._FILTHInput = value;
 				SetIsDirty(true);
 			}
 		}
@@ -124,6 +127,22 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._incremental = value;
+				SetIsDirty(true);
+			}
+		}
+
+		[CategoryAttribute("Compose* installation settings"),  
+		DescriptionAttribute("JVM Options"),
+		IniSettingFieldAttribute("JVMOptions", "JVM")]
+		public string JVMOptions
+		{
+			get
+			{
+				return this._JVMOptions;
+			}
+			set 
+			{
+				this._JVMOptions = value;
 				SetIsDirty(true);
 			}
 		}
