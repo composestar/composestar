@@ -5,16 +5,16 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledI
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.Config.*;
 import Composestar.Core.LAMA.*;
-//import Composestar.dotnet.LAMA.*;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-//import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.TYM.TypeLocations;
 
 import Composestar.Utils.Debug;
@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -66,6 +67,8 @@ public class INCRE implements CTCommonModule
 	private HashMap historyObjectsOrdered;
 	private ArrayList currentConcernsWithFMO;
 	private ArrayList historyConcernsWithFMO;
+	private ArrayList currentConcernsWithModifiedSignatures;
+	private ArrayList historyConcernsWithModifiedSignatures;
 	private String projectSources;
 	
 	public INCRE()
@@ -239,6 +242,49 @@ public class INCRE implements CTCommonModule
 			historyConcernsWithFMO = concerns;
 		else 
 			currentConcernsWithFMO = concerns;
+		
+		// sort concerns before returning
+		Collections.sort(concerns, new Comparator() { 
+		   	public int compare(Object o1, Object o2) { 
+		    	Concern c1 = (Concern) o1;
+		   		Concern c2 = (Concern) o2;
+		   		String s1 = c1.getQualifiedName();
+		   		String s2 = c2.getQualifiedName();
+		   		return s1.compareTo(s2); 
+		   	}
+		  });
+		return concerns;
+	}
+	
+	public ArrayList getConcernsWithModifiedSignature()
+	{
+		if(searchingHistory){
+			// if set before, return it
+			if(historyConcernsWithModifiedSignatures!=null)
+				return historyConcernsWithModifiedSignatures;
+		}
+		else {
+			// if set before, return it
+			if(currentConcernsWithModifiedSignatures!=null)
+				return currentConcernsWithModifiedSignatures;
+		}
+		
+		ArrayList concerns = new ArrayList();
+		Iterator iterConcerns = currentRepository.getAllInstancesOf(Concern.class);
+		while ( iterConcerns.hasNext() ){
+			Concern c = (Concern)iterConcerns.next();
+			Signature signature = c.getSignature();
+			List added = signature.getMethods(MethodWrapper.ADDED);
+			List removed = signature.getMethods(MethodWrapper.REMOVED);
+			if(!added.isEmpty() || !removed.isEmpty()){
+				concerns.add(c);	
+			}	
+		}
+		
+		if(searchingHistory)
+			historyConcernsWithModifiedSignatures = concerns;
+		else 
+			currentConcernsWithModifiedSignatures = concerns;
 		
 		// sort concerns before returning
 		Collections.sort(concerns, new Comparator() { 

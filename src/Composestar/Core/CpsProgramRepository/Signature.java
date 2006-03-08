@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Signature.java,v 1.2 2006/02/13 16:59:53 composer Exp $
+ * $Id: Signature.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository;
 
@@ -152,6 +152,16 @@ public class Signature implements SerializableRepositoryEntity
  		String key = getHashKey(methodInfo);
  		return (MethodWrapper) methodByKey.get(key);    	
     }
+    
+
+    public void removeMethodWrapper(MethodWrapper mw){
+    	MethodInfo minfo = mw.getMethodInfo();
+    	String key = getHashKey(minfo);
+    	if(methodByKey.containsKey(key))
+    		methodByKey.remove(key);
+    	if(methodByName.containsKey(minfo.name()))
+    		methodByName.remove(minfo.name());
+     }
     
     public boolean hasMethod(MethodInfo dnmi)
     {
