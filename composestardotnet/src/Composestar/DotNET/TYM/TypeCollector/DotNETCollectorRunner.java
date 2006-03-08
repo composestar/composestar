@@ -65,8 +65,11 @@ public class DotNETCollectorRunner implements CollectorRunner {
         int count = 0;
 		DataStore dataStore = DataStore.instance();
         HashMap typeMap = TypeMap.instance().map();
+        /* TODO : It looks like that the embedded code is not placed in the typemap at all and therefore
+        *  is this while loop no longer needed. It does also introduces an exception.
+        */
         // loop through all current concerns, fetch implementation and remove from types map.
-        Iterator repIt = dataStore.getIterator();
+        /* Iterator repIt = dataStore.getIterator();
         while( repIt.hasNext() ) {
         	Object next = repIt.next();
         	if( next instanceof CpsConcern ) {
@@ -101,6 +104,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
         		// transform source name into assembly name blaat.java --> blaat.dll
         		if( !typeMap.containsKey( className ) ) {
         			throw new ModuleException( "Implementation: " + className + " for concern: " + concern.getName() + " not found!" );
+        			
         		}
         		DotNETType type = (DotNETType)typeMap.get(className);
         		concern.setPlatformRepresentation( type );
@@ -108,7 +112,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
         		typeMap.remove( className );
 				count++;
         	}
-        }
+        }*/
         
         // loop through rest of the concerns and add to the repository in the form of primitive concerns
         Iterator it = typeMap.values().iterator();
