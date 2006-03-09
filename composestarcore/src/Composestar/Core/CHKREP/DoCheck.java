@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: DoCheck.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+* $Id: DoCheck.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -54,11 +54,13 @@ public class DoCheck {
       NotUsedSelector nus = new NotUsedSelector();
       nus.check(ds);
       
-      ExistFilterModule efm = new ExistFilterModule();
-      efm.check(ds);
+      //Allready checked by REXREF
+      //ExistFilterModule efm = new ExistFilterModule();
+      //efm.check(ds);
       
-      ExistSelector es = new ExistSelector();
-      es.check(ds);
+      //Allready checked by REXREF
+      //ExistSelector es = new ExistSelector();
+      //es.check(ds);
       
       ExistCondition ec = new ExistCondition();
       ec.check(ds);

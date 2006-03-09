@@ -4,7 +4,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: ExistFilterModule.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+* $Id: ExistFilterModule.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -41,12 +41,19 @@ public class ExistFilterModule implements BaseChecker {
 				FilterModuleReference fm = (FilterModuleReference) fms.next();
 				boolean filterModuleReferenceExists = false;
 				String filterModuleName = fm.getName();
-				CpsConcern concern = (CpsConcern) ((SuperImposition) fmb.getParent()).getParent();
-				Iterator fmi= concern.getFilterModuleIterator();
-				while(fmi.hasNext()){
-					FilterModule fm2 = (FilterModule) fmi.next();
-					if(fm2.getName().equals(filterModuleName)){
-						filterModuleReferenceExists = true;
+				Iterator concerns = ds.getAllInstancesOf(CpsConcern.class);
+				while(concerns.hasNext()){
+					CpsConcern concern = (CpsConcern) concerns.next();
+					Iterator fmi = concern.getFilterModuleIterator();
+					if (fmi != null){
+						while(fmi.hasNext()){
+							FilterModule fm2 = (FilterModule) fmi.next();
+							if(fm2.getName().equals(filterModuleName)){
+								if (((CpsConcern) fm2.getParent()).getName().equals(fm.getConcern())){
+									filterModuleReferenceExists = true;
+								}
+							}
+						}
 					}
 				}
 				if(!filterModuleReferenceExists){
