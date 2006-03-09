@@ -20,6 +20,7 @@
 	Var NET_RUN_PATH
 	Var NET_VER
 	Var INI_FILE
+	Var CSS_FILE
 	Var UNIX_DIR
 	Var VS_PATH
 	Var KEY_FILE
@@ -29,10 +30,9 @@
 ;--------------------------------
 ;General
 
-  ;Name and file
-  Name "Compose* beta"
-	Icon cstar.ico
-  OutFile "ComposeStar.NET_0.5.2.exe"
+  Name "Compose*.NET"
+  Icon cstar.ico
+  OutFile "ComposeStar.NET_0.6.exe"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -114,8 +114,8 @@ Section "Compose* beta" Compose
 	File filterdesc.xml
 	File ComposeStarAddInFixer.exe
 	File INCREconfig.xml
-	File INCRE.css
-	File /nonfatal secret.css
+	File /nonfatal *.css
+	File /nonfatal *.gif
 	File /nonfatal /r /x CVS compilers
 	File cstar.ico
 	File /nonfatal /r binaries
@@ -139,6 +139,7 @@ Section "Settings" Settings
 	Call writeComposeStarINIFile
 	Call writeRegistryKeys
 	Call writeKeyWordFile
+	Call writeSECRETCSS
 	
 	ExecWait '$NET_RUN_PATH/regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"' $RESULT
 	IntCmp 0 $RESULT OK
@@ -233,6 +234,15 @@ Function writeComposeStarINIFile
 	FileClose $INI_FILE
 FunctionEnd
 
+;--------------------------------
+Function writeSECRETCSS
+	
+	FileOpen  $CSS_FILE "$INSTDIR\SECRET.css" a
+	FileWrite $CSS_FILE 'background-image: url(back.gif)$\n'
+	FileWrite $CSS_FILE '}$\n'
+	FileClose $CSS_FILE
+FunctionEnd
+
 Function writeRegistryKeys
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandLineSafe" "0"
 	WriteRegStr HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect" "CommandPreload" "0"
@@ -251,7 +261,7 @@ Function writeRegistryKeys
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLUpdateInfo" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "HelpLink" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLInfoAbout" "http://composestar.sourceforge.net"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "0.5.1"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "0.6"
 FunctionEnd
 
 Function writeKeyWordFile

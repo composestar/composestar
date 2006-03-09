@@ -25,14 +25,17 @@
 	Var KEY_FILE
 	Var RESULT
 	Var StartMenuGroup
+	Var Version
 
 ;--------------------------------
 ;General
 
+  StrCpy $Version "0.6"
+
   ;Name and file
   Name "Compose* Java Edition"
 	Icon cstar.ico
-  OutFile "ComposeStar.Java_0.5.2.exe"
+  OutFile "ComposeStar.Java_$Version.exe"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -196,7 +199,7 @@ Function writeRegistryKeys
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLUpdateInfo" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "HelpLink" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLInfoAbout" "http://composestar.sourceforge.net"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "0.5.1"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "$Version"
 FunctionEnd
 
 Function writeKeyWordFile
