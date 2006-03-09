@@ -65,11 +65,13 @@ public class DotNETCollectorRunner implements CollectorRunner {
         int count = 0;
 		DataStore dataStore = DataStore.instance();
         HashMap typeMap = TypeMap.instance().map();
-        /* TODO : It looks like that the embedded code is not placed in the typemap at all and therefore
-        *  is this while loop no longer needed. It does also introduces an exception.
+        /* TODO : The only types of embedded codeare the imported dll's like in the VenusFlytrap
+         * Therefore:
+         * 1) embedded code that it fully programd, like the Sound concern of Pacman must be ignored in this part of code;
+         * 2) embedded code from dll's do need to pass this part of code (Like VenusFlyTrap)
         */
         // loop through all current concerns, fetch implementation and remove from types map.
-        /* Iterator repIt = dataStore.getIterator();
+        Iterator repIt = dataStore.getIterator();
         while( repIt.hasNext() ) {
         	Object next = repIt.next();
         	if( next instanceof CpsConcern ) {
@@ -82,8 +84,10 @@ public class DotNETCollectorRunner implements CollectorRunner {
 				}
 				else if( impl instanceof Source )
 				{ 
-					Source source = (Source)impl;
-					className = source.getClassName();
+					//fixes the problem with the embedded code not being in the type map at all.
+					continue; 
+					//Source source = (Source)impl;
+					//className = source.getClassName();
 				}
 				else if( impl instanceof SourceFile ) 
 				{
@@ -112,7 +116,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
         		typeMap.remove( className );
 				count++;
         	}
-        }*/
+        }
         
         // loop through rest of the concerns and add to the repository in the form of primitive concerns
         Iterator it = typeMap.values().iterator();
