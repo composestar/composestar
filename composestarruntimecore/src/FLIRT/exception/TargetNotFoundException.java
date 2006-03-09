@@ -5,45 +5,53 @@ package Composestar.RuntimeCore.FLIRT.Exception;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: TargetNotFoundException.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: TargetNotFoundException.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
- * Exception thrown when a pattern calls for a target - selector pair not existing
- * within the enclosing filter module at the time of interpretation
- * (for example *.messageNotImplementedByInnerInternalOrExternal)
+ * Exception thrown when a pattern calls for a non-existing target-selector pair
+ * within the enclosing filter module at the time of interpretation.
+ * For example, *.messageNotImplementedByInnerInternalOrExternal.
  */
-public class TargetNotFoundException extends InvalidPatternExpressionException {
-    
-    /**
-	 * 
-	 */
+public class TargetNotFoundException extends InvalidPatternExpressionException 
+{
+
 	private static final long serialVersionUID = -3068254562496318841L;
 	/**
-     * Name of the internal, external or pseudo variable that was not found
-     */
-    private String target;
+	 * Name of the internal, external or pseudo variable that was not found
+	 */
+	private String target = null;
     
-    /**
-     * @inheritDoc
-     * @param message
-     * @roseuid 3F3652A2017E
-     */
-    public TargetNotFoundException(String message) {
-        super(message);     
-    }
+	/**
+	 * @inheritDoc
+	 * @param message
+	 * @roseuid 3F3652A2017E
+	 */
+	public TargetNotFoundException(String message) 
+	{
+	}
     
-    /**
-     * Default constructor
-     * @roseuid 3F3652A20156
-     */
-    public TargetNotFoundException() {
-     
-    }
+	/**
+	 * Default constructor
+	 * @roseuid 3F3652A20156
+	 */
+	public TargetNotFoundException() 
+	{
+	}
 
-	public String getTarget() {
+	/**
+	 * Constructor with underlying cause.
+	 */
+	public TargetNotFoundException(TargetNotFoundException cause)
+	{
+		super(cause.getMessage(),cause);
+	}
+
+	public String getTarget() 
+	{
 		return target;
 	}
 
-	public void setTarget(String target) {
+	public void setTarget(String target) 
+	{
 		this.target = target;
 	}
 }

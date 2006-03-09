@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: FilterModuleRuntime.java,v 1.2 2006/03/07 12:47:39 oohlaf Exp $
  */
 public class FilterModuleRuntime extends ReferenceEntityRuntime implements Interpretable, ConditionResolver, Cloneable 
 {
@@ -312,8 +312,7 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 		catch (Exception e) 
 		{
 			e.printStackTrace();
-			InvalidConditionException ex =
-				new InvalidConditionException("invalid condition invocation");
+			InvalidConditionException ex = new InvalidConditionException("Invalid condition invocation");
 			ex.setConditionResolver(this);
 			throw ex;
 		}

@@ -5,32 +5,41 @@ package Composestar.RuntimeCore.FLIRT.Exception;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterSpecificationException.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: FilterSpecificationException.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
- * Represents an exception ocurred when interpreting the specification of a filter.
- * for example a message pattern pointing to a non existing internal or external.
+ * Represents an exception when interpreting the specification of a filter.
+ * For example, a message pattern pointing to a non existing internal or external.
  */
-public class FilterSpecificationException extends ComposeStarException {
-    
-    /**
-	 * 
-	 */
+public class FilterSpecificationException extends ComposestarRuntimeException 
+{
+
 	private static final long serialVersionUID = -511183999904793943L;
+  
+	/**
+	 * @inheritDoc
+	 * @roseuid 3F3652A001A3
+	 */
+	public FilterSpecificationException() 
+	{
+	}
 
 	/**
-     * @inheritDoc
-     * @param message
-     * @roseuid 3F3652A001D5
-     */
-    public FilterSpecificationException(String message) {
+	 * @inheritDoc
+	 * @param message
+	 * @roseuid 3F3652A001D5
+	 */
+	public FilterSpecificationException(String message) 
+	{
 		super(message);     
-    }
-    
-    /**
-     * @inheritDoc
-     * @roseuid 3F3652A001A3
-     */
-    public FilterSpecificationException() {
-     
-    }
+	}
+
+	public FilterSpecificationException(String message, Throwable cause)
+	{
+		super(message,cause);
+	}
+
+	public FilterSpecificationException(Throwable cause)
+	{
+		super(cause);
+	}
 }

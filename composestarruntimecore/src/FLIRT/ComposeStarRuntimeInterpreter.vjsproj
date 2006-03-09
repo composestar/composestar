@@ -195,11 +195,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\ComposeStarException.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "exception\ComposestarRuntimeException.java"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
+ * $Id: ObjectManager.java,v 1.2 2006/03/06 14:22:37 oohlaf Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -66,23 +66,18 @@ public class ObjectManager
 			{
 				reply = this.receiveMessage(msg);
 			}
-			catch (ErrorFilterException e)
-			{
-				// Report error filter rejection and exit.
-				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message from `" + msg.getSender() + "' rejected by error filter.");
-				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message has target `" + msg.getTarget() + "' and selector `" + msg.getSelector() + "'.");
-				System.exit(1);
-			}
 			catch (Exception e)
 			{
-				// Should not happen, otherwise catch FilterExceptions like above.
 				Debug.out(Debug.MODE_ERROR, "FLIRT", "An exception was thrown from within a filter.");
 				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message was `" + msg.getSelector() + "' for target `" + msg.getTarget() + "' from sender `" + msg.getSender() + "'.");
 				Debug.out(Debug.MODE_ERROR, "FLIRT", "Internal Compose* stack trace:");
 				e.printStackTrace();
-				System.exit(1);
+				// This method is executed in a seperate thread and will die on exceptions.
 			}
-			msg.setResponse(reply);
+			finally
+			{
+				msg.setResponse(reply);
+			}
 		}
 		this.working = false;
 	}
@@ -92,7 +87,7 @@ public class ObjectManager
 		if (!this.working) 
 		{
 			System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(run));
-		}
+		} 
 	}
 
     /**
@@ -255,7 +250,7 @@ public class ObjectManager
 			{
 				// TODO resolve the long external jump
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tFound long external '"+external.longinit.getName()+ "' of type '"+external.longinit.getQualifiedName()+"'.");
-				throw new ComposeStarException("The use of external references is not supported!");
+				throw new ComposestarRuntimeException("The use of external references is not supported.");
 			}
 			else
 			{
@@ -297,7 +292,7 @@ public class ObjectManager
 			{ // Condition to other filtermodule
 				// TODO: Resolve the references to the referred conditions in other concerns/filtermodules
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR,"FLIRT","Found long conditionref '"+condition.getLongref()+"'.");
-				throw new ComposeStarException("The use of condition references is not supported!");
+				throw new ComposestarRuntimeException("The use of condition references is not supported.");
 			}
 		}
 	}
@@ -318,7 +313,7 @@ public class ObjectManager
 	}
 
     /**
-     * Retrives the Object Manager associated with the object o. If
+     * Retrieves the Object Manager associated with the object o. If
      * there is none, a new one is created.
      * @param o The object whose manager is needed.
      * @return the manager of the object o
@@ -493,12 +488,6 @@ public class ObjectManager
 		{
 			Debug.out(Debug.MODE_ERROR,"FLIRT","Encountered error while interpreting: "+e.getMessage());
 			e.printStackTrace();
-		}
-		
-		catch (System.Exception netE) 
-		{
-			Debug.out(Debug.MODE_ERROR,"FLIRT","Encountered a .NET error while interpreting: "+netE.get_Message());
-			System.out.println(netE.get_StackTrace());
 		}*/
 		
 		return null;

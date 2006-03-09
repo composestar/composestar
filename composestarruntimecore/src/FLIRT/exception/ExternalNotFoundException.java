@@ -5,24 +5,15 @@ package Composestar.RuntimeCore.FLIRT.Exception;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ExternalNotFoundException.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: ExternalNotFoundException.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Exception thrown while interpreting a pattern when the pattern specifies a
- * selector not existing in the type definition of the current target. (For example
- * inner.nonExistingMethod)
+ * selector not existing in the type definition of the current target.
+ * For example, inner.nonExistingMethod.
  */
-public class ExternalNotFoundException extends ComposeStarException 
+public class ExternalNotFoundException extends ComposestarRuntimeException 
 {
-    
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1745635381520680402L;
-
-	public ExternalNotFoundException(String internaltype, String internalname, String concern) 
-	{
-		super("The external: "+internalname+" of type "+internaltype+" in concern "+concern+" is not found!");
-	}
     
 	/**
 	 * Default Constructor
@@ -30,6 +21,18 @@ public class ExternalNotFoundException extends ComposeStarException
 	 */
 	public ExternalNotFoundException() 
 	{
-     
+	}
+
+	public ExternalNotFoundException(String internaltype, String internalname, String concern)
+	{
+		super("The external '"+internalname+"' of type '"+internaltype+"' in concern '"+concern+"' is not found");
+	}
+
+	/**
+	 * Constructor with underlying cause.
+	 */
+	public ExternalNotFoundException(ExternalNotFoundException cause)
+	{
+		super(cause.getMessage(),cause);
 	}
 }

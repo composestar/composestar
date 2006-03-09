@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.2 2006/03/07 13:45:47 reddog33hummer Exp $
+ * $Id: MetaFilterPolicy.java,v 1.3 2006/03/07 16:29:45 reddog33hummer Exp $
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -92,7 +92,6 @@ class MetaFilterPolicy extends FilterPolicy
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 
-
 			if (Debug.SHOULD_DEBUG) 
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "############  Before call  ############");
@@ -110,14 +109,13 @@ class MetaFilterPolicy extends FilterPolicy
 				continue;
 			}
 			*/
-
 			
-			if( csa instanceof DispatchAction || csa instanceof DispatchToInnerAction || csa instanceof SendAction )
+			if( csa instanceof DispatchAction || csa instanceof DispatchToInnerAction || csa instanceof SendAction || csa instanceof ErrorAction)
 			{				
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","End of filterset, returning '" + csa.getClass().getName()+"'.");
 				return new PolicyExecutionResult(true, false, csa);
 			}
-			
+
 			result = csa.execute();
 			
 			if(Debug.SHOULD_DEBUG)

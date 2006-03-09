@@ -3,6 +3,7 @@ package Composestar.RuntimeCore.FLIRT.Message;
 import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
+import Composestar.RuntimeCore.FLIRT.Actions.ErrorAction;
 import Composestar.RuntimeCore.Utils.ResponseBuffer;
 import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
 
@@ -13,7 +14,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Message.java,v 1.4 2006/02/13 13:23:46 pascal Exp $
+ * $Id: Message.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -343,6 +344,8 @@ public class Message implements DebuggableMessage
 			response = ((DispatchToInnerAction)response).execute();
 		else if( response instanceof SendAction )
 			response = ((SendAction)response).execute();
+		else if( response instanceof ErrorAction )
+			response = ((ErrorAction)response).execute();
 
 		return response;
 	}

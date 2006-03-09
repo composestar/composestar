@@ -22,7 +22,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.10 2006/02/16 16:34:40 composer Exp $
+ * $Id: MessageHandlingFacility.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT
@@ -135,12 +135,12 @@ public abstract class MessageHandlingFacility
 					}
 					else
 					{
-						throw new ComposeStarException("Called constructor of concern '"+cpsConcern.getName()+"' does not match the specified one!");
+						throw new ComposestarRuntimeException("Called constructor of concern '"+cpsConcern.getName()+"' does not match the specified one.");
 					}
 				}
 				else
 				{
-					throw new ComposeStarException("Called constructor of concern '"+cpsConcern.getName()+"' does not match the specified one!");
+					throw new ComposestarRuntimeException("Called constructor of concern '"+cpsConcern.getName()+"' does not match the specified one.");
 				}
 				i++;
 			}
@@ -166,7 +166,7 @@ public abstract class MessageHandlingFacility
 		}
 		/*else
 		 {
-		 throw new ComposeStarException("The called constructor of the concern: "+createdObject.GetType().ToString()+" does not match the specified one!");
+		 throw new ComposestarRuntimeException("The called constructor of the concern: "+createdObject.GetType().ToString()+" does not match the specified one.");
 		 }*/
 		
 		ObjectManager.getObjectManagerFor(createdObject, datastore);
@@ -190,7 +190,21 @@ public abstract class MessageHandlingFacility
 		// Now check for input filters
 		msg.setDirection(Message.INCOMING);
 		ObjectManager om = ObjectManager.getObjectManagerFor(createdObject, datastore);
-		Object returnvalue = om.deliverIncomingMessage(creator,createdObject,msg);
+
+		try 
+		{
+			om.deliverIncomingMessage(creator,createdObject,msg);
+		}
+		catch(ErrorFilterException e)
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Rethrowing ErrorFilterException");
+			throw new ErrorFilterException(e);
+		}
+		catch (ComposestarRuntimeException e)
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING,"FLIRT","Rethrowing ComposestarRuntimeException");
+			throw new ComposestarRuntimeException(e);
+		}
 
 		if(Debug.SHOULD_DEBUG) logIncomingMethodEnd();
 	}
@@ -211,35 +225,48 @@ public abstract class MessageHandlingFacility
 		msg.setServer(target);
 		msg.STATE = Message.MESSAGE_NONSTATIC_NONSTATIC_RETURN;
 		ObjectManager om;
-		
-		
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> OUTGOING: " + msg);
-		if( ObjectManager.hasFilterModules(caller, datastore) )
+		Object returnvalue = null;
+
+		try 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at caller, delivering message...");
-			om = ObjectManager.getObjectManagerFor(caller, datastore);
-			msg = (Message) om.deliverOutgoingMessage(caller,target,msg);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> OUTGOING: " + msg);
+			if( ObjectManager.hasFilterModules(caller, datastore) )
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at caller, delivering message...");
+				om = ObjectManager.getObjectManagerFor(caller, datastore);
+				msg = (Message) om.deliverOutgoingMessage(caller,target,msg);
+			}
+			else
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at caller, sending message...");
+				msg.setDirection(Message.INCOMING);
+				msg.setTarget(target);
+			}
+
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> INCOMING: " + msg);
+			if( ObjectManager.hasFilterModules(msg.getTarget(), datastore) )
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
+				om = ObjectManager.getObjectManagerFor(msg.getTarget(), datastore);
+				returnvalue = om.deliverIncomingMessage(caller,msg.getTarget(),msg);
+			}
+			else
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
+				returnvalue = Invoker.getInstance().invoke(msg.getTarget(),msg.getSelector(),msg.getArguments());		
+			}
 		}
-		else
+		catch(ErrorFilterException e)
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at caller, sending message...");
-			msg.setDirection(Message.INCOMING);
-			msg.setTarget(target);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Rethrowing ErrorFilterException");
+			throw new ErrorFilterException(e);
+		}
+		catch (ComposestarRuntimeException e)
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING,"FLIRT","Rethrowing ComposestarRuntimeException");
+			throw new ComposestarRuntimeException(e);
 		}
 
-		Object returnvalue;
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> INCOMING: " + msg);
-		if( ObjectManager.hasFilterModules(msg.getTarget(), datastore) )
-		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
-			om = ObjectManager.getObjectManagerFor(msg.getTarget(), datastore);
-			returnvalue = om.deliverIncomingMessage(caller,msg.getTarget(),msg);
-		}
-		else
-		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
-			returnvalue = Invoker.getInstance().invoke(msg.getTarget(),msg.getSelector(),msg.getArguments());		
-		}
 		if(Debug.SHOULD_DEBUG) logIncomingMethodEnd();
 		return returnvalue;
 	}
@@ -263,31 +290,44 @@ public abstract class MessageHandlingFacility
 		ObjectManager om;
 		
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> OUTGOING: " + msg);
-		
-		if( ObjectManager.hasFilterModules(caller, datastore) )
+	
+		try 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at caller, delivering message...");
-			om = ObjectManager.getObjectManagerFor(caller, datastore);
-			msg = (Message) om.deliverOutgoingMessage(caller,target,msg);
-		}
-		else
-		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at caller, sending message...");
-			msg.setDirection(Message.INCOMING);
-			msg.setTarget(target);
-		}
+			if( ObjectManager.hasFilterModules(caller, datastore) )
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at caller, delivering message...");
+				om = ObjectManager.getObjectManagerFor(caller, datastore);
+				msg = (Message) om.deliverOutgoingMessage(caller,target,msg);
+			}
+			else
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at caller, sending message...");
+				msg.setDirection(Message.INCOMING);
+				msg.setTarget(target);
+			}
 
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> INCOMING: " + msg);
-		if( ObjectManager.hasFilterModules(msg.getTarget(), datastore) )
-		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
-			om = ObjectManager.getObjectManagerFor(msg.getTarget(), datastore);
-			om.deliverIncomingMessage(caller,msg.getTarget(),msg);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT",">>> INCOMING: " + msg);
+			if( ObjectManager.hasFilterModules(msg.getTarget(), datastore) )
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
+				om = ObjectManager.getObjectManagerFor(msg.getTarget(), datastore);
+				om.deliverIncomingMessage(caller,msg.getTarget(),msg);
+			}
+			else
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
+				Invoker.getInstance().invoke(msg.getTarget(),msg.getSelector(),msg.getArguments());		
+			}
 		}
-		else
+		catch(ErrorFilterException e)
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
-			Invoker.getInstance().invoke(msg.getTarget(),msg.getSelector(),msg.getArguments());		
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Rethrowing ErrorFilterException");
+			throw new ErrorFilterException(e);
+		}
+		catch (ComposestarRuntimeException e)
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING,"FLIRT","Rethrowing ComposestarRuntimeException");
+			throw new ComposestarRuntimeException(e);
 		}
 
 		if(Debug.SHOULD_DEBUG) logIncomingMethodEnd();
@@ -309,18 +349,31 @@ public abstract class MessageHandlingFacility
 		msg.setServer(target);
 		msg.STATE = Message.MESSAGE_STATIC_NONSTATIC_RETURN;
 		msg.setDirection(Message.INCOMING);
-		
-		Object returnvalue;
-		if( ObjectManager.hasFilterModules(target, datastore ) )
+		Object returnvalue = null;
+
+		try 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
-			ObjectManager om = ObjectManager.getObjectManagerFor(target, datastore);
-			returnvalue = om.deliverIncomingMessage(staticcaller.GetType().ToString(),target,msg);
+			if( ObjectManager.hasFilterModules(target, datastore ) )
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
+				ObjectManager om = ObjectManager.getObjectManagerFor(target, datastore);
+				returnvalue = om.deliverIncomingMessage(staticcaller.GetType().ToString(),target,msg);
+			}
+			else
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
+				returnvalue = Invoker.getInstance().invoke(target,selector,args);
+			}
 		}
-		else
+		catch(ErrorFilterException e)
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
-			returnvalue = Invoker.getInstance().invoke(target,selector,args);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Rethrowing ErrorFilterException");
+			throw new ErrorFilterException(e);
+		}
+		catch (ComposestarRuntimeException e)
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING,"FLIRT","Rethrowing ComposestarRuntimeException");
+			throw new ComposestarRuntimeException(e);
 		}
 
 		if(Debug.SHOULD_DEBUG) logIncomingMethodEnd();
@@ -340,21 +393,34 @@ public abstract class MessageHandlingFacility
 	{
 		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static void message",staticcaller,target.GetType().ToString(),selector,args);
 
-		if( ObjectManager.hasFilterModules(target, datastore) )
+		try 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
-			Message msg = new Message(selector, args);
-			msg.setSender(staticcaller);
-			msg.setServer(target);
-			msg.STATE = Message.MESSAGE_STATIC_NONSTATIC_VOID;
-			msg.setDirection(Message.INCOMING);
-			ObjectManager om = ObjectManager.getObjectManagerFor(target, datastore);
-			om.deliverIncomingMessage(null,target,msg);
+			if( ObjectManager.hasFilterModules(target, datastore) )
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
+				Message msg = new Message(selector, args);
+				msg.setSender(staticcaller);
+				msg.setServer(target);
+				msg.STATE = Message.MESSAGE_STATIC_NONSTATIC_VOID;
+				msg.setDirection(Message.INCOMING);
+				ObjectManager om = ObjectManager.getObjectManagerFor(target, datastore);
+				om.deliverIncomingMessage(null,target,msg);
+			}
+			else
+			{
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
+				Invoker.getInstance().invoke(target,selector,args);
+			}
 		}
-		else
+		catch(ErrorFilterException e)
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules present at target, invoking message...");
-			Invoker.getInstance().invoke(target,selector,args);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Rethrowing ErrorFilterException");
+			throw new ErrorFilterException(e);
+		}
+		catch (ComposestarRuntimeException e)
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING,"FLIRT","Rethrowing ComposestarRuntimeException");
+			throw new ComposestarRuntimeException(e);
 		}
 
 		if(Debug.SHOULD_DEBUG) logIncomingMethodEnd();
@@ -371,8 +437,8 @@ public abstract class MessageHandlingFacility
 	public static Object handleReturnMethodCall(Object caller, String target, String selector, Object[] args) 
 	{
 		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static return message",caller.GetType().ToString(),target,selector,args);
-
 		Object returnvalue = null;
+
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Invoking message...");
 		returnvalue = Invoker.getInstance().invoke(target,selector,args);		
 
@@ -460,14 +526,13 @@ public abstract class MessageHandlingFacility
 		Debug.out(Debug.MODE_INFORMATION,"FLIRT","*********************************************************************");
 	}
 
-
 	/**
 	 * When the application starts this method is called to deserialize and link the compile time structure to the runtime
 	 * @param filename String The location of the xml file
 	 * @param debug int The debug level
 	 * $param debugInterface boolean Turn on the debugger interface
 	 */
-	public synchronized static void handleApplicationStart(String filename, int debug, boolean debugInterface, PlatformProvider provider) 
+	public synchronized static void handleApplicationStart(String filename, int debug, boolean debugInterface, PlatformProvider provider)
 	{
 		Debug.setMode(debug);
 		Debug.setDebuggerInterface(debugInterface);
