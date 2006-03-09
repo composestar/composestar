@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: SyntacticSugarExpander.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+* $Id: SyntacticSugarExpander.java,v 1.2 2006/03/06 09:25:50 reddog33hummer Exp $
 */
 package Composestar.Core.COPPER;
 
@@ -161,7 +161,7 @@ public class SyntacticSugarExpander {
 					    
 					    SelClass sc = new SelClass();
 					    sc.setClass(cref);
-					    sc.setClassName(concern.getName());
+					    sc.setClassName(concern.getQualifiedName());
 					    sc.setParent(sd);
 					    sd.addSelExpression(sc);
 					    ds.addObject(sc);
