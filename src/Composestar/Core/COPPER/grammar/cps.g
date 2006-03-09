@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.6 2006/02/27 15:59:33 reddog33hummer Exp $
+ * $Id: cps.g,v 1.7 2006/02/27 17:44:59 reddog33hummer Exp $
  */
 
 /**
@@ -92,12 +92,12 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 //don't bother parsing the closing end / curly if implementation is used
 //(because of possible embedded source code, which stops the parsing at that point)
   concernEnd : (implementation) => (implementation)
-                    | RCURLY! (SEMICOLON!)?;
+                    | RCURLY!;
 
   //////////////////////////////////////////////////////////////////////////
   filterModule : "filtermodule"^ NAME filterModuleBlock ;
 
-  filterModuleBlock : LCURLY! (internals)? (externals)? (conditions)? (methodDeclarations)? (inputFilters)? (outputFilters)? RCURLY! (SEMICOLON!)?;
+    filterModuleBlock : LCURLY! (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)? RCURLY!;
 
     /*---------------------------------------------------------------------------*/
     internals : "internals"^ (singleInternal)* ;
@@ -148,23 +148,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     /*---------------------------------------------------------------------------*/
     conditions : "conditions"^ (singleCondition)* ;
 
-      singleCondition:(((~(DOUBLE_COLON|COMMA|SEMICOLON))* DOUBLE_COLON) => NAME COLON! fmElemReference SEMICOLON //add the SEMICOLON!to differentiate between the alternatives
+      singleCondition:(((~(DOUBLE_COLON|COMMA))* DOUBLE_COLON) => NAME COLON! fmElemReference SEMICOLON //add the SEMICOLON!to differentiate between the alternatives
       		      | NAME COLON! concernReference LPARENTHESIS! RPARENTHESIS! SEMICOLON!)
       { #singleCondition = #([CONDITION_, "condition"], #singleCondition);} ;
-
-
-    /*---------------------------------------------------------------------------*/
-    methodDeclarations : "methods"^ (singleMethodDeclaration)* ;
-
-      singleMethodDeclaration : NAME LPARENTHESIS! (formalParametersType)? RPARENTHESIS! (COLON!type)? SEMICOLON!
-      { #singleMethodDeclaration = #([METHOD_, "method"], #singleMethodDeclaration);} ;
-
-        formalParametersType : formalParameterDefType (SEMICOLON!formalParameterDefType)*
-        { #formalParametersType = #([FPMSTYPE_, "formal parameters (only type)"], #formalParametersType);} ;
-
-          formalParameterDefType : (((~(COLON|RPARENTHESIS|COMMA|SEMICOLON))* COLON) => NAME (COMMA! NAME)* COLON!type
-                                 | type)
-          { #formalParameterDefType = #([FPMDEFTYPE_, "formal parameter definition (only type)"], #formalParameterDefType);} ;
 
 
     /*---------------------------------------------------------------------------*/
@@ -181,7 +167,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     	  filterElements : filterElement (COMMA filterElement)*
           { #filterElements = #([FILTERSET_, "filterelements"], #filterElements);} ;
 
-            filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP) => orExpr FILTER_OP messagePatternSet
+            //filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
+            filterElement : (((~(FILTER_OP))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
                           | messagePatternSet)
                           { #filterElement = #([FILTERELEM_, "filterelement"], #filterElement);} ;
 
@@ -222,14 +209,14 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
       generalFilterSet2 : singleOutputFilter (SEMICOLON singleOutputFilter)* ;     //exactly the same definitons, but we use it to separate in- and outputfilters
 
-        singleOutputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? (EQUALS! LCURLY! (filterElements)? RCURLY!)?
+        singleOutputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! (filterElements)? RCURLY!
         { #singleOutputFilter = #([OFILTER_, "outputfilter"], #singleOutputFilter);} ;
 
 
   //////////////////////////////////////////////////////////////////////////
-  superImposition : "superimposition"^ superImpositionBlock (SEMICOLON!)?;
+  superImposition : "superimposition"^ superImpositionBlock;
 
-    superImpositionBlock : LCURLY! superImpositionInner RCURLY! ("superimposition"!)?;
+    superImpositionBlock : LCURLY! superImpositionInner RCURLY!;
 
       superImpositionInner : (selectorDef)? (conditionBind)? (methodBind)? (filtermoduleBind)? (annotationBind)? (constraints)?;
 
@@ -248,24 +235,13 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 	   
 
     /*---------------------------------------------------------------------------*/
-    commonBindingPart : (event)? (bindCondition)? selectorRef weaveOperation;
-
-      event : "on"^ LPARENTHESIS! (instanceCreated | applicationStart | methodCalled) RPARENTHESIS!;
-
-        instanceCreated : "instancecreated"^;
-
-        applicationStart : "applicationstart"^;
-
-        methodCalled : "methodcalled"^ COLON! concernReference (LPARENTHESIS! (formalParametersType)? RPARENTHESIS!)? (COLON! type)?; 
-
-      	bindCondition : "if"^ LPARENTHESIS! conditionRef RPARENTHESIS!;
-
-      	conditionRef : fmElemReference;
+    commonBindingPart : selectorRef weaveOperation;
+    
+       	conditionRef : fmElemReference;
   
       	selectorRef : concernElemReference;
 
-      	weaveOperation : ARROW_LEFT!
-                       | ARROW_RIGHT!;
+      	weaveOperation : ARROW_LEFT!;
 
     /*---------------------------------------------------------------------------*/
     conditionBind : "conditions"^ (singleConditionBind)* ;
@@ -318,8 +294,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
       singleAnnotBind : selectorRef ARROW_LEFT! annotationSet SEMICOLON!
                    { #singleAnnotBind = #([ANNOT_, "annotation"], #singleAnnotBind);} ;
 
-        annotationSet : (((~(LCURLY|SEMICOLON))* LCURLY) => LCURLY! annotationElement (COMMA! annotationElement)* RCURLY!
-                        | annotationElement (COMMA! annotationElement)*)
+      annotationSet : LCURLY! annotationElement (COMMA! annotationElement)* RCURLY!
+                        | annotationElement (COMMA! annotationElement)*
                           { #annotationSet = #([ANNOTSET_, "annotation_set"], #annotationSet);} ;
 
           annotationElement : concernReference
@@ -360,7 +336,6 @@ options {
 
 AND                     : '&';
 ARROW_LEFT              : "<-" ;
-ARROW_RIGHT             : "->" ;
 COLON                   : ':' ;
 COMMA                   : ',' ;
 DOT                     : '.' ;
