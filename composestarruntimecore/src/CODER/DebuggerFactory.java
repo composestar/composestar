@@ -10,7 +10,7 @@ import java.io.*;
  */
 public class DebuggerFactory {
 	private final static String DEBUGGER_CONFIG_FILE = "debugger.xml";
-
+	private final static String DEFAULT_DEBUGGER = "Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger";;
 	/**
 	 * Returns the debugger that is specified
 	 */
@@ -43,9 +43,20 @@ public class DebuggerFactory {
 		return result;
 	}
 
+	public static String getDebuggerClass(String type)
+	{
+		if("VisualDebugger".equalsIgnoreCase(type))
+		{
+			return "Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.FilterVisualizer";
+		}
+		else
+		{
+			return DEFAULT_DEBUGGER;
+		}
+	}
+
 	public static String getDebugger()
 	{
-		final String fail = "Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.FilterVisualizer";
 		try
 		{
 			FileInputStream fstream = new FileInputStream(DEBUGGER_CONFIG_FILE);
@@ -55,20 +66,20 @@ public class DebuggerFactory {
 			int index = line.toUpperCase().indexOf("<DEBUGGER>");
 			if(index < 0)
 			{
-				return fail;
+				return DEFAULT_DEBUGGER;
 			}
 			index += 10;
 			int end = line.indexOf("/>");
 			if(end <= index + 9)
 			{
-				return fail;
+				return DEFAULT_DEBUGGER;
 			}
-			return line.substring(index,end-9);
+			return getDebuggerClass(line.substring(index,end-9));
 		}
 		catch(Exception e)
 		{
 
 		}
-		return fail;
+		return DEFAULT_DEBUGGER;
 	}
 }

@@ -261,6 +261,15 @@ namespace ComposestarVSAddin
 							{
 								val = Convert.ToString(property.GetValue(settings, null));
 							}
+							else if (property.PropertyType == typeof(DebuggerType))
+							{
+								DebuggerType dm;
+								dm = (DebuggerType)(property.GetValue(settings, null));
+								if (dm == DebuggerType.NotSet)
+									val = "";
+								else
+									val = dm.ToString();
+							}
 							else if (property.PropertyType == typeof(DebugModes))
 							{
 								DebugModes dm;
@@ -414,6 +423,15 @@ namespace ComposestarVSAddin
 									else
 										dm =(DebugModes)Convert.ToInt32(val);
 									property.SetValue(settings, dm, null);
+								}
+								else if (property.PropertyType == typeof(DebuggerType))
+								{
+									DebuggerType sm;
+									if (val.Trim().Length == 0)
+										sm = DebuggerType.NotSet;
+									else
+										sm =(DebuggerType)DebuggerType.Parse(typeof(DebuggerType),val, true);
+									property.SetValue(settings, sm, null);
 								}
 								else if (property.PropertyType == typeof(SecretModes))
 								{

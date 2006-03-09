@@ -26,6 +26,7 @@ namespace ComposestarVSAddin
 		private string _CSCompiler;
 		private string _CSCompilerOptions;
 		private string _JVMOptions;
+		private DebuggerType _debuggerType = DebuggerType.NotSet;
 		private string _FILTHInput;
 		private SecretModes _secretMode = SecretModes.NotSet;
 		private TriStateBooleanModes _verifyAssemblies = TriStateBooleanModes.NotSet;
@@ -63,6 +64,22 @@ namespace ComposestarVSAddin
 			set 
 			{
 				this._secretMode = value;
+				SetIsDirty(true);
+			}
+		}
+
+		[CategoryAttribute("User defined settings"),  
+		DescriptionAttribute("DebuggerType"),
+		IniSettingFieldAttribute("DebuggerType", "Global Composestar configuration")]
+		public DebuggerType DebuggerType
+		{
+			get
+			{
+				return _debuggerType;
+			}
+			set 
+			{
+				this._debuggerType = value;
 				SetIsDirty(true);
 			}
 		}

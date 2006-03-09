@@ -215,6 +215,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Settings\Debuggers.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Settings\IniReader.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

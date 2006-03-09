@@ -1232,37 +1232,65 @@ namespace ComposestarVSAddin
 			try
 			{
 				string dir = this.iniconfig.IniReadValue("Common", "OutputPath");
-				string debugger = this.iniconfig.IniReadValue("Common", "Debugger");
+				string debugger = this.iniconfig.IniReadValue("Common", "DebuggerType");
 				if(dir != null && !"".Equals(dir))
 				{
 					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1){
 						dir = dir.Substring(1,dir.Length-2);
 					}
-					if(!dir.EndsWith("\\"))
+					if(!dir.EndsWith("/"))
 					{
-						dir += '\\';
+						dir += '/';
 					}
 					if(debugger == null || "".Equals(debugger))
 					{
-						debugger = "Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger";
+						debugger = "CodeDebugger";
 					}
-					string debuggerXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<debugger>" + debugger + "<debugger/>";
-					string fileName = "\"" + dir + "debugger.xml\"";
+					string fileName = dir + "debugger.xml";
+
 					StreamWriter writer = File.CreateText(fileName);
-					writer.Write(debuggerXML);
+					writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+					writer.Write("<debugger>" + debugger + "<debugger/>");
 					writer.Close();
+				}
+			}
+			catch(Exception e)
+			{
+				Debug.Instance.Log(DebugModes.Information,"CONNECT",e.StackTrace);
+			}	
+		RunProgram();
+	}
+
+		private void OnRun()
+		{
+			try
+			{
+				string dir = this.iniconfig.IniReadValue("Common", "OutputPath");
+
+				if(dir != null && !"".Equals(dir))
+				{
+					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1)
+					{
+						dir = dir.Substring(1,dir.Length-2);
+					}
+					if(!dir.EndsWith("/"))
+					{
+						dir += '/';
+					}
+					string fileName = dir + "debugger.xml";
+					File.Delete(fileName);
 				}
 			}
 			catch(Exception)
 			{
-			}	
-		OnRun();
-	}
+			}
+			RunProgram();
+		}
 
 		/// <summary>
 		/// Run the compiled application.
 		/// </summary>
-		private void OnRun()
+		private void RunProgram()
 		{
 			//			if (iniconfig == null) 
 			//			{
