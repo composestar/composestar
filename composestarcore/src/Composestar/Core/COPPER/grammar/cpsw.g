@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.3 2006/02/28 08:43:31 whavinga Exp $
+ * $Id: cpsw.g,v 1.4 2006/02/28 09:47:24 whavinga Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -60,7 +60,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
 
   //////////////////////////////////////////////////////////////////////////
-filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.getLine());} (internals)? (externals)? (conditions)? (methodDeclarations)? (inputFilters)? (outputFilters)?);       //fixme: include arguments? (not really used)
+    filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.getLine());} (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)?);       //fixme: include arguments? (not really used)
 
     /*---------------------------------------------------------------------------*/
     internals : #("internals" (singleInternal)*);
@@ -84,23 +84,8 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
       singleCondition : #(CONDITION_ (n2:NAME) {namev.clear();} (n:NAME {namev.add(n.getText());} )+ {s = null;} (s:SEMICOLON)? {if(s == null) b.addCondition(n2.getText(), namev, 0,n2.getLine()); else b.addCondition(n2.getText(), namev, 1,n2.getLine()); });
 
         ocl : #(OCL_ (~(SEMICOLON))*);
-
-    /*---------------------------------------------------------------------------*/
-    methodDeclarations : #("methods" (singleMethodDeclaration)*);
-
-      singleMethodDeclaration : #(METHOD_ n:NAME {b.addMethod(n.getText(),n.getLine());} (formalParametersType)? {typev.clear();} (type)? {b.addMethodReturnType(typev);});
-
-        formalParametersType : #(FPMSTYPE_ ({namev.clear(); typev.clear();} formalParameterDefType {b.addMethodFormalParameters(namev, typev);})+);
-
-         formalParameterDefType : #(FPMDEFTYPE_ (n:NAME {namev.add(n.getText());} )* type);
-
-        //extra, don't call the builder
-        formalParametersType2 : #(FPMSTYPE_ ({namev.clear(); typev.clear();} formalParameterDefType)+);
-
-         formalParameterDefType2 : #(FPMDEFTYPE_ (n:NAME {namev.add(n.getText());} )* type);
-
-
-    /*---------------------------------------------------------------------------*/
+        
+   /*---------------------------------------------------------------------------*/
     inputFilters : #("inputfilters" generalFilter);
 
       generalFilter: singleInputFilter ( (s:SEMICOLON {b.addFilterCompOper(s.getText(),s.getLine());})? singleInputFilter )* ;
@@ -149,7 +134,7 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
   superImposition : #("superimposition" {b.addSuperImposition();} (selectorDef)? (conditionBind)? (methodBind)? (filtermoduleBind)? (annotationBind)? (constraints)?);
 
     /*---------------------------------------------------------------------------*/
-    selectorDef : #("selectors" (singleSelectorDefinition)*);
+     selectorDef : #("selectors" (singleSelectorDefinition)*);
 
      singleSelectorDefinition : #(SELEC2_ n:NAME {b.addSelectorDefinition(n.getText(),n.getLine());} ((selExpressionOld)+ | selExpressionPred));
 
@@ -174,7 +159,7 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
     /*---------------------------------------------------------------------------*/
     methodBind : #("methods" (singleMethodBind)*);
 
-      singleMethodBind : #(METHOD2_ (event)? (bindCondition)? {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
+      singleMethodBind : #(METHOD2_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
       //singleMethodBind : #(METHOD2_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
 
         methodNameSet : #(METHODNAMESET_ (#(METHODNAME_ methodName))+);
@@ -184,17 +169,7 @@ filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.
 
             typeList: #(TYPELIST_ {typev.clear();} (type {typel.add(typev);} )*);
 
-    event : #("on" (instanceCreated | applicationStart | methodCalled));
-
-     instanceCreated : "instancecreated";
-
-     applicationStart : "applicationstart";
-
-     methodCalled : #("methodcalled" concernReference (formalParametersType2)? (type)?); 
-
        concernReference : (NAME)+;
-
-     bindCondition : #("if" conditionRef);
 
        conditionRef : (NAME)+;
 
