@@ -1,6 +1,7 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents;
 
 import Composestar.RuntimeCore.CODER.Model.*;
+import Composestar.RuntimeCore.CODER.*;
 
 import java.io.*;
 import java.awt.*;
@@ -43,7 +44,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		messageHistory.add(postMessage);
 	}
 
-	public synchronized void fill(DebuggableMessage preMessage, DebuggableMessage postMessage,DebuggableFilter currentFilter, ArrayList filters, Dictionary context)
+	public synchronized void fill(StateHandler handler, DebuggableMessage preMessage, DebuggableMessage postMessage,DebuggableFilter currentFilter, ArrayList filters, Dictionary context)
 	{
 		updateHistory(preMessage, postMessage,context);
 
@@ -76,8 +77,7 @@ public class CodeExecutionGuiComponent extends Panel {
 			}
 		}
 
-		Object sender = ((DebuggableMessage)((DebuggableMessageList)messageHistory.get(0)).getMessages().get(0)).getSender();
-		components[0].setText(sender == null ? "Null Sender" : sender.toString());
+		components[0].setText(getSenderText(handler));
 		for(int i =0 ; i < filters.size();i++)
 		{
 			components[i+1].setText(getCode((DebuggableFilter) filters.get(i)));
@@ -88,6 +88,11 @@ public class CodeExecutionGuiComponent extends Panel {
 		Object target = ((DebuggableMessage)((DebuggableMessageList)messageHistory.get(0)).getMessages().get(0)).getTarget();
 		components[filters.size()+1].setText(target == null ? "Null Target" : target.toString());
     }
+
+	public String getSenderText(StateHandler handler)
+	{
+		return handler.getStackTrace();
+	}
 
 	public String getCode(DebuggableFilter filter)
 	{

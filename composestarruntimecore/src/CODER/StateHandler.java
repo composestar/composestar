@@ -64,4 +64,9 @@ public class StateHandler {
 	{
 		halter.threadSuspend();
 	}
+
+	public String getStackTrace()
+	{
+		return halter.getStackTrace();
+	}
 }

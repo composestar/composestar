@@ -55,7 +55,7 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
         setBreakPoint(dummy);
     }
 
-    public void addBreakPointListener(BreakPointListener debugger) {
+    public synchronized void addBreakPointListener(BreakPointListener debugger) {
         Assertion.pre(halt.isGlobalHalted(), MODULENAME, "addBreakPointListener needs a halted Runtime");
         if (debugger == null) return;
         if (!breakpoint.threadSpecific()) {
@@ -68,7 +68,7 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
         }
     }
 
-    public void removeBreakPointListener(BreakPointListener debugger) {
+    public synchronized void removeBreakPointListener(BreakPointListener debugger) {
         Assertion.pre(halt.isGlobalHalted(), MODULENAME, "removeBreakPointListener needs a halted Runtime");
         if (debugger == null) return;
         if (!breakpoint.threadSpecific()) {
@@ -153,7 +153,7 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
     private BreakPoint dummy = new NeverBreakBreakPoint(halt);
     private BreakPoint breakpoint;
 
-    private void setBreakPoint(BreakPoint breakpoint) {
+    private synchronized void setBreakPoint(BreakPoint breakpoint) {
         if (breakpoint == null) breakpoint = dummy;
         Iterator i = statepool.values().iterator();
         while (i.hasNext()) {

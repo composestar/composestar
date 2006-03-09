@@ -17,4 +17,6 @@ public interface Halter {
     public void threadResume();
 
     public void threadSuspend();
+
+	public String getStackTrace();
 }

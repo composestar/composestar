@@ -54,7 +54,7 @@ public class CodeDebugger  extends Visualizer implements  ActionListener{
 		{
 			handler.threadSuspend();
 		}
-		component.fill(beforeMessage, afterMessage,currentFilter,filters, context);
+		component.fill(handler, beforeMessage, afterMessage,currentFilter,filters, context);
 		frame.show();
 	}
 }

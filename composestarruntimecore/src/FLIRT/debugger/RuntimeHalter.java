@@ -3,6 +3,9 @@ package Composestar.RuntimeCore.FLIRT.Debugger;
 import Composestar.RuntimeCore.CODER.*;
 import Composestar.Utils.Debug;
 
+import java.io.*;
+import java.util.*;
+
 /**
  * Summary description for Halter.
  */
@@ -11,6 +14,11 @@ public class RuntimeHalter implements Halter {
     private static boolean globalHalt = false;
 	//Thread specific
 	private boolean threadHalt = false;
+
+	public RuntimeHalter()
+	{
+		stacktrace = produceStackTrace();
+	}
 
     public void halting() 
 	{
@@ -21,6 +29,31 @@ public class RuntimeHalter implements Halter {
             }
         }
     }
+
+	private String stacktrace = "";
+
+	public String getStackTrace()
+	{
+		return stacktrace;
+	}
+
+	private String produceStackTrace()
+	{
+		//Lets do something very dirty
+		try
+		{
+			throw new Throwable(); //need the stack :P
+		}
+		catch(Throwable t)
+		{
+			StringWriter sw = new StringWriter();
+			PrintWriter writer = new PrintWriter(sw);
+			t.printStackTrace(writer);
+			writer.flush();
+			String stack = sw.toString();
+			return stack;
+		}
+	}
 
     public boolean isGlobalHalted() {
         return globalHalt;
