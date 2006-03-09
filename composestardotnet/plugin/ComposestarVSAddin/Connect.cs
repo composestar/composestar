@@ -80,27 +80,32 @@ namespace ComposestarVSAddin
 		/// </summary>
 		private readonly string   m_commandNameBuild;
 		private readonly string   m_commandNameRun;
+		private readonly string   m_commandNameDebugRun;
 		private readonly string   m_commandNameSettings;
 		private readonly string   m_commandNameClean;
 
 		private const string ADDIN_BUILD        = "Build";
 		private const string ADDIN_RUN          = "Run";
+		private const string ADDIN_DEBUGRUN     = "Debug";
 		private const string ADDIN_CLEAN        = "Clean";
 		private const string ADDIN_SETTINGS     = "Settings";
 
 		private const int    BITMAP_ID_BUILD    = 5830;
 		private const int    BITMAP_ID_CLEAN    = 1786;    // 1088 1786 67 
 		private const int    BITMAP_ID_RUN      = 2945; // alternatives: 186 2997 3820
+		private const int    BITMAP_ID_DEBUGRUN = 3820; // alternatives: 186 2997 3820
 		private const int    BITMAP_ID_SETTINGS = 642;  // alternatives: 1951 2597 2770
 
 		private string m_captionBuild ="Build with Compose*" ;
 		private string m_captionRun = "Run with Compose*";
+		private string m_captionDebugRun = "Debug with Compose*";
 		private string m_captionSettings = "Compose* Settings";
-        private string m_captionClean = "Clean with Compose*";
+		private string m_captionClean = "Clean with Compose*";
 		private string m_toolTipBuild = "Will invoke Compose* to build the current solution";
 		private string m_toolTipRun = "Will invoke application build with Compose*";
+		private string m_toolTipDebugRun = "Will debug application build with Compose*";
 		private string m_toolTipSettings = "Opens the Compose* settings dialog";
-        private string m_toolTipClean = "Cleans the previous Compose* build information";
+		private string m_toolTipClean = "Cleans the previous Compose* build information";
 
 		/// <summary>
 		///     References to <c>Command</c>s which are used to 
@@ -129,6 +134,7 @@ namespace ComposestarVSAddin
     
 			m_commandNameBuild = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_BUILD;
 			m_commandNameRun = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_RUN;
+			m_commandNameDebugRun = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_DEBUGRUN;
 			m_commandNameSettings = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_SETTINGS;
 			m_commandNameClean = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_CLEAN;
 		}
@@ -199,6 +205,7 @@ namespace ComposestarVSAddin
 					// Adds commands to the environment
 					AddCommand((AddIn)addInInst, ADDIN_BUILD, m_captionBuild, m_toolTipBuild, true, BITMAP_ID_BUILD, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_RUN, m_captionRun, m_toolTipRun, true, BITMAP_ID_RUN, false, true);
+					AddCommand((AddIn)addInInst, ADDIN_DEBUGRUN, m_captionDebugRun, m_toolTipDebugRun, true, BITMAP_ID_DEBUGRUN, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_CLEAN, m_captionClean, m_toolTipClean, true, BITMAP_ID_CLEAN, false, false);
 					AddCommand((AddIn)addInInst, ADDIN_SETTINGS, m_captionSettings, m_toolTipSettings, true, BITMAP_ID_SETTINGS, true, true);
 	
@@ -236,7 +243,7 @@ namespace ComposestarVSAddin
 		{
 			if (neededText == EnvDTE.vsCommandStatusTextWanted.vsCommandStatusTextWantedNone) 
 			{
-				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameSettings || commandName == m_commandNameClean) 
+				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameDebugRun || commandName == m_commandNameSettings || commandName == m_commandNameClean) 
 				{
 					UpdateStatus(commandName, ref status);
 				}
@@ -252,6 +259,7 @@ namespace ComposestarVSAddin
 			object commandText = null;
 			QueryStatus(m_commandNameBuild, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
+			QueryStatus(m_commandNameDebugRun, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameSettings, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 			QueryStatus(m_commandNameClean, vsCommandStatusTextWanted.vsCommandStatusTextWantedNone, ref commandStatus, ref commandText);
 		}
@@ -315,6 +323,12 @@ namespace ComposestarVSAddin
 					handled = true;
 					return;
 				}
+				else if(commandName ==  m_commandNameDebugRun)
+				{
+					this.OnDebugRun();
+					handled = true;
+					return;
+				}
 				else if(commandName == m_commandNameSettings)
 				{
 					this.OnSettings();
@@ -344,7 +358,7 @@ namespace ComposestarVSAddin
 		public void OnDisconnection(Extensibility.ext_DisconnectMode disconnectMode, ref System.Array custom)
 		{	
 			// Save toolbar
-				SaveToolBarLayout();
+			SaveToolBarLayout();
 			
 			if (disconnectMode == ext_DisconnectMode.ext_dm_UserClosed ) 
 			{
@@ -356,15 +370,16 @@ namespace ComposestarVSAddin
 				taskListEvents = null;
 
 				m_referenceBuildCommand = null;
-			    m_referenceCancelBuildCommand = null;
+				m_referenceCancelBuildCommand = null;
 
 				// Remove the buttons
 				this.DeleteCommand( m_commandNameBuild );
 				this.DeleteCommand( m_commandNameRun );
+				this.DeleteCommand( m_commandNameDebugRun );
 				this.DeleteCommand( m_commandNameSettings ); 
 				this.DeleteCommand( m_commandNameClean ); 
 
-                Debug.Instance.Log(DebugModes.Information, "AddIn", "Unloaded the Compose* Add-In.");   
+				Debug.Instance.Log(DebugModes.Information, "AddIn", "Unloaded the Compose* Add-In.");   
 				
 				this.addInInstance = null;
 			}
@@ -913,7 +928,7 @@ namespace ComposestarVSAddin
 			Debug.Instance.ShowProgress("Building with Compose*", 0);
 			Debug.Instance.ShowAnimation(vsStatusAnimation.vsStatusAnimationBuild);
 			Debug.Instance.ResetWarnings();
-  			Application.DoEvents();
+			Application.DoEvents();
 
 			if (action == EnvDTE.vsBuildAction.vsBuildActionBuild || action == EnvDTE.vsBuildAction.vsBuildActionRebuildAll) 
 			{
@@ -1208,6 +1223,41 @@ namespace ComposestarVSAddin
 			Debug.Instance.ActivateOutputWindowPane();
 
 		}
+
+		/// <summary>
+		/// Run the compiled application.
+		/// </summary>
+		private void OnDebugRun()
+		{
+			try
+			{
+				string dir = this.iniconfig.IniReadValue("Common", "OutputPath");
+				string debugger = this.iniconfig.IniReadValue("Common", "Debugger");
+				if(dir != null && !"".Equals(dir))
+				{
+					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1){
+						dir = dir.Substring(1,dir.Length-2);
+					}
+					if(!dir.EndsWith("\\"))
+					{
+						dir += '\\';
+					}
+					if(debugger == null || "".Equals(debugger))
+					{
+						debugger = "Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger";
+					}
+					string debuggerXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<debugger>" + debugger + "<debugger/>";
+					string fileName = "\"" + dir + "debugger.xml\"";
+					StreamWriter writer = File.CreateText(fileName);
+					writer.Write(debuggerXML);
+					writer.Close();
+				}
+			}
+			catch(Exception)
+			{
+			}	
+		OnRun();
+	}
 
 		/// <summary>
 		/// Run the compiled application.
