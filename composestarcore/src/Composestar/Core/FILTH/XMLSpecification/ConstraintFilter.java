@@ -100,7 +100,8 @@ public class ConstraintFilter extends ArgumentFilter{
 					Rule _rule=new SoftPreRule((Parameter)l, (Parameter)r);
 					_rule.insert(_graph);
 
-					FILTHService.print("FILTH::adding rule> "+value+"( "+l+" , "+r+" )\n");
+					//FILTHService.print("FILTH::adding rule> "+value+"( "+l+" , "+r+" )\n");
+					FILTHService.log.print("<li><i>"+value+"( "+l+" , "+r+")</i></li>\n");
 				}
 			
 			//itt egy action-t letrehozni; elotte ellenorizni, hogy benne van-e a memoriaban; es felszurni a grafba

@@ -7,11 +7,15 @@
 package Composestar.Core.CKRET;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
+import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
@@ -89,29 +93,35 @@ public class SECRET implements CTCommonModule {
 			Debug.out(Debug.MODE_WARNING,"SECRET","Failed to fetch SECRET mode, SECRET will run in " + MODES[MODE] + " mode");
 		}
 		
-		// create the reporter
-		reportFile = resources.ProjectConfiguration.getProperty("TempFolder") + "SECRET.html";
-
-		String cssFile = "file://"+resources.ProjectConfiguration.getProperty("TempFolder") + "SECRET.css";
-		if( !(new File(cssFile).exists()))
-		{
-			cssFile = "file://"+resources.ProjectConfiguration.getProperty("ComposestarPath") + "SECRET.css";
-		}
-
-		resources.ProjectConfiguration.put("SECRETCssFile",cssFile.substring(7));
-
 		try
 		{
-			reporter = new HTMLReporter(reportFile, cssFile);
-			reporter.open();
-			Debug.out(Debug.MODE_DEBUG,"SECRET","SECRET report file (" + reportFile + ") created...");
-			
+			String basedir =  resources.ProjectConfiguration.getProperty("TempFolder");
+			File file = new File(basedir+"analyses/");
+			if(!file.exists())
+			{
+				file.mkdir();
+			}
+			if(file.isDirectory())
+			{
+				reportFile = file.getAbsolutePath() + "\\SECRET.html";
+
+				String cssFile = "file://"+resources.ProjectConfiguration.getProperty("TempFolder") + "SECRET.css";
+				if( !(new File(cssFile).exists()))
+				{
+					cssFile = "file://"+resources.ProjectConfiguration.getProperty("ComposestarPath") + "SECRET.css";
+				}
+
+				resources.ProjectConfiguration.put("SECRETCssFile",cssFile.substring(7));
+				
+				reporter = new HTMLReporter(reportFile, cssFile, resources);
+				reporter.open();
+				Debug.out(Debug.MODE_DEBUG,"SECRET","SECRET report file (" + reportFile + ") created...");
+			}
 		}
-		catch(Exception e)
-		{
+		catch(Exception e){
+			e.getMessage();
 			throw new ModuleException("SECRET","SECRET report file creation failed (" + reportFile + "), with reason: " + e.getMessage());
 		}
-
 		
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 
@@ -151,14 +161,14 @@ public class SECRET implements CTCommonModule {
 				case NORMAL: // NORMAL
 					if( !oa.checkOrder(singleOrder, true) )
 					{
-						Debug.out(Debug.MODE_WARNING,"SECRET","Conflicts detected on concern " + concern.getQualifiedName(),reportFile);
+						Debug.out(Debug.MODE_WARNING,"SECRET","Semantic conflict(s) detected on concern " + concern.getQualifiedName(),reportFile);
 					}
 					break;
 				
 				case REDUNDANT: // REDUNDANT
 					if( !oa.checkOrder(singleOrder, true) )
 					{
-						Debug.out(Debug.MODE_WARNING,"SECRET","Conflicts detected on concern " + concern.getQualifiedName(),reportFile);
+						Debug.out(Debug.MODE_WARNING,"SECRET","Semantic conflict(s) detected on concern " + concern.getQualifiedName(),reportFile);
 					}
 					for( Iterator fmoit = fmolist.iterator(); fmoit.hasNext(); )
 					{
