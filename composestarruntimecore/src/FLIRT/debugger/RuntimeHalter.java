@@ -24,16 +24,34 @@ public class RuntimeHalter implements Halter {
 	{
         while (globalHalt || threadHalt) {
             try {
+				if(dumpStackSpace)
+				{
+					stacktrace = produceStackTrace();
+					dumpStackSpace = false;
+				}
                 Thread.yield();
             } catch (Exception e) {
             }
         }
     }
 
-	private String stacktrace = "";
+	private boolean dumpStackSpace = false;
+
+	private String stacktrace = null;
 
 	public String getStackTrace()
 	{
+		dumpStackSpace = true;
+		while(stacktrace == null)
+		{
+			try
+			{
+				Thread.yield();
+			}
+			catch(Exception e)
+			{
+			}
+		}
 		return stacktrace;
 	}
 
