@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedExternals.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+* $Id: NotUsedExternals.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -103,7 +103,7 @@ public class NotUsedExternals implements BaseChecker {
 				while(conditions.hasNext()){
 					Condition condition = (Condition) conditions.next();
 					Reference ref = condition.getShortref();
-					if(ref.getName().equals(externalID)){
+					if(ref != null && ref.getName().equals(externalID)){
 						isExternalUsed = true;
 					}
 				}
