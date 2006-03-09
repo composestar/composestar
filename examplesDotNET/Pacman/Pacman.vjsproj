@@ -83,7 +83,7 @@
                 <Reference
                     Name = "ComposeStarRuntimeInterpreter"
                     AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
             </References>
         </Build>
@@ -161,11 +161,6 @@
                 />
                 <File
                     RelPath = "World.jsl"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ConcernImplementations\Beeper.jsl"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
