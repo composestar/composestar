@@ -454,7 +454,7 @@ namespace ComposestarVSAddin
 				{
 					File.Delete(fileName);
 				}
-				catch (IOException ex)
+				catch (IOException)
 				{
 				}
 		}
