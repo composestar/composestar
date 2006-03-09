@@ -39,7 +39,8 @@ public class ExistSelector implements BaseChecker {
 
 	public void check(DataStore newDs) throws ModuleException {
 		ds = newDs;
-		boolean nonFatal = performCheck();
+		// REXREF does checks it as well, so this would be the second test and is therefore quite useless
+		boolean nonFatal = true; //performCheck();
 		
 		if(!nonFatal) {
       throw (new ModuleException("One or more Selectors in filtermodules are not declared", "CHKREP") );
