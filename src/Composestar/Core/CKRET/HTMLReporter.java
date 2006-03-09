@@ -8,12 +8,15 @@ package Composestar.Core.CKRET;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.Master.CommonResources;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
@@ -28,12 +31,14 @@ public class HTMLReporter implements Reporter {
 	private BufferedWriter writer;
 	private StringBuffer buffer;
 	private String cssFile;
+	private Properties props = null;
 
-	public HTMLReporter(String path, String cssFile) throws Exception
+	public HTMLReporter(String path, String cssFile, CommonResources resources) throws Exception
 	{
 		writer = new BufferedWriter(new FileWriter(path));
 		buffer = new StringBuffer("");
 		this.cssFile = cssFile;
+		this.props = resources.ProjectConfiguration;
 	}
 
 
@@ -130,8 +135,16 @@ public class HTMLReporter implements Reporter {
 
 	public void open()
 	{
-        buffer.append("<html><head><title>SECRET Report</title><link rel=\"stylesheet\" href=\"").append(cssFile).append("\" type=\"text/css\"></head><body><H1>SECRET Report</h1><h3>");
-		buffer.append((new java.util.Date()).toString());
+        //buffer.append("<html><head><title>SECRET Report</title><link rel=\"stylesheet\" href=\"").append(cssFile).append("\" type=\"text/css\"></head><body><H1>SECRET Report</h1><h3>");
+		buffer.append("<html>\n");
+		buffer.append("\t<head>\n");
+		buffer.append("\t\t<title>SEmantiC Reasoning Tool</title>\n");
+		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\""+cssFile+"\"/>\n");
+		buffer.append("</head>\n");
+		buffer.append("<body>\n");
+		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+props.getProperty("ComposestarPath")+"/logo.gif\"/>  /TRESE/Compose*/SECRET</i></b></font></div>\n");
+		
+		buffer.append("<h3>"+(new java.util.Date()).toString());
 		buffer.append("<BR>");
         buffer.append("Runmode: ").append(SECRET.MODES[SECRET.MODE]);
 		buffer.append("</h3>");
