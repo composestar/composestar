@@ -16,5 +16,5 @@ concern VenusFlyTrap in VenusFlyTrapExample {
 			files <-InsectTrap;
 	}
 	
-	implementation by VenusFlyTrapExample.VenusFlyTrap.dll;
+	implementation by VenusFlyTrapExample.VenusFlyTrap;
 }
