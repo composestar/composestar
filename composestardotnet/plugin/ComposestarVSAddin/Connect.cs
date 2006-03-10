@@ -166,13 +166,13 @@ namespace ComposestarVSAddin
 		/// <seealso class='IDTExtensibility2' />
 		public void OnConnection(object application, Extensibility.ext_ConnectMode connectMode, object addInInst, ref System.Array custom)
 		{
-			applicationObject = (_DTE)application;
-			addInInstance = (AddIn)addInInst;
-		
-			Debug.Instance.Init(DebugModes.Information, applicationObject);
-
 			if (connectMode == Extensibility.ext_ConnectMode.ext_cm_Startup || connectMode == Extensibility.ext_ConnectMode.ext_cm_AfterStartup) 
 			{
+				applicationObject = (_DTE)application;
+				addInInstance = (AddIn)addInInst;
+		
+				Debug.Instance.Init(DebugModes.Information, applicationObject);
+
 				try 
 				{
 					SetCurrentThreadUICulture();
@@ -185,8 +185,7 @@ namespace ComposestarVSAddin
 					return;
 				}
 				try 
-				{
-					
+				{					
 					// get references to Build Solution and Cancel Build commands which are 
 					// used to synchronize enabled/disabled state
 					EnvDTE.Commands cmds = applicationObject.Commands;
@@ -1051,7 +1050,7 @@ namespace ComposestarVSAddin
 
 					DeleteFile(Path.Combine(tempfolder,  "BuildConfiguration.xml"));
 
-					BuildConfigurationManager.Instance.Settings.Paths.Add("Temp", tempfolder);  		
+					BuildConfigurationManager.Instance.Settings.Paths.Add("Base", tempfolder);  		
 							
 					if(ComposestarIniFileExists()) 
 					{
