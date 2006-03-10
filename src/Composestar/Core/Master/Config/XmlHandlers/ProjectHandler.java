@@ -89,21 +89,6 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 			ProjectTypeSourcesHandler typesourceshandler = new ProjectTypeSourcesHandler(project,parser,this);
 			parser.setContentHandler( typesourceshandler );
 		}
-		
-		if("ConcernSources".equals(raw_name))
-		{// in <ConcernSources>	
-			//System.out.println("<concernsources>");	
-			//look further
-			ConcernSourcesHandler concernsourceshandler = new ConcernSourcesHandler(parser,this);
-			parser.setContentHandler( concernsourceshandler );
-		}
-		else if("CustomFilters".equals(raw_name))
-		{
-			// in <RequiredFiles>
-			// look further	
-			CustomFiltersHandler fileshandler = new CustomFiltersHandler(parser,this);
-			parser.setContentHandler( fileshandler );
-		}
 	}
 
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException 

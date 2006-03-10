@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: COPPER.java,v 1.3 2006/02/24 15:54:33 dspenkel Exp $
+ * $Id: COPPER.java,v 1.4 2006/02/28 09:56:19 whavinga Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -18,6 +18,8 @@ import java.util.Iterator;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.*;
+import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.*;
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -152,22 +154,22 @@ public class COPPER implements CTCommonModule
 	{
 	   COPPER copper = new COPPER();
 	   INCRE incre = INCRE.instance();
-	   Iterator cpsIterator = (Iterator)resources.getResource("CpsIterator");
+	   Iterator cpsIterator = Configuration.instance().projects.getConcernSources().iterator();
 		
 	   while(cpsIterator.hasNext()) 
 	   {
-	   		String concern = (String)cpsIterator.next();
+	   		ConcernSource concern = (ConcernSource)cpsIterator.next();
 	   
 			if(incre.isProcessedByModule(concern,"COPPER"))
 			{
-				INCRETimer coppercopy = incre.getReporter().openProcess("COPPER",concern,INCRETimer.TYPE_INCREMENTAL);
-				copper.copyOperation(concern);
+				INCRETimer coppercopy = incre.getReporter().openProcess("COPPER",concern.getFileName(),INCRETimer.TYPE_INCREMENTAL);
+				copper.copyOperation(concern.getFileName());
 				coppercopy.stop();
 			}
 			else 
 			{
-				INCRETimer copperrun = incre.getReporter().openProcess("COPPER",concern,INCRETimer.TYPE_NORMAL);
-				copper.parseCpsFile(concern,ALL_PHASES);
+				INCRETimer copperrun = incre.getReporter().openProcess("COPPER",concern.getFileName(),INCRETimer.TYPE_NORMAL);
+				copper.parseCpsFile(concern.getFileName(),ALL_PHASES);
 				copperrun.stop();
 			}
 		}

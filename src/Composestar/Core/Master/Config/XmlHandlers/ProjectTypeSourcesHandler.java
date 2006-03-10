@@ -30,6 +30,8 @@ public class ProjectTypeSourcesHandler extends DefaultHandler implements Content
 			TypeSource typesource = new TypeSource();
 			if(amap.getValue("fileName")!=null)
 				typesource.setFileName(amap.getValue("fileName"));
+			if(amap.getValue("name")!=null)
+				typesource.setName(amap.getValue("name"));
 						
 			project.addTypeSource(typesource);
 		}

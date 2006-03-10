@@ -246,13 +246,16 @@ public class FILTHServiceImpl extends FILTHService{
 		return modulerefs;
 	}
 	
-	private void processXML(Concern c, Graph g){
-		
+	private void processXML(Concern c, Graph g)
+	{
 		/* process XML specification, build the rules into the graph */
 		try{
 			XMLReader xr = XMLReaderFactory.createXMLReader();		
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
+			
+			_specfile = Configuration.instance().moduleSettings.getModule("FILTH").getProperty("input");
+			
 			//System.out.println(_specfile);
 			FileReader r = new FileReader(_specfile);
 			of.parse(new InputSource(r));
