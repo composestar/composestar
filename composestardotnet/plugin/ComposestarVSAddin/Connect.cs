@@ -170,6 +170,7 @@ namespace ComposestarVSAddin
 			addInInstance = (AddIn)addInInst;
 		
 			Debug.Instance.Init(DebugModes.Information, applicationObject);
+
 			if (connectMode == Extensibility.ext_ConnectMode.ext_cm_Startup || connectMode == Extensibility.ext_ConnectMode.ext_cm_AfterStartup) 
 			{
 				try 
@@ -437,6 +438,12 @@ namespace ComposestarVSAddin
 			m_referenceBuildCommand = null;
 			m_referenceCancelBuildCommand = null;
 
+			dummymanager = null;
+			mastermanager=null;
+			attributemanager=null;
+			embsrcmanager=null;
+
+
 			// Remove the buttons
 			this.DeleteCommand( m_commandNameBuild );
 			this.DeleteCommand( m_commandNameRun );
@@ -446,6 +453,15 @@ namespace ComposestarVSAddin
 
 			this.DeleteMenu();
 			this.DeleteToolBar(); 
+			
+
+
+
+			m_Menu = null;
+			m_Bar  = null;
+
+
+
 
 		}
 
@@ -707,7 +723,7 @@ namespace ComposestarVSAddin
 			// if not found, creates it
 			if (m_Bar != null) 
 			{
-				m_Bar.Delete(); 				
+				m_Bar.Delete(); 
 			}	
 			
 		}

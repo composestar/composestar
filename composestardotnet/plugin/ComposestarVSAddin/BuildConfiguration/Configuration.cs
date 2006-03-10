@@ -536,14 +536,7 @@ namespace BuildConfiguration
 				this.OutputPath = tempfolder;
 				this.Executable = "program.exe";
 			}
-		
-			// FILTH configuration
-			ModuleSetting filthModule = new ModuleSetting();
-			filthModule.Name = "FILTH";
-			filthModule.Elements.Add("input", this.mFilthFilterOrderSpecification)  ;
-			filthModule.Elements.Add("output_pattern", ".//analyses//FILTH_") ;
-			Settings.SetModule(filthModule);
-			
+				
 			// Include Composestar.ini and overwrite values with Project.ini, if it exists
 			ReadIniFile(Settings.ComposestarIni);
 
@@ -582,9 +575,16 @@ namespace BuildConfiguration
 
 					// Process project.ini
 					ReadIniFile(Path.Combine(_tempFolder, "project.ini"));
-
 				}
+
 			}
+
+			// FILTH configuration
+			ModuleSetting filthModule = new ModuleSetting();
+			filthModule.Name = "FILTH";
+			filthModule.Elements.Add("input", this.mFilthFilterOrderSpecification)  ;
+			filthModule.Elements.Add("output_pattern", ".//analyses//FILTH_") ;
+			Settings.SetModule(filthModule);
 			
 			// Paths
 			Settings.Paths.Add("Dummy", "dummies\\") ;		
