@@ -21,6 +21,17 @@ public class StateHandler {
 	private Object context = null;
 	private BreakPoint breakpoint;
 
+	public StateHandler(BreakPoint breakpoint, Halter halter)
+	{
+		this(Thread.currentThread(),breakpoint, halter);
+	}
+
+	public void cleanup()
+	{
+		myThread = Thread.currentThread();
+		halter.setThread(Thread.currentThread());
+	}
+
 	public StateHandler(Thread thread, BreakPoint breakpoint, Halter halter)
 	{
 		this.breakpoint = breakpoint;

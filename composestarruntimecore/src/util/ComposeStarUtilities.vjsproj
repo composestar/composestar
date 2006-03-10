@@ -90,6 +90,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ChildRunable.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ChildThread.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ComposestarStack.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -136,6 +146,11 @@
                 />
                 <File
                     RelPath = "SyncBuffer.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ThreadPool.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

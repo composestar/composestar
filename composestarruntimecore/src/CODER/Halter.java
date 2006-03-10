@@ -6,6 +6,8 @@ package Composestar.RuntimeCore.CODER;
 public interface Halter {
     public void halting();
 
+	public void setThread(Thread thread);
+
     public boolean isGlobalHalted();
 
     public void globalResume();

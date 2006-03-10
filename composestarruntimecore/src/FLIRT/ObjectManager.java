@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.2 2006/03/06 14:22:37 oohlaf Exp $
+ * $Id: ObjectManager.java,v 1.3 2006/03/09 18:12:12 oohlaf Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -36,7 +36,7 @@ import java.util.*;
  * Finally, the object manager also manages the filtermodules that are
  * imposed on the object that manages.
  */
-public class ObjectManager 
+public class ObjectManager implements ChildRunable
 {
     
     /**
@@ -54,7 +54,7 @@ public class ObjectManager
     /**
      * @roseuid 41161A8D008E
      */
-	public synchronized void run(Object state) 
+	public synchronized void run() 
 	{
 		this.working = true;
 
@@ -86,7 +86,8 @@ public class ObjectManager
 	{
 		if (!this.working) 
 		{
-			System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(run));
+			ChildThread child = ThreadPool.getChildThread(this);
+			child.start();
 		} 
 	}
 

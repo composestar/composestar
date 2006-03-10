@@ -20,6 +20,11 @@ public class RuntimeHalter implements Halter {
 		stacktrace = produceStackTrace();
 	}
 
+	public void setThread(Thread thread)
+	{
+		threadHalt = false;
+	}
+
     public void halting() 
 	{
         while (globalHalt || threadHalt) {
@@ -29,7 +34,7 @@ public class RuntimeHalter implements Halter {
 					stacktrace = produceStackTrace();
 					dumpStackSpace = false;
 				}
-                Thread.yield();
+               Thread.yield();
             } catch (Exception e) {
             }
         }
@@ -46,7 +51,7 @@ public class RuntimeHalter implements Halter {
 		{
 			try
 			{
-				Thread.yield();
+				Thread.sleep(0);
 			}
 			catch(Exception e)
 			{
@@ -66,6 +71,7 @@ public class RuntimeHalter implements Halter {
 		{
 			StringWriter sw = new StringWriter();
 			PrintWriter writer = new PrintWriter(sw);
+			t = t.fillInStackTrace();
 			t.printStackTrace(writer);
 			writer.flush();
 			String stack = sw.toString();

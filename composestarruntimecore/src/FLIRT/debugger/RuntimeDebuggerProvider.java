@@ -20,7 +20,6 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
     private final static String MODULENAME = "FLIRT(RuntimeDebuggerProvider)";
 
     public RuntimeDebuggerProvider() {
-        cleanupInterval = CLEANUP_TUNE_FACTOR ^ 10;
         breakpoint = dummy;
     }
 
@@ -62,10 +61,15 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
             breakpoint.addBreakPointListener(debugger);
             return;
         }
-        Iterator i = statepool.values().iterator();
-        while (i.hasNext()) {
-            ((StateHandler) i.next()).getBreakPoint().addBreakPointListener(debugger);
-        }
+
+		for(int i = 0 ; i < runningHandlers.size(); i++)
+		{
+			((StateHandler) runningHandlers.get(i)).getBreakPoint().addBreakPointListener(debugger);
+		}
+		for(int i = 0 ; i < sleepingHandlers.size(); i++)
+		{
+			((StateHandler) sleepingHandlers.get(i)).getBreakPoint().addBreakPointListener(debugger);
+		}
     }
 
     public synchronized void removeBreakPointListener(BreakPointListener debugger) {
@@ -75,76 +79,54 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
             breakpoint.removeBreakPointListener(debugger);
             return;
         }
-        Iterator i = statepool.values().iterator();
-        while (i.hasNext()) {
-            ((StateHandler) i.next()).getBreakPoint().removeBreakPointListener(debugger);
-        }
+
+		for(int i = 0 ; i < runningHandlers.size(); i++)
+		{
+			((StateHandler) runningHandlers.get(i)).getBreakPoint().removeBreakPointListener(debugger);
+		}
+		for(int i = 0 ; i < sleepingHandlers.size(); i++)
+		{
+			((StateHandler) sleepingHandlers.get(i)).getBreakPoint().removeBreakPointListener(debugger);
+		}
     }
 
     public void fireEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context) {
         Debug.out(Debug.MODE_DEBUG, MODULENAME, "Having event");
         StateHandler handler = getStateHandler();
         handler.event(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
+		returnHandler(handler);
     }
 
-    private HashMap statepool = new HashMap();
+    private ArrayList runningHandlers = new ArrayList();
+	private ArrayList sleepingHandlers = new ArrayList();
 
-    //Automatic tuning of the cleaner
-    private static int cleanupInterval = 1;
-	private static int cleanupTimer = 0;
+	private StateHandler createHandler()
+	{
+		Halter halter = new RuntimeHalter();
+		return new StateHandler(breakpoint,halter);
+	}
 
-    private final static int CLEANUP_TUNE_FACTOR = 2;
-
-    private void tuneCleanupInterval(int deaths) {
-        switch (deaths) {
-            case 0:
-                cleanupInterval *= CLEANUP_TUNE_FACTOR; //nothing to do, speed down
-                break;
-            case 1:
-            case CLEANUP_TUNE_FACTOR:
-                //On target
-                break;
-            default:
-                cleanupInterval /= CLEANUP_TUNE_FACTOR; //Dead threads, speed up
-                break;
-        }
-		if(cleanupInterval < 0)
-		{
-			cleanupInterval = Integer.MAX_VALUE;
-		}
-    }
-
-    private synchronized void cleanup() {
-		if(cleanupTimer < cleanupInterval)
-		{
-			cleanupTimer++;
-			return;
-		}
-		cleanupTimer = 0;
-
-        Debug.out(Debug.MODE_DEBUG, "MODULENAME", "Cleaning RuntimeState");
-        int deaths = 0;
-        Iterator i = statepool.keySet().iterator();
-        while (i.hasNext()) {
-            Thread thread = (Thread) i.next();
-            if (!thread.isAlive()) {
-                statepool.remove(thread);
-                deaths++;
-            }
-        }
-        tuneCleanupInterval(deaths);
-    }
+	private synchronized void returnHandler(StateHandler handler)
+	{	
+		int index = runningHandlers.indexOf(handler);
+		runningHandlers.remove(index);
+		sleepingHandlers.add(handler);
+	}
 
     private synchronized StateHandler getStateHandler() {
-        Thread thread = Thread.currentThread();
-        StateHandler handler = (StateHandler) statepool.get(thread);
-		Halter halter = new RuntimeHalter();
-        if (handler == null) {
-            handler = new StateHandler(thread, breakpoint,halter);
-            statepool.put(thread, handler);
-        }
-
-		cleanup();
+		StateHandler handler = null;
+		if(sleepingHandlers.isEmpty())
+		{
+			handler = createHandler();
+			runningHandlers.add(handler);
+		}
+		else
+		{
+			handler = (StateHandler) sleepingHandlers.get(sleepingHandlers.size() -1);
+			sleepingHandlers.remove(sleepingHandlers.size() -1);
+			runningHandlers.add(handler);
+			handler.cleanup();
+		}
         return handler;
     }
 
@@ -155,9 +137,14 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
 
     private synchronized void setBreakPoint(BreakPoint breakpoint) {
         if (breakpoint == null) breakpoint = dummy;
-        Iterator i = statepool.values().iterator();
-        while (i.hasNext()) {
-            ((StateHandler) i.next()).setBreakPoint(breakpoint);
-        }
+
+		for(int i = 0 ; i < runningHandlers.size(); i++)
+		{
+			((StateHandler) runningHandlers.get(i)).setBreakPoint(breakpoint.getForNextThread());
+		}
+		for(int i = 0 ; i < sleepingHandlers.size(); i++)
+		{
+			((StateHandler) sleepingHandlers.get(i)).setBreakPoint(breakpoint.getForNextThread());
+		}
     }
 }
