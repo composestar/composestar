@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.6 2006/03/10 12:42:08 pascal_durr Exp $
+ * $Id: DotNETMaster.java,v 1.7 2006/03/10 14:44:14 pascal_durr Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -67,6 +67,7 @@ public class DotNETMaster extends Master  {
 	    resources.CustomFilters = new Properties();
 
 	    try {
+	    	Debug.out(Debug.MODE_DEBUG,"Master","Reading build configuration from: "+configurationFile);
             SAXParserFactory saxParserFactory =
                 SAXParserFactory.newInstance();
             SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -76,9 +77,7 @@ public class DotNETMaster extends Master  {
             parser.setContentHandler( handler );
             parser.parse( new InputSource( configurationFile ));
             
-            Configuration config = Configuration.instance();
-            
-            System.out.println("Done... "+config.pathSettings.getPath("Temp"));
+            //System.out.println("Done... "+config.pathSettings.getPath("Base"));
             //System.exit(-1);
         }
 	    catch( Exception e )

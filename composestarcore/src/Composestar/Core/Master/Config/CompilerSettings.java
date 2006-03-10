@@ -30,7 +30,7 @@ public class CompilerSettings implements Serializable{
 	}
 	
 	public void addCompilerConverter(CompilerConverter converter) {
-		compilerActions.put(converter.getName(),converter);
+		compilerConverters.put(converter.getName(),converter);
 	}
 	
 	public CompilerConverter getCompilerConverter(String key) {
@@ -53,6 +53,7 @@ public class CompilerSettings implements Serializable{
 		try {
 			Class myclass = Class.forName(this.getProperty("implementedBy"));
 			LangCompiler comp = (LangCompiler)myclass.newInstance();
+			//LangCompiler comp = new Composestar.DotNET.
 			return comp;
 		}
 		catch(Exception e) {

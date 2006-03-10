@@ -92,6 +92,9 @@ public class ILCodeParser extends TransformerBase {
         } catch( AssemblerException e ){
             throw new ModifierException( e.getMessage() + " (Assembly: '" + getAssemblyName() + "', IL: '" + ilName + "')");
         }
+        
+        File file = new File(ilName+".il");
+        file.delete();
 
         // open dissassembled file
         BufferedReader in = null;

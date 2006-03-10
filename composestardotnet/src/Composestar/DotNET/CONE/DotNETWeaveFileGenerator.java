@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.3 2006/03/10 12:42:08 pascal_durr Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.4 2006/03/10 14:57:52 pascal_durr Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -432,11 +432,11 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
     	
       Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
       
-	  application = Configuration.instance().getProperty("ApplicationStart");
+	  application = Configuration.instance().projects.getProperty("Executable");
       
 	  try
 	  {
-	  	debugLevel = Integer.parseInt(Configuration.instance().getProperty("runDebugLevel"));
+	  	debugLevel = Integer.parseInt(Configuration.instance().projects.getProperty("runDebugLevel"));
 	  }
 	  catch (NumberFormatException e)
 	  {
@@ -464,7 +464,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
         throw new ModuleException("Unable to create weave specification file '" + destination + "'.","CONE_IS");
       }
       catch (Exception e) {
-        throw new ModuleException("Unhandled exception: " + e.getClass().toString() + ";"+ e.getMessage(),"CONE_IS");
+        throw new ModuleException("Unhandled exception: " + e.getClass().toString() + " : "+ e.getMessage(),"CONE_IS");
       }     
     }
     
