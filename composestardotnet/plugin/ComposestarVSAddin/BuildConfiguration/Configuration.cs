@@ -501,6 +501,7 @@ namespace BuildConfiguration
 			if (startProject != null)
 			{
 				this.OutputPath =Path.Combine(Path.GetDirectoryName(startProject.FileName), "bin");	
+				this.Executable = getProperty(startProject.Properties, "OutputFileName").ToString();
 			}
 			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1);
 			_tempFolder = tempfolder;
