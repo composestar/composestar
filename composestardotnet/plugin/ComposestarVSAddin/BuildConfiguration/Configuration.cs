@@ -434,9 +434,7 @@ namespace BuildConfiguration
 									if (reader.NodeType == XmlNodeType.Element) 
 									{
 										if (reader.Name.Equals("RequiredFile"))
-										{
-											p.RequiredFiles.Add(reader.GetAttribute("fileName") ); 
-										}
+											p.RequiredFiles.Add(reader.GetAttribute("fileName") );
 									}
 								}
 							}

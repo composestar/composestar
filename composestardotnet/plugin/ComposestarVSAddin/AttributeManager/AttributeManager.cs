@@ -47,7 +47,7 @@ namespace ComposestarVSAddin
 
 		public override void run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action) 
 		{
-			String outFolder = BuildConfigurationManager.Instance.Settings.Paths["Temp"];   
+			String outFolder = BuildConfigurationManager.Instance.Settings.Paths["Base"];   
 			writer = new XmlTextWriter(System.IO.Path.Combine(outFolder,"attributes.xml"), null);
 			writer.WriteStartDocument();
 			writer.Formatting = Formatting.Indented;

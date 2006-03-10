@@ -115,7 +115,7 @@ namespace ComposestarVSAddin
 			
 
 				System.CodeDom.Compiler.CompilerResults compilerResults = null;
-				string dllPath = generator.generateDummies(BuildConfigurationManager.Instance.Settings.Paths["Temp"]  , referencedAssemblies, out compilerResults);
+				string dllPath = generator.generateDummies(BuildConfigurationManager.Instance.Settings.Paths["Base"]  , referencedAssemblies, out compilerResults);
 		
 				if ((dllPath != null) && (compilerResults != null) && (compilerResults.Errors.Count > 0) )
 				{

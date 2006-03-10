@@ -79,12 +79,12 @@ namespace ComposestarVSAddin
 		/// </summary>
 		public SupportedLanguages()
 		{
-			// TODO: Maybe this can be done by a addin config file?
+			// TODO: Should read this from the PlatformConfigurations.xml file
 			mDefinedLanguages = new ListDictionary();
 			mDefinedLanguages.Add("CPS", new Language("CPS", "ConcernSources", ".cps", false));
-			mDefinedLanguages.Add("CS", new Language("CS", "CSSources", ".cs", true));
-			mDefinedLanguages.Add("VB", new Language("VB", "VBSources", ".vb", true));
-			mDefinedLanguages.Add("JS", new Language("JS", "JSSources", ".jsl;.java", true));
+			mDefinedLanguages.Add("CSharp", new Language("CSharp", "CSSources", ".cs", true));
+			mDefinedLanguages.Add("VBNet", new Language("VBNet", "VBSources", ".vb", true));
+			mDefinedLanguages.Add("JSharp", new Language("JSharp", "JSSources", ".jsl;.java", true));
 			//mDefinedLanguages.Add("PL", new Language("JS", "PerlSources", ".pl", true));
 			//mDefinedLanguages.Add("JAVA", new Language("JAVA", "JSSources", ".java", true));
 		}

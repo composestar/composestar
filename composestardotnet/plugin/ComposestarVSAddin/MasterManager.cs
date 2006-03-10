@@ -46,7 +46,7 @@ namespace ComposestarVSAddin
 			string mainClass = BuildConfigurationManager.Instance.DotNetPlatform.MainClass;  
 			string jvmOptions = BuildConfigurationManager.Instance.DotNetPlatform.Options;  
 
-			string projectIni = BuildConfigurationManager.Instance.Settings.Paths["Temp"];
+			string projectIni = BuildConfigurationManager.Instance.Settings.Paths["Base"];
 			projectIni = projectIni.Replace("\"", "");
 			projectIni = "\"" + projectIni + "BuildConfiguration.xml\"";
 

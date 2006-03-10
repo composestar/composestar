@@ -35,7 +35,7 @@ namespace ComposestarVSAddin
 			// adding embedded sources to project
 			// get embedded source folder from inifile
 			
-			string tempfolder = BuildConfigurationManager.Instance.Settings.Paths["Temp"];
+			string tempfolder = BuildConfigurationManager.Instance.Settings.Paths["Base"];
 			tempfolder = tempfolder.Replace("/","\\");
 			string embFolder = BuildConfigurationManager.Instance.Settings.Paths["EmbeddedSources"];
 			// remove \ character
@@ -78,7 +78,7 @@ namespace ComposestarVSAddin
 
 		public void removeEmbeddedSources()
 		{
-			string tempfolder = BuildConfigurationManager.Instance.Settings.Paths["Temp"];
+			string tempfolder = BuildConfigurationManager.Instance.Settings.Paths["Base"];
 			tempfolder = tempfolder.Replace("/","\\");
 			string embFolder = BuildConfigurationManager.Instance.Settings.Paths["EmbeddedSources"];
 			// remove \ character
