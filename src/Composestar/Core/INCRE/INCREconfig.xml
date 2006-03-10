@@ -224,12 +224,12 @@
 	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" phase="two" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>	
 	</module>
-	<module name="RECOMA" fulltype="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager" input="java.lang.String" phase="two" enabled="true" incremental="true" summary="Compiling all sources...">
+	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="java.lang.String" phase="two" enabled="true" incremental="false" summary="Compiling all sources...">
 		<dependencies>
 			<dependency type="FILE" name="source"></dependency>
 			<dependency type="FILE" name="xternals">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.externalSources"></node>
+					<node type="METHOD" nodevalue="Composestar.Core.TYM.SrcCompiler.RealSourceManager.externalSources"></node>
 				</path>
 			</dependency>
 			<dependency type="FILE" name="CompileLibsDependencies">
@@ -239,7 +239,7 @@
 			</dependency>
 			<dependency type="OBJECT" name="fullsignatures">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.SrcCompiler.DotNETRealSourceManager.fullSignatures"></node>
+					<node type="METHOD" nodevalue="Composestar.Core.TYM.SrcCompiler.RealSourceManager.fullSignatures"></node>
 				</path>
 			</dependency>
 		</dependencies>
