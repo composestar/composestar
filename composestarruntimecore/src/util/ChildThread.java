@@ -28,7 +28,13 @@ public class ChildThread extends Thread
 		else
 		{
 			sleeping = false;
+			reanimate();
 		}
+	}
+
+	public synchronized void reanimate()
+	{
+		notify();
 	}
 
 	public void setRunnable(ChildRunable run)
@@ -54,7 +60,7 @@ public class ChildThread extends Thread
 			{
 				try
 				{
-					Thread.yield();
+					wait();
 				}
 				catch(Exception e)
 				{
