@@ -109,7 +109,7 @@ namespace ComposestarVSAddin
 									break;
 							}
 						}
-						Debug.Instance.Log(DebugModes.Information,"DummyManager","Startup object filename not found, gambling on " + this.ExecSource);
+						Debug.Instance.Log(DebugModes.Information,"DummyManager","Startup object filename not found, guessing '" + this.ExecSource + "'.");
 					}
 				}
 			
