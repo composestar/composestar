@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.5 2006/03/10 13:35:28 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.6 2006/03/10 14:57:52 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.5 2006/03/10 13:35:28 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.6 2006/03/10 14:57:52 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -49,7 +49,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.5 $";
+	public static final String version = "$Revision: 1.6 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -132,7 +132,7 @@ public class ILICIT implements WEAVER {
       String verifystr = "";
 	  Module m = config.moduleSettings.getModule("ILICIT");
 	  if(m!=null){
-		  verifystr = m.getProperty("verify");
+		  verifystr = m.getProperty("verifyAssemblies");
 		  if ("True".equalsIgnoreCase(verifystr)) {
 				verify = true;
 		  }
