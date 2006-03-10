@@ -1,8 +1,9 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BuiltAssemblies {
+public class BuiltAssemblies implements Serializable{
 
 	private ArrayList builtassemblies;
 	

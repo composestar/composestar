@@ -1,8 +1,9 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class ModuleSettings {
+public class ModuleSettings implements Serializable{
 
 	private HashMap modules;
 	
@@ -18,6 +19,5 @@ public class ModuleSettings {
 	
 	public void addModule(String key, Module m) {
 		modules.put(key,m);
-		System.out.println("ModuleSetting "+key+" added to moduleSettings");
 	}
 }

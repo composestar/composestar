@@ -1,10 +1,16 @@
 package Composestar.Core.Master.Config;
 
-public class CompilerConverter {
+import java.io.Serializable;
+
+public class CompilerConverter implements Serializable{
 
 	private String name;
 	private String expression;
 	private String replaceBy;
+	
+	public CompilerConverter() {
+		
+	}
 	
 	public String getName() {
 		return name;

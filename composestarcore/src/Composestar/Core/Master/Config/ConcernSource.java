@@ -1,6 +1,8 @@
 package Composestar.Core.Master.Config;
 
-public class ConcernSource {
+import java.io.Serializable;
+
+public class ConcernSource implements Serializable{
 	
 	String fileName;
 	
@@ -16,3 +18,4 @@ public class ConcernSource {
 		fileName = file;
 	}
 }
+

@@ -1,8 +1,9 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CustomFilters {
+public class CustomFilters implements Serializable{
 
 	private ArrayList filters;
 	

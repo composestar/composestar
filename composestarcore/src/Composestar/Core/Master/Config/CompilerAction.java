@@ -1,6 +1,8 @@
 package Composestar.Core.Master.Config;
 
-public class CompilerAction {
+import java.io.Serializable;
+
+public class CompilerAction implements Serializable{
 
 	private String name;
 	private String argument;

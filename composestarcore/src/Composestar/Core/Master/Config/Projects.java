@@ -1,16 +1,21 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 
-public class Projects {
+public class Projects implements Serializable{
 
 	private Properties properties;
 	private ArrayList projects;
 	private ArrayList concernSources;
 	
 	private HashMap projectsByLanguage;
+	private ArrayList dependencies;
+	private ArrayList compiledDummies;
 	
 	public Projects() {
 		properties = new Properties();
@@ -21,7 +26,6 @@ public class Projects {
 	
 	public void addConcernSource(ConcernSource concernsource) {
 		concernSources.add(concernsource);
-		//System.out.println("ConcernSource "+concernsource.getFileName()+" added to projects");
 	}
 	
 	public ArrayList getConcernSources() {
@@ -30,8 +34,7 @@ public class Projects {
 	
 	public void addProject(Project proj) {
 		projects.add(proj);
-		//System.out.println("Project "+proj.getProperty("name")+" added to projects");
-	
+			
 		String language = proj.getProperty("language");
 		if(projectsByLanguage.containsKey(language)) {
 			ArrayList projects = (ArrayList)projectsByLanguage.get(language);
@@ -57,7 +60,6 @@ public class Projects {
 	
 	public void addProperty(String key, String value) {
 		properties.setProperty(key, value);
-		System.out.println("Projects property "+key+" added with value "+value);
 	}
 	
 	public String getProperty(String key) {
@@ -65,4 +67,32 @@ public class Projects {
 			return properties.getProperty(key);
 		return null;
 	}
+	
+	public ArrayList getDependencies() {
+		Iterator projIt = projects.iterator();
+		while( projIt.hasNext() ) {
+			Project p = (Project)projIt.next();
+			ArrayList projectdeps = p.getDependencies();
+			Iterator deps = projectdeps.iterator();
+			while( deps.hasNext() ) {
+				String dependency = (String)deps.next();
+				if(!dependencies.contains(dependency)) {
+					dependencies.add(dependency);
+				}
+			}
+		}
+		return dependencies;
+	}
+	
+	public ArrayList getCompiledDummies() {
+		Iterator projIt = projects.iterator();
+		while( projIt.hasNext() ) {
+			Project p = (Project)projIt.next();
+			if(p.getCompiledDummies()!= null) {
+				compiledDummies.add(p.getCompiledDummies());
+			}
+		}
+		return compiledDummies;
+	}
+	
 }

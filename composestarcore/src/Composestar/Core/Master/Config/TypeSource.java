@@ -1,6 +1,8 @@
 package Composestar.Core.Master.Config;
 
-public class TypeSource {
+import java.io.Serializable;
+
+public class TypeSource implements Serializable{
 	
 	private String name;
 	private String fileName;

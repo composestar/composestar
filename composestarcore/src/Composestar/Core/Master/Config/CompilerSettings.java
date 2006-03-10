@@ -1,9 +1,10 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class CompilerSettings {
+public class CompilerSettings implements Serializable{
 
 	private Properties properties;
 	private ArrayList compilerActions;
@@ -33,7 +34,6 @@ public class CompilerSettings {
 	
 	public void addProperty(String key, String value) {
 		properties.setProperty(key, value);
-		System.out.println("CompilerSettings property "+key+" added with value "+value);
 	}
 	
 	public String getProperty(String key) {
