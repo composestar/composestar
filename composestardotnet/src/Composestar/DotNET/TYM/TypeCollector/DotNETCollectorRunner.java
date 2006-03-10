@@ -50,7 +50,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
      */
     public void run(CommonResources resources) throws ModuleException {
     	
-    	String tempFolder = Configuration.instance().pathSettings.getPath("Temp"); 
+    	String tempFolder = Configuration.instance().pathSettings.getPath("Base"); 
     	try{
     		SAXParserFactory saxParserFactory =
             SAXParserFactory.newInstance();

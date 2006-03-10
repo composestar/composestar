@@ -57,7 +57,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
     public void run(CommonResources resources) throws ModuleException {
     	String assemblyList = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies"); 
 		ArrayList dependencyList = Configuration.instance().projects.getDependencies();  
-		String tempFolder = Configuration.instance().pathSettings.getPath("Temp");
+		String tempFolder = Configuration.instance().pathSettings.getPath("Base");
 		
 		
 		if( assemblyList == null )

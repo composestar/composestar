@@ -69,7 +69,7 @@ public class Repository {
 		actions.put("meta", new MetaFilterAction());
 				
 		CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
-		String tempFolder = Configuration.instance().pathSettings.getPath("Temp");
+		String tempFolder = Configuration.instance().pathSettings.getPath("Base");
 		String secretconfigfile = tempFolder + SECRET_CONFIG;
 		if( !(new File(secretconfigfile).exists()))
 		{

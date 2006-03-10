@@ -69,7 +69,7 @@ public class FILTHServiceImpl extends FILTHService{
 		String cssFile = "";
 		try
 		{
-			String basedir = Configuration.instance().pathSettings.getPath("Temp");
+			String basedir = Configuration.instance().pathSettings.getPath("Base");
 			File file = new File(basedir+"analyses/");
 			if(!file.exists())
 			{
@@ -80,7 +80,7 @@ public class FILTHServiceImpl extends FILTHService{
 				//System.out.println("Found and Dir: "+file.getAbsolutePath());
 				filename = file.getAbsolutePath()+"\\FILTH_"+c.getName()+".html";
 				FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
-				cssFile = "file://"+Configuration.instance().pathSettings.getPath("Temp") + "SECRET.css";
+				cssFile = "file://"+Configuration.instance().pathSettings.getPath("base") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
 				{
 					cssFile = "file://"+Configuration.instance().pathSettings.getPath("Composestar") + "SECRET.css";

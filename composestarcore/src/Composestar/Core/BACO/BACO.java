@@ -72,7 +72,7 @@ public class BACO implements CTCommonModule
         	}
         }
         
-        String examplepath = config.pathSettings.getPath("Temp");
+        String examplepath = config.pathSettings.getPath("Base");
         // Repsotory.xml: 
         filesToCopy.add(this.processString(examplepath+"repository.xml"));
         

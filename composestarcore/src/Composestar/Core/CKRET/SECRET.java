@@ -97,7 +97,7 @@ public class SECRET implements CTCommonModule {
 		
 		try
 		{
-			String basedir =  Configuration.instance().pathSettings.getPath("Temp");
+			String basedir =  Configuration.instance().pathSettings.getPath("Base");
 			File file = new File(basedir+"analyses/");
 			if(!file.exists())
 			{
@@ -107,7 +107,7 @@ public class SECRET implements CTCommonModule {
 			{
 				reportFile = file.getAbsolutePath() + "\\SECRET.html";
 
-				String cssFile = "file://"+Configuration.instance().pathSettings.getPath("Temp") + "SECRET.css";
+				String cssFile = "file://"+Configuration.instance().pathSettings.getPath("Base") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
 				{
 					cssFile = "file://"+Configuration.instance().pathSettings.getPath("Composestar") + "SECRET.css";

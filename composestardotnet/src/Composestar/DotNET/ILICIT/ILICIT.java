@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.4 2006/03/10 12:42:08 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.5 2006/03/10 13:35:28 dspenkel Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.4 2006/03/10 12:42:08 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.5 2006/03/10 13:35:28 dspenkel Exp $
  */
 
 import java.io.BufferedWriter;
@@ -49,14 +49,14 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.4 $";
+	public static final String version = "$Revision: 1.5 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
      PrintWriter out = null; 
      String binPath = Configuration.instance().getProperty("outputPath");
 	 //String tempPath = resources.ProjectConfiguration.getProperty("TempFolder");
-     String tempPath = config.pathSettings.getPath("Temp");
+     String tempPath = config.pathSettings.getPath("Base");
 	 //String buildPath = resources.ProjectConfiguration.getProperty("BuildPath");
      String buildPath = config.projects.getProperty("outputPath");
 	 String weavePath = buildPath + "Weaver\\";

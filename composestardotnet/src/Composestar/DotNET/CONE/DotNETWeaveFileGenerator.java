@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.2 2006/03/07 11:16:09 mivano Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.3 2006/03/10 12:42:08 pascal_durr Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -428,7 +428,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
      */
     public void run(CommonResources resources) throws ModuleException 
 	{
-    	File destination = new File(Configuration.instance().pathSettings.getPath("Temp") + "weavespec.xml");
+    	File destination = new File(Configuration.instance().pathSettings.getPath("Base") + "weavespec.xml");
     	
       Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
       

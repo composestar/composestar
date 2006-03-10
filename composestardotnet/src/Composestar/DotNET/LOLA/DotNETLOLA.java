@@ -71,7 +71,7 @@ public class DotNETLOLA extends LOLA
   
   public String initLanguageModel() throws ModuleException
   {
-	String generatedPredicatesFilename = FileUtils.fixFilename(Configuration.instance().pathSettings.getPath("Temp") + "langmap.pro");
+	String generatedPredicatesFilename = FileUtils.fixFilename(Configuration.instance().pathSettings.getPath("Base") + "langmap.pro");
     try
     {
       langModel.createMetaModel();

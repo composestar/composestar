@@ -36,7 +36,7 @@ public class AttributeCollector extends DefaultHandler {
      * @roseuid 40AB48FB0299
      */
     public void run(CommonResources resources) throws ModuleException {
-		String tempFolder = Configuration.instance().pathSettings.getPath("Temp");
+		String tempFolder = Configuration.instance().pathSettings.getPath("Base");
 		try {
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
