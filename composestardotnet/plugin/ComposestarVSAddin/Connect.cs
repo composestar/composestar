@@ -57,12 +57,9 @@ namespace ComposestarVSAddin
 
 		#region Private Variables
 		private const string RegistryPath = "Software\\Microsoft\\VisualStudio\\7.1\\Addins\\ComposestarVSAddin.Connect";
-              
-        private bool IsBuilt = false;
                                      
 		private DummyManager dummymanager;
 		private MasterManager mastermanager;
-		private AssemblyManager assemblymanager;
 		private AttributeManager attributemanager;
 		private EmbeddedSourceManager embsrcmanager;
 	
@@ -301,7 +298,7 @@ namespace ComposestarVSAddin
 			else
 			{
 				// Run and debug are only enabled when the project has been built.
-				if (m_referenceBuildCommand.IsAvailable && IsBuilt && (!m_referenceCancelBuildCommand.IsAvailable)) 
+				if (m_referenceBuildCommand.IsAvailable && this.buildSuccess && (!m_referenceCancelBuildCommand.IsAvailable)) 
 					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
 				else 
 					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported & ~(vsCommandStatus)vsCommandStatus.vsCommandStatusEnabled;
@@ -948,8 +945,7 @@ namespace ComposestarVSAddin
 		public void OnBuildBegin(vsBuildScope scope, vsBuildAction action) 
 		{
 			this.buildSuccess = false;
-			IsBuilt = false;
-
+		
 			// Setup the statusbar
 			Debug.Instance.ShowProgress("Building with Compose*", 0);
 			Debug.Instance.ShowAnimation(vsStatusAnimation.vsStatusAnimationBuild);
@@ -1086,18 +1082,8 @@ namespace ComposestarVSAddin
 							}
 						}
 
-						if (dummiesOK && mastermanager.CompletedSuccessfully()) 
-						{
-							// Call the assembly manager to copy all the required dll's to their final location
-							Debug.Instance.ShowProgress("Copying assemblies", 90);
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Copying assemblies...");
-
-							assemblymanager = new AssemblyManager();
-							assemblymanager.run(applicationObject, scope, action);
-
-							this.buildSuccess = true;
-						}
-
+						this.buildSuccess = dummiesOK && mastermanager.CompletedSuccessfully();
+					
 						if (this.buildSuccess)
 						{
 							long EndTime; 
@@ -1123,7 +1109,6 @@ namespace ComposestarVSAddin
 							Debug.Instance.Log("");
 							Debug.Instance.Log("");
 							this.buildSuccess = true;
-							IsBuilt = true;
 						}
 						else 
 						{

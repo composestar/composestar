@@ -278,10 +278,11 @@ namespace BuildConfiguration
 
 					// TypeSources
 					writer.WriteStartElement("TypeSources");
-					foreach (String s in p.TypeSources)
+					foreach (TypeSource ts in p.TypeSources)
 					{
-						writer.WriteStartElement("TypeSources");
-						writer.WriteAttributeString("fileName", FormatPath(s));
+						writer.WriteStartElement("TypeSource");
+						writer.WriteAttributeString("name", ts.Name);
+						writer.WriteAttributeString("fileName", FormatPath(ts.FileName));
 						writer.WriteEndElement(); 
 					}
 
