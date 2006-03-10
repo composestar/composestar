@@ -12,9 +12,9 @@ import Composestar.Core.Master.Config.ConcernSource;
 public class ConcernSourcesHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
-	ProjectHandler returnHandler;
+	ProjectConfigurationHandler returnHandler;
 		
-	public ConcernSourcesHandler(XMLReader parser, ProjectHandler documentHandler)
+	public ConcernSourcesHandler(XMLReader parser, ProjectConfigurationHandler documentHandler)
 	{
 		this.parser = parser;
 		this.returnHandler = documentHandler;

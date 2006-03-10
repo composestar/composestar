@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.5 2006/03/08 10:33:35 mivano Exp $
+ * $Id: DotNETMaster.java,v 1.6 2006/03/10 12:42:08 pascal_durr Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -43,7 +43,6 @@ public class DotNETMaster extends Master  {
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
 	public static String phase = "";
 
-    private Iterator concern_iterator;
     private CommonResources resources;
     private String configfile;
 
@@ -99,7 +98,7 @@ public class DotNETMaster extends Master  {
 
 		//just added this for testing
 	    //fixme:we need to iterate over all the cps files specified in the configuration
-	    resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
+	    //resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
 	}
 
     /**

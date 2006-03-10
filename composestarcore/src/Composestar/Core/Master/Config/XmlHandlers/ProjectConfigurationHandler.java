@@ -50,6 +50,21 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 			ProjectHandler prjhandler = new ProjectHandler(parser,this);
 			parser.setContentHandler( prjhandler );
 		}
+		if("ConcernSources".equals(raw_name))
+		{// in <ConcernSources>	
+			//System.out.println("<concernsources>");	
+			//look further
+			ConcernSourcesHandler concernsourceshandler = new ConcernSourcesHandler(parser,this);
+			parser.setContentHandler( concernsourceshandler );
+		}
+
+		if("CustomFilters".equals(raw_name))
+		{
+			// in <RequiredFiles>
+			// look further	
+			CustomFiltersHandler fileshandler = new CustomFiltersHandler(parser,this);
+			parser.setContentHandler( fileshandler );
+		}
 	}
 
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
