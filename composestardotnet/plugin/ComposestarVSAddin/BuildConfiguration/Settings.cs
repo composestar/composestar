@@ -101,7 +101,18 @@ namespace BuildConfiguration
 				return;
 			
 			if (_modules.ContainsKey(ms.Name) )
-				_modules[ms.Name] = ms;
+			{
+				ModuleSetting msExisting = (ModuleSetting)_modules[ms.Name];
+				// Update or add the elements
+				foreach (String s in ms.Elements.AllKeys  )
+				{
+					if (msExisting.Elements[s] == null )
+						msExisting.Elements.Add(s, ms.Elements[s] );
+					else
+						msExisting.Elements[s] = ms.Elements[s];
+					
+				}
+			}
 			else
 				_modules.Add(ms.Name, ms);
 			

@@ -78,18 +78,7 @@ namespace BuildConfiguration
 				_basePath = value;
 			}
 		}
-		private bool _verify = true;
-		public bool Verify
-		{
-			get
-			{
-				return _verify;
-			}
-			set
-			{
-				_verify = value;
-			}
-		}
+	
 
 		private System.Collections.ArrayList _sources = new System.Collections.ArrayList ();
 		public System.Collections.ArrayList Sources

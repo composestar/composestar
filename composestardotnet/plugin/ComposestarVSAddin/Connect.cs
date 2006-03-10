@@ -170,7 +170,6 @@ namespace ComposestarVSAddin
 			addInInstance = (AddIn)addInInst;
 		
 			Debug.Instance.Init(DebugModes.Information, applicationObject);
-            
 			if (connectMode == Extensibility.ext_ConnectMode.ext_cm_Startup || connectMode == Extensibility.ext_ConnectMode.ext_cm_AfterStartup) 
 			{
 				try 
@@ -186,6 +185,7 @@ namespace ComposestarVSAddin
 				}
 				try 
 				{
+					
 					// get references to Build Solution and Cancel Build commands which are 
 					// used to synchronize enabled/disabled state
 					EnvDTE.Commands cmds = applicationObject.Commands;
@@ -217,8 +217,9 @@ namespace ComposestarVSAddin
 					AddCommand((AddIn)addInInst, ADDIN_DEBUGRUN, m_captionDebugRun, m_toolTipDebugRun, true, BITMAP_ID_DEBUGRUN, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_CLEAN, m_captionClean, m_toolTipClean, true, BITMAP_ID_CLEAN, false, false);
 					AddCommand((AddIn)addInInst, ADDIN_SETTINGS, m_captionSettings, m_toolTipSettings, true, BITMAP_ID_SETTINGS, true, true);
-	
+						
 					UpdateAddinControlStatus();
+					
 				}
 				catch (Exception e) 
 				{
@@ -250,6 +251,7 @@ namespace ComposestarVSAddin
 		/// <seealso class='Exec' />
 		public void QueryStatus(string commandName, EnvDTE.vsCommandStatusTextWanted neededText, ref EnvDTE.vsCommandStatus status, ref object commandText)
 		{
+
 			if (neededText == EnvDTE.vsCommandStatusTextWanted.vsCommandStatusTextWantedNone) 
 			{
 				if (commandName == m_commandNameBuild || commandName == m_commandNameRun || commandName == m_commandNameDebugRun || commandName == m_commandNameSettings || commandName == m_commandNameClean) 
@@ -383,24 +385,13 @@ namespace ComposestarVSAddin
 			{
 				Debug.Instance.Log(DebugModes.Information, "AddIn", "Unloading Compose* Add-In.");   
 
-				// Disconnect event handler.
-				taskListEvents.TaskNavigated -= new 
-					_dispTaskListEvents_TaskNavigatedEventHandler(this.TaskNavigated);
-				taskListEvents = null;
-
-				m_referenceBuildCommand = null;
-				m_referenceCancelBuildCommand = null;
-
-				// Remove the buttons
-				this.DeleteCommand( m_commandNameBuild );
-				this.DeleteCommand( m_commandNameRun );
-				this.DeleteCommand( m_commandNameDebugRun );
-				this.DeleteCommand( m_commandNameSettings ); 
-				this.DeleteCommand( m_commandNameClean ); 
+				OnBeginShutdown(ref custom);
 
 				Debug.Instance.Log(DebugModes.Information, "AddIn", "Unloaded the Compose* Add-In.");   
 				
 				this.addInInstance = null;
+				this.applicationObject = null;
+			
 			}
 		}
 
@@ -439,6 +430,23 @@ namespace ComposestarVSAddin
 		/// <seealso class='IDTExtensibility2' />
 		public void OnBeginShutdown(ref System.Array custom)
 		{
+			// Disconnect event handler.
+			taskListEvents.TaskNavigated -= new _dispTaskListEvents_TaskNavigatedEventHandler(this.TaskNavigated);
+			taskListEvents = null;
+
+			m_referenceBuildCommand = null;
+			m_referenceCancelBuildCommand = null;
+
+			// Remove the buttons
+			this.DeleteCommand( m_commandNameBuild );
+			this.DeleteCommand( m_commandNameRun );
+			this.DeleteCommand( m_commandNameDebugRun );
+			this.DeleteCommand( m_commandNameSettings ); 
+			this.DeleteCommand( m_commandNameClean ); 
+
+			this.DeleteMenu();
+			this.DeleteToolBar(); 
+
 		}
 
 		#endregion
@@ -681,6 +689,29 @@ namespace ComposestarVSAddin
 			this.LoadToolBarLayout(); 
 		}
 
+		private void DeleteToolBar() 
+		{
+			
+			// checks if toolbar exists
+			foreach (CommandBar bar in this.applicationObject.CommandBars) 
+			{
+				if (bar.Type == MsoBarType.msoBarTypeNormal) 
+				{
+					if (bar.Name.Equals(commandBarValue)) 
+					{
+						m_Bar = bar;
+						break;
+					}
+				}
+			}
+			// if not found, creates it
+			if (m_Bar != null) 
+			{
+				m_Bar.Delete(); 				
+			}	
+			
+		}
+
 		/// <summary>
 		///   Creates menu at the end of the menu bar.
 		/// </summary>
@@ -698,6 +729,16 @@ namespace ComposestarVSAddin
 			}
 		}
 
+		private void DeleteMenu() 
+		{
+			// checks if menu exists
+			m_Menu = applicationObject.CommandBars.ActiveMenuBar.FindControl(MsoControlType.msoControlPopup, 1, CommandBarName, false, false);
+			// if not found, appends it to the menu bar
+			if (m_Menu != null) 
+			{
+				m_Menu.Delete(System.Reflection.Missing.Value); 
+			}
+		}
 	
 		/// <summary>
 		///   Adds a command.

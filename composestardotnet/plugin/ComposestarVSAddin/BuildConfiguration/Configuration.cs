@@ -250,8 +250,7 @@ namespace BuildConfiguration
 					writer.WriteAttributeString("buildPath", FormatPath(p.BuildPath)  );
 					writer.WriteAttributeString("basePath", FormatPath(p.BasePath)  );
 					writer.WriteAttributeString("outputPath", FormatPath(p.OutputPath)  );
-					writer.WriteAttributeString("verify", p.Verify.ToString()   );
-
+				
 					// Sources
 					writer.WriteStartElement("Sources");
 					foreach (String s in p.Sources)
@@ -556,7 +555,6 @@ namespace BuildConfiguration
 					BuildConfiguration.Project p = new Project();
 
 					p.Name = project.Name;
-					p.Verify = true;
 					p.BasePath = Path.GetDirectoryName(project.FileName);
 
 					if( getProperty(project.Properties, "OutputType") != null )
@@ -579,12 +577,6 @@ namespace BuildConfiguration
 					p.BuildPath = tempfolder + "obj\\";
 					StringCollection dependencies = ComposestarVSAddin.DependencyHarvester.Collect(project, false);
 					p.Dependencies.AddRange(dependencies) ;
-					
-//					if (startupObjects.Count > 0) 
-//					{
-//						//startup = startupObjects[0].ToString();// NOT SUPPORTED YET! String.Join(",", (string[])(startupObjects.ToArray(typeof(string))));
-//						p.ApplicationStart = string.Join(",", (string[])startupObjects.ToArray(typeof(string)));
-//					}
 
 					Projects.Add(p); 
 
@@ -645,6 +637,15 @@ namespace BuildConfiguration
 				IncreModule.Name = "INCRE";
 				IncreModule.Elements.Add("enabled", INCRE_ENABLED)  ;
 				Settings.SetModule(IncreModule);
+			}
+
+			String VerifyAssemblies = ini.ReadString("Common", "VerifyAssemblies", "") ;
+			if (VerifyAssemblies.Length > 0)
+			{
+				ModuleSetting ilicitModule = new ModuleSetting ();
+				ilicitModule.Name = "ILICIT";
+				ilicitModule.Elements.Add("verifyAssemblies", VerifyAssemblies)  ;
+				Settings.SetModule(ilicitModule);
 			}
 				
 			// Debugger

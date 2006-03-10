@@ -21,7 +21,7 @@ namespace ComposestarVSAddin
 		
 		private string ProjectStartupObject;
 
-		private StringCollection TypeSources;
+		private ArrayList TypeSources;
 	
 		private bool mSuccess = false;
 
@@ -34,7 +34,7 @@ namespace ComposestarVSAddin
 		{
 			languages = new SupportedLanguages();
 
-			TypeSources = new StringCollection();
+			TypeSources = new ArrayList();
 
 		}
 
@@ -169,10 +169,8 @@ namespace ComposestarVSAddin
 
 				BuildConfiguration.Project p = BuildConfigurationManager.Instance.GetProjectByName(project.Name);
 
-				for (int typeCounter=0; typeCounter < this.TypeSources.Count; typeCounter++)
-				{
-					p.TypeSources.Add(new TypeSource(this.TypeSources[typeCounter],this.TypeSources[typeCounter]));
-				}
+				p.TypeSources.AddRange(this.TypeSources);  
+			
 			}
 			mSuccess = true;
 		}
@@ -292,7 +290,7 @@ namespace ComposestarVSAddin
 			string fullname = ce.FullName;
 			string filename = ce.ProjectItem.get_FileNames(0);
 
-			this.TypeSources.Add(fullname + "@" + filename);
+			this.TypeSources.Add(new TypeSource(fullname, filename));
 		}
 
 	}
