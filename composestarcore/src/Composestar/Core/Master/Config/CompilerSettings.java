@@ -1,35 +1,41 @@
 package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
+
+import Composestar.Core.COMP.LangCompiler;
 
 public class CompilerSettings implements Serializable{
 
 	private Properties properties;
-	private ArrayList compilerActions;
-	private ArrayList compilerConverters;
-	
+	private HashMap compilerActions;
+	private HashMap compilerConverters;
+		
 	public CompilerSettings() {
 			properties = new Properties();
-			compilerActions = new ArrayList();
-			compilerConverters = new ArrayList();
+			compilerActions = new HashMap();
+			compilerConverters = new HashMap();
 	}
 	
 	public void addCompilerAction(CompilerAction action) {
-		compilerActions.add(action);
+		compilerActions.put(action.getName(),action);
 	}
 	
-	public ArrayList getCompilerActions() {
-		return compilerActions;
+	public CompilerAction getCompilerAction(String key) {
+		if(compilerActions.containsKey(key))
+			return (CompilerAction)compilerActions.get(key);
+		return null;
 	}
 	
-	public void addCompilerConverter(CompilerConverter action) {
-		compilerConverters.add(action);
+	public void addCompilerConverter(CompilerConverter converter) {
+		compilerActions.put(converter.getName(),converter);
 	}
 	
-	public ArrayList getCompilerConverters() {
-		return compilerConverters;
+	public CompilerConverter getCompilerConverter(String key) {
+		if(compilerConverters.containsKey(key))
+			return (CompilerConverter)compilerConverters.get(key);
+		return null;
 	}
 	
 	public void addProperty(String key, String value) {
@@ -39,6 +45,11 @@ public class CompilerSettings implements Serializable{
 	public String getProperty(String key) {
 		if(properties.containsKey(key))
 			return properties.getProperty(key);
+		return null;
+	}
+	
+	public LangCompiler getCompiler() {
+		//TODO: return implementing compiler, use reflection
 		return null;
 	}
 	
