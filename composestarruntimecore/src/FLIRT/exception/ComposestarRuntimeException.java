@@ -1,20 +1,22 @@
 package Composestar.RuntimeCore.FLIRT.Exception;
 
 /**
- * General Exception for the composestar runtime.
+ * General Exception class for Composestar Runtime.
  * 
- * J# (based on Java 1.2) does not support nested exceptions.
- * .NET innerException is not supported by Java.
+ * J# does not support nested exceptions on type throwable.
  * 
- * To keep Composestar.RuntimeCore buildable by J#, we introduce
- * nested exceptions as implemented in Java 1.4.
+ * To keep Composestar.RuntimeCore buildable by both J# and Java,
+ * we introduce nested exceptions as implemented by Java 1.4.
+ * 
+ * This means DotNET applications should use getCause() and not
+ * property InnerException.
  */
 public class ComposestarRuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = -638265734486320669L;
 
 	/**
-	 * The cause of the throwable, including null for an unknown or non-chained
+	 * The cause of this exception, including null for an unknown or non-chained
 	 * cause. This may only be set once; so the field is set to
 	 * this until initialized.
 	 *
