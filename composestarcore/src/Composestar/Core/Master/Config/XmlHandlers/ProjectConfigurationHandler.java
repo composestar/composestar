@@ -46,6 +46,12 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 				config.projects.addProperty("runDebugLevel",rdlevel);
 			}
 			
+			if(amap.getValue("applicationStart")!=null){
+				String rdlevel = amap.getValue("applicationStart"); 
+				//System.out.println("RunDebugLevel "+rdlevel);
+				config.projects.addProperty("applicationStart",rdlevel);
+			}
+			
 			// done here thus look further
 			ProjectHandler prjhandler = new ProjectHandler(parser,this);
 			parser.setContentHandler( prjhandler );
