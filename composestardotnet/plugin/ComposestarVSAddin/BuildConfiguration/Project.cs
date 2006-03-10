@@ -51,19 +51,7 @@ namespace BuildConfiguration
 				_buildPath = value;
 			}
 		}
-		private string _applicationStart="";
-
-		public string ApplicationStart
-		{
-			get
-			{
-				return _applicationStart;
-			}
-			set
-			{
-				_applicationStart = value;
-			}
-		}
+	
 		private string _outputPath="";
 
 		public string OutputPath

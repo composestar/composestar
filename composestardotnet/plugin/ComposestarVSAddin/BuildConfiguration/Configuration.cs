@@ -172,6 +172,20 @@ namespace BuildConfiguration
 			}
 		}
 
+		private string _applicationStart="";
+
+		public string ApplicationStart
+		{
+			get
+			{
+				return _applicationStart;
+			}
+			set
+			{
+				_applicationStart = value;
+			}
+		}
+
 		#endregion
 
 		#region Functions
@@ -222,6 +236,7 @@ namespace BuildConfiguration
 				// First the projects
 				writer.WriteStartElement("Projects");
 				writer.WriteAttributeString("executable", this.Executable);
+				writer.WriteAttributeString("applicationStart", this.ApplicationStart);
 				writer.WriteAttributeString("runDebugLevel", ((int)this.RunDebugLevel).ToString());
 				writer.WriteAttributeString("outputPath", FormatPath(this.OutputPath));
 			
@@ -235,7 +250,6 @@ namespace BuildConfiguration
 					writer.WriteAttributeString("buildPath", FormatPath(p.BuildPath)  );
 					writer.WriteAttributeString("basePath", FormatPath(p.BasePath)  );
 					writer.WriteAttributeString("outputPath", FormatPath(p.OutputPath)  );
-					writer.WriteAttributeString("applicationStart", p.ApplicationStart  );
 					writer.WriteAttributeString("verify", p.Verify.ToString()   );
 
 					// Sources
@@ -510,6 +524,12 @@ namespace BuildConfiguration
 			{
 				this.OutputPath =Path.Combine(Path.GetDirectoryName(startProject.FileName), "bin");	
 				this.Executable = getProperty(startProject.Properties, "OutputFileName").ToString();
+				string appStart = null;
+				appStart = (string)getProperty(startProject.Properties, "StartupObject"); 
+				if (appStart != null & appStart.Length  > 0)
+				{
+					this.ApplicationStart = appStart;
+				}
 			}
 			else
 			{
@@ -559,11 +579,11 @@ namespace BuildConfiguration
 					StringCollection dependencies = ComposestarVSAddin.DependencyHarvester.Collect(project, false);
 					p.Dependencies.AddRange(dependencies) ;
 					
-					if (startupObjects.Count > 0) 
-					{
-						//startup = startupObjects[0].ToString();// NOT SUPPORTED YET! String.Join(",", (string[])(startupObjects.ToArray(typeof(string))));
-						p.ApplicationStart = string.Join(",", (string[])startupObjects.ToArray(typeof(string)));
-					}
+//					if (startupObjects.Count > 0) 
+//					{
+//						//startup = startupObjects[0].ToString();// NOT SUPPORTED YET! String.Join(",", (string[])(startupObjects.ToArray(typeof(string))));
+//						p.ApplicationStart = string.Join(",", (string[])startupObjects.ToArray(typeof(string)));
+//					}
 
 					Projects.Add(p); 
 
