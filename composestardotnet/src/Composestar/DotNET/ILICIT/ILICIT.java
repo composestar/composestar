@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.3 2006/03/08 09:29:34 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.4 2006/03/10 12:42:08 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.3 2006/03/08 09:29:34 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.4 2006/03/10 12:42:08 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -41,6 +41,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Module;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 import java.util.ArrayList;
@@ -48,13 +49,16 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.3 $";
+	public static final String version = "$Revision: 1.4 $";
 	
     public void run(CommonResources resources) throws ModuleException {
+     Configuration config = Configuration.instance();
      PrintWriter out = null; 
      String binPath = Configuration.instance().getProperty("outputPath");
-	 String tempPath = resources.ProjectConfiguration.getProperty("TempFolder");
-	 String buildPath = resources.ProjectConfiguration.getProperty("BuildPath");
+	 //String tempPath = resources.ProjectConfiguration.getProperty("TempFolder");
+     String tempPath = config.pathSettings.getPath("Temp");
+	 //String buildPath = resources.ProjectConfiguration.getProperty("BuildPath");
+     String buildPath = config.projects.getProperty("outputPath");
 	 String weavePath = buildPath + "Weaver\\";
 	 String peweaver = binPath + "binaries\\peweaver.exe";
 	 String weavefile = "\"" + tempPath + "weavespec.xml" + '\"';
@@ -87,8 +91,10 @@ public class ILICIT implements WEAVER {
 	 resources.addResource("BuiltAssemblies", builtAssemblies);
 	 
 	 //also copy dummies 
-	 String assemblyList = resources.ProjectConfiguration.getProperty("Assemblies");
-	 String[] asmPaths = assemblyList.split(",");
+	 //String assemblyList = resources.ProjectConfiguration.getProperty("Assemblies");
+	 ArrayList dummies = Configuration.instance().projects.getCompiledDummies();
+	 String[] asmPaths = (String[])dummies.toArray(new String[dummies.size()]);
+	 //String[] asmPaths = assemblyList.split(",");
 	 for( int i = 0; i < asmPaths.length; i++ ) 
 	 {  
 			String asm = asmPaths[i];
@@ -123,11 +129,20 @@ public class ILICIT implements WEAVER {
     
 	  // verify assemblies?
 	  boolean verify = false;
-      if (resources.ProjectConfiguration.getProperty("VerifyAssemblies") != null) {
+      String verifystr = "";
+	  Module m = config.moduleSettings.getModule("ILICIT");
+	  if(m!=null){
+		  verifystr = m.getProperty("verify");
+		  if ("True".equalsIgnoreCase(verifystr)) {
+				verify = true;
+		  }
+	  }
+	  
+	  /*if (resources.ProjectConfiguration.getProperty("VerifyAssemblies") != null) {
 	 	if ("yes".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("VerifyAssemblies"))) {
 	 		verify = true;
 	 	}
-	  }
+	  }*/
       
 	  CommandLineExecutor cle = new CommandLineExecutor();
 
