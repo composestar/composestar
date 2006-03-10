@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedSelector.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+* $Id: NotUsedSelector.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -28,6 +28,10 @@ public class NotUsedSelector implements BaseChecker {
 	
 	/* (non-Javadoc)
 	 * @see Composestar.Core.CHKREP.BaseChecker#performCheck()
+	 * 
+	 * Chnaged the check to check in all four bindings instead of one,
+	 * code might be more compact, whether it is doubtfull whether we would
+	 * gain much when we compress the four search loops into one more reusable loop
 	 */
 	public boolean performCheck() {
 		Iterator selectors = ds.getAllInstancesOf(SelectorDefinition.class);
@@ -36,7 +40,7 @@ public class NotUsedSelector implements BaseChecker {
 			SelectorDefinition selDef = (SelectorDefinition) selectors.next();
 			boolean isUsed = false;
 			
-			// search where this definition is used
+			// search where this definition is used in the filtermodulebindings
 			SuperImposition si = (SuperImposition) selDef.getParent();
 			Iterator fmbi = si.getFilterModuleBindingIterator();
 			while(fmbi.hasNext()){
@@ -44,6 +48,40 @@ public class NotUsedSelector implements BaseChecker {
 				SelectorReference sf = fmb.getSelector();
 				if(sf.getName().equals(selDef.getName())){
 					isUsed = true;
+				}
+			}
+			
+			if(!isUsed){
+				// a little (style) error in the repository?
+				Iterator annotbinding = si.getAnnotationBindings().iterator();
+				while(annotbinding.hasNext()){
+					AnnotationBinding ab = (AnnotationBinding) annotbinding.next();
+					SelectorReference sf = ab.getSelector();
+					if(sf.getName().equals(selDef.getName())){
+						isUsed = true;
+					}
+				}
+			}
+			
+			if(!isUsed){
+				Iterator mb = si.getMethodBindingIterator();
+				while(mb.hasNext()){
+					MethodBinding m = (MethodBinding) mb.next();
+					SelectorReference sf = m.getSelector();
+					if(sf.getName().equals(selDef.getName())){
+						isUsed = true;
+					}
+				}
+			}
+			
+			if(!isUsed){
+				Iterator cb = si.getMethodBindingIterator();
+				while(cb.hasNext()){
+					ConditionBinding c = (ConditionBinding) cb.next();
+					SelectorReference sf = c.getSelector();
+					if(sf.getName().equals(selDef.getName())){
+						isUsed = true;
+					}
 				}
 			}
 			
