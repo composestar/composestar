@@ -6,6 +6,7 @@
  */
 package Composestar.Utils;
 
+import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
@@ -42,7 +43,7 @@ public class FileUtils
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 	    
 	    // transfer bytes from in to out
-	    byte[] buf = new byte[1024];
+	    byte[] buf = new byte[65536];
 	    int len;
 	    while ((len = bis.read(buf)) > 0) {
 	        bos.write(buf, 0, len);
@@ -64,5 +65,59 @@ public class FileUtils
 	  }
 	  
 	  return filename;
+  }
+  
+  /**
+   * Create a name for an output file based on the input name; this is used e.g. when creating dummies.
+   * The conversion works as follows: a sourceName should like this:
+   *   basePath/project/specific/subdirs/SomeSourceFile.ext
+   * The converted version will look like:
+   *   basePath/prefix/project/specific/subdirs/SomeSourceFile.ext
+   * @param basePath 
+   * @param prefix the prefix to be prepended before the project-specific directories
+   * @param sourceName the name of the original file
+   * @return The converted (output)-filename.
+ * @throws Exception 
+   */
+  public static String createOutputFilename(String basePath, String prefix, String sourceName) throws Exception
+  {
+	  if (!sourceName.startsWith(basePath))
+		  throw new Exception("File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
+	  return basePath + prefix + sourceName.substring(basePath.length());
+  }
+  
+  /**
+   * @param pathToCreate A valid directory
+   * @return Whether the entire path could be created (also true if it already exists)
+   */
+  public static boolean createFullPath(String pathToCreate)
+  {
+	  File f = new File(pathToCreate);
+	  try
+	  {
+		  return f.mkdirs(); // Returns false if the string is not a valid pathname
+	  }
+	  catch (SecurityException e)
+	  { // We don't really care about the reason; the important thing is the path could not be created
+		  return false;
+	  }
+  }
+  
+  public static String getFilenamePart(String pathToFile)
+  {
+	  int pathEnd = pathToFile.lastIndexOf('/');
+	  if (pathEnd > 0)
+		  return pathToFile.substring(pathEnd+1);
+	  else
+		  return pathToFile;
+  }
+  
+  public static String getDirectoryPart(String pathToFile)
+  {
+	  int pathEnd = pathToFile.lastIndexOf('/');
+	  if (pathEnd > 0)
+		  return pathToFile.substring(0, pathEnd);
+	  else
+		  return pathToFile;
   }
 }
