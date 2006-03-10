@@ -39,6 +39,7 @@ import Composestar.Core.FILTH.Core.OrderTraverser;
 import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.SIinfo;
@@ -49,16 +50,8 @@ public class FILTHServiceImpl extends FILTHService{
 	private CommonResources _cr;
 		
 	protected FILTHServiceImpl(CommonResources cr){
-		Properties props = (Properties)DataStore.instance().getObjectByID("config");
-		_specfile = props.getProperty("FILTH_INPUT");
-		_ds = (DataStore)cr.getResource("TheRepository");
-		
-		try
-		{
-			this.setLog(cr.ProjectConfiguration.getProperty("TempFolder") + "filth.html");
-		} catch(Exception e)
-		{
-		}
+		Configuration.instance().moduleSettings.getModule("FILTH").getProperty("FILTH_INPUT");
+		_ds = DataStore.instance();
 	}
 	
 	public List getOrder(Concern c){
@@ -72,12 +65,11 @@ public class FILTHServiceImpl extends FILTHService{
 	}
 	
 	public List getMultipleOrder(Concern c) { 
-		Properties props = (Properties)DataStore.instance().getObjectByID("config");
 		String filename = "";
 		String cssFile = "";
 		try
 		{
-			String basedir = props.getProperty("TempFolder");
+			String basedir = Configuration.instance().pathSettings.getPath("Temp");
 			File file = new File(basedir+"analyses/");
 			if(!file.exists())
 			{
@@ -88,10 +80,10 @@ public class FILTHServiceImpl extends FILTHService{
 				//System.out.println("Found and Dir: "+file.getAbsolutePath());
 				filename = file.getAbsolutePath()+"\\FILTH_"+c.getName()+".html";
 				FILTHService.setLog(new PrintStream(new FileOutputStream(filename)));
-				cssFile = "file://"+props.getProperty("TempFolder") + "SECRET.css";
+				cssFile = "file://"+Configuration.instance().pathSettings.getPath("Temp") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
 				{
-					cssFile = "file://"+props.getProperty("ComposestarPath") + "SECRET.css";
+					cssFile = "file://"+Configuration.instance().pathSettings.getPath("Composestar") + "SECRET.css";
 				}
 			}
 		}
@@ -112,7 +104,7 @@ public class FILTHServiceImpl extends FILTHService{
 		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\""+cssFile+"\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+props.getProperty("ComposestarPath")+"/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
+		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+Configuration.instance().pathSettings.getPath("Composestar")+"/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
 		buffer.append("<h3>Report generated on:  "+new Date().toString()+"</h3>\n");
 
 		FILTHService.log.print(buffer.toString());

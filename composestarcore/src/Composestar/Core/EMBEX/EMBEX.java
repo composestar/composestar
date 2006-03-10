@@ -45,7 +45,7 @@ public class EMBEX implements CTCommonModule
 		Iterator cpsConcernIter = ds.getAllInstancesOf(CpsConcern.class);
 
 		// fetch temppath
-		tempPath = resources.ProjectConfiguration.getProperty( "TempFolder", "ERROR" );
+		/*tempPath = resources.ProjectConfiguration.getProperty( "TempFolder", "ERROR" );
 		if( tempPath.equals( "ERROR" ) ) 
 		{
 			throw new ModuleException( "Error in configuration file: No such property TempFolder" );
@@ -56,7 +56,7 @@ public class EMBEX implements CTCommonModule
 		if( embeddedDir.equals( "ERROR" ) ) 
 		{
 			throw new ModuleException( "Error in configuration file: No such property EmbeddedSourcesFolder" );
-		}
+		}*/
 
 		// create directory for embedded code
 		embeddedPath = tempPath + embeddedDir;

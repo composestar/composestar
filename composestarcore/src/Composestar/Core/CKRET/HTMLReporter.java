@@ -17,6 +17,7 @@ import java.util.Set;
 
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
@@ -31,14 +32,12 @@ public class HTMLReporter implements Reporter {
 	private BufferedWriter writer;
 	private StringBuffer buffer;
 	private String cssFile;
-	private Properties props = null;
 
 	public HTMLReporter(String path, String cssFile, CommonResources resources) throws Exception
 	{
 		writer = new BufferedWriter(new FileWriter(path));
 		buffer = new StringBuffer("");
 		this.cssFile = cssFile;
-		this.props = resources.ProjectConfiguration;
 	}
 
 
@@ -142,7 +141,7 @@ public class HTMLReporter implements Reporter {
 		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\""+cssFile+"\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+props.getProperty("ComposestarPath")+"/logo.gif\"/>  /TRESE/Compose*/SECRET</i></b></font></div>\n");
+		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+Configuration.instance().pathSettings.getPath("Composestar")+"/logo.gif\"/>  /TRESE/Compose*/SECRET</i></b></font></div>\n");
 		
 		buffer.append("<h3>"+(new java.util.Date()).toString());
 		buffer.append("<BR>");

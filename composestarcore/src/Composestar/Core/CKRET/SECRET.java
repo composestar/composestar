@@ -21,6 +21,8 @@ import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Module;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -76,8 +78,8 @@ public class SECRET implements CTCommonModule {
 		// fetch the secret runmode
 		try
 		{
-			
-			int mode = Integer.parseInt(resources.ProjectConfiguration.getProperty("SECRETMode"));
+			Module module = Configuration.instance().moduleSettings.getModule("SECRET");
+			int mode = Integer.parseInt(module.getProperty("mode"));
 			if( mode < 3 && mode > -1 )
 			{
 				Debug.out(Debug.MODE_INFORMATION,"SECRET","SECRET mode set to " + MODES[mode]);
@@ -95,7 +97,7 @@ public class SECRET implements CTCommonModule {
 		
 		try
 		{
-			String basedir =  resources.ProjectConfiguration.getProperty("TempFolder");
+			String basedir =  Configuration.instance().pathSettings.getPath("Temp");
 			File file = new File(basedir+"analyses/");
 			if(!file.exists())
 			{
@@ -105,14 +107,12 @@ public class SECRET implements CTCommonModule {
 			{
 				reportFile = file.getAbsolutePath() + "\\SECRET.html";
 
-				String cssFile = "file://"+resources.ProjectConfiguration.getProperty("TempFolder") + "SECRET.css";
+				String cssFile = "file://"+Configuration.instance().pathSettings.getPath("Temp") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
 				{
-					cssFile = "file://"+resources.ProjectConfiguration.getProperty("ComposestarPath") + "SECRET.css";
+					cssFile = "file://"+Configuration.instance().pathSettings.getPath("Composestar") + "SECRET.css";
 				}
 
-				resources.ProjectConfiguration.put("SECRETCssFile",cssFile.substring(7));
-				
 				reporter = new HTMLReporter(reportFile, cssFile, resources);
 				reporter.open();
 				Debug.out(Debug.MODE_DEBUG,"SECRET","SECRET report file (" + reportFile + ") created...");

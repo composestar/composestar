@@ -7,12 +7,12 @@
 package Composestar.Core.TYM;
 
 import Composestar.Utils.Debug;
-import Composestar.Utils.StringConverter;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.TypeSource;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.HashSet;
 import java.util.HashMap;
 
@@ -40,19 +40,20 @@ public class TypeLocations {
 	
 	private TypeLocations()
 	{
-		DataStore ds = DataStore.instance();
-		Properties p = (Properties) ds.getObjectByID("config");
-		String typeSourcesString = p.getProperty("TypeSources");
-		
-		Iterator typeSources = StringConverter.stringToStringList(typeSourcesString, ",");
-		while( typeSources.hasNext())
-		{
-			String typeSource = (String) typeSources.next();
-			String[] parts = typeSource.split("@");
-			String type = parts[0];
-			String source = parts[1];
-			setTypeSource(type, source);
-		}
+		Configuration config = Configuration.instance();
+		Iterator it = config.projects.getProjects().iterator();
+        while(it.hasNext())
+        {
+        	Project prj = (Project)it.next();
+        	Iterator projectit = prj.getTypeSources().iterator();
+        	while(projectit.hasNext())
+        	{
+        		TypeSource source = (TypeSource)projectit.next();
+        		String type = source.getName();
+        		String file = source.getFileName();
+        		setTypeSource(type, file);
+        	}
+        }
 	}
 	
 	public void setTypeSource(String type, String source)

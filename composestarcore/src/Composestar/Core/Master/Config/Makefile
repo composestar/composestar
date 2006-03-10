@@ -1,7 +1,7 @@
 ROOTDIR=../../../../../
 include ${ROOTDIR}common.mk
 
-SUBDIRS=
+SUBDIRS=XmlHandlers
 
 CLASSES=BuiltAssemblies.class \
 	CompilerAction.class \

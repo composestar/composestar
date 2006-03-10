@@ -24,7 +24,7 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 		Configuration config = Configuration.instance();
 		if("Projects".equals(raw_name)){
 			/* in <projects> */
-			System.out.println("<projects>");
+			//System.out.println("<projects>");
 			
 			if(amap.getValue("executable")!=null){
 				String exec = amap.getValue("executable"); 
@@ -56,7 +56,7 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 	{
 		if("Projects".equals(raw_name)){
 			// end <projects>
-			System.out.println("end projects");
+			//System.out.println("end projects");
 			parser.setContentHandler( returnHandler );
 		}
 	}
