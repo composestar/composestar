@@ -2,17 +2,16 @@ package Composestar.RuntimeCore.FLIRT.Message;
 
 import Composestar.RuntimeCore.FLIRT.ObjectManager;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
-import Composestar.RuntimeCore.Utils.SyncBuffer;
-import Composestar.RuntimeCore.Utils.Invoker;
+import Composestar.RuntimeCore.Utils.*;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ReifiedMessage.java,v 1.5 2006/02/16 14:09:46 composer Exp $
+ * $Id: ReifiedMessage.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
-public class ReifiedMessage implements Runnable
+public class ReifiedMessage implements ChildRunable
 {
 	public static final int REIFIED = 0;
 	public static final int RESPONDED = 1;

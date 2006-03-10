@@ -1,6 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Actions;
 
 import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.Utils.*;
 
 /**
  * Models the action that comes from the acceptance of a message by a Meta
@@ -84,7 +85,7 @@ public class MetaAction extends ComposeStarAction {
 		
 
 		// start execution in a new thread
-		Thread t = new Thread(this.message);
+		ChildThread t = ThreadPool.getChildThread(this.message);
 		
 		// Store jp and m in ACT thread
 		JoinPoint __jp = JoinPointInfo.getJoinPointInfo();
