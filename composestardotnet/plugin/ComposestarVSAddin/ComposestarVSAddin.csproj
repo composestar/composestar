@@ -165,11 +165,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "PeWeaverManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "SupportedLanguages.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -180,9 +175,49 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ConfigManager\ConfigManager.cs"
+                    RelPath = "BuildConfiguration\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\CustomFilter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\DependencyFile.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\ModuleSetting.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\Platform.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\Project.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\Settings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BuildConfiguration\TypeSource.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ConfigManager\ConfigManager.cs"
+                    SubType = "Code"
+                    BuildAction = "None"
                 />
                 <File
                     RelPath = "ConfigManager\DependencyHarvester.cs"

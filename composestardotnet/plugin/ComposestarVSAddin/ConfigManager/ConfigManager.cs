@@ -128,12 +128,12 @@ namespace ComposestarVSAddin
 
 			// TYM configuration
 			this.writeIniValue("TYM", "BuildPath", "" + this.readIniValue("Common", "TempFolder").Replace("\\", "/") + "obj/");
-			StringCollection dependencies = DependencyHarvester.Collect(mApplicationObject.Solution.Projects, false);
-			this.writeIniValue("TYM", "Dependencies", dependencies.Count.ToString());
-			for (int dependencyCounter=0; dependencyCounter < dependencies.Count; dependencyCounter++)
-			{
-				this.writeIniValue("TYM", "Dependency" + dependencyCounter, dependencies[dependencyCounter]);
-			}
+		//	StringCollection dependencies = DependencyHarvester.Collect(mApplicationObject.Solution.Projects, false);
+//			this.writeIniValue("TYM", "Dependencies", dependencies.Count.ToString());
+//			for (int dependencyCounter=0; dependencyCounter < dependencies.Count; dependencyCounter++)
+//			{
+//				this.writeIniValue("TYM", "Dependency" + dependencyCounter, dependencies[dependencyCounter]);
+//			}
 
 			// FILTH configuration
 			this.writeIniValue("FILTH", "FILTH_INPUT", this.mFilthFilterOrderSpecification);

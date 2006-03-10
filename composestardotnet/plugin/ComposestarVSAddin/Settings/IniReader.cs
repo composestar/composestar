@@ -79,6 +79,11 @@ namespace Org.Mentalis.Files {
 		/// <returns>The return value is the number of characters copied to the buffer, not including the terminating null character.</returns>
 		[DllImport("KERNEL32.DLL", EntryPoint="GetPrivateProfileStringA",  CharSet=CharSet.Ansi)]
 		private static extern int GetPrivateProfileString (string lpApplicationName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, int nSize, string lpFileName);
+		
+	
+		[DllImport("KERNEL32.DLL", EntryPoint="GetPrivateProfileSection",  CharSet=CharSet.Ansi)]
+		private static extern uint GetPrivateProfileSection(string lpAppName, IntPtr lpReturnedString, uint nSize, string lpFileName);
+
 		/// <summary>
 		/// The GetPrivateProfileSectionNames function retrieves the names of all sections in an initialization file.
 		/// </summary>
@@ -245,12 +250,43 @@ namespace Org.Mentalis.Files {
 		public bool ReadBoolean(string key) {
 			return ReadBoolean(Section, key);
 		}
+
+		public bool ReadSectionValues(string sectionName, out string[] section)
+		{
+			section = null;
+
+			if (!System.IO.File.Exists(m_Filename))
+				return false;
+
+		
+			IntPtr pReturnedString = Marshal.AllocCoTaskMem((int)MAX_ENTRY);
+
+			uint bytesReturned = GetPrivateProfileSection(sectionName, pReturnedString, MAX_ENTRY, m_Filename);
+
+			if ((bytesReturned == MAX_ENTRY - 2) ||(bytesReturned == 0)) 
+				return false;
+
+			System.Text.StringBuilder returnedString = new System.Text.StringBuilder((int)bytesReturned);
+
+			//bytesReturned -1 to remove trailing \0
+			for (int i = 0; i < bytesReturned-1; i++)
+				returnedString.Append((char)Marshal.ReadByte(new IntPtr((uint)pReturnedString + (uint)i)));
+
+			Marshal.FreeCoTaskMem(pReturnedString);
+
+			section = returnedString.ToString().Split('\0');
+
+			return true;
+		}
+
+
 		/// <summary>Writes an Integer to the specified key in the specified section.</summary>
 		/// <param name="section">The section to write in.</param>
 		/// <param name="key">The key to write to.</param>
 		/// <param name="value">The value to write.</param>
 		/// <returns>Returns true if the function succeeds, false otherwise.</returns>
-		public bool Write(string section, string key, int value) {
+		public bool Write(string section, string key, int value) 
+		{
 			return Write(section, key, value.ToString());
 		}
 		/// <summary>Writes an Integer to the specified key in the active section.</summary>

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using EnvDTE;
 using Ini;
 using VSLangProj;
+using BuildConfiguration;
 
 namespace ComposestarVSAddin 
 {
@@ -21,9 +22,7 @@ namespace ComposestarVSAddin
 		private string ProjectStartupObject;
 
 		private StringCollection TypeSources;
-
-		private IniFile inifile;
-
+	
 		private bool mSuccess = false;
 
 		public bool CompletedSuccessfully() 
@@ -31,13 +30,12 @@ namespace ComposestarVSAddin
 			return mSuccess;
 		}
 
-		public DummyManager(IniFile inifile) : base (inifile)
+		public DummyManager() : base ()
 		{
 			languages = new SupportedLanguages();
 
 			TypeSources = new StringCollection();
 
-			this.inifile = inifile;
 		}
 
 		public override void run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action) 
@@ -47,7 +45,7 @@ namespace ComposestarVSAddin
 			System.Collections.ArrayList dllNames = new System.Collections.ArrayList();
 			
 			string referencedAssemblies = "";
-			foreach( Project project in applicationObject.Solution.Projects ) 
+			foreach(EnvDTE.Project project in applicationObject.Solution.Projects ) 
 			{
 				if( project != null  && project.Properties != null)
 				{
@@ -79,7 +77,8 @@ namespace ComposestarVSAddin
 					ProcessProjectFiles(project.ProjectItems,project,applicationObject.Solution);
 					
 					//Try to fix things the system doesn't know
-					if(this.ProjectStartupObject != null){
+					if(this.ProjectStartupObject != null)
+					{
 						if(project.Properties.Item("StartupObject") == null || "".Equals(project.Properties.Item("StartupObject").Value.ToString().Trim()))
 						{
 							project.Properties.Item("StartupObject").Value = this.ProjectStartupObject;
@@ -113,65 +112,72 @@ namespace ComposestarVSAddin
 						Debug.Instance.Log(DebugModes.Information,"DummyManager","Startup object filename not found, gambling on " + this.ExecSource);
 					}
 				}
-			}
+			
 
-			System.CodeDom.Compiler.CompilerResults compilerResults = null;
-			string dllPath = generator.generateDummies(inifile.IniReadValue("Common","TempFolder"), referencedAssemblies, out compilerResults);
+				System.CodeDom.Compiler.CompilerResults compilerResults = null;
+				string dllPath = generator.generateDummies(BuildConfigurationManager.Instance.Settings.Paths["Temp"]  , referencedAssemblies, out compilerResults);
 		
-			if ((dllPath != null) && (compilerResults != null) && (compilerResults.Errors.Count > 0) )
-			{
-				IEnumerator errorResults = compilerResults.Errors.GetEnumerator();
-				System.CodeDom.Compiler.CompilerError err;
-				while( errorResults.MoveNext() )
+				if ((dllPath != null) && (compilerResults != null) && (compilerResults.Errors.Count > 0) )
 				{
-					err = (System.CodeDom.Compiler.CompilerError) errorResults.Current;
+					IEnumerator errorResults = compilerResults.Errors.GetEnumerator();
+					System.CodeDom.Compiler.CompilerError err;
+					while( errorResults.MoveNext() )
+					{
+						err = (System.CodeDom.Compiler.CompilerError) errorResults.Current;
 					
-					Debug.Instance.AddTaskItem(String.Format("Compose* Dummy Generation; {0}",  err.ErrorText),
-						EnvDTE.vsTaskPriority.vsTaskPriorityMedium, 
-						EnvDTE.vsTaskIcon.vsTaskIconCompile,
-						err.FileName, err.Line);  
-				}
+						Debug.Instance.AddTaskItem(String.Format("Compose* Dummy Generation; {0}",  err.ErrorText),
+							EnvDTE.vsTaskPriority.vsTaskPriorityMedium, 
+							EnvDTE.vsTaskIcon.vsTaskIconCompile,
+							err.FileName, err.Line);  
+					}
 				
-				mSuccess = false;
-				return;
-			}
+					mSuccess = false;
+					return;
+				}
 
-			if( dllPath != null )
-				dllNames.Add(dllPath.Replace("\\", "/"));
+				if( dllPath != null )
+					dllNames.Add(dllPath.Replace("\\", "/"));
 
-			// Check whether startup object has been set!
-			const string NoStartupObjectSet = "Compose* Dummy Manager; No startup object has been set. (see Project properties/Common properties/General/Startup object)";
-			if (null == this.ProjectStartupObject)
-			{
-				mSuccess = false;
-				Debug.Instance.AddTaskItem(NoStartupObjectSet, vsTaskPriority.vsTaskPriorityHigh, vsTaskIcon.vsTaskIconCompile);  
-				return; // Stop execution
-			}
+				// Check whether startup object has been set!
+				const string NoStartupObjectSet = "Compose* Dummy Manager; No startup object has been set. (see Project properties/Common properties/General/Startup object)";
+				if (null == this.ProjectStartupObject)
+				{
+					mSuccess = false;
+					Debug.Instance.AddTaskItem(NoStartupObjectSet, vsTaskPriority.vsTaskPriorityHigh, vsTaskIcon.vsTaskIconCompile);  
+					return; // Stop execution
+				}
 
-			// Check whether startup object is in a file!
-			const string NoStartupObjectFileSet = "Compose* Dummy Manager; File which contains startup object has not been found. (see Project properties/Common properties/General/Startup object)";
-			if (null == this.ExecSource)
-			{
-				mSuccess = false;
-				Debug.Instance.AddTaskItem(NoStartupObjectFileSet, vsTaskPriority.vsTaskPriorityHigh, vsTaskIcon.vsTaskIconCompile);  
-				return; // Stop execution
-			}
+				// Check whether startup object is in a file!
+				const string NoStartupObjectFileSet = "Compose* Dummy Manager; File which contains startup object has not been found. (see Project properties/Common properties/General/Startup object)";
+				if (null == this.ExecSource)
+				{
+					mSuccess = false;
+					Debug.Instance.AddTaskItem(NoStartupObjectFileSet, vsTaskPriority.vsTaskPriorityHigh, vsTaskIcon.vsTaskIconCompile);  
+					return; // Stop execution
+				}
 
-			DependencyInserter.Equals(applicationObject.Solution.Projects, dllNames);
+				DependencyInserter.Equals(applicationObject.Solution.Projects, dllNames);
 
-			// Store dll path's in configuration file
-			string dummypaths = String.Join(",", (string[])dllNames.ToArray(typeof(string)));
-			this.writeIniValue("TYM", "Assemblies", dummypaths);
-			this.writeIniValue("Sources", languages.GetLanguage(this.ExecSource).Name + "ExecSource", this.ExecSource );
-			this.writeIniValue("TYM", "TypeSources" , this.TypeSources.Count.ToString() );
-			for (int typeCounter=0; typeCounter < this.TypeSources.Count; typeCounter++)
-			{
-				this.writeIniValue("TYM", "TypeSource" + typeCounter, this.TypeSources[typeCounter]);
+				// Store dll path's in configuration file
+				string dummypaths = String.Join(",", (string[])dllNames.ToArray(typeof(string)));
+				ModuleSetting ilicitSettings = new ModuleSetting ();
+				ilicitSettings.Name = "ILICIT";
+				ilicitSettings.Elements.Add("assemblies", dummypaths)  ;
+				BuildConfigurationManager.Instance.Settings.SetModule(ilicitSettings); 
+			
+				BuildConfigurationManager.Instance.Executable = this.ExecSource;
+
+				BuildConfiguration.Project p = BuildConfigurationManager.Instance.GetProjectByName(project.Name);
+
+				for (int typeCounter=0; typeCounter < this.TypeSources.Count; typeCounter++)
+				{
+					p.TypeSources.Add(new TypeSource(this.TypeSources[typeCounter],this.TypeSources[typeCounter]));
+				}
 			}
 			mSuccess = true;
 		}
 		
-		private void ProcessProjectFiles(ProjectItems projectitems, Project project, Solution solution) 
+		private void ProcessProjectFiles(ProjectItems projectitems, EnvDTE.Project project, Solution solution) 
 		{
 			foreach (ProjectItem projectitem in projectitems)
 			{

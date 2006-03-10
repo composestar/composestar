@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using EnvDTE;
 using Ini;
 using VSLangProj;
+using BuildConfiguration;
 
 namespace ComposestarVSAddin 
 {
@@ -13,14 +14,12 @@ namespace ComposestarVSAddin
 	/// </summary>
 	public class AttributeManager : AbstractManager
 	{
-		private IniFile inifile;
 		private ArrayList attributes;
 		private XmlTextWriter writer;
 
 
-		public AttributeManager(IniFile inifile) : base (inifile)
+		public AttributeManager() : base ()
 		{
-			this.inifile = inifile;
 			attributes = new ArrayList();
 		}
 
@@ -48,13 +47,13 @@ namespace ComposestarVSAddin
 
 		public override void run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action) 
 		{
-			String outFolder = inifile.IniReadValue("Common","TempFolder");
-			writer = new XmlTextWriter(outFolder + "attributes.xml", null);
+			String outFolder = BuildConfigurationManager.Instance.Settings.Paths["Temp"];   
+			writer = new XmlTextWriter(System.IO.Path.Combine(outFolder,"attributes.xml"), null);
 			writer.WriteStartDocument();
 			writer.Formatting = Formatting.Indented;
 			writer.WriteStartElement( "Attributes" );
 
-			foreach( Project project in applicationObject.Solution.Projects ) 
+			foreach(EnvDTE.Project project in applicationObject.Solution.Projects ) 
 			{
 				if( project != null  && project.Properties != null)
 				{

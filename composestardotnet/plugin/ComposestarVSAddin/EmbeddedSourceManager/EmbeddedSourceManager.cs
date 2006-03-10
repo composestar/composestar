@@ -3,6 +3,7 @@ using Ini;
 using System;
 using System.IO;
 using System.Collections;
+using BuildConfiguration;
 
 namespace ComposestarVSAddin
 {
@@ -11,40 +12,42 @@ namespace ComposestarVSAddin
 	/// </summary>
 	public class EmbeddedSourceManager : AbstractManager
 	{
-		private IniFile inifile;
+
 		private ProjectItem addedDirectory= null;
 
-		public EmbeddedSourceManager(IniFile inifile) : base (inifile)
+		public EmbeddedSourceManager() : base ()
 		{
-			this.inifile = inifile;
+
 		}
 
 		public override void run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action)
 		{
 			this.mApplicationObject = applicationObject;
 
-			foreach(Project project in this.mApplicationObject.Solution.Projects)
+			foreach(EnvDTE.Project project in this.mApplicationObject.Solution.Projects)
 			{
 				this.addEmbeddedSources(project);
 			}
 		}	
 
-		private void addEmbeddedSources(Project p)
+		private void addEmbeddedSources(EnvDTE.Project p)
 		{
 			// adding embedded sources to project
 			// get embedded source folder from inifile
 			
-			string tempfolder = inifile.IniReadValue("COMMON", "TempFolder");
+			string tempfolder = BuildConfigurationManager.Instance.Settings.Paths["Temp"];
 			tempfolder = tempfolder.Replace("/","\\");
-			string embFolder = inifile.IniReadValue("Global Composestar configuration", "EmbeddedSourcesFolder");
+			string embFolder = BuildConfigurationManager.Instance.Settings.Paths["EmbeddedSources"];
 			// remove \ character
 			embFolder = embFolder.Substring(0,embFolder.Length-1);
 
 			// path to embedded sources
-			string embPath = tempfolder + embFolder ;
+			string embPath = Path.Combine(tempfolder , embFolder);
 			
 			DirectoryInfo di = new DirectoryInfo(embPath);
 			
+			// TODO could be removed since this can be done directly in the master. This also leads to only one phase
+
 			if(di.Exists)
 			{
 				FileInfo[] sources = di.GetFiles("*.*");
@@ -75,14 +78,14 @@ namespace ComposestarVSAddin
 
 		public void removeEmbeddedSources()
 		{
-			string tempfolder = inifile.IniReadValue("COMMON", "TempFolder");
+			string tempfolder = BuildConfigurationManager.Instance.Settings.Paths["Temp"];
 			tempfolder = tempfolder.Replace("/","\\");
-			string embFolder = inifile.IniReadValue("Global Composestar configuration", "EmbeddedSourcesFolder");
+			string embFolder = BuildConfigurationManager.Instance.Settings.Paths["EmbeddedSources"];
 			// remove \ character
 			embFolder = embFolder.Substring(0,embFolder.Length-1);
 
 			// path to embedded sources
-			string embPath = tempfolder + embFolder ;
+			string embPath =  Path.Combine(tempfolder, embFolder);
 
 			DirectoryInfo di = new DirectoryInfo(embPath);
 

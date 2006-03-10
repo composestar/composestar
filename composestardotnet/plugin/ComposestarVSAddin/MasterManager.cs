@@ -3,6 +3,8 @@ using Ini;
 using System;
 using System.Collections;
 using System.Threading;
+using BuildConfiguration;
+using System.IO;
 
 namespace ComposestarVSAddin
 {
@@ -14,7 +16,7 @@ namespace ComposestarVSAddin
 		private bool mSuccess = false;
 		private string moduleName = "Compose* Master; {0}";
 
-		public MasterManager(IniFile inifile) : base (inifile)
+		public MasterManager() : base ()
 		{
 
 		}
@@ -29,19 +31,24 @@ namespace ComposestarVSAddin
 			this.mApplicationObject = applicationObject;
 
 			System.Diagnostics.Process p = new System.Diagnostics.Process();
-			p.StartInfo.FileName = "java";
-
-			string composestarJar = readIniValue("Global Composestar configuration", "ComposestarPath");
+			if (BuildConfigurationManager.Instance.Settings.Paths["JavaBin"] != null)
+			{
+				p.StartInfo.FileName = Path.Combine(BuildConfigurationManager.Instance.Settings.Paths["JavaBin"], "java.exe");
+			}
+			else
+				p.StartInfo.FileName = "java";
+			
+			string composestarJar = BuildConfigurationManager.Instance.Settings.Paths["Composestar"];   
 			composestarJar = composestarJar.Replace("\"", "");
 			composestarJar = "\"" + composestarJar + "Composestar.jar\"";
 
-			string classPath = readIniValue("Global Composestar configuration","ClassPath");
-			string mainClass = readIniValue("Global Composestar configuration","MainClass");
-			string jvmOptions = readIniValue("JVM","JVMOptions");
+			string classPath = BuildConfigurationManager.Instance.DotNetPlatform.ClassPath; 
+			string mainClass = BuildConfigurationManager.Instance.DotNetPlatform.MainClass;  
+			string jvmOptions = BuildConfigurationManager.Instance.DotNetPlatform.Options;  
 
-			string projectIni = readIniValue("Common", "TempFolder");
+			string projectIni = BuildConfigurationManager.Instance.Settings.Paths["Temp"];
 			projectIni = projectIni.Replace("\"", "");
-			projectIni = "\"" + projectIni + "build.ini\"";
+			projectIni = "\"" + projectIni + "BuildConfiguration.xml\"";
 
 			//p.StartInfo.Arguments = "-cp " + composestarJar + " Composestar.CTCommon.Master.Master " + projectIni;
 			//p.StartInfo.Arguments = "-cp \"" + classPath + "\" " + mainClass + " " + projectIni;

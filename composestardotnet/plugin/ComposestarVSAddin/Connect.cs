@@ -9,6 +9,7 @@ using System.Collections;
 using System.Globalization; 
 using System.Windows.Forms;
 using System.Drawing;
+using BuildConfiguration;
 
 namespace ComposestarVSAddin
 {
@@ -53,16 +54,18 @@ namespace ComposestarVSAddin
 	[GuidAttribute("2A23A699-C931-40A7-A52D-67D1224565E8"), ProgId("ComposestarVSAddin.Connect")]
 	public class Connect : Object, Extensibility.IDTExtensibility2, IDTCommandTarget
 	{
+
+		#region Private Variables
 		private const string RegistryPath = "Software\\Microsoft\\VisualStudio\\7.1\\Addins\\ComposestarVSAddin.Connect";
-                                                           
+              
+        private bool IsBuilt = false;
+                                     
 		private DummyManager dummymanager;
-		private ConfigManager configmanager;
 		private MasterManager mastermanager;
 		private AssemblyManager assemblymanager;
 		private AttributeManager attributemanager;
 		private EmbeddedSourceManager embsrcmanager;
-
-		private IniFile iniconfig = null;
+	
 		private bool buildSuccess = false;
 		private EnvDTE.TaskListEvents taskListEvents;
 
@@ -74,6 +77,8 @@ namespace ComposestarVSAddin
 
 		private CommandBarControl m_Menu = null;
 		private CommandBar        m_Bar  = null;
+
+		#region Addin element names
 
 		/// <summary>
 		///     Name of the add-in command.
@@ -96,16 +101,19 @@ namespace ComposestarVSAddin
 		private const int    BITMAP_ID_DEBUGRUN = 3820; // alternatives: 186 2997 3820
 		private const int    BITMAP_ID_SETTINGS = 642;  // alternatives: 1951 2597 2770
 
-		private string m_captionBuild ="Build with Compose*" ;
-		private string m_captionRun = "Run with Compose*";
-		private string m_captionDebugRun = "Debug with Compose*";
-		private string m_captionSettings = "Compose* Settings";
-		private string m_captionClean = "Clean with Compose*";
+		private string m_captionBuild ="&Build" ;
+		private string m_captionRun = "&Run";
+		private string m_captionDebugRun = "&Debug";
+		private string m_captionSettings = "&Settings";
+		private string m_captionClean = "&Clean";
+
 		private string m_toolTipBuild = "Will invoke Compose* to build the current solution";
 		private string m_toolTipRun = "Will invoke application build with Compose*";
 		private string m_toolTipDebugRun = "Will debug application build with Compose*";
 		private string m_toolTipSettings = "Opens the Compose* settings dialog";
 		private string m_toolTipClean = "Cleans the previous Compose* build information";
+		
+		#endregion
 
 		/// <summary>
 		///     References to <c>Command</c>s which are used to 
@@ -122,11 +130,14 @@ namespace ComposestarVSAddin
 
 		public const string ProgId = "ComposestarVSAddin.Connect";
 
-		// Added highresolution performance counters - Michiel (28/2/2005)
+		// Highresolution performance counters
 		[DllImport("kernel32.dll")]
 		extern static short QueryPerformanceCounter(ref long x);
 		[DllImport("kernel32.dll")]
 		extern static short QueryPerformanceFrequency(ref long x);
+		#endregion
+
+		#region Constructor
 
 		public Connect()
 		{
@@ -138,6 +149,7 @@ namespace ComposestarVSAddin
 			m_commandNameSettings = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_SETTINGS;
 			m_commandNameClean = ((System.Runtime.InteropServices.ProgIdAttribute)attribute).Value + "." + ADDIN_CLEAN;
 		}
+		#endregion
 
 		#region Add in
 
@@ -201,7 +213,7 @@ namespace ComposestarVSAddin
 					taskListEvents = (EnvDTE.TaskListEvents)events.get_TaskListEvents("Composestar");
 					taskListEvents.TaskNavigated += new 
 						_dispTaskListEvents_TaskNavigatedEventHandler(this.TaskNavigated);
- 
+
 					// Adds commands to the environment
 					AddCommand((AddIn)addInInst, ADDIN_BUILD, m_captionBuild, m_toolTipBuild, true, BITMAP_ID_BUILD, false, true);
 					AddCommand((AddIn)addInInst, ADDIN_RUN, m_captionRun, m_toolTipRun, true, BITMAP_ID_RUN, false, true);
@@ -275,11 +287,21 @@ namespace ComposestarVSAddin
 		/// </param>
 		private void UpdateStatus(string commandName, ref EnvDTE.vsCommandStatus status) 
 		{
-			if (commandName == m_commandNameSettings)
-				status = status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+			// Clean and settings are always available
+			if (commandName == m_commandNameSettings | commandName == m_commandNameClean)
+				status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+			else if (commandName == m_commandNameBuild)
+			{
+				// Build is only enabled when there is a project loaded
+				if (m_referenceBuildCommand.IsAvailable && (!m_referenceCancelBuildCommand.IsAvailable)) 
+					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
+				else 
+					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported & ~(vsCommandStatus)vsCommandStatus.vsCommandStatusEnabled;
+			}
 			else
 			{
-				if (m_referenceBuildCommand.IsAvailable && (!m_referenceCancelBuildCommand.IsAvailable)) 
+				// Run and debug are only enabled when the project has been built.
+				if (m_referenceBuildCommand.IsAvailable && IsBuilt && (!m_referenceCancelBuildCommand.IsAvailable)) 
 					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported | vsCommandStatus.vsCommandStatusEnabled;
 				else 
 					status = (vsCommandStatus)vsCommandStatus.vsCommandStatusSupported & ~(vsCommandStatus)vsCommandStatus.vsCommandStatusEnabled;
@@ -455,7 +477,11 @@ namespace ComposestarVSAddin
 				}
 			}
 			catch (Exception)
-			{}
+			{
+				Debug.Instance.AddTaskItem(String.Format("Composestar; Could not retrieve composestar file '{0}' for the information values. Please reinstall the Composestar tool.", iniFileName), 
+					vsTaskPriority.vsTaskPriorityHigh, vsTaskIcon.vsTaskIconUser );
+				Debug.Instance.ActivateTaskListWindow();
+			}
 		}
 
 		/// <summary>
@@ -486,7 +512,7 @@ namespace ComposestarVSAddin
 			{
 				string curPrjName = (string) projectNames.GetValue(0);
    
-				foreach( Project project in applicationObject.Solution.Projects ) 
+				foreach(EnvDTE.Project project in applicationObject.Solution.Projects ) 
 				{
 					if (project.UniqueName == curPrjName)
 						return project;
@@ -549,7 +575,7 @@ namespace ComposestarVSAddin
 				}
 				else 
 				{
-					iniconfig.IniWriteValue("Common", "ComposestarIniFile", "\"" + fullname + "\"");
+					BuildConfigurationManager.Instance.Settings.ComposestarIni = fullname;
 				}
 			}
 			catch (Exception)
@@ -591,7 +617,6 @@ namespace ComposestarVSAddin
 		{
 
 			Registry reg = new Registry();
-
 	
 			try
 			{
@@ -923,13 +948,17 @@ namespace ComposestarVSAddin
 		public void OnBuildBegin(vsBuildScope scope, vsBuildAction action) 
 		{
 			this.buildSuccess = false;
+			IsBuilt = false;
 
 			// Setup the statusbar
 			Debug.Instance.ShowProgress("Building with Compose*", 0);
 			Debug.Instance.ShowAnimation(vsStatusAnimation.vsStatusAnimationBuild);
 			Debug.Instance.ResetWarnings();
+			Debug.Instance.ActivateOutputWindowPane(); 
 			Application.DoEvents();
 
+			BuildConfigurationManager.Instance.CleanConfig();
+  
 			if (action == EnvDTE.vsBuildAction.vsBuildActionBuild || action == EnvDTE.vsBuildAction.vsBuildActionRebuildAll) 
 			{
 
@@ -949,7 +978,7 @@ namespace ComposestarVSAddin
 
 				Debug.Instance.ShowProgress("Initializing", 5); 
 				
-				// Changed DateTime timer to HighPerformanceTimer - Michiel (28/02/2005)
+				// HighPerformanceTimer 
 				long StartTime=0;
 				bool HighTimerEnabled=false;
 				long ctr1 = 0, ctr2 = 0, freq = 0;
@@ -969,41 +998,38 @@ namespace ComposestarVSAddin
 				try 
 				{
 					Debug.Instance.ShowProgress("Preparing configuration files", 10); 
-
 					Debug.Instance.Log(DebugModes.Debug,"AddIn","Preparing configuration files...");
 					
 					string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
 					string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");
 
-					DeleteFile(Path.Combine (tempfolder,  "build.ini"));
-					iniconfig = new IniFile(Path.Combine (tempfolder , "build.ini"));
-				
-					iniconfig.IniWriteValue("Common", "TempFolder", tempfolder);
-					iniconfig.IniWriteValue("Master", "CompilePhase", "one");
-			
+					DeleteFile(Path.Combine(tempfolder,  "BuildConfiguration.xml"));
+
+					BuildConfigurationManager.Instance.Settings.Paths.Add("Temp", tempfolder);  		
+							
 					if(ComposestarIniFileExists()) 
 					{
 						// Generate solution specific configuration file for composestar
-						Debug.Instance.ShowProgress("Creating configuration files", 15); 
-						Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating solution specific configuration file...");
+						Debug.Instance.ShowProgress("Gathering configuration", 15); 
+						Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating solution specific configuration...");
 						
-						configmanager = new ConfigManager(iniconfig);
-						configmanager.run(applicationObject, scope, action);
-
-						string debuglevel = this.iniconfig.IniReadValue("Common","BuildDebugLevel");
-						if(debuglevel != null)
+						BuildConfigurationManager.Instance.BuildConfig(applicationObject, scope, action); 
+						if (BuildConfigurationManager.Instance.DotNetPlatform == null)
 						{
-							int debug_level = Convert.ToInt32(this.iniconfig.IniReadValue("Common","BuildDebugLevel"));
-							// Use next line when the string is used instead of an integer (the value)
-							//Debug.Instance.DebugMode = DebugModes.Parse(typeof(DebugModes), this.iniconfig.IniReadValue("Common","BuildDebugLevel"), true);
-							Debug.Instance.DebugMode = (DebugModes) debug_level;
+							// Get the dotNet platform settings
+							BuildConfigurationManager.Instance.ReadDotNetPlatform(); 
 						}
+
+						Debug.Instance.DebugMode = BuildConfigurationManager.Instance.Settings.BuildDebugLevel ;
 
 						// Call Master to do its first run
 						Debug.Instance.ShowProgress("Running master phase one", 20); 
 						Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master to do first run...");
 
-						mastermanager = new MasterManager(iniconfig);
+						BuildConfigurationManager.Instance.Settings.CompilePhase = "one";
+						BuildConfigurationManager.Instance.SaveToXml();
+
+						mastermanager = new MasterManager();
 						mastermanager.run(applicationObject, scope, action);
 
 						bool dummiesOK = false;
@@ -1013,24 +1039,13 @@ namespace ComposestarVSAddin
 							Debug.Instance.ShowProgress("Processing embedded sources", 30); 
 							Debug.Instance.Log(DebugModes.Debug,"AddIn","Processing embedded sources...");
 
-							embsrcmanager = new EmbeddedSourceManager(iniconfig);
+							embsrcmanager = new EmbeddedSourceManager();
 							embsrcmanager.run(applicationObject, scope, action);
-							
-							//							dummymanager = null;
-							//							configmanager = null;
-							//							iniconfig = null;
-							//							mastermanager = null;
-							
-							//System.IO.File.Delete(tempfolder + "project.ini");
-							//iniconfig = new IniFile(tempfolder + "project.ini");
-							//iniconfig.IniWriteValue("Common", "TempFolder", tempfolder);
-							//iniconfig.IniWriteValue("Master", "CompilePhase", "one");
-							//ComposestarIniFileExists();
-							
+																			
 							Debug.Instance.ShowProgress("Creating dummies", 40);
 							Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating dummies...");
 
-							dummymanager = new DummyManager(iniconfig);
+							dummymanager = new DummyManager();
 							dummymanager.run(applicationObject, scope, action);
 							dummiesOK = dummymanager.CompletedSuccessfully();
 
@@ -1049,21 +1064,22 @@ namespace ComposestarVSAddin
 								Debug.Instance.ShowProgress("Creating config", 50);
 								Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating solution specific configuration file...");
 								
-								configmanager = new ConfigManager(iniconfig);
-								configmanager.run(applicationObject, scope, action);
-
 								// Find and dump attributes (annotations)
 								Debug.Instance.ShowProgress("Harvesting annotations", 60);
 								Debug.Instance.Log(DebugModes.Debug,"AddIn","Harvesting annotations...");
 
-								attributemanager = new AttributeManager(iniconfig);
+								attributemanager = new AttributeManager();
 								attributemanager.run(applicationObject, scope, action);
 							
 								// Call Master to do its second run
 								Debug.Instance.ShowProgress("Running master phase two", 70);
-								iniconfig.IniWriteValue("Master", "CompilePhase", "two");
+
+								BuildConfigurationManager.Instance.Settings.CompilePhase = "two";
+								BuildConfigurationManager.Instance.SaveToXml();
+
 								Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master to do second run...");
-								mastermanager = new MasterManager(iniconfig);
+
+								mastermanager = new MasterManager();
 								mastermanager.run(applicationObject, scope, action);
 
 								embsrcmanager.removeEmbeddedSources();
@@ -1075,8 +1091,10 @@ namespace ComposestarVSAddin
 							// Call the assembly manager to copy all the required dll's to their final location
 							Debug.Instance.ShowProgress("Copying assemblies", 90);
 							Debug.Instance.Log(DebugModes.Debug,"AddIn","Copying assemblies...");
-							assemblymanager = new AssemblyManager(iniconfig);
+
+							assemblymanager = new AssemblyManager();
 							assemblymanager.run(applicationObject, scope, action);
+
 							this.buildSuccess = true;
 						}
 
@@ -1105,6 +1123,7 @@ namespace ComposestarVSAddin
 							Debug.Instance.Log("");
 							Debug.Instance.Log("");
 							this.buildSuccess = true;
+							IsBuilt = true;
 						}
 						else 
 						{
@@ -1123,6 +1142,10 @@ namespace ComposestarVSAddin
 				{
 					Debug.Instance.Log("*** Composestar internal error ***"); 
 					Debug.Instance.Log(" message : " + e.Message );
+					if (e.InnerException != null)
+					{
+						Debug.Instance.Log(" inner : " + e.InnerException.ToString());
+					}
 					Debug.Instance.Log("   stack : " + e.StackTrace);
 					Debug.Instance.ActivateOutputWindowPane();
 					Debug.Instance.HideProgress("Composestar build failed");
@@ -1162,8 +1185,8 @@ namespace ComposestarVSAddin
 			string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
 			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");
 
-			Debug.Instance.Log("  removing build.ini");
-			DeleteFile(Path.Combine(tempfolder, "build.ini") );
+			Debug.Instance.Log("  removing BuildConfiguration.xml");
+			DeleteFile(Path.Combine(tempfolder, "BuildConfiguration.xml") );
 
 			Debug.Instance.Log("  removing incre.html");
 			DeleteFile(Path.Combine(tempfolder, "incre.html") );
@@ -1231,11 +1254,19 @@ namespace ComposestarVSAddin
 		{
 			try
 			{
-				string dir = this.iniconfig.IniReadValue("Common", "OutputPath");
-				string debugger = this.iniconfig.IniReadValue("Common", "DebuggerType");
+
+				string dir = BuildConfigurationManager.Instance.OutputPath; 
+				string debugger = "";
+
+				if (BuildConfigurationManager.Instance.Settings.GetModule("CODER") != null  )
+				{
+					debugger = BuildConfigurationManager.Instance.Settings.GetModule("CODER").Elements["DebuggerType"]; 
+				}
+		
 				if(dir != null && !"".Equals(dir))
 				{
-					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1){
+					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1)
+					{
 						dir = dir.Substring(1,dir.Length-2);
 					}
 					if(!dir.EndsWith("/"))
@@ -1247,25 +1278,40 @@ namespace ComposestarVSAddin
 						debugger = "CodeDebugger";
 					}
 					string fileName = dir + "debugger.xml";
-
-					StreamWriter writer = File.CreateText(fileName);
-					writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-					writer.Write("<debugger>" + debugger + "<debugger/>");
-					writer.Close();
+					StreamWriter writer = null;
+					try
+					{
+						writer = File.CreateText(fileName);
+						writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+						writer.Write("<debugger>" + debugger + "<debugger/>");
+						
+					}
+					catch (Exception ex)
+					{
+						Debug.Instance.Log(DebugModes.Error,"ADDIN", string.Format("Could not write file '{0}' to set debugger type. Exception is '{1}'.", fileName, ex.ToString()));
+					}
+					finally
+					{
+						if (writer != null)
+							writer.Close();
+					}
 				}
+				
 			}
 			catch(Exception e)
 			{
 				Debug.Instance.Log(DebugModes.Information,"CONNECT",e.StackTrace);
 			}	
-		RunProgram();
-	}
+
+			RunProgram();
+		}
 
 		private void OnRun()
 		{
 			try
 			{
-				string dir = this.iniconfig.IniReadValue("Common", "OutputPath");
+				// TODO aanpassen
+				string dir = BuildConfigurationManager.Instance.OutputPath; 
 
 				if(dir != null && !"".Equals(dir))
 				{
@@ -1287,29 +1333,20 @@ namespace ComposestarVSAddin
 			RunProgram();
 		}
 
+
 		/// <summary>
 		/// Run the compiled application.
 		/// </summary>
 		private void RunProgram()
 		{
-			//			if (iniconfig == null) 
-			//			{
-			//				// Try to load a previous ini file
-			//				string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
-			//				string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1).Replace("\\", "/");
-			//				if (System.IO.File.Exists(tempfolder + "project.ini"))
-			//				{
-			//					iniconfig = new IniFile(tempfolder + "project.ini");
-			//				}
-			//			}
-
+			
 			// Clean panels
 			Debug.Instance.ClearOutputWindowPane();
 			Debug.Instance.ClearTaskListWindow();
 			Application.DoEvents();
 						
 			// Check for iniconfig object
-			if (this.iniconfig == null)
+			if (BuildConfigurationManager.Instance.Executable.Length  == 0)
 			{
 				Debug.Instance.Log("Application cannot be started. Build the application first.");
 				Debug.Instance.AddTaskItem("Composestar Run; Application cannot be started. Build the application first.", 
@@ -1326,10 +1363,10 @@ namespace ComposestarVSAddin
 			try
 			{
 				String savefolder = System.IO.Directory.GetCurrentDirectory();
-				System.IO.Directory.SetCurrentDirectory(this.iniconfig.IniReadValue("Common", "OutputPath"));
+			//	System.IO.Directory.SetCurrentDirectory(this.iniconfig.IniReadValue("Common", "OutputPath"));
 
 				System.Diagnostics.Process p = new System.Diagnostics.Process();
-				p.StartInfo.FileName = this.iniconfig.IniReadValue("Common", "Executable");		
+				p.StartInfo.FileName = BuildConfigurationManager.Instance.Executable;		
 	
 				// If the filename is empty we can stop
 				if (p.StartInfo.FileName.Trim().Length == 0)
