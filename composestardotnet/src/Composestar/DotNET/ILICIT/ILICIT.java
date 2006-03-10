@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.2 2006/02/24 15:56:00 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.3 2006/03/08 09:29:34 dspenkel Exp $
  */
 
 
@@ -15,8 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- *
- * $Id: ILICIT.java,v 1.2 2006/02/24 15:56:00 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.3 2006/03/08 09:29:34 dspenkel Exp $
  */
 
 import java.io.BufferedWriter;
@@ -41,6 +40,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 import java.util.ArrayList;
@@ -48,11 +48,11 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.2 $";
+	public static final String version = "$Revision: 1.3 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      PrintWriter out = null; 
-     String binPath = resources.ProjectConfiguration.getProperty("ComposestarPath");
+     String binPath = Configuration.instance().getProperty("outputPath");
 	 String tempPath = resources.ProjectConfiguration.getProperty("TempFolder");
 	 String buildPath = resources.ProjectConfiguration.getProperty("BuildPath");
 	 String weavePath = buildPath + "Weaver\\";
@@ -370,7 +370,7 @@ public class ILICIT implements WEAVER {
     public void main(String[] args) {
       CommonResources resources = new CommonResources();
       DataStore ds = DataStore.instance();
-      resources.addResource("TheRepository", ds);
+      
 
       Properties props = new Properties();
       props.setProperty("ILICIT_PEWEAVER", "C:\\Documents and Settings\\%username%\\My Documents\\Visual Studio Projects\\Composestar\\PeWeaver\\bin\\Debug\\peweaver.exe");

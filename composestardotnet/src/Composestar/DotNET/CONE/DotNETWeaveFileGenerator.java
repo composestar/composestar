@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.1 2006/02/16 23:10:57 pascal_durr Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.2 2006/03/07 11:16:09 mivano Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -32,6 +32,9 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.Project;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.Debug;
@@ -84,32 +87,36 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
         	throw new ModuleException("Application has no startup object defined!","CONE_IS");
         }
      
-        String dependencyList = resources.ProjectConfiguration.getProperty("Dependencies");
-        String[] dependencyPaths = dependencyList.split(",");
-        
-        for( int i = 0; i < dependencyPaths.length; i++ ) 
-		{
-			String dep = dependencyPaths[i];
-			// Do not add the dependency when it is a .NET assembly or a composestar assembly
-			if( dep.indexOf("Microsoft.NET/Framework/") >= 0 )
-			{
-				continue;
-			}
-			if( dep.indexOf("ComposeStarRuntimeInterpreter") >= 0 )
-			{
-				continue;
-			}
-			if( dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0 )
-			{
-				continue;
-			}
-			File f = new File( dep );
-			
+        Configuration config = Configuration.instance();
+        Iterator it = config.projects.getProjects().iterator();
+        while(it.hasNext())
+        {
+        	Project prj = (Project)it.next();
+        	Iterator projectit = prj.getDependencies().iterator();
+        	while(projectit.hasNext())
+        	{
+        		Dependency dependency = (Dependency)projectit.next();
+        		String dep = dependency.getFileName();
+    			// Do not add the dependency when it is a .NET assembly or a composestar assembly
+    			if( dep.indexOf("Microsoft.NET/Framework/") >= 0 )
+    			{
+    				continue;
+    			}
+    			if( dep.indexOf("ComposeStarRuntimeInterpreter") >= 0 )
+    			{
+    				continue;
+    			}
+    			if( dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0 )
+    			{
+    				continue;
+    			}
+    			File f = new File( dep );
+    			
 				String filename = f.getName();
 				String dllname  = filename.substring( 0, filename.lastIndexOf( "." ) );
 				writeAssemblyDefinitionRecord( dllname, "0.0.0.0", entryAssembly );
-			
-		}
+        	}
+        }
         
         java.util.Enumeration cfNames = resources.CustomFilters.propertyNames();
         while( cfNames.hasMoreElements() ) {
@@ -421,18 +428,15 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
      */
     public void run(CommonResources resources) throws ModuleException 
 	{
-    	Properties property = ((Properties)DataStore.instance().getObjectByID("config"));
-    	File destination = new File(property.getProperty("TempFolder") + "weavespec.xml");
+    	File destination = new File(Configuration.instance().pathSettings.getPath("Temp") + "weavespec.xml");
     	
       Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
       
-	  application = resources.ProjectConfiguration.getProperty("ApplicationStart");
+	  application = Configuration.instance().getProperty("ApplicationStart");
       
 	  try
 	  {
-	  	DataStore ds = DataStore.instance();
-	  	//this.repository = ((Properties)ds.getObjectByID("config")).getProperty("RepositoryFilename");
-	  	debugLevel = Integer.parseInt(((Properties)ds.getObjectByID("config")).getProperty("RunDebugLevel"));
+	  	debugLevel = Integer.parseInt(Configuration.instance().getProperty("runDebugLevel"));
 	  }
 	  catch (NumberFormatException e)
 	  {

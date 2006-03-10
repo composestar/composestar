@@ -137,7 +137,6 @@ namespace ComposestarVSAddin
 
 			// FILTH configuration
 			this.writeIniValue("FILTH", "FILTH_INPUT", this.mFilthFilterOrderSpecification);
-			this.writeIniValue("FILTH", "FILTH_output_pattern", ".//analyses//FILTH_");
 
 			// CONE configuration
 			//string startup = "";

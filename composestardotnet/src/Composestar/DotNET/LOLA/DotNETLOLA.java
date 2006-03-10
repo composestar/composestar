@@ -22,6 +22,7 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.INCRE.MyComparator;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
@@ -70,7 +71,7 @@ public class DotNETLOLA extends LOLA
   
   public String initLanguageModel() throws ModuleException
   {
-	String generatedPredicatesFilename = FileUtils.fixFilename(((Properties)dataStore.getObjectByID("config")).getProperty("TempFolder") + "langmap.pro");
+	String generatedPredicatesFilename = FileUtils.fixFilename(Configuration.instance().pathSettings.getPath("Temp") + "langmap.pro");
     try
     {
       langModel.createMetaModel();

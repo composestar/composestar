@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRepositorySerializer.java,v 1.1 2006/02/13 11:54:42 pascal Exp $
+ * $Id: DotNETRepositorySerializer.java,v 1.1 2006/02/16 23:10:57 pascal_durr Exp $
  */
 
 package Composestar.DotNET.CONE;
@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import java.io.File;
@@ -65,8 +66,7 @@ public class DotNETRepositorySerializer implements RepositorySerializer
 		File destination = null;
 		DataStore ds = DataStore.instance();
 		
-		Properties property = ((Properties)ds.getObjectByID("config"));
-    	String repositoryFilename = property.getProperty("TempFolder") + "repository.xml";
+    	String repositoryFilename = Configuration.instance().pathSettings.getPath("Temp") + "repository.xml";
     	
     	destination = new File(repositoryFilename);
     	

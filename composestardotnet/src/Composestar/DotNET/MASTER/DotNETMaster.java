@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.4 2006/03/08 09:28:19 dspenkel Exp $
+ * $Id: DotNETMaster.java,v 1.5 2006/03/08 10:33:35 mivano Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -16,15 +16,23 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
 import Composestar.Utils.StringConverter;
-import Composestar.Utils.INIFile; 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.XmlHandlers.ActionsHandler;
+import Composestar.Core.Master.Config.XmlHandlers.BuildXMLHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -36,7 +44,7 @@ public class DotNETMaster extends Master  {
 	public static String phase = "";
 
     private Iterator concern_iterator;
-    private CommonResources Resources;
+    private CommonResources resources;
     private String configfile;
 
     /**
@@ -49,145 +57,41 @@ public class DotNETMaster extends Master  {
     	
 		configfile = configurationFile;
     	Debug.setMode(3);
-	    Resources = new CommonResources();
+	    resources = new CommonResources();
 
 	    //  create the repository
 	    DataStore ds = DataStore.instance();
-	    Resources.addResource("TheRepository", ds);
-	    ds.addObject(RESOURCES_KEY, Resources );
+
+	    ds.addObject(RESOURCES_KEY, resources );
 
 	    // init the project configuration file
-	    Resources.ProjectConfiguration = new Properties();
-	    Resources.CustomFilters = new Properties();
+	    resources.CustomFilters = new Properties();
 
-	    try {	    	
-	    	// Open the ini file
-	    	INIFile iniFile = new INIFile(configfile);
-	    	
-	    	// Get all the sectionnames
-	    	String[] sections = iniFile.getAllSectionNames();
-	    	
-	    	// For each of the sections
-	    	for (int i=0; i < sections.length; i++)
-	    	{
-	    		// Get a single section name
-	    		String section = sections[i];
-	    		
-	    		// Retrieve all the settings in the section
-	    		String[] keysInSection = iniFile.getPropertyNames(section);
-	    		
-	    		// Store the settings
-	    		for (int keys =0; keys < keysInSection.length; keys++ )
-	    		{
-	    			String key = keysInSection[keys];
-	    			String value = iniFile.getStringProperty(section, key);
-	    			if (value != null)
-	    			{
-	    				// Some items are placed in a different resource element
-	    				if (section.equalsIgnoreCase("CustomFilters"))
-	    				{
-	    					Resources.CustomFilters.put(key, value);
-	    				}
-	    				else
-	    				{
-	    					Resources.ProjectConfiguration.put(key, value);
-	    				}
-	    			}
-	    		}
-	    		
-	    		// Retrieve the sources, concernsources and dependencies
-	    		if (section.equalsIgnoreCase("TYM"))
-	    		{
-	    			// Get the number of items
-	    			Integer numberOfItems = iniFile.getIntegerProperty(section, "Dependencies");
-	    			String value = "";
-	    			// And retrieve all those items, placing them in a single string delimited by commas
-	    			if (numberOfItems != null)
-	    			{  				
-	    				for (int c=0; c < numberOfItems.intValue(); c++)
-	    				{
-	    					String iniValue = iniFile.getStringProperty(section, "Dependency" + c );
-	    					if (iniValue != null)
-	    					{
-	    						if (value.length() != 0)
-	    							value = value + ",";
-	    						value = value + iniValue;
-	    					}
-	    				}
-	    			}
-	    			Resources.ProjectConfiguration.put("Dependencies", value);
-	    			
-	    			numberOfItems = iniFile.getIntegerProperty(section, "TypeSources");
-	    			value = "";
-	    			if (numberOfItems != null)
-	    			{ 
-	    				for (int c=0; c < numberOfItems.intValue(); c++)
-	    				{
-	    					String iniValue = iniFile.getStringProperty(section, "TypeSource" + c );
-	    					if (iniValue != null)
-	    					{
-	    						if (value.length() != 0)
-	    							value = value + ",";
-	    						value = value + iniValue;
-	    					}
-	    				}
-	    			}
-	    			Resources.ProjectConfiguration.put("TypeSources", value);
-	    		}
-	    		else if (section.equalsIgnoreCase("sources"))
-	    		{
-	    			Integer numberOfItems = iniFile.getIntegerProperty(section, "ConcernSources");
-	    			String value = "";
-	    			if (numberOfItems != null)
-	    			{ 
-	    				for (int c=0; c < numberOfItems.intValue(); c++)
-	    				{
-	    					String iniValue = iniFile.getStringProperty(section, "ConcernSource" + c );
-	    					if (iniValue != null)
-	    					{
-	    						if (value.length() != 0)
-	    							value = value + ",";
-	    						value = value + iniValue;
-	    					}
-	    				}
-	    			}
-	    			Resources.ProjectConfiguration.put("ConcernSources", value);
-	    			
-	    			// Determine the compiler
-	    			String compiler = iniFile.getStringProperty( "Common","Compilers");
-	    			String sourcesKey = compiler + "Source";
-	    			
-	    			// Get the sources based on the CS or JS prefix
-	    			numberOfItems = iniFile.getIntegerProperty(section, sourcesKey + "s");
-	    			value = "";
-	    			if (numberOfItems != null)
-	    			{ 
-	    				for (int c=0; c < numberOfItems.intValue(); c++)
-	    				{
-	    					String iniValue = iniFile.getStringProperty(section, sourcesKey + c );
-	    					if (iniValue != null)
-	    					{
-	    						if (value.length() != 0)
-	    							value = value + ",";
-	    						value = value + iniValue;
-	    					}
-	    				}
-	    			}
-	    			Resources.ProjectConfiguration.put(sourcesKey + "s", value);
-	    		}
-	    	}
-	    	
-	    	
-			ds.addObject("config",Resources.ProjectConfiguration);
-			ds.addObject(Master.RESOURCES_KEY,Resources);
-			
-	    } catch(Exception e) {
-	    	throw new ModuleException();
-	    }
+	    try {
+            SAXParserFactory saxParserFactory =
+                SAXParserFactory.newInstance();
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            XMLReader  parser  = saxParser.getXMLReader();
+            //BuildXMLHandler handler = new BuildXMLHandler( parser );
+            BuildXMLHandler handler = new BuildXMLHandler(parser);
+            parser.setContentHandler( handler );
+            parser.parse( new InputSource( configurationFile ));
+            
+            Configuration config = Configuration.instance();
+            
+            System.out.println("Done... "+config.pathSettings.getPath("Temp"));
+            //System.exit(-1);
+        }
+	    catch( Exception e )
+	    { 
+            throw new ModuleException("An error occured while reading the build configuration file: "+configurationFile+", reason: "+e.getMessage(),"Master");
+        }
+		
+	    ds.addObject(Master.RESOURCES_KEY,resources);
 
 	    // Set debug level
 	    try {
-			Debug.setMode(Integer.parseInt(Resources.ProjectConfiguration.getProperty("BuildDebugLevel")));
+			Debug.setMode(Integer.parseInt(Configuration.instance().getProperty("buildDebugLevel")));
 		}
 	    catch (NumberFormatException e) {
 			Debug.setMode(1);
@@ -195,13 +99,7 @@ public class DotNETMaster extends Master  {
 
 		//just added this for testing
 	    //fixme:we need to iterate over all the cps files specified in the configuration
-	    String concerns = (String)Resources.ProjectConfiguration.get("ConcernSources");
-		//System.out.println("ConcernSources: "+Resources.ProjectConfiguration);
-		if(concerns != null)
-		{
-			concern_iterator = StringConverter.stringToStringList(concerns);
-			Resources.addResource("CpsIterator",concern_iterator);
-		}
+	    resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
 	}
 
     /**
@@ -264,24 +162,24 @@ public class DotNETMaster extends Master  {
 			DataStore.instance();
 
 			// read phase configuration key
-			phase = Resources.ProjectConfiguration.getProperty( "CompilePhase", "ERROR" );
+			phase = Configuration.instance().getProperty("compilePhase");
 			
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
-			incre.run(Resources);
+			incre.run(resources);
 									
 			Iterator modulesIter = incre.getModules();
 			while(modulesIter.hasNext())
 			{
 				// execute enabled modules one by one
 				Module m = (Module)modulesIter.next();
-				m.execute(phase,Resources);
+				m.execute(phase,resources);
 			}
 			
 			if("two".equalsIgnoreCase(phase))
 			{	
 				Debug.out(Debug.MODE_DEBUG, "Master", "Updating configuration file...");
-				this.SaveModifiedConfigurationKeys(Resources);
+				this.SaveModifiedConfigurationKeys(resources);
 
 				incre.getReporter().close();
 		        
