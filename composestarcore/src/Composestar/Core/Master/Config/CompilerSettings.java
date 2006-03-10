@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import Composestar.Core.COMP.LangCompiler;
+import Composestar.Core.Exception.ModuleException;
 
 public class CompilerSettings implements Serializable{
 
@@ -48,9 +49,15 @@ public class CompilerSettings implements Serializable{
 		return null;
 	}
 	
-	public LangCompiler getCompiler() {
-		//TODO: return implementing compiler, use reflection
-		return null;
+	public LangCompiler getCompiler() throws ModuleException {
+		try {
+			Class myclass = Class.forName(this.getProperty("implementedBy"));
+			LangCompiler comp = (LangCompiler)myclass.newInstance();
+			return comp;
+		}
+		catch(Exception e) {
+			throw new ModuleException("Error while creating compiler..");
+		}
 	}
 	
 }
