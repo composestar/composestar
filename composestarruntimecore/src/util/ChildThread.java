@@ -34,7 +34,7 @@ public class ChildThread extends Thread
 
 	public synchronized void reanimate()
 	{
-		notify();
+		this.interrupt();
 	}
 
 	public void setRunnable(ChildRunable run)
@@ -60,9 +60,12 @@ public class ChildThread extends Thread
 			{
 				try
 				{
-					wait();
+					synchronized(this)
+					{
+						wait();
+					}
 				}
-				catch(Exception e)
+				catch(InterruptedException e)
 				{
 				}
 			}

@@ -34,11 +34,16 @@ public class RuntimeHalter implements Halter {
 					stacktrace = produceStackTrace();
 					dumpStackSpace = false;
 				}
-               Thread.yield();
+               wait();
             } catch (Exception e) {
             }
         }
     }
+
+	public synchronized void reanimate()
+	{
+		notify();
+	}
 
 	private boolean dumpStackSpace = false;
 
@@ -86,6 +91,7 @@ public class RuntimeHalter implements Halter {
     public void globalResume() {
         Debug.out(Debug.MODE_DEBUG, "FLIRT(RuntimeHalter)", "Resuming the runtime");
         globalHalt = false;
+		reanimate();
     }
 
     public void globalSuspend() {
@@ -100,6 +106,7 @@ public class RuntimeHalter implements Halter {
     public void threadResume() {
         Debug.out(Debug.MODE_DEBUG, "FLIRT(RuntimeHalter)", "Resuming Thread");
         threadHalt = false;
+		reanimate();
     }
 
     public void threadSuspend() {
