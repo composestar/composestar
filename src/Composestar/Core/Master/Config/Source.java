@@ -8,7 +8,8 @@ public class Source implements Serializable{
 	private String fileName;
 	private String dummy;
 	private String compiledSource;
-		
+	private String target;
+	
 	public Source() {
 		
 	}
@@ -43,5 +44,13 @@ public class Source implements Serializable{
 	
 	public String getDummy() {
 		return dummy;
+	}
+	
+	public String getTarget() {
+		return target;
+	}
+	
+	public void setTarget(String target) {
+		this.target = target;
 	}
 }
