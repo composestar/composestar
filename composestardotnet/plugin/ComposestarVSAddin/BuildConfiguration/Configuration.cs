@@ -185,7 +185,7 @@ namespace BuildConfiguration
 		/// <returns></returns>
 		private string FormatPath(string pathName)
 		{
-			if (!pathName.EndsWith("\\"))
+			if (!pathName.EndsWith("\\") & !pathName.EndsWith("/") )
 				pathName= string.Concat(pathName, "\\"); 
 			return pathName.Replace("\\", "/");
 		}
@@ -408,7 +408,7 @@ namespace BuildConfiguration
 							{
 
 								p.ClassPath = reader.GetAttribute("classPath");
-								p.MainClass = reader.GetAttribute("classPath");
+								p.MainClass = reader.GetAttribute("mainClass");
 								p.Options = reader.GetAttribute("options"); 
 							
 
@@ -497,6 +497,11 @@ namespace BuildConfiguration
 				mUsedCompilers = new ArrayList(languages.GetCount());
 
 			string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
+			EnvDTE.Project startProject = GetStartupProject(applicationObject);
+			if (startProject != null)
+			{
+				this.OutputPath =Path.Combine(Path.GetDirectoryName(startProject.FileName), "bin");	
+			}
 			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1);
 			_tempFolder = tempfolder;
 
@@ -630,6 +635,25 @@ namespace BuildConfiguration
 					this._customFilters.Add(new CustomFilter(parsed[0], parsed[1]) );
 				}
 			}
+		}
+
+		private EnvDTE.Project GetStartupProject(_DTE applicationObject)
+		{
+			
+			System.Array projectNames = (System.Array) applicationObject.Solution.SolutionBuild.StartupProjects;
+			if ((projectNames != null) && (projectNames.Length > 0))
+			{
+				string curPrjName = (string) projectNames.GetValue(0);
+   
+				foreach(EnvDTE.Project project in applicationObject.Solution.Projects ) 
+				{
+					if (project.UniqueName == curPrjName)
+						return project;
+				}
+			
+			}
+
+			return null;
 		}
 
 		private void ProcessProjectFiles(BuildConfiguration.Project project, string path, ProjectItems projectitems) 
