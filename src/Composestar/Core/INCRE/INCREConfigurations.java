@@ -5,12 +5,10 @@ package Composestar.Core.INCRE;
 
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Module;
-import Composestar.Core.Master.Config.Project;
 
 import Composestar.Utils.StringConverter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Properties;
 /**
  * @author Dennis
@@ -59,7 +57,11 @@ public class INCREConfigurations {
 		props.put("Dependencies",depstr);
 		
 		/* ApplicationStart */
-		ArrayList projects = config.projects.getProjects();
+		String as = config.projects.getProperty("applicationStart");
+		if(null!=as && !as.equals("")){
+			props.put("ApplicationStart",as);
+		}
+		/*ArrayList projects = config.projects.getProjects();
 		Iterator prjIter = projects.iterator();
 		while(prjIter.hasNext())
 		{
@@ -69,7 +71,7 @@ public class INCREConfigurations {
 				props.put("ApplicationStart",as);
 				break;
 			}
-		}
+		}*/
 				
 		/* RunDebugLevel */
 		String rdl = config.projects.getProperty("runDebugLevel");
