@@ -519,14 +519,16 @@ namespace BuildConfiguration
 			EnvDTE.Project startProject = GetStartupProject(applicationObject);
 			if (startProject != null)
 			{
-				this.OutputPath =Path.Combine(Path.GetDirectoryName(startProject.FileName), "bin");	
+				this.OutputPath =Path.Combine(Path.GetDirectoryName(startProject.FileName), "bin");
 				this.Executable = getProperty(startProject.Properties, "OutputFileName").ToString();
 				string appStart = null;
 				appStart = (string)getProperty(startProject.Properties, "StartupObject"); 
 				if (appStart != null & appStart.Length  > 0)
 				{
 					this.ApplicationStart = appStart;
+					this.Executable = appStart;
 				}
+				//System.Windows.Forms.MessageBox.Show("Executable: "+this.Executable+"    Appstart: "+this.ApplicationStart);
 			}
 			else
 			{

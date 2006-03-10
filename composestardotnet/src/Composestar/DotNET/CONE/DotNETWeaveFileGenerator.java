@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.4 2006/03/10 14:57:52 pascal_durr Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.5 2006/03/10 21:50:56 pascal_durr Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -432,7 +432,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
     	
       Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
       
-	  application = Configuration.instance().projects.getProperty("Executable");
+	  application = Configuration.instance().projects.getProperty("applicationStart");
       
 	  try
 	  {
@@ -474,7 +474,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
     private void writeApplicationInfo() 
     {
       	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing application information...");
-      	out.println("<application name=\"" + application + "\">");
+      	out.println("<application name=\"" + application + ".exe\">");
       	out.println("<notifyStart id=\"application_start\"/>");     	
       	out.println("</application>");
       	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Application information has been written.");     

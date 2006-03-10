@@ -165,7 +165,7 @@ namespace ComposestarVSAddin
 				ilicitSettings.Elements.Add("assemblies", dummypaths)  ;
 				BuildConfigurationManager.Instance.Settings.SetModule(ilicitSettings); 
 			
-				BuildConfigurationManager.Instance.Executable = this.ExecSource;
+				//BuildConfigurationManager.Instance.Executable = this.ExecSource;
 
 				BuildConfiguration.Project p = BuildConfigurationManager.Instance.GetProjectByName(project.Name);
 

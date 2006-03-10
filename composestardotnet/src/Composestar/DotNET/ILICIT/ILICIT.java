@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.6 2006/03/10 14:57:52 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.7 2006/03/10 15:19:13 dspenkel Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.6 2006/03/10 14:57:52 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.7 2006/03/10 15:19:13 dspenkel Exp $
  */
 
 import java.io.BufferedWriter;
@@ -49,18 +49,18 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.6 $";
+	public static final String version = "$Revision: 1.7 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
      PrintWriter out = null; 
-     String binPath = Configuration.instance().getProperty("outputPath");
+     String binPath = config.pathSettings.getPath("Composestar");
 	 //String tempPath = resources.ProjectConfiguration.getProperty("TempFolder");
      String tempPath = config.pathSettings.getPath("Base");
 	 //String buildPath = resources.ProjectConfiguration.getProperty("BuildPath");
-     String buildPath = config.projects.getProperty("outputPath");
-	 String weavePath = buildPath + "Weaver\\";
-	 String peweaver = binPath + "binaries\\peweaver.exe";
+     //String buildPath = config.projects.getProperty("outputPath");
+	 String weavePath = tempPath + "obj/Weaver";
+	 String peweaver = binPath + "binaries/peweaver.exe";
 	 String weavefile = "\"" + tempPath + "weavespec.xml" + '\"';
 	      
      ArrayList compiledSources = (ArrayList) resources.getResource("CompiledSources");
