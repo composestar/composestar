@@ -70,12 +70,12 @@ public class DotNETHarvestRunner implements HarvestRunner {
 		Iterator it = dependencyList.iterator();
 		while(it.hasNext()) 
 		{
-			Dependency dependency = (Dependency)it.next();
-			String name = dependency.getName();
+			Composestar.Core.Master.Config.Dependency dependency = (Composestar.Core.Master.Config.Dependency)it.next();
+			String name = dependency.getFileName();
 			if( name.indexOf("Microsoft.NET/Framework/") == -1 )
 			{
 				name = checkDLL(name);
-                arg += name + " ";
+                arg += "\"" +name + "\"" + " ";
 			}
 		}
 
@@ -90,7 +90,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
       	
 		resources.addResource("unmodifiedDLLs",unmodifiedDLLs);
 		Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
-		String typeHarvester =  Configuration.instance().pathSettings.getPath("Composestar") + "binaries\\TypeHarvester.exe" ;
+		String typeHarvester =  Configuration.instance().pathSettings.getPath("Composestar") + "binaries/TypeHarvester.exe" ;
 		java.io.File typeHarvesterFile = new java.io.File(typeHarvester);
 		if( !typeHarvesterFile.exists() )
 		{

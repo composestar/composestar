@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRealSourceManager.java,v 1.5 2006/03/08 16:35:38 dspenkel Exp $
+ * $Id: DotNETRealSourceManager.java,v 1.6 2006/03/08 16:39:26 dspenkel Exp $
  */
 
 package Composestar.DotNET.TYM.SrcCompiler;
@@ -142,7 +142,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
      * @roseuid 401BCC860131
      */
     public void run(CommonResources resources) throws ModuleException {
-        ProjectConfig = resources.ProjectConfiguration;
+        //ProjectConfig = resources.ProjectConfiguration;
         // fetch compilers
         String compilerString = ProjectConfig.getProperty( "Compilers", "ERROR" );
         if( "ERROR".equals(compilerString) ) {
@@ -294,7 +294,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
      * @roseuid 404F328B039A
      */
     public void start(CommonResources resources) {
-      	 String assemblies = resources.ProjectConfiguration.getProperty("Assemblies");
+      	 String assemblies = "";//resources.ProjectConfiguration.getProperty("Assemblies");
       	 String[] assArray = assemblies.split(",");
       	 for( int i = 0; i < assArray.length; i++ )
       	 {
@@ -302,7 +302,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
       	 	deps.add('\"' + assArray[i] + '\"');
       	 }
       	  
-      	 String dependencies = resources.ProjectConfiguration.getProperty("Dependencies");
+      	 String dependencies = "";//resources.ProjectConfiguration.getProperty("Dependencies");
       	 String[] depArray = dependencies.split(",");
       	 for( int i = 0; i < depArray.length; i++ )
       	 {
@@ -348,7 +348,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 		
 		DataStore ds = DataStore.instance();
 		CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
-		String buildPath = resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
+		String buildPath = "";//resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
 		
 		//	step 1: open il code of source
 		String targetFile = createTargetFile(src,false);
@@ -413,7 +413,7 @@ public class DotNETRealSourceManager implements RealSourceManager  {
 		
 		DataStore ds = DataStore.instance();
 		CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
-		String buildPath = resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
+		String buildPath = "";//resources.ProjectConfiguration.getProperty( "BuildPath", "ERROR" );
 		
 		//concernsToCheck = incre.getConcernsWithFMO();
 		concernsToCheck = incre.getConcernsWithModifiedSignature();
