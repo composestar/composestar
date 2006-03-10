@@ -22,7 +22,6 @@ namespace BuildConfiguration
 		#region Privates
 
 		private ComposestarVSAddin.SupportedLanguages languages = null;
-		private string mFilthFilterOrderSpecification = "";
 		private ArrayList mUsedCompilers;
 		private string _tempFolder = "";
 		#endregion
@@ -582,7 +581,6 @@ namespace BuildConfiguration
 			// FILTH configuration
 			ModuleSetting filthModule = new ModuleSetting();
 			filthModule.Name = "FILTH";
-			filthModule.Elements.Add("input", this.mFilthFilterOrderSpecification)  ;
 			filthModule.Elements.Add("output_pattern", ".//analyses//FILTH_") ;
 			Settings.SetModule(filthModule);
 			
@@ -637,6 +635,15 @@ namespace BuildConfiguration
 				IncreModule.Name = "INCRE";
 				IncreModule.Elements.Add("enabled", INCRE_ENABLED)  ;
 				Settings.SetModule(IncreModule);
+			}
+
+			String FilterModuleOrder = ini.ReadString("Global Composestar configuration", "FILTH_INPUT", "") ;
+			if (FilterModuleOrder.Length > 0)
+			{
+				ModuleSetting filthModule = new ModuleSetting ();
+				filthModule.Name = "FILTH";
+				filthModule.Elements.Add("input", FilterModuleOrder)  ;
+				Settings.SetModule(filthModule);
 			}
 
 			String VerifyAssemblies = ini.ReadString("Common", "VerifyAssemblies", "") ;
@@ -733,11 +740,6 @@ namespace BuildConfiguration
 						}
 					}
 					
-					// Check for FILTH filter order specification file
-					if (projectitem.Name.Equals("filterorderspecification.xml"))
-					{
-						this.mFilthFilterOrderSpecification = path + "filterorderspecification.xml";
-					}
 				}
 
 			}

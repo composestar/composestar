@@ -392,7 +392,7 @@ namespace ComposestarVSAddin
 				
 				this.addInInstance = null;
 				this.applicationObject = null;
-			
+	
 			}
 		}
 
@@ -443,7 +443,6 @@ namespace ComposestarVSAddin
 			attributemanager=null;
 			embsrcmanager=null;
 
-
 			// Remove the buttons
 			this.DeleteCommand( m_commandNameBuild );
 			this.DeleteCommand( m_commandNameRun );
@@ -454,14 +453,8 @@ namespace ComposestarVSAddin
 			this.DeleteMenu();
 			this.DeleteToolBar(); 
 			
-
-
-
 			m_Menu = null;
 			m_Bar  = null;
-
-
-
 
 		}
 
