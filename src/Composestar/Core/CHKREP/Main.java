@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Main.java,v 1.1 2006/02/13 11:16:53 pascal Exp $
+ * $Id: Main.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
  */
 /**
  * Main class
@@ -34,6 +34,6 @@ public class Main implements CTCommonModule {
    */
   public void run(CommonResources resources) throws ModuleException {
     DoCheck dc = new DoCheck();
-    dc.go((DataStore) resources.getResource("TheRepository"));
+    dc.go(DataStore.instance());
   }
 }

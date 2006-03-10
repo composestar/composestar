@@ -1,7 +1,7 @@
 ROOTDIR=../../../../
 include ${ROOTDIR}common.mk
 
-SUBDIRS=
+SUBDIRS=Config
 
 CLASSES=CommonResources.class \
 	CTCommonModule.class \

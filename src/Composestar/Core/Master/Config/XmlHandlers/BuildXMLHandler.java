@@ -67,7 +67,7 @@ public class BuildXMLHandler extends DefaultHandler implements ContentHandler {
 
 	public void endDocument() 
 	{
-			System.out.println("Done with document..");
+			//System.out.println("Done with document..");
 	}
 	
 	public static void main(String[] args) {

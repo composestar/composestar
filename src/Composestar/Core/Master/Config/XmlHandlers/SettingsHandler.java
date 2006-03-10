@@ -37,7 +37,7 @@ public class SettingsHandler extends DefaultHandler implements ContentHandler
 	{
 		if("Settings".equals(raw_name)){
 			// end <settings>
-			System.out.println("end settings");
+			//System.out.println("end settings");
 			parser.setContentHandler( returnHandler );
 		}
 	}

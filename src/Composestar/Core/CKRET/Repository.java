@@ -14,6 +14,7 @@ import java.util.Map;
 
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.*;
 import Composestar.Core.CKRET.Config.ConfigParser;
@@ -68,17 +69,17 @@ public class Repository {
 		actions.put("meta", new MetaFilterAction());
 				
 		CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
-		String tempFolder = (String) resources.ProjectConfiguration.getProperty("TempFolder");
+		String tempFolder = Configuration.instance().pathSettings.getPath("Temp");
 		String secretconfigfile = tempFolder + SECRET_CONFIG;
 		if( !(new File(secretconfigfile).exists()))
 		{
-			secretconfigfile = resources.ProjectConfiguration.getProperty("ComposestarPath") + SECRET_CONFIG;
+			secretconfigfile = Configuration.instance().pathSettings.getPath("Composestar") + SECRET_CONFIG;
 			if( !(new File(secretconfigfile).exists()))
 			{
 				throw new ModuleException("Filter specification (" + SECRET_CONFIG + ") not found.","SECRET");
 			}
 		}	
-		resources.ProjectConfiguration.put("SECRETConfigFile",secretconfigfile);	
+		//resources.ProjectConfiguration.put("SECRETConfigFile",secretconfigfile);	
 										
 		Debug.out(Debug.MODE_INFORMATION,"SECRET","Using filter specification in " + secretconfigfile);
 		

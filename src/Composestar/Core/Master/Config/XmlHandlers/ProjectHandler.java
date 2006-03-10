@@ -25,7 +25,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 	{
 		if("Project".equals(raw_name))
 		{// in <Project>
-			System.out.println("<project>");
+			//System.out.println("<project>");
 			project = new Project();
 			
 			if(amap.getValue("name")!=null){
@@ -68,7 +68,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 		
 		if("Sources".equals(raw_name))
 		{// in <Sources>	
-			System.out.println("<sources>");	
+			//System.out.println("<sources>");	
 			//look further
 			ProjectSourcesHandler sourceshandler = new ProjectSourcesHandler(project,parser,this);
 			parser.setContentHandler( sourceshandler );
@@ -76,7 +76,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 		
 		if("Dependencies".equals(raw_name))
 		{// in <Dependencies>	
-			System.out.println("<dependencies>");	
+			//System.out.println("<dependencies>");	
 			//look further
 			ProjectDependenciesHandler dependencyhandler = new ProjectDependenciesHandler(project,parser,this);
 			parser.setContentHandler( dependencyhandler );
@@ -84,7 +84,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 		
 		if("TypeSources".equals(raw_name))
 		{// in <Type>	
-			System.out.println("<typesources>");	
+			//System.out.println("<typesources>");	
 			//look further
 			ProjectTypeSourcesHandler typesourceshandler = new ProjectTypeSourcesHandler(project,parser,this);
 			parser.setContentHandler( typesourceshandler );
@@ -92,7 +92,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 		
 		if("ConcernSources".equals(raw_name))
 		{// in <ConcernSources>	
-			System.out.println("<concernsources>");	
+			//System.out.println("<concernsources>");	
 			//look further
 			ConcernSourcesHandler concernsourceshandler = new ConcernSourcesHandler(parser,this);
 			parser.setContentHandler( concernsourceshandler );

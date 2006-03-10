@@ -9,6 +9,10 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.Config.*;
 import Composestar.Core.LAMA.*;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
@@ -51,7 +55,7 @@ public class INCRE implements CTCommonModule
 	private DataStore currentRepository;
 	public DataStore history;
 	private boolean enabled = false;
-	private boolean searchingHistory = false;
+	public boolean searchingHistory = false;
 	
 	private String historyfile = "";
 	private Date lastCompTime = null;
@@ -60,6 +64,7 @@ public class INCRE implements CTCommonModule
 	private INCREReporter reporter;
 	
 	/* for optimalization purposes */
+	public INCREConfigurations configurations;
 	private HashMap filesCheckedOnTimeStamp;
 	private HashMap filesCheckedOnProjectConfig;
 	public HashMap externalSourcesBySource;
@@ -80,6 +85,7 @@ public class INCRE implements CTCommonModule
 		dsObjectsOrdered = new HashMap();
 		historyObjectsOrdered = new HashMap();
 		externalSourcesBySource = new HashMap();
+		configurations = new INCREConfigurations();
 	}
 	
 	public static INCRE instance()
@@ -100,10 +106,21 @@ public class INCRE implements CTCommonModule
     */
    public void run(CommonResources resources) throws ModuleException 
    {
-       this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
-    
+	   Configuration config = Configuration.instance();
+       //this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
+       this.historyfile = config.pathSettings.getPath("Temp")+"history.dat";
+	   
    	   // ability to turn INCRE on
-   	   if ("True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
+   	   String incre_enabled = "";
+   	   Module m = config.moduleSettings.getModule("INCRE");
+   	   if(m!=null){
+   		   incre_enabled = m.getProperty("enabled");
+   	   }
+       
+       //if ("True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
+		//	this.enabled = true;
+	   //}
+   	   if ("True".equalsIgnoreCase(incre_enabled)) {
 			this.enabled = true;
 	   }
    	   else {
@@ -116,12 +133,14 @@ public class INCRE implements CTCommonModule
 	   
 	   // set configmanager to read xml configuration file */
 	   configmanager = new ConfigManager(resources);
-	   String configfile = resources.ProjectConfiguration.getProperty("TempFolder") + "INCREconfig.xml";
+	   //String configfile = resources.ProjectConfiguration.getProperty("TempFolder") + "INCREconfig.xml";
+	   String configfile = config.pathSettings.getPath("Temp") + "INCREconfig.xml";
 	   try
 	   {
 		   File file = new File(configfile);
 		   if(!file.exists() && !file.canRead())
-			   configfile = resources.ProjectConfiguration.getProperty("ComposestarPath") + "INCREconfig.xml";
+			   configfile = config.pathSettings.getPath("Composestar") + "INCREconfig.xml";
+			   //configfile = resources.ProjectConfiguration.getProperty("ComposestarPath") + "INCREconfig.xml";
 	   }
 	   catch(Exception ioe)
 	   {
@@ -134,8 +153,9 @@ public class INCRE implements CTCommonModule
 	   try 
 	   {
 		   	configmanager.parseXML(configfile);
+		   	
 		   	// load the project sources by iterating over the compilers
-		   	String compilerStr = resources.ProjectConfiguration.getProperty( "Compilers", "ERROR" );
+		   	/*String compilerStr = resources.ProjectConfiguration.getProperty( "Compilers", "ERROR" );
 		   	if( "ERROR".equals(compilerStr) ) {
 		   		throw new ModuleException( "Error in configuration file: No such property \"Compilers\"" );
 		   	}
@@ -159,7 +179,24 @@ public class INCRE implements CTCommonModule
 	        }
 		   	
 		   	int firstComma = this.projectSources.indexOf(",")+1;
-		   	this.projectSources = this.projectSources.substring(firstComma);
+		   	this.projectSources = this.projectSources.substring(firstComma);*/
+		   	
+		   	// get all sources by iterating over projects
+		   	ArrayList sources = new ArrayList();
+		   	ArrayList projects = config.projects.getProjects();
+		   	Iterator prjIter = projects.iterator();
+		   	while(prjIter.hasNext()){
+		   		Project p = (Project)prjIter.next();
+		   		ArrayList sourcesList = p.getSources();
+		   		Iterator sourceItr = sourcesList.iterator();
+		   		while(sourceItr.hasNext()){
+		   			Source s = (Source)sourceItr.next();
+		   			sources.add(s.getFileName());
+		   		}
+		   	}
+		   	String[] sourcePaths = (String[]) sources.toArray(new String[sources.size()]);
+		   	this.projectSources = StringConverter.stringListToString(sourcePaths);
+		   	Debug.out(Debug.MODE_DEBUG,"INCRE","ProjectSources "+this.projectSources);
 	   }
 	   catch(Exception e)
 	   {
@@ -176,7 +213,8 @@ public class INCRE implements CTCommonModule
 	   increparse.stop();  	
 	   
 	   // only load history once
-	   String phase = resources.ProjectConfiguration.getProperty("CompilePhase");
+	   //String phase = resources.ProjectConfiguration.getProperty("CompilePhase");
+	   String phase = config.getProperty("compilePhase");
 	   if(!phase.equals("two")){
 	   		this.enabled = false; // no need to load history in MASTER phase one
 	   }
@@ -187,6 +225,11 @@ public class INCRE implements CTCommonModule
 	   		INCRETimer loadhistory = this.getReporter().openProcess("INCRE","Loading history",INCRETimer.TYPE_OVERHEAD);	
 	   		this.enabled = this.loadHistory(historyfile);
 	   		loadhistory.stop(); // shut down INCRE in case loading fails!	
+	   }
+	   
+	   if(this.enabled){
+	   		// preprocess configurations for fast retrieval
+	   		configurations.init();
 	   }
 	   
 	   incretotal.stop(); // stop timing INCRE's initialization 
@@ -210,6 +253,17 @@ public class INCRE implements CTCommonModule
 	{
 		return this.configmanager;
 	}
+	
+	public void addConfiguration(String key, String val)
+	{
+		configurations.addConfiguration(key,val);
+	}
+	
+	public String getConfiguration(String key)
+	{
+		return configurations.getConfiguration(key);		
+	}
+	
 	
 	public DataStore getCurrentRepository()
 	{
@@ -432,8 +486,8 @@ public class INCRE implements CTCommonModule
 		String searchStr = "";
 		
 		// project configuration of previous compilation run
-		Properties prop = (Properties)history.getObjectByID("config"); 
-				
+		//Properties prop = (Properties)history.getObjectByID("config"); 
+				 
 		// As an optimalization: 
 		// do not look in all configurations but only in the interesting part(s)
 		// thus set searchstring dependent of type of file
@@ -442,7 +496,10 @@ public class INCRE implements CTCommonModule
 			searchStr = this.projectSources;// look in project sources
 		}
 		else if(fixedFile.endsWith(".cps")){
-			searchStr = prop.getProperty("ConcernSources");// look in concern sources
+			//searchStr = prop.getProperty("ConcernSources");// look in concern sources
+			ArrayList conList = Configuration.instance().projects.getConcernSources();
+			String[] conPaths = (String[])conList.toArray(new String[conList.size()]);
+		   	searchStr = StringConverter.stringListToString(conPaths);
 		}
 		else if(fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe")){
 			// TODO: use SupportedLanguages and move/replace .NET specific code
@@ -472,8 +529,16 @@ public class INCRE implements CTCommonModule
 			
 			// look in configurations "Dependencies" and "Assemblies"
 			// TODO: possible naming conflict when JAVA platform is there
-			searchStr = prop.getProperty("Dependencies");
-			searchStr += prop.getProperty("Assemblies");
+			//searchStr = prop.getProperty("Dependencies");
+			ArrayList depList = Configuration.instance().projects.getDependencies();
+			String[] depPaths = (String[])depList.toArray(new String[depList.size()]);
+		   	searchStr += StringConverter.stringListToString(depPaths);
+		   	
+			//searchStr += prop.getProperty("Assemblies");
+			ArrayList dummies = Configuration.instance().projects.getCompiledDummies();
+			String[] dummyPaths = (String[])dummies.toArray(new String[dummies.size()]);
+		   	searchStr += StringConverter.stringListToString(dummyPaths);
+			
 		} 
 		else {
 			// file could be referenced by a ConfigNode of the FileDependency
@@ -481,7 +546,8 @@ public class INCRE implements CTCommonModule
 			if(!p.isEmpty()){
 				Node n = (Node)p.getFirstNode();
 				if(n instanceof ConfigNode){
-					searchStr = (String)prop.getProperty(n.getReference());
+					//searchStr = (String)prop.getProperty(n.getReference());
+					searchStr = (String)configurations.historyconfig.getProperty(n.getReference());
 				}
 			}
 		}
@@ -506,7 +572,7 @@ public class INCRE implements CTCommonModule
 	{
 		if(enabled){
 			if(configmanager.getModuleByID(name)!=null){
-				Module m = configmanager.getModuleByID(name);
+				Composestar.Core.INCRE.Module m = configmanager.getModuleByID(name);
 				return m.isIncremental();
 			}
 		}
@@ -653,7 +719,7 @@ public class INCRE implements CTCommonModule
 	   	if(!isModuleInc(modulename))
 	   		return false;
 	   		 
-	  	Module mod = configmanager.getModuleByID(modulename);
+	   	Composestar.Core.INCRE.Module mod = configmanager.getModuleByID(modulename);
 		if(mod!=null)
 		{
 			// *** Little verification of input object ***
@@ -778,7 +844,6 @@ public class INCRE implements CTCommonModule
 			thus input has already been processed */
 		overhead.stop();
 		
-		//TODO: call copy operation of module
 		return true;
    }
    
@@ -810,11 +875,11 @@ public class INCRE implements CTCommonModule
 		   Debug.out(Debug.MODE_INFORMATION, "INCRE","Loading history ("+lastCompTime.toString()+") ...");	
 
 		   // read project configurations
-		   history.addObject("config",ois.readObject());
+		   //history.addObject("config",ois.readObject());
+		   configurations.historyconfig = (Configuration)ois.readObject();
 		   
 		   int numberofobjects = ois.readInt();	
-		   
-		   for(int i=1;i<numberofobjects;i++)
+		   for(int i=0;i<numberofobjects;i++)
 		   {
 			   try 
 			   {
@@ -840,7 +905,7 @@ public class INCRE implements CTCommonModule
 	   }
 	   catch(Exception ex){
 		   Debug.out(Debug.MODE_WARNING, "INCRE","Failed to load history: "+ex.toString());
-		   return false;
+		  return false;
 	   }
    }
    
@@ -853,8 +918,18 @@ public class INCRE implements CTCommonModule
 	   Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
 	   
 	   DataStore ds = DataStore.instance();
-	   CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
-	   if (!"True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
+	   //CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
+	   
+	   Configuration config = Configuration.instance();
+	   String incre_enabled = "";
+   	   Module m = config.moduleSettings.getModule("INCRE");
+   	   if(m!=null){
+   		   incre_enabled = m.getProperty("enabled");
+   	   }
+	   //if (!"True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
+	   //		return;
+	   //}
+   	   if (!"True".equalsIgnoreCase(incre_enabled)) {
 	   		return;
 	   }
 		
@@ -866,10 +941,11 @@ public class INCRE implements CTCommonModule
 		   		   
 		   // write current date = last compilation date
 		   oos.writeObject(new Date());
-		   
+		  		   
 		   // write project configurations
-		   oos.writeObject(ds.getObjectByID("config"));
-		   		   
+		   //oos.writeObject(ds.getObjectByID("config"));
+		   oos.writeObject(Configuration.instance());
+		   
 		   // collect the objects
 		   Object[] objects = ds.getAllObjects();
 		   oos.writeInt(objects.length-1);

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Main.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: Main.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -32,7 +32,7 @@ public class Main
 
 		Composestar.Core.REXREF.Main rexref = new Composestar.Core.REXREF.Main(); 
 		CommonResources cr = new CommonResources(); 
-		cr.addResource("TheRepository", ds);
+		
 		cr.addResource("CpsFileName", filename);
 
 		//Composestar.Core.Supre.Main fillDatastore = new Composestar.Core.Supre.Main();

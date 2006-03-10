@@ -6,9 +6,7 @@ import java.io.File;
 import java.util.*;
 
 import Composestar.Utils.*;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Master;
-import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.Master.Config.Configuration;
 
 public class INCREReporter 
 {
@@ -21,15 +19,19 @@ public class INCREReporter
 	public INCREReporter() 
 	{
 		// find INCRE stylesheet and create html report file
-		DataStore ds = DataStore.instance();
-		Properties resources = (Properties)ds.getObjectByID("config");
-		this.cssFile = resources.getProperty( "ComposestarPath", "ERROR" ) + "INCRE.css";
+		//DataStore ds = DataStore.instance();
+		//Properties resources = (Properties)ds.getObjectByID("config");
+		Configuration config = Configuration.instance();
+		
+		//this.cssFile = resources.getProperty( "ComposestarPath", "ERROR" ) + "INCRE.css";
+		this.cssFile = config.pathSettings.getPath("Composestar")+"INCRE.css";
 		if( !(new File(cssFile).exists()))
 		{
 			Debug.out(Debug.MODE_WARNING, "INCRE", "Could not find stylesheet for INCRE reporter: "+cssFile);
 		}
 		
-		String reportFile = resources.getProperty("TempFolder") + "INCRE.html";
+		//String reportFile = resources.getProperty("TempFolder") + "INCRE.html";
+		String reportFile = config.pathSettings.getPath("Temp") + "INCRE.html";
 		try 
 		{
 			writer = new BufferedWriter(new FileWriter(reportFile));
@@ -74,10 +76,12 @@ public class INCREReporter
 	
 	public void open()
 	{
-		DataStore ds = DataStore.instance();
-		Properties resources = (Properties)ds.getObjectByID("config");
-		String tempPath = resources.getProperty( "TempFolder", "ERROR" );
-
+		//DataStore ds = DataStore.instance();
+		//Properties resources = (Properties)ds.getObjectByID("config");
+		//String tempPath = resources.getProperty( "TempFolder", "ERROR" );
+		Configuration config = Configuration.instance();
+		String tempPath = config.pathSettings.getPath("Temp");
+		
 		buffer.append("<html><head><title>INCRE Report</title></head>");
 		buffer.append("<link rel=stylesheet href=");
         buffer.append("\"file://").append(this.cssFile).append("\"");

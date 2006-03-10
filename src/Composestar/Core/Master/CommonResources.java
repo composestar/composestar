@@ -7,7 +7,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CommonResources.java,v 1.2 2006/02/14 11:57:55 composer Exp $
+ * $Id: CommonResources.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
  */
 
 package Composestar.Core.Master;
@@ -31,7 +31,7 @@ public class CommonResources implements Serializable{
 	/**
      * The main project configuration file. This resource is initialized by Master
      */
-    public Properties ProjectConfiguration;
+    //public Properties ProjectConfiguration;
     
     /**
      * Information about the Custom Filters that are used in this project.

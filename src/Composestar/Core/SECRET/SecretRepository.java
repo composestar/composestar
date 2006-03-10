@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SECRET.filterxmlparser.SecretFilterXMLParser;
 
@@ -162,7 +163,7 @@ public class SecretRepository implements CTCommonModule {
      */
     public void run(CommonResources resources) throws ModuleException {
 		DataStore ds = DataStore.instance();
-		java.util.Properties props = (java.util.Properties)ds.getObjectByID("config");
+		Configuration.instance().moduleSettings.getModule("SECRET").getProperty();
 		String secretconfigfile = props.getProperty("SECRET_CONFIG");
 		SecretFilterXMLParser xmlparser = new SecretFilterXMLParser();
 		xmlparser.parse(secretconfigfile, this);     

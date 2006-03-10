@@ -17,6 +17,7 @@ CLASSES=INCRE.class \
 	INCRETimer.class \
 	INCREReporter.class \
 	Path.class \
+	INCREConfigurations.class \
 	INCRETester.class
 
 include ${ROOTDIR}default.mk
