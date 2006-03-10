@@ -112,7 +112,7 @@ public class View extends Panel implements Runnable
 	    	
 			try
 			{
-				Thread.yield();
+				Thread.sleep(2);
 			}
 			catch(Exception e)
 			{
@@ -122,69 +122,3 @@ public class View extends Panel implements Runnable
 		}
 	}	
 }
-/**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void View.paint(java.lang.String){
-   }
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- */
