@@ -22,6 +22,7 @@ public class Projects implements Serializable{
 		projects = new ArrayList();
 		concernSources = new ArrayList();
 		projectsByLanguage = new HashMap();
+		dependencies = new ArrayList();
 	}
 	
 	public void addConcernSource(ConcernSource concernsource) {
@@ -75,7 +76,7 @@ public class Projects implements Serializable{
 			ArrayList projectdeps = p.getDependencies();
 			Iterator deps = projectdeps.iterator();
 			while( deps.hasNext() ) {
-				String dependency = (String)deps.next();
+				Dependency dependency = (Dependency)deps.next();
 				if(!dependencies.contains(dependency)) {
 					dependencies.add(dependency);
 				}
