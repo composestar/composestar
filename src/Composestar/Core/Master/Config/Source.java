@@ -1,10 +1,14 @@
 package Composestar.Core.Master.Config;
 
-public class Source {
+import java.io.Serializable;
+
+public class Source implements Serializable{
 
 	private boolean isExecutable = false;
 	private String fileName;
-	
+	private String dummy;
+	private String compiledSource;
+		
 	public Source() {
 		
 	}
@@ -23,5 +27,21 @@ public class Source {
 	
 	public void setIsExecutable(boolean isexe) {
 		this.isExecutable = isexe;
+	}
+	
+	public void setCompiledSource(String fileName) {
+		this.compiledSource = fileName;
+	}
+	
+	public String getCompiledSource() {
+		return compiledSource;
+	}
+	
+	public void setDummy(String filename) {
+		this.dummy = filename;
+	}
+	
+	public String getDummy() {
+		return dummy;
 	}
 }

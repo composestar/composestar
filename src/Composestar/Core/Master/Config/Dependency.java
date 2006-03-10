@@ -1,6 +1,8 @@
 package Composestar.Core.Master.Config;
 
-public class Dependency {
+import java.io.Serializable;
+
+public class Dependency implements Serializable{
 
 	String fileName;
 	
@@ -16,3 +18,4 @@ public class Dependency {
 		fileName = file;
 	}
 }
+

@@ -2,9 +2,10 @@ package Composestar.Core.Master.Config;
 
 //import Composestar.Core.DUMMER.DummyEmitter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Language {
+public class Language implements Serializable{
 
 	private String name;
 	public CompilerSettings compilerSettings;
@@ -41,3 +42,4 @@ public class Language {
 		return extensions;
 	}
 }
+

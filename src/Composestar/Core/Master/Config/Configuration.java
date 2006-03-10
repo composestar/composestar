@@ -1,8 +1,9 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.Properties;
 
-public class Configuration {
+public class Configuration implements Serializable{
 	
 	private static Configuration Instance = null;
 	private Properties properties;
@@ -34,7 +35,6 @@ public class Configuration {
 	
 	public void addProperty(String key, String value) {
 		properties.setProperty(key, value);
-		System.out.println("Configuration property "+key+" added with value "+value);
 	}
 	
 	public String getProperty(String key) {

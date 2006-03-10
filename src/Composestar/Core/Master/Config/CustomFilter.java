@@ -1,6 +1,8 @@
 package Composestar.Core.Master.Config;
 
-public class CustomFilter {
+import java.io.Serializable;
+
+public class CustomFilter implements Serializable{
 	
 	private String filter = "";
 	private String library = "";

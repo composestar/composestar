@@ -1,8 +1,9 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.Properties;
 
-public class PathSettings {
+public class PathSettings implements Serializable{
 
 	private Properties paths;
 	
@@ -12,7 +13,6 @@ public class PathSettings {
 
 	public void addPath(String key, String value) {
 		paths.setProperty(key, value);
-		System.out.println("Path "+key+" added with value "+value);
 	}
 	
 	public String getPath(String key) {
@@ -21,3 +21,4 @@ public class PathSettings {
 		return null;
 	}
 }
+

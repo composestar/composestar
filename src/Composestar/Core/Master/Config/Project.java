@@ -1,15 +1,17 @@
 package Composestar.Core.Master.Config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class Project {
+public class Project implements Serializable{
 
 	private Properties properties;
 	private ArrayList dependencies;
 	private ArrayList sources;
 	private ArrayList typeSources;
 	private Language language;
+	private String compiledDummies;
 	
 	public Project() {
 		properties = new Properties();
@@ -21,7 +23,6 @@ public class Project {
 	
 	public void addProperty(String key, String value) {
 		properties.setProperty(key, value);
-		System.out.println("Project property "+key+" added with value "+value);
 	}
 	
 	public String getProperty(String key) {
@@ -32,7 +33,6 @@ public class Project {
 	
 	public void addDependency(Dependency dep) {
 		dependencies.add(dep);
-		System.out.println("Dependency "+dep.getFileName()+" added to project "+this.getProperty("name"));
 	}
 	
 	public ArrayList getDependencies() {
@@ -41,7 +41,6 @@ public class Project {
 	
 	public void addSource(Source source) {
 		sources.add(source);
-		System.out.println("Source "+source.getFileName()+" added to project "+this.getProperty("name"));
 	}
 	
 	public ArrayList getTypeSources() {
@@ -50,7 +49,6 @@ public class Project {
 	
 	public void addTypeSource(TypeSource typesource) {
 		typeSources.add(typesource);
-		System.out.println("TypeSource "+typesource.getName()+" added to project "+this.getProperty("name"));
 	}
 	
 	public ArrayList getSources() {
@@ -58,11 +56,18 @@ public class Project {
 	}
 	
 	public void setLanguage(Language lang) {
-		System.out.println("set language "+lang.getName());
 		this.language = lang;
 	}
 	
 	public Language getLanguage() {
 		return this.language;
+	}
+	
+	public void setCompiledDummies(String fileName) {
+		this.compiledDummies = fileName;
+	}
+	
+	public String getCompiledDummies() {
+		return compiledDummies;
 	}
 }
