@@ -1,8 +1,7 @@
 ROOTDIR=../../../../
 include ${ROOTDIR}common.mk
 
-SUBDIRS=SrcCompiler \
-	TypeHarvester \
+SUBDIRS=TypeHarvester \
 	SignatureTransformer \
 	TypeCollector
 
