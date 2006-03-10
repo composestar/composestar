@@ -5,13 +5,15 @@
 package Composestar.DotNET.TYM.TypeHarvester;
 
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
+import Composestar.Core.INCRE.Dependency;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
 import Composestar.Core.Exception.ModuleException;
 
-import java.util.Vector;
+import java.util.*;
 
 /**
  * This Module is responsible for running the .NET assembly harvester.
@@ -53,9 +55,9 @@ public class DotNETHarvestRunner implements HarvestRunner {
      * @roseuid 4056E8BC03B6
      */
     public void run(CommonResources resources) throws ModuleException {
-    	String assemblyList = resources.ProjectConfiguration.getProperty("Assemblies");
-		String dependencyList = resources.ProjectConfiguration.getProperty("Dependencies");
-		String tempFolder = resources.ProjectConfiguration.getProperty("TempFolder");
+    	String assemblyList = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies"); 
+		ArrayList dependencyList = Configuration.instance().projects.getDependencies();  
+		String tempFolder = Configuration.instance().pathSettings.getPath("Temp");
 		
 		
 		if( assemblyList == null )
@@ -63,21 +65,21 @@ public class DotNETHarvestRunner implements HarvestRunner {
 		if( dependencyList == null )
 			throw new ModuleException("TYM TypeHarvester needs \"ProjectConfiguration.Dependencies\" which is missing.");
 		
-		String[] assemblyPaths = assemblyList.split(",");
-		String[] dependencyPaths = dependencyList.split(",");
-    	
 		String arg = "";
 
-		for( int i = 0; i < dependencyPaths.length; i++ ) 
+		Iterator it = dependencyList.iterator();
+		while(it.hasNext()) 
 		{
-			String dep = dependencyPaths[i];
-			if( dep.indexOf("Microsoft.NET/Framework/") == -1 )
+			Dependency dependency = (Dependency)it.next();
+			String name = dependency.getName();
+			if( name.indexOf("Microsoft.NET/Framework/") == -1 )
 			{
-				dep = checkDLL(dep);
-                arg += dep + " ";
+				name = checkDLL(name);
+                arg += name + " ";
 			}
 		}
 
+		String[] assemblyPaths = assemblyList.split(",");
 		for( int i = 0; i < assemblyPaths.length; i++ ) {  
 			String asm = assemblyPaths[i];
 			asm = checkDLL(asm);
@@ -88,7 +90,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
       	
 		resources.addResource("unmodifiedDLLs",unmodifiedDLLs);
 		Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
-		String typeHarvester =  resources.ProjectConfiguration.getProperty("ComposestarPath") + "binaries\\TypeHarvester.exe" ;
+		String typeHarvester =  Configuration.instance().pathSettings.getPath("Composestar") + "binaries\\TypeHarvester.exe" ;
 		java.io.File typeHarvesterFile = new java.io.File(typeHarvester);
 		if( !typeHarvesterFile.exists() )
 		{
@@ -96,7 +98,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
 		}
 
       	CommandLineExecutor exec = new CommandLineExecutor();
-		resources.ProjectConfiguration.getProperty("ComposestarPath");
+      	Configuration.instance().pathSettings.getPath("Composestar");
       	String cmd =  "\"" + typeHarvester + "\"" + " \"" + tempFolder + "\" " + arg;
       	int result = exec.exec( "call " + cmd );
       	if( result != 0 )

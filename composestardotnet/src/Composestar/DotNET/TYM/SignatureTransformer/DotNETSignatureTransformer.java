@@ -4,6 +4,7 @@ package Composestar.DotNET.TYM.SignatureTransformer;
 
 import Composestar.Core.TYM.SignatureTransformer.*;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -43,7 +44,8 @@ public class DotNETSignatureTransformer implements SignatureTransformer {
      	
 			try
 			{
-				String assemblies = resources.ProjectConfiguration.getProperty("Assemblies");
+				
+				String assemblies = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies");
 				String[] assemblyArray = assemblies.split(",");
 				for( int i = 0; i < assemblyArray.length; i++ )
 				{

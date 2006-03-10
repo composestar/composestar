@@ -6,6 +6,7 @@ package Composestar.DotNET.TYM.TypeCollector;
 
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -49,7 +50,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
      */
     public void run(CommonResources resources) throws ModuleException {
     	
-    	String tempFolder = resources.ProjectConfiguration.getProperty("TempFolder");
+    	String tempFolder = Configuration.instance().pathSettings.getPath("Temp"); 
     	try{
     		SAXParserFactory saxParserFactory =
             SAXParserFactory.newInstance();

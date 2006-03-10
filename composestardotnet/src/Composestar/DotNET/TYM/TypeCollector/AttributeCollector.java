@@ -13,7 +13,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.LAMA.*;
 import Composestar.DotNET.LAMA.*;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.*;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
@@ -35,7 +36,7 @@ public class AttributeCollector extends DefaultHandler {
      * @roseuid 40AB48FB0299
      */
     public void run(CommonResources resources) throws ModuleException {
-		String tempFolder = resources.ProjectConfiguration.getProperty("TempFolder");
+		String tempFolder = Configuration.instance().pathSettings.getPath("Temp");
 		try {
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();

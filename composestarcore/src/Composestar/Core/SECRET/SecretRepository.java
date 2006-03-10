@@ -163,8 +163,7 @@ public class SecretRepository implements CTCommonModule {
      */
     public void run(CommonResources resources) throws ModuleException {
 		DataStore ds = DataStore.instance();
-		Configuration.instance().moduleSettings.getModule("SECRET").getProperty();
-		String secretconfigfile = props.getProperty("SECRET_CONFIG");
+		String secretconfigfile = Configuration.instance().moduleSettings.getModule("SECRET").getProperty("SECRET_CONFIG");	
 		SecretFilterXMLParser xmlparser = new SecretFilterXMLParser();
 		xmlparser.parse(secretconfigfile, this);     
     }
