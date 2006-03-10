@@ -31,7 +31,7 @@ public class INCREReporter
 		}
 		
 		//String reportFile = resources.getProperty("TempFolder") + "INCRE.html";
-		String reportFile = config.pathSettings.getPath("Temp") + "INCRE.html";
+		String reportFile = config.pathSettings.getPath("Base") + "INCRE.html";
 		try 
 		{
 			writer = new BufferedWriter(new FileWriter(reportFile));
@@ -80,7 +80,7 @@ public class INCREReporter
 		//Properties resources = (Properties)ds.getObjectByID("config");
 		//String tempPath = resources.getProperty( "TempFolder", "ERROR" );
 		Configuration config = Configuration.instance();
-		String tempPath = config.pathSettings.getPath("Temp");
+		String tempPath = config.pathSettings.getPath("Base");
 		
 		buffer.append("<html><head><title>INCRE Report</title></head>");
 		buffer.append("<link rel=stylesheet href=");

@@ -108,7 +108,7 @@ public class INCRE implements CTCommonModule
    {
 	   Configuration config = Configuration.instance();
        //this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
-       this.historyfile = config.pathSettings.getPath("Temp")+"history.dat";
+       this.historyfile = config.pathSettings.getPath("Base")+"history.dat";
 	   
    	   // ability to turn INCRE on
    	   String incre_enabled = "";
@@ -134,7 +134,7 @@ public class INCRE implements CTCommonModule
 	   // set configmanager to read xml configuration file */
 	   configmanager = new ConfigManager(resources);
 	   //String configfile = resources.ProjectConfiguration.getProperty("TempFolder") + "INCREconfig.xml";
-	   String configfile = config.pathSettings.getPath("Temp") + "INCREconfig.xml";
+	   String configfile = config.pathSettings.getPath("Base") + "INCREconfig.xml";
 	   try
 	   {
 		   File file = new File(configfile);
