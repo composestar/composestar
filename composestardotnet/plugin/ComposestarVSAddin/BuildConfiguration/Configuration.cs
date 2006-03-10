@@ -185,8 +185,12 @@ namespace BuildConfiguration
 		/// <returns></returns>
 		private string FormatPath(string pathName)
 		{
-			if (!pathName.EndsWith("\\") & !pathName.EndsWith("/") )
-				pathName= string.Concat(pathName, "\\"); 
+			// check if it is a path or a file. With a file, do not add last slash.
+			if (!Path.HasExtension(pathName)) 
+			{ 
+				if (!pathName.EndsWith("\\") & !pathName.EndsWith("/") )
+					pathName= string.Concat(pathName, "\\"); 
+			}
 			return pathName.Replace("\\", "/");
 		}
 
@@ -304,7 +308,7 @@ namespace BuildConfiguration
 
 				// Settings
 				writer.WriteStartElement("Settings");
-				writer.WriteAttributeString("composestarIni", this.Settings.ComposestarIni  );
+				writer.WriteAttributeString("composestarIni", FormatPath(this.Settings.ComposestarIni ) );
 				writer.WriteAttributeString("buildDebugLevel", ((int)this.Settings.BuildDebugLevel).ToString());
 				writer.WriteAttributeString("compilePhase", this.Settings.CompilePhase   );
 				writer.WriteAttributeString("platform", "dotNET" );
@@ -497,15 +501,22 @@ namespace BuildConfiguration
 				mUsedCompilers = new ArrayList(languages.GetCount());
 
 			string solutionfile = applicationObject.Solution.Properties.Item("Path").Value.ToString();
+			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1);
+			_tempFolder = tempfolder;
+
+			// Find the startupproject and read the executable and outputpath defined in this project.
 			EnvDTE.Project startProject = GetStartupProject(applicationObject);
 			if (startProject != null)
 			{
 				this.OutputPath =Path.Combine(Path.GetDirectoryName(startProject.FileName), "bin");	
 				this.Executable = getProperty(startProject.Properties, "OutputFileName").ToString();
 			}
-			string tempfolder = solutionfile.Substring(0, solutionfile.LastIndexOf("\\")+1);
-			_tempFolder = tempfolder;
-
+			else
+			{
+				this.OutputPath = tempfolder;
+				this.Executable = "program.exe";
+			}
+		
 			// FILTH configuration
 			ModuleSetting filthModule = new ModuleSetting();
 			filthModule.Name = "FILTH";
