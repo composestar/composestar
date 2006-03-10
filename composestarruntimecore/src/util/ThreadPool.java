@@ -54,10 +54,10 @@ public class ThreadPool
 		return getInstance().get();
 	}
 
-	public static ChildThread getChildThread(ChildRunable runable)
+	public static ChildThread getChildThread(ChildRunnable runnable)
 	{
 		ChildThread thread = getInstance().get();
-		thread.setRunnable(runable);
+		thread.setRunnable(runnable);
 		return thread;
 	}
 }

@@ -7,7 +7,7 @@ import java.util.*;
 public class ChildThread extends Thread
 {
 	private Thread parent = null;
-	private ChildRunable run = null;
+	private ChildRunnable run = null;
 	private boolean running = false;
 
 	public ChildThread()
@@ -37,7 +37,7 @@ public class ChildThread extends Thread
 		this.interrupt();
 	}
 
-	public void setRunnable(ChildRunable run)
+	public void setRunnable(ChildRunnable run)
 	{
 		this.run = run;
 	}
@@ -53,7 +53,7 @@ public class ChildThread extends Thread
 			}
 			else
 			{
-				throw new RuntimeException("Starting ChildThread without setting runable");
+				throw new RuntimeException("Starting ChildThread without setting runnable");
 			}
 			sleeping = true;
 			while(sleeping)

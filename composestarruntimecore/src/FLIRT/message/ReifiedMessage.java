@@ -9,9 +9,9 @@ import Composestar.RuntimeCore.Utils.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ReifiedMessage.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: ReifiedMessage.java,v 1.2 2006/03/10 14:38:21 reddog33hummer Exp $
  */
-public class ReifiedMessage implements ChildRunable
+public class ReifiedMessage implements ChildRunnable
 {
 	public static final int REIFIED = 0;
 	public static final int RESPONDED = 1;

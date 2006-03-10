@@ -90,7 +90,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ChildRunable.java"
+                    RelPath = "ChildRunnable.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

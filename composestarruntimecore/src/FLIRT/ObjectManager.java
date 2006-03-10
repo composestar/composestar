@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.3 2006/03/09 18:12:12 oohlaf Exp $
+ * $Id: ObjectManager.java,v 1.4 2006/03/10 13:15:56 reddog33hummer Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -36,7 +36,7 @@ import java.util.*;
  * Finally, the object manager also manages the filtermodules that are
  * imposed on the object that manages.
  */
-public class ObjectManager implements ChildRunable
+public class ObjectManager implements ChildRunnable
 {
     
     /**
