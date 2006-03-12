@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class Project implements Serializable{
-
+public class Project implements Serializable
+{
 	private Properties properties;
 	private ArrayList dependencies;
 	private ArrayList sources;

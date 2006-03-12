@@ -23,6 +23,7 @@ public class Projects implements Serializable{
 		concernSources = new ArrayList();
 		projectsByLanguage = new HashMap();
 		dependencies = new ArrayList();
+		compiledDummies = new ArrayList();
 	}
 	
 	public void addConcernSource(ConcernSource concernsource) {

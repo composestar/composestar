@@ -30,8 +30,8 @@ public class ProjectSourcesHandler extends DefaultHandler implements ContentHand
 			Source s = new Source();
 			if(amap.getValue("fileName")!=null)
 				s.setFileName(amap.getValue("fileName"));
-			if(amap.getValue("fileName").equals("True"))
-				s.setIsExecutable(true);
+			//if(amap.getValue("fileName").equals("True"))
+			//	s.setIsExecutable(true);
 			
 			project.addSource(s);
 		}

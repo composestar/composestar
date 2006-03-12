@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: RealSourceManager.java,v 1.1 2006/02/16 23:04:07 pascal_durr Exp $
+ * $Id: RealSourceManager.java,v 1.2 2006/03/10 15:24:56 roy_ Exp $
  */
 
 package Composestar.Core.TYM.SrcCompiler;
@@ -59,11 +59,25 @@ public class RealSourceManager implements CTCommonModule {
 			CompilerSettings compsettings = lang.compilerSettings;
 			LangCompiler comp = (LangCompiler)compsettings.getCompiler();
 			
+			String exec = Configuration.instance().projects.getProperty("Executable");
+	        String exefile = "";
+	        Iterator typesourcesit = p.getTypeSources().iterator();
+	        while(typesourcesit.hasNext())
+	        {
+	        	TypeSource source = (TypeSource)typesourcesit.next();
+	        	if(source.getName().equals(exec))
+	        		exefile = source.getFileName();
+	        }
+			
 			//set target of sources
 			Iterator sourceIt = p.getSources().iterator();
 			while( sourceIt.hasNext() ) {
 				Source source = (Source)sourceIt.next();
-				String target = this.createTargetFile(source.getFileName(),source.isExecutable());
+				if(source.getFileName().equals(exefile))
+					source.setIsExecutable(true);
+				else
+					source.setIsExecutable(false);
+				String target = createTargetFile(source.getFileName(),source.isExecutable());
 				source.setTarget(target);
 			}
 			
