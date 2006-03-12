@@ -33,6 +33,22 @@ public class FileUtils
     return name.replace('\\', '/');
   } 
   
+  public static String prepareCommand(String command)
+	{
+		char[] cmd = command.toCharArray();
+		StringBuffer buffer = new StringBuffer();
+		for(int i=0; i<cmd.length; i++)
+		{
+			if(cmd[i] == '/')
+				buffer.append(File.separator+File.separator);
+			else if(cmd[i] == '\\')
+				buffer.append(File.separator);
+			else
+				buffer.append(cmd[i]);
+		}
+		return buffer.toString();
+	}
+  
   public static void copyFile(String dst, String src) throws ModuleException 
   {
 	try  

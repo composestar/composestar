@@ -39,7 +39,7 @@ public class MSAssembler implements Assembler {
     public void disassemble(String inputFile, String outputFile) throws AssemblerException {
         // ildasm /out=filename /nobar /source inputFile
         String execString = "ildasm /out=" +
-                '\"' + outputFile + "\" /nobar /source \"" + inputFile + '\"';
+                '\"' + outputFile + "\" /nobar \"" + inputFile + '\"';
         //System.err.println(execString);
         CommandLineExecutor cmdExec = new CommandLineExecutor();
         if( cmdExec.exec( execString ) != 0 ) {

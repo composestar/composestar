@@ -9,8 +9,10 @@ import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Language;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
+import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringConverter;
 
 import java.io.File;
@@ -46,7 +48,11 @@ public class DotNETCompiler implements LangCompiler{
             // set the libraries
         	Dependency dependency = (Dependency)dependencies.next();
         	if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
+        	{
         			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        			if(!(dependency.getFileName().startsWith(Configuration.instance().pathSettings.getPath("Composestar"))))
+        				Configuration.instance().assemblies.addAssembly(FileUtils.prepareCommand(dependency.getFileName()));
+        	}
         	if(dependency.getFileName().indexOf("vjslib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         }
@@ -57,9 +63,11 @@ public class DotNETCompiler implements LangCompiler{
         // generate and execute command for each source
         ArrayList sources = p.getSources();
         Iterator sourcesItr = sources.iterator();
+        
         while(sourcesItr.hasNext()){
         	Source s = (Source)sourcesItr.next();
-        	if(s.isExecutable()){
+        	if(s.isExecutable())
+        	{
         		CompilerAction action = lang.compilerSettings.getCompilerAction("CompileExecutable");
         		if(action==null)
         			throw new CompilerException("Cannot obtain compileraction");  
@@ -75,11 +83,12 @@ public class DotNETCompiler implements LangCompiler{
         	command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
         	// now generate command
-        	String basepath = Configuration.instance().pathSettings.getPath("Base")+"obj/"+s.getTarget();
-        	command = command.replaceAll( "\\{OUT\\}", prepareCommand(basepath));
+        	String basepath = FileUtils.prepareCommand(Configuration.instance().pathSettings.getPath("Base")+"obj/"+s.getTarget());
+        	Configuration.instance().assemblies.addAssembly(basepath);
+        	command = command.replaceAll( "\\{OUT\\}", basepath);
             command = command.replaceAll( "\\{LIBS\\}", libString );
             command = command.replaceAll( "\\{OPTIONS\\}", options );
-            command = command.replaceAll( "\\{SOURCES\\}", prepareCommand(s.getFileName()));
+            command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(s.getFileName()));
              
              Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
              
@@ -116,21 +125,6 @@ public class DotNETCompiler implements LangCompiler{
         }
     }
 	
-	private String prepareCommand(String command)
-	{
-		char[] cmd = command.toCharArray();
-		StringBuffer buffer = new StringBuffer();
-		for(int i=0; i<cmd.length; i++)
-		{
-			if(cmd[i] == '/')
-				buffer.append(File.separator+File.separator);
-			else if(cmd[i] == '\\')
-				buffer.append(File.separator);
-			else
-				buffer.append(cmd[i]);
-		}
-		return buffer.toString();
-	}
 	public void compileDummies(Project p) throws CompilerException{
 		//TODO roy
 	}

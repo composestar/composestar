@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.7 2006/03/10 14:44:14 pascal_durr Exp $
+ * $Id: DotNETMaster.java,v 1.8 2006/03/10 21:50:56 pascal_durr Exp $
  */
 
 package Composestar.DotNET.MASTER;
@@ -177,7 +177,7 @@ public class DotNETMaster extends Master  {
 			if("two".equalsIgnoreCase(phase))
 			{	
 				Debug.out(Debug.MODE_DEBUG, "Master", "Updating configuration file...");
-				this.SaveModifiedConfigurationKeys(resources);
+				//this.SaveModifiedConfigurationKeys(resources);
 
 				incre.getReporter().close();
 		        
