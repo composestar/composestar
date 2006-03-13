@@ -1,0 +1,162 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{A0477333-E47E-4BA1-83DC-EC047389588C}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = ""
+                AssemblyKeyContainerName = ""
+                AssemblyName = "EncryptionExample"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Exe"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "EncryptionExample"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = "EncryptionExample.ExampleRunner"
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "vjslib"
+                    AssemblyName = "vjslib"
+                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\vjslib.dll"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETRuntimeInterpreter"
+                    AssemblyName = "ComposeStarDotNETRuntimeInterpreter"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarDotNETRuntimeInterpreter.dll"
+                />
+                <Reference
+                    Name = "DotNETPlatformInterface"
+                    AssemblyName = "DotNETPlatformInterface"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\DotNETPlatformInterface.dll"
+                />
+                <Reference
+                    Name = "ComposeStarRuntimeInterpreter"
+                    AssemblyName = "ComposeStarRuntimeInterpreter"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
+                />
+                <Reference
+                    Name = "SecureLib"
+                    AssemblyName = "SecureLib"
+                    HintPath = "EncryptionFilter\bin\Release\SecureLib.dll"
+                />
+                <Reference
+                    Name = "ProtocolLib"
+                    AssemblyName = "ProtocolLib"
+                    HintPath = "ProtocolLib\bin\Release\ProtocolLib.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "Client.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CommunicationObject.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EncrpyionConcern.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Encryptor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExampleRunner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Logger.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Logging.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "project.ini"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Server.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+

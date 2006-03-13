@@ -1,0 +1,6 @@
+package ProtocolLibrary;
+
+public class ProtocolException extends java.lang.Exception
+{
+
+}

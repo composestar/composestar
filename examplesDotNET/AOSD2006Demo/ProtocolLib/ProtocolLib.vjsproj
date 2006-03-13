@@ -1,0 +1,75 @@
+<VisualStudioProject>
+    <VISUALJSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{28AA22EE-73BC-4C17-A21F-596AC3F70E53}"
+    >
+        <Build>
+            <Settings
+                AssemblyKeyContainerName = ""
+                AssemblyName = "ProtocolLib"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "ProtocolLib"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    BaseAddress = "285212672"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DebugSymbols = "true"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                    AdditionalOptions = ""
+                />
+                <Config
+                    Name = "Release"
+                    BaseAddress = "285212672"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DebugSymbols = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                    AdditionalOptions = ""
+                />
+            </Settings>
+            <References/>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "Protocol.jsl"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ProtocolException.jsl"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ProtocolObject.jsl"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </VISUALJSHARP>
+</VisualStudioProject>
+
