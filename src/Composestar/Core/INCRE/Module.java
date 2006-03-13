@@ -167,7 +167,7 @@ public class Module
 	 */
 	public void execute(String phase,CommonResources resources) throws ModuleException
 	{
-		if(isEnabled(phase))
+		//if(isEnabled(phase))
 		{
 			// module is enabled for the phase so continue
 			if(!this.summary.equals(""))
