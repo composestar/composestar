@@ -9,7 +9,7 @@ import java.util.HashMap;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageInfo.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: MessageInfo.java,v 1.2 2006/03/13 11:59:25 reddog33hummer Exp $
  * </pre>
  * 
  * MessageInfo provides an interface to access reflective information 
@@ -53,7 +53,7 @@ public class MessageInfo
 	 */
 	 
 	public static Message getMessageInfo(){
-		return (Message)messagesByThread.get(Thread.currentThread());
+		return (Message)messagesByThread.get(Thread.currentThread().getName());
 	}
 
 	/**
@@ -65,12 +65,12 @@ public class MessageInfo
 
 	static void updateMessage(Message msg)
 	{ 
-		messagesByThread.put(Thread.currentThread(), new Message(msg) ); 
+		messagesByThread.put(Thread.currentThread().getName(), new Message(msg) ); 
 	}
 	
 	static void updateMessage(ChildThread t, Message msg)
 	{ 
-		messagesByThread.put(t.getThread(), new Message(msg) ); 
+		messagesByThread.put(t.getThread().getName(), new Message(msg) ); 
 	}
 
 

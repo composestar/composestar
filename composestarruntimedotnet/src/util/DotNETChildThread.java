@@ -21,6 +21,16 @@ public class DotNETChildThread implements ChildThread
 
 	public java.lang.Thread getThread()
 	{
+		while(thisThreadJava == null)
+		{
+			try
+			{
+				java.lang.Thread.yield();
+			}
+			catch(Exception e)
+			{
+			}
+		}
 		return thisThreadJava;
 	}
 

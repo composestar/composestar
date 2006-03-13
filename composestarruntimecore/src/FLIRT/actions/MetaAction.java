@@ -86,14 +86,13 @@ public class MetaAction extends ComposeStarAction {
 
 		// start execution in a new thread
 		ChildThread t = ThreadPool.getChildThread(this.message);
-		
+		t.start();
+
 		// Store jp and m in ACT thread
 		JoinPoint __jp = JoinPointInfo.getJoinPointInfo();
 		JoinPointInfoProxy.updateJoinPoint(t,__jp);
 		Message __m = MessageInfo.getMessageInfo();
 		MessageInfoProxy.updateMessage(t,__m);
-
-		t.start();
 
 		// now block until the ACT calls send, reply or fire on the ReifiedMessage
 		this.message.getContinueBuffer().consume();
