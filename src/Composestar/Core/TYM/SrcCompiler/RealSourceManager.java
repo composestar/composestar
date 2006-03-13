@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: RealSourceManager.java,v 1.2 2006/03/10 15:24:56 roy_ Exp $
+ * $Id: RealSourceManager.java,v 1.3 2006/03/12 13:42:52 pascal_durr Exp $
  */
 
 package Composestar.Core.TYM.SrcCompiler;
@@ -173,7 +173,7 @@ public class RealSourceManager implements CTCommonModule {
 		String ilFile = targetFile.replaceAll( ".dll", ".il" );
 		ilFile = buildPath + "Weaver\\" + ilFile;
 		
-		// step 2: extract all external assemblies
+		// step 2: extract all external libraries
 		BufferedReader in = null;
 		try
 		{
@@ -201,7 +201,7 @@ public class RealSourceManager implements CTCommonModule {
 		}
 		catch(IOException ioexc){throw new ModuleException("Error occured while reading "+ilFile);}
 		
-		// step 3: convert external assemblies to user sources on disk
+		// step 3: convert external libraries to user sources on disk
 		TypeLocations locations = TypeLocations.instance();
 		Iterator refs = asmReferences.iterator();
 		while(refs.hasNext())

@@ -5,6 +5,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.*;
 
@@ -45,18 +48,18 @@ public class EMBEX implements CTCommonModule
 		Iterator cpsConcernIter = ds.getAllInstancesOf(CpsConcern.class);
 
 		// fetch temppath
-		/*tempPath = resources.ProjectConfiguration.getProperty( "TempFolder", "ERROR" );
+		tempPath = Configuration.instance().pathSettings.getPath( "Base");
 		if( tempPath.equals( "ERROR" ) ) 
 		{
 			throw new ModuleException( "Error in configuration file: No such property TempFolder" );
 		}
 		
 		//fetch embedded sources directory
-		embeddedDir = resources.ProjectConfiguration.getProperty( "EmbeddedSourcesFolder", "ERROR" );
-		if( embeddedDir.equals( "ERROR" ) ) 
+		embeddedDir = Configuration.instance().pathSettings.getPath( "EmbeddedSources");
+		if( embeddedDir.equals( "" ) ) 
 		{
-			throw new ModuleException( "Error in configuration file: No such property EmbeddedSourcesFolder" );
-		}*/
+			throw new ModuleException( "Error in configuration file: No such property EmbeddedSources" );
+		}
 
 		// create directory for embedded code
 		embeddedPath = tempPath + embeddedDir;
@@ -97,7 +100,30 @@ public class EMBEX implements CTCommonModule
 				}
 				// fetch embedded source and save
 				Source src = (Source)imp;
-				this.saveToFile(src,resources);
+				src.getLanguage();
+				Debug.out(Debug.MODE_DEBUG,"EMBEX","Found embedded source: "+src.getClassName());
+				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tLanguage: "+src.getLanguage());
+				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tFile: "+src.getSourceFile());
+				Configuration config = Configuration.instance();
+				Iterator projectit = config.projects.getProjectsByLanguage(src.getLanguage()).iterator();
+				if(!projectit.hasNext())
+					throw new ModuleException("There is no project to add the embedded source to, the embedded code: "+src.className+" is added to the first project of type: "+src.language);
+				else
+				{
+					Project prj = (Project)projectit.next();
+					Debug.out(Debug.MODE_DEBUG,"EMBEX","Adding embedded code to project: "+prj.getProperty("name"));
+					
+					Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
+					source.setFileName(embeddedPath+src.getSourceFile());
+					prj.addSource(source);
+					
+					TypeSource tsource = new TypeSource();
+					tsource.setFileName(embeddedPath+src.getSourceFile());
+					tsource.setName(src.getClassName());
+					prj.addTypeSource(tsource);
+					
+					this.saveToFile(src,resources);
+				}
 			}
 		}
 	}
