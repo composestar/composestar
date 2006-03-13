@@ -4,11 +4,10 @@
 package Composestar.Core.INCRE;
 
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Module;
 
-import Composestar.Utils.StringConverter;
-
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
 /**
  * @author Dennis
@@ -50,10 +49,15 @@ public class INCREConfigurations {
 		// SECRET add this one
 		
 		/* Dependencies */
-		ArrayList depsList = config.projects.getDependencies();
-		String[] deps = (String[]) depsList.toArray(new String[depsList.size()]);
-		String depstr = StringConverter.stringListToString(deps);
-		System.out.println("dependencies are "+depstr);
+		Iterator dependencies = config.projects.getDependencies().iterator();
+    	String depstr = "";
+		while(dependencies.hasNext())
+    	{
+        	Dependency d = (Dependency)dependencies.next();
+        	depstr += d.getFileName();
+        	if(dependencies.hasNext())
+        		depstr += ",";
+    	}
 		props.put("Dependencies",depstr);
 		
 		/* ApplicationStart */
@@ -61,18 +65,7 @@ public class INCREConfigurations {
 		if(null!=as && !as.equals("")){
 			props.put("ApplicationStart",as);
 		}
-		/*ArrayList projects = config.projects.getProjects();
-		Iterator prjIter = projects.iterator();
-		while(prjIter.hasNext())
-		{
-			Project p = (Project)prjIter.next();
-			String as = p.getProperty("applicationStart");
-			if(null!=as && !as.equals("")){
-				props.put("ApplicationStart",as);
-				break;
-			}
-		}*/
-				
+						
 		/* RunDebugLevel */
 		String rdl = config.projects.getProperty("runDebugLevel");
 		props.put("RunDebugLevel",rdl);
