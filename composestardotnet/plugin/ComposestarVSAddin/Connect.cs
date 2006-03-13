@@ -1374,10 +1374,12 @@ namespace ComposestarVSAddin
 			{
 				String savefolder = System.IO.Directory.GetCurrentDirectory();
 			//	System.IO.Directory.SetCurrentDirectory(this.iniconfig.IniReadValue("Common", "OutputPath"));
-				System.IO.Directory.SetCurrentDirectory(BuildConfigurationManager.Instance.Settings.Paths.Get("Base")+"bin/");
+				string path = BuildConfigurationManager.Instance.Settings.Paths.Get("Base")+"bin/";
+				path = path.Replace("/","\\");
+				System.IO.Directory.SetCurrentDirectory(path);
 
 				System.Diagnostics.Process p = new System.Diagnostics.Process();
-				p.StartInfo.FileName = BuildConfigurationManager.Instance.Executable;
+				p.StartInfo.FileName = BuildConfigurationManager.Instance.Executable+".exe";
 		
 				p.StartInfo.UseShellExecute = false;
 	
