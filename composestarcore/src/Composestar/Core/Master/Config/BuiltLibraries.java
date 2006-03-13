@@ -3,19 +3,19 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BuiltAssemblies implements Serializable{
+public class BuiltLibraries implements Serializable{
 
 	private ArrayList builtassemblies;
 	
-	public BuiltAssemblies() {
+	public BuiltLibraries() {
 		builtassemblies = new ArrayList();
 	}
 	
-	public void addAssembly(String file) {
+	public void addLibrary(String file) {
 		builtassemblies.add(file);
 	}
 	
-	public ArrayList getAssemblies() {
+	public ArrayList getLibraries() {
 		return builtassemblies;
 	}
 }
