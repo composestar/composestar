@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.9 2006/03/12 13:42:52 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.10 2006/03/13 10:34:42 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.9 2006/03/12 13:42:52 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.10 2006/03/13 10:34:42 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -50,7 +50,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.9 $";
+	public static final String version = "$Revision: 1.10 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -65,7 +65,7 @@ public class ILICIT implements WEAVER {
 	 String weavefile = "\"" + tempPath + "weavespec.xml" + '\"';
 	      
      //ArrayList compiledSources = (ArrayList) resources.getResource("CompiledSources");
-	 ArrayList compiledSources = Configuration.instance().assemblies.getAssemblies(); 
+	 ArrayList compiledSources = Configuration.instance().libraries.getLibraries(); 
 	 ArrayList builtAssemblies = new ArrayList();
 	 ArrayList toBeWeaved = new ArrayList();
 	 
@@ -104,8 +104,8 @@ public class ILICIT implements WEAVER {
 			FileUtils.copyFile(FileUtils.fixFilename(weavePath+asmFile.getName()),asm);
 	 }
 	 
-	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().assemblies.getAssemblies());
-	 //ArrayList assemblies = Configuration.instance().assemblies.getAssemblies();
+	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().libraries.getLibraries());
+	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
 	 //String[] assemblyPaths = (String[]) toBeWeaved.toArray(new String[toBeWeaved.size()]);
 	 String targets = "";
 	 int assembliesSize = builtAssemblies.size();
@@ -117,7 +117,7 @@ public class ILICIT implements WEAVER {
 	  		
 	 		for( int i = 0; i < assembliesSize; i++ )
 	 		{
-	 			//out.println(((String)assemblies.get(i)).replaceAll("\"", ""));
+	 			//out.println(((String)libraries.get(i)).replaceAll("\"", ""));
 	 			out.println((String)builtAssemblies.get(i));
 	 		}
 			
@@ -136,7 +136,7 @@ public class ILICIT implements WEAVER {
 		  //targets = StringConverter.stringListToString(assemblyPaths, " ");
 	  }
     
-	  // verify assemblies?
+	  // verify libraries?
 	  boolean verify = false;
       String verifystr = "";
 	  Module m = config.moduleSettings.getModule("ILICIT");

@@ -571,7 +571,7 @@ public class INCRE implements CTCommonModule
    
 	/**
 	 * Returns all primitive concerns potentially modified
-	 * primitive concerns from unmodified assemblies/sources are excluded
+	 * primitive concerns from unmodified libraries/sources are excluded
 	 * If this information is not available then the primitive concern is included
 	 * @param ds Datastore to search
 	 * @return

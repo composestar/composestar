@@ -3,7 +3,7 @@ include ${ROOTDIR}common.mk
 
 SUBDIRS=XmlHandlers
 
-CLASSES=BuiltAssemblies.class \
+CLASSES=BuiltLibraries.class \
 	CompilerAction.class \
 	CompilerConverter.class \
 	CompilerSettings.class \

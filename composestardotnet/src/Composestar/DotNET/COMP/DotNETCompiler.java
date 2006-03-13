@@ -50,7 +50,7 @@ public class DotNETCompiler implements LangCompiler{
         	{
         			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         			if(!(dependency.getFileName().startsWith(Configuration.instance().pathSettings.getPath("Composestar"))))
-        				Configuration.instance().assemblies.addAssembly(FileUtils.prepareCommand(dependency.getFileName()));
+        				Configuration.instance().libraries.addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
         	}
         	if(dependency.getFileName().indexOf("vjslib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
@@ -82,7 +82,7 @@ public class DotNETCompiler implements LangCompiler{
         	command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
         	String basepath = FileUtils.prepareCommand(Configuration.instance().pathSettings.getPath("Base")+"obj/"+s.getTarget());
-        	Configuration.instance().assemblies.addAssembly(basepath);
+        	Configuration.instance().libraries.addLibrary(basepath);
         	compiledSources.add(basepath);
         	
         	TypeLocations tl = TypeLocations.instance();
