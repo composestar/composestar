@@ -1374,9 +1374,12 @@ namespace ComposestarVSAddin
 			{
 				String savefolder = System.IO.Directory.GetCurrentDirectory();
 			//	System.IO.Directory.SetCurrentDirectory(this.iniconfig.IniReadValue("Common", "OutputPath"));
+				System.IO.Directory.SetCurrentDirectory(BuildConfigurationManager.Instance.Settings.Paths.Get("Base")+"bin/");
 
 				System.Diagnostics.Process p = new System.Diagnostics.Process();
-				p.StartInfo.FileName = BuildConfigurationManager.Instance.Executable;		
+				p.StartInfo.FileName = BuildConfigurationManager.Instance.Executable;
+		
+				p.StartInfo.UseShellExecute = false;
 	
 				// If the filename is empty we can stop
 				if (p.StartInfo.FileName.Trim().Length == 0)
@@ -1414,7 +1417,7 @@ namespace ComposestarVSAddin
 				
 				p.Start();
 			
-				//p.WaitForExit();
+				p.WaitForExit();
 
 				System.IO.Directory.SetCurrentDirectory(savefolder);
 				

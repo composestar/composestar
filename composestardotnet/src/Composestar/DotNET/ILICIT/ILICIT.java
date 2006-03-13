@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.11 2006/03/13 12:44:12 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.13 2006/03/13 13:42:41 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.11 2006/03/13 12:44:12 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.13 2006/03/13 13:42:41 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.11 $";
+	public static final String version = "$Revision: 1.13 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -93,14 +93,19 @@ public class ILICIT implements WEAVER {
 	 
 	 //also copy dummies 
 	 //String assemblyList = resources.ProjectConfiguration.getProperty("Assemblies");
-	 Iterator dummies = Configuration.instance().projects.getCompiledDummies().iterator();
+	 /*Iterator dummies = Configuration.instance().projects.getCompiledDummies().iterator();
 	 while(dummies.hasNext()) 
 	 {  
 			String asm = (String)dummies.next();
 			File asmFile = new File(asm);
 			Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
 			FileUtils.copyFile(FileUtils.fixFilename(weavePath+asmFile.getName()),asm);
-	 }
+	 }*/
+	 
+	 String asm = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies");
+	 File asmFile = new File(asm);
+	 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
+	 FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
 	 
 	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().libraries.getLibraries());
 	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();

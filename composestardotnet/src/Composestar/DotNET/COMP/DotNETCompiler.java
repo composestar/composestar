@@ -91,7 +91,7 @@ public class DotNETCompiler implements LangCompiler{
         	command = command.replaceAll( "\\{OUT\\}", "\""+basepath+"\"");
             command = command.replaceAll( "\\{LIBS\\}", libString );
             command = command.replaceAll( "\\{OPTIONS\\}", options );
-            command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(s.getFileName()));
+            command = command.replaceAll( "\\{SOURCES\\}", "\""+FileUtils.prepareCommand(s.getFileName())+"\"");
              
              Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
              
