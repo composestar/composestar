@@ -17,7 +17,6 @@ import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Master;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -458,9 +457,6 @@ public class INCRE implements CTCommonModule
 		String searchStr = "";
 		StringBuffer searchBuffer = new StringBuffer("");	
 		
-		// project configuration of previous compilation run
-		//Properties prop = (Properties)history.getObjectByID("config"); 
-				 
 		// As an optimalization: 
 		// do not look in all configurations but only in the interesting part(s)
 		// thus set searchstring dependent of type of file
@@ -489,14 +485,13 @@ public class INCRE implements CTCommonModule
 			}
 			
 			// TODO: make this configurable for filedependencies in config.xml
-			CommonResources resources = (CommonResources)DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
 			try {
 				// no need to check 'added to project' for these files
 				if(filename.indexOf("/obj/Weaver/")>0){
 					return false;
 				}
 				
-				ArrayList compSources = (ArrayList)resources.getResource("CompiledSources");
+				ArrayList compSources = Configuration.instance().libraries.getLibraries(); 
 				if(compSources.contains(filename)){
 					return false;
 				}
