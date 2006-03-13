@@ -1,5 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Message;
 
+import Composestar.RuntimeCore.Utils.ChildThread;
+
 public class JoinPointInfoProxy
 {
 	public static void updateJoinPoint(JoinPoint jp)
@@ -7,7 +9,7 @@ public class JoinPointInfoProxy
 		JoinPointInfo.updateJoinPoint(jp);
 	}
 	
-	public static void updateJoinPoint(Thread thread, JoinPoint jp)
+	public static void updateJoinPoint(ChildThread thread, JoinPoint jp)
 	{ 
 		JoinPointInfo.updateJoinPoint(thread, jp);
 	}

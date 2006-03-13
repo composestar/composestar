@@ -1,6 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Message;
 
-import java.util.*;;
+import Composestar.RuntimeCore.Utils.*;
+import java.util.*;
 
 public class JoinPointInfo
 {
@@ -16,9 +17,9 @@ public class JoinPointInfo
 		joinpointByThread.put(Thread.currentThread(), jp ); 
 	}
 
-	protected static void updateJoinPoint(Thread thread, JoinPoint jp)
+	protected static void updateJoinPoint(ChildThread thread, JoinPoint jp)
 	{ 
-		joinpointByThread.put(thread, jp ); 
+		joinpointByThread.put(thread.getThread(), jp ); 
 	}
 	
 	/**

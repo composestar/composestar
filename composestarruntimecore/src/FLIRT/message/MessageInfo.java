@@ -1,5 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Message;
 
+import Composestar.RuntimeCore.Utils.ChildThread;
 import java.util.HashMap;
 
 /**
@@ -8,7 +9,7 @@ import java.util.HashMap;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageInfo.java,v 1.1 2006/02/13 13:24:11 pascal Exp $
+ * $Id: MessageInfo.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * </pre>
  * 
  * MessageInfo provides an interface to access reflective information 
@@ -67,9 +68,9 @@ public class MessageInfo
 		messagesByThread.put(Thread.currentThread(), new Message(msg) ); 
 	}
 	
-	static void updateMessage(Thread t, Message msg)
+	static void updateMessage(ChildThread t, Message msg)
 	{ 
-		messagesByThread.put(t, new Message(msg) ); 
+		messagesByThread.put(t.getThread(), new Message(msg) ); 
 	}
 
 

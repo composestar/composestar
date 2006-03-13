@@ -115,6 +115,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "EntryPoint.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutionStackReader.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Invoker.java"
                     SubType = "Code"
                     BuildAction = "Compile"

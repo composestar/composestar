@@ -1,5 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Message;
 
+import Composestar.RuntimeCore.Utils.ChildThread;
+
 public class MessageInfoProxy
 {
 	public static void updateMessage(Message msg)
@@ -7,7 +9,7 @@ public class MessageInfoProxy
 		MessageInfo.updateMessage(msg);
 	}
 
-	public static void updateMessage(Thread t, Message msg)
+	public static void updateMessage(ChildThread t, Message msg)
 	{ 
 		MessageInfo.updateMessage(t, msg);
 	}
@@ -17,7 +19,7 @@ public class MessageInfoProxy
 		updateMessage(msg.getOrgMessage());
 	}
 
-	public static void updateMessage(Thread t, MessageList msg)
+	public static void updateMessage(ChildThread t, MessageList msg)
 	{ 
 		MessageInfo.updateMessage(t, msg.getOrgMessage());
 	}

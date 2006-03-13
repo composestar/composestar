@@ -9,6 +9,8 @@ public class ThreadPool
 {
 	private ArrayList pool;
 
+	private ChildThread protoType = null;
+
 	private static ThreadPool instance = null;
 
 	private ThreadPool()
@@ -34,7 +36,12 @@ public class ThreadPool
 	{
 		if(pool.isEmpty())
 		{
-			return new ChildThread();
+			if(protoType == null)
+			{
+				Debug.out(Debug.MODE_ERROR,"ThreadPool","Prototype Thread not set for ThreadPool at platform instanciation");
+				System.exit(-1);
+			}
+			return protoType.createNew();
 		}
 		else
 		{
@@ -44,6 +51,10 @@ public class ThreadPool
 		}
 	}
 
+	public static void setProtoType(ChildThread thread)
+	{
+		getInstance().protoType = thread;
+	}
 	public static void returnChildThread(ChildThread returned)
 	{
 		getInstance().add(returned);
