@@ -183,13 +183,6 @@ public class INCRE implements CTCommonModule
 
 	   increparse.stop();  	
 	   
-	   // only load history once
-	   //String phase = resources.ProjectConfiguration.getProperty("CompilePhase");
-	   String phase = config.getProperty("compilePhase");
-	   if(!phase.equals("two")){
-	   		this.enabled = false; // no need to load history in MASTER phase one
-	   }
-	   
 	   if(this.enabled){	
 	   		/* load data of previous compilation run (history)
 	   		 	time the loading process */
