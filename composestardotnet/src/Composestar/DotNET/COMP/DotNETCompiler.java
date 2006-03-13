@@ -9,13 +9,10 @@ import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Language;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
-import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.StringConverter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -126,8 +123,86 @@ public class DotNETCompiler implements LangCompiler{
     }
 	
 	public void compileDummies(Project p) throws CompilerException{
-		//TODO roy
-	}
+		String command = ""; 
+		this.compilerOutput = "";
+       	String libString = "";
+        String options = "";
+        Language lang = p.getLanguage();
+        
+        if(lang!=null){
+        	// set the compiler options            	
+        	options = lang.compilerSettings.getProperty("options");
+        }
+        else {
+        	throw new CompilerException("Project has no language object");            	
+        }
+        
+		// work out the libraries string
+        CompilerConverter compconv = lang.compilerSettings.getCompilerConverter("libraryParam");
+        if(compconv==null)
+        	throw new CompilerException("Cannot obtain compilerconverter");  
+        	
+		String clstring = compconv.getReplaceBy();
+        	Iterator dependencies = p.getDependencies().iterator();
+        	while(dependencies.hasNext())
+        	{
+            	// set the libraries
+        		Dependency dependency = (Dependency)dependencies.next();
+        		if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
+        			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        		if(dependency.getFileName().indexOf("vjslib.dll") > 0)
+    				libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        	}
+
+		// generate and execute command
+        CompilerAction action = lang.compilerSettings.getCompilerAction("CompileLibrary");
+        if(action==null)
+        	throw new CompilerException("Cannot obtain compileraction");  
+        command = action.getArgument();
+        command = lang.compilerSettings.getProperty("executable")+" "+ command;
+        	
+		//what's the outputfile? --> obj/dummies/projectname.dummies.dll	
+        String output = FileUtils.prepareCommand(Configuration.instance().pathSettings.getPath("Base")+"obj/"+"dummies/"+p.getProperty("name")+".dummies.dll");
+        	
+		command = command.replaceAll( "\\{OUT\\}", output);
+        command = command.replaceAll( "\\{LIBS\\}", libString );
+        command = command.replaceAll( "\\{OPTIONS\\}", options );
+                        
+		String sourcefiles = "";
+		ArrayList sources = p.getSources();
+        Iterator sourcesItr = sources.iterator();
+		while(sourcesItr.hasNext()){
+        	Source s = (Source)sourcesItr.next();
+			sourcefiles = sourcefiles + " " +s.getFileName();
+		}
+		command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(sourcefiles));
+ 
+        Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
+             
+        // execute command
+        CommandLineExecutor cmdExec = new CommandLineExecutor();
+        int result = cmdExec.exec(  "call " + command);
+        compilerOutput = cmdExec.outputNormal();
+            
+        if( result != 0 ) { // there was an error
+        	if (compilerOutput.length() == 0){
+              		compilerOutput = "Could not execute compiler. Make sure the .net framework 1.1 folder is set in the path and restart Visual Studio.";
+            }
+            try	{
+     			java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
+     			String lastToken = null;
+     			while (st.hasMoreTokens()) {
+     				lastToken = st.nextToken();
+     				Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: "+ lastToken);
+  				}
+     			throw new CompilerException("COMP reported errors during compilation.");
+     		}
+            catch (Exception ex)	{
+            	throw new CompilerException( ex.getMessage() );
+     		}
+        } 
+		p.setCompiledDummies(output);    	
+    }
 	
 	public String getOutput(){
 		return this.compilerOutput; 
