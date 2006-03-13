@@ -9,6 +9,7 @@ import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Language;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
+import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
@@ -26,6 +27,7 @@ public class DotNETCompiler implements LangCompiler{
         String libString = "";
         String options = "";
         Language lang = p.getLanguage();
+        ArrayList compiledSources = new ArrayList();
         
         if(lang!=null){
         	// set the compiler options            	
@@ -79,9 +81,13 @@ public class DotNETCompiler implements LangCompiler{
         	
         	command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
-        	// now generate command
         	String basepath = FileUtils.prepareCommand(Configuration.instance().pathSettings.getPath("Base")+"obj/"+s.getTarget());
         	Configuration.instance().assemblies.addAssembly(basepath);
+        	compiledSources.add(basepath);
+        	
+        	TypeLocations tl = TypeLocations.instance();
+        	tl.setSourceAssembly(s.getFileName(),s.getTarget());
+        	
         	command = command.replaceAll( "\\{OUT\\}", basepath);
             command = command.replaceAll( "\\{LIBS\\}", libString );
             command = command.replaceAll( "\\{OPTIONS\\}", options );
