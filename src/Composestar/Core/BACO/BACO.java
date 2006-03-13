@@ -7,9 +7,12 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.CustomFilter;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Project;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -34,15 +37,16 @@ public class BACO implements CTCommonModule
         Iterator it = config.platform.getRequiredFiles().iterator();
         while(it.hasNext())
         {
-        	//System.out.println("COPY: "+composestarpath+"binaries\\\t"+it.next()+"\t"+outputpath+"bin/");
-        	filesToCopy.add(this.processString(composestarpath+"binaries\\"+it.next()));
+        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
+        	filesToCopy.add(this.processString(composestarpath+"binaries/"+it.next()));
         }
         
         // Built Assemblies:
-        it = config.assemblies.getAssemblies().iterator();
+        //it = config.assemblies.getAssemblies().iterator();
+        it = ((ArrayList)DataStore.instance().getObjectByID("BuiltLibs")).iterator();
         while(it.hasNext())
         {
-        	//System.out.println("COPY: "+composestarpath+"binaries\\\t"+it.next()+"\t"+outputpath+"bin/");
+        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
         	filesToCopy.add(this.processString((String)it.next()));
         }
         
@@ -67,7 +71,7 @@ public class BACO implements CTCommonModule
         		if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0))
         		{
         			filesToCopy.add(this.processString(dependency.getFileName()));
-        			//System.out.println(dependency.getFileName());
+        			//System.err.println("COPY: "+dependency.getFileName());
         		}
         	}
         }
@@ -84,7 +88,7 @@ public class BACO implements CTCommonModule
         {
         	String file = (String)filesit.next();
         	Debug.out(Debug.MODE_DEBUG,"BACO","Copying file: "+file+" to "+outputpath);
-        	//this.copyFile(file,outputpath);
+        	this.copyFile(file,outputpath);
         }		
 	}
 	
@@ -95,14 +99,15 @@ public class BACO implements CTCommonModule
 		try
 		{
 			File in = new File(file);
-			File out = new File(outputpath+file);
+			String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator)+1);
+			File out = new File(outputpath+tmp);
 			if(in.exists())
 			{
 				if(in.isFile())
 				{
 					if(in.canRead())
 					{
-						if(out.canWrite())
+						if(true)
 						{
 						    FileInputStream fis  = new FileInputStream(in);
 						    FileOutputStream fos = new FileOutputStream(out);
