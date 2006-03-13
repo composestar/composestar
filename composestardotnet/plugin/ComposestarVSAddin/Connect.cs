@@ -61,7 +61,6 @@ namespace ComposestarVSAddin
 		private DummyManager dummymanager;
 		private MasterManager mastermanager;
 		private AttributeManager attributemanager;
-		private EmbeddedSourceManager embsrcmanager;
 	
 		private bool buildSuccess = false;
 		private EnvDTE.TaskListEvents taskListEvents;
@@ -440,7 +439,6 @@ namespace ComposestarVSAddin
 			dummymanager = null;
 			mastermanager=null;
 			attributemanager=null;
-			embsrcmanager=null;
 
 			// Remove the buttons
 			this.DeleteCommand( m_commandNameBuild );
@@ -1067,68 +1065,47 @@ namespace ComposestarVSAddin
 
 						Debug.Instance.DebugMode = BuildConfigurationManager.Instance.Settings.BuildDebugLevel ;
 
-						// Call Master to do its first run
-						Debug.Instance.ShowProgress("Running master phase one", 20); 
-						Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master to do first run...");
-
-						BuildConfigurationManager.Instance.Settings.CompilePhase = "one";
-						BuildConfigurationManager.Instance.SaveToXml();
-
-						mastermanager = new MasterManager();
-						mastermanager.run(applicationObject, scope, action);
-
 						bool dummiesOK = false;
 
-						if (mastermanager.CompletedSuccessfully()) 
+						Debug.Instance.ShowProgress("Creating dummies", 40);
+						Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating dummies...");
+
+						// TODO: This should be removed!
+						dummymanager = new DummyManager();
+						dummymanager.run(applicationObject, scope, action);
+						dummiesOK = dummymanager.CompletedSuccessfully();
+
+						if (!dummiesOK)
 						{
-							Debug.Instance.ShowProgress("Processing embedded sources", 30); 
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Processing embedded sources...");
-
-							embsrcmanager = new EmbeddedSourceManager();
-							embsrcmanager.run(applicationObject, scope, action);
-																			
-							Debug.Instance.ShowProgress("Creating dummies", 40);
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating dummies...");
-
-							dummymanager = new DummyManager();
-							dummymanager.run(applicationObject, scope, action);
-							dummiesOK = dummymanager.CompletedSuccessfully();
-
-							if (!dummiesOK)
-							{
-								Debug.Instance.Log("---------------------- Done ----------------------");
-								Debug.Instance.Log("Dummy creation failed. See the task window for more information.");
-								Debug.Instance.Log("");
-								Debug.Instance.Log("Composestar build failed.");
-								Debug.Instance.Log("");
-								Debug.Instance.Log("");
-								Debug.Instance.ActivateTaskListWindow();
-							}
-							else
-							{
-								Debug.Instance.ShowProgress("Creating config", 50);
-								Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating solution specific configuration file...");
+							Debug.Instance.Log("---------------------- Done ----------------------");
+							Debug.Instance.Log("Dummy creation failed. See the task window for more information.");
+							Debug.Instance.Log("");
+							Debug.Instance.Log("Composestar build failed.");
+							Debug.Instance.Log("");
+							Debug.Instance.Log("");
+							Debug.Instance.ActivateTaskListWindow();
+						}
+						else
+						{
+							Debug.Instance.ShowProgress("Creating config", 50);
+							Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating solution specific configuration file...");
 								
-								// Find and dump attributes (annotations)
-								Debug.Instance.ShowProgress("Harvesting annotations", 60);
-								Debug.Instance.Log(DebugModes.Debug,"AddIn","Harvesting annotations...");
+							// Find and dump attributes (annotations)
+							Debug.Instance.ShowProgress("Harvesting annotations", 60);
+							Debug.Instance.Log(DebugModes.Debug,"AddIn","Harvesting annotations...");
 
-								attributemanager = new AttributeManager();
-								attributemanager.run(applicationObject, scope, action);
+							attributemanager = new AttributeManager();
+							attributemanager.run(applicationObject, scope, action);
 							
-								// Call Master to do its second run
-								Debug.Instance.ShowProgress("Running master phase two", 70);
+							// Call Master to do its second run
+							Debug.Instance.ShowProgress("Invoking Master", 70);
 
-								BuildConfigurationManager.Instance.Settings.CompilePhase = "two";
-								BuildConfigurationManager.Instance.SaveToXml();
+							BuildConfigurationManager.Instance.SaveToXml();
 
-								Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master to do second run...");
+							Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master to do second run...");
 
-								mastermanager = new MasterManager();
-								mastermanager.run(applicationObject, scope, action);
-
-								embsrcmanager.removeEmbeddedSources();
-							}
+							mastermanager = new MasterManager();
+							mastermanager.run(applicationObject, scope, action);
 						}
 
 						this.buildSuccess = dummiesOK && mastermanager.CompletedSuccessfully();
@@ -1344,7 +1321,6 @@ namespace ComposestarVSAddin
 		{
 			try
 			{
-				// TODO aanpassen
 				string dir = BuildConfigurationManager.Instance.OutputPath; 
 
 				if(dir != null && !"".Equals(dir))

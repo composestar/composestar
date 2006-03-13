@@ -239,11 +239,7 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <File
-                    RelPath = "EmbeddedSourceManager\EmbeddedSourceManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
+                <Folder RelPath = "EmbeddedSourceManager\" />
                 <File
                     RelPath = "Settings\Debuggers.cs"
                     SubType = "Code"

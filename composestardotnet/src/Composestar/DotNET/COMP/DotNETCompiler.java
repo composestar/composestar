@@ -88,7 +88,7 @@ public class DotNETCompiler implements LangCompiler{
         	TypeLocations tl = TypeLocations.instance();
         	tl.setSourceAssembly(s.getFileName(),s.getTarget());
         	
-        	command = command.replaceAll( "\\{OUT\\}", basepath);
+        	command = command.replaceAll( "\\{OUT\\}", "\""+basepath+"\"");
             command = command.replaceAll( "\\{LIBS\\}", libString );
             command = command.replaceAll( "\\{OPTIONS\\}", options );
             command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(s.getFileName()));

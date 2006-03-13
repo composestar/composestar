@@ -29,7 +29,6 @@ import Composestar.Core.WEAVER.*;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
-import Composestar.Utils.StringConverter;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
@@ -43,7 +42,6 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Module;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.DotNET.TYM.SignatureTransformer.AssemblerException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -93,21 +91,16 @@ public class ILICIT implements WEAVER {
 	 
 	 DataStore.instance().addObject("BuiltLibs", builtAssemblies);
 	 
-	 //also copy compiled dummies 
+	 //also copy dummies 
 	 //String assemblyList = resources.ProjectConfiguration.getProperty("Assemblies");
-	 /*Iterator dummies = Configuration.instance().projects.getCompiledDummies().iterator();
+	 Iterator dummies = Configuration.instance().projects.getCompiledDummies().iterator();
 	 while(dummies.hasNext()) 
 	 {  
 			String asm = (String)dummies.next();
 			File asmFile = new File(asm);
 			Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
 			FileUtils.copyFile(FileUtils.fixFilename(weavePath+asmFile.getName()),asm);
-	 }*/
-	 String asm = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies");
-	 File asmFile = new File(asm);
-	 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
-	 FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
-	 
+	 }
 	 
 	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().libraries.getLibraries());
 	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
