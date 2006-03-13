@@ -43,13 +43,13 @@ public class DotNETInvoker extends Invoker
 		catch(System.Exception e) {
 			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation on instance "+ target + ":" + selector + " failed.");
 			String inner = "";
+			Console.WriteLine(e.get_StackTrace());
 			while(e != null)
 			{
 				Console.WriteLine(inner + "exception:" + e.getClass().getName() + ":" + e.get_Message());
 				inner += "inner";
 				e = e.get_InnerException();
 			}
-			Console.WriteLine(e.get_InnerException().get_StackTrace());
 			System.exit(1);
 		}
 		return reply;
@@ -77,13 +77,13 @@ public class DotNETInvoker extends Invoker
 		{ 
 			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation of static "+ target + ":" + selector + " failed.");
 			String inner = "";
+			Console.WriteLine(e.get_StackTrace());
 			while(e != null)
 			{
 				Console.WriteLine(inner + "exception:" + e.getClass().getName() + ":" + e.get_Message());
 				inner += "inner";
 				e = e.get_InnerException();
 			}
-			Console.WriteLine(e.get_InnerException().get_StackTrace());
 			System.exit(1);
 		}
 		return reply;
