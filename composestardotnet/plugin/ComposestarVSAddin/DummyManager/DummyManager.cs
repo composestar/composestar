@@ -169,7 +169,8 @@ namespace ComposestarVSAddin
 
 				BuildConfiguration.Project p = BuildConfigurationManager.Instance.GetProjectByName(project.Name);
 
-				p.TypeSources.AddRange(this.TypeSources);  
+				if (p != null)
+					p.TypeSources.AddRange(this.TypeSources);  
 			
 			}
 			mSuccess = true;
