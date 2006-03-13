@@ -15,7 +15,6 @@ public class Module
 	private String name = "";
 	private String fulltype;
 	private String input;	
-	private String phase = "";
 	private boolean enabled = false;
 	private boolean incremental = false;
 	private String summary = "";
@@ -46,11 +45,6 @@ public class Module
 	public void setInput(String className)
 	{
 		this.input = className;
-	}
-
-	public void setPhase(String p)
-	{
-		this.phase = p;
 	}
 
 	public void setEnabled(boolean b)
@@ -138,19 +132,6 @@ public class Module
 		return input;
 	}
 
-	/**
-	 * @param String phase
-	 * Returns true if the module is enabled for the specified phase
-	 * Otherwise false
-	 */ 
-	protected boolean isEnabled(String phase)
-	{
-		if(!"".equals(this.phase) && !this.phase.equals(phase))
-			return false;
-		else 
-			return enabled;
-	}
-
 	public boolean isIncremental()
 	{
 		return this.incremental;
@@ -167,7 +148,7 @@ public class Module
 	 */
 	public void execute(String phase,CommonResources resources) throws ModuleException
 	{
-		//if(isEnabled(phase))
+		if(this.enabled)
 		{
 			// module is enabled for the phase so continue
 			if(!this.summary.equals(""))
