@@ -11,7 +11,7 @@ public class Configuration implements Serializable{
 	public ModuleSettings moduleSettings;
 	public PathSettings pathSettings;
 	public Platform platform;
-	public BuiltAssemblies assemblies;
+	public BuiltLibraries assemblies;
 	public CustomFilters filters;
 		
 	public Configuration() {
@@ -20,7 +20,7 @@ public class Configuration implements Serializable{
 		pathSettings = new PathSettings();
 		projects = new Projects();
 		platform = new Platform();
-		assemblies = new BuiltAssemblies();
+		assemblies = new BuiltLibraries();
 		filters = new CustomFilters();
 	}
 		
