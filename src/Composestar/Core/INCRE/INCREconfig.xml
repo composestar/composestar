@@ -1,29 +1,36 @@
 <modules>
-	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="java.lang.String" enabled="true" incremental="true" summary="Parsing concerns...">
+	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
 		<dependencies>
-			<dependency type="FILE" name="cpsfile"></dependency>
+			<dependency type="FILE" name="cpsfile">
+			<path>
+				<node type="FIELD" nodevalue="fileName"></node>
+			</path>
+			</dependency>
 		</dependencies>
 	</module>
-	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" phase="one" enabled="true" incremental="false" summary="Extracting embedded sources...">
+	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" enabled="true" incremental="false" summary="Extracting embedded sources...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" phase="two" enabled="true" incremental="true" summary="Harvesting type information...">
+	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="false" incremental="false" summary="Generating dummy sources...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="false" summary="Harvesting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" phase="two" enabled="true" incremental="true" summary="Collecting type information...">
+	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" phase="two" enabled="true" incremental="false" summary="Collecting attributes...">
+	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" enabled="true" incremental="false" summary="Collecting attributes...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" phase="two" enabled="true" incremental="false" summary="Resolving references...">
+	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" phase="two" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
+	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
 			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
@@ -35,10 +42,10 @@
 			</type>
 		</comparisons>		
 	</module>
-	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" phase="two" enabled="true" incremental="false" summary="Checking repository...">
+	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" enabled="true" incremental="false" summary="Checking repository...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" phase="two" enabled="true" incremental="false" summary="Resolving superimpositions...">
+	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" enabled="true" incremental="false" summary="Resolving superimpositions...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
@@ -61,7 +68,7 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="SIGN" fulltype="Composestar.Core.SIGN.SIGN" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Computing full signatures..." >
+	<module name="SIGN" fulltype="Composestar.Core.SIGN.SIGN" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Computing full signatures..." >
 		<dependencies>
 			<dependency type="OBJECT" name="signature" store="true" lookup="true">
 				<path>
@@ -152,7 +159,7 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
 			<dependency type="FILE" name="SECRETConfigFile">
 				<path>
@@ -221,10 +228,10 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" phase="two" enabled="true" incremental="false" summary="">
+	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>	
 	</module>
-	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="java.lang.String" phase="two" enabled="true" incremental="false" summary="Compiling all sources...">
+	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="java.lang.String" enabled="true" incremental="false" summary="Compiling all sources...">
 		<dependencies>
 			<dependency type="FILE" name="source"></dependency>
 			<dependency type="FILE" name="xternals">
@@ -252,10 +259,10 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="CONE" fulltype="Composestar.DotNET.CONE.DotNETCONE" phase="two" enabled="true" incremental="false" summary="">
+	<module name="CONE" fulltype="Composestar.DotNET.CONE.DotNETCONE" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>	
 	</module>
-	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" phase="two" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
+	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
 		<dependencies>
 			<dependencies>
 				<dependency type="FILE" name="assembly"></dependency>
@@ -291,5 +298,8 @@
 				</path>
 			</dependency>
 		</dependencies>	
+	</module>
+	<module name="BACO" fulltype="Composestar.Core.BACO.BACO" enabled="true" incremental="false" summary="copying libraries...">
+		<dependencies></dependencies>	
 	</module>
 </modules>
