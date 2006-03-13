@@ -1,9 +1,9 @@
 
-import Composestar.RuntimeCore.Utils.Debug;
-/**
+import Composestar.RuntimeCore.Utils.*;
+/*
  * Summary description for ExecutionStackReader.
  */
-public class ExecutionStackReader
+public abstract class ExecutionStackReader
 {
 	public static ExecutionStackReader getInstance()
 	{
@@ -15,4 +15,7 @@ public class ExecutionStackReader
 	}
 
 	protected static ExecutionStackReader instance = null;
+
+	public abstract String getTopParrentStack(ChildThread thread);
+	public abstract EntryPoint getComposestarEntryPoint();
 }

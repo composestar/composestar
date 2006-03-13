@@ -4,10 +4,22 @@
  */
 public class EntryPoint
 {
-	public EntryPoint()
+	private String fileName = "";
+	private int lineNumber = 0;
+
+	public EntryPoint(String fileName, int lineNumber)
 	{
-		//
-		// TODO: Add Constructor Logic here
-		//
+		this.fileName = fileName;
+		this.lineNumber = lineNumber;
+	}
+
+	public String getFileName()
+	{
+		return fileName;
+	}
+
+	public int getLineNumber()
+	{
+		return lineNumber;
 	}
 }
