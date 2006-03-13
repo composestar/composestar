@@ -1419,7 +1419,7 @@ namespace ComposestarVSAddin
 				
 				p.Start();
 			
-				p.WaitForExit();
+				//p.WaitForExit();
 
 				System.IO.Directory.SetCurrentDirectory(savefolder);
 				

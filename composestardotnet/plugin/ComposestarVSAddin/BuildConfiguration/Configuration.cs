@@ -219,7 +219,7 @@ namespace BuildConfiguration
 
 			try
 			{
-				writer = new XmlTextWriter(fileName, Encoding.UTF8);
+				writer = new XmlTextWriter(fileName, Encoding.ASCII);
 				writer.Formatting = Formatting.Indented;
 					
 				// Write the XML declaration. 
