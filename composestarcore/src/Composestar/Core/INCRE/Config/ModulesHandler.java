@@ -26,8 +26,6 @@ public class ModulesHandler extends DefaultHandler
 				m.setFullType(amap.getValue("fulltype"));
 			if(amap.getValue("input")!=null)
 				m.setInput(amap.getValue("input"));
-			if(amap.getValue("phase")!=null)
-				m.setPhase(amap.getValue("phase"));
 			if(amap.getValue("summary")!=null)
 				m.setSummary(amap.getValue("summary"));
 			if(amap.getValue("incremental")!=null)
