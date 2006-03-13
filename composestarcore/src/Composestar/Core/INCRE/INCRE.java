@@ -10,6 +10,8 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.Config.*;
 import Composestar.Core.LAMA.*;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Module;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
@@ -25,6 +27,7 @@ import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringConverter;
 
+import java.lang.StringBuffer;
 import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -41,7 +44,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * The INCRE class is responsible for deciding which modules are incremental 
@@ -117,10 +119,7 @@ public class INCRE implements CTCommonModule
    		   incre_enabled = m.getProperty("enabled");
    	   }
        
-       //if ("True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
-		//	this.enabled = true;
-	   //}
-   	   if ("True".equalsIgnoreCase(incre_enabled)) {
+       if ("True".equalsIgnoreCase(incre_enabled)) {
 			this.enabled = true;
 	   }
    	   else {
@@ -153,33 +152,6 @@ public class INCRE implements CTCommonModule
 	   try 
 	   {
 		   	configmanager.parseXML(configfile);
-		   	
-		   	// load the project sources by iterating over the compilers
-		   	/*String compilerStr = resources.ProjectConfiguration.getProperty( "Compilers", "ERROR" );
-		   	if( "ERROR".equals(compilerStr) ) {
-		   		throw new ModuleException( "Error in configuration file: No such property \"Compilers\"" );
-		   	}
-		   	Iterator compIt = StringConverter.stringToStringList( compilerStr );
-		   	while( compIt.hasNext() ) {
-		   		String compilerPrefix = (String)compIt.next();
-	            String srcprefix = compilerPrefix + "Sources";
-	            String execprefix = compilerPrefix + "ExecSource";
-	            String sourceStr = resources.ProjectConfiguration.getProperty( srcprefix, "ERROR" );
-	            
-	            if( !"ERROR".equals( sourceStr ) ){
-	                 this.projectSources += ",";
-	                 this.projectSources += sourceStr;
-	            }
-	            
-	            String execSourceStr = resources.ProjectConfiguration.getProperty( execprefix, "ERROR" );
-	            if( !"ERROR".equals( execSourceStr ) ){
-	                 this.projectSources += ",";
-	                 this.projectSources += execSourceStr;
-	            }
-	        }
-		   	
-		   	int firstComma = this.projectSources.indexOf(",")+1;
-		   	this.projectSources = this.projectSources.substring(firstComma);*/
 		   	
 		   	// get all sources by iterating over projects
 		   	ArrayList sources = new ArrayList();
@@ -484,6 +456,7 @@ public class INCRE implements CTCommonModule
 		boolean isAdded = true;
 		String fixedFile = FileUtils.fixFilename(filename).toLowerCase();
 		String searchStr = "";
+		StringBuffer searchBuffer = new StringBuffer("");	
 		
 		// project configuration of previous compilation run
 		//Properties prop = (Properties)history.getObjectByID("config"); 
@@ -493,13 +466,16 @@ public class INCRE implements CTCommonModule
 		// thus set searchstring dependent of type of file
 		if(fixedFile.endsWith(".cs") || fixedFile.endsWith(".jsl") || fixedFile.endsWith(".vb") || fixedFile.endsWith(".java")){
 			//TODO: use configurable SupportedLanguages (xml)
-			searchStr = this.projectSources;// look in project sources
+			searchBuffer.append(this.projectSources);// look in project sources
 		}
 		else if(fixedFile.endsWith(".cps")){
 			//searchStr = prop.getProperty("ConcernSources");// look in concern sources
 			ArrayList conList = Configuration.instance().projects.getConcernSources();
-			String[] conPaths = (String[])conList.toArray(new String[conList.size()]);
-		   	searchStr = StringConverter.stringListToString(conPaths);
+			Iterator cps = conList.iterator();
+			while(cps.hasNext()){
+				ConcernSource cs = (ConcernSource)cps.next();
+				searchBuffer.append(cs.getFileName());
+			}
 		}
 		else if(fixedFile.endsWith(".dll") || fixedFile.endsWith(".exe")){
 			// TODO: use SupportedLanguages and move/replace .NET specific code
@@ -531,13 +507,17 @@ public class INCRE implements CTCommonModule
 			// TODO: possible naming conflict when JAVA platform is there
 			//searchStr = prop.getProperty("Dependencies");
 			ArrayList depList = Configuration.instance().projects.getDependencies();
-			String[] depPaths = (String[])depList.toArray(new String[depList.size()]);
-		   	searchStr += StringConverter.stringListToString(depPaths);
-		   	
+			Iterator dependencies = depList.iterator();
+			while(dependencies.hasNext())
+	    	{
+				Dependency d = (Dependency)dependencies.next(); 
+			   	searchBuffer.append(d.getFileName());
+	    	}
+			
 			//searchStr += prop.getProperty("Assemblies");
 			ArrayList dummies = Configuration.instance().projects.getCompiledDummies();
 			String[] dummyPaths = (String[])dummies.toArray(new String[dummies.size()]);
-		   	searchStr += StringConverter.stringListToString(dummyPaths);
+		   	searchBuffer.append(StringConverter.stringListToString(dummyPaths));
 			
 		} 
 		else {
@@ -547,13 +527,13 @@ public class INCRE implements CTCommonModule
 				Node n = (Node)p.getFirstNode();
 				if(n instanceof ConfigNode){
 					//searchStr = (String)prop.getProperty(n.getReference());
-					searchStr = (String)configurations.historyconfig.getProperty(n.getReference());
+					searchBuffer.append((String)configurations.historyconfig.getProperty(n.getReference()));
 				}
 			}
 		}
 		
 		// file in old project configurations?
-		searchStr = FileUtils.fixFilename(searchStr).toLowerCase();
+		searchStr = FileUtils.fixFilename(searchBuffer.toString()).toLowerCase();
 		if(searchStr.indexOf(fixedFile)>=0)
 			isAdded = false; // file not added to project
 		
@@ -649,8 +629,8 @@ public class INCRE implements CTCommonModule
 	 */
 	public boolean declaredInSource(Concern c,String src){
 		
-		/* Sourcefile format: C:\Program Files\ComposeStar\... */
-		String source = src.replace('/','\\');
+		/* Sourcefile format: C:/Program Files/ComposeStar/... */
+		String source = src;
 		TypeLocations locations = TypeLocations.instance();
 		PlatformRepresentation repr = c.getPlatformRepresentation();
 		
@@ -725,7 +705,7 @@ public class INCRE implements CTCommonModule
 			// *** Little verification of input object ***
 			try 
 			{
-				if ( !Class.forName ( mod.getInput() ).isInstance ( input ) )
+				if ( mod.getInput()==null || !Class.forName ( mod.getInput() ).isInstance ( input ) )
 					throw new ModuleException("Wrong input for module "+mod.getName()+". "+input.getClass()+" is not an instance of "+mod.getInput(),"INCRE");
 				}
 			catch(ClassNotFoundException cnfe)
@@ -738,7 +718,7 @@ public class INCRE implements CTCommonModule
 			{
 				currentRepository = DataStore.instance();
 				searchingHistory = false;
-				Dependency dep = (Dependency)dependencies.next();
+				Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
 				
 				try {
 					depofinputobject = (Object)dep.getDepObject(inputobject);
@@ -926,9 +906,7 @@ public class INCRE implements CTCommonModule
    	   if(m!=null){
    		   incre_enabled = m.getProperty("enabled");
    	   }
-	   //if (!"True".equalsIgnoreCase(resources.ProjectConfiguration.getProperty("INCRE_ENABLED"))) {
-	   //		return;
-	   //}
+	   
    	   if (!"True".equalsIgnoreCase(incre_enabled)) {
 	   		return;
 	   }
