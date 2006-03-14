@@ -256,15 +256,28 @@ public class FILTHServiceImpl extends FILTHService{
 			
 			_specfile = Configuration.instance().getModuleSettings().getModule("FILTH").getProperty("input");
 			
-			//System.out.println(_specfile);
-			FileReader r = new FileReader(_specfile);
-			of.parse(new InputSource(r));
-
-		}catch (SAXException se){
-			Debug.out(Debug.MODE_WARNING, "FILTH", "xml parsing problem");
+			if(_specfile != null)
+			{
+				//System.out.println(_specfile);
+				File file = new File(_specfile);
+				if(file!=null && file.exists() && file.canRead())
+				{
+					FileReader r = new FileReader(_specfile);
+					of.parse(new InputSource(r));
+				}
+				else
+				{
+					Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification (" + _specfile + ").",c.getName());
+				}
+			}
+		}
+		catch (SAXException se){
+			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: "+_specfile+", message: "+se.getMessage());
 			se.printStackTrace();
-		}catch (Exception ioe){
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Order specification (" + _specfile + ") not found. ",c.getName());
+		}
+		catch (Exception ioe)
+		{
+			Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification (" + _specfile + ").",c.getName());
 		}
 		
 	}

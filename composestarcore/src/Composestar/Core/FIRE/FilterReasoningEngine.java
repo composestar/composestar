@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: FilterReasoningEngine.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: FilterReasoningEngine.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 import java.util.HashMap;
@@ -56,10 +56,10 @@ public class FilterReasoningEngine
 	{
 		Tand fc = (Tand) treeBuilder.getTree(this); 
 
-		Debug.out (Debug.MODE_INFORMATION, "FIRE", fc.toTreeString());
+		//Debug.out (Debug.MODE_INFORMATION, "FIRE", fc.toTreeString());
 
 		SymbolTable st = SymbolTable.getInstance();
-		Debug.out (Debug.MODE_INFORMATION, "FIRE", "\n" + st.toString()); // print the symboltable.
+		//Debug.out (Debug.MODE_INFORMATION, "FIRE", "\n" + st.toString()); // print the symboltable.
 
 		// Initialize status column
 		Symbol [] symbols = st.getAllSymbols();
@@ -72,8 +72,8 @@ public class FilterReasoningEngine
 
 		symbolHash = st.getHashMap();
 
-		Debug.out (Debug.MODE_INFORMATION, "FIRE", "Status after calculation: " + status);
-		Debug.out (Debug.MODE_INFORMATION, "FIRE", stateTable.toString());
+		//Debug.out (Debug.MODE_INFORMATION, "FIRE", "Status after calculation: " + status);
+		//Debug.out (Debug.MODE_INFORMATION, "FIRE", stateTable.toString());
 	}
 
 	/**

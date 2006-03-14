@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.6 2006/03/08 12:15:12 stephan_h Exp $
+ * $Id: SIGN.java,v 1.7 2006/03/08 16:34:27 dspenkel Exp $
  * 
 **/
 
@@ -521,7 +521,7 @@ public class SIGN implements CTCommonModule
 	 	Node node = fire.getTree();
 	 	
 	 	treeMap.put(c.getName(), node);
-	 	Debug.out(Debug.MODE_DEBUG, "Sign", node.toTreeString());
+	 	//Debug.out(Debug.MODE_DEBUG, "Sign", node.toTreeString());
 	 	
 	 	return node;
 	 	//}
