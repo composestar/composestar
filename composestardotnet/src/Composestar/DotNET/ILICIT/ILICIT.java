@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.14 2006/03/13 14:27:28 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.15 2006/03/14 10:08:36 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.14 2006/03/13 14:27:28 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.15 2006/03/14 10:08:36 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.14 $";
+	public static final String version = "$Revision: 1.15 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -75,8 +75,7 @@ public class ILICIT implements WEAVER {
 		 String asm = (String)binItr.next();
 		 File source = new File(asm);
 		 String target = FileUtils.fixFilename(weavePath+File.separator+source.getName());
-		 File ftarget = new File(target);
-		 if(!ftarget.exists() /* add to config.xml */ || !INCRE.instance().isProcessedByModule(asm,"ILICIT")){
+		 if(!INCRE.instance().isProcessedByModule(asm,"ILICIT")){
 			 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
 			 FileUtils.copyFile(target,source.getAbsolutePath());	 
 			 builtAssemblies.add(target);
@@ -109,9 +108,9 @@ public class ILICIT implements WEAVER {
 	 
 	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().getLibraries().getLibraries());
 	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
-	 //String[] assemblyPaths = (String[]) toBeWeaved.toArray(new String[toBeWeaved.size()]);
+	 String[] assemblyPaths = (String[]) toBeWeaved.toArray(new String[toBeWeaved.size()]);
 	 String targets = "";
-	 int assembliesSize = builtAssemblies.size();
+	 int assembliesSize = assemblyPaths.length;
 	 if(assembliesSize > 0 )
 	 {
 	  if ( assembliesSize > 20 ) {
@@ -121,7 +120,8 @@ public class ILICIT implements WEAVER {
 	 		for( int i = 0; i < assembliesSize; i++ )
 	 		{
 	 			//out.println(((String)libraries.get(i)).replaceAll("\"", ""));
-	 			out.println((String)builtAssemblies.get(i));
+	 			//out.println((String)builtAssemblies.get(i));
+	 			out.println((String)assemblyPaths[i]);
 	 		}
 			
 	 		out.flush();
@@ -134,7 +134,8 @@ public class ILICIT implements WEAVER {
 	  else {
 		  for( int i = 0; i < assembliesSize; i++ )
 	 	  {
-	 			targets += "\""+(String)builtAssemblies.get(i)+"\" ";
+	 			//targets += "\""+(String)builtAssemblies.get(i)+"\" ";
+		  		targets += "\""+(String)assemblyPaths[i]+"\" ";
 	 	  }
 		  //targets = StringConverter.stringListToString(assemblyPaths, " ");
 	  }
@@ -179,7 +180,7 @@ public class ILICIT implements WEAVER {
 		
 		// If debugging write output from PeWeaver to log file
 		if ( Debug.getMode() == Debug.MODE_DEBUG ) 
-			cmd += " > \"" + weavePath + "peweaver.log\"";
+			cmd += " > \"" + weavePath + "/peweaver.log\"";
 		
 			Debug.out(Debug.MODE_DEBUG, "ILICIT", "Starting execution of the 'PE Weaver' tool with arguments '" + args + "'...");
 			int exitcode = cle.exec(cmd);
@@ -231,7 +232,9 @@ public class ILICIT implements WEAVER {
 		INCRE incre = INCRE.instance();
 		ArrayList concerns = new ArrayList();
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(src));
+		// remove the \\ :(
+		String srcFile = src.replaceAll("\\\\\\\\","/");
+		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0,src);
 		
 		if(!concernsWithFMO.isEmpty()){
@@ -260,7 +263,9 @@ public class ILICIT implements WEAVER {
      	INCRE incre = INCRE.instance();
      	DataStore ds = incre.getCurrentRepository();
      	ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(src));
+     	// remove the \\ :(
+		String srcFile = src.replaceAll("\\\\\\\\","/");
+     	ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0,src);
      	
 		if(!concernsWithFMO.isEmpty())
@@ -314,7 +319,9 @@ public class ILICIT implements WEAVER {
 	{
 		INCRE incre = INCRE.instance();
 		ArrayList result = new ArrayList();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(src));
+		// remove the \\ :(
+		String srcFile = src.replaceAll("\\\\\\\\","/");
+		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0,src);
 		
 		Iterator it = incre.getAllInstancesOfOrdered(CompiledImplementation.class);
@@ -347,7 +354,7 @@ public class ILICIT implements WEAVER {
 				}
 			}
 		}
-			
+		
 		return result;
 	}
 
@@ -362,9 +369,11 @@ public class ILICIT implements WEAVER {
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(src));
+		// remove the \\ :(
+		String srcFile = src.replaceAll("\\\\\\\\","/");
+		ArrayList sources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0,src);
-		
+
 		if(!concernsWithFMO.isEmpty()){
      	Iterator iterConcerns = concernsWithFMO.iterator();
 			while ( iterConcerns.hasNext() )

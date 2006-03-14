@@ -13,7 +13,6 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Module;
-import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
@@ -154,20 +153,13 @@ public class INCRE implements CTCommonModule
 		   	
 		   	// get all sources by iterating over projects
 		   	ArrayList sources = new ArrayList();
-		   	ArrayList projects = config.getProjects().getProjects();
-		   	Iterator prjIter = projects.iterator();
-		   	while(prjIter.hasNext()){
-		   		Project p = (Project)prjIter.next();
-		   		ArrayList sourcesList = p.getSources();
-		   		Iterator sourceItr = sourcesList.iterator();
-		   		while(sourceItr.hasNext()){
-		   			Source s = (Source)sourceItr.next();
-		   			sources.add(s.getFileName());
-		   		}
+		   	Iterator sourceItr = Configuration.instance().getProjects().getSources().iterator();
+		   	while(sourceItr.hasNext()){
+		   		Source s = (Source)sourceItr.next();
+		   		sources.add(s.getFileName());
 		   	}
 		   	String[] sourcePaths = (String[]) sources.toArray(new String[sources.size()]);
 		   	this.projectSources = StringConverter.stringListToString(sourcePaths);
-		   	Debug.out(Debug.MODE_DEBUG,"INCRE","ProjectSources "+this.projectSources);
 	   }
 	   catch(Exception e)
 	   {
@@ -379,7 +371,19 @@ public class INCRE implements CTCommonModule
    				// special case, return string
    				return obj;
    			}
-   	    
+   			
+   			if(obj instanceof Source){
+   				// special case, look in history configurations
+   				Source s = (Source)obj;
+   				ArrayList historysources = configurations.historyconfig.getProjects().getSources();
+   				Iterator sources = historysources.iterator();
+   				while(sources.hasNext()){
+   					Source historysource = (Source)sources.next();
+   					if(s.getFileName().equals(historysource.getFileName()))
+   						return historysource;	
+   				}
+   			}
+   			
    			Iterator objIter = history.getAllInstancesOf(obj.getClass());
    			while( objIter.hasNext() ){
    				Object nextobject = (Object)objIter.next();
@@ -459,7 +463,7 @@ public class INCRE implements CTCommonModule
 		}
 		else if(fixedFile.endsWith(".cps")){
 			//searchStr = prop.getProperty("ConcernSources");// look in concern sources
-			ArrayList conList = Configuration.instance().getProjects().getConcernSources();
+			ArrayList conList = configurations.historyconfig.getProjects().getConcernSources();
 			Iterator cps = conList.iterator();
 			while(cps.hasNext()){
 				ConcernSource cs = (ConcernSource)cps.next();
@@ -494,7 +498,7 @@ public class INCRE implements CTCommonModule
 			// look in configurations "Dependencies" and "Assemblies"
 			// TODO: possible naming conflict when JAVA platform is there
 			//searchStr = prop.getProperty("Dependencies");
-			ArrayList depList = Configuration.instance().getProjects().getDependencies();
+			ArrayList depList = configurations.historyconfig.getProjects().getDependencies();
 			Iterator dependencies = depList.iterator();
 			while(dependencies.hasNext())
 	    	{
@@ -503,7 +507,7 @@ public class INCRE implements CTCommonModule
 	    	}
 			
 			//searchStr += prop.getProperty("Assemblies");
-			ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
+			ArrayList dummies = configurations.historyconfig.getProjects().getCompiledDummies();
 			String[] dummyPaths = (String[])dummies.toArray(new String[dummies.size()]);
 		   	searchBuffer.append(StringConverter.stringListToString(dummyPaths));
 			

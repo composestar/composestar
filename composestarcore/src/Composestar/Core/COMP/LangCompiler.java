@@ -1,10 +1,11 @@
 package Composestar.Core.COMP;
 
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Project;
 
 public interface LangCompiler {
 	
-	public void compileSources(Project p) throws CompilerException;
+	public void compileSources(Project p) throws CompilerException,ModuleException;
 	
 	public void compileDummies(Project p) throws CompilerException;
 	
