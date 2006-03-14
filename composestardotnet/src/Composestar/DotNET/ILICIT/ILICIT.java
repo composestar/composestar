@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.13 2006/03/13 13:42:41 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.14 2006/03/13 14:27:28 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.13 2006/03/13 13:42:41 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.14 2006/03/13 14:27:28 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,14 +48,14 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.13 $";
+	public static final String version = "$Revision: 1.14 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
      PrintWriter out = null; 
-     String binPath = config.pathSettings.getPath("Composestar");
+     String binPath = config.getPathSettings().getPath("Composestar");
 	 //String tempPath = resources.ProjectConfiguration.getProperty("TempFolder");
-     String tempPath = config.pathSettings.getPath("Base");
+     String tempPath = config.getPathSettings().getPath("Base");
 	 //String buildPath = resources.ProjectConfiguration.getProperty("BuildPath");
      //String buildPath = config.projects.getProperty("outputPath");
 	 String weavePath = tempPath + "obj/Weaver";
@@ -63,7 +63,7 @@ public class ILICIT implements WEAVER {
 	 String weavefile = "\"" + tempPath + "weavespec.xml" + '\"';
 	      
      //ArrayList compiledSources = (ArrayList) resources.getResource("CompiledSources");
-	 ArrayList compiledSources = Configuration.instance().libraries.getLibraries(); 
+	 ArrayList compiledSources = Configuration.instance().getLibraries().getLibraries(); 
 	 ArrayList builtAssemblies = new ArrayList();
 	 ArrayList toBeWeaved = new ArrayList();
 	 
@@ -102,12 +102,12 @@ public class ILICIT implements WEAVER {
 			FileUtils.copyFile(FileUtils.fixFilename(weavePath+asmFile.getName()),asm);
 	 }*/
 	 
-	 String asm = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies");
+	 String asm = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
 	 File asmFile = new File(asm);
 	 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
 	 FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
 	 
-	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().libraries.getLibraries());
+	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().getLibraries().getLibraries());
 	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
 	 //String[] assemblyPaths = (String[]) toBeWeaved.toArray(new String[toBeWeaved.size()]);
 	 String targets = "";
@@ -142,7 +142,7 @@ public class ILICIT implements WEAVER {
 	  // verify libraries?
 	  boolean verify = false;
       String verifystr = "";
-	  Module m = config.moduleSettings.getModule("ILICIT");
+	  Module m = config.getModuleSettings().getModule("ILICIT");
 	  if(m!=null){
 		  verifystr = m.getProperty("verifyAssemblies");
 		  if ("True".equalsIgnoreCase(verifystr)) {

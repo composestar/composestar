@@ -41,7 +41,7 @@ public class TypeLocations {
 	private TypeLocations()
 	{
 		Configuration config = Configuration.instance();
-		Iterator it = config.projects.getProjects().iterator();
+		Iterator it = config.getProjects().getProjects().iterator();
         while(it.hasNext())
         {
         	Project prj = (Project)it.next();

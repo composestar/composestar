@@ -49,14 +49,14 @@ public class DotNETCompiler implements LangCompiler{
         	if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
         	{
         			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-        			if(!(dependency.getFileName().startsWith(Configuration.instance().pathSettings.getPath("Composestar"))))
-        				Configuration.instance().libraries.addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
+        			if(!(dependency.getFileName().startsWith(Configuration.instance().getPathSettings().getPath("Composestar"))))
+        				Configuration.instance().getLibraries().addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
         	}
         	if(dependency.getFileName().indexOf("vjslib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         }
         
-        String dummiesdll = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies");
+        String dummiesdll = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
         libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dummiesdll+"\"") ) + " ";
 
         // generate and execute command for each source
@@ -81,8 +81,8 @@ public class DotNETCompiler implements LangCompiler{
         	
         	command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
-        	String basepath = FileUtils.prepareCommand(Configuration.instance().pathSettings.getPath("Base")+"obj/"+s.getTarget());
-        	Configuration.instance().libraries.addLibrary(basepath);
+        	String basepath = FileUtils.prepareCommand(Configuration.instance().getPathSettings().getPath("Base")+"obj/"+s.getTarget());
+        	Configuration.instance().getLibraries().addLibrary(basepath);
         	compiledSources.add(basepath);
         	
         	TypeLocations tl = TypeLocations.instance();
@@ -168,7 +168,7 @@ public class DotNETCompiler implements LangCompiler{
         command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
 		//what's the outputfile? --> obj/dummies/projectname.dummies.dll	
-        String output = FileUtils.prepareCommand(Configuration.instance().pathSettings.getPath("Base")+"obj/"+"dummies/"+p.getProperty("name")+".dummies.dll");
+        String output = FileUtils.prepareCommand(Configuration.instance().getPathSettings().getPath("Base")+"obj/"+"dummies/"+p.getProperty("name")+".dummies.dll");
         	
 		command = command.replaceAll( "\\{OUT\\}", output);
         command = command.replaceAll( "\\{LIBS\\}", libString );

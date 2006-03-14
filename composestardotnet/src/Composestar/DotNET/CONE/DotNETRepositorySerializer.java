@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRepositorySerializer.java,v 1.2 2006/03/10 12:42:08 pascal_durr Exp $
+ * $Id: DotNETRepositorySerializer.java,v 1.3 2006/03/10 14:57:52 pascal_durr Exp $
  */
 
 package Composestar.DotNET.CONE;
@@ -66,7 +66,7 @@ public class DotNETRepositorySerializer implements RepositorySerializer
 		File destination = null;
 		DataStore ds = DataStore.instance();
 		
-    	String repositoryFilename = Configuration.instance().pathSettings.getPath("Base") + "repository.xml";
+    	String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.xml";
     	
     	destination = new File(repositoryFilename);
     	

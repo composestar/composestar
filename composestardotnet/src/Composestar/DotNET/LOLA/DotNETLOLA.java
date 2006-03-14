@@ -71,7 +71,7 @@ public class DotNETLOLA extends LOLA
   
   public String initLanguageModel() throws ModuleException
   {
-	String generatedPredicatesFilename = FileUtils.fixFilename(Configuration.instance().pathSettings.getPath("Base") + "langmap.pro");
+	String generatedPredicatesFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Base") + "langmap.pro");
     try
     {
       langModel.createMetaModel();
@@ -103,8 +103,8 @@ public class DotNETLOLA extends LOLA
   public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
   {
     /* Get the names of special files (containing base predicate libraries) */
-    String prologLibraryFilename = FileUtils.fixFilename(Configuration.instance().pathSettings.getPath("Composestar") + "binaries/prolog/lib.pro");
-    String prologConnectorFilename = FileUtils.fixFilename(Configuration.instance().pathSettings.getPath("Composestar") + "binaries/prolog/connector.pro"); 
+    String prologLibraryFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/prolog/lib.pro");
+    String prologConnectorFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/prolog/connector.pro"); 
     
 	/* Initialize the prolog engine */
     Debug.out(Debug.MODE_DEBUG, "LOLA", "Initializing the prolog interpreter");

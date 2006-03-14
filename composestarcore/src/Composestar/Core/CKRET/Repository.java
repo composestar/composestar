@@ -69,11 +69,11 @@ public class Repository {
 		actions.put("meta", new MetaFilterAction());
 				
 		CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
-		String tempFolder = Configuration.instance().pathSettings.getPath("Base");
+		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		String secretconfigfile = tempFolder + SECRET_CONFIG;
 		if( !(new File(secretconfigfile).exists()))
 		{
-			secretconfigfile = Configuration.instance().pathSettings.getPath("Composestar") + SECRET_CONFIG;
+			secretconfigfile = Configuration.instance().getPathSettings().getPath("Composestar") + SECRET_CONFIG;
 			if( !(new File(secretconfigfile).exists()))
 			{
 				throw new ModuleException("Filter specification (" + SECRET_CONFIG + ") not found.","SECRET");

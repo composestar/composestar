@@ -56,7 +56,7 @@
                     NoStdLib = "false"
                     NoWarn = ""
                     Optimize = "true"
-                    OutputPath = "bin\Release\"
+                    OutputPath = "..\..\..\ComposestarInstaller\ComposestarVSAddin\"
                     RegisterForComInterop = "true"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"

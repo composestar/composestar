@@ -109,11 +109,11 @@ public class INCRE implements CTCommonModule
    {
 	   Configuration config = Configuration.instance();
        //this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
-       this.historyfile = config.pathSettings.getPath("Base")+"history.dat";
+       this.historyfile = config.getPathSettings().getPath("Base")+"history.dat";
 	   
    	   // ability to turn INCRE on
    	   String incre_enabled = "";
-   	   Module m = config.moduleSettings.getModule("INCRE");
+   	   Module m = config.getModuleSettings().getModule("INCRE");
    	   if(m!=null){
    		   incre_enabled = m.getProperty("enabled");
    	   }
@@ -132,12 +132,12 @@ public class INCRE implements CTCommonModule
 	   // set configmanager to read xml configuration file */
 	   configmanager = new ConfigManager(resources);
 	   //String configfile = resources.ProjectConfiguration.getProperty("TempFolder") + "INCREconfig.xml";
-	   String configfile = config.pathSettings.getPath("Base") + "INCREconfig.xml";
+	   String configfile = config.getPathSettings().getPath("Base") + "INCREconfig.xml";
 	   try
 	   {
 		   File file = new File(configfile);
 		   if(!file.exists() && !file.canRead())
-			   configfile = config.pathSettings.getPath("Composestar") + "INCREconfig.xml";
+			   configfile = config.getPathSettings().getPath("Composestar") + "INCREconfig.xml";
 			   //configfile = resources.ProjectConfiguration.getProperty("ComposestarPath") + "INCREconfig.xml";
 	   }
 	   catch(Exception ioe)
@@ -154,7 +154,7 @@ public class INCRE implements CTCommonModule
 		   	
 		   	// get all sources by iterating over projects
 		   	ArrayList sources = new ArrayList();
-		   	ArrayList projects = config.projects.getProjects();
+		   	ArrayList projects = config.getProjects().getProjects();
 		   	Iterator prjIter = projects.iterator();
 		   	while(prjIter.hasNext()){
 		   		Project p = (Project)prjIter.next();
@@ -459,7 +459,7 @@ public class INCRE implements CTCommonModule
 		}
 		else if(fixedFile.endsWith(".cps")){
 			//searchStr = prop.getProperty("ConcernSources");// look in concern sources
-			ArrayList conList = Configuration.instance().projects.getConcernSources();
+			ArrayList conList = Configuration.instance().getProjects().getConcernSources();
 			Iterator cps = conList.iterator();
 			while(cps.hasNext()){
 				ConcernSource cs = (ConcernSource)cps.next();
@@ -484,7 +484,7 @@ public class INCRE implements CTCommonModule
 					return false;
 				}
 				
-				ArrayList compSources = Configuration.instance().libraries.getLibraries(); 
+				ArrayList compSources = Configuration.instance().getLibraries().getLibraries(); 
 				if(compSources.contains(filename)){
 					return false;
 				}
@@ -494,7 +494,7 @@ public class INCRE implements CTCommonModule
 			// look in configurations "Dependencies" and "Assemblies"
 			// TODO: possible naming conflict when JAVA platform is there
 			//searchStr = prop.getProperty("Dependencies");
-			ArrayList depList = Configuration.instance().projects.getDependencies();
+			ArrayList depList = Configuration.instance().getProjects().getDependencies();
 			Iterator dependencies = depList.iterator();
 			while(dependencies.hasNext())
 	    	{
@@ -503,7 +503,7 @@ public class INCRE implements CTCommonModule
 	    	}
 			
 			//searchStr += prop.getProperty("Assemblies");
-			ArrayList dummies = Configuration.instance().projects.getCompiledDummies();
+			ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
 			String[] dummyPaths = (String[])dummies.toArray(new String[dummies.size()]);
 		   	searchBuffer.append(StringConverter.stringListToString(dummyPaths));
 			
@@ -890,7 +890,7 @@ public class INCRE implements CTCommonModule
 	   
 	   Configuration config = Configuration.instance();
 	   String incre_enabled = "";
-   	   Module m = config.moduleSettings.getModule("INCRE");
+   	   Module m = config.getModuleSettings().getModule("INCRE");
    	   if(m!=null){
    		   incre_enabled = m.getProperty("enabled");
    	   }

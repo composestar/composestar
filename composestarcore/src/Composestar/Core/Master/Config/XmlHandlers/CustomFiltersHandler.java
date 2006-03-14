@@ -32,7 +32,7 @@ public class CustomFiltersHandler extends DefaultHandler implements ContentHandl
 				CustomFilter cf = new CustomFilter();
 				cf.setFilter(name);
 				cf.setLibrary(path);
-				Configuration.instance().filters.addCustomFilters(cf);
+				Configuration.instance().getFilters().addCustomFilters(cf);
 			}
 		}			
 	}

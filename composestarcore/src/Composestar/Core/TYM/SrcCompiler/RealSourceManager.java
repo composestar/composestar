@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: RealSourceManager.java,v 1.3 2006/03/12 13:42:52 pascal_durr Exp $
+ * $Id: RealSourceManager.java,v 1.4 2006/03/13 12:43:54 pascal_durr Exp $
  */
 
 package Composestar.Core.TYM.SrcCompiler;
@@ -51,7 +51,7 @@ public class RealSourceManager implements CTCommonModule {
 	public void run(CommonResources resources) throws ModuleException {
 		//compile sources of project
 		Configuration config = Configuration.instance();
-		ArrayList projects = config.projects.getProjects();
+		ArrayList projects = config.getProjects().getProjects();
 		Iterator projIt = projects.iterator();
 		while(projIt.hasNext()) {
 			Project p = (Project)projIt.next();
@@ -59,7 +59,7 @@ public class RealSourceManager implements CTCommonModule {
 			CompilerSettings compsettings = lang.compilerSettings;
 			LangCompiler comp = (LangCompiler)compsettings.getCompiler();
 			
-			String exec = Configuration.instance().projects.getProperty("Executable");
+			String exec = Configuration.instance().getProjects().getProperty("Executable");
 	        String exefile = "";
 	        Iterator typesourcesit = p.getTypeSources().iterator();
 	        while(typesourcesit.hasNext())

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.5 2006/03/10 21:50:56 pascal_durr Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.6 2006/03/10 22:17:37 pascal_durr Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -88,7 +88,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
         }
      
         Configuration config = Configuration.instance();
-        Iterator it = config.projects.getProjects().iterator();
+        Iterator it = config.getProjects().getProjects().iterator();
         while(it.hasNext())
         {
         	Project prj = (Project)it.next();
@@ -428,15 +428,15 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
      */
     public void run(CommonResources resources) throws ModuleException 
 	{
-    	File destination = new File(Configuration.instance().pathSettings.getPath("Base") + "weavespec.xml");
+    	File destination = new File(Configuration.instance().getPathSettings().getPath("Base") + "weavespec.xml");
     	
       Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
       
-	  application = Configuration.instance().projects.getProperty("applicationStart");
+	  application = Configuration.instance().getProjects().getProperty("applicationStart");
       
 	  try
 	  {
-	  	debugLevel = Integer.parseInt(Configuration.instance().projects.getProperty("runDebugLevel"));
+	  	debugLevel = Integer.parseInt(Configuration.instance().getProjects().getProperty("runDebugLevel"));
 	  }
 	  catch (NumberFormatException e)
 	  {

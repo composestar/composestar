@@ -24,7 +24,7 @@ public class RequiredFilesHandler extends DefaultHandler implements ContentHandl
 			// in <requiredfile>
 			Configuration config = Configuration.instance();
 			if(amap.getValue("fileName")!=null){
-				config.platform.addRequiredFile(amap.getValue("fileName"));
+				config.getPlatform().addRequiredFile(amap.getValue("fileName"));
 			}
 
 		}

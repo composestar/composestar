@@ -55,9 +55,9 @@ public class DotNETHarvestRunner implements HarvestRunner {
      * @roseuid 4056E8BC03B6
      */
     public void run(CommonResources resources) throws ModuleException {
-    	String assemblyList = Configuration.instance().moduleSettings.getModule("ILICIT").getProperty("assemblies"); 
-		ArrayList dependencyList = Configuration.instance().projects.getDependencies();  
-		String tempFolder = Configuration.instance().pathSettings.getPath("Base");
+    	String assemblyList = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies"); 
+		ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
+		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		
 		
 		if( assemblyList == null )
@@ -90,7 +90,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
       	
 		resources.addResource("unmodifiedDLLs",unmodifiedDLLs);
 		Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
-		String typeHarvester =  Configuration.instance().pathSettings.getPath("Composestar") + "binaries/TypeHarvester.exe" ;
+		String typeHarvester =  Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/TypeHarvester.exe" ;
 		java.io.File typeHarvesterFile = new java.io.File(typeHarvester);
 		if( !typeHarvesterFile.exists() )
 		{
@@ -98,7 +98,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
 		}
 
       	CommandLineExecutor exec = new CommandLineExecutor();
-      	Configuration.instance().pathSettings.getPath("Composestar");
+      	Configuration.instance().getPathSettings().getPath("Composestar");
       	String cmd =  "\"" + typeHarvester + "\"" + " \"" + tempFolder + "\" " + arg;
       	int result = exec.exec( "call " + cmd );
       	if( result != 0 )

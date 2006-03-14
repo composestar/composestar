@@ -28,7 +28,7 @@ public class ConcernSourcesHandler extends DefaultHandler implements ContentHand
 			ConcernSource concernsource = new ConcernSource();
 			if(amap.getValue("fileName")!=null){
 				concernsource.setFileName(amap.getValue("fileName"));
-				Configuration.instance().projects.addConcernSource(concernsource);
+				Configuration.instance().getProjects().addConcernSource(concernsource);
 			}
 		}
 	}

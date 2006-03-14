@@ -28,13 +28,13 @@ public class BACO implements CTCommonModule
         //config.assemblies.addAssembly("D:/ComposestarSource/examplesDotNET/Pacman/obj/Weaver/pacman.ConcernImplementations.ScoreIncreaser.dll");
         //config.assemblies.addAssembly("D:/ComposestarSource/examplesDotNET/Pacman/obj/Weaver/pacman.Direction.dll");
         
-        String composestarpath = config.pathSettings.getPath("Composestar");
+        String composestarpath = config.getPathSettings().getPath("Composestar");
         //System.out.println("ComposestartPath: "+composestarpath);
         
         HashSet filesToCopy = new HashSet();
         
         // Required Files:
-        Iterator it = config.platform.getRequiredFiles().iterator();
+        Iterator it = config.getPlatform().getRequiredFiles().iterator();
         while(it.hasNext())
         {
         	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
@@ -51,7 +51,7 @@ public class BACO implements CTCommonModule
         }
         
         // Custom Filters:
-        it = config.filters.getCustomFilters().iterator();
+        it = config.getFilters().getCustomFilters().iterator();
         while(it.hasNext())
         {
         	//System.out.println("COPY: "+composestarpath+"binaries\\\t"+it.next()+"\t"+outputpath+"bin/");
@@ -60,7 +60,7 @@ public class BACO implements CTCommonModule
         }
         
         // Dependencies:
-        it = config.projects.getProjects().iterator();
+        it = config.getProjects().getProjects().iterator();
         while(it.hasNext())
         {
         	Project prj = (Project)it.next();
@@ -76,12 +76,12 @@ public class BACO implements CTCommonModule
         	}
         }
         
-        String examplepath = config.pathSettings.getPath("Base");
+        String examplepath = config.getPathSettings().getPath("Base");
         // Repsotory.xml: 
         filesToCopy.add(this.processString(examplepath+"repository.xml"));
         
         // ouputpath:
-        String outputpath = config.projects.getProperty("OuputPath");
+        String outputpath = config.getProjects().getProperty("OuputPath");
         
         Iterator filesit = filesToCopy.iterator();
         while(filesit.hasNext())

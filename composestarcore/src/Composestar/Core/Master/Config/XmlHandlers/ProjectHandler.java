@@ -63,7 +63,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 				project.addProperty("verify",verify);
 			}
 			
-			Configuration.instance().projects.addProject(project);
+			Configuration.instance().getProjects().addProject(project);
 		}
 		
 		if("Sources".equals(raw_name))
