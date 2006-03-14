@@ -5,13 +5,12 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.9 2006/03/12 13:42:56 pascal_durr Exp $
+ * $Id: DotNETMaster.java,v 1.10 2006/03/13 14:19:04 whavinga Exp $
  */
 
 package Composestar.DotNET.MASTER;
 
 import java.io.*;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -24,14 +23,12 @@ import org.xml.sax.XMLReader;
 
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
-import Composestar.Utils.StringConverter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.XmlHandlers.ActionsHandler;
 import Composestar.Core.Master.Config.XmlHandlers.BuildXMLHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
@@ -41,8 +38,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
  */
 public class DotNETMaster extends Master  {
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-	public static String phase = "";
-
+	
     private CommonResources resources;
     private String configfile;
 
@@ -159,9 +155,6 @@ public class DotNETMaster extends Master  {
 			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
 			DataStore.instance();
 
-			// read phase configuration key
-			phase = Configuration.instance().getProperty("compilePhase");
-			
 			// initialize INCRE
 			INCRE incre = INCRE.instance();
 			incre.run(resources);
@@ -171,18 +164,12 @@ public class DotNETMaster extends Master  {
 			{
 				// execute enabled modules one by one
 				Module m = (Module)modulesIter.next();
-				m.execute(phase,resources);
+				m.execute(resources);
 			}
 			
-			if("two".equalsIgnoreCase(phase))
-			{	
-				Debug.out(Debug.MODE_DEBUG, "Master", "Updating configuration file...");
-				//this.SaveModifiedConfigurationKeys(resources);
-
-				incre.getReporter().close();
-		        
-				if (Debug.getMode() >= Debug.MODE_WARNING ) Debug.outWarnings();
-			}
+			incre.getReporter().close();
+		    if (Debug.getMode() >= Debug.MODE_WARNING ) Debug.outWarnings();
+			
 
 		} catch(ModuleException e)  { // MasterStopException
 			String error = e.getMessage();
