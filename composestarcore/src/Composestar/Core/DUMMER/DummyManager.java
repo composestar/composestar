@@ -39,7 +39,6 @@ public class DummyManager implements CTCommonModule {
 				String target = "";
 				try {
 					target = FileUtils.createOutputFilename(p.getProperty("basePath"),"obj/"+dummyPath,source.getFileName());
-					System.out.println("target created: "+target);
 				}
 				catch(Exception e) {
 					throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),"DUMMER");
