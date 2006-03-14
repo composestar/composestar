@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.2 2006/02/21 16:37:03 whavinga Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.3 2006/02/28 09:49:02 whavinga Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -1549,7 +1549,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
             vfco.setParent(current);
             vfco.setRightArgument(null); //nothing after this
             current.setRightOperator(vfco);
-            this.addToRepository(vfco);
+            vfco.setDescriptionFileName(current.getDescriptionFileName());
+        	ds.addObject(vfco);
           }
         }
       }
@@ -1587,7 +1588,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
             vfco.setParent(current);
             vfco.setRightArgument(null); //nothing after this
             current.setRightOperator(vfco);
-            this.addToRepository(vfco);
+            vfco.setDescriptionFileName(current.getDescriptionFileName());
+        	ds.addObject(vfco);
           }
         }
       }
