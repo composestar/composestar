@@ -28,39 +28,10 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 			//System.out.println("<project>");
 			project = new Project();
 			
-			if(amap.getValue("name")!=null){
-				String name = amap.getValue("name"); 
-				project.addProperty("name",name);
-			}
-			
-			if(amap.getValue("language")!=null){
-				String languagestr = amap.getValue("language"); 
-				project.addProperty("language",languagestr);
-			}
-			
-			if(amap.getValue("buildPath")!=null){
-				String bp = amap.getValue("buildPath"); 
-				project.addProperty("buildPath",bp);
-			}
-			
-			if(amap.getValue("tempPath")!=null){
-				String tp = amap.getValue("tempPath"); 
-				project.addProperty("tempPath",tp);
-			}
-			
-			if(amap.getValue("outputPath")!=null){
-				String op = amap.getValue("outputPath"); 
-				project.addProperty("outputPath",op);
-			}
-			
-			if(amap.getValue("applicationStart")!=null){
-				String as = amap.getValue("applicationStart"); 
-				project.addProperty("applicationStart",as);
-			}
-			
-			if(amap.getValue("verify")!=null){
-				String verify = amap.getValue("verify"); 
-				project.addProperty("verify",verify);
+			for(int i=0;i<amap.getLength();i++){
+				String key = amap.getQName(i);
+				String val = amap.getValue(key);
+				project.addProperty(key,val);
 			}
 			
 			Configuration.instance().getProjects().addProject(project);
