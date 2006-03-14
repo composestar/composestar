@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Threading;
 using BuildConfiguration;
+using System.Diagnostics;
+using System.ComponentModel;
 using System.IO;
 
 namespace ComposestarVSAddin
@@ -15,6 +17,8 @@ namespace ComposestarVSAddin
 	{
 		private bool mSuccess = false;
 		private string moduleName = "Compose* Master; {0}";
+		const int ERROR_FILE_NOT_FOUND =2;
+		const int ERROR_ACCESS_DENIED = 5;
 
 		public MasterManager() : base ()
 		{
@@ -57,36 +61,40 @@ namespace ComposestarVSAddin
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.UseShellExecute = false;
-			p.Start();
-
-			while (!p.HasExited)
+			try
 			{
-				Debug.Instance.ParseLog(p.StandardOutput.ReadLine());
+				p.Start();
+				while (!p.HasExited)
+				{
+					Debug.Instance.ParseLog(p.StandardOutput.ReadLine());
+				}
+				if (p.ExitCode == 0) 
+				{
+					mSuccess = true;
+				}
+				else
+				{
+					Debug.Instance.Log(String.Format("Master run failure reported by process. Exit code is {0}.", p.ExitCode) );
+					Debug.Instance.AddTaskItem(string.Format(moduleName, "Master run failed."), vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+				}
 			}
-			//
-			//			string line = null;
-			//			while ((line = p.StandardOutput.ReadLine()) != null)
-			//			{
-			//				this.printMessage(line);
-			//			}
-
-			//			this.printMessage(p.StandardOutput.ReadToEnd());
-			//
-			//			string output =  p.StandardOutput.ReadToEnd();
-			//			p.WaitForExit();
-			//
-			//			this.printMessage(output);
-
-			if (p.ExitCode == 0) 
+			catch (Win32Exception e)
 			{
-				mSuccess = true;
+				if(e.NativeErrorCode == ERROR_FILE_NOT_FOUND)
+				{
+					//Console.WriteLine(e.Message + ". Check the path.");
+					Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", is not found, please add the Java executable to your path!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+					Debug.Instance.ActivateTaskListWindow();
+				} 
+
+				else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)
+				{
+					// Note that if your word processor might generate exceptions
+					// such as this, which are handled first.
+					Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", can not be accessed!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+					Debug.Instance.ActivateTaskListWindow();
+				}
 			}
-			else
-			{
-				Debug.Instance.Log(String.Format("Master run failure reported by process. Exit code is {0}.", p.ExitCode) );
-				Debug.Instance.AddTaskItem(string.Format(moduleName, "Master run failed."), vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
-			}
-		
 		}
 
 	}

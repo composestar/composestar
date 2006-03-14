@@ -1102,7 +1102,7 @@ namespace ComposestarVSAddin
 
 							BuildConfigurationManager.Instance.SaveToXml();
 
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master to do second run...");
+							Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master...");
 
 							mastermanager = new MasterManager();
 							mastermanager.run(applicationObject, scope, action);
