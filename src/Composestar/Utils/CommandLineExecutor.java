@@ -5,12 +5,12 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CommandLineExecutor.java,v 1.1 2006/02/13 11:19:59 pascal Exp $
+ * $Id: CommandLineExecutor.java,v 1.1 2006/02/16 23:04:08 pascal_durr Exp $
  */
 
 package Composestar.Utils;
 
-
+import java.io.File;
 /**
  * CmdExec is a tool for running command line programs. Its intention is to handle 
  * command line
@@ -98,6 +98,50 @@ public class CommandLineExecutor {
         }
         return -1;     
     }
+    
+    public int exec(String execString, File dir) {
+    	try {
+            String osName = System.getProperty( "os.name" );
+            // "some" OSs need special treatment to be able to use built in functions
+            if( osName.equals( "Windows NT" )
+                || osName.equals( "Windows 2000")
+                || osName.equals( "Windows CE")
+                || osName.equals( "Windows XP" ) ) {
+                	execString = "cmd.exe /C " + execString;
+            }
+            else if( osName.equals( "Windows 95" )
+                     || osName.equals( "Windows 98" )
+                     || osName.equals( "Windows ME" ) ) {
+                execString = "command.exe /C " + execString;
+            }
+            // else real operating systems handle this flawlessly
+            
+            Runtime rt = Runtime.getRuntime();
+
+            Process proc = rt.exec( execString, null, dir );
+            
+            // connect error and output filters
+            // these are threads because the buffers used to hold the output data
+            // could otherwise overrun which blocks the program.
+            ErrorGobbler = new StreamGobbler( proc.getErrorStream() );
+            OutputGobbler = new StreamGobbler( proc.getInputStream() );
+            ErrorGobbler.start();
+            OutputGobbler.start();
+
+            // wait for program return.
+            int exitVal = proc.waitFor();
+
+            // wait for the output threads
+            OutputGobbler.waitForResult();
+            ErrorGobbler.waitForResult();
+            return exitVal;
+        } catch( Throwable t ) {
+            // TODO: New throw specific to project
+            t.printStackTrace();
+        }
+        return -1;     
+    }
+
     
     /**
      * just for testing purposes
