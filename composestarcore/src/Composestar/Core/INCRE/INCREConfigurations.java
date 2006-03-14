@@ -36,6 +36,8 @@ public class INCREConfigurations {
 			Module m = config.getModuleSettings().getModule("SECRET");
 			if(m.getProperty("mode")!=null)
 				props.put("SECRETMode",m.getProperty("mode"));
+			else
+				props.put("SECRETMode","EMPTY_CONFIG");
 		}
 		
 		/* FILTH_INPUT */
@@ -43,10 +45,9 @@ public class INCREConfigurations {
 			Module m = config.getModuleSettings().getModule("FILTH");
 			if(m.getProperty("input")!=null)
 				props.put("FILTH_INPUT",m.getProperty("input"));
+			else
+				props.put("FILTH_INPUT","EMPTY_CONFIG");	
 		}
-		
-		/* SECRETConfigFile */
-		// SECRET add this one
 		
 		/* Dependencies */
 		Iterator dependencies = config.getProjects().getDependencies().iterator();
@@ -79,10 +80,16 @@ public class INCREConfigurations {
 	public String getConfiguration(String key)
 	{
 		INCRE incre = INCRE.instance();
-		if(incre.searchingHistory)
+		if(incre.searchingHistory){
 			return history.getProperty(key);
-		else
+		}
+		else {
 			return current.getProperty(key);
+		}
 	}
 
+	public Properties getHistory()
+	{
+		return this.history;
+	}
 }

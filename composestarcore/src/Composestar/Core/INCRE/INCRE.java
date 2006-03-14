@@ -107,7 +107,6 @@ public class INCRE implements CTCommonModule
    public void run(CommonResources resources) throws ModuleException 
    {
 	   Configuration config = Configuration.instance();
-       //this.historyfile = resources.ProjectConfiguration.getProperty("TempFolder") + "history.dat";
        this.historyfile = config.getPathSettings().getPath("Base")+"history.dat";
 	   
    	   // ability to turn INCRE on
@@ -130,14 +129,12 @@ public class INCRE implements CTCommonModule
 	   
 	   // set configmanager to read xml configuration file */
 	   configmanager = new ConfigManager(resources);
-	   //String configfile = resources.ProjectConfiguration.getProperty("TempFolder") + "INCREconfig.xml";
 	   String configfile = config.getPathSettings().getPath("Base") + "INCREconfig.xml";
 	   try
 	   {
 		   File file = new File(configfile);
 		   if(!file.exists() && !file.canRead())
 			   configfile = config.getPathSettings().getPath("Composestar") + "INCREconfig.xml";
-			   //configfile = resources.ProjectConfiguration.getProperty("ComposestarPath") + "INCREconfig.xml";
 	   }
 	   catch(Exception ioe)
 	   {
@@ -518,8 +515,7 @@ public class INCRE implements CTCommonModule
 			if(!p.isEmpty()){
 				Node n = (Node)p.getFirstNode();
 				if(n instanceof ConfigNode){
-					//searchStr = (String)prop.getProperty(n.getReference());
-					searchBuffer.append((String)configurations.historyconfig.getProperty(n.getReference()));
+					searchBuffer.append((String)configurations.getHistory().getProperty(n.getReference()));
 				}
 			}
 		}
@@ -532,7 +528,7 @@ public class INCRE implements CTCommonModule
 		if(isAdded){
 			Debug.out(Debug.MODE_DEBUG,"INCRE","File "+fixedFile+" added to project since last compilation run");
 		}
-		
+				
 		this.filesCheckedOnProjectConfig.put(filename, Boolean.valueOf(isAdded));
 		return isAdded;
 	}
@@ -711,7 +707,6 @@ public class INCRE implements CTCommonModule
 				currentRepository = DataStore.instance();
 				searchingHistory = false;
 				Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
-				
 				try {
 					depofinputobject = (Object)dep.getDepObject(inputobject);
 				}
@@ -729,13 +724,13 @@ public class INCRE implements CTCommonModule
 					if(files.size()>0 && files.get(0).equals("EMPTY_CONFIG")){
 						// special case, file has not been configured
 						currentRepository = history;
+						searchingHistory = true;
 						ArrayList hfiles = (ArrayList)dep.getDepObject(inputobject);
 						if(!hfiles.get(0).equals("EMPTY_CONFIG")){
 							// configuration has been removed since last compilation run
 							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
 							return false;
 						}
-						currentRepository = DataStore.instance();
 					}
 					else {
 						// iterate over all files	
@@ -847,7 +842,6 @@ public class INCRE implements CTCommonModule
 		   Debug.out(Debug.MODE_INFORMATION, "INCRE","Loading history ("+lastCompTime.toString()+") ...");	
 
 		   // read project configurations
-		   //history.addObject("config",ois.readObject());
 		   configurations.historyconfig = (Configuration)ois.readObject();
 		   
 		   int numberofobjects = ois.readInt();	
@@ -890,7 +884,7 @@ public class INCRE implements CTCommonModule
 	   Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
 	   
 	   DataStore ds = DataStore.instance();
-	   //CommonResources resources = (CommonResources)ds.getObjectByID(Master.RESOURCES_KEY);
+	   
 	   
 	   Configuration config = Configuration.instance();
 	   String incre_enabled = "";
@@ -913,7 +907,6 @@ public class INCRE implements CTCommonModule
 		   oos.writeObject(new Date());
 		  		   
 		   // write project configurations
-		   //oos.writeObject(ds.getObjectByID("config"));
 		   oos.writeObject(Configuration.instance());
 		   
 		   // collect the objects
@@ -937,18 +930,11 @@ public class INCRE implements CTCommonModule
        }
 	   catch(StackOverflowError ex)
 	   {
-		   Debug.out(Debug.MODE_ERROR, "INCRE", "StackOverflow while creating incre history");
-		   ex.printStackTrace(System.out);
-		   // throw new ModuleException("Failure in writing: "+e.toString(),"INCRE");
+	   		throw new ModuleException("Need more stack size to store history: "+ex.toString(),"INCRE");
 	   }
 	   catch(Exception e)
 	   {
-		   Debug.out(Debug.MODE_ERROR, "INCRE", "Exception occured during creation of incre history: "+e.getMessage());
-		   e.printStackTrace(System.out);
-	   }
-	   catch(Throwable ee) 
-	   {
-		   ee.printStackTrace(System.out);
+	   		throw new ModuleException("Error occured while creating history: "+e.toString(),"INCRE");
 	   }
    }
 }
