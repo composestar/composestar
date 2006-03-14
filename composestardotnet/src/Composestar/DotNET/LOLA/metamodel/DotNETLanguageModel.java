@@ -55,13 +55,13 @@ public class DotNETLanguageModel extends LanguageModel
 		try {	
 		  	
 			  Class namespaceImpl = Class.forName("Composestar.Core.LAMA.LangNamespace");	
-			  Class classImpl = Class.forName("Composestar.Core.LAMA.Type");
-			  Class interfaceImpl = Class.forName("Composestar.Core.LAMA.Type");	
-			  Class typeImpl = Class.forName("Composestar.Core.LAMA.Type");
-			  Class methodImpl = Class.forName("Composestar.Core.LAMA.MethodInfo");	
-			  Class fieldImpl = Class.forName("Composestar.Core.LAMA.FieldInfo");	
-			  Class parameterImpl = Class.forName("Composestar.Core.LAMA.ParameterInfo");	
-			  Class annotationImpl = Class.forName("Composestar.Core.LAMA.Type");
+			  Class classImpl = Class.forName("Composestar.DotNET.LAMA.DotNETType");
+			  Class interfaceImpl = Class.forName("Composestar.DotNET.LAMA.DotNETType");	
+			  Class typeImpl = Class.forName("Composestar.DotNET.LAMA.DotNETType");
+			  Class methodImpl = Class.forName("Composestar.DotNET.LAMA.DotNETMethodInfo");	
+		      Class fieldImpl = Class.forName("Composestar.DotNET.LAMA.DotNETFieldInfo");	
+			  Class parameterImpl = Class.forName("Composestar.DotNET.LAMA.DotNETParameterInfo");	
+			  Class annotationImpl = Class.forName("Composestar.DotNET.LAMA.DotNETType");
 			  
 			  /********* Definition of unit types ***********/
 			  // Define the 'Namespace' language unit type
