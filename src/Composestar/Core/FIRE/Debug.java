@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Debug.java,v 1.1 2006/02/13 11:16:55 pascal Exp $
+ * $Id: Debug.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -38,12 +38,12 @@ public class Debug
 		modeUsed = mode;
 		currentAction = action;
 
-		Debug.out (modeUsed, currentAction + " start");
+		//Debug.out (modeUsed, currentAction + " start");
 	}
 
 	public void finalize() throws Throwable
 	{
-		Debug.out (modeUsed, currentAction + " stop");
+		//Debug.out (modeUsed, currentAction + " stop");
         super.finalize();
 	}
 	

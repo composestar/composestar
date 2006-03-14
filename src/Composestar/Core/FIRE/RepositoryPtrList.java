@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: RepositoryPtrList.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: RepositoryPtrList.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -48,7 +48,7 @@ public class RepositoryPtrList extends TreeBuilder
 
 			if (conditionString == null || conditionString.equals(""))
 			{
-				Debug.out(Debug.MODE_WARNING,"FIRE", "Condition string is empty, assuming true");
+				//Debug.out(Debug.MODE_WARNING,"FIRE", "Condition string is empty, assuming true");
 				// Bailing out with true condition.
 				return new MatchTrue();
 			}

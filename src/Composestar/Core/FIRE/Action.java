@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Action.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id: Action.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -28,7 +28,7 @@ public class Action extends FilterLeaf
 
 	public StatusColumn calculateStatus(StatusColumn status, StateTable stateTable)
 	{
-		Debug.out(Debug.MODE_INFORMATION, "FIRE" , "Visiting action: " + filter);
+		//Debug.out(Debug.MODE_INFORMATION, "FIRE" , "Visiting action: " + filter);
 		return filter.calc(status, stateTable, this);
 	}
 
