@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: COPPER.java,v 1.4 2006/02/28 09:56:19 whavinga Exp $
+ * $Id: COPPER.java,v 1.5 2006/03/10 14:43:58 pascal_durr Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -154,7 +154,7 @@ public class COPPER implements CTCommonModule
 	{
 	   COPPER copper = new COPPER();
 	   INCRE incre = INCRE.instance();
-	   Iterator cpsIterator = Configuration.instance().projects.getConcernSources().iterator();
+	   Iterator cpsIterator = Configuration.instance().getProjects().getConcernSources().iterator();
 		
 	   while(cpsIterator.hasNext()) 
 	   {

@@ -22,7 +22,7 @@ public class DummyManager implements CTCommonModule {
 		/** create dummies */
 		
 		Configuration config = Configuration.instance();
-		ArrayList projects = config.projects.getProjects();
+		ArrayList projects = config.getProjects().getProjects();
 		Iterator projIt = projects.iterator();
 		
 		while( projIt.hasNext() ) {
@@ -33,7 +33,7 @@ public class DummyManager implements CTCommonModule {
 			while( sourceIt.hasNext() ) {
 				//create target of source 
 				Source source = (Source)sourceIt.next();
-				String dummyPath = config.pathSettings.getPath("dummyPath");
+				String dummyPath = config.getPathSettings().getPath("dummyPath");
 				String target = "";
 				try {
 					target = FileUtils.createOutputFilename(p.getProperty("basePath"),"obj/"+dummyPath,source.getFileName());

@@ -27,7 +27,7 @@ public class PathsHandler extends DefaultHandler implements ContentHandler
 			{
 				String name = amap.getValue("name");
 				String path = amap.getValue("pathName");
-				Configuration.instance().pathSettings.addPath(name,path);
+				Configuration.instance().getPathSettings().addPath(name,path);
 			}
 		}			
 	}

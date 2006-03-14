@@ -78,7 +78,7 @@ public class SECRET implements CTCommonModule {
 		// fetch the secret runmode
 		try
 		{
-			Module module = Configuration.instance().moduleSettings.getModule("SECRET");
+			Module module = Configuration.instance().getModuleSettings().getModule("SECRET");
 			int mode = Integer.parseInt(module.getProperty("mode"));
 			if( mode < 3 && mode > -1 )
 			{
@@ -97,7 +97,7 @@ public class SECRET implements CTCommonModule {
 		
 		try
 		{
-			String basedir =  Configuration.instance().pathSettings.getPath("Base");
+			String basedir =  Configuration.instance().getPathSettings().getPath("Base");
 			File file = new File(basedir+"analyses/");
 			if(!file.exists())
 			{
@@ -107,10 +107,10 @@ public class SECRET implements CTCommonModule {
 			{
 				reportFile = file.getAbsolutePath() + "\\SECRET.html";
 
-				String cssFile = "file://"+Configuration.instance().pathSettings.getPath("Base") + "SECRET.css";
+				String cssFile = "file://"+Configuration.instance().getPathSettings().getPath("Base") + "SECRET.css";
 				if( !(new File(cssFile).exists()))
 				{
-					cssFile = "file://"+Configuration.instance().pathSettings.getPath("Composestar") + "SECRET.css";
+					cssFile = "file://"+Configuration.instance().getPathSettings().getPath("Composestar") + "SECRET.css";
 				}
 
 				reporter = new HTMLReporter(reportFile, cssFile, resources);

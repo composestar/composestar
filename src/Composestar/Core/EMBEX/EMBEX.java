@@ -48,14 +48,14 @@ public class EMBEX implements CTCommonModule
 		Iterator cpsConcernIter = ds.getAllInstancesOf(CpsConcern.class);
 
 		// fetch temppath
-		tempPath = Configuration.instance().pathSettings.getPath( "Base");
+		tempPath = Configuration.instance().getPathSettings().getPath( "Base");
 		if( tempPath.equals( "ERROR" ) ) 
 		{
 			throw new ModuleException( "Error in configuration file: No such property TempFolder" );
 		}
 		
 		//fetch embedded sources directory
-		embeddedDir = Configuration.instance().pathSettings.getPath( "EmbeddedSources");
+		embeddedDir = Configuration.instance().getPathSettings().getPath( "EmbeddedSources");
 		if( embeddedDir.equals( "" ) ) 
 		{
 			throw new ModuleException( "Error in configuration file: No such property EmbeddedSources" );
@@ -105,7 +105,7 @@ public class EMBEX implements CTCommonModule
 				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tLanguage: "+src.getLanguage());
 				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tFile: "+src.getSourceFile());
 				Configuration config = Configuration.instance();
-				Iterator projectit = config.projects.getProjectsByLanguage(src.getLanguage()).iterator();
+				Iterator projectit = config.getProjects().getProjectsByLanguage(src.getLanguage()).iterator();
 				if(!projectit.hasNext())
 					throw new ModuleException("There is no project to add the embedded source to, the embedded code: "+src.className+" is added to the first project of type: "+src.language);
 				else

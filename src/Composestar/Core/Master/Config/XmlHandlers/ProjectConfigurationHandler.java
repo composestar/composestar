@@ -29,27 +29,27 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 			if(amap.getValue("executable")!=null){
 				String exec = amap.getValue("executable"); 
 				//System.out.println("Executable "+exec);
-				config.projects.addProperty("Executable",exec);
+				config.getProjects().addProperty("Executable",exec);
 				
 			} 
 			
 			if(amap.getValue("outputPath")!=null){
 				String exec = amap.getValue("outputPath"); 
 				//System.out.println("Executable "+exec);
-				config.projects.addProperty("OuputPath",exec);
+				config.getProjects().addProperty("OuputPath",exec);
 				
 			} 
 			
 			if(amap.getValue("runDebugLevel")!=null){
 				String rdlevel = amap.getValue("runDebugLevel"); 
 				//System.out.println("RunDebugLevel "+rdlevel);
-				config.projects.addProperty("runDebugLevel",rdlevel);
+				config.getProjects().addProperty("runDebugLevel",rdlevel);
 			}
 			
 			if(amap.getValue("applicationStart")!=null){
 				String rdlevel = amap.getValue("applicationStart"); 
 				//System.out.println("RunDebugLevel "+rdlevel);
-				config.projects.addProperty("applicationStart",rdlevel);
+				config.getProjects().addProperty("applicationStart",rdlevel);
 			}
 			
 			// done here thus look further

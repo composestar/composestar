@@ -32,15 +32,15 @@ public class INCREConfigurations {
 	public void initConfig(Configuration config,Properties props)
 	{
 		/* SECRETMode */
-		if(config.moduleSettings.getModule("SECRET")!=null){
-			Module m = config.moduleSettings.getModule("SECRET");
+		if(config.getModuleSettings().getModule("SECRET")!=null){
+			Module m = config.getModuleSettings().getModule("SECRET");
 			if(m.getProperty("mode")!=null)
 				props.put("SECRETMode",m.getProperty("mode"));
 		}
 		
 		/* FILTH_INPUT */
-		if(config.moduleSettings.getModule("FILTH")!=null){
-			Module m = config.moduleSettings.getModule("FILTH");
+		if(config.getModuleSettings().getModule("FILTH")!=null){
+			Module m = config.getModuleSettings().getModule("FILTH");
 			if(m.getProperty("input")!=null)
 				props.put("FILTH_INPUT",m.getProperty("input"));
 		}
@@ -49,7 +49,7 @@ public class INCREConfigurations {
 		// SECRET add this one
 		
 		/* Dependencies */
-		Iterator dependencies = config.projects.getDependencies().iterator();
+		Iterator dependencies = config.getProjects().getDependencies().iterator();
     	String depstr = "";
 		while(dependencies.hasNext())
     	{
@@ -61,13 +61,13 @@ public class INCREConfigurations {
 		props.put("Dependencies",depstr);
 		
 		/* ApplicationStart */
-		String as = config.projects.getProperty("applicationStart");
+		String as = config.getProjects().getProperty("applicationStart");
 		if(null!=as && !as.equals("")){
 			props.put("ApplicationStart",as);
 		}
 						
 		/* RunDebugLevel */
-		String rdl = config.projects.getProperty("runDebugLevel");
+		String rdl = config.getProjects().getProperty("runDebugLevel");
 		props.put("RunDebugLevel",rdl);
 	}
 	

@@ -35,7 +35,7 @@ public class ModulesHandler extends DefaultHandler implements ContentHandler
 					m.addProperty(key,val);
 				}
 					
-				Configuration.instance().moduleSettings.addModule(name,m);
+				Configuration.instance().getModuleSettings().addModule(name,m);
 			}
 		}	
 	}

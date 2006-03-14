@@ -32,7 +32,7 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 			{
 				String languagename = amap.getValue("name");
 				Configuration config = Configuration.instance();
-				if(config.projects.getProjectsByLanguage(languagename)!=null){
+				if(config.getProjects().getProjectsByLanguage(languagename)!=null){
 					// look further
 					Language lang = new Language();
 					lang.setName(languagename);
@@ -40,7 +40,7 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 					parser.setContentHandler( langhandler );
 					
 					// add language to projects
-					ArrayList projects = config.projects.getProjectsByLanguage(languagename);
+					ArrayList projects = config.getProjects().getProjectsByLanguage(languagename);
 					Iterator prjIter = projects.iterator();
 					while(prjIter.hasNext()){
 						//System.out.println("add lang "+lang.getName());
