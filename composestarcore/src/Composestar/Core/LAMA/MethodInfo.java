@@ -23,10 +23,18 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		Parameters = new ArrayList();
 	}
 	
+	/**
+     * @param param
+     */
+    public void addParameter(ParameterInfo param) 
+    {
+       Parameters.add( param );
+       //param.setParent(this);
+    }
+    
 	public MethodInfo getClone(String n, Type actualParent) throws Exception{
 		throw new Exception("MethodInfo.getClone(String n) should only be called on subtypes");
 	}
-
 
 	/**
 	 * @return java.lang.String
@@ -75,6 +83,14 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	}
 	
 	/**
+     * @param parent
+     */
+    public void setParent(Type parent) 
+    {
+     	Parent = parent;     
+    }
+	
+	/**
 	 * @return Composestar.Core.LAMA.Type
 	 * @roseuid 401B84CF020F
 	 */
@@ -87,6 +103,14 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
         return ReturnType;
 	} 
 	
+	/**
+     * @param type
+     */
+    public void setReturnType(String type) 
+    {
+       ReturnTypeString = type;     
+    }
+	
 	/** Stuff for LOLA **/
 	
 	/* (non-Javadoc)
@@ -94,7 +118,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 */
 	public String getUnitName()
     {
-      return Name;
+      return name();
     }
 	
 	/* (non-Javadoc)

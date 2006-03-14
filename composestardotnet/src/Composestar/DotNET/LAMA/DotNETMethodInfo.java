@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMethodInfo.java,v 1.2 2006/02/24 14:35:40 roy_ Exp $
+ * $Id: DotNETMethodInfo.java,v 1.3 2006/03/08 11:16:55 stephan_h Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -293,14 +293,6 @@ public class DotNETMethodInfo extends MethodInfo {
        IsVirtual = isVirtual;     
     }
             
-    /**
-     * @param type
-     * @roseuid 402A02D60328
-     */
-    public void setReturnType(String type) {
-       ReturnTypeString = type;     
-    }
-    
     /**
      * @return int
      * @roseuid 401B84CF0210

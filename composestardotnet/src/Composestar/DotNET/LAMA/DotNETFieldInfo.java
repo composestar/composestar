@@ -30,14 +30,9 @@ import java.io.ObjectOutputStream;
 
 public class DotNETFieldInfo extends FieldInfo
 {
-  /**
-	 * 
-	 */
   private static final long serialVersionUID = 235924601234730641L;
 	
   public int HashCode;                // .NET hashcode
-  public String FieldTypeString;      // FQN of field type (class name incl. package) 
-  private DotNETType FieldType;        // The actual .NET type
   public boolean IsAssembly;          // Visible on Assembly level?
   public boolean IsFamily;            // Visible on Family level?
   public boolean IsFamilyAndAssembly; // Visible at both levels?
@@ -68,22 +63,6 @@ public class DotNETFieldInfo extends FieldInfo
     this.HashCode = hashcode;
   }
   
-  public DotNETType fieldType()
-  {
-   if (this.FieldType == null)
-    { // We don't do this in setFieldType because at that point
-      // the DotNETType of the field may not be registered yet (!)
-      TypeMap map = TypeMap.instance();
-      this.FieldType = (DotNETType)map.getType( FieldTypeString );
-    }
-    return FieldType;
-  }
-  
-  public void setFieldType(String fieldtype)
-  {
-    this.FieldTypeString = fieldtype;
-  }
-
   public boolean isAssembly()
   {
      return this.IsAssembly;     
@@ -174,36 +153,11 @@ public class DotNETFieldInfo extends FieldInfo
      this.IsStatic = isStatic;     
   }  
   
-  public String name()
-  {
-    return this.Name;
-  }
-  
-  public void setName(String name)
-  {
-    this.Name = name;
-  }
-
-  public void setParent(DotNETType parent)
-  {
-    this.Parent = parent;
-  }
-  
-  public DotNETType parent()
-  {
-    return this.Parent;
-  }
-
-  /**
-   * @return Returns the isDeclaredHere.
-   */
   public boolean isDeclaredHere()
   {
     return IsDeclaredHere;
   }
-  /**
-   * @param setIsDeclaredHere The isDeclaredHere to set.
-   */
+  
   public void setIsDeclaredHere(boolean isDeclaredHere)
   {
     IsDeclaredHere = isDeclaredHere;
@@ -258,7 +212,6 @@ public class DotNETFieldInfo extends FieldInfo
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		HashCode = in.readInt();
-		FieldTypeString = in.readUTF();
 		IsAssembly = in.readBoolean();
 		IsFamily = in.readBoolean();
 		IsFamilyAndAssembly = in.readBoolean();
@@ -269,7 +222,6 @@ public class DotNETFieldInfo extends FieldInfo
 		IsPublic = in.readBoolean();
 		IsStatic = in.readBoolean();
 		IsDeclaredHere = in.readBoolean();
-		Parent = (DotNETType)in.readObject();
 	}
 	 
 	/**
@@ -278,7 +230,6 @@ public class DotNETFieldInfo extends FieldInfo
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);
-		out.writeUTF(FieldTypeString);
 		out.writeBoolean(IsAssembly);
 		out.writeBoolean(IsFamily);
 		out.writeBoolean(IsFamilyAndAssembly);
@@ -292,4 +243,3 @@ public class DotNETFieldInfo extends FieldInfo
 		out.writeObject(Parent);
 	}
 }
-

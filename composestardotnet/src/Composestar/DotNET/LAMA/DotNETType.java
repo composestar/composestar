@@ -33,10 +33,9 @@ import java.io.ObjectOutputStream;
  * the concern.
  */
 public class DotNETType extends Type {
-    /**
-	 * 
-	 */
+    
 	private static final long serialVersionUID = 5652622506200113401L;
+	
 	public int HashCode;
     public boolean IsAbstract;
     public boolean IsAnsiClass;
@@ -503,14 +502,6 @@ public class DotNETType extends Type {
     }
     
     /**
-     * @param name
-     * @roseuid 4029F83F0366
-     */
-    public void setName(String name) {
-        Name = name;     
-    }
-    
-    /**
      * @return java.lang.String
      * @roseuid 401B84CF01F4
      */
@@ -604,20 +595,6 @@ public class DotNETType extends Type {
       return null;
     }
     
-    /**
-     * @param method
-     * @roseuid 4029F8B802DE
-     */
-    public void addMethod(DotNETMethodInfo method) {
-        Methods.add( method );
-        method.setParent(this);     
-    }
-    
-    public void addField(DotNETFieldInfo field) {
-      Fields.add(field);
-      field.setParent(this);
-    }
-
     public void addImplementedInterface(String iface) {
       ImplementedInterfaceNames.add(iface);
     }
@@ -645,7 +622,7 @@ public class DotNETType extends Type {
     public String assemblyName() {
 		String name = this.assemblyQualifiedName();
 		StringTokenizer st = new StringTokenizer(name,",",false);
-		//System.out.println("Name: "+st.countTokens());
+		System.out.println("Name: "+st.countTokens());
 		if(st.hasMoreTokens())
 		{
 			if(st.countTokens() == 6) // Really ugly hack for this case: System.Int16[,] this throws of the assemblyname resulting in errors during assembly transformer

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-
 public abstract class Type extends ProgramElement{
 
 	public ArrayList Methods;
@@ -22,14 +21,35 @@ public abstract class Type extends ProgramElement{
     	Methods = new ArrayList();
     	Fields = new ArrayList();
     }
+    
+    /**
+     * @param field
+     */
+    public void addField(FieldInfo field) 
+    {
+        Fields.add(field);
+        field.setParent(this);
+    }
+    
+    /**
+     * @param method
+     */
+    public void addMethod(MethodInfo method) 
+    {
+        Methods.add( method );
+        method.setParent(this);     
+    }
 	
-    public List getFields() {
+    /**
+	 * @return java.util.List
+	 */
+    public List getFields() 
+    {
         return Fields;
     }
     
 	/**
 	 * @return java.lang.String
-	 * @roseuid 401B84CF01DA
 	 */
 	public String fullName() 
 	{
@@ -38,7 +58,6 @@ public abstract class Type extends ProgramElement{
 	
 	/**
 	 * @param name
-	 * @roseuid 4029F62E03B6
 	 */
 	public void setFullName(String name) 
 	{
@@ -49,7 +68,6 @@ public abstract class Type extends ProgramElement{
 	 * @param name
 	 * @param types
 	 * @return Composestar.dotnet.LAMA.DotNETMethodInfo
-	 * @roseuid 401B84CF01F9
 	 */
 	public MethodInfo getMethod(String name, String[] types) 
 	{
@@ -67,7 +85,6 @@ public abstract class Type extends ProgramElement{
 	
 	/**
 	 * @return java.util.List
-	 * @roseuid 401B84CF01FA
 	 */
 	public List getMethods() 
 	{
@@ -76,7 +93,6 @@ public abstract class Type extends ProgramElement{
 	
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF01E9
 	 */
 	public boolean isNestedPrivate() 
 	{
@@ -85,7 +101,6 @@ public abstract class Type extends ProgramElement{
 	
 	/**
 	 * @return boolean
-	 * @roseuid 401B84CF01EA
 	 */
 	public boolean isNestedPublic() 
 	{
@@ -94,11 +109,18 @@ public abstract class Type extends ProgramElement{
 	
 	/**
 	 * @return java.lang.String
-	 * @roseuid 401B84CF01F3
 	 */
 	public String name() 
 	{
 		return Name;     
+    }
+	
+	/**
+     * @param name
+     * @roseuid 4029F83F0366
+     */
+    public void setName(String name) {
+        Name = name;     
     }
 	
 	/** Stuff for annotations **/
@@ -122,9 +144,12 @@ public abstract class Type extends ProgramElement{
 	
 	/** Stuff for LOLA **/
 	
+	/* (non-Javadoc)
+	 * @see Composestar.Core.LAMA.ProgramElement#getUnitName()
+	 */
 	public String getUnitName()
     {
-      return FullName;
+      return fullName();
     }
 	
 	/* (non-Javadoc)

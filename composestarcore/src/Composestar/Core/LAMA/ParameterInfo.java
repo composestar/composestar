@@ -6,10 +6,11 @@ import java.io.ObjectOutputStream;
 
 public abstract class ParameterInfo extends ProgramElement
 {
-
 	public String ParameterTypeString;
 	private Type ParameterType;
 	public String Name;
+	
+	public MethodInfo Parent;
 	
 	public ParameterInfo()
 	{
@@ -24,6 +25,15 @@ public abstract class ParameterInfo extends ProgramElement
 	{
 		return Name;     
 	}
+	
+	/**
+     * @param name
+     * @roseuid 402A072800EE
+     */
+    public void setName(String name) {
+        Name = name;     
+    }
+    
     
 	/**
 	 * @return Composestar.Core.LAMA.Type
@@ -48,6 +58,22 @@ public abstract class ParameterInfo extends ProgramElement
 		ParameterTypeString = paramType;     
 	}
 	
+	/**
+     * @return Returns the parent.
+     */
+    public MethodInfo getParent()
+    {
+      return Parent;
+    }
+    
+    /**
+     * @param parent The parent to set.
+     */
+    public void setParent(MethodInfo parent)
+    {
+      Parent = parent;
+    }
+    
 	/** Stuff for LOLA **/
 	
 	/* (non-Javadoc)
@@ -55,7 +81,7 @@ public abstract class ParameterInfo extends ProgramElement
 	 */
 	public String getUnitName()
 	{
-		return Name;
+		return name();
 	}
 	
 	/* (non-Javadoc)
@@ -81,6 +107,7 @@ public abstract class ParameterInfo extends ProgramElement
 	{
 		Name = in.readUTF();
 		ParameterTypeString = in.readUTF();
+		Parent = (MethodInfo)in.readObject();
 	}
 	 
 	/**
@@ -90,5 +117,6 @@ public abstract class ParameterInfo extends ProgramElement
 	{
 		out.writeUTF(Name);
 		out.writeUTF(ParameterTypeString);
+		out.writeObject(Parent);
 	}
 }

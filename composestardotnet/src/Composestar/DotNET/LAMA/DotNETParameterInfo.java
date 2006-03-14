@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETParameterInfo.java,v 1.2 2006/02/01 13:33:43 composer Exp $
+ * $Id: DotNETParameterInfo.java,v 1.2 2006/02/24 14:35:40 roy_ Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -39,8 +39,6 @@ public class DotNETParameterInfo extends ParameterInfo {
     public boolean IsOptional;
     public boolean IsOut;
     public boolean IsRetval;
-    
-    public DotNETMethodInfo Parent;
     
     /**
      * @roseuid 401B84CF0220
@@ -131,14 +129,6 @@ public class DotNETParameterInfo extends ParameterInfo {
     }
     
     /**
-     * @param name
-     * @roseuid 402A072800EE
-     */
-    public void setName(String name) {
-        Name = name;     
-    }
-    
-    /**
      * @return int
      * @roseuid 401B84CF021E
      */
@@ -170,21 +160,6 @@ public class DotNETParameterInfo extends ParameterInfo {
         HashCode = code;     
     }
 
-    /**
-     * @return Returns the parent.
-     */
-    public DotNETMethodInfo getParent()
-    {
-      return Parent;
-    }
-    /**
-     * @param parent The parent to set.
-     */
-    
-    public void setParent(DotNETMethodInfo parent)
-    {
-      Parent = parent;
-    }
     
     /** Stuff for LOLA **/  
     
@@ -233,7 +208,6 @@ public class DotNETParameterInfo extends ParameterInfo {
 		IsOptional = in.readBoolean();
 		IsOut = in.readBoolean();
 		IsRetval = in.readBoolean();
-		Parent = (DotNETMethodInfo)in.readObject();
 	}
 	 
 	/**
@@ -248,6 +222,5 @@ public class DotNETParameterInfo extends ParameterInfo {
 		out.writeBoolean(IsOptional);
 		out.writeBoolean(IsOut);
 		out.writeBoolean(IsRetval);
-		out.writeObject(Parent);
 	}
 }
