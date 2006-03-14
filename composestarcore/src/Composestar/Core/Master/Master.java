@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Master.java,v 1.2 2006/02/14 14:45:28 composer Exp $
+ * $Id: Master.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
  */
 
 package Composestar.Core.Master;
@@ -17,8 +17,7 @@ package Composestar.Core.Master;
 public abstract class Master {
 	
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-	public static String phase = "";
-    
+	    
 	public abstract void run();
     	
 	public abstract String printStackTrace(Exception e); 
