@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Properties;
 
 public class Projects implements Serializable{
@@ -70,6 +69,17 @@ public class Projects implements Serializable{
 		return null;
 	}
 	
+	public ArrayList getCompiledDummies() {
+		Iterator projIt = projects.iterator();
+		while( projIt.hasNext() ) {
+			Project p = (Project)projIt.next();
+			if(p.getCompiledDummies()!= null) {
+				compiledDummies.add(p.getCompiledDummies());
+			}
+		}
+		return compiledDummies;
+	}
+	
 	public ArrayList getDependencies() {
 		Iterator projIt = projects.iterator();
 		while( projIt.hasNext() ) {
@@ -86,15 +96,19 @@ public class Projects implements Serializable{
 		return dependencies;
 	}
 	
-	public ArrayList getCompiledDummies() {
+	public ArrayList getSources() {
+		ArrayList sources = new ArrayList();
 		Iterator projIt = projects.iterator();
 		while( projIt.hasNext() ) {
 			Project p = (Project)projIt.next();
-			if(p.getCompiledDummies()!= null) {
-				compiledDummies.add(p.getCompiledDummies());
+			ArrayList projectsources = p.getSources();
+			Iterator sourceItr = projectsources.iterator();
+			while( sourceItr.hasNext() ) {
+				Source s = (Source)sourceItr.next();
+				sources.add(s);
 			}
 		}
-		return compiledDummies;
+		return sources;
 	}
 	
 }

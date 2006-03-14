@@ -1,9 +1,6 @@
 package Composestar.Core.INCRE;
 
 import Composestar.Utils.*;
-import Composestar.Core.RepositoryImplementation.DataStore;
-
-import java.util.Properties;
 
 public class ConfigNode extends Node
 {
@@ -20,16 +17,6 @@ public class ConfigNode extends Node
 	{ 
 		try 
 		{
-			/*DataStore ds = INCRE.instance().getCurrentRepository();
-			Properties prop = (Properties)ds.getObjectByID("config");
-			if(prop.getProperty(reference).equals(""))
-			{
-				Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE::ConfigNode EMPTY value for configuration "+reference);
-				return "EMPTY_CONFIG"; 
-			}
-			else 
-				return prop.getProperty(reference);*/
-			
 			INCRE incre = INCRE.instance();
 			if(incre.getConfiguration(reference).equals(""))
 			{
