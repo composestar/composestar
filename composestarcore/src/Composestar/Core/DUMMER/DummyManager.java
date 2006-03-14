@@ -27,16 +27,19 @@ public class DummyManager implements CTCommonModule {
 		
 		while( projIt.hasNext() ) {
 			Project p = (Project)projIt.next();
-			DummyEmitter emitter = p.getLanguage().getEmitter();
 			ArrayList sources = p.getSources();
 			Iterator sourceIt = sources.iterator();
 			while( sourceIt.hasNext() ) {
+				
+				DummyEmitter emitter = p.getLanguage().getEmitter();
+				
 				//create target of source 
 				Source source = (Source)sourceIt.next();
-				String dummyPath = config.getPathSettings().getPath("dummyPath");
+				String dummyPath = config.getPathSettings().getPath("Dummy");
 				String target = "";
 				try {
 					target = FileUtils.createOutputFilename(p.getProperty("basePath"),"obj/"+dummyPath,source.getFileName());
+					System.out.println("target created: "+target);
 				}
 				catch(Exception e) {
 					throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),"DUMMER");
@@ -59,17 +62,17 @@ public class DummyManager implements CTCommonModule {
 				emitter.createDummy(source,bw);
 
 				//add dummy to source
-				source.setDummy(target);
+				//source.setDummy(target);
 			}
 			
 			/** compile dummies */
-			LangCompiler comp = (LangCompiler)p.getLanguage().compilerSettings.getCompiler();
+			/*LangCompiler comp = (LangCompiler)p.getLanguage().compilerSettings.getCompiler();
 			try {
 				comp.compileDummies(p);
 			}
 			catch(Exception e) {
 				throw new ModuleException("CANNOT compile dummies: "+e.getMessage(),"DUMMER");
-			}
+			}*/
 		}
 	}	
 		
