@@ -18,15 +18,15 @@ public class ConfigNode extends Node
 		try 
 		{
 			INCRE incre = INCRE.instance();
-			if(incre.getConfiguration(reference).equals(""))
+			String config = incre.getConfiguration(reference);
+			if(config.equals(""))
 			{
 				Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE::ConfigNode EMPTY value for configuration "+reference);
 				return "EMPTY_CONFIG"; 
 			}
 			else 
-				return incre.getConfiguration(reference);
-			
-			
+				return config;
+					
 		}
 		catch(Exception excep){
 			Debug.out(Debug.MODE_WARNING, "INCRE","Cannot find value for config node "+reference+" due to "+excep.getMessage());
