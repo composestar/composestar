@@ -146,7 +146,7 @@ public class Module
 	 * Creates an instance of a coreModule of type 'fulltype' and calls it run method
 	 * @param String phase of execution
 	 */
-	public void execute(String phase,CommonResources resources) throws ModuleException
+	public void execute(CommonResources resources) throws ModuleException
 	{
 		if(this.enabled)
 		{
