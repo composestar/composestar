@@ -519,7 +519,7 @@ public class DotNETLanguageModel extends LanguageModel
 	      else if (unit instanceof DotNETParameterInfo)
 	      {
 	        DotNETParameterInfo param = (DotNETParameterInfo)unit;
-	        if ((null == param.getParent()) || param.getParent().isDeclaredHere())
+	        if ((null == param.getParent()) || ((DotNETMethodInfo)param.getParent()).isDeclaredHere())
 	          dict.addLanguageUnit(unit); // The parameter does not belong to an inherited method, so add it.
 	      }
 	      else if (!(unit instanceof DotNETMethodInfo)) // Skip methods, add everything else that hasn't matched so far
