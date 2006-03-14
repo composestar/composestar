@@ -62,17 +62,17 @@ public class DummyManager implements CTCommonModule {
 				emitter.createDummy(source,bw);
 
 				//add dummy to source
-				//source.setDummy(target);
+				source.setDummy(target);
 			}
 			
 			/** compile dummies */
-			/*LangCompiler comp = (LangCompiler)p.getLanguage().compilerSettings.getCompiler();
+			LangCompiler comp = (LangCompiler)p.getLanguage().compilerSettings.getCompiler();
 			try {
 				comp.compileDummies(p);
 			}
 			catch(Exception e) {
 				throw new ModuleException("CANNOT compile dummies: "+e.getMessage(),"DUMMER");
-			}*/
+			}
 		}
 	}	
 		
