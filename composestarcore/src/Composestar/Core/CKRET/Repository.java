@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.Configuration;
@@ -79,8 +80,8 @@ public class Repository {
 				throw new ModuleException("Filter specification (" + SECRET_CONFIG + ") not found.","SECRET");
 			}
 		}	
-		//resources.ProjectConfiguration.put("SECRETConfigFile",secretconfigfile);	
-										
+		INCRE.instance().addConfiguration("SECRETConfigFile",secretconfigfile);
+														
 		Debug.out(Debug.MODE_INFORMATION,"SECRET","Using filter specification in " + secretconfigfile);
 		
 		ConfigParser parser = new ConfigParser();
