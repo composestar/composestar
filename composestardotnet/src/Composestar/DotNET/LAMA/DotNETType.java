@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETType.java,v 1.2 2006/02/24 14:35:40 roy_ Exp $
+ * $Id: DotNETType.java,v 1.4 2006/03/14 18:19:16 roy_ Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -622,7 +622,7 @@ public class DotNETType extends Type {
     public String assemblyName() {
 		String name = this.assemblyQualifiedName();
 		StringTokenizer st = new StringTokenizer(name,",",false);
-		System.out.println("Name: "+st.countTokens());
+		//System.out.println("Name: "+st.countTokens());
 		if(st.hasMoreTokens())
 		{
 			if(st.countTokens() == 6) // Really ugly hack for this case: System.Int16[,] this throws of the assemblyname resulting in errors during assembly transformer
