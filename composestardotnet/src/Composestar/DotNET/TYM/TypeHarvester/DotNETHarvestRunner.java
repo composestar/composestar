@@ -4,14 +4,20 @@
 
 package Composestar.DotNET.TYM.TypeHarvester;
 
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
-import Composestar.Core.INCRE.Dependency;
-import Composestar.Core.INCRE.INCRE;
+import Composestar.DotNET.LAMA.DotNETType;
+
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
-import Composestar.Core.Exception.ModuleException;
 
 import java.util.*;
 
@@ -24,8 +30,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
      * @roseuid 4056E99103CC
      */
 	private INCRE incre;
-	public static Vector unmodifiedDLLs = new Vector();
-
+	
     public DotNETHarvestRunner() {
 		this.incre = INCRE.instance();	
     } 
@@ -37,13 +42,94 @@ public class DotNETHarvestRunner implements HarvestRunner {
     		{
     			if(dllName.indexOf("dummies")==-1)
     			{
-					unmodifiedDLLs.add(dllName);
-					dllName = "!" + dllName;
+    				return this.copyOperation(dllName);
     			}
     		}
     	}
 		return dllName;
 	}
+   
+    /**
+     * Returns all assemblies indirectly used by the harvester 
+     * 	to harvest all types from the assembly (param asm)
+     * e.g: When the harvester loads assembly composestarruntimeinterpreter, 
+     * it indirectly harvest types from other assemblies e.g composestarfilterdebugger.dll
+     * 
+     * @param lib
+     * @return
+     */
+    public ArrayList externalAssemblies(String asm)
+    {
+    	ArrayList externals = new ArrayList();
+    	INCRE incre = INCRE.instance();
+    	Iterator types = incre.getHistoryTypes().iterator();
+    	while(types.hasNext()){
+    		DotNETType type = (DotNETType)types.next();
+    		if(type.fromDLL.equalsIgnoreCase(asm)){
+    			String extAsm = type.Module.fullyQualifiedName();
+    			if(!externals.contains(extAsm))
+    				externals.add(extAsm);
+    		}
+    	}
+    	
+    	return externals;
+    }
+    
+    /**
+     * Returns a list containing all assemblies harvested earlier
+     * e.g input for harvester is "A.dll B.dll C.dll"
+     * then the list returned is 
+     * 		for input A.dll => []
+     * 		for input B.dll => [A.dll]
+     * 		for input C.dll => [A.dll,B.dll] 
+     * @param asm
+     * @return ArrayList
+     */
+    public ArrayList prevAssemblies(String asm)
+    {
+    	ArrayList assemblies = new ArrayList();
+    	ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
+    	Iterator it = dependencyList.iterator();
+    	
+    	while(it.hasNext()) 
+		{
+			Dependency dependency = (Dependency)it.next();
+			String name = dependency.getFileName();
+			if(name.equalsIgnoreCase(asm))
+				return assemblies;
+						
+			if( name.indexOf("Microsoft.NET/Framework/") == -1 )
+				assemblies.add(name);
+		}
+    	
+		// TODO: use getCompiledDummies of DUMMER instead of ugly ilicit setting
+		String dummies = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
+		assemblies.add(dummies); 
+		return assemblies;
+    }
+    
+    /**
+     * Returns a string of all assemblies harvested earlier
+     * e.g input for harvester is "A.dll B.dll C.dll"
+     * then return string for 
+     * 		input A.dll => ""
+     * 		input B.dll => "A.dll"
+     * 		input C.dll => "A.dll B.dll" 
+     * @param asm
+     * @return String
+     */
+    public String prevInput(String asm)
+    {
+    	INCRE incre = INCRE.instance();
+    	String harvesterinput = incre.getConfiguration("HarvesterInput");
+    	int index = harvesterinput.indexOf(asm);
+    	if(index>0){
+    		String previnput = harvesterinput.substring(0,index);
+    		return previnput;
+    	}
+    	
+    	return "";
+    }
     
     /**
      * The run function of each module is called in the same order as the  modules 
@@ -70,7 +156,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
 		Iterator it = dependencyList.iterator();
 		while(it.hasNext()) 
 		{
-			Composestar.Core.Master.Config.Dependency dependency = (Composestar.Core.Master.Config.Dependency)it.next();
+			Dependency dependency = (Dependency)it.next();
 			String name = dependency.getFileName();
 			if( name.indexOf("Microsoft.NET/Framework/") == -1 )
 			{
@@ -87,9 +173,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
 			// Add additional dll's (from compiled inner's) and list of classes that we still need.
       	}
       	
-      	
-		resources.addResource("unmodifiedDLLs",unmodifiedDLLs);
-		Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
+      	Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
 		String typeHarvester =  Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/TypeHarvester.exe" ;
 		java.io.File typeHarvesterFile = new java.io.File(typeHarvester);
 		if( !typeHarvesterFile.exists() )
@@ -106,4 +190,39 @@ public class DotNETHarvestRunner implements HarvestRunner {
       		throw new ModuleException("TypeHarvester failed with error: " + exec.outputError(),"TYM");
       	}
     }
+    
+    /**
+     * Find all concerns harvested from specified assembly
+     * Add those concerns to the DataStore and TypeMap,
+     * and register all program elements
+     * @param dll Assembly harvested during a previous compilation cycle
+     * @return !dll
+     */
+    public String copyOperation(String dll){
+    	INCRE incre = INCRE.instance();
+    	INCRETimer copytypes = incre.getReporter().openProcess("HARVESTER","Copying skipped types for assembly "+dll,INCRETimer.TYPE_INCREMENTAL);
+    	TypeMap map = TypeMap.instance();
+    	Iterator objects = incre.history.getAllInstancesOf(PrimitiveConcern.class);
+    	while(objects.hasNext()){
+    		PrimitiveConcern pc = (PrimitiveConcern)objects.next();
+    		DotNETType type = (DotNETType)pc.getPlatformRepresentation();
+    							
+    		if(type.fromDLL.equals(dll))
+    		{
+    				// make a clone and add to datastore
+    				PrimitiveConcern pcclone = (PrimitiveConcern)pc.clone();
+    				type.setParentConcern(pcclone);
+    				DataStore.instance().addObject( type.fullName(), pcclone );
+    					
+    				// also add the type to the type map
+    				type.reset(); // reset hashsets of type and register
+    				map.addType( type.fullName() , type );
+    		}
+    	}
+    		
+		copytypes.stop();
+		
+		// tell TypeHarvester not to write to types.xml for this assembly
+		return	"!" + dll;
+	}
 }

@@ -4,23 +4,22 @@
 
 package Composestar.DotNET.TYM.TypeCollector;
 
-import Composestar.Core.TYM.TypeCollector.CollectorRunner;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
-import Composestar.Core.LAMA.*;
-import Composestar.DotNET.LAMA.*;
-import Composestar.DotNET.TYM.TypeCollector.DocumentHandler;
-import Composestar.Utils.Debug;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.*;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.TYM.TypeCollector.CollectorRunner;
+
+import Composestar.DotNET.LAMA.*;
+import Composestar.DotNET.TYM.TypeCollector.DocumentHandler;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -129,45 +128,6 @@ public class DotNETCollectorRunner implements CollectorRunner {
 			type.setParentConcern(pc);
 			dataStore.addObject( type.fullName(), pc );
 		}
-              
-        INCRETimer copytypes = incre.getReporter().openProcess("COLLECTOR","Copying skipped types..",INCRETimer.TYPE_INCREMENTAL);
-		// add skipped concerns in case collector was incremental
-		if(incre.isModuleInc("COLLECTOR"))
-		{
-			// copy types from dll's skipped by Harvester
-			this.copyOperation((Vector)resources.getResource("unmodifiedDLLs"));
-		}
-		copytypes.stop();
-		
-	}
-
-    public void copyOperation(Vector dlls)
-	{
-		TypeMap map = TypeMap.instance();
-	
-		for(int i=0;i<dlls.size();i++)
-		{
-			Iterator objects = incre.history.getAllInstancesOf(PrimitiveConcern.class);
-			String dllName = (String)dlls.elementAt(i);
-			
-			while(objects.hasNext()){
-				
-                PrimitiveConcern pc = (PrimitiveConcern)objects.next();
-				DotNETType type = (DotNETType)pc.getPlatformRepresentation();
-							
-				//System.out.println(dllName + "VERSUS "+type.fromDLL);
-				if(type.fromDLL.equals(dllName))
-				{
-					// make a clone and add to datastore
-					PrimitiveConcern pcclone = (PrimitiveConcern)pc.clone();
-					type.setParentConcern(pcclone);
-					DataStore.instance().addObject( type.fullName(), pcclone );
-					
-					// IMPORTANT: also add the type to the type map
-					type.reset(); // reset hashsets of type
-					map.addType( type.fullName() , type );
-				}
-			}
-		}
-	}
+    }
+  
 }

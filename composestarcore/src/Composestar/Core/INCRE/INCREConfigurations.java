@@ -61,6 +61,11 @@ public class INCREConfigurations {
     	}
 		props.put("Dependencies",depstr);
 		
+		/* Harvester input */
+		// TODO: use getCompiledDummies of DUMMER instead of ugly ilicit setting
+		String dummies = config.getModuleSettings().getModule("ILICIT").getProperty("assemblies");
+		props.put("HarvesterInput",depstr+","+dummies);
+				
 		/* ApplicationStart */
 		String as = config.getProjects().getProperty("applicationStart");
 		if(null!=as && !as.equals("")){

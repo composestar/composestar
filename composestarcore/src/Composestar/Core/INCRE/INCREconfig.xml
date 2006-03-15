@@ -14,15 +14,28 @@
 	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="false" incremental="false" summary="Generating dummy sources...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="false" summary="Harvesting type information...">
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
-		</dependencies>		
+		</dependencies>	
+		<dependency type="OBJECT" name="previousinput">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevInput"></node>
+			</path>
+		</dependency>	
+		<dependency type="FILE" name="previousassemblies">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevAssemblies"></node>
+			</path>
+		</dependency>
+		<dependency type="FILE" name="externalassemblies" isAdded="false">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.externalAssemblies"></node>
+			</path>
+		</dependency>
 	</module>
 	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
-		<dependencies>
-			<dependency type="FILE" name="assembly"></dependency>
-		</dependencies>		
+		<dependencies></dependencies>		
 	</module>
 	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" enabled="true" incremental="false" summary="Collecting attributes...">
 		<dependencies></dependencies>	

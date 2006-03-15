@@ -5,9 +5,7 @@
 package Composestar.Core.TYM.TypeCollector;
 
 import Composestar.Core.Master.CTCommonModule;
-import java.util.Vector;
 
 public interface CollectorRunner extends CTCommonModule {
     
-    public abstract void copyOperation(Vector dlls);
 }

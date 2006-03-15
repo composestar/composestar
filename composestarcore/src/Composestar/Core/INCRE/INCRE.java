@@ -70,6 +70,7 @@ public class INCRE implements CTCommonModule
 	public HashMap externalSourcesBySource;
 	private HashMap dsObjectsOrdered;
 	private HashMap historyObjectsOrdered;
+	private ArrayList historyTypes;
 	private ArrayList currentConcernsWithFMO;
 	private ArrayList historyConcernsWithFMO;
 	private ArrayList currentConcernsWithModifiedSignatures;
@@ -304,6 +305,21 @@ public class INCRE implements CTCommonModule
 		   	}
 		  });
 		return concerns;
+	}
+	
+	public ArrayList getHistoryTypes()
+	{
+		if(historyTypes!=null) /* set before */
+			return historyTypes;
+			
+		historyTypes = new ArrayList();
+		Iterator iterConcerns = history.getAllInstancesOf(PrimitiveConcern.class);
+		while ( iterConcerns.hasNext() ){
+			PrimitiveConcern pc = (PrimitiveConcern)iterConcerns.next();
+			historyTypes.add(pc.getPlatformRepresentation());
+		}
+				
+		return historyTypes;
 	}
 	
 	public Iterator getAllInstancesOfOrdered(Class c)
