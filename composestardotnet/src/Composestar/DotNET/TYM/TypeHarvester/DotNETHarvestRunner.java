@@ -40,10 +40,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
     	if(!dllName.equals("")){
     		if(incre.isProcessedByModule(dllName.replace('\"',' ').trim(),"HARVESTER"))
     		{
-    			if(dllName.indexOf("dummies")==-1)
-    			{
-    				return this.copyOperation(dllName);
-    			}
+    			return this.copyOperation(dllName);
     		}
     	}
 		return dllName;
