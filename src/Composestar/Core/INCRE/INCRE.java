@@ -478,20 +478,6 @@ public class INCRE implements CTCommonModule
 					fixedFile = fixedFile.substring(fixedFile.lastIndexOf("/")+1);
 			}
 			
-			// TODO: make this configurable for filedependencies in config.xml
-			try {
-				// no need to check 'added to project' for these files
-				if(filename.indexOf("/obj/Weaver/")>0){
-					return false;
-				}
-				
-				ArrayList compSources = Configuration.instance().getLibraries().getLibraries(); 
-				if(compSources.contains(filename)){
-					return false;
-				}
-			}
-			catch(Exception e){/*ignore*/}
-			
 			// look in configurations "Dependencies" and "Assemblies"
 			// TODO: possible naming conflict when JAVA platform is there
 			//searchStr = prop.getProperty("Dependencies");
@@ -720,6 +706,7 @@ public class INCRE implements CTCommonModule
 				{
 					/* check if file(s) have been modified
 					 stop process when a file has been modified */
+					FileDependency fdep = (FileDependency)dep;
 					ArrayList files = (ArrayList)depofinputobject;
 					if(files.size()>0 && files.get(0).equals("EMPTY_CONFIG")){
 						// special case, file has not been configured
@@ -738,7 +725,10 @@ public class INCRE implements CTCommonModule
 						while(fileItr.hasNext())
 						{
 							String currentFile = (String)fileItr.next();
-							if(isFileAdded(currentFile,(FileDependency)dep)){
+							if(fdep.isAdded() && isFileAdded(currentFile,fdep)){
+								// check files for added to project or not
+								// optimalisation: certain files do not need this check
+								// can be configured in .xml file by isAdded=false
 								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
 								return false; // file added to project thus modified!
 							}

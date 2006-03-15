@@ -31,15 +31,11 @@ public class DependencyHandler extends DefaultHandler
 			if(deptype.equals("FILE"))
 			{
 				// create a file dependency
-				FileDependency fdep = new FileDependency(name,resources);
-				String depkey = amap.getValue("depkey");
-
-				// set the configuration key of the file
-				if(depkey!=null)
-				{	
-					fdep.setKey(depkey);
-				}
-				// add dependency to module	
+				FileDependency fdep = new FileDependency(name);
+				
+				if(amap.getValue("isAdded")!=null)
+					fdep.setIsAdded(amap.getValue("isAdded").equalsIgnoreCase("true"));
+				
 				module.addDep(fdep);
 								
 				// look further in the xml file, between <path> tags

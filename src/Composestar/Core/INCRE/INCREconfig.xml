@@ -14,12 +14,12 @@
 	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="false" incremental="false" summary="Generating dummy sources...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="false" summary="Harvesting type information...">
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
+	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="true" summary="Collecting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
@@ -48,7 +48,7 @@
 	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" enabled="true" incremental="false" summary="Resolving superimpositions...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" phase="two" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
 		<dependencies>
 			<dependency type="FILE" name="specfile">
 				<path>
@@ -159,9 +159,9 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="false" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
-			<dependency type="FILE" name="SECRETConfigFile">
+			<dependency type="FILE" name="SECRETConfigFile" isAdded="false">
 				<path>
 					<node type="CONFIG" nodevalue="SECRETConfigFile"></node>
 				</path>
@@ -269,7 +269,7 @@
 	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
 		<dependencies>
 			<dependencies>
-				<dependency type="FILE" name="assembly"></dependency>
+				<dependency type="FILE" name="assembly" isAdded="false"></dependency>
 			</dependencies>
 			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
 				<path>
