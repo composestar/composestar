@@ -9,7 +9,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETTypeHandler.java,v 1.1 2006/02/13 11:54:43 pascal Exp $
+ * $Id: DotNETTypeHandler.java,v 1.1 2006/02/16 23:11:01 pascal_durr Exp $
  */
 
 package Composestar.DotNET.TYM.TypeCollector;
@@ -224,7 +224,7 @@ public class DotNETTypeHandler extends DefaultHandler implements ContentHandler 
         }
 		else if( "FromDLL".equals(rawName) ) 
 		{
-			type.fromDLL = lastCharData;
+			type.fromDLL = lastCharData.replaceAll("\"","");
 		}
         // end of type
         else if( "Type".equals(rawName) ) {
