@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.15 2006/03/14 10:08:36 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.16 2006/03/14 13:34:15 dspenkel Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.15 2006/03/14 10:08:36 pascal_durr Exp $
+ * $Id: ILICIT.java,v 1.16 2006/03/14 13:34:15 dspenkel Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.15 $";
+	public static final String version = "$Revision: 1.16 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -202,6 +202,7 @@ public class ILICIT implements WEAVER {
 			case 9: msg = "Input file not found"; break;
 			case 10: msg = "IL disassembler not found (ildasm.exe)"; break;
 			case 11: msg = "IL disassembler execution failure"; break;
+			case 12: msg = "Assembly verification error"; break;
 			case 13: msg = "IL file not found"; break;
 			case 14: msg = "Unsupported file format"; break;
 			case 15: msg = "IL assemmbler not found (ilasm.exe)"; break;
