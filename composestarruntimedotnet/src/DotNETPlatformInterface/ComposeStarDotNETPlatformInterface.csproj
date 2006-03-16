@@ -94,11 +94,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DotNETExecutionTraceDumper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DotNETObjectInterface.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
