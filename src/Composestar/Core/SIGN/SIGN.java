@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.7 2006/03/08 16:34:27 dspenkel Exp $
+ * $Id: SIGN.java,v 1.8 2006/03/14 12:53:54 pascal_durr Exp $
  * 
 **/
 
@@ -16,6 +16,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 
@@ -670,7 +671,7 @@ public class SIGN implements CTCommonModule
     	boolean signaturesmodified = false;
 		datastore = DataStore.instance();
     	
-    	// Get all the concerns
+		// Get all the concerns
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
 		
 		while( conIter.hasNext() )
@@ -696,23 +697,26 @@ public class SIGN implements CTCommonModule
 					if(mw.getRelationType()==MethodWrapper.REMOVED) relation = "removed";
 					if(mw.getRelationType()==MethodWrapper.NORMAL) relation = "kept";
 					
-					String returntype = mw.theMethodInfo.returnType().Name ;
-					
-					String parameters = "";
-					Iterator itrpara = mw.theMethodInfo.getParameters().iterator();
-					while (itrpara.hasNext())
+					//TODO: remove this, needed for demo!
+					if(!Configuration.instance().getProperty("Platform").equalsIgnoreCase("c"))
 					{
-						ParameterInfo parainfo = (ParameterInfo) itrpara.next();
-						if (parameters.equalsIgnoreCase("") && parainfo.parameterType() != null) {
-							parameters = parainfo.parameterType().Name;
-						}
-						else {
-							parameters = parameters + ", " + parainfo.Name;
-						}
+						String returntype = mw.theMethodInfo.returnType().Name ;
 						
+						String parameters = "";
+						Iterator itrpara = mw.theMethodInfo.getParameters().iterator();
+						while (itrpara.hasNext())
+						{
+							ParameterInfo parainfo = (ParameterInfo) itrpara.next();
+							if (parameters.equalsIgnoreCase("") && parainfo.parameterType() != null) {
+								parameters = parainfo.parameterType().Name;
+							}
+							else {
+								parameters = parameters + ", " + parainfo.Name;
+							}
+							
+						}
+						Debug.out (Debug.MODE_INFORMATION, "Sign", "\t\t[ " + relation +  " ]  (" + returntype + ") " + mw.getMethodInfo().name() + "(" + parameters + ")");
 					}
-
-					Debug.out (Debug.MODE_INFORMATION, "Sign", "\t\t[ " + relation +  " ]  (" + returntype + ") " + mw.getMethodInfo().name() + "(" + parameters + ")");
 				}
 			}
 		}
