@@ -3,7 +3,8 @@ include ${ROOTDIR}common.mk
 
 SUBDIRS=
 
-CLASSES=DummyManager.class \
+CLASSES=DefaultEmitter.class \
+	DummyManager.class \
 	DummyEmitter.class
 
 include ${ROOTDIR}default.mk
