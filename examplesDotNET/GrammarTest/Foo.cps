@@ -35,7 +35,7 @@ concern Foo in GrammarTest
 		  prehard (Filtermodule, Filtermodule2);
   }
   
-  implementation in MyFirstLanguage by Foo as "Foo.cs"
+  implementation in CSharp by Foo as "Foo.cs"
   {
     using System;
     

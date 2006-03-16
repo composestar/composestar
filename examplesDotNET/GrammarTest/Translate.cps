@@ -13,7 +13,7 @@ concern Translate in GrammarTest{
 		  prehard (translate, Foo);
   }
   
-  implementation in MyFirstLanguage by Translate as "Translate.cs"
+  implementation in CSharp by Translate as "Translate.cs"
   {
 		using System;
 		namespace GrammarTest{

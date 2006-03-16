@@ -67,37 +67,37 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    HintPath = "System.XML.dll"
                 />
                 <Reference
                     Name = "vjslib"
                     AssemblyName = "vjslib"
-                    HintPath = "..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\vjslib.dll"
+                    HintPath = "vjslib.dll"
                 />
                 <Reference
                     Name = "ComposeStarDotNETRuntimeInterpreter"
                     AssemblyName = "ComposeStarDotNETRuntimeInterpreter"
-                    HintPath = "../../binaries/ComposeStarDotNETRuntimeInterpreter.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarDotNETRuntimeInterpreter.dll"
                 />
                 <Reference
                     Name = "DotNETPlatformInterface"
                     AssemblyName = "DotNETPlatformInterface"
-                    HintPath = "../../DotNETPlatformInterface.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\DotNETPlatformInterface.dll"
                 />
                 <Reference
                     Name = "ComposeStarRuntimeInterpreter"
                     AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "../../binaries/ComposeStarRuntimeInterpreter.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
                 <Reference
                     Name = "SecureLib"
@@ -108,6 +108,11 @@
                     Name = "ProtocolLib"
                     AssemblyName = "ProtocolLib"
                     HintPath = "ProtocolLib\bin\Release\ProtocolLib.dll"
+                />
+                <Reference
+                    Name = "ComposeStarUtilities"
+                    AssemblyName = "ComposeStarUtilities"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
                 />
             </References>
         </Build>
