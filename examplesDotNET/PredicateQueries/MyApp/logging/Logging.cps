@@ -13,5 +13,5 @@ concern Logging {
 
     filtermodules
       logged <- logModule;
-  };
+  }
 }

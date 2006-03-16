@@ -94,6 +94,11 @@
                     AssemblyName = "mscorlib"
                     HintPath = "mscorlib.dll"
                 />
+                <Reference
+                    Name = "ComposeStarUtilities"
+                    AssemblyName = "ComposeStarUtilities"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
+                />
             </References>
         </Build>
         <Files>

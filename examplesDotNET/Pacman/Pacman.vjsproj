@@ -187,10 +187,6 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "Concerns\Sound.cps"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "Strategies\FleeStrategy.jsl"
                     SubType = "Code"
                     BuildAction = "Compile"
