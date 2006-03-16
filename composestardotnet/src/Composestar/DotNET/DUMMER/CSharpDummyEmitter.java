@@ -25,7 +25,7 @@ public class CSharpDummyEmitter implements DummyEmitter {
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("DUMMER", e.getCause().getMessage());
+			throw new ModuleException("Error while creating dummy: " + e.getCause().getMessage(), "DUMMER");
 		}
 	}
 
@@ -48,7 +48,7 @@ public class CSharpDummyEmitter implements DummyEmitter {
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException(e.getCause().getMessage(), "DUMMER");
+			throw new ModuleException("Error while creating dummies: " + e.getCause().getMessage(), "DUMMER");
 		}
 	}
 }
