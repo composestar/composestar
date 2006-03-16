@@ -46,11 +46,13 @@ public class MyComparator {
         compare++;
         
         // special cases: one or both objects are null
-        if (a == null && b == null)
-            return true;
-        else if (a == null || b == null)
-            return false;
-
+        if (a == null && b == null) {          
+        	return true;
+        }
+        else if (a == null || b == null){
+           	return false;
+        }
+        
         // first check the types of both objects
         if (a.getClass().getName().equals(b.getClass().getName())) {
             if (a.getClass().equals(String.class)) {
@@ -189,8 +191,8 @@ public class MyComparator {
      * @return
      */
     public void addComparison(String id, boolean result) {
-        if (id != null) {
-            Boolean b = Boolean.valueOf(result);
+    	if (id != null) {
+    		Boolean b = Boolean.valueOf(result);
             comparisons.put(id, b);
         } else {
             Debug.out(Debug.MODE_DEBUG, "INCRE::Comparator", "Key of comparison is null!");
@@ -204,7 +206,7 @@ public class MyComparator {
      * @return true if object is in map, false if not
      */
     public boolean comparisonMade(String id) {
-        return (comparisons.containsKey(id));
+    	return (comparisons.containsKey(id));
     }
 
     /*
@@ -245,12 +247,12 @@ public class MyComparator {
 
                 if (obj instanceof FieldNode) {
                     FieldNode fieldnode = (FieldNode) obj;
-                    key = fieldnode.getUniqueID(a);
+                    key = fieldnode.getUniqueID(a)+b.hashCode();
                     fielda = fieldnode.visit(a);
                     fieldb = fieldnode.visit(b);
                 } else if (obj instanceof MethodNode) {
                     MethodNode methodnode = (MethodNode) obj;
-                    key = methodnode.getUniqueID(a);
+                    key = methodnode.getUniqueID(a)+b.hashCode();
                     fielda = methodnode.visit(a);
                     fieldb = methodnode.visit(b);
                 } else if (obj instanceof Path) {
@@ -261,7 +263,7 @@ public class MyComparator {
 
                 if (key != null && comparisonMade(key)) {
                     // already made comparison before
-                    duplicates++;
+                	duplicates++;
                     equal = getComparison(key);
                 } else {
                     if (key != null)// temporarily true to avoid infinite loops

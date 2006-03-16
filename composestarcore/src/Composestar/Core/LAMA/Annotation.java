@@ -74,6 +74,8 @@ public abstract class Annotation implements Serializable{
 	 */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
+		type = (Type)in.readObject();
+		target = (ProgramElement)in.readObject();
 		value = in.readUTF();
 		if(value.equals(""))
 			value = null;
@@ -85,6 +87,8 @@ public abstract class Annotation implements Serializable{
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
+		out.writeObject(type);
+		out.writeObject(target);
 		if(value!=null)
 			out.writeUTF(value);
 		else

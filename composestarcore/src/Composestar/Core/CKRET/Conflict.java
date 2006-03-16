@@ -1,6 +1,8 @@
 package Composestar.Core.CKRET;
 
-public class Conflict
+import java.io.Serializable;
+
+public class Conflict implements Serializable
 {
 	private String resource = "";
 	private String sequence = "";
