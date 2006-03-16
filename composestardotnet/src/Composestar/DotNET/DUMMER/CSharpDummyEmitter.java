@@ -70,10 +70,9 @@ class CSharpDummyProcess
 
         Runtime rt = Runtime.getRuntime();
 
-        Process proc = rt.exec(csDummyEmitter);
-
-        this.stdin = proc.getInputStream();
-        this.stdout = new PrintStream(proc.getOutputStream());		
+        this.process = rt.exec(csDummyEmitter);
+        this.stdin = process.getInputStream();
+        this.stdout = new PrintStream(process.getOutputStream());		
 	}
 
 	public PrintStream getStdout() {
