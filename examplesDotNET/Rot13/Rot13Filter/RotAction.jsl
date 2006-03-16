@@ -1,5 +1,6 @@
 package Rot13Filter;
 
+import Composestar.RuntimeCore.Utils.*;
 import Composestar.RuntimeCore.FLIRT.Actions.*;
 import Composestar.RuntimeCore.FLIRT.Message.*;
 
@@ -40,7 +41,7 @@ public class RotAction extends ComposeStarAction {
 	public Object execute()
 	{
 		// Start execution in a new thread
-		Thread t = new Thread(this.message);
+		ChildThread t = ThreadPool.getChildThread(this.message);
 
 		// Store jp and m in ACT thread.
 		JoinPoint __jp = JoinPointInfo.getJoinPointInfo();
