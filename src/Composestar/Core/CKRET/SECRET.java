@@ -7,18 +7,17 @@
 package Composestar.Core.CKRET;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
-import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
@@ -26,6 +25,8 @@ import Composestar.Core.Master.Config.Module;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.Exception.ModuleException;
 
 /**
@@ -250,6 +251,45 @@ public class SECRET implements CTCommonModule {
 		secretcopy.stop();
 	}
 
+	public ArrayList getSemanticAnnotations(PrimitiveConcern pc)
+	{
+		return getSemanticAnnotations((Concern)pc);
+	}
+	
+	public ArrayList getSemanticAnnotations(CpsConcern cps)
+	{
+		return getSemanticAnnotations((Concern)cps);
+	}
+	
+	public ArrayList getSemanticAnnotations(Concern c)
+	{
+		ArrayList annos = new ArrayList();
+		INCRE incre = INCRE.instance();
+		DataStore ds = incre.getCurrentRepository();
+		
+		// iterate over concerns
+		Iterator iterConcerns = ds.getAllInstancesOf(Concern.class);
+		while ( iterConcerns.hasNext() ){
+			Concern concern = (Concern)iterConcerns.next();
+			Type type = (Type)concern.getPlatformRepresentation();
+			if(type==null) continue;
+			// iterate over methods
+			Iterator methods = type.getMethods().iterator();
+			while(methods.hasNext()){
+				MethodInfo method = (MethodInfo)methods.next();
+				// iterate over annotations
+				Iterator annotations = method.getAnnotations().iterator();
+				while(annotations.hasNext()){
+					Annotation anno = (Annotation)annotations.next();
+					if(anno.getType().getUnitName().endsWith("Semantics"));
+						annos.add(anno);
+				}
+			}
+		}
+		
+		return annos;
+	}
+	
 	/*
 	public static void printState(ActionNode node)
 	{

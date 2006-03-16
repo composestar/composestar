@@ -172,7 +172,7 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="false" summary="Checking for semantic conflicts among aspects...">
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
 			<dependency type="FILE" name="SECRETConfigFile" isAdded="false">
 				<path>
@@ -182,6 +182,11 @@
 			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
 				<path>
 					<node type="CONFIG" nodevalue="SECRETMode"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="semantics" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.Core.CKRET.SECRET.getSemanticAnnotations"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="filtermoduleorders">
@@ -238,6 +243,13 @@
 			</type>
 			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
 				<field name="typeList"></field>
+			</type>
+			<type fullname="Composestar.DotNET.LAMA.DotNETAttribute">
+				<field name="value"></field>
+				<field name="target"></field>
+			</type>
+			<type fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
+				<field name="Name"></field>
 			</type>
 		</comparisons>
 	</module>
