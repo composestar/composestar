@@ -51,6 +51,11 @@ public class ThreadPool
 		}
 	}
 
+	public static ChildThread getCurrentChildTread()
+	{
+		return getInstance().protoType.getCurrentChildThread();
+	}
+
 	public static void setProtoType(ChildThread thread)
 	{
 		getInstance().protoType = thread;

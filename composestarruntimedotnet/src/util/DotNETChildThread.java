@@ -4,6 +4,8 @@ import System.Threading.Thread;
 import System.Threading.ThreadStart;
 
 import Composestar.RuntimeCore.Utils.*;
+import java.util.*;
+
 /**
  * Summary description for DotNETChildThread.
  */
@@ -43,6 +45,22 @@ public class DotNETChildThread implements ChildThread
 		return thisThread;
 	}
 
+
+	public void suspendThread()
+	{
+		thisThread.Suspend();
+	}
+
+	public void resumeThread()
+	{
+		thisThread.Resume();
+	}
+
+	public boolean isSuspended()
+	{
+		return running == null || thisThread.get_IsAlive();
+	}
+
 	public void start()
 	{
 		parent = System.Threading.Thread.get_CurrentThread();
@@ -50,6 +68,7 @@ public class DotNETChildThread implements ChildThread
 		{
 			thisThread = new System.Threading.Thread(new ThreadStart(run));
 			thisThread.set_IsBackground(true);
+			addChildThread(thisThread,this);
 			thisThread.Start();
 		}
 		else
@@ -60,6 +79,16 @@ public class DotNETChildThread implements ChildThread
 
 	public System.Threading.Thread getParentThread()
 	{
+		while(parent == null)
+		{
+			try
+			{
+				java.lang.Thread.yield();
+			}
+			catch(Exception e)
+			{
+			}
+		}
 		return parent;
 	}
 
@@ -97,6 +126,51 @@ public class DotNETChildThread implements ChildThread
 				{
 				}
 			}
+		}
+	}
+
+	private static HashMap threads = new HashMap();
+	public ChildThread getCurrentChildThread()
+	{
+		ChildThread thread = getChildThread(System.Threading.Thread.get_CurrentThread());
+		if(thread == null)
+		{
+			return createNew();
+		}
+		return thread;
+	}
+
+	private synchronized ChildThread getChildThread(System.Threading.Thread key)
+	{
+		return (ChildThread) threads.get(key);
+	}
+
+	private synchronized void addChildThread(System.Threading.Thread key, ChildThread thread)
+	{
+		threads.put(key,thread);
+	}
+
+	public boolean equals(Object o)
+	{
+		if(o instanceof java.lang.Thread)
+		{
+			return ((java.lang.Thread)o).equals(thisThreadJava);
+		}
+		else if(o instanceof Thread)
+		{
+			return ((Thread)o).equals(thisThread);
+		}
+		else if(o instanceof DotNETChildThread)
+		{
+			if(thisThread == null)
+			{
+				return false;
+			}
+			return thisThread.equals(((DotNETChildThread) o).thisThread);
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

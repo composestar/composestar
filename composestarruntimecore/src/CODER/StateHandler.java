@@ -12,31 +12,25 @@ public class StateHandler {
 	private final static String MODULENAME= "CODER(StateHandler)";
 
 	private Halter halter;
-	private Thread myThread; //Cant use currentTread because of debugger in different thread
-
-	private Object currentFilter = null;
-	private Object source = null;
-	private Object target = null;
-	private Object filters = null;
-	private Object context = null;
+	private ChildThread thisThread;
 	private BreakPoint breakpoint;
 
 	public StateHandler(BreakPoint breakpoint, Halter halter)
 	{
-		this(Thread.currentThread(),breakpoint, halter);
+		this(ThreadPool.getCurrentChildTread(),breakpoint, halter);
 	}
 
 	public void cleanup()
 	{
-		myThread = Thread.currentThread();
-		halter.setThread(Thread.currentThread());
+		thisThread = ThreadPool.getCurrentChildTread();
+		halter.setThread(thisThread);
 	}
 
-	public StateHandler(Thread thread, BreakPoint breakpoint, Halter halter)
+	public StateHandler(ChildThread thread, BreakPoint breakpoint, Halter halter)
 	{
 		this.breakpoint = breakpoint;
 		this.halter = halter;
-		this.myThread = thread;
+		this.thisThread = thread;
 	}
 
 	public BreakPoint getBreakPoint()
@@ -54,10 +48,6 @@ public class StateHandler {
 	{
 		halter.halting();
 		Debug.out(Debug.MODE_DEBUG,"FLIRT(RuntimeStateHandler)","Having event");
-		this.source= source;
-		this.target= target;
-		this.filters = filters;
-		this.context = context;
 		breakpoint.event(eventType,this,currentFilter,beforeMessage,afterMessage,filters,context);
 	}
 
@@ -78,6 +68,6 @@ public class StateHandler {
 
 	public String getStackTrace()
 	{
-		return halter.getStackTrace();
+		return ExecutionStackReader.getInstance().getComposestarEntryPoint(thisThread).getFileName();
 	}
 }

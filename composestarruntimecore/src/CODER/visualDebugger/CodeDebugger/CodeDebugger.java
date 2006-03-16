@@ -50,11 +50,11 @@ public class CodeDebugger  extends Visualizer implements  ActionListener{
 	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context)
 	{
 		this.handler = handler;
+		component.fill(handler, beforeMessage, afterMessage,currentFilter,filters, context);
 		if(eventType == DebuggerProvider.FILTER_EVALUATION_START || eventType == DebuggerProvider.FILTER_REJECTED || eventType == DebuggerProvider.FILTER_ACCEPTED)
 		{
 			handler.threadSuspend();
 		}
-		component.fill(handler, beforeMessage, afterMessage,currentFilter,filters, context);
 		frame.show();
 	}
 }

@@ -9,17 +9,17 @@ public class JoinPointInfo
 	
 	public static JoinPoint getJoinPointInfo()
 	{
-		return (JoinPoint) joinpointByThread.get(Thread.currentThread().getName());
+		return (JoinPoint) joinpointByThread.get(ThreadPool.getCurrentChildTread());
 	}
 
 	protected static void updateJoinPoint(JoinPoint jp)
 	{ 
-		joinpointByThread.put(Thread.currentThread().getName(), jp ); 
+		joinpointByThread.put(ThreadPool.getCurrentChildTread(), jp ); 
 	}
 
 	protected static void updateJoinPoint(ChildThread thread, JoinPoint jp)
 	{ 
-		joinpointByThread.put(thread.getThread().getName(), jp ); 
+		joinpointByThread.put(thread, jp ); 
 	}
 	
 	/**

@@ -51,7 +51,7 @@ public class RuntimeDebuggerProvider extends DebuggerProvider {
 
     public synchronized void clearBreakPoints() {
         breakpoint = dummy;
-        setBreakPoint(dummy);
+        setBreakPoint(breakpoint);
     }
 
     public synchronized void addBreakPointListener(BreakPointListener debugger) {

@@ -10,5 +10,9 @@ public interface ChildThread
 	public void setRunnable(ChildRunnable runnable);
 	public void start();
 	public Thread getThread();
+	public ChildThread getCurrentChildThread();
 
+	public void suspendThread();
+	public void resumeThread();
+	public boolean isSuspended();
 }

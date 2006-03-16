@@ -15,7 +15,5 @@ public abstract class ExecutionStackReader
 	}
 
 	protected static ExecutionStackReader instance = null;
-
-	public abstract String getTopParrentStack(ChildThread thread);
-	public abstract EntryPoint getComposestarEntryPoint();
+	public abstract EntryPoint getComposestarEntryPoint(ChildThread thread);
 }

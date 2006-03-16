@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Debugger;
 
 import Composestar.RuntimeCore.CODER.*;
-import Composestar.Utils.Debug;
+import Composestar.RuntimeCore.Utils.*;
 
 import java.io.*;
 import java.util.*;
@@ -12,28 +12,22 @@ import java.util.*;
 public class RuntimeHalter implements Halter {
     //ALL
     private static boolean globalHalt = false;
-	//Thread specific
-	private boolean threadHalt = false;
+
+	ChildThread thread;
 
 	public RuntimeHalter()
 	{
-		stacktrace = produceStackTrace();
 	}
 
-	public void setThread(Thread thread)
+	public void setThread(ChildThread thread)
 	{
-		threadHalt = false;
+		this.thread= thread;
 	}
 
     public void halting() 
 	{
-        while (globalHalt || threadHalt) {
+        while (globalHalt) {
             try {
-				if(dumpStackSpace)
-				{
-					stacktrace = produceStackTrace();
-					dumpStackSpace = false;
-				}
                wait();
             } catch (Exception e) {
             }
@@ -42,46 +36,7 @@ public class RuntimeHalter implements Halter {
 
 	public synchronized void reanimate()
 	{
-		notify();
-	}
-
-	private boolean dumpStackSpace = false;
-
-	private String stacktrace = null;
-
-	public String getStackTrace()
-	{
-		dumpStackSpace = true;
-		while(stacktrace == null)
-		{
-			try
-			{
-				Thread.sleep(0);
-			}
-			catch(Exception e)
-			{
-			}
-		}
-		return stacktrace;
-	}
-
-	private String produceStackTrace()
-	{
-		//Lets do something very dirty
-		try
-		{
-			throw new Throwable(); //need the stack :P
-		}
-		catch(Throwable t)
-		{
-			StringWriter sw = new StringWriter();
-			PrintWriter writer = new PrintWriter(sw);
-			t = t.fillInStackTrace();
-			t.printStackTrace(writer);
-			writer.flush();
-			String stack = sw.toString();
-			return stack;
-		}
+		this.notify();
 	}
 
     public boolean isGlobalHalted() {
@@ -100,17 +55,17 @@ public class RuntimeHalter implements Halter {
     }
 
     public boolean isTreadHalted() {
-        return threadHalt;
+        return thread.isSuspended();
     }
 
     public void threadResume() {
         Debug.out(Debug.MODE_DEBUG, "FLIRT(RuntimeHalter)", "Resuming Thread");
-        threadHalt = false;
+        thread.resumeThread();
 		reanimate();
     }
 
     public void threadSuspend() {
         Debug.out(Debug.MODE_DEBUG, "FLIRT(RuntimeHalter)", "Suspending Thread");
-        threadHalt = true;
+        thread.suspendThread();
     }
 }
