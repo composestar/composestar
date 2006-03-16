@@ -83,7 +83,8 @@ public class MetaFilterAction extends FilterAction {
 						for( int i = 0; i < attributes.size(); i++ )
 						{
 							Annotation dna = (Annotation) attributes.get(i);
-							if( dna.getType().fullName().equals("Composestar.RuntimeDotNET.Semantics"))
+							if( dna.getType().fullName().startsWith("Composestar.") &&
+									dna.getType().fullName().endsWith("Semantics"))
 							{
 								//System.err.println(dna.getValue());
 								String spec = dna.getValue().replaceAll("\"","");

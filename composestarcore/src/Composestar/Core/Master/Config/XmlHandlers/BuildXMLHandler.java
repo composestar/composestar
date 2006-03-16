@@ -51,6 +51,8 @@ public class BuildXMLHandler extends DefaultHandler implements ContentHandler {
 			//	look further
 			PlatformHandler platformhandler = new PlatformHandler(parser,this);
 			parser.setContentHandler( platformhandler );
+			if(amap.getValue("name") != null)
+				Configuration.instance().addProperty("Platform",amap.getValue("name"));
 		}
 		
 	}
