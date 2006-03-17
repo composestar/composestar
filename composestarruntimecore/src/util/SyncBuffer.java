@@ -24,6 +24,10 @@ public class SyncBuffer
 			{
 				wait();
 			}
+			catch(InterruptedException e)
+			{
+				//resume
+			}
 			catch( Exception e )
 			{
 				e.printStackTrace();
@@ -34,7 +38,7 @@ public class SyncBuffer
 		return o;
 	}
 
-	public int getSize()
+	private int getSize()
 	{
 		return this.queue.size();
 	}

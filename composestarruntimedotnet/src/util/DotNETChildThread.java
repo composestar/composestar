@@ -38,6 +38,10 @@ public class DotNETChildThread implements ChildThread
 
 	public DotNETChildThread()
 	{
+		thisThread = new System.Threading.Thread(new ThreadStart(run));
+		thisThread.set_IsBackground(true);
+		addChildThread(thisThread,this);
+		thisThread.Start();
 	}
 	
 	public System.Threading.Thread getThisThread()
@@ -64,17 +68,7 @@ public class DotNETChildThread implements ChildThread
 	public void start()
 	{
 		parent = System.Threading.Thread.get_CurrentThread();
-		if(thisThread == null)
-		{
-			thisThread = new System.Threading.Thread(new ThreadStart(run));
-			thisThread.set_IsBackground(true);
-			addChildThread(thisThread,this);
-			thisThread.Start();
-		}
-		else
-		{
-			reanimate();
-		}
+		reanimate();
 	}
 
 	public System.Threading.Thread getParentThread()
@@ -107,12 +101,6 @@ public class DotNETChildThread implements ChildThread
 		thisThreadJava = java.lang.Thread.currentThread();
 		while(true) //We are a deamon thread so we will be killed automaticly
 		{
-			if(running != null)
-			{
-				running.run();
-				running = null;
-				ThreadPool.returnChildThread(this);
-			}
 			while(running == null)
 			{
 				try
@@ -126,6 +114,9 @@ public class DotNETChildThread implements ChildThread
 				{
 				}
 			}
+			running.run();
+			running = null;
+			ThreadPool.returnChildThread(this);
 		}
 	}
 

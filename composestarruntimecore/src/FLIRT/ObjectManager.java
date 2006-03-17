@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.4 2006/03/10 13:15:56 reddog33hummer Exp $
+ * $Id: ObjectManager.java,v 1.5 2006/03/10 15:58:05 oohlaf Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -58,7 +58,7 @@ public class ObjectManager implements ChildRunnable
 	{
 		this.working = true;
 
-		while( !this.messageQueue.isEmpty() ) 
+		do
 		{
 			Message msg = (Message) this.messageQueue.consume();
 			Object reply = null;
@@ -78,7 +78,7 @@ public class ObjectManager implements ChildRunnable
 			{
 				msg.setResponse(reply);
 			}
-		}
+		}while (!this.messageQueue.isEmpty()); //dowhile because of concurency
 		this.working = false;
 	}
 
