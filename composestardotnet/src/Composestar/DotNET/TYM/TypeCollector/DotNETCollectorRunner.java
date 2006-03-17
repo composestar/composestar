@@ -12,12 +12,14 @@ import Composestar.Core.LAMA.*;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 
 import Composestar.DotNET.LAMA.*;
 import Composestar.DotNET.TYM.TypeCollector.DocumentHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -128,6 +130,48 @@ public class DotNETCollectorRunner implements CollectorRunner {
 			type.setParentConcern(pc);
 			dataStore.addObject( type.fullName(), pc );
 		}
+        
+        // add skipped types in case harvester was incremental
+        if (incre.isModuleInc("HARVESTER")) {
+            // copy types from assemblies skipped by harvester
+        	INCRETimer copytypes = incre.getReporter().openProcess("COLLECTOR", "Copying skipped types..", INCRETimer.TYPE_INCREMENTAL);
+        	this.copyOperation(resources);
+        	copytypes.stop();
+        }
     }
-  
+    
+    /**
+     * Find all concerns harvested from unmodified assemblies
+     * Add those concerns to the DataStore and TypeMap,
+     * and register all program elements
+     */
+    public void copyOperation(CommonResources resources)
+    {
+    	INCRE incre = INCRE.instance();
+    	TypeMap map = TypeMap.instance();
+    	
+    	ArrayList skippedAssemblies = (ArrayList)resources.getResource("skippedAssemblies");
+    	Iterator asmItr = skippedAssemblies.iterator();
+    	while(asmItr.hasNext())
+    	{
+    		String asm = (String)asmItr.next();
+    		Iterator objects = incre.history.getAllInstancesOf(PrimitiveConcern.class);
+    		while(objects.hasNext()){
+    			PrimitiveConcern pc = (PrimitiveConcern)objects.next();
+    			DotNETType type = (DotNETType)pc.getPlatformRepresentation();
+    							
+    			if(type.fromDLL.equals(asm))
+    			{
+    				// make a clone and add to datastore
+    				PrimitiveConcern pcclone = (PrimitiveConcern)pc.clone();
+    				type.setParentConcern(pcclone);
+    				DataStore.instance().addObject( type.fullName(), pcclone );
+    					
+    				// also add the type to the type map
+    				type.reset(); // reset hashsets of type and register
+    				map.addType( type.fullName() , type );
+    			}
+    		}
+    	}
+    }
 }

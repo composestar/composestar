@@ -4,15 +4,11 @@
 
 package Composestar.DotNET.TYM.TypeHarvester;
 
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.DotNET.LAMA.DotNETType;
 
@@ -30,17 +26,20 @@ public class DotNETHarvestRunner implements HarvestRunner {
      * @roseuid 4056E99103CC
      */
 	private INCRE incre;
+	public ArrayList skippedAssemblies;
 	
     public DotNETHarvestRunner() {
-		this.incre = INCRE.instance();	
-    } 
+		this.incre = INCRE.instance();
+		skippedAssemblies = new ArrayList();
+	} 
 
     public String checkDLL(String dllName) throws ModuleException
 	{
     	if(!dllName.equals("")){
     		if(incre.isProcessedByModule(dllName.replace('\"',' ').trim(),"HARVESTER"))
     		{
-    			return this.copyOperation(dllName);
+    			skippedAssemblies.add(dllName);
+    			return "!"+dllName;
     		}
     	}
 		return dllName;
@@ -170,7 +169,8 @@ public class DotNETHarvestRunner implements HarvestRunner {
 			// Add additional dll's (from compiled inner's) and list of classes that we still need.
       	}
       	
-      	Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
+		resources.addResource("skippedAssemblies", skippedAssemblies);
+		Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
 		String typeHarvester =  Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/TypeHarvester.exe" ;
 		java.io.File typeHarvesterFile = new java.io.File(typeHarvester);
 		if( !typeHarvesterFile.exists() )
@@ -188,38 +188,5 @@ public class DotNETHarvestRunner implements HarvestRunner {
       	}
     }
     
-    /**
-     * Find all concerns harvested from specified assembly
-     * Add those concerns to the DataStore and TypeMap,
-     * and register all program elements
-     * @param dll Assembly harvested during a previous compilation cycle
-     * @return !dll
-     */
-    public String copyOperation(String dll){
-    	INCRE incre = INCRE.instance();
-    	INCRETimer copytypes = incre.getReporter().openProcess("HARVESTER","Copying skipped types for assembly "+dll,INCRETimer.TYPE_INCREMENTAL);
-    	TypeMap map = TypeMap.instance();
-    	Iterator objects = incre.history.getAllInstancesOf(PrimitiveConcern.class);
-    	while(objects.hasNext()){
-    		PrimitiveConcern pc = (PrimitiveConcern)objects.next();
-    		DotNETType type = (DotNETType)pc.getPlatformRepresentation();
-    							
-    		if(type.fromDLL.equals(dll))
-    		{
-    				// make a clone and add to datastore
-    				PrimitiveConcern pcclone = (PrimitiveConcern)pc.clone();
-    				type.setParentConcern(pcclone);
-    				DataStore.instance().addObject( type.fullName(), pcclone );
-    					
-    				// also add the type to the type map
-    				type.reset(); // reset hashsets of type and register
-    				map.addType( type.fullName() , type );
-    		}
-    	}
-    		
-		copytypes.stop();
-		
-		// tell TypeHarvester not to write to types.xml for this assembly
-		return	"!" + dll;
-	}
+    
 }
