@@ -140,7 +140,7 @@ namespace Weavers.AssemblyInspection
 						a = System.Reflection.Assembly.LoadFile(this.assemblyName + assembly + ".exe");
 					}
 				}
-				catch (Exception e)
+				catch (Exception)
 				{ 
 					//Console.WriteLine(e.Message);
 				}
@@ -181,7 +181,7 @@ namespace Weavers.AssemblyInspection
 					result = a.GetType(type, true);
 					//if (result != null) Console.WriteLine("Found type: " + result.Name );
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					//Console.WriteLine(e.Message);
 				}
