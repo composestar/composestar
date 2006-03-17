@@ -59,7 +59,6 @@ namespace Weavers.IlWeaver
 			StringCollection files = new StringCollection();
 			bool inspectingOptions = true;
 
-			debug = true;
 			// Inspect arguments
 			for (int i=0; i < args.Length; i++)
 			{
