@@ -5,6 +5,7 @@ import System.Threading.ThreadStart;
 
 import Composestar.RuntimeCore.Utils.*;
 import java.util.*;
+import java.io.*;
 
 /**
  * Summary description for DotNETChildThread.
@@ -15,7 +16,24 @@ public class DotNETChildThread implements ChildThread
 	private System.Threading.Thread thisThread = null;
 	private java.lang.Thread thisThreadJava = null;
 	private ChildRunnable running = null;
-	
+	private String parentStack = "";
+
+	public String getParentStack()
+	{
+		return parentStack;
+	}
+
+	public void setParentStack()
+	{
+		Throwable e = new Exception("Oeps");
+		e = e.fillInStackTrace();
+		StringWriter writer = new StringWriter();
+		PrintWriter pw = new PrintWriter(writer);
+		e.printStackTrace(pw);
+		pw.flush();
+		parentStack = writer.toString();
+	}
+
 	public ChildThread createNew()
 	{
 		return new DotNETChildThread();
@@ -68,6 +86,7 @@ public class DotNETChildThread implements ChildThread
 	public void start()
 	{
 		parent = System.Threading.Thread.get_CurrentThread();
+		setParentStack();
 		reanimate();
 	}
 

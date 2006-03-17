@@ -80,6 +80,11 @@
                     Project = "{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}"
                     Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
                 />
+                <Reference
+                    Name = "ComposeStarDotNETPlatformInterface"
+                    Project = "{5C1D7A8F-5EF0-4633-8283-D4017C0F88FE}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

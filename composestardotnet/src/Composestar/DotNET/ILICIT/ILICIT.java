@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.16 2006/03/14 13:34:15 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.17 2006/03/16 14:44:16 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.16 2006/03/14 13:34:15 dspenkel Exp $
+ * $Id: ILICIT.java,v 1.17 2006/03/16 14:44:16 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.16 $";
+	public static final String version = "$Revision: 1.17 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -77,7 +77,13 @@ public class ILICIT implements WEAVER {
 		 String target = FileUtils.fixFilename(weavePath+File.separator+source.getName());
 		 if(!INCRE.instance().isProcessedByModule(asm,"ILICIT")){
 			 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
-			 FileUtils.copyFile(target,source.getAbsolutePath());	 
+			 FileUtils.copyFile(target,source.getAbsolutePath());
+			 String pdbFileName = FileUtils.removeExtension(source.getAbsolutePath()) + ".pdb";
+			 if(FileUtils.fileExist(pdbFileName)){
+				 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+pdbFileName+" to Weaver directory...");
+				 File pdb = new File(pdbFileName);
+				 FileUtils.copyFile(FileUtils.removeExtension(target) + ".pdb",pdb.getAbsolutePath());
+			 }
 			 builtAssemblies.add(target);
 			 toBeWeaved.add(target);
 		 }
@@ -105,7 +111,8 @@ public class ILICIT implements WEAVER {
 	 File asmFile = new File(asm);
 	 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
 	 FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
-	 
+	 String pdbFileName = FileUtils.removeExtension(weavePath+File.separator+asmFile.getName()) + ".pdb";
+
 	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().getLibraries().getLibraries());
 	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
 	 String[] assemblyPaths = (String[]) toBeWeaved.toArray(new String[toBeWeaved.size()]);
@@ -212,6 +219,7 @@ public class ILICIT implements WEAVER {
 			case 19: msg = "PEVerify execution failure"; break;
 			case 25: msg = "ILWeaver not found (ilweaver.exe)"; break;
 			case 26: msg = "ILWeaver execution failure"; break;
+			case -532459699: msg = "PeWeaver or ILWeaver had a CLR crash. Most likely your compiler created rubish from your sourcefiles."; break; //Happens if your compiler creates rubbish
 			default: msg = "PeWeaver execution failure (exitcode " + exitcode + ')'; break;
 			}
 

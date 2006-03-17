@@ -15,4 +15,6 @@ public interface ChildThread
 	public void suspendThread();
 	public void resumeThread();
 	public boolean isSuspended();
+
+	public String getParentStack();
 }

@@ -92,30 +92,33 @@ public class CodeExecutionGuiComponent extends Panel {
 
 	public String getSenderText(StateHandler handler)
 	{
-		return handler.getStackTrace();
+		EntryPoint point = handler.getEntryPoint();
+		if(point.getLineNumber() == EntryPoint.UNDEFINED)
+		{
+			return point.getFileName();
+		}
+		return getCodeFormfile(point.getFileName(),point.getLineNumber());
 	}
 
-	public String getCode(DebuggableFilter filter)
+	private String getCodeFormfile(String filename, int lineNumber)
 	{
-		String filename = filter.getDeclerationFileName();
 		String line = null;
-		final String fail = "Failure to read filterspecification ";
 		if(filename == null)
 		{
-			return fail + filename;
+			return "Unable to read codefile";
 		}
 		try
 		{
 			FileInputStream fstream = new FileInputStream(filename);
 			DataInputStream in = new DataInputStream(fstream);
-			int lines = filter.getDeclerationLineNumber();
+			int lines = lineNumber;
 			line = in.readLine();
 			lines--;
 			while(lines > 0 )
 			{
 				line = in.readLine();
 				if(line == null)
-					return "Unable to read " + filter.getDeclerationFileName() + ":" + filter.getDeclerationLineNumber();
+					return "Unable to read " + filename + ":" + lineNumber;
 				lines--;
 			}
 		}
@@ -124,6 +127,11 @@ public class CodeExecutionGuiComponent extends Panel {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		return filename + ":" + filter.getDeclerationLineNumber() + '\n' + line;
+		return filename + ":" + lineNumber + '\n' + line;
+	}
+
+	public String getCode(DebuggableFilter filter)
+	{
+		return getCodeFormfile(filter.getDeclerationFileName(),filter.getDeclerationLineNumber());
 	}
 }

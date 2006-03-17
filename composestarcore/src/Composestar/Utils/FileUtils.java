@@ -49,6 +49,10 @@ public class FileUtils
 		return buffer.toString();
 	}
   
+  public static boolean fileExist(String fileName){
+	  File file = new File(fileName);
+	  return file.exists(); 
+  }
   public static void copyFile(String dst, String src) throws ModuleException 
   {
 	try  

@@ -120,7 +120,7 @@ namespace Weavers.PeWeaver
 					if ( !quiet) Console.WriteLine("Disassembling '" + filename + "'...");
 						
 					// Run ildasm on specified file
-					ProcessManager pm = new ProcessManager("ildasm.exe", "/utf8 /nobar /raweh /out=\"" + filenameBase + ".il\" \"" + filename + "\"");
+					ProcessManager pm = new ProcessManager("ildasm.exe", "/nobar /linenum /raweh /out=\"" + filenameBase + ".il\" \"" + filename + "\"");
 					pm.Run();
 
 					if ( pm.Win32ExitCode != 0 ) 

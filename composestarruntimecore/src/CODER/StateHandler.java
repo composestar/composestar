@@ -66,8 +66,8 @@ public class StateHandler {
 		halter.threadSuspend();
 	}
 
-	public String getStackTrace()
+	public EntryPoint getEntryPoint()
 	{
-		return ExecutionStackReader.getInstance().getComposestarEntryPoint(thisThread).getFileName();
+		return ExecutionStackReader.getInstance().parseStack(thisThread.getParentStack());
 	}
 }
