@@ -550,7 +550,7 @@ namespace ComposestarVSAddin
 			this.name = dummyClass.FullName;
 			EnvDTE.CodeNamespace dummyNamespace = dummyClass.Namespace;
 
-			CodeNamespace codeNamespace = new CodeNamespace(dummyNamespace.Name);
+			CodeNamespace codeNamespace = new CodeNamespace(dummyNamespace.FullName);
 			CodeTypeDeclaration typeDeclaration = new CodeTypeDeclaration(dummyClass.Name);
 			codeNamespace.Types.Add(typeDeclaration);
 			compileUnit.Namespaces.Add(codeNamespace);
