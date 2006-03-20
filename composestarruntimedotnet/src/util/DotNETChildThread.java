@@ -2,6 +2,7 @@ package Composestar.RuntimeDotNET.Utils;
 
 import System.Threading.Thread;
 import System.Threading.ThreadStart;
+import System.Diagnostics.*;
 
 import Composestar.RuntimeCore.Utils.*;
 import java.util.*;
@@ -16,22 +17,25 @@ public class DotNETChildThread implements ChildThread
 	private System.Threading.Thread thisThread = null;
 	private java.lang.Thread thisThreadJava = null;
 	private ChildRunnable running = null;
-	private String parentStack = "";
 
-	public String getParentStack()
+	public EntryPoint getEntryPoint()
 	{
-		return parentStack;
-	}
-
-	public void setParentStack()
-	{
-		Throwable e = new Exception("Oeps");
-		e = e.fillInStackTrace();
-		StringWriter writer = new StringWriter();
-		PrintWriter pw = new PrintWriter(writer);
-		e.printStackTrace(pw);
-		pw.flush();
-		parentStack = writer.toString();
+		parent.Suspend();
+		StackTrace st = new StackTrace(parent,true);
+		System.out.println(st.toString());
+		for(int i = 0; i < st.get_FrameCount(); i++)
+		{
+			StackFrame frame = st.GetFrame(i);
+			String type = frame.GetMethod().get_DeclaringType().get_FullName();
+			type = type.toUpperCase();
+			if(!(type.startsWith("COMPOSESTAR.") ||type.startsWith("SYSTEM.") || type.startsWith("COM.MS.VJSHARP."))){
+				EntryPoint point = new EntryPoint(frame.GetFileName(),frame.GetFileLineNumber());
+				parent.Resume();
+				return point;
+			}
+		}
+		parent.Resume();
+		return new EntryPoint("Can't read stack");
 	}
 
 	public ChildThread createNew()
@@ -86,7 +90,6 @@ public class DotNETChildThread implements ChildThread
 	public void start()
 	{
 		parent = System.Threading.Thread.get_CurrentThread();
-		setParentStack();
 		reanimate();
 	}
 

@@ -120,11 +120,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ExecutionStackReader.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Invoker.java"
                     SubType = "Code"
                     BuildAction = "Compile"

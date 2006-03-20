@@ -17,7 +17,6 @@ public class DotNETPlatformProvider extends PlatformProvider
 		new DotNETObjectInterface();
 		new DotNETInvoker();
 		new DotNETFilterFactory();
-		new DotNETExecutionStackReader();
 		ThreadPool.setProtoType(new DotNETChildThread());
 	}
 

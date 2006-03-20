@@ -100,11 +100,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DotNETExecutionStackReader.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DotNETInvoker.java"
                     SubType = "Code"
                     BuildAction = "Compile"

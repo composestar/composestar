@@ -124,8 +124,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
-			System.exit(1);
+			return "Unable to read " + filename + ":" + lineNumber;
 		}
 		return filename + ":" + lineNumber + '\n' + line;
 	}

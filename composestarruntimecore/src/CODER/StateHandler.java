@@ -68,6 +68,6 @@ public class StateHandler {
 
 	public EntryPoint getEntryPoint()
 	{
-		return ExecutionStackReader.getInstance().parseStack(thisThread.getParentStack());
+		return thisThread.getEntryPoint();
 	}
 }

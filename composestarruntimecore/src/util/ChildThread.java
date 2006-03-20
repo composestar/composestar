@@ -16,5 +16,5 @@ public interface ChildThread
 	public void resumeThread();
 	public boolean isSuspended();
 
-	public String getParentStack();
+	public EntryPoint getEntryPoint();
 }

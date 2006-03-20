@@ -1265,9 +1265,43 @@ namespace ComposestarVSAddin
 		{
 			try
 			{
+				string dir = BuildConfigurationManager.Instance.OutputPath;
+				if(dir != null && !"".Equals(dir))
+				{
+					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1)
+					{
+						dir = dir.Substring(1,dir.Length-2);
+					}
+					if(!dir.EndsWith("\\"))
+					{
+						dir += '\\';
+					}
+				}
 
-				string dir = BuildConfigurationManager.Instance.OutputPath; 
 				string debugger = "";
+
+				string buildPath = BuildConfigurationManager.Instance.Settings.Paths["Base"];
+				if(buildPath != null)
+				{
+					if(!buildPath.EndsWith("/"))
+					{
+						buildPath += '/';
+					}
+					buildPath += "obj/weaver/";
+					string[] files = Directory.GetFiles(buildPath,"*.pdb");
+					for(int i = 0; i < files.Length; i++)
+					{
+						try
+						{
+							string filename = dir +  files[i].Substring(files[i].LastIndexOf('/') +1);						
+							File.Copy(files[i],filename);
+						}
+						catch(Exception)
+						{
+							//To bad
+						}
+					}
+				}
 
 				if (BuildConfigurationManager.Instance.Settings.GetModule("CODER") != null  )
 				{
@@ -1276,14 +1310,6 @@ namespace ComposestarVSAddin
 		
 				if(dir != null && !"".Equals(dir))
 				{
-					if(dir.StartsWith("\"") && dir.EndsWith("\"") && dir.Length > 1)
-					{
-						dir = dir.Substring(1,dir.Length-2);
-					}
-					if(!dir.EndsWith("/"))
-					{
-						dir += '/';
-					}
 					if(debugger == null || "".Equals(debugger))
 					{
 						debugger = "CodeDebugger";
@@ -1306,6 +1332,7 @@ namespace ComposestarVSAddin
 						if (writer != null)
 							writer.Close();
 					}
+
 				}
 				
 			}
