@@ -8,7 +8,7 @@ import java.io.*;
 import antlr.*;
 import antlr.collections.*;
 
-public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter,JavaTokenTypes 
+public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, JavaTokenTypes 
 {	
 	private StringBuffer dummy;
 	private java.util.Stack stack = new java.util.Stack();
@@ -25,11 +25,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter,Jav
 	public JavaDummyEmitter() 
 	{
 		setupTokenNames();
-		dummy = new StringBuffer();
 	}
    
 	public void createDummy(Source source, String targetFilename) throws ModuleException {	   
 	 	
+		dummy = new StringBuffer();
+		
 		//Create a root AST node with id 0
 		ASTFactory factory = new ASTFactory();
 		AST root = factory.create(ROOT_ID,"AST ROOT");
