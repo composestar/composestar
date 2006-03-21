@@ -145,6 +145,8 @@ public class HTMLReporter implements Reporter {
 		
 		buffer.append("<h3>"+(new java.util.Date()).toString());
 		buffer.append("<BR>");
+        buffer.append("Platform: ").append(Configuration.instance().getProperty("Platform"));
+        buffer.append("<BR>");
         buffer.append("Runmode: ").append(SECRET.MODES[SECRET.MODE]);
 		buffer.append("</h3>");
 	}
