@@ -22,7 +22,6 @@ public class DotNETChildThread implements ChildThread
 	{
 		parent.Suspend();
 		StackTrace st = new StackTrace(parent,true);
-		System.out.println(st.toString());
 		for(int i = 0; i < st.get_FrameCount(); i++)
 		{
 			StackFrame frame = st.GetFrame(i);
