@@ -5,6 +5,7 @@ import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponen
 import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.DebuggerProvider;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Dictionary;
 /**
  * Summary description for Visualizer.
  */
-public abstract class Visualizer extends Panel
+public abstract class Visualizer extends JPanel
 {
 	protected VisualDebugger debugger;
 	protected Frame frame;

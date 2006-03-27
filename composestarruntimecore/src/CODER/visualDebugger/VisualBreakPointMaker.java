@@ -7,6 +7,7 @@ import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg.*;
 
 import Composestar.RuntimeCore.Utils.Debug;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,99 +17,121 @@ import java.awt.event.WindowAdapter;
 /**
  * Summary description for VisualBreakPointMaker.
  */
-public class VisualBreakPointMaker extends Panel implements ActionListener
+public class VisualBreakPointMaker extends JFrame implements ActionListener
 {
-	private class VisualBreakPointMakerFrame extends Frame 
-	{
-		public VisualBreakPointMakerFrame() 
-		{
-			setTitle("Composition filter debugger");
-			setSize(800,250);
-			
-			Dimension dim = getToolkit().getScreenSize();
-			Rectangle abounds = getBounds();
-			setLocation((dim.width - abounds.width) / 2,
-				(dim.height - abounds.height) / 2);
-
-			addWindowListener(new WindowAdapter() 
-			{
-				public void windowClosing(WindowEvent e) 
-				{
-					closeMaker();
-				}
-			});
-		}
-
-		public void closeMaker()
-		{
-			popup.dispose();
-			dispose();
-			debugger.setBreakPoint(breakpoint);
-			debugger.startVisualizer();
-		}
-	}
-
+	private PopUp popup = new PopUp();
+	private VisualDebugger debugger;
 	private BreakPoint breakpoint = null;
 
-	private TextArea regularStopExpression = new TextArea();
-	private TextArea ltlValueExpression = new TextArea();
+	private TextArea senders = new TextArea("*");
 	private TextArea selectors = new TextArea("*");
 	private TextArea targets = new TextArea("*");
 
-	private VisualDebugger debugger;
+	private TextArea regularStopExpression = new TextArea();
+	private TextArea ltlValueExpression = new TextArea();
 
-	private PopUp popup = new PopUp();
-	private VisualBreakPointMakerFrame frame= new VisualBreakPointMakerFrame();
+	private JButton proceed = new JButton("Proceed");
+	private JButton clear = new JButton ("Clear");
+
+	private JCheckBox onlyAccepting = new JCheckBox("Only halt when a filter accepts");
 
 	public VisualBreakPointMaker(VisualDebugger debugger)
 	{
+		setTitle("Composition filter debugger");
+		setSize(1000,250);
+			
+		Dimension dim = getToolkit().getScreenSize();
+		Rectangle abounds = getBounds();
+		setLocation((dim.width - abounds.width) / 2,
+			(dim.height - abounds.height) / 2);
+
+		addWindowListener(new WindowAdapter() 
+		{
+			public void windowClosing(WindowEvent e) 
+			{
+				System.exit(0);
+			}
+		});
+
 		this.debugger = debugger;
-		setLayout(new BorderLayout());
 
-		Panel top = new Panel();
+		JPanel senderPane = new JPanel();
+		senderPane.setLayout(new BorderLayout());
+		senderPane.add(new Label("Senders"),BorderLayout.NORTH);
+		senderPane.add(senders,BorderLayout.SOUTH);
+
+		JPanel selectorsPane = new JPanel();
+		selectorsPane.setLayout(new BorderLayout());
+		selectorsPane.add(new Label("Selectors"),BorderLayout.NORTH);
+		selectorsPane.add(selectors,BorderLayout.SOUTH);
+
+		JPanel targetPane = new JPanel();
+		targetPane.setLayout(new BorderLayout());
+		targetPane.add(new Label("Targets"),BorderLayout.NORTH);
+		targetPane.add(targets,BorderLayout.SOUTH);
+
+		JPanel top = new JPanel();
 		top.setLayout(new BorderLayout());
-		Panel one = new Panel();
-		one.setLayout(new BorderLayout());
-		one.add(new Label("Selectors"),BorderLayout.WEST);
-		one.add(new Label("Targets"),BorderLayout.EAST);
-		top.add(one,BorderLayout.NORTH);
+		top.add(senderPane,BorderLayout.WEST);
+		top.add(selectorsPane,BorderLayout.CENTER);
+		top.add(targetPane,BorderLayout.EAST);
 
-		one = new Panel();
-		one.add(selectors,BorderLayout.WEST);
-		one.add(targets,BorderLayout.EAST);
-		top.add(one,BorderLayout.SOUTH);
+		/*		JPanel center = new JPanel();
+		 panel.setLayout(bordl;
+		 one = new Panel();
+		 add(new Label("LTL Condition Formula",BorderLayout.WEST));
+		 add(ltlValueExpression,BorderLayout.WEST);
+		 add(new Label("Regular Stop Sequence"));
+		 add(regularStopExpression,BorderLayout.EAST);
+		 add(one,BorderLayout.CENTER,BorderLayout.EAST);		
+		 add(one,BorderLayout.CENTER);*/
 
-		add(top,BorderLayout.NORTH);
+		JPanel bottom = new JPanel();
+		proceed.addActionListener(this);
+		clear.addActionListener(this);
+		bottom.add(proceed);
+		bottom.add(clear);
+		bottom.add(onlyAccepting);
 
-/*		Panel center = new Panel();
-		panel.setLayout(new BorderLayout());
- 		one = new Panel();
-		add(new Label("LTL Condition Formula",BorderLayout.WEST));
-		add(ltlValueExpression,BorderLayout.WEST);
-		add(new Label("Regular Stop Sequence"));
-		add(regularStopExpression,BorderLayout.EAST);
-		add(one,BorderLayout.CENTER,BorderLayout.EAST);		
-		add(one,BorderLayout.CENTER);*/
+		Container content = getContentPane();
+		content.setLayout(new BorderLayout());
+		content.add(top,BorderLayout.NORTH);
+		//content.add(middle,BorderLayout.CENTER);
+		content.add(bottom,BorderLayout.SOUTH);
 
-		one = new Panel();
-		Button button = new Button("Proceed");
-		button.addActionListener(this);
-		one.add(button,BorderLayout.WEST);
-		button = new Button("Cancel");
-		one.add(button,BorderLayout.EAST);
-		add(one,BorderLayout.SOUTH);
-
-		frame.add(this);
-		frame.show();
+		show();
 	}
 
 	public void actionPerformed(ActionEvent evt) 
+	{
+		if(proceed.equals(evt.getSource()))
+		{
+			proceed();
+		}
+		else if(clear.equals(evt.getSource()))
+		{
+			clear();
+		}
+	}
+
+	private void clear()
+	{
+		senders.setText("*");
+		selectors.setText("*");
+		targets.setText("*");
+		onlyAccepting.setSelected(false);
+	}
+
+	private void proceed()
 	{
 		breakpoint = createBreakPoint();
 		if(breakpoint != null)
 		{
 			debugger.setBreakPoint(breakpoint);
-			frame.closeMaker();
+			popup.dispose();
+			dispose();
+			debugger.setBreakPoint(breakpoint);
+			debugger.startVisualizer();
 		}
 	}
 
@@ -145,6 +168,11 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 			{
 				breakpoint = new BreakPointAnd(debugger.getHalter(),breakpoint,regBreakPoint);
 			}
+
+			if(onlyAccepting.isSelected())
+			{
+				breakpoint = new BreakPointAnd(debugger.getHalter(),breakpoint,new AcceptingOnlyBreakPoint(debugger.getHalter()));
+			}
 		}
 		catch(BreakPointParseException e)
 		{
@@ -159,10 +187,10 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 		popup.update("Parsing error", "Error while parsing " + parsing + "\n" + e.getMessage());
 	}
 
-	private class PopUp extends Frame implements ActionListener
+	private class PopUp extends JFrame implements ActionListener
 	{
-		private TextField text = new java.awt.TextField();
-
+		private JTextField textField = new JTextField("");
+		private JButton button = new JButton("Ok");
 		private void close()
 		{
 			setVisible(false);
@@ -171,7 +199,10 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 
 		public void actionPerformed(ActionEvent evt) 
 		{
-			close();
+			if(button.equals(evt.getSource()))
+			{
+				close();
+			}
 		}
 
 		public PopUp()
@@ -183,10 +214,9 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 					close();
 				}
 			});
-			Panel panel = new Panel(new GridLayout(2,1));
-			add(panel);
-			Button button = new Button("Ok");
-			panel.add(text);
+			Container panel = getContentPane();
+			panel.setLayout(new GridLayout(2,1));
+			panel.add(textField);
 			panel.add(button);
 			button.addActionListener(this);
 
@@ -197,7 +227,7 @@ public class VisualBreakPointMaker extends Panel implements ActionListener
 		public void update(String title, String text)
 		{
 			setTitle(title);
-			this.text.setText(text);
+			textField.setText(text);
 			setVisible(true);
 			show();
 		}
