@@ -65,7 +65,10 @@ public class DotNETCompiler implements LangCompiler{
         			if(!(dependency.getFileName().startsWith(Configuration.instance().getPathSettings().getPath("Composestar"))))
         				Configuration.instance().getLibraries().addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
         	}
+        	//set J# specific libraries
         	if(dependency.getFileName().indexOf("vjslib.dll") > 0)
+    			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        	if(dependency.getFileName().indexOf("VJSSupUILib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         }
         
