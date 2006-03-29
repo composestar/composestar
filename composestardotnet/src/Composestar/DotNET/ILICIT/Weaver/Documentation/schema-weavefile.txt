@@ -1,0 +1,58 @@
+﻿To define the weave operations a separate configuration file is used. The layout of this file is listed below.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<weaveSpecification version="<weave specification version>">
+  <assemblies>
+    <assembly name="<assembly name>"
+              version="<assembly version>"
+              publicKeytoken="<keytoken of the assembly>"
+              forceReferenceIn="<assembly name>"
+              remove="[yes/no]"/>
+  </assemblies>
+  <methods>
+    <method id="<id of the method reference>"
+            assembly="<assembly the method can be found in>"
+            class="<fully qualified name of the class the method belongs to>"
+            name="<name of the method>">
+      <argument value="" type="[string/int]"/>
+      <argument value="%senderobject"/>
+      <argument value="%createdobject"/>
+      <argument value="%targetobject"/>
+      <argument value="%targetmethod"/>
+      <argument value="%originalparameters"/>
+      <argument value="%casttarget"/>
+    </method>
+  </methods>
+  <application name="<name of the application>">
+    <notifyStart id="<reference to a method definition>"/>
+  </application>
+  <class name="[*/<fully qualified class name>]">
+    <afterClassInstantiation>
+      <executeMethod id="<reference to a method definition>"/>
+    </afterClassInstantiation>
+    <methodInvocations>
+      <callToMethod class="<fully qualified name of the class>" name="<name of the method>">
+        <voidRedirectTo id="<reference to a method definition>"/>
+        <returnvalueRedirectTo id="<reference to a method definition>"/>
+      </callToMethod>
+    </methodInvocations>
+    <casts>
+      <castTo assembly="<assembly the method can be found in>" class="">
+        <executeMethodBefore id="<reference to a method definition>"/>
+      </castTo>
+    </casts>
+
+    <classReplacements>
+      <classReplacement assembly="<assembly the method can be found in>" class="">
+        <replaceWith assembly="<assembly the method can be found in>" class=""/>
+      </classReplacement>
+    </classReplacements>
+    <fieldAccesses>
+	    <field class="<fully qualified name of the class>" name="<name of the field>">
+		    <callBefore id="<reference to a method definition>"/>
+		    <callAfter id="<reference to a method definition>"/>
+		    <replaceWith id="<reference to a method definition>"/>
+      </field>
+    </fieldAccesses>
+  </class>
+</weaveSpecification>
