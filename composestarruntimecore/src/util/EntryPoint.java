@@ -1,3 +1,4 @@
+package Composestar.RuntimeCore.Utils;
 
 /**
  * Summary description for EntryPoint.
