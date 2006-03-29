@@ -4,7 +4,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.LAMA.ProgramElement;;
+import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author whavinga

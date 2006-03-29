@@ -7,11 +7,11 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Action.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id: Action.java,v 1.2 2006/03/14 12:53:54 pascal_durr Exp $
  * 
 **/
 
-import Composestar.Utils.Debug;;
+import Composestar.Utils.Debug;
 
 public class Action extends FilterLeaf
 {
