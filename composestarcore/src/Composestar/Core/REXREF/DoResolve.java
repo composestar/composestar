@@ -82,7 +82,7 @@ public class DoResolve {
         ref.setRef(concern);
         ref.setResolved(true);
       } else {
-        throw new ModuleException("ConcernReference '" + ref.getQualifiedName() + "' cannot be resolved (are you referencing a non-existent concern?)", "REXREF", ref);
+        throw new ModuleException("ConcernReference '" + ref.getQualifiedName() + "' cannot be resolved (are you referencing a non-existent concern or is the startup object incorrect?)", "REXREF", ref);
       }
     }
   }
@@ -103,7 +103,7 @@ public class DoResolve {
         ref.setRef(reffedConcern);
         ref.setResolved(true);
       } else {
-          throw new ModuleException("LabeledConcernReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent concern?)", "REXREF", ref);
+          throw new ModuleException("LabeledConcernReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent concern or is the startup object incorrect?)", "REXREF", ref);
       }
     }
   }
