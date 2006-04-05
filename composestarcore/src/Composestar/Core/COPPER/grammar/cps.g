@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.7 2006/02/27 17:44:59 reddog33hummer Exp $
+ * $Id: cps.g,v 1.8 2006/03/09 10:18:39 doornenbal Exp $
  */
 
 /**
@@ -117,8 +117,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
       singleExternal : variableSet COLON!type (externalReferance)? SEMICOLON!
       { #singleExternal = #([EXTERNAL_, "external"], #singleExternal);} ;
       
-      externalReferance : (((~(DOUBLE_COLON|COMMA|SEMICOLON))* DOUBLE_COLON) => EQUALS! fmElemReference //add the equals to differentiate between the alternatives
-           | EQUALS! concernReference LPARENTHESIS! RPARENTHESIS!);
+      externalReferance : EQUALS! concernReference LPARENTHESIS! RPARENTHESIS!;
 
         //stuff that is reused in the definitions of references
         fqnDCNameCName 	: NAME (DOT! NAME)* DOUBLE_COLON! NAME COLON! NAME;       //n.n.n.n::n:n
@@ -148,8 +147,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     /*---------------------------------------------------------------------------*/
     conditions : "conditions"^ (singleCondition)* ;
 
-      singleCondition:(((~(DOUBLE_COLON|COMMA))* DOUBLE_COLON) => NAME COLON! fmElemReference SEMICOLON //add the SEMICOLON!to differentiate between the alternatives
-      		      | NAME COLON! concernReference LPARENTHESIS! RPARENTHESIS! SEMICOLON!)
+      singleCondition: NAME COLON! concernReference LPARENTHESIS! RPARENTHESIS! SEMICOLON!
       { #singleCondition = #([CONDITION_, "condition"], #singleCondition);} ;
 
 
