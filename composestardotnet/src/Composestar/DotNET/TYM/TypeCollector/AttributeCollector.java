@@ -2,6 +2,7 @@
 
 package Composestar.DotNET.TYM.TypeCollector;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,8 +14,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.LAMA.*;
 import Composestar.DotNET.LAMA.*;
+import Composestar.Utils.CommandLineExecutor;
 import Composestar.Core.Master.*;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Projects;
+import Composestar.Core.Master.Config.Project;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
@@ -36,17 +40,26 @@ public class AttributeCollector extends DefaultHandler {
      * @roseuid 40AB48FB0299
      */
     public void run(CommonResources resources) throws ModuleException {
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
-		try {
-			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-			SAXParser saxParser = saxParserFactory.newSAXParser();
-			XMLReader parser  = saxParser.getXMLReader();
-			parser.setContentHandler( this );
-			parser.parse( new InputSource( tempFolder + "attributes.xml" ));
-		} catch( Exception e ) {
-			e.printStackTrace();
-			//throw new ModuleException( e.getMessage() );
-		}
+		
+    	Projects prjs = Configuration.instance().getProjects();
+    	ArrayList projectList = prjs.getProjects();
+    	Iterator prjIt = projectList.iterator();
+    	while(prjIt.hasNext()) 
+    	{
+    	    Project p = (Project)prjIt.next();
+    		String projectFolder = p.getProperty("basePath");
+    		String xmlFile = projectFolder + "attributes.xml";
+    		try {
+				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+				SAXParser saxParser = saxParserFactory.newSAXParser();
+				XMLReader parser  = saxParser.getXMLReader();
+				parser.setContentHandler( this );
+				parser.parse( new InputSource( xmlFile ));
+			} catch( Exception e ) {
+				e.printStackTrace();
+				//throw new ModuleException( e.getMessage() );
+			}
+    	}
     }
     
     /**
