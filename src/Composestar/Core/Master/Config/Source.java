@@ -9,9 +9,10 @@ public class Source implements Serializable{
 	private String dummy;
 	private String compiledSource;
 	private String target;
+	private Project prj;
 	
 	public Source() {
-		
+		prj = new Project();
 	}
 	
 	public String getFileName() {
@@ -52,5 +53,13 @@ public class Source implements Serializable{
 	
 	public void setTarget(String target) {
 		this.target = target;
+	}
+	
+	public void setProject(Project p){
+		this.prj = p;
+	}
+	
+	public Project getProject(){
+		return prj;
 	}
 }

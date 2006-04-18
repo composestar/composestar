@@ -41,6 +41,7 @@ public class Project implements Serializable
 	
 	public void addSource(Source source) {
 		sources.add(source);
+		source.setProject(this);
 	}
 	
 	public ArrayList getTypeSources() {
