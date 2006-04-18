@@ -213,7 +213,7 @@ public class DotNETCompiler implements LangCompiler{
         Iterator sourcesItr = sources.iterator();
 		while(sourcesItr.hasNext()){
         	Source s = (Source)sourcesItr.next();
-			sourcefiles = sourcefiles + " " +s.getFileName();
+			sourcefiles = sourcefiles + " " +s.getDummy();
 		}
 		command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(sourcefiles));
  
