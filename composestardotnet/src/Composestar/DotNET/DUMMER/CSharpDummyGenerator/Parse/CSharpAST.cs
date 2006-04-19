@@ -812,6 +812,10 @@ namespace DDW.CSharp.Parse
 				else if(tok is EnumMemberNode) 
 					graph.Add( (Dom.EnumMemberDecl)((EnumMemberNode)tok).GetGraph() );
 
+				// WH: Fix - support nested classes as well!
+				else if(tok is ClassNode) 
+					graph.Add((Dom.ClassDecl)((ClassNode)tok).GetGraph());
+
 				tok = tok.getNextSibling();
 			}
 
