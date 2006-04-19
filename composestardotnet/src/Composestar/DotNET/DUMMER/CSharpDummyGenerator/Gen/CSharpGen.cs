@@ -78,7 +78,54 @@ namespace DDW.CSharp.Gen
 			else
 			{
 				OpenBlock();
-				Parse(gr.Statements);
+				IDefinition retDef = gr.ReturnType.Definition;
+				if (gr.ReturnType.ArrayRanks.Count > 0) // It's an array def, so null is a valid return value
+					sb.WriteLine("return null;");
+				else if (retDef.GetType().Equals(typeof(BuiltInDefinition)))
+				{ // Have to return a specific value for builtin types
+					switch (((BuiltInDefinition)retDef).LiteralType)
+					{
+						case LiteralType.Bool:
+							sb.WriteLine("return false;");
+							break;
+						case LiteralType.Byte:
+						case LiteralType.Decimal:
+						case LiteralType.Int:
+						case LiteralType.Long:
+						case LiteralType.Sbyte:
+						case LiteralType.Short:
+						case LiteralType.Uint:
+						case LiteralType.Ulong:
+						case LiteralType.Ushort:
+							sb.WriteLine("return 0;");
+							break;
+						case LiteralType.Char:
+							sb.WriteLine("return '0';");
+							break;
+						case LiteralType.Double:
+						case LiteralType.Float:
+							sb.WriteLine("return 0.0;");
+							break;
+						case LiteralType.Null:
+						case LiteralType.Object:
+							sb.WriteLine("return null;");
+							break;
+						case LiteralType.String:
+							sb.WriteLine("return \"\";");
+							break;
+						case LiteralType.Void:
+							break; // write nothing
+						default:
+							sb.WriteLine("return null;"); // and hope this works...
+							break;
+					}
+				}
+				else
+				{ // For all 'normal' types, null should be a valid return value
+					sb.WriteLine("return null;");
+				}
+				/* WH - Edit: remove contents of methods! */
+				//Parse(gr.Statements);
 				CloseBlock();
 			}
 		}
@@ -279,7 +326,8 @@ namespace DDW.CSharp.Gen
 				sb.Write(")");
 			}
 			OpenBlock();
-			Parse(gr.Statements);
+			// WH: Edit - Remove actual contents of constructor code.
+			//Parse(gr.Statements);
 			CloseBlock();
 		}
 		#endregion
