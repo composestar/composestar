@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp", "CSharp.csproj", "{B0A1577D-951D-4886-8726-9388FB15CFF4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		antlr java = antlr java
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{B0A1577D-951D-4886-8726-9388FB15CFF4}.antlr java.ActiveCfg = antlr java|.NET
+		{B0A1577D-951D-4886-8726-9388FB15CFF4}.antlr java.Build.0 = antlr java|.NET
+		{B0A1577D-951D-4886-8726-9388FB15CFF4}.Debug.ActiveCfg = Debug|.NET
+		{B0A1577D-951D-4886-8726-9388FB15CFF4}.Debug.Build.0 = Debug|.NET
+		{B0A1577D-951D-4886-8726-9388FB15CFF4}.Release.ActiveCfg = Release|.NET
+		{B0A1577D-951D-4886-8726-9388FB15CFF4}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
