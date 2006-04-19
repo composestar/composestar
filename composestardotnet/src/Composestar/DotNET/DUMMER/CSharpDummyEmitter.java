@@ -1,39 +1,37 @@
 package Composestar.DotNET.DUMMER;
 
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Source;
+import Composestar.Utils.Debug;
+import Composestar.Utils.StreamGobbler;
 
 public class CSharpDummyEmitter implements DummyEmitter {
 		
 	public void createDummy(Source source, String outputFilename) throws ModuleException
 	{
-		try
-		{
-			CSharpDummyProcess dummyGen = new CSharpDummyProcess();
-			dummyGen.openProcess();
-			dummyGen.getStdout().println(source.getFileName());
-			dummyGen.getStdout().println(outputFilename);
-			dummyGen.getStdout().close();
-			dummyGen.getProcess().waitFor();
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("Error while creating dummy: " + e.getCause().getMessage(), "DUMMER");
-		}
+		Vector sources = new Vector(); 
+		sources.add(source);
+		
+		Vector outputFilenames = new Vector(); 
+		outputFilenames.add(outputFilename);
+		
+		createDummies(sources, outputFilenames);
 	}
 
 	public void createDummies(Collection sources, Collection outputFilenames) throws ModuleException
 	{
+		int result = 0;
+		StringBuffer processOutput = new StringBuffer();
+		CSharpDummyProcess dummyGen = new CSharpDummyProcess();
 		try
 		{
-			CSharpDummyProcess dummyGen = new CSharpDummyProcess();
 			dummyGen.openProcess();
             
             Iterator srcIter = sources.iterator();
@@ -44,11 +42,18 @@ public class CSharpDummyEmitter implements DummyEmitter {
             	dummyGen.getStdout().println((String)outputIter.next());
             }
             dummyGen.getStdout().close();
-            dummyGen.getProcess().waitFor();
+            dummyGen.getStdin().waitForResult();
+            dummyGen.getStderr().waitForResult();
+            result = dummyGen.getProcess().waitFor();
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while creating dummies: " + e.getCause().getMessage(), "DUMMER");
+			throw new ModuleException("Error while creating dummies: " + e.getCause(), "DUMMER");
+		}
+		if (result != 0)
+		{
+			Debug.out(Debug.MODE_DEBUG, "DUMMER", "CSharpDummyGenerator failed; output from dummy generation process:\n" + dummyGen.getStdin().result());
+			throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed", "DUMMER");
 		}
 	}
 }
@@ -56,9 +61,9 @@ public class CSharpDummyEmitter implements DummyEmitter {
 class CSharpDummyProcess
 {
 	private PrintStream stdout;
-	private InputStream stdin;
+	private StreamGobbler stdin, stderr;
 	private Process process;
-	
+
 	public CSharpDummyProcess()
 	{
 	}
@@ -71,19 +76,27 @@ class CSharpDummyProcess
         Runtime rt = Runtime.getRuntime();
 
         this.process = rt.exec(csDummyEmitter);
-        this.stdin = process.getInputStream();
-        this.stdout = new PrintStream(process.getOutputStream());		
+        stderr = new StreamGobbler( process.getErrorStream() );
+        stdin = new StreamGobbler( process.getInputStream() );
+        stderr.start();
+        stdin.start();
+        this.stdout = new PrintStream(process.getOutputStream());
+        //this.stdin = new BufferedReader(new InputStreamReader(process.getInputStream()));
 	}
 
 	public PrintStream getStdout() {
 		return stdout;
 	}
 
-	public InputStream getStdin() {
-		return stdin;
-	}
-
 	public Process getProcess() {
 		return process;
+	}
+
+	public StreamGobbler getStdin() {
+		return stdin;
+	}
+	
+	public StreamGobbler getStderr() {
+		return stderr;
 	}
 }
