@@ -7,6 +7,7 @@ using System.CodeDom.Compiler;
 
 using DDW.CSharp.Dom;
 using DDW.CSharp.Walk;
+using DDW.CSharp.SymbolTable;
 
 namespace DDW.CSharp.Gen
 {		
