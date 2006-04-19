@@ -12,7 +12,7 @@ import java.io.InputStream;
  * overrun which
  * blocks the program.
  */
-class StreamGobbler extends Thread {
+public class StreamGobbler extends Thread {
     private InputStream Is;
     private String Result = "";
     
@@ -21,7 +21,7 @@ class StreamGobbler extends Thread {
      * @param is The input stream to monitor.
      * @roseuid 404DCCF400D4
      */
-    StreamGobbler(InputStream is) {
+    public StreamGobbler(InputStream is) {
      Is = is;     
     }
     
