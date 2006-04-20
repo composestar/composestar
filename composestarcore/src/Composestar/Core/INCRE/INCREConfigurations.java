@@ -7,6 +7,7 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Module;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 /**
@@ -62,9 +63,16 @@ public class INCREConfigurations {
 		props.put("Dependencies",depstr);
 		
 		/* Harvester input */
-		// TODO: use getCompiledDummies of DUMMER instead of ugly ilicit setting
-		String dummies = config.getModuleSettings().getModule("ILICIT").getProperty("assemblies");
-		props.put("HarvesterInput",depstr+","+dummies);
+		String dummyStr = "";
+		ArrayList dummies = config.getProjects().getCompiledDummies();
+		Iterator dumIt = dummies.iterator();
+		while(dumIt.hasNext()) 
+		{
+			String name = (String)dumIt.next();
+			dummyStr += name;
+			if(dumIt.hasNext()) dummyStr += ",";
+        }
+		props.put("HarvesterInput",depstr+","+dummyStr);
 				
 		/* ApplicationStart */
 		String as = config.getProjects().getProperty("applicationStart");
