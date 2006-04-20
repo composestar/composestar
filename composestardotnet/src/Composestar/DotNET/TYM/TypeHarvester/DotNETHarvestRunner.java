@@ -98,9 +98,13 @@ public class DotNETHarvestRunner implements HarvestRunner {
 				assemblies.add(name);
 		}
     	
-		// TODO: use getCompiledDummies of DUMMER instead of ugly ilicit setting
-		String dummies = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
-		assemblies.add(dummies); 
+		ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
+		Iterator dumIt = dummies.iterator();
+		while(dumIt.hasNext()) 
+		{
+			String name = (String)dumIt.next();
+			assemblies.add(name);
+        }
 		return assemblies;
     }
     
@@ -137,13 +141,13 @@ public class DotNETHarvestRunner implements HarvestRunner {
      * @roseuid 4056E8BC03B6
      */
     public void run(CommonResources resources) throws ModuleException {
-    	String assemblyList = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies"); 
-		ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
+    	ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
+    	ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
 		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		
 		
-		if( assemblyList == null )
-			throw new ModuleException("TYM TypeHarvester needs \"ProjectConfiguration.Assemblies\" which is missing.");
+		if( dummies == null )
+			throw new ModuleException("TYM TypeHarvester needs compiled dummies which is missing.");
 		if( dependencyList == null )
 			throw new ModuleException("TYM TypeHarvester needs \"ProjectConfiguration.Dependencies\" which is missing.");
 		
@@ -161,14 +165,15 @@ public class DotNETHarvestRunner implements HarvestRunner {
 			}
 		}
 
-		String[] assemblyPaths = assemblyList.split(",");
-		for( int i = 0; i < assemblyPaths.length; i++ ) {  
-			String asm = assemblyPaths[i];
-			asm = checkDLL(asm);
-			arg += "\"" + asm + "\"" + " ";
-			// Add additional dll's (from compiled inner's) and list of classes that we still need.
-      	}
-      	
+		Iterator dumIt = dummies.iterator();
+		while(dumIt.hasNext()) 
+		{
+			String name = (String)dumIt.next();
+			name = checkDLL(name);
+            arg += "\"" +name + "\"" + " ";
+            //Add additional dll's (from compiled inner's) and list of classes that we still need.
+		}
+		
 		resources.addResource("skippedAssemblies", skippedAssemblies);
 		Debug.out(Debug.MODE_DEBUG,"TYM","Arguments for TYM Harvester: "+arg);
 		String typeHarvester =  Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/TypeHarvester.exe" ;

@@ -72,7 +72,7 @@ public class DotNETCompiler implements LangCompiler{
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         }
         
-        String dummiesdll = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
+        String dummiesdll = p.getCompiledDummies();
         libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dummiesdll+"\"") ) + " ";
 
         // generate and execute command for each source
@@ -202,7 +202,9 @@ public class DotNETCompiler implements LangCompiler{
         command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
 		//what's the outputfile? --> obj/dummies/projectname.dummies.dll	
-        String output = FileUtils.prepareCommand(Configuration.instance().getPathSettings().getPath("Base")+"obj/"+"dummies/"+p.getProperty("name")+".dummies.dll");
+        String output = Configuration.instance().getPathSettings().getPath("Base")+"obj/"+"dummies/"+p.getProperty("name")+".dummies.dll";
+        p.setCompiledDummies(output);
+        output = FileUtils.prepareCommand(output);
         	
 		command = command.replaceAll( "\\{OUT\\}", output);
         command = command.replaceAll( "\\{LIBS\\}", libString );
@@ -241,8 +243,7 @@ public class DotNETCompiler implements LangCompiler{
             	throw new CompilerException( ex.getMessage() );
      		}
         } 
-		p.setCompiledDummies(output);    	
-    }
+	}
 	
 	/**
 	 * @param src Source

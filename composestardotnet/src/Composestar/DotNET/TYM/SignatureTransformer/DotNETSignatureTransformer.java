@@ -10,7 +10,7 @@ import Composestar.Utils.Debug;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.Exception.ModuleException;
 
-
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DotNETSignatureTransformer implements SignatureTransformer {
@@ -44,14 +44,22 @@ public class DotNETSignatureTransformer implements SignatureTransformer {
      	
 			try
 			{
+				ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
+				Iterator dumIt = dummies.iterator();
+				while(dumIt.hasNext()) 
+				{
+					String name = (String)dumIt.next();
+					codeParser.setAssemblyName(name);
+					codeParser.run();
+		        }
 				
-				String assemblies = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
+				/*String assemblies = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
 				String[] assemblyArray = assemblies.split(",");
 				for( int i = 0; i < assemblyArray.length; i++ )
 				{
 					codeParser.setAssemblyName(assemblyArray[i]);
 					codeParser.run();
-				}
+				}*/
 			}
 			catch(ModifierException me)
 			{
