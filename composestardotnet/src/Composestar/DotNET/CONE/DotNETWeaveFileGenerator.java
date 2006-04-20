@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.6 2006/03/10 22:17:37 pascal_durr Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.7 2006/03/14 10:08:35 pascal_durr Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -35,6 +35,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.Debug;
@@ -73,8 +74,16 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		
         writeAssemblyDefinitionRecord("ComposeStarRuntimeInterpreter", "1.0.0.0");
 		writeAssemblyDefinitionRecord("ComposeStarDotNETRuntimeInterpreter", "1.0.0.0");
-        writeAssemblyDefinitionRecord("dummies", "0.0.0.0", true);
-
+        
+		Configuration config = Configuration.instance();
+		Iterator prjIt = config.getProjects().getProjects().iterator();
+		while( prjIt.hasNext() ) {
+			Project p = (Project)prjIt.next();
+			String dummies = p.getProperty("name")+".dummies";
+			writeAssemblyDefinitionRecord(dummies, "0.0.0.0", true);
+			
+		}
+				
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolving entry assembly...");
         String entryAssembly = "";
 
@@ -87,7 +96,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
         	throw new ModuleException("Application has no startup object defined!","CONE_IS");
         }
      
-        Configuration config = Configuration.instance();
         Iterator it = config.getProjects().getProjects().iterator();
         while(it.hasNext())
         {
@@ -340,7 +348,12 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			String type = types[i];
 			String assembly = typeLocations.getAssemblyByType(type);
 		
-			writeClassReplacementRecord("dummies", type, assembly, type);
+			//writeClassReplacementRecord("dummies", type, assembly, type);
+			String dummies = "";
+			String sourceFile = typeLocations.getSourceByType(type);
+			Source s = (Source)Configuration.instance().getProjects().getSource(sourceFile);
+			if(s!=null) dummies = s.getProject().getProperty("name") + ".dummies";
+			writeClassReplacementRecord(dummies, type, assembly, type);
 		}
     	
     	out.println("</classReplacements>");
