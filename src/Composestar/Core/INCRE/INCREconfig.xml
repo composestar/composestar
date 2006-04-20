@@ -11,7 +11,7 @@
 	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" enabled="true" incremental="false" summary="Extracting embedded sources...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="false" incremental="false" summary="Generating dummy sources...">
+	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="true" incremental="false" summary="Generating dummy sources...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
@@ -43,7 +43,7 @@
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="true" summary="Evaluating predicate selectors...">
+	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
 		<dependencies></dependencies>
 		<comparisons>
 			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
