@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Properties;
 
+import Composestar.Utils.FileUtils;
+
 public class Projects implements Serializable{
 
 	private Properties properties;
@@ -70,6 +72,7 @@ public class Projects implements Serializable{
 	}
 	
 	public ArrayList getCompiledDummies() {
+		compiledDummies = new ArrayList();
 		Iterator projIt = projects.iterator();
 		while( projIt.hasNext() ) {
 			Project p = (Project)projIt.next();
@@ -109,6 +112,17 @@ public class Projects implements Serializable{
 			}
 		}
 		return sources;
+	}
+	
+	public Source getSource(String fileName) {
+		ArrayList sources = getSources();
+		Iterator sourceIt = sources.iterator();
+		while( sourceIt.hasNext() ) {
+			Source s = (Source)sourceIt.next();
+			if(FileUtils.fixFilename(s.getFileName()).equals(FileUtils.fixFilename(fileName)))
+				return s;
+		}
+		return null;
 	}
 	
 }
