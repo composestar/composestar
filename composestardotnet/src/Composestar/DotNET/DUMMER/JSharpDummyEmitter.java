@@ -515,7 +515,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			visitChildren(ast, "\n",  IMPORT);
 			newline();
 			newline();
-			visit(getChild(ast, CLASS_DEF));    
+			visitChildren(ast,"\n",CLASS_DEF);
 			visit(getChild(ast, INTERFACE_DEF));  
 			newline();
 			break;
