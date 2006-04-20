@@ -74,6 +74,8 @@ public class BACO implements CTCommonModule
         			//System.err.println("COPY: "+dependency.getFileName());
         		}
         	}
+        	String dummies = prj.getCompiledDummies();
+        	filesToCopy.add(this.processString(dummies));
         }
         
         String examplepath = config.getPathSettings().getPath("Base");
