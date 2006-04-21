@@ -16,6 +16,8 @@ namespace DDW.CSharp.Gen
 		private int tabSize = 4;
 		private bool needIndent = true;
 
+		public LineWriter() {}
+
 		public LineWriter(TextWriter tw)
 		{
 			sb = new IndentedTextWriter(tw); 
@@ -38,7 +40,7 @@ namespace DDW.CSharp.Gen
 			}
 		}
 		#endregion
-		public void Write(string s)
+		public virtual void Write(string s)
 		{
 			if(needIndent)
 			{
@@ -48,14 +50,14 @@ namespace DDW.CSharp.Gen
 			column += s.Length;
 			sb.Write(s);
 		}
-		public void WriteLine(string s)
+		public virtual void WriteLine(string s)
 		{
 			column = 1;
 			line++;
 			sb.WriteLine(s);
 			needIndent = true;
 		}
-		public void Write(int s)
+		public virtual void Write(int s)
 		{
 			if(needIndent)
 			{
@@ -65,7 +67,7 @@ namespace DDW.CSharp.Gen
 			column += s.ToString().Length;
 			sb.Write(s);
 		}
-		public void WriteLine(int s)
+		public virtual void WriteLine(int s)
 		{
 			column = 1;
 			line++;
