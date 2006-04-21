@@ -53,6 +53,8 @@ namespace DDW.CSharp.Gen
 		public override void ParseElement(NamespaceDecl gr)
 		{
 			sb.Write("namespace " + gr.Name);
+			AttributeState.Namespace = gr.Name;
+
 			OpenBlock();
 			Parse(gr.Imports);
 			Parse(gr.Types);
@@ -63,6 +65,8 @@ namespace DDW.CSharp.Gen
 		#region MethodDecl *
 		public override void ParseElement(MethodDecl gr)
 		{
+			AttributeState.Method = gr.Name;
+			AttributeState.Type = AttributeState.TargetType.TargetMethod;
 			Parse(gr.Comments);
 			Parse(gr.CustomAttributes);
 			Parse(gr.ReturnTypeCustomAttributes);
@@ -135,6 +139,8 @@ namespace DDW.CSharp.Gen
 		public override void ParseElement(FieldDecl gr)
 		{
 			Parse(gr.Comments);
+			//AttributeCollector.Instance.Field = gr.Name;
+			//AttributeCollector.Instance.Type = AttributeCollector.Instance.Field = AttributeCollector.TargetType.TargetField;
 			Parse(gr.CustomAttributes);
 			ParseElement(gr.Attributes);
 			Parse(gr.Type);
@@ -375,6 +381,8 @@ namespace DDW.CSharp.Gen
 		public override void ParseElement(ClassDecl gr)
 		{
 			Parse(gr.Comments);
+			AttributeState.Class = gr.Name;
+			AttributeState.Type = AttributeState.TargetType.TargetClass;
 			Parse(gr.CustomAttributes);
 			ParseElement(gr.Attributes);
 			sb.Write("class " + gr.Name +" ");
@@ -1115,6 +1123,13 @@ namespace DDW.CSharp.Gen
 		#region CustomAttribute
 		public override void ParseElement(CustomAttribute gr)
 		{
+			/** Added to gather custom attributes */
+			AttributeRepresentation ar = new AttributeRepresentation();
+			ar.TargetType = AttributeState.TypeAsString;
+			ar.TargetLocation = AttributeState.Target;
+			ar.TypeName = gr.Name; // Name may not be fully qualified!
+			/** End */
+
 			sb.Write("[");
 			if(gr.AttributeTarget != AttributeTarget.Empty)
 			{
@@ -1125,6 +1140,11 @@ namespace DDW.CSharp.Gen
 			if(gr.Parameters.Count != 0)
 			{
 				sb.Write("(");
+
+				LineWriter oldWriter = sb;
+				CapturingLineWriter capture = new CapturingLineWriter(oldWriter); // Capture input + write as normal
+				sb = capture;
+
 				string comma = "";
 				foreach(Expression o in gr.Parameters)
 				{
@@ -1132,9 +1152,17 @@ namespace DDW.CSharp.Gen
 					Parse(o);
 					comma = ", ";
 				}
+				ar.ConstructorValues = capture.Text;
+				sb = oldWriter; // Restore normal writer
+
 				sb.Write(")");
 			}			
 			sb.WriteLine("]");
+
+			/** Write the attribute to XML */
+			AttributeWriter.Instance.addAttribute(ar);
+			/** End added code */
+
 		}
 		#endregion
 		#region TypeRef
