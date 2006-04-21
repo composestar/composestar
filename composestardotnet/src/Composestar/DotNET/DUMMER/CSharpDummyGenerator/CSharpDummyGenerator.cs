@@ -14,6 +14,7 @@ using DDW.CSharp.Parse;
 using DDW.CSharp.Dom;
 using DDW.CSharp.Walk;
 using DDW.CSharp.Gen;
+using DDW.CSharp;
 
 namespace DDW.CSharpUI
 {
@@ -24,6 +25,11 @@ namespace DDW.CSharpUI
 		[STAThread]
 		public static int Main(string[] args) 
 		{
+			if (args.Length < 1)
+			{
+				Console.WriteLine("Usage: CSharpDummyGenerator <attribute-xml-filename>");
+				return 2; // Failure
+			}
 			try 
 			{	
 				string filename = "";
@@ -37,6 +43,7 @@ namespace DDW.CSharpUI
 					csg.Close();
 					sr.Close();
 				}
+				AttributeWriter.Instance.writeXML(args[0]);
 			}
 			catch(Exception e) 
 			{
