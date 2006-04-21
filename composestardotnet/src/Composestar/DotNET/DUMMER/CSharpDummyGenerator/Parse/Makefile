@@ -3,7 +3,7 @@ include ${ROOTDIR}common.mk
 
 SUBDIRS=
 
-src:
+src: csharp.g
 	"${CURDIR}/antlr-2.7.2.exe" csharp.g
 
 clean:
