@@ -94,10 +94,20 @@
                     AssemblyName = "antlr.runtime"
                     HintPath = "antlr.runtime.dll"
                 />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.XML"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "Attributes.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "CSharpDummyGenerator.cs"
                     SubType = "Code"
