@@ -18,7 +18,6 @@ CLASSES=ActionsHandler.class \
 	ProjectDependenciesHandler.class \
 	ProjectHandler.class \
 	ProjectSourcesHandler.class \
-	ProjectTypeSourcesHandler.class \
 	RequiredFilesHandler.class \
 	SettingsHandler.class
 

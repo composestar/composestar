@@ -52,14 +52,7 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 			ProjectDependenciesHandler dependencyhandler = new ProjectDependenciesHandler(project,parser,this);
 			parser.setContentHandler( dependencyhandler );
 		}
-		
-		if("TypeSources".equals(raw_name))
-		{// in <Type>	
-			//System.out.println("<typesources>");	
-			//look further
-			ProjectTypeSourcesHandler typesourceshandler = new ProjectTypeSourcesHandler(project,parser,this);
-			parser.setContentHandler( typesourceshandler );
-		}
+			
 	}
 
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException 

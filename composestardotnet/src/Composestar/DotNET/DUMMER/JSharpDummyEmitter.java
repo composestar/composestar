@@ -1,8 +1,9 @@
 package Composestar.DotNET.DUMMER;
 
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
+import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Core.DUMMER.*;
 
 import java.io.*;
@@ -28,7 +29,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	private String packageName = "";
 	private ArrayList packages = new ArrayList();
 	private boolean packageDefinition = false;
-	
+	private Source currentSource = null;
 	
 	//Added attributes
 	private String className = "";
@@ -52,6 +53,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		dummy = new StringBuffer();
 		packageName = "";
 		packages = new ArrayList();
+		currentSource = source;
 		
 		ASTFactory factory = new ASTFactory();
 		AST root = factory.create(ROOT_ID,"AST ROOT");
@@ -86,6 +88,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	}
 	
 	public void createDummies(Collection sources, Collection outputFilenames) throws ModuleException {
+		
 		if (sources.size() != outputFilenames.size())
 			throw new ModuleException("Lists of source- and outputfilenames do not have equal length!", "DUMMER");
 		Iterator srcIter = sources.iterator();
@@ -133,6 +136,17 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 	}
 	//End Attributes Methods
+	
+	// Add type sources
+	public void addTypeSource(String type){
+		if(this.currentSource!=null){
+				Project p = currentSource.getProject();
+				TypeSource ts = new TypeSource();
+				ts.setName(type);
+				ts.setFileName(currentSource.getFileName());
+				p.addTypeSource(ts);
+		}
+	}
 	
 	public void emit() throws ModuleException 
 	{
@@ -267,7 +281,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		return (ast.getFirstChild() != null);
 	}
 	
-	public void interceptMethodBody(AST ast) {
+	public void interceptMethodBody(AST ast){
 		
 		//Attributes
 		if(hasChildren(ast)){
@@ -364,7 +378,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 	}	
 	
-	private void printWithParens(AST parent, AST ast) 
+	private void printWithParens(AST parent, AST ast)
 	{
 		boolean parensNeeded = (getPrecedence(parent) < getPrecedence(ast));
 		if (parensNeeded) {
@@ -596,6 +610,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 				visitChildren(ast, "\n", ATTR, false);
 			}
 			//End attributes
+			
+			// Create type source
+			this.addTypeSource(this.attributeLocation);
+			
 			
 			visit(getChild(ast, EXTENDS_CLAUSE));
 			visit(getChild(ast, IMPLEMENTS_CLAUSE));
