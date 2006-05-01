@@ -1,6 +1,8 @@
 ROOTDIR=../../../../
 include ${ROOTDIR}common.mk
 
+SUBDIRS=CSharpDummyGenerator
+
 CLASSES=CSharpDummyEmitter.class \
 	JSharpDummyEmitter.class \
 	JSharpLexer.class \
