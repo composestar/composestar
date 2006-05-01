@@ -53,7 +53,7 @@ public class DummyManager implements CTCommonModule {
 				//emitter.createDummy(source,target);
 			}
 			// Create all the dummies in one go.
-			emitter.createDummies(sources, outputFilenames);
+			emitter.createDummies(p, sources, outputFilenames);
 			
 			/** compile dummies */
 			LangCompiler comp = (LangCompiler)p.getLanguage().compilerSettings.getCompiler();
