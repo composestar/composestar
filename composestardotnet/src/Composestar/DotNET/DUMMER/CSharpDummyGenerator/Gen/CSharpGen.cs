@@ -386,6 +386,12 @@ namespace DDW.CSharp.Gen
 			Parse(gr.CustomAttributes);
 			ParseElement(gr.Attributes);
 			sb.Write("class " + gr.Name +" ");
+			// Match class - store TypeLocation information
+			// Store Current filename?
+			Console.WriteLine("TypeLocation");
+			Console.WriteLine(CSharpUI.CSharpDummyGenerator.Filename);
+			Console.WriteLine(AttributeState.Target);
+
 			Parse(gr.BaseTypes);
 			OpenBlock();
 			Parse(gr.Members);
