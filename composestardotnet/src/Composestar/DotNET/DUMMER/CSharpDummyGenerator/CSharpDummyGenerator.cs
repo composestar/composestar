@@ -21,6 +21,12 @@ namespace DDW.CSharpUI
 	class CSharpDummyGenerator
 	{
 		private static CSharpAST antlrTree = null;
+		private static string filename; // File currently being parsed
+
+		public static string Filename
+		{
+			get { return filename; }
+		}
 
 		[STAThread]
 		public static int Main(string[] args) 
@@ -32,12 +38,13 @@ namespace DDW.CSharpUI
 			}
 			try 
 			{	
-				string filename = "";
+				filename = "";
 				while ((filename = Console.ReadLine()) != null)
 				{
 					IGraph ig = GetGraph(filename);
 					// Arg[0] = output directory.
-					StreamWriter sr = File.CreateText(Console.ReadLine());
+					string outputFilename = Console.ReadLine();
+					StreamWriter sr = File.CreateText(outputFilename);
 					CSharpGen csg = new CSharpGen(sr);
 					csg.Parse(ig);
 					csg.Close();
