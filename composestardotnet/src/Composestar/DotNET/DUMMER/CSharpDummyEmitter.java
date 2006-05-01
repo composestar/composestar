@@ -35,7 +35,7 @@ public class CSharpDummyEmitter implements DummyEmitter {
 		CSharpDummyProcess dummyGen = new CSharpDummyProcess();
 		try
 		{
-			dummyGen.openProcess();
+			dummyGen.openProcess(project.getProperty("basePath") + "attributes.xml");
             
             Iterator srcIter = sources.iterator();
             Iterator outputIter = outputFilenames.iterator();
