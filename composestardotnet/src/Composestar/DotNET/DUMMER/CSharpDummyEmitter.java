@@ -1,6 +1,7 @@
 package Composestar.DotNET.DUMMER;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -8,13 +9,15 @@ import java.util.Vector;
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
+import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Utils.Debug;
 import Composestar.Utils.StreamGobbler;
 
 public class CSharpDummyEmitter implements DummyEmitter {
 		
-	public void createDummy(Source source, String outputFilename) throws ModuleException
+	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
 	{
 		Vector sources = new Vector(); 
 		sources.add(source);
@@ -22,10 +25,10 @@ public class CSharpDummyEmitter implements DummyEmitter {
 		Vector outputFilenames = new Vector(); 
 		outputFilenames.add(outputFilename);
 		
-		createDummies(sources, outputFilenames);
+		createDummies(project, sources, outputFilenames);
 	}
 
-	public void createDummies(Collection sources, Collection outputFilenames) throws ModuleException
+	public void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException
 	{
 		int result = 0;
 		StringBuffer processOutput = new StringBuffer();
@@ -45,6 +48,7 @@ public class CSharpDummyEmitter implements DummyEmitter {
             dummyGen.getStdin().waitForResult();
             dummyGen.getStderr().waitForResult();
             result = dummyGen.getProcess().waitFor();
+            createTypeLocationMapping(project, dummyGen.getStdin());
 		}
 		catch (Exception e)
 		{
@@ -54,6 +58,28 @@ public class CSharpDummyEmitter implements DummyEmitter {
 		{
 			Debug.out(Debug.MODE_DEBUG, "DUMMER", "CSharpDummyGenerator failed; output from dummy generation process:\n" + dummyGen.getStdin().result());
 			throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed", "DUMMER");
+		}
+	}
+	
+	private void createTypeLocationMapping(Project project, StreamGobbler input)
+	{
+		// Parse output from CSharpDummyGen, if a line starts with the word 'TypeLocation' the next 2 lines
+		// will contain the filename (full path) and name of a class that is defined in that file (FQN)
+		ArrayList in  = input.getResultLines();
+		Iterator i = in.iterator();
+		while (i.hasNext())
+		{
+			String s = (String)i.next();
+			if (s.startsWith("TypeLocation"))
+			{
+				String filename = (String)i.next();
+				String classname = (String)i.next();
+				Debug.out(Debug.MODE_DEBUG, "DUMMER", "Defined mapping: " + filename + "=> " + classname);
+				TypeSource srcLocation = new TypeSource();
+				srcLocation.setFileName(filename);
+				srcLocation.setName(classname);				
+				project.addTypeSource(srcLocation);
+			}
 		}
 	}
 }
@@ -68,14 +94,19 @@ class CSharpDummyProcess
 	{
 	}
 	
-	public void openProcess() throws Exception
+	public void openProcess(String attributesFile) throws Exception
 	{
 		Configuration config = Configuration.instance();
-		String csDummyEmitter = config.getPathSettings().getPath("Composestar") + "binaries/CSharpDummygen.exe";
+		String csDummyEmitter = config.getPathSettings().getPath("Composestar") + "binaries/CSharpDummyGenerator.exe";
 
         Runtime rt = Runtime.getRuntime();
 
-        this.process = rt.exec(csDummyEmitter);
+        String[] command = new String[2];
+        command[0] = csDummyEmitter;
+        command[1] = attributesFile;
+
+        this.process = rt.exec(command);
+        
         stderr = new StreamGobbler( process.getErrorStream() );
         stdin = new StreamGobbler( process.getInputStream() );
         stderr.start();
