@@ -48,7 +48,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		setupTokenNames();
 	}
 	
-	public void createDummy(Source source, String outputFilename) throws ModuleException {	   
+	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException {	   
 		
 		dummy = new StringBuffer();
 		packageName = "";
@@ -59,6 +59,9 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		AST root = factory.create(ROOT_ID,"AST ROOT");
 		
 		try {
+			// Attributes.xml is written to this directory
+			this.basePath = project.getProperty("basePath");
+			
 			FileInputStream fis = new FileInputStream(source.getFileName());
 			// Create a scanner that reads from the input stream passed to us
 			JSharpLexer lexer = new JSharpLexer(fis);
@@ -87,22 +90,8 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		emit();
 	}
 	
-	public void createDummies(Collection sources, Collection outputFilenames) throws ModuleException {
-		
-		if (sources.size() != outputFilenames.size())
-			throw new ModuleException("Lists of source- and outputfilenames do not have equal length!", "DUMMER");
-		Iterator srcIter = sources.iterator();
-		Iterator outIter = outputFilenames.iterator();
-		while (srcIter.hasNext())
-		{
-			Source src = (Source)srcIter.next();
-			if(basePath==""){
-				basePath = ((Project)src.getProject()).getProperty("basePath");
-			}
-			String output = (String)outIter.next();
-			createDummy(src, output);			
-		}
-		
+	public void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException {
+		super.createDummies(project, sources, outputFilenames);
 		writeAttributes();
 	}
 	
