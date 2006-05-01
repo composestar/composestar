@@ -3,6 +3,7 @@ ROOTDIR=./
 include ${ROOTDIR}common.mk
 
 WEAVER=src$(PATHSEP)Composestar$(PATHSEP)DotNET$(PATHSEP)ILICIT$(PATHSEP)Weaver
+CSHARPDUMMYGEN=src$(PATHSEP)Composestar$(PATHSEP)DotNET$(PATHSEP)DUMMER$(PATHSEP)CSharpDummyGenerator
 
 all: build 
 
@@ -64,3 +65,5 @@ installit:
 	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)WeaveLibrary.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)IlWeaver.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)PeWeaver.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "$(CSHARPDUMMYGEN)$(PATHSEP)CSharpDummyGenerator.exe" "$(INSTALLDIR)$PATHSEPbinaries"
+	@$(fileCopy) "$(CSHARPDUMMYGEN)$(PATHSEP)antlr.runtime.dll" "$(INSTALLDIR)$PATHSEPbinaries"
