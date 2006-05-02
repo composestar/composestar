@@ -226,7 +226,7 @@ namespace BuildConfiguration
 				writer.WriteStartDocument();
 
 				// Add comments
-				writer.WriteComment(String.Format("This BuildConfiguration file is automaticly generated on {0} by the Composestar VS Addin.", DateTime.Now.ToString () ) );
+				writer.WriteComment(String.Format("This BuildConfiguration file was automatically generated on {0} by the Composestar VS Addin.", DateTime.Now.ToString () ) );
 				
 				// Start the root
 				writer.WriteStartElement("BuildConfiguration");
@@ -709,37 +709,30 @@ namespace BuildConfiguration
 				{
 					ComposestarVSAddin.Language l = languages.GetLanguage(projectitem.Name);
 
-
-					// Set the language of the project 
-					if (project.Language.Length == 0 && l != null) 
-					{
-						project.Language = l.Name;
-					}
-
 					// Add the file if it is the same language 
-					string sourcename = "";
 					if (l != null) 
 					{
-
 						if (l.Name.Equals("CPS") )
 						{
 							this.ConcernSources.Add(  String.Concat(path, projectitem.Name));
-							continue;
 						}
-
-						sourcename = l.SourceTag;
-
-						if ( l.isCompiler() && !this.mUsedCompilers.Contains(l.Name) ) 
+						else
 						{
-							this.mUsedCompilers.Add(l.Name);
-						}
+							// Set language for this project (if it hasn't been set yet)
+							if (project.Language == null || "".Equals(project.Language))
+								project.Language = l.Name;
 
-						if (!sourcename.Equals(""))
-						{
-							project.Sources.Add(String.Concat(path, projectitem.Name));
+							if ( l.isCompiler() && !this.mUsedCompilers.Contains(l.Name) ) 
+							{
+								this.mUsedCompilers.Add(l.Name);
+							}
+
+							if (! "".Equals(l.SourceTag))
+							{
+								project.Sources.Add(String.Concat(path, projectitem.Name));
+							}
 						}
 					}
-					
 				}
 
 			}
