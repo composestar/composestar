@@ -3472,8 +3472,15 @@ namespace DDW.CSharp.Parse
 				{
 					// can't be array
 					AST trName = tok.getFirstChild();
-					graph.Name = 
-						(trName != null) ? trName.getText() : "";
+					if (trName == null)
+						graph.Name = "";
+					else
+					{
+						string name = trName.getText();
+						while ((trName = trName.getNextSibling()) != null)
+							name+= "." + trName.getText();
+						graph.Name = name;
+					}
 				}
 				else if(tok is Args)
 				{
