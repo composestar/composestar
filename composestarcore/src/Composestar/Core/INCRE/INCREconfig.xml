@@ -328,7 +328,7 @@
 			</dependency>
 		</dependencies>	
 	</module>
-	<module name="BACO" fulltype="Composestar.Core.BACO.BACO" enabled="true" incremental="false" summary="copying libraries...">
+	<module name="BACO" fulltype="Composestar.DotNET.BACO.DotNETBACO" enabled="true" incremental="false" summary="copying libraries...">
 		<dependencies></dependencies>	
 	</module>
 </modules>
