@@ -33,50 +33,10 @@ public class BACO implements CTCommonModule
         
         HashSet filesToCopy = new HashSet();
         
-        // Required Files:
-        Iterator it = config.getPlatform().getRequiredFiles().iterator();
-        while(it.hasNext())
-        {
-        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
-        	filesToCopy.add(this.processString(composestarpath+"binaries/"+it.next()));
-        }
-        
-        // Built Assemblies:
-        //it = config.assemblies.getAssemblies().iterator();
-        it = ((ArrayList)DataStore.instance().getObjectByID("BuiltLibs")).iterator();
-        while(it.hasNext())
-        {
-        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
-        	filesToCopy.add(this.processString((String)it.next()));
-        }
-        
-        // Custom Filters:
-        it = config.getFilters().getCustomFilters().iterator();
-        while(it.hasNext())
-        {
-        	//System.out.println("COPY: "+composestarpath+"binaries\\\t"+it.next()+"\t"+outputpath+"bin/");
-        	CustomFilter filter = (CustomFilter)it.next();
-        	filesToCopy.add(this.processString(filter.getLibrary()));
-        }
-        
-        // Dependencies:
-        it = config.getProjects().getProjects().iterator();
-        while(it.hasNext())
-        {
-        	Project prj = (Project)it.next();
-        	Iterator projectit = prj.getDependencies().iterator();
-        	while(projectit.hasNext())
-        	{
-        		Dependency dependency = (Dependency)projectit.next();
-        		if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0))
-        		{
-        			filesToCopy.add(this.processString(dependency.getFileName()));
-        			//System.err.println("COPY: "+dependency.getFileName());
-        		}
-        	}
-        	String dummies = prj.getCompiledDummies();
-        	filesToCopy.add(this.processString(dummies));
-        }
+        copyRequiredFiles(filesToCopy,config,composestarpath);
+        copyBuildAssemblies(filesToCopy);
+        copyCustomFilters(filesToCopy,config);
+        copyDependencies(config, filesToCopy);
         
         String examplepath = config.getPathSettings().getPath("Base");
         // Repsotory.xml: 
@@ -93,8 +53,59 @@ public class BACO implements CTCommonModule
         	this.copyFile(file,outputpath);
         }		
 	}
+
+	protected boolean checkNeededDependency(Dependency dependency){
+		return true;
+	}
 	
+	protected void copyDependencies(Configuration config, HashSet filesToCopy) {
+        Iterator it = config.getProjects().getProjects().iterator();
+        while(it.hasNext())
+        {
+        	Project prj = (Project)it.next();
+        	Iterator projectit = prj.getDependencies().iterator();
+        	while(projectit.hasNext())
+        	{
+        		Dependency dependency = (Dependency)projectit.next();
+        		if(checkNeededDependency(dependency))
+        		{
+        			filesToCopy.add(this.processString(dependency.getFileName()));
+        			//System.err.println("COPY: "+dependency.getFileName());
+        		}
+        	}
+        	String dummies = prj.getCompiledDummies();
+        	filesToCopy.add(this.processString(dummies));
+        }
+	}
 	
+	protected void copyCustomFilters(HashSet filesToCopy, Configuration config){
+        Iterator it = config.getFilters().getCustomFilters().iterator();
+        while(it.hasNext())
+        {
+        	//System.out.println("COPY: "+composestarpath+"binaries\\\t"+it.next()+"\t"+outputpath+"bin/");
+        	CustomFilter filter = (CustomFilter)it.next();
+        	filesToCopy.add(this.processString(filter.getLibrary()));
+        }
+	}
+	
+	protected void copyRequiredFiles(HashSet filesToCopy, Configuration config, String composestarpath){
+        Iterator it = config.getPlatform().getRequiredFiles().iterator();
+        while(it.hasNext())
+        {
+        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
+        	filesToCopy.add(this.processString(composestarpath+"binaries/"+it.next()));
+        }
+	}
+	
+	protected void copyBuildAssemblies(HashSet filesToCopy){
+        //it = config.assemblies.getAssemblies().iterator();
+        Iterator it = ((ArrayList)DataStore.instance().getObjectByID("BuiltLibs")).iterator();
+        while(it.hasNext())
+        {
+        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
+        	filesToCopy.add(this.processString((String)it.next()));
+        }
+	}
 	
 	public void copyFile(String file, String outputpath) throws ModuleException
 	{
@@ -152,7 +163,7 @@ public class BACO implements CTCommonModule
 		}
 	}
 	
-	private String processString(String in)
+	protected String processString(String in)
 	{
 		String tmp = in;
 		if(tmp.startsWith("\""))
