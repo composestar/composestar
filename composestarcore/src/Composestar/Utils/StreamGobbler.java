@@ -1,9 +1,11 @@
 package Composestar.Utils;
 
-import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Internal class for CmdExec. It handles input from a running program. These are 
@@ -14,7 +16,7 @@ import java.io.InputStream;
  */
 public class StreamGobbler extends Thread {
     private InputStream Is;
-    private String Result = "";
+    private ArrayList output;
     
     /**
      * ctor
@@ -22,7 +24,8 @@ public class StreamGobbler extends Thread {
      * @roseuid 404DCCF400D4
      */
     public StreamGobbler(InputStream is) {
-     Is = is;     
+     Is = is;
+     output = new ArrayList(32);
     }
     
     /**
@@ -31,7 +34,18 @@ public class StreamGobbler extends Thread {
      * @roseuid 404DCCF40151
      */
     public String result() {
-     return Result;     
+    	StringBuffer out = new StringBuffer();
+    	Iterator i = output.iterator();
+    	while (i.hasNext())
+    	{
+    		out.append((String)i.next());
+    		out.append('\n');
+    	}
+    	return out.toString();
+    }
+    
+    public ArrayList getResultLines() {
+    	return output;
     }
     
     /**
@@ -40,16 +54,18 @@ public class StreamGobbler extends Thread {
      * @roseuid 404DCCF4017F
      */
     public void run() {
-     try{
-  	InputStreamReader isr = new InputStreamReader( Is );
-  	BufferedReader br = new BufferedReader( isr );
-  	String line = null;
-  	while( (line = br.readLine()) != null ) Result += line + "\n";
-  	}catch( IOException ioe ) {
-  	System.out.println( "StreamGobbler::run - This should be impossible, sorry!" );
-  	ioe.printStackTrace();
-     }
-     done();     
+    	try {
+    		InputStreamReader isr = new InputStreamReader( Is );
+    		BufferedReader br = new BufferedReader( isr );
+    		String line = null;
+    		while( (line = br.readLine()) != null )
+    			output.add(line);
+    	}
+    	catch( IOException ioe ) {
+    		System.out.println( "StreamGobbler::run - This should be impossible, sorry!" );
+    		ioe.printStackTrace();
+    	}
+    	done();     
     }
     
     /**
