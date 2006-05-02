@@ -65,5 +65,5 @@ installit:
 	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)WeaveLibrary.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)IlWeaver.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "$(WEAVER)$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)PeWeaver.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
-	@$(fileCopy) "$(CSHARPDUMMYGEN)$(PATHSEP)CSharpDummyGenerator.exe" "$(INSTALLDIR)$PATHSEPbinaries"
-	@$(fileCopy) "$(CSHARPDUMMYGEN)$(PATHSEP)antlr.runtime.dll" "$(INSTALLDIR)$PATHSEPbinaries"
+	@$(fileCopy) "$(CSHARPDUMMYGEN)$(PATHSEP)CSharpDummyGenerator.exe" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "$(CSHARPDUMMYGEN)$(PATHSEP)antlr.runtime.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
