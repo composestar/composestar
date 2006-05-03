@@ -114,6 +114,11 @@
                     AssemblyName = "jukeboxframe"
                     HintPath = "jukeboxframe\bin\Debug\jukeboxframe.dll"
                 />
+                <Reference
+                    Name = "ComposeStarUtilities"
+                    AssemblyName = "ComposeStarUtilities"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
+                />
             </References>
         </Build>
         <Files>
