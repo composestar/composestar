@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETType.java,v 1.4 2006/03/14 18:19:16 roy_ Exp $
+ * $Id: DotNETType.java,v 1.5 2006/03/15 08:39:48 dspenkel Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -637,62 +637,68 @@ public class DotNETType extends Type {
 		return name;   
     } 
     
-    /**
-     * @return java.lang.String
-     * @roseuid 40FD2B8802E7
-     */
-    public String ilType() {
-		if( this.FullName.equals("System.Void"))
-			return "void";
-		else
-			return "class [" + this.assemblyName() + "]"+ this.ilName(); 
+    
+    public String useArrayType(String type){
+    	if(type.endsWith("[]")){
+    		return "[]";
+    	}
+    	else return "";
     }
+    
     
     /**
      * Converts a .net type to IL data type as defined at
      * http://www.codeproject.com/dotnet/ilassembly.asp
      * 
      * @return an IL datatype
-     */
-    public String ilName() {
-		if (this.FullName.equals("System.Boolean")) 
-			return "Bool";
-		else if (this.FullName.equals("System.Char")) 
-			return "Char";
-		else if (this.FullName.equals("System.SByte")) 
-			return "int8";
-		else if (this.FullName.equals("System.Int16")) 
-			return "int16";
-		else if (this.FullName.equals("System.Int32")) 
-			return "int32";
-		else if (this.FullName.equals("System.64")) 
-			return "int64";
-		else if (this.FullName.equals("System.IntPtr")) 
-			return "native int";
-		else if (this.FullName.equals("System.Byte")) 
-			return "unsigned int8";
-		else if (this.FullName.equals("System.UInt16")) 
-			return "unsigned int16";
-		else if (this.FullName.equals("System.UInt32")) 
-			return "unsigned int32";
-		else if (this.FullName.equals("System.UInt64")) 
-			return "unsigned int64";
-		else if (this.FullName.equals("System.UIntPtr")) 
-			return "native unsigned int";
-		else if (this.FullName.equals("System.Single")) 
-			return "Float32";
-		else if (this.FullName.equals("System.Double")) 
-			return "Float64";
-		else if (this.FullName.equals("System.Object")) 
-			return "object";
-		else if (this.FullName.equals("System.IntPtr")) 
-			return "*";
-		else if (this.FullName.equals("System.Array")) 
-			return "Array";
-		else if (this.FullName.equals("System.String")) 
-			return "string";
+     */ 
+    public String ilType() {
+    	String fullName = this.FullName;
+    	String arrayPart = "";
+    	if(fullName.endsWith("[]")){
+    		fullName = fullName.substring(0,fullName.length()-2);
+    		arrayPart = "[]";
+    	}
+		if( fullName.equals("System.Void"))
+			return "void" + arrayPart;
+		else if (fullName.equals("System.Boolean")) 
+			return "bool" + arrayPart;
+		else if (fullName.equals("System.Char")) 
+			return "Char" + arrayPart;
+		else if (fullName.equals("System.SByte")) 
+			return "int8" + arrayPart;
+		else if (fullName.equals("System.Int16")) 
+			return "int16" + arrayPart;
+		else if (fullName.equals("System.Int32")) 
+			return "int32" + arrayPart;
+		else if (fullName.equals("System.64")) 
+			return "int64" + arrayPart;
+		else if (fullName.equals("System.IntPtr")) 
+			return "native int" + arrayPart;
+		else if (fullName.equals("System.Byte")) 
+			return "unsigned int8" + arrayPart;
+		else if (fullName.equals("System.UInt16")) 
+			return "unsigned int16" + arrayPart;
+		else if (fullName.equals("System.UInt32")) 
+			return "unsigned int32" + arrayPart;
+		else if (fullName.equals("System.UInt64")) 
+			return "unsigned int64" + arrayPart;
+		else if (fullName.equals("System.UIntPtr")) 
+			return "native unsigned int" + arrayPart;
+		else if (fullName.equals("System.Single")) 
+			return "Float32" + arrayPart;
+		else if (fullName.equals("System.Double")) 
+			return "Float64" + arrayPart;
+		else if (fullName.equals("System.Object")) 
+			return "object" + arrayPart;
+		else if (fullName.equals("System.IntPtr")) 
+			return "*" + arrayPart;
+		else if (fullName.equals("System.Array")) 
+			return "Array" + arrayPart;
+		else if (fullName.equals("System.String")) 
+			return "string" + arrayPart;
 		else
-			return this.FullName;
+			return "class [" + this.assemblyName() + "]"+ fullName + arrayPart; 
     }
     
     /** Stuff for LOLA **/
