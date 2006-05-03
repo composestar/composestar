@@ -195,8 +195,6 @@ public class ClassModifier extends TransformerBase {
 			{
 				String iltype =((DotNETType)paramType).ilType();
 				
-				if (iltype.equalsIgnoreCase("class [mscorlib]string")) iltype = "string";
-				
 				writenn( iltype + " " + param.name());
 
 				if( it.hasNext() )
