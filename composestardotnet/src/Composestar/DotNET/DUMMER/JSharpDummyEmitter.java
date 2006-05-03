@@ -592,7 +592,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 
 			//Added attributes
 			this.className = getChild(ast, IDENT).getText();
-			this.attributeLocation = this.packageName+"."+this.className;
+			this.attributeLocation = this.getPackageName() +"."+this.className;
 			this.attributeTarget = "Class";
 			//if there are attributes
 			if(hasChildren(ast)){
@@ -635,7 +635,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			break;
 			
 		case DOT:
-			if(this.packageDefinition)
+			if(this.packageDefinition && !child1.getText().equals("."))
 				this.packages.add(child1.getText());
 			visit(child1);
 			out(".");
