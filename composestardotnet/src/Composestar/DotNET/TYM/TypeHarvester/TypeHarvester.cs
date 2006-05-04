@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: TypeHarvester.cs,v 1.2 2006/02/16 17:50:18 composer Exp $
+ * $Id: TypeHarvester.cs,v 1.1 2006/02/16 23:11:02 pascal_durr Exp $
  */
 
 using System.Xml;
@@ -598,7 +598,7 @@ public class TypeHarvester
 		}
    }
 
-   public static void Main(string[] args)
+   public static int Main(string[] args)
    {
        if (args.Length == 0 )
        {
@@ -632,12 +632,12 @@ public class TypeHarvester
                try{
                    asm = Assembly.LoadFrom( dll );
                } catch( System.IO.FileNotFoundException ) {
-                   Console.WriteLine( "File not found " + dll + ". Skipping." );
+                   Console.Error.WriteLine( "File not found " + dll + ". Skipping." );
                    continue;
                }
 			   catch(System.ArgumentException)
 			   {
-				   Console.WriteLine( "Cannot harvest type of " + dll + ". Skipping." );
+				   Console.Error.WriteLine( "Cannot harvest type of " + dll + ". Skipping." );
 				   continue;
 			   }
 			   Type[] types = null;
@@ -646,7 +646,7 @@ public class TypeHarvester
 				   types = asm.GetTypes();
 				   foreach( Type singleType in types )
 				   {
-					   //Console.WriteLine("Type "+singleType.Name+" in "+dllName);
+					   //Console.Error.WriteLine("Type "+singleType.Name+" in "+dllName);
 					   HarvesterType htype = new HarvesterType(dll,singleType);
 					   //thing.getTypeInfo( singleType );
 					   thing.getTypeInfo(htype);
@@ -659,10 +659,11 @@ public class TypeHarvester
 				   string inner = "";
 				   while(e != null)
 				   {
-						Console.WriteLine(inner + "Exception:" + e.Message);
+						Console.Error.WriteLine(inner + "Exception:" + e.Message);
 					   inner += "Inner";
 					   e = e.InnerException;
 				   }
+				   return 1; // Error!
 			   }
 
 			   // take care of the pending types
@@ -672,6 +673,7 @@ public class TypeHarvester
            thing.finish();
 		   //Console.WriteLine(""+thing.count+ " types found!");
        }
+	   return 0;
    }
 
 	public class HarvesterType
