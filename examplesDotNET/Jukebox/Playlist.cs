@@ -24,7 +24,7 @@ namespace Jukebox
 		}
 		
 		// TBD: 4c
-		[Semantics("song.play,target.read,message.return")]
+		[Composestar.RuntimeDotNET.Semantics("song.play,target.read,message.return")]
 		public void enqueue(ReifiedMessage message)
 		{
 			Song song = (Song) message.getTarget();
@@ -47,7 +47,7 @@ namespace Jukebox
 			Console.WriteLine("Queue empty.");
 		}
 
-		[StateChange]
+		[Jukebox.StateChange]
 		public Song dequeueSong()
 		{
 			if( songs.Count > 0 )
@@ -60,7 +60,7 @@ namespace Jukebox
 			}
 		}
 
-		[StateChange]
+		[Jukebox.StateChange]
 		public void enqueueSong(Song song)
 		{
 			songs.Enqueue(song);
