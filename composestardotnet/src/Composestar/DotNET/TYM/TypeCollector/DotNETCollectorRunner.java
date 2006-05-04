@@ -4,30 +4,33 @@
 
 package Composestar.DotNET.TYM.TypeCollector;
 
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
-import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.LAMA.*;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.TYM.TypeCollector.CollectorRunner;
-
-import Composestar.DotNET.LAMA.*;
-import Composestar.DotNET.TYM.TypeCollector.DocumentHandler;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
- 
-import org.xml.sax.XMLReader;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.TYM.TypeCollector.CollectorRunner;
+import Composestar.DotNET.LAMA.DotNETType;
 
 public class DotNETCollectorRunner implements CollectorRunner {
     
@@ -60,9 +63,19 @@ public class DotNETCollectorRunner implements CollectorRunner {
             DocumentHandler handler = new DocumentHandler( parser );
             parser.setContentHandler( handler );
             parser.parse( new InputSource( tempFolder + "types.xml" ));
-        }catch( Exception e ){
-            throw new ModuleException( e.getMessage() );
-        }
+    	}
+    	catch (SAXException e1)
+    	{
+    		throw new ModuleException("XML Parser exception: " + e1.getMessage(), "TYM");
+    	}
+    	catch (ParserConfigurationException e2)
+    	{
+    		throw new ModuleException("Parser Configuration exception: "+ e2.getMessage(), "TYM");
+    	}
+    	catch (IOException e3)
+    	{
+    		throw new ModuleException("I/O exception while parsing types.xml: "+ e3.getMessage(), "TYM");
+    	}
     	
         int count = 0;
 		DataStore dataStore = DataStore.instance();
@@ -104,12 +117,12 @@ public class DotNETCollectorRunner implements CollectorRunner {
 				}
 				else 
 				{
-					throw new ModuleException( "CollectorRunner: Can only handle concerns with source file implementations or direct class links." );
+					throw new ModuleException( "CollectorRunner: Can only handle concerns with source file implementations or direct class links.", "TYM" );
 				}
         		
         		// transform source name into assembly name blaat.java --> blaat.dll
         		if( !typeMap.containsKey( className ) ) {
-        			throw new ModuleException( "Implementation: " + className + " for concern: " + concern.getName() + " not found!" );
+        			throw new ModuleException( "Implementation: " + className + " for concern: " + concern.getName() + " not found!", "TYM" );
         			
         		}
         		DotNETType type = (DotNETType)typeMap.get(className);
