@@ -5,14 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DataStore.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
+ * $Id: DataStore.java,v 1.2 2006/02/24 16:02:05 dspenkel Exp $
  */
 /**
  *   The Repository part of the Compose* project.
  *   It supports reading and writing objects.
  *   It allows for basic store and restore operations
  *   @author Pascal DŸrr
- *   @version $Id: DataStore.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
+ *   @version $Id: DataStore.java,v 1.2 2006/02/24 16:02:05 dspenkel Exp $
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
 /**
  * @modelguid {A1641B28-AC6E-42C3-A196-95AEBCF46B38}
@@ -191,7 +192,7 @@ public class DataStore implements Serializable, Cloneable {
    */
   public String addObject(String id, Object obj) {
 	
-	  /*if (obj instanceof ConcernReference) 
+	  /*if (obj instanceof ConcernReference)
 	  {
 	  		ConcernReference cref = (ConcernReference)obj;
 	  		Debug.out(Debug.MODE_DEBUG,"DataStore","Adding object '" + id + "' to map with id '" + cref.getName()+"'.");
