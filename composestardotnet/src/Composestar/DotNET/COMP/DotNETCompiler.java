@@ -88,7 +88,8 @@ public class DotNETCompiler implements LangCompiler{
         	if(new File(target).exists() && incre.isProcessedByModule(s,"RECOMA") ){
         		Debug.out(Debug.MODE_DEBUG, "INCRE","No need to recompile "+s.getFileName());
         		Configuration.instance().getLibraries().addLibrary(target);
-        		compiledSources.add(target);
+        		//compiledSources.add(target);
+        		p.addCompiledSource(target);
         		TypeLocations tl = TypeLocations.instance();
             	tl.setSourceAssembly(s.getFileName(),s.getTarget());
         		continue; // next source plz
@@ -114,7 +115,9 @@ public class DotNETCompiler implements LangCompiler{
         	command = lang.compilerSettings.getProperty("executable")+" "+ command;
         	
         	Configuration.instance().getLibraries().addLibrary(target);
-        	compiledSources.add(target);
+        	//compiledSources.add(target);
+        	p.addCompiledSource(target);
+        	
         	TypeLocations tl = TypeLocations.instance();
         	tl.setSourceAssembly(s.getFileName(),s.getTarget());
         	
@@ -133,7 +136,7 @@ public class DotNETCompiler implements LangCompiler{
             
              if( result != 0 ) { // there was an error
              	if (compilerOutput.length() == 0){
-                		compilerOutput = "Could not execute compiler. Make sure the .net framework 1.1 folder is set in the path and restart Visual Studio.";
+                		compilerOutput = "Could not execute compiler. Make sure the .NET Framework folder is set in the path and restart Visual Studio.";
              	}
                 	try
      			{

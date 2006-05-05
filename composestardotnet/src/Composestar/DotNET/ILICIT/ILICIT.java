@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.18 2006/03/17 16:18:49 reddog33hummer Exp $
+ * $Id: ILICIT.java,v 1.19 2006/04/20 11:02:15 roy_ Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.18 2006/03/17 16:18:49 reddog33hummer Exp $
+ * $Id: ILICIT.java,v 1.19 2006/04/20 11:02:15 roy_ Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.18 $";
+	public static final String version = "$Revision: 1.19 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -63,9 +63,10 @@ public class ILICIT implements WEAVER {
 	 String weavefile = "\"" + tempPath + "weavespec.xml" + '\"';
 	      
      //ArrayList compiledSources = (ArrayList) resources.getResource("CompiledSources");
-	 ArrayList compiledSources = Configuration.instance().getLibraries().getLibraries(); 
+	 //ArrayList compiledSources = Configuration.instance().getLibraries().getLibraries();
+	 ArrayList compiledSources = Configuration.instance().getProjects().getCompiledSources();
 	 ArrayList builtAssemblies = new ArrayList();
-	 ArrayList toBeWeaved = new ArrayList();
+	 ArrayList toBeWoven = new ArrayList();
 	 
 	 // make a copy of the built binaries 
 	 Iterator binItr = compiledSources.iterator();
@@ -76,16 +77,16 @@ public class ILICIT implements WEAVER {
 		 File source = new File(asm);
 		 String target = FileUtils.fixFilename(weavePath+File.separator+source.getName());
 		 if(!INCRE.instance().isProcessedByModule(asm,"ILICIT")){
-			 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
+			 Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory...");
 			 FileUtils.copyFile(target,source.getAbsolutePath());
 			 String pdbFileName = FileUtils.removeExtension(source.getAbsolutePath()) + ".pdb";
 			 if(FileUtils.fileExist(pdbFileName)){
-				 Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+pdbFileName+" to Weaver directory...");
+				 Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+pdbFileName+" to Weaver directory...");
 				 File pdb = new File(pdbFileName);
 				 FileUtils.copyFile(FileUtils.removeExtension(target) + ".pdb",pdb.getAbsolutePath());
 			 }
 			 builtAssemblies.add(target);
-			 toBeWeaved.add(target);
+			 toBeWoven.add(target);
 		 }
 		 else {
 			 // no need to weave the file
@@ -103,7 +104,7 @@ public class ILICIT implements WEAVER {
 	 {  
 			String asm = FileUtils.prepareCommand((String)dumIt.next());
 			File asmFile = new File(asm);
-			Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
+			Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory...");
 			FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
 	 }
 	 /*
@@ -114,9 +115,9 @@ public class ILICIT implements WEAVER {
 	 String pdbFileName = FileUtils.removeExtension(weavePath+File.separator+asmFile.getName()) + ".pdb";
 	 */
 	 
-	 Debug.out(Debug.MODE_DEBUG,"ILICIT","File list: "+Configuration.instance().getLibraries().getLibraries());
+	 Debug.out(Debug.MODE_DEBUG,"ILICIT","To be woven file list: "+toBeWoven);
 	 //ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
-	 String[] assemblyPaths = (String[]) toBeWeaved.toArray(new String[toBeWeaved.size()]);
+	 String[] assemblyPaths = (String[]) toBeWoven.toArray(new String[toBeWoven.size()]);
 	 String targets = "";
 	 int assembliesSize = assemblyPaths.length;
 	 if(assembliesSize > 0 )

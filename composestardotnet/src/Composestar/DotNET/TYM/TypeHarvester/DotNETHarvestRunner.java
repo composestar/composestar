@@ -145,6 +145,7 @@ public class DotNETHarvestRunner implements HarvestRunner {
     	ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
 		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		
+		//dummies.add(Configuration.instance().getPathSettings().getPath("Base")+"obj/dummies.dll");
 		
 		if( dummies == null )
 			throw new ModuleException("TYM TypeHarvester needs compiled dummies which is missing.");
