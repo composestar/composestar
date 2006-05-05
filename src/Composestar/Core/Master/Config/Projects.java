@@ -17,6 +17,7 @@ public class Projects implements Serializable{
 	private HashMap projectsByLanguage;
 	private ArrayList dependencies;
 	private ArrayList compiledDummies;
+	private ArrayList compiledSources;
 	
 	public Projects() {
 		properties = new Properties();
@@ -25,6 +26,7 @@ public class Projects implements Serializable{
 		projectsByLanguage = new HashMap();
 		dependencies = new ArrayList();
 		compiledDummies = new ArrayList();
+		compiledSources = new ArrayList();
 	}
 	
 	public void addConcernSource(ConcernSource concernsource) {
@@ -81,6 +83,18 @@ public class Projects implements Serializable{
 			}
 		}
 		return compiledDummies;
+	}
+	
+	public ArrayList getCompiledSources() {
+		compiledSources = new ArrayList();
+		Iterator projIt = projects.iterator();
+		while( projIt.hasNext() ) {
+			Project p = (Project)projIt.next();
+			if(p.getCompiledSources()!= null) {
+				compiledSources.addAll(p.getCompiledSources());
+			}
+		}
+		return compiledSources;
 	}
 	
 	public ArrayList getDependencies() {

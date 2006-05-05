@@ -12,6 +12,7 @@ public class Project implements Serializable
 	private ArrayList typeSources;
 	private Language language;
 	private String compiledDummies;
+	private ArrayList compiledSources;
 	
 	public Project() {
 		properties = new Properties();
@@ -19,6 +20,7 @@ public class Project implements Serializable
 		sources = new ArrayList();
 		typeSources = new ArrayList();
 		language = new Language();
+		compiledSources = new ArrayList();
 	}
 	
 	public void addProperty(String key, String value) {
@@ -70,5 +72,13 @@ public class Project implements Serializable
 	
 	public String getCompiledDummies() {
 		return compiledDummies;
+	}
+	
+	public void addCompiledSource(String source) {
+		compiledSources.add(source);
+	}
+	
+	public ArrayList getCompiledSources() {
+		return this.compiledSources;
 	}
 }

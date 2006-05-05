@@ -67,7 +67,7 @@ public class BACO implements CTCommonModule
         	while(projectit.hasNext())
         	{
         		Dependency dependency = (Dependency)projectit.next();
-        		if(checkNeededDependency(dependency))
+        		if(checkNeededDependency(dependency) && !(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0))
         		{
         			filesToCopy.add(this.processString(dependency.getFileName()));
         			//System.err.println("COPY: "+dependency.getFileName());

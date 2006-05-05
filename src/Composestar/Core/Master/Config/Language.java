@@ -34,7 +34,7 @@ public class Language implements Serializable{
 			return emitter;
 		}
 		catch(Exception e) {
-			throw new ModuleException("Error while instantiating dummyemitter","DUMMER");
+			throw new ModuleException("Error while instantiating Dummy Emitter: "+this.dummyEmitter,"DUMMER");
 		}
 	}
 	

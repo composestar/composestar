@@ -88,7 +88,7 @@ public class UnitDictionary
   	  
         if (nameTypeTable.containsKey(name)) // In this case the unit will *NOT* have been added anywhere!
         {
-        	System.out.println("Duplicate key for unit with unique name: "+name);
+        	Debug.out(Debug.MODE_WARNING,"LOLA","Duplicate key for unit with unique name: "+name);
         	return;
         	//throw new ModelClashException("Duplicate key for unit with unique name");
         }
