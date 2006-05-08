@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.8 2006/03/14 12:53:54 pascal_durr Exp $
+ * $Id: SIGN.java,v 1.9 2006/03/16 14:46:25 pascal_durr Exp $
  * 
 **/
 
@@ -618,23 +618,30 @@ public class SIGN implements CTCommonModule
 										
 										//the method must not be implemented in the inner already
 										if(!signature.hasMethod(matchingSelectorName)){	
-											
-											//retrieve internal and external
-											Iterator internalIter = fm.getInternalIterator();
-											Iterator externalIter = fm.getExternalIterator();
-											TypedDeclaration internalOrExternal=null;
-											while(internalIter.hasNext() || externalIter.hasNext()){
-												if(internalIter.hasNext())
-													internalOrExternal = (TypedDeclaration)internalIter.next();
-												 else
-													internalOrExternal = (TypedDeclaration)externalIter.next();
-												if(internalOrExternal.getName().equals(substitutionTargetName)){
-													break;
-												}
+											Concern foundConcern;
+											//The method to convert is defined in inner, an internal or external
+											if(substitutionTargetName.equals("*")){
+												//method is in inner
+												foundConcern = concern;
 											}
-											Concern foundConcern = internalOrExternal.getType().getRef();
+											else{
+												//method is in internal or external
+												Iterator internalIter = fm.getInternalIterator();
+												Iterator externalIter = fm.getExternalIterator();
+												TypedDeclaration internalOrExternal=null;
+												while(internalIter.hasNext() || externalIter.hasNext()){
+													if(internalIter.hasNext())
+														internalOrExternal = (TypedDeclaration)internalIter.next();
+													else
+														internalOrExternal = (TypedDeclaration)externalIter.next();
+													if(internalOrExternal.getName().equals(substitutionTargetName)){
+														break;
+													}
+												}
+												foundConcern = internalOrExternal.getType().getRef();
+											}
 											if (foundConcern != null){
-												//retrieve methodinfo from internal
+												//retrieve methodinfo
 												LinkedList methods = getMethodList(foundConcern);
 												MethodInfo mi;
 												for (int i = 0; i < methods.size(); i++){
