@@ -299,7 +299,7 @@
 			</dependency>
 		</dependencies>	
 	</module>
-	<module name="BACO" fulltype="Composestar.Core.BACO.BACO" enabled="false" incremental="false" summary="copying libraries...">
+	<module name="BACO" fulltype="Composestar.Java.BACO.JavaBACO" enabled="false" incremental="false" summary="copying libraries...">
 		<dependencies></dependencies>	
 	</module>
 </modules>
