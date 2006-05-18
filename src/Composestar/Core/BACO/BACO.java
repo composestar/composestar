@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class BACO implements CTCommonModule
+public abstract class BACO implements CTCommonModule
 {
 
 	public void run(CommonResources resources) throws ModuleException
@@ -54,9 +54,7 @@ public class BACO implements CTCommonModule
         }		
 	}
 
-	protected boolean checkNeededDependency(Dependency dependency){
-		return true;
-	}
+	protected abstract boolean checkNeededDependency(Dependency dependency);
 	
 	protected void copyDependencies(Configuration config, HashSet filesToCopy) {
         Iterator it = config.getProjects().getProjects().iterator();
@@ -67,7 +65,7 @@ public class BACO implements CTCommonModule
         	while(projectit.hasNext())
         	{
         		Dependency dependency = (Dependency)projectit.next();
-        		if(checkNeededDependency(dependency) && !(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0))
+        		if(checkNeededDependency(dependency))
         		{
         			filesToCopy.add(this.processString(dependency.getFileName()));
         			//System.err.println("COPY: "+dependency.getFileName());
@@ -114,51 +112,25 @@ public class BACO implements CTCommonModule
 			File in = new File(file);
 			String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator)+1);
 			File out = new File(outputpath+tmp);
-			if(in.exists())
+						    
+			FileInputStream fis  = new FileInputStream(in);
+			FileOutputStream fos = new FileOutputStream(out);
+			byte[] buf = new byte[1024];
+			for(int i = 0;(i=fis.read(buf))!=-1;)
 			{
-				if(in.isFile())
-				{
-					if(in.canRead())
-					{
-						if(true)
-						{
-						    FileInputStream fis  = new FileInputStream(in);
-						    FileOutputStream fos = new FileOutputStream(out);
-						    byte[] buf = new byte[1024];
-						    int i = 0;
-						    while((i=fis.read(buf))!=-1)
-						    {
-						      fos.write(buf, 0, i);
-						    }
-						    fis.close();
-						    fos.close();
-						}
-						else
-						{
-							throw new ModuleException("Failed to copy file: "+out.getAbsolutePath()+", output file can not be written!","BACO");
-						}
-					}
-					else
-					{
-						throw new ModuleException("Failed to copy file: "+in.getAbsolutePath()+", input file can not be read!","BACO");
-					}
-				}
-				else
-				{
-					throw new ModuleException("Failed to copy file: "+in.getAbsolutePath()+", input file is a directory!","BACO");
-				}
+			     fos.write(buf, 0, i);
 			}
-			else
-			{
-				throw new ModuleException("Failed to copy file: "+in.getAbsolutePath()+", file does not exist!","BACO");
-			}
+			fis.close();
+			fos.close();
 		}
 		catch(FileNotFoundException fnfe)
 		{
+			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not Found:" + fnfe.getMessage());
 			fnfe.printStackTrace();
 		}
 		catch(IOException fnfe)
 		{
+			Debug.out(Debug.MODE_CRUCIAL,"BACO","IOException:" + fnfe.getMessage());
 			fnfe.printStackTrace();
 		}
 	}
