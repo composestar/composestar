@@ -34,8 +34,7 @@ runtime: src
 	
 src:
 	-${DEL} error.log ${NULL}
-	"devenv.exe" composestarruntimedotnet.sln /rebuild Release /out error.log
-	type error.log	
+	("devenv.exe" composestarruntimedotnet.sln /rebuild Release /out error.log || (@type error.log && _fail 2>NUL))
 
 clean:
 	${DEL} error.log ${NULL}
