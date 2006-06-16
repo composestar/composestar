@@ -5,8 +5,8 @@ namespace ExampleAOP
 	/// <summary>
 	/// Interface defining the update facility for any kind of observer internal.
 	/// </summary>
-	public interface IObserver
+	public abstract class IObserver
 	{
-		void Update(Subject s);
+		public abstract void Update(Subject s);
 	}
 }
