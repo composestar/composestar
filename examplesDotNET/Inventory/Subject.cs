@@ -17,12 +17,12 @@ namespace ExampleAOP
 			observers = new ArrayList();
 		}
 
-		public void Attach(IObserver o)
+		public void Attach(Observer o)
 		{
 			observers.Add(o);
 		}
 
-		public void Detach(IObserver o)
+		public void Detach(Observer o)
 		{
 			observers.Remove(o);
 		}
@@ -30,7 +30,7 @@ namespace ExampleAOP
 		public void Notify(ReifiedMessage rm)
 		{
 			rm.proceed();
-			foreach(IObserver o in observers)
+			foreach(Observer o in observers)
 			{
 				o.Update(this);
 			}

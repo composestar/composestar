@@ -7,7 +7,7 @@ namespace ExampleAOP
 	/// <summary>
 	/// Internal for observer filter module imposed on InventoryDisplay.
 	/// </summary>
-	public class ObserverInventoryDisplay : IObserver
+	public class ObserverInventoryDisplay : Observer
 	{
 		private Subject subject;
 
