@@ -27,6 +27,11 @@ namespace ExampleAOP
 			observers.Remove(o);
 		}
 
+		public bool Observed()
+		{
+			return (observers.Count > 0);
+		}
+
 		public void Notify(ReifiedMessage rm)
 		{
 			rm.proceed();

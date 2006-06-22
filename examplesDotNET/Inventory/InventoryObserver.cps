@@ -2,11 +2,13 @@ concern InventoryObserver in ExampleAOP {
 	filtermodule SubjectInventoryFilter {
 		internals
 			subject: ExampleAOP.Subject;
+		conditions
+			observed: subject.Observed();
 		inputfilters
 			attach: Dispatch = {[*.Attach] subject.Attach};
 			detach: Dispatch = {[*.Detach] subject.Detach};
-			change: Meta = {[*.AddProduct] subject.Notify,
-			                [*.RemoveProduct] subject.Notify}
+			change: Meta = {observed => [*.AddProduct] subject.Notify,
+			                observed => [*.RemoveProduct] subject.Notify}
 	}
 
 	/*
