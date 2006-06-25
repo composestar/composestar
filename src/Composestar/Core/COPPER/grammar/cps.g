@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.8 2006/03/09 10:18:39 doornenbal Exp $
+ * $Id: cps.g,v 1.9 2006/04/05 07:11:51 doornenbal Exp $
  */
 
 /**
@@ -56,6 +56,7 @@ tokens {                                //extra tokens used in constructing the 
         NOTEXPR_;
         MPSET_;
         MP_;
+        MPART_;
         OCL_;
         OFILTER_;
         OREXPR_;
@@ -63,6 +64,8 @@ tokens {                                //extra tokens used in constructing the 
         SELEC_;
         SELEXP_;
         SOURCE_;
+        SPART_;
+        TSSET_;
         TARGET_;
         TYPELIST_;
         TYPE_;
@@ -184,14 +187,33 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                 | messagePattern)
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
-                messagePattern : (LSQUARE targetSelector RSQUARE! (targetSelector)? // name
-                     	         | LANGLE targetSelector RANGLE! (targetSelector)? // signature
-                               | SINGLEQUOTE targetSelector SINGLEQUOTE! (targetSelector)? //name
-                               | targetSelector)
-                               { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
-
-                  targetSelector : (target DOT) => target DOT! selector      //extra rule to help parse target.selector correctly
-                                 | selector;
+                messagePattern : ( matchingPart (substitutionPart)? )
+                                 { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
+                
+                 matchingPart : ( 
+                                  HASH! LPARENTHESIS! singleTargetSelector (SEMICOLON singleTargetSelector)* RPARENTHESIS!
+                                | singleTargetSelector
+                                )
+                                { #matchingPart = #([MPART_, "matchingPart"], #matchingPart);}
+                                ;
+                
+                 substitutionPart : ( 
+                                      HASH! LPARENTHESIS! targetSelector (SEMICOLON targetSelector)* RPARENTHESIS!
+                                    | targetSelector
+                                    )
+                                    { #substitutionPart = #([SPART_, "substitutionPart"], #substitutionPart);}
+                                    ;
+                 
+                 
+                   singleTargetSelector : (
+                                          LSQUARE targetSelector RSQUARE!          // name
+                                        | LANGLE targetSelector RANGLE!            // signature
+                                        | SINGLEQUOTE targetSelector SINGLEQUOTE!  // name
+                                        | targetSelector
+                                        ) ;
+                  
+                   targetSelector : (target DOT) => target DOT! selector      //extra rule to help parse target.selector correctly
+                                  | selector;
 
                     target : (NAME                      //removed inner
                            | STAR)
@@ -340,6 +362,7 @@ DOT                     : '.' ;
 DOUBLE_COLON            : "::" ;
 EQUALS                  : '=' ;
 FILTER_OP               : "=>" | "~>" ;
+HASH                    : '#' ;
 LANGLE                  : '<' ;
 LCURLY                  : '{' ;
 LPARENTHESIS            : '(';

@@ -13,6 +13,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import java.util.ArrayList;
+import java.util.Vector;
+import java.util.Iterator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -81,7 +83,8 @@ public class SecretFilterInformationHarvestor {
      * @param matchingpart
      * @roseuid 40D841C001A5
      */
-    public void collectMacthingSpecification(MatchingPart matchingpart) {
+    public void collectMacthingSpecification(Vector matchingparts) {
+    	/* nothing happens here
     	String target = matchingpart.getTarget().getName();
     	if(!target.equals("*")) // Something to be done the target is read!
     	{
@@ -89,29 +92,37 @@ public class SecretFilterInformationHarvestor {
     	String selector = matchingpart.getSelector().getName();
     	if(!selector.equals("*")) // Something to be done the selector is read!
     	{
-    	}     
+    	}
+    	*/     
     }
     
     /**
      * @param subspart
      * @roseuid 40D843320234
      */
-    public void collectSubstitutionSpecification(SubstitutionPart subspart) {
-    	String target = subspart.getTarget().getName();
-    	if(!target.equals("*")) // Something to be done the target is read!
-    	{
-    		this.substitutions.add("message.target;");
+    public void collectSubstitutionSpecification(Vector subsparts) {
+    	boolean foundTarget = false, foundSelector = false;
+    	Iterator spi = new CPSIterator( subsparts );
+    	while( spi.hasNext() ) {
+    		SubstitutionPart subspart = (SubstitutionPart) spi.next();
+	    	String target = subspart.getTarget().getName();
+	    	if(!target.equals("*")) // Something to be done the target is read!
+	    	{
+	    		foundTarget = true;
+	    	}
+	    	String selector = subspart.getSelector().getName();
+	    	if(!selector.equals("*")) // Something to be done the selector is read!
+	    	{
+	    		foundSelector = true;
+	    	}
+	    	CPSIterator argiterator = (CPSIterator)subspart.getSelector().getParameterTypeIterator();
+	    	while(argiterator.hasNext())
+	    	{
+	    		this.substitutions.add(((ConcernReference)argiterator.next()).getRef().getName());
+	    	}
     	}
-    	String selector = subspart.getSelector().getName();
-    	if(!selector.equals("*")) // Something to be done the selector is read!
-    	{
-    		this.substitutions.add("message.selector");
-    	}
-    	CPSIterator argiterator = (CPSIterator)subspart.getSelector().getParameterTypeIterator();
-    	while(argiterator.hasNext())
-    	{
-    		this.substitutions.add(((ConcernReference)argiterator.next()).getRef().getName());
-    	}     
+    	if( foundTarget ) this.substitutions.add("message.target;");
+    	if( foundSelector ) this.substitutions.add("message.selector");
     }
     
     /**
@@ -128,10 +139,10 @@ public class SecretFilterInformationHarvestor {
 			while(matchiterator.hasNext())
 			{
 				MatchingPattern mp = (MatchingPattern)matchiterator.next();
-				MatchingPart mpart = mp.getMatchingPart();
-				this.collectMacthingSpecification(mpart);
-				SubstitutionPart spart = mp.getSubstitutionPart();
-				this.collectSubstitutionSpecification(spart);
+				Vector mparts = mp.getMatchingParts();
+				this.collectMacthingSpecification(mparts);
+				Vector sparts = mp.getSubstitutionParts();
+				this.collectSubstitutionSpecification(sparts);
 			}
 		}
 		this.populateSecretRepository();

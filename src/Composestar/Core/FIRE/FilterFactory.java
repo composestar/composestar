@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: FilterFactory.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: FilterFactory.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -20,6 +20,8 @@ public class FilterFactory
 		else if (name.equals( "Meta")) return new MetaFilter();
 		else if (name.equals( "Custom")) return new MetaFilter();
 		else if (name.equals( "Dispatch")) return new DispatchFilter();
+		else if (name.equals( "Prepend")) return new MetaFilter();
+		else if (name.equals( "Append")) return new MetaFilter();
 
 		return null;
 	}

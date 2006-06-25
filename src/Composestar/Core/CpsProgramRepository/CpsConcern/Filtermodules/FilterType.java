@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterType.java,v 1.2 2006/02/16 12:51:21 composer Exp $
+ * $Id: FilterType.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -31,12 +31,15 @@ public class FilterType extends Concern {
   public static String SUBSTITUTION = "Substitution";
   public static String CUSTOM = "Custom";
   public static String SEND	  = "Send";
+  public static String PREPEND = "Prepend";
+  public static String APPEND  = "Append";
 
   /**
    * @modelguid {6E580DFE-8DED-49DC-A73D-EFAAE97C4827}
    * @roseuid 401FAA650205
    */
-  public FilterType() {
+  public FilterType() 
+  {
     super();
   }
 

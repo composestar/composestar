@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.4 2006/02/28 09:47:24 whavinga Exp $
+ * $Id: cpsw.g,v 1.5 2006/03/09 10:18:39 doornenbal Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -41,6 +41,8 @@ options {
   public int t=0;                         //flag for selectorexpression
   public int matching=0;                  //flag for name / signature matching (0=signature, 1=name)
   public Vector typel = new Vector();     //temp vector for type list (in methods)
+  public String target;   // temp string for target name
+  public String selector; // temp string for selector name
   
   public CpsRepositoryBuilder getRepositoryBuilder()
   {
@@ -92,7 +94,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
         singleInputFilter : #(IFILTER_ n:NAME {typev.clear();} type {b.addInputFilter(n.getText(), typev,n.getLine());} (actualParameters)? (filterElements)? );
 
-	  actualParameters : #(APS_ {namev.clear();} (n:NAME {namev.add(n.getText());} )+ {b.addFilterActualParameters(namev);});
+          actualParameters : #(APS_ {namev.clear();} (n:NAME {namev.add(n.getText());} )+ {b.addFilterActualParameters(namev);});
 
           filterElements : #(FILTERSET_ (filterElement {c = null;} (c:COMMA)? {if(c!=null) b.addFilterElementCompOper(c.getText(),c.getLine()); else b.addFilterElementCompOper(null,0);} )* );
 
@@ -106,21 +108,43 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
               messagePatternSet : #(MPSET_ (messagePattern)+);
 
-                messagePattern : #(MP_ {matching = CpsRepositoryBuilder.MESSAGEP; } (LSQUARE {matching=0;} | LANGLE {matching=1;} | SINGLEQUOTE {matching=0;})? {objv.clear(); typev.clear(); typev2.clear();} targetSelector (targetSelector2)? {b.addMessagePattern(objv, typev, typev2, matching);});
+                messagePattern : #(MP_
+                                    { objv.clear(); typev.clear(); typev2.clear(); }
+                                    {b.addMessagePattern( /*objv, typev, typev2, matching*/ );}
+                                    matchingPart
+                                    (substitutionPart)?
+                                  );
+                
+                matchingPart : #(MPART_ singleTargetSelector (SEMICOLON singleTargetSelector)* );
+                substitutionPart : #(SPART_ targetSelector2 (SEMICOLON targetSelector2)* );
+                
+                singleTargetSelector : 
+                					{ matching = 1; target = null; selector = null; typev.clear(); }
+                                    (
+                                        LSQUARE {matching=0;}
+                                      | LANGLE {matching=1;}
+                                      | SINGLEQUOTE {matching=0;}
+                                    )?
+                                    targetSelector
+                                    { b.addMatchingPart( target, selector, typev, matching, 0 ); }
+                                    ;
 
                   targetSelector : (target)? selector;
 
-                  targetSelector2 : (target)? selector2;                //extra rule to distinguish between selector matching / substitution part
+                  targetSelector2 : { target = null; selector=null; typev2.clear(); }
+                                    (target)? selector2                //extra rule to distinguish between selector matching / substitution part
+                                    { b.addSubstitutionPart( target, selector, typev2, 0 ); }
+                                    ;
 
-                  selector : #(SELEC_ (((n:NAME {objv.add(n.getText()); typev.clear();} (type3)*)) | (STAR {objv.add("*"); } )));
+                  selector : #(SELEC_ (((n:NAME { selector=n.getText(); typev.clear();} (type3)*)) | (STAR { selector="*"; } )));
 
                     type3 : #(TYPE_ {temptypes = new Vector();} (t:NAME {temptypes.add(t.getText());} )+ {typev.add(temptypes);});   //extra rule
 
-                  selector2 : #(SELEC_ (((n:NAME {objv.add(n.getText()); typev2.clear();} (type2)*)) | (STAR {objv.add("*"); } )));
+                  selector2 : #(SELEC_ (((n:NAME { selector=n.getText(); typev2.clear();} (type2)*)) | (STAR { selector="*"; } )));
 
         type2 : #(TYPE_ {temptypes = new Vector();} (t:NAME {temptypes.add(t.getText());} )+ {typev2.add(temptypes);});  //extra rule
 
-          target : #(TARGET_ (n:NAME {objv.add(n.getText()); } | STAR {objv.add("*"); }));
+          target : #(TARGET_ (n:NAME { target=n.getText(); } | STAR { target="*"; }));
 
     /*---------------------------------------------------------------------------*/
     outputFilters : #("outputfilters" generalFilter2);

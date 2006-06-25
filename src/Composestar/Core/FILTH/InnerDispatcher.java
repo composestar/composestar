@@ -80,7 +80,7 @@ public class InnerDispatcher {
 		mpart.setTarget(mtarget);
 		mpart.setSelector(selector);
 		mpart.setMatchType(new SignatureMatchingType());
-		mpattern.setMatchingPart(mpart);
+		mpattern.addMatchingPart(mpart);
 		
 		SubstitutionPart spart = new SubstitutionPart();
 		Target starget = new Target();
@@ -94,7 +94,7 @@ public class InnerDispatcher {
 		
 		spart.setTarget(starget);
 		spart.setSelector(selector);
-		mpattern.setSubstitutionPart(spart);
+		mpattern.addSubstitutionPart(spart);
 		
 		fe.addMatchingPattern(mpattern);
 		
