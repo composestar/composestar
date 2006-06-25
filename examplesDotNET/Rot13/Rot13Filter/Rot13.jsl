@@ -19,30 +19,9 @@ public class Rot13 extends CustomFilter
 	 */
 	public ComposeStarAction acceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) 
 	{
-		if(modifiedMessage.getTarget().equals("*"))
-		{
-			modifiedMessage.setTarget(originalMessage.getTarget());
-		}
-		else if(modifiedMessage.getTarget().equals("inner"))
-		{
-			// TODO Look at Runtime\FLIRT\filtertypes\meta.java for other implementations.
-			modifiedMessage.setTarget(originalMessage.getInner());
-		}
-		else if(modifiedMessage.getTarget() instanceof String && originalMessage.getInternal((String)modifiedMessage.getTarget()) != null)
-		{
-			modifiedMessage.setTarget(originalMessage.getInternal((String)modifiedMessage.getTarget()));
-		}
-		else if(modifiedMessage.getTarget() instanceof String && originalMessage.getExternal((String)modifiedMessage.getTarget()) != null)
-		{
-			modifiedMessage.setTarget(originalMessage.getExternal((String)modifiedMessage.getTarget()));
-		}
-		
-		if(modifiedMessage.getSelector().equals("*"))
-		{
-			modifiedMessage.setSelector(originalMessage.getSelector());
-		}
-
-		return new RotAction(originalMessage, originalMessage.reify(), modifiedMessage.getTarget(), modifiedMessage.getSelector(), true);
+		replaceInner( originalMessage, modifiedMessage );
+		replaceWildcards( originalMessage, modifiedMessage );
+		return new RotAction(originalMessage, originalMessage.reify(), modifiedMessage.getFirstMessage().getTarget(), modifiedMessage.getFirstMessage().getSelector(), true);     
 	}
     
 	/**

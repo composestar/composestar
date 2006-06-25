@@ -1,7 +1,8 @@
+using System;
+using System.IO;
+
 namespace Rot13Filter
 {
-	using System;
-	using System.IO;
 
 	/// <summary>
 	/// Create a wrapper around StreamReader. Filters cannot be superimposed on .NET libraries.

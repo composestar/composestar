@@ -1,6 +1,6 @@
 using System;
 using Composestar.RuntimeCore.FLIRT.Message;
-using Composestar.Reasoning;
+using Composestar.RuntimeDotNET;
 
 namespace SECRETTesting
 {

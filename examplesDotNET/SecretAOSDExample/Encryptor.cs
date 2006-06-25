@@ -6,7 +6,7 @@ namespace SecretAOSDExample
 {
 	public class Encryptor
 	{
-		[@Semantics("args.Encrypt")]
+		[Semantics("args.Encrypt")]
 		public void encrypt(ReifiedMessage rm)
 		{
 			string msg = (string)rm.getArg(0);
@@ -33,7 +33,7 @@ namespace SecretAOSDExample
 			return new String(tmp);
 		}
 
-		[@Semantics("args.decrypt")]
+		[Semantics("args.decrypt")]
 		public void decrypt(ReifiedMessage rm)
 		{
 			string msg = (string)rm.getArg(0);

@@ -28,7 +28,7 @@ namespace wedding.ConcernImplementations
 
 		public int calculateTax(int ammount)
 		{
-			int tax = (int) (0.18 * ammount);
+			int tax = (int) (((double)18/100) * ammount);
 			Console.WriteLine("Need to pay " + tax + " in taxes");
 			return tax;
 		}

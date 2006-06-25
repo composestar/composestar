@@ -8,7 +8,7 @@ namespace SecretAOSDExample
 	{
 		public Logger() { }
 
-		[@Semantics("args.read")]
+		[Semantics("args.read")]
 		public void log(ReifiedMessage rm)
 		{
 			string tmp = (string)rm.getArg(0);
