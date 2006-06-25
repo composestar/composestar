@@ -355,6 +355,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "model\DebuggableSingleMessage.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "model\DebuggableSubstitutionFilterType.java"
                     SubType = "Code"
                     BuildAction = "Compile"

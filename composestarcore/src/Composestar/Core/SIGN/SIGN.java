@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.9 2006/03/16 14:46:25 pascal_durr Exp $
+ * $Id: SIGN.java,v 1.10 2006/05/08 11:36:32 stephan_h Exp $
  * 
 **/
 
@@ -598,26 +598,45 @@ public class SIGN implements CTCommonModule
 								MatchingPattern pattern = (MatchingPattern) matchingItr.next();
 								
 								//get matching and substitution part
-								MatchingPart matching = pattern.getMatchingPart();
-								SubstitutionPart substitution = pattern.getSubstitutionPart();
+								java.util.Vector matchingparts = pattern.getMatchingParts();
+								java.util.Vector substitutionparts = pattern.getSubstitutionParts();
 								
 								//both matching and substitution must be present
-								if(matching!= null && substitution!=null){
-									//get matching and substitution selector
-									MessageSelector matchingSelector = matching.getSelector();
+								if(matchingparts.size() > 0 && substitutionparts.size() > 0 ){
+									
+									// get the first substitutionpart
+									SubstitutionPart substitution = (SubstitutionPart) substitutionparts.get( 0 );
+									
+									// get substitution selector
 									MessageSelector substitutionSelector = substitution.getSelector();
 									
-									//get matching and substitution selector names
-									String matchingSelectorName = matchingSelector.getName();
+									// get substitution target and selector name
 									String substitutionSelectorName = substitutionSelector.getName();
-									
 									String substitutionTargetName = substitution.getTarget().getName();
 									
-									//only add signature if selector names are different
-									if(!matchingSelectorName.equals(substitutionSelectorName)){
-										
-										//the method must not be implemented in the inner already
-										if(!signature.hasMethod(matchingSelectorName)){	
+									// find matching parts that have a selector that is not in the inner
+									// and that are not also in the substitutionpart
+									
+									LinkedList foundMatchingParts = new LinkedList();
+									
+									Iterator matchIter = pattern.getMatchingPartsIterator();
+									matchingloop: while( matchIter.hasNext() ) {
+										MatchingPart mp = (MatchingPart) matchIter.next();
+										String matchingSelectorName = mp.getSelector().getName();
+										Iterator substIter = pattern.getSubstitutionPartsIterator();
+										while( substIter.hasNext() ) {
+											if( ((SubstitutionPart)substIter.next()).getSelector().getName().equals( matchingSelectorName ) )
+												continue matchingloop;
+										}
+										if( !signature.hasMethod( matchingSelectorName ) )
+											foundMatchingParts.add( mp );
+									}
+									
+									Iterator foundMpIter = foundMatchingParts.iterator();
+									
+									while( foundMpIter.hasNext() ) {
+										String matchingSelectorName = ((MatchingPart)foundMpIter.next()).getSelector().getName();
+											
 											Concern foundConcern;
 											//The method to convert is defined in inner, an internal or external
 											if(substitutionTargetName.equals("*")){
@@ -662,7 +681,8 @@ public class SIGN implements CTCommonModule
 													}
 												}
 											}
-										}
+											
+											
 									}
 								}
 							}

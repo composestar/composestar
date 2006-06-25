@@ -11,7 +11,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Send.java,v 1.4 2006/02/13 13:25:11 pascal Exp $
+ * $Id: Send.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Models the Send filter
  * Not implemented because it is an output filter, and those are not implemented.
@@ -33,12 +33,11 @@ public class Send extends FilterTypeRuntime implements DebuggableSendFilterType
      * @roseuid 40DFE17B0248
      */
     public ComposeStarAction acceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) {
+		/*
 		if(modifiedMessage.getSelector().equals("*"))
 		{
 			modifiedMessage.setSelector(originalMessage.getSelector());
 		}
-		// If we dispatch to inner we should dispatch to the inner object
-		// In all other cases hand it over to the message handlingfacilty
 		if(modifiedMessage.getTarget().equals("inner"))
 		{
 			modifiedMessage.setTarget(originalMessage.getInner());
@@ -55,6 +54,9 @@ public class Send extends FilterTypeRuntime implements DebuggableSendFilterType
 		{
 			modifiedMessage.setTarget(originalMessage.getExternal((String)modifiedMessage.getTarget()));
 		}
+		*/
+		replaceInner( originalMessage, modifiedMessage );
+		replaceWildcards( originalMessage, modifiedMessage );
 		return new SendAction(modifiedMessage, true);
     }
     

@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedExternals.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
+* $Id: NotUsedExternals.java,v 1.2 2006/03/09 10:36:13 whavinga Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -59,9 +59,13 @@ public class NotUsedExternals implements BaseChecker {
 						Iterator mpi = fe.getMatchingPatternIterator();
 						while(mpi.hasNext()){
 							MatchingPattern mp = (MatchingPattern) mpi.next();
-							if(!(mp.getSubstitutionPart() == null)){
-								if (externalID.equals(mp.getSubstitutionPart().getTarget().getName())){
-									isExternalUsed = true;
+							Iterator spi = mp.getSubstitutionPartsIterator();
+							while( spi.hasNext() ) {
+								SubstitutionPart sp = (SubstitutionPart) spi.next();
+								if(!(sp == null)){
+									if (externalID.equals(sp.getTarget().getName())){
+										isExternalUsed = true;
+									}
 								}
 							}
 						}
@@ -81,17 +85,26 @@ public class NotUsedExternals implements BaseChecker {
 						while(mpi.hasNext()){
 							MatchingPattern mp = (MatchingPattern) mpi.next();
 							//Check whether the internal show up as matching target or substitution target (maybe the if statement is too long)
-							if(!(mp.getSubstitutionPart() == null)){
-								if (externalID.equals(mp.getSubstitutionPart().getTarget().getName())){
-									isExternalUsed = true;
+							Iterator spi = mp.getSubstitutionPartsIterator();
+							while( spi.hasNext() ) {
+								SubstitutionPart sp = (SubstitutionPart) spi.next();
+								if(!(sp == null)){
+									if (externalID.equals(sp.getTarget().getName())){
+										isExternalUsed = true;
+									}
 								}
 							}
 							
-							if(!(mp.getMatchingPart() == null)){
-								if (externalID.equals(mp.getMatchingPart().getTarget().getName())){
-									isExternalUsed = true;
+							Iterator matchpi = mp.getMatchingPartsIterator();
+							while( matchpi.hasNext() ) {
+								MatchingPart matchp = (MatchingPart) matchpi.next();
+								if(!(matchp == null)){
+									if (externalID.equals(matchp.getTarget().getName())){
+										isExternalUsed = true;
+									}
 								}
 							}
+							
 						}
 					}
 				}

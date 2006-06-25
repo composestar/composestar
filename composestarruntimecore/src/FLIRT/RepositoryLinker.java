@@ -3,7 +3,7 @@
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: RepositoryLinker.java,v 1.6 2006/02/16 15:30:26 composer Exp $
+ * $Id: RepositoryLinker.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
  * 
  */
 package Composestar.RuntimeCore.FLIRT;
@@ -140,6 +140,7 @@ public class RepositoryLinker
 		filterElementRuntime = new FilterElementRuntime();
 		filterElementRuntime.setReference(filterElement);
 		filterRuntime.addFilterElement(filterElementRuntime);
+		filterElementRuntime.theFilter = filterRuntime;
 
 		if(this.previous_operator != null)
 		{
@@ -187,27 +188,39 @@ public class RepositoryLinker
 		matchingPatternRuntime = new MatchingPatternRuntime();
 		matchingPatternRuntime.setReference(matchingPattern);
 		filterElementRuntime.matchingPatterns.add(matchingPatternRuntime);
+		matchingPatternRuntime.theFilterElement = filterElementRuntime;
 
 		//link the matching part 
-		linkMatchingPart(matchingPattern.getMatchingPart(), matchingPatternRuntime);
+		linkMatchingParts(matchingPattern.getMatchingPartsIterator(), matchingPatternRuntime);
 
 		//link the substitution part
-		if(matchingPattern.getSubstitutionPart() != null 
-			&& matchingPattern.getSubstitutionPart().getTarget() != null 
-			&& matchingPattern.getSubstitutionPart().getSelector() != null
-			&& !matchingPattern.getSubstitutionPart().getTarget().equals("")
-			&& !matchingPattern.getSubstitutionPart().getTarget().equals("") )
+		if(matchingPattern.getSubstitutionParts().size() != 0 )
 		{
-			linkSubstitutionPart(matchingPattern.getSubstitutionPart(), matchingPatternRuntime);
+			linkSubstitutionParts(matchingPattern.getSubstitutionPartsIterator(), matchingPatternRuntime);
 		}
 		else
 		{ // If no substitution part was found will create it based on the matching part so <inner.*> == <inner.*>inner.*
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"Repository Linker","Creating substitution part...");
-			SubstitutionPart subpart = new SubstitutionPart();
-			subpart.setTarget(matchingPattern.getMatchingPart().getTarget());
-			subpart.setSelector(matchingPattern.getMatchingPart().getSelector());
-			subpart.setParent(matchingPattern);
-			linkSubstitutionPart(subpart, matchingPatternRuntime);
+			Vector matchparts = matchingPattern.getMatchingParts();
+			Vector subparts = new Vector();
+			for( int i = 0; i < matchparts.size(); i++ )
+			{
+				SubstitutionPart subpart = new SubstitutionPart();
+				subpart.setTarget(((MatchingPart)matchparts.elementAt(i)).getTarget());
+				subpart.setSelector(((MatchingPart)matchparts.elementAt(i)).getSelector());
+				subpart.setParent(matchingPattern);
+				subparts.addElement( subpart );
+			}
+			linkSubstitutionParts(new CPSIterator(subparts), matchingPatternRuntime);
+		}
+	}
+
+	private void linkMatchingParts( Iterator matchingParts, MatchingPatternRuntime matchingPatternRuntime ) 
+	{
+		while( matchingParts.hasNext() )
+		{
+			MatchingPart matchingPart = (MatchingPart) matchingParts.next();
+			linkMatchingPart( matchingPart, matchingPatternRuntime );
 		}
 	}
 	
@@ -218,7 +231,7 @@ public class RepositoryLinker
 		//matching part to it, and add the runtime matching part to the runtime matching pattern
 		matchingPartRuntime = new MatchingPartRuntime();
 		matchingPartRuntime.setReference(matchingPart);
-		matchingPatternRuntime.theMatchingPartRuntime = matchingPartRuntime;
+		matchingPatternRuntime.addMatchingPart( matchingPartRuntime );
 
 		//link matching type
 		linkMatchingType(matchingPart.getMatchType(), matchingPartRuntime);
@@ -264,6 +277,21 @@ public class RepositoryLinker
 		targetRuntime.setReference(messageTarget);
 		matchingPartRuntime.theTargetRuntime = targetRuntime;
 	}
+	
+	private void linkSubstitutionParts( Iterator substitutionParts, MatchingPatternRuntime matchingPatternRuntime ) 
+	{
+		while( substitutionParts.hasNext() )
+		{
+			SubstitutionPart substitutionPart = (SubstitutionPart) substitutionParts.next();
+			if( substitutionPart.getTarget() != null 
+				&& substitutionPart.getSelector() != null
+				&& !substitutionPart.getTarget().equals("")
+				&& !substitutionPart.getTarget().equals("") ) 
+			{
+				linkSubstitutionPart( substitutionPart, matchingPatternRuntime );
+			}
+		}
+	}
 
 	private void linkSubstitutionPart(SubstitutionPart substitutionPart, MatchingPatternRuntime  matchingPatternRuntime)
 	{
@@ -272,7 +300,7 @@ public class RepositoryLinker
 		//substitution part to it, and add the runtime substitution part to the runtime matching pattern
 		substitutionPartRuntime = new SubstitutionPartRuntime();
 		substitutionPartRuntime.setReference(substitutionPart);
-		matchingPatternRuntime.theSubstitutionPartRuntime = substitutionPartRuntime;
+		matchingPatternRuntime.addSubstitutionPart( substitutionPartRuntime );
 
 		if(substitutionPart != null)
 		{

@@ -15,7 +15,7 @@ import Composestar.RuntimeCore.CODER.Model.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Dispatch.java,v 1.4 2006/02/13 13:25:11 pascal Exp $
+ * $Id: Dispatch.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Dispatch Filter
  * This filter redirects messages that accepts to the objects (internals or 
@@ -32,10 +32,12 @@ public class Dispatch extends FilterTypeRuntime implements DebuggableDispatchFil
      * @roseuid 40DFDDA502B4
      */
     public ComposeStarAction acceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) {
+		/*
 		if(modifiedMessage.getSelector().equals("*"))
 		{
 			modifiedMessage.setSelector(originalMessage.getSelector());
 		}
+
 		// If we dispatch to inner we should dispatch to the inner object
 		// In all other cases hand it over to the message handlingfacilty
 		if(modifiedMessage.getTarget().equals("inner"))
@@ -43,6 +45,7 @@ public class Dispatch extends FilterTypeRuntime implements DebuggableDispatchFil
 			modifiedMessage.setTarget(originalMessage.getInner());
 			return new DispatchToInnerAction(originalMessage,true,originalMessage.getInner(),modifiedMessage.getSelector(), originalMessage.getArguments());
 		}
+
 		else if(modifiedMessage.getTarget().equals("*"))
 		{
 			modifiedMessage.setTarget(originalMessage.getTarget());
@@ -55,6 +58,13 @@ public class Dispatch extends FilterTypeRuntime implements DebuggableDispatchFil
 		{
 			modifiedMessage.setTarget(originalMessage.getExternal((String)modifiedMessage.getTarget()));
 		}
+		*/
+
+		//TODO: move dispatch to inner logic to DispatchAction
+		// Do not replace inner
+
+		replaceWildcards( originalMessage, modifiedMessage );
+
 		return new DispatchAction(originalMessage, true, modifiedMessage, originalMessage.getArguments());     
     }
     

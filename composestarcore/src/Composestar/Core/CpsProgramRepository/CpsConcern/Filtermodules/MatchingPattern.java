@@ -9,11 +9,14 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+import java.util.Vector;
+import Composestar.Utils.*;
+
 import Composestar.Core.RepositoryImplementation.*;
 
 public class MatchingPattern extends ContextRepositoryEntity {
-  public MatchingPart matchingPart;
-  public SubstitutionPart substitutionPart;
+  public Vector matchingParts;
+  public Vector substitutionParts;
 
 
   /**
@@ -21,6 +24,8 @@ public class MatchingPattern extends ContextRepositoryEntity {
    */
   public MatchingPattern() {
     super();
+	matchingParts = new Vector();
+	substitutionParts = new Vector();
   }
 
 
@@ -29,8 +34,12 @@ public class MatchingPattern extends ContextRepositoryEntity {
    *
    * @roseuid 401FAA65006B
    */
-  public MatchingPart getMatchingPart() {
-    return matchingPart;
+  public Vector getMatchingParts() {
+    return matchingParts;
+  }
+
+  public java.util.Iterator getMatchingPartsIterator() {
+    return new CPSIterator( matchingParts );
   }
 
 
@@ -38,8 +47,8 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @param matchingPartValue
    * @roseuid 401FAA65007E
    */
-  public void setMatchingPart(MatchingPart matchingPartValue) {
-    this.matchingPart = matchingPartValue;
+  public void addMatchingPart(MatchingPart matchingPartValue) {
+    this.matchingParts.addElement( matchingPartValue );
   }
 
 
@@ -49,8 +58,12 @@ public class MatchingPattern extends ContextRepositoryEntity {
    *
    * @roseuid 401FAA65008A
    */
-  public SubstitutionPart getSubstitutionPart() {
-    return substitutionPart;
+  public Vector getSubstitutionParts() {
+    return substitutionParts;
+  }
+
+  public java.util.Iterator getSubstitutionPartsIterator() {
+    return new CPSIterator( substitutionParts );
   }
 
 
@@ -58,7 +71,7 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @param substitutionPartValue
    * @roseuid 401FAA65009D
    */
-  public void setSubstitutionPart(SubstitutionPart substitutionPartValue) {
-    this.substitutionPart = substitutionPartValue;
+  public void addSubstitutionPart(SubstitutionPart substitutionPartValue) {
+    this.substitutionParts.addElement( substitutionPartValue );
   }
 }

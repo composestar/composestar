@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleRuntime.java,v 1.2 2006/03/07 12:47:39 oohlaf Exp $
+ * $Id: FilterModuleRuntime.java,v 1.3 2006/03/09 18:12:12 oohlaf Exp $
  */
 public class FilterModuleRuntime extends ReferenceEntityRuntime implements Interpretable, ConditionResolver, Cloneable 
 {
@@ -204,12 +204,15 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
      */
     public boolean shouldNotFilter(MessageList message) {
 		//check the methods
+
+		/* useless?
 		String selector = message.getSelector();
 		int i;
 		ArrayList temp;
 		ConditionBinding temp2;
 		MethodBinding temp3;
 		String co;
+		*/
 		return false;     
     }
     
@@ -218,6 +221,7 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
      * @return java.lang.Object
      * @roseuid 4116A59D00F0
      */
+	/* seems not to be in use
     public Object selfDispatch(MessageList message) {
 		try 
 		{
@@ -228,10 +232,11 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 		catch (Exception e) 
 		{
 			FilterModuleException fme = 
-				new  FilterModuleException("error while dispatching a message " + message.getSelector());
+				new  FilterModuleException("error while dispatching a message " + message.toShortString());
 			throw fme;
 		}
     }
+	*/
     
     /**
      * @param filter

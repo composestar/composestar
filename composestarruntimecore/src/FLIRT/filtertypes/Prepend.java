@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
-import Composestar.RuntimeCore.FLIRT.Actions.MetaAction;
+import Composestar.RuntimeCore.FLIRT.Actions.PrependAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.CODER.Model.*;
 
@@ -20,16 +20,17 @@ import java.util.Dictionary;
  * filter specification. if the message is rejected, it is passed on to the next 
  * filter.
  */
-public class Meta extends FilterTypeRuntime implements DebuggableMetaFilterType
+public class Prepend extends FilterTypeRuntime
 {
     
-    /**
-     * @param m
-     * @param context
-     * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
-     * @roseuid 40DFE17B018A
-     */
-    public ComposeStarAction acceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) {
+	/**
+	 * @param m
+	 * @param context
+	 * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
+	 * @roseuid 40DFE17B018A
+	 */
+	public ComposeStarAction acceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) 
+	{
 		/*
 		if(modifiedMessage.getTarget().equals("*"))
 		{
@@ -55,24 +56,26 @@ public class Meta extends FilterTypeRuntime implements DebuggableMetaFilterType
 		*/
 		replaceInner( originalMessage, modifiedMessage );
 		replaceWildcards( originalMessage, modifiedMessage );
-		return new MetaAction(originalMessage, originalMessage.reify(), modifiedMessage.getFirstMessage().getTarget(), modifiedMessage.getFirstMessage().getSelector(), true);     
-    }
+		return new PrependAction( originalMessage, modifiedMessage, originalMessage.getArguments() );
+	}
     
-    /**
-     * @param m
-     * @param context
-     * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
-     * @roseuid 40DFE17B01BC
-     */
-    public ComposeStarAction rejectAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) {
+	/**
+	 * @param m
+	 * @param context
+	 * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
+	 * @roseuid 40DFE17B01BC
+	 */
+	public ComposeStarAction rejectAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) 
+	{
 		return new ContinueToNextFilterAction(originalMessage, false);     
-    }
+	}
     
-    /**
-     * @return boolean
-     * @roseuid 40F2A8E9016F
-     */
-    public boolean shouldContinueAfterAccepting() {
-     return true;
-    }
+	/**
+	 * @return boolean
+	 * @roseuid 40F2A8E9016F
+	 */
+	public boolean shouldContinueAfterAccepting() 
+	{
+		return true;
+	}
 }

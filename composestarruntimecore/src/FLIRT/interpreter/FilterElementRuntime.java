@@ -13,7 +13,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterElementRuntime.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: FilterElementRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
 public class FilterElementRuntime extends ReferenceEntityRuntime implements Interpretable 
 {
@@ -21,6 +21,7 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     public ConditionExpressionRuntime conditionpart;
     public ArrayList matchingPatterns = null;
     public EnableOperatorTypeRuntime theEnableOperatorTypeRuntime;
+	public FilterRuntime theFilter = null;
     
     /**
      * @roseuid 40DDFC7202D8

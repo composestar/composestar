@@ -7,12 +7,13 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: RepositoryPtrList.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id: RepositoryPtrList.java,v 1.2 2006/03/14 12:53:54 pascal_durr Exp $
  * 
 **/
 
 import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Utils.Debug;
@@ -96,45 +97,29 @@ public class RepositoryPtrList extends TreeBuilder
 	
 	private FilterComponent parseMatching(MatchingPattern mp)
 	{
-		MatchingPart matchPart = mp.getMatchingPart();
-		SubstitutionPart substPart = mp.getSubstitutionPart();
+		// TODO WM: needs fixing
+		
+		Vector matchParts = mp.getMatchingParts();
+		Vector substParts = mp.getSubstitutionParts();
+		
 		
 		String matchTarget = null;
 		String matchSelector = null;
 		String substTarget = null;
 		String substSelector = null;
 
-		// TODO workaround.
-		if (matchPart == null) 
+		matchTarget = ((MatchingPart)matchParts.firstElement()).getTarget().getName();
+		matchSelector = ((MatchingPart)matchParts.firstElement()).getSelector().getName();
+		
+		if (substParts.size() != 0)
 		{
-			Debug.out(Debug.MODE_INFORMATION,"FIRE", "MatchPart is NULL. Assuming that the SubstitutionPart contains the matching part");
-
-			if (substPart == null) 
-			{
-				Debug.out(Debug.MODE_CRUCIAL,"FIRE",  "Oops.. substitution part is also NULL, bailing out.");
-				return null;
-			}
-
-			matchTarget = substPart.getTarget().getName();
-			matchSelector = substPart.getSelector().getName();
-			substPart = null;
-		}
-		else
-		{
-			// The way it should be.
-			matchTarget = matchPart.getTarget().getName();
-			matchSelector = matchPart.getSelector().getName();
-
-			if (substPart != null)
-			{
-				substTarget = substPart.getTarget().getName();
-				substSelector = substPart.getSelector().getName();
-			}
+			substTarget = ((SubstitutionPart)substParts.firstElement()).getTarget().getName();
+			substSelector = ((SubstitutionPart)substParts.firstElement()).getSelector().getName();
 		}
 
 		//Signature or name matching?
 		SymbolTable st = SymbolTable.getInstance();
-		if (matchPart != null && matchPart.getMatchType() instanceof SignatureMatchingType)
+		if (matchParts.size() != 0 && ((MatchingPart)matchParts.firstElement()).getMatchType() instanceof SignatureMatchingType)
 		{
 			MatchSignature match = new MatchSignature((st.addSymbol(matchTarget, 1)), filterNumber);
 			
@@ -142,7 +127,7 @@ public class RepositoryPtrList extends TreeBuilder
 			// FIX BY TOM, INSERT Substitutes after a successful signature match
 
 			Tand joinSubst = new Tand();
-			if( substPart != null )
+			if( substParts.size() != 0 )
 			{
 				joinSubst.addChild1 (new Substitute(st.addSymbol(substTarget, 1), filterNumber));
 				joinSubst.addChild2 (new Substitute(st.addSymbol(substSelector, 2), filterNumber));
@@ -166,7 +151,7 @@ public class RepositoryPtrList extends TreeBuilder
 			joinMatch.addChild1 (new Match(st.addSymbol(matchTarget, 1), filterNumber));
 			joinMatch.addChild2 (new Match(st.addSymbol(matchSelector, 2), filterNumber));
 
-			if (substPart != null)
+			if (substParts.size() != 0)
 			{
 				Tand joinSubst = new Tand();
 				joinSubst.addChild1 (new Substitute(st.addSymbol(substTarget, 1), filterNumber));

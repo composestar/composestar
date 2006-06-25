@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Interpreter;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.List;
@@ -14,9 +14,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: SubstitutionPartRuntime.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: SubstitutionPartRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
-public class SubstitutionPartRuntime extends AbstractPatternRuntime implements Interpretable 
+public class SubstitutionPartRuntime extends AbstractPatternRuntime 
 {
     
     /**
@@ -32,10 +32,9 @@ public class SubstitutionPartRuntime extends AbstractPatternRuntime implements I
      * @return boolean
      * @roseuid 40DD969D002B
      */
-    public boolean interpret(MessageList m, Dictionary context) {
-		// TODO WM: Iterage over messages
+    public boolean interpret(Message m, Dictionary context) {
     	resolveTarget(m.getInternals(), m.getExternals(), m, context);
-        return resolveSelector(m, context);     
+		return resolveSelector(m, context);     
     }
     
     /**
@@ -44,7 +43,7 @@ public class SubstitutionPartRuntime extends AbstractPatternRuntime implements I
      * @return boolean
      * @roseuid 40DE04230257
      */
-    public boolean resolveSelector(MessageList m, Dictionary context) {
+    public boolean resolveSelector(Message m, Dictionary context) {
 		//m.addFilterParameter("SubstitionSelector",m.getSelector());
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolve selector: "+((MessageSelector)this.theSelectorRuntime.getReference()).getName());
 		//String message_selector = m.getSelector();
@@ -61,7 +60,7 @@ public class SubstitutionPartRuntime extends AbstractPatternRuntime implements I
      * @param context
      * @roseuid 40DE042C0191
      */
-    public void resolveTarget(Dictionary internals, Dictionary externals, MessageList m, Dictionary context) {
+    public void resolveTarget(Dictionary internals, Dictionary externals, Message m, Dictionary context) {
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolve target: "+((Target)this.theTargetRuntime.getReference()).getName());
 		String target = ((Target)this.theTargetRuntime.getReference()).getName();
 		m.setTarget(target);

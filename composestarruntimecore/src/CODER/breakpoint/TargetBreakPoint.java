@@ -19,7 +19,7 @@ public class TargetBreakPoint extends ObjectBreakPoint {
 		LinkedList list = afterMessage.getMessages();
 		for(int i = 0; i < list.size();i++)
 		{
-			if(matchObject(((DebuggableMessage)list.get(i)).getTarget()))
+			if(matchObject(((DebuggableSingleMessage)list.get(i)).getTarget()))
 			{
 				return true;
 			}

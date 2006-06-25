@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Acting.java,v 1.1 2006/02/13 11:16:53 pascal Exp $
+ * $Id: Acting.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
  */package Composestar.Core.ACTING;
 
 import Composestar.Core.Master.CTCommonModule;
@@ -131,28 +131,31 @@ public class Acting implements CTCommonModule {
 	    						for( Iterator mpi = filterElement.getMatchingPatternIterator(); mpi.hasNext(); )
 	    						{
 	    							matchingPattern = (MatchingPattern) mpi.next();
-	    							Target target = matchingPattern.getSubstitutionPart().getTarget();
-	    							if( target.getRef() instanceof DeclaredObjectReference )
-	    							{
-	    								DeclaredObjectReference dor = (DeclaredObjectReference) target.getRef();
-										if( dor.getResolved() )
-										{
-											//System.err.println("ACT Method: " + dor.getRef().getType().getQualifiedName() + "." + matchingPattern.getSubstitutionPart().getSelector().getName());
-											Concern act = dor.getRef().getType().getRef();
-											if( act.getDynObject("superImpInfo") !=  null )
+	    							Iterator sps = matchingPattern.getSubstitutionPartsIterator();
+	    							while( sps.hasNext() ) {
+		    							Target target = ((SubstitutionPart)sps.next()).getTarget();
+		    							if( target.getRef() instanceof DeclaredObjectReference )
+		    							{
+		    								DeclaredObjectReference dor = (DeclaredObjectReference) target.getRef();
+											if( dor.getResolved() )
 											{
-												this.getFIRETree(act);
-												//System.err.println("Nodetree created for this ACT " + act.getQualifiedName());
-											}
-											else
-											{
-												//System.err.println("Simple act, using scenario's directly (" + act.getQualifiedName() + ")");
-											}
-										}											
-	    							}
-	    							else
-	    							{
-	    								//System.err.println("ACTING: Unsupported meta usage (static?)");
+												//System.err.println("ACT Method: " + dor.getRef().getType().getQualifiedName() + "." + matchingPattern.getSubstitutionPart().getSelector().getName());
+												Concern act = dor.getRef().getType().getRef();
+												if( act.getDynObject("superImpInfo") !=  null )
+												{
+													this.getFIRETree(act);
+													//System.err.println("Nodetree created for this ACT " + act.getQualifiedName());
+												}
+												else
+												{
+													//System.err.println("Simple act, using scenario's directly (" + act.getQualifiedName() + ")");
+												}
+											}											
+		    							}
+		    							else
+		    							{
+		    								//System.err.println("ACTING: Unsupported meta usage (static?)");
+		    							}
 	    							}
 	    						}
 	    					}
@@ -176,7 +179,7 @@ public class Acting implements CTCommonModule {
     public static String getActingFilterType(Filter meta) {
 		String retval = "";
 		FilterModule fm = (FilterModule) meta.getParent();
-		SubstitutionPart sp = meta.getFilterElement(0).getMatchingPattern(0).getSubstitutionPart();
+		SubstitutionPart sp = (SubstitutionPart) meta.getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().firstElement();
 		FilterModuleElementReference fmer = sp.getTarget().getRef();
 		Target t = sp.getTarget();
 		retval += sp.getSelector().getName();

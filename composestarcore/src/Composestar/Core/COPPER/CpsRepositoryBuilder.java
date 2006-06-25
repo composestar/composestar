@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.3 2006/02/28 09:49:02 whavinga Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.4 2006/03/14 14:34:28 dspenkel Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -466,6 +466,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       ft.setType(FilterType.SUBSTITUTION);
     } else if ("send".equalsIgnoreCase(type))  {
       ft.setType(FilterType.SEND);
+    } else if ("append".equalsIgnoreCase(type))  {
+        ft.setType(FilterType.APPEND);
+    } else if ("prepend".equalsIgnoreCase(type))  {
+        ft.setType(FilterType.PREPEND);
     } else {
       ft.setType(FilterType.CUSTOM);
     }
@@ -833,20 +837,21 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *                    Contains Vectors with the complete packages of the parameters
    * @param orgmatching Whether the matching is name or signature (0=name, 1=signature)
    */
-  public void addMessagePattern(Vector objv, Vector typev, Vector typev2, int orgmatching) {
-    int matching;
+  public void addMessagePattern( /*Vector objv, Vector typev, Vector typev2, int orgmatching */ ) {
+    //int matching;
 
     mpat = new MatchingPattern();
     mpat.setParent(fe);
     fe.addMatchingPattern(mpat);
     this.addToRepository(mpat);
 
+    /*
     if (orgmatching == MESSAGEP) {
       matching = 1;                                    //signature matching is the default
     } else {
       matching = orgmatching;
     }
-
+    
     //now create the MatchingPattern with selectors etc.
     switch (objv.size()) {
       case 1: //selector
@@ -871,11 +876,14 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
         Debug.out(Debug.MODE_WARNING, "COPPER", "error"); //fixme: throw exception
         break;
     }
-
+    */
+    
     //should not happen anymore
+    /* TODO WM: can this be removed?
     if ((mpat.getMatchingPart() == null) && (mpat.getSubstitutionPart() != null)) {
       Debug.out(Debug.MODE_WARNING, "COPPER", "Error: no matching, only substitution");
     }
+    */
   }
 
 
@@ -894,13 +902,16 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     mp.setParent(mpat);
 	  mp.setDescriptionFileName(filename);
 	  mp.setDescriptionLineNumber(lineNumber);
-    mpat.setMatchingPart(mp);
+    mpat.addMatchingPart(mp);
     this.addToRepository(mp);
 
     if (target != null) {
       addTarget(target);
-      ta.setParent(mp);
+    } else {
+      addTarget("*");
     }
+    ta.setParent(mp);
+    
     if (selector != null) {
       addSelector(selector, argTypes,lineNumber);
       s.setParent(mp);
@@ -938,7 +949,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 	  sp.setDescriptionFileName(filename);
 	  sp.setDescriptionLineNumber(lineNumber);
     sp.setParent(mpat);
-    mpat.setSubstitutionPart(sp);
+    mpat.addSubstitutionPart(sp);
     this.addToRepository(sp);
 
     if (target != null) {

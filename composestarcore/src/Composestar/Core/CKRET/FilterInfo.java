@@ -3,7 +3,9 @@
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
@@ -98,42 +100,55 @@ public class FilterInfo {
      * @param matchingpart
      * @roseuid 40D841C001A5
      */
-    public void collectMacthingSpecification(MatchingPart matchingpart) {
-    	String target = matchingpart.getTarget().getName();
-    	if(!target.equals("*")) // Something to be done the target is read!
-    	{
-    		this.targetmatching = true;
-    	}
-    	String selector = matchingpart.getSelector().getName();
-    	if(!selector.equals("*")) // Something to be done the selector is read!
-    	{
-    		this.selectormatching = true;
-    	}     
+    public void collectMacthingSpecification(Vector matchingparts) {
+    	Iterator mpi = new CPSIterator( matchingparts );
+    	while( mpi.hasNext() ) {
+    		MatchingPart matchingpart = (MatchingPart) mpi.next();
+	    	String target = matchingpart.getTarget().getName();
+	    	if(!target.equals("*")) // Something to be done the target is read!
+	    	{
+	    		this.targetmatching = true;
+	    	}
+	    	String selector = matchingpart.getSelector().getName();
+	    	if(!selector.equals("*")) // Something to be done the selector is read!
+	    	{
+	    		this.selectormatching = true;
+	    	}     
+	    }
     }
     
     /**
      * @param subspart
      * @roseuid 40D843320234
      */
-    public void collectSubstitutionSpecification(SubstitutionPart subspart) {
-    	if( subspart == null )
+    public void collectSubstitutionSpecification(Vector subsparts) {
+    	if( subsparts.size() == 0 )
     		return;
+    	boolean foundTarget = false, foundSelector=false;
     	
-    	String target = subspart.getTarget().getName();
-    	if(!target.equals("*")) // Something to be done the target is read!
-    	{
-    		this.substitutions.add("message.target;");
+    	Iterator spi = new CPSIterator( subsparts );
+    	while( spi.hasNext() ) {
+    		SubstitutionPart subspart = (SubstitutionPart) spi.next();
+    		
+	    	String target = subspart.getTarget().getName();
+	    	if(!target.equals("*")) // Something to be done the target is read!
+	    	{
+	    		foundTarget = true;
+	    	}
+	    	String selector = subspart.getSelector().getName();
+	    	if(!selector.equals("*")) // Something to be done the selector is read!
+	    	{
+	    		foundSelector = true;
+	    	}
+	    	CPSIterator argiterator = (CPSIterator)subspart.getSelector().getParameterTypeIterator();
+	    	while(argiterator.hasNext())
+	    	{
+	    		this.substitutions.add(((ConcernReference)argiterator.next()).getRef().getName());
+	    	}
     	}
-    	String selector = subspart.getSelector().getName();
-    	if(!selector.equals("*")) // Something to be done the selector is read!
-    	{
-    		this.substitutions.add("message.selector");
-    	}
-    	CPSIterator argiterator = (CPSIterator)subspart.getSelector().getParameterTypeIterator();
-    	while(argiterator.hasNext())
-    	{
-    		this.substitutions.add(((ConcernReference)argiterator.next()).getRef().getName());
-    	}     
+    	
+    	if( foundTarget ) this.substitutions.add("message.target;");
+    	if( foundSelector ) this.substitutions.add("message.selector");
     }
     
     /**
@@ -141,7 +156,7 @@ public class FilterInfo {
      * @roseuid 40D846D5011A
      */
     private void run(Filter filter) {
-		CPSIterator iterator = (CPSIterator)filter.getFilterElementIterator();
+		Iterator iterator = (CPSIterator)filter.getFilterElementIterator();
 		while(iterator.hasNext())
 		{
 			FilterElement fe = (FilterElement)iterator.next();
@@ -150,9 +165,9 @@ public class FilterInfo {
 			while(matchiterator.hasNext())
 			{
 				MatchingPattern mp = (MatchingPattern)matchiterator.next();
-				MatchingPart mpart = mp.getMatchingPart();
+				Vector mpart = mp.getMatchingParts();
 				this.collectMacthingSpecification(mpart);
-				SubstitutionPart spart = mp.getSubstitutionPart();
+				Vector spart = mp.getSubstitutionParts();
 				this.collectSubstitutionSpecification(spart);
 			}
 		}

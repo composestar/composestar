@@ -101,7 +101,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		components[filters.size()+1].setVisible(true);
 		messages[filters.size()+1].setVisible(true);
 
-		Object target = ((DebuggableMessage)((DebuggableMessageList)messageHistory.get(0)).getMessages().get(0)).getTarget();
+		Object target = ((DebuggableSingleMessage)((DebuggableMessageList)messageHistory.get(0)).getMessages().get(0)).getTarget();
 		components[filters.size()+1].setText(target == null ? "Null Target" : target.toString());
 		messages[filters.size()+1].setText(postMessage.toString());
 

@@ -4,7 +4,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.Invoker;
@@ -16,9 +16,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: SignatureMatchingRuntime.java,v 1.3 2006/02/13 13:37:35 composer Exp $
+ * $Id: SignatureMatchingRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
-public class SignatureMatchingRuntime extends MatchingTypeRuntime implements Interpretable 
+public class SignatureMatchingRuntime extends MatchingTypeRuntime 
 {
     
     /**
@@ -35,7 +35,7 @@ public class SignatureMatchingRuntime extends MatchingTypeRuntime implements Int
      * @return boolean
      * @roseuid 40DD96900127
      */
-    public boolean interpret(MessageList m, Dictionary context) 
+    public boolean interpret(Message m, Dictionary context) 
 	{
 		// TODO WM: Iterate over messages
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tInterpreting SIGNATURE MatchingPartRuntime '"+m.getSelector()+"'...");

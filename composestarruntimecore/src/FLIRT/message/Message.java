@@ -14,7 +14,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Message.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: Message.java,v 1.2 2006/03/09 18:12:13 oohlaf Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -24,19 +24,40 @@ import java.util.*;
  */
 public class Message implements DebuggableMessage
 {
+	/**
+	 * If messageList is not null, some of the properties of the message are
+	 * delegated to the list.
+	 */
+	private MessageList messageList = null;
     
+	public void setMessageList (MessageList ml ) 
+	{
+		messageList = ml;
+	}
+
+	public MessageList getMessageList() 
+	{
+		return messageList;
+	}
+
 	/**
 	 *  Some stuff to indicate the direction of the message
 	 **/
-	public int direction;
+	private int direction;
 
 	public int getDirection()
 	{
-		return this.direction;
+		if( messageList != null )
+			return messageList.getDirection();
+		else
+			return this.direction;
 	}
 	public void setDirection(int direction)
 	{
-		this.direction = direction;
+		if( messageList != null )
+			messageList.setDirection( direction );
+		else
+			this.direction = direction;
 	}
 
 	/**
@@ -127,6 +148,10 @@ public class Message implements DebuggableMessage
 
 	public Message(Message m)
 	{
+		// clear the messagelist to get the message's own properties
+		MessageList ml = m.getMessageList();
+		m.setMessageList( null );
+
 		this.sender = m.getSender();
 		this.server = m.getServer();
 		this.inner = m.getInner();
@@ -139,7 +164,10 @@ public class Message implements DebuggableMessage
 	    this.STATE = m.STATE;
 		this.responseBuffer = m.getResponseBuffer();
 		this.direction = m.getDirection();
+		this.messageList = ml;
 
+		// reset the messagelist
+		m.setMessageList( ml );
 	}
     
     /**
@@ -159,7 +187,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F36532702FD
      */
     public Object getInner() {
-        return inner;     
+		if( messageList != null )
+			return messageList.getInner();
+		else
+			return inner;     
     }
     
     /**
@@ -168,7 +199,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F3653270306
      */
     public void setInner(Object inner) {
-        this.inner = inner;     
+		if( messageList != null )
+			messageList.setInner( inner );
+		else
+			this.inner = inner;     
     }
     
     /**
@@ -196,12 +230,18 @@ public class Message implements DebuggableMessage
      * @roseuid 3F365327031A
      */
     public Object[] getArguments() {
-        return args;     
+		if( messageList != null )
+			return messageList.getArguments();
+		else
+			return args;     
     }
 
 	public void setArguments(Object[] args) 
 	{
-		this.args = args;
+		if( messageList != null )
+			messageList.setArguments( args );
+		else
+			this.args = args;
 	}
     
     /**
@@ -211,7 +251,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F365327031B
      */
     public void addFilterParameter(String messageElement, String identifier) {
-        filterParams.put(messageElement, identifier);     
+		if( messageList != null )
+			messageList.getFilterParameters().put( messageElement, identifier );
+		else
+			filterParams.put(messageElement, identifier);     
     }
     
     /**
@@ -221,22 +264,40 @@ public class Message implements DebuggableMessage
      * @roseuid 3F3653270326
      */
     public String getFilterParameter(String messageElement) {
-        return (String) filterParams.get(messageElement);     
+		if( messageList != null )
+			return (String) messageList.getFilterParameter( messageElement );
+		else
+			return (String) filterParams.get(messageElement);     
     }
 
 	public Dictionary getFilterParameters()
 	{
-		return this.filterParams;
+		if( messageList != null )
+			return messageList.getFilterParameters();
+		else
+			return this.filterParams;
 	}
     
-    /**
+	public void setFilterParameters( Dictionary d )
+	{
+		if( messageList != null )
+			messageList.setFilterParameters( d );
+		else
+			filterParams = d;
+	}
+
+	/**
      * Returns an internal by its name.
      * @param name name of the internal
      * @return the object bound to that name.
      * @roseuid 3F365327032F
      */
-    public Object getInternal(String name) {
-        return internals.get(name);     
+    public Object getInternal(String name) 
+	{
+		if( messageList != null )
+			return messageList.getInternal( name );
+		else
+			return internals.get(name);     
     }
     
     /**
@@ -245,7 +306,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F3653270338
      */
     public Dictionary getInternals() {
-        return internals;     
+		if( messageList != null )
+			return messageList.getInternals();
+		else
+			return internals;     
     }
     
     /**
@@ -254,7 +318,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F3653270339
      */
     public void setInternals(Dictionary internals) {
-        this.internals = internals;     
+		if( messageList != null )
+			messageList.setInternals( internals );
+		else
+			this.internals = internals;     
     }
     
     /**
@@ -264,7 +331,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F3653270343
      */
     public Object getExternal(String name) {
-        return externals.get(name);     
+		if( messageList != null )
+			return messageList.getExternal( name );
+		else
+			return externals.get(name);     
     }
     
     /**
@@ -273,7 +343,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F365327034D
      */
     public Dictionary getExternals() {
-        return this.externals;     
+		if( messageList != null )
+			return messageList.getExternals();
+		else
+			return this.externals;     
     }
     
     /**
@@ -283,7 +356,10 @@ public class Message implements DebuggableMessage
      * @roseuid 3F3653270356
      */
     public void setExternals(Dictionary externals) {
-		this.externals = externals;
+		if( messageList != null )
+			messageList.setExternals( externals );
+		else
+			this.externals = externals;
     }
     
     /**
@@ -291,7 +367,10 @@ public class Message implements DebuggableMessage
      * @roseuid 411B57170266
      */
     public Object getSender() {
-		return this.sender;
+		if( messageList != null )
+			return messageList.getSender();
+		else
+			return this.sender;
     }
     
     /**
@@ -299,17 +378,26 @@ public class Message implements DebuggableMessage
      * @roseuid 411B571E01BC
      */
     public void setSender(Object obj) {
-		this.sender = obj;
+		if( messageList != null )
+			messageList.setSender( obj );
+		else
+			this.sender = obj;
     }
 
 	public void setServer(Object server)
 	{
-		this.server = server;
+		if( messageList != null )
+			messageList.setServer( server );
+		else
+			this.server = server;
 	}
 
 	public Object getServer()
 	{
-		return this.server;
+		if( messageList != null )
+			return messageList.getServer();
+		else
+			return this.server;
 	}
 
 	public void setTarget(Object target)
@@ -353,5 +441,16 @@ public class Message implements DebuggableMessage
 	public String toString()
 	{
 		return "Message,caller(" + this.getSender() + "),target(" + this.getTarget() + "::" + this.getSelector() + ")";
+	}
+
+	private boolean matched;
+	public boolean isMatched() 
+	{
+		return matched;
+	}
+
+	public void setMatched( boolean m ) 
+	{
+		matched = m;
 	}
 }

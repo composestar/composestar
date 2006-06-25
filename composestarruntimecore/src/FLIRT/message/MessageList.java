@@ -5,6 +5,7 @@ import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
 import Composestar.RuntimeCore.Utils.ResponseBuffer;
 import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
+import Composestar.RuntimeCore.Utils.Debug;
 
 import java.util.*;
 
@@ -13,6 +14,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
+ * $Id: MessageList.java,v 1.2 2006/03/06 16:37:53 reddog33hummer Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -35,15 +37,20 @@ public class MessageList implements DebuggableMessageList
 
 	public MessageList(Message m)
 	{
-		Message newMessage = new Message( m );
-		
 		messages = new LinkedList();
-		messages.add( newMessage );
+		messages.add( m );
 		orgMessagePointer = messages.size() - 1;
-	
+		
+		this.copyFromMessage( m );
+		m.setMessageList( this );
 	}
     
 	public MessageList(MessageList ml)
+	{
+		copyFromMessageList( ml );
+	}
+
+	public void copyFromMessageList( MessageList ml ) 
 	{
 		orgMessagePointer = ml.getOrgMessagePointer();
 
@@ -51,8 +58,57 @@ public class MessageList implements DebuggableMessageList
 		LinkedList othermessages = ml.getMessages();
 		for( int i = 0; i < othermessages.size(); i++ ) 
 		{
-			messages.add( new Message( (Message) othermessages.get( i ) ) );
+			Message newMessage = new Message( (Message) othermessages.get( i ) );
+			newMessage.setMessageList( this );
+			messages.add( newMessage );
 		}
+
+		this.setSender( ml.getSender() );
+		this.setServer( ml.getServer() );
+		this.setInner( ml.getInner() );
+		this.setArguments( ml.getArguments() );
+		this.setInternals( ml.getInternals() );
+		this.setExternals( ml.getExternals() );
+		this.setFilterParameters( ml.getFilterParameters() );
+		this.setDirection( ml.getDirection() );
+	}
+
+	public void copyFromMessage( Message m ) 
+	{
+		// clear the messagelist to get the message's own properties
+		MessageList ml = m.getMessageList();
+		m.setMessageList( null );
+
+		this.setSender( m.getSender() );
+		this.setServer( m.getServer() );
+		this.setInner( m.getInner() );
+		this.setArguments( m.getArguments() );
+		this.setInternals( m.getInternals() );
+		this.setExternals( m.getExternals() );
+		this.setFilterParameters( m.getFilterParameters() );
+		this.setDirection( m.getDirection() );
+
+		// reset the messagelist
+		m.setMessageList( ml );
+	}
+    
+	public void copyToMessage( Message m ) 
+	{
+		// clear the messagelist to get the message's own properties
+		MessageList ml = m.getMessageList();
+		m.setMessageList( null );
+
+		m.setSender( this.getSender() );
+		m.setServer( this.getServer() );
+		m.setInner( this.getInner() );
+		m.setArguments( this.getArguments() );
+		m.setInternals( this.getInternals() );
+		m.setExternals( this.getExternals() );
+		m.setFilterParameters( this.getFilterParameters() );
+		m.setDirection( this.getDirection() );
+
+		// reset the messagelist
+		m.setMessageList( ml );
 	}
     
 	/**
@@ -67,6 +123,9 @@ public class MessageList implements DebuggableMessageList
 		return new ReifiedMessage(this);     
 	}
     
+
+	private Object inner;
+
 	/**
 	 * Returns the object bound to inner
 	 * @return java.lang.Object
@@ -74,7 +133,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public Object getInner() 
 	{
-		return getOrgMessage().getInner();     
+		return inner;     
 	}
     
 	/**
@@ -84,7 +143,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public void setInner(Object inner) 
 	{
-		getOrgMessage().setInner( inner );     
+		this.inner = inner;     
 	}
     
 	/**
@@ -92,22 +151,31 @@ public class MessageList implements DebuggableMessageList
 	 * @return current selector
 	 * @roseuid 3F3653270310
 	 */
+	/*
 	public String getSelector() 
 	{
 		return getOrgMessage().getSelector();     
 	}
-    
+    */
+
 	/**
 	 * Sets  the selector of this message.
 	 * @param new selector.
 	 * @param s
 	 * @roseuid 3F3653270311
 	 */
+	/*
 	public void setSelector(String s) 
 	{
 		getOrgMessage().setSelector( s );
 	}
-    
+    */
+
+	/**
+	 * Arguments of the message
+	 */
+	private Object args[];
+
 	/**
 	 * Returns the arguments of this message
 	 * @return an array of objects containing the arguments
@@ -115,14 +183,17 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public Object[] getArguments() 
 	{
-		return getOrgMessage().getArguments();     
+		return args;     
 	}
 
 	public void setArguments(Object[] args) 
 	{
-		getOrgMessage().setArguments( args );
+		this.args = args;
 	}
     
+
+	private Dictionary filterParams = new Hashtable();
+
 	/**
 	 * Sets a new filter parameter
 	 * @param messageElement the name of the parameter
@@ -131,7 +202,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public void addFilterParameter(String messageElement, String identifier) 
 	{
-		getOrgMessage().addFilterParameter( messageElement, identifier );
+		filterParams.put( messageElement, identifier );
 	}
     
 	/**
@@ -142,14 +213,25 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public String getFilterParameter(String messageElement) 
 	{
-		return (String) getOrgMessage().getFilterParameter( messageElement );
+		return (String) filterParams.get(messageElement);
 	}
 
 	public Dictionary getFilterParameters()
 	{
-		return getOrgMessage().getFilterParameters();
+		return filterParams;
 	}
     
+	public void setFilterParameters( Dictionary d )
+	{
+		filterParams = d;
+	}
+    
+
+	/**
+	 * Internals of the current FilterModule
+	 */
+	private Dictionary internals = new Hashtable();
+
 	/**
 	 * Returns an internal by its name.
 	 * @param name name of the internal
@@ -158,7 +240,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public Object getInternal(String name) 
 	{
-		return getOrgMessage().getInternal(name);     
+		return internals.get(name);     
 	}
     
 	/**
@@ -168,7 +250,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public Dictionary getInternals() 
 	{
-		return getOrgMessage().getInternals();     
+		return internals;     
 	}
     
 	/**
@@ -178,9 +260,15 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public void setInternals(Dictionary internals) 
 	{
-		getOrgMessage().setInternals( internals );
+		this.internals = internals;
 	}
     
+
+	/**
+	 * Externals of the current FilterModule
+	 */
+	private Dictionary externals = new Hashtable();
+
 	/**
 	 * Returns an external by its name
 	 * @param name name of the desired external
@@ -189,7 +277,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public Object getExternal(String name) 
 	{
-		return getOrgMessage().getExternal( name );
+		return externals.get( name );
 	}
     
 	/**
@@ -199,7 +287,7 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public Dictionary getExternals() 
 	{
-		return getOrgMessage().getExternals();
+		return externals;
 	}
     
 	/**
@@ -210,16 +298,23 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public void setExternals(Dictionary externals) 
 	{
-		getOrgMessage().setExternals( externals );
+		this.externals = externals;
 	}
     
+
+	/**
+	 * Original Sender of the message -as os this version this is not used
+	 * due to constraints of the message interception layer
+	 */
+	private Object sender;
+
 	/**
 	 * @return java.lang.Object
 	 * @roseuid 411B57170266
 	 */
 	public Object getSender() 
 	{
-		return getOrgMessage().getSender();
+		return sender;
 	}
     
 	/**
@@ -228,19 +323,22 @@ public class MessageList implements DebuggableMessageList
 	 */
 	public void setSender(Object obj) 
 	{
-		getOrgMessage().setSender( obj );
+		this.sender = obj;
 	}
+
+
+	private Object server;
 
 	public void setServer(Object server)
 	{
-		getOrgMessage().setServer( server );
+		this.server = server;
 	}
 
 	public Object getServer()
 	{
-		return getOrgMessage().getServer();
+		return server;
 	}
-
+/*
 	public void setTarget(Object target)
 	{
 		getOrgMessage().setTarget( target );
@@ -250,24 +348,7 @@ public class MessageList implements DebuggableMessageList
 	{
 		return getOrgMessage().getTarget();
 	}
-
-
-	public ResponseBuffer getResponseBuffer()
-	{
-		return getOrgMessage().getResponseBuffer();
-	}
-
-	public void setResponse(Object o)
-	{
-		getOrgMessage().setResponse( o );
-		
-	}
-
-	public Object getResponse()
-	{
-		return getOrgMessage().getResponse();
-	}
-
+*/
 	public Message getOrgMessage() 
 	{
 		return (Message) messages.get( orgMessagePointer );
@@ -283,14 +364,16 @@ public class MessageList implements DebuggableMessageList
 		return messages;
 	}
 
+	private int direction;
+
 	public int getDirection() 
 	{
-		return getOrgMessage().getDirection();
+		return direction;
 	}
 
 	public void setDirection(int direction) 
 	{
-		getOrgMessage().setDirection( direction );
+		this.direction = direction;
 	}
 
 	public Iterator getIterator() 
@@ -307,4 +390,159 @@ public class MessageList implements DebuggableMessageList
 		}
 		return ret;
 	}
+
+	public String toShortString() 
+	{
+		String ret = "#( ";
+		String separator = "";
+		for( int i = 0; i<messages.size(); i++ ) 
+		{
+			ret += separator + ((Message)messages.get(i)).getTarget().GetType().ToString()
+				             + "." + ((Message)messages.get(i)).getSelector();
+			separator = ", ";
+		}
+		ret += " )";
+		return ret;
+	}
+
+	public void prepend( Message m ) 
+	{
+		m.setMessageList( this );
+		messages.addFirst( m );
+		orgMessagePointer++;
+	}
+
+	public void append( Message m ) 
+	{
+		m.setMessageList( this );
+		messages.addLast( m );
+	}
+
+	public void replace( MessageList ml ) 
+	{
+		int firstmatch = getFirstMatchIndex();
+		int lastmatch  = getLastMatchIndex();
+		
+		if( firstmatch == -1 || lastmatch == -1 )
+			throw new Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException( "There was no match" );
+
+
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Firstmatch: " + firstmatch + "\nLastmatch: " + lastmatch );
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","This: " + this.toShortString() );
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Other: " + ml.toShortString() );
+	
+		// duplicate a message
+		Message copy = new Message( (Message) messages.get( firstmatch ) );
+
+		// first remove the old messages
+		for( int i = firstmatch; i <= lastmatch; i++ ) 
+		{
+			messages.remove( firstmatch );
+		}
+
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","This after removal: " + this.toShortString() );
+
+		// insert new messages
+		int insertat = firstmatch;
+		for( int i = 0; i < ml.getMessages().size(); i++ ) 
+		{
+			Message m = (Message) ml.getMessages().get( i );
+			m.setMessageList( this );
+			messages.add( insertat, m );
+			insertat++;
+		}
+
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","This after insertion: " + this.toShortString() );
+	}
+
+	private int getFirstMatchIndex() 
+	{
+		for( int i = 0; i < messages.size(); i++ ) 
+		{
+			if( ((Message)messages.get( i )).isMatched() )
+				return i;
+		}
+		return -1;
+	}
+
+	private int getLastMatchIndex()
+	{
+		for( int i = messages.size()-1; i >= 0; i-- ) 
+		{
+			if( ((Message)messages.get( i )).isMatched() )
+				return i;
+		}
+		return -1;
+	}
+
+	public Message getFirstMessage() 
+	{
+		if( messages.size() == 0 )
+			return null;
+		else
+			return (Message) messages.get( 0 );
+	}
+
+	public boolean hasWildcards() 
+	{
+		for( int i = 0; i < messages.size(); i++ ) 
+		{
+			Message m = (Message) messages.get( i );
+			if( m.getTarget().equals( "*" ) || m.getSelector().equals( "*" ) )
+				return true;
+		}
+		return false;
+	}
+
+	public void resetMatches() 
+	{
+		for( int i = 0; i < messages.size(); i++ ) 
+		{
+			((Message) messages.get( i )).setMatched( false );
+		}
+	}
+
+	public void matchAll() 
+	{
+		for( int i = 0; i < messages.size(); i++ ) 
+		{
+			((Message) messages.get( i )).setMatched( true );
+		}
+	}
+
+	private MessageList originalMessageList = null;
+
+	public void setOriginalMessageList( MessageList ml ) 
+	{
+		originalMessageList = ml;
+	}
+
+	public MessageList getOriginalMessageList() 
+	{
+		return originalMessageList;
+	}
+
+	public Message getMessageAfterOutputFilter() 
+	{
+		Message m = new Message( getOrgMessage() );
+		m.setMessageList( null );
+		copyToMessage( m );
+		return m;
+	}
+
+	public Message reduceToOne() 
+	{
+		Message m1 = (Message) messages.get( 0 );
+		messages = new LinkedList();
+		messages.add( m1 );
+		return m1;
+	}
+
+	public Message duplicateOne()
+	{
+		Message m2 = new Message( (Message) messages.get( 0 ) );
+		messages.add( m2 );
+		return m2;
+	}
+
 }

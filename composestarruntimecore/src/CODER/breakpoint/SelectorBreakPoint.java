@@ -22,7 +22,7 @@ public class SelectorBreakPoint extends BreakPoint{
 		LinkedList list = afterMessage.getMessages();
 		for(int i = 0; i < list.size();i++)
 		{
-			if(sList.indexOf(((DebuggableMessage)list.get(i)).getSelector()) >= 0)
+			if(sList.indexOf(((DebuggableSingleMessage)list.get(i)).getSelector()) >= 0)
 			{
 				return true;
 			}

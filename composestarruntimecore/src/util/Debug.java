@@ -90,6 +90,7 @@ public class Debug
 		System.err.println (module + ": " + message);
 		try
 		{
+			System.in.reset();
 			System.in.read();
 		}
 		catch(Exception e)

@@ -41,6 +41,10 @@ public abstract class FilterFactory
 			return(new Meta());
 		else if(filterType.getType().equals(FilterType.SEND))
 			return(new Send());
+		else if(filterType.getType().equals(FilterType.PREPEND))
+			return(new Prepend());
+		else if(filterType.getType().equals(FilterType.APPEND))
+			return(new Append());
 		else if(filterType.getType().equals(FilterType.CUSTOM)) 
 			return getCustomFilterTypeFor(filterType);
 		else 

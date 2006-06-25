@@ -55,7 +55,7 @@ public class MetaFilterAction extends FilterAction {
 				continue;
 
 			Concern target = null;
-			SubstitutionPart sp = filter.getFilterElement(0).getMatchingPattern(0).getSubstitutionPart();
+			SubstitutionPart sp = (SubstitutionPart) filter.getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().firstElement();
 			DeclaredObjectReference dor = (DeclaredObjectReference) sp.getTarget().getRef();
 			Object o = dor.getRef();
 			if( o instanceof Internal )

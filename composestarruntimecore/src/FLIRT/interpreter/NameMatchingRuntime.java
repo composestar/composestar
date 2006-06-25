@@ -1,7 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 
@@ -12,9 +12,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: NameMatchingRuntime.java,v 1.3 2006/02/13 13:20:06 composer Exp $
+ * $Id: NameMatchingRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
-public class NameMatchingRuntime extends MatchingTypeRuntime implements Interpretable 
+public class NameMatchingRuntime extends MatchingTypeRuntime 
 {
     
     /**
@@ -30,8 +30,8 @@ public class NameMatchingRuntime extends MatchingTypeRuntime implements Interpre
      * @return boolean
      * @roseuid 40DD96920333
      */
-    public boolean interpret(MessageList m, Dictionary context) {
-		// TODO W<: Iterate over messages or at least over internals/externals
+    public boolean interpret(Message m, Dictionary context) {
+		// TODO WM: Iterate over messages or at least over internals/externals
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tInterpreting NAME MatchingPartRuntime...");
 		resolveTarget(m.getInternals(), m.getExternals(), m, context);
 		return resolveSelector(m, context);
@@ -43,7 +43,7 @@ public class NameMatchingRuntime extends MatchingTypeRuntime implements Interpre
 	 * @return boolean
 	 * @roseuid 40DDFDF702CD
 	 */
-	public boolean resolveSelector(MessageList m, Dictionary context) 
+	public boolean resolveSelector(Message m, Dictionary context) 
 	{
 		String ct_selector = ((MessageSelector)this.parentMatchingPart.theSelectorRuntime.getReference()).getName();
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolving selector '"+ ct_selector+"'...");
@@ -71,7 +71,7 @@ public class NameMatchingRuntime extends MatchingTypeRuntime implements Interpre
 	 * @param context
 	 * @roseuid 40DDFE10002A
 	 */
-	public void resolveTarget(Dictionary internals, Dictionary externals, MessageList m, Dictionary context) 
+	public void resolveTarget(Dictionary internals, Dictionary externals, Message m, Dictionary context) 
 	{
 		String target = ((Target)this.parentMatchingPart.theTargetRuntime.getReference()).getName();
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolving target '" + target + "'...");

@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Policy;
 
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterPolicy.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: FilterPolicy.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  * 
  * Models the Way messages are filtered.
  * This deals with the way messages are handled within a FilterModule.
@@ -44,5 +45,5 @@ public abstract class FilterPolicy
      * @return Composestar.Runtime.FLIRT.policy.PolicyExecutionResult
      * @roseuid 3F36533000D8
      */
-    public abstract PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, Message aMessage);
+    public abstract PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, MessageList aMessage);
 }

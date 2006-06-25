@@ -9,7 +9,7 @@ import Composestar.RuntimeCore.Utils.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ReifiedMessage.java,v 1.2 2006/03/10 14:38:21 reddog33hummer Exp $
+ * $Id: ReifiedMessage.java,v 1.3 2006/03/10 15:58:05 oohlaf Exp $
  */
 public class ReifiedMessage implements ChildRunnable
 {
@@ -23,6 +23,7 @@ public class ReifiedMessage implements ChildRunnable
 	protected Object returnValue;
     
 	private Message message;
+	private MessageList messagelist;
     
 	private Object actObject;
 	private String actMethod;
@@ -80,7 +81,7 @@ public class ReifiedMessage implements ChildRunnable
 	public ReifiedMessage( MessageList m )
 	{
 		this.message = m.getOrgMessage();
-		// TODO WM: Do something useful here
+		this.messagelist = m;
 	}
     
 	/**
@@ -252,5 +253,10 @@ public class ReifiedMessage implements ChildRunnable
 	public Object getSender()
 	{
 		return this.message.getSender();
+	}
+
+	public MessageList getMessageListCopy() 
+	{
+		return new MessageList( messagelist );
 	}
 }

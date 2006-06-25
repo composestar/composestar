@@ -98,9 +98,10 @@ public class MetaAction extends ComposeStarAction {
 		this.message.getContinueBuffer().consume();
 
 		// sync stuff...
-		this.continueMessage.setSelector(message.getSelector());
-		this.continueMessage.setTarget(message.getTarget());
-		this.continueMessage.setArguments(message.getArgs());
+		this.continueMessage.copyFromMessageList( message.getMessageListCopy() );
+		//this.continueMessage.setSelector(message.getSelector());
+		//this.continueMessage.setTarget(message.getTarget());
+		//this.continueMessage.setArguments(message.getArgs());
 		
 		this.shouldContinue = this.message.shouldContinue();
 

@@ -12,7 +12,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DispatchToInnerAction.java,v 1.3 2006/02/13 13:37:35 composer Exp $
+ * $Id: DispatchToInnerAction.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
  * 
  * Models the action to carry out when a Dispatch Filter accepts a message.
  * When executed, it redirects the message to the target specified during
@@ -76,8 +76,10 @@ public class DispatchToInnerAction extends ComposeStarAction
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+target.GetType().ToString()+"()");
 			return null;
 		}
-		this.continueMessage.setTarget(this.continueMessage.getInner());
-		this.continueMessage.setSelector(selector);
+
+		// TODO change this
+		//this.continueMessage.setTarget(this.continueMessage.getInner());
+		//this.continueMessage.setSelector(selector);
 		return Invoker.getInstance().invoke(target, selector, args);     
 	}
 

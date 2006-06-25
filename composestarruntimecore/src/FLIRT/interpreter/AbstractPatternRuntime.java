@@ -9,9 +9,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: AbstractPatternRuntime.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: AbstractPatternRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
-public abstract class AbstractPatternRuntime extends ReferenceEntityRuntime implements Interpretable 
+public abstract class AbstractPatternRuntime extends ReferenceEntityRuntime
 {
     public TargetRuntime theTargetRuntime;
     public SelectorRuntime theSelectorRuntime;

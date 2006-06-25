@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedInternals.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
+* $Id: NotUsedInternals.java,v 1.2 2006/03/09 10:36:13 whavinga Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -61,9 +61,13 @@ public class NotUsedInternals implements BaseChecker {
 						Iterator mpi = fe.getMatchingPatternIterator();
 						while(mpi.hasNext()){
 							MatchingPattern mp = (MatchingPattern) mpi.next();
-							if(!(mp.getSubstitutionPart() == null)){
-								if (internalID.equals(mp.getSubstitutionPart().getTarget().getName())){
-									isInternalUsed = true;
+							Iterator spi = mp.getSubstitutionPartsIterator();
+							while( spi.hasNext() ) {
+								SubstitutionPart sp = (SubstitutionPart) spi.next();
+								if(!(sp == null)){
+									if (internalID.equals(sp.getTarget().getName())){
+										isInternalUsed = true;
+									}
 								}
 							}
 						}
@@ -83,17 +87,27 @@ public class NotUsedInternals implements BaseChecker {
 						while(mpi.hasNext()){
 							MatchingPattern mp = (MatchingPattern) mpi.next();
 							//Check whether the internal show up as matching target or substitution target (maybe the if statement is too long)
-							if(!(mp.getSubstitutionPart() == null)){
-								if (internalID.equals(mp.getSubstitutionPart().getTarget().getName())){
-									isInternalUsed = true;
+							
+							Iterator spi = mp.getSubstitutionPartsIterator();
+							while( spi.hasNext() ) {
+								SubstitutionPart sp = (SubstitutionPart) spi.next();
+								if(!(sp == null)){
+									if (internalID.equals(sp.getTarget().getName())){
+										isInternalUsed = true;
+									}
 								}
 							}
 							
-							if(!(mp.getMatchingPart() == null)){
-								if (internalID.equals(mp.getMatchingPart().getTarget().getName())){
-									isInternalUsed = true;
+							Iterator matchpi = mp.getMatchingPartsIterator();
+							while( matchpi.hasNext() ) {
+								MatchingPart matchp = (MatchingPart) matchpi.next();
+								if(!(matchp == null)){
+									if (internalID.equals(matchp.getTarget().getName())){
+										isInternalUsed = true;
+									}
 								}
 							}
+							
 						}
 					}
 				}

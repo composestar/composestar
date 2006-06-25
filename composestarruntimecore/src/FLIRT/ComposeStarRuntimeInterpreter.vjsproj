@@ -145,6 +145,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "actions\AppendAction.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "actions\ComposeStarAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -171,6 +176,11 @@
                 />
                 <File
                     RelPath = "actions\MetaAction.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "actions\PrependAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -255,6 +265,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "filtertypes\Append.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "filtertypes\CustomFilter.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -281,6 +296,11 @@
                 />
                 <File
                     RelPath = "filtertypes\Meta.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "filtertypes\Prepend.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

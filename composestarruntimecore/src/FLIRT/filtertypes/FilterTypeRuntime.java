@@ -1,6 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.CODER.Model.*;
@@ -12,7 +13,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterTypeRuntime.java,v 1.4 2006/02/13 13:25:11 pascal Exp $
+ * $Id: FilterTypeRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
 public abstract class FilterTypeRuntime implements DebuggableFilterType
 {
@@ -62,4 +63,62 @@ public abstract class FilterTypeRuntime implements DebuggableFilterType
     public FilterRuntime getFilter() {
 		return this.filter;     
     }
+
+	protected void replaceInner( MessageList originalMessages, MessageList modifiedMessages ) 
+	{
+		java.util.LinkedList mod = modifiedMessages.getMessages();
+
+		for( int i = 0; i < mod.size(); i++ ) 
+		{
+			Message modifiedMessage = (Message) mod.get( i );
+
+			if(modifiedMessage.getTarget().equals("inner"))
+			{
+				modifiedMessage.setTarget(originalMessages.getInner());
+			}
+		}
+
+	}
+
+	protected void replaceWildcards( MessageList originalMessages, MessageList modifiedMessages ) 
+	{
+		java.util.LinkedList org = originalMessages.getMessages();
+		java.util.LinkedList mod = modifiedMessages.getMessages();
+
+		if( org.size() != mod.size() && modifiedMessages.hasWildcards() )
+			throw new Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException( "Ambiguous wildcards in selector" );
+		
+		if( modifiedMessages.hasWildcards() ) 
+		{
+			// so org.size == mod.size
+			for( int i = 0; i < org.size(); i++ ) 
+			{
+				Message originalMessage = (Message) org.get( i );
+				Message modifiedMessage = (Message) mod.get( i );
+
+				if(modifiedMessage.getTarget().equals("*"))
+				{
+					modifiedMessage.setTarget(originalMessage.getTarget());
+				}
+		
+				if(modifiedMessage.getSelector().equals("*"))
+				{
+					modifiedMessage.setSelector(originalMessage.getSelector());
+				}
+			}
+		}
+
+		for( int i = 0; i < mod.size(); i++ ) 
+		{
+			Message modifiedMessage = (Message) mod.get( i );
+			if(modifiedMessage.getTarget() instanceof String && modifiedMessage.getInternal((String)modifiedMessage.getTarget()) != null)
+			{
+				modifiedMessage.setTarget(modifiedMessage.getInternal((String)modifiedMessage.getTarget()));
+			}
+			else if(modifiedMessage.getTarget() instanceof String && modifiedMessage.getExternal((String)modifiedMessage.getTarget()) != null)
+			{
+				modifiedMessage.setTarget(modifiedMessage.getExternal((String)modifiedMessage.getTarget()));
+			}
+		}
+	}
 }

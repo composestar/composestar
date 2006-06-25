@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DefaultFilterPolicy.java,v 1.2 2006/03/07 13:45:47 reddog33hummer Exp $
+ * $Id: DefaultFilterPolicy.java,v 1.3 2006/03/07 16:29:45 reddog33hummer Exp $
  * 
  * Filter policy with support for the Dispatch, Error and Substitution filters.
  */
@@ -31,7 +31,7 @@ class DefaultFilterPolicy extends FilterPolicy
      * @return Composestar.Runtime.FLIRT.policy.PolicyExecutionResult
      * @roseuid 40DFDB790369
      */
-    public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, Message aSingleMessage) {
+    public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, MessageList aSingleMessage) {
 		boolean messageWasFiltered = false;
 		boolean exit = false;
 		boolean shouldDispatchToInner = true;
@@ -85,8 +85,8 @@ class DefaultFilterPolicy extends FilterPolicy
 			if(Debug.SHOULD_DEBUG)
 			{
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","#######################################");
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Original Message: "+originalMessage.getTarget().GetType().ToString() +"."+ originalMessage.getSelector());
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Modified Message: "+modifiedMessage.getTarget().GetType().ToString() +"."+ modifiedMessage.getSelector());
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Original Message: "+originalMessage.toShortString() );
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Modified Message: "+modifiedMessage.toShortString() );
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","#######################################");
 			}
 			

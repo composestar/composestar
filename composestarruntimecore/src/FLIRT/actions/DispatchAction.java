@@ -4,13 +4,14 @@ import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
+import Composestar.RuntimeCore.Utils.Invoker;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DispatchAction.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: DispatchAction.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
  * 
  * Models the action to carry out when a Dispatch Filter accepts a message.
  * When executed, it redirects the message to the target specified during
@@ -77,37 +78,70 @@ public class DispatchAction extends ComposeStarAction
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tWith argument["+i+"] = "+args[i]);
 		}
 
-		this.continueMessage.setTarget(modifiedMessage.getTarget());
-		this.continueMessage.setSelector(modifiedMessage.getSelector());
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","ContinueMessage:\n"+continueMessage.toShortString() );
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","ModifiedMessage:\n"+modifiedMessage.toShortString() );
+
+		//this.continueMessage.setTarget(modifiedMessage.getTarget());
+		//this.continueMessage.setSelector(modifiedMessage.getSelector());
+		this.continueMessage.replace( modifiedMessage );
 		
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","ContinueMessage after replace:\n"+continueMessage.toShortString() );
+
 		Object returnValue = null;
 		java.util.Iterator ms = modifiedMessage.getIterator();
 		while( ms.hasNext() ) 
 		{
 			Message m = (Message) ms.next();
 
-			if(Debug.SHOULD_DEBUG) 
+			if( m.getTarget().equals( "inner" ) ) 
 			{
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Processing item in message list");
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().ToString());
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Selector: "+m.getSelector());
-			}
+				m.setTarget( m.getInner() );
 
-			//switch(this.continueMessage.STATE)
-			switch(m.STATE)
+				if(Debug.SHOULD_DEBUG) 
+				{
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Processing item in message list");
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().ToString());
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Selector: "+m.getSelector());
+				}
+
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+m.getTarget().GetType().ToString()+"."+m.getSelector()+" ==> "+m.getTarget().GetType().ToString());
+				for(int i=0; i<args.length; i++)
+				{
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tWith argument["+i+"] = "+args[i]);
+				}
+				if(m.STATE == Message.MESSAGE_CONSTRUCTOR) // Found a constructor call!
+				{
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+m.getTarget().GetType().ToString()+"()");
+					return null;
+				}
+
+				returnValue = Invoker.getInstance().invoke( m.getTarget(), m.getSelector(), m.getArguments() );     
+			}  
+			else 
 			{
-				case Message.MESSAGE_NONSTATIC_NONSTATIC_VOID :
-					MessageHandlingFacility.handleVoidMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
-					break;
-				case Message.MESSAGE_NONSTATIC_NONSTATIC_RETURN :
-					returnValue = MessageHandlingFacility.handleReturnMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
-					break;
-				case Message.MESSAGE_STATIC_NONSTATIC_VOID :
-					MessageHandlingFacility.handleVoidMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
-					break;
-				case Message.MESSAGE_STATIC_NONSTATIC_RETURN :
-					returnValue = MessageHandlingFacility.handleReturnMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
-					break;
+				if(Debug.SHOULD_DEBUG) 
+				{
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Processing item in message list");
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().ToString());
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Selector: "+m.getSelector());
+				}
+
+				//switch(this.continueMessage.STATE)
+				switch(m.STATE)
+				{
+					case Message.MESSAGE_NONSTATIC_NONSTATIC_VOID :
+						MessageHandlingFacility.handleVoidMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
+						break;
+					case Message.MESSAGE_NONSTATIC_NONSTATIC_RETURN :
+						returnValue = MessageHandlingFacility.handleReturnMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
+						break;
+					case Message.MESSAGE_STATIC_NONSTATIC_VOID :
+						MessageHandlingFacility.handleVoidMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
+						break;
+					case Message.MESSAGE_STATIC_NONSTATIC_RETURN :
+						returnValue = MessageHandlingFacility.handleReturnMethodCall(this.continueMessage.getSender(),m.getTarget(),m.getSelector(),this.args);
+						break;
+				}
 			}
 			//return null;
 

@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Interpreter;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 
@@ -13,9 +13,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MatchingPartRuntime.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id: MatchingPartRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
  */
-public class MatchingPartRuntime extends AbstractPatternRuntime implements Interpretable 
+public class MatchingPartRuntime extends AbstractPatternRuntime 
 {
     public MatchingTypeRuntime theMatchingTypeRuntime;
     
@@ -32,7 +32,7 @@ public class MatchingPartRuntime extends AbstractPatternRuntime implements Inter
      * @return boolean
      * @roseuid 40DD9697005F
      */
-    public boolean interpret(MessageList m, Dictionary context) {
+    public boolean interpret(Message m, Dictionary context) {
 		// TODO WM: Iterate over messages here? probably not
     	return theMatchingTypeRuntime.interpret(m,context);
 		// TODO: Fix it here so we do make a distinction between name and signature matching!!
@@ -46,7 +46,7 @@ public class MatchingPartRuntime extends AbstractPatternRuntime implements Inter
      * @return boolean
      * @roseuid 40DDFDF702CD
      */
-    public boolean resolveSelector(MessageList m, Dictionary context) {
+    public boolean resolveSelector(Message m, Dictionary context) {
 		// TODO WM: iterate here? nah
 		String message_selector = m.getSelector();
 		String ct_selector = ((MessageSelector)this.theSelectorRuntime.getReference()).getName();
@@ -89,7 +89,7 @@ public class MatchingPartRuntime extends AbstractPatternRuntime implements Inter
      * @param context
      * @roseuid 40DDFE10002A
      */
-    public void resolveTarget(Dictionary internals, Dictionary externals, MessageList m, Dictionary context) {
+    public void resolveTarget(Dictionary internals, Dictionary externals, Message m, Dictionary context) {
 		String target = ((Target)this.theTargetRuntime.getReference()).getName();
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolving target '" + target + "'...");
 		if (target.equals("*"))

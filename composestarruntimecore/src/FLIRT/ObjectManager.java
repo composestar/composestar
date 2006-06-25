@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.5 2006/03/10 15:58:05 oohlaf Exp $
+ * $Id: ObjectManager.java,v 1.6 2006/03/17 08:42:29 reddog33hummer Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -411,6 +411,9 @@ public class ObjectManager implements ChildRunnable
 		
 		// read the response from the responsebuffer...
 		Object reply = m.getResponse();
+		
+		if( reply instanceof MessageList )
+			reply = ((MessageList)reply).getMessageAfterOutputFilter();
 
 		if( reply instanceof Message )
 			((Message)reply).setDirection(Message.INCOMING);
@@ -429,12 +432,13 @@ public class ObjectManager implements ChildRunnable
      * @see dotNetComposeStar.runtime.policy.FilterPolicy
      * @roseuid 3F36584D012B
      */
-    public Object receiveMessage(Message aMessage) {
+    public Object receiveMessage(Message aSingleMessage) {
 		// Set used vars
 		Object retVal = null;
 		boolean wasAccepted = false;
 		ArrayList filterList = new ArrayList();
 		
+		MessageList aMessage = new MessageList( aSingleMessage );
 		//try 
 		//{
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Number of filtermodules is " + filterModules.size() + ".");
@@ -481,7 +485,7 @@ public class ObjectManager implements ChildRunnable
 			{
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules, returning DefaultDispatchToInnerAction");
 				//return Invoker.getInstance().invoke(aMessage.getTarget(), aMessage.getSelector(), aMessage.getArguments());
-				return new DispatchToInnerAction( new MessageList( aMessage ), true, aMessage.getTarget(), aMessage.getSelector(), aMessage.getArguments());
+				return new DispatchToInnerAction( aMessage, true, aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector(), aMessage.getArguments());
 			}
 			//throw new MessageNotFilteredException("The message: "+aMessage.getSelector()+ " for target: "+aMessage.getInner().GetType().ToString()+" was not filtered!");
 		//}

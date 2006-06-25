@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.3 2006/03/07 16:29:45 reddog33hummer Exp $
+ * $Id: MetaFilterPolicy.java,v 1.4 2006/03/09 18:12:13 oohlaf Exp $
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -32,11 +32,10 @@ class MetaFilterPolicy extends FilterPolicy
      * @return Composestar.Runtime.FLIRT.policy.PolicyExecutionResult
      * @roseuid 40DFDB7902FB
      */
-    public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, Message aSingleMessage) {
+    public PolicyExecutionResult executeFilterPolicy(FilterModuleRuntime fm, ArrayList filterList, MessageList aMessage) {
 		boolean messageWasFiltered = false;
 		boolean exit = false;
 		boolean shouldDispatchToInner = true;
-		MessageList aMessage = new MessageList( aSingleMessage );
 
 		FilterModule filtermod = (FilterModule)fm.getReference();
 
@@ -48,10 +47,10 @@ class MetaFilterPolicy extends FilterPolicy
 		aMessage.setExternals(fm.getExternals());
 
 		// Update the JP!
-		JoinPoint jp = new JoinPoint(aMessage.getTarget());
+		JoinPoint jp = new JoinPoint(aMessage.getFirstMessage().getTarget());
 		jp.setInternals(fm.getInternals());
 		jp.setExternals(fm.getExternals());
-		jp.setAttributeList(Invoker.getInstance().getAttributesFor(aMessage.getTarget(), aMessage.getSelector()));
+		jp.setAttributeList(Invoker.getInstance().getAttributesFor(aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector()));
 		JoinPointInfoProxy.updateJoinPoint(jp);
 
 		if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
@@ -72,8 +71,11 @@ class MetaFilterPolicy extends FilterPolicy
 			// Update the message!
             MessageInfoProxy.updateMessage(originalMessage);
 
-			boolean eval = f.canAccept(aMessage, context);
-			MessageList modifiedMessage = new MessageList(aMessage);
+			MessageList modifiedMessage = new MessageList( aMessage );
+			modifiedMessage.setOriginalMessageList( originalMessage );
+
+			boolean eval = f.canAccept(modifiedMessage, context);
+
 
 			if (eval) 
 			{
@@ -95,8 +97,8 @@ class MetaFilterPolicy extends FilterPolicy
 			if (Debug.SHOULD_DEBUG) 
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "############  Before call  ############");
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Original Message: " + originalMessage.getTarget().GetType().ToString() + "." + originalMessage.getSelector());
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Modified Message: " + modifiedMessage.getTarget().GetType().ToString() + "." + modifiedMessage.getSelector());
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Original Message: " + originalMessage.toShortString() );
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Modified Message: " + modifiedMessage.toShortString() );
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "#######################################");
 			}
 
@@ -121,9 +123,9 @@ class MetaFilterPolicy extends FilterPolicy
 			if(Debug.SHOULD_DEBUG)
 			{
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","#############  After call  ############");
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Original Message: "+originalMessage.getTarget().GetType().ToString() +"."+ originalMessage.getSelector());
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filter Modified Message: "+modifiedMessage.getTarget().GetType().ToString() +"."+ modifiedMessage.getSelector());
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Action Modified Message: "+csa.getMessageToContinueWith().getTarget().GetType().ToString() +"."+ csa.getMessageToContinueWith().getSelector());
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Original Message: "+originalMessage.toShortString() );
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filter Modified Message: "+modifiedMessage.toShortString() );
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","Action Modified Message: "+csa.getMessageToContinueWith().toShortString() );
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","#######################################");
 
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tFilterexecution result: " + result);
@@ -136,8 +138,11 @@ class MetaFilterPolicy extends FilterPolicy
 			}
 
 			//aMessage = csa.getMessageToContinueWith();
-			aMessage.setTarget(csa.getMessageToContinueWith().getTarget());
-			aMessage.setSelector(csa.getMessageToContinueWith().getSelector());
+			//aMessage.setTarget(csa.getMessageToContinueWith().getTarget());
+			//aMessage.setSelector(csa.getMessageToContinueWith().getSelector());
+			//csa.updateMessage( aMessage );
+			aMessage.copyFromMessageList( csa.getMessageToContinueWith() );
+			
 			messageWasFiltered = messageWasFiltered | eval;
 			shouldDispatchToInner = shouldDispatchToInner & csa.getShouldContinue();
 		}
