@@ -37,13 +37,13 @@ public class AcceptRejectGuiComponent extends JPanel
 		}
 		else if(accept)
 		{
-			g.setColor(Color.GREEN);
+			g.setColor(Color.green);
 		}
 		else
 		{
-			g.setColor(Color.RED);
+			g.setColor(Color.red);
 		}
-		g.fillRect(0,0,getWidth(),getHeight());
+		g.fillRect(0,0,super.getSize().width,super.getSize().height);
 		g.setColor(old);
 	}
 }
