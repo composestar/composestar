@@ -12,6 +12,8 @@ CLASSES=Annotation.class \
 	Type.class \
 	TypeMap.class \
 	UnitRegister.class \
-	UnitResult.class
+	UnitResult.class \
+	CallToOtherMethod.class \
+	ResourceUsage.class
 
 include ${ROOTDIR}default.mk
