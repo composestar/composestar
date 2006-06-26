@@ -21,7 +21,7 @@ public abstract class BACO implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Debug.out(Debug.MODE_CRUCIAL,"BACO","Copying files to output directory...");
+		Debug.out(Debug.MODE_DEBUG, "BACO","Copying files to output directory...");
 		Configuration config = Configuration.instance();
         
         //config.assemblies.addAssembly("D:/ComposestarSource/examplesDotNET/Pacman/obj/Weaver/pacman.ConcernImplementations.ChangingLevel.dll");

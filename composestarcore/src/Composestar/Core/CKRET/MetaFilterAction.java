@@ -8,6 +8,7 @@ package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class MetaFilterAction extends FilterAction {
 			Filter filter = (Filter) it.next();
 			if( !filter.getFilterType().getType().equals(FilterType.META) )
 				continue;
-
+			
 			Concern target = null;
 			SubstitutionPart sp = (SubstitutionPart) filter.getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().firstElement();
 			DeclaredObjectReference dor = (DeclaredObjectReference) sp.getTarget().getRef();
@@ -74,7 +75,7 @@ public class MetaFilterAction extends FilterAction {
 				{
 					Type dnt = (Type) pr;
 					String selector = sp.getSelector().getName();
-			
+					
 					String[] params = {"Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage"};
 					MethodInfo method = dnt.getMethod(selector,params);
 					if( method != null )
@@ -103,13 +104,13 @@ public class MetaFilterAction extends FilterAction {
 									StringTokenizer ost = new StringTokenizer(token ,".()");
 									//try
 									//{
-										String resource = ost.nextToken();
-										String operation  = ost.nextToken();
-										if( ost.hasMoreTokens() )
-										{
-											String argument = ost.nextToken();
-										}
-										metaOperations.add(new Operation(operation,resource));
+									String resource = ost.nextToken();
+									String operation  = ost.nextToken();
+									if( ost.hasMoreTokens() )
+									{
+										String argument = ost.nextToken();
+									}
+									metaOperations.add(new Operation(operation,resource));
 									//}
 									//catch(Exception e)
 									//{
@@ -122,11 +123,45 @@ public class MetaFilterAction extends FilterAction {
 								this.metaSemantics.put(filter, metaOperations);
 							}
 						}
+						Iterator ReifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator() ;
+						while (ReifiedMessageBehaviour.hasNext())
+						{
+							String refMes = (String)(ReifiedMessageBehaviour.next());
+							
+							StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"",""),",");
+							
+							List metaOperations = new ArrayList();
+							
+							while( st.hasMoreTokens() )
+							{
+								String token = st.nextToken();
+								StringTokenizer ost = new StringTokenizer(token ,".()");
+								//try
+								//{
+								String resource = ost.nextToken();
+								String operation  = ost.nextToken();
+								if( ost.hasMoreTokens() )
+								{
+									String argument = ost.nextToken();
+								}
+								metaOperations.add(new Operation(operation,resource));
+								//}
+								//catch(Exception e)
+								//{
+								//	throw new ModuleException("SECRET","Error in annotation semantics of filter " + filter.getQualifiedName());
+								//}
+							}
+							
+							// TODO: this overrides a previously found scenario for the same filter
+							//       which should obviously never happen...
+							this.metaSemantics.put(filter, metaOperations);
+						}
 					}
 				}
 			}
 		}
 	}
+	
 
 	public List getOperations(Filter filter)
 	{
