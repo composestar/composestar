@@ -89,11 +89,18 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable {
      * @return java.lang.Object
      * @roseuid 40EBC9CC0285
      */
-    public Object get(Object arg0) {
-     	if( keys.contains(arg0))
-     		return values.elementAt(keys.indexOf(arg0));
-     	return null;     
-    }
+	public Object get(Object arg0) 
+	{
+		int index = keys.indexOf(arg0);
+		if(index < 0)
+		{
+			return null; 
+		}
+		else
+		{
+			return values.elementAt(index);
+		}   
+	}
     
     /**
      * @return int
@@ -125,21 +132,22 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable {
      * @return java.lang.Object
      * @roseuid 40EBC9CC037F
      */
-    public Object put(Object arg0, Object arg1) {
-     	
-		Object old = null;
-     	if( this.containsKey(arg0) ) 
-     		old = values.elementAt(keys.indexOf(arg0));
-     		
-     	if( !this.containsKey(arg0)) {
-     		keys.addElement(arg0);
-     		values.addElement(arg1);
-     	}
-     	else {
-     		values.setElementAt(arg1, keys.indexOf(arg0));
+	public Object put(Object arg0, Object arg1) 
+	{
+		int index = keys.indexOf(arg0);
+		if(index <0)
+		{
+			keys.addElement(arg0);
+			values.addElement(arg1);
+			return null;
 		}
-     	return old;     
-    }
+		else
+		{
+			Object old = values.elementAt(index);
+			values.setElementAt(arg1, index);
+			return old;
+		}
+	}
     
     /**
      * @param arg0
