@@ -6,10 +6,12 @@
  */
 package Composestar.Utils;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -140,4 +142,41 @@ public class FileUtils
 	  else
 		  return pathToFile;
   }
+  
+  /**
+   * Get a file stream for the SAX parser whitout the Root element could not be found exception.
+   * This is caused by a BOM character which is skipped by this file reader.
+ * @param xmlFile
+ * @return
+ * @throws FileNotFoundException
+ * @throws IOException
+ */
+public static FileInputStream getCleanInputStream(File xmlFile) throws FileNotFoundException, IOException {
+  	FileInputStream in = new FileInputStream(xmlFile);
+  	int bomKount = getBOMCount(xmlFile);
+  	if (bomKount > 0) {
+  		byte[] buf = new byte[bomKount];
+  		in.read(buf);
+  	}
+  	return in;
+  }
+  
+  /**
+   * Get count of leading characters that denote the byte order mark, part of
+   * the unicode standard. These make SaxParser barf
+   */
+  private static int getBOMCount(File xmlFile) throws FileNotFoundException,
+  IOException {
+  	DataInputStream din = new DataInputStream(new FileInputStream(xmlFile));
+  	int bomKount = 0;
+  	byte b = din.readByte();
+  	while (b < 0) {
+  		bomKount++;
+  		b = din.readByte();
+  	}
+  	din.close();
+  	//	 System.out.println("Skipping BOM, " + bomKount + " bytes");
+  	return bomKount;
+  }
+  
 }

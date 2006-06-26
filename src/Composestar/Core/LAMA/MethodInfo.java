@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
 public abstract class MethodInfo extends ProgramElement implements SerializableRepositoryEntity{
 	
@@ -17,10 +18,17 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	public ArrayList Parameters;
 	public Type Parent;
 
+	private HashSet CallsToOtherMethods;
+	private HashSet ReifiedMessageBehavior;
+	private HashSet ResourceUsage;
+	
 	public MethodInfo()
 	{
 		UnitRegister.instance().registerLanguageUnit(this);
 		Parameters = new ArrayList();
+		CallsToOtherMethods = new HashSet();
+		ReifiedMessageBehavior = new HashSet();
+		ResourceUsage = new HashSet();
 	}
 	
 	/**
@@ -61,6 +69,76 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	public List getParameters() 
 	{
 		return Parameters;     
+	}
+	
+	
+	/**
+	 * Get a list with information about the calls to other methods from within this method.
+	 * @return java.util.List
+	 */
+	public HashSet getCallsToOtherMethods()
+	{
+		return CallsToOtherMethods;	
+	}
+	
+	public void setCallsToOtherMethods(HashSet value)
+	{
+		CallsToOtherMethods = value;
+	}
+	
+	/** 
+	 * Indicates if this instance had information about the calls to other methods.
+	 * @return
+	 */
+	public boolean hasCallsToOtherMethodsInformation()
+	{
+		return CallsToOtherMethods.size() > 0;	
+	}
+		
+	/**
+	 * Get the resource usage information.
+	 * @return
+	 */
+	public HashSet getResourceUsage()
+	{
+		return ResourceUsage;
+	}
+	
+	public void setResourceUsage(HashSet value)
+	{
+		ResourceUsage = value;
+	}
+	
+	/** 
+	 * Indicates if this instance had information about the resource usage.
+	 * @return
+	 */
+	public boolean hasResourceUsage()
+	{
+		return ResourceUsage.size() > 0;	
+	}
+	
+	/**
+	 * Get a list of strings describing the behaviour of the ReifiedMessage
+	 * @return java.util.List
+	 */
+	public HashSet getReifiedMessageBehavior()
+	{
+		return ReifiedMessageBehavior;	
+	}
+	
+	public void setReifiedMessageBehavior(HashSet value)
+	{
+		ReifiedMessageBehavior = value;
+	}
+	
+	/**
+	 * Indicates if the message has a specified ReifiedMessage Behavior collection.
+	 * @return boolean
+	 */
+	public boolean hasReifiedMessageBehavior()
+	{
+		return ReifiedMessageBehavior.size() > 0;
 	}
 	
 	/**
@@ -146,6 +224,9 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		ReturnTypeString = in.readUTF();
 		Parameters = (ArrayList)in.readObject();   
 		Parent = (Type)in.readObject();
+		CallsToOtherMethods = (HashSet)in.readObject() ;
+		ReifiedMessageBehavior = (HashSet)in.readObject();
+		ResourceUsage = (HashSet)in.readObject();
 	}
 	 
 	/**
@@ -157,5 +238,8 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		out.writeUTF(ReturnTypeString);
 		out.writeObject(Parameters);
 		out.writeObject(Parent);
+		out.writeObject(CallsToOtherMethods);
+		out.writeObject(ReifiedMessageBehavior);
+		out.writeObject(ResourceUsage);
 	}
 }
