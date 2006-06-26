@@ -209,7 +209,7 @@ public class DotNETCompiler implements LangCompiler{
         p.setCompiledDummies(output);
         output = FileUtils.prepareCommand(output);
         	
-		command = command.replaceAll( "\\{OUT\\}", output);
+		command = command.replaceAll( "\\{OUT\\}", "\""+output+"\"");
         command = command.replaceAll( "\\{LIBS\\}", libString );
         command = command.replaceAll( "\\{OPTIONS\\}", options );
                         
@@ -218,7 +218,7 @@ public class DotNETCompiler implements LangCompiler{
         Iterator sourcesItr = sources.iterator();
 		while(sourcesItr.hasNext()){
         	Source s = (Source)sourcesItr.next();
-			sourcefiles = sourcefiles + " " +s.getDummy();
+			sourcefiles = sourcefiles + " " +"\""+s.getDummy()+"\"";
 		}
 		command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(sourcefiles));
  
