@@ -4,7 +4,6 @@
 ;Include Modern UI
 
   !include "MUI.nsh"
-  !include "SetEnvVar.nsh"
 
 ;--------------------------------
 
@@ -21,18 +20,19 @@
 	Var NET_VER
 	Var INI_FILE
 	Var CSS_FILE
-	Var UNIX_DIR
 	Var VS_PATH
 	Var KEY_FILE
 	Var RESULT
 	Var StartMenuGroup
+	Var Path
+	Var UNIX_DIR
 
 ;--------------------------------
 ;General
 
   Name "Compose*.NET"
   Icon cstar.ico
-  OutFile "ComposeStar.NET_0.6.exe"
+  OutFile "ComposeStar.NET_0.5.1.exe"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -104,17 +104,17 @@ Section "Checks" Checks
 	
 SectionEnd
 
-Section "Compose* beta" Compose
+Section "Compose*" Compose
 
 	SetOutPath "$INSTDIR"
   
-  	;ADD YOUR OWN FILES HERE...
-  	File ABOUT.txt
+  ;ADD YOUR OWN FILES HERE...
+  File ABOUT.txt
 	File ComposeStarSyntaxHighlighting.reg
 	File filterdesc.xml
 	File ComposeStarAddInFixer.exe
 	File INCREconfig.xml
-	File /nonfatal *.css
+	File /nonfatal INCRE.css
 	File /nonfatal *.gif
 	File /nonfatal /r /x CVS compilers
 	File cstar.ico
@@ -136,9 +136,11 @@ SectionEnd
 
 Section "Settings" Settings
 	
-	Call writeComposeStarINIFile
+	;Call writeComposeStarINIFile
+	Call writeComposeStarPlatformConfigurations
 	Call writeRegistryKeys
 	Call writeKeyWordFile
+	Call writeComposeStarINIFile
 	Call writeSECRETCSS
 	
 	ExecWait '$NET_RUN_PATH/regasm /codebase "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"' $RESULT
@@ -156,9 +158,11 @@ Section "Settings" Settings
 	OKK:
 	
 	; Set environment variables, for Java, .NET and .NET sdk!
-	Push "PATH"
-  	Push "%PATH%;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
-  	Call WriteEnvStr
+	Push "%PATH%;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
+  ;Call WriteEnvStr
+	ReadRegStr $Path HKCU "Environment" "PATH"
+	WriteRegStr HKCU "Environment" "PATH" "$Path;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
+	;MessageBox MB_OK "$Path;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
 
 SectionEnd
 
@@ -167,14 +171,14 @@ SectionEnd
 
   	;Language strings
   	LangString DESC_Checks ${LANG_ENGLISH} "The checks for the Compose*.NET package, this will check your current system to see if it meets some of the requirements."
-	LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."
-	LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*.NET package, it can must be used for the first install and can be used for resque purposes."
+		LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."
+		LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*.NET package, it can must be used for the first install and can be used for resque purposes."
 
   	;Assign language strings to sections
   	!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-    	!insertmacro MUI_DESCRIPTION_TEXT ${Checks} $(DESC_Checks)
-	!insertmacro MUI_DESCRIPTION_TEXT ${Compose} $(DESC_Settings)
-	!insertmacro MUI_DESCRIPTION_TEXT ${Settings} $(DESC_Compose)
+    !insertmacro MUI_DESCRIPTION_TEXT ${Checks} $(DESC_Checks)
+		!insertmacro MUI_DESCRIPTION_TEXT ${Compose} $(DESC_Settings)
+		!insertmacro MUI_DESCRIPTION_TEXT ${Settings} $(DESC_Compose)
   	!insertmacro MUI_FUNCTION_DESCRIPTION_END
  
 ;--------------------------------
@@ -182,13 +186,13 @@ SectionEnd
 
 Section "Uninstall"
 
-  	ExecWait '$NET_RUN_PATH/regasm /unregister "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
+	ExecWait '$NET_RUN_PATH/regasm /unregister "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"'
 	
 	DeleteRegKey HKCU "SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect"
 	DeleteRegKey HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps"
 	
 	;ADD YOUR OWN FILES HERE...
-  	RMDir /r "$INSTDIR"
+	RMDir /r "$INSTDIR"
 	
 	ExecWait '$NET_RUN_PATH/regasm /unregister "$INSTDIR\ComposestarVSAddin\ComposestarVSAddin.dll"' $RESULT
 	IntCmp 0 $RESULT OK
@@ -200,13 +204,68 @@ OK:
 SectionEnd
 
 ;--------------------------------
+Function writeComposeStarPlatformConfigurations
+	
+	FileOpen  $INI_FILE "$INSTDIR\PlatformConfigurations.xml" w
+	FileWrite $INI_FILE '<?xml version="1.0" encoding="utf-8" ?>'
+	FileWrite $INI_FILE '<Platforms>'
+	FileWrite $INI_FILE '<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="$INSTDIR\binaries\ComposestarCORE.jar;$INSTDIR\binaries\ComposestarDotNET.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar" options="">'
+	FileWrite $INI_FILE '<Languages defaultLanguage="CSharp">'
+	FileWrite $INI_FILE '<Language name="CSharp" >'
+	FileWrite $INI_FILE '<Compiler name="CSharpCompiler" executable="csc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">'
+	FileWrite $INI_FILE '<Actions>'
+	FileWrite $INI_FILE '<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
+	FileWrite $INI_FILE '<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
+	FileWrite $INI_FILE '</Actions>'
+	FileWrite $INI_FILE '<Converters>'
+	FileWrite $INI_FILE '<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />'
+	FileWrite $INI_FILE '</Converters>'
+	FileWrite $INI_FILE '</Compiler>'
+	FileWrite $INI_FILE '<DummyGeneration emitter="" />'
+	FileWrite $INI_FILE '<FileExtensions>'
+	FileWrite $INI_FILE '<FileExtension extension=".cs" />'
+	FileWrite $INI_FILE '</FileExtensions>'
+	FileWrite $INI_FILE '</Language>'
+	FileWrite $INI_FILE '<Language name="JSharp" >'
+	FileWrite $INI_FILE '<Compiler name="JSharpCompiler" executable="vjc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">'
+	FileWrite $INI_FILE '<Actions>'
+	FileWrite $INI_FILE '<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
+	FileWrite $INI_FILE '<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
+	FileWrite $INI_FILE '</Actions>'
+	FileWrite $INI_FILE '<Converters>'
+	FileWrite $INI_FILE '<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />'
+	FileWrite $INI_FILE '</Converters>'
+	FileWrite $INI_FILE '</Compiler>'
+	FileWrite $INI_FILE '<DummyGeneration emitter="" />'
+	FileWrite $INI_FILE '<FileExtensions>'
+	FileWrite $INI_FILE '<FileExtension extension=".jsl" />'
+	FileWrite $INI_FILE '</FileExtensions>'
+	FileWrite $INI_FILE '</Language>'
+	FileWrite $INI_FILE '</Languages>'
+	FileWrite $INI_FILE '<RequiredFiles>'
+	FileWrite $INI_FILE '<RequiredFile fileName="AntlrDotNet.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposestarCore.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposestarCoreDotNET.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarDotNETUtilities.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarFilterDebugger.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarUtilities.dll" />'
+	FileWrite $INI_FILE '<RequiredFile fileName="DotNETPlatformInterface.dll" />'
+	FileWrite $INI_FILE '</RequiredFiles>'
+	FileWrite $INI_FILE '</Platform>'
+	FileWrite $INI_FILE '</Platforms>'
+	FileClose $INI_FILE
+FunctionEnd
+
+;--------------------------------
 Function writeComposeStarINIFile
 	
 	Push "$INSTDIR\binaries\ComposeStarRuntimeInterpreter.dll"
-  	Push "\" ;needs to be replaced
-  	Push "/" ;will replace wrong characters
-  	Call StrReplace
-  	Pop $UNIX_DIR
+  Push "\" ;needs to be replaced
+  Push "/" ;will replace wrong characters
+  Call StrReplace
+  Pop $UNIX_DIR
 	
 	FileOpen  $INI_FILE "$INSTDIR\Composestar.ini" w
 	FileWrite $INI_FILE '################################################################################$\n'
@@ -229,7 +288,7 @@ Function writeComposeStarINIFile
 	FileWrite $INI_FILE '[Common]$\n'
 	FileWrite $INI_FILE 'RunDebugLevel=1$\n'
 	FileWrite $INI_FILE 'BuildDebugLevel=1$\n'
-	FileWrite $INI_FILE 'VerifyAssemblies=true$\n'
+	FileWrite $INI_FILE 'VerifyAssemblies=false$\n'
 	FileWrite $INI_FILE '################################################################################$\n'
 	FileClose $INI_FILE
 FunctionEnd
@@ -237,10 +296,17 @@ FunctionEnd
 ;--------------------------------
 Function writeSECRETCSS
 	
-	FileOpen  $CSS_FILE "$INSTDIR\SECRET.css" a
-	FileWrite $CSS_FILE 'background-image: url(back.gif)$\n'
-	FileWrite $CSS_FILE '}$\n'
-	FileClose $CSS_FILE
+	FileOpen  $CSS_FILE "$INSTDIR\SECRET.css" w
+	FileWrite $CSS_FILE '#headerbox h1 { color: #fff; }$\n'
+	FileWrite $CSS_FILE '#headerbox a { color: #fff; }$\n'
+	FileWrite $CSS_FILE 'body, td { font-family: Arial, Verdana; font-size: 9pt; background: #EEEEEE; }$\n'
+	FileWrite $CSS_FILE 'div.concern { background: #DDDDDD; padding-top: 10px; margin-bottom: 50px; padding-right: 10px; border: 1px solid #C0C0C0 }$\n'
+	FileWrite $CSS_FILE 'div { padding-left: 20px; }$\n'
+	FileWrite $CSS_FILE 'div.red { border: 2px solid #FF0000; background: #EEEEEE; margin-bottom: 20px; padding-left: 30px; }$\n'
+	FileWrite $CSS_FILE 'div.green { border: 2px solid #00FF00; background: #EEEEEE; margin-bottom: 20px; padding-left: 30px; }$\n'
+	FileWrite $CSS_FILE 'div.filterorder { border: 1px solid #C0C0C0; background: #EEEEEE; padding-left: 30px; margin-bottom: 20px; }$\n'
+	FileWrite $CSS_FILE '.headerbox { background-color: #9693A8; border-bottom: 1px solid #FFF; background-repeat: no-repeat; background-attachment: fixed; background-position: center top; color:#fff; background-image: url($INSTDIR\back.gif); }$\n'
+  FileClose $CSS_FILE
 FunctionEnd
 
 Function writeRegistryKeys
@@ -260,7 +326,7 @@ Function writeRegistryKeys
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "Publisher" "University of Twente"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLUpdateInfo" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "HelpLink" "http://composestar.sourceforge.net"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLInfoAbout" "http://composestar.sourceforge.net"
+;	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLInfoAbout" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "0.6"
 FunctionEnd
 
