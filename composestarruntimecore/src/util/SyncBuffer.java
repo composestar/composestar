@@ -13,7 +13,7 @@ public class SyncBuffer
 	public synchronized void produce( Object o )
 	{
 		this.queue.addLast(o);
-		this.notify();
+		this.notifyAll();
 	}
 	
 	public synchronized Object consume()
