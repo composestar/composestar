@@ -107,7 +107,7 @@ public class DotNETChildThread implements ChildThread
 		return parent;
 	}
 
-	public synchronized void reanimate()
+	public void reanimate()
 	{
 		thisThread.Interrupt();
 	}
@@ -152,14 +152,20 @@ public class DotNETChildThread implements ChildThread
 		return thread;
 	}
 
-	private synchronized ChildThread getChildThread(System.Threading.Thread key)
+	private ChildThread getChildThread(System.Threading.Thread key)
 	{
-		return (ChildThread) threads.get(key);
+		synchronized(threads)
+		{
+			return (ChildThread) threads.get(key);
+		}
 	}
 
-	private synchronized void addChildThread(System.Threading.Thread key, ChildThread thread)
+	private void addChildThread(System.Threading.Thread key, ChildThread thread)
 	{
-		threads.put(key,thread);
+		synchronized(threads)
+		{
+			threads.put(key,thread);
+		}
 	}
 
 	public boolean equals(Object o)
