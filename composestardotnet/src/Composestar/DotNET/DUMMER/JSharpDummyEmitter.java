@@ -293,11 +293,11 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		
 		//Attributes
 		String locationPackage = getPackageName();
-		if(locationPackage!="") locationPackage += ".";
+		if(!locationPackage.equals("")) locationPackage += ".";
 			
 		this.attributeLocation = locationPackage+this.className+"."+methodName;
 		this.attributeTarget = "Method";
-		if(this.attributeType!="") {
+		if(!this.attributeType.equals("")) {
 				addAttribute();
 				this.attributeType = "";
 		}
