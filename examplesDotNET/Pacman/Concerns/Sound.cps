@@ -68,9 +68,8 @@ public class Beeper
 		}
 	}
 
-	private static boolean Beep( int freq, int dur ) {
-		return true;
-	}
+	/**@dll.import("kernel32.dll") */
+	private static native boolean Beep( int freq, int dur );
 }
 
    }
