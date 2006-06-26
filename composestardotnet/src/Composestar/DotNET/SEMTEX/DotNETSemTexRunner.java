@@ -59,8 +59,8 @@ public class DotNETSemTexRunner implements CTCommonModule {
 		java.io.File semTexFile = new java.io.File(semTexAnalyser);
 		if( !semTexFile.exists() )
 		{
-			Debug.out(Debug.MODE_WARNING , "SEMTEX", "SemTex Analyser not found on it's expected location: " + semTexAnalyser + ". Semantic Analyzing will be skipped.");
-			Debug.out(Debug.MODE_INFORMATION , "SEMTEX", "Semantic Analyzing cannot be executed because of missing files. See http://composestar.sf.net for more information.");
+			Debug.out(Debug.MODE_WARNING , "SEMTEX", "SemTex Analyzer not found on it's expected location: " + semTexAnalyser + ". Semantic Analyzing will be skipped.");
+			Debug.out(Debug.MODE_INFORMATION , "SEMTEX", "Semantic Analyzer cannot be executed because of missing files. See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
 		}
 		else
 		{
@@ -68,16 +68,16 @@ public class DotNETSemTexRunner implements CTCommonModule {
 			Configuration.instance().getPathSettings().getPath("Composestar");
 			String cmd =  "\"" + semTexAnalyser + "\" "  + arg;
 			
-			Debug.out(Debug.MODE_DEBUG,"SEMTEX","Calling SemTex Analyser...");
+			Debug.out(Debug.MODE_DEBUG,"SEMTEX","Calling SemTex Analyzer...");
 			
 			int result = exec.exec( "call " + cmd );
 			
 			if( result != 0 )
 			{
-				throw new ModuleException("SemTex Analyser failed with error: " + exec.outputError(),"SEMTEX");
+				throw new ModuleException("SemTex Analyzer failed with error: " + exec.outputError(),"SEMTEX");
 			}
 		}
-		Debug.out(Debug.MODE_DEBUG,"SEMTEX","SemTex Analyser completed.");
+		Debug.out(Debug.MODE_DEBUG,"SEMTEX","SemTex Analyzer completed.");
 	}
 		
 }
