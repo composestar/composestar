@@ -19,7 +19,7 @@ namespace BuildConfiguration
 	public class BuildConfigurationManager
 	{
 
-		#region Privates
+		#region Private Variables
 
 		private ComposestarVSAddin.SupportedLanguages languages = null;
 		private ArrayList mUsedCompilers;

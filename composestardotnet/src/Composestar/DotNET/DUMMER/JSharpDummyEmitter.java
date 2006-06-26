@@ -28,7 +28,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	private PrintStream debug = System.err;
 	private String packageName = "";
 	private ArrayList packages = new ArrayList();
-	private boolean packageDefinition = false;
+	private boolean packageDefinition = false; 
 	private Source currentSource = null;
 	
 	//Added attributes

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETRepositorySerializer.java,v 1.3 2006/03/10 14:57:52 pascal_durr Exp $
+ * $Id: DotNETRepositorySerializer.java,v 1.4 2006/03/14 10:08:35 pascal_durr Exp $
  */
 
 package Composestar.DotNET.CONE;
@@ -29,6 +29,7 @@ import java.util.Enumeration;
 import java.util.Stack;
 
 import Composestar.Core.CONE.RepositorySerializer;
+import Composestar.Core.CONE.CONE;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 
@@ -45,7 +46,7 @@ import Composestar.Utils.Debug;
  * @author Tom Staijen
  * @version 0.9.0
  */
-public class DotNETRepositorySerializer implements RepositorySerializer
+public class DotNETRepositorySerializer extends CONE implements RepositorySerializer
 {
 	private Hashtable orderedFieldInfo;
 	private PrintWriter out =null;
