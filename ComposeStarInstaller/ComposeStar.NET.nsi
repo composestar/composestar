@@ -32,7 +32,7 @@
 
   Name "Compose*.NET"
   Icon cstar.ico
-  OutFile "ComposeStar.NET_0.5.1.exe"
+  OutFile "ComposeStar.NET_0.5.4.exe"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -122,6 +122,7 @@ Section "Compose*" Compose
 	File /nonfatal /r /x CVS documentation
 	File /nonfatal /r ComposestarVSAddin
 	File /nonfatal /r /x CVS examplesDotNET
+	File vjssupuilib.exe
   
   	;Call website for the install times!
 	;NSISdl::download http://flatliner.student.utwente.nl/composestar_install
@@ -156,6 +157,12 @@ Section "Settings" Settings
 	MessageBox MB_OK $JAVA_INSTALLATION_MSG
 	
 	OKK:
+	ExecWait '"$INSTDIR\vjssupuilib.exe"' $RESULT
+	IntCmp 0 $RESULT OKKK
+	StrCpy $JAVA_INSTALLATION_MSG "Could not install the Supplement UI library for Visual J# , please rerun it manually!"
+	MessageBox MB_OK $JAVA_INSTALLATION_MSG
+
+	OKKK:
 	
 	; Set environment variables, for Java, .NET and .NET sdk!
 	Push "%PATH%;$REAL_JAVA_HOME\bin;$NET_SDK_PATH;$NET_RUN_PATH"
@@ -207,54 +214,54 @@ SectionEnd
 Function writeComposeStarPlatformConfigurations
 	
 	FileOpen  $INI_FILE "$INSTDIR\PlatformConfigurations.xml" w
-	FileWrite $INI_FILE '<?xml version="1.0" encoding="utf-8" ?>'
-	FileWrite $INI_FILE '<Platforms>'
-	FileWrite $INI_FILE '<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="$INSTDIR\binaries\ComposestarCORE.jar;$INSTDIR\binaries\ComposestarDotNET.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar" options="">'
-	FileWrite $INI_FILE '<Languages defaultLanguage="CSharp">'
-	FileWrite $INI_FILE '<Language name="CSharp" >'
-	FileWrite $INI_FILE '<Compiler name="CSharpCompiler" executable="csc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">'
-	FileWrite $INI_FILE '<Actions>'
-	FileWrite $INI_FILE '<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
-	FileWrite $INI_FILE '<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
-	FileWrite $INI_FILE '</Actions>'
-	FileWrite $INI_FILE '<Converters>'
-	FileWrite $INI_FILE '<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />'
-	FileWrite $INI_FILE '</Converters>'
-	FileWrite $INI_FILE '</Compiler>'
-	FileWrite $INI_FILE '<DummyGeneration emitter="" />'
-	FileWrite $INI_FILE '<FileExtensions>'
-	FileWrite $INI_FILE '<FileExtension extension=".cs" />'
-	FileWrite $INI_FILE '</FileExtensions>'
-	FileWrite $INI_FILE '</Language>'
-	FileWrite $INI_FILE '<Language name="JSharp" >'
-	FileWrite $INI_FILE '<Compiler name="JSharpCompiler" executable="vjc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">'
-	FileWrite $INI_FILE '<Actions>'
-	FileWrite $INI_FILE '<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
-	FileWrite $INI_FILE '<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />'
-	FileWrite $INI_FILE '</Actions>'
-	FileWrite $INI_FILE '<Converters>'
-	FileWrite $INI_FILE '<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />'
-	FileWrite $INI_FILE '</Converters>'
-	FileWrite $INI_FILE '</Compiler>'
-	FileWrite $INI_FILE '<DummyGeneration emitter="" />'
-	FileWrite $INI_FILE '<FileExtensions>'
-	FileWrite $INI_FILE '<FileExtension extension=".jsl" />'
-	FileWrite $INI_FILE '</FileExtensions>'
-	FileWrite $INI_FILE '</Language>'
-	FileWrite $INI_FILE '</Languages>'
-	FileWrite $INI_FILE '<RequiredFiles>'
-	FileWrite $INI_FILE '<RequiredFile fileName="AntlrDotNet.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposestarCore.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposestarCoreDotNET.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarDotNETUtilities.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarFilterDebugger.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarUtilities.dll" />'
-	FileWrite $INI_FILE '<RequiredFile fileName="DotNETPlatformInterface.dll" />'
-	FileWrite $INI_FILE '</RequiredFiles>'
-	FileWrite $INI_FILE '</Platform>'
-	FileWrite $INI_FILE '</Platforms>'
+	FileWrite $INI_FILE '<?xml version="1.0" encoding="utf-8" ?>$\n'
+	FileWrite $INI_FILE '<Platforms>$\n'
+	FileWrite $INI_FILE '<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="$INSTDIR\binaries\ComposestarCORE.jar;$INSTDIR\binaries\ComposestarDotNET.jar;$INSTDIR\binaries\antlr.jar;$INSTDIR\binaries\prolog\prolog.jar" options="">$\n'
+	FileWrite $INI_FILE '<Languages defaultLanguage="CSharp">$\n'
+	FileWrite $INI_FILE '<Language name="CSharp" >$\n'
+	FileWrite $INI_FILE '<Compiler name="CSharpCompiler" executable="csc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">$\n'
+	FileWrite $INI_FILE '<Actions>$\n'
+	FileWrite $INI_FILE '<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />$\n'
+	FileWrite $INI_FILE '<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />$\n'
+	FileWrite $INI_FILE '</Actions>$\n'
+	FileWrite $INI_FILE '<Converters>$\n'
+	FileWrite $INI_FILE '<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />$\n'
+	FileWrite $INI_FILE '</Converters>$\n'
+	FileWrite $INI_FILE '</Compiler>$\n'
+	FileWrite $INI_FILE '<DummyGeneration emitter="Composestar.DotNET.DUMMER.CSharpDummyEmitter" />$\n'
+	FileWrite $INI_FILE '<FileExtensions>$\n'
+	FileWrite $INI_FILE '<FileExtension extension=".cs" />$\n'
+	FileWrite $INI_FILE '</FileExtensions>$\n'
+	FileWrite $INI_FILE '</Language>$\n'
+	FileWrite $INI_FILE '<Language name="JSharp" >$\n'
+	FileWrite $INI_FILE '<Compiler name="JSharpCompiler" executable="vjc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">$\n'
+	FileWrite $INI_FILE '<Actions>$\n'
+	FileWrite $INI_FILE '<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />$\n'
+	FileWrite $INI_FILE '<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />$\n'
+	FileWrite $INI_FILE '</Actions>$\n'
+	FileWrite $INI_FILE '<Converters>$\n'
+	FileWrite $INI_FILE '<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />$\n'
+	FileWrite $INI_FILE '</Converters>$\n'
+	FileWrite $INI_FILE '</Compiler>$\n'
+	FileWrite $INI_FILE '<DummyGeneration emitter="Composestar.DotNET.DUMMER.JSharpDummyEmitter" />$\n'
+	FileWrite $INI_FILE '<FileExtensions>$\n'
+	FileWrite $INI_FILE '<FileExtension extension=".jsl" />$\n'
+	FileWrite $INI_FILE '</FileExtensions>$\n'
+	FileWrite $INI_FILE '</Language>$\n'
+	FileWrite $INI_FILE '</Languages>$\n'
+	FileWrite $INI_FILE '<RequiredFiles>$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="AntlrDotNet.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposestarCore.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposestarCoreDotNET.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarDotNETUtilities.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarFilterDebugger.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="ComposeStarUtilities.dll" />$\n'
+	FileWrite $INI_FILE '<RequiredFile fileName="DotNETPlatformInterface.dll" />$\n'
+	FileWrite $INI_FILE '</RequiredFiles>$\n'
+	FileWrite $INI_FILE '</Platform>$\n'
+	FileWrite $INI_FILE '</Platforms>$\n'
 	FileClose $INI_FILE
 FunctionEnd
 
