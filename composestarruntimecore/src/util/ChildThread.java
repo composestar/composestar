@@ -9,7 +9,6 @@ public interface ChildThread
 	public ChildThread createNew();
 	public void setRunnable(ChildRunnable runnable);
 	public void start();
-	public Thread getThread();
 	public ChildThread getCurrentChildThread();
 
 	public void suspendThread();

@@ -14,7 +14,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageList.java,v 1.2 2006/03/06 16:37:53 reddog33hummer Exp $
+ * $Id: MessageList.java,v 1.5 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -393,16 +393,19 @@ public class MessageList implements DebuggableMessageList
 
 	public String toShortString() 
 	{
-		String ret = "#( ";
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("#( ");
 		String separator = "";
 		for( int i = 0; i<messages.size(); i++ ) 
 		{
-			ret += separator + ((Message)messages.get(i)).getTarget().GetType().ToString()
-				             + "." + ((Message)messages.get(i)).getSelector();
+			buffer.append(separator);
+			buffer.append(((Message)messages.get(i)).getTarget().GetType().ToString());
+			buffer.append('.');
+			buffer.append(((Message)messages.get(i)).getSelector());
 			separator = ", ";
 		}
-		ret += " )";
-		return ret;
+		buffer.append(" )");
+		return buffer.toString();
 	}
 
 	public void prepend( Message m ) 

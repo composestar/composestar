@@ -15,7 +15,6 @@ public class DotNETChildThread implements ChildThread
 {
 	private System.Threading.Thread parent = null;
 	private System.Threading.Thread thisThread = null;
-	private java.lang.Thread thisThreadJava = null;
 	private ChildRunnable running = null;
 
 	public EntryPoint getEntryPoint()
@@ -42,27 +41,11 @@ public class DotNETChildThread implements ChildThread
 		return new DotNETChildThread();
 	}
 
-	public java.lang.Thread getThread()
-	{
-		while(thisThreadJava == null)
-		{
-			try
-			{
-				java.lang.Thread.yield();
-			}
-			catch(Exception e)
-			{
-			}
-		}
-		return thisThreadJava;
-	}
-
 	public DotNETChildThread()
 	{
 		thisThread = new System.Threading.Thread(new ThreadStart(run));
 		thisThread.set_IsBackground(true);
 		addChildThread(thisThread,this);
-		thisThread.Start();
 	}
 	
 	public System.Threading.Thread getThisThread()
@@ -86,24 +69,23 @@ public class DotNETChildThread implements ChildThread
 		return running == null || thisThread.get_IsAlive();
 	}
 
-	public void start()
+	private boolean started = false;
+	public synchronized void start()
 	{
-		parent = System.Threading.Thread.get_CurrentThread();
-		reanimate();
+		parent = Thread.get_CurrentThread();
+		if(started)
+		{
+			thisThread.Interrupt();
+		}
+		else
+		{
+			thisThread.Start();
+			started = true;
+		}
 	}
 
-	public System.Threading.Thread getParentThread()
+	public Thread getParentThread()
 	{
-		while(parent == null)
-		{
-			try
-			{
-				java.lang.Thread.yield();
-			}
-			catch(Exception e)
-			{
-			}
-		}
 		return parent;
 	}
 
@@ -119,7 +101,6 @@ public class DotNETChildThread implements ChildThread
 
 	public void run()
 	{
-		thisThreadJava = java.lang.Thread.currentThread();
 		while(true) //We are a deamon thread so we will be killed automaticly
 		{
 			while(running == null)
@@ -172,11 +153,11 @@ public class DotNETChildThread implements ChildThread
 	{
 		if(o instanceof java.lang.Thread)
 		{
-			return ((java.lang.Thread)o).equals(thisThreadJava);
+			throw new RuntimeException("Wrong thread type");
 		}
 		else if(o instanceof Thread)
 		{
-			return ((Thread)o).equals(thisThread);
+			return ((Thread)o).GetDomainID() == thisThread.GetDomainID();
 		}
 		else if(o instanceof DotNETChildThread)
 		{
