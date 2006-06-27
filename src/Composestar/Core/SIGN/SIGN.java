@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.10 2006/05/08 11:36:32 stephan_h Exp $
+ * $Id: SIGN.java,v 1.11 2006/06/25 19:24:11 wminnen Exp $
  * 
 **/
 
@@ -628,8 +628,10 @@ public class SIGN implements CTCommonModule
 											if( ((SubstitutionPart)substIter.next()).getSelector().getName().equals( matchingSelectorName ) )
 												continue matchingloop;
 										}
-										if( !signature.hasMethod( matchingSelectorName ) )
-											foundMatchingParts.add( mp );
+										if( !signature.hasMethod( matchingSelectorName ) ){
+											if(!matchingSelectorName.equals("*"))
+												foundMatchingParts.add( mp );
+										}
 									}
 									
 									Iterator foundMpIter = foundMatchingParts.iterator();
