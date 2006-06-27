@@ -61,7 +61,8 @@ public class Score
 		rm.proceed();
 		label = new Label("Score: 0");
 		label.setSize(15*View.BLOCKSIZE+20,15*View.BLOCKSIZE);
-		Main main = (Main)Composestar.RuntimeCore.FLIRT.Message.MessageInfo.getMessageInfo().getTarget();
+		
+		Main main = (Main)rm.getSender();
 		main.add(label,BorderLayout.SOUTH);
 	}
 }

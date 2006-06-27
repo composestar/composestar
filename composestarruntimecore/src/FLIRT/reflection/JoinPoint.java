@@ -1,4 +1,4 @@
-package Composestar.RuntimeCore.FLIRT.Message;
+package Composestar.RuntimeCore.FLIRT.Reflection;
 
 import java.util.*;
 
@@ -6,8 +6,8 @@ public class JoinPoint
 {
 	private Object joinPointInstance; // the 'current' object
 	private HashMap attributemap = new HashMap();
-	private Hashtable internals = new Hashtable();
-	private Hashtable externals = new Hashtable();
+	private Dictionary internals = new Hashtable();
+	private Dictionary externals = new Hashtable();
 	private ArrayList attributelist = new ArrayList();
 
 	public JoinPoint() { }
@@ -17,11 +17,18 @@ public class JoinPoint
 		this.joinPointInstance = instance;
 	}
 
+	public JoinPoint(Object instance, Dictionary internals, Dictionary externals, ArrayList atributesList)
+	{
+		this(instance);
+		this.internals = internals;
+		this.externals = externals;
+		this.attributelist = atributesList;
+	}
+
     public Object getInstance()
     {
         return joinPointInstance;
     }
-
 
 	public void setAttributeList(ArrayList atts)
 	{
@@ -92,11 +99,11 @@ public class JoinPoint
 
 	public void setExternals(Dictionary dic)
 	{
-		this.externals = (Hashtable)dic;
+		this.externals = dic;
 	}
 
 	public void setInternals(Dictionary dic)
 	{
-		this.internals = (Hashtable)dic;
+		this.internals = dic;
 	}
 }

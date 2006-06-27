@@ -10,6 +10,7 @@ import Composestar.RuntimeCore.CODER.*;
 import Composestar.RuntimeCore.FLIRT.Exception.*;
 import Composestar.RuntimeCore.FLIRT.Interpreter.*;
 import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 import Composestar.RuntimeCore.FLIRT.Debugger.*;
 import Composestar.RuntimeCore.Utils.*;
 
@@ -22,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.2 2006/03/09 18:12:12 oohlaf Exp $
+ * $Id: MessageHandlingFacility.java,v 1.3 2006/06/25 19:33:21 wminnen Exp $
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT

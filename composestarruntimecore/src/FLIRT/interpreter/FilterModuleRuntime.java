@@ -3,7 +3,7 @@ package Composestar.RuntimeCore.FLIRT.Interpreter;
 import Composestar.RuntimeCore.FLIRT.ObjectManager;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.Message.MessageInfo;
+import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfo;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.ConditionBinding;
 import Composestar.RuntimeCore.Utils.*;
@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleRuntime.java,v 1.3 2006/03/09 18:12:12 oohlaf Exp $
+ * $Id: FilterModuleRuntime.java,v 1.4 2006/06/25 19:33:21 wminnen Exp $
  */
 public class FilterModuleRuntime extends ReferenceEntityRuntime implements Interpretable, ConditionResolver, Cloneable 
 {

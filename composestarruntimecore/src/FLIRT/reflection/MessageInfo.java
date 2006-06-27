@@ -1,5 +1,6 @@
-package Composestar.RuntimeCore.FLIRT.Message;
+package Composestar.RuntimeCore.FLIRT.Reflection;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.Utils.*;
 import java.util.HashMap;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageInfo.java,v 1.3 2006/03/13 14:38:14 reddog33hummer Exp $
+ * $Id: MessageInfo.java,v 1.4 2006/03/16 15:17:12 reddog33hummer Exp $
  * </pre>
  * 
  * MessageInfo provides an interface to access reflective information 

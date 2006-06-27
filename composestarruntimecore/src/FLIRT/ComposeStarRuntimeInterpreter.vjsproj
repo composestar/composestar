@@ -475,32 +475,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "message\JoinPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "message\JoinPointInfo.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "message\JoinPointInfoProxy.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "message\Message.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "message\MessageInfo.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "message\MessageInfoProxy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -536,6 +511,31 @@
                 />
                 <File
                     RelPath = "policy\PolicyExecutionResult.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "reflection\JoinPoint.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "reflection\JoinPointInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "reflection\JoinPointInfoProxy.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "reflection\MessageInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "reflection\MessageInfoProxy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

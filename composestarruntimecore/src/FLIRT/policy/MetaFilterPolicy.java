@@ -7,6 +7,7 @@ import Composestar.RuntimeCore.FLIRT.Actions.*;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 import Composestar.RuntimeCore.Utils.*;
 import Composestar.RuntimeCore.Utils.Debug;
 
@@ -17,7 +18,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.4 2006/03/09 18:12:13 oohlaf Exp $
+ * $Id: MetaFilterPolicy.java,v 1.5 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -47,10 +48,7 @@ class MetaFilterPolicy extends FilterPolicy
 		aMessage.setExternals(fm.getExternals());
 
 		// Update the JP!
-		JoinPoint jp = new JoinPoint(aMessage.getFirstMessage().getTarget());
-		jp.setInternals(fm.getInternals());
-		jp.setExternals(fm.getExternals());
-		jp.setAttributeList(Invoker.getInstance().getAttributesFor(aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector()));
+		JoinPoint jp = new JoinPoint(aMessage.getFirstMessage().getTarget(),fm.getInternals(),fm.getExternals(),Invoker.getInstance().getAttributesFor(aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector()));
 		JoinPointInfoProxy.updateJoinPoint(jp);
 
 		if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
