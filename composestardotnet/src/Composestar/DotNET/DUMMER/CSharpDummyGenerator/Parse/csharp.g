@@ -1068,23 +1068,32 @@ compilation_unit //{getASTFactory().setASTNodeType("DDW.CSharp.Parse.LineNumberA
 
 namespace_declaration!
 	:	NAMESPACE   
-		qi:qualified_identifier  
-		bd:namespace_body   
+		qi:qualified_identifier
+		LBRACE!
+		ud:using_directives
+		bd:namespace_body
+		RBRACE!
 		(SEMI!)?
 		
 		{ #namespace_declaration = 
 			#([NamespaceNode],
 			 ([QualIdent], qi),
+			 ud,
 			 ([Types], bd) ); 
 		}
 	;
 	
+using_directives
+    : (using_directive)*
+    ;
+
 qualified_identifier
 	:	identifier (DOT! identifier)*
 	;
 namespace_body
-	:	LBRACE!   (using_directive)*  (namespace_member_declaration)*   RBRACE!
+	:	(namespace_member_declaration)*
 	;
+	
 using_directive!
 	:	USING   
 		(	id:identifier   ASSIGN   nm:namespace_or_type_name   SEMI

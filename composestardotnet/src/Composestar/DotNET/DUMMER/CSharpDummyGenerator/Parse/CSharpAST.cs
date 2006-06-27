@@ -555,7 +555,8 @@ namespace DDW.CSharp.Parse
 				}				
 				else if(tok is Types) 
 					graph.Types = ((Types)tok).GetGraph(graph.Types);
-				// todo: imports
+				else if (tok is UsingNode)
+					graph.Imports.Add( (Dom.Import)((UsingNode)tok).GetGraph() );
 
 				tok = tok.getNextSibling();
 			}
