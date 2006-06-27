@@ -3184,7 +3184,8 @@ namespace DDW.CSharp.Parse
 		{		
 			//graph.Clear();
 			base.GetGraph(graph);
-			graph.Value = Double.Parse(this.getText(), NumberStyles.Float);
+			NumberFormatInfo nfi = CultureInfo.CreateSpecificCulture( "en" ).NumberFormat;
+			graph.Value = Double.Parse(this.getText(), NumberStyles.Float, nfi);
 			if(graph.Value <= float.MaxValue)
 				graph.ResultType = AddBuiltInDefinition("float");
 			else
