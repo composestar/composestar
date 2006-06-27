@@ -84,6 +84,60 @@ namespace DDW.CSharp.Gen
 			{
 				OpenBlock();
 				IDefinition retDef = gr.ReturnType.Definition;
+				/* Assign null to all out-parameters (because it is obligatory to assign *something*) */
+				ParamDeclCollection parameterList = gr.Parameters;
+				if (parameterList != null) // Does this method have parameters at all?
+				{
+					foreach (ParamDecl pd in parameterList)
+					{
+						// Only need to assign something if the parameter is an 'out'-parameter
+						if (pd.Direction == ParamDirection.Out)
+						{
+							sb.Write(pd.Name + " = ");
+							if (pd.Type.Definition is BuiltInDefinition)
+							{ // If it's a builtin type, set it to something appropriate for that type
+								switch (((BuiltInDefinition)pd.Type.Definition).LiteralType)
+								{
+									case LiteralType.Bool:
+										sb.WriteLine("false;");
+										break;
+									case LiteralType.Byte:
+									case LiteralType.Decimal:
+									case LiteralType.Int:
+									case LiteralType.Long:
+									case LiteralType.Sbyte:
+									case LiteralType.Short:
+									case LiteralType.Uint:
+									case LiteralType.Ulong:
+									case LiteralType.Ushort:
+										sb.WriteLine("0;");
+										break;
+									case LiteralType.Char:
+										sb.WriteLine("'0';");
+										break;
+									case LiteralType.Double:
+									case LiteralType.Float:
+										sb.WriteLine("0.0;");
+										break;
+									case LiteralType.Null:
+									case LiteralType.Object:
+										sb.WriteLine("null;");
+										break;
+									case LiteralType.String:
+										sb.WriteLine("\"\";");
+										break;
+									case LiteralType.Void:
+									default:
+										sb.WriteLine("null;"); // and hope this works...
+										break;
+								}
+							}
+							else
+								sb.WriteLine("null;"); // Assign null to any normal type
+						}
+					}
+				}
+
 				if (gr.ReturnType.ArrayRanks.Count > 0) // It's an array def, so null is a valid return value
 					sb.WriteLine("return null;");
 				else if (retDef.GetType().Equals(typeof(BuiltInDefinition)))
