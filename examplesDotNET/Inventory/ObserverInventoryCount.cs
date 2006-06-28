@@ -25,7 +25,7 @@ namespace ExampleAOP
 			rm.resume();
 		}
 
-		public override void Update(Subject s)
+		public void Update(Subject s)
 		{
 			if (subject == s)
 			{
