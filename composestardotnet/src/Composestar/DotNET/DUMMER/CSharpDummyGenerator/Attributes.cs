@@ -16,7 +16,8 @@ namespace DDW.CSharp
 		{
 			TargetClass = 1,
 			TargetMethod = 2,
-			TargetField = 3
+			TargetField = 3,
+			TargetInterface = 4
 		}
 
 		public static TargetType Type
@@ -31,10 +32,15 @@ namespace DDW.CSharp
 			{
 				switch (targetType)
 				{
-					case TargetType.TargetClass : return "Type";
-					case TargetType.TargetMethod : return "Method";
-					case TargetType.TargetField : return "Field";
-					default: return "unknown";
+					case TargetType.TargetClass :
+					case TargetType.TargetInterface: 
+						return "Type";
+					case TargetType.TargetMethod : 
+						return "Method";
+					case TargetType.TargetField : 
+						return "Field";
+					default: 
+						return "unknown";
 				}
 			}
 		}
@@ -69,6 +75,7 @@ namespace DDW.CSharp
 			{
 				switch (targetType)
 				{
+					case TargetType.TargetInterface:
 					case TargetType.TargetClass:
 						return sNamespace + "." + sClass;
 					case TargetType.TargetMethod:
