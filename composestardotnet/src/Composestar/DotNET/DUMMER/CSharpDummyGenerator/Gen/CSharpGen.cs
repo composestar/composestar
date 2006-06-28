@@ -455,9 +455,18 @@ namespace DDW.CSharp.Gen
 		#region InterfaceDecl *
 		public override void ParseElement(InterfaceDecl gr)
 		{
+			AttributeState.Class = gr.Name;
+			AttributeState.Type = AttributeState.TargetType.TargetInterface;
 			Parse(gr.CustomAttributes);
 			ParseElement(gr.Attributes);
 			sb.Write("interface " + gr.Name +" ");
+
+			// Match interface - store TypeLocation information
+			// Store Current filename?
+			Console.WriteLine("TypeLocation");
+			Console.WriteLine(CSharpUI.CSharpDummyGenerator.Filename);
+			Console.WriteLine(AttributeState.Target);
+
 			Parse(gr.BaseTypes);
 			OpenBlock();
 
