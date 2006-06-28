@@ -59,17 +59,22 @@ public class DotNETCompiler implements LangCompiler{
         {
             // set the libraries
         	Dependency dependency = (Dependency)dependencies.next();
-        	if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
-        	{
-        			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-        			if(!(dependency.getFileName().startsWith(Configuration.instance().getPathSettings().getPath("Composestar"))))
-        				Configuration.instance().getLibraries().addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
-        	}
+        	
+        	//Add dependencies to the libString i.e. use in the compile comand
+        	//Do not add to the configuration i.e. add to ILICIT list 
+        	//if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
+        	//{
+        		libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        			//if(!(dependency.getFileName().startsWith(Configuration.instance().getPathSettings().getPath("Composestar"))))
+        				//Configuration.instance().getLibraries().addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
+        	//}
         	//set J# specific libraries
+        	/*
         	if(dependency.getFileName().indexOf("vjslib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         	if(dependency.getFileName().indexOf("VJSSupUILib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+    		*/
         }
         
         String dummiesdll = p.getCompiledDummies();
@@ -191,10 +196,16 @@ public class DotNETCompiler implements LangCompiler{
         	{
             	// set the libraries
         		Dependency dependency = (Dependency)dependencies.next();
-        		if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
+        		//if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
         			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        		
+        		/*
         		if(dependency.getFileName().indexOf("vjslib.dll") > 0)
     				libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+            	if(dependency.getFileName().indexOf("VJSSupUILib.dll") > 0)
+        			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
+        		*/
+        		
         	}
 
 		// generate and execute command
