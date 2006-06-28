@@ -32,6 +32,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	private Source currentSource = null;
 	
 	//Added attributes
+	private boolean attributeDefinition = false;
 	private String className = "";
 	private String attributes = "";
 	private String attributeType = "";
@@ -284,7 +285,6 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			AST type = getChild(ast, TYPE);
 			visit(type);
 			methodReturnType = type.getFirstChild();
-			
 			out(" ");
 		}
 		AST method = getChild(ast,IDENT);
@@ -294,13 +294,8 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		//Attributes
 		String locationPackage = getPackageName();
 		if(!locationPackage.equals("")) locationPackage += ".";
-			
 		this.attributeLocation = locationPackage+this.className+"."+methodName;
 		this.attributeTarget = "Method";
-		if(!this.attributeType.equals("")) {
-				addAttribute();
-				this.attributeType = "";
-		}
 		//End attributes
 		
 		visit(getChild(ast, PARAMETERS));
@@ -525,16 +520,21 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			
 		//Added attributes
 		case ATTR:
+			this.attributeDefinition = true;
 			out("/** ");
 			visit(getChild(ast, ATTR_TARGET));
 			out(" ");
 			visit(getChild(ast, ATTR_IDENT));
-			this.attributeType = "";
 			out("(");
 			visit(getChild(ast, ATTR_ARGUMENT));
 			out(")");
 			out(" */");
 			newline();
+			if(!this.attributeType.equals("")) {
+				addAttribute();
+				this.attributeType = "";
+			}
+			this.attributeDefinition = false;
 			break;
 		
 		case ATTR_TARGET:
@@ -544,7 +544,6 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		case ATTR_IDENT:
 			//write attribute type
 			AST attrIdentAST = ast.getFirstChild();
-			this.attributeType += attrIdentAST.getText();
 			visit(attrIdentAST);
 			break;
 			
@@ -637,10 +636,14 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		case DOT:
 			if(this.packageDefinition && !child1.getText().equals("."))
 				this.packages.add(child1.getText());
+			if(this.attributeDefinition && !child1.getText().equals("."))
+				this.attributeType += child1.getText();
 			visit(child1);
 			out(".");
 			if(this.packageDefinition)
 				this.packages.add(child2.getText());
+			if(this.attributeDefinition)
+				this.attributeType += "."+child2.getText();
 			visit(child2);
 			break;
 			
