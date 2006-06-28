@@ -1,0 +1,56 @@
+/**
+ * "The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ * 
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * The Original Code is ca.ubc.cs.spl.aspectPatterns. 
+ * 
+ * The Initial Developers of the Original Code are Jan Hannemann and Gregor Kiczales.
+ * 
+ * For more details and the latest version of the original code, please see: 
+ * http://www.cs.ubc.ca/labs/spl/projects/aodps.html
+ * 
+ * Contributor(s): Stephan Huttenhuis.
+ * 
+ * The modified version of the code is part of the Compose* project which can be found at: 
+ * http://composestar.sf.net
+ * 
+ */
+package Composestar.Patterns.AbstractFactory;
+ 
+import javax.swing.JLabel; 
+import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+
+public class FramedFactory{
+
+	public JLabel createLabel() {
+		System.out.println("FramedFactory.createLabel()");
+		JLabel label = new JLabel("This Label was created by " +getName());
+		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
+		Border loweredbevel = BorderFactory.createLoweredBevelBorder();
+		label.setBorder(BorderFactory.createCompoundBorder(raisedbevel, loweredbevel));
+		return label;
+	} 
+	
+     public JButton createButton(String label) {
+		System.out.println("FramedFactory.createButton()");
+		JButton button = new JButton(label);
+		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
+		Border loweredbevel = BorderFactory.createLoweredBevelBorder();
+		button.setBorder(BorderFactory.createCompoundBorder(raisedbevel, loweredbevel));
+		return button;
+	}	
+
+ 	public String getName() {
+		System.out.println("FramedFactory.getName()");
+		return "Framed Factory";
+	} 
+}
