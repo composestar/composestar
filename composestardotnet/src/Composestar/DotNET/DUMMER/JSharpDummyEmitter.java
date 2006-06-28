@@ -293,9 +293,13 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		
 		//Attributes
 		String locationPackage = getPackageName();
-		if(!locationPackage.equals("")) locationPackage += ".";
+		if(!locationPackage.equals("")) locationPackage += ".";	
 		this.attributeLocation = locationPackage+this.className+"."+methodName;
 		this.attributeTarget = "Method";
+		if(!this.attributeType.equals("")) {
+			addAttribute();
+			this.attributeType = "";
+		}
 		//End attributes
 		
 		visit(getChild(ast, PARAMETERS));
@@ -512,7 +516,6 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			visit(getChild(ast, PACKAGE_DEF));
 			visitChildren(ast, "\n",  IMPORT);
 			newline();
-			newline();
 			visitChildren(ast,"\n",CLASS_DEF);
 			visit(getChild(ast, INTERFACE_DEF));  
 			newline();
@@ -520,23 +523,18 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			
 		//Added attributes
 		case ATTR:
-			this.attributeDefinition = true;
-			out("/** ");
-			visit(getChild(ast, ATTR_TARGET));
-			out(" ");
-			visit(getChild(ast, ATTR_IDENT));
-			out("(");
-			visit(getChild(ast, ATTR_ARGUMENT));
-			out(")");
-			out(" */");
-			newline();
-			if(!this.attributeType.equals("")) {
-				addAttribute();
-				this.attributeType = "";
-			}
-			this.attributeDefinition = false;
+				this.attributeDefinition = true;
+				out("/** ");
+				visit(getChild(ast, ATTR_TARGET));
+				out(" ");
+				visit(getChild(ast, ATTR_IDENT));
+				out("(");
+				visit(getChild(ast, ATTR_ARGUMENT));
+				out(")");
+				out(" */");
+				newline();
+				this.attributeDefinition = false;
 			break;
-		
 		case ATTR_TARGET:
 			visit(getChild(ast, ATTRIBUTE));
 			break;
@@ -554,7 +552,6 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			visit(getChild(ast, STRING_LITERAL));
 			break;
 		//End attributes
-			
 			
 		case PACKAGE_DEF:
 			out("package ");
@@ -579,29 +576,35 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			
 		case CLASS_DEF:
 		case INTERFACE_DEF:
-			
+			//Attributes
+			if(hasChildren(ast)){
+				visitChildren(ast, "\n", ATTR, false);
+			}
+			//End Attributes
+
 			visit(getChild(ast, MODIFIERS));
 			if (ast.getType() == CLASS_DEF) {
 				out("class ");
 			} else {
 				out("interface ");
 			}
-			visit(getChild(ast, IDENT));
-			out(" ");
+			AST c = getChild(ast, IDENT);
 
 			//Added attributes
-			this.className = getChild(ast, IDENT).getText();
+			this.className = c.getText();
 			this.attributeLocation = this.getPackageName() +"."+this.className;
-			this.attributeTarget = "Class";
-			//if there are attributes
-			if(hasChildren(ast)){
-				visitChildren(ast, "\n", ATTR, false);
+			this.attributeTarget = "Type";
+			if(!this.attributeType.equals("")) {				
+				addAttribute();
+				this.attributeType = "";
 			}
 			//End attributes
+
+			visit(c);
+			out(" ");
 			
 			// Create type source
 			this.addTypeSource(this.attributeLocation);
-			
 			
 			visit(getChild(ast, EXTENDS_CLAUSE));
 			visit(getChild(ast, IMPLEMENTS_CLAUSE));

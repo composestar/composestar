@@ -38,7 +38,7 @@ compilationUnit
 
 		// Wrapping things up with any number of class or interface
 		//    definitions
-		( (a:attributes)? typeDefinition[#a] )*
+		( (a:attributes!)? typeDefinition[#a] )*
 		EOF!
 	;
 
@@ -55,7 +55,7 @@ attribute!
 	:	at:attributeTargetSpecifier name:attributeName arguments:attributeArguments
 		{#attribute = #(#[ATTR,"ATTR"],at,name,arguments);}
 	;
-
+	
 attributeTargetSpecifier!
 	: 	at:ATTRIBUTE
 		{ #attributeTargetSpecifier = #([ATTR_TARGET, "ATTR_TARGET"], at);}
@@ -211,7 +211,7 @@ classDefinition![AST a, AST modifiers]
 		// now parse the body of the class
 		cb:classBlock
 		{#classDefinition = #(#[CLASS_DEF,"CLASS_DEF"],
-							   modifiers,IDENT,a,sc,ic,cb);}
+							   a,modifiers,IDENT,sc,ic,cb);}
 	;
 
 superClassClause!
@@ -227,7 +227,7 @@ interfaceDefinition![AST a, AST modifiers]
 		// now parse the body of the interface (looks like a class...)
 		cb:classBlock
 		{#interfaceDefinition = #(#[INTERFACE_DEF,"INTERFACE_DEF"],
-									modifiers,IDENT,a,ie,cb);}
+									a,modifiers,IDENT,ie,cb);}
 	;
 
 
