@@ -1,0 +1,14 @@
+------ Composestar build started: Solution: DesignPatternAnnotations ------
+
+---------------------- Done ----------------------
+Dummy creation failed. See the task window for more information.
+
+Composestar build failed.
+
+
+
+---------------------- Done ----------------------
+
+Composestar build failed.
+
+
