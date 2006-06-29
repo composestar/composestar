@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "Adapter", "Adapter.vjsproj", "{EF2BE2AE-EA3E-460D-A7FA-494A9B9221FA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{EF2BE2AE-EA3E-460D-A7FA-494A9B9221FA}.Debug.ActiveCfg = Debug|.NET
+		{EF2BE2AE-EA3E-460D-A7FA-494A9B9221FA}.Debug.Build.0 = Debug|.NET
+		{EF2BE2AE-EA3E-460D-A7FA-494A9B9221FA}.Release.ActiveCfg = Release|.NET
+		{EF2BE2AE-EA3E-460D-A7FA-494A9B9221FA}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,21 @@
+
+
+Creating the Adaptee...
+Adapter and Adaptee are the same object: true
+
+
+Issuing the request() to the Adapter...
+First Test successful.
+
+Printing Text
+Changed to Default Text
+
+
+Printing Square
+* * * * *
+*	*
+*	*
+* Hello *
+*	*
+*	*
+* * * * *
