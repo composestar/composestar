@@ -1,13 +1,17 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger;
 
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
+
 import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.BreakPoint.AlwaysBreakBreakPoint;
 import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
-import Composestar.RuntimeCore.CODER.Debugger;
 import Composestar.RuntimeCore.CODER.DebuggerProvider;
 import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
+
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
 
 import java.awt.*;
@@ -24,19 +28,14 @@ import java.util.Dictionary;
  */
 public class VisualDebugger implements Debugger, BreakPointListener{
 	private Visualizer filterscreen;
-	private DebuggerProvider provider = null;
 	private String visualizer;
 
-    public VisualDebugger(DebuggerProvider provider, String visualizer) {
-        this.provider = provider;
+    public VisualDebugger(String visualizer) {
 		this.visualizer = visualizer;
     }
 
     public void start() {
-        provider.HaltRuntime();
-        provider.clearBreakPoints();
-
-		new VisualBreakPointMaker(this);
+		//new VisualBreakPointMaker(this);
 	}
 
 	public void startVisualizer()
@@ -52,13 +51,9 @@ public class VisualDebugger implements Debugger, BreakPointListener{
 			e.printStackTrace();
 			System.exit(1);
 		}
-		provider.ResumeRuntime();
 	}
 
     public void stop() {
-        provider.HaltRuntime();
-        provider.clearBreakPoints();
-        provider.removeBreakPointListener(this);
     }
 
     public void reset() {
@@ -66,34 +61,10 @@ public class VisualDebugger implements Debugger, BreakPointListener{
 		start();
     }
 
-    public void breakEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters,Dictionary context) {
+    public void breakEvent(int eventType, StateHandler handler, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters,Dictionary context) {
 		if(filterscreen != null)
 		{
 			filterscreen.renderFilterEvent(eventType, handler, currentFilter, beforeMessage, afterMessage, filters, context);
 		}
     }
-
-	public void setBreakPoint(BreakPoint breakPoint)
-	{
-		provider.clearBreakPoints();
-		if(breakPoint == null)
-		{
-			provider.addBreakPoint(new AlwaysBreakBreakPoint(getHalter()));
-		}
-		else
-		{
-			provider.addBreakPoint(breakPoint);
-		} 
-		provider.addBreakPointListener(this);
-	}
-
-	public void resume()
-	{
-		provider.ResumeRuntime();
-	}
-
-	public Halter getHalter()
-	{
-		return provider.getHalter();
-	}
 }

@@ -1,13 +1,16 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
+
 import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.BreakPoint.AlwaysBreakBreakPoint;
 import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
-import Composestar.RuntimeCore.CODER.Debugger;
 import Composestar.RuntimeCore.CODER.DebuggerProvider;
 import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents.*;
 
@@ -68,10 +71,10 @@ public class CodeDebugger extends Visualizer implements  ActionListener{
 	}
 
 	private StateHandler handler;
-	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context)
+	public void renderFilterEvent(int eventType, StateHandler handler, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context)
 	{
 		this.handler = handler;
-		if(eventType == DebuggerProvider.FILTER_REJECTED || eventType == DebuggerProvider.FILTER_ACCEPTED)
+		if(eventType == Debugger.FILTER_REJECTED || eventType == Debugger.FILTER_ACCEPTED)
 		{
 			resuming();
 			component.fill(handler, beforeMessage, afterMessage,currentFilter,filters, context);

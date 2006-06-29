@@ -1,6 +1,9 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents;
 
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 
 import java.awt.*;
 import java.util.Dictionary;
@@ -27,5 +30,5 @@ public abstract class DebugGuiComponent {
 
     public abstract void bump();
 
-    public abstract void paint(Graphics g, DebuggableMessageList message, Dictionary context);
+    public abstract void paint(Graphics g, MessageList message, Dictionary context);
 }

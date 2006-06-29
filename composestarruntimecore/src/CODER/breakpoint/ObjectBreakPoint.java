@@ -1,8 +1,7 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
 import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
+import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.BreakPointParseException;
 
 import java.util.*;

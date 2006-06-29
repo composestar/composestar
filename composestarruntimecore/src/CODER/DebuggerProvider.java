@@ -1,5 +1,9 @@
 package Composestar.RuntimeCore.CODER;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+
 import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
 import java.util.ArrayList;
@@ -31,15 +35,10 @@ public abstract class DebuggerProvider {
 
     public abstract void removeBreakPointListener(BreakPointListener debugger);
 
-    public static final int FILTER_ACCEPTED = 0;
-    public static final int FILTER_REJECTED = 1;
-	public static final int FILTER_EVALUATION_START = 2;
-	public static final int MESSAGE_INTERCEPTED = 3;
-	public static final int MESSAGE_PROCESSING_START = 4;
 
-    public static void event(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context) {
+    public static void event(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context) {
         instance.fireEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
     }
 
-    public abstract void fireEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context);
+    public abstract void fireEvent(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context);
 }

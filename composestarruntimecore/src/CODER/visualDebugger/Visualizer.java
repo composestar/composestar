@@ -1,5 +1,9 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+
 import Composestar.RuntimeCore.CODER.VisualDebugger.*;
 import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.*;
 import Composestar.RuntimeCore.CODER.Model.*;
@@ -56,5 +60,5 @@ public abstract class Visualizer extends JPanel
 	{
 		((VisualizerFrame)frame).center();
 	}
-	public abstract void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context);
+	public abstract void renderFilterEvent(int eventType, StateHandler handler, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context);
 }

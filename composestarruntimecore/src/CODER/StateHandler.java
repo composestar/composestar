@@ -1,5 +1,9 @@
 package Composestar.RuntimeCore.CODER;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+
 import Composestar.RuntimeCore.Utils.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.CODER.Model.*;
@@ -44,11 +48,10 @@ public class StateHandler {
 		this.breakpoint = breakpoint;
 	}
 	
-	public void event(int eventType,DebuggableFilter currentFilter,DebuggableMessageList beforeMessage ,DebuggableMessageList afterMessage, ArrayList filters, Dictionary context)
+	public void event(int eventType,FilterRuntime currentFilter,MessageList beforeMessage ,MessageList afterMessage, ArrayList filters, Dictionary context)
 	{
 		halter.halting();
 		Debug.out(Debug.MODE_DEBUG,"FLIRT(RuntimeStateHandler)","Having event");
-		breakpoint.event(eventType,this,currentFilter,beforeMessage,afterMessage,filters,context);
 	}
 
 	public boolean isTreadHalted()

@@ -1,5 +1,9 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+
 import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.*;
 import Composestar.RuntimeCore.Utils.*;
@@ -37,7 +41,7 @@ public class CodeExecutionGuiComponent extends Panel {
 	public ArrayList dictionaryHistory = new ArrayList();
 	public ArrayList messageHistory = new ArrayList();
 
-	public void updateHistory(DebuggableMessage preMessage, DebuggableMessage postMessage,Dictionary context)
+	public void updateHistory(MessageList preMessage, MessageList postMessage,Dictionary context)
 	{
 		if(preMessage == null)
 		{
@@ -48,7 +52,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		messageHistory.add(postMessage);
 	}
 
-	public synchronized void fill(StateHandler handler, DebuggableMessageList preMessage, DebuggableMessageList postMessage,DebuggableFilter currentFilter, ArrayList filters, Dictionary context)
+	public synchronized void fill(StateHandler handler, MessageList preMessage, MessageList postMessage,FilterRuntime currentFilter, ArrayList filters, Dictionary context)
 	{
 		updateHistory(preMessage, postMessage,context);
 
@@ -85,7 +89,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		messages[0].setText(preMessage.toString());
 		for(int i =0 ; i < filters.size();i++)
 		{
-			DebuggableFilter filter = (DebuggableFilter) filters.get(i);
+			FilterRuntime filter = (FilterRuntime) filters.get(i);
 
 			accepting[i+1].setEnabled(true);
 			Dictionary oldContext = dictionaryHistory.size() == 1 ? context: (Dictionary) dictionaryHistory.get(dictionaryHistory.size() -2);
@@ -101,7 +105,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		components[filters.size()+1].setVisible(true);
 		messages[filters.size()+1].setVisible(true);
 
-		Object target = ((DebuggableSingleMessage)((DebuggableMessageList)messageHistory.get(0)).getMessages().get(0)).getTarget();
+		Object target = ((Message)((MessageList)messageHistory.get(0)).getMessages().get(0)).getTarget();
 		components[filters.size()+1].setText(target == null ? "Null Target" : target.toString());
 		messages[filters.size()+1].setText(postMessage.toString());
 
@@ -166,7 +170,7 @@ public class CodeExecutionGuiComponent extends Panel {
 		return filename + ":" + lineNumber + '\n' + line;
 	}
 
-	public String getCode(DebuggableFilter filter)
+	public String getCode(FilterRuntime filter)
 	{
 		if(filter.isDummy())
 		{

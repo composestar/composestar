@@ -1,5 +1,6 @@
 package Composestar.RuntimeCore.CODER;
 
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
 import Composestar.RuntimeCore.CODER.ConsoleDebugger.ConsolePrinterDebugger;
 import Composestar.RuntimeCore.CODER.VisualDebugger.VisualDebugger;
 import Composestar.RuntimeCore.Utils.Debug;
@@ -9,22 +10,39 @@ import java.io.*;
  * Summary description for DebuggerFactory.
  */
 public class DebuggerFactory {
-	private final static String DEBUGGER_CONFIG_FILE = "debugger.xml";
-	private final static String DEFAULT_DEBUGGER = "Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger";;
+	private static String DEBUGGER_CONFIG_FILE = "debugger.xml";
+	private static String DEFAULT_DEBUGGER = "Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger";;
 	/**
 	 * Returns the debugger that is specified
 	 */
-    public static Debugger getDebugger(DebuggerProvider provider) {
-		if(Debug.DEBUGGER_INTERFACE)
+	private static Debugger debugger = null;
+
+    public final static Debugger getDebugger() {
+		if(debugger == null) //First selection
 		{
-			String debugger = getDebugger();
-			return new VisualDebugger(provider,debugger);
+			instantiateDebugger();
 		}
-		else
-		{
-			return new ConsolePrinterDebugger(provider);
-		}
+		return debugger;
     }
+
+	private final static void instantiateDebugger()
+	{
+		synchronized(DEBUGGER_CONFIG_FILE)
+		{
+			if(debugger == null) //Because of race condition with singleton
+			{
+				if(Debug.DEBUGGER_INTERFACE)
+				{
+					String debuggerRepresentation = getDebuggerType();
+					debugger = new VisualDebugger(debuggerRepresentation);
+				}
+				else
+				{
+					debugger = new ConsolePrinterDebugger();
+				}
+			}
+		}
+	}
 
 	/**
 	 */
@@ -43,7 +61,7 @@ public class DebuggerFactory {
 		return result;
 	}
 
-	public static String getDebuggerClass(String type)
+	private static String getDebuggerClass(String type)
 	{
 		if("VisualDebugger".equalsIgnoreCase(type))
 		{
@@ -54,8 +72,7 @@ public class DebuggerFactory {
 			return DEFAULT_DEBUGGER;
 		}
 	}
-
-	public static String getDebugger()
+	private static String getDebuggerType()
 	{
 		try
 		{

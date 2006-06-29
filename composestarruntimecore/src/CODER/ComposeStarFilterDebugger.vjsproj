@@ -125,11 +125,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "breakpoint\AcceptingOnlyBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "breakpoint\AlwaysBreakBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -140,232 +135,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "breakpoint\BreakPointAnd.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointBi.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointFuture.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointGlobal.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointMono.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointNot.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointOr.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointRelease.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointUntil.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\BreakPointValueOperator.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\MultiBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\NeverBreakBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\ObjectBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\SelectorBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\SenderBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\TargetBreakPoint.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\BreakPointParseException.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\BreakPointParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\ltl\BreakPointLTLParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\ltl\LtlLexer.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\ltl\LtlParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\ltl\LtlParserTokenTypes.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\BreakPointRegParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegLexer.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegParser.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegParserTokenTypes.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegularExpression.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegularExpressionName.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegularExpressionOperator.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegularExpressionOptional.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegularExpressionPlus.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "breakpoint\parsers\reg\RegularExpressionStar.java"
+                    RelPath = "breakpoint\BreakPointParseException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "consoleDebugger\ConsolePrinterDebugger.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableCustomFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableDispatchFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableErrorFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableFilter.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableFilterModule.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableMessage.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableMessageList.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableMetaFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableSendFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableSingleMessage.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableSubstitutionFilterType.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "model\DebuggableWaitFilterType.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -381,11 +156,6 @@
                 />
                 <File
                     RelPath = "value\VariableValue.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "visualDebugger\VisualBreakPointMaker.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

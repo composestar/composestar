@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -10,17 +10,10 @@ import java.util.Dictionary;
 /**
  * Summary description for AlwaysBreakBreakPoint.
  */
-public class AlwaysBreakBreakPoint extends BreakPoint {
+public class AlwaysBreakBreakPoint implements BreakPoint {
 
-    public AlwaysBreakBreakPoint(Halter halt) {
-        super(halt);
-    }
-
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
-        return true;
-    }
-
-    public boolean threadSpecific() {
-        return false;
-    }
+	public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filtersModules, Dictionary context)
+	{
+		return true;
+	}
 }

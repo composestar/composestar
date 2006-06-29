@@ -1,6 +1,8 @@
 package Composestar.RuntimeDotNET.FLIRT;
 
 import Composestar.RuntimeCore.FLIRT.PlatformProvider;
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
+import Composestar.RuntimeCore.CODER.*;
 import Composestar.RuntimeCore.Utils.*;
 import Composestar.RuntimeDotNET.FLIRT.Filtertypes.*;
 import Composestar.RuntimeDotNET.Interface.*;
@@ -23,6 +25,11 @@ public class DotNETPlatformProvider extends PlatformProvider
 	public RepositoryDeserializer getRepositoryDeserializer()
 	{
 		return new DotNETRepositoryDeserializer();
+	}
+
+	public Debugger getDebugger()
+	{
+		return DebuggerFactory.getDebugger();
 	}
 }
 

@@ -1,7 +1,9 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents;
 
-import Composestar.RuntimeCore.CODER.Model.DebuggableFilter;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,7 +29,7 @@ public class FilterExecutionGuiComponent extends Panel {
     private ArrayList filters;
     private Object source;
     private Object target;
-    private DebuggableMessageList message;
+    private MessageList message;
     private Dictionary context;
 
     private Object deveredTarget = null;
@@ -44,13 +46,13 @@ public class FilterExecutionGuiComponent extends Panel {
         });
     }
 
-    public void fill(DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage,DebuggableFilter current, ArrayList filters,Dictionary context) {
+    public void fill(MessageList beforeMessage, MessageList afterMessage,FilterRuntime current, ArrayList filters,Dictionary context) {
         fillIt("source", "target", beforeMessage, current,filters,context);
         repaint();
 		show();
     }
 
-    private synchronized void fillIt(Object source, Object target, DebuggableMessageList message, DebuggableFilter current,ArrayList filters, Dictionary context) {
+    private synchronized void fillIt(Object source, Object target, MessageList message, FilterRuntime current,ArrayList filters, Dictionary context) {
         this.source = source;
         this.target = target;
         this.message = message;
@@ -105,7 +107,7 @@ public class FilterExecutionGuiComponent extends Panel {
                 }
                 paintMessage(g, message, currentX, currentY, messageLength, ARROWSIZE);
                 currentX += messageLength;
-                items.addElement(FilterGuiComponent.createFilter(currentX, currentY - FILTERHEIGTH / 2, FILTERWIDTH, FILTERHEIGTH, (DebuggableFilter) filters.get(index)));
+                items.addElement(FilterGuiComponent.createFilter(currentX, currentY - FILTERHEIGTH / 2, FILTERWIDTH, FILTERHEIGTH, (FilterRuntime) filters.get(index)));
                 if (accepted[index]) {
                     currentX += FILTERWIDTH >> 1;
                     g.drawLine(currentX, currentY + (FILTERHEIGTH >> 1), currentX, currentY + OBJECTSIZE);
@@ -122,18 +124,18 @@ public class FilterExecutionGuiComponent extends Panel {
         }
     }
 
-    public void paintMessage(Graphics g, DebuggableMessageList message, int x, int y, int width, int height) {
+    public void paintMessage(Graphics g, MessageList message, int x, int y, int width, int height) {
         g.drawLine(x, y, x + width, y);
         g.drawLine(x + width, y, x + width - height, y - height);
         g.drawLine(x + width, y, x + width - height, y + height);
     }
 
-    public void updateFilterAccepted(DebuggableFilter f, DebuggableMessageList modifiedMessage, Dictionary context) {
+    public void updateFilterAccepted(FilterRuntime f, MessageList modifiedMessage, Dictionary context) {
         updateFilterAck(f, modifiedMessage, context);
         repaint();
     }
 
-    private synchronized void updateFilterAck(DebuggableFilter f, DebuggableMessageList modifiedMessage, Dictionary context) {
+    private synchronized void updateFilterAck(FilterRuntime f, MessageList modifiedMessage, Dictionary context) {
         this.message = modifiedMessage;
         this.context = context;
         int i = items.size();

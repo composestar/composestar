@@ -1,5 +1,10 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer;
 
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
+
 import Composestar.RuntimeCore.CODER.VisualDebugger.*;
 import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.*;
 import Composestar.RuntimeCore.CODER.Model.*;
@@ -36,10 +41,10 @@ public class FilterVisualizer extends Visualizer implements  ActionListener
 	}
 
 	private StateHandler handler;
-	public void renderFilterEvent(int eventType, StateHandler handler, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context)
+	public void renderFilterEvent(int eventType, StateHandler handler, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context)
 	{
 		this.handler = handler;
-		if(eventType == DebuggerProvider.FILTER_REJECTED || eventType == DebuggerProvider.FILTER_ACCEPTED)
+		if(eventType == Debugger.FILTER_REJECTED || eventType == Debugger.FILTER_ACCEPTED)
 		{
 			handler.threadSuspend();
 		}
