@@ -39,7 +39,7 @@
                     BaseAddress = "285212672"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
-                    DebugSymbols = "false"
+                    DebugSymbols = "true"
                     NoWarn = ""
                     Optimize = "true"
                     OutputPath = "..\"
