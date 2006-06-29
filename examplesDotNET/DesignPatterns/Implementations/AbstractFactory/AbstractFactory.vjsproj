@@ -78,7 +78,7 @@
                 <Reference
                     Name = "DesignPatternAnnotations"
                     AssemblyName = "DesignPatternAnnotations"
-                    HintPath = "..\DesignPatternAnnotations\bin\Debug\DesignPatternAnnotations.dll"
+                    HintPath = "..\..\Annotations\bin\Debug\DesignPatternAnnotations.dll"
                 />
             </References>
         </Build>
