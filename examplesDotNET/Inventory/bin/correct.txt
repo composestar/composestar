@@ -1,16 +1,41 @@
-List of Products in Inventory:
-A
 Number of Products in Inventory: 1
 List of Products in Inventory:
 A
-P
 Number of Products in Inventory: 2
 List of Products in Inventory:
 A
 P
+Number of Products in Inventory: 3
+List of Products in Inventory:
+A
+P
+Z
+Number of Products in Inventory: 2
+List of Products in Inventory:
+A
 Z
 Number of Products in Inventory: 3
 List of Products in Inventory:
 A
 Z
-Number of Products in Inventory: 2
+L1
+Number of Products in Inventory: 4
+List of Products in Inventory:
+A
+Z
+L1
+L2
+Number of Products in Inventory: 5
+List of Products in Inventory:
+A
+Z
+L1
+L2
+L3
+Number of Products in Inventory: 5
+List of Products in Inventory:
+A
+Z
+L1
+L2
+L3

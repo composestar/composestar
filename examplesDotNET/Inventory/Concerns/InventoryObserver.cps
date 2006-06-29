@@ -8,7 +8,8 @@ concern InventoryObserver in ExampleAOP {
 			attach: Dispatch = {[*.Attach] subject.Attach};
 			detach: Dispatch = {[*.Detach] subject.Detach};
 			change: Meta = {observed => [*.AddProduct] subject.Notify,
-			                observed => [*.RemoveProduct] subject.Notify}
+			                observed => [*.RemoveProduct] subject.Notify,
+							observed => [*.AddProducts] subject.Notify}
 	}
 
 	/*

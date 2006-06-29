@@ -128,31 +128,40 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "InventoryObserver.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Observer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ObserverInventoryCount.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ObserverInventoryDisplay.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Product.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Subject.cs"
+                    RelPath = "Concerns\BulkAdder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Concerns\BulkAddProducts.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\InventoryObserver.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\Observer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Concerns\ObserverInventoryCount.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Concerns\ObserverInventoryDisplay.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Concerns\Subject.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

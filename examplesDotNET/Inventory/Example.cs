@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace ExampleAOP
 {
@@ -14,14 +15,20 @@ namespace ExampleAOP
 		static void Main(string[] args)
 		{
 			Inventory i = new Inventory();
-			InventoryDisplay id = new InventoryDisplay(i);
 			InventoryCount ic = new InventoryCount(i);
+			InventoryDisplay id = new InventoryDisplay(i);
 
 			Product p = new Product("P");
 			i.AddProduct(new Product("A"));
 			i.AddProduct(p);
 			i.AddProduct(new Product("Z"));
 			i.RemoveProduct(p);
+
+			ArrayList ps = new ArrayList();
+			ps.Add(new Product("L1"));
+			ps.Add(new Product("L2"));
+			ps.Add(new Product("L3"));
+			i.AddProducts(ps);
 		}
 	}
 }
