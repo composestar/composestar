@@ -1,0 +1,17 @@
+Creating builder1
+Created Director
+Creating builder2
+Created Director
+calling build on builder1
+calling build on builder2
+This is a new Person:
+Its Name is James Brick.
+Its Age is 33.
+Its Occupation is Builder.
+
+<Person>
+	<Name>James Brick</Name>
+	<Age>33</Age>
+	<Occupation>Builder</Occupation>
+</Person>
+
