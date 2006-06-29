@@ -39,7 +39,6 @@ namespace ExampleAOP
 			{
 				o.Update(this);
 			}
-			rm.resume();
 		}
 	}
 }

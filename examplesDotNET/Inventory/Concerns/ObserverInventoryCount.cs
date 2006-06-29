@@ -22,7 +22,6 @@ namespace ExampleAOP
 			subject = (Subject)rm.getArg(0);
 			ObserverInventoryCount o = (ObserverInventoryCount)rm.getTarget();
 			subject.Attach(o);
-			rm.resume();
 		}
 
 		public void Update(Subject s)
