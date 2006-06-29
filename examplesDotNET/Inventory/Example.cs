@@ -29,6 +29,7 @@ namespace ExampleAOP
 			ps.Add(new Product("L2"));
 			ps.Add(new Product("L3"));
 			i.AddProducts(ps);
+			i.RemoveProducts(ps);
 		}
 	}
 }

@@ -39,3 +39,22 @@ Z
 L1
 L2
 L3
+Number of Products in Inventory: 4
+List of Products in Inventory:
+A
+Z
+L2
+L3
+Number of Products in Inventory: 3
+List of Products in Inventory:
+A
+Z
+L3
+Number of Products in Inventory: 2
+List of Products in Inventory:
+A
+Z
+Number of Products in Inventory: 2
+List of Products in Inventory:
+A
+Z

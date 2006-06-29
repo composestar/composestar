@@ -133,12 +133,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Concerns\BulkAdder.cs"
+                    RelPath = "Concerns\BulkUpdater.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Concerns\BulkAddProducts.cps"
+                    RelPath = "Concerns\BulkUpdates.cps"
                     BuildAction = "None"
                 />
                 <File
