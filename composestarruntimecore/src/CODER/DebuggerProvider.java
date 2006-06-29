@@ -3,42 +3,43 @@ package Composestar.RuntimeCore.CODER;
 import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
 import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
 
-import Composestar.RuntimeCore.CODER.Model.*;
-import Composestar.RuntimeCore.CODER.BreakPoint.BreakPoint;
+import Composestar.RuntimeCore.CODER.BreakPoint.*;
+
 import java.util.ArrayList;
 import java.util.Dictionary;
 
 /**
  * Debug interface for the ComposeStar runtime.
  */
-public abstract class DebuggerProvider {
-    protected static DebuggerProvider instance = null;
+public abstract class DebuggerProvider extends Debugger{
+	BreakPoint breakpoint = new AlwaysBreakBreakPoint();
+	public DebuggerProvider()
+	{
+		instance = this;
+	}
 
-    public DebuggerProvider() {
-        instance = this;
-    }
+	public void start() 
+	{
+	}
 
-    public abstract Halter getHalter();
+	public void stop() 
+	{
+	}
 
-    public abstract void HaltRuntime();
+	public void reset() 
+	{
+	}
 
-    public abstract void ResumeRuntime();
+	public void event(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point)
+	{
+		if(breakpoint.matchEvent(eventType, currentFilter, messageList, point))
+		{
+			executeEvent(eventType, currentFilter, messageList, point);
+		}
+	}
 
-    public abstract void addBreakPoint(BreakPoint point);
-
-    public abstract void removeBreakPoint(BreakPoint point);
-
-    public abstract void clearBreakPoints();
-
-    public abstract void addBreakPointListener(BreakPointListener debugger);
-
-    public abstract void removeBreakPointListener(BreakPointListener debugger);
-
-
-    public static void event(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context) {
-        instance.fireEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
-    }
-
-    public abstract void fireEvent(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context);
+	protected abstract void executeEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point);
 }

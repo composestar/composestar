@@ -8,8 +8,9 @@ import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.FLIRT.Reflection.*;
+import Composestar.RuntimeCore.FLIRT.Debugger.*;
+
 import Composestar.RuntimeCore.Utils.*;
-import Composestar.RuntimeCore.Utils.Debug;
 
 import java.util.*;
 
@@ -18,7 +19,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.6 2006/06/27 15:39:34 reddog33hummer Exp $
+ * $Id: MetaFilterPolicy.java,v 1.7 2006/06/29 08:46:01 reddog33hummer Exp $
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -51,20 +52,20 @@ class MetaFilterPolicy extends FilterPolicy
 		JoinPoint jp = new JoinPoint(aMessage.getFirstMessage().getTarget(),fm.getInternals(),fm.getExternals(),Invoker.getInstance().getAttributesFor(aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector()));
 		JoinPointInfoProxy.updateJoinPoint(jp);
 
-		if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
+		Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START,null,aMessage, jp);
+		if (Debug.SHOULD_DEBUG) 
 		{
 			Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tProcessing meta filter policy...");
-			//DebuggerProvider.event(DebuggerProvider.MESSAGE_PROCESSING_START, null, null, aMessage, filterList, context);
 		}
 		for (int j = 0; (j < filterList.size()) && !exit; j++) 
 		{
 			FilterRuntime f = (FilterRuntime) filterList.get(j);
 			MessageList originalMessage = new MessageList(aMessage);
 
-			if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
+			Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START,null,aMessage, jp);
+			if (Debug.SHOULD_DEBUG) 
 			{
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tEvaluating filter '"+((Filter)f.getReference()).getName()+"' of type '"+((Filter)f.getReference()).getFilterType().getType()+"'...");
-				//DebuggerProvider.event(DebuggerProvider.FILTER_EVALUATION_START, f, aMessage, originalMessage, filterList, context);
 			}
 			// Update the message!
             MessageInfoProxy.updateMessage(originalMessage);
@@ -77,18 +78,12 @@ class MetaFilterPolicy extends FilterPolicy
 
 			if (eval) 
 			{
-				if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
-				{
-					//DebuggerProvider.event(DebuggerProvider.FILTER_ACCEPTED, f, originalMessage, modifiedMessage, filterList, context);
-				}
+				Debugger.getInstance().event(Debugger.FILTER_ACCEPTED,f,modifiedMessage, jp);
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			} 
 			else 
 			{
-				if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
-				{
-					//DebuggerProvider.event(DebuggerProvider.FILTER_REJECTED, f, originalMessage, modifiedMessage, filterList, context);
-				}
+				Debugger.getInstance().event(Debugger.FILTER_REJECTED,f,modifiedMessage, jp);
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 

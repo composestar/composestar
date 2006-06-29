@@ -19,12 +19,10 @@ import java.util.Dictionary;
  */
 public abstract class Visualizer extends JPanel
 {
-	protected VisualDebugger debugger;
 	protected Frame frame;
 
-	public Visualizer(VisualDebugger debugger)
+	public Visualizer()
 	{
-		this.debugger = debugger;
 		frame = new VisualizerFrame();
 		frame.add(this);
 	}

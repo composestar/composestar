@@ -6,8 +6,6 @@ package Composestar.RuntimeCore.Utils;
 public class Debug 
 {
 	public static boolean SHOULD_DEBUG = true;
-	public static boolean DEBUGGER_INTERFACE = false;
-
 	private static int currentMode = 0;
     
 	public static final int MODE_ERROR = Composestar.Utils.Debug.MODE_ERROR;             //0;
@@ -26,12 +24,7 @@ public class Debug
 		if (mode > 1) 
 			Debug.SHOULD_DEBUG = true;
 	}
-
-	public static void setDebuggerInterface(boolean on)
-	{
-		Debug.DEBUGGER_INTERFACE = on;
-	}
-    
+ 
 	/**
 	 * @return int
 	 * @roseuid 41161EA901B9

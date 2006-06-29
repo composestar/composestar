@@ -3,10 +3,10 @@ package Composestar.RuntimeCore.FLIRT.Policy;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.RuntimeCore.CODER.*;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
-import Composestar.RuntimeCore.FLIRT.Message.Message;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.*;
+import Composestar.RuntimeCore.FLIRT.Debugger.*;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 
@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DefaultFilterPolicy.java,v 1.4 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: DefaultFilterPolicy.java,v 1.5 2006/06/29 08:46:01 reddog33hummer Exp $
  * 
  * Filter policy with support for the Dispatch, Error and Substitution filters.
  */
@@ -44,11 +44,10 @@ class DefaultFilterPolicy extends FilterPolicy
 		aMessage.setInternals(fm.getInternals());
 		aMessage.setExternals(fm.getExternals());
 
-
-		if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
+		Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START,null,aMessage, null);
+		if (Debug.SHOULD_DEBUG) 
 		{
 			Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tProcessing default filter policy...");
-			//DebuggerProvider.event(DebuggerProvider.MESSAGE_PROCESSING_START, null, null, aMessage, filterList, context);
 		}
 
 		for (int j = 0; (j < filterList.size()) && !exit; j++) 
@@ -56,10 +55,10 @@ class DefaultFilterPolicy extends FilterPolicy
 			FilterRuntime f = (FilterRuntime) filterList.get(j);
 			MessageList originalMessage = new MessageList(aMessage);
 			
-			if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
+			Debugger.getInstance().event(Debugger.FILTER_EVALUATION_START,null,aMessage, null);
+			if (Debug.SHOULD_DEBUG) 
 			{
 				Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tEvaluating filter '"+((Filter)f.getReference()).getName()+"' of type '"+((Filter)f.getReference()).getFilterType().getType()+"'...");
-				//DebuggerProvider.event(DebuggerProvider.FILTER_EVALUATION_START, null, aMessage, originalMessage, filterList, context);
 			}
 
 			boolean eval = f.canAccept(aMessage, context);
@@ -67,18 +66,12 @@ class DefaultFilterPolicy extends FilterPolicy
 
 			if (eval) 
 			{
-				if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
-				{
-					//DebuggerProvider.event(DebuggerProvider.FILTER_ACCEPTED, f, originalMessage, modifiedMessage, filterList, context);
-				}
+				Debugger.getInstance().event(Debugger.FILTER_ACCEPTED,f,modifiedMessage, null);
 				csa = f.getAcceptAction(originalMessage, modifiedMessage, context);
 			}
 			else 
 			{
-				if (Debug.DEBUGGER_INTERFACE || Debug.SHOULD_DEBUG) 
-				{
-					//DebuggerProvider.event(DebuggerProvider.FILTER_REJECTED, f, originalMessage, modifiedMessage, filterList, context);
-				}
+				Debugger.getInstance().event(Debugger.FILTER_REJECTED,f,modifiedMessage, null);
 				csa = f.getRejectAction(originalMessage, modifiedMessage, context);
 			}
 			

@@ -3,6 +3,8 @@ package Composestar.RuntimeCore.CODER;
 import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
 import Composestar.RuntimeCore.CODER.ConsoleDebugger.ConsolePrinterDebugger;
 import Composestar.RuntimeCore.CODER.VisualDebugger.VisualDebugger;
+import Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger;
+import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.FilterVisualizer;
 import Composestar.RuntimeCore.Utils.Debug;
 import java.io.*;
 
@@ -11,7 +13,6 @@ import java.io.*;
  */
 public class DebuggerFactory {
 	private static String DEBUGGER_CONFIG_FILE = "debugger.xml";
-	private static String DEFAULT_DEBUGGER = "Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.CodeDebugger";;
 	/**
 	 * Returns the debugger that is specified
 	 */
@@ -31,45 +32,25 @@ public class DebuggerFactory {
 		{
 			if(debugger == null) //Because of race condition with singleton
 			{
-				if(Debug.DEBUGGER_INTERFACE)
-				{
-					String debuggerRepresentation = getDebuggerType();
-					debugger = new VisualDebugger(debuggerRepresentation);
-				}
-				else
-				{
-					debugger = new ConsolePrinterDebugger();
-				}
+				String debuggerRepresentation = getDebuggerType();
+				debugger = getDebuggerClass(debuggerRepresentation);
 			}
 		}
 	}
 
-	/**
-	 */
-	public static boolean checkDebugInterfaceSetting()
-	{
-		boolean result = false;
-		try
-		{
-			File file = new File(DEBUGGER_CONFIG_FILE);
-			result = file.exists(); //not using settings now. Just pressent is ok
-		}
-		catch(Exception e)
-		{
-			//Ignore
-		}
-		return result;
-	}
-
-	private static String getDebuggerClass(String type)
+	private static Debugger getDebuggerClass(String type)
 	{
 		if("VisualDebugger".equalsIgnoreCase(type))
 		{
-			return "Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.FilterVisualizer";
+			return new VisualDebugger(new CodeDebugger());
+		}
+		else if ("CodeDebugger".equalsIgnoreCase(type))
+		{
+			return new VisualDebugger(new FilterVisualizer());
 		}
 		else
 		{
-			return DEFAULT_DEBUGGER;
+			return new ConsolePrinterDebugger();
 		}
 	}
 	private static String getDebuggerType()
@@ -83,20 +64,20 @@ public class DebuggerFactory {
 			int index = line.toUpperCase().indexOf("<DEBUGGER>");
 			if(index < 0)
 			{
-				return DEFAULT_DEBUGGER;
+				return "";
 			}
 			index += 10;
 			int end = line.indexOf("/>");
 			if(end <= index + 9)
 			{
-				return DEFAULT_DEBUGGER;
+				return "";
 			}
-			return getDebuggerClass(line.substring(index,end-9));
+			return line.substring(index,end-9);
 		}
 		catch(Exception e)
 		{
 
 		}
-		return DEFAULT_DEBUGGER;
+		return "";
 	}
 }

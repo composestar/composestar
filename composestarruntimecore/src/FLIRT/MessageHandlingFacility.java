@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.4 2006/06/27 15:39:33 reddog33hummer Exp $
+ * $Id: MessageHandlingFacility.java,v 1.5 2006/06/29 08:46:00 reddog33hummer Exp $
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT
@@ -533,29 +533,21 @@ public abstract class MessageHandlingFacility
 	 * @param debug int The debug level
 	 * $param debugInterface boolean Turn on the debugger interface
 	 */
-	public synchronized static void handleApplicationStart(String filename, int debug, boolean debugInterface, PlatformProvider provider)
+	public synchronized static void handleApplicationStart(String filename, int debug, PlatformProvider provider)
 	{
 		Debug.setMode(debug);
-		Debug.setDebuggerInterface(debugInterface);
 
 		provider.instantiatePlatform();
 
-		if (Debug.SHOULD_DEBUG || Debug.DEBUGGER_INTERFACE) 
+		if (Debug.SHOULD_DEBUG) 
 		{
-			if(Debug.SHOULD_DEBUG)
-			{
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "MessageHandlingFacility for application started...");
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Debugger interface is:" + (debugInterface ? "enabled" : "disabled"));
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Starting filter debugger providers");
-			}
-                        
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Starting Filter Debugger");
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "MessageHandlingFacility for application started...");
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Starting filter debugger providers");
+
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Starting Filter Debugger");
                        
-			if(Debug.SHOULD_DEBUG)
-			{
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Filter Debugger Started");
-				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Deserializing compile time structure from '" + filename + "'...");
-			}
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Filter Debugger Started");
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Deserializing compile time structure from '" + filename + "'...");
 		}
 		
 		rd = provider.getRepositoryDeserializer();

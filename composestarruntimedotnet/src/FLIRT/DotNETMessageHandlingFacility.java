@@ -14,14 +14,8 @@ public class DotNETMessageHandlingFacility extends MessageHandlingFacility
 	 * @param filename String The location of the xml file
 	 * @param debug int The debug level
 	 */
-	public static void handleDotNETApplicationStart(String filename, int debug) 
+	public synchronized static void handleDotNETApplicationStart(String filename, int debug) 
 	{
-		boolean debugInterface = false;//DebuggerFactory.checkDebugInterfaceSetting();
-		handleDotNETApplicationStart(filename, debug, debugInterface);
-	}
-
-	public synchronized static void handleDotNETApplicationStart(String filename, int debug, boolean debugInterface)
-	{
-		handleApplicationStart(filename, debug, debugInterface, new DotNETPlatformProvider());
+		handleApplicationStart(filename, debug, new DotNETPlatformProvider());
 	}
 }

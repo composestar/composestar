@@ -21,9 +21,8 @@ import java.util.Dictionary;
 public class FilterVisualizer extends Visualizer implements  ActionListener
 {
 	private FilterExecutionGuiComponent component;
-	public FilterVisualizer(VisualDebugger debugger)
+	public FilterVisualizer()
 	{
-		super(debugger);
 		frame.setSize(1024,250);
 		center();
 		setLayout(new BorderLayout());

@@ -33,9 +33,8 @@ public class CodeDebugger extends Visualizer implements  ActionListener{
 	private CodeExecutionGuiComponent component;
 	private JTextField waiting = new JTextField("Waiting for filter");
 	
-	public CodeDebugger(VisualDebugger debugger)
+	public CodeDebugger()
 	{
-		super(debugger);
 		frame.setSize(1024,800);
 		center();
 		component = new CodeExecutionGuiComponent();

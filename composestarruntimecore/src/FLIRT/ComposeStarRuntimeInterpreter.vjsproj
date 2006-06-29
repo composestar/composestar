@@ -195,6 +195,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "debugger\Ignore.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "exception\ComposestarRuntimeException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
