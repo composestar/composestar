@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.11 2006/06/25 19:24:11 wminnen Exp $
+ * $Id: SIGN.java,v 1.12 2006/06/27 11:22:53 stephan_h Exp $
  * 
 **/
 
@@ -641,7 +641,7 @@ public class SIGN implements CTCommonModule
 											
 											Concern foundConcern;
 											//The method to convert is defined in inner, an internal or external
-											if(substitutionTargetName.equals("*")){
+											if(substitutionTargetName.equals("*") || substitutionTargetName.equals("inner")){
 												//method is in inner
 												foundConcern = concern;
 											}
