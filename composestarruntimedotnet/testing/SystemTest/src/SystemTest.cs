@@ -318,6 +318,32 @@ namespace SystemTest
 		}
 
 		/**
+		 * Add one directory with examples
+		 */
+		public void readExampleDirectory(String examplePath)
+		{
+			if (!Directory.Exists(examplePath))
+			{
+				Console.WriteLine("ERROR: Directory of examples cannot be found!");
+				Environment.Exit(1);
+			}
+			else 
+			{
+				Console.WriteLine("Specified example directory:" + examplePath);
+				// collect all .sln files in second level
+				DirectoryInfo exampleDir = new DirectoryInfo(examplePath);
+				for(int i=0;i<exampleDir.GetDirectories().Length;i++)
+				{
+					FileInfo[] projects = exampleDir.GetDirectories()[i].GetFiles("*.sln");
+					for(int k=0;k<projects.Length;k++)
+					{
+						this.examples.Add(projects[k].FullName);
+					}
+				}	
+			}
+		}
+
+		/**
 		 * Extract configurations from config file 
 		 */
 		public void readConfigFile()
@@ -343,34 +369,36 @@ namespace SystemTest
 				exampleIndex++;
 				examplefile = ini.IniReadValue("EXAMPLES", "Example" + exampleIndex);
 			}
-			string examplePath = ini.IniReadValue("EXAMPLES","ExampleDirectory");
-			
-			if (!Directory.Exists(examplePath)) 
+			//check for a single path
+			String examplePath = ini.IniReadValue("EXAMPLES","ExampleDirectory");
+			if("".Equals(examplePath))
 			{
-				Console.WriteLine("ERROR: Directory of examples cannot be found!");
-				Environment.Exit(1);
-			}
-			else if("".Equals(examplePath))
-			{
-				if(examples.Count <= 0)
+				//check for a multiple paths
+				examplePath = ini.IniReadValue("EXAMPLES","ExampleDirectory0");
+				if("".Equals(examplePath))
 				{
-					Console.WriteLine("ERROR: No examples specified!");
-					Environment.Exit(1);
+					//no paths found
+					if(examples.Count <= 0)
+					{
+						Console.WriteLine("ERROR: No examples specified!");
+						Environment.Exit(1);
+					}
+				}
+				else
+				{
+					//add multiple paths
+					int examplePathIndex = 0;
+					while ( (examplePath = ini.IniReadValue("EXAMPLES", "ExampleDirectory" + examplePathIndex)) != "" ) 
+					{
+						readExampleDirectory(examplePath);
+						examplePathIndex++;
+					}
 				}
 			}
-			else 
+			else
 			{
-				Console.WriteLine("Specified example directory:" + examplePath);
-				// collect all .sln files in second level
-				DirectoryInfo exampleDir = new DirectoryInfo(examplePath);
-				for(int i=0;i<exampleDir.GetDirectories().Length;i++)
-				{
-					FileInfo[] projects = exampleDir.GetDirectories()[i].GetFiles("*.sln");
-					for(int k=0;k<projects.Length;k++)
-					{
-						this.examples.Add(projects[k].FullName);
-					}
-				}	
+				//add single path
+				readExampleDirectory(examplePath);
 			}
 
 			// Read [RUNNABLE_EXAMPLES] part
