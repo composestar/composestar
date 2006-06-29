@@ -1,0 +1,4 @@
+ColoredFactory.createLabel()
+ColoredFactory.getName()
+ColoredFactory.createButton()
+ColoredFactory.createInputField()
