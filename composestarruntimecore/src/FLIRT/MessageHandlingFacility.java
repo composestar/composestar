@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.3 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: MessageHandlingFacility.java,v 1.4 2006/06/27 15:39:33 reddog33hummer Exp $
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT
@@ -548,13 +548,9 @@ public abstract class MessageHandlingFacility
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Debugger interface is:" + (debugInterface ? "enabled" : "disabled"));
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Starting filter debugger providers");
 			}
-            
-			RuntimeDebuggerProvider debugProvider = new RuntimeDebuggerProvider();
-            
+                        
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Starting Filter Debugger");
-            
-			DebuggerFactory.getDebugger(debugProvider).start();
-            
+                       
 			if(Debug.SHOULD_DEBUG)
 			{
 				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Filter Debugger Started");

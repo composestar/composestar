@@ -8,7 +8,6 @@ import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
-import Composestar.RuntimeCore.CODER.Model.*;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -18,9 +17,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterRuntime.java,v 1.3 2006/03/06 16:37:52 reddog33hummer Exp $
+ * $Id: FilterRuntime.java,v 1.4 2006/03/07 16:29:45 reddog33hummer Exp $
  */
-public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable, DebuggableFilter
+public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable
 {
     private ComposeStarAction acceptAction;
     private ComposeStarAction rejectAction;
@@ -108,16 +107,6 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
 	public void addFilterElement(FilterElementRuntime filterElement)
 	{
 		filterElements.add(filterElement);
-	}
-
-	public boolean canAccept(DebuggableMessageList message,Dictionary context)
-	{
-		return canAccept((MessageList) message,context);
-	}
-
-	public DebuggableFilterType getDebuggableFilterType()
-	{
-		return this.theFilterTypeRuntime;
 	}
 
 	public String getDeclerationFileName()

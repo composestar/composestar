@@ -4,7 +4,6 @@ import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-import Composestar.RuntimeCore.CODER.Model.*;
 
 import java.util.Dictionary;
 
@@ -13,9 +12,9 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterTypeRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: FilterTypeRuntime.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  */
-public abstract class FilterTypeRuntime implements DebuggableFilterType
+public abstract class FilterTypeRuntime
 {
     private FilterRuntime filter;
     

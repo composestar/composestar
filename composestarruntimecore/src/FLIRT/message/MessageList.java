@@ -4,7 +4,6 @@ import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
 import Composestar.RuntimeCore.Utils.ResponseBuffer;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessageList;
 import Composestar.RuntimeCore.Utils.Debug;
 
 import java.util.*;
@@ -14,7 +13,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageList.java,v 1.5 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: MessageList.java,v 1.6 2006/06/26 13:48:20 reddog33hummer Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -22,7 +21,7 @@ import java.util.*;
  * externals). Finally it is responsible for producing a Reified message of
  * itself for the ACT's in the meta filter.
  */
-public class MessageList implements DebuggableMessageList
+public class MessageList
 {
     
 	/**

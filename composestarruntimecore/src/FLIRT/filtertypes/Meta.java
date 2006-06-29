@@ -4,7 +4,6 @@ import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
 import Composestar.RuntimeCore.FLIRT.Actions.MetaAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-import Composestar.RuntimeCore.CODER.Model.*;
 
 import java.util.Dictionary;
 
@@ -13,14 +12,14 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Meta.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: Meta.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Models the Meta filter
  * If a message is accepted, it is reified and offered to a method defined in the
  * filter specification. if the message is rejected, it is passed on to the next 
  * filter.
  */
-public class Meta extends FilterTypeRuntime implements DebuggableMetaFilterType
+public class Meta extends FilterTypeRuntime
 {
     
     /**

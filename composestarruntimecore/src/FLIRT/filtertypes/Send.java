@@ -2,7 +2,6 @@ package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
 import Composestar.RuntimeCore.FLIRT.Actions.*;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.CODER.Model.*;
 
 import java.util.Dictionary;
 
@@ -11,12 +10,12 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Send.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: Send.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Models the Send filter
  * Not implemented because it is an output filter, and those are not implemented.
  */
-public class Send extends FilterTypeRuntime implements DebuggableSendFilterType
+public class Send extends FilterTypeRuntime
 {
     
     /**

@@ -8,21 +8,20 @@ import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 
 import java.util.Dictionary;
 
-import Composestar.RuntimeCore.CODER.Model.*;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Dispatch.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: Dispatch.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Dispatch Filter
  * This filter redirects messages that accepts to the objects (internals or 
  * externals)
  * defined in its specification.
  */
-public class Dispatch extends FilterTypeRuntime implements DebuggableDispatchFilterType
+public class Dispatch extends FilterTypeRuntime
 {
     
     /**

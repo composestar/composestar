@@ -5,7 +5,6 @@ import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ErrorAction;
 import Composestar.RuntimeCore.Utils.ResponseBuffer;
-import Composestar.RuntimeCore.CODER.Model.DebuggableMessage;
 
 import java.util.*;
 
@@ -14,7 +13,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Message.java,v 1.2 2006/03/09 18:12:13 oohlaf Exp $
+ * $Id: Message.java,v 1.3 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -22,7 +21,7 @@ import java.util.*;
  * externals). Finally it is responsible for producing a Reified message of
  * itself for the ACT's in the meta filter.
  */
-public class Message implements DebuggableMessage
+public class Message
 {
 	/**
 	 * If messageList is not null, some of the properties of the message are
@@ -43,8 +42,11 @@ public class Message implements DebuggableMessage
 	/**
 	 *  Some stuff to indicate the direction of the message
 	 **/
-	private int direction;
+	public static final int OUTGOING = 0;
+	public static final int INCOMING = 1;
 
+	private int direction;
+	
 	public int getDirection()
 	{
 		if( messageList != null )

@@ -1,6 +1,5 @@
 package Composestar.RuntimeDotNET.FLIRT;
 
-import Composestar.RuntimeCore.CODER.DebuggerFactory;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
@@ -17,7 +16,7 @@ public class DotNETMessageHandlingFacility extends MessageHandlingFacility
 	 */
 	public static void handleDotNETApplicationStart(String filename, int debug) 
 	{
-		boolean debugInterface = DebuggerFactory.checkDebugInterfaceSetting();
+		boolean debugInterface = false;//DebuggerFactory.checkDebugInterfaceSetting();
 		handleDotNETApplicationStart(filename, debug, debugInterface);
 	}
 

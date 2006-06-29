@@ -85,6 +85,11 @@
                     AssemblyName = "VJSSupUILib"
                     HintPath = "VJSSupUILib.dll"
                 />
+                <Reference
+                    Name = "ComposeStarRuntimeInterpreter"
+                    Project = "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
             </References>
         </Build>
         <Files>
@@ -96,11 +101,6 @@
                 />
                 <File
                     RelPath = "BreakPointListener.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Debugger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

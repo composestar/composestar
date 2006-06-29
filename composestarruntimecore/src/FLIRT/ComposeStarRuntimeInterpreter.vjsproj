@@ -81,11 +81,6 @@
                     Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
                 />
                 <Reference
-                    Name = "ComposeStarFilterDebugger"
-                    Project = "{227D8FE5-F6DA-4D40-BADB-C19320F6BD01}"
-                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
-                />
-                <Reference
                     Name = "ComposeStarDotNETUtilities"
                     Project = "{50342189-4B39-4980-8CE7-E75BD1066B47}"
                     Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
@@ -195,12 +190,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "debugger\RuntimeDebuggerProvider.java"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "debugger\RuntimeHalter.java"
+                    RelPath = "debugger\Debugger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
