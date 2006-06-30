@@ -55,3 +55,5 @@ installit:
 	@$(fileCopy) "src$(PATHSEP)FLIRT$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)ComposeStarDotNETUtilities.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "src$(PATHSEP)FLIRT$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)ComposeStarFilterDebugger.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "src$(PATHSEP)FLIRT$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)AntlrDotNet.dll" "$(INSTALLDIR)$(PATHSEP)binaries"
+	@$(fileCopy) "src$(PATHSEP)FLIRT$(PATHSEP)bin$(PATHSEP)Release$(PATHSEP)*.pdb" "$(INSTALLDIR)$(PATHSEP)binaries"
+

@@ -39,7 +39,7 @@
                     BaseAddress = "285212672"
                     ConfigurationOverrideFile = ""
                     DefineConstants = ""
-                    DebugSymbols = "false"
+                    DebugSymbols = "true"
                     NoWarn = ""
                     Optimize = "false"
                     OutputPath = "bin\Release\"
