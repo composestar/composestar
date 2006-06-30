@@ -44,7 +44,7 @@ endif
 endif
 
 
-CLASSPATH=.$(SEP)$(ROOTDIR)binaries/antlr/antlr.jar$(SEP)$(ROOTDIR)binaries/junit/junit.jar$(SEP)$(ROOTDIR)binaries/prolog/prolog.jar
+CLASSPATH=.$(SEP)$(ROOTDIR)binaries/antlr/antlr.jar$(SEP)$(ROOTDIR)binaries/junit/junit.jar$(SEP)$(ROOTDIR)binaries/prolog/prolog.jar$(SEP)$(ROOTDIR)binaries/groove/groove-1_2_0.jar$(SEP)$(ROOTDIR)binaries/groove/castor-0_9_5_2-xml.jar
 JAVAC_RULE=javac -target 1.4 -source 1.4 -sourcepath $(ROOTDIR)src$(SEP)$(ROOTDIR) -classpath $(CLASSPATH)  $<
 
 ANTLR_RULE=java -classpath $(CLASSPATH) antlr.Tool 
