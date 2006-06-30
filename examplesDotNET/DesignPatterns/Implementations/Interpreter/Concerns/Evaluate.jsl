@@ -1,0 +1,36 @@
+package Composestar.Patterns.Interpreter;
+
+public class Evaluate
+{
+	public Evaluate(){}
+
+	public boolean evaluateAndExpression(VariableContext c) 
+	{
+		AndExpression andExpression = (AndExpression)((Object)this);
+		return (andExpression.expression1.evaluate(c) && andExpression.expression2.evaluate(c)); 
+	}
+
+	public boolean evaluateBooleanConstant(VariableContext c) 
+	{
+		BooleanConstant booleanConstant = (BooleanConstant)((Object)this);
+		return booleanConstant.value;
+	}
+
+	public boolean evaluateNotExpression(VariableContext c) 
+	{
+		NotExpression notExpression = (NotExpression)((Object)this);
+		return (! notExpression.exp.evaluate(c)); 
+	}
+
+	public boolean evaluateOrExpression(VariableContext c) 
+	{
+		OrExpression orExpression = (OrExpression)((Object)this);
+		return (orExpression.expression1.evaluate(c) || orExpression.expression2.evaluate(c)); 
+	}
+
+	public boolean evaluateVariableExpression(VariableContext c) 
+	{
+		VariableExpression variableExpression = (VariableExpression)((Object)this);
+		return c.lookup(variableExpression.name);
+	}
+}
