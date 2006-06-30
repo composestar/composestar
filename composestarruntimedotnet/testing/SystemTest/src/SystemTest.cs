@@ -135,7 +135,6 @@ namespace SystemTest
            	Process p = new Process();
 			p.StartInfo.FileName = this.EXECUTION_AND_SAVE;
 			p.StartInfo.Arguments= exec + " \"" + binDir+ "\" \"" + this.EXECUTION_LOG + "\""; 
-			Console.WriteLine(p.StartInfo.Arguments.ToString());
 			p.StartInfo.CreateNoWindow= true; 
 			p.StartInfo.RedirectStandardError= false; 
 			
