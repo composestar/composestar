@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMethodInfo.java,v 1.3 2006/03/08 11:16:55 stephan_h Exp $
+ * $Id: DotNETMethodInfo.java,v 1.4 2006/03/14 18:19:16 roy_ Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -359,7 +359,7 @@ public class DotNETMethodInfo extends MethodInfo {
         Iterator i = getAnnotations().iterator();
         HashSet res = new HashSet();
         while (i.hasNext())
-          res.add(((DotNETAttribute)i.next()).getType());
+          res.add(((Annotation)i.next()).getType());
         return new UnitResult(res);
       }        
       

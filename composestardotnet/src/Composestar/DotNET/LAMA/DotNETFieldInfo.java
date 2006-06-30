@@ -183,7 +183,7 @@ public class DotNETFieldInfo extends FieldInfo
       Iterator i = getAnnotations().iterator();
       HashSet res = new HashSet();
       while (i.hasNext())
-        res.add(((DotNETAttribute)i.next()).getType());
+        res.add(((Annotation)i.next()).getType());
       return new UnitResult(res);
     }
     

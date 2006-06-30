@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETType.java,v 1.5 2006/03/15 08:39:48 dspenkel Exp $
+ * $Id: DotNETType.java,v 1.6 2006/05/03 14:35:34 stephan_h Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -760,7 +760,7 @@ public class DotNETType extends Type {
         Iterator i = getAnnotations().iterator();
         HashSet res = new HashSet();
         while (i.hasNext())
-          res.add(((DotNETAttribute)i.next()).getType());
+          res.add(((Annotation)i.next()).getType());
         return new UnitResult(res);
       }
 
@@ -790,7 +790,7 @@ public class DotNETType extends Type {
         Iterator i = getAnnotations().iterator();
         HashSet res = new HashSet();
         while (i.hasNext())
-          res.add(((DotNETAttribute)i.next()).getType());
+          res.add(((Annotation)i.next()).getType());
         return new UnitResult(res);
       }
         
@@ -808,7 +808,7 @@ public class DotNETType extends Type {
 	  Iterator i = getAnnotationInstances().iterator();
 	  while (i.hasNext())
 	  {
-	    ProgramElement unit = ((DotNETAttribute)i.next()).getTarget();
+	    ProgramElement unit = ((Annotation)i.next()).getTarget();
 	    if (unit instanceof DotNETType)
 	    {
 	      DotNETType type = (DotNETType)unit;

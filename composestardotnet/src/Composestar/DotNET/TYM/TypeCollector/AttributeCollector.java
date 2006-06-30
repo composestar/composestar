@@ -72,7 +72,7 @@ public class AttributeCollector extends DefaultHandler {
      */
     public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException {
      	if( "Attribute".equalsIgnoreCase(qName) && attr != null ) {
-     		Annotation attribute = new DotNETAttribute();
+     		Annotation attribute = new Annotation();
 			Concern c = (Concern) DataStore.instance().getObjectByID(attr.getValue("type"));
 			if( c != null && c.getPlatformRepresentation() != null )
 			{

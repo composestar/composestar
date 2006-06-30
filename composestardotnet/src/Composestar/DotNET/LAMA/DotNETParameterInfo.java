@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETParameterInfo.java,v 1.2 2006/02/24 14:35:40 roy_ Exp $
+ * $Id: DotNETParameterInfo.java,v 1.3 2006/03/14 18:19:16 roy_ Exp $
  */
 
 package Composestar.DotNET.LAMA;
@@ -181,7 +181,7 @@ public class DotNETParameterInfo extends ParameterInfo {
         Iterator i = getAnnotations().iterator();
         HashSet res = new HashSet();
         while (i.hasNext())
-          res.add(((DotNETAttribute)i.next()).getType());
+          res.add(((Annotation)i.next()).getType());
         return new UnitResult(res);
       }
       
