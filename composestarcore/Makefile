@@ -36,6 +36,7 @@ jar: src
 	-${RMDIR} jarsource ${NULL}
 	${MKDIR} jarsource
 	${COPY} "src\*.class" "jarsource\"
+	${COPY} "src\*.gpr" "jarsource\"
 	jar -cfmv "ComposestarCORE.jar" "src\MANIFEST.MF" -C jarsource .
 	-${RMDIR} jarsource
 
@@ -61,6 +62,11 @@ installit:
 	@$(fileCopy) "binaries$(PATHSEP)prolog$(PATHSEP)prolog.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)prolog"
 	@$(fileCopy) "binaries$(PATHSEP)prolog$(PATHSEP)lib.pro" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)prolog"
 	@$(fileCopy) "binaries$(PATHSEP)prolog$(PATHSEP)connector.pro" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)prolog"
+	@$(fileCopy) "binaries$(PATHSEP)groove$(PATHSEP)groove-1_2_0.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)groove"
+	@$(fileCopy) "binaries$(PATHSEP)groove$(PATHSEP)castor-0_9_5_2-xml.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)groove"
+	@$(fileCopy) "binaries$(PATHSEP)groove$(PATHSEP)jgraph.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)groove"
+	@$(fileCopy) "binaries$(PATHSEP)groove$(PATHSEP)xerces-2_6_0-xercesImpl.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)groove"
+	@$(fileCopy) "binaries$(PATHSEP)groove$(PATHSEP)xerces-2_6_0-xml-apis.jar" "$(INSTALLDIR)$(PATHSEP)binaries$(PATHSEP)groove"
 	@$(fileCopy) "ComposestarCORE.jar" "$(INSTALLDIR)$(PATHSEP)binaries"
 	@$(fileCopy) "src$(PATHSEP)Composestar$(PATHSEP)Core$(PATHSEP)INCRE$(PATHSEP)INCRE.css" "$(INSTALLDIR)"
 	@$(fileCopy) "src$(PATHSEP)Composestar$(PATHSEP)Core$(PATHSEP)INCRE$(PATHSEP)INCREconfig.xml" "$(INSTALLDIR)"
