@@ -368,10 +368,10 @@ public class AnnotationSuperImposition
 				if (!doubleAnnot)
 				{
 					Debug.out(Debug.MODE_DEBUG, "LOLA", "Attaching annotation '" + action.annotation.name() + "' to program element '" + elem.toString());
-					// TODO: CHECK this
-					//Annotation annotInst = new DotNETAttribute(); // true = SuperImposed annotation
-					//annotInst.register(action.annotation, elem);
-					//removeMeLater.add(annotInst);
+
+					Annotation annotInst = new Annotation(true); // true = SuperImposed annotation
+					annotInst.register(action.annotation, elem);
+					removeMeLater.add(annotInst);
 				}
 				else // We don't attach the same annotation twice right now (!)
 					Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName() + "' to '" + ((ProgramElement)elem).getUnitName() + "' a second time!");
