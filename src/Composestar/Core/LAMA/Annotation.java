@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public abstract class Annotation implements Serializable{
+public class Annotation implements Serializable{
 
 	public Type type;
 	public String value;
