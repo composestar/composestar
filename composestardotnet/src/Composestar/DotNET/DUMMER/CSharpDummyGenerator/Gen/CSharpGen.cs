@@ -52,13 +52,22 @@ namespace DDW.CSharp.Gen
 		#region NamespaceDecl *
 		public override void ParseElement(NamespaceDecl gr)
 		{
-			sb.Write("namespace " + gr.Name);
 			AttributeState.Namespace = gr.Name;
 
-			OpenBlock();
-			Parse(gr.Imports);
-			Parse(gr.Types);
-			CloseBlock();
+			if (gr.Name == "$DefaultNamespace")
+			{
+				Parse(gr.Imports);
+				Parse(gr.Types);
+			}
+			else
+			{
+				sb.Write("namespace " + gr.Name);
+
+				OpenBlock();
+				Parse(gr.Imports);
+				Parse(gr.Types);
+				CloseBlock();
+			}
 		}
 		#endregion
 

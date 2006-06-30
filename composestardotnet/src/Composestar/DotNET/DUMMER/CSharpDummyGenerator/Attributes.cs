@@ -47,7 +47,7 @@ namespace DDW.CSharp
 
 		public static string Namespace
 		{
-			get { return sNamespace; }
+			get { return (sNamespace == "$DefaultNamespace" ? "" : sNamespace); }
 			set { sNamespace = value; }
 		}
 
@@ -73,15 +73,16 @@ namespace DDW.CSharp
 		{
 			get
 			{
+				string realNamespace = (Namespace == "" ? "" : Namespace + ".");
 				switch (targetType)
 				{
 					case TargetType.TargetInterface:
 					case TargetType.TargetClass:
-						return sNamespace + "." + sClass;
+						return realNamespace + sClass;
 					case TargetType.TargetMethod:
-						return sNamespace + "." + sClass + "." + sMethod;
+						return realNamespace + sClass + "." + sMethod;
 					case TargetType.TargetField:
-						return sNamespace + "." + sClass + "." + sField;
+						return realNamespace + sClass + "." + sField;
 					default:
 						return "<unknown annotation type>";
 				}
