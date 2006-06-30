@@ -1,0 +1,12 @@
+# Layout information for C:\local\ComposeGraph\generateflow.gps\framestates.gst
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n133 744 94 18 18 
+n n140 1312 738 18 18 
+n n134 457 184 18 18 
+n n136 215 183 18 18 
+n n135 626 185 18 18 
+n n138 888 187 18 18 
+n n139 1240 829 18 18 
+n n137 353 94 18 18 

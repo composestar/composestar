@@ -1,0 +1,42 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\grass2\runtime.gps\start3.gst
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n57 527 725 18 18 
+e n57 n38 "flowNext" 500 500 575 758 482 687 491 656 11
+n n45 257 940 18 18 
+n n42 434 374 18 18 
+n n33 778 308 18 18 
+n n35 279 59 18 18 
+n n56 1279 450 18 18 
+n n32 236 311 18 18 
+n n50 1020 673 18 18 
+n n53 71 318 18 18 
+n n47 604 900 18 18 
+n n49 397 106 18 18 
+e n32 n41 "flowNext" 500 500 303 328 387 268 301 186 11
+n n62 390 796 18 18 
+n n48 501 482 18 18 
+n n36 526 41 18 18 
+n n40 1270 930 18 18 
+n n41 261 169 18 18 
+e n44 n37 "flowNext" 500 500 1568 851 1545 670 1535 597 11
+n n64 194 465 18 18 
+n n60 69 60 18 18 
+n n43 884 946 18 18 
+n n37 1487 564 18 18 
+n n38 443 623 18 18 
+n n44 1520 818 18 18 
+n n63 602 178 18 18 
+n n59 681 396 18 18 
+n n46 556 284 18 18 
+e n32 n41 "statement" 500 500 303 328 387 268 301 186 11
+n n61 722 807 18 18 
+e n41 n32 "flowNext" 500 500 301 186 208 238 303 328 11
+n n51 438 285 18 18 
+n n55 1280 715 18 18 
+n n39 756 1007 18 18 
+n n52 762 912 18 18 
+n n58 383 0 18 18 
+n n34 60 674 18 18 
+n n54 931 802 18 18 

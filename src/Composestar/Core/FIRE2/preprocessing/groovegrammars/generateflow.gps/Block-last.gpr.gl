@@ -1,0 +1,9 @@
+# Layout information for C:\local\ComposeGraph\generateflow.gps\Block-last.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n358 103 268 18 18 
+n n357 210 182 18 18 
+n n361 400 58 18 18 
+n n359 413 317 18 18 
+n n360 239 43 18 18 

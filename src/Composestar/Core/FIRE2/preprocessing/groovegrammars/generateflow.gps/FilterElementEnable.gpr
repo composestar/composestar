@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n813"/>
+        <node id="n818"/>
+        <node id="n819"/>
+        <node id="n814"/>
+        <node id="n817"/>
+        <node id="n816"/>
+        <node id="n815"/>
+        <node id="n812"/>
+        <edge from="n818" to="n818">
+            <attr name="label">
+                <string>ConditionExpression</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n813">
+            <attr name="label">
+                <string>FilterElement</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n815">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n818" to="n814">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n814" to="n816">
+            <attr name="label">
+                <string>new:flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n819" to="n818">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n812" to="n816">
+            <attr name="label">
+                <string>new:flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n817">
+            <attr name="label">
+                <string>conditionOperator</string>
+            </attr>
+        </edge>
+        <edge from="n812" to="n812">
+            <attr name="label">
+                <string>MatchingPattern</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n816">
+            <attr name="label">
+                <string>flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n812" to="n812">
+            <attr name="label">
+                <string>new:Enable</string>
+            </attr>
+        </edge>
+        <edge from="n818" to="n817">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n812" to="n814">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n815" to="n815">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n814" to="n815">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n818">
+            <attr name="label">
+                <string>conditionPart</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n812">
+            <attr name="label">
+                <string>orderFirst</string>
+            </attr>
+        </edge>
+        <edge from="n819" to="n813">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n817" to="n817">
+            <attr name="label">
+                <string>EnableOperator</string>
+            </attr>
+        </edge>
+        <edge from="n817" to="n812">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n816" to="n816">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n819" to="n819">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n814" to="n814">
+            <attr name="label">
+                <string>CompOper</string>
+            </attr>
+        </edge>
+        <edge from="n813" to="n814">
+            <attr name="label">
+                <string>rightOper</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

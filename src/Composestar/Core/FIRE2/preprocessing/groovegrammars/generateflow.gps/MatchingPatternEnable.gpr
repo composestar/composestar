@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n459"/>
+        <node id="n465"/>
+        <node id="n460"/>
+        <node id="n464"/>
+        <node id="n463"/>
+        <node id="n466"/>
+        <node id="n461"/>
+        <node id="n462"/>
+        <edge from="n466" to="n461">
+            <attr name="label">
+                <string>flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n461" to="n461">
+            <attr name="label">
+                <string>MatchingPattern</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n463">
+            <attr name="label">
+                <string>substitutionPart</string>
+            </attr>
+        </edge>
+        <edge from="n459" to="n459">
+            <attr name="label">
+                <string>MatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n462" to="n462">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n466" to="n466">
+            <attr name="label">
+                <string>FlowTmp</string>
+            </attr>
+        </edge>
+        <edge from="n461" to="n462">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n462">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n463" to="n464">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n460" to="n459">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n459" to="n463">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n460" to="n460">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n461" to="n461">
+            <attr name="label">
+                <string>new:Enable</string>
+            </attr>
+        </edge>
+        <edge from="n459" to="n466">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n465">
+            <attr name="label">
+                <string>MatchingPattern</string>
+            </attr>
+        </edge>
+        <edge from="n466" to="n466">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n461" to="n464">
+            <attr name="label">
+                <string>new:flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n459">
+            <attr name="label">
+                <string>matchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n464" to="n464">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n463" to="n463">
+            <attr name="label">
+                <string>SubstitutionPart</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n464">
+            <attr name="label">
+                <string>flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n461">
+            <attr name="label">
+                <string>orderNext</string>
+            </attr>
+        </edge>
+        <edge from="n460" to="n465">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n465" to="n465">
+            <attr name="label">
+                <string>del:Enable</string>
+            </attr>
+        </edge>
+        <edge from="n466" to="n466">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

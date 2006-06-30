@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n4870"/>
+        <node id="n4868"/>
+        <node id="n4869"/>
+        <edge from="n4869" to="n4869">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n4869" to="n4868">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n4869" to="n4870">
+            <attr name="label">
+                <string>del:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n4870" to="n4870">
+            <attr name="label">
+                <string>FilterElement</string>
+            </attr>
+        </edge>
+        <edge from="n4868" to="n4868">
+            <attr name="label">
+                <string>ConditionExpression</string>
+            </attr>
+        </edge>
+        <edge from="n4870" to="n4868">
+            <attr name="label">
+                <string>conditionPart</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n2634"/>
+        <node id="n2630"/>
+        <node id="n2632"/>
+        <node id="n2633"/>
+        <node id="n2631"/>
+        <edge from="n2632" to="n2631">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2631" to="n2630">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n2632" to="n2630">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2633" to="n2633">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n2630" to="n2630">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2632" to="n2634">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n2632" to="n2632">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n2634" to="n2634">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n2632" to="n2633">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n2631" to="n2633">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n2631" to="n2634">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n2631" to="n2631">
+            <attr name="label">
+                <string>NameMatchingPart</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

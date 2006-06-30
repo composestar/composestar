@@ -1,0 +1,8 @@
+# Layout information for C:\local\ComposeGraph\generateflow.gps\MatchingPart.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n1034 313 154 18 18 
+e n1034 n1035 "new:flowNext" 78 592 158 343 266 251 354 354 12
+n n1035 312 345 18 18 
+e n1034 n1035 "del:flowIn" 759 463 158 343 354 354 11

@@ -1,0 +1,9 @@
+# Layout information for C:\files\work\ComposeGraph\generateflow.gps\VoidFilterCompOper.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n573 n574 "new:flowNext" 294 921 131 63 289 74 372 114 12
+e n573 n575 "del:flowIn" 580 604 131 63 278 306 11
+n n575 240 304 18 18 
+n n573 91 54 18 18 
+n n574 397 93 18 18 

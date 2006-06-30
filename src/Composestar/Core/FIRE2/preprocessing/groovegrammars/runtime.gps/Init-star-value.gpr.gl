@@ -1,0 +1,14 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\Init-star-value.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n666 n666 "not:'*'" 500 500 595 183 614 107 560 49 560 49 12
+n n661 376 329 18 18 
+n n665 236 146 18 18 
+n n666 584 180 18 18 
+n n664 360 149 18 18 
+n n663 303 260 18 18 
+n n662 84 164 18 18 
+e n664 n664 "Frame" 500 500 369 158 441 97 388 31 369 158 12
+e n662 n662 "Frame" 500 500 102 175 119 119 78 77 78 77 12
+e n665 n665 "'*'" 500 500 245 154 241 84 179 51 179 51 12
