@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n3322"/>
+        <node id="n3320"/>
+        <node id="n3319"/>
+        <node id="n3321"/>
+        <edge from="n3319" to="n3319">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n3322" to="n3319">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n3322" to="n3321">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n3322" to="n3319">
+            <attr name="label">
+                <string>rightArg</string>
+            </attr>
+        </edge>
+        <edge from="n3322" to="n3322">
+            <attr name="label">
+                <string>SEQFilterCompOper</string>
+            </attr>
+        </edge>
+        <edge from="n3321" to="n3321">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n3320" to="n3319">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n3320" to="n3322">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n3319" to="n3321">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n3320" to="n3320">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

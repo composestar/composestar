@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n3074"/>
+        <node id="n3071"/>
+        <node id="n3073"/>
+        <node id="n3072"/>
+        <node id="n3070"/>
+        <edge from="n3070" to="n3074">
+            <attr name="label">
+                <string>del:substitutionSelector</string>
+            </attr>
+        </edge>
+        <edge from="n3071" to="n3072">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n3071" to="n3071">
+            <attr name="label">
+                <string>DispatchAction</string>
+            </attr>
+        </edge>
+        <edge from="n3070" to="n3071">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n3070" to="n3073">
+            <attr name="label">
+                <string>del:substitutionTarget</string>
+            </attr>
+        </edge>
+        <edge from="n3070" to="n3070">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n3072" to="n3072">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n3070" to="n3072">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

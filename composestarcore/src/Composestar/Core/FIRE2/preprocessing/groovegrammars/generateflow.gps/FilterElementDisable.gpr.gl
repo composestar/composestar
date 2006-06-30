@@ -1,0 +1,20 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\FilterElementDisable.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n404 n405 "new:flowIn" 624 491 356 807 473 694 568 569 12
+e n404 n404 "new:Disable" 500 500 356 807 412 883 328 833 356 807 12
+n n409 42 223 18 18 
+e n403 n408 "new:flowTrue" 503 363 132 446 94 567 99 702 12
+n n404 305 798 18 18 
+n n405 534 560 18 18 
+n n407 348 184 18 18 
+n n403 51 450 18 18 
+n n406 924 734 18 18 
+e n409 n407 "del:flowIn" 437 433 125 50 534 341 11
+e n409 n403 "new:flowNext" 770 229 273 41 79 218 13
+e n407 n408 "conditionOperator" 580 638 395 255 99 702 11
+n n402 839 167 18 18 
+e n407 n406 "flowAccept" 605 603 389 193 964 743 11
+e n407 n405 "rightOper" 618 650 389 193 568 569 11
+n n408 93 694 18 18 

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1956"/>
+        <node id="n1955"/>
+        <node id="n1958"/>
+        <node id="n1960"/>
+        <node id="n1959"/>
+        <node id="n1954"/>
+        <node id="n1957"/>
+        <edge from="n1958" to="n1958">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n1960" to="n1960">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n1956" to="n1956">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1954" to="n1956">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1958" to="n1958">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1960" to="n1957">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n1960" to="n1956">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1960" to="n1960">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1959" to="n1959">
+            <attr name="label">
+                <string>NameMatchingPart|SignatureMatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n1959" to="n1957">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1957">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1955" to="n1955">
+            <attr name="label">
+                <string>FilterModule</string>
+            </attr>
+        </edge>
+        <edge from="n1960" to="n1955">
+            <attr name="label">
+                <string>pc</string>
+            </attr>
+        </edge>
+        <edge from="n1954" to="n1954">
+            <attr name="label">
+                <string>NameMatchingPart|SignatureMatchingPart</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

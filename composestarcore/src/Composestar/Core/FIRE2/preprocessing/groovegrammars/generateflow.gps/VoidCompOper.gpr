@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n2075"/>
+        <node id="n2076"/>
+        <node id="n2077"/>
+        <node id="n2078"/>
+        <edge from="n2078" to="n2076">
+            <attr name="label">
+                <string>del:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n2077" to="n2075">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n2076" to="n2076">
+            <attr name="label">
+                <string>VoidCompOper</string>
+            </attr>
+        </edge>
+        <edge from="n2076" to="n2075">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n2078" to="n2078">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2078" to="n2075">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n2075" to="n2075">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2077" to="n2077">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2077" to="n2076">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

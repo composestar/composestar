@@ -1,0 +1,8 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\ConditionExpression-true.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n1312 383 225 18 18 
+n n1313 381 61 18 18 
+e n1314 n1314 "not:False" 500 500 229 171 206 95 130 73 130 73 12
+n n1314 161 157 18 18 

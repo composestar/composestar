@@ -1,0 +1,9 @@
+# Layout information for C:\local\ComposeGraph\generateflow.gps\2.PredicateNode.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n18 n18 "not:FlowElement" 500 500 208 170 160 86 255 88 208 170 12
+e n18 n18 "not:PredicateNode" 500 500 208 170 160 86 255 88 208 170 12
+e n18 n18 "new:PredicateNode" 500 500 208 170 163 249 260 244 208 170 12
+n n18 132 161 18 18 
+e n18 n18 "new:FlowElement" 500 500 208 170 163 249 260 244 208 170 12

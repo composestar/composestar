@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1643"/>
+        <node id="n1641"/>
+        <node id="n1642"/>
+        <node id="n1644"/>
+        <node id="n1640"/>
+        <edge from="n1642" to="n1644">
+            <attr name="label">
+                <string>pc</string>
+            </attr>
+        </edge>
+        <edge from="n1644" to="n1644">
+            <attr name="label">
+                <string>FilterModule</string>
+            </attr>
+        </edge>
+        <edge from="n1641" to="n1641">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1642" to="n1643">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1642" to="n1640">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+        <edge from="n1641" to="n1641">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n1642" to="n1642">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n1643" to="n1643">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1640" to="n1640">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n1643" to="n1643">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n1642" to="n1642">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1640" to="n1640">
+            <attr name="label">
+                <string>'*'</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

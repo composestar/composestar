@@ -1,0 +1,40 @@
+# Layout information for C:\local\ComposeGraph\generateflow.gps\categorized.gst
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n1873 751 582 18 18 
+n n1857 652 755 18 18 
+n n1849 459 829 18 18 
+n n1846 732 756 18 18 
+n n1856 997 92 18 18 
+n n1860 833 164 18 18 
+n n1868 665 438 18 18 
+n n1874 59 810 18 18 
+n n1871 42 563 18 18 
+n n1845 909 753 18 18 
+n n1851 325 423 18 18 
+n n1870 991 484 18 18 
+e n1854 n1861 "reject" 500 500 238 37 158 56 74 96 11
+n n1853 1027 825 18 18 
+n n1872 430 790 18 18 
+n n1863 196 290 18 18 
+n n1842 1033 624 18 18 
+n n1848 315 855 18 18 
+n n1844 621 84 18 18 
+n n1840 212 841 18 18 
+n n1854 207 20 18 18 
+n n1852 364 56 18 18 
+n n1847 826 34 18 18 
+n n1855 370 764 18 18 
+n n1866 242 594 18 18 
+n n1869 751 836 18 18 
+n n1843 194 159 18 18 
+n n1858 655 829 18 18 
+n n1865 23 415 18 18 
+n n1859 939 332 18 18 
+n n1841 435 583 18 18 
+n n1861 27 79 18 18 
+n n1864 578 321 18 18 
+n n1867 1095 780 18 18 
+n n1862 894 825 18 18 
+n n1850 27 724 18 18 

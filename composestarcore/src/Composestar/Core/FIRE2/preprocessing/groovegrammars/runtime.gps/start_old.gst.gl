@@ -1,0 +1,41 @@
+# Layout information for C:\files\work\ComposeGraph\runtime.gps\start.gst
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n157 1247 619 18 18 
+n n149 97 95 18 18 
+n n161 833 711 18 18 
+n n146 65 279 18 18 
+e n166 n171 "flowNext" 500 500 568 80 393 201 324 389 11
+n n148 1161 746 18 18 
+e n171 n166 "statement" 500 500 324 389 514 266 568 80 11
+n n171 257 364 18 18 
+n n151 1112 84 18 18 
+n n147 661 429 18 18 
+n n172 291 95 18 18 
+n n170 284 577 18 18 
+e n169 n156 "filter" 500 500 495 529 525 475 647 611 11
+n n165 947 502 18 18 
+e n169 n156 "orderFirst" 500 500 495 529 525 475 647 611 11
+n n160 1061 630 18 18 
+n n166 520 55 18 18 
+n n159 358 769 18 18 
+n n163 860 87 18 18 
+n n156 599 578 18 18 
+n n158 834 199 18 18 
+n n164 1089 873 18 18 
+n n154 544 672 18 18 
+e n156 n168 "reject" 500 500 647 611 707 659 779 634 11
+e n148 n148 "flowNext" 755 216 1230 763 1368 804 1483 706 1230 763 12
+n n155 606 812 18 18 
+n n152 947 784 18 18 
+n n169 455 496 18 18 
+e n162 n156 "flowNext" 500 500 776 527 650 511 647 611 11
+e n158 n158 "flowNext" 750 -62 903 216 961 253 1028 222 903 216 12
+n n173 1182 825 18 18 
+n n153 302 663 18 18 
+n n150 901 308 18 18 
+n n168 731 601 18 18 
+e n171 n166 "flowNext" 500 500 324 389 514 266 568 80 11
+n n162 728 494 18 18 
+n n167 646 301 18 18 

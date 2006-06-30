@@ -1,0 +1,20 @@
+# Layout information for C:\files\work\ComposeGraph\generateflow.gps\Filter.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+e n530 n529 "reject" 623 633 346 154 844 426 11
+n n529 513 352 18 18 
+n n528 202 674 18 18 
+e n528 n529 "new:flowNext" 519 624 243 683 472 470 549 361 12
+e n528 n527 "new:flowAccept" 346 109 243 683 1154 329 11
+e n529 n530 "new:flowNext" 475 193 714 490 499 378 301 135 12
+e n527 n530 "new:flowNext" 337 462 952 466 689 306 301 135 12
+n n527 916 457 18 18 
+n n525 502 27 18 18 
+n n524 863 90 18 18 
+e n530 n528 "orderFirst" 426 360 301 135 543 796 11
+n n530 283 126 18 18 
+e n526 n530 "del:flowIn" -194 762 266 62 405 208 11
+e n530 n524 "new:flowIn" 689 121 301 135 658 189 911 99 12
+n n526 86 215 18 18 
+e n526 n528 "new:flowIn" 243 644 126 224 165 506 243 683 12
