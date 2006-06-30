@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Composestar.RuntimeCore.FLIRT.Exception;
 
 namespace ExampleAOP
 {
@@ -29,7 +30,17 @@ namespace ExampleAOP
 			ps.Add(new Product("L2"));
 			ps.Add(new Product("L3"));
 			i.AddProducts(ps);
-			i.RemoveProducts(ps);
+			try
+			{
+				i.RemoveProducts(ps);
+			}
+			catch(ComposestarRuntimeException e)
+			{
+				Console.WriteLine("-< ComposestarRuntimeException caught >-");
+				Console.WriteLine("Message was '{0}'.", e.Message);
+				Console.WriteLine("-< Stacktrace >-");
+				Console.WriteLine(e.StackTrace);
+			}
 		}
 	}
 }
