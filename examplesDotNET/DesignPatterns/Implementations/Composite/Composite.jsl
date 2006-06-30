@@ -1,0 +1,53 @@
+package Composestar.Patterns.Composite;
+
+import java.util.LinkedList;
+
+public class Composite
+{
+	public Composite(){}
+
+	protected LinkedList children = new java.util.LinkedList();
+	
+	public void	addC(Object component) 
+	{
+		this.children.add(component);
+	} 
+
+	public void removeC(Object component) 
+	{
+		this.children.remove(component);
+	}
+
+	public Object getChild(int index) 
+	{
+		return (Object) children.get(index);
+	}
+
+	public int getChildCount() 
+	{
+		return children.size();
+	}
+
+	private static int indent = 0;
+
+	private void indent() 
+	{
+		for (int i=0; i<indent; i++)
+			System.out.print(" ");
+	}
+
+	public void printStructure() 
+	{
+		indent +=4;
+		Directory d = (Directory)((Object)this);
+		System.out.println("<Composite>"+d.ts());
+		FileSystemComponent fsc;
+		for(int i=0; i< children.size(); i++)
+		{
+			indent();			
+			fsc = (FileSystemComponent)children.get(i);
+			fsc.printStructure();
+		}
+		indent -=4;
+	}
+}
