@@ -81,96 +81,14 @@
 			</type>
 		</comparisons>
 	</module>
-	<module name="SIGN" fulltype="Composestar.Core.SIGN.SIGN" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Computing full signatures..." >
-		<dependencies>
-			<dependency type="OBJECT" name="signature" store="true" lookup="true">
-				<path>
-					<node type="FIELD" nodevalue="platformRepr"></node>
-					<node type="FIELD" nodevalue="Methods"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="zmodules" store="true" lookup="true">
-				<path>
-					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
-					<node type="FIELD" nodevalue="theFmSIinfo"></node>
-				</path>
-			</dependency>
-		</dependencies>
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
-				<field name="name"></field>
-				<field name="ref"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
-				<field name="internals"></field>
-				<field name="externals"></field>
-				<field name="inputFilters"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal">
-				<path>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getType"></method>
-					<method name="getQualifiedName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External">
-				<path>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getType"></method>
-					<method name="getQualifiedName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
-				<field name="filterElements"></field>
-				<path>
-					<field name="type"></field>
-					<method name="getType"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
-				<field name="conditionPart"></field>
-				<field name="enableOperatorType"></field>
-				<field name="matchingPatterns"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
-				<field name="left"></field>
-				<field name="right"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
-				<field name="matchType"></field>
-				<path>
-					<method name="getTarget"></method>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getSelector"></method>
-					<method name="getName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
-				<path>
-					<method name="getTarget"></method>
-					<method name="getName"></method>
-				</path>
-				<path>
-					<method name="getSelector"></method>
-					<method name="getName"></method>
-				</path>
-			</type>
-			<type fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
-				<field name="Name"></field>
-				<field name="ReturnTypeString"></field>
-				<field name="Parameters"></field>
-			</type> 
-			<type fullname="Composestar.DotNET.LAMA.DotNETParameterInfo">
-				<field name="Name"></field>
-				<field name="ParameterTypeString"></field>
-			</type>
-		</comparisons>
+	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
+		<dependencies></dependencies>	
 	</module>
 	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" enabled="true" incremental="false" summary="">
 		<dependencies></dependencies>	
