@@ -40,9 +40,13 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
        //param.setParent(this);
     }
     
-	public MethodInfo getClone(String n, Type actualParent) throws Exception{
-		throw new Exception("MethodInfo.getClone(String n) should only be called on subtypes");
-	}
+    
+    /**
+     * This method should make a clone of the MethodInfo with the name and
+     * parentType changed to the given name and actualParent. The parameters and
+     * return type should stay the same. 
+     */
+    public abstract MethodInfo getClone( String name, Type actualParent );
 
 	/**
 	 * @return java.lang.String
@@ -241,5 +245,32 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 		out.writeObject(CallsToOtherMethods);
 		out.writeObject(ReifiedMessageBehavior);
 		out.writeObject(ResourceUsage);
+	}
+	
+	
+	public boolean equals( Object obj ){
+	    if ( !(obj instanceof MethodInfo) )
+	        return false;
+	    
+	    MethodInfo info = (MethodInfo) obj;
+	    
+	    if ( !info.Name.equals( this.Name ) )
+	        return false;
+	    
+	    if ( !info.ReturnTypeString.equals( this.ReturnTypeString ) )
+	        return false;
+	    
+	    if ( this.Parameters.size() != info.Parameters.size() )
+	        return false;
+	        
+	    for (int i=0; i<this.Parameters.size(); i++){
+	        ParameterInfo thisPar = (ParameterInfo) this.Parameters.get( i );
+	        ParameterInfo objPar = (ParameterInfo) info.Parameters.get( i );
+	        if ( !thisPar.ParameterTypeString.equals( objPar.ParameterTypeString ) )
+	            return false;
+	    }
+	    
+	    
+	    return true;
 	}
 }
