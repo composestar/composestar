@@ -161,15 +161,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Concerns\RemovePolicy.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Concerns\RemovePolicy.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Concerns\Subject.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
