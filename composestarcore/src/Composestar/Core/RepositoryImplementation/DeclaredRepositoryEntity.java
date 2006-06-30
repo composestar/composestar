@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DeclaredRepositoryEntity.java,v 1.2 2006/02/16 12:51:22 composer Exp $
+ * $Id: DeclaredRepositoryEntity.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -81,7 +81,7 @@ public String name;
     {
     	return o.getQualifiedName();
     }*/
-    while (!ready) {
+    while (!ready && o!= null) {
       if (o instanceof Concern) { //stop when we reach the concern
         temp.addElement(o.getName());
         ready = true;
