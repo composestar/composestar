@@ -1,0 +1,10 @@
+<superimposition-contraints>
+	<constraint type="pre_soft">
+		<left>StarDecorator</left>
+		<right>BracketDecorator</right>
+	</constraint>
+	<constraint type="pre_soft">
+		<left>BracketDecorator</left>
+		<right>DollarDecorator</right>
+	</constraint>
+</superimposition-contraints>
