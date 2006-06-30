@@ -506,7 +506,7 @@ namespace DDW.CSharp.Parse
 					if(dns == null)
 					{
 						dns = new Dom.NamespaceDecl();
-						dns.Name = "DefaultNamespace";
+						dns.Name = "$DefaultNamespace";
 						graph.Namespaces.Add(dns);
 					}
 					Types.ParseTypesIntoNamespace(tok, dns);
