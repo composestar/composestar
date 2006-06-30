@@ -28,7 +28,7 @@
                     DebugSymbols = "true"
                     NoWarn = ""
                     Optimize = "false"
-                    OutputPath = "bin\Debug\"
+                    OutputPath = "bin\"
                     RegisterForComInterop = "false"
                     TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
@@ -42,7 +42,7 @@
                     DebugSymbols = "false"
                     NoWarn = ""
                     Optimize = "true"
-                    OutputPath = "bin\Release\"
+                    OutputPath = "bin\"
                     RegisterForComInterop = "false"
                     TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
@@ -176,10 +176,6 @@
                 />
                 <File
                     RelPath = "Concerns\DynamicStrategy.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Concerns\Levels.cps"
                     BuildAction = "None"
                 />
                 <File
