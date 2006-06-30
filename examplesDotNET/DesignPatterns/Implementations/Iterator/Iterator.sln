@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "Iterator", "Iterator.vjsproj", "{8F4DA3A1-26E3-4F04-B70B-97C317473237}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{8F4DA3A1-26E3-4F04-B70B-97C317473237}.Debug.ActiveCfg = Debug|.NET
+		{8F4DA3A1-26E3-4F04-B70B-97C317473237}.Debug.Build.0 = Debug|.NET
+		{8F4DA3A1-26E3-4F04-B70B-97C317473237}.Release.ActiveCfg = Release|.NET
+		{8F4DA3A1-26E3-4F04-B70B-97C317473237}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

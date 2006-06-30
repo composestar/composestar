@@ -1,0 +1,57 @@
+/**
+ * "The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ * 
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * The Original Code is ca.ubc.cs.spl.aspectPatterns. 
+ * 
+ * The Initial Developers of the Original Code are Jan Hannemann and Gregor Kiczales.
+ * 
+ * For more details and the latest version of the original code, please see: 
+ * http://www.cs.ubc.ca/labs/spl/projects/aodps.html
+ * 
+ * Contributor(s): Stephan Huttenhuis.
+ * 
+ * The modified version of the code is part of the Compose* project which can be found at: 
+ * http://composestar.sf.net
+ * 
+ */
+package Composestar.Patterns.Iterator;
+
+import java.util.Iterator;
+
+public class Main {
+    
+	//external iterator because iterator defines the traversal algorithm
+	private static void print(Iterator iter) { 
+		while(iter.hasNext()) {
+			System.out.println(iter.next());
+		}
+	}
+
+	public static void main(String[] args) 
+	{
+	    
+		SimpleList openList = new OpenList();
+		openList.append(new Integer(1));
+		openList.append(new Integer(2));		
+		openList.append(new Integer(3));
+		openList.append(new Integer(4));
+		openList.append(new Integer(5)); 
+		
+		System.out.println("List created, containing int objects 1, 2, 3, 4, 5.");
+		
+		//createReverseIterator is superimposed on OpenList and not the interface SimpleList
+		//superimpose on interface is not possible, so we need a cast
+		Iterator iter = ((OpenList)openList).createReverseIterator();
+		System.out.println("Using ReverseIterator to print list elements in reverse order...");
+		print(iter);
+		System.out.println("done.");
+	}
+}
