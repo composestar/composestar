@@ -1,12 +1,19 @@
 package Composestar.Patterns.Bridge;
 
-import java.util.Random;
-
 public class DecisionMaker
 {
+	private static boolean one = true;
+
 	public static boolean use1()
 	{
-		Random generator = new Random();
-		return generator.nextBoolean();
+		if(one)
+		{
+			one = false;
+		}
+		else
+		{
+			one = true;
+		}
+		return one;
 	}
 }

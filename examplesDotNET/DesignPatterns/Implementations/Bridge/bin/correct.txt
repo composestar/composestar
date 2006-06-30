@@ -1,38 +1,14 @@
 Creating GreetingScreen abstraction
 
 Drawing...
-**************
-* Greetings! *
-XXXXXXXX******
-Press Enter for another round
-
-Drawing...
-**************
-* GREETINGS! X
-XXXXXXXXXXXXXX
-Press Enter for another round
-
-Drawing...
-X*************
-* Greetings! *
-XXXXXXXXXXXXXX
+*X*X*X*X*X*X*X
+X Greetings! X
+X*X*X*X*X*X*X*
 
 Creating InformationScreen abstraction
 
 Drawing...
-****XXXXXXXXX**********************XXXXXXXXXXXXXXXXXXXXXXXX
-X CURRENT SYSTEM TIME: THU JUN 29 16:17:52 GMT+02:00 2006 X
-XXXXXXX****************************************************
-Press Enter for another round
-
-Drawing...
-***********XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X CURRENT SYSTEM TIME: THU JUN 29 16:17:52 GMT+02:00 2006 *
-******************XXXXXXXXXXXXXXXXXX***********************
-Press Enter for another round
-
-Drawing...
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX******
-* Current system time: Thu Jun 29 16:17:52 GMT+02:00 2006 *
-***********************************************************
+X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X
+X Current system time: Fri Jun 30 09:45:06 GMT+02:00 2006 X
+X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X*X
 
