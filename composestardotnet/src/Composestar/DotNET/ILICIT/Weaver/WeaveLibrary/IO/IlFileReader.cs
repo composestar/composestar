@@ -72,12 +72,6 @@ namespace Weavers.IO
 
 		private IlOpcode GetIlOpcodeStatement(string line, StreamReader srIn)
 		{
-			if (line.StartsWith(".line "))
-			{
-				char[] sep = {':'};
-				string[] two = line.Split(sep,2);
-				return new IlOpcode(two[0], two[1]);
-			}
 			if (line.IndexOf(": ") > 0) 
 			{
 				string label = line.Substring(0, line.IndexOf(": "));
@@ -149,17 +143,16 @@ namespace Weavers.IO
 				else if (line.StartsWith(".locals"))
 				{
 					if (line.IndexOf("init") > 0) result.InitLocals = true;
-
 					string locals = "";
 					line = line.Remove(0, line.IndexOf("(")+1);
-					while (line.LastIndexOf(")") != line.Length-1)
+					while (line.LastIndexOf(")") == -1)
 					{
-						locals += line.Trim();
+						if (line.Length > 0) { locals += line.Trim(); }
 						line = srIn.ReadLine();
 					}
 					locals += line.Trim();
 					locals = locals.Remove(locals.Length-1, 1);
-
+					if (this.mDebug && !this.mQuiet) Console.WriteLine("Found locals: " + locals);
 					result.AddLocals(locals.Split(','));
 				}
 				else if (line.StartsWith(".custom"))
