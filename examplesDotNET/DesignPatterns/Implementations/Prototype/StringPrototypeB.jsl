@@ -1,0 +1,18 @@
+package Composestar.Patterns.Prototype;
+
+public class StringPrototypeB{
+    
+    protected String text;
+    
+    public StringPrototypeB(String init) {
+        text = init;
+    }
+    
+    public void setText(String newText) {
+        text = newText;
+    }
+    
+    public String ts() {
+        return "StringPrototypeB: " + text;
+    } 
+}
