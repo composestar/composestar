@@ -106,20 +106,6 @@
                     RelPath = "Concerns\CounterProxy.cps"
                     BuildAction = "None"
                 />
-                <File
-                    RelPath = "Concerns\RemoteProxy.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Concerns\RemoteProxy.jsl"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Concerns\RequestCounter.jsl"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
             </Include>
         </Files>
     </VISUALJSHARP>
