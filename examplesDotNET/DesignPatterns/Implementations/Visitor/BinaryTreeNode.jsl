@@ -22,21 +22,25 @@
  * http://composestar.sf.net
  * 
  */
-package Composestar.Patterns.Prototype;
+package Composestar.Patterns.Visitor;
 
-public class StringPrototypeB{
-    
-    protected String text;
-    
-    public StringPrototypeB(String init) {
-        text = init;
-    }
-    
-    public void setText(String newText) {
-        text = newText;
-    }
-    
-    public String ts() {
-        return "StringPrototypeB: " + text;
-    } 
+public class BinaryTreeNode extends BinaryTreeElement{ 
+
+	protected BinaryTreeElement left;
+	protected BinaryTreeElement right;
+
+	public BinaryTreeNode(BinaryTreeElement left, BinaryTreeElement right) 
+	{
+		this.left = left;
+		this.right = right;
+	}
+ 
+	public BinaryTreeElement getLeft() 
+	{
+	    return left;
+	}
+
+	public BinaryTreeElement getRight() {
+	    return right;
+	}
 }
