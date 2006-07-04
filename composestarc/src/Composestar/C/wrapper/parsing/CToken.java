@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: CToken.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id: CToken.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -59,6 +59,6 @@ public class CToken extends antlr.CommonToken
   }
 
     public String toString() {
-        return "com.ideals.weavec.wrapper.parsing.CToken:" +"(" + hashCode() + ")" + "[" + getType() + "] "+ getText() + " line:" + getLine() + " source:" + source ;
+        return "Composestar.C.wrapper.parsing.CToken:" +"(" + hashCode() + ")" + "[" + getType() + "] "+ getText() + " line:" + getLine() + " source:" + source ;
     }
 }

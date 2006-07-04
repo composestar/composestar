@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETType.java,v 1.1 2006/02/16 23:10:59 pascal_durr Exp $
+ * $Id: CFile.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 
 package Composestar.C.LAMA;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -84,6 +85,20 @@ public class CFile extends Type
     public void setAnnotation(boolean isAnnotation){
     	this.isAnnotation=isAnnotation;
     }
+    
+    public MethodInfo getMethod(String name) 
+	{
+        MethodInfo method = null;
+        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); ) 
+        {
+        	method = (MethodInfo)iter.next();
+            // if same name && param length
+            if( method.name().equals( name ) ) {
+                return method;
+            }
+        }
+        return null;
+	}  
     
     
     /****** Implementation of Language Unit interface **********/

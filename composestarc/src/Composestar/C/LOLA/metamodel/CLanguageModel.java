@@ -56,7 +56,8 @@ public class CLanguageModel extends LanguageModel
 			  Class fieldImpl = Class.forName("Composestar.Core.LAMA.FieldInfo");	
 			  Class parameterImpl = Class.forName("Composestar.Core.LAMA.ParameterInfo");	
 			  Class annotationImpl = Class.forName("Composestar.Core.LAMA.Type");
-			  			  
+			 // Class basictypeImpl = Class.forName("Composestar.C.LAMA.CBasicType");
+			  
 			  /********* Definition of unit types ***********/ 
 			  // Define the 'Type' composite language unit type (Type = Class | Interface)
 			  LanguageUnitType utType = new LanguageUnitType(typeImpl,"Type" , false);
@@ -80,6 +81,9 @@ public class CLanguageModel extends LanguageModel
 			  // Define the 'Annotation' language unit type
 			  LanguageUnitType utAnnotation = new LanguageUnitType(annotationImpl,"Annotation", true);
 			  addLanguageUnitType(utAnnotation);
+			  
+			 // LanguageUnitType utBType = new LanguageUnitType(basictypeImpl,"BasicType" , false);
+			 // addLanguageUnitType(utBType);
 			 
 			  /********* Definition of unit relations *********/
 			  

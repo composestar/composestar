@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCEmitter.g,v 1.4 2005/12/05 09:17:44 pascal_durr Exp $
+ * $Id: GnuCEmitter.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 	
 	package Composestar.C.wrapper.parsing;

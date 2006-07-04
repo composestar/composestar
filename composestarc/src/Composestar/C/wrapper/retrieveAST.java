@@ -1,0 +1,271 @@
+package Composestar.C.wrapper;
+
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Vector;
+
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
+import antlr.CommonAST;
+import antlr.debug.misc.ASTFrame;
+
+import java.io.*;
+import java.util.*;
+
+import Composestar.C.wrapper.parsing.*;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.C.LAMA.*;
+import Composestar.C.MASTER.FileMap;
+import Composestar.Core.LAMA.*;
+
+import Composestar.C.wrapper.parsing.WrappedAST;
+
+public class retrieveAST {
+	
+		private Vector allNodes = null;
+	    private Vector commentKeepers = null;
+	    private GnuCLexer lexer = null;
+	    private GnuCParser parser = null;
+	    private TNode node = null;
+	    public GlobalIntroductionPoint introductionPoint = null;
+	    public HeaderIntroductionPoint headerintroductionPoint=null;
+	    private PreprocessorInfoChannel infoChannel = null;
+	    public Hashtable fileASTMap = new Hashtable();
+	    private Vector functions = null;
+	    private String filename = null;
+	    private String tempFolder = null;
+	    public String objectname = null;
+	    public HashMap structASTMap = new HashMap();
+	    private ArrayList cfiles = new ArrayList();
+	    private WrappedAST wrappedAST = null;
+	    private PrintWriter out=null;
+	    private String namespace=null;
+	    private boolean firstNameSpace = false;
+		private File directory=null;
+		private static HashMap usedTypes= null;
+		private CWrapper cw = null;
+		private CWrapper cw2 = null;
+	    private HashMap test =null;
+	    
+	    public WrappedAST createWrappedAST(String filename, String objectname, String namespace, PrintWriter pw, HashMap usedType, CWrapper t ) throws FileNotFoundException
+	    {
+	    	allNodes = new Vector();
+	        setFunctions(new Vector());
+	        commentKeepers = new Vector();
+	        
+	    	this.setFilename(filename);
+	        this.getObjectname(objectname);
+	        this.pWriter(pw);
+	        this.getNameSpace(namespace);
+	        this.getUsedType(usedType);
+	        
+
+	        try
+	        {
+	        	DataInputStream input = new DataInputStream(new FileInputStream(filename));
+	        	initialization(input);
+	        	fillAllNodes();
+	        	
+	        	this.setWrappedAST(new WrappedAST(node, infoChannel,
+	                     allNodes, getFunctions(), commentKeepers, this.introductionPoint, this.headerintroductionPoint));
+	             wrappedAST.setFilename(filename);
+	             //this.setCW(this);
+	             //System.out.println("CWrapper"+cw.getFilename());
+	             return getWrappedAST();
+	        }
+	        catch(FileNotFoundException fnfe)
+	        {
+	        	System.out.println("File "+filename+" not found!");
+	        	System.exit(-1);
+	        }
+	        
+	        return null;
+	    }
+	       
+	   
+	    private void initialization(DataInputStream input)
+	    {
+	    	lexer = new GnuCLexer(input);
+	        lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
+	        lexer.initialize();
+	        infoChannel = lexer.getPreprocessorInfoChannel();
+
+	        parser = new GnuCParser(lexer);
+
+	        parser.setASTNodeClass(TNode.class.getName());
+	        TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
+	        try
+	        {
+	        	parser.setFilename(this.filename);
+	        	parser.translationUnit();
+	            
+	            GnuCTreeParser treeparser = new GnuCTreeParser();
+	            treeparser.setUsedTypes(usedTypes);
+	            treeparser.initiateXMLFile(out);
+	            treeparser.setFilename(this.objectname);
+	            treeparser.translationUnit(parser.getAST());
+	            treeparser.printFields();
+	            treeparser.addFieldsToRepository();
+	            //CommonAST parseTree=(CommonAST)parser.getAST();
+	            //printTree(parseTree);          
+	            
+	            this.introductionPoint = treeparser.getIntroductionPoint();
+	            this.headerintroductionPoint=treeparser.getHeaderIntroductionPoint();
+	            this.functions = treeparser.getFunctions();
+	            this.structASTMap = treeparser.getStructASTMap();
+	            usedTypes.putAll(treeparser.getUsedTypes());
+	            //printMetaModel();
+	        }
+	        catch (RecognitionException e)
+	        {
+	            e.printStackTrace();
+	        }
+	        catch (TokenStreamException e)
+	        {
+	            e.printStackTrace();
+	        }
+	                
+	        node = (TNode) parser.getAST();
+	    }
+	    
+	    public void printMetaModel()
+	    {
+	    	System.out.println("Meta model for file: "+this.getFilename());
+	    	if(this.introductionPoint != null)
+	    		System.out.println("Introduction JP: "+this.introductionPoint.getNode().getLineNum());
+	    	for(int i=0; i<getFunctions().size(); i++)
+	    	{
+	    		Function function = (Function)this.getFunctions().get(i);
+	    		if(function != null)
+	    		{
+		    		System.out.println("Meta model for function: "+function.getName());
+		    		System.out.println("\tIn file: "+function.getFileName());
+		    		System.out.print("\tReturn type: ");
+	    			if(function.getReturnParameter() != null)
+		    		{
+		    			function.getReturnParameter().testParameterType();
+		    		}
+		    		else 
+		    			System.out.println("void");
+	    			
+		    		if(!function.hasNoParameters())
+		    		{
+			    		System.out.println("\tNumber of parameters: "+function.getNumberOfInputs());
+			    		for(int j=0; j<function.getNumberOfInputs(); j++)
+			    		{
+			    			Parameter param = function.getInputParameter(j);
+			    			System.out.print("\t\tParameter["+j+"]: ");
+			    			param.testParameter();
+			    		}
+		    		}
+	    		}
+	    	}
+	    }
+
+		public void printTree(CommonAST parseTree){
+			System.out.println(parseTree.toStringList());
+	        ASTFrame frame= new ASTFrame(objectname, parseTree);
+	        frame.setVisible(true);
+		}
+	    
+	    public void setFunctions(Vector functions) {
+			this.functions = functions;
+		}
+
+		public Vector getFunctions() {
+			return functions;
+		}
+
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+		
+		public void getObjectname(String objectname){
+			this.objectname =objectname;
+		}
+		
+		public void getNameSpace(String namespace){
+			this.namespace=namespace;
+		}
+		
+		public void getUsedType(HashMap usedTypes){
+			this.usedTypes= usedTypes;
+		}
+		
+		public void setObjectName(String filename, CommonResources resources){
+			this.objectname = Configuration.instance().getPathSettings().getPath("Base");
+			this.objectname = objectname.replace('/','\\');
+			this.objectname = filename.substring(objectname.length());
+			this.objectname = objectname.substring(0,objectname.lastIndexOf(".c"));
+			this.objectname = objectname.replace('\\','.');
+		}
+		
+		public void setNameSpace(String filename, CommonResources resources){
+			namespace= Configuration.instance().getPathSettings().getPath("Base");
+			namespace = namespace.replace('/','\\');
+			namespace = namespace.substring(0,namespace.lastIndexOf("\\"));
+			namespace = namespace.substring(0,namespace.lastIndexOf("\\"));
+			namespace = filename.substring(namespace.length());
+			namespace = namespace.substring(0,namespace.lastIndexOf("\\"));
+			namespace = namespace.substring(namespace.indexOf("\\")+1, namespace.length());
+			namespace = namespace.replace('\\','.');
+		}
+		
+		private void fillAllNodes()
+	    {
+	        allNodes.addElement(node);
+	        if(node.getNumberOfChildren()>0)
+	        {
+	            fillVectorAll((TNode) node.getFirstChild(), allNodes);
+	            ((TNode)node.getFirstChild()).setParent(node);
+
+	        }
+	        if(node.getNextSibling() != null)
+	        {
+	            fillVectorAll((TNode) node.getNextSibling(), allNodes);
+	            ((TNode)node.getNextSibling()).setPreviousNode(node);
+	        }
+	    }
+
+	    private void fillVectorAll(TNode node, Vector vec)
+	    {
+	        vec.addElement(node);
+	        
+	        if(node.getNumberOfChildren()>0)
+	        {
+	            fillVectorAll((TNode) node.getFirstChild(), vec);
+	            ((TNode)node.getFirstChild()).setParent(node);
+	        }
+	        if(node.getNextSibling() != null)
+	        {
+	            fillVectorAll((TNode) node.getNextSibling(), vec);
+	            ((TNode)node.getNextSibling()).setPreviousNode(node);
+	        }
+	    }
+
+		public String getFilename() {
+			return filename;
+		}
+		
+		public void pWriter(PrintWriter pw){
+			this.out=pw;
+		}
+
+		public void setWrappedAST(WrappedAST wrappedAST) {
+			this.wrappedAST = wrappedAST;
+		}
+
+		public WrappedAST getWrappedAST() {
+			return wrappedAST;
+		}
+		
+
+	}

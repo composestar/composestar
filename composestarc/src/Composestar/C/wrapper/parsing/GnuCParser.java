@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCParser.g,v 1.4 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id: GnuCParser.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -2085,7 +2085,7 @@ public GnuCParser(ParserSharedInputState state) {
 			if ( inputState.guessing==0 ) {
 				
 				if (isFunctionDefinition) {
-				if(checksymbols) pushScope(declName);
+					if(checksymbols) pushScope(declName);
 				}
 				else {
 				if(checksymbols) pushScope("!"+declName); 
@@ -2167,7 +2167,8 @@ public GnuCParser(ParserSharedInputState state) {
 			match(RPAREN);
 			if ( inputState.guessing==0 ) {
 				declaratorParamaterList_AST = (TNode)currentAST.root;
-				declaratorParamaterList_AST.setType(NParameterTypeList);
+				declaratorParamaterList_AST.setType(NParameterTypeList);                                             
+				
 			}
 			declaratorParamaterList_AST = (TNode)currentAST.root;
 		}

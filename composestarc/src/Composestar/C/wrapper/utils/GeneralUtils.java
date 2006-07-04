@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GeneralUtils.java,v 1.6 2005/12/24 16:21:03 pascal_durr Exp $
+ * $Id: GeneralUtils.java,v 1.1 2006/03/16 14:08:55 johantewinkel Exp $
  */
 package Composestar.C.wrapper.utils;
 
@@ -44,6 +44,7 @@ public class GeneralUtils
     public final static int FUNCTION_INTRODUCTION = 3;
     public final static int GLOBAL_INTRODUCTION = 4;
     public final static int STRUCTURE_INTRODUCTION = 5;
+    public final static int HEADER_INTRODUCTION=6;
     
     //  ADVICE APPLICATION TYPES:
     public final static int BEFORE = 1;
@@ -53,6 +54,7 @@ public class GeneralUtils
     public final static int FUNCTION = 1;
     public final static int STRUCT = 2;
     public final static int GLOBAL = 3;
+    public final static int HEADER = 4;
     
     public static String getTypeForID(int id)
 	{
@@ -77,6 +79,8 @@ public class GeneralUtils
 			ttype = FUNCTION_INTRODUCTION;
 		else if(type.equalsIgnoreCase("function_variable_introduction"))
 			ttype = FUNCTION_INTRODUCTION;
+		else if(type.equalsIgnoreCase("header_introduction"))
+			ttype = HEADER_INTRODUCTION;
 		else if(type.equalsIgnoreCase("structure_introduction"))
 			ttype = STRUCTURE_INTRODUCTION;
 		else 

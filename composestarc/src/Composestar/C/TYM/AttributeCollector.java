@@ -45,8 +45,10 @@ public class AttributeCollector extends DefaultHandler {
 			parser.parse( new InputSource( tempFolder + "attributes.xml" ));
 		} catch( Exception e ) {
 			e.printStackTrace();
+			System.out.println("Null pointer hier");
 			//throw new ModuleException( e.getMessage() );
 		}
+		
     }
     
     /**

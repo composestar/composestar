@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: ParserTest.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id: ParserTest.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -59,14 +59,14 @@ public class ParserTest
             }
             GnuCLexer lexer =
                 new GnuCLexer ( dis );
-            lexer.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+            lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
             lexer.initialize();
             // Parse the input expression.
             GnuCParser parser = new GnuCParser ( lexer );
             
             // set AST node type to TNode or get nasty cast class errors
             parser.setASTNodeType(TNode.class.getName());
-            TNode.setTokenVocabulary("com.ideals.weavec.wrapper.parsing.GnuCTokenTypes");
+            TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
 
             // invoke parser
             try {

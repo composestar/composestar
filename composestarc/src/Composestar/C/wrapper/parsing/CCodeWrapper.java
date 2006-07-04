@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: CCodeWrapper.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id: CCodeWrapper.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -141,7 +141,7 @@ public class CCodeWrapper
     private void initialization(DataInputStream input)
     {
         lexer = new GnuCLexer(input);
-        lexer.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+        lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
         lexer.initialize();
         infoChannel = lexer.getPreprocessorInfoChannel();
         System.out.println(" ... lexer done");
@@ -149,7 +149,7 @@ public class CCodeWrapper
         System.out.println("");
         emitter = new GnuCEmitter(infoChannel);
         parser.setASTNodeType(TNode.class.getName());
-        TNode.setTokenVocabulary("com.ideals.weavec.wrapper.parsing.GnuCTokenTypes");
+        TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
 
 
         try
@@ -165,7 +165,7 @@ public class CCodeWrapper
             e.printStackTrace();
         }
         System.gc();
-        System.out.println(" ... com.ideals.weavec.wrapper.parsing done");
+        System.out.println(" ... Composestar.C.wrapper.parsing done");
         node = (TNode) parser.getAST();
         System.out.println(" ... node done");
     }

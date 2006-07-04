@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: PreprocessorInfoChannel.java,v 1.3 2005/11/08 05:49:29 pascal_durr Exp $
+ * $Id: PreprocessorInfoChannel.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -97,7 +97,7 @@ public class PreprocessorInfoChannel
 
     public String toString()
     {
-        StringBuffer sb = new StringBuffer("com.ideals.weavec.wrapper.parsing.PreprocessorInfoChannel:\n");
+        StringBuffer sb = new StringBuffer("Composestar.C.parsing.PreprocessorInfoChannel:\n");
         for (int i = 0; i <= maxTokenNumber + 1; i++){
             Integer inti = new Integer(i);
             if ( lineLists.containsKey( inti ) ) {

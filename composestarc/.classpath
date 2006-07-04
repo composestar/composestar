@@ -2,8 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="src/Composestar/C/grammar/antlr.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/prolog/prolog.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/composestarcore"/>
+	<classpathentry kind="lib" path="/composestarcore/binaries/prolog/prolog.jar"/>
+	<classpathentry kind="lib" path="/composestarcore/binaries/junit/junit.jar"/>
+	<classpathentry kind="lib" path="/composestarcore/binaries/antlr/antlr.jar"/>
 	<classpathentry kind="output" path="src"/>
 </classpath>

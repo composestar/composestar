@@ -1,24 +1,26 @@
 package Composestar.C.wrapper;
 
-//import com.ideals.weavec.specification.Advice;
-//import com.ideals.weavec.specification.AdviceApplication;
-//import com.ideals.weavec.weaver.WeavingInstruction;
+import Composestar.C.specification.Advice;
+import Composestar.C.specification.AdviceApplication;
+import Composestar.C.CONE.WeavingInstruction;
+
+import java.util.ArrayList;
 
 public class WeaveblePoint
 {
 	public String filename = "";
 	
-	//@johanpublic ArrayList weavinginstructions = new ArrayList();
+	public ArrayList weavinginstructions = new ArrayList();
 	
 	public WeaveblePoint(String filename)
 	{
 		this.filename = filename;
 	}
 	
-	/**@johan
+	
 	public void addWeavingInstruction(WeavingInstruction wi)
 	{
-	//@johan	this.weavinginstructions.add(wi);
+		this.weavinginstructions.add(wi);
 	}
 	
 	public WeavingInstruction getWeavingInstruction(int i)
@@ -30,11 +32,11 @@ public class WeaveblePoint
 	{
 		return this.weavinginstructions.size();
 	}
-	**/
-	//public static void main(String[] args)
-	//{
-	//	WeaveblePoint wp = new WeaveblePoint("");
-		/**Advice adv0 = new Advice();
+	
+	public static void main(String[] args)
+	{
+	WeaveblePoint wp = new WeaveblePoint("");
+		Advice adv0 = new Advice();
 		adv0.setId("ADV0");
 		adv0.setPriority(0);
 		wp.addWeavingInstruction(new WeavingInstruction("",adv0,new AdviceApplication()));
@@ -51,9 +53,9 @@ public class WeaveblePoint
 		adv00.setPriority(0);
 		wp.addWeavingInstruction(new WeavingInstruction("",adv00,new AdviceApplication()));
 		
-		wp.prioritizeWeavingInstructions();**/
-	//}
-	/**
+		wp.prioritizeWeavingInstructions();
+	}
+	
 	public ArrayList prioritizeWeavingInstructions()
 	{
 		//System.out.println("Evaluating advices: "+this.weavinginstructions.size());
@@ -96,7 +98,7 @@ public class WeaveblePoint
 		//System.out.println("Old: "+backup);
 		//System.out.println("New: "+newlist);
 		return newlist;
-	}**/
+	}
 	
 	public String getFileName()
     {

@@ -36,9 +36,12 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
   private Type FieldType;       
   private CFile Parent;
   public boolean IsStatic;   
-  private boolean isPointer;
+  private int pointerLevel;
   private boolean isGlobal;
-    
+  private boolean isExtern;
+  private boolean isInline;
+  private int arrayLevel;
+      
   public CVariable()
   {
     UnitRegister.instance().registerLanguageUnit(this);    
@@ -75,17 +78,48 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
     return this.IsStatic;     
   }
   
+  public void setIsInline(boolean isInline)
+  {
+     this.isInline = isInline;     
+  }
+  public boolean isInline()
+  {
+    return this.isInline;     
+  }
+  
+  public void setIsExtern(boolean isExtern)
+  {
+     this.isExtern = isExtern;     
+  }
+  public boolean isExtern()
+  {
+    return this.isExtern;     
+  }
+  
   public void setIsStatic(boolean isStatic)
   {
      this.IsStatic = isStatic;     
   }
   
   public boolean isPointer(){
-	  return this.isPointer;
+	  return this.pointerLevel>0;
   }
   
-  public void setIsPointer(boolean isPointer){
-	  this.isPointer=isPointer;
+  public void setPointerLevel(int pointer){
+	  this.pointerLevel=pointer;
+  }
+  public int getPointerLevel(){
+	  return pointerLevel;
+  }
+  public boolean isArray(){
+	  return this.arrayLevel>0;
+  }
+  
+  public void setArrayLevel(int pointer){
+	  this.arrayLevel=pointer;
+  }
+  public int getArrayLevel(){
+	  return arrayLevel;
   }
   
   public boolean isGlobal(){
@@ -145,7 +179,8 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
 		FieldTypeString = in.readUTF();
 		IsStatic = in.readBoolean();
 		isGlobal = in.readBoolean();
-		isPointer = in.readBoolean();
+		pointerLevel = in.readInt();
+		arrayLevel = in.readInt();
 		Name = in.readUTF();
 		Parent = (CFile)in.readObject();
 	}
@@ -159,7 +194,8 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
 		out.writeUTF(FieldTypeString);
 		out.writeBoolean(IsStatic);
 		out.writeBoolean(isGlobal);
-		out.writeBoolean(isPointer);
+		out.writeInt(pointerLevel);
+		out.writeInt(arrayLevel);
 		out.writeUTF(Name);
 		out.writeObject(Parent);
 	}

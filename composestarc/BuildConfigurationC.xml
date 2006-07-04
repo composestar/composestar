@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <!--This BuildConfiguration file is automaticly generated on 3/14/2006 10:48:16 AM by the Composestar VS Addin.-->
 <BuildConfiguration version="1.00">
-	<Projects executable="EncryptionExample.ExampleRunner" applicationStart="EncryptionExample.ExampleRunner" runDebugLevel="0" outputPath="D:/ComposestarSource/examplesC/EncryptionExample/bin/">
-		<Project name="EncryptionExample" language="C" buildPath="D:/ComposestarSource/examplesJava/AOSD2006Demo/obj/" basePath="D:/ComposestarSource/examplesJava/AOSD2006Demo/" outputPath="D:/ComposestarSource/examplesJava/AOSD2006Demo/bin">
+	<Projects executable="EncryptionExample.ExampleRunner" applicationStart="EncryptionExample.ExampleRunner" runDebugLevel="0" outputPath="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/bin/">
+		<Project name="EncryptionExample" language="C" buildPath="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/" basePath="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/" outputPath="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/bin">
       <Sources>
-        <Source fileName="D:/ComposestarSource/examplesC/EncryptionExample/Client.c" />
-        <Source fileName="D:/ComposestarSource/examplesC/EncryptionExample/CommunicationObject.c" />
-        <Source fileName="D:/ComposestarSource/examplesC/EncryptionExample/Encryptor.c" />
-        <Source fileName="D:/ComposestarSource/examplesC/EncryptionExample/ExampleRunner.c" />
-        <Source fileName="D:/ComposestarSource/examplesC/EncryptionExample/Logger.c" />
-        <Source fileName="D:/ComposestarSource/examplesC/EncryptionExample/Server.c" />
+        <Source fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/Client.c" />
+        <Source fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/CommunicationObject.c" />
+        <Source fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/Encryptor.c" />
+        <Source fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/ExampleRunner.c" />
+        <Source fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/Logger.c" />
+        <Source fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/Server.c" />
       </Sources>
       <Dependencies/>
       <TypeSources/>
     </Project>
     <ConcernSources>
-      <ConcernSource fileName="D:/ComposestarSource/examplesC/EncryptionExample/EncryptionConcern.cps" />
-      <ConcernSource fileName="D:/ComposestarSource/examplesC/EncryptionExample/Logging.cps" />
+      <ConcernSource fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/EncryptionConcern.cps" />
+      <ConcernSource fileName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/Logging.cps" />
     </ConcernSources>
     <CustomFilters/>
   </Projects>
-  <Settings composestarIni="C:/Program Files/ComposeStar/Composestar.ini" buildDebugLevel="4" compilePhase="one" platform="c">
+  <Settings composestarIni="C:/local/Johan/ComposeStar/Composestar.ini" buildDebugLevel="0" compilePhase="one" platform="c">
     <Modules>
-      <Module name="FILTH" input="D:\ComposestarSource\examplesJava\AOSD2006Demo\FilterOrderingSpec.xml" output_pattern=".//analyses//FILTH_" />
+      <Module name="FILTH" input="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/FilterOrderingSpec.xml" output_pattern=".//analyses//FILTH_" />
       <Module name="SECRET" mode="0" />
-      <Module name="ILICIT" verifyAssemblies="False" assemblies="D:/ComposestarSource/examplesJava/AOSD2006Demo/obj/dummies.jar" />
+      <Module name="ILICIT" verifyAssemblies="False" assemblies="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/obj/dummies.jar" />
     	<Module name="INCRE" enabled="False" />
     </Modules>
     <Paths>
-      <Path name="Base" pathName="D:/ComposestarSource/examplesC/EncryptionExample/" />
-      <Path name="Composestar" pathName="C:/Program Files/ComposeStar/" />
+      <Path name="Base" pathName="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/" />
+      <Path name="Output" pathName="C:\local\Johan\ComposeStarCVS\examplesC\EncryptionExample\bin" />
+      <Path name="Composestar" pathName="C:/local/Johan/ComposeStar/" />
       <Path name="NET" pathName="C:/WINDOWS/Microsoft.NET/Framework/v1.1.4322" />
       <Path name="NETSDK" pathName="C:/Program Files/Microsoft Visual Studio .NET 2003/SDK/v1.1/Bin/" />
       <Path name="EmbeddedSources" pathName="embedded/" />
@@ -37,7 +38,7 @@
     </Paths>
   </Settings>
   <Platforms>
-  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="D:\ComposestarSource\composestarcore\src;D:\ComposestarSource\composestarc\src;C:\Program Files\ComposeStar\binaries\antlr.jar;C:\Program Files\ComposeStar\binaries\prolog\prolog.jar" options="">
+  <Platform name="C" mainClass="Composestar.C.MASTER.CMaster" classPath="C:\local\Johan\ComposeStarCVS\composestarcore\src;C:\local\Johan\ComposeStarCVS\composestarc\src;C:\Program Files\ComposeStar\binaries\antlr.jar;C:\Program Files\ComposeStar\binaries\prolog\prolog.jar" options="">
     <Languages defaultLanguage="C">
       <Language name="C">
         <Compiler name="CCompiler" executable="gcc" options="" implementedBy="Composestar.C.COMP.JavaCompiler">

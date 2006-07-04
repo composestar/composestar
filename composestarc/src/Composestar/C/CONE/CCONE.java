@@ -8,6 +8,8 @@ import Composestar.Core.CONE.CONE;
 import Composestar.Utils.Debug;
 import Composestar.Core.Exception.ModuleException;
 
+import java.util.Hashtable;
+
 public class CCONE extends CONE{
 
 	/**
@@ -24,17 +26,13 @@ public class CCONE extends CONE{
 		incre.storeHistory();
 		increhistory.stop();
 		
-		// Generate repository file
-		INCRETimer xmlgenerator = incre.getReporter().openProcess("CONE","Generation of repository.xml",INCRETimer.TYPE_NORMAL);
-		CRepositorySerializer rs = new CRepositorySerializer(); 
-		rs.run(resources);
-		xmlgenerator.stop();
-		
 		// Generate weave specification file
 		INCRETimer weave = incre.getReporter().openProcess("CONE","Generation of weave specification file",INCRETimer.TYPE_NORMAL);
 		CWeaveFileGenerator wg = new CWeaveFileGenerator();
      	wg.run(resources);
      	weave.stop();
+     	
+     	
     }
 	
 }

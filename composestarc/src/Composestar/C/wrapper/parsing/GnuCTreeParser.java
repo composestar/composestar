@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCTreeParser.g,v 1.5 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id: GnuCTreeParser.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -66,16 +66,25 @@ public class GnuCTreeParser extends antlr.TreeParser       implements GnuCTreePa
 		// WeaveC specifics:
 		private String filename = "";
 		private GlobalIntroductionPoint gip = null;
+		private HeaderIntroductionPoint hip = null;
 		private boolean firstfunction = true;
+		private boolean firstExternal = true;
 		private Vector functions = new Vector();
 		private FunctionFactory functionFactory = new FunctionFactory();
 		private HashMap structASTMap = new HashMap();
 		private CFile file = new CFile();
+		//private CMethodInfo method = new CMethodInfo();
 		private DataStore dataStore = DataStore.instance();
 		private PrimitiveConcern pcFile = new PrimitiveConcern();
 		private Signature sig = new Signature();
 		private PrintWriter out = null; //xml writer
-            	
+		private ArrayList parameterList = new ArrayList();
+            	private HashMap usedTypes= new HashMap();
+            	private HashMap fields= new HashMap();
+            	protected int pointer = 0;
+            	protected int array = 0;
+            	protected int returnTypePointerLevel=0;
+        	protected int returnTypeArrayLevel=0;
 		
 		public String getFilename()
 		{
@@ -97,6 +106,10 @@ public class GnuCTreeParser extends antlr.TreeParser       implements GnuCTreePa
 		{
 			return this.gip;
 		}
+		public HeaderIntroductionPoint getHeaderIntroductionPoint()
+		{
+			return this.hip;
+		}
 		
 		public void setIntroductionPoint(GlobalIntroductionPoint node)
 		{
@@ -113,15 +126,105 @@ public class GnuCTreeParser extends antlr.TreeParser       implements GnuCTreePa
 			this.functions = funcs;
 		}
 		
+		public void setUsedTypes(HashMap usedTypes)
+		{
+			this.usedTypes.putAll(usedTypes);
+		}
+		
 		public HashMap getStructASTMap()
 		{
 			return this.structASTMap;
+		}
+		
+		public HashMap getUsedTypes()
+		{
+			return this.usedTypes;
 		}
 		
 		public void setStructASTMap(HashMap map)
 		{
 			this.structASTMap = map;
 		}
+		
+		public boolean isPointer()
+    		{
+        		return pointer > 0;
+    		}
+
+    		public void addPointerLevel()
+    		{
+        		this.pointer++;
+    		}
+    
+    		public int getPointerLevel()
+    		{
+        		return this.pointer;
+    		}
+    		
+    		public void clearPointerLevel()
+    		{
+    			this.pointer=0;
+    		}
+    		 
+    		 public boolean isArray()
+                   {
+                       return array > 0;
+                   }
+               
+                   public void addArrayLevel()
+                   {
+                       this.array++;
+                   }
+                   
+                   public int getArrayLevel()
+                   {
+                       return this.array;
+                   }
+                   
+                   public void clearArrayLevel()
+                   {
+                   	this.array=0;
+                   }
+                   	   
+		    public boolean isReturnTypePointerLevel()
+                   {
+                       return returnTypePointerLevel > 0;
+                   }
+               
+                   public void addReturnTypePointerLevel()
+                   {
+                       this.returnTypePointerLevel++;
+                   }
+                   
+                   public int getReturnTypePointerLevel()
+                   {
+                       return this.returnTypePointerLevel;
+                   }
+                   
+                   public void clearReturnTypePointerLevel()
+                   {
+                   	this.returnTypePointerLevel=0;
+                   }
+                    public boolean isReturnTypeArrayLevel()
+                   {
+                       return returnTypeArrayLevel > 0;
+                   }
+               
+                   public void addReturnTypeArrayLevel()
+                   {
+                       this.returnTypeArrayLevel++;
+                   }
+                   
+                   public int getReturnTypeArrayLevel()
+                   {
+                       return this.returnTypeArrayLevel;
+                   }
+                   
+                   public void clearReturnTypeArrayLevel()
+                   {
+                   	this.returnTypeArrayLevel=0;
+                   }
+		   
     	
         int traceDepth = 0;
         public void reportError(RecognitionException ex) {
@@ -173,8 +276,41 @@ public class GnuCTreeParser extends antlr.TreeParser       implements GnuCTreePa
         public void initiateXMLFile(PrintWriter out){
         	this.out=out;
         }
-
-
+        public void addBasicType(String typeName){
+        	if(!usedTypes.containsValue(typeName)){
+                		usedTypes.put(typeName,typeName);
+                		CFile usedType = new CFile();
+                		usedType.setName(typeName);
+                		usedType.setFullName(typeName);
+                		PrimitiveConcern pcType = new PrimitiveConcern();
+                		pcType.setName(typeName);
+                		pcType.setPlatformRepresentation(usedType);
+                		usedType.setParentConcern(pcType);
+                		dataStore.addObject( typeName, pcType );
+          	}
+        }
+        public void printFields(){
+        	Iterator it = ((this.fields).values()).iterator();
+        	while(it.hasNext()){
+        		Variable var= (Variable)it.next();
+        		//System.out.println("Fields value:"+ var.name() + " & isStatic:"+ var.isStatic() + " & type is: " +var.FieldTypeString() + " & Levels[p,a]: [" + var.getPointerLevel() + "," + var.getArrayLevel() + "]");
+        	}
+        }
+        public void addFieldsToRepository(){
+        	Iterator it = ((this.fields).values()).iterator();
+        	while(it.hasNext()){
+        		Variable var= (Variable)it.next();
+        		CVariable cvar=new CVariable();
+        		cvar.setName(var.name());
+        		cvar.setParent(file);
+        		cvar.setIsStatic(var.isStatic());
+        		cvar.setFieldType(var.FieldTypeString());
+        		cvar.setPointerLevel(var.getPointerLevel());
+        		cvar.setArrayLevel(var.getArrayLevel());
+        		cvar.setIsInline(var.isInline());
+        		cvar.setIsExtern(var.isExtern());
+        	}
+        }
 public GnuCTreeParser() {
 	tokenNames = _tokenNames;
 }
@@ -245,14 +381,110 @@ public GnuCTreeParser() {
 	public final void externalDef(AST _t) throws RecognitionException {
 		
 		TNode externalDef_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		TNode decl = null;
+		boolean noFunction=true;
+			TNode declarationNode=null;
+			AST child=null;
+			TNode childID=null;
+			TNode pointer=null;
+			TNode array=null;
+			int pointerLevel=0;
+			int arrayLevel=0;
+			
 		
 		try {      // for error handling
 			if (_t==null) _t=ASTNULL;
 			switch ( _t.getType()) {
 			case NDeclaration:
 			{
-				declaration(_t);
+				decl = _t==ASTNULL ? null : (TNode)_t;
+				declaration(_t,noFunction);
 				_t = _retTree;
+				if ( inputState.guessing==0 ) {
+					
+							declarationNode=decl;
+							//decl.printTree(decl);
+							        child=declarationNode.getFirstChild();
+							if(child!=null){
+								if((childID=declarationNode.firstChildOfType(GnuCTokenTypes.NInitDecl))!=null){
+									if((childID=childID.firstChildOfType(GnuCTokenTypes.NDeclarator))!=null){
+										if((pointer=childID.firstChildOfType(GnuCTokenTypes.NPointerGroup))!=null){
+											if((pointer=pointer.firstChildOfType(GnuCTokenTypes.STAR))!=null){
+												pointerLevel++;
+												if((pointer=pointer.firstSiblingOfType(GnuCTokenTypes.STAR))!=null){
+													pointerLevel++;
+												}
+											}
+										}
+										if((array=childID.firstChildOfType(GnuCTokenTypes.LBRACKET))!=null){
+											arrayLevel++;
+											if((array=array.firstSiblingOfType(GnuCTokenTypes.LBRACKET))!=null){
+													arrayLevel++;
+											}
+										}
+										if((childID=childID.firstChildOfType(GnuCTokenTypes.ID))!=null){
+											String test=(String)childID.getAttribute("source");
+												int endindex=test.indexOf(".");
+												int beginindex=test.lastIndexOf("/")+1;
+												test=test.substring(beginindex,endindex);
+												if(test.equals(getFilename())){
+													Variable var =new Variable();
+													var.setName(childID.getText());	    
+													switch(child.getType()){
+												case GnuCTokenTypes.LITERAL_extern: var.setIsExtern(true);
+												case GnuCTokenTypes.LITERAL_static: var.setIsStatic(true);
+												case GnuCTokenTypes.LITERAL_inline: var.setIsInline(true);
+												case GnuCTokenTypes.SEMI:break;
+														case GnuCTokenTypes.NInitDecl: break;
+														default:{ 
+																var.setFieldTypeString(child.getText());
+																String basicType = child.getText();
+																for(int j =0; j< pointerLevel;j++){
+																	basicType=basicType+"*";
+																}
+																for(int j =0; j< arrayLevel;j++){
+																	basicType=basicType+"[]";
+																}
+																addBasicType(basicType);
+															}
+											}
+											//System.out.print(" declaration: "+ childID.getText()+ " " + child.getText()+ " ");
+											for(int i=1; i<declarationNode.numberOfChildren();i++){
+												child=child.getNextSibling();
+												if(child!=null){
+													switch(child.getType()){
+														case GnuCTokenTypes.LITERAL_extern: var.setIsExtern(true);
+														case GnuCTokenTypes.LITERAL_static: var.setIsStatic(true);
+														case GnuCTokenTypes.LITERAL_inline: var.setIsInline(true);
+														case GnuCTokenTypes.SEMI:break;
+																case GnuCTokenTypes.NInitDecl: break;
+																default: { 
+																	var.setFieldTypeString(child.getText());
+																	String basicType = child.getText();
+																	for(int j =0; j< pointerLevel;j++){
+																		basicType=basicType+"*";
+																	}
+																	for(int j =0; j< arrayLevel;j++){
+																		basicType=basicType+"[]";
+																	}
+																	addBasicType(basicType);
+																}
+													}
+													//System.out.print(child.getText()+ " ");
+												}
+								
+											}
+											var.setPointerLevel(pointerLevel);
+											var.setArrayLevel(arrayLevel);
+											var.setFileName(this.filename);
+											fields.put(childID.getText(),var);
+										}
+										}
+									}
+								}	
+								}	
+						
+				}
 				break;
 			}
 			case NFunctionDef:
@@ -297,15 +529,21 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void declaration(AST _t) throws RecognitionException {
+	public final void declaration(AST _t,
+		boolean noFunction
+	) throws RecognitionException {
 		
 		TNode declaration_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		TNode ND = null;
+		TNode decl = null;
+		TNode in = null;
 		
 		try {      // for error handling
 			AST __t15 = _t;
-			TNode tmp2_AST_in = (TNode)_t;
+			ND = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NDeclaration);
 			_t = _t.getFirstChild();
+			decl = _t==ASTNULL ? null : (TNode)_t;
 			declSpecifiers(_t);
 			_t = _retTree;
 			{
@@ -313,7 +551,8 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case NInitDecl:
 			{
-				initDeclList(_t);
+				in = _t==ASTNULL ? null : (TNode)_t;
+				initDeclList(_t,noFunction);
 				_t = _retTree;
 				break;
 			}
@@ -333,7 +572,7 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==SEMI)) {
-					TNode tmp3_AST_in = (TNode)_t;
+					TNode tmp2_AST_in = (TNode)_t;
 					match(_t,SEMI);
 					_t = _t.getNextSibling();
 				}
@@ -362,6 +601,10 @@ public GnuCTreeParser() {
 		
 		TNode functionDef_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		TNode ndef = null;
+		TNode retType=null;
+		clearReturnTypePointerLevel();
+		String returnType="";
+			
 		
 		try {      // for error handling
 			AST __t125 = _t;
@@ -392,7 +635,7 @@ public GnuCTreeParser() {
 			case LITERAL_typeof:
 			case LITERAL___complex:
 			{
-				functionDeclSpecifiers(_t);
+				retType=functionDeclSpecifiers(_t);
 				_t = _retTree;
 				break;
 			}
@@ -406,8 +649,19 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			declarator(_t);
+			declarator(_t,true,false,true);
 			_t = _retTree;
+			if ( inputState.guessing==0 ) {
+				returnTypePointerLevel=getReturnTypePointerLevel(); 
+					returnType = retType.getText();
+							for (int i =0; i< getReturnTypePointerLevel(); i++){
+						returnType=returnType+"*";
+					}	
+					addBasicType(returnType);
+							//System.out.println("returntype is:" + returnType );	
+						clearReturnTypePointerLevel();
+						
+			}
 			{
 			_loop128:
 			do {
@@ -415,13 +669,13 @@ public GnuCTreeParser() {
 				switch ( _t.getType()) {
 				case NDeclaration:
 				{
-					declaration(_t);
+					declaration(_t,true);
 					_t = _retTree;
 					break;
 				}
 				case VARARGS:
 				{
-					TNode tmp4_AST_in = (TNode)_t;
+					TNode tmp3_AST_in = (TNode)_t;
 					match(_t,VARARGS);
 					_t = _t.getNextSibling();
 					break;
@@ -456,28 +710,36 @@ public GnuCTreeParser() {
 			_t = _retTree;
 			if ( inputState.guessing==0 ) {
 				
-						CMethodInfo method= new CMethodInfo();
-							
-							Function f = functionFactory.createFunction(ndef, getFilename(),out);
-							method.setName(f.getName());
-							method.setParent((Type)file);
-							file.addMethod(method);
-							//PrimitiveConcern pc = new PrimitiveConcern();
-							//pc.setName( method.name() );
-							//pc.setPlatformRepresentation( method );
-					
-							sig.add(method,MethodWrapper.UNKNOWN);
-							pcFile.setSignature(sig);
 						
-							//dataStore.addObject( method.name(), pc );
-							if(firstfunction)
-							{
-								gip = new GlobalIntroductionPoint(filename);
-								gip.setNode(ndef);
-								firstfunction = false;
-							}
-							functions.addElement(f);
-					//System.out.println("Found function: "+f);
+				CMethodInfo method= new CMethodInfo();
+						Function f = functionFactory.createFunction(ndef, getFilename(),out);
+						method.setReturnType(returnType);
+						method.setName(f.getName());
+						method.setParent((Type)file);
+						for(int i= 0 ; i< parameterList.size(); i++){
+							((CParameterInfo)parameterList.get(i)).setParent(method);
+							method.addParameter((CParameterInfo)parameterList.get(i)); 
+						}
+						parameterList.clear();
+						file.addMethod(method);
+						
+						sig.add(method,MethodWrapper.UNKNOWN);
+						pcFile.setSignature(sig);
+					
+						if(firstfunction)
+						{
+							gip = new GlobalIntroductionPoint(filename);
+							gip.setNode(ndef);
+							hip = new HeaderIntroductionPoint(filename);
+							hip.setNode(ndef);
+							ndef.HEADER=true;
+							firstfunction = false;
+						}
+						functions.addElement(f);
+						if(fields.containsKey(f.getName())){
+							//System.out.println("Key deleted: " + f.getName());
+							fields.remove(f.getName());
+						}
 				
 			}
 			_t = __t125;
@@ -500,7 +762,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t10 = _t;
-			TNode tmp5_AST_in = (TNode)_t;
+			TNode tmp4_AST_in = (TNode)_t;
 			match(_t,LITERAL_asm);
 			_t = _t.getFirstChild();
 			{
@@ -508,7 +770,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LITERAL_volatile:
 			{
-				TNode tmp6_AST_in = (TNode)_t;
+				TNode tmp5_AST_in = (TNode)_t;
 				match(_t,LITERAL_volatile);
 				_t = _t.getNextSibling();
 				break;
@@ -523,12 +785,12 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			TNode tmp7_AST_in = (TNode)_t;
+			TNode tmp6_AST_in = (TNode)_t;
 			match(_t,LCURLY);
 			_t = _t.getNextSibling();
 			expr(_t);
 			_t = _retTree;
-			TNode tmp8_AST_in = (TNode)_t;
+			TNode tmp7_AST_in = (TNode)_t;
 			match(_t,RCURLY);
 			_t = _t.getNextSibling();
 			{
@@ -537,7 +799,7 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==SEMI)) {
-					TNode tmp9_AST_in = (TNode)_t;
+					TNode tmp8_AST_in = (TNode)_t;
 					match(_t,SEMI);
 					_t = _t.getNextSibling();
 				}
@@ -568,12 +830,12 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t8 = _t;
-			TNode tmp10_AST_in = (TNode)_t;
+			TNode tmp9_AST_in = (TNode)_t;
 			match(_t,NTypeMissing);
 			_t = _t.getFirstChild();
-			initDeclList(_t);
+			initDeclList(_t,false);
 			_t = _retTree;
-			TNode tmp11_AST_in = (TNode)_t;
+			TNode tmp10_AST_in = (TNode)_t;
 			match(_t,SEMI);
 			_t = _t.getNextSibling();
 			_t = __t8;
@@ -590,7 +852,9 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void initDeclList(AST _t) throws RecognitionException {
+	public final void initDeclList(AST _t,
+		boolean noFunction
+	) throws RecognitionException {
 		
 		TNode initDeclList_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
@@ -601,7 +865,7 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==NInitDecl)) {
-					initDecl(_t);
+					initDecl(_t,noFunction);
 					_t = _retTree;
 				}
 				else {
@@ -806,9 +1070,11 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void declSpecifiers(AST _t) throws RecognitionException {
+	public final TNode  declSpecifiers(AST _t) throws RecognitionException {
+		TNode type;
 		
 		TNode declSpecifiers_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		type = null;
 		
 		try {      // for error handling
 			{
@@ -851,7 +1117,7 @@ public GnuCTreeParser() {
 				case LITERAL_typeof:
 				case LITERAL___complex:
 				{
-					typeSpecifier(_t);
+					type=typeSpecifier(_t);
 					_t = _retTree;
 					break;
 				}
@@ -873,6 +1139,7 @@ public GnuCTreeParser() {
 			}
 		}
 		_retTree = _t;
+		return type;
 	}
 	
 	public final void storageClassSpecifier(AST _t) throws RecognitionException {
@@ -885,14 +1152,14 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LITERAL_auto:
 			{
-				TNode tmp12_AST_in = (TNode)_t;
+				TNode tmp11_AST_in = (TNode)_t;
 				match(_t,LITERAL_auto);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_register:
 			{
-				TNode tmp13_AST_in = (TNode)_t;
+				TNode tmp12_AST_in = (TNode)_t;
 				match(_t,LITERAL_register);
 				_t = _t.getNextSibling();
 				break;
@@ -955,14 +1222,14 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LITERAL_const:
 			{
-				TNode tmp14_AST_in = (TNode)_t;
+				TNode tmp13_AST_in = (TNode)_t;
 				match(_t,LITERAL_const);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_volatile:
 			{
-				TNode tmp15_AST_in = (TNode)_t;
+				TNode tmp14_AST_in = (TNode)_t;
 				match(_t,LITERAL_volatile);
 				_t = _t.getNextSibling();
 				break;
@@ -984,78 +1251,121 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void typeSpecifier(AST _t) throws RecognitionException {
+	public final TNode  typeSpecifier(AST _t) throws RecognitionException {
+		TNode type;
 		
 		TNode typeSpecifier_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		TNode nodeType = null;
+		TNode nodeType1 = null;
+		TNode nodeType2 = null;
+		TNode nodeType3 = null;
+		TNode nodeType4 = null;
+		TNode nodeType5 = null;
+		TNode nodeType6 = null;
+		TNode nodeType7 = null;
+		TNode nodeType8 = null;
+		TNode nodeType9 = null;
+		TNode nodeType10 = null;
+		TNode nodeType11 = null;
+		TNode nodeType12 = null;
+		type = null;
 		
 		try {      // for error handling
 			if (_t==null) _t=ASTNULL;
 			switch ( _t.getType()) {
 			case LITERAL_void:
 			{
-				TNode tmp16_AST_in = (TNode)_t;
+				nodeType = (TNode)_t;
 				match(_t,LITERAL_void);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType;
+				}
 				break;
 			}
 			case LITERAL_char:
 			{
-				TNode tmp17_AST_in = (TNode)_t;
+				nodeType1 = (TNode)_t;
 				match(_t,LITERAL_char);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType1;
+				}
 				break;
 			}
 			case LITERAL_short:
 			{
-				TNode tmp18_AST_in = (TNode)_t;
+				nodeType2 = (TNode)_t;
 				match(_t,LITERAL_short);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType2;
+				}
 				break;
 			}
 			case LITERAL_int:
 			{
-				TNode tmp19_AST_in = (TNode)_t;
+				nodeType3 = (TNode)_t;
 				match(_t,LITERAL_int);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType3;
+				}
 				break;
 			}
 			case LITERAL_long:
 			{
-				TNode tmp20_AST_in = (TNode)_t;
+				nodeType4 = (TNode)_t;
 				match(_t,LITERAL_long);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType4;
+				}
 				break;
 			}
 			case LITERAL_float:
 			{
-				TNode tmp21_AST_in = (TNode)_t;
+				nodeType5 = (TNode)_t;
 				match(_t,LITERAL_float);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType5;
+				}
 				break;
 			}
 			case LITERAL_double:
 			{
-				TNode tmp22_AST_in = (TNode)_t;
+				nodeType6 = (TNode)_t;
 				match(_t,LITERAL_double);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType6;
+				}
 				break;
 			}
 			case LITERAL_signed:
 			{
-				TNode tmp23_AST_in = (TNode)_t;
+				nodeType7 = (TNode)_t;
 				match(_t,LITERAL_signed);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType7;
+				}
 				break;
 			}
 			case LITERAL_unsigned:
 			{
-				TNode tmp24_AST_in = (TNode)_t;
+				nodeType8 = (TNode)_t;
 				match(_t,LITERAL_unsigned);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					type=nodeType8;
+				}
 				break;
 			}
 			case LITERAL_struct:
 			{
+				nodeType9 = _t==ASTNULL ? null : (TNode)_t;
 				structSpecifier(_t);
 				_t = _retTree;
 				{
@@ -1072,10 +1382,14 @@ public GnuCTreeParser() {
 					
 				} while (true);
 				}
+				if ( inputState.guessing==0 ) {
+					type=nodeType9;
+				}
 				break;
 			}
 			case LITERAL_union:
 			{
+				nodeType10 = _t==ASTNULL ? null : (TNode)_t;
 				unionSpecifier(_t);
 				_t = _retTree;
 				{
@@ -1092,27 +1406,38 @@ public GnuCTreeParser() {
 					
 				} while (true);
 				}
+				if ( inputState.guessing==0 ) {
+					type=nodeType10;
+				}
 				break;
 			}
 			case LITERAL_enum:
 			{
+				nodeType11 = _t==ASTNULL ? null : (TNode)_t;
 				enumSpecifier(_t);
 				_t = _retTree;
+				if ( inputState.guessing==0 ) {
+					type=nodeType11;
+				}
 				break;
 			}
 			case NTypedefName:
 			{
+				nodeType12 = _t==ASTNULL ? null : (TNode)_t;
 				typedefName(_t);
 				_t = _retTree;
+				if ( inputState.guessing==0 ) {
+					type=nodeType12;
+				}
 				break;
 			}
 			case LITERAL_typeof:
 			{
 				AST __t30 = _t;
-				TNode tmp25_AST_in = (TNode)_t;
+				TNode tmp15_AST_in = (TNode)_t;
 				match(_t,LITERAL_typeof);
 				_t = _t.getFirstChild();
-				TNode tmp26_AST_in = (TNode)_t;
+				TNode tmp16_AST_in = (TNode)_t;
 				match(_t,LPAREN);
 				_t = _t.getNextSibling();
 				{
@@ -1200,7 +1525,7 @@ public GnuCTreeParser() {
 				}
 				}
 				}
-				TNode tmp27_AST_in = (TNode)_t;
+				TNode tmp17_AST_in = (TNode)_t;
 				match(_t,RPAREN);
 				_t = _t.getNextSibling();
 				_t = __t30;
@@ -1209,7 +1534,7 @@ public GnuCTreeParser() {
 			}
 			case LITERAL___complex:
 			{
-				TNode tmp28_AST_in = (TNode)_t;
+				TNode tmp18_AST_in = (TNode)_t;
 				match(_t,LITERAL___complex);
 				_t = _t.getNextSibling();
 				break;
@@ -1229,6 +1554,7 @@ public GnuCTreeParser() {
 			}
 		}
 		_retTree = _t;
+		return type;
 	}
 	
 	public final void functionStorageClassSpecifier(AST _t) throws RecognitionException {
@@ -1240,21 +1566,21 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LITERAL_extern:
 			{
-				TNode tmp29_AST_in = (TNode)_t;
+				TNode tmp19_AST_in = (TNode)_t;
 				match(_t,LITERAL_extern);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_static:
 			{
-				TNode tmp30_AST_in = (TNode)_t;
+				TNode tmp20_AST_in = (TNode)_t;
 				match(_t,LITERAL_static);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_inline:
 			{
-				TNode tmp31_AST_in = (TNode)_t;
+				TNode tmp21_AST_in = (TNode)_t;
 				match(_t,LITERAL_inline);
 				_t = _t.getNextSibling();
 				break;
@@ -1282,7 +1608,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t37 = _t;
-			TNode tmp32_AST_in = (TNode)_t;
+			TNode tmp22_AST_in = (TNode)_t;
 			match(_t,LITERAL_struct);
 			_t = _t.getFirstChild();
 			structOrUnionBody(_t);
@@ -1311,7 +1637,7 @@ public GnuCTreeParser() {
 			case LITERAL___attribute:
 			{
 				AST __t72 = _t;
-				TNode tmp33_AST_in = (TNode)_t;
+				TNode tmp23_AST_in = (TNode)_t;
 				match(_t,LITERAL___attribute);
 				_t = _t.getFirstChild();
 				{
@@ -1319,7 +1645,7 @@ public GnuCTreeParser() {
 				do {
 					if (_t==null) _t=ASTNULL;
 					if (((_t.getType() >= LITERAL_typedef && _t.getType() <= LITERAL___imag))) {
-						TNode tmp34_AST_in = (TNode)_t;
+						TNode tmp24_AST_in = (TNode)_t;
 						if ( _t==null ) throw new MismatchedTokenException();
 						_t = _t.getNextSibling();
 					}
@@ -1336,15 +1662,15 @@ public GnuCTreeParser() {
 			case NAsmAttribute:
 			{
 				AST __t75 = _t;
-				TNode tmp35_AST_in = (TNode)_t;
+				TNode tmp25_AST_in = (TNode)_t;
 				match(_t,NAsmAttribute);
 				_t = _t.getFirstChild();
-				TNode tmp36_AST_in = (TNode)_t;
+				TNode tmp26_AST_in = (TNode)_t;
 				match(_t,LPAREN);
 				_t = _t.getNextSibling();
 				expr(_t);
 				_t = _retTree;
-				TNode tmp37_AST_in = (TNode)_t;
+				TNode tmp27_AST_in = (TNode)_t;
 				match(_t,RPAREN);
 				_t = _t.getNextSibling();
 				_t = __t75;
@@ -1374,7 +1700,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t39 = _t;
-			TNode tmp38_AST_in = (TNode)_t;
+			TNode tmp28_AST_in = (TNode)_t;
 			match(_t,LITERAL_union);
 			_t = _t.getFirstChild();
 			structOrUnionBody(_t);
@@ -1399,7 +1725,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t63 = _t;
-			TNode tmp39_AST_in = (TNode)_t;
+			TNode tmp29_AST_in = (TNode)_t;
 			match(_t,LITERAL_enum);
 			_t = _t.getFirstChild();
 			{
@@ -1407,7 +1733,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case ID:
 			{
-				TNode tmp40_AST_in = (TNode)_t;
+				TNode tmp30_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
 				break;
@@ -1428,12 +1754,12 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LCURLY:
 			{
-				TNode tmp41_AST_in = (TNode)_t;
+				TNode tmp31_AST_in = (TNode)_t;
 				match(_t,LCURLY);
 				_t = _t.getNextSibling();
 				enumList(_t);
 				_t = _retTree;
-				TNode tmp42_AST_in = (TNode)_t;
+				TNode tmp32_AST_in = (TNode)_t;
 				match(_t,RCURLY);
 				_t = _t.getNextSibling();
 				break;
@@ -1468,10 +1794,10 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t35 = _t;
-			TNode tmp43_AST_in = (TNode)_t;
+			TNode tmp33_AST_in = (TNode)_t;
 			match(_t,NTypedefName);
 			_t = _t.getFirstChild();
-			TNode tmp44_AST_in = (TNode)_t;
+			TNode tmp34_AST_in = (TNode)_t;
 			match(_t,ID);
 			_t = _t.getNextSibling();
 			_t = __t35;
@@ -1539,10 +1865,10 @@ public GnuCTreeParser() {
 				inputState.guessing++;
 				try {
 					{
-					TNode tmp45_AST_in = (TNode)_t;
+					TNode tmp35_AST_in = (TNode)_t;
 					match(_t,ID);
 					_t = _t.getNextSibling();
-					TNode tmp46_AST_in = (TNode)_t;
+					TNode tmp36_AST_in = (TNode)_t;
 					match(_t,LCURLY);
 					_t = _t.getNextSibling();
 					}
@@ -1554,10 +1880,10 @@ public GnuCTreeParser() {
 				inputState.guessing--;
 			}
 			if ( synPredMatched43 ) {
-				TNode tmp47_AST_in = (TNode)_t;
+				TNode tmp37_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				TNode tmp48_AST_in = (TNode)_t;
+				TNode tmp38_AST_in = (TNode)_t;
 				match(_t,LCURLY);
 				_t = _t.getNextSibling();
 				{
@@ -1595,12 +1921,12 @@ public GnuCTreeParser() {
 				}
 				}
 				}
-				TNode tmp49_AST_in = (TNode)_t;
+				TNode tmp39_AST_in = (TNode)_t;
 				match(_t,RCURLY);
 				_t = _t.getNextSibling();
 			}
 			else if ((_t.getType()==LCURLY)) {
-				TNode tmp50_AST_in = (TNode)_t;
+				TNode tmp40_AST_in = (TNode)_t;
 				match(_t,LCURLY);
 				_t = _t.getNextSibling();
 				{
@@ -1638,12 +1964,12 @@ public GnuCTreeParser() {
 				}
 				}
 				}
-				TNode tmp51_AST_in = (TNode)_t;
+				TNode tmp41_AST_in = (TNode)_t;
 				match(_t,RCURLY);
 				_t = _t.getNextSibling();
 			}
 			else if ((_t.getType()==ID)) {
-				TNode tmp52_AST_in = (TNode)_t;
+				TNode tmp42_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
 			}
@@ -1721,6 +2047,7 @@ public GnuCTreeParser() {
 	public final void specifierQualifierList(AST _t) throws RecognitionException {
 		
 		TNode specifierQualifierList_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		TNode type=null;
 		
 		try {      // for error handling
 			{
@@ -1745,7 +2072,7 @@ public GnuCTreeParser() {
 				case LITERAL_typeof:
 				case LITERAL___complex:
 				{
-					typeSpecifier(_t);
+					type=typeSpecifier(_t);
 					_t = _retTree;
 					break;
 				}
@@ -1815,7 +2142,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t57 = _t;
-			TNode tmp53_AST_in = (TNode)_t;
+			TNode tmp43_AST_in = (TNode)_t;
 			match(_t,NStructDeclarator);
 			_t = _t.getFirstChild();
 			{
@@ -1823,7 +2150,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case NDeclarator:
 			{
-				declarator(_t);
+				declarator(_t,false,false,false);
 				_t = _retTree;
 				break;
 			}
@@ -1845,7 +2172,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case COLON:
 			{
-				TNode tmp54_AST_in = (TNode)_t;
+				TNode tmp44_AST_in = (TNode)_t;
 				match(_t,COLON);
 				_t = _t.getNextSibling();
 				expr(_t);
@@ -1892,14 +2219,19 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void declarator(AST _t) throws RecognitionException {
+	public final String  declarator(AST _t,
+		boolean isReturnType, boolean isParameter, boolean isFunction
+	) throws RecognitionException {
+		String idname;
 		
 		TNode declarator_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		TNode id = null;
+		idname ="";
+			
 		
 		try {      // for error handling
 			AST __t107 = _t;
-			TNode tmp55_AST_in = (TNode)_t;
+			TNode tmp45_AST_in = (TNode)_t;
 			match(_t,NDeclarator);
 			_t = _t.getFirstChild();
 			{
@@ -1907,7 +2239,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case NPointerGroup:
 			{
-				pointerGroup(_t);
+				pointerGroup(_t,isReturnType, isParameter, isFunction);
 				_t = _retTree;
 				break;
 			}
@@ -1930,16 +2262,19 @@ public GnuCTreeParser() {
 				id = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
+				if ( inputState.guessing==0 ) {
+					idname = id.getText();
+				}
 				break;
 			}
 			case LPAREN:
 			{
-				TNode tmp56_AST_in = (TNode)_t;
+				TNode tmp46_AST_in = (TNode)_t;
 				match(_t,LPAREN);
 				_t = _t.getNextSibling();
-				declarator(_t);
+				declarator(_t,false,false,false);
 				_t = _retTree;
-				TNode tmp57_AST_in = (TNode)_t;
+				TNode tmp47_AST_in = (TNode)_t;
 				match(_t,RPAREN);
 				_t = _t.getNextSibling();
 				break;
@@ -1958,9 +2293,12 @@ public GnuCTreeParser() {
 				case NParameterTypeList:
 				{
 					AST __t111 = _t;
-					TNode tmp58_AST_in = (TNode)_t;
+					TNode tmp48_AST_in = (TNode)_t;
 					match(_t,NParameterTypeList);
 					_t = _t.getFirstChild();
+					if ( inputState.guessing==0 ) {
+						if(isFunction)parameterList.clear();
+					}
 					{
 					if (_t==null) _t=ASTNULL;
 					switch ( _t.getType()) {
@@ -2000,7 +2338,7 @@ public GnuCTreeParser() {
 					}
 					}
 					}
-					TNode tmp59_AST_in = (TNode)_t;
+					TNode tmp49_AST_in = (TNode)_t;
 					match(_t,RPAREN);
 					_t = _t.getNextSibling();
 					_t = __t111;
@@ -2009,7 +2347,7 @@ public GnuCTreeParser() {
 				}
 				case LBRACKET:
 				{
-					TNode tmp60_AST_in = (TNode)_t;
+					TNode tmp50_AST_in = (TNode)_t;
 					match(_t,LBRACKET);
 					_t = _t.getNextSibling();
 					{
@@ -2079,9 +2417,12 @@ public GnuCTreeParser() {
 					}
 					}
 					}
-					TNode tmp61_AST_in = (TNode)_t;
+					TNode tmp51_AST_in = (TNode)_t;
 					match(_t,RBRACKET);
 					_t = _t.getNextSibling();
+					if ( inputState.guessing==0 ) {
+						addArrayLevel();
+					}
 					break;
 				}
 				default:
@@ -2103,6 +2444,7 @@ public GnuCTreeParser() {
 			}
 		}
 		_retTree = _t;
+		return idname;
 	}
 	
 	public final void enumList(AST _t) throws RecognitionException {
@@ -2143,7 +2485,7 @@ public GnuCTreeParser() {
 		TNode enumerator_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			TNode tmp62_AST_in = (TNode)_t;
+			TNode tmp52_AST_in = (TNode)_t;
 			match(_t,ID);
 			_t = _t.getNextSibling();
 			{
@@ -2151,7 +2493,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case ASSIGN:
 			{
-				TNode tmp63_AST_in = (TNode)_t;
+				TNode tmp53_AST_in = (TNode)_t;
 				match(_t,ASSIGN);
 				_t = _t.getNextSibling();
 				expr(_t);
@@ -2181,18 +2523,27 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void initDecl(AST _t) throws RecognitionException {
+	public final void initDecl(AST _t,
+		boolean noFunction
+	) throws RecognitionException {
 		
 		TNode initDecl_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
-		String declName = "";
+		TNode decl = null;
+		String id="";
 		
 		try {      // for error handling
 			AST __t80 = _t;
-			TNode tmp64_AST_in = (TNode)_t;
+			TNode tmp54_AST_in = (TNode)_t;
 			match(_t,NInitDecl);
 			_t = _t.getFirstChild();
-			declarator(_t);
+			decl = _t==ASTNULL ? null : (TNode)_t;
+			declarator(_t,false,false,(!noFunction));
 			_t = _retTree;
+			if ( inputState.guessing==0 ) {
+				//if(decl.firstChildOfType(27)!=null)System.out.println("id: " + (decl.firstChildOfType(27)).getText());
+										//if(decl.parentOfType(102)!=null) System.out.println("parent: "+ (decl.parentOfType(102)).getText());
+										
+			}
 			{
 			_loop82:
 			do {
@@ -2212,7 +2563,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case ASSIGN:
 			{
-				TNode tmp65_AST_in = (TNode)_t;
+				TNode tmp55_AST_in = (TNode)_t;
 				match(_t,ASSIGN);
 				_t = _t.getNextSibling();
 				initializer(_t);
@@ -2221,7 +2572,7 @@ public GnuCTreeParser() {
 			}
 			case COLON:
 			{
-				TNode tmp66_AST_in = (TNode)_t;
+				TNode tmp56_AST_in = (TNode)_t;
 				match(_t,COLON);
 				_t = _t.getNextSibling();
 				expr(_t);
@@ -2262,7 +2613,7 @@ public GnuCTreeParser() {
 			case NInitializer:
 			{
 				AST __t94 = _t;
-				TNode tmp67_AST_in = (TNode)_t;
+				TNode tmp57_AST_in = (TNode)_t;
 				match(_t,NInitializer);
 				_t = _t.getFirstChild();
 				{
@@ -2361,13 +2712,15 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void pointerGroup(AST _t) throws RecognitionException {
+	public final void pointerGroup(AST _t,
+		boolean isReturnType, boolean isParameter, boolean isFunction
+	) throws RecognitionException {
 		
 		TNode pointerGroup_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
 			AST __t85 = _t;
-			TNode tmp68_AST_in = (TNode)_t;
+			TNode tmp58_AST_in = (TNode)_t;
 			match(_t,NPointerGroup);
 			_t = _t.getFirstChild();
 			{
@@ -2376,7 +2729,7 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==STAR)) {
-					TNode tmp69_AST_in = (TNode)_t;
+					TNode tmp59_AST_in = (TNode)_t;
 					match(_t,STAR);
 					_t = _t.getNextSibling();
 					{
@@ -2392,6 +2745,11 @@ public GnuCTreeParser() {
 						}
 						
 					} while (true);
+					}
+					if ( inputState.guessing==0 ) {
+						if(isParameter && isFunction)addPointerLevel();
+													 if(isReturnType && isFunction)addReturnTypePointerLevel();	
+													
 					}
 				}
 				else {
@@ -2420,7 +2778,7 @@ public GnuCTreeParser() {
 		TNode idList_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			TNode tmp70_AST_in = (TNode)_t;
+			TNode tmp60_AST_in = (TNode)_t;
 			match(_t,ID);
 			_t = _t.getNextSibling();
 			{
@@ -2428,10 +2786,10 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==COMMA)) {
-					TNode tmp71_AST_in = (TNode)_t;
+					TNode tmp61_AST_in = (TNode)_t;
 					match(_t,COMMA);
 					_t = _t.getNextSibling();
-					TNode tmp72_AST_in = (TNode)_t;
+					TNode tmp62_AST_in = (TNode)_t;
 					match(_t,ID);
 					_t = _t.getNextSibling();
 				}
@@ -2459,7 +2817,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t97 = _t;
-			TNode tmp73_AST_in = (TNode)_t;
+			TNode tmp63_AST_in = (TNode)_t;
 			match(_t,NInitializerElementLabel);
 			_t = _t.getFirstChild();
 			{
@@ -2468,12 +2826,12 @@ public GnuCTreeParser() {
 			case LBRACKET:
 			{
 				{
-				TNode tmp74_AST_in = (TNode)_t;
+				TNode tmp64_AST_in = (TNode)_t;
 				match(_t,LBRACKET);
 				_t = _t.getNextSibling();
 				expr(_t);
 				_t = _retTree;
-				TNode tmp75_AST_in = (TNode)_t;
+				TNode tmp65_AST_in = (TNode)_t;
 				match(_t,RBRACKET);
 				_t = _t.getNextSibling();
 				{
@@ -2481,7 +2839,7 @@ public GnuCTreeParser() {
 				switch ( _t.getType()) {
 				case ASSIGN:
 				{
-					TNode tmp76_AST_in = (TNode)_t;
+					TNode tmp66_AST_in = (TNode)_t;
 					match(_t,ASSIGN);
 					_t = _t.getNextSibling();
 					break;
@@ -2501,23 +2859,23 @@ public GnuCTreeParser() {
 			}
 			case ID:
 			{
-				TNode tmp77_AST_in = (TNode)_t;
+				TNode tmp67_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				TNode tmp78_AST_in = (TNode)_t;
+				TNode tmp68_AST_in = (TNode)_t;
 				match(_t,COLON);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DOT:
 			{
-				TNode tmp79_AST_in = (TNode)_t;
+				TNode tmp69_AST_in = (TNode)_t;
 				match(_t,DOT);
 				_t = _t.getNextSibling();
-				TNode tmp80_AST_in = (TNode)_t;
+				TNode tmp70_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
-				TNode tmp81_AST_in = (TNode)_t;
+				TNode tmp71_AST_in = (TNode)_t;
 				match(_t,ASSIGN);
 				_t = _t.getNextSibling();
 				break;
@@ -2548,12 +2906,12 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t102 = _t;
-			TNode tmp82_AST_in = (TNode)_t;
+			TNode tmp72_AST_in = (TNode)_t;
 			match(_t,NLcurlyInitializer);
 			_t = _t.getFirstChild();
 			initializerList(_t);
 			_t = _retTree;
-			TNode tmp83_AST_in = (TNode)_t;
+			TNode tmp73_AST_in = (TNode)_t;
 			match(_t,RCURLY);
 			_t = _t.getNextSibling();
 			_t = __t102;
@@ -2604,6 +2962,7 @@ public GnuCTreeParser() {
 	public final void parameterTypeList(AST _t) throws RecognitionException {
 		
 		TNode parameterTypeList_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		clearPointerLevel(); clearArrayLevel();
 		
 		try {      // for error handling
 			{
@@ -2614,19 +2973,22 @@ public GnuCTreeParser() {
 				if ((_t.getType()==NParameterDeclaration)) {
 					parameterDeclaration(_t);
 					_t = _retTree;
+					if ( inputState.guessing==0 ) {
+						clearPointerLevel(); clearArrayLevel();
+					}
 					{
 					if (_t==null) _t=ASTNULL;
 					switch ( _t.getType()) {
 					case COMMA:
 					{
-						TNode tmp84_AST_in = (TNode)_t;
+						TNode tmp74_AST_in = (TNode)_t;
 						match(_t,COMMA);
 						_t = _t.getNextSibling();
 						break;
 					}
 					case SEMI:
 					{
-						TNode tmp85_AST_in = (TNode)_t;
+						TNode tmp75_AST_in = (TNode)_t;
 						match(_t,SEMI);
 						_t = _t.getNextSibling();
 						break;
@@ -2656,7 +3018,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case VARARGS:
 			{
-				TNode tmp86_AST_in = (TNode)_t;
+				TNode tmp76_AST_in = (TNode)_t;
 				match(_t,VARARGS);
 				_t = _t.getNextSibling();
 				break;
@@ -2686,21 +3048,50 @@ public GnuCTreeParser() {
 	public final void parameterDeclaration(AST _t) throws RecognitionException {
 		
 		TNode parameterDeclaration_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		TNode npd = null;
+		
+		String declName = ""; 
+		TNode parameterNode= null;
+		String parameterType;
+		
+		
 		
 		try {      // for error handling
 			AST __t122 = _t;
-			TNode tmp87_AST_in = (TNode)_t;
+			npd = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NParameterDeclaration);
 			_t = _t.getFirstChild();
-			declSpecifiers(_t);
+			parameterNode=declSpecifiers(_t);
 			_t = _retTree;
 			{
 			if (_t==null) _t=ASTNULL;
 			switch ( _t.getType()) {
 			case NDeclarator:
 			{
-				declarator(_t);
+				declName=declarator(_t,false,true,true);
 				_t = _retTree;
+				if ( inputState.guessing==0 ) {
+						
+						//if(isFunction)
+						//{	
+							
+							parameterType=parameterNode.getText();
+							for (int i =0; i< getPointerLevel(); i++){
+								parameterType=parameterType+"*";
+							}
+							for (int i =0; i< getArrayLevel(); i++){
+								parameterType=parameterType+"[]";
+							}
+							addBasicType(parameterType);
+							                			
+							CParameterInfo parameter = new CParameterInfo();
+							parameter.setName(declName);
+							parameter.setParameterType(parameterType);
+							parameterList.add(parameter);
+					
+						//}
+					
+				}
 				break;
 			}
 			case NNonemptyAbstractDeclarator:
@@ -2739,7 +3130,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t249 = _t;
-			TNode tmp88_AST_in = (TNode)_t;
+			TNode tmp77_AST_in = (TNode)_t;
 			match(_t,NNonemptyAbstractDeclarator);
 			_t = _t.getFirstChild();
 			{
@@ -2747,7 +3138,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case NPointerGroup:
 			{
-				pointerGroup(_t);
+				pointerGroup(_t,false,false,false);
 				_t = _retTree;
 				{
 				_loop256:
@@ -2757,7 +3148,7 @@ public GnuCTreeParser() {
 					case LPAREN:
 					{
 						{
-						TNode tmp89_AST_in = (TNode)_t;
+						TNode tmp78_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						{
@@ -2785,7 +3176,7 @@ public GnuCTreeParser() {
 						}
 						}
 						}
-						TNode tmp90_AST_in = (TNode)_t;
+						TNode tmp79_AST_in = (TNode)_t;
 						match(_t,RPAREN);
 						_t = _t.getNextSibling();
 						}
@@ -2794,7 +3185,7 @@ public GnuCTreeParser() {
 					case LBRACKET:
 					{
 						{
-						TNode tmp91_AST_in = (TNode)_t;
+						TNode tmp80_AST_in = (TNode)_t;
 						match(_t,LBRACKET);
 						_t = _t.getNextSibling();
 						{
@@ -2864,7 +3255,7 @@ public GnuCTreeParser() {
 						}
 						}
 						}
-						TNode tmp92_AST_in = (TNode)_t;
+						TNode tmp81_AST_in = (TNode)_t;
 						match(_t,RBRACKET);
 						_t = _t.getNextSibling();
 						}
@@ -2891,7 +3282,7 @@ public GnuCTreeParser() {
 					case LPAREN:
 					{
 						{
-						TNode tmp93_AST_in = (TNode)_t;
+						TNode tmp82_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						{
@@ -2919,7 +3310,7 @@ public GnuCTreeParser() {
 						}
 						}
 						}
-						TNode tmp94_AST_in = (TNode)_t;
+						TNode tmp83_AST_in = (TNode)_t;
 						match(_t,RPAREN);
 						_t = _t.getNextSibling();
 						}
@@ -2928,7 +3319,7 @@ public GnuCTreeParser() {
 					case LBRACKET:
 					{
 						{
-						TNode tmp95_AST_in = (TNode)_t;
+						TNode tmp84_AST_in = (TNode)_t;
 						match(_t,LBRACKET);
 						_t = _t.getNextSibling();
 						{
@@ -2998,7 +3389,7 @@ public GnuCTreeParser() {
 						}
 						}
 						}
-						TNode tmp96_AST_in = (TNode)_t;
+						TNode tmp85_AST_in = (TNode)_t;
 						match(_t,RBRACKET);
 						_t = _t.getNextSibling();
 						}
@@ -3034,9 +3425,11 @@ public GnuCTreeParser() {
 		_retTree = _t;
 	}
 	
-	public final void functionDeclSpecifiers(AST _t) throws RecognitionException {
+	public final TNode  functionDeclSpecifiers(AST _t) throws RecognitionException {
+		TNode type;
 		
 		TNode functionDeclSpecifiers_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		type = null;
 		
 		try {      // for error handling
 			{
@@ -3076,7 +3469,7 @@ public GnuCTreeParser() {
 				case LITERAL_typeof:
 				case LITERAL___complex:
 				{
-					typeSpecifier(_t);
+					type=typeSpecifier(_t);
 					_t = _retTree;
 					break;
 				}
@@ -3098,6 +3491,7 @@ public GnuCTreeParser() {
 			}
 		}
 		_retTree = _t;
+		return type;
 	}
 	
 	public final void traceDef(AST _t) throws RecognitionException {
@@ -3109,13 +3503,13 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t131 = _t;
-			TNode tmp97_AST_in = (TNode)_t;
+			TNode tmp86_AST_in = (TNode)_t;
 			match(_t,LITERAL___trace__);
 			_t = _t.getFirstChild();
-			TNode tmp98_AST_in = (TNode)_t;
+			TNode tmp87_AST_in = (TNode)_t;
 			match(_t,LPAREN);
 			_t = _t.getNextSibling();
-			TNode tmp99_AST_in = (TNode)_t;
+			TNode tmp88_AST_in = (TNode)_t;
 			match(_t,LPAREN);
 			_t = _t.getNextSibling();
 			{
@@ -3131,7 +3525,7 @@ public GnuCTreeParser() {
 					switch ( _t.getType()) {
 					case LPAREN:
 					{
-						TNode tmp100_AST_in = (TNode)_t;
+						TNode tmp89_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						{
@@ -3149,9 +3543,6 @@ public GnuCTreeParser() {
 							st = (TNode)_t;
 							match(_t,StringLiteral);
 							_t = _t.getNextSibling();
-							if ( inputState.guessing==0 ) {
-								System.out.println("ST: "+st.getText());
-							}
 							break;
 						}
 						default:
@@ -3160,7 +3551,7 @@ public GnuCTreeParser() {
 						}
 						}
 						}
-						TNode tmp101_AST_in = (TNode)_t;
+						TNode tmp90_AST_in = (TNode)_t;
 						match(_t,RPAREN);
 						_t = _t.getNextSibling();
 						break;
@@ -3183,10 +3574,10 @@ public GnuCTreeParser() {
 				
 			} while (true);
 			}
-			TNode tmp102_AST_in = (TNode)_t;
+			TNode tmp91_AST_in = (TNode)_t;
 			match(_t,RPAREN);
 			_t = _t.getNextSibling();
-			TNode tmp103_AST_in = (TNode)_t;
+			TNode tmp92_AST_in = (TNode)_t;
 			match(_t,RPAREN);
 			_t = _t.getNextSibling();
 			_t = __t131;
@@ -3209,7 +3600,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t152 = _t;
-			TNode tmp104_AST_in = (TNode)_t;
+			TNode tmp93_AST_in = (TNode)_t;
 			match(_t,NCompoundStatement);
 			_t = _t.getFirstChild();
 			{
@@ -3270,7 +3661,7 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			TNode tmp105_AST_in = (TNode)_t;
+			TNode tmp94_AST_in = (TNode)_t;
 			match(_t,RCURLY);
 			_t = _t.getNextSibling();
 			_t = __t152;
@@ -3296,7 +3687,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t137 = _t;
-			TNode tmp106_AST_in = (TNode)_t;
+			TNode tmp95_AST_in = (TNode)_t;
 			match(_t,LITERAL___);
 			_t = _t.getFirstChild();
 			id = (TNode)_t;
@@ -3305,10 +3696,10 @@ public GnuCTreeParser() {
 			if ( inputState.guessing==0 ) {
 				System.out.println("Found annotation: "+id.getText());
 			}
-			TNode tmp107_AST_in = (TNode)_t;
+			TNode tmp96_AST_in = (TNode)_t;
 			match(_t,LITERAL___);
 			_t = _t.getNextSibling();
-			TNode tmp108_AST_in = (TNode)_t;
+			TNode tmp97_AST_in = (TNode)_t;
 			match(_t,LPAREN);
 			_t = _t.getNextSibling();
 			{
@@ -3319,15 +3710,12 @@ public GnuCTreeParser() {
 				st = _t==ASTNULL ? null : (TNode)_t;
 				stringConst(_t);
 				_t = _retTree;
-				if ( inputState.guessing==0 ) {
-					System.out.println("ST: "+st.getText());
-				}
 				{
 				_loop140:
 				do {
 					if (_t==null) _t=ASTNULL;
 					if ((_t.getType()==COMMA)) {
-						TNode tmp109_AST_in = (TNode)_t;
+						TNode tmp98_AST_in = (TNode)_t;
 						match(_t,COMMA);
 						_t = _t.getNextSibling();
 						st1 = _t==ASTNULL ? null : (TNode)_t;
@@ -3352,7 +3740,7 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			TNode tmp110_AST_in = (TNode)_t;
+			TNode tmp99_AST_in = (TNode)_t;
 			match(_t,RPAREN);
 			_t = _t.getNextSibling();
 			_t = __t137;
@@ -3375,7 +3763,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t289 = _t;
-			TNode tmp111_AST_in = (TNode)_t;
+			TNode tmp100_AST_in = (TNode)_t;
 			match(_t,NStringSeq);
 			_t = _t.getFirstChild();
 			{
@@ -3384,7 +3772,7 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==StringLiteral)) {
-					TNode tmp112_AST_in = (TNode)_t;
+					TNode tmp101_AST_in = (TNode)_t;
 					match(_t,StringLiteral);
 					_t = _t.getNextSibling();
 				}
@@ -3424,7 +3812,7 @@ public GnuCTreeParser() {
 					_t = _retTree;
 				}
 				else if ((_t.getType()==NDeclaration)) {
-					declaration(_t);
+					declaration(_t,false);
 					_t = _retTree;
 				}
 				else {
@@ -3452,7 +3840,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t148 = _t;
-			TNode tmp113_AST_in = (TNode)_t;
+			TNode tmp102_AST_in = (TNode)_t;
 			match(_t,LITERAL___label__);
 			_t = _t.getFirstChild();
 			{
@@ -3461,7 +3849,7 @@ public GnuCTreeParser() {
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==ID)) {
-					TNode tmp114_AST_in = (TNode)_t;
+					TNode tmp103_AST_in = (TNode)_t;
 					match(_t,ID);
 					_t = _t.getNextSibling();
 				}
@@ -3547,7 +3935,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case SEMI:
 			{
-				TNode tmp115_AST_in = (TNode)_t;
+				TNode tmp104_AST_in = (TNode)_t;
 				match(_t,SEMI);
 				_t = _t.getNextSibling();
 				break;
@@ -3561,7 +3949,7 @@ public GnuCTreeParser() {
 			case NStatementExpr:
 			{
 				AST __t161 = _t;
-				TNode tmp116_AST_in = (TNode)_t;
+				TNode tmp105_AST_in = (TNode)_t;
 				match(_t,NStatementExpr);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3573,7 +3961,7 @@ public GnuCTreeParser() {
 			case LITERAL_while:
 			{
 				AST __t162 = _t;
-				TNode tmp117_AST_in = (TNode)_t;
+				TNode tmp106_AST_in = (TNode)_t;
 				match(_t,LITERAL_while);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3587,7 +3975,7 @@ public GnuCTreeParser() {
 			case LITERAL_do:
 			{
 				AST __t163 = _t;
-				TNode tmp118_AST_in = (TNode)_t;
+				TNode tmp107_AST_in = (TNode)_t;
 				match(_t,LITERAL_do);
 				_t = _t.getFirstChild();
 				statement(_t);
@@ -3601,7 +3989,7 @@ public GnuCTreeParser() {
 			case LITERAL_for:
 			{
 				AST __t164 = _t;
-				TNode tmp119_AST_in = (TNode)_t;
+				TNode tmp108_AST_in = (TNode)_t;
 				match(_t,LITERAL_for);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3619,7 +4007,7 @@ public GnuCTreeParser() {
 			case LITERAL_goto:
 			{
 				AST __t165 = _t;
-				TNode tmp120_AST_in = (TNode)_t;
+				TNode tmp109_AST_in = (TNode)_t;
 				match(_t,LITERAL_goto);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3630,14 +4018,14 @@ public GnuCTreeParser() {
 			}
 			case LITERAL_continue:
 			{
-				TNode tmp121_AST_in = (TNode)_t;
+				TNode tmp110_AST_in = (TNode)_t;
 				match(_t,LITERAL_continue);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_break:
 			{
-				TNode tmp122_AST_in = (TNode)_t;
+				TNode tmp111_AST_in = (TNode)_t;
 				match(_t,LITERAL_break);
 				_t = _t.getNextSibling();
 				break;
@@ -3645,7 +4033,7 @@ public GnuCTreeParser() {
 			case LITERAL_return:
 			{
 				AST __t166 = _t;
-				TNode tmp123_AST_in = (TNode)_t;
+				TNode tmp112_AST_in = (TNode)_t;
 				match(_t,LITERAL_return);
 				_t = _t.getFirstChild();
 				{
@@ -3722,10 +4110,10 @@ public GnuCTreeParser() {
 			case NLabel:
 			{
 				AST __t168 = _t;
-				TNode tmp124_AST_in = (TNode)_t;
+				TNode tmp113_AST_in = (TNode)_t;
 				match(_t,NLabel);
 				_t = _t.getFirstChild();
-				TNode tmp125_AST_in = (TNode)_t;
+				TNode tmp114_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
 				{
@@ -3768,7 +4156,7 @@ public GnuCTreeParser() {
 			case LITERAL_case:
 			{
 				AST __t170 = _t;
-				TNode tmp126_AST_in = (TNode)_t;
+				TNode tmp115_AST_in = (TNode)_t;
 				match(_t,LITERAL_case);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3813,7 +4201,7 @@ public GnuCTreeParser() {
 			case LITERAL_default:
 			{
 				AST __t172 = _t;
-				TNode tmp127_AST_in = (TNode)_t;
+				TNode tmp116_AST_in = (TNode)_t;
 				match(_t,LITERAL_default);
 				_t = _t.getFirstChild();
 				{
@@ -3856,7 +4244,7 @@ public GnuCTreeParser() {
 			case LITERAL_if:
 			{
 				AST __t174 = _t;
-				TNode tmp128_AST_in = (TNode)_t;
+				TNode tmp117_AST_in = (TNode)_t;
 				match(_t,LITERAL_if);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3868,7 +4256,7 @@ public GnuCTreeParser() {
 				switch ( _t.getType()) {
 				case LITERAL_else:
 				{
-					TNode tmp129_AST_in = (TNode)_t;
+					TNode tmp118_AST_in = (TNode)_t;
 					match(_t,LITERAL_else);
 					_t = _t.getNextSibling();
 					statement(_t);
@@ -3892,7 +4280,7 @@ public GnuCTreeParser() {
 			case LITERAL_switch:
 			{
 				AST __t176 = _t;
-				TNode tmp130_AST_in = (TNode)_t;
+				TNode tmp119_AST_in = (TNode)_t;
 				match(_t,LITERAL_switch);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3930,7 +4318,7 @@ public GnuCTreeParser() {
 			case ASSIGN:
 			{
 				AST __t202 = _t;
-				TNode tmp131_AST_in = (TNode)_t;
+				TNode tmp120_AST_in = (TNode)_t;
 				match(_t,ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3944,7 +4332,7 @@ public GnuCTreeParser() {
 			case DIV_ASSIGN:
 			{
 				AST __t203 = _t;
-				TNode tmp132_AST_in = (TNode)_t;
+				TNode tmp121_AST_in = (TNode)_t;
 				match(_t,DIV_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3958,7 +4346,7 @@ public GnuCTreeParser() {
 			case PLUS_ASSIGN:
 			{
 				AST __t204 = _t;
-				TNode tmp133_AST_in = (TNode)_t;
+				TNode tmp122_AST_in = (TNode)_t;
 				match(_t,PLUS_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3972,7 +4360,7 @@ public GnuCTreeParser() {
 			case MINUS_ASSIGN:
 			{
 				AST __t205 = _t;
-				TNode tmp134_AST_in = (TNode)_t;
+				TNode tmp123_AST_in = (TNode)_t;
 				match(_t,MINUS_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3986,7 +4374,7 @@ public GnuCTreeParser() {
 			case STAR_ASSIGN:
 			{
 				AST __t206 = _t;
-				TNode tmp135_AST_in = (TNode)_t;
+				TNode tmp124_AST_in = (TNode)_t;
 				match(_t,STAR_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4000,7 +4388,7 @@ public GnuCTreeParser() {
 			case MOD_ASSIGN:
 			{
 				AST __t207 = _t;
-				TNode tmp136_AST_in = (TNode)_t;
+				TNode tmp125_AST_in = (TNode)_t;
 				match(_t,MOD_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4014,7 +4402,7 @@ public GnuCTreeParser() {
 			case RSHIFT_ASSIGN:
 			{
 				AST __t208 = _t;
-				TNode tmp137_AST_in = (TNode)_t;
+				TNode tmp126_AST_in = (TNode)_t;
 				match(_t,RSHIFT_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4028,7 +4416,7 @@ public GnuCTreeParser() {
 			case LSHIFT_ASSIGN:
 			{
 				AST __t209 = _t;
-				TNode tmp138_AST_in = (TNode)_t;
+				TNode tmp127_AST_in = (TNode)_t;
 				match(_t,LSHIFT_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4042,7 +4430,7 @@ public GnuCTreeParser() {
 			case BAND_ASSIGN:
 			{
 				AST __t210 = _t;
-				TNode tmp139_AST_in = (TNode)_t;
+				TNode tmp128_AST_in = (TNode)_t;
 				match(_t,BAND_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4056,7 +4444,7 @@ public GnuCTreeParser() {
 			case BOR_ASSIGN:
 			{
 				AST __t211 = _t;
-				TNode tmp140_AST_in = (TNode)_t;
+				TNode tmp129_AST_in = (TNode)_t;
 				match(_t,BOR_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4070,7 +4458,7 @@ public GnuCTreeParser() {
 			case BXOR_ASSIGN:
 			{
 				AST __t212 = _t;
-				TNode tmp141_AST_in = (TNode)_t;
+				TNode tmp130_AST_in = (TNode)_t;
 				match(_t,BXOR_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4104,7 +4492,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t214 = _t;
-			TNode tmp142_AST_in = (TNode)_t;
+			TNode tmp131_AST_in = (TNode)_t;
 			match(_t,QUESTION);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -4176,7 +4564,7 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			TNode tmp143_AST_in = (TNode)_t;
+			TNode tmp132_AST_in = (TNode)_t;
 			match(_t,COLON);
 			_t = _t.getNextSibling();
 			expr(_t);
@@ -4201,7 +4589,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t217 = _t;
-			TNode tmp144_AST_in = (TNode)_t;
+			TNode tmp133_AST_in = (TNode)_t;
 			match(_t,LOR);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -4228,7 +4616,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t219 = _t;
-			TNode tmp145_AST_in = (TNode)_t;
+			TNode tmp134_AST_in = (TNode)_t;
 			match(_t,LAND);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -4255,7 +4643,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t221 = _t;
-			TNode tmp146_AST_in = (TNode)_t;
+			TNode tmp135_AST_in = (TNode)_t;
 			match(_t,BOR);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -4282,7 +4670,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t223 = _t;
-			TNode tmp147_AST_in = (TNode)_t;
+			TNode tmp136_AST_in = (TNode)_t;
 			match(_t,BXOR);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -4309,7 +4697,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t225 = _t;
-			TNode tmp148_AST_in = (TNode)_t;
+			TNode tmp137_AST_in = (TNode)_t;
 			match(_t,BAND);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -4340,7 +4728,7 @@ public GnuCTreeParser() {
 			case EQUAL:
 			{
 				AST __t227 = _t;
-				TNode tmp149_AST_in = (TNode)_t;
+				TNode tmp138_AST_in = (TNode)_t;
 				match(_t,EQUAL);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4354,7 +4742,7 @@ public GnuCTreeParser() {
 			case NOT_EQUAL:
 			{
 				AST __t228 = _t;
-				TNode tmp150_AST_in = (TNode)_t;
+				TNode tmp139_AST_in = (TNode)_t;
 				match(_t,NOT_EQUAL);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4392,7 +4780,7 @@ public GnuCTreeParser() {
 			case LT:
 			{
 				AST __t230 = _t;
-				TNode tmp151_AST_in = (TNode)_t;
+				TNode tmp140_AST_in = (TNode)_t;
 				match(_t,LT);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4406,7 +4794,7 @@ public GnuCTreeParser() {
 			case LTE:
 			{
 				AST __t231 = _t;
-				TNode tmp152_AST_in = (TNode)_t;
+				TNode tmp141_AST_in = (TNode)_t;
 				match(_t,LTE);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4420,7 +4808,7 @@ public GnuCTreeParser() {
 			case GT:
 			{
 				AST __t232 = _t;
-				TNode tmp153_AST_in = (TNode)_t;
+				TNode tmp142_AST_in = (TNode)_t;
 				match(_t,GT);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4434,7 +4822,7 @@ public GnuCTreeParser() {
 			case GTE:
 			{
 				AST __t233 = _t;
-				TNode tmp154_AST_in = (TNode)_t;
+				TNode tmp143_AST_in = (TNode)_t;
 				match(_t,GTE);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4472,7 +4860,7 @@ public GnuCTreeParser() {
 			case LSHIFT:
 			{
 				AST __t235 = _t;
-				TNode tmp155_AST_in = (TNode)_t;
+				TNode tmp144_AST_in = (TNode)_t;
 				match(_t,LSHIFT);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4486,7 +4874,7 @@ public GnuCTreeParser() {
 			case RSHIFT:
 			{
 				AST __t236 = _t;
-				TNode tmp156_AST_in = (TNode)_t;
+				TNode tmp145_AST_in = (TNode)_t;
 				match(_t,RSHIFT);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4524,7 +4912,7 @@ public GnuCTreeParser() {
 			case PLUS:
 			{
 				AST __t238 = _t;
-				TNode tmp157_AST_in = (TNode)_t;
+				TNode tmp146_AST_in = (TNode)_t;
 				match(_t,PLUS);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4538,7 +4926,7 @@ public GnuCTreeParser() {
 			case MINUS:
 			{
 				AST __t239 = _t;
-				TNode tmp158_AST_in = (TNode)_t;
+				TNode tmp147_AST_in = (TNode)_t;
 				match(_t,MINUS);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4576,7 +4964,7 @@ public GnuCTreeParser() {
 			case STAR:
 			{
 				AST __t241 = _t;
-				TNode tmp159_AST_in = (TNode)_t;
+				TNode tmp148_AST_in = (TNode)_t;
 				match(_t,STAR);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4590,7 +4978,7 @@ public GnuCTreeParser() {
 			case DIV:
 			{
 				AST __t242 = _t;
-				TNode tmp160_AST_in = (TNode)_t;
+				TNode tmp149_AST_in = (TNode)_t;
 				match(_t,DIV);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4604,7 +4992,7 @@ public GnuCTreeParser() {
 			case MOD:
 			{
 				AST __t243 = _t;
-				TNode tmp161_AST_in = (TNode)_t;
+				TNode tmp150_AST_in = (TNode)_t;
 				match(_t,MOD);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4638,12 +5026,12 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t245 = _t;
-			TNode tmp162_AST_in = (TNode)_t;
+			TNode tmp151_AST_in = (TNode)_t;
 			match(_t,NCast);
 			_t = _t.getFirstChild();
 			typeName(_t);
 			_t = _retTree;
-			TNode tmp163_AST_in = (TNode)_t;
+			TNode tmp152_AST_in = (TNode)_t;
 			match(_t,RPAREN);
 			_t = _t.getNextSibling();
 			expr(_t);
@@ -4672,7 +5060,7 @@ public GnuCTreeParser() {
 			case INC:
 			{
 				AST __t264 = _t;
-				TNode tmp164_AST_in = (TNode)_t;
+				TNode tmp153_AST_in = (TNode)_t;
 				match(_t,INC);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4684,7 +5072,7 @@ public GnuCTreeParser() {
 			case DEC:
 			{
 				AST __t265 = _t;
-				TNode tmp165_AST_in = (TNode)_t;
+				TNode tmp154_AST_in = (TNode)_t;
 				match(_t,DEC);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -4696,7 +5084,7 @@ public GnuCTreeParser() {
 			case NUnaryExpr:
 			{
 				AST __t266 = _t;
-				TNode tmp166_AST_in = (TNode)_t;
+				TNode tmp155_AST_in = (TNode)_t;
 				match(_t,NUnaryExpr);
 				_t = _t.getFirstChild();
 				unaryOperator(_t);
@@ -4710,7 +5098,7 @@ public GnuCTreeParser() {
 			case LITERAL_sizeof:
 			{
 				AST __t267 = _t;
-				TNode tmp167_AST_in = (TNode)_t;
+				TNode tmp156_AST_in = (TNode)_t;
 				match(_t,LITERAL_sizeof);
 				_t = _t.getFirstChild();
 				{
@@ -4721,7 +5109,7 @@ public GnuCTreeParser() {
 					inputState.guessing++;
 					try {
 						{
-						TNode tmp168_AST_in = (TNode)_t;
+						TNode tmp157_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						typeName(_t);
@@ -4735,12 +5123,12 @@ public GnuCTreeParser() {
 					inputState.guessing--;
 				}
 				if ( synPredMatched270 ) {
-					TNode tmp169_AST_in = (TNode)_t;
+					TNode tmp158_AST_in = (TNode)_t;
 					match(_t,LPAREN);
 					_t = _t.getNextSibling();
 					typeName(_t);
 					_t = _retTree;
-					TNode tmp170_AST_in = (TNode)_t;
+					TNode tmp159_AST_in = (TNode)_t;
 					match(_t,RPAREN);
 					_t = _t.getNextSibling();
 				}
@@ -4760,7 +5148,7 @@ public GnuCTreeParser() {
 			case LITERAL___alignof:
 			{
 				AST __t271 = _t;
-				TNode tmp171_AST_in = (TNode)_t;
+				TNode tmp160_AST_in = (TNode)_t;
 				match(_t,LITERAL___alignof);
 				_t = _t.getFirstChild();
 				{
@@ -4771,7 +5159,7 @@ public GnuCTreeParser() {
 					inputState.guessing++;
 					try {
 						{
-						TNode tmp172_AST_in = (TNode)_t;
+						TNode tmp161_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						typeName(_t);
@@ -4785,12 +5173,12 @@ public GnuCTreeParser() {
 					inputState.guessing--;
 				}
 				if ( synPredMatched274 ) {
-					TNode tmp173_AST_in = (TNode)_t;
+					TNode tmp162_AST_in = (TNode)_t;
 					match(_t,LPAREN);
 					_t = _t.getNextSibling();
 					typeName(_t);
 					_t = _retTree;
-					TNode tmp174_AST_in = (TNode)_t;
+					TNode tmp163_AST_in = (TNode)_t;
 					match(_t,RPAREN);
 					_t = _t.getNextSibling();
 				}
@@ -4830,7 +5218,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t277 = _t;
-			TNode tmp175_AST_in = (TNode)_t;
+			TNode tmp164_AST_in = (TNode)_t;
 			match(_t,NPostfixExpr);
 			_t = _t.getFirstChild();
 			primaryExpr(_t);
@@ -4843,20 +5231,20 @@ public GnuCTreeParser() {
 				switch ( _t.getType()) {
 				case PTR:
 				{
-					TNode tmp176_AST_in = (TNode)_t;
+					TNode tmp165_AST_in = (TNode)_t;
 					match(_t,PTR);
 					_t = _t.getNextSibling();
-					TNode tmp177_AST_in = (TNode)_t;
+					TNode tmp166_AST_in = (TNode)_t;
 					match(_t,ID);
 					_t = _t.getNextSibling();
 					break;
 				}
 				case DOT:
 				{
-					TNode tmp178_AST_in = (TNode)_t;
+					TNode tmp167_AST_in = (TNode)_t;
 					match(_t,DOT);
 					_t = _t.getNextSibling();
-					TNode tmp179_AST_in = (TNode)_t;
+					TNode tmp168_AST_in = (TNode)_t;
 					match(_t,ID);
 					_t = _t.getNextSibling();
 					break;
@@ -4864,7 +5252,7 @@ public GnuCTreeParser() {
 				case NFunctionCallArgs:
 				{
 					AST __t279 = _t;
-					TNode tmp180_AST_in = (TNode)_t;
+					TNode tmp169_AST_in = (TNode)_t;
 					match(_t,NFunctionCallArgs);
 					_t = _t.getFirstChild();
 					{
@@ -4934,7 +5322,7 @@ public GnuCTreeParser() {
 					}
 					}
 					}
-					TNode tmp181_AST_in = (TNode)_t;
+					TNode tmp170_AST_in = (TNode)_t;
 					match(_t,RPAREN);
 					_t = _t.getNextSibling();
 					_t = __t279;
@@ -4943,26 +5331,26 @@ public GnuCTreeParser() {
 				}
 				case LBRACKET:
 				{
-					TNode tmp182_AST_in = (TNode)_t;
+					TNode tmp171_AST_in = (TNode)_t;
 					match(_t,LBRACKET);
 					_t = _t.getNextSibling();
 					expr(_t);
 					_t = _retTree;
-					TNode tmp183_AST_in = (TNode)_t;
+					TNode tmp172_AST_in = (TNode)_t;
 					match(_t,RBRACKET);
 					_t = _t.getNextSibling();
 					break;
 				}
 				case INC:
 				{
-					TNode tmp184_AST_in = (TNode)_t;
+					TNode tmp173_AST_in = (TNode)_t;
 					match(_t,INC);
 					_t = _t.getNextSibling();
 					break;
 				}
 				case DEC:
 				{
-					TNode tmp185_AST_in = (TNode)_t;
+					TNode tmp174_AST_in = (TNode)_t;
 					match(_t,DEC);
 					_t = _t.getNextSibling();
 					break;
@@ -4998,14 +5386,14 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case ID:
 			{
-				TNode tmp186_AST_in = (TNode)_t;
+				TNode tmp175_AST_in = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case Number:
 			{
-				TNode tmp187_AST_in = (TNode)_t;
+				TNode tmp176_AST_in = (TNode)_t;
 				match(_t,Number);
 				_t = _t.getNextSibling();
 				break;
@@ -5025,7 +5413,7 @@ public GnuCTreeParser() {
 			case NExpressionGroup:
 			{
 				AST __t283 = _t;
-				TNode tmp188_AST_in = (TNode)_t;
+				TNode tmp177_AST_in = (TNode)_t;
 				match(_t,NExpressionGroup);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -5057,7 +5445,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t179 = _t;
-			TNode tmp189_AST_in = (TNode)_t;
+			TNode tmp178_AST_in = (TNode)_t;
 			match(_t,NCommaExpr);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -5083,7 +5471,7 @@ public GnuCTreeParser() {
 		TNode emptyExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			TNode tmp190_AST_in = (TNode)_t;
+			TNode tmp179_AST_in = (TNode)_t;
 			match(_t,NEmptyExpression);
 			_t = _t.getNextSibling();
 		}
@@ -5104,12 +5492,12 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t182 = _t;
-			TNode tmp191_AST_in = (TNode)_t;
+			TNode tmp180_AST_in = (TNode)_t;
 			match(_t,LPAREN);
 			_t = _t.getFirstChild();
 			compoundStatement(_t);
 			_t = _retTree;
-			TNode tmp192_AST_in = (TNode)_t;
+			TNode tmp181_AST_in = (TNode)_t;
 			match(_t,RPAREN);
 			_t = _t.getNextSibling();
 			_t = __t182;
@@ -5132,12 +5520,12 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t184 = _t;
-			TNode tmp193_AST_in = (TNode)_t;
+			TNode tmp182_AST_in = (TNode)_t;
 			match(_t,NRangeExpr);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
-			TNode tmp194_AST_in = (TNode)_t;
+			TNode tmp183_AST_in = (TNode)_t;
 			match(_t,VARARGS);
 			_t = _t.getNextSibling();
 			expr(_t);
@@ -5162,7 +5550,7 @@ public GnuCTreeParser() {
 		
 		try {      // for error handling
 			AST __t186 = _t;
-			TNode tmp195_AST_in = (TNode)_t;
+			TNode tmp184_AST_in = (TNode)_t;
 			match(_t,NGnuAsmExpr);
 			_t = _t.getFirstChild();
 			{
@@ -5170,7 +5558,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LITERAL_volatile:
 			{
-				TNode tmp196_AST_in = (TNode)_t;
+				TNode tmp185_AST_in = (TNode)_t;
 				match(_t,LITERAL_volatile);
 				_t = _t.getNextSibling();
 				break;
@@ -5185,7 +5573,7 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			TNode tmp197_AST_in = (TNode)_t;
+			TNode tmp186_AST_in = (TNode)_t;
 			match(_t,LPAREN);
 			_t = _t.getNextSibling();
 			stringConst(_t);
@@ -5193,7 +5581,7 @@ public GnuCTreeParser() {
 			{
 			if (_t==null) _t=ASTNULL;
 			if ((_t.getType()==COLON)) {
-				TNode tmp198_AST_in = (TNode)_t;
+				TNode tmp187_AST_in = (TNode)_t;
 				match(_t,COLON);
 				_t = _t.getNextSibling();
 				{
@@ -5208,7 +5596,7 @@ public GnuCTreeParser() {
 					do {
 						if (_t==null) _t=ASTNULL;
 						if ((_t.getType()==COMMA)) {
-							TNode tmp199_AST_in = (TNode)_t;
+							TNode tmp188_AST_in = (TNode)_t;
 							match(_t,COMMA);
 							_t = _t.getNextSibling();
 							strOptExprPair(_t);
@@ -5236,7 +5624,7 @@ public GnuCTreeParser() {
 				{
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==COLON)) {
-					TNode tmp200_AST_in = (TNode)_t;
+					TNode tmp189_AST_in = (TNode)_t;
 					match(_t,COLON);
 					_t = _t.getNextSibling();
 					{
@@ -5251,7 +5639,7 @@ public GnuCTreeParser() {
 						do {
 							if (_t==null) _t=ASTNULL;
 							if ((_t.getType()==COMMA)) {
-								TNode tmp201_AST_in = (TNode)_t;
+								TNode tmp190_AST_in = (TNode)_t;
 								match(_t,COMMA);
 								_t = _t.getNextSibling();
 								strOptExprPair(_t);
@@ -5297,7 +5685,7 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case COLON:
 			{
-				TNode tmp202_AST_in = (TNode)_t;
+				TNode tmp191_AST_in = (TNode)_t;
 				match(_t,COLON);
 				_t = _t.getNextSibling();
 				stringConst(_t);
@@ -5307,7 +5695,7 @@ public GnuCTreeParser() {
 				do {
 					if (_t==null) _t=ASTNULL;
 					if ((_t.getType()==COMMA)) {
-						TNode tmp203_AST_in = (TNode)_t;
+						TNode tmp192_AST_in = (TNode)_t;
 						match(_t,COMMA);
 						_t = _t.getNextSibling();
 						stringConst(_t);
@@ -5331,7 +5719,7 @@ public GnuCTreeParser() {
 			}
 			}
 			}
-			TNode tmp204_AST_in = (TNode)_t;
+			TNode tmp193_AST_in = (TNode)_t;
 			match(_t,RPAREN);
 			_t = _t.getNextSibling();
 			_t = __t186;
@@ -5360,12 +5748,12 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case LPAREN:
 			{
-				TNode tmp205_AST_in = (TNode)_t;
+				TNode tmp194_AST_in = (TNode)_t;
 				match(_t,LPAREN);
 				_t = _t.getNextSibling();
 				expr(_t);
 				_t = _retTree;
-				TNode tmp206_AST_in = (TNode)_t;
+				TNode tmp195_AST_in = (TNode)_t;
 				match(_t,RPAREN);
 				_t = _t.getNextSibling();
 				break;
@@ -5403,63 +5791,63 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case BAND:
 			{
-				TNode tmp207_AST_in = (TNode)_t;
+				TNode tmp196_AST_in = (TNode)_t;
 				match(_t,BAND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case STAR:
 			{
-				TNode tmp208_AST_in = (TNode)_t;
+				TNode tmp197_AST_in = (TNode)_t;
 				match(_t,STAR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case PLUS:
 			{
-				TNode tmp209_AST_in = (TNode)_t;
+				TNode tmp198_AST_in = (TNode)_t;
 				match(_t,PLUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MINUS:
 			{
-				TNode tmp210_AST_in = (TNode)_t;
+				TNode tmp199_AST_in = (TNode)_t;
 				match(_t,MINUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BNOT:
 			{
-				TNode tmp211_AST_in = (TNode)_t;
+				TNode tmp200_AST_in = (TNode)_t;
 				match(_t,BNOT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LNOT:
 			{
-				TNode tmp212_AST_in = (TNode)_t;
+				TNode tmp201_AST_in = (TNode)_t;
 				match(_t,LNOT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LAND:
 			{
-				TNode tmp213_AST_in = (TNode)_t;
+				TNode tmp202_AST_in = (TNode)_t;
 				match(_t,LAND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL___real:
 			{
-				TNode tmp214_AST_in = (TNode)_t;
+				TNode tmp203_AST_in = (TNode)_t;
 				match(_t,LITERAL___real);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL___imag:
 			{
-				TNode tmp215_AST_in = (TNode)_t;
+				TNode tmp204_AST_in = (TNode)_t;
 				match(_t,LITERAL___imag);
 				_t = _t.getNextSibling();
 				break;
@@ -5519,7 +5907,7 @@ public GnuCTreeParser() {
 		TNode charConst_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			TNode tmp216_AST_in = (TNode)_t;
+			TNode tmp205_AST_in = (TNode)_t;
 			match(_t,CharLiteral);
 			_t = _t.getNextSibling();
 		}
@@ -5543,63 +5931,63 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case IntOctalConst:
 			{
-				TNode tmp217_AST_in = (TNode)_t;
+				TNode tmp206_AST_in = (TNode)_t;
 				match(_t,IntOctalConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongOctalConst:
 			{
-				TNode tmp218_AST_in = (TNode)_t;
+				TNode tmp207_AST_in = (TNode)_t;
 				match(_t,LongOctalConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case UnsignedOctalConst:
 			{
-				TNode tmp219_AST_in = (TNode)_t;
+				TNode tmp208_AST_in = (TNode)_t;
 				match(_t,UnsignedOctalConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case IntIntConst:
 			{
-				TNode tmp220_AST_in = (TNode)_t;
+				TNode tmp209_AST_in = (TNode)_t;
 				match(_t,IntIntConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongIntConst:
 			{
-				TNode tmp221_AST_in = (TNode)_t;
+				TNode tmp210_AST_in = (TNode)_t;
 				match(_t,LongIntConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case UnsignedIntConst:
 			{
-				TNode tmp222_AST_in = (TNode)_t;
+				TNode tmp211_AST_in = (TNode)_t;
 				match(_t,UnsignedIntConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case IntHexConst:
 			{
-				TNode tmp223_AST_in = (TNode)_t;
+				TNode tmp212_AST_in = (TNode)_t;
 				match(_t,IntHexConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongHexConst:
 			{
-				TNode tmp224_AST_in = (TNode)_t;
+				TNode tmp213_AST_in = (TNode)_t;
 				match(_t,LongHexConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case UnsignedHexConst:
 			{
-				TNode tmp225_AST_in = (TNode)_t;
+				TNode tmp214_AST_in = (TNode)_t;
 				match(_t,UnsignedHexConst);
 				_t = _t.getNextSibling();
 				break;
@@ -5630,21 +6018,21 @@ public GnuCTreeParser() {
 			switch ( _t.getType()) {
 			case FloatDoubleConst:
 			{
-				TNode tmp226_AST_in = (TNode)_t;
+				TNode tmp215_AST_in = (TNode)_t;
 				match(_t,FloatDoubleConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DoubleDoubleConst:
 			{
-				TNode tmp227_AST_in = (TNode)_t;
+				TNode tmp216_AST_in = (TNode)_t;
 				match(_t,DoubleDoubleConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongDoubleConst:
 			{
-				TNode tmp228_AST_in = (TNode)_t;
+				TNode tmp217_AST_in = (TNode)_t;
 				match(_t,LongDoubleConst);
 				_t = _t.getNextSibling();
 				break;

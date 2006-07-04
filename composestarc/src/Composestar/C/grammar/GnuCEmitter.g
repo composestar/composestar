@@ -47,7 +47,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCEmitter.g,v 1.4 2005/12/05 09:17:44 pascal_durr Exp $
+ * $Id: GnuCEmitter.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -217,6 +217,10 @@ void print( TNode t ) {
 	if(t.INTRODUCED)
 	{
 		//System.out.println("Found introduced node: "+t.getText());	
+	}
+	if(t.HEADER){
+		//System.out.println("Header Point found!!!!!!"+t.getText());
+		 currentOutput.println("\n"+ t.getComment()+"\n");
 	}
     int tLineNum = t.getLocalLineNum();
     if ( tLineNum == 0 ) tLineNum = lineNum;
@@ -779,7 +783,7 @@ parameterDeclaration
 
 
 functionDef
-        :   #( NFunctionDef
+        :   #( ndef:NFunctionDef{if(ndef.HEADER== true)print(ndef);}
                 ( functionDeclSpecifiers)? 
                 declarator
                 (declaration
@@ -844,7 +848,8 @@ localLabelDecl
 compoundStatement
         :       #( cs:NCompoundStatement                { print( cs ); tabs++; }
                 ( declarationList
-                | functionDef
+                |functionDef 
+	
                 )*
                 ( statementList )?
                 rc:RCURLY                               { tabs--; print( rc ); }

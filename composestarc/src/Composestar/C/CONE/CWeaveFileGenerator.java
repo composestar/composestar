@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.1 2006/02/16 23:10:57 pascal_durr Exp $
+ * $Id: CWeaveFileGenerator.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.CONE;
 
@@ -14,12 +14,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.Vector;
+import java.util.HashMap;
+
+import org.w3c.dom.Element;
 
 import Composestar.Core.CONE.WeaveFileGenerator;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -27,6 +28,7 @@ import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
 
@@ -35,7 +37,18 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.C.LAMA.CFile;
+import Composestar.C.LAMA.CMethodInfo;
+import Composestar.C.LAMA.CParameterInfo;
+import Composestar.C.specification.Advice;
+import Composestar.C.specification.AdviceApplication;
+import  Composestar.C.specification.Aspect;
+import Composestar.C.specification.Functions;
+import Composestar.C.specification.Pointcut;
+import Composestar.C.wrapper.utils.GeneralUtils;
+import Composestar.C.wrapper.WeaveblePoint;
 import Composestar.Utils.Debug;
+
 
 /**
  * This class generates the interception specification file for ILICIT based on 
@@ -46,9 +59,9 @@ import Composestar.Utils.Debug;
 public class CWeaveFileGenerator implements WeaveFileGenerator
 {
     private PrintWriter out = null;
-    private String repository = "repository.xml";
-    private int debugLevel = 0;
-    private String application = "";
+    public static HashMap filterModuleReferenceMap = new HashMap();
+	private HashMap aspects= new HashMap();
+	private DataStore ds  = DataStore.instance();
     
     /**
      * @roseuid 40EBC2AE0112
@@ -57,240 +70,301 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
     {
      
     }
-       
-    /**
-     * @roseuid 40EBC2AE0121
-     */
-    private void writeMethodDefinitions() 
-    {
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing method definitions block...");
-        out.println("<methods>");
-        
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Inserting method definition for 'handleApplicationStart'.");     
-        out.println("<method id=\"application_start\" assembly=\"ComposeStarDotNETRuntimeInterpreter\" class=\"Composestar.RuntimeDotNET.FLIRT.DotNETMessageHandlingFacility\" name=\"handleDotNETApplicationStart\">");
-    	out.println("<argument value=\"" + repository + "\" type=\"string\"/>");
-    	out.println("<argument value=\"" + debugLevel + "\" type=\"int\"/>");
-    	out.println("</method>");
-    	
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Inserting method definition for 'handleInstanceCreation'.");     
-    	out.println("<method id=\"after_instantiation\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleInstanceCreation\">");
-    	out.println("<argument value=\"%senderobject\"/>");
-    	out.println("<argument value=\"%createdobject\"/>");
-		out.println("<argument value=\"%originalparameters\"/>");
-    	out.println("</method>");
-
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Inserting method definition for 'handleVoidMethodCall'.");     
-    	out.println("<method id=\"invocation_void\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleVoidMethodCall\">");
-    	out.println("<argument value=\"%senderobject\"/>");
-    	out.println("<argument value=\"%targetobject\"/>");
-    	out.println("<argument value=\"%targetmethod\"/>");
-    	out.println("<argument value=\"%originalparameters\"/>");
-    	out.println("</method>");
-    	
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Inserting method definition for 'handleReturnMethodCall'.");     
-    	out.println("<method id=\"invocation_with_return\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.MessageHandlingFacility\" name=\"handleReturnMethodCall\" returnType=\"object\">");
-    	out.println("<argument value=\"%senderobject\"/>");
-    	out.println("<argument value=\"%targetobject\"/>");
-    	out.println("<argument value=\"%targetmethod\"/>");
-    	out.println("<argument value=\"%originalparameters\"/>");
-    	out.println("</method>");
-    	
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Inserting method definition for 'handleCast'.");     
-        out.println("<method id=\"cast\" assembly=\"ComposeStarRuntimeInterpreter\" class=\"Composestar.RuntimeCore.FLIRT.CastingFacility\" name=\"handleCast\" returnType=\"object\">");
-    	out.println("<argument value=\"%targetobject\"/>");
-    	out.println("<argument value=\"%casttarget\"/>");
-    	out.println("</method>");
- 
-    	out.println("</methods>");
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Method definitions block has been written.");     
-    }
     
-    public ArrayList getAfterInstantiationClasses() 
-    {
-    	ArrayList result = new ArrayList();
-    	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Searching for instantiation interceptions...");
-		
-    	DataStore ds = DataStore.instance();
-		Iterator it = ds.getAllInstancesOf(CompiledImplementation.class);
-		while(it.hasNext())
+    public void retrieveFilterModuleReferences(){
+    	Iterator concernIter = ds.getAllInstancesOf(CpsConcern.class);
+		while(concernIter.hasNext())
 		{
-			CompiledImplementation ci = (CompiledImplementation)it.next();
-			String className = ci.getClassName();
-			if(className != null)
+			CpsConcern cc = (CpsConcern)concernIter.next();
+			Iterator filterModuleIter = cc.getFilterModuleIterator();
+			while(filterModuleIter.hasNext())
 			{
-				result.add(className);
-			   	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for instantiation of class '" + className + "' to our internal list.");
+				String fullname = cc.getName();
+				FilterModule fm = new FilterModule();
+				fm = (FilterModule)filterModuleIter.next();
+				fullname = fullname + "." +fm.getName();
+				//System.out.println("FilterModule: "+ fullname + " has filter: " + fm.getName() );
+				filterModuleReferenceMap.put(fullname,fm);
 			}
 		}
-		
-		it = ds.getAllInstancesOf(CpsConcern.class);
-		while (it.hasNext()) {
-			CpsConcern c = (CpsConcern)it.next();
-			
-			Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found CpsConcern with name["+c.getName()+"]: " + c.getQualifiedName());
-			
-			Object o = c.getDynObject("IMPLEMENTATION");
-			if ( o != null) {
+    }
+ 
+    public void createAspects() 
+    {
+    	Aspect asp = null;
+    	boolean aspectInConcern;
+    	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Searching for instantiation interceptions...");
 				
-				PrimitiveConcern pc = (PrimitiveConcern)o;
-				
-				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found primitive concern with name: " + pc.getQualifiedName());
-				result.add(pc.getQualifiedName());
-				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for instantiation of class '" + pc.getQualifiedName() + "' to our internal list.");
-			}
-		}
+		Iterator it = ds.getAllInstancesOf(CpsConcern.class);
+		retrieveFilterModuleReferences();
+		int pointcutNumber=0;		
 		it = ds.getAllInstancesOf(Concern.class);
 		while (it.hasNext()) {
+			pointcutNumber++;
+			aspectInConcern=false;
 			Concern c = (Concern)it.next();
 			//Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found Concern with name["+c.getName()+"]: " + c.getQualifiedName());
 			if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
 			{
-				result.add(c.getQualifiedName());
-				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for instantiation of class '" + c.getQualifiedName() + "' to our internal list.");
-			}
-		}
-	   	
-	   	return result;
-    }
-    
-    private void writeMethodInvocations(CommonResources resources)
-    {
-        // Get a FILTHService instance
-        FILTHService filthservice = FILTHService.getInstance(resources);
- 
-        out.println("<methodInvocations>");
-      
-		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
-		while( iterConcerns.hasNext() )
-		{
-			Concern c = (Concern)iterConcerns.next();
-				
-			try {
-				List list = filthservice.getOrder(c);
-				if (!list.isEmpty()) {
-					writeMethodInvocationRecord(c.getQualifiedName());
-				}
-			}
-			catch (Exception e) {
-				Debug.out(Debug.MODE_WARNING, "CONE-IS", "Unable to get ordering for concern '" + c.getName() + "' from FILTH.");
-			}
-		}
-      
-		out.println("</methodInvocations>");
-    }
-    
-    private void writeCastingInterceptions()
-    {
-    	Set s = new HashSet();
-     	
-    	out.println("<casts>");
-    	
-  	  	Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
-  	  	while ( iterConcerns.hasNext() )
-	 	{
-  	  		Concern c = (Concern)iterConcerns.next();
-  	  		boolean castConcern = false;
-				
-  	  		if ( c.getDynObject("SingleOrder") != null) {
-  	  			FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
-
-  	  			Iterator iterFilterModules = fmo.orderAsList().iterator();
-  	  			while ( iterFilterModules.hasNext() )
-  	  			{
-  	  				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID((String)iterFilterModules.next());
-  	  			
-  	  				Iterator iterInternals = fm.getInternalIterator() ;
-  	  				while ( iterInternals.hasNext() )
-  	  				{
-  	  					Internal internal = (Internal)iterInternals.next();
-  	  					if ( !s.contains(internal) )
-  	  					{
-  	  						castConcern = true;
-  	  						s.add( internal );
-  	  						writeCastingInterceptionRecord( internal.type.getQualifiedName() );
-  	  					}
-  	  				}
-  	  			}
-  	  		}
-  	  		
-  	  		if ( castConcern ) {
-  	  			writeCastingInterceptionRecord( c.getQualifiedName() );
-  	  		}
-	 	}
-  	  	
-    	out.println("</casts>");
-    }
-    
-    /**
-     * @param store
-     * @param resources
-     * @roseuid 40EBC2AE0316
-     */
-    private void writeClassDefinitions(CommonResources resources) {
-      // Write definitions for inputfilters and dummy unlinking
-  	  Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '*'...");
-
-	  out.println("<class name=\"*\">");
-	  
-	  writeMethodInvocations(resources);
-	  writeCastingInterceptions();
-	  
-      out.println("</class>");
-      
-      Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Class definition for class '*' has been written.");
-      
-      // Write definitions for outputfilters and instantiations
-      ArrayList instantiationClasses = getAfterInstantiationClasses();
-      
-	  Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
-	  while ( iterConcerns.hasNext() )
-	  {
-		Concern c = (Concern)iterConcerns.next();
-				
-		if ( c.getDynObject("SingleOrder") != null) {
-			FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
-
-			Iterator iterFilterModules = fmo.orderAsList().iterator();
-			while ( iterFilterModules.hasNext() )
-			{
-				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID((String)iterFilterModules.next());
-
-				if ( !fm.outputFilters.isEmpty() )
+				/** Dit levert de namen van de filtermodules die op dit concern werken op**/
+				if(c.getDynObject("SingleOrder") != null && c.getDynObject("SingleOrder") instanceof FilterModuleOrder)
 				{
-					// Outputfilters defined for this concern
-				  	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '" + c.getQualifiedName() + "'...");
-
-					out.println("<class name=\"" + c.getQualifiedName() + "\">");
-				
-					out.println("<methodInvocations>");
-					writeMethodInvocationRecord();
-					out.println("</methodInvocations>");
-					
-					if ( instantiationClasses.contains(c.getQualifiedName()) )
+					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
+					Vector order = fmo._order;
+					for(int i=0; i<order.size(); i++)
 					{
-						writeAfterInstantiationRecord();
-						instantiationClasses.remove(c.getQualifiedName());
+						String filtermodulename = (String)order.elementAt(i);
+						FilterModule fm = (FilterModule)filterModuleReferenceMap.get(filtermodulename);
+						
+						Debug.out(Debug.MODE_INFORMATION,"cone","FQN: " + fm.getQualifiedName()+  " Concern : " + c.getName() + "has Filtermodule with name: "+fm.getName() + " Number of [c,m,i,filtertype,internals] : [" + fm.conditions.size() + "," + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName()+ "," + fm.inputFilters.size()+ "," + ((Filter)fm.inputFilters.elementAt(0)).getFilterType().type + "," + fm.internals.size() + "]" );
+						
+						if(!fm.getQualifiedName().equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")){
+							if(aspects.containsKey(fm.getQualifiedName())){ 
+								asp = (Aspect)aspects.get(fm.getQualifiedName());
+								//aspects.remove(fm.getQualifiedName());
+							}
+							else{
+								asp = new Aspect();
+								asp.setId(fm.getQualifiedName());
+								aspects.put(fm.getQualifiedName(),asp);
+							}
+							Filter filter=null;
+							Iterator inputfilters = fm.getInputFilterIterator();
+							while(inputfilters.hasNext()){
+								filter= (Filter)inputfilters.next();
+								int numberOfFilterElements =filter.filterElements.size();//.elementAt(0))..getFilterElement(0) //.getMatchingPattern(0).getMatchingParts().size();
+								for(int x=0; x<numberOfFilterElements; x++){
+									//System.out.println("Other superimposed functions are:" + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+									/*** concern has to contain the function**/
+									CFile file= (CFile)c.getPlatformRepresentation();
+									CMethodInfo method =(CMethodInfo)file.getMethod(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
+									/****/
+									if(method != null){
+										AdviceApplication aa = new AdviceApplication();
+										//aa.setId(((Filter)fm.inputFilters.elementAt(0)).getFilterType().getType());
+										aa.setId(filter.getName()+x+((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+				            	
+										aa.setType(GeneralUtils.getTypeOfAdvice("before"));
+				            
+										Pointcut pointcut = createPointcut(filter,c,x,pointcutNumber);
+										pointcut.addAdviceApplication(aa);
+										pointcut.setParent(asp);
+										asp.addPointcut(pointcut);
+										int priority =order.size()-i;
+										Advice advice =createAdvice(filter,priority,x, "input",c);
+										asp.addAdvice(advice);
+										System.out.println("Pointcuts: "+pointcut.getId()+" "+ aa.getId()+ " "+ advice.getId()+  " "+ advice.getCode());
+										
+										aspectInConcern=true;
+										//addSubstitutionTargetHeader(filter, x);
+									}
+								}
+							
+							}
+							Iterator outputfilters = fm.getOutputFilterIterator();
+							while(outputfilters.hasNext()){
+								filter= (Filter)outputfilters.next();
+								//aa.setId(((Filter)fm.inputFilters.elementAt(0)).getFilterType().getType());
+								
+								int numberOfFilterElements =filter.filterElements.size();//.elementAt(0))..getFilterElement(0) //.getMatchingPattern(0).getMatchingParts().size();
+								for(int x=0; x<numberOfFilterElements; x++){
+									//System.out.println("Other superimposed functions are:" + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+									/*****/
+									CFile file= (CFile)c.getPlatformRepresentation();
+									CMethodInfo method =(CMethodInfo)file.getMethod(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
+									/****/
+									if(method != null){
+									
+										AdviceApplication aa = new AdviceApplication();
+									
+										aa.setId(filter.getName()+x+((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+										aa.setType(GeneralUtils.getTypeOfAdvice("before"));
+				            
+										Pointcut pointcut = createPointcut(filter,c,x,pointcutNumber);
+										pointcut.addAdviceApplication(aa);
+										pointcut.setParent(asp);
+										asp.addPointcut(pointcut);
+										int priority =order.size()-i;
+										Advice advice =createAdvice(filter,priority,x, "output",c);
+										asp.addAdvice(advice);
+										aspectInConcern=true;
+									}
+								}
+							}
+							
+				            //if(!asp.aspectIsSane())
+			        		//{
+			        		//	System.out.println("Advice reference in aspect: "+asp.getId()+" can not be resolved...");
+			            	//	System.exit(-1);
+			        		//}
+							
+							out.println("<aspect id=\""+ fm.getName() +"\">");
+							//out.println("<pointcut id=\""+ ((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).matchingPart.selector.getName()+"\">");
+							//out.println("<elements files=\""+c.getName()+".c\" identifier=\"function\" data=\""+((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).matchingPart.selector.getName() +"\"/>");
+							out.println("<advices><adviceapplication id=\""+((Filter)fm.inputFilters.elementAt(0)).getFilterType().type+"\" type=\"before\"/></advices>");
+							out.println("</pointcut>");
+							//out.println("<advice id=\""+ ((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).matchingPart.selector.getName()+"\" type=\"execution\" priority=\""+(order.size()-i)+"\">");
+							out.println("<code><![CDATA[");
+							//((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getSubstitutionPart();
+							if(!((Filter)fm.inputFilters.elementAt(0)).getFilterType().type.equals("Custom") && !((Filter)fm.inputFilters.elementAt(0)).getFilterType().type.equals("Error")){
+								out.println("if("+1+"){"+((SubstitutionPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().elementAt(0)).getSelector().getName()+"();}");
+							}
+							out.println("]]></code>");
+							out.println("</advice></aspect>");
+													
+							
+						}
 					}
-				    
-					out.println("</class>");
-				      
-			        Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Class definition for class '" + c.getQualifiedName() + "' has been written.");
-				
+				}
+	
+			}
+			/** include header file **/
+			if(aspectInConcern==true)includeMessageHeader(c);
+		}	
+    }
+    
+    private void includeMessageHeader(Concern c){
+    	CFile file=(CFile)c.getPlatformRepresentation();
+    	
+    	Aspect aspect = new Aspect();
+		aspect.setId(file.getUnitName());
+		AdviceApplication aa = new AdviceApplication();
+		
+		aa.setId("header"+file.getUnitName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+		aa.setType(GeneralUtils.BEFORE);
+		Pointcut pointcut = new Pointcut(file.getUnitName()+".c");
+        int type = GeneralUtils.HEADER;
+        Functions functions = new Functions();
+        functions.setFile(file.getUnitName()+".c");
+        functions.setData(file.getUnitName()+".c");
+		 
+     	functions.setType(type);
+     	functions.setParent(pointcut);
+     	
+		Advice advice = new Advice();
+    	int ttype=GeneralUtils.HEADER_INTRODUCTION;
+    	advice.setId("header"+file.getUnitName());
+    	advice.setType(ttype);
+    	advice.setPriority(1);
+    	advice.setCode("#include \"message.h\"");
+		aspect.addAdvice(advice);
+		pointcut.addAdviceApplication(aa);
+		pointcut.setParent(aspect);
+		pointcut.addFunctions(functions);
+		aspect.addPointcut(pointcut);
+		aspects.put(file.getUnitName()+".c",aspect);
+	}
+    
+    public Pointcut createPointcut(Filter filter, Concern c, int filterelem, int pointcutNumber){
+    	
+    	Pointcut pointcut = new Pointcut(((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()+pointcutNumber);
+        Functions functions = new Functions();
+        functions.setFile(c.getName());
+        functions.setData(((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
+		//System.out.println("Function to be superimposed:" + ((MatchingPart)(((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName() + " & " + fm.getQualifiedName() );
+		//System.out.println("FQN: " + fm.getQualifiedName()+  " Concern : " + c.getName() + "has Filtermodule with name: "+fm.getName() + " Number of [c,m,i,filtertype,internals] : [" + fm.conditions.size() + "," + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName()+ "," + fm.inputFilters.size()+ "," + ((Filter)fm.inputFilters.elementAt(0)).getFilterType().type + "," + fm.internals.size() + "]" );
+        int type = GeneralUtils.getTypeForProgramElement("function");
+     	if(type ==0)
+     	{
+     		Debug.out(Debug.MODE_ERROR,"CONE","Unknown program element type: function");
+     		System.exit(-1);
+     	}
+     	functions.setType(type);
+     	functions.setParent(pointcut);
+     	
+     	/**TODO: if we want to select functions based 
+     	 * on there parameters or returntype the following
+     	 * functions can be used:
+     	functions.setReturnType();
+     	functions.addParameter()**/
+     	
+     	pointcut.addFunctions(functions);
+     	return pointcut;
+    }
+    
+    public Advice createAdvice(Filter filter, int priority, int filterelem, String filtertype, Concern c){
+    	Advice advice = new Advice();
+    	int ttype=0;
+    	if(filtertype.equals("input"))
+    	 ttype= GeneralUtils.getTypeOfProgramPoint("execution");
+    	else if(filtertype.equals("output"))
+    		ttype= GeneralUtils.getTypeOfProgramPoint("call");
+    	if(ttype == 0)
+    	{
+    		Debug.out(Debug.MODE_ERROR, "CONE","Undefined join point type: execution");
+    		System.exit(-1);
+    	}
+    	advice.setId(filter.getName()+filterelem+((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
+    	advice.setType(ttype);
+    	advice.setPriority(priority);
+    	String code="";
+    	if(filter.getFilterType().getType().equals("Dispatch")){
+    		Semantic filterSemantic=new DispatchSemantic(filter,filterelem,c);
+    		code=filterSemantic.retrieveSemantics();
+			addSubstitutionTargetHeader(filter, filterelem);
+    	}
+    	else code="int"+ filter.getFilterType().getType()+ ";";
+    	advice.setCode(code);
+    	Debug.out(Debug.MODE_INFORMATION,"CONE","Filter: "+filter.getName());
+		 
+        return advice;
+    }
+    
+    public void addSubstitutionTargetHeader(Filter filter, int filterelem){
+    	Aspect aspect=new Aspect();
+    	SubstitutionPart sub=(SubstitutionPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getSubstitutionParts().elementAt(0));
+    	String substitutionFunction=sub.getSelector().name;
+    	String matchingFunction=((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName();
+    	String matchingFile=((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getTarget().getName();
+    	
+    	CFile file=null;
+    	CFile substitutionFile=null;
+    	CMethodInfo method=null;
+    	Concern c=null;
+    	Iterator it = ds.getAllInstancesOf(Concern.class);
+		while (it.hasNext()) {
+			c = (Concern)it.next();
+			if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
+			{
+				file=(CFile)c.getPlatformRepresentation();
+				method =(CMethodInfo)file.getMethod(substitutionFunction);
+				if(method!=null) {
+					substitutionFile=file;
 					break;
 				}
 			}
 		}
-	  }
-      
-      // Write remaining class instantiations
-      Iterator iterClasses = instantiationClasses.iterator();
-      while ( iterClasses.hasNext() )
-      {
-      	String className = (String)iterClasses.next();
-      	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '" + className + "'...");
-      	writeAfterInstantiationRecord(className);
-      	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Class definition for class '" + className + "' has been written.");
-      }
+		if(substitutionFile==null){
+			Debug.out(Debug.MODE_WARNING, "Cone", "No substitution target found for filter:"+filter.getName());
+			return;
+		}
+		System.out.println("Aspect:"+ matchingFunction+substitutionFile.getUnitName()+"STH superimposes:"+ substitutionFile.getUnitName());			
+    	aspect.setId(matchingFunction+substitutionFile.getUnitName()+"STH");
+		AdviceApplication aa = new AdviceApplication();
+		
+		aa.setId(matchingFunction+substitutionFile.getUnitName()+"STH");//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+		aa.setType(GeneralUtils.BEFORE);
+		Pointcut pointcut = new Pointcut(matchingFunction+substitutionFile.getUnitName()+"STH");
+        int type = GeneralUtils.HEADER;
+        Functions functions = new Functions();
+        functions.setFile(matchingFile+".c");
+        functions.setData(matchingFile+".c");
+		 
+     	functions.setType(type);
+     	functions.setParent(pointcut);
+     	
+		Advice advice = new Advice();
+    	int ttype=GeneralUtils.HEADER_INTRODUCTION;
+    	advice.setId(matchingFunction+substitutionFile.getUnitName()+"STH");
+    	advice.setType(ttype);
+    	advice.setPriority(1);
+    	advice.setCode("#include \""+ substitutionFile.getUnitName()+ ".h\"");
+		aspect.addAdvice(advice);
+		pointcut.addAdviceApplication(aa);
+		pointcut.setParent(aspect);
+		pointcut.addFunctions(functions);
+		aspect.addPointcut(pointcut);
+		aspects.put(matchingFunction+substitutionFile.getUnitName()+"STH",aspect);
     }
     
     /**
@@ -306,107 +380,40 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
     	
       Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
       
-	  application = Configuration.instance().getProjects().getProperty("Executable");
-      
-	  try
-	  {
-	  	//this.repository = ((Properties)ds.getObjectByID("config")).getProperty("RepositoryFilename");
-	  	debugLevel = Integer.parseInt(Configuration.instance().getProjects().getProperty("runDebugLevel"));
-	  }
-	  catch (NumberFormatException e)
-	  {
-	  	Debug.out(Debug.MODE_WARNING, "CONE-IS", "Unable to set debug level, using default debug level of 0.");
-	  }
-	  
       try
       {
         out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
 
         out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        out.println("<weaveSpecification version=\"1.0\">");
-
-        //writeAssemblyReferenceDefinitions( resources );
-        writeMethodDefinitions();
-        writeApplicationInfo();
-        writeClassDefinitions(resources);
-
-        out.println("</weaveSpecification>");
+ 
+        createAspects();
 
         out.flush();
         out.close();
+        
+        
       }
       catch (IOException e) {
         throw new ModuleException("Unable to create weave specification file '" + destination + "'.","CONE_IS");
       }
       catch (Exception e) {
         throw new ModuleException("Unhandled exception: " + e.getClass().toString() + ";"+ e.getMessage(),"CONE_IS");
-      }     
+      } 
+      
+//    Last piece of WeaveC weaver.java
+      WeaverEngine we = new WeaverEngine();
+      Hashtable functionsToRealWeavebaleObjectsMap = we.populateFunctionsWithRealInfo(aspects, resources);
+      HashSet weavebleobjects = we.attachAdvicesToFunctions(functionsToRealWeavebaleObjectsMap);
+      //we.processAllInternalAdvices(weavebleobjects);
+      Iterator weaveit = weavebleobjects.iterator();
+  	  while(weaveit.hasNext())
+  	  {
+  			we.weaveInstructionsForPoint((WeaveblePoint)weaveit.next());
+  	  }
+  	  we.emitFiles();
     }
     
-    /**
-     * @roseuid 40F3CE3B00DD
-     */
-    private void writeApplicationInfo() 
-    {
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing application information...");
-      	out.println("<application name=\"" + application + "\">");
-      	out.println("<notifyStart id=\"application_start\"/>");     	
-      	out.println("</application>");
-      	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Application information has been written.");     
-    }
    
-    private void writeMethodInvocationRecord() 
-    {
-		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for all outgoing calls.");
-    	out.println("<callToMethod class=\"*\" name=\"*\">");
-		out.println("<voidRedirectTo id=\"invocation_void\"/>");
-		out.println("<returnvalueRedirectTo id=\"invocation_with_return\"/>");
-		out.println("</callToMethod>");     
-    }
-    
-    /**
-     * @param target
-     * @roseuid 40F3CE3B010F
-     */
-    private void writeMethodInvocationRecord(String target) 
-    {
-		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for all methods of class '" + target + "'.");
-    	out.println("<callToMethod class=\"" + target + "\" name=\"*\">");
-		out.println("<voidRedirectTo id=\"invocation_void\"/>");
-		out.println("<returnvalueRedirectTo id=\"invocation_with_return\"/>");
-		out.println("</callToMethod>");     
-    }
-    
-    private void writeClassReplacementRecord(String oldAssembly, String oldClass, String newAssembly, String newClass)
-    {
-     	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Replacing class '[" + oldAssembly + "]" + oldClass + "' with '[" + newAssembly + "]" + newClass + "'.");
-    	out.println("<classReplacement assembly=\"" + oldAssembly + "\" class=\"" + oldClass + "\">");
-    	out.println("<replaceWith assembly=\"" + newAssembly + "\" class=\"" + newClass + "\"/>");
-    	out.println("</classReplacement>");
-    }
-    
-    private void writeAfterInstantiationRecord()
-    {
-     	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Adding notification after instantiation.");
-    	out.println("<afterClassInstantiation>");
-		out.println("<executeMethod id=\"after_instantiation\"/>");
-		out.println("</afterClassInstantiation>");  	
-    }
-    
-    private void writeAfterInstantiationRecord(String className)
-    {
-		out.println("<class name=\""+className+"\">");
-		writeAfterInstantiationRecord();
-		out.println("</class>");	
-    }
-    
-    private void writeCastingInterceptionRecord(String className)
-    {
-		out.println("<castTo assembly=\"\" class=\""+className+"\">");
-		out.println("<executeMethodBefore id=\"cast\"/>");
-		out.println("</castTo>");   	
-    
-    }
     
     class MethodInformation {
         private String mClassName;
@@ -439,32 +446,5 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
         }
     }
     
-    private class ClassInformation {
-        private ArrayList mInvocations;
-        private String mClassName = "";
-
-        /**
-         * @return java.lang.String
-         * @roseuid 40EBC2C80155
-         */
-        public String getClassName() {
-        return mClassName;
-        }
-        
-        /**
-         * @param invocation
-         * @roseuid 40EBC2C80173
-         */
-        public void AddInvocation(CWeaveFileGenerator.MethodInformation invocation) {
-        mInvocations.add(invocation);
-        }
-        
-        /**
-         * @return java.util.Iterator
-         * @roseuid 40EBC2C801A2
-         */
-        public Iterator getInvocationsIterator() {
-        return mInvocations.iterator();
-        }
-    }
+   
 }

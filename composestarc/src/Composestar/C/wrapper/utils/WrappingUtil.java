@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: WrappingUtil.java,v 1.5 2005/11/21 16:20:09 pascal_durr Exp $
+ * $Id: WrappingUtil.java,v 1.1 2006/03/16 14:08:55 johantewinkel Exp $
  */
 package Composestar.C.wrapper.utils;
 
@@ -62,7 +62,7 @@ public class WrappingUtil
     	GnuCParser parser = new GnuCParser(lexer);
     	parser.activateSymbolCheck(false);
         parser.setASTNodeClass(TNode.class.getName());
-        TNode.setTokenVocabulary("com.ideals.weavec.wrapper.parsing.GnuCTokenTypes");
+        TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
         try
         {
         	parser.translationUnit();
@@ -84,10 +84,10 @@ public class WrappingUtil
     public TNode prepareNode(String inputStr)
     {
     	Reader input1 = new StringReader("void foo(){" +inputStr+"}");
-    	//System.out.println("Prepating node for: "+"void foo(){ " +inputStr+"}");
+    	System.out.println("Prepating node for: "+"void foo(){ " +inputStr+"}");
     	
     	GnuCLexer lexer1 = new GnuCLexer(input1);
-        lexer1.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+        lexer1.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
         
         TNode  node = createTNode(lexer1);
     	node = node.firstChildOfType(GnuCTokenTypes.NCompoundStatement);
@@ -109,10 +109,11 @@ public class WrappingUtil
     
     public TNode prepareNodeForIntroduction(String inputStr)
     {
+    	//inputStr="short x;"; 
     	Reader input1 = new StringReader("void foo(){" +inputStr+"}");
-    	//System.out.println("Prepating node for: "+"void foo(){ " +inputStr+"}");
-        GnuCLexer lexer1 = new GnuCLexer(input1);
-        lexer1.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+    	 
+    	GnuCLexer lexer1 = new GnuCLexer(input1);
+        lexer1.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
         TNode  node = createTNode(lexer1);
         node = node.firstChildOfType(GnuCTokenTypes.NCompoundStatement);
         //node = node.firstChildOfType(109);
@@ -128,12 +129,35 @@ public class WrappingUtil
         return node;
     }
     
+    public TNode prepareNodeForHeaderIntroduction(String inputStr)
+    {
+    	//inputStr="short x;"; 
+    	//Reader input1 = new StringReader("void foo(){" +inputStr+"}");
+    	Reader input1 = new StringReader( inputStr);
+    	
+    	GnuCLexer lexer1 = new GnuCLexer(input1);
+        lexer1.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
+        TNode  node = createTNode(lexer1);
+        node = node.firstChildOfType(GnuCTokenTypes.NCompoundStatement);
+        //node = node.firstChildOfType(109);
+        node = (TNode) node.getFirstChild();
+        node = node.deepCopy();
+//        com.ideals.weavec.wrapper.parsing.TNode.printTree(node);
+//        System.out.println("------------");
+        preparingTokenNumbers(node);
+        preparingRelationShips(node);
+        node.HEADER=true;
+        flagNodes(node,true);
+        
+        return node;
+    }
+    
     public TNode[] prepareNodeForStructureIntroduction(String inputStr)
     {
     	Reader input1 = new StringReader("typedef struct {" +inputStr+"} hallo;");
     	//System.out.println("Prepating node for: "+"void foo(){ " +inputStr+"}");
         GnuCLexer lexer1 = new GnuCLexer(input1);
-        lexer1.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+        lexer1.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
         TNode  node = createTNode(lexer1);
         node = (TNode)node.getFirstChild();
         TNode node1 = (TNode)node.getNextSibling().getFirstChild().getNextSibling();
@@ -166,7 +190,7 @@ public class WrappingUtil
     	//System.out.println("Prepating node for: "+"void foo(){ " +inputStr+"}");
         Reader input1 = new StringReader("void foo(){" +inputStr+"}");
         GnuCLexer lexer1 = new GnuCLexer(input1);
-        lexer1.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+        lexer1.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
         TNode  node = createTNode(lexer1);
         
         node = node.firstChildOfType(GnuCTokenTypes.NCompoundStatement);
@@ -187,7 +211,7 @@ public class WrappingUtil
     	//System.out.println("Prepating node for: "+"void foo(){ " +code+"}");
         Reader input1 = new StringReader("void foo(){" + code +"}");
         GnuCLexer lexer1 = new GnuCLexer(input1);
-        lexer1.setTokenObjectClass("com.ideals.weavec.wrapper.parsing.CToken");
+        lexer1.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
         TNode  node = createTNode(lexer1);
         node = node.firstChildOfType(GnuCTokenTypes.NCompoundStatement);
 

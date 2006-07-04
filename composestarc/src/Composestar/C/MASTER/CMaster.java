@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java,v 1.2 2006/02/17 16:43:33 oohlaf Exp $
+ * $Id: CMaster.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 
 package Composestar.C.MASTER;
@@ -41,7 +41,6 @@ public class CMaster extends Master  {
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
 	public static String phase = "";
 
-    private Iterator concern_iterator;
     private CommonResources resources;
     private String configfile;
 
@@ -81,9 +80,10 @@ public class CMaster extends Master  {
         }
 		
 	    DataStore ds = DataStore.instance();
-
+	    
 	    ds.addObject(Master.RESOURCES_KEY,resources);
 
+	    
 	    // Set debug level
 	    try {
 			Debug.setMode(Integer.parseInt(Configuration.instance().getProperty("buildDebugLevel")));

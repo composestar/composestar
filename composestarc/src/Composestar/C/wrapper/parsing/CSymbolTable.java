@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: CSymbolTable.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id: CSymbolTable.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -186,7 +186,7 @@ public class CSymbolTable {
   public String toString()
   {
     StringBuffer buff = new StringBuffer(300);
-    buff.append("com.ideals.weavec.wrapper.parsing.CSymbolTable { \nCurrentScope: " + currentScopeAsString() +
+    buff.append("Composestar.C.parsing.CSymbolTable { \nCurrentScope: " + currentScopeAsString() +
                 "\nDefinedSymbols:\n");
     Enumeration ke = symTable.keys();
     Enumeration ve = symTable.elements();

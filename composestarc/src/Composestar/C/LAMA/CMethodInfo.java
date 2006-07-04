@@ -5,13 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMethodInfo.java,v 1.1 2006/02/16 23:10:59 pascal_durr Exp $
+ * $Id: CMethodInfo.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 
 //
 package Composestar.C.LAMA;
 
 import Composestar.Core.LAMA.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -80,6 +81,19 @@ public class CMethodInfo extends MethodInfo /*implements SerializableRepositoryE
      */
     public int getHashCode() {
     return HashCode;     
+    }
+    
+    public MethodInfo getClone(String n, Type actualParent){
+    	CMethodInfo mi = new CMethodInfo();
+    	mi.setName(n);
+    	//set MethodInfo variables
+    	//mi.Parent = this.Parent;
+    	mi.Parent = actualParent;
+    	mi.Parameters = this.Parameters;
+    	mi.ReturnType = this.ReturnType;
+    	mi.ReturnTypeString = this.ReturnTypeString;
+      	mi.CallingConvention = this.CallingConvention;
+    	return mi;
     }
     
     /**

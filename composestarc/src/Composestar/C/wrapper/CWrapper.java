@@ -29,12 +29,14 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: CWrapper.java,v 1.7 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id: CWrapper.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper;
 
 import antlr.RecognitionException;
 import antlr.TokenStreamException;
+import antlr.CommonAST;
+import antlr.debug.misc.ASTFrame;
 
 import java.io.*;
 import java.util.*;
@@ -47,6 +49,8 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.C.LAMA.*;
+import Composestar.C.MASTER.FileMap;
+import Composestar.Core.LAMA.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,44 +61,105 @@ import Composestar.C.LAMA.*;
  */
 public class CWrapper implements CTCommonModule
 {
-
-    private GnuCLexer lexer = null;
-    private GnuCParser parser = null;
-    private TNode node = null;
+	private Vector allNodes = null;
+	private TNode node = null;
     public GlobalIntroductionPoint introductionPoint = null;
-    private PreprocessorInfoChannel infoChannel = null;
-    Hashtable fileASTMap = new Hashtable();
+    public Hashtable fileASTMap = new Hashtable();
     private Vector functions = null;
     private String filename = null;
     private String tempFolder = null;
-    private String objectname = null;
+    public String objectname = null;
     public HashMap structASTMap = new HashMap();
     private ArrayList cfiles = new ArrayList();
     private WrappedAST wrappedAST = null;
     private PrintWriter out=null;
-    
-    public void createWrappedAST(String filename, String objectname, PrintWriter pw) throws FileNotFoundException
+    private String namespace=null;
+    private boolean firstNameSpace = false;
+	private File directory=null;
+	private static HashMap usedTypes= null;
+  
+	   
+    public void run(CommonResources resources) throws ModuleException
     {
-        this.setFilename(filename);
-        this.getObjectname(objectname);
-        this.pWriter(pw);
-
-        try
-        {
-        	DataInputStream input = new DataInputStream(new FileInputStream(filename));
-        	initialization(input);
+    	filename= Configuration.instance().getPathSettings().getPath("Base"); 
+    	tempFolder= Configuration.instance().getPathSettings().getPath("Base");
+    	/** here a new file(typ): Semantics of the annotations is instantiaded 
+    	 * just as the xml file where the annotion information will be saved **/
+    	File destination = new File(tempFolder+"attributes.xml");
+    	CFile semantics = new CFile();
+    	usedTypes=new HashMap();
+    	DataStore dataStore = DataStore.instance();
+    	PrimitiveConcern pcFile = new PrimitiveConcern();
+    	semantics.setName("Semantics");
+    	semantics.setFullName("Composestar.Semantics");
+    	semantics.setAnnotation(true);
+    	pcFile.setName( semantics.name() );
+		pcFile.setPlatformRepresentation(semantics);
+		semantics.setParentConcern(pcFile);
+		
+		dataStore.addObject( semantics.name(), pcFile );
+		//FileMap fm = FileMap.instance();
+		
+	 	try{
+    		out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
+    		out.println("<?xml version=\"1.0\"?>");
+    	    out.println("<Attributes>");
+    	}
+    	catch (IOException e) {
+            e.printStackTrace();
         }
-        catch(FileNotFoundException fnfe)
-        {
-        	System.out.println("File "+filename+" not found!");
-        	System.exit(-1);
-        }
+    	if( filename.equals( "ERROR" ) ) 
+		{
+			throw new ModuleException( "Error in configuration file: No such property TempFolder" );
+		}
+    	/**@Todo: now the subdirs are searched for .c files and not the sources of build.ini is used**/
+    	
+    	createNameSpace(new File(filename),true,new InputFileNameFilter(), resources);
+    	cfiles = getAllFilesFromDirectory(new File(filename),true,new InputFileNameFilter());
+  	
+    	for(int i=0; i<cfiles.size(); i++)
+		{
+				this.fileASTMap.put((String)cfiles.get(i),new Object());
+		}
+        
+    	Iterator it = this.fileASTMap.keySet().iterator();
+		while(it.hasNext())
+		{
+			filename = (String)it.next();//(String)cfiles.get(i); //
+			try
+	    	{
+				/******************************8
+				 * object name is the filename without the extension and 
+				 * without the tempfolder-path, subdirs from the tempfolder path
+				 * are changed into subdir.object*
+				 ***********************************/
+				retrieveAST wrapper = new retrieveAST();
+		    	
+				setObjectName(filename,resources);
+				setNameSpace(filename, resources);
+				wrapper.createWrappedAST(filename, objectname, namespace, out, usedTypes, this);
+				this.fileASTMap.put(filename,wrapper);
+				FileMap.instance().addFileAST(filename,wrapper);//createWrappedAST(filename, objectname, namespace, out, usedTypes, this));
+			}
+    		catch(Exception e)
+    		{
+	    		e.printStackTrace();
+	    	}
+		}
+		out.println("</Attributes>");
+		out.close();
+		
+		//Iterator i = usedTypes.values().iterator();
+        //while(i.hasNext()){
+        	//System.out.println("HashMap usedTypes entry:" +(String)i.next());
+        //}
     }
-
+	
+   
     private ArrayList getAllFilesFromDirectory(File dir, boolean recurse, FilenameFilter fnf) 
     {
     	ArrayList list = new ArrayList();
-        if (dir.isDirectory())
+    	if (dir.isDirectory())
         {
             String[] children = dir.list(fnf);
             for (int i=0; i<children.length; i++)
@@ -115,144 +180,40 @@ public class CWrapper implements CTCommonModule
         return list;
     }
     
-    public void run(CommonResources resources) throws ModuleException
-    {
-    	filename= Configuration.instance().getPathSettings().getPath("Base"); 
-    	tempFolder= Configuration.instance().getPathSettings().getPath("Base");
-    	
-    	/** here a new file(typ): Semantics of the annotations is instantiaded 
-    	 * just as the xml file where the annotion information will be saved **/
-    	File destination = new File(tempFolder+"attributes.xml");
-    	CFile semantics = new CFile();
-    	DataStore dataStore = DataStore.instance();
-    	PrimitiveConcern pcFile = new PrimitiveConcern();
-    	semantics.setName("Semantics");
-    	semantics.setFullName("Composestar.Semantics");
-    	semantics.setAnnotation(true);
-    	pcFile.setName( semantics.name() );
-		pcFile.setPlatformRepresentation(semantics);
-		semantics.setParentConcern(pcFile);
-		dataStore.addObject( semantics.name(), pcFile );
-		
-    	try{
-    		out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
-    		out.println("<?xml version=\"1.0\"?>");
-    	    out.println("<Attributes>");
-    	}
-    	catch (IOException e) {
-            e.printStackTrace();
-        }
-    	if( filename.equals( "ERROR" ) ) 
-		{
-			throw new ModuleException( "Error in configuration file: No such property TempFolder" );
-		}
-    	/**@Todo: now the subdirs are searched for .c files and not the sources of build.ini is used**/
-    	
-    	cfiles = getAllFilesFromDirectory(new File(filename),true,new InputFileNameFilter());
-  	
-    	for(int i=0; i<cfiles.size(); i++)
-		{
-				this.fileASTMap.put((String)cfiles.get(i),new Object());
-		}
-        
-    	Iterator it = this.fileASTMap.keySet().iterator();
-		while(it.hasNext())
-		{
-			filename = (String)it.next();
-			try
-	    	{
-				CWrapper wrapper = new CWrapper();
-				/******************************8
-				 * object name is the filename without the extension and 
-				 * without the tempfolder-path, subdirs from the tempfolder path
-				 * are changed into subdir.object*
-				 ***********************************/
-				setObjectName(filename,resources);
-				wrapper.createWrappedAST(filename, objectname, out);
-				fileASTMap.put(filename,wrapper);
-    		}
-    		catch(Exception e)
-    		{
-	    		e.printStackTrace();
-	    	}
-		}
-		out.println("</Attributes>");
-		out.close();
-    }
-   
-    private void initialization(DataInputStream input)
-    {
-    	lexer = new GnuCLexer(input);
-        lexer.setTokenObjectClass("Composestar.C.wrapper.parsing.CToken");
-        lexer.initialize();
-        infoChannel = lexer.getPreprocessorInfoChannel();
-
-        parser = new GnuCParser(lexer);
-
-        parser.setASTNodeClass(TNode.class.getName());
-        TNode.setTokenVocabulary("Composestar.C.wrapper.parsing.GnuCTokenTypes");
-        try
-        {
-        	parser.setFilename(this.filename);
-        	parser.translationUnit();
-            
-            GnuCTreeParser treeparser = new GnuCTreeParser();
-            
-            treeparser.initiateXMLFile(out);
-            treeparser.setFilename(this.objectname);
-            treeparser.translationUnit(parser.getAST());
-            
-            this.introductionPoint = treeparser.getIntroductionPoint();
-            this.functions = treeparser.getFunctions();
-            this.structASTMap = treeparser.getStructASTMap();
-        }
-        catch (RecognitionException e)
-        {
-            e.printStackTrace();
-        }
-        catch (TokenStreamException e)
-        {
-            e.printStackTrace();
-        }
-                
-        node = (TNode) parser.getAST();
-    }
-    /**
-    public void printMetaModel()
-    {
-    	System.out.println("Meta model for file: "+this.getFilename());
-    	if(this.introductionPoint != null)
-    		System.out.println("Introduction JP: "+this.introductionPoint.getNode().getLineNum());
-    	for(int i=0; i<getFunctions().size(); i++)
+    /**TODO: @johan this create namespace function makes a namespace from a directory
+     * this does not work well cause is only looks for the path and not for the parent namespaces 
+     * **/ 
+    
+    private void createNameSpace(File dir, boolean recurse, FilenameFilter fnf, CommonResources resources){
     	{
-    		Function function = (Function)this.getFunctions().get(i);
-    		if(function != null)
-    		{
-	    		System.out.println("Meta model for function: "+function.getName());
-	    		System.out.println("\tIn file: "+function.getFileName());
-	    		System.out.print("\tReturn type: ");
-    			if(function.getReturnParameter() != null)
-	    		{
-	    			function.getReturnParameter().testParameterType();
-	    		}
-	    		else 
-	    			System.out.println("void");
-    			
-	    		if(!function.hasNoParameters())
-	    		{
-		    		System.out.println("\tNumber of parameters: "+function.getNumberOfInputs());
-		    		for(int j=0; j<function.getNumberOfInputs(); j++)
-		    		{
-		    			Parameter param = function.getInputParameter(j);
-		    			System.out.print("\t\tParameter["+j+"]: ");
-		    			param.testParameter();
-		    		}
-	    		}
-    		}
-    	}
-    }**/
-
-	public void setFunctions(Vector functions) {
+        	if (dir.isDirectory())
+            {
+        		namespace=dir.getName();
+              	firstNameSpace = true;
+            	String[] children = dir.list(fnf);
+                for (int i=0; i<children.length; i++)
+                {
+                	File f = new File(dir, children[i]);
+                    if(recurse)
+                    {
+                    	createNameSpace(f,recurse,fnf, resources);
+                    }
+                }
+            }
+            else //is in directory:namespace and this directory contains a .c file
+            {
+            	if(firstNameSpace){
+            		LangNamespace ns = new LangNamespace(namespace);
+            		//dict.addLanguageUnit(ns);
+            		firstNameSpace=false;
+            	}
+            }
+        }
+    
+    }
+ 
+  
+    public void setFunctions(Vector functions) {
 		this.functions = functions;
 	}
 
@@ -268,6 +229,14 @@ public class CWrapper implements CTCommonModule
 		this.objectname =objectname;
 	}
 	
+	public void getNameSpace(String namespace){
+		this.namespace=namespace;
+	}
+	
+	public void getUsedType(HashMap usedTypes){
+		this.usedTypes= usedTypes;
+	}
+	
 	public void setObjectName(String filename, CommonResources resources){
 		this.objectname = Configuration.instance().getPathSettings().getPath("Base");
 		this.objectname = objectname.replace('/','\\');
@@ -275,7 +244,18 @@ public class CWrapper implements CTCommonModule
 		this.objectname = objectname.substring(0,objectname.lastIndexOf(".c"));
 		this.objectname = objectname.replace('\\','.');
 	}
-
+	
+	public void setNameSpace(String filename, CommonResources resources){
+		namespace= Configuration.instance().getPathSettings().getPath("Base");
+		namespace = namespace.replace('/','\\');
+		namespace = namespace.substring(0,namespace.lastIndexOf("\\"));
+		namespace = namespace.substring(0,namespace.lastIndexOf("\\"));
+		namespace = filename.substring(namespace.length());
+		namespace = namespace.substring(0,namespace.lastIndexOf("\\"));
+		namespace = namespace.substring(namespace.indexOf("\\")+1, namespace.length());
+		namespace = namespace.replace('\\','.');
+	}
+	    
 	public String getFilename() {
 		return filename;
 	}
@@ -291,4 +271,5 @@ public class CWrapper implements CTCommonModule
 	public WrappedAST getWrappedAST() {
 		return wrappedAST;
 	}
+	
 }

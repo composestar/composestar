@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: TNode.java,v 1.3 2005/11/11 21:04:33 pascal_durr Exp $
+ * $Id: TNode.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -55,6 +55,7 @@ public class TNode extends CommonAST
   public static final long serialVersionUID = 5324853;
   
   public boolean INTRODUCED = false;
+  public boolean HEADER =false;
 
   protected int ttype;
   protected String text;
@@ -71,6 +72,7 @@ public class TNode extends CommonAST
   private TNode parent = null;
   private TNode previousNode = null;
   private int oldComment = -1;
+  private String comment="";
 
   public void setParent(TNode parent)
   {
@@ -108,7 +110,16 @@ public class TNode extends CommonAST
   public static void setTokenVocabulary(String s) {
     tokenVocabulary = s;
   }
+  public String getComment()
+  {
+      return comment;
+  }
 
+  public void addComment(String comment)
+  {
+      if(this.comment.indexOf(comment)==-1)
+    	  this.comment += comment+"\n";
+  }
     
 public void initialize(Token token) {
         CToken tok = (CToken) token;

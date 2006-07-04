@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: FunctionFactory.java,v 1.6 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id: FunctionFactory.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper;
 
@@ -279,15 +279,19 @@ public class FunctionFactory
     public void checkForPointer(TNode node100, ParameterType p)
     {
     	TNode tn = (TNode)node100.getFirstChild();
-        if(tn.getType() == GnuCTokenTypes.NPointerGroup)
+    	//System.out.println(node100.getText());
+		
+    	if(tn.getType() == GnuCTokenTypes.NPointerGroup)
         {
         	TNode n = null;
             for(int i = 0; i < node100.getNumberOfChildren(); i++)
             {
             	if(i==0) n = (TNode) tn.getFirstChild();
             	else if(n != null) n = (TNode) n.getNextSibling();
-            	if(n != null && n.getType() == GnuCTokenTypes.STAR)
+            	if(n != null && n.getType() == GnuCTokenTypes.STAR){
+            		/**let op als het hier fout gaat kan er wel eens message.c/.h in je dir staan**/
             		p.addPointerLevel();
+            	}
              }
         }
     }

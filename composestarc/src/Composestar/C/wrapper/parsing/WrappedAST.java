@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: WrappedAST.java,v 1.6 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id: WrappedAST.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
  */
 package Composestar.C.wrapper.parsing;
 
@@ -65,6 +65,7 @@ public class WrappedAST
     private TNode node = null;
     private PreprocessorInfoChannel infoChannel = null;
     public GlobalIntroductionPoint introductionPoint = null;
+    public HeaderIntroductionPoint headerintroductionPoint=null;
     private Vector allNodes = new Vector();
     private Vector functions = new Vector();
     private Vector commentKeepers = new Vector();
@@ -73,10 +74,12 @@ public class WrappedAST
     private WrappingUtil wrappingUtil = new WrappingUtil();
 
     public WrappedAST(TNode node, PreprocessorInfoChannel infoChannel,
-                      Vector allNodes, Vector functions, Vector commentKeepers, GlobalIntroductionPoint  intropoint)
+                      Vector allNodes, Vector functions, Vector commentKeepers, GlobalIntroductionPoint  intropoint, HeaderIntroductionPoint headerpoint)
     {
         this.node = node;
         this.introductionPoint = intropoint;
+        this.headerintroductionPoint = headerpoint;
+        
         this.infoChannel = infoChannel;
         this.allNodes = allNodes;
         this.functions = functions;
@@ -753,6 +756,11 @@ public class WrappedAST
     	TNode previous = gip.getNode().getPreviousNode();
     	//System.out.println("Previous NODE: "+GnuCParser._tokenNames[previous.getType()]);
     	this.insertBeforeNode(previous,iNode);
+    }
+    public void weaveHeaderIntroduction(String code, HeaderIntroductionPoint hip)
+    {
+    	hip.getNode().addComment(code);
+    	hip.getNode().HEADER=true;
     }
     
     public void weaveStructureIntroduction(String code, Struct struct)
