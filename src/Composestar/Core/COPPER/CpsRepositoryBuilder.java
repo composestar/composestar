@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.4 2006/03/14 14:34:28 dspenkel Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.5 2006/06/25 19:24:10 wminnen Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -954,6 +954,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
     if (target != null) {
       addTarget(target);
+    }
+    else {
+      addTarget("*");
     }
     if (selector != null) {
       addSelector(selector, argTypes,lineNumber);
