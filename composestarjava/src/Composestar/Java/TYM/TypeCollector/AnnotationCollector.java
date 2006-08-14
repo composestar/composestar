@@ -15,37 +15,44 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.*;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
 
-public class AnnotationCollector {
+public class AnnotationCollector 
+{
 
-	public void run(CommonResources resources) throws ModuleException {
+	public void run(CommonResources resources) throws ModuleException 
+	{
 		
 		ClassMap classmap = ClassMap.instance();
 		HashMap classes = classmap.map();
 		Iterator classIt = classes.values().iterator();
-		while( classIt.hasNext() ) {
+		while( classIt.hasNext() ) 
+		{
 			Class c = (Class)classIt.next();
 			fetchMethodAnnotations(c);
 		}
 	}
 	
-	public void fetchMethodAnnotations(Class c) {
+	public void fetchMethodAnnotations(Class c) 
+	{
 					
 		Method[] methods  = c.getMethods();
-		for(int i = 0; i < methods.length; i++ ) {
+		for(int i = 0; i < methods.length; i++ ) 
+		{
 			Annotation[] annotations = methods[i].getAnnotations();
-			for(int j = 0; j < annotations.length; j++ ) {
-					JavaAnnotation annot = new JavaAnnotation();
-					Type annotType = getTypeLocation(annotations[j].annotationType().getName());
-					if(annotType!=null) {
-						annot.register(annotType,getMethodLocation(getTypeLocation(c.getName()),methods[i].getName()));
-					}
+			for(int j = 0; j < annotations.length; j++ ) 
+			{
+				JavaAnnotation annot = new JavaAnnotation();
+				Type annotType = getTypeLocation(annotations[j].annotationType().getName());
+				if(annotType!=null) 
+				{
+					annot.register(annotType,getMethodLocation(getTypeLocation(c.getName()),methods[i].getName()));
+				}
 					
-					//retrieving value
-					String value = "";
-					String annotStr = annotations[j].toString(); 
-					//"@COmposehfdskja.Semantics(value=args.read)"
-					value = annotStr.substring(annotStr.indexOf("=")+1 , annotStr.indexOf(")"));
-					annot.setValue(value);
+				//retrieving value
+				String value = "";
+				String annotStr = annotations[j].toString(); 
+				//"@Composestar.Semantics(value=args.read)"
+				value = annotStr.substring(annotStr.indexOf("=")+1 , annotStr.indexOf(")"));
+				annot.setValue(value);
 			}
 		}
 	}
@@ -55,7 +62,7 @@ public class AnnotationCollector {
 		if( type != null )
 		{
 			List methods = type.getMethods();
-            Iterator i = methods.iterator();
+			Iterator i = methods.iterator();
 			while(i.hasNext())
 			{
 				MethodInfo method = (MethodInfo) i.next();

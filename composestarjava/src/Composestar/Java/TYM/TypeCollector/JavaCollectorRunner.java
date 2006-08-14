@@ -20,49 +20,55 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-public class JavaCollectorRunner implements CollectorRunner {
+public class JavaCollectorRunner implements CollectorRunner 
+{
 
 	HashMap pendingTypes; 
 	HashMap processedTypes; 
 	
-	public JavaCollectorRunner() {
+	public JavaCollectorRunner() 
+	{
 		pendingTypes = new HashMap();
 		processedTypes = new HashMap();
 	}
 	
-	public void run(CommonResources resources) throws ModuleException {
+	public void run(CommonResources resources) throws ModuleException 
+	{
 				
-		try {
+		try 
+		{
 			//iterate over classes
 			ClassMap cm = ClassMap.instance();
 			HashMap classes = cm.map();
 			Iterator classIt = classes.values().iterator();
-			while( classIt.hasNext() ) {
+			while( classIt.hasNext() ) 
+			{
 				Class c = (Class)classIt.next();
-				if(c.getName().equals("EncryptionExample.Logger")) {
-					doSomething(c);					
-				}
 				processType(c);
 			}
 			processPendingTypes();
 		}
-		catch(Exception e) {
+		catch(Exception e) 
+		{
 			throw new ModuleException("Collector: "+e.toString());
 		}
 		
 		int count = 0;
 		DataStore dataStore = DataStore.instance();
-        HashMap typeMap = TypeMap.instance().map();
-        // loop through all current concerns, fetch implementation and remove from types map.
-        Iterator repIt = dataStore.getIterator();
-        while( repIt.hasNext() ) {
-        	Object next = repIt.next();
-        	if( next instanceof CpsConcern ) {
-        		CpsConcern concern = (CpsConcern)next;
-        		// fetch implementation name
-        		Object impl = concern.getImplementation();
-        		String className = "";
-				if( impl == null ) { 
+		HashMap typeMap = TypeMap.instance().map();
+		// loop through all current concerns, fetch implementation and remove from types map.
+		Iterator repIt = dataStore.getIterator();
+		while( repIt.hasNext() ) 
+		{
+			Object next = repIt.next();
+			if( next instanceof CpsConcern ) 
+			{
+				CpsConcern concern = (CpsConcern)next;
+				// fetch implementation name
+				Object impl = concern.getImplementation();
+				String className = "";
+				if( impl == null ) 
+				{ 
 					continue; 
 				}
 				else if( impl instanceof Source )
@@ -88,20 +94,22 @@ public class JavaCollectorRunner implements CollectorRunner {
 					throw new ModuleException( "CollectorRunner: Can only handle concerns with source file implementations or direct class links." );
 				}
         		
-        		if( !typeMap.containsKey( className ) ) {
-        			throw new ModuleException( "Implementation: " + className + " for concern: " + concern.getName() + " not found!" );
-        		}
-        		JavaType type = (JavaType)typeMap.get(className);
-        		concern.setPlatformRepresentation( type );
-        		type.setParentConcern(concern);
-        		typeMap.remove( className );
+				if( !typeMap.containsKey( className ) ) 
+				{
+					throw new ModuleException( "Implementation: " + className + " for concern: " + concern.getName() + " not found!" );
+				}
+				JavaType type = (JavaType)typeMap.get(className);
+				concern.setPlatformRepresentation( type );
+				type.setParentConcern(concern);
+				typeMap.remove( className );
 				count++;
-        	}
-        }
+			}
+		}
         
-        // loop through rest of the concerns and add to the repository in the form of primitive concerns
-        Iterator it = typeMap.values().iterator();
-        while( it.hasNext() ) {
+		// loop through rest of the concerns and add to the repository in the form of primitive concerns
+		Iterator it = typeMap.values().iterator();
+		while( it.hasNext() ) 
+		{
 			JavaType type = (JavaType)it.next();
 			PrimitiveConcern pc = new PrimitiveConcern();
 			pc.setName( type.fullName() );
@@ -111,19 +119,11 @@ public class JavaCollectorRunner implements CollectorRunner {
 		}
 	}
 	
-	private void doSomething(Class c) {
-		Method[] methods  = c.getMethods();
-		for(int i = 0; i < methods.length; i++ ) {
-			Annotation[] annotations = methods[i].getAnnotations();
-			for(int j = 0; j < annotations.length; j++ ) {
-					
-			}
-		}
-	}
-	private void processType(Class c) {
+	private void processType(Class c) 
+	{
 		
 		if( processedTypes.containsKey( c.getName() ) ) return;
-        // this type is processed
+		// this type is processed
 		typeProcessed( c.getName(), c );
 		
 		TypeMap map = TypeMap.instance();
@@ -139,37 +139,43 @@ public class JavaCollectorRunner implements CollectorRunner {
 			jtype.setName(jtype.fullName());
 		
 		//is annotation?
-		if(c.isAnnotation()) {
+		if(c.isAnnotation()) 
+		{
 			jtype.setIsAnnotation(true);
 		}
 		
 		//add superclass
 		Class superclass = c.getSuperclass();
-		if(superclass != null) {
+		if(superclass != null) 
+		{
 			addPendingType(superclass.getName(),superclass);
 		}
 		
 		//add interfaces
 		Class[] interfaces = c.getInterfaces();
-		for(int i = 0; i < interfaces.length; i++ ) {
+		for(int i = 0; i < interfaces.length; i++ ) 
+		{
 			jtype.addImplementedInterface(interfaces[i].getName());
 			addPendingType(interfaces[i].getName(),interfaces[i]);
 		}
 		
 		//add methods
 		Method[] methods  = c.getMethods();
-		for(int i = 0; i < methods.length; i++ ) {
+		for(int i = 0; i < methods.length; i++ ) 
+		{
 			jtype.addMethod(processMethodInfo(methods[i]));
 		}
 		
 		//add fields
 		Field[] fields  = c.getFields();
-		for(int i = 0; i < fields.length; i++ ) {
+		for(int i = 0; i < fields.length; i++ ) 
+		{
 			jtype.addField(processFieldInfo(fields[i]));
 		}
 	}
 	
-	private MethodInfo processMethodInfo(Method m) {
+	private MethodInfo processMethodInfo(Method m) 
+	{
 		JavaMethodInfo jmethod = new JavaMethodInfo(m);
 		jmethod.setName(m.getName());
 		jmethod.setReturnType(m.getReturnType().getName());
@@ -177,13 +183,15 @@ public class JavaCollectorRunner implements CollectorRunner {
 		
 		//add parameters
 		Class[] parameters = m.getParameterTypes();
-		for(int i = 0; i < parameters.length; i++ ) {
+		for(int i = 0; i < parameters.length; i++ ) 
+		{
 			jmethod.addParameter(processParameterInfo(parameters[i]));
 		}
 		return jmethod;
 	}
 	
-	private FieldInfo processFieldInfo(Field f) {
+	private FieldInfo processFieldInfo(Field f) 
+	{
 		
 		JavaFieldInfo jfield = new JavaFieldInfo(f);
 		jfield.setName(f.getName());
@@ -192,7 +200,8 @@ public class JavaCollectorRunner implements CollectorRunner {
 		return jfield;
 	}
 	
-	private ParameterInfo processParameterInfo(Class p) {
+	private ParameterInfo processParameterInfo(Class p) 
+	{
 		
 		JavaParameterInfo jparameter = new JavaParameterInfo(p);
 		jparameter.setName("");
@@ -201,7 +210,8 @@ public class JavaCollectorRunner implements CollectorRunner {
 		return jparameter;
 	}
 	
-	private void addPendingType(String key, Class ptype) {
+	private void addPendingType(String key, Class ptype) 
+	{
 		
 		if(pendingTypes.containsKey(key))
 			return;
@@ -210,10 +220,12 @@ public class JavaCollectorRunner implements CollectorRunner {
 		pendingTypes.put(key,ptype);
 	}
 	
-	private void processPendingTypes() {
+	private void processPendingTypes() 
+	{
 		
 		Iterator pendingIt = pendingTypes.values().iterator();
-		while( pendingIt.hasNext() ) {
+		while( pendingIt.hasNext() ) 
+		{
 			Class pendingClass = (Class)pendingIt.next();
 			processType(pendingClass);
 			typeProcessed(pendingClass.getName(),pendingClass);
@@ -221,14 +233,16 @@ public class JavaCollectorRunner implements CollectorRunner {
 		}
 	}
 	
-	private void typeProcessed(String key, Class type){
+	private void typeProcessed(String key, Class type)
+	{
 		if( pendingTypes.containsKey( key ) )
 			pendingTypes.remove( key );
 		if( !processedTypes.containsKey( key ) )
 			processedTypes.put( key , type );
 	}
 
-	public void copyOperation(Vector dlls) {
+	public void copyOperation(Vector dlls) 
+	{
 		//TODO: implement this
 	}
 }
