@@ -5,6 +5,9 @@ import Composestar.Core.DUMMER.*;
 import Composestar.Core.Master.Config.*;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import antlr.*;
 import antlr.collections.*;
 
@@ -18,32 +21,33 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	private int tabs = 0;
 	private boolean lastOutputWasNewline = true;
 	private PrintStream debug = System.err;
-		
+			
 	/**
-    * @roseuid 43D4B7B30265
-    */
+	 * @roseuid 43D4B7B30265
+	 */
 	public JavaDummyEmitter() 
 	{
 		setupTokenNames();
 	}
    
-	public void createDummy(Source source, String targetFilename) throws ModuleException {	   
+	public void createDummy(Source source, String targetFilename) throws ModuleException 
+	{	   
 	 	
 		dummy = new StringBuffer();
-		
 		//Create a root AST node with id 0
 		ASTFactory factory = new ASTFactory();
 		AST root = factory.create(ROOT_ID,"AST ROOT");
 		
-		try {
-	   		FileInputStream fis = new FileInputStream(source.getFileName());
-	   		// Create a scanner that reads from the input stream passed to us
-	   		JavaLexer lexer = new JavaLexer(fis);
-	   		lexer.setFilename(source.getFileName());
+		try 
+		{
+			FileInputStream fis = new FileInputStream(source.getFileName());
+			// Create a scanner that reads from the input stream passed to us
+			JavaLexer lexer = new JavaLexer(fis);
+			lexer.setFilename(source.getFileName());
 
-	   		// Create a parser that reads from the scanner
-	   		JavaRecognizer parser = new JavaRecognizer(lexer);
-	   		parser.setFilename(source.getFileName());
+			// Create a parser that reads from the scanner
+			JavaRecognizer parser = new JavaRecognizer(lexer);
+			parser.setFilename(source.getFileName());
 
 			// start parsing at the compilationUnit rule
 			parser.compilationUnit();
@@ -51,7 +55,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			AST t = parser.getAST();
 			root.setFirstChild(t);
 		}
-		catch (Exception e) {
+		catch (Exception e) 
+		{
 			throw new ModuleException("Error while creating AST: " + e.getMessage(), "DUMMER");
 		}
 		
@@ -59,7 +64,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		visit(root);
 		
 		//emit dummy to file
-		try {
+		try 
+		{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(targetFilename));			
 			bw.write(dummy.toString());
 			bw.close();
@@ -80,8 +86,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	private AST getChild(AST ast, int childType)
 	{
 		AST child = ast.getFirstChild();
-		while (child != null) {
-			if (child.getType() == childType) {
+		while (child != null) 
+		{
+			if (child.getType() == childType) 
+			{
 				return child;
 			}
 			child = child.getNextSibling();
@@ -91,10 +99,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	
 	private static int getPrecedence(AST ast) 
 	{
-		if (ast == null) {
+		if (ast == null) 
+		{
 			return -2;				
 		}
-		switch (ast.getType()) {
+		switch (ast.getType()) 
+		{
 			case EXPR:
 				return getPrecedence(ast.getFirstChild());
 
@@ -178,10 +188,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		return (ast.getFirstChild() != null);
 	}
 	
-	public void interceptMethodBody(AST ast) {
+	public void interceptMethodBody(AST ast) 
+	{
 		AST methodReturnType = new CommonAST();
 		visit(getChild(ast, MODIFIERS));
-		if (ast.getType() != CTOR_DEF) {
+		if (ast.getType() != CTOR_DEF) 
+		{
 			AST type = getChild(ast, TYPE);
 			visit(type);
 			methodReturnType = type.getFirstChild();
@@ -192,13 +204,17 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		visit(getChild(ast, PARAMETERS));
 		visit(getChild(ast, LITERAL_throws));
 		AST methodBody = getChild(ast, SLIST);
-		if (methodBody == null) {
+		if (methodBody == null) 
+		{
 			out(";");
-		} else {
+		} 
+		else 
+		{
 			out(" ");
 			startBlock();
 			int t = methodReturnType.getType();
-			if(t!=LITERAL_void && t!=0){
+			if(t!=LITERAL_void && t!=0)
+			{
 				out("return "+getDefaultReturnValue(t)+";");
 				newline();
 			}
@@ -207,7 +223,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		}
 	}
 	
-	private String getDefaultReturnValue(int tokentype){
+	private String getDefaultReturnValue(int tokentype)
+	{
 		if(tokentype == LITERAL_int || tokentype == LITERAL_short || tokentype == LITERAL_byte || tokentype == LITERAL_long)
 			return "0";
 		else if(tokentype == LITERAL_float || tokentype == LITERAL_double)
@@ -220,7 +237,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			return "null";
 	}
 	
-	private String name(AST ast) {
+	private String name(AST ast) 
+	{
 		return tokenNames[ast.getType()];
 	}
 		
@@ -232,9 +250,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	
 	public void out(String text)
 	{	
-		if ( lastOutputWasNewline ) {
-            tab();
-        }
+		if ( lastOutputWasNewline ) 
+		{
+			tab();
+		}
 		lastOutputWasNewline = false;
 		this.dummy.append(text);
 	}
@@ -248,7 +267,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	
 	private void printSemi(AST parent) 
 	{
-		if (parent!= null && parent.getType() == SLIST) {
+		if (parent!= null && parent.getType() == SLIST) 
+		{
 			out(";");
 		}
 	}	
@@ -256,18 +276,22 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	private void printWithParens(AST parent, AST ast) 
 	{
 		boolean parensNeeded = (getPrecedence(parent) < getPrecedence(ast));
-		if (parensNeeded) {
+		if (parensNeeded) 
+		{
 			out("(");
 		}
 		visit(ast);
-		if (parensNeeded) {
+		if (parensNeeded) 
+		{
 			out(")");
 		}
 	}
 	
-	private static void setupTokenNames() {
+	private static void setupTokenNames() 
+	{
 		tokenNames = new String[200];
-		for (int i=0; i<tokenNames.length; i++) {
+		for (int i=0; i<tokenNames.length; i++) 
+		{
 			tokenNames[i] = "ERROR:" + i;
 		}
 
@@ -369,20 +393,24 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		newline();
 	}
 	
-	protected void tab() {
-        for (int i=1; i<=tabs; i++) {
-            this.dummy.append('\t');
-        }
-    }
+	protected void tab() 
+	{
+		for (int i=1; i<=tabs; i++) 
+		{
+			this.dummy.append('\t');
+		}
+	}
 	
 	public void visit(AST ast)
 	{
-		if (ast == null) {
+		if (ast == null) 
+		{
 			return;
 		}
 
 		AST parent = null;
-		if (!stack.isEmpty()) {
+		if (!stack.isEmpty()) 
+		{
 			parent = (AST) stack.peek();
 		}
 		stack.push(ast);
@@ -390,14 +418,17 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		AST child1 = ast.getFirstChild();
 		AST child2 = null;
 		AST child3 = null;
-		if (child1 != null) {
+		if (child1 != null) 
+		{
 			child2 = child1.getNextSibling();
-			if (child2 != null) {
+			if (child2 != null) 
+			{
 				child3 = child2.getNextSibling();
 			}
 		}
 
-		switch(ast.getType()) {
+		switch(ast.getType()) 
+		{
 			
 			case ROOT_ID:
 				visit(getChild(ast, PACKAGE_DEF));
@@ -413,9 +444,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				
 				visit(getChild(ast, ANNOTATIONS)); //added 1.5
 				out("package ");
-				
 				visit(getChild(ast, IDENT));
-								
+				visitChildren(ast, "", DOT);
 				out(";");
 				newline();
 				break;
@@ -429,9 +459,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			case CLASS_DEF:
 			case INTERFACE_DEF:
 				visit(getChild(ast, MODIFIERS));
-				if (ast.getType() == CLASS_DEF) {
+				if (ast.getType() == CLASS_DEF) 
+				{
 					out("class ");
-				} else {
+				} 
+				else 
+				{
 					out("interface ");
 				}
 				visit(getChild(ast, IDENT));
@@ -467,14 +500,16 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 				
 			case MODIFIERS:
-				if (hasChildren(ast)) {
+				if (hasChildren(ast)) 
+				{
 					visitChildren(ast, " ");
 					out(" ");
 				}
 				break;
 
 			case EXTENDS_CLAUSE:
-				if (hasChildren(ast)) {
+				if (hasChildren(ast)) 
+				{
 					out("extends ");
 					visitChildren(ast, ", ");
 					out(" ");
@@ -483,7 +518,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			case IMPLEMENTS_CLAUSE:
 				
-				if (hasChildren(ast)) {
+				if (hasChildren(ast)) 
+				{
 					out("implements ");
 					visitChildren(ast, ", ", IDENT); //changed 1.5
 					out(" ");
@@ -491,26 +527,34 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				}
 				break;
 
-			case DOT:
+			case DOT: //changed 1.5
 				visit(child1);
 				out(".");
-				visit(child2);
+				if(child2.getType()==JavaTokenTypes.TYPE_ARGS)
+					visit(child3);
+				else
+					visit(child2);
 				break;
 
 			case OBJBLOCK:
-				if (visitChildren(ast, "\n",  VARIABLE_DEF)) {
+				if (visitChildren(ast, "\n",  VARIABLE_DEF)) 
+				{
 					newline();
 				}
-				if (visitChildren(ast, "\n",  STATIC_INIT)) {
+				if (visitChildren(ast, "\n",  STATIC_INIT)) 
+				{
 					newline();
 				}
-				if (visitChildren(ast, "\n",  INSTANCE_INIT)) {
+				if (visitChildren(ast, "\n",  INSTANCE_INIT)) 
+				{
 					newline();
 				}
-				if (visitChildren(ast, "\n",  CTOR_DEF)) {
+				if (visitChildren(ast, "\n",  CTOR_DEF)) 
+				{
 					
 				}
-				if (visitChildren(ast, "\n",  METHOD_DEF)) {
+				if (visitChildren(ast, "\n",  METHOD_DEF)) 
+				{
 					newline();
 				}
 				visitChildren(ast, "\n",  CLASS_DEF);
@@ -541,7 +585,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visit(getChild(ast, IDENT));
 				visit(getChild(ast, ASSIGN));
 				printSemi(parent);
-				if (parent!= null && parent.getType() == OBJBLOCK) {
+				if (parent!= null && parent.getType() == OBJBLOCK) 
+				{
 					out(";");
 				}
 				break;
@@ -551,27 +596,32 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case ARRAY_DECLARATOR:
-				if (child1 == null) {		
+				if (child1 == null) 
+				{		
 					out("[]");
 				}
-				else if (child1.getType() == EXPR) {
+				else if (child1.getType() == EXPR) 
+				{
 					out("[");
 					visit(child1);
 					out("]");
 				}
-				else {
+				else 
+				{
 					visit(child1);
 					out("[]");		
 				}
 				break;
 
 			case ASSIGN:
-				if (child2 != null) {
+				if (child2 != null) 
+				{
 					visit(child1);
 					out(" = ");
 					visit(child2);
 				}
-				else {
+				else 
+				{
 					out(" = ");
 					visit(child1);
 				}
@@ -591,7 +641,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			case SLIST:
 				startBlock();
-				if (visitChildren(ast, "\n")) {
+				if (visitChildren(ast, "\n")) 
+				{
 					newline();
 				}
 				endBlock();
@@ -668,20 +719,16 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				printWithParens(ast, child1);
 				break;
 
-			case LITERAL_new:
+			case LITERAL_new: //changed 1.5
 				out("new ");
-				visit(child1);
-				if (child2.getType() != ARRAY_DECLARATOR) {
-					out("(");
-				}
+				
+				//skip TYPE_ARGS
 				visit(child2);
-				if (child2.getType() != ARRAY_DECLARATOR) {
+				if (child3.getType() != ARRAY_DECLARATOR)
+					out("(");
+				visit(child3);
+				if (child3.getType() != ARRAY_DECLARATOR)
 					out(")");
-				}
-				if (child3 != null) {
-					out(" ");
-					visit(child3);
-				}
 				break;
 
 			case METHOD_CALL:
@@ -803,10 +850,12 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 
 			
 			case STAR:
-				if (hasChildren(ast)) {	
+				if (hasChildren(ast)) 
+				{	
 					printBinaryOperator(ast);
 				}
-				else {	
+				else 
+				{	
 					out("*");
 				}
 				break;
@@ -821,7 +870,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				visit(child1);	
 				out(") ");
 				visit(child2);	
-				if (child3 != null) {
+				if (child3 != null) 
+				{
 					out("else ");
 					visit(child3);	
 				}
@@ -886,69 +936,75 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				out("class");
 				break;
 					
-			/*case LITERAL_assert:
-				out("assert ");
-				visit(child1);
-				if (child2 != null) {
-					out(" : ");
-					visit(child2);
-				}
-				break;
-			*/
+				/*case LITERAL_assert:
+				 out("assert ");
+				 visit(child1);
+				 if (child2 != null) {
+				 out(" : ");
+				 visit(child2);
+				 }
+				 break;
+				 */
 					
 			default:
 				debug.println("Invalid type:" + ast.getType());
-				//System.out.println("Invalid type:" + ast.getType());
 				break;
 
 
-		/* The following are tokens, but I don't think JavaRecognizer 
-		 ever produces an AST with one of these types:
-			case COMMA:
-			case LITERAL_implements:
-			case LITERAL_class:
-			case LITERAL_extends:
-			case EOF:
-			case NULL_TREE_LOOKAHEAD:
-			case BLOCK:
-			case LABELED_STAT:	// refuse to implement on moral grounds :)
-			case LITERAL_import:
-			case LBRACK:
-			case RBRACK:
-			case LCURLY:
-			case RCURLY:
-			case LPAREN:
-			case RPAREN:
-			case LITERAL_else:	// else is a child of "if" AST
-			case COLON:		// part of the trinary operator
-			case WS:		// whitespace
-			case ESC:
-			case HEX_DIGIT:
-			case VOCAB:
+				/* The following are tokens, but I don't think JavaRecognizer 
+				 ever produces an AST with one of these types:
+				 case COMMA:
+				 case LITERAL_implements:
+				 case LITERAL_class:
+				 case LITERAL_extends:
+				 case EOF:
+				 case NULL_TREE_LOOKAHEAD:
+				 case BLOCK:
+				 case LABELED_STAT:	// refuse to implement on moral grounds :)
+				 case LITERAL_import:
+				 case LBRACK:
+				 case RBRACK:
+				 case LCURLY:
+				 case RCURLY:
+				 case LPAREN:
+				 case RPAREN:
+				 case LITERAL_else:	// else is a child of "if" AST
+				 case COLON:		// part of the trinary operator
+				 case WS:		// whitespace
+				 case ESC:
+				 case HEX_DIGIT:
+				 case VOCAB:
 
-			case EXPONENT:	// exponents and float suffixes are left in the NUM_FLOAT
-			case FLOAT_SUFFIX
-		*/
+				 case EXPONENT:	// exponents and float suffixes are left in the NUM_FLOAT
+				 case FLOAT_SUFFIX
+				 */
 
 		}
 		stack.pop();
 	}
 
-	private boolean visitChildren(AST ast, String separator) {
+	private boolean visitChildren(AST ast, String separator) 
+	{
 		return visitChildren(ast, separator, ALL);
 	}
 
-	private boolean visitChildren(AST ast, String separator, int type) {
+	private boolean visitChildren(AST ast, String separator, int type) 
+	{
 		boolean ret = false;
 		AST child = ast.getFirstChild();
-		while (child != null) {
-			if (type == ALL || child.getType() == type) {
-				if (child != ast.getFirstChild()) {
-					if (separator.endsWith("\n")) {
+		while (child != null) 
+		{
+			if (type == ALL || child.getType() == type) 
+			{
+				if (child != ast.getFirstChild()) 
+				{
+					if (separator.endsWith("\n")) 
+					{
 						out(separator.substring(0,separator.length()-1));
 						newline();
 					}
-					else {
+					else 
+					{
 						out(separator);
 					}
 				}
