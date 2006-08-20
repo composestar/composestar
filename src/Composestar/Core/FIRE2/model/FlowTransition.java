@@ -12,64 +12,28 @@ package Composestar.Core.FIRE2.model;
  *
  * 
  */
-public class FlowTransition{
-    /**
-     * The type of the transition;
-     */
-    private int type;
-    
-    
-    /**
-     * The startNode
-     */
-	private FlowNode startNode;
-	
-	/**
-	 * The endNode
-	 */
-	private FlowNode endNode;
-
+public interface FlowTransition{
     public static final int FLOW_NEXT_TRANSITION = 1;
     public static final int FLOW_FALSE_TRANSITION = 2;
     public static final int FLOW_TRUE_TRANSITION = 3;
 	
-	
-	/**
-	 * The constructor
-	 *
-	 */
-	public FlowTransition( int type, FlowNode startNode, FlowNode endNode )
-	{
-		super();
-		
-		this.type = type;
-		this.startNode = startNode;
-		this.endNode = endNode;
-		
-		startNode.addTransition( this );
-	}
 	
 	
 	
     /**
      * @return Returns the type.
      */
-    public int getType() {
-        return type;
-    }
+    public int getType();
+    
+    
     /**
      * @return Returns the endNode.
      */
-    public FlowNode getEndNode() {
-        return endNode;
-    }
+    public FlowNode getEndNode();
+    
     
     /**
      * @return Returns the startNode.
      */
-    public FlowNode getStartNode() {
-        return startNode;
-    }
-    
-    
+    public FlowNode getStartNode();
 }

@@ -1,7 +1,7 @@
-ROOTDIR=../../../../
+ROOTDIR=../../../../../
 include ${ROOTDIR}common.mk
 
-SUBDIRS=model preprocessing util
+SUBDIRS=iterator queryengine regex viewer
 
 CLASSES=
 
