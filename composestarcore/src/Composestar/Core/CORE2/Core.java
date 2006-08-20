@@ -16,13 +16,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.FIRE2.analysis.DepthFirstIterator;
-import Composestar.Core.FIRE2.analysis.FireAnalysis;
+import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
+import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
+import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -76,10 +77,11 @@ public class Core implements CTCommonModule{
         HashSet visitedTransitions = new HashSet();
         Hashtable filterContinueTable = new Hashtable();
         
-        FireAnalysis model = new FireAnalysis( concern, modules );
-        DepthFirstIterator iterator = new DepthFirstIterator( model );
+        FireModel fireModel = new FireModel( concern, modules );
+        ExecutionModel execModel = fireModel.getExecutionModel();
+        ExecutionStateIterator iterator = new ExecutionStateIterator( execModel );
         
-        Enumeration enum;
+        Enumeration enumer;
         
         Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:   o/ ");
         if ( concern != null ){
@@ -109,18 +111,18 @@ public class Core implements CTCommonModule{
                 }
             }
             
-            enum = state.getOutTransitions();
-            while( enum.hasMoreElements() ){
-                transition = (ExecutionTransition) enum.nextElement();
+            enumer = state.getOutTransitions();
+            while( enumer.hasMoreElements() ){
+                transition = (ExecutionTransition) enumer.nextElement();
                 visitedTransitions.add( transition.getFlowTransition() );
             }
         }
         
         
         //check useless filters (filters that only continue):
-        enum = filterContinueTable.keys();
-        while( enum.hasMoreElements() ){
-            Filter filter = (Filter) enum.nextElement();
+        enumer = filterContinueTable.keys();
+        while( enumer.hasMoreElements() ){
+            Filter filter = (Filter) enumer.nextElement();
             Boolean b = (Boolean) filterContinueTable.get( filter );
             if ( b.booleanValue() == true ){
                 Debug.out( Debug.MODE_ERROR, MODULE_NAME, 
@@ -129,13 +131,13 @@ public class Core implements CTCommonModule{
         }
         
         
-        FlowModel[] flowModels = model.getFlowModels();
+        FlowModel[] flowModels = fireModel.getFlowModels();
         for (int i=0; i<flowModels.length; i++){
             
             //unreachable matchingparts:
-            enum = flowModels[i].getNodes();
-            while( enum.hasMoreElements() ){
-                flowNode = (FlowNode) enum.nextElement();
+            enumer = flowModels[i].getNodes();
+            while( enumer.hasMoreElements() ){
+                flowNode = (FlowNode) enumer.nextElement();
                 
                 if ( !visitedNodes.contains( flowNode )  &&  
                         flowNode.containsName( "MatchingPart" ) )
@@ -147,9 +149,9 @@ public class Core implements CTCommonModule{
             }
             
             //matchingparts that always accept or reject:
-            enum = flowModels[i].getTransitions();
-            while( enum.hasMoreElements() ){
-                flowTransition = (FlowTransition) enum.nextElement();
+            enumer = flowModels[i].getTransitions();
+            while( enumer.hasMoreElements() ){
+                flowTransition = (FlowTransition) enumer.nextElement();
                 if ( !visitedTransitions.contains( flowTransition ) )
                 {
                     FlowNode startNode = flowTransition.getStartNode();
