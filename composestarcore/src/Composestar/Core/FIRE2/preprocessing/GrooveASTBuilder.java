@@ -33,6 +33,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
+import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.Message;
 
 /**
@@ -54,11 +55,7 @@ public class GrooveASTBuilder {
     
     public final static String STAR_REPRESENTATION = "'*'";
     
-    public final static String DISPATCH_ACTION_ID = "DispatchAction";
-    public final static String META_ACTION_ID = "MetaAction";
     
-    public final static String SIGNATURE_MATCHING_ID = "SignatureMatchingPart";
-    public final static String NAME_MATCHING_ID = "NameMatchingPart";
     
     public GrooveASTBuilder(){
         
@@ -77,7 +74,7 @@ public class GrooveASTBuilder {
         graph.addNode( filterModuleNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( filterModuleNode, 
-                "FilterModule", filterModuleNode );
+                FlowChartNames.FILTER_MODULE_NODE, filterModuleNode );
         graph.addEdge( edge );
         
         
@@ -93,26 +90,28 @@ public class GrooveASTBuilder {
             filterNode = buildFilterNode( filter, graph );
             //filterNode already added to graph by the buildFilterNode method!
             
-            edge = new AnnotatedEdge( filterModuleNode, "filter", filterNode );
+            edge = new AnnotatedEdge( filterModuleNode, FlowChartNames.FILTER_EDGE, 
+                    filterNode );
             graph.addEdge( edge );
             
             if ( i==0 ){
                 //create 'orderFirst' edge:
-                edge = new AnnotatedEdge( filterModuleNode, "orderFirst", filterNode );
+                edge = new AnnotatedEdge( filterModuleNode, 
+                        FlowChartNames.ORDER_FIRST_EDGE, filterNode );
                 graph.addEdge( edge );
             }
             
             //create rightArg of operatorNode:
             if ( operatorNode != null ){
-                edge = new AnnotatedEdge( operatorNode, "rightArg", 
-                        filterNode );
+                edge = new AnnotatedEdge( operatorNode, 
+                        FlowChartNames.RIGHT_ARGUMENT_EDGE, filterNode );
                 graph.addEdge( edge );
             }
             
             //create new operatorNode:
             operatorNode = buildFilterOperatorNode(
                     filter.rightOperator, graph );
-            edge = new AnnotatedEdge( filterNode, "rightOper", 
+            edge = new AnnotatedEdge( filterNode, FlowChartNames.RIGHT_OPERATOR_EDGE, 
                     operatorNode );
             graph.addEdge( edge );
             
@@ -124,10 +123,10 @@ public class GrooveASTBuilder {
         endNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filterModule );
         graph.addNode( endNode );
         
-        edge = new AnnotatedEdge( endNode, "End", endNode );
+        edge = new AnnotatedEdge( endNode, FlowChartNames.END_NODE, endNode );
         graph.addEdge( edge );
         
-        edge = new AnnotatedEdge( endNode, "FlowElement", endNode );
+        edge = new AnnotatedEdge( endNode, FlowChartNames.FLOW_ELEMENT_NODE, endNode );
         graph.addEdge( edge );
         
         //stopNode:
@@ -135,10 +134,11 @@ public class GrooveASTBuilder {
         stopNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filterModule );
         graph.addNode( stopNode );
         
-        edge = new AnnotatedEdge( stopNode, "Stop", stopNode );
+        edge = new AnnotatedEdge( stopNode, FlowChartNames.STOP_NODE, stopNode );
         graph.addEdge( edge );
         
-        edge = new AnnotatedEdge( stopNode, "FlowElement", stopNode );
+        edge = new AnnotatedEdge( stopNode, FlowChartNames.FLOW_ELEMENT_NODE,
+                stopNode );
         graph.addEdge( edge );
         
         graph.setFixed();
@@ -159,12 +159,12 @@ public class GrooveASTBuilder {
             operatorNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, operator );
             graph.addNode( operatorNode );
             
-            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, "FilterCompOper", 
-                    operatorNode );
+            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.FILTER_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
-            edge = new AnnotatedEdge( operatorNode, "SEQFilterCompOper", 
-                    operatorNode );
+            edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.SEQ_FILTER_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
             return operatorNode;
@@ -174,12 +174,12 @@ public class GrooveASTBuilder {
             operatorNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, operator );
             graph.addNode( operatorNode );
             
-            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, "FilterCompOper", 
-                    operatorNode );
+            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.FILTER_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
-            edge = new AnnotatedEdge( operatorNode, "VoidFilterCompOper", 
-                    operatorNode );
+            edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.VOID_FILTER_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
             return operatorNode;
@@ -201,7 +201,7 @@ public class GrooveASTBuilder {
         graph.addNode( filterNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( filterNode, 
-                "Filter", filterNode );
+                FlowChartNames.FILTER_NODE, filterNode );
         graph.addEdge( edge );
         
         //create reject and accept nodes:
@@ -209,80 +209,100 @@ public class GrooveASTBuilder {
         rejectNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
         rejectNode.addAnnotation( ACTION_NODE_ANNOTATION, new Integer( REJECT_ACTION ) );
         graph.addNode( rejectNode );
-        edge = new AnnotatedEdge( filterNode, "reject", rejectNode );
+        edge = new AnnotatedEdge( filterNode, FlowChartNames.REJECT_EDGE, rejectNode );
         graph.addEdge( edge );
-        edge = new AnnotatedEdge( rejectNode, "FilterAction", rejectNode );
+        edge = new AnnotatedEdge( rejectNode, FlowChartNames.FILTER_ACTION_NODE,
+                rejectNode );
         graph.addEdge( edge );
         
         AnnotatedNode acceptNode = new AnnotatedNode();
         acceptNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
         acceptNode.addAnnotation( ACTION_NODE_ANNOTATION, new Integer( ACCEPT_ACTION ) );
         graph.addNode( acceptNode );
-        edge = new AnnotatedEdge( filterNode, "accept", acceptNode );
+        edge = new AnnotatedEdge( filterNode, FlowChartNames.ACCEPT_EDGE, acceptNode );
         graph.addEdge( edge );
-        edge = new AnnotatedEdge( acceptNode, "FilterAction", acceptNode );
+        edge = new AnnotatedEdge( acceptNode, FlowChartNames.FILTER_ACTION_NODE,
+                acceptNode );
         graph.addEdge( edge );
         
         //add correct action to reject and accept node:
         FilterType filterType = filter.getFilterType();
         if ( filterType.type == FilterType.META ){
-            edge = new AnnotatedEdge( acceptNode, META_ACTION_ID, acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.META_ACTION_NODE, 
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.ERROR ){
-            edge = new AnnotatedEdge( acceptNode, "ContinueAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ErrorAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.ERROR_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.DISPATCH ){
-            edge = new AnnotatedEdge( acceptNode, DISPATCH_ACTION_ID, acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.DISPATCH_ACTION_NODE, 
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.SEND ){
 //          edge = new AnnotatedEdge( acceptNode, "SendAction", acceptNode );
             //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, "ContinueAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.SUBSTITUTION ){
-            edge = new AnnotatedEdge( acceptNode, "SubstitutionAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, 
+                    FlowChartNames.SUBSTITUTION_ACTION_NODE, acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.WAIT ){
 //          edge = new AnnotatedEdge( acceptNode, "WaitAction", acceptNode );
             //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, "ContinueAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.APPEND ){
             //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, "ContinueAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.PREPEND ){
             //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, "ContinueAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else if ( filterType.type == FilterType.CUSTOM ){
-            edge = new AnnotatedEdge( acceptNode, "ContinueCustomAction", acceptNode );
+            edge = new AnnotatedEdge( acceptNode, 
+                    FlowChartNames.CUSTOM_CONTINUE_ACTION, acceptNode );
             graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, "ContinueAction", rejectNode );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
             graph.addEdge( edge );
         }
         else{
@@ -305,27 +325,29 @@ public class GrooveASTBuilder {
             filterElementNode = buildFilterElementNode( filterElement, graph );
             //filterElementNode already added to graph by the buildFilterElementNode method!
             
-            edge = new AnnotatedEdge( filterNode, "filterElement", filterElementNode );
+            edge = new AnnotatedEdge( filterNode, FlowChartNames.FILTER_ELEMENT_EDGE,
+                    filterElementNode );
             graph.addEdge( edge );
             
             if ( i==0 ){
                 //create 'orderFirst' edge:
-                edge = new AnnotatedEdge( filterNode, "orderFirst", filterElementNode );
+                edge = new AnnotatedEdge( filterNode, FlowChartNames.ORDER_FIRST_EDGE,
+                        filterElementNode );
                 graph.addEdge( edge );
             }
             
             //create rightArg of operatorNode:
             if ( operatorNode != null ){
-                edge = new AnnotatedEdge( operatorNode, "rightArg", 
-                        filterElementNode );
+                edge = new AnnotatedEdge( operatorNode, 
+                        FlowChartNames.RIGHT_ARGUMENT_EDGE, filterElementNode );
                 graph.addEdge( edge );
             }
             
             //create new operatorNode:
             FilterElementCompOper oper = filterElement.rightOperator;
             operatorNode = BuildFilterElementOperatorNode( oper, graph );
-            edge = new AnnotatedEdge( filterElementNode, "rightOper", 
-                    operatorNode );
+            edge = new AnnotatedEdge( filterElementNode, 
+                    FlowChartNames.RIGHT_OPERATOR_EDGE, operatorNode );
             graph.addEdge( edge );
         }
         
@@ -345,12 +367,12 @@ public class GrooveASTBuilder {
             operatorNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, operator );
             graph.addNode( operatorNode );
             
-            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, "CompOper", 
-                    operatorNode );
+            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.FE_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
-            edge = new AnnotatedEdge( operatorNode, "CORCompOper", 
-                    operatorNode );
+            edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.FE_COR_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
             return operatorNode;
@@ -360,12 +382,12 @@ public class GrooveASTBuilder {
             operatorNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, operator );
             graph.addNode( operatorNode );
             
-            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, "CompOper", 
-                    operatorNode );
+            AnnotatedEdge edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.FE_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
-            edge = new AnnotatedEdge( operatorNode, "VoidCompOper", 
-                    operatorNode );
+            edge = new AnnotatedEdge( operatorNode, 
+                    FlowChartNames.FE_VOID_COMP_OPER_NODE, operatorNode );
             graph.addEdge( edge );
             
             return operatorNode;
@@ -388,21 +410,23 @@ public class GrooveASTBuilder {
         graph.addNode( filterElementNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( filterElementNode, 
-                "FilterElement", filterElementNode );
+                FlowChartNames.FILTER_ELEMENT_NODE, filterElementNode );
         graph.addEdge( edge );
         
         //conditionpart:
         AnnotatedNode conditionPartNode = 
             buildConditionPartNode( filterElement.conditionPart, graph );
         edge = new AnnotatedEdge( 
-                filterElementNode, "conditionPart", conditionPartNode );
+                filterElementNode, FlowChartNames.CONDITION_PART_EDGE, 
+                conditionPartNode );
         graph.addEdge( edge );
         
         //conditionoperator:
         AnnotatedNode conditionOperatorNode =
             buildConditionOperatorNode( filterElement.enableOperatorType, graph );
         edge = new AnnotatedEdge( 
-                filterElementNode, "conditionOperator", conditionOperatorNode );
+                filterElementNode, FlowChartNames.CONDITION_OPERATOR_EDGE,
+                conditionOperatorNode );
         graph.addEdge( edge );
         
         //iterate over matchingpatterns::
@@ -417,20 +441,20 @@ public class GrooveASTBuilder {
             patternNode = buildMatchingPatternNode( pattern, graph );
             //patternNode already added to graph by the buildMatchingPatternNode method!
             
-            edge = new AnnotatedEdge( filterElementNode, "matchingPattern", 
-                    patternNode );
+            edge = new AnnotatedEdge( filterElementNode, 
+                    FlowChartNames.MATCHING_PATTERN_EDGE, patternNode );
             graph.addEdge( edge );
             
             if ( i==0 ){
                 //create 'orderFirst' edge:
-                edge = new AnnotatedEdge( filterElementNode, "orderFirst", 
-                        patternNode );
+                edge = new AnnotatedEdge( filterElementNode, 
+                        FlowChartNames.ORDER_FIRST_EDGE, patternNode );
                 graph.addEdge( edge );
             }
             else{
                 //create 'orderNext' edge:
-                edge = new AnnotatedEdge( previousPatternNode, "orderNext", 
-                        patternNode );
+                edge = new AnnotatedEdge( previousPatternNode, 
+                        FlowChartNames.ORDER_NEXT_EDGE, patternNode );
                 graph.addEdge( edge );
             }
             
@@ -453,14 +477,15 @@ public class GrooveASTBuilder {
         graph.addNode( patternNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( 
-                patternNode, "MatchingPattern", patternNode );
+                patternNode, FlowChartNames.MATCHING_PATTERN_NODE, patternNode );
         graph.addEdge( edge );
         
         //matchingpart:
         MatchingPart matchingPart = 
             (MatchingPart) pattern.matchingParts.elementAt( 0 );
         Node matchingPartNode = buildMatchingPartNode( matchingPart, graph );
-        edge = new AnnotatedEdge( patternNode, "matchingPart", matchingPartNode );
+        edge = new AnnotatedEdge( patternNode, FlowChartNames.MATCHING_PART_EDGE,
+                matchingPartNode );
         graph.addEdge( edge );
         
         //substitutionpart:
@@ -473,7 +498,8 @@ public class GrooveASTBuilder {
                 substitutionPart, graph );
         
         edge = new AnnotatedEdge( 
-                patternNode, "substitutionPart", substitutionPartNode );
+                patternNode, FlowChartNames.SUBSTITUTION_PART_EDGE,
+                substitutionPartNode );
         graph.addEdge( edge );
         
         return patternNode;
@@ -490,7 +516,8 @@ public class GrooveASTBuilder {
         graph.addNode( substitutionPartNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( 
-                substitutionPartNode, "SubstitutionPart", substitutionPartNode );
+                substitutionPartNode, FlowChartNames.SUBSTITUTION_PART_NODE,
+                substitutionPartNode );
         graph.addEdge( edge );
         
         //selector:
@@ -500,7 +527,8 @@ public class GrooveASTBuilder {
             selectorNode = buildSelectorNode( selector, graph );
         }
         
-        edge = new AnnotatedEdge( substitutionPartNode, "selector", selectorNode );
+        edge = new AnnotatedEdge( substitutionPartNode, FlowChartNames.SELECTOR_EDGE,
+                selectorNode );
         graph.addEdge( edge );
         
         //target:
@@ -510,7 +538,8 @@ public class GrooveASTBuilder {
             targetNode = buildTargetNode( target, graph );
         }
         
-        edge = new AnnotatedEdge( substitutionPartNode, "target", targetNode );
+        edge = new AnnotatedEdge( substitutionPartNode, FlowChartNames.TARGET_EDGE,
+                targetNode );
         graph.addEdge( edge );
         
         return substitutionPartNode;
@@ -527,7 +556,8 @@ public class GrooveASTBuilder {
         graph.addNode( substitutionPartNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( 
-                substitutionPartNode, "SubstitutionPart", substitutionPartNode );
+                substitutionPartNode, FlowChartNames.SUBSTITUTION_PART_NODE,
+                substitutionPartNode );
         graph.addEdge( edge );
         
         //selector:
@@ -541,7 +571,8 @@ public class GrooveASTBuilder {
             selectorNode = buildSelectorNode( selector, graph );
         }
         
-        edge = new AnnotatedEdge( substitutionPartNode, "selector", selectorNode );
+        edge = new AnnotatedEdge( substitutionPartNode, FlowChartNames.SELECTOR_EDGE,
+                selectorNode );
         graph.addEdge( edge );
         
         //target:
@@ -555,7 +586,8 @@ public class GrooveASTBuilder {
             targetNode = buildTargetNode( target, graph );
         }
         
-        edge = new AnnotatedEdge( substitutionPartNode, "target", targetNode );
+        edge = new AnnotatedEdge( substitutionPartNode, FlowChartNames.TARGET_EDGE,
+                targetNode );
         graph.addEdge( edge );
         
         return substitutionPartNode;
@@ -572,17 +604,20 @@ public class GrooveASTBuilder {
         graph.addNode( matchingPartNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( 
-                matchingPartNode, "MatchingPart", matchingPartNode );
+                matchingPartNode, FlowChartNames.MATCHING_PART_NODE,
+                matchingPartNode );
         graph.addEdge( edge );
         
         if ( matchingPart.matchType instanceof NameMatchingType ){
             edge = new AnnotatedEdge( 
-                    matchingPartNode, NAME_MATCHING_ID, matchingPartNode );
+                    matchingPartNode, FlowChartNames.NAME_MATCHING_NODE, 
+                    matchingPartNode );
             graph.addEdge( edge );
         }
         else{
             edge = new AnnotatedEdge( 
-                    matchingPartNode, SIGNATURE_MATCHING_ID, matchingPartNode );
+                    matchingPartNode, FlowChartNames.SIGNATURE_MATCHING_NODE, 
+                    matchingPartNode );
             graph.addEdge( edge );
         }
         
@@ -593,7 +628,8 @@ public class GrooveASTBuilder {
             selectorNode = buildSelectorNode( selector, graph );
         }
         
-        edge = new AnnotatedEdge( matchingPartNode, "selector", selectorNode );
+        edge = new AnnotatedEdge( matchingPartNode, FlowChartNames.SELECTOR_EDGE,
+                selectorNode );
         graph.addEdge( edge );
         
         //target:
@@ -603,7 +639,8 @@ public class GrooveASTBuilder {
             targetNode = buildTargetNode( target, graph );
         }
         
-        edge = new AnnotatedEdge( matchingPartNode, "target", targetNode );
+        edge = new AnnotatedEdge( matchingPartNode, FlowChartNames.TARGET_EDGE,
+                targetNode );
         graph.addEdge( edge );
         
         return matchingPartNode;
@@ -673,17 +710,17 @@ public class GrooveASTBuilder {
         graph.addNode( operatorNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( 
-                operatorNode, "ConditionOperator", operatorNode );
+                operatorNode, FlowChartNames.CONDITION_OPERATOR_NODE, operatorNode );
         graph.addEdge( edge );
         
         if ( enableOperatorType instanceof DisableOperator ){
             edge = new AnnotatedEdge( 
-                    operatorNode, "DisableOperator", operatorNode );
+                    operatorNode, FlowChartNames.DISABLE_OPERATOR_NODE, operatorNode );
             graph.addEdge( edge );
         }
         else if ( enableOperatorType instanceof EnableOperator ){
             edge = new AnnotatedEdge( 
-                    operatorNode, "EnableOperator", operatorNode );
+                    operatorNode, FlowChartNames.ENABLE_OPERATOR_NODE, operatorNode );
             graph.addEdge( edge );
         }
         else{
@@ -708,18 +745,18 @@ public class GrooveASTBuilder {
         graph.addNode( conditionNode );
         
         AnnotatedEdge edge = new AnnotatedEdge( 
-                conditionNode, "ConditionExpression", conditionNode );
+                conditionNode, FlowChartNames.CONDITION_EXPRESSION_NODE, conditionNode );
         graph.addEdge( edge );
         
         //if always true or false, add this information to the graph:
         if ( conditionExpression instanceof True ){
             edge = new AnnotatedEdge( 
-                    conditionNode, "True", conditionNode );
+                    conditionNode, FlowChartNames.TRUE_NODE, conditionNode );
             graph.addEdge( edge );
         }
         else if ( conditionExpression instanceof False ){
             edge = new AnnotatedEdge( 
-                    conditionNode, "False", conditionNode );
+                    conditionNode, FlowChartNames.FALSE_NODE, conditionNode );
             graph.addEdge( edge );
         }
         

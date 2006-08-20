@@ -16,8 +16,12 @@ import groove.lts.DefaultGraphTransition;
 import groove.lts.GTS;
 
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
@@ -28,13 +32,14 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * 
  *
  * @author Arjan de Roo
  */
-public class ExecutionModelExtractor {
+public class ExecutionModelExtractor{
     private Hashtable stateTable;
     private final static Label PC_LABEL = new DefaultLabel( "pc" );
     private final static Label SELECTOR_LABEL = new DefaultLabel( "selector" );
@@ -50,7 +55,7 @@ public class ExecutionModelExtractor {
     public ExecutionModel extract( GTS gts, FlowModel flowModel ){
         stateTable = new Hashtable();
         
-        ExecutionModel executionModel = new ExecutionModel();
+        BasicExecutionModel executionModel = new BasicExecutionModel();
         
         DefaultGraphState startState = (DefaultGraphState) gts.startState();
         Iterator iter = startState.getOutTransitionIter();
@@ -75,14 +80,14 @@ public class ExecutionModelExtractor {
         return executionModel;
     }
     
-    private void analyseState( DefaultGraphState state, ExecutionModel executionModel,
-            FlowModel flowModel )
+    private void analyseState( DefaultGraphState state, 
+            BasicExecutionModel executionModel, FlowModel flowModel )
     {
         Iterator iter = state.getOutTransitionIter();
         
         DefaultGraphTransition transition;
         DefaultGraphState nextState;
-        ExecutionState startState, endState;
+        BasicExecutionState startState, endState;
         
         while( iter.hasNext() ){
             transition = (DefaultGraphTransition) iter.next();
@@ -92,26 +97,27 @@ public class ExecutionModelExtractor {
                 analyseState( nextState, executionModel, flowModel );
             }
             
-            startState = (ExecutionState) stateTable.get( state );
-            endState = (ExecutionState) stateTable.get( nextState );
+            startState = (BasicExecutionState) stateTable.get( state );
+            endState = (BasicExecutionState) stateTable.get( nextState );
             
             addTransition( startState, endState, transition, executionModel );
         }
     }
     
-    private void addTransition( ExecutionState startState, ExecutionState endState,
-            DefaultGraphTransition transition, ExecutionModel executionModel )
+    private void addTransition( BasicExecutionState startState, 
+            BasicExecutionState endState, DefaultGraphTransition transition,
+            BasicExecutionModel executionModel )
     {
         FlowTransition flowTransition = 
             startState.getFlowNode().getTransition( endState.getFlowNode() );
         
-        ExecutionTransition exeTrans = new ExecutionTransition(
+        ExecutionTransition exeTrans = new BasicExecutionTransition(
                 startState, transition.label().text(), endState, flowTransition );
         
         executionModel.addTransition( exeTrans );
     }
     
-    private void addState( DefaultGraphState state, ExecutionModel executionModel,
+    private void addState( DefaultGraphState state, BasicExecutionModel executionModel,
             FlowModel flowModel )
     {
         Node selectorNode = null;
@@ -186,6 +192,8 @@ public class ExecutionModelExtractor {
             target = Message.STAR_TARGET;
         }
         
+        Message message = new Message( target, selector );
+        
         if ( substitutionSelectorNode != null  &&
                 substitutionSelectorNode instanceof AnnotatedNode )
         {
@@ -210,30 +218,214 @@ public class ExecutionModelExtractor {
         }
         
         
-        ExecutionState executionState;
+        BasicExecutionState executionState;
         
         //check for start- or endnode:
         if ( flowNode == flowModel.getStartNode() ){
-            executionState = new ExecutionState( flowNode, selector, target,
+            executionState = new BasicExecutionState( flowNode, message,
                     substitutionSelector, substitutionTarget,
                     ExecutionState.ENTRANCE_STATE );
             executionModel.addState( executionState );
             executionModel.addEntranceState( executionState );
         }
         else if ( flowNode == flowModel.getEndNode() ){
-            executionState = new ExecutionState( flowNode, selector, target,
+            executionState = new BasicExecutionState( flowNode, message,
                     substitutionSelector, substitutionTarget,
                     ExecutionState.EXIT_STATE );
             executionModel.addState( executionState );
-            executionModel.addExitState( executionState );
         }
         else{
-            executionState = new ExecutionState( flowNode, selector, target,
+            executionState = new BasicExecutionState( flowNode, message,
                     substitutionSelector, substitutionTarget,
                     ExecutionState.NORMAL_STATE );
             executionModel.addState( executionState );
         }
         
         stateTable.put( state, executionState );
+    }
+    
+    
+    private static class BasicExecutionModel extends RepositoryEntity 
+    implements ExecutionModel
+    {
+        private Hashtable entranceStates;
+        private HashSet states;
+        private HashSet transitions;
+        
+        public BasicExecutionModel(){
+            super();
+            
+            entranceStates = new Hashtable();
+            states = new HashSet();
+            transitions = new HashSet();
+        }
+        
+        /**
+         * Adds an entrance state to this model. The method addState should also
+         * be used on this state.
+         * @param state
+         */
+        public void addEntranceState( ExecutionState state ){
+            entranceStates.put( state.getMessage(), state );
+        }
+        
+        public Enumeration getEntranceStates(){
+            return entranceStates.elements();
+        }
+        
+        /**
+         * Returns the entrance state for the given selector. If a selector
+         * doesn't have it's own entrance state, the entrance state of the star-trace
+         * is returned.
+         * @param message
+         * @return
+         */
+        public ExecutionState getEntranceState( Message message ){
+            ExecutionState state = (ExecutionState) entranceStates.get( message );
+            
+            if ( state == null ){
+                state = (ExecutionState) entranceStates.get(
+                        new Message( Message.STAR_TARGET, message.getSelector() ) );
+            }
+            if ( state == null ){
+                state = (ExecutionState) entranceStates.get(
+                        new Message( message.getTarget(), Message.STAR_SELECTOR ) );
+            }
+            if ( state == null ){
+                state = (ExecutionState) entranceStates.get( Message.STAR_MESSAGE );
+            }
+            
+            return state;
+        }
+        
+        
+        /**
+         * Adds a normal state to this model (for boundary states use the method
+         * <code>addBoundaryState( ExecutionState )</code> instead.
+         * @param state
+         */
+        public void addState( ExecutionState state ){
+            states.add( state );
+        }
+        
+        
+        
+        /**
+         * Adds a transition to this model.
+         * @param transition
+         */
+        public void addTransition( ExecutionTransition transition ){
+            transitions.add( transition );
+            
+//            if ( !transition.getStartState().getSelector().equals( "*" )
+//                    &&
+//                    transition.getEndState().getSelector().equals( "*" ) )
+//            {
+//                starTransitions.addElement( transition );
+//            }
+        }
+        
+        /**
+         * Returns all the selectors for which there are different 
+         * entrance states.
+         * @return
+         */
+        public Set getEntranceMessages(){
+//            return (String[]) entranceStates.keySet().toArray( new String[0] );
+            return entranceStates.keySet();
+        }
+        
+        
+        
+        public boolean isEntranceMessage( Message message ){
+            return entranceStates.containsKey( message );
+        }
+        
+    }
+    
+    
+    private static class BasicExecutionState extends ExecutionState{
+        private Vector outTransitions;
+        private Vector inTransitions;
+        
+        public BasicExecutionState( FlowNode flowNode, Message message, 
+                MessageSelector substitutionSelector, 
+                Target substitutionTarget, int stateType )
+        {
+            super( flowNode, message, substitutionSelector, 
+                    substitutionTarget, stateType );
+            
+            outTransitions = new Vector();
+            inTransitions = new Vector();
+        }
+        
+        
+        public void addOutTransition( ExecutionTransition transition ){
+            outTransitions.addElement( transition );
+        }
+        
+        public void removeOutTransition( ExecutionTransition transition ){
+            outTransitions.removeElement( transition );
+        }
+        
+        public Enumeration getOutTransitions(){
+            return outTransitions.elements();
+        }
+        
+        
+        public void addInTransition( ExecutionTransition transition ){
+            inTransitions.addElement( transition );
+        }
+        
+        public void removeInTransition( ExecutionTransition transition ){
+            inTransitions.removeElement( transition );
+        }
+        
+        public Enumeration getInTransitions(){
+            return inTransitions.elements();
+        }
+    }
+    
+    
+    private static class BasicExecutionTransition extends ExecutionTransition{
+        /**
+         * The startState
+         */
+        private ExecutionState startState;
+        
+        /**
+         * The endState
+         */
+        private ExecutionState endState;
+        
+        
+        public BasicExecutionTransition( BasicExecutionState startState, String label, 
+                BasicExecutionState endState, FlowTransition flowTransition )
+        {
+            super( label, flowTransition );
+            
+            this.startState = startState;
+            this.endState = endState;
+            
+            startState.addOutTransition( this );
+            endState.addInTransition( this );
+        }
+        
+        
+        
+        /**
+         * @return Returns the endState.
+         */
+        public ExecutionState getEndState() {
+            return endState;
+        }
+        
+        
+        /**
+         * @return Returns the startState.
+         */
+        public ExecutionState getStartState() {
+            return startState;
+        }
     }
 }

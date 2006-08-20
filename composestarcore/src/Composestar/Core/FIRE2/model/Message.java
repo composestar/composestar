@@ -12,7 +12,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
  *
  * @author Arjan de Roo
  */
-public class Message implements Cloneable{
+public class Message{
     /**
      * The target of the message, or "*" to indicate an unknown target.
      */
@@ -119,17 +119,7 @@ public class Message implements Cloneable{
     }
     
     
-    /**
-     * @see java.lang.Object#clone()
-     */
-    public Object clone() throws CloneNotSupportedException {
-        Message m = (Message) super.clone();
-        
-        m.target = this.target;
-        m.selector = this.selector;
-        
-        return m;
-    }
+    
     
     public static boolean checkEquals( MessageSelector selector1, 
             MessageSelector selector2 )

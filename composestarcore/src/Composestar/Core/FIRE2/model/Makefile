@@ -7,6 +7,8 @@ CLASSES=ExecutionLabels.class \
 	ExecutionModel.class \
 	ExecutionState.class \
 	ExecutionTransition.class \
+	FireModel.class \
+	FlowChartNames.class \
 	FlowModel.class \
 	FlowNode.class \
 	FlowTransition.class \

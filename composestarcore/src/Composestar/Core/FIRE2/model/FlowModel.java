@@ -7,69 +7,33 @@
 package Composestar.Core.FIRE2.model;
 
 import java.util.Enumeration;
-import java.util.Vector;
-
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @author Arjan
  *
  */
-public class FlowModel extends RepositoryEntity{
-    private FlowNode startNode;
-    private FlowNode endNode;
-    private Vector nodes;
-    private Vector transitions;
-    
-    
-    public FlowModel(){
-        super();
-        
-        nodes = new Vector();
-        transitions = new Vector();
-    }
-    
-    public void addNode( FlowNode node ){
-        nodes.addElement( node );
-    }
-    
-    public void addTransition( FlowTransition transition ){
-        transitions.addElement( transition );
-    }
-    
+public interface FlowModel{
     
     /**
      * @return Returns the startNode.
      */
-    public FlowNode getStartNode() {
-        return startNode;
-    }
-    /**
-     * @param startNode The startNode to set.
-     */
-    public void setStartNode(FlowNode startNode) {
-        this.startNode = startNode;
-    }
+    public FlowNode getStartNode();
     
     
     /**
      * @return Returns the endNode.
      */
-    public FlowNode getEndNode() {
-        return endNode;
-    }
+    public FlowNode getEndNode();
+    
     /**
-     * @param endNode The endNode to set.
+     * 
+     * @return Returns all nodes
      */
-    public void setEndNode(FlowNode endNode) {
-        this.endNode = endNode;
-    }
+    public Enumeration getNodes();
     
-    public Enumeration getNodes(){
-        return nodes.elements();
-    }
-    
-    public Enumeration getTransitions(){
-        return transitions.elements();
-    }
+    /**
+     * 
+     * @return Returns all transitions
+     */
+    public Enumeration getTransitions();
 }
