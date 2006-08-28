@@ -113,8 +113,8 @@ public class JavaCompiler implements LangCompiler
 		}
     	
 		//create file containing all dummies
-		String target =  p.getProperty("buildPath")+ "dummies.txt";
-		String argfiles = "@"+target;
+		String target =  p.getProperty("buildPath")+"dummies.txt";
+		String argfiles = "@dummies.txt";
 		createFile(p, true, target);
     	
 		CompilerAction action = lang.compilerSettings.getCompilerAction("Compile");
@@ -130,7 +130,7 @@ public class JavaCompiler implements LangCompiler
     	    	
 		//compile
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec("call " +command);
+		int result = cmdExec.exec("call " +command, new File(p.getProperty("buildPath")));
 		compilerOutput = cmdExec.outputError();
                
 		if( result != 0 ) 
@@ -235,7 +235,7 @@ public class JavaCompiler implements LangCompiler
 		{
 			Source s = (Source)sourceIt.next();
 			if(dummies)
-				sourcefiles.append(s.getDummy()+"\n");
+				sourcefiles.append("\""+s.getDummy()+"\""+"\n");
 			else
 				sourcefiles.append(s.getFileName()+"\n");
 		}
