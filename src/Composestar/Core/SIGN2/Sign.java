@@ -17,6 +17,7 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
@@ -28,8 +29,8 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowChartNames;
+import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.ctl.CtlChecker;
@@ -154,7 +155,7 @@ public class Sign implements CTCommonModule {
 
                 unsolvedConcerns.add(concern);
             } else {
-                Signature signature = getSignature(concern);
+            	Signature signature = getSignature(concern);
                 LinkedList methods = getMethodList(concern);
 
                 // Add all (usr src) methods to the signature with status
@@ -1295,7 +1296,7 @@ public class Sign implements CTCommonModule {
     }
 
     private LinkedList getMethodList(Concern c) {
-        Type dt = (Type) c.getPlatformRepresentation();
+    	Type dt = (Type) c.getPlatformRepresentation();
         if (dt == null)
             return new LinkedList();
 
