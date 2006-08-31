@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.8 2006/04/20 11:03:38 roy_ Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.9 2006/05/03 14:33:45 stephan_h Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -316,7 +316,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
   	  				while ( iterInternals.hasNext() )
   	  				{
   	  					Internal internal = (Internal)iterInternals.next();
-  	  					String internalQFN = internal.type.getQualifiedName();
+  	  					String internalQFN = internal.getType().getQualifiedName();
   	  					castConcern = true;
   	  					if ( !s.contains(internalQFN) )
   	  					{
@@ -396,7 +396,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			{
 				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID((String)iterFilterModules.next());
 
-				if ( !fm.outputFilters.isEmpty() )
+				if ( !fm.getOutputFilters().isEmpty() )
 				{
 					// Outputfilters defined for this concern
 				  	Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '" + c.getQualifiedName() + "'...");

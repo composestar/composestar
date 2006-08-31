@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ILICIT.java,v 1.19 2006/04/20 11:02:15 roy_ Exp $
+ * $Id: ILICIT.java,v 1.20 2006/05/05 09:08:13 pascal_durr Exp $
  */
 
 
@@ -15,7 +15,7 @@ package Composestar.DotNET.ILICIT;
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ILICIT.java,v 1.19 2006/04/20 11:02:15 roy_ Exp $
+ * $Id: ILICIT.java,v 1.20 2006/05/05 09:08:13 pascal_durr Exp $
  */
 
 import java.io.BufferedWriter;
@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public class ILICIT implements WEAVER {
 
-	public static final String version = "$Revision: 1.19 $";
+	public static final String version = "$Revision: 1.20 $";
 	
     public void run(CommonResources resources) throws ModuleException {
      Configuration config = Configuration.instance();
@@ -398,7 +398,7 @@ public class ILICIT implements WEAVER {
 					{
 						FilterModule fm = (FilterModule) ds.getObjectByID((String)iterFilterModules.next());
 			
-						if ( !fm.outputFilters.isEmpty() )
+						if ( !fm.getOutputFilters().isEmpty() )
 							concerns.add( c.getQualifiedName() );
 					}
 				}
