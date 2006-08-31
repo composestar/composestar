@@ -1,15 +1,20 @@
 package Composestar.Core.REXREF;
 
 import java.util.Iterator;
+import java.util.Vector;
 
+import Composestar.Core.COPPER.Splitter;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedInternal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
@@ -19,7 +24,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcer
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
-import Composestar.Utils.*;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
@@ -48,14 +52,15 @@ public class DoResolve {
       return;
     }
     ds = d;
-
+    
+    //  filtermodulreferences
+    resolveFilterModuleReferences();
+    
     //concernreferences
     resolveConcernReferences();
     resolveLabeledConcernReferences();
 
-    //filtermodulreferences
-    resolveFilterModuleReferences();
-    //    resolveCompiledConcernReprRefs();
+     //    resolveCompiledConcernReprRefs();
     resolveSelectorReferences();
 
     //filtermodulelementreferences
@@ -114,10 +119,50 @@ public class DoResolve {
  * @throws ModuleException 
    */
   private void resolveFilterModuleReferences() throws ModuleException {
-    for (Iterator it = ds.getAllInstancesOf(FilterModuleReference.class); it.hasNext();) {
+    /* The names of DeclaredRepositoryEntities do need to be unique, so the
+     * FM_AST does keeps its orignal name, but all FM (Inst) do need a unique identifier
+     * Instead of using a nice Singlton construct, I just use int counters, more because
+     * this is the only method that actually creates all the instantances of FilterModules, Internals, etc.
+     */
+	int fmCounter = 1;
+	  
+	//for (Iterator it = ds.getAllInstancesOf(FilterModuleReference.class); it.hasNext();) {
+    Iterator it = ds.getAllInstancesOf(FilterModuleReference.class);
+    while(it.hasNext()){
       FilterModuleReference ref = (FilterModuleReference) it.next();
-      FilterModule fm = (FilterModule) ds.getObjectByID(ref.getQualifiedName());
-      if (fm != null) {
+      FilterModuleAST fm_ast = (FilterModuleAST) ds.getObjectByID(ref.getQualifiedName());
+      if (fm_ast != null) {
+    	FilterModule fm = new FilterModule(fm_ast, ref.getArgs(),fmCounter);
+    	fmCounter++;
+        CpsConcern concern = (CpsConcern) fm.getParent();
+        concern.addFilterModule(fm);
+        ds.addObject(fm);
+        
+        //add all the newly created internal instances to the repository
+        Iterator iter = fm.getInternalIterator();
+        while(iter.hasNext()){
+        	Internal o = (Internal) iter.next();
+        	
+        	if(o instanceof ParameterizedInternal){
+        		ParameterizedInternal pi = (ParameterizedInternal) o; 
+        		Vector pack = (Vector)((FilterModuleParameter) fm.getParameter(pi.getParameter())).getValue();
+        		ConcernReference cref = new ConcernReference();
+        		ds.removeObject(cref);
+        		Splitter split = new Splitter(); 
+        		split.splitConcernReference(pack);
+        	    cref.setPackage(split.getPack());
+        	    cref.setName(split.getConcern());
+        	    pi.setType(cref);
+        	    ds.addObject(cref);
+        		ds.addObject(pi.getType());
+        	}
+        }
+        //adding the new parameters instances to the repository 
+        Iterator iterParams = fm.getParameterIterator();
+        while(iterParams.hasNext()){
+        	Object o = iterParams.next();
+        	ds.addObject(o);
+        }
         ref.setRef(fm);
         ref.setResolved(true);
       } else {
@@ -385,7 +430,7 @@ public class DoResolve {
   private void resolveConditionReferences() {
     ConditionReference ref;
     CpsConcern concern;
-    FilterModule filtermod;
+    FilterModuleAST filtermod;
     Condition condition;
     Iterator conditionrefiterator, concerniterator, fmiterator, conditerator;
     boolean found;
@@ -399,9 +444,9 @@ public class DoResolve {
         concern = (CpsConcern) concerniterator.next();
         if (concern.getName().compareTo(ref.getConcern()) == 0)
         {
-        	for (fmiterator = concern.getFilterModuleIterator(); fmiterator.hasNext() && !found;)
+        	for (fmiterator = concern.getFilterModuleASTIterator(); fmiterator.hasNext() && !found;)
         	{
-	            filtermod = (FilterModule) fmiterator.next();
+	            filtermod = (FilterModuleAST) fmiterator.next();
 	            if (filtermod.getName().compareTo(ref.getFilterModule()) == 0)
 	            {
 		              for (conditerator = filtermod.getConditionIterator(); conditerator.hasNext() && !found;)
@@ -445,7 +490,7 @@ public class DoResolve {
 	              //ok, found, now try to find the filtermodule
 	              for (Iterator fmit = cpsconcern.getFilterModuleIterator(); fmit.hasNext() && !found;) {
 	                FilterModule fm = (FilterModule) fmit.next();
-	                if (fm.getName().compareTo(ref.getFilterModule()) == 0)
+	                if (fm.getFm_ast().getName().compareTo(ref.getFilterModule()) == 0)
 	                {
 	                  //ok, found
 	                  //now see if an internal matches
@@ -453,7 +498,9 @@ public class DoResolve {
 	                    Internal internal = (Internal) interalit.next();
 	                    if ((ignoreCase) && (internal.getName().compareToIgnoreCase(ref.getName()) == 0)) {
 	                      found = true;
-	                    } else if ((!ignoreCase) && (internal.getName().compareTo(ref.getName()) == 0)) found = true;
+	                    } else if ((!ignoreCase) && (internal.getName().compareTo(ref.getName()) == 0)){
+	                    	found = true;
+	                    }
 	                    if (found) {
 	                      ref.setRef(internal);
 	                      ref.setResolved(true);
