@@ -5,24 +5,27 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModuleReference.java,v 1.2 2006/02/16 12:51:21 composer Exp $
+ * $Id: FilterModuleReference.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
+import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 
 /**
  * reference to a filtermodule
  */
 public class FilterModuleReference extends ConcernElementReference {
-  private FilterModule ref;
-
+  public FilterModule ref;
+  public Vector args;
 
   /**
    * @roseuid 401FAA640376
    */
   public FilterModuleReference() {
     super();
+    args = new Vector();
   }
 
 
@@ -42,5 +45,17 @@ public class FilterModuleReference extends ConcernElementReference {
    */
   public void setRef(FilterModule refValue) {
     this.ref = refValue;
+  }
+  
+  public void setArgs(Vector a){
+	  args = a;
+  }
+  
+  public Vector getArgs(){
+	  return args;
+  }
+  
+  public void addArg(Object o){
+	  args.add(o);
   }
 }
