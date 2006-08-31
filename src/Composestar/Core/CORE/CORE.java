@@ -68,7 +68,7 @@ public class CORE implements CTCommonModule
 			String name = (String) itr.next();
 			
 			FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
-			Iterator ifItr = fm.inputFilters.iterator();
+			Iterator ifItr = fm.getInputFilterIterator();
 			
 			while (ifItr.hasNext())
 			{

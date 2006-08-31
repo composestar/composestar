@@ -101,7 +101,7 @@ public class FilterSetAnalysis implements Serializable {
 			//if( !(name.equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
 			{
 				FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID(name);
-				Iterator ifItr = fm.inputFilters.iterator();
+				Iterator ifItr = fm.getInputFilterIterator();
 		
 				while (ifItr.hasNext())
 				{
