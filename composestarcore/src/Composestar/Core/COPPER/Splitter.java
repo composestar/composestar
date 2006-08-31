@@ -33,7 +33,7 @@ public class Splitter {
 
 
   //split a concernReference (i.e. a.b.c.concern)
-  void splitConcernReference(Vector in) {
+ public void splitConcernReference(Vector in) {
     reset();
     i = in.size();
     switch (i) {

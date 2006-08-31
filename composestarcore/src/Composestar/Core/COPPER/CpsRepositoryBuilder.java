@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.5 2006/06/25 19:24:10 wminnen Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.6 2006/08/08 13:43:54 elmuerte Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -26,8 +26,12 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameterAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.InternalAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType;
@@ -36,6 +40,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.NameMatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedInternalAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SEQfilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
@@ -83,8 +88,9 @@ public class CpsRepositoryBuilder
   private Filter inf;
   private Filter of;
   private FilterElement fe;
-  private FilterModule fm;
+  private FilterModuleAST fm;
   private FilterModuleBinding fmb;
+  private FilterModuleReference fmref;
   private MatchingPart mp;
   private MatchingPattern mpat;
   private MatchingType mt;
@@ -203,15 +209,30 @@ public class CpsRepositoryBuilder
    * @param name Name for the filtermodule
    */
   public void addFilterModule(String name,int lineNumber) {
-    fm = new FilterModule();
+    fm = new FilterModuleAST();
     fm.setName(name);
     fm.setParent(cpsc);
 	fm.setDescriptionFileName(filename);
     fm.setDescriptionLineNumber(lineNumber);
-    cpsc.addFilterModule(fm);
+    cpsc.addFilterModuleAST(fm);
     this.addToRepository(fm);
   }
-
+  
+  public void addFilterModuleParameters(Vector idv,int lineNumber) throws SemanticException {
+	    for (int j = 0; j < idv.size(); j++) {
+	    	FilterModuleParameterAST fmp = new FilterModuleParameterAST();
+	    	fmp.setDescriptionFileName(filename);
+	    	fmp.setDescriptionLineNumber(lineNumber);
+	    	fmp.setName((String) idv.elementAt(j));
+	    	fmp.setParent(fm);
+	    	if(!fm.doesParameterExists(fmp)){
+	    		fm.addParameter(fmp);
+	    		this.addToRepository(fmp);
+	    	}else{
+	    		throw new SemanticException("Parameter not unique within filtermodule", fmp.getDescriptionFileName(), fmp.descriptionLineNumber, 0);
+	    	}
+	    }
+  }
 
   /**
    * Creates internals. Internals have a name and a type (e.g. a: int)
@@ -220,18 +241,32 @@ public class CpsRepositoryBuilder
    * @param typev the type shared by the internals (can contain a package e.g. x.y.z.int)
    * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
    */
-  public void addInternals(Vector namev, Vector typev,int lineNumber) throws SemanticException {
+  public void addInternals(Vector namev, Vector idv,int lineNumber, boolean parameterized) throws SemanticException {
     for (int j = 0; j < namev.size(); j++) {
-      Internal in = new Internal();
-		in.setDescriptionFileName(filename);
-		in.setDescriptionLineNumber(lineNumber);
-      in.setName((String) namev.elementAt(j));
-      in.setType(addConcernReference(typev));    //fixme: instead of recreating the concernreference here, we could just create it once and reuse for all internals
-      in.setParent(fm);
-      if (fm.addInternal(in) )
-    	  this.addToRepository(in);
-      else
-    	  throw new SemanticException("Identifier not unique within filtermodule", in.getDescriptionFileName(), in.descriptionLineNumber, 0);
+    	if(!parameterized){
+    		InternalAST in = new InternalAST();
+    		in.setDescriptionFileName(filename);
+    		in.setDescriptionLineNumber(lineNumber);
+    		in.setName((String) namev.elementAt(j));
+    		in.setType(addConcernReference(idv));    //fixme: instead of recreating the concernreference here, we could just create it once and reuse for all internals
+    		in.setParent(fm);
+    		if (fm.addInternal(in) )
+    			this.addToRepository(in);
+    		else
+    			throw new SemanticException("Identifier not unique within filtermodule", in.getDescriptionFileName(), in.descriptionLineNumber, 0);
+    	}else{
+    		ParameterizedInternalAST parin = new ParameterizedInternalAST();
+    		parin.setDescriptionFileName(filename);
+    		parin.setDescriptionLineNumber(lineNumber);
+    		parin.setName((String) namev.elementAt(j));
+    		parin.setParameter((String) idv.elementAt(0));
+    		parin.setParent(fm);
+    		if (fm.addInternal(parin) )
+    			this.addToRepository(parin);
+    		else
+    			throw new SemanticException("Identifier not unique within filtermodule", parin.getDescriptionFileName(), parin.descriptionLineNumber, 0);
+    	
+    	}
     }
   }
 
@@ -301,10 +336,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
   private boolean isInternal(String name) {
   	Iterator iterInternals;
-  	Internal internal;
+  	InternalAST internal;
   	
   	for (iterInternals = fm.getInternalIterator(); iterInternals.hasNext();) {
-  		internal = (Internal)iterInternals.next();
+  		internal = (InternalAST)iterInternals.next();
   		if (internal.getName().compareTo(name) == 0) return true;
   	}
   	
@@ -375,6 +410,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a Method object to the repository
    *
    * @param name Name of the method
+   * @deprecated
+   * obselete now? DD
    */
   public void addMethod(String name,int lineNumber) {
     m = new Method();
@@ -391,6 +428,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds the returntype to a Method object
    *
    * @param typev the returntype (e.g. java.lang.int)
+   * @deprecated
+   * obselete now? DD
    */
   public void addMethodReturnType(Vector typev) {
     if (typev.size() > 0) { //because returntype is optional
@@ -406,6 +445,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param namev the names of the parameters with a common type
    * @param typev the type shared by the parameters
+   * @deprecated
+   * obselete now? DD
    */
   public void addMethodFormalParameters(Vector namev, Vector typev) {
     String name;
@@ -1241,8 +1282,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name Name of the fm (may include package + concern)
    */
-  public void addFilterModuleName(Vector name, int line) {
-    FilterModuleReference fmref = new FilterModuleReference();
+  public void addFilterModuleName(Vector name, Vector args, int line) {
+    fmref = new FilterModuleReference();
     fmref.setDescriptionFileName(filename);
     fmref.setDescriptionLineNumber(line);
     split.splitConcernElemReference(name, true);
@@ -1251,8 +1292,17 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     fmref.setName(split.getConcernelem());
     fmb.addFilterModule(fmref);
     this.addToRepository(fmref);
+    
+    for(int i = 0; i < args.size(); i++){
+		FilterModuleParameter fmp = new FilterModuleParameter();
+		fmp.setDescriptionFileName(filename);
+	    fmp.setDescriptionLineNumber(line);
+		fmp.setValue(args.elementAt(i));
+		fmref.addArg(fmp);
+		this.addToRepository(fmp);
+    }
   }
-
+  
   /**
    * Creates a new AnnotationBinding
    *

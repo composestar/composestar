@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.5 2006/03/09 10:18:39 doornenbal Exp $
+ * $Id: cpsw.g,v 1.6 2006/06/25 19:24:10 wminnen Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -33,11 +33,13 @@ options {
   public String cur_fm = new String();
   public CpsRepositoryBuilder b = new CpsRepositoryBuilder();
   public Vector typev = new Vector();     //temp vector for types
+  public Vector parameterv = new Vector();//temp vector for parameters
   public Vector namev = new Vector();     //temp vector for names
   public Vector objv = new Vector();      //temp vector for objects (target / selector names)
   public Vector typev2 = new Vector();    //temp vector for types of 2nd selector
   public Vector temptypes = new Vector(); //temp vector for types (including full package names)
   public Vector tempnames = new Vector(); //temp vector for names (including full packages)
+  public Vector arg = new Vector(); 	  //temp string for argument name
   public int t=0;                         //flag for selectorexpression
   public int matching=0;                  //flag for name / signature matching (0=signature, 1=name)
   public Vector typel = new Vector();     //temp vector for type list (in methods)
@@ -62,15 +64,20 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
 
   //////////////////////////////////////////////////////////////////////////
-    filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.getLine());} (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)?);       //fixme: include arguments? (not really used)
+    filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.getLine());} (filterModuleParameters)? (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)?);       //fixme: include arguments? (not really used)
+        
+    filterModuleParameters :  #(FILTERMODULEPARAMETERS_ {parameterv.clear();} filterModuleParameterSet {b.addFilterModuleParameters(parameterv, 0);}); 
+    filterModuleParameterSet : #(DECLAREDPARAMETER_ (p:PARAMETER_NAME {parameterv.add(p.getText());} | p2:PARAMETERLIST_NAME {parameterv.add(p2.getText());})+ );
+  	parameter : #(PARAMETER_ p:PARAMETER_NAME {parameterv.add(p.getText());} );    
 
     /*---------------------------------------------------------------------------*/
     internals : #("internals" (singleInternal)*);
 
-      singleInternal : #(INTERNAL_ {namev.clear();} n:variableSet {typev.clear();} type {b.addInternals(namev, typev, n.getFirstChild().getLine());} );
-
+     singleInternal : #(INTERNAL_ {namev.clear();} n:variableSet {typev.clear(); parameterv.clear();} (type {b.addInternals(namev, typev, n.getFirstChild().getLine(), false);}
+											|parameter {b.addInternals(namev, parameterv, n.getFirstChild().getLine(), true);}));
+			
         variableSet : #(VAR_ (n:NAME {namev.add(n.getText());})+ );
-
+        
         type : #(TYPE_ (t:NAME {typev.add(t.getText());} )+);
 
     /*---------------------------------------------------------------------------*/
@@ -203,10 +210,12 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
       singleFmBind : #(FM_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addFilterModuleBinding(namev, n.getLine());}  filterModuleSet);
 
-        filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} filterModuleElement))+);
+        filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} {parameterv.clear();} filterModuleElement))+);
 
-          filterModuleElement : (n:NAME {namev.add(n.getText());})+ { b.addFilterModuleName(namev, n.getLine()); } ;
-          
+		filterModuleElement : (n:NAME {namev.add(n.getText());})+ (fmBindingArguments)? { b.addFilterModuleName(namev, parameterv, n.getLine()); } ;
+        fmBindingArguments : #(DECLAREDARGUMENT_ {parameterv.clear();} (argument {parameterv.add(arg);})* );
+          argument : #(ARGUMENT_ {arg.clear();} (n:NAME {arg.add(n.getText());})*) ;
+             
     /*---------------------------------------------------------------------------*/
     annotationBind : #("annotations" (singleAnnotBind)*);
 

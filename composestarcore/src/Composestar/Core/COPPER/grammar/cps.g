@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.9 2006/04/05 07:11:51 doornenbal Exp $
+ * $Id: cps.g,v 1.10 2006/06/25 19:24:10 wminnen Exp $
  */
 
 /**
@@ -34,6 +34,9 @@ tokens {                                //extra tokens used in constructing the 
         ANNOTELEM_;
         ANNOTSET_;
         ANNOT_;
+        ARGUMENT_;
+        DECLAREDARGUMENT_;
+        DECLAREDPARAMETER_;
         FPMSET_;
         FPMDEF_;
         FPMSTYPE_;
@@ -43,6 +46,7 @@ tokens {                                //extra tokens used in constructing the 
         CONDNAME_;
         EXTERNAL_;
         FILTERELEM_;
+        FILTERMODULEPARAMETERS_;
         FILTERSET_;
         FMELEM_;
         FMSET_;
@@ -60,6 +64,7 @@ tokens {                                //extra tokens used in constructing the 
         OCL_;
         OFILTER_;
         OREXPR_;
+        PARAMETER_;
         SELEC2_;
         SELEC_;
         SELEXP_;
@@ -98,14 +103,20 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                     | RCURLY!;
 
   //////////////////////////////////////////////////////////////////////////
-  filterModule : "filtermodule"^ NAME filterModuleBlock ;
-
-    filterModuleBlock : LCURLY! (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)? RCURLY!;
+  filterModule : "filtermodule"^ NAME (filterModuleParameters)? LCURLY! (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)? RCURLY!;
+  
+  filterModuleParameters : LPARENTHESIS! (filterModuleParameterSet)? RPARENTHESIS!
+  {#filterModuleParameters = #([FILTERMODULEPARAMETERS_, "filtermoduleparameters"], #filterModuleParameters);} ;
+  filterModuleParameterSet : (PARAMETER_NAME  | PARAMETERLIST_NAME) (COMMA! (PARAMETER_NAME | PARAMETERLIST_NAME))*
+   {#filterModuleParameterSet = #([DECLAREDPARAMETER_, "declaredparameter"], #filterModuleParameterSet);} ;
+    
+  parameter : PARAMETER_NAME 
+  {#parameter = #([PARAMETER_, "parameter"], #parameter);} ;
 
     /*---------------------------------------------------------------------------*/
     internals : "internals"^ (singleInternal)* ;
 
-      singleInternal : variableSet COLON! type SEMICOLON!
+      singleInternal : variableSet COLON! (parameter|type) SEMICOLON!
       { #singleInternal = #([INTERNAL_, "internal"], #singleInternal);} ;
 
         variableSet : NAME (COMMA! NAME)*
@@ -231,9 +242,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
         singleOutputFilter : NAME COLON! type (LPARENTHESIS! actualParameters RPARENTHESIS!)? EQUALS! LCURLY! (filterElements)? RCURLY!
         { #singleOutputFilter = #([OFILTER_, "outputfilter"], #singleOutputFilter);} ;
-
-
-  //////////////////////////////////////////////////////////////////////////
+        
+   //////////////////////////////////////////////////////////////////////////
   superImposition : "superimposition"^ superImpositionBlock;
 
     superImpositionBlock : LCURLY! superImpositionInner RCURLY!;
@@ -305,8 +315,12 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                           | filterModuleElement (COMMA! filterModuleElement)*)
                           { #filterModuleSet = #([FMSET_, "filtermodule set"], #filterModuleSet);} ;
 
-          filterModuleElement : concernElemReference
-          { #filterModuleElement = #([FMELEM_, "filtermodule element"], #filterModuleElement);} ;
+          filterModuleElement : concernElemReference (fmBindingArguments)?
+          					 { #filterModuleElement = #([FMELEM_, "filtermodule element"], #filterModuleElement);} ;
+          fmBindingArguments : LPARENTHESIS! (argument (COMMA! argument)*)? RPARENTHESIS!
+          				     {#fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
+          argument : fqn
+          		   {#argument = #([ARGUMENT_, "argument"], #argument);};
 
     /*---------------------------------------------------------------------------*/
 	annotationBind : "annotations"^ (singleAnnotBind)* ;
@@ -375,7 +389,8 @@ RPARENTHESIS            : ')';
 RSQUARE                 : ']' ;
 SEMICOLON               : ';' ;
 STAR                    : '*' ;
-SINGLEQUOTE             : '\'' ;
+SINGLEQUOTE             : '\'';
+QUESTIONMARK			: '?';
 
 protected DIGIT         : '0'..'9' ;
 protected FILE_SPECIAL  : '\\' | '/' | COLON!| ' ' | DOT;     //special items only allowed in filenames
@@ -398,6 +413,10 @@ FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOT
                           | QUOTE {$setType(QUOTE);};
 
 NAME                    : (LETTER | SPECIAL) (LETTER | DIGIT | SPECIAL)*;
+
+PARAMETERLIST_NAME		: QUESTIONMARK QUESTIONMARK NAME;
+
+PARAMETER_NAME          : QUESTIONMARK NAME;
 
 // NEWLINE and WS.... you can combine those
 WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
