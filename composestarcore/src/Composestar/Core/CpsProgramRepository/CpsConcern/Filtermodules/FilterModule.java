@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModule.java,v 1.2 2006/02/21 16:38:15 whavinga Exp $
+ * $Id: FilterModule.java,v 1.3 2006/08/31 10:06:04 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -554,7 +554,7 @@ public void setDescriptionFileName(String newFileName) {
 	fm_ast.setDescriptionFileName(newFileName);
 }
 
-public void addDynObject(String key, Object obj) {
+/*public void addDynObject(String key, Object obj) {
 	fm_ast.addDynObject(key, obj);
 }
 
@@ -564,7 +564,7 @@ public Object getDynObject(String key) {
 
 public Iterator getDynIterator() {
 	return fm_ast.getDynIterator();
-}
+}*/
 
 public FilterModuleAST getFm_ast() {
 	return fm_ast;

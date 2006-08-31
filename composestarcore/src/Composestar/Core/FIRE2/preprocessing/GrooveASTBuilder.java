@@ -34,6 +34,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.Message;
 
@@ -113,7 +114,7 @@ public class GrooveASTBuilder {
             
             //create new operatorNode:
             operatorNode = buildFilterOperatorNode(
-                    filter.rightOperator, graph );
+                    filter.getRightOperator(), graph );
             edge = new AnnotatedEdge( filterNode, FlowChartNames.RIGHT_OPERATOR_EDGE, 
                     operatorNode );
             graph.addEdge( edge );
@@ -172,7 +173,7 @@ public class GrooveASTBuilder {
             
             return operatorNode;
         }
-        else if ( operator instanceof VoidFilterCompOper ){
+        else if ( operator instanceof VoidFilterCompOper || operator == null){
             AnnotatedNode operatorNode = new AnnotatedNode();
             operatorNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, operator );
             graph.addNode( operatorNode );
@@ -191,6 +192,8 @@ public class GrooveASTBuilder {
             //should never happen, because all cases should be handled by 
             //previous if/elses
             throw new RuntimeException( "Unknown rightOperator type" );
+        	// debugger says null
+        	//return null;
         }
     }
 

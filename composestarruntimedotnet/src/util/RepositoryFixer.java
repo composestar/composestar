@@ -3,7 +3,7 @@
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: RepositoryFixer.java,v 1.1 2006/02/16 13:50:33 composer Exp $
+ * $Id: RepositoryFixer.java,v 1.1 2006/02/16 23:16:20 pascal_durr Exp $
  * 
  */
 package Composestar.RuntimeDotNET.Utils;
@@ -51,10 +51,11 @@ public class RepositoryFixer
 			for( ; e.hasMoreElements(); )
 			{
 				Object obj = e.nextElement();
+			
 				if( obj instanceof DeclaredRepositoryEntity )
 				{
 					//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing clone " + ((DeclaredRepositoryEntity)obj).repositoryKey + "." );
-					fixChildren(obj, ds);
+					fixChildren(obj, ds);																
 				}
 			}
 		}
@@ -69,32 +70,38 @@ public class RepositoryFixer
 	{
 		FieldInfo[] fields = o.GetType().GetFields();
 		Object child;
+		
 		for( int i = 0; i < fields.length; i++ )
 		{
 			child = fields[i].GetValue(o);
+			
 			if( child == null )
 			{
 			}
 			else if( child instanceof RepositoryEntity )
 			{
-				//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
-				fields[i].SetValue(o, fixEntity((RepositoryEntity) child, ds) );
+				 if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
+					
+					Object temp = fixEntity((RepositoryEntity) child, ds);
+					fields[i].SetValue(o, temp);
 			}
 			else if( child instanceof Vector )
 			{
-				//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
 				fields[i].SetValue(o, fixVector((Vector) child, ds) );
 			}
 			else if( child instanceof DataMap )
 			{
+				
 				//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","TODO: Fix DataMap '" + fields[i].get_Name()+"'." );
-				//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() +"'.");
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() +"'.");
 				//fields[i].SetValue(o, fixVector((Vector) child, ds) );
 			}
 			else
 			{
-				//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Field '" + fields[i].get_Name() + "' has unknown type '" + child.getClass().getName() +"'.");
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Field '" + fields[i].get_Name() + "' has unknown type '" + child.getClass().getName() +"'.");
 			}
+			
 		}
 	}
 
@@ -102,8 +109,10 @@ public class RepositoryFixer
 	{
 		String repositoryKey = ((RepositoryEntity) o).repositoryKey;
 		Object reffedObject = ds.getObjectByID(repositoryKey);
+
 		if( reffedObject == null )
 		{
+		
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR,"FLIRT","Fatal Error: Unable to resolve object with key '" + repositoryKey +"'.");
 			System.exit(0);
 		}
@@ -114,12 +123,14 @@ public class RepositoryFixer
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","DISCLONED object with key '" + o.repositoryKey +"'.");
 		}
 		*/
+
 		return reffedObject;
 	}
 
 	public Object fixVector( Vector v, DataStore ds)
 	{
 		Vector returnVector = new Vector();
+		
 		for( Enumeration e = v.elements(); e.hasMoreElements(); )
 		{
 			Object o = e.nextElement();
@@ -158,13 +169,12 @@ public class RepositoryFixer
 				}
 				else if( ref instanceof FilterModuleReference ) 
 				{
-					referenced = ds.getObjectByID(fqn);
+					referenced = (((FilterModuleReference) ref).getRef());
+					
 					if( referenced == null )
 					{
 						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Unable to resolve filtermodule '" + fqn + "' with key '" + ref.repositoryKey + "'.");
 					}
-					else	
-						((FilterModuleReference)ref).setRef((FilterModule) referenced);
 				}
 				else if( ref instanceof DeclaredObjectReference )
 				{
