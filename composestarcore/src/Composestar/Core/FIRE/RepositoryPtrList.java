@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: RepositoryPtrList.java,v 1.2 2006/03/14 12:53:54 pascal_durr Exp $
+ * $Id: RepositoryPtrList.java,v 1.3 2006/06/25 19:24:10 wminnen Exp $
  * 
 **/
 
@@ -374,10 +374,10 @@ public class RepositoryPtrList extends TreeBuilder
 
 	protected void addFIREInfo(FilterReasoningEngine fireInfo, FilterModule fm)
 	{
-		Iterator itr = fm.internals.iterator();
+		Iterator itr = fm.getInternalIterator();
 		mapConcernToSymbol (fireInfo, itr);
 		
-		itr = fm.externals.iterator();
+		itr = fm.getExternalIterator();
 		mapConcernToSymbol (fireInfo, itr);
 	}
 	

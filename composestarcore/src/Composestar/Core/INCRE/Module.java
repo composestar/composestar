@@ -169,15 +169,19 @@ public class Module
 				module.stop();
 			}
 			catch(StackOverflowError ex1){
+				ex1.printStackTrace();
 				throw new ModuleException("I need more stack!", "INCRE running " + this.name);
 			}
 			catch(OutOfMemoryError ex2){
+				ex2.printStackTrace();
 				throw new ModuleException("I am using too much memory!", "INCRE running " + this.name);
 			}
 			catch(ClassNotFoundException ex3){
+				ex3.printStackTrace();
 				throw new ModuleException("Cannot find class "+this.fulltype, "INCRE running " + this.name);
 			}
 			catch(InvocationTargetException ex4){
+				ex4.printStackTrace();
 				if (ex4.getCause() instanceof ModuleException)
 					throw (ModuleException)ex4.getCause();
 				else if(ex4.getTargetException()  instanceof ModuleException)
@@ -186,15 +190,19 @@ public class Module
 					throw new ModuleException(ex4.getMessage(), "INCRE running " + this.name);
 			}
 			catch(IllegalAccessException ex5){
+				ex5.printStackTrace();
 				throw new ModuleException(ex5.getMessage() + " Caused by:" + ex5.getCause().getMessage(), "INCRE running " + this.name);
 			}
 			catch(NoSuchMethodException ex6){
+				ex6.printStackTrace();
 				throw new ModuleException(ex6.getMessage(), "INCRE running " + this.name);
 			}
 			catch(InstantiationException ex6){
+				ex6.printStackTrace();
 				throw new ModuleException(ex6.getMessage(), "INCRE running " + this.name);
 			}
 			catch(Exception e){
+				e.printStackTrace();
 				Debug.out(Debug.MODE_DEBUG, "Master",e.getCause().toString());
 				throw new ModuleException(e.getCause().toString(),"INCRE running " + this.name);
 			}

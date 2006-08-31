@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.12 2006/06/27 11:22:53 stephan_h Exp $
+ * $Id: SIGN.java,v 1.13 2006/06/29 11:54:10 stephan_h Exp $
  * 
 **/
 
@@ -174,8 +174,9 @@ public class SIGN implements CTCommonModule
 			 while( conIter.hasNext() )
 			 {
 				 Concern concern = (Concern)conIter.next();
-				 if (concern.getDynObject("superImpInfo") != null)
+				 if (concern.getDynObject("superImpInfo") != null){
 					 this.toBeProcessed.put(concern.getUniqueID(),concern);
+				 }
 				 else 
 					 this.noFilters.add(concern);
 			 }

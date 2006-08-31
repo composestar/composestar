@@ -163,6 +163,7 @@ public class INCRE implements CTCommonModule
 	   {
 		   increparse.stop();	
 		   String error = e.getMessage();
+		   e.printStackTrace();
 		   if(error == null || "null".equals(error))
 		   {
 			   error = e.toString();

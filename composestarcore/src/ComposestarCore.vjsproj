@@ -179,12 +179,32 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleParameter.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleParameterAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterType.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Internal.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\InternalAST.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -225,6 +245,16 @@
                 />
                 <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Or.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedInternal.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedInternalAST.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

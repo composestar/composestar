@@ -9,6 +9,7 @@ import groove.graph.Graph;
 import groove.graph.Node;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
@@ -79,12 +80,13 @@ public class GrooveASTBuilder {
         
         
         //iterate over filters:
-        Vector inputFilters = filterModule.inputFilters;
+        Iterator inputFilters = filterModule.getInputFilterIterator();
         Filter filter;
         Node filterNode;
         AnnotatedNode operatorNode = null;
-        for (int i=0; i<inputFilters.size(); i++){
-            filter = (Filter) inputFilters.elementAt( i );
+        int i = 0; //vague leftover of the for loop
+        while(inputFilters.hasNext()){
+            filter = (Filter) inputFilters.next();
             
             //create filternode:
             filterNode = buildFilterNode( filter, graph );
@@ -96,6 +98,7 @@ public class GrooveASTBuilder {
             
             if ( i==0 ){
                 //create 'orderFirst' edge:
+            	i++;
                 edge = new AnnotatedEdge( filterModuleNode, 
                         FlowChartNames.ORDER_FIRST_EDGE, filterNode );
                 graph.addEdge( edge );

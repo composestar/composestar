@@ -5,13 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DeclaredRepositoryEntity.java,v 1.1 2006/02/16 23:03:58 pascal_durr Exp $
+ * $Id: DeclaredRepositoryEntity.java,v 1.2 2006/06/30 12:32:16 reddog33hummer Exp $
  */
 package Composestar.Core.RepositoryImplementation;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-
 import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 
 public class DeclaredRepositoryEntity extends ContextRepositoryEntity 
 {
@@ -86,7 +87,7 @@ public String name;
         temp.addElement(o.getName());
         ready = true;
       } else {
-        temp.addElement(o.getName());
+        temp.addElement(o.getName());       
         o = (DeclaredRepositoryEntity) o.getParent();
       }
     }
