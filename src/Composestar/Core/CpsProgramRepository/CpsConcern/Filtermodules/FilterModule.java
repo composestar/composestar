@@ -5,43 +5,196 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModule.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: FilterModule.java,v 1.2 2006/02/21 16:38:15 whavinga Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {A1F21307-81AA-41BE-8D4C-79216E1F0EC6}
  */
 public class FilterModule extends DeclaredRepositoryEntity {
-    public Vector conditions;
-    public Vector internals;
-    public Vector externals;
-    public Vector methods;
-    public Vector inputFilters;
-    public Vector outputFilters;
+    public FilterModuleAST fm_ast;
+	
+	public Vector parameters;
+	//public Vector conditions;
+    public Vector internals; //instances
+    //public Vector externals;
+    //public Vector methods;
+    //public Vector inputFilters;
+    //public Vector outputFilters;
     
-
+    public int uniqueNumber;
+    
     /**
      * @modelguid {04F87A00-10B0-476E-8C87-A6BD604DEF19}
      * @roseuid 401FAA6303DA
+     * @deprecated
      */
-    public FilterModule() 
+   public FilterModule() 
 	{
     super();
-    conditions = new Vector();
+    fm_ast = new FilterModuleAST();
+    parameters = new Vector();
+    //conditions = new Vector();
     internals = new Vector();
-    externals = new Vector();
-    methods = new Vector();
-    inputFilters = new Vector();
-    outputFilters = new Vector();
+    //externals = new Vector();
+    //methods = new Vector();
+    //inputFilters = new Vector();
+    //outputFilters = new Vector();
+  }
+    
+    public FilterModule(FilterModuleAST fmAst, Vector args, int number){
+    super();
+    descriptionLineNumber = 0;
+    uniqueNumber = number;
+    fm_ast = fmAst;
+    setParent(fm_ast.getParent());
+    setName(fm_ast.getName());
+    int counter = 1;
+    
+    ((CpsConcern) getParent()).addFilterModule(this);
+    
+    //set the unique Vectors;
+    parameters = new Vector();
+    internals = new Vector();
+    
+    //create the FilterModuleParameter (instances)
+    Iterator parameterIterator = fm_ast.getParameterIterator();
+    int index = 0;
+    while(parameterIterator.hasNext()){
+    	FilterModuleParameterAST fmp_ast = (FilterModuleParameterAST) parameterIterator.next();
+    	// we take the assumption that #parameters == # arguments
+    	FilterModuleParameter fmp = new FilterModuleParameter(fmp_ast, args.elementAt(index), counter);
+    	fmp.setParent(this);
+    	this.addParameter(fmp);
+    	index++; counter++;
+    }
+    
+    //create unique internals
+    Iterator internalIt = fm_ast.getInternalIterator();
+    while(internalIt.hasNext()){
+    	InternalAST internalAST = (InternalAST) internalIt.next();
+    	//parameterized internal
+    	if(internalAST.getType()==null){
+    		ParameterizedInternal internal = new ParameterizedInternal((ParameterizedInternalAST)internalAST);
+    		//counter++;
+    		internal.setParent(this);
+    		this.addInternal(internal);
+    	}else{
+    		Internal internal = new Internal(internalAST);
+    		//counter++;
+    		internal.setParent(this);
+    		internal.setType(internalAST.getType());
+    		this.addInternal(internal);
+    	}   
+    }
   }
 
+    public FilterModuleParameter getParameter(String parameterName){
+    	Iterator it = getParameterIterator();
+    	FilterModuleParameter result = null;
+    	while(it.hasNext()){
+    		FilterModuleParameter fmp = (FilterModuleParameter) it.next();
+    		if(fmp.getName().equals(parameterName)){
+    			result = fmp;
+    		}
+    	}
+    	return result;
+    }
+    
+    /**
+     * internals
+     *
+     * @param internal
+     * @return boolean
+     *
+     * @modelguid {638C9279-9DD7-4E4B-92D1-52A44F9D6D93}
+     * @roseuid 401FAA640041
+     */
+    public boolean addInternal(Internal internal) {
+   	    internals.addElement(internal);
+  	    return true;
+    }
 
+
+    /**
+     * @param index
+     * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal
+     *
+     * @modelguid {E1CCC976-8BB3-40C4-A7E8-024139E6EF68}
+     * @roseuid 401FAA640060
+     */
+    public Internal removeInternal(int index) {
+      Object o = internals.elementAt(index);
+      internals.removeElementAt(index);
+      return ((Internal) o);
+    }
+
+
+    /**
+     * @param index
+     * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal
+     *
+     * @modelguid {0A8DFDE2-FD90-47F2-8C9E-1BE78B38EE07}
+     * @roseuid 401FAA640073
+     */
+    public Internal getInternal(int index) {
+      return ((Internal) internals.elementAt(index));
+    }
+
+
+    /**
+     * @return java.util.Iterator
+     *
+     * @modelguid {0DD565EF-8A52-4205-AF2F-45EBC462C6DC}
+     * @roseuid 401FAA64007E
+     */
+    public Iterator getInternalIterator() {
+      return (new CPSIterator(internals));
+    }
+
+    /**
+     * @ return boolean
+     * Checks whether a parameter does already exists.
+     * Fixme: no difference yet between ?foo and ??foo 
+     */
+    public boolean doesParameterExists(FilterModuleParameter fmp){
+  	  boolean exist = false;
+  	  for (int i = 0; i < parameters.size(); i++){
+  		  FilterModuleParameter temp = (FilterModuleParameter) parameters.elementAt(i);
+  		  if (temp.getName().equals(fmp.getName())){
+  			  exist = true;
+  		  }
+  	  }
+  	  return exist;
+    }
+    
+    /**
+     * Adds a parameter to a filtermodule.
+     * pre requirment is to call boolean doesParameterExists(FilterModuleParameter fmp)
+     * please note that this construction is different to the other boolean addWhatever
+     */
+    public void addParameter(FilterModuleParameter fmp){
+  	  parameters.add(fmp);
+    }
+    
+    /**
+     * @return java.util.Iterator
+     */
+    public Iterator getParameterIterator() {
+  	    return (new CPSIterator(parameters));
+  	  }
+    
+   /*
+    * Forwarded functions
+    */ 
   /**
    * conditions
    *
@@ -52,8 +205,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640006
    */
   public boolean addCondition(Condition condition) {
-    conditions.addElement(condition);
-    return (true);
+	return fm_ast.addCondition(condition);
   }
 
 
@@ -65,9 +217,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640010
    */
   public Condition removeCondition(int index) {
-    Object o = conditions.elementAt(index);
-    conditions.removeElementAt(index);
-    return ((Condition) o);
+    return fm_ast.removeCondition(index);
   }
 
 
@@ -79,7 +229,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640023
    */
   public Condition getCondition(int index) {
-    return ((Condition) conditions.elementAt(index));
+    return fm_ast.getCondition(index);
   }
 
 
@@ -90,7 +240,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64002E
    */
   public Iterator getConditionIterator() {
-    return (new CPSIterator(conditions));
+    return fm_ast.getConditionIterator();
   }
 
 
@@ -103,13 +253,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @modelguid {638C9279-9DD7-4E4B-92D1-52A44F9D6D93}
    * @roseuid 401FAA640041
    */
-  public boolean addInternal(Internal internal) {
-	  if (isIdentifierUnique(internal.getName()))
-	  {
-	    internals.addElement(internal);
-	    return true;
-	  }
-	  return false;
+  public boolean addInternalAST(InternalAST internal) {
+	  return fm_ast.addInternal(internal);
   }
 
 
@@ -120,10 +265,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @modelguid {E1CCC976-8BB3-40C4-A7E8-024139E6EF68}
    * @roseuid 401FAA640060
    */
-  public Internal removeInternal(int index) {
-    Object o = internals.elementAt(index);
-    internals.removeElementAt(index);
-    return ((Internal) o);
+  public InternalAST removeInternalAST(int index) {
+    return fm_ast.removeInternal(index);
   }
 
 
@@ -134,8 +277,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @modelguid {0A8DFDE2-FD90-47F2-8C9E-1BE78B38EE07}
    * @roseuid 401FAA640073
    */
-  public Internal getInternal(int index) {
-    return ((Internal) internals.elementAt(index));
+  public InternalAST getInternalAST(int index) {
+    return fm_ast.getInternal(index);
   }
 
 
@@ -145,8 +288,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @modelguid {0DD565EF-8A52-4205-AF2F-45EBC462C6DC}
    * @roseuid 401FAA64007E
    */
-  public Iterator getInternalIterator() {
-    return (new CPSIterator(internals));
+  public Iterator getInternalASTIterator() {
+    return fm_ast.getInternalIterator();
   }
 
 
@@ -160,12 +303,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640091
    */
   public boolean addExternal(External external) {
-	if (isIdentifierUnique(external.getName()))
-	{
-		externals.addElement(external);
-		return true;
-	}
-	return false;
+	return fm_ast.addExternal(external);
   }
 
 
@@ -177,9 +315,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64009C
    */
   public External removeExternal(int index) {
-    Object o = externals.elementAt(index);
-    externals.removeElementAt(index);
-    return ((External) o);
+    return fm_ast.removeExternal(index);
   }
 
 
@@ -191,7 +327,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6400B0
    */
   public External getExternal(int index) {
-    return ((External) externals.elementAt(index));
+    return fm_ast.getExternal(index);
   }
 
 
@@ -202,7 +338,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6400C4
    */
   public Iterator getExternalIterator() {
-    return (new CPSIterator(externals));
+    return fm_ast.getExternalIterator();
   }
 
 
@@ -216,8 +352,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6400D7
    */
   public boolean addMethod(Method method) {
-    methods.addElement(method);
-    return (true);
+    return fm_ast.addMethod(method);
   }
 
 
@@ -229,9 +364,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6400F6
    */
   public Method removeMethod(int index) {
-    Object o = methods.elementAt(index);
-    methods.removeElementAt(index);
-    return ((Method) o);
+    return fm_ast.removeMethod(index);
   }
 
 
@@ -243,7 +376,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640109
    */
   public Method getMethod(int index) {
-    return ((Method) methods.elementAt(index));
+    return fm_ast.getMethod(index);
   }
 
 
@@ -254,7 +387,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64011D
    */
   public Iterator getMethodIterator() {
-    return (new CPSIterator(methods));
+    return fm_ast.getMethodIterator();
   }
 
 
@@ -268,12 +401,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640127
    */
   public boolean addInputFilter(Filter inputfilter) {
-	  if (isIdentifierUnique(inputfilter.getName()))
-	  {
-		  inputFilters.addElement(inputfilter);
-		  return true;
-	  }
-	  return false;
+	  return fm_ast.addInputFilter(inputfilter);
   }
 
 
@@ -285,9 +413,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64013C
    */
   public Filter removeInputFilter(int index) {
-    Object o = inputFilters.elementAt(index);
-    inputFilters.removeElementAt(index);
-    return ((Filter) o);
+    return fm_ast.removeInputFilter(index);
   }
 
 
@@ -299,7 +425,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64014F
    */
   public Filter getInputFilter(int index) {
-    return ((Filter) inputFilters.elementAt(index));
+    return fm_ast.getInputFilter(index);
   }
 
 
@@ -310,7 +436,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640163
    */
   public Iterator getInputFilterIterator() {
-    return (new CPSIterator(inputFilters));
+    return fm_ast.getInputFilterIterator();
   }
 
 
@@ -324,11 +450,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640177
    */
   public boolean addOutputFilter(Filter outputfilter) {
-	  if (isIdentifierUnique(outputfilter.getName())) {
-		  outputFilters.addElement(outputfilter);
-		  return true;
-	  }
-	  return false;
+	  return fm_ast.addOutputFilter(outputfilter);
   }
 
 
@@ -340,9 +462,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64018B
    */
   public Filter removeOutputFilter(int index) {
-    Object o = outputFilters.elementAt(index);
-    outputFilters.removeElementAt(index);
-    return ((Filter) o);
+    return fm_ast.removeOutputFilter(index);
   }
 
 
@@ -354,7 +474,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64019F
    */
   public Filter getOutputFilter(int index) {
-    return ((Filter) outputFilters.elementAt(index));
+    return fm_ast.getOutputFilter(index);
   }
 
 
@@ -365,12 +485,13 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6401B4
    */
   public Iterator getOutputFilterIterator() {
-    return (new CPSIterator(outputFilters));
+    return fm_ast.getOutputFilterIterator();
   }
   
   /* Returns true when this identifier has not been used yet, within this filtermodule. */
   
-  private boolean isIdentifierUnique(String identifier)
+  /*
+   private boolean isIdentifierUnique(String identifier)
   { // Not sure if methods and conditions should also be included here? - WH
 	  Vector allIdentifiers[] = {internals, externals, inputFilters, outputFilters };
 	  
@@ -382,6 +503,89 @@ public class FilterModule extends DeclaredRepositoryEntity {
 	  }
 	  return true;
   }
+  */
+  
+  /**
+   * @ return boolean
+   * Checks whether a parameter does already exists.
+   * Fixme: no difference yet between ?foo and ??foo 
+   */
+  public boolean doesParameterASTExists(FilterModuleParameterAST fmp){
+	  return fm_ast.doesParameterExists(fmp);
+  }
+  
+  /**
+   * Adds a parameter to a filtermodule.
+   * pre requirment is to call boolean doesParameterExists(FilterModuleParameter fmp)
+   * please note that this construction is different to the other boolean addWhatever
+   */
+  public void addParameterAST(FilterModuleParameterAST fmp){
+	  fm_ast.addParameter(fmp);
+  }
+  
+  /**
+   * @return java.util.Iterator
+   */
+  public Iterator getParameterASTIterator() {
+	    return fm_ast.getParameterIterator();
+	  }
+  
+  public Vector getOutputFilters(){
+	  return fm_ast.getOutputFilters();
+  }
+
+public Object clone() throws CloneNotSupportedException {
+	return fm_ast.clone();
+}
+
+public int getDescriptionLineNumber() {
+	return fm_ast.getDescriptionLineNumber();
+}
+
+public void setDescriptionLineNumber(int newLineNumber) {
+	fm_ast.setDescriptionLineNumber(newLineNumber);
+}
+
+public String getDescriptionFileName() {
+	return fm_ast.getDescriptionFileName();
+}
+
+public void setDescriptionFileName(String newFileName) {
+	fm_ast.setDescriptionFileName(newFileName);
+}
+
+public void addDynObject(String key, Object obj) {
+	fm_ast.addDynObject(key, obj);
+}
+
+public Object getDynObject(String key) {
+	return fm_ast.getDynObject(key);
+}
+
+public Iterator getDynIterator() {
+	return fm_ast.getDynIterator();
+}
+
+public FilterModuleAST getFm_ast() {
+	return fm_ast;
+}
+
+public int getUniqueNumber() {
+	return uniqueNumber;
+}
+
+public void setUniqueNumber(int uniqueNumber) {
+	this.uniqueNumber = uniqueNumber;
+}
+
+public String getName() {
+	return (name + "!" + uniqueNumber);
+}
+
+public String getOriginalName() {
+	return name;
+}
+
 }
 
 /**

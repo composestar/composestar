@@ -19,8 +19,12 @@ CLASSES=AbstractPattern.class \
 	FilterElement.class \
 	FilterElementCompOper.class \
 	FilterModule.class \
+	FilterModuleAST.class \
+	FilterModuleParameter.class \
+	FilterModuleParameterAST.class \
 	FilterType.class \
 	Internal.class \
+	InternalAST.class \
 	MatchingPart.class \
 	MatchingPattern.class \
 	MatchingType.class \
@@ -29,6 +33,8 @@ CLASSES=AbstractPattern.class \
 	NameMatchingType.class \
 	Not.class \
 	Or.class \
+	ParameterizedInternal.class \
+	ParameterizedInternalAST.class \
 	SEQfilterCompOper.class \
 	SignatureMatchingType.class \
 	SubstitutionPart.class \

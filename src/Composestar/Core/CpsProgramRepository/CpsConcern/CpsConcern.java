@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsConcern.java,v 1.3 2006/02/16 12:51:20 composer Exp $
+ * $Id: CpsConcern.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern;
 
@@ -35,7 +35,8 @@ public class CpsConcern extends Concern
 	 * @modelguid {D83B8E0F-0DD6-435B-80D8-67C6EC1DC456}
 	 */
 	public SuperImposition superImposition;
-	public Vector filterModules;
+	public Vector filterModules; //instances
+	public Vector filterModulesAST;
 	public Vector formalParameters;
 	public String qualifiedName;
 	
@@ -47,6 +48,7 @@ public class CpsConcern extends Concern
 	{
 		super();
 		filterModules = new Vector();
+		filterModulesAST = new Vector();
 		formalParameters = new Vector();
 	}
 
@@ -113,6 +115,11 @@ public class CpsConcern extends Concern
 		filterModules.addElement(filtermodule);
 		return (true);
 	}
+	
+	public boolean addFilterModuleAST(FilterModuleAST filtermodule){
+		filterModulesAST.addElement(filtermodule);
+		return (true);
+	}
 
 
 	/**
@@ -154,6 +161,9 @@ public class CpsConcern extends Concern
 		return (new CPSIterator(filterModules));
 	}
 
+	public Iterator getFilterModuleASTIterator(){
+		return (new CPSIterator(filterModulesAST));
+	}
 
 	/**
 	 * @return java.util.Iterator
