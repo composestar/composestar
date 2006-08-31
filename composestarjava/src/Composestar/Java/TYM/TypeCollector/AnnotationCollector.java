@@ -14,24 +14,32 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.*;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
+import Composestar.Utils.Debug;
 
 public class AnnotationCollector 
 {
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
-		
-		ClassMap classmap = ClassMap.instance();
-		HashMap classes = classmap.map();
-		Iterator classIt = classes.values().iterator();
-		while( classIt.hasNext() ) 
-		{
-			Class c = (Class)classIt.next();
-			fetchMethodAnnotations(c);
+		try {
+			ClassMap classmap = ClassMap.instance();
+			HashMap classes = classmap.map();
+			Iterator classIt = classes.values().iterator();
+			while( classIt.hasNext() ) 
+			{
+				Class c = (Class)classIt.next();
+				try {
+				fetchMethodAnnotations(c);
+				}
+				catch(Throwable t){Debug.out(Debug.MODE_DEBUG,"COLLECTOR","Error while fetching annotations from type: "+c.getName()+" --> "+t.getMessage());}
+			}
+		}
+		catch(Exception e) {
+			throw new ModuleException(e.getMessage(),"AnnotationCollector");
 		}
 	}
 	
-	public void fetchMethodAnnotations(Class c) 
+	public void fetchMethodAnnotations(Class c) throws Throwable
 	{
 					
 		Method[] methods  = c.getMethods();
@@ -57,7 +65,7 @@ public class AnnotationCollector
 		}
 	}
 	
-	public MethodInfo getMethodLocation(Type type, String methodName)
+	public MethodInfo getMethodLocation(Type type, String methodName) throws Throwable
 	{
 		if( type != null )
 		{

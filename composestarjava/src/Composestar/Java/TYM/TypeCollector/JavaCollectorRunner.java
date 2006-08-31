@@ -12,8 +12,8 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.Java.LAMA.*;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
+import Composestar.Utils.Debug;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -34,7 +34,6 @@ public class JavaCollectorRunner implements CollectorRunner
 	
 	public void run(CommonResources resources) throws ModuleException 
 	{
-				
 		try 
 		{
 			//iterate over classes
@@ -44,13 +43,18 @@ public class JavaCollectorRunner implements CollectorRunner
 			while( classIt.hasNext() ) 
 			{
 				Class c = (Class)classIt.next();
-				processType(c);
+				try {
+					processType(c);
+				}
+				catch(Throwable t){Debug.out(Debug.MODE_DEBUG,"COLLECTOR","Error while processing type: "+c.getName()+" --> "+t.getMessage());}
 			}
+			try {
 			processPendingTypes();
+			} catch(Throwable t){Debug.out(Debug.MODE_DEBUG,"COLLECTOR",t.getMessage());}
 		}
 		catch(Exception e) 
 		{
-			throw new ModuleException("Collector: "+e.toString());
+			throw new ModuleException(e.getMessage(), "COLLECTOR");
 		}
 		
 		int count = 0;
@@ -119,7 +123,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		}
 	}
 	
-	private void processType(Class c) 
+	private void processType(Class c) throws Throwable
 	{
 		
 		if( processedTypes.containsKey( c.getName() ) ) return;
@@ -165,7 +169,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		{
 			jtype.addMethod(processMethodInfo(methods[i]));
 		}
-		
+						
 		//add fields
 		Field[] fields  = c.getFields();
 		for(int i = 0; i < fields.length; i++ ) 
@@ -174,7 +178,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		}
 	}
 	
-	private MethodInfo processMethodInfo(Method m) 
+	private MethodInfo processMethodInfo(Method m) throws Throwable
 	{
 		JavaMethodInfo jmethod = new JavaMethodInfo(m);
 		jmethod.setName(m.getName());
@@ -190,7 +194,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		return jmethod;
 	}
 	
-	private FieldInfo processFieldInfo(Field f) 
+	private FieldInfo processFieldInfo(Field f) throws Throwable
 	{
 		
 		JavaFieldInfo jfield = new JavaFieldInfo(f);
@@ -200,7 +204,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		return jfield;
 	}
 	
-	private ParameterInfo processParameterInfo(Class p) 
+	private ParameterInfo processParameterInfo(Class p) throws Throwable
 	{
 		
 		JavaParameterInfo jparameter = new JavaParameterInfo(p);
@@ -220,7 +224,7 @@ public class JavaCollectorRunner implements CollectorRunner
 		pendingTypes.put(key,ptype);
 	}
 	
-	private void processPendingTypes() 
+	private void processPendingTypes() throws Throwable 
 	{
 		
 		Iterator pendingIt = pendingTypes.values().iterator();
