@@ -45,7 +45,7 @@ public class JavaCompiler implements LangCompiler
     	
 		//create file containing all sources
 		String target =  p.getProperty("buildPath")+ "sources.txt";
-		String argfiles = "@"+target;
+		String argfiles = "@sources.txt";
 		createFile(p, false, target);
     	
 		//create command
@@ -62,7 +62,7 @@ public class JavaCompiler implements LangCompiler
     
 		//compile
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec("call " +command);
+		int result = cmdExec.exec("call " +command, new File(p.getProperty("buildPath")));
 		compilerOutput = cmdExec.outputError();
                
 		if( result != 0 ) 
@@ -126,7 +126,7 @@ public class JavaCompiler implements LangCompiler
 		command = command.replaceAll( "\\{OPTIONS\\}", options );
 		command = command.replaceAll( "\\{SOURCES\\}", argfiles );
    	
-		//Debug.out(Debug.MODE_DEBUG,"DUMMER","command for compiling dummies: "+command);
+		Debug.out(Debug.MODE_DEBUG,"DUMMER","command for compiling dummies: "+command);
     	    	
 		//compile
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
@@ -237,7 +237,7 @@ public class JavaCompiler implements LangCompiler
 			if(dummies)
 				sourcefiles.append("\""+s.getDummy()+"\""+"\n");
 			else
-				sourcefiles.append(s.getFileName()+"\n");
+				sourcefiles.append("\""+s.getFileName()+"\""+"\n");
 		}
 		
 		//emit file
