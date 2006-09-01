@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.10 2006/06/25 19:24:10 wminnen Exp $
+ * $Id: cps.g,v 1.11 2006/08/31 09:34:05 doornenbal Exp $
  */
 
 /**
@@ -166,7 +166,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
 
     /*---------------------------------------------------------------------------*/
-    inputFilters : "inputfilters"^ (generalFilterSet)* ;
+    inputFilters : "inputfilters"^ generalFilterSet;
 
       generalFilterSet : singleInputFilter (SEMICOLON singleInputFilter)*;
 
@@ -236,7 +236,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
 
     /*---------------------------------------------------------------------------*/
-    outputFilters : "outputfilters"^ (generalFilterSet2)* ;
+    outputFilters : "outputfilters"^ generalFilterSet2;
 
       generalFilterSet2 : singleOutputFilter (SEMICOLON singleOutputFilter)* ;     //exactly the same definitons, but we use it to separate in- and outputfilters
 
