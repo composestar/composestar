@@ -305,7 +305,7 @@ public class GrooveASTBuilder {
         }
         else if ( filterType.type == FilterType.CUSTOM ){
             edge = new AnnotatedEdge( acceptNode, 
-                    FlowChartNames.CUSTOM_CONTINUE_ACTION, acceptNode );
+                    FlowChartNames.CUSTOM_ACTION_NODE, acceptNode );
             graph.addEdge( edge );
             edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
                     rejectNode );
