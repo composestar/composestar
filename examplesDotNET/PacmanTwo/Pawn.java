@@ -1,0 +1,380 @@
+/**
+ * Pacman* 2.0 - Example Compose* program
+ * 
+ * This file is part of Composestar project [http://composestar.sourceforge.net]
+ * Copyright (C) 2006
+ * 
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ * 
+ * @author Michiel Hendriks
+ * @version $Id: Pawn.java,v 1.8 2006/09/05 06:58:49 elmuerte Exp $
+ */
+package PacmanTwo;
+
+import java.util.Enumeration;
+
+/**
+ * A moving entity.
+ */
+public abstract class Pawn extends GameElement
+{
+	protected Controller controller;
+	
+	/* partial cell location */
+	protected double dx = 0;
+	protected double dy = 0;
+
+	protected int startX;
+	protected int startY;
+
+	/**
+	 * Number of lives left
+	 */
+	protected int lives = 1;
+	
+	/**
+	 * cells per second
+	 */
+	protected double speed;
+
+	/**
+	 * direction this element is moving
+	 */
+	protected int direction = Direction.LEFT;
+
+	protected boolean bumpedWall = false;
+
+	public Pawn()
+	{
+		super();
+	}
+
+	public Pawn(int X, int Y)
+	{
+		super(X, Y);
+		startX = X;
+		startY = Y;
+		restart();
+	}
+
+	public void died()
+	{
+		if (lives > 0) 
+		{
+			restart();
+		}
+		else 
+		{
+			reset();
+		}
+	}
+
+	/**
+	 * Restart the pawn in it's orignal state
+	 */
+	public void restart()
+	{
+		direction = Direction.LEFT;
+		lives--;
+		dx = 0;
+		dy = 0;
+		speed = 2;
+		cellX = startX;
+		cellY = startY;
+	}
+
+	/**
+	 * Return true if the pawn is human controlled
+	 */
+	public boolean isHuman()
+	{
+		return controller.isHumanControlled();
+	}
+
+	/**
+	 * Return the current controller
+	 */
+	public Controller getController()
+	{
+		return controller;
+	}
+
+	/**
+	 * Set the current controller. This will also register
+	 * the pawn with the controller. A pawn can only be controller
+	 * by a single controller and a controller can only control
+	 * a single pawn.
+	 */
+	public void setController(Controller inval)
+	{
+		if (controller != null) controller.setPawn(null);
+		controller = inval;
+		if (controller != null) controller.setPawn(this);
+	}
+
+	public void tick(double delta)
+	{
+		double _x = this.getX();
+		System.out.println("getx = "+_x+" vs "+(cellX+dx));
+		Composestar.RuntimeCore.FLIRT.Debugger.Debugger.getInstance().stop();
+		try 
+		{
+			System.in.read();
+		}
+		catch (Exception e)
+		{
+		}
+		if ((speed > 0) && (controller != null)) move(delta);
+	}
+
+	/**
+	 * Move the pawn in the requested direction
+	 */
+	public void move(double delta)
+	{
+		if (dx == 0 && dy == 0)
+		{
+			if (continueMovement() == 0) return;
+		}
+		double dif = speed * delta;
+		bumpedWall = false;
+		//int n;
+		switch (direction)
+		{
+			case Direction.UP:
+				dy -= dif;
+				if (dy <= 0)
+				{
+					checkNewCell();
+					if (continueMovement() == 1)
+					{
+						//n = (int) Math.floor(dy);
+						dy += 1;
+						cellY -= 1;
+						if (cellY < 0) 
+						{
+							cellY = 14;
+						}
+					}
+				}
+				break;
+			case Direction.DOWN:
+				dy += dif;
+				if (dy >= 1)
+				{
+					//n = (int) Math.floor(dy);
+					dy -= 1;
+					cellY += 1;
+					if (cellY > 14) cellY = 0;
+					checkNewCell();
+					continueMovement();
+				}
+				break;
+			case Direction.LEFT:
+				dx -= dif;
+				if (dx <= 0)
+				{
+					checkNewCell();
+					if (continueMovement() == 1)
+					{
+						//n = (int) Math.floor(dx);
+						dx += 1;
+						cellX -= 1;
+						if (cellX < 0) 
+						{
+							cellX = 14;
+						}
+					}
+				}
+				break;
+			case Direction.RIGHT:
+				dx += dif;
+				if (dx >= 1)
+				{
+					//n = (int) Math.floor(dx);
+					dx -= 1;
+					cellX += 1;
+					if (cellX > 14) cellX = 0;
+					checkNewCell();
+					continueMovement();
+				}
+				break;
+		}
+		checkTouching();
+	}
+
+	/**
+	 * Returns 2 if a turn was made,
+	 *	1 if movement in the same direction can be performed,
+	 *  0 if a wall was hit,
+	 */
+	public int continueMovement()
+	{
+		int newdir = controller.getDirection();
+		Level l = Game.instance().level();
+		// if newdirection and can move in that direction move to it
+		if ((newdir != direction) && l.canMove(newdir, cellX, cellY))
+		{
+			dx = 0;
+			dy = 0;
+			direction = newdir;
+			return 2;
+		}
+		// if we can move in that direction
+		if (l.canMove(direction, cellX, cellY))
+		{
+			return 1;
+		}
+		dx = 0;
+		dy = 0;
+		if (!bumpedWall) 
+		{
+			bumpedWall = true;
+			bumpWall();
+		}
+		return 0;
+	}
+
+	/**
+	 * Called when the pawn hits a wall
+	 */
+	public void bumpWall()
+	{
+		//System.out.println("Bumped into the wall");
+		if (controller != null && !controller.isHumanControlled())
+		{
+			controller.getNextMove();
+		}
+	}
+
+
+	protected int oldCellX = -1;
+	protected int oldCellY = -1;
+
+	/**
+	 * Dirty hack to filter duplicate enter cell events (caused by Left and Up)
+	 */
+	protected void checkNewCell()
+	{
+		if ((cellX != oldCellX) || (cellY != oldCellY))
+		{
+			oldCellX = cellX;
+			oldCellY = cellY;
+			newCell();
+		}
+	}
+
+	/**
+	 * Called when a new cell is (completely) entered
+	 */
+	public void newCell()
+	{
+	}
+
+	/**
+	 * Called to check if the game element collides with an other game element
+	 */
+	public void checkTouching()
+	{
+		double cXu = getX()+getCollisionRadius();
+		double cXl = getX()-getCollisionRadius();
+		double cYu = getY()+getCollisionRadius();
+		double cYl = getY()-getCollisionRadius();
+
+		for( Enumeration e = Game.instance().getGameElements(); e.hasMoreElements(); )
+		{
+			GameElement ge = ((GameElement) e.nextElement());
+			if (!doTouchingCheck(ge)) continue;
+
+			double gXu = ge.getX()+ge.getCollisionRadius();
+			double gXl = ge.getX()-ge.getCollisionRadius();
+			double gYu = ge.getY()+ge.getCollisionRadius();
+			double gYl = ge.getY()-ge.getCollisionRadius();
+
+			// check touching
+			if (
+					(	(cXu > gXl && cXu <= gXu)
+					||	(cXl < gXu && cXl >= gXl)
+					)
+				&&
+					(	(cYu > gYl && cYu <= gYu)
+					||	(cYl < gYu && cYl >= gYl)
+					)
+				)
+			{
+				touch(ge);
+			}
+		}
+	}
+
+	public boolean doTouchingCheck(GameElement ge)
+	{
+		return (ge != this);
+	}
+
+	/**
+	 * Touching this game element
+	 */
+	public void touch(GameElement ge)
+	{
+		System.out.println(this+" touched "+ge);
+	}
+
+	/**
+	 * Set the pawns speed. The value is the number of cell's per second
+	 */
+	public void setSpeed(double inval)
+	{
+		if (inval <= 0) speed = 0;
+		else speed = inval;
+	}
+
+	public double getSpeed()
+	{
+		return speed;
+	}
+
+	/**
+	 * Return the X offset within the current cell
+	 */
+	public double getX()
+	{
+		//System.out.println(">>>>  "+ cellX + " + " + dx + " = "+ (cellX + dx));
+		return cellX + dx;
+	}
+
+	public double getDX()
+	{
+		return dx;
+	}
+
+	/**
+	 * Return the Y offset within the current ceel
+	 */
+	public double getY()
+	{
+		return cellY + dy;
+	}
+
+	public double getDY()
+	{
+		return dy;
+	}
+
+	/**
+	 * Get the current movement direction
+	 */
+	public int getDirection()
+	{
+		return direction;
+	}
+
+	/**
+	 * return the number of lives left
+	 */
+	public int getLives()
+	{
+		return lives;
+	}
+}
