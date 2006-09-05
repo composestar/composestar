@@ -6,6 +6,7 @@ package Composestar.Core.FIRE2.util.viewer;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -31,6 +32,9 @@ public class ViewPanel extends JPanel {
     
     private final static int RADIUS = 40;
     private final static int MARGIN = 10;
+    
+    private final static int ARROW_HEAD_XOFFSET = -10;
+    private final static int ARROW_HEAD_YOFFSET = -5;
     
     private int height = 0;
     private int width = 0;
@@ -181,7 +185,7 @@ public class ViewPanel extends JPanel {
     
     private void calculatePositions(){
         this.width = calculatePosition( rootNode, 0, 0 );
-        this.height += 3*( MARGIN+RADIUS );
+        this.height += 4*( MARGIN+RADIUS );
         
         this.setPreferredSize( new Dimension( width, height ) );
     }
@@ -212,6 +216,8 @@ public class ViewPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
+        g.setFont( g.getFont().deriveFont(10.0f) );
+        
         paintNode( g, rootNode );
     }
     
@@ -228,8 +234,15 @@ public class ViewPanel extends JPanel {
             paintNode( g, node.primaryEdges[i].endNode );
         }
         
-        g.drawString( getLabel( node.state ), node.xPos, node.yPos );
+        //paint label:
+        FontMetrics metrics = g.getFontMetrics();
+        String label = getLabel( node.state );
+        int width = metrics.stringWidth( label );
+        if ( width > 2*RADIUS )
+            width = 2*RADIUS;
+        g.drawString( label, node.xPos-width/2, node.yPos );
         
+        //paint edges:
         paintEdges( g, node );
     }
     
@@ -244,8 +257,41 @@ public class ViewPanel extends JPanel {
     }
     
     private void paintEdge( Graphics g, Edge edge ){
-        g.drawLine( edge.startNode.xPos, edge.startNode.yPos,
-                edge.endNode.xPos, edge.endNode.yPos );
+        int xDiff = edge.endNode.xPos - edge.startNode.xPos;
+        int yDiff = edge.endNode.yPos - edge.startNode.yPos;
+        
+        double l = Math.sqrt( xDiff * xDiff + yDiff * yDiff );
+        
+        int deltaX = (int) ((double) RADIUS / l * (double) xDiff);
+        int deltaY = (int) ((double) RADIUS / l * (double) yDiff);
+        
+        int x1 = edge.startNode.xPos + deltaX;
+        int x2 = edge.endNode.xPos - deltaX;
+        
+        int y1 = edge.startNode.yPos + deltaY;
+        int y2 = edge.endNode.yPos - deltaY;
+        
+        g.drawLine( x1, y1, x2, y2 );
+        
+        //paint head:
+        int deltaXH1 = (int) ((double) ARROW_HEAD_XOFFSET / l * (double) xDiff);
+        int deltaYH1 = (int) ((double) ARROW_HEAD_XOFFSET / l * (double) yDiff);
+        
+        int deltaXH2 = (int) ((double) -ARROW_HEAD_YOFFSET / l * (double) yDiff);
+        int deltaYH2 = (int) ((double) ARROW_HEAD_YOFFSET / l * (double) xDiff);
+        
+        
+        int xh1 = x2 + deltaXH1 + deltaXH2;
+        int yh1 = y2 + deltaYH1 + deltaYH2;
+        
+        int xh2 = x2 + deltaXH1 - deltaXH2;
+        int yh2 = y2 + deltaYH1 - deltaYH2;
+        
+        
+        int[] xPoints = { xh1, xh2, x2 };
+        int[] yPoints = { yh1, yh2, y2 };
+        
+        g.fillPolygon( xPoints, yPoints, 3 );
     }
 
 
