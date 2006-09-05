@@ -397,15 +397,6 @@ public class Pattern {
         public int getLength() {
             return length;
         }
-        
-        
-        public boolean equals(Object obj) {
-            if ( ! (obj instanceof Token) )
-                return false;
-            
-            Token token = (Token) obj;
-            return this.type == token.type  &&  this.value.equals( token.value );
-        }
     }
     
     

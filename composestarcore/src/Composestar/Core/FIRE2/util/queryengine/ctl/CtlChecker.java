@@ -50,7 +50,7 @@ public class CtlChecker {
         this.formula = formula;
 
         initialize();
-
+        
         simplify();
 
         check();
