@@ -257,8 +257,9 @@ public class Sign implements CTCommonModule {
             // unknown, else normal
             if (node.containsName("Filter")) {
                 Filter filter = (Filter) node.getRepositoryLink();
-                if (filter.type.type != FilterType.META
-                        && filter.type.type != FilterType.DISPATCH
+                // just a quick fix, no idea what this should do, can the author rewrite this to decent code?
+                if (filter.getFilterAST().type.type != FilterType.META
+                        && filter.getFilterAST().type.type != FilterType.DISPATCH
                         && signatureMatchingTarget != null) {
                     earlierSignatureMatch = true;
                 }

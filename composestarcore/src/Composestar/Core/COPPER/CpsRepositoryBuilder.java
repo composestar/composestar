@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.6 2006/08/08 13:43:54 elmuerte Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.7 2006/08/31 09:36:29 doornenbal Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -24,13 +24,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOper
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameterAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.InternalAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
@@ -85,8 +85,8 @@ public class CpsRepositoryBuilder
   private AnnotationBinding annotBinding;
   private ConditionBinding cb;
   private CpsConcern cpsc;
-  private Filter inf;
-  private Filter of;
+  private FilterAST inf;
+  private FilterAST of;
   private FilterElement fe;
   private FilterModuleAST fm;
   private FilterModuleBinding fmb;
@@ -472,7 +472,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addInputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = true;
-    inf = new Filter();
+    inf = new FilterAST();
     inf.setName(name);
     inf.setParent(fm);
 	  inf.setDescriptionFileName(filename);
@@ -1071,7 +1071,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addOutputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = false;
-    of = new Filter();
+    of = new FilterAST();
     of.setName(name);
     of.setDescriptionLineNumber(lineNumber);
 	  of.setDescriptionFileName(filename);

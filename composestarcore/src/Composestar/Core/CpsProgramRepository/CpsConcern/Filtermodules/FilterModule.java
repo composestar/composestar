@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModule.java,v 1.3 2006/08/31 10:06:04 doornenbal Exp $
+ * $Id: FilterModule.java,v 1.4 2006/08/31 14:19:00 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
@@ -27,8 +28,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
     public Vector internals; //instances
     //public Vector externals;
     //public Vector methods;
-    //public Vector inputFilters;
-    //public Vector outputFilters;
+    public Vector inputFilters;
+    public Vector outputFilters;
     
     public int uniqueNumber;
     
@@ -46,8 +47,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
     internals = new Vector();
     //externals = new Vector();
     //methods = new Vector();
-    //inputFilters = new Vector();
-    //outputFilters = new Vector();
+    inputFilters = new Vector();
+    outputFilters = new Vector();
   }
     
     public FilterModule(FilterModuleAST fmAst, Vector args, int number){
@@ -58,12 +59,15 @@ public class FilterModule extends DeclaredRepositoryEntity {
     setParent(fm_ast.getParent());
     setName(fm_ast.getName());
     int counter = 1;
+    DataStore ds = DataStore.instance();
     
     ((CpsConcern) getParent()).addFilterModule(this);
     
     //set the unique Vectors;
     parameters = new Vector();
     internals = new Vector();
+    inputFilters = new Vector();
+    outputFilters = new Vector();
     
     //create the FilterModuleParameter (instances)
     Iterator parameterIterator = fm_ast.getParameterIterator();
@@ -94,6 +98,22 @@ public class FilterModule extends DeclaredRepositoryEntity {
     		internal.setType(internalAST.getType());
     		this.addInternal(internal);
     	}   
+    }
+    
+    Iterator filterIt = fm_ast.getInputFilterIterator();
+    while(filterIt.hasNext()){
+      Filter filter = new Filter((FilterAST) filterIt.next());
+      this.addInputFilter(filter); 
+      filter.setParent(this);
+      ds.addObject(filter);
+    }
+    
+    filterIt = fm_ast.getOutputFilterIterator();
+    while(filterIt.hasNext()){
+      Filter filter = new Filter((FilterAST) filterIt.next());
+      this.addOutputFilter(filter);
+      filter.setParent(this);
+      ds.addObject(filter);
     }
   }
 
@@ -350,6 +370,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    *
    * @modelguid {C26D4769-374D-4328-9EC6-1B739DEADC28}
    * @roseuid 401FAA6400D7
+   * @deprecated
    */
   public boolean addMethod(Method method) {
     return fm_ast.addMethod(method);
@@ -362,6 +383,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    *
    * @modelguid {5993A474-B082-4B82-9271-BB10A261D535}
    * @roseuid 401FAA6400F6
+   * @deprecated
    */
   public Method removeMethod(int index) {
     return fm_ast.removeMethod(index);
@@ -374,6 +396,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    *
    * @modelguid {251921D1-08F7-40BD-BE2F-EA2E20B28B83}
    * @roseuid 401FAA640109
+   * @deprecated
    */
   public Method getMethod(int index) {
     return fm_ast.getMethod(index);
@@ -385,6 +408,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    *
    * @modelguid {55FF6623-0ACA-4974-A6F7-CABA99F1CB93}
    * @roseuid 401FAA64011D
+   * @deprecated
    */
   public Iterator getMethodIterator() {
     return fm_ast.getMethodIterator();
@@ -401,7 +425,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640127
    */
   public boolean addInputFilter(Filter inputfilter) {
-	  return fm_ast.addInputFilter(inputfilter);
+	  inputFilters.add(inputfilter);
+	  return true;
   }
 
 
@@ -413,7 +438,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64013C
    */
   public Filter removeInputFilter(int index) {
-    return fm_ast.removeInputFilter(index);
+    return (Filter) inputFilters.remove(index);
   }
 
 
@@ -425,7 +450,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64014F
    */
   public Filter getInputFilter(int index) {
-    return fm_ast.getInputFilter(index);
+    return (Filter) inputFilters.get(index);
   }
 
 
@@ -436,7 +461,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640163
    */
   public Iterator getInputFilterIterator() {
-    return fm_ast.getInputFilterIterator();
+    return inputFilters.iterator();
   }
 
 
@@ -450,7 +475,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640177
    */
   public boolean addOutputFilter(Filter outputfilter) {
-	  return fm_ast.addOutputFilter(outputfilter);
+	  outputFilters.add(outputfilter);
+	  return (true);
   }
 
 
@@ -462,7 +488,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64018B
    */
   public Filter removeOutputFilter(int index) {
-    return fm_ast.removeOutputFilter(index);
+    return (Filter) outputFilters.remove(index);
   }
 
 
@@ -474,7 +500,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64019F
    */
   public Filter getOutputFilter(int index) {
-    return fm_ast.getOutputFilter(index);
+    return (Filter) outputFilters.get(index);
   }
 
 
@@ -485,7 +511,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6401B4
    */
   public Iterator getOutputFilterIterator() {
-    return fm_ast.getOutputFilterIterator();
+    return outputFilters.iterator();
   }
   
   /* Returns true when this identifier has not been used yet, within this filtermodule. */
@@ -531,7 +557,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
 	  }
   
   public Vector getOutputFilters(){
-	  return fm_ast.getOutputFilters();
+	  return outputFilters;
   }
 
 public Object clone() throws CloneNotSupportedException {

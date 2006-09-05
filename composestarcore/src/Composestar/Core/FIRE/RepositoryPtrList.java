@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: RepositoryPtrList.java,v 1.3 2006/06/25 19:24:10 wminnen Exp $
+ * $Id: RepositoryPtrList.java,v 1.4 2006/08/31 10:59:36 doornenbal Exp $
  * 
 **/
 
@@ -252,7 +252,7 @@ public class RepositoryPtrList extends TreeBuilder
 
 		// TODO deprecated
 		Filter f = FilterFactory.getFilter(repositoryFilter.getFilterType().getType());
-		f.setParameters(repositoryFilter.parameters);
+		f.setParameters(repositoryFilter.getParameters());
 		tand.addChild2(new Action(f, filterNumber));
 		
 		return tand;

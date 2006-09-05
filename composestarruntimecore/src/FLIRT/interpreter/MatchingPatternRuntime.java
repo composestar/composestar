@@ -4,7 +4,7 @@ import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 
 import java.util.Dictionary;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MatchingPatternRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: MatchingPatternRuntime.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  */
 public class MatchingPatternRuntime extends ReferenceEntityRuntime implements Interpretable 
 {
@@ -84,7 +84,12 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		ml.resetMatches();
 
 		// Default Dispatch to Inner Filter always matches
-		if( ((Filter)this.theFilterElement.theFilter.getReference()).name.equals( "CpsDefaultInnerDispatchFilter" ) ) 
+		// broke up the code into smaller, more debugable code
+		FilterRuntime fr = this.theFilterElement.theFilter;
+		Filter temp = (Filter) fr.getReference();
+		FilterAST astTemp = temp.getFilterAST();
+		String name = astTemp.getName();
+		if (name.equals("CpsDefaultInnerDispatchFilter")) //( ((Filter)this.theFilterElement.theFilter.getReference()).getFilterAST().getName().equals( "CpsDefaultInnerDispatchFilter" ) ) 
 		{
 			ml.matchAll();
 			return true;

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModule.java,v 1.2 2006/02/21 16:38:15 whavinga Exp $
+ * $Id: FilterModuleAST.java,v 1.1 2006/08/31 10:06:04 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -270,7 +270,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @modelguid {057E1939-BF1B-488B-9433-D9AFDDE5F3DC}
    * @roseuid 401FAA640127
    */
-  public boolean addInputFilter(Filter inputfilter) {
+  public boolean addInputFilter(FilterAST inputfilter) {
 	  if (isIdentifierUnique(inputfilter.getName()))
 	  {
 		  inputFilters.addElement(inputfilter);
@@ -326,7 +326,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @modelguid {33854751-CB00-46A6-BAEE-EE06C8E13F29}
    * @roseuid 401FAA640177
    */
-  public boolean addOutputFilter(Filter outputfilter) {
+  public boolean addOutputFilter(FilterAST outputfilter) {
 	  if (isIdentifierUnique(outputfilter.getName())) {
 		  outputFilters.addElement(outputfilter);
 		  return true;
@@ -356,8 +356,8 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @modelguid {4F30E1EA-4EAA-4352-B0F6-E72F3297C18B}
    * @roseuid 401FAA64019F
    */
-  public Filter getOutputFilter(int index) {
-    return ((Filter) outputFilters.elementAt(index));
+  public FilterAST getOutputFilter(int index) {
+    return ((FilterAST) outputFilters.elementAt(index));
   }
 
 

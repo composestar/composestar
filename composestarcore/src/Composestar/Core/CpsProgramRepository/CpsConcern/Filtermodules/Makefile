@@ -15,6 +15,7 @@ CLASSES=AbstractPattern.class \
 	EnableOperatorType.class \
         External.class \
 	Filter.class \
+        FilterAST.class \
 	FilterCompOper.class \
 	FilterElement.class \
 	FilterElementCompOper.class \

@@ -320,12 +320,13 @@ public class GrooveASTBuilder {
         
         
         //iterate over filterelements:
-        Vector filterElements = filter.filterElements;
+        Iterator filters = filter.getFilterElementIterator();
         FilterElement filterElement;
         Node filterElementNode;
         AnnotatedNode operatorNode = null;
-        for (int i=0; i<filterElements.size(); i++){
-            filterElement = (FilterElement) filterElements.elementAt( i );
+        int i = 0;
+        while(filters.hasNext()){
+            filterElement = (FilterElement) filters.next();
             
             //create filternode:
             filterElementNode = buildFilterElementNode( filterElement, graph );
@@ -337,6 +338,7 @@ public class GrooveASTBuilder {
             
             if ( i==0 ){
                 //create 'orderFirst' edge:
+            	i++;
                 edge = new AnnotatedEdge( filterNode, FlowChartNames.ORDER_FIRST_EDGE,
                         filterElementNode );
                 graph.addEdge( edge );

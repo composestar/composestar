@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Filter.java,v 1.3 2006/02/16 12:51:21 composer Exp $
+ * $Id: Filter.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -28,21 +28,24 @@ public class Filter extends DeclaredRepositoryEntity {
   /**
    * @modelguid {BA6E0095-9527-4D09-9DBB-C6C6D14F98CF}
    */
-  public FilterType type;
-  public Vector filterElements;
-  public FilterCompOper rightOperator;
-  public Vector parameters;
+  //public FilterType type; -> get from AST
+  //public Vector filterElements; -> get from AST
+  //public FilterCompOper rightOperator; -> get from AST 
+  //public Vector parameters; -> get from AST
+  public FilterAST filterAST;
 
   /**
    * @modelguid {C7DDAADC-9E56-486C-B4B0-8CDF99C09BA9}
    * @roseuid 401FAA6300CC
+   * @deprecated
    */
   public Filter() {
     super();
-    filterElements = new Vector();
-    parameters = new Vector();
   }
 
+  public Filter(FilterAST aFilterAST){
+	filterAST = aFilterAST;
+  }
 
   /**
    * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType
@@ -50,7 +53,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6300E1
    */
   public FilterType getFilterType() {
-    return type;
+    return filterAST.getFilterType();
   }
 
 
@@ -59,7 +62,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6300F4
    */
   public void setFilterType(FilterType typeValue) {
-    this.type = typeValue;
+	  filterAST.setFilterType(typeValue);
   }
 
 
@@ -73,7 +76,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6300FF
    */
   public boolean addFilterElement(FilterElement filterelement) {
-    filterElements.addElement(filterelement);
+	  filterAST.addFilterElement(filterelement);
     return (true);
   }
 
@@ -86,9 +89,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA630126
    */
   public FilterElement removeFilterElement(int index) {
-    Object o = filterElements.elementAt(index);
-    filterElements.removeElementAt(index);
-    return ((FilterElement) o);
+    return filterAST.removeFilterElement(index);
   }
 
 
@@ -100,7 +101,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63013A
    */
   public FilterElement getFilterElement(int index) {
-    return ((FilterElement) filterElements.elementAt(index));
+    return filterAST.getFilterElement(index);
   }
 
 
@@ -111,7 +112,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63014E
    */
   public Iterator getFilterElementIterator() {
-    return (new CPSIterator(filterElements));
+    return filterAST.getFilterElementIterator();
   }
 
 
@@ -125,8 +126,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA630158
    */
   public boolean addParameter(String parameter) {
-    parameters.addElement(parameter);
-    return (true);
+    return filterAST.addParameter(parameter);
   }
 
 
@@ -139,9 +139,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63016D
    */
   public String removeParameter(int index) {
-    Object o = parameters.elementAt(index);
-    parameters.removeElementAt(index);
-    return ((String) o);
+    return filterAST.removeParameter(index);
   }
 
 
@@ -154,7 +152,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA630181
    */
   public String getParameter(int index) {
-    return ((String) parameters.elementAt(index));
+    return filterAST.getParameter(index);
   }
 
 
@@ -165,7 +163,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA630195
    */
   public Iterator getParameterIterator() {
-    return (new CPSIterator(parameters));
+    return filterAST.getParameterIterator();
   }
 
 
@@ -176,7 +174,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 402AA7530225
    */
   public FilterCompOper getRightOperator() {
-    return rightOperator;
+    return filterAST.getRightOperator();
   }
 
 
@@ -185,7 +183,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 402AA7790310
    */
   public void setRightOperator(FilterCompOper rightOperatorValue) {
-    this.rightOperator = rightOperatorValue;
+	  filterAST.setRightOperator(rightOperatorValue);
   }
 
 
@@ -195,7 +193,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 40ADD67500CA
    */
   public ConcernReference getTypeImplementation() {
-    return typeImplementation;
+    return filterAST.getTypeImplementation();
   }
 
 
@@ -204,6 +202,39 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 40ADD68103CA
    */
   public void setTypeImplementation(ConcernReference typeImplementationValue) {
-    this.typeImplementation = typeImplementationValue;
+	  filterAST.setTypeImplementation(typeImplementationValue);
   }
+
+public String getName() {
+	return filterAST.getName();
+}
+
+public void setName(String nameValue) {
+	filterAST.setName(nameValue);
+}
+
+public String getDescriptionFileName() {
+	return filterAST.getDescriptionFileName();
+}
+
+public int getDescriptionLineNumber() {
+	return filterAST.getDescriptionLineNumber();
+}
+
+public void setDescriptionFileName(String newFileName) {
+	filterAST.setDescriptionFileName(newFileName);
+}
+
+public void setDescriptionLineNumber(int newLineNumber) {
+	filterAST.setDescriptionLineNumber(newLineNumber);
+}
+
+public Vector getParameters(){
+	return filterAST.getParameters();
+}
+
+public FilterAST getFilterAST(){
+	return filterAST;
+}
+
 }

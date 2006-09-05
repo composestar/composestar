@@ -5,24 +5,24 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: SyntacticSugarExpander.java,v 1.2 2006/03/06 09:25:50 reddog33hummer Exp $
+* $Id: SyntacticSugarExpander.java,v 1.3 2006/03/09 16:09:26 doornenbal Exp $
 */
 package Composestar.Core.COPPER;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SelClass;
-import antlr.debug.misc.*;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
+import Composestar.Utils.StringConverter;
 
 
 /**
@@ -77,6 +77,7 @@ public class SyntacticSugarExpander {
 	   */
 	  public void expand() {
 	  	resolveEmptySuperImposition();
+	  	addVoidOperator();
 	  	
 	  	/*ASTFrame frame;
 	
@@ -170,5 +171,20 @@ public class SyntacticSugarExpander {
 			}
 		}
 	}
+
+  	private void addVoidOperator(){
+  	  DataStore ds = DataStore.instance();
+  	  Iterator filters = ds.getAllInstancesOf( Filter.class);
+  	  Filter tempFilter;
+  	  
+  	  while(filters.hasNext()){
+        tempFilter = (Filter) filters.next();
+        if(tempFilter.getRightOperator() == null){
+        	VoidFilterCompOper operator = new VoidFilterCompOper();
+        	tempFilter.setRightOperator(operator);
+        	ds.addObject(operator);
+        }
+  	  }  	  
+  	}
 }
 
