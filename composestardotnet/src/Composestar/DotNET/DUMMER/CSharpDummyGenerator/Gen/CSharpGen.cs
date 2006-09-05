@@ -125,8 +125,10 @@ namespace DDW.CSharp.Gen
 										sb.WriteLine("'0';");
 										break;
 									case LiteralType.Double:
-									case LiteralType.Float:
 										sb.WriteLine("0.0;");
+										break;
+									case LiteralType.Float:
+										sb.WriteLine("0.0f;");
 										break;
 									case LiteralType.Null:
 									case LiteralType.Object:
@@ -171,8 +173,10 @@ namespace DDW.CSharp.Gen
 							sb.WriteLine("return '0';");
 							break;
 						case LiteralType.Double:
-						case LiteralType.Float:
 							sb.WriteLine("return 0.0;");
+							break;
+						case LiteralType.Float:
+							sb.WriteLine("return 0.0f;");
 							break;
 						case LiteralType.Null:
 						case LiteralType.Object:
