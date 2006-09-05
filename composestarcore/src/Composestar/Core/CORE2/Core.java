@@ -20,6 +20,7 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 import Composestar.Core.FIRE2.model.FireModel;
+import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
@@ -95,7 +96,7 @@ public class Core implements CTCommonModule{
             flowNode = state.getFlowNode();
             visitedNodes.add( flowNode );
             
-            if ( flowNode.getType() == FlowNode.ACTION_NODE ){
+            if ( flowNode.containsName(FlowChartNames.ACTION_NODE) ){
                 Filter filter = (Filter) flowNode.getRepositoryLink();
                 if ( flowNode.containsName( "ContinueAction" ) ){
                     if( !filterContinueTable.containsKey( filter ) ){
