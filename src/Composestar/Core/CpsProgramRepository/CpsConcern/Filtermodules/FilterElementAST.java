@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterElement.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: FilterElementAST.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -17,25 +17,27 @@ import java.util.*;
 /**
  * @modelguid {5976EB5C-BFC4-46BF-995B-AD41D42C48C7}
  */
-public class FilterElement extends RepositoryEntity {
-  public FilterElementAST filterElementAST;
-  //public ConditionExpression conditionPart; -> delegate to FilterElementAST
-  //public EnableOperatorType enableOperatorType; -> delegate to FilterElementAST
-  //public FilterElementCompOper rightOperator; -> delegate to FilterElementAST
-  //public Vector matchingPatterns;
+public class FilterElementAST extends RepositoryEntity {
+
+  /**
+   * @modelguid {6783CA89-B3A5-4BAC-959E-31BB7590D241}
+   */
+  public ConditionExpression conditionPart;
+
+  /**
+   * @modelguid {0B16FE4E-FD0E-4CE7-A05C-714E74CAC427}
+   */
+  public EnableOperatorType enableOperatorType;
+  public FilterElementCompOper rightOperator;
+  public Vector matchingPatterns;
 
   /**
    * @modelguid {51317331-0B65-4CD1-AE8A-20C987FD14D0}
    * @roseuid 401FAA63027A
-   * @deprecated
    */
-  public FilterElement() {
+  public FilterElementAST() {
     super();
-    //matchingPatterns = new Vector();
-  }
-  
-  public FilterElement(FilterElementAST ast){
-	  filterElementAST = ast;
+    matchingPatterns = new Vector();
   }
 
 
@@ -46,7 +48,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA630284
    */
   public ConditionExpression getConditionPart() {
-    return filterElementAST.conditionPart;
+    return conditionPart;
   }
 
 
@@ -55,7 +57,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA63028E
    */
   public void setConditionPart(ConditionExpression conditionValue) {
-	  filterElementAST.setConditionPart(conditionValue);
+    this.conditionPart = conditionValue;
   }
 
 
@@ -66,7 +68,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA6302A3
    */
   public EnableOperatorType getEnableOperatorType() {
-    return filterElementAST.getEnableOperatorType();
+    return enableOperatorType;
   }
 
 
@@ -75,7 +77,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA6302B6
    */
   public void setEnableOperatorType(EnableOperatorType enableOperatorTypeValue) {
-	  filterElementAST.setEnableOperatorType(enableOperatorTypeValue);
+    this.enableOperatorType = enableOperatorTypeValue;
   }
 
 
@@ -89,7 +91,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA6302CA
    */
   public boolean addMatchingPattern(MatchingPattern filterObject) {
-	  filterElementAST.addMatchingPattern(filterObject);
+    matchingPatterns.addElement(filterObject);
     return (true);
   }
 
@@ -103,7 +105,9 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA6302E9
    */
   public MatchingPattern removeMatchingPattern(int index) {
-    return filterElementAST.removeMatchingPattern(index);
+    Object o = matchingPatterns.elementAt(index);
+    matchingPatterns.removeElementAt(index);
+    return ((MatchingPattern) o);
   }
 
 
@@ -114,7 +118,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA630312
    */
   public Iterator getMatchingPatternIterator() {
-    return filterElementAST.getMatchingPatternIterator();
+    return (new CPSIterator(matchingPatterns));
   }
 
 
@@ -126,7 +130,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 402AB4E5039D
    */
   public MatchingPattern getMatchingPattern(int index) {
-    return filterElementAST.getMatchingPattern(index);
+    return ((MatchingPattern) matchingPatterns.elementAt(index));
   }
 
 
@@ -137,7 +141,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 402AB5780268
    */
   public FilterElementCompOper getRightOperator() {
-    return filterElementAST.getRightOperator();
+    return rightOperator;
   }
 
 
@@ -146,10 +150,8 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 402AB57C02DB
    */
   public void setRightOperator(FilterElementCompOper rightOperatorValue) {
-	  filterElementAST.setRightOperator(rightOperatorValue);
+    this.rightOperator = rightOperatorValue;
   }
+}
 
-public FilterElementAST getFilterElementAST() {
-	return filterElementAST;
-}
-}
+

@@ -18,6 +18,7 @@ CLASSES=AbstractPattern.class \
         FilterAST.class \
 	FilterCompOper.class \
 	FilterElement.class \
+        FilterElementAST.class \
 	FilterElementCompOper.class \
 	FilterModule.class \
 	FilterModuleAST.class \

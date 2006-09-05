@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.7 2006/08/31 09:36:29 doornenbal Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.8 2006/09/05 12:30:47 doornenbal Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -26,6 +26,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
@@ -87,7 +88,7 @@ public class CpsRepositoryBuilder
   private CpsConcern cpsc;
   private FilterAST inf;
   private FilterAST of;
-  private FilterElement fe;
+  private FilterElementAST fe;
   private FilterModuleAST fm;
   private FilterModuleBinding fmb;
   private FilterModuleReference fmref;
@@ -557,7 +558,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     int i;
     ConditionExpression tempce;
 
-    fe = new FilterElement();
+    fe = new FilterElementAST();
 	  fe.setDescriptionFileName(filename);
 	  fe.setDescriptionLineNumber(lineNumber);
 
