@@ -6,9 +6,27 @@
  */
 package Composestar.Core.FILTH;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -36,13 +54,13 @@ public class InnerDispatcher {
 		
 		
 		// create filtermodule
-		FilterModule fm = new FilterModule();
-		cc.addFilterModule(fm);
+		FilterModuleAST fm = new FilterModuleAST();
+		cc.addFilterModuleAST(fm);
 		fm.setParent(cc);
 		fm.setName("CpsDefaultInnerDispatchFilterModule");
 
 		// create a filter
-		Filter f = new Filter();
+		FilterAST f = new FilterAST();
 		f.setParent(fm);
 		f.setName("CpsDefaultInnerDispatchFilter");
 
@@ -105,9 +123,12 @@ public class InnerDispatcher {
 		DataStore.instance().addObject(cc);
 		DataStore.instance().addObject(fm);
 
-		// return the filtermodule
-		return fm;
+		//create the instances
+		FilterModule fmInstance = new FilterModule(fm, new Vector(), 0);
+		DataStore.instance().addObject(fmInstance);
 		
+		// return the filtermodule
+		return fmInstance;		
 	}
 	
 	private static FilterModuleReference createInnerDispatchReference()
