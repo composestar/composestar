@@ -1,9 +1,9 @@
-# Layout information for C:\local\ComposeGraph\generateflow.gps\FlowTmp-flowNext.gpr
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\FlowTmp-flowNext.gpr
 # Each line contains layout information about a node or edge
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n372 316 253 18 18 
-n n370 320 79 18 18 
-e n370 n372 "new:flowNext" 883 557 360 88 250 187 356 262 13
-n n371 330 161 18 18 
-e n371 n372 "flowNext" 500 500 359 170 357 197 356 262 11
+n n13269 320 79 18 18 
+n n13271 316 253 18 18 
+e n13270 n13271 "flowNext" 260 434 359 170 357 197 356 262 11
+n n13270 330 161 18 18 
+e n13269 n13271 "new:flowNext" 883 557 360 88 250 187 356 262 13

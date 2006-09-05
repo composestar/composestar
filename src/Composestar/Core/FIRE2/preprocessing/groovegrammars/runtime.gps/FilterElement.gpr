@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n4870"/>
-        <node id="n4868"/>
-        <node id="n4869"/>
-        <edge from="n4869" to="n4869">
+        <node id="n17969"/>
+        <node id="n17970"/>
+        <node id="n17971"/>
+        <edge from="n17971" to="n17971">
             <attr name="label">
-                <string>FlowElement</string>
+                <string>Frame</string>
             </attr>
         </edge>
-        <edge from="n4869" to="n4868">
+        <edge from="n17971" to="n17969">
             <attr name="label">
-                <string>new:flowFalse</string>
+                <string>del:pc</string>
             </attr>
         </edge>
-        <edge from="n4869" to="n4870">
+        <edge from="n17969" to="n17970">
             <attr name="label">
-                <string>del:flowFalse</string>
+                <string>flowNext</string>
             </attr>
         </edge>
-        <edge from="n4870" to="n4870">
+        <edge from="n17969" to="n17969">
             <attr name="label">
                 <string>FilterElement</string>
             </attr>
         </edge>
-        <edge from="n4868" to="n4868">
+        <edge from="n17971" to="n17970">
             <attr name="label">
-                <string>ConditionExpression</string>
+                <string>new:pc</string>
             </attr>
         </edge>
-        <edge from="n4870" to="n4868">
+        <edge from="n17970" to="n17970">
             <attr name="label">
-                <string>conditionPart</string>
+                <string>FlowElement</string>
             </attr>
         </edge>
     </graph>
