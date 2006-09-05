@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETWeaveFileGenerator.java,v 1.9 2006/05/03 14:33:45 stephan_h Exp $
+ * $Id: DotNETWeaveFileGenerator.java,v 1.10 2006/08/31 11:11:00 doornenbal Exp $
  */
 package Composestar.DotNET.CONE;
 
@@ -87,7 +87,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolving entry assembly...");
         String entryAssembly = "";
 
-        if ( application != null)
+        if ( (application != null) && (application != "") )
         {
         	entryAssembly = typeLocations.getAssemblyByType(application);
         	Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolved '" + entryAssembly + "' as entry assembly.");     
