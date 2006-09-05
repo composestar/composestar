@@ -323,7 +323,9 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	private String getDefaultReturnValue(int tokentype){
 		if(tokentype == LITERAL_int || tokentype == LITERAL_short || tokentype == LITERAL_byte || tokentype == LITERAL_long)
 			return "0";
-		else if(tokentype == LITERAL_float || tokentype == LITERAL_double)
+		else if(tokentype == LITERAL_float)
+			return "0.0f";
+		else if (tokentype == LITERAL_double)
 			return "0.0";
 		else if(tokentype == LITERAL_boolean)
 			return "false";
