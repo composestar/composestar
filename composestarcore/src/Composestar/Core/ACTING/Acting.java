@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Acting.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
+ * $Id: Acting.java,v 1.2 2006/06/25 19:24:10 wminnen Exp $
  */package Composestar.Core.ACTING;
 
 import Composestar.Core.Master.CTCommonModule;
@@ -210,7 +210,7 @@ public class Acting implements CTCommonModule {
 			// didn't find anything, returning "Meta" 
 			return meta.getFilterType().getType();
 		}
-		retval += "." + sp.getSelector().getName();
+		retval += '.' + sp.getSelector().getName();
 		return retval;     
     }
 }

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: MatchSignature.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: MatchSignature.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -23,7 +23,7 @@ public class MatchSignature extends FilterLeaf
 	
 	public String toString () 
 	{
-		return "matchsignature(" + symbol + ")";
+		return "matchsignature(" + symbol + ')';
 	} 
 
 

@@ -78,7 +78,7 @@ public class TypeLocations {
 			assembly = "";
 		}
 
-		int index = assembly.lastIndexOf(".");
+		int index = assembly.lastIndexOf('.');
 		if(index < 0)
 		{
 			assembly = "";

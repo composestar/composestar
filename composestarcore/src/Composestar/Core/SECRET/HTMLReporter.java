@@ -72,7 +72,7 @@ public class HTMLReporter extends ConflictReporter {
      * @roseuid 40585261005F
      */
     public void dumpBuffer() {
-		filename=filename+"_"+concern+".html";
+		filename=filename+ '_' +concern+".html";
     	try
     	{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
@@ -90,7 +90,7 @@ public class HTMLReporter extends ConflictReporter {
      * @roseuid 40585297032B
      */
     public void writeBuffer(String line) {
-     	buffer+=(line+"\n");     
+     	buffer+=(line+ '\n');
     }
     
     /**
@@ -131,17 +131,17 @@ public class HTMLReporter extends ConflictReporter {
     		ActionDescription ad = (ActionDescription)actionseq.get(i);
     		//System.out.println("AD: "+ad);
     		String actionname = "";
-			if(ad.getActor().indexOf(".") > 0) actionname = ad.getActor().substring(0,ad.getActor().indexOf("."));
+			if(ad.getActor().indexOf('.') > 0) actionname = ad.getActor().substring(0,ad.getActor().indexOf('.'));
 			else actionname = ad.getActor();
 			html_type = actionname;
-			String action = ad.getActor().substring(ad.getActor().indexOf(".")+1);
+			String action = ad.getActor().substring(ad.getActor().indexOf('.')+1);
 			for(int j=0; j<thefilters.size(); j++)
 			{
 				Filter filter = (Filter)thefilters.get(j);
 				if(filter.getName().equals(actionname))
 				{ //Found match
 					if(map.containsKey(actionname))
-						html_name = (String)map.get(actionname)+".";
+						html_name = (String)map.get(actionname)+ '.';
 					
 					html_name += actionname;
 	     			/* TODO: html_type = filter.getFilterType().getType(); */

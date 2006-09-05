@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SymbolTable.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: SymbolTable.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -163,7 +163,7 @@ public class SymbolTable
 			
 		for (int i = 0; i < allSymbols.length; i++)
 		{
-			out += i + " --> " + (String) (allSymbols[i]).toString() + "\n";
+			out += i + " --> " + (String) (allSymbols[i]).toString() + '\n';
 		}
 
 		return out;

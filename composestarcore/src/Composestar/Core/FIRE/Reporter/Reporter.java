@@ -7,7 +7,7 @@ package Composestar.Core.FIRE.Reporter;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Reporter.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: Reporter.java,v 1.1 2006/02/16 23:03:57 pascal_durr Exp $
  * 
 **/
 
@@ -117,7 +117,7 @@ public class Reporter
 
 	public void addMessage (String target, String selector)
 	{
-		addElement(target + "." + selector);
+		addElement(target + '.' + selector);
 	}
 
 	public void addSeparator ()

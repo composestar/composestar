@@ -67,7 +67,7 @@ public class MyComparator {
             } else if (a instanceof AbstractList) {
                 // compare abstract list
                 return compareAbstractLists((AbstractList) a, (AbstractList) b);
-            } else if (a instanceof AbstractSet) {
+            } else if (a instanceof HashSet) {
                 // compare HashSets
                 return compareAbstractSets((HashSet) a, (HashSet) b);
             } else {

@@ -62,7 +62,7 @@ public class PredicateSelector extends SimpleSelExpression
     toBeCheckedByINCRE = false;
     TYMInfo = new HashMap();
     annotations = new HashSet();
-    Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating a predicate selector(" + outputVar + ", " + query + ")");
+    Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating a predicate selector(" + outputVar + ", " + query + ')');
   }
   
   public PredicateSelector()
@@ -250,7 +250,7 @@ public class PredicateSelector extends SimpleSelExpression
       r=Prog.ask_engine(E);
     }
     
-    if(answers.size()==0)
+    if(answers.isEmpty())
     	toBeCheckedByINCRE = false; // no answers, do not skip this selector
     
     if (answers.size() >= 50000) // Arbitrary number...what would be reasonable to expect?

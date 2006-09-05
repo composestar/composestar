@@ -83,7 +83,7 @@ public class JarGpsGrammar extends GpsGrammar {
     throws IOException 
     {
         String grammarName = grammarURL.getFile();
-        int pos = grammarName.indexOf( "!" );
+        int pos = grammarName.indexOf('!' );
         String grammarLocation = grammarName.substring( pos + 2 );
         if ( pos > 0 ){
             grammarName = grammarName.substring( 6, pos );
@@ -103,7 +103,7 @@ public class JarGpsGrammar extends GpsGrammar {
                 String fileName = name.substring( grammarLocation.length() + 1 );
                 String subName = fileName.substring(0, fileName.length() - 4 );
                 
-                int separatorPos = subName.indexOf(".");
+                int separatorPos = subName.indexOf('.');
                 
                 Integer priority;
                 if ( separatorPos > 0 ){
@@ -123,10 +123,10 @@ public class JarGpsGrammar extends GpsGrammar {
                 // check for overlapping rule and directory names
                 if (ruleGraphMap.containsKey(extendedRulePath))
                     throw new IOException(LOAD_ERROR + 
-                            ": duplicate rule name \"" + extendedRulePath+"\"");
+                            ": duplicate rule name \"" + extendedRulePath+ '\"');
                 try {
                     RuleGraph ruleGraph = createRuleGraph(
-                            innerLoader.unmarshal(relativeLocation + "/" + fileName), extendedRulePath);
+                            innerLoader.unmarshal(relativeLocation + '/' + fileName), extendedRulePath);
                     ruleGraph.setFixed();
                     ruleGraphMap.put(extendedRulePath, ruleGraph);
                     priorityMap.put(extendedRulePath, priority);

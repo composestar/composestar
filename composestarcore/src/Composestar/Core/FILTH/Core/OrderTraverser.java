@@ -114,7 +114,7 @@ public class OrderTraverser {
 				candidates.add(current);
 		}
 		/* if there is no candidate node return null */
-		if (candidates.size()==0)
+		if (candidates.isEmpty())
 			return null;
 		/* if there are more possible candidates are available select one randomly ~ non-determinism*/
 		return candidates;
@@ -183,7 +183,7 @@ public class OrderTraverser {
 				candidates.add(current);
 		}
 		/* if there is no candidate node return null */
-		if (candidates.size()==0)
+		if (candidates.isEmpty())
 			return null;
 		/* if there are more possible candidates are available select one randomly ~ non-determinism*/
 		return (Node)candidates.get(new Random().nextInt(candidates.size()));

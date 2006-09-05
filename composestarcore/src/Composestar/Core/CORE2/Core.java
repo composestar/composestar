@@ -102,13 +102,13 @@ public class Core implements CTCommonModule{
                     if( !filterContinueTable.containsKey( filter ) ){
                         //put boolean in the table indicating that for the
                         //filter until now only continueactions are found:
-                        filterContinueTable.put( filter, new Boolean( true ) );
+                        filterContinueTable.put( filter, Boolean.TRUE );
                     }
                 }
                 else{
                     //put boolean in the table indicating that for the
                     //filter not only continueactions are found:
-                    filterContinueTable.put( filter, new Boolean( false ) );
+                    filterContinueTable.put( filter, Boolean.FALSE );
                 }
             }
             

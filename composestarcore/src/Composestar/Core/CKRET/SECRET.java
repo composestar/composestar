@@ -199,8 +199,8 @@ public class SECRET implements CTCommonModule {
 									// so this is the first good order found...
 									foundGoodOrder = true;
 									concern.addDynObject("SingleOrder",fmo);
-									Debug.out(Debug.MODE_INFORMATION,"SECRET","Selected filtermodule order for concern " + concern.getQualifiedName() + ":");
-									Debug.out(Debug.MODE_INFORMATION,"SECRET","\t" + fmo.toString());
+									Debug.out(Debug.MODE_INFORMATION,"SECRET","Selected filtermodule order for concern " + concern.getQualifiedName() + ':');
+									Debug.out(Debug.MODE_INFORMATION,"SECRET", '\t' + fmo.toString());
 								} 
 							}
 						}
@@ -208,7 +208,7 @@ public class SECRET implements CTCommonModule {
 					if( !foundGoodOrder )
 					{
 						Debug.out(Debug.MODE_WARNING,"SECRET","Unable to find a filtermodule order without conflicts for concern:");
-						Debug.out(Debug.MODE_WARNING,"SECRET","\t" + concern.getQualifiedName());						
+						Debug.out(Debug.MODE_WARNING,"SECRET", '\t' + concern.getQualifiedName());
 					}
 					
 					break;
@@ -281,7 +281,7 @@ public class SECRET implements CTCommonModule {
 				Iterator annotations = method.getAnnotations().iterator();
 				while(annotations.hasNext()){
 					Annotation anno = (Annotation)annotations.next();
-					if(anno.getType().getUnitName().endsWith("Semantics"));
+					if(anno.getType().getUnitName().endsWith("Semantics"))
 						annos.add(anno);
 				}
 			}

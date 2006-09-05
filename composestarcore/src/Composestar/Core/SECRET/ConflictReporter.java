@@ -41,7 +41,7 @@ public class ConflictReporter {
 		{
 			ActionDescription ad = (ActionDescription)actionseq.get(i);
 			String tmp = ad.getActor();
-			System.out.println("\t"+tmp);
+			System.out.println('\t' +tmp);
 		}     
     }
 }

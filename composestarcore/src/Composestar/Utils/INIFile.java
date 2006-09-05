@@ -155,7 +155,7 @@ public final class INIFile
             }
             objSec = null;
         }
-        return new Boolean(blnRet);
+        return (blnRet) ? Boolean.TRUE : Boolean.FALSE;
     }
 
     /**
@@ -566,7 +566,7 @@ public final class INIFile
 
         try
         {
-            if (this.mhmapSections.size() > 0)
+            if (!this.mhmapSections.isEmpty())
             {
                 arrRet = new String[this.mhmapSections.size()];
                 for (iter = this.mhmapSections.keySet().iterator();;iter.hasNext())
@@ -668,7 +668,7 @@ public final class INIFile
 
         try
         {
-            if (this.mhmapSections.size() == 0) return false;
+            if (this.mhmapSections.isEmpty()) return false;
             objFile = new File(this.mstrFile);
             if (objFile.exists()) objFile.delete();
             objWriter = new FileWriter(objFile);
@@ -828,7 +828,7 @@ public final class INIFile
                             objSec = new INISection(strSection.trim(), strRemarks);
                             strRemarks = null;
                         }
-                        else if ((iPos = strLine.indexOf("=")) > 0 && objSec != null)
+                        else if ((iPos = strLine.indexOf('=')) > 0 && objSec != null)
                         {
                             // read the key value pair 012345=789
                             objSec.setProperty(strLine.substring(0, iPos).trim(), 
@@ -1001,7 +1001,7 @@ public final class INIFile
         int    intPos = 0;
 
         if (pstrSrc == null) return null;
-        while ((intPos = pstrSrc.indexOf(";")) >= 0)
+        while ((intPos = pstrSrc.indexOf(';')) >= 0)
         {
             if (intPos == 0)
                 pstrSrc = pstrSrc.substring(intPos + 1);
@@ -1033,8 +1033,8 @@ public final class INIFile
             if (intPos < 0)
             {
                 intLen = 1;
-                intPos = pstrSrc.indexOf("\n", intPrev);
-                if (intPos < 0) intPos = pstrSrc.indexOf("\r", intPrev);
+                intPos = pstrSrc.indexOf('\n', intPrev);
+                if (intPos < 0) intPos = pstrSrc.indexOf('\r', intPrev);
             }
             if (intPos == 0)
             {
@@ -1055,7 +1055,7 @@ public final class INIFile
             }
         }
         if (!pstrSrc.substring(0, 1).equals(";"))
-            pstrSrc = ";" + pstrSrc;
+            pstrSrc = ';' + pstrSrc;
         pstrSrc = pstrSrc + "\r\n";
         return pstrSrc;
     }
@@ -1217,7 +1217,7 @@ public final class INIFile
 
             try
             {
-                if (this.mhmapProps.size() > 0)
+                if (!this.mhmapProps.isEmpty())
                 {
                     arrRet = new String[this.mhmapProps.size()]; 
                     for (iter = this.mhmapProps.keySet().iterator();iter.hasNext();)
@@ -1261,7 +1261,7 @@ public final class INIFile
 
             if (this.mstrComment != null)
                 objBuf.append(addRemChars(this.mstrComment));
-            objBuf.append("[" + this.mstrName + "]\r\n");
+            objBuf.append('[' + this.mstrName + "]\r\n");
             colKeys = this.mhmapProps.keySet();
             if (colKeys != null)
             {
@@ -1352,10 +1352,10 @@ public final class INIFile
             String strRet   = null;
 
             strRet = this.mstrValue;
-            intStart = strRet.indexOf("%");
+            intStart = strRet.indexOf('%');
             if (intStart >= 0)
             {
-                intEnd = strRet.indexOf("%", intStart + 1);
+                intEnd = strRet.indexOf('%', intStart + 1);
                 strVar = strRet.substring(intStart + 1, intEnd);
                 strVal = mpropEnv.getProperty(strVar);
                 if (strVal != null)

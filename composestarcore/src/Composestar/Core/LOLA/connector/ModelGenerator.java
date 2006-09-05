@@ -171,7 +171,7 @@ public class ModelGenerator
     var1unique = rel.getRelationType(2).isUnique();
     StringBuffer res = new StringBuffer();
     // Definition of relation predicate
-      res.append(rel.getPredicateName()).append("(").append(commaSeparated(varList)).append(") :-\n  ");
+      res.append(rel.getPredicateName()).append('(').append(commaSeparated(varList)).append(") :-\n  ");
 
     if (!var1unique && !var2unique) // It is a (*,*)-relation
     { /* Because both sides can have multiple answers, we have to put
@@ -194,7 +194,7 @@ public class ModelGenerator
     // else: it is a (1,1)-relation so we don't need an answer generator (the answers are already unique)
 
       res.append(rel.getPredicateName()).append("Builtin");
-      res.append("(").append(commaSeparated(varList)).append(")");
+      res.append('(').append(commaSeparated(varList)).append(')');
     if (!(var1unique && var2unique)) // Some generator was included, so we have to add the closing ')'
       res.append(')');
     res.append(".\n\n");
@@ -212,8 +212,8 @@ public class ModelGenerator
     {
       RelationPredicate containedRel = (RelationPredicate)iter.next();
       Vector varList = getVarList(containedRel);
-        res.append(rel.getPredicateName()).append("(").append(commaSeparated(varList)).append(") :-\n  ");
-        res.append(containedRel.getPredicateName()).append("(").append(commaSeparated(varList)).append(").\n");
+        res.append(rel.getPredicateName()).append('(').append(commaSeparated(varList)).append(") :-\n  ");
+        res.append(containedRel.getPredicateName()).append('(').append(commaSeparated(varList)).append(").\n");
     }
     res.append('\n');
     

@@ -722,8 +722,8 @@ public class Sign implements CTCommonModule {
             Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Selector '" + selector
                     + "' is not added" + " to the signature of concern '"
                     + concern.name + "' " + "because the dispatch target '"
-                    + dispTarget.name + "(" + targetConcern.name
-                    + ")' does not contain method '" + dispSelector.name + "'",
+                    + dispTarget.name + '(' + targetConcern.name
+                    + ")' does not contain method '" + dispSelector.name + '\'',
                     state.getFlowNode().getRepositoryLink());
         }
     }
@@ -960,8 +960,8 @@ public class Sign implements CTCommonModule {
                     Debug.out(Debug.MODE_ERROR, MODULE_NAME,
                             "Cyclic signature "
                                     + "dependancy found on method '"
-                                    + concern.getName() + "."
-                                    + wrapper.theMethodInfo.Name + "'");
+                                    + concern.getName() + '.'
+                                    + wrapper.theMethodInfo.Name + '\'');
                 }
 
                 // check for unexisting dispatches:
@@ -1268,8 +1268,8 @@ public class Sign implements CTCommonModule {
                         }
                         Debug.out(Debug.MODE_INFORMATION, "Sign", "\t\t[ "
                                 + relation + " ]  (" + returntype + ") "
-                                + mw.getMethodInfo().name() + "(" + parameters
-                                + ")");
+                                + mw.getMethodInfo().name() + '(' + parameters
+                                + ')');
                     }
                 }
             }

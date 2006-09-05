@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: RepositoryPtrList.java,v 1.4 2006/08/31 10:59:36 doornenbal Exp $
+ * $Id: RepositoryPtrList.java,v 1.5 2006/09/05 12:30:49 doornenbal Exp $
  * 
 **/
 
@@ -47,7 +47,7 @@ public class RepositoryPtrList extends TreeBuilder
 			// TODO deprecated
 			String conditionString = cl.getName();
 
-			if (conditionString == null || conditionString.equals(""))
+			if (conditionString == null || conditionString.length() == 0)
 			{
 				//Debug.out(Debug.MODE_WARNING,"FIRE", "Condition string is empty, assuming true");
 				// Bailing out with true condition.
@@ -111,7 +111,7 @@ public class RepositoryPtrList extends TreeBuilder
 		matchTarget = ((MatchingPart)matchParts.firstElement()).getTarget().getName();
 		matchSelector = ((MatchingPart)matchParts.firstElement()).getSelector().getName();
 		
-		if (substParts.size() != 0)
+		if (!substParts.isEmpty())
 		{
 			substTarget = ((SubstitutionPart)substParts.firstElement()).getTarget().getName();
 			substSelector = ((SubstitutionPart)substParts.firstElement()).getSelector().getName();
@@ -119,7 +119,7 @@ public class RepositoryPtrList extends TreeBuilder
 
 		//Signature or name matching?
 		SymbolTable st = SymbolTable.getInstance();
-		if (matchParts.size() != 0 && ((MatchingPart)matchParts.firstElement()).getMatchType() instanceof SignatureMatchingType)
+		if (!matchParts.isEmpty() && ((MatchingPart)matchParts.firstElement()).getMatchType() instanceof SignatureMatchingType)
 		{
 			MatchSignature match = new MatchSignature((st.addSymbol(matchTarget, 1)), filterNumber);
 			
@@ -127,7 +127,7 @@ public class RepositoryPtrList extends TreeBuilder
 			// FIX BY TOM, INSERT Substitutes after a successful signature match
 
 			Tand joinSubst = new Tand();
-			if( substParts.size() != 0 )
+			if(!substParts.isEmpty() )
 			{
 				joinSubst.addChild1 (new Substitute(st.addSymbol(substTarget, 1), filterNumber));
 				joinSubst.addChild2 (new Substitute(st.addSymbol(substSelector, 2), filterNumber));
@@ -151,7 +151,7 @@ public class RepositoryPtrList extends TreeBuilder
 			joinMatch.addChild1 (new Match(st.addSymbol(matchTarget, 1), filterNumber));
 			joinMatch.addChild2 (new Match(st.addSymbol(matchSelector, 2), filterNumber));
 
-			if (substParts.size() != 0)
+			if (!substParts.isEmpty())
 			{
 				Tand joinSubst = new Tand();
 				joinSubst.addChild1 (new Substitute(st.addSymbol(substTarget, 1), filterNumber));

@@ -221,14 +221,14 @@ public class ExecutionModelExtractor{
         BasicExecutionState executionState;
         
         //check for start- or endnode:
-        if ( flowNode == flowModel.getStartNode() ){
+        if (flowNode.equals(flowModel.getStartNode()) ){
             executionState = new BasicExecutionState( flowNode, message,
                     substitutionSelector, substitutionTarget,
                     ExecutionState.ENTRANCE_STATE );
             executionModel.addState( executionState );
             executionModel.addEntranceState( executionState );
         }
-        else if ( flowNode == flowModel.getEndNode() ){
+        else if (flowNode.equals(flowModel.getEndNode()) ){
             executionState = new BasicExecutionState( flowNode, message,
                     substitutionSelector, substitutionTarget,
                     ExecutionState.EXIT_STATE );

@@ -67,7 +67,7 @@ public class CtlChecker {
         ExecutionState state2 = null;
         HashSet satSet2=null, reverseSatSet2=null;
         Vector v2=null;
-        if ( v.size() > 0 ){
+        if (!v.isEmpty() ){
             state2 = (ExecutionState) v.elementAt(0);
             satSet2 = (HashSet) satTable.get( state2 );
 
@@ -335,7 +335,7 @@ public class CtlChecker {
 
         public Object visitReverse(Reverse formula, Object arg){
             Boolean b1 = (Boolean) arg;
-            Boolean b2 = new Boolean( !b1.booleanValue() );
+            Boolean b2 = (!b1.booleanValue()) ? Boolean.TRUE : Boolean.FALSE;
 
             formula.subFormula.visit( this, b2 );
 
@@ -634,7 +634,7 @@ public class CtlChecker {
             
             Vector v = new Vector();
             Enumeration states = backwardStateVector.elements();
-            Boolean reversed = new Boolean( reverse );
+            Boolean reversed = (reverse) ? Boolean.TRUE : Boolean.FALSE;
             
             while( states.hasMoreElements() ){
                 ExecutionState state = (ExecutionState) states.nextElement();

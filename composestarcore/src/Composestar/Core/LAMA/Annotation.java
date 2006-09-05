@@ -77,7 +77,7 @@ public class Annotation implements Serializable{
 		type = (Type)in.readObject();
 		target = (ProgramElement)in.readObject();
 		value = in.readUTF();
-		if(value.equals(""))
+		if(value.length() == 0)
 			value = null;
 		isSuperImposed = in.readBoolean();
 	}

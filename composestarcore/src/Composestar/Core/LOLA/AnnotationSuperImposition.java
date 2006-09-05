@@ -100,7 +100,7 @@ public class AnnotationSuperImposition
       s.predicate = predSel;
       s.posInResultVector = selectors.size();
       selectors.add(s);
-      Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.name + ", " + s.predicate.getQuery() + ")");
+      Debug.out(Debug.MODE_DEBUG, "LOLA", "Predicate selector added (" + s.name + ", " + s.predicate.getQuery() + ')');
     }
     
     Iterator annotBindingIter = dataStore.getAllInstancesOf(AnnotationBinding.class);
@@ -147,7 +147,7 @@ public class AnnotationSuperImposition
 					act.selector = sel;
 					act.annotation = annotation;
 					annotationActions.add(act);
-					Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation binding: '" + act.annotation.getUnitName() + "' to selector '" + act.selector.name + "'");
+					Debug.out(Debug.MODE_DEBUG, "LOLA", "Annotation binding: '" + act.annotation.getUnitName() + "' to selector '" + act.selector.name + '\'');
 				}
 			}
 		}
@@ -182,7 +182,7 @@ public class AnnotationSuperImposition
 	  		// Attach annotations based on the current state (e.g. this action and actions done by previous states in this run)
 	  		Set addedAnnots = setAnnotationState(myState, action);
 	  		
-	  		if (addedAnnots.size() == 0)
+	  		if (addedAnnots.isEmpty())
 	  			continue; // No annotation was attached (selectors empty?), so obviously nothing can have changed. Try next action.
 	  		              // Also in this case we don't have to bother with resetAnnotationState, because nothing was added.
 	  		
@@ -201,7 +201,7 @@ public class AnnotationSuperImposition
 	  			msg.append("as the order of superimposing annotations is arbitrary, this would make the compilation process ambiguous.\n");
 	  			msg.append("The problem was detected while applying the following annotation superimposition:\n");
 		  		AnnotationAction act = (AnnotationAction)annotationActions.elementAt(action);
-                  msg.append("Attaching annotation ").append(act.annotation.getUnitName()).append(" to the program elements selected by ").append(act.selector.name).append("\n");
+                  msg.append("Attaching annotation ").append(act.annotation.getUnitName()).append(" to the program elements selected by ").append(act.selector.name).append('\n');
                   msg.append("This action shrunk the resultset of selector ").append(((Selector) selectors.elementAt(errorLocation)).name);
 	  		 // At least one of the result sets shrunk, this is not allowed
 	  			throw new ModuleException(msg.toString(), "LOLA");
@@ -244,7 +244,7 @@ public class AnnotationSuperImposition
 	for (int i = 0; i < endState.selectorResults.size(); i++)
 	{
 		HashSet resultSet = (HashSet)endState.selectorResults.elementAt(i); 
-		if (resultSet.size() == 0)
+		if (resultSet.isEmpty())
 			//Debug.out(Debug.MODE_WARNING, "LOLA", "Selector does not match any program elements: " + ((Selector)selectors.elementAt(i)).name);
 			Debug.out(Debug.MODE_WARNING, "LOLA", "Selector does not match any program elements", ((Selector)selectors.elementAt(i)).predicate);
 		else
@@ -258,7 +258,7 @@ public class AnnotationSuperImposition
 				if(lu instanceof Type)
 				{
 					Type dotnettype = (Type)lu;
-					names += dotnettype.FullName+" ";
+					names += dotnettype.FullName+ ' ';
 				}
 			}
 			Debug.out(Debug.MODE_INFORMATION, "LOLA", "Selector " +((Selector)selectors.elementAt(i)).name+" matches the following program elements: "+names);
@@ -359,7 +359,7 @@ public class AnnotationSuperImposition
 				for (Iterator existingAnnots = elem.getAnnotations().iterator(); existingAnnots.hasNext();)
 				{
 					Annotation existingAnnot = (Annotation) existingAnnots.next();
-					if (existingAnnot.getType() == action.annotation)
+					if (existingAnnot.getType().equals(action.annotation))
 					{
 						doubleAnnot = true;
 						break; // out of existing Annotations for-loop

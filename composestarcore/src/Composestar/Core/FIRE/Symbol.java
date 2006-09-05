@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Symbol.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id: Symbol.java,v 1.2 2006/03/06 09:25:50 reddog33hummer Exp $
  * 
 **/
 
@@ -54,7 +54,7 @@ public class Symbol
             default:typeStr = "unknown"; break;
 		}
 
-		if (Debug.getMode() > Debug.MODE_WARNING) return "Symbol: " + name + " " + typeStr + (column != null ? column.toString() : "");
+		if (Debug.getMode() > Debug.MODE_WARNING) return "Symbol: " + name + ' ' + typeStr + (column != null ? column.toString() : "");
 		else return name;
 	}
 

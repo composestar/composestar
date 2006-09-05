@@ -81,7 +81,7 @@ public class FileUtils
   
   public static String removeExtension(String filename)
   {
-	  int lastdot = filename.lastIndexOf(".");
+	  int lastdot = filename.lastIndexOf('.');
 	  if(lastdot>0){
 		  return filename.substring(0,lastdot);
 	  }
@@ -104,7 +104,7 @@ public class FileUtils
   public static String createOutputFilename(String basePath, String prefix, String sourceName) throws Exception
   {
 	  if (!sourceName.startsWith(basePath))
-		  throw new Exception("File + '" + sourceName + "' should be within the project basePath '" + basePath + "'");
+		  throw new Exception("File + '" + sourceName + "' should be within the project basePath '" + basePath + '\'');
 	  return basePath + prefix + sourceName.substring(basePath.length());
   }
   

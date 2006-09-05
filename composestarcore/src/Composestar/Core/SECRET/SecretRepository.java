@@ -150,8 +150,8 @@ public class SecretRepository implements CTCommonModule {
      */
     public String toString() {
     	String tmp = "**** SecretRepository dump:\n";
-    	tmp+="FiltersActions: "+this.filterActionList+"\n";
-    	tmp+="ActionResources: "+this.actionResourceList+"\n";
+    	tmp+="FiltersActions: "+this.filterActionList+ '\n';
+    	tmp+="ActionResources: "+this.actionResourceList+ '\n';
     	tmp+="Resources: "+this.conflictResourceMap;
     	return(tmp);     
     }

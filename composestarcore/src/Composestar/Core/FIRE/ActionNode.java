@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: ActionNode.java,v 1.1 2006/02/13 11:16:55 pascal Exp $
+ * $Id: ActionNode.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -157,17 +157,17 @@ public class ActionNode extends Node implements Cloneable
 			
 			if (isPerfectMatch())
 			{
-				if (act.getTarget() != null && act.getTarget() != getTarget()) return false;
-				if (act.getSelector() != null && act.getSelector() != getSelector()) return false;
+				if (act.getTarget() != null && !act.getTarget().equals(getTarget())) return false;
+				if (act.getSelector() != null && !act.getSelector().equals(getSelector())) return false;
 			}
 			else
 			{
-				if (act.getTarget() != null && !act.getTarget().getName().equals("*") &&  act.getTarget() != getTarget()) return false;
-				if (act.getSelector() != null && !act.getSelector().getName().equals("*") && act.getSelector() != getSelector()) return false;
+				if (act.getTarget() != null && !act.getTarget().getName().equals("*") && !act.getTarget().equals(getTarget())) return false;
+				if (act.getSelector() != null && !act.getSelector().getName().equals("*") && !act.getSelector().equals(getSelector())) return false;
 			}
 			
 			// Lazy way to fix it
-			if (checkConditions() && act.conditions.size () > 0) 
+			if (checkConditions() && !act.conditions.isEmpty())
 			{
 				if (act.conditions.size () != conditions.size ()) return false;
 
@@ -190,7 +190,7 @@ public class ActionNode extends Node implements Cloneable
 
 		//if (getTarget() != null || getSelector() != null || conditions.size() > 0)
 		//{
-			return " " + target + "." + selector + " " + conditions.toString();
+			return ' ' + target + '.' + selector + ' ' + conditions.toString();
 		//}
 
 		//return "";

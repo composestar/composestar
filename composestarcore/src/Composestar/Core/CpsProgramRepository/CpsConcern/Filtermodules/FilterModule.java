@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterModule.java,v 1.4 2006/08/31 14:19:00 doornenbal Exp $
+ * $Id: FilterModule.java,v 1.5 2006/09/05 12:30:49 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -605,7 +605,7 @@ public void setUniqueNumber(int uniqueNumber) {
 }
 
 public String getName() {
-	return (name + "!" + uniqueNumber);
+	return (name + '!' + uniqueNumber);
 }
 
 public String getOriginalName() {

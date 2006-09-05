@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.8 2006/09/05 12:30:47 doornenbal Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.9 2006/09/05 14:17:31 doornenbal Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -160,7 +160,7 @@ public class CpsRepositoryBuilder
   
   public void finalizeNamespace()
   {
-  	cpsc.setQualifiedName(namespace+"."+cpsc.getName());
+  	cpsc.setQualifiedName(namespace+ '.' +cpsc.getName());
   	//System.out.println("CPSC: "+this.cpsc.getQualifiedName());
   	ds.removeObject(cpsc.repositoryKey);
   	ds.addObject(cpsc.getQualifiedName(),cpsc);
@@ -175,7 +175,7 @@ public class CpsRepositoryBuilder
   	}
   	else
   	{
-  		namespace += "."+name;
+  		namespace += '.' +name;
   	}
   	//System.out.println("Namespace: "+this.namespace);
   }
@@ -191,7 +191,7 @@ public class CpsRepositoryBuilder
     String name;
     int j;
 
-    if (namev.size() > 0) { //names are optional, only specifying types is enough
+    if (!namev.isEmpty()) { //names are optional, only specifying types is enough
       for (j = 0; j < namev.size(); j++) {
         name = (String) namev.elementAt(j);
         cpsc.addParameter(addLabeledConcernReference(name, typev));
@@ -290,7 +290,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 		ex.setDescriptionFileName(filename);
 		ex.setDescriptionLineNumber(lineNumber);
 
-		if (init.size() > 0)
+		if (!init.isEmpty())
 		{
 			if(type == 0)
 			{
@@ -305,7 +305,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 					for(int i=0; i<(init.size()-1); i++)
 					{
 						//System.out.println("Hello: "+(String)init.get(i));
-						target += (String)init.get(i)+".";
+						target += (String)init.get(i)+ '.';
 						v.add(init.get(i));
 					}
 					//System.out.println("Hello: "+selector);
@@ -433,7 +433,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * obselete now? DD
    */
   public void addMethodReturnType(Vector typev) {
-    if (typev.size() > 0) { //because returntype is optional
+    if (!typev.isEmpty()) { //because returntype is optional
       m.setReturnType(addConcernReference(typev));
     } else { //default is void
       m.setReturnType(addConcernReference(null, "void"));
@@ -453,7 +453,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     String name;
     int j;
 
-    if (namev.size() > 0) { //names are optional, only specifying types is enough
+    if (!namev.isEmpty()) { //names are optional, only specifying types is enough
       for (j = 0; j < namev.size(); j++) {
         name = (String) namev.elementAt(j);
         m.addParameter(addLabeledConcernReference(name, typev));

@@ -21,7 +21,7 @@ public class SoftSkipRule extends SkipRule{
 	}
 		
 	public void apply(){
-		System.out.print(" *applying: SoftSkip <"+(Action)_left+","+(Action)_right+">*\n");
+		System.out.print(" *applying: SoftSkip <"+(Action)_left+ ',' +(Action)_right+">*\n");
 		if ( (_left.evaluate()==null) ||
 		     (_left.evaluate().booleanValue()) ){
 				((Action)_right).setExecutable(false);

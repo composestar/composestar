@@ -122,7 +122,7 @@ public class FilterInfo {
      * @roseuid 40D843320234
      */
     public void collectSubstitutionSpecification(Vector subsparts) {
-    	if( subsparts.size() == 0 )
+    	if(subsparts.isEmpty() )
     		return;
     	boolean foundTarget = false, foundSelector=false;
     	

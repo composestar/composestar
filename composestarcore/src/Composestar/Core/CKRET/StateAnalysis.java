@@ -33,7 +33,7 @@ public class StateAnalysis {
 
 	public void analyze()
 	{
-		System.out.print("\n" + this.concern.getName() + ": analyzing ");
+		System.out.print('\n' + this.concern.getName() + ": analyzing ");
 		//SECRET.printState(this.node);
 
 		//table = new SemanticTable(this.node.getTarget().getName(), this.node.getSelector().getName());

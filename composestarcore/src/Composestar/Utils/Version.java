@@ -59,7 +59,7 @@ public class Version {
      * String for the current version.
      */
     public static String getVersionString(){
-    	return "version " + instance.versionMajor + "." + instance.versionMinor + "." + instance.versionBuild + "." + instance.versionRevision;
+    	return "version " + instance.versionMajor + '.' + instance.versionMinor + '.' + instance.versionBuild + '.' + instance.versionRevision;
     }
 
     /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -115,11 +115,11 @@ public class Version {
 				String line;
 		    	while ( (line = br.readLine()) != null) {
 		    		if ( !line.startsWith("#") && !line.equalsIgnoreCase("") ) {
-						if (line.indexOf("=") > 0) {
-							String key = line.substring(0, line.indexOf("="));
+						if (line.indexOf('=') > 0) {
+							String key = line.substring(0, line.indexOf('='));
 							String value = "";
-							if (line.indexOf("=")+1 != line.length()) {
-								value = line.substring(line.indexOf("=") + 1, line.length());
+							if (line.indexOf('=')+1 != line.length()) {
+								value = line.substring(line.indexOf('=') + 1, line.length());
 							}
 							if (key.equalsIgnoreCase("version.major")) versionMajor = value;
 							else if (key.equalsIgnoreCase("version.minor")) versionMinor = value;

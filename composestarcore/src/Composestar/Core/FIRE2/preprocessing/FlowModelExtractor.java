@@ -129,7 +129,7 @@ public class FlowModelExtractor {
         String label;
         while( iter.hasNext() ){
             Edge edge = (Edge) iter.next();
-            if ( edge.source() == graphNode  &&  edge.opposite() == graphNode ){
+            if (edge.source().equals(graphNode)  && edge.opposite().equals(graphNode) ){
                 label = edge.label().text();
                 names.add( label );
             }
@@ -259,7 +259,7 @@ public class FlowModelExtractor {
             
             while( enumer.hasMoreElements() ){
                 transition = (FlowTransition) enumer.nextElement();
-                if ( transition.getEndNode() == endNode ){
+                if (transition.getEndNode().equals(endNode) ){
                     return transition;
                 }
             }

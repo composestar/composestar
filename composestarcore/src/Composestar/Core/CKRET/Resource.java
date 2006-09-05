@@ -31,13 +31,13 @@ public class Resource {
 	{
 		//this.history.append(operation.charAt(0));
 		this.history.append(operation);
-		this.fancyhistory.append(" ");
+		this.fancyhistory.append(' ');
 		this.fancyhistory.append(operation);
 	}
 
 	public String toString()
 	{
-		return this.name + " > " + history.toString();
+		return this.name + " > " + history;
 	}
 	
 	public String getName()

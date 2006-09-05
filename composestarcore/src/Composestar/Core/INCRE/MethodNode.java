@@ -28,10 +28,10 @@ public class MethodNode extends Node
 		{
 			Method mymethod = null;
 			
-            if(reference.indexOf(".")>0){
+            if(reference.indexOf('.')>0){
             	// reference => FULLNAME_OF_CLASS.NAME_OF_METHOD
-            	String fullclassname = reference.substring(0,reference.lastIndexOf("."));
-            	String methodname = reference.substring(reference.lastIndexOf(".")+1);
+            	String fullclassname = reference.substring(0,reference.lastIndexOf('.'));
+            	String methodname = reference.substring(reference.lastIndexOf('.')+1);
             	Class myclass = Class.forName(fullclassname);
             	Class[] paramclasses = {obj.getClass()};
             	mymethod = myclass.getMethod(methodname,paramclasses);
@@ -52,7 +52,7 @@ public class MethodNode extends Node
 			throw new ModuleException(error, "INCRE");
 		}
 		catch(Exception excep){
-			throw new ModuleException("Cannot visit method node "+reference+" "+excep.toString(),"INCRE");
+			throw new ModuleException("Cannot visit method node "+reference+ ' ' +excep.toString(),"INCRE");
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class MethodNode extends Node
 	public Class[] getParameterTypes(){
 		
 		try {
-			if(this.parameters.size()>0){
+			if(!this.parameters.isEmpty()){
 				Class[] classes = new Class[this.parameters.size()];
 				for(int i=0;i<this.parameters.size();i++){
 					Object obj = (Object)parameters.get(i);
@@ -86,7 +86,7 @@ public class MethodNode extends Node
 	 */
 	public String getUniqueID(Object obj){
 		String uniqueID = obj.hashCode()+"."+this.reference;
-		if(parameters.size()>0){
+		if(!parameters.isEmpty()){
 			Iterator params = parameters.iterator();
 			while(params.hasNext()){
 				uniqueID += (String)params.next();				

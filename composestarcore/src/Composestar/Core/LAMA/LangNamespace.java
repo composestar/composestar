@@ -116,7 +116,7 @@ public class LangNamespace extends ProgramElement
   
   public String toString()
   {
-    return "LangNamespace(name=" + getUnitName() + ")";
+    return "LangNamespace(name=" + getUnitName() + ')';
   }
   
   /**

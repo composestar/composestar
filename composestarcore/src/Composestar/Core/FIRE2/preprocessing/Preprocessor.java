@@ -172,7 +172,7 @@ public class Preprocessor implements CTCommonModule{
             URL genUrl = this.getClass().getResource( GENERATE_FLOW_GRAMMAR_FILE );
             String fileName = genUrl.getFile();
             Debug.out( Debug.MODE_DEBUG, MODULE_NAME, fileName );
-            if ( fileName.indexOf( "!" ) >= 0 ){
+            if ( fileName.indexOf('!' ) >= 0 ){
                 //load from jar:
                 JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
                 
