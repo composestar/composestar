@@ -11,7 +11,7 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
@@ -77,7 +77,7 @@ public class InnerDispatcher {
 		f.setRightOperator(new VoidFilterCompOper());
 		
 		// create a filterelement
-		FilterElement fe = new FilterElement();
+		FilterElementAST fe = new FilterElementAST();
 		f.addFilterElement(fe);
 		fe.setConditionPart(new True());
 		fe.setEnableOperatorType(new EnableOperator());

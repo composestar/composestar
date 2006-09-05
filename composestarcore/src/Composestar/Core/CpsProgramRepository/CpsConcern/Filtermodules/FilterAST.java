@@ -5,7 +5,7 @@
 	 * Licensed under LGPL v2.1 or (at your option) any later version.
 	 * [http://www.fsf.org/copyleft/lgpl.html]
 	 *
-	 * $Id: FilterAST.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+	 * $Id: FilterAST.java,v 1.1 2006/09/05 12:30:49 doornenbal Exp $
 	 */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -70,7 +70,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   * @modelguid {C3A32E86-43B0-40A3-A470-33F577AFCB58}
 	   * @roseuid 401FAA6300FF
 	   */
-	  public boolean addFilterElement(FilterElement filterelement) {
+	  public boolean addFilterElement(FilterElementAST filterelement) {
 	    filterElements.addElement(filterelement);
 	    return (true);
 	  }

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Filter.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: Filter.java,v 1.2 2006/09/05 12:30:49 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -29,7 +29,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @modelguid {BA6E0095-9527-4D09-9DBB-C6C6D14F98CF}
    */
   //public FilterType type; -> get from AST
-  //public Vector filterElements; -> get from AST
+  public Vector filterElements;
   //public FilterCompOper rightOperator; -> get from AST 
   //public Vector parameters; -> get from AST
   public FilterAST filterAST;
@@ -41,10 +41,20 @@ public class Filter extends DeclaredRepositoryEntity {
    */
   public Filter() {
     super();
+    filterElements = new Vector();
   }
 
   public Filter(FilterAST aFilterAST){
 	filterAST = aFilterAST;
+	
+	//create unique Filter Elements
+	filterElements = new Vector();
+	Iterator fei = filterAST.getFilterElementIterator();
+	while(fei.hasNext()){
+	  FilterElement fe = new FilterElement((FilterElementAST) fei.next());
+	  filterElements.add(fe);
+	  DataStore.instance().addObject(fe);
+	}
   }
 
   /**
@@ -76,7 +86,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6300FF
    */
   public boolean addFilterElement(FilterElement filterelement) {
-	  filterAST.addFilterElement(filterelement);
+	filterElements.add(filterelement);
     return (true);
   }
 
@@ -89,8 +99,11 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA630126
    */
   public FilterElement removeFilterElement(int index) {
-    return filterAST.removeFilterElement(index);
+	  Object o = filterElements.elementAt(index);
+	  filterElements.removeElementAt(index);
+	  return ((FilterElement) o);
   }
+
 
 
   /**
@@ -101,7 +114,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63013A
    */
   public FilterElement getFilterElement(int index) {
-    return filterAST.getFilterElement(index);
+	  return ((FilterElement) filterElements.elementAt(index));
   }
 
 
@@ -112,7 +125,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63014E
    */
   public Iterator getFilterElementIterator() {
-    return filterAST.getFilterElementIterator();
+	  return (new CPSIterator(filterElements));
   }
 
 

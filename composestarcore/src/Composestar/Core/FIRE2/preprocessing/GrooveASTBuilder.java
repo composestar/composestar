@@ -352,7 +352,7 @@ public class GrooveASTBuilder {
             }
             
             //create new operatorNode:
-            FilterElementCompOper oper = filterElement.rightOperator;
+            FilterElementCompOper oper = filterElement.getRightOperator();
             operatorNode = BuildFilterElementOperatorNode( oper, graph );
             edge = new AnnotatedEdge( filterElementNode, 
                     FlowChartNames.RIGHT_OPERATOR_EDGE, operatorNode );
@@ -423,7 +423,7 @@ public class GrooveASTBuilder {
         
         //conditionpart:
         AnnotatedNode conditionPartNode = 
-            buildConditionPartNode( filterElement.conditionPart, graph );
+            buildConditionPartNode( filterElement.getConditionPart(), graph );
         edge = new AnnotatedEdge( 
                 filterElementNode, FlowChartNames.CONDITION_PART_EDGE, 
                 conditionPartNode );
@@ -431,19 +431,20 @@ public class GrooveASTBuilder {
         
         //conditionoperator:
         AnnotatedNode conditionOperatorNode =
-            buildConditionOperatorNode( filterElement.enableOperatorType, graph );
+            buildConditionOperatorNode( filterElement.getEnableOperatorType(), graph );
         edge = new AnnotatedEdge( 
                 filterElementNode, FlowChartNames.CONDITION_OPERATOR_EDGE,
                 conditionOperatorNode );
         graph.addEdge( edge );
         
         //iterate over matchingpatterns::
-        Vector matchingpatterns = filterElement.matchingPatterns;
+        Iterator it = filterElement.getMatchingPatternIterator();
         MatchingPattern pattern;
         Node patternNode;
         Node previousPatternNode = null;
-        for (int i=0; i<matchingpatterns.size(); i++){
-            pattern = (MatchingPattern) matchingpatterns.elementAt( i );
+        int i = 0;
+        while(it.hasNext()){
+             pattern = (MatchingPattern) it.next();
             
             //create patternNode:
             patternNode = buildMatchingPatternNode( pattern, graph );
@@ -455,6 +456,7 @@ public class GrooveASTBuilder {
             
             if ( i==0 ){
                 //create 'orderFirst' edge:
+            	i++;
                 edge = new AnnotatedEdge( filterElementNode, 
                         FlowChartNames.ORDER_FIRST_EDGE, patternNode );
                 graph.addEdge( edge );
