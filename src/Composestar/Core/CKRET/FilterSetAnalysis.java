@@ -56,7 +56,7 @@ public class FilterSetAnalysis implements Serializable {
 		this.filters = getFilterList(this.order.orderAsList());
 		int numFilters = filters.size();
 		
-		int numPaths = (int) Math.pow(2,numFilters);
+		int numPaths = (int) StrictMath.pow(2,numFilters);
 		for( int i = 0; i < numPaths; i++ )
 		{
 			ExecutionAnalysis execution = new ExecutionAnalysis(concern, filters, i);
@@ -75,7 +75,7 @@ public class FilterSetAnalysis implements Serializable {
 		{
 			ExecutionAnalysis execution = (ExecutionAnalysis) it.next();
 			List conflicts = execution.analyze();
-			if( conflicts.size() > 0 )
+			if(!conflicts.isEmpty() )
 				this.conflictingExecutions.put(execution, conflicts);
 		}
 	}

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Main.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id: Main.java,v 1.2 2006/03/10 12:41:51 pascal_durr Exp $
  * 
 **/
 
@@ -44,7 +44,7 @@ public class Main
 		}
 		catch (ModuleException e)
 		{
-			System.out.println ("Exception in FilterReasoningEngineTest.readConcern("+filename+")");
+			System.out.println ("Exception in FilterReasoningEngineTest.readConcern("+filename+ ')');
 		}
 
 		return getList(ds.getAllObjects());

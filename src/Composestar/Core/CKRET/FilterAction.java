@@ -85,7 +85,7 @@ public class FilterAction implements Serializable{
 
 	public boolean equals(Object o)
 	{
-		if( this.toString() == null && o.toString() == null )
+        if( this.toString() == null && o.toString() == null )
 			return true;
 		return (o.toString().equals(this.toString()));
 	}

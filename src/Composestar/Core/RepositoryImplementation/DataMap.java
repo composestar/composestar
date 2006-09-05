@@ -115,7 +115,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable {
      * @roseuid 40EBC9CC0322
      */
     public boolean isEmpty() {
-     	return (keys.size() == 0);     
+     	return (keys.isEmpty());
     }
     
     /**

@@ -75,7 +75,7 @@ public class ComposestarBuiltins extends HashDict
   */
   public void register(Const proto)
   {
-	String key=proto.name()+"/"+proto.getArity();
+	String key=proto.name()+ '/' +proto.getArity();
 	put(key,proto);
   }
 }
@@ -299,9 +299,9 @@ class binaryRelationBuiltin extends FunBuiltin
   	  	
         // If one of the relations is unique, use that side (faster)
         if (relation1unique && (unit1.getUnitRelation(relation1).singleValue() != null))
-          return (unit1.getUnitRelation(relation1).singleValue() == unit2 ? 1 : 0);
+          return (unit1.getUnitRelation(relation1).singleValue().equals(unit2) ? 1 : 0);
         else if (relation2unique && (unit2.getUnitRelation(relation2).singleValue() != null))
-          return (unit2.getUnitRelation(relation2).singleValue() == unit1 ? 1 : 0);
+          return (unit2.getUnitRelation(relation2).singleValue().equals(unit1) ? 1 : 0);
         else // many-to-many relation, check whether unit1 contains unit2 in the relation set
           return (unit1.getUnitRelation(relation1).multiValue().contains(unit2) ? 1 : 0);
         
@@ -414,7 +414,7 @@ class isUnitNameBuiltin extends FunBuiltin
         ComposestarBuiltins.currentSelector.addTYMInfo((ProgramElement)tUnit.toObject(),"getUnitName");
         
         if (result.isSingleValue())
-          return (result.singleValue() == tUnit.toObject()) ? 1 : 0;
+          return (result.singleValue().equals(tUnit.toObject())) ? 1 : 0;
         else // Multiple values found
           return (result.multiValue().contains(tUnit.toObject())) ? 1 : 0;
       }

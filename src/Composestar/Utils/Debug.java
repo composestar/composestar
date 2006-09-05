@@ -64,7 +64,7 @@ public class Debug
 					modeDescription = "debug";
 					break;
 			}
-			System.out.println (module+"~"+modeDescription+"~"+filename+"~"+line+"~"+msg);     
+			System.out.println (module+ '~' +modeDescription+ '~' +filename+ '~' +line+ '~' +msg);
 		}
 	}
 	
@@ -88,6 +88,6 @@ public class Debug
 	public static void outWarnings() 
 	{
 		if( warnings > 0 )
-			System.out.println ( "Warnings: " + warnings + ".");  	
+			System.out.println ( "Warnings: " + warnings + '.');
 	}
 }

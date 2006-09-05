@@ -73,8 +73,8 @@ public class INCRETester
 				openTag("tr bgcolor=#AA8888");
 			else
 				openTag("tr");
-			createCell("["+count1+"] "+type.substring(type.lastIndexOf(".")+1));
-			createCell("["+count2+"] "+type.substring(type.lastIndexOf(".")+1));
+			createCell("["+count1+"] "+type.substring(type.lastIndexOf('.')+1));
+			createCell("["+count2+"] "+type.substring(type.lastIndexOf('.')+1));
 			closeTag("tr");
 		}
 		
@@ -86,7 +86,7 @@ public class INCRETester
 		Iterator datakeys = record1.ds.map.keys.iterator();
 		while(datakeys.hasNext()){
 			String key = (String)datakeys.next();
-			if(key.indexOf("_")==-1){
+			if(key.indexOf('_')==-1){
 				if(null==record2.ds.getObjectByID(key)){
 					/* object with key cannot be found */
 					openTag("tr align=left bgcolor=#AA8888");
@@ -131,15 +131,15 @@ public class INCRETester
 	}
 	
 	public void createCell(String s,int colspan){
-        buffer.append("<td width=50% colspan=").append(colspan).append(">").append(s).append("</td>");
+        buffer.append("<td width=50% colspan=").append(colspan).append('>').append(s).append("</td>");
 	}
 	
 	public void openTag(String tag){
-        buffer.append("<").append(tag).append(">");
+        buffer.append('<').append(tag).append('>');
 	}
 	
 	public void closeTag(String tag){
-        buffer.append("</").append(tag).append(">");
+        buffer.append("</").append(tag).append('>');
 	}
 	
 	public static void main(String args[])

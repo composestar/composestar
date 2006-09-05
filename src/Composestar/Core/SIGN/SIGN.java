@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.13 2006/06/29 11:54:10 stephan_h Exp $
+ * $Id: SIGN.java,v 1.14 2006/08/31 11:07:29 doornenbal Exp $
  * 
 **/
 
@@ -490,7 +490,7 @@ public class SIGN implements CTCommonModule
 	 		}
 	 	}
 
-	 	if (dependencies.size() == 0)
+	 	if (dependencies.isEmpty())
 	 	{
 	 		signature.setStatus(Signature.SOLVED);
 	 		return true;
@@ -603,7 +603,7 @@ public class SIGN implements CTCommonModule
 								java.util.Vector substitutionparts = pattern.getSubstitutionParts();
 								
 								//both matching and substitution must be present
-								if(matchingparts.size() > 0 && substitutionparts.size() > 0 ){
+								if(!matchingparts.isEmpty() && !substitutionparts.isEmpty() ){
 									
 									// get the first substitutionpart
 									SubstitutionPart substitution = (SubstitutionPart) substitutionparts.get( 0 );
@@ -745,7 +745,7 @@ public class SIGN implements CTCommonModule
 							}
 							
 						}
-						Debug.out (Debug.MODE_INFORMATION, "Sign", "\t\t[ " + relation +  " ]  (" + returntype + ") " + mw.getMethodInfo().name() + "(" + parameters + ")");
+						Debug.out (Debug.MODE_INFORMATION, "Sign", "\t\t[ " + relation +  " ]  (" + returntype + ") " + mw.getMethodInfo().name() + '(' + parameters + ')');
 					}
 				}
 			}

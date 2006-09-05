@@ -151,7 +151,7 @@ public class Module
 		if(this.enabled)
 		{
 			// module is enabled for the phase so continue
-			if(!this.summary.equals(""))
+			if(this.summary.length() != 0)
 				Debug.out(Debug.MODE_CRUCIAL, "Master",this.summary);
 		
 			try 

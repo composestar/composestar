@@ -92,7 +92,7 @@ public class AbstractVM {
 			ActionDescription ad = (ActionDescription)actionseq.get(i);
 			actionsequence += ad.getAction();
 			String tmp = ad.getActor();
-			if(tmp.indexOf(".") > 0) actors.add(tmp.substring(0,tmp.indexOf(".")));
+			if(tmp.indexOf('.') > 0) actors.add(tmp.substring(0,tmp.indexOf('.')));
 			else actors.add(tmp);
 		}
 		/* Check of there are any duplicate actors on one resource, if not check for conflicts! */
@@ -166,7 +166,7 @@ public class AbstractVM {
 		{
 			ActionDescription ad = (ActionDescription)seq.get(i);
 			String tmp = ad.getActor();
-			if(tmp.indexOf(".") > 0) actors.add(tmp.substring(0,tmp.indexOf(".")));
+			if(tmp.indexOf('.') > 0) actors.add(tmp.substring(0,tmp.indexOf('.')));
 			else actors.add(tmp);
 		}
     	//System.out.println("\tCHECK: "+actors);
@@ -195,7 +195,7 @@ public class AbstractVM {
 		{
 			ActionDescription ad = (ActionDescription)seq.get(i);
 			String tmp = ad.getActor();
-			if(tmp.indexOf(".") > 0) actors.add(tmp.substring(0,tmp.indexOf(".")));
+			if(tmp.indexOf('.') > 0) actors.add(tmp.substring(0,tmp.indexOf('.')));
 			else actors.add(tmp);
 		}
     	

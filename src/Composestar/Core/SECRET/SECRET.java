@@ -120,12 +120,12 @@ public class SECRET implements CTCommonModule {
 			ActionNode childNode = (ActionNode) fireTree.getChild(i);
 			if( childNode.getTarget().getName().compareTo("*") != 0 )
 			{
-				System.out.println("Removing branch with init " + childNode.getTarget().getName() + "." + childNode.getSelector().getName());
+				System.out.println("Removing branch with init " + childNode.getTarget().getName() + '.' + childNode.getSelector().getName());
 				fireTree.removeChild(i);
 			}
 			else
 			{
-				System.out.println("Leaving branch with init " + childNode.getTarget().getName() + "." + childNode.getSelector().getName());
+				System.out.println("Leaving branch with init " + childNode.getTarget().getName() + '.' + childNode.getSelector().getName());
 			}
 		}
 		
@@ -147,10 +147,10 @@ public class SECRET implements CTCommonModule {
 				for( int i = 0; i < path.length; i++ )
 				{
 					if( path[i] instanceof ActionNode )
-						System.out.print("" + ((ActionNode) path[i]).getTarget().getName()+"."+((ActionNode) path[i]).getSelector().getName()+" >> ");
+						System.out.print("" + ((ActionNode) path[i]).getTarget().getName()+ '.' +((ActionNode) path[i]).getSelector().getName()+" >> ");
 					System.out.print(" " + path[i]);
 					if( path[i] instanceof ActionNode )
-						System.out.print(" {" + ((ActionNode) path[i]).getFilterNumber()+"}");
+						System.out.print(" {" + ((ActionNode) path[i]).getFilterNumber()+ '}');
 					System.out.println("");
 				}
 				System.out.println("");

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: FilterComposite.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id: FilterComposite.java,v 1.2 2006/03/06 09:07:40 reddog33hummer Exp $
  * 
 **/
 
@@ -21,22 +21,22 @@ public abstract class FilterComposite extends FilterComponent
 
 	protected void toTreeString(StringBuffer strPart)
 	{
-		strPart.append("(");
-        strPart.append(toString()).append(" ");
+		strPart.append('(');
+        strPart.append(toString()).append(' ');
 
 		if (fc1 != null) 
 		{
 			fc1.toTreeString(strPart);
-			strPart.append(" ");
+			strPart.append(' ');
 		}
 
 		if (fc2 != null) 
 		{
 			fc2.toTreeString(strPart);
-			strPart.append(" ");
+			strPart.append(' ');
 		}
 
-		strPart.append(")");
+		strPart.append(')');
 
 	}
 }

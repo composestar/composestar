@@ -101,7 +101,7 @@ public class Pattern {
             	return resultMachine;
             case Token.STAR_OPERATOR:
                 throw new PatternParseException( "Unexpected star-operator at" +
-                		" position " + token.getPosition() + "." );
+                		" position " + token.getPosition() + '.' );
             default:
                 return machine1;
             }

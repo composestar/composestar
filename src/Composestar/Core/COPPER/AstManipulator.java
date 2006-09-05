@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: AstManipulator.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+* $Id: AstManipulator.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
 */
 package Composestar.Core.COPPER;
 
@@ -259,7 +259,7 @@ public class AstManipulator implements CpsTokenTypes {
         return (null);
       }
       if ((position != null) && (!"last".equals(position)) && (Integer.parseInt(position) > counter)) {       //positie die niet bestaat opgegeven
-        if (!adding) Debug.out(Debug.MODE_WARNING, "COPPER", "Invalid position specified in node " + text + " in path " + totalpath + ".");    //fixme: doens't matter for add
+        if (!adding) Debug.out(Debug.MODE_WARNING, "COPPER", "Invalid position specified in node " + text + " in path " + totalpath + '.');    //fixme: doens't matter for add
         return (null);
       }
 
@@ -272,12 +272,12 @@ public class AstManipulator implements CpsTokenTypes {
           return ((AST) children.elementAt(positions[Integer.parseInt(position)]));
         }
       } else {
-        if (!adding) Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + ".");  //fixme: doesn't matter for add
+        if (!adding) Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + '.');  //fixme: doesn't matter for add
         return (null);
       }
     } else {                        //only position specified
       if (position == null) {
-        Debug.out(Debug.MODE_WARNING, "COPPER", "No node specified in in path " + totalpath + ".");
+        Debug.out(Debug.MODE_WARNING, "COPPER", "No node specified in in path " + totalpath + '.');
         return (null);
       } else if ("last".equals(position)) {       //last
         return ((AST) children.lastElement());

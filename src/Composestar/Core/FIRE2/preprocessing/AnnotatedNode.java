@@ -91,11 +91,12 @@ public class AnnotatedNode extends DefaultNode {
         StringBuffer buffer = new StringBuffer();
         buffer.append( "AnnotatedNode\n" );
         buffer.append( "  Annotations:\n" );
-        Enumeration enum = annotations.elements();
-        while( enum.hasMoreElements() ){
+        //enum gives problems in JDK1.5
+        Enumeration enumer = annotations.elements();
+        while( enumer.hasMoreElements() ){
             buffer.append( "  - " );
-            buffer.append( enum.nextElement() );
-            buffer.append( "\n" );
+            buffer.append( enumer.nextElement() );
+            buffer.append('\n' );
         }
         
         return buffer.toString();

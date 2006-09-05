@@ -34,7 +34,7 @@ public class CmdLineParser {
      */
     public static class UnknownOptionException extends OptionException {
         UnknownOptionException( String optionName ) {
-            super("unknown option '" + optionName + "'");
+            super("unknown option '" + optionName + '\'');
             this.optionName = optionName;
         }
 
@@ -182,7 +182,7 @@ public class CmdLineParser {
      * Add the specified Option to the list of accepted options
      */
     public final Option addOption( Option opt ) {
-        this.options.put("-" + opt.shortForm(), opt);
+        this.options.put('-' + opt.shortForm(), opt);
         this.options.put("--" + opt.longForm(), opt);
         return opt;
     }
@@ -271,7 +271,7 @@ public class CmdLineParser {
                 }
                 String valueArg = null;
                 if ( curArg.startsWith("--") ) { // handle --arg=value
-                    int equalsPos = curArg.indexOf("=");
+                    int equalsPos = curArg.indexOf('=');
                     if ( equalsPos != -1 ) {
                         valueArg = curArg.substring(equalsPos+1);
                         curArg = curArg.substring(0,equalsPos);

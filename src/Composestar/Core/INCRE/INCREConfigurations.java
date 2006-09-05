@@ -72,11 +72,11 @@ public class INCREConfigurations {
 			dummyStr += name;
 			if(dumIt.hasNext()) dummyStr += ",";
         }
-		props.put("HarvesterInput",depstr+","+dummyStr);
+		props.put("HarvesterInput",depstr+ ',' +dummyStr);
 				
 		/* ApplicationStart */
 		String as = config.getProjects().getProperty("applicationStart");
-		if(null!=as && !as.equals("")){
+		if(null!=as && as.length() != 0){
 			props.put("ApplicationStart",as);
 		}
 						

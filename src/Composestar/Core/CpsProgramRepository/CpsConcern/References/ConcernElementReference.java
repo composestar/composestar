@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: ConcernElementReference.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: ConcernElementReference.java,v 1.2 2006/03/06 09:07:40 reddog33hummer Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
@@ -51,7 +51,7 @@ public class ConcernElementReference extends Reference {
       fname += ".";
     }
     fname += concern;
-    fname += "." + name;
+    fname += '.' + name;
     return (fname);
   }
 }

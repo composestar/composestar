@@ -28,6 +28,6 @@ public class LabelSequence{
     }
     
     public boolean isEmpty(){
-        return resourceOperations.size() == 0;
+        return resourceOperations.isEmpty();
     }
 }

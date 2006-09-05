@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: RealSourceManager.java,v 1.5 2006/03/14 10:07:18 pascal_durr Exp $
+ * $Id: RealSourceManager.java,v 1.6 2006/03/14 13:32:46 dspenkel Exp $
  */
 
 package Composestar.Core.TYM.SrcCompiler;
@@ -103,7 +103,7 @@ public class RealSourceManager implements CTCommonModule {
     	/* last part of sourcefile's path, without extension
     	 * e.g C:/pacman/Main.jsl => Main
     	 */
-    	String srcType = source.substring(source.lastIndexOf("\\")+1);
+    	String srcType = source.substring(source.lastIndexOf('\\')+1);
     	srcType = srcType.replaceAll("\\.\\w+", "");
     	
     	TypeLocations locations = TypeLocations.instance();
@@ -121,7 +121,7 @@ public class RealSourceManager implements CTCommonModule {
     		  }
     	}
     	
-    	if(targetFile.equals("")) { // full namespace not found  
+    	if(targetFile.length() == 0) { // full namespace not found
     		if(!types.isEmpty()){
     			targetFile = (String)types.get(0); // first type declared in sourcefile
     		}

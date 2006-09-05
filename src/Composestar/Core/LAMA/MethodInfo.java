@@ -96,7 +96,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 */
 	public boolean hasCallsToOtherMethodsInformation()
 	{
-		return CallsToOtherMethods.size() > 0;	
+		return !CallsToOtherMethods.isEmpty();
 	}
 		
 	/**
@@ -119,7 +119,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 */
 	public boolean hasResourceUsage()
 	{
-		return ResourceUsage.size() > 0;	
+		return !ResourceUsage.isEmpty();
 	}
 	
 	/**
@@ -142,7 +142,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 */
 	public boolean hasReifiedMessageBehavior()
 	{
-		return ReifiedMessageBehavior.size() > 0;
+		return !ReifiedMessageBehavior.isEmpty();
 	}
 	
 	/**

@@ -38,7 +38,7 @@ public class INCREReporter
 		} 
 		catch(Exception e)
 		{
-			Debug.out(Debug.MODE_WARNING, "INCRE", "INCRE report file creation failed (" + reportFile + ")");
+			Debug.out(Debug.MODE_WARNING, "INCRE", "INCRE report file creation failed (" + reportFile + ')');
 		}
 
 		buffer = new StringBuffer("");
@@ -84,7 +84,7 @@ public class INCREReporter
 		
 		buffer.append("<html><head><title>INCRE Report</title></head>");
 		buffer.append("<link rel=stylesheet href=");
-        buffer.append("\"file://").append(this.cssFile).append("\"");
+        buffer.append("\"file://").append(this.cssFile).append('\"');
 		buffer.append(" type=\"text/css\">");
         buffer.append("<body bgcolor=#EEEEEE><b>INCRE REPORT</b><br><b>Date: </b>").append(new Date().toString()).append("<br><b>Project:</b> ").append(tempPath).append("<br><br><table width=90% border=0 cellspacing=0 cellpadding=2>");
 		buffer.append("<tr><td class=maincell colspan=3></td></tr>");

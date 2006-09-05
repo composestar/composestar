@@ -233,7 +233,7 @@ public class GrooveASTBuilder {
         
         //add correct action to reject and accept node:
         FilterType filterType = filter.getFilterType();
-        if ( filterType.type == FilterType.META ){
+        if (filterType.type.equals(FilterType.META) ){
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.META_ACTION_NODE, 
                     acceptNode );
             graph.addEdge( edge );
@@ -241,7 +241,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.ERROR ){
+        else if (filterType.type.equals(FilterType.ERROR) ){
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
                     acceptNode );
             graph.addEdge( edge );
@@ -249,7 +249,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.DISPATCH ){
+        else if (filterType.type.equals(FilterType.DISPATCH) ){
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.DISPATCH_ACTION_NODE, 
                     acceptNode );
             graph.addEdge( edge );
@@ -257,7 +257,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.SEND ){
+        else if (filterType.type.equals(FilterType.SEND) ){
 //          edge = new AnnotatedEdge( acceptNode, "SendAction", acceptNode );
             //not implemented in the groove model yet;
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
@@ -267,7 +267,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.SUBSTITUTION ){
+        else if (filterType.type.equals(FilterType.SUBSTITUTION) ){
             edge = new AnnotatedEdge( acceptNode, 
                     FlowChartNames.SUBSTITUTION_ACTION_NODE, acceptNode );
             graph.addEdge( edge );
@@ -275,7 +275,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.WAIT ){
+        else if (filterType.type.equals(FilterType.WAIT) ){
 //          edge = new AnnotatedEdge( acceptNode, "WaitAction", acceptNode );
             //not implemented in the groove model yet;
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
@@ -285,7 +285,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.APPEND ){
+        else if (filterType.type.equals(FilterType.APPEND) ){
             //not implemented in the groove model yet;
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
                     acceptNode );
@@ -294,7 +294,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.PREPEND ){
+        else if (filterType.type.equals(FilterType.PREPEND) ){
             //not implemented in the groove model yet;
             edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
                     acceptNode );
@@ -303,7 +303,7 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
-        else if ( filterType.type == FilterType.CUSTOM ){
+        else if (filterType.type.equals(FilterType.CUSTOM) ){
             edge = new AnnotatedEdge( acceptNode, 
                     FlowChartNames.CUSTOM_ACTION_NODE, acceptNode );
             graph.addEdge( edge );
@@ -501,7 +501,7 @@ public class GrooveASTBuilder {
         //substitutionpart:
         Node substitutionPartNode;
         SubstitutionPart substitutionPart = 
-            (pattern.substitutionParts.size() == 0) ? null :
+            (pattern.substitutionParts.isEmpty()) ? null :
                 (SubstitutionPart) pattern.substitutionParts.elementAt(0);
         
         substitutionPartNode = buildSubstitutionPartNode(

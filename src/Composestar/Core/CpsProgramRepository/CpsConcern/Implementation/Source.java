@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Source.java,v 1.2 2006/02/16 12:51:21 composer Exp $
+ * $Id: Source.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Implementation;
 
@@ -106,9 +106,9 @@ public class Source extends Implementation {
 
 
   public void setClassName(Vector qualifiedClass) {
-    if (qualifiedClass.size() > 0) className = (String) qualifiedClass.elementAt(0);
+    if (!qualifiedClass.isEmpty()) className = (String) qualifiedClass.elementAt(0);
     for (int i = 1; i < qualifiedClass.size(); i++) {
-      className += "." + (String) qualifiedClass.elementAt(i);
+      className += '.' + (String) qualifiedClass.elementAt(i);
     }
   }
 }

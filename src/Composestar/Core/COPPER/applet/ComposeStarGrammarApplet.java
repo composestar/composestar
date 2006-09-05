@@ -62,7 +62,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 			src = textpane.getText();
 			errline = -1;
 			msgpane.setText("Invoking parser...\n");
-			if(src.trim().equals(""))
+			if(src.trim().length() == 0)
 			{
 				msgpane.append("Please insert text!");
 			}
@@ -80,11 +80,11 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 				catch(ANTLRException exp)
 				{
 					String tmp = exp.toString();
-					msgpane.append("Syntax error occurred: "+tmp+"\n");
+					msgpane.append("Syntax error occurred: "+tmp+ '\n');
 					if(tmp.indexOf("line") >= 0)
 					{
 						int startline = tmp.indexOf("line ")+5;
-						int endline = tmp.indexOf(":");
+						int endline = tmp.indexOf(':');
 						String line = tmp.substring(startline,endline);
 						try
 						{

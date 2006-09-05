@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DeclaredRepositoryEntity.java,v 1.2 2006/06/30 12:32:16 reddog33hummer Exp $
+ * $Id: DeclaredRepositoryEntity.java,v 1.3 2006/08/31 11:03:54 doornenbal Exp $
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -96,7 +96,7 @@ public String name;
       if (i == temp.size() - 1) {
         out = (String) temp.elementAt(i); //do not add a dot for the first element
       } else {
-        out += "." + (String) temp.elementAt(i);
+        out += '.' + (String) temp.elementAt(i);
       }
     }
     return (out);

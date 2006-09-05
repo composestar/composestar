@@ -56,7 +56,7 @@ public class EMBEX implements CTCommonModule
 		
 		//fetch embedded sources directory
 		embeddedDir = Configuration.instance().getPathSettings().getPath( "EmbeddedSources");
-		if( embeddedDir.equals( "" ) ) 
+		if(embeddedDir.length() == 0 )
 		{
 			throw new ModuleException( "Error in configuration file: No such property EmbeddedSources" );
 		}

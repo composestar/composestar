@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Node.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: Node.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -108,7 +108,7 @@ public abstract class Node implements Comparable, Cloneable
 
 	public boolean hasChildren ()
 	{
-		return (children.size() > 0);
+		return (!children.isEmpty());
 	}
 	
 	// Root node returns null
@@ -344,7 +344,7 @@ public abstract class Node implements Comparable, Cloneable
 
 		for (;!itr.isDone(); itr.next())
 		{
-			total += itr.getDepth() + " " + itr.getNode().toString() + " " + itr.getNode().getFilterNumber() + "\n"; 
+			total += itr.getDepth() + " " + itr.getNode().toString() + ' ' + itr.getNode().getFilterNumber() + '\n';
 		}
 
 		return total;
@@ -455,7 +455,7 @@ public abstract class Node implements Comparable, Cloneable
 		int nrOfChildren = parent.numberOfChildren();
 		for (int i = 0; i < nrOfChildren; i++)
 		{
-			if (parent.getChild(i) == this) return i;
+			if (parent.getChild(i).equals(this)) return i;
 		}
 		
 		return -1;

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Substitute.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: Substitute.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
 **/
 
@@ -23,7 +23,7 @@ public class Substitute extends FilterLeaf
 	
 	public String toString () 
 	{
-		return "replace(" + symbol + ")";
+		return "replace(" + symbol + ')';
 	} 
 
 	// TODO: implement
@@ -45,7 +45,7 @@ public class Substitute extends FilterLeaf
 		Logic.not(status);
 		for (int i = 0; i < symbols.length; i++)
 		{
-			if (symbols[i] != symbol)
+			if (!symbols[i].equals(symbol))
 			{
 				// Remove not matching stuff.
 				Logic.and(symbols[i].column, (StatusColumn) status);

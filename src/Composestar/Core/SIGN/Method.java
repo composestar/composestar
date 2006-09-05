@@ -32,10 +32,10 @@ public class Method
 	
 	public String getHashKey()
 	{
-		String key = getMethodInfo().name() + "%";
+		String key = getMethodInfo().name() + '%';
 		List parameter = getMethodInfo().getParameters();
 		for (int i = 0; i < parameter.size(); i++)
-			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + "%";
+			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + '%';
 		
 		key += getMethodInfo().returnType();
 		

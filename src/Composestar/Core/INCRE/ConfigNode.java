@@ -19,7 +19,7 @@ public class ConfigNode extends Node
 		{
 			INCRE incre = INCRE.instance();
 			String config = incre.getConfiguration(reference);
-			if(config.equals(""))
+			if(config.length() == 0)
 			{
 				Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE::ConfigNode EMPTY value for configuration "+reference);
 				return "EMPTY_CONFIG"; 

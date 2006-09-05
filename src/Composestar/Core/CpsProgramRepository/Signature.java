@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Signature.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+ * $Id: Signature.java,v 1.2 2006/03/08 16:34:59 dspenkel Exp $
  */
 package Composestar.Core.CpsProgramRepository;
 
@@ -195,10 +195,10 @@ public class Signature implements SerializableRepositoryEntity
     
 	public String getHashKey(MethodInfo methodInfo)
 	{
-		String key = methodInfo.name() + "%"; 
+		String key = methodInfo.name() + '%';
 		List parameter = methodInfo.getParameters();
 		for (int i = 0; i < parameter.size(); i++)
-			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + "%";
+			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + '%';
 		
 		key += methodInfo.returnType();
 		

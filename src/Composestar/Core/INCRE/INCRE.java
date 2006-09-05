@@ -492,7 +492,7 @@ public class INCRE implements CTCommonModule
 				return false;
 			
 			if(fixedFile.indexOf("/gac/")>0){// Global Assembly Cache
-					fixedFile = fixedFile.substring(fixedFile.lastIndexOf("/")+1);
+					fixedFile = fixedFile.substring(fixedFile.lastIndexOf('/')+1);
 			}
 			
 			// look in configurations "Dependencies" and "Assemblies"
@@ -685,7 +685,7 @@ public class INCRE implements CTCommonModule
 		Object historyobject = null;
 		Object depofinputobject = null;
 		Object depofhistoryobject = null; 
-		INCRETimer overhead = getReporter().openProcess(modulename,"INCRE::isProcessedBy("+input+")",INCRETimer.TYPE_OVERHEAD);
+		INCRETimer overhead = getReporter().openProcess(modulename,"INCRE::isProcessedBy("+input+ ')',INCRETimer.TYPE_OVERHEAD);
 		
 	   	if(!isModuleInc(modulename))
 	   		return false;
@@ -715,7 +715,7 @@ public class INCRE implements CTCommonModule
 				}
 				catch(Exception e){
 					Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+inputobject);
-					Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+					Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 					return false;
 				}
 					
@@ -725,14 +725,14 @@ public class INCRE implements CTCommonModule
 					 stop process when a file has been modified */
 					FileDependency fdep = (FileDependency)dep;
 					ArrayList files = (ArrayList)depofinputobject;
-					if(files.size()>0 && files.get(0).equals("EMPTY_CONFIG")){
+					if(!files.isEmpty() && files.get(0).equals("EMPTY_CONFIG")){
 						// special case, file has not been configured
 						currentRepository = history;
 						searchingHistory = true;
 						ArrayList hfiles = (ArrayList)dep.getDepObject(inputobject);
 						if(!hfiles.get(0).equals("EMPTY_CONFIG")){
 							// configuration has been removed since last compilation run
-							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 							return false;
 						}
 					}
@@ -746,13 +746,13 @@ public class INCRE implements CTCommonModule
 								// check files for added to project or not
 								// optimalisation: certain files do not need this check
 								// can be configured in .xml file by isAdded=false
-								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 								return false; // file added to project thus modified!
 							}
 							if(isFileModified(currentFile))
 							{							
 								overhead.stop();
-								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 								return false;	
 							}
 						}
@@ -766,7 +766,7 @@ public class INCRE implements CTCommonModule
 						boolean modified = !comparator.getComparison(dep.getName()+depofinputobject.hashCode());
 						if(modified){
 							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 							return false;
 						}
 					}
@@ -793,7 +793,7 @@ public class INCRE implements CTCommonModule
 							// stop calculation when object has been modified
 							if(modified){
 								overhead.stop();
-								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 								return false;
 							}
 						}
@@ -802,7 +802,7 @@ public class INCRE implements CTCommonModule
 							/* history of input object cannot be found 
 								thus input has not been processed */
 							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+"]");
+							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 							return false;
 						}
 					}
@@ -811,7 +811,7 @@ public class INCRE implements CTCommonModule
 		}
 		else 
 		{
-			throw (new ModuleException("INCRE cannot find module "+modulename+"!"));
+			throw (new ModuleException("INCRE cannot find module "+modulename+ '!'));
 		}
 
 		/* all dependencies have not been modified 
