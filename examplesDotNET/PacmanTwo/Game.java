@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Game.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
+ * @version $Id: Game.java,v 1.3 2006/09/05 12:43:08 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -91,7 +91,7 @@ public class Game implements Runnable
 
 			// cap framerate to 100fps
 			// although for some reason the FPS never exceeds 64fps
-			long FRAMESCAP = 16;
+			long FRAMESCAP = 2;
 			if (frameTime < FRAMESCAP)
 			{
 				try 
@@ -185,7 +185,7 @@ public class Game implements Runnable
 
 		if ((_level != null) && _level.mazeCompleted())
 		{
-			System.out.println("Maze completed, start a new game");
+			//System.out.println("Maze completed, start a new game");
 			startGame();
 		}
 	}

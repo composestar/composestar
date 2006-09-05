@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pawn.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
+ * @version $Id: Pawn.java,v 1.3 2006/09/05 12:43:08 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -308,7 +308,7 @@ public abstract class Pawn extends GameElement
 	 */
 	public void touch(GameElement ge)
 	{
-		System.out.println(this+" touched "+ge);
+		//System.out.println(this+" touched "+ge);
 	}
 
 	/**

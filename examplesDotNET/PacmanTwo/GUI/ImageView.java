@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: ImageView.java,v 1.1 2006/09/03 13:58:04 elmuerte Exp $
+ * @version $Id: ImageView.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo.GUI;
 
@@ -49,7 +49,7 @@ public abstract class ImageView extends View
 			file = new java.io.File(resourcePath + files[i]);
 			if( !file.exists() ) 
 			{
-				System.out.println("No such image: " + file.getAbsolutePath());
+				//System.out.println("No such image: " + file.getAbsolutePath());
 			}
 			else 
 			{

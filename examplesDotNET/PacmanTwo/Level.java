@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Level.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: Level.java,v 1.2 2006/09/05 12:43:08 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -118,17 +118,17 @@ public class Level implements Tickable
 				if((maze[i][j] & MazeCell.PLAYERSTART) != 0)
 				{
 					playerStarts.addElement(new Point(j, i));
-					System.out.println("Player Start @ "+j+"x"+i);
+					//System.out.println("Player Start @ "+j+"x"+i);
 				}
 				//       y  x
 				if((maze[i][j] & MazeCell.GHOSTSTART) != 0)
 				{
 					enemyStarts.addElement(new Point(j, i));
-					System.out.println("Enemy Start @ "+j+"x"+i);
+					//System.out.println("Enemy Start @ "+j+"x"+i);
 				}
 			}
 		}
-		System.out.println("Pills left: "+pillsLeft);
+		//System.out.println("Pills left: "+pillsLeft);
 	}
 
 	/* Collision detection */
@@ -178,7 +178,7 @@ public class Level implements Tickable
 		{
 			maze[y][x] -= MazeCell.PILL;
 			pillsLeft--;
-			System.out.println("Pills left: "+pillsLeft);
+			//System.out.println("Pills left: "+pillsLeft);
 			return true;
 		}
 		return false;
@@ -195,7 +195,7 @@ public class Level implements Tickable
 		{
 			maze[y][x] -= MazeCell.POWERPILL;
 			pillsLeft--;
-			System.out.println("*Pills left: "+pillsLeft);
+			//System.out.println("*Pills left: "+pillsLeft);
 			return true;
 		}
 		return false;

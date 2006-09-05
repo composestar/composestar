@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pacman.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: Pacman.java,v 1.2 2006/09/05 12:43:08 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -53,7 +53,7 @@ public class Pacman extends Pawn
 		{
 			if (l.eatPowerPill(cellX, cellY))
 			{
-				System.out.println("Evil pacman");
+				//System.out.println("Evil pacman");
 				setEvil(true);
 			}
 		}

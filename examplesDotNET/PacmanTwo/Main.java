@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Main.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: Main.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -66,7 +66,7 @@ public class Main extends Frame
 			{
 				i++;
 				g.FRAMESCAP = 1000 / Integer.parseInt(args[i], 10);
-				System.out.println("FRAMESCAP = "+g.FRAMESCAP);
+				//System.out.println("FRAMESCAP = "+g.FRAMESCAP);
 			}
 			else if (args[i].equals("--ghosts"))
 			{
@@ -84,7 +84,7 @@ public class Main extends Frame
 
 	public static void main(String[] args) 
 	{
-		System.out.println("Pacman2 Starting ...");
+		//System.out.println("Pacman2 Starting ...");
 		new Main(args);
 	}
 }
