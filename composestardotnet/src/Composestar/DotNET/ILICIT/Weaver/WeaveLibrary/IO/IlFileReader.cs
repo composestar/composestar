@@ -72,6 +72,12 @@ namespace Weavers.IO
 
 		private IlOpcode GetIlOpcodeStatement(string line, StreamReader srIn)
 		{
+			if (line.StartsWith(".line "))
+			{
+				char[] sep = {':'};
+				string[] two = line.Split(sep,2);
+				return new IlOpcode(two[0], two[1]);
+			}
 			if (line.IndexOf(": ") > 0) 
 			{
 				string label = line.Substring(0, line.IndexOf(": "));

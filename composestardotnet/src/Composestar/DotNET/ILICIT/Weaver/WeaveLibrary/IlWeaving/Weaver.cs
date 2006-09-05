@@ -932,8 +932,6 @@ namespace Weavers.IlWeaving
 					{
 						// Replace first label with the original label if replacing something (keep jumps valid)
 						((IlOpcode)newCallStatement[0]).Label = code.Label;
-					
-						result.Add( new IlOpcode("// hiero", "-") );
 
 						result.AddRange(newCallStatement);
 						//result = VerifyBranchStatements(result, debug);
