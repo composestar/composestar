@@ -25,12 +25,13 @@ public interface FlowChartNames {
     public final static String TRUE_NODE = "True";
     public final static String FALSE_NODE = "False";
     
+    public final static String ACTION_NODE = "FilterAction";
     public final static String FILTER_ACTION_NODE = "FilterAction";
     public final static String DISPATCH_ACTION_NODE = "DispatchAction";
     public final static String META_ACTION_NODE = "MetaAction";
     public final static String ERROR_ACTION_NODE = "ErrorAction";
     public final static String SUBSTITUTION_ACTION_NODE = "SubstitutionAction";
-    public final static String CUSTOM_CONTINUE_ACTION = "ContinueCustomAction";
+    public final static String CUSTOM_ACTION_NODE = "ContinueCustomAction";
     public final static String CONTINUE_ACTION_NODE = "ContinueAction";
     
     public final static String SIGNATURE_MATCHING_NODE = "SignatureMatchingPart";
@@ -55,7 +56,9 @@ public interface FlowChartNames {
      */
     public final static String STOP_NODE = "Stop";
     
-    
+    public final static String CONTEXT_NODE = "ContextNode";
+    public final static String PROCEDURE_NODE = "ProcedureNode";
+    public final static String PREDICATE_NODE = "PredicateNode";
     
     
     //edges:

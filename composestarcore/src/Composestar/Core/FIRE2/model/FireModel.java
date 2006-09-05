@@ -37,6 +37,8 @@ public class FireModel {
     private Concern concern;
     private FlowModel[] flowModels;
     private ExecutionModel[] executionModels;
+    private FilterModule[] filterModules;
+    
     
     public final static int NO_SIGNATURE_CHECK = 0;
     public final static int LOOSE_SIGNATURE_CHECK = 1;
@@ -72,6 +74,7 @@ public class FireModel {
 
     
     private void initialize( FilterModule[] modules ){
+        this.filterModules = modules;
         this.flowModels = new FlowModel[ modules.length ];
         this.executionModels = new ExecutionModel[ modules.length ];
         
@@ -101,9 +104,13 @@ public class FireModel {
         return flowModels;
     }
     
-    
+    /**
+     * @return the filterModules
+     */
+    public FilterModule[] getFilterModules() {
+        return filterModules;
+    }
 
-    
     
     private Vector getOutTransitions( ExtendedExecutionState state )
     {
@@ -171,7 +178,8 @@ public class FireModel {
             ExecutionTransition baseTransition = 
                 (ExecutionTransition) baseEnum.nextElement();
             outTransitions.addElement( 
-                    new ExtendedExecutionTransition( state, baseTransition, false ) );
+                    new ExtendedExecutionTransition( 
+                            state.model, state, baseTransition, false ) );
         }
         
         return outTransitions;
@@ -288,8 +296,8 @@ public class FireModel {
             ExtendedExecutionState startState, int layer )
     {
         if ( !baseState.getMessage().isGeneralization() ){
-            return new ExtendedExecutionState( baseState, baseState.getMessage(), 
-                    startState.signatureCheck, 
+            return new ExtendedExecutionState( startState.model, baseState,
+                    baseState.getMessage(), startState.signatureCheck, 
                     startState.signatureCheckInfo, layer );
         }
         else{
@@ -308,8 +316,9 @@ public class FireModel {
 
             Message derivedMessage = new Message( derivedTarget, derivedSelector );
 
-            return new ExtendedExecutionState( baseState, derivedMessage,
-                    startState.signatureCheck, startState.signatureCheckInfo, layer );
+            return new ExtendedExecutionState( startState.model, baseState, 
+                    derivedMessage, startState.signatureCheck, 
+                    startState.signatureCheckInfo, layer );
         }
     }
     
@@ -326,15 +335,28 @@ public class FireModel {
     
     
     /**
-     * Returns the startstate for a given methodInfo.
+     * Returns the ExecutionModel for a given methodInfo.
      * @param methodInfo The methodinfo
-     * @param signatureCheck Indication whether a signatureCheck needs to be done.
+     * @param signatureCheck Indicates whether a signatureCheck needs to be done.
      * @return
      */
     public ExecutionModel getExecutionModel( MethodInfo methodInfo, 
             int signatureCheck )
     {
         return new ExtendedExecutionModel( methodInfo, signatureCheck );
+    }
+    
+    /**
+     * Returns the ExecutionModel for a given target and methodinfo.
+     * @param target The entrance target
+     * @param methodInfo The entrance method
+     * @param signatureCheck Indicates whether a signatureCheck needs to be done.
+     * @return
+     */
+    public ExecutionModel getExecutionModel( Target target, MethodInfo methodInfo,
+            int signatureCheck )
+    {
+        return new ExtendedExecutionModel( target, methodInfo, signatureCheck );
     }
     
     
@@ -374,6 +396,7 @@ public class FireModel {
     
     private class ExtendedExecutionModel implements ExecutionModel{
         private Hashtable entranceTable = new Hashtable();
+        private Hashtable stateCache = new Hashtable();
         
         /**
          * Indicates whether this ExecutionModel is a full model for the
@@ -397,8 +420,8 @@ public class FireModel {
                 state = executionModels[0].getEntranceState( message );
                 
                 extendedState =
-                    new ExtendedExecutionState( state, message, NO_SIGNATURE_CHECK, 
-                            null, 0 );
+                    new ExtendedExecutionState( this, state, message,
+                            NO_SIGNATURE_CHECK, null, 0 );
                 
                 entranceTable.put( message, extendedState );
             }
@@ -410,7 +433,7 @@ public class FireModel {
             state = executionModels[0].getEntranceState( message );
             
             extendedState =
-                new ExtendedExecutionState( state, message, NO_SIGNATURE_CHECK, 
+                new ExtendedExecutionState( this, state, message, NO_SIGNATURE_CHECK, 
                         null, 0 );
             
             entranceTable.put( message, extendedState );
@@ -425,7 +448,7 @@ public class FireModel {
             ExecutionState state = executionModels[0].getEntranceState( message );
             
             ExtendedExecutionState extendedState =
-                new ExtendedExecutionState( state, message, NO_SIGNATURE_CHECK, 
+                new ExtendedExecutionState( this, state, message, NO_SIGNATURE_CHECK, 
                         null, 0 );
             
             entranceTable.put( message, extendedState );
@@ -442,11 +465,30 @@ public class FireModel {
             ExecutionState state = executionModels[0].getEntranceState( message );
             
             ExtendedExecutionState extendedState =
-                new ExtendedExecutionState( state, message, signatureCheck, 
+                new ExtendedExecutionState( this, state, message, signatureCheck, 
                         methodInfo, 0 );
             
             entranceTable.put( message, extendedState );
             
+            
+            fullModel = false;
+        }
+        
+        public ExtendedExecutionModel( Target target, MethodInfo methodInfo,
+                int signatureCheck )
+        {
+            //Message message = getEntranceMessage( )
+            MessageSelector selector = new MessageSelector();
+            selector.setName( methodInfo.name() );
+            Message message = new Message( target, selector );
+            
+            ExecutionState state = executionModels[0].getEntranceState( message );
+            
+            ExtendedExecutionState extendedState =
+                new ExtendedExecutionState( this, state, message, signatureCheck, 
+                        methodInfo, 0 );
+            
+            entranceTable.put( message, extendedState );
             
             fullModel = false;
         }
@@ -463,8 +505,8 @@ public class FireModel {
                 //create the entrance-state:
                 ExecutionState state = executionModels[0].getEntranceState( message );
                 ExtendedExecutionState newState = 
-                    new ExtendedExecutionState( state, message, NO_SIGNATURE_CHECK, 
-                            null, 0 );
+                    new ExtendedExecutionState( this, state, message, 
+                            NO_SIGNATURE_CHECK, null, 0 );
                 entranceTable.put( message, newState );
                 return newState;
             }
@@ -481,6 +523,7 @@ public class FireModel {
     
     
     private class ExtendedExecutionState extends ExecutionState{
+        private ExtendedExecutionModel model;
         private ExecutionState baseState;
         private int signatureCheck;
         private MethodInfo signatureCheckInfo;
@@ -488,13 +531,15 @@ public class FireModel {
         
         private Vector outTransitions;
         
-        public ExtendedExecutionState( ExecutionState baseState, Message message, 
+        public ExtendedExecutionState( ExtendedExecutionModel model, 
+                ExecutionState baseState, Message message, 
                 int signatureCheck, MethodInfo signatureCheckInfo, int layer )
         {
             super( baseState.getFlowNode(), message, 
                     baseState.getSubstitutionSelector(), 
                     baseState.getSubstitutionTarget(), baseState.getStateType() );
             
+            this.model = model;
             this.baseState = baseState;
             this.signatureCheck = signatureCheck;
             this.signatureCheckInfo = signatureCheckInfo;
@@ -512,16 +557,19 @@ public class FireModel {
     
     
     private class ExtendedExecutionTransition extends ExecutionTransition{
+        private ExtendedExecutionModel model;
         private ExtendedExecutionState startState;
         private ExecutionTransition baseTransition;
         private ExtendedExecutionState endState;
         private boolean nextLayer;
         
-        public ExtendedExecutionTransition( ExtendedExecutionState startState, 
+        public ExtendedExecutionTransition( ExtendedExecutionModel model, 
+                ExtendedExecutionState startState, 
                 ExecutionTransition baseTransition, boolean nextLayer )
         {
             super( baseTransition.getLabel(), baseTransition.getFlowTransition() );
             
+            this.model = model;
             this.startState = startState;
             this.baseTransition = baseTransition;
             this.nextLayer = nextLayer;
@@ -550,9 +598,20 @@ public class FireModel {
                 }
                 endState = (ExtendedExecutionState) deriveState(
                         baseTransition.getEndState(), startState, newLayer );
+                
+                //if state already in 
+                if ( model.stateCache.containsKey( endState ) ){
+                    endState = (ExtendedExecutionState) model.stateCache.get( 
+                            endState );
+                }
+                else{
+                    model.stateCache.put( endState, endState );
+                }
             }
             
             return endState;
         }
     }
+    
+    
 }

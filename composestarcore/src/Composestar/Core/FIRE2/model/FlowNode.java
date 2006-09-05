@@ -32,11 +32,6 @@ public interface FlowNode{
     public FlowTransition getTransition(FlowNode endNode);
     
     
-    /**
-     * @return Returns the type.
-     */
-    public int getType();
-    
     
     /**
      * @return Returns the names.
