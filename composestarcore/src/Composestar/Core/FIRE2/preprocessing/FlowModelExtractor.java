@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
@@ -32,16 +33,12 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 public class FlowModelExtractor {
     public final static String FLOW_NODE_ANNOTATION = "FlowNode";
     
-    private final static Label FILTERMODULE_LABEL =new DefaultLabel( "FilterModule" );
-    private final static Label END_LABEL = new DefaultLabel( "End" );
+    private final static Label FILTERMODULE_LABEL =new DefaultLabel( 
+            FlowChartNames.FILTER_MODULE_NODE );
+    private final static Label END_LABEL = new DefaultLabel( 
+            FlowChartNames.END_NODE );
     
-    private final static String FLOW_ELEMENT_LABEL = "FlowElement";
-	private final static String CONTEXT_LABEL = "ContextNode";
-	private final static String PROCEDURE_LABEL = "ProcedureNode";
-	private final static String PREDICATE_LABEL = "PredicateNode";
-	private final static String ACTION_LABEL = "FilterAction";
-	
-	private final static String FLOW_TRUE_LABEL = "flowTrue";
+    private final static String FLOW_TRUE_LABEL = "flowTrue";
 	private final static String FLOW_FALSE_LABEL = "flowFalse";
 	private final static String FLOW_NEXT_LABEL = "flowNext";
     
@@ -134,30 +131,11 @@ public class FlowModelExtractor {
             Edge edge = (Edge) iter.next();
             if ( edge.source() == graphNode  &&  edge.opposite() == graphNode ){
                 label = edge.label().text();
-                if ( label.equals( FLOW_ELEMENT_LABEL ) ){
-                    continue;
-                }
-                else if ( label.equals( CONTEXT_LABEL ) ){
-                    type = FlowNode.CONTEXT_NODE;
-                }
-                else if ( label.equals( PROCEDURE_LABEL )  &&  
-                        type != FlowNode.ACTION_NODE)
-                {
-                    type = FlowNode.PROCEDURE_NODE;
-                }
-                else if ( label.equals( PREDICATE_LABEL ) ){
-                    type = FlowNode.PREDICATE_NODE;
-                }
-                else if ( label.equals( ACTION_LABEL ) ){
-                    type = FlowNode.ACTION_NODE;
-                }
-                else{
-                    names.add( label );
-                }
+                names.add( label );
             }
         }
         
-        node = new BasicFlowNode( type, names, entity );
+        node = new BasicFlowNode( names, entity );
         
         graphNode.addAnnotation( FLOW_NODE_ANNOTATION, node );
         
@@ -227,8 +205,6 @@ public class FlowModelExtractor {
     
     
     private static class BasicFlowNode implements FlowNode{
-        private int type;
-        
         private HashSet names;
         
         private RepositoryEntity repositoryLink;
@@ -250,10 +226,9 @@ public class FlowModelExtractor {
          * Default constructor
          *
          */
-        public BasicFlowNode( int type, HashSet names, RepositoryEntity repositoryLink ){
+        public BasicFlowNode( HashSet names, RepositoryEntity repositoryLink ){
             super();
             
-            this.type = type;
             this.names = names;
             this.repositoryLink = repositoryLink;
             
@@ -293,12 +268,6 @@ public class FlowModelExtractor {
         }
         
         
-        /**
-         * @return Returns the type.
-         */
-        public int getType() {
-            return type;
-        }
         
         
         /**
