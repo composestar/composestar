@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: GameElement.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: GameElement.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -27,7 +27,7 @@ public abstract class GameElement implements Tickable
 	/**
 	 * collision radius of this element in cell size
 	 */
-	protected double collisionRadius = 0.3;
+	protected float collisionRadius = 0.3f;
 
 	public GameElement()
 	{
@@ -49,7 +49,7 @@ public abstract class GameElement implements Tickable
 		reset();
 	}
 
-	public void tick(double delta)
+	public void tick(float delta)
 	{
 	}
 
@@ -64,7 +64,7 @@ public abstract class GameElement implements Tickable
 	/**
 	 * Return the X cell coordinate
 	 */
-	public double getX()
+	public float getX()
 	{
 		return cellX;
 	}
@@ -77,7 +77,7 @@ public abstract class GameElement implements Tickable
 	/**
 	 * Return the Y cell coordinate
 	 */
-	public double getY()
+	public float getY()
 	{
 		return cellY;
 	}
@@ -90,7 +90,7 @@ public abstract class GameElement implements Tickable
 	/**
 	 * Return the collision radius
 	 */
-	public double getCollisionRadius()
+	public float getCollisionRadius()
 	{
 		return collisionRadius;
 	}

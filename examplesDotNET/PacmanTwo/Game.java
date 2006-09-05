@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Game.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: Game.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -89,6 +89,9 @@ public class Game implements Runnable
 
 			tick(frameTime / 1000.0f);
 
+			// cap framerate to 100fps
+			// although for some reason the FPS never exceeds 64fps
+			long FRAMESCAP = 16;
 			if (frameTime < FRAMESCAP)
 			{
 				try 
@@ -173,15 +176,7 @@ public class Game implements Runnable
 		return evilPacman;
 	}
 
-	/**
-	 * Sets the number of ghosts for the next game played
-	 */
-	public void setNumberOfGhosts(int inval)
-	{
-		numberOfGhosts = inval;
-	}
-
-	protected void tick(double delta)
+	protected void tick(float delta)
 	{
 		for( Enumeration e = tickList.elements(); e.hasMoreElements(); )
 		{
@@ -193,6 +188,14 @@ public class Game implements Runnable
 			System.out.println("Maze completed, start a new game");
 			startGame();
 		}
+	}
+
+	/**
+	* Sets the number of ghosts for the next game played
+	*/
+	public void setNumberOfGhosts(int inval)	
+	{
+		numberOfGhosts = inval;
 	}
 
 	/**

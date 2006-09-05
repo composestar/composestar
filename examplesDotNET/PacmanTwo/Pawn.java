@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pawn.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: Pawn.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -22,8 +22,8 @@ public abstract class Pawn extends GameElement
 	protected Controller controller;
 	
 	/* partial cell location */
-	protected double dx = 0;
-	protected double dy = 0;
+	protected float dx = 0;
+	protected float dy = 0;
 
 	protected int startX;
 	protected int startY;
@@ -36,7 +36,7 @@ public abstract class Pawn extends GameElement
 	/**
 	 * cells per second
 	 */
-	protected double speed;
+	protected float speed;
 
 	/**
 	 * direction this element is moving
@@ -113,7 +113,7 @@ public abstract class Pawn extends GameElement
 		if (controller != null) controller.setPawn(this);
 	}
 
-	public void tick(double delta)
+	public void tick(float delta)
 	{
 		if ((speed > 0) && (controller != null)) move(delta);
 	}
@@ -121,13 +121,13 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Move the pawn in the requested direction
 	 */
-	public void move(double delta)
+	public void move(float delta)
 	{
 		if (dx == 0 && dy == 0)
 		{
 			if (continueMovement() == 0) return;
 		}
-		double dif = speed * delta;
+		float dif = speed * delta;
 		bumpedWall = false;
 		//int n;
 		switch (direction)
@@ -267,20 +267,20 @@ public abstract class Pawn extends GameElement
 	 */
 	public void checkTouching()
 	{
-		double cXu = getX()+getCollisionRadius();
-		double cXl = getX()-getCollisionRadius();
-		double cYu = getY()+getCollisionRadius();
-		double cYl = getY()-getCollisionRadius();
+		float cXu = getX()+getCollisionRadius();
+		float cXl = getX()-getCollisionRadius();
+		float cYu = getY()+getCollisionRadius();
+		float cYl = getY()-getCollisionRadius();
 
 		for( Enumeration e = Game.instance().getGameElements(); e.hasMoreElements(); )
 		{
 			GameElement ge = ((GameElement) e.nextElement());
 			if (!doTouchingCheck(ge)) continue;
 
-			double gXu = ge.getX()+ge.getCollisionRadius();
-			double gXl = ge.getX()-ge.getCollisionRadius();
-			double gYu = ge.getY()+ge.getCollisionRadius();
-			double gYl = ge.getY()-ge.getCollisionRadius();
+			float gXu = ge.getX()+ge.getCollisionRadius();
+			float gXl = ge.getX()-ge.getCollisionRadius();
+			float gYu = ge.getY()+ge.getCollisionRadius();
+			float gYl = ge.getY()-ge.getCollisionRadius();
 
 			// check touching
 			if (
@@ -314,13 +314,13 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Set the pawns speed. The value is the number of cell's per second
 	 */
-	public void setSpeed(double inval)
+	public void setSpeed(float inval)
 	{
 		if (inval <= 0) speed = 0;
 		else speed = inval;
 	}
 
-	public double getSpeed()
+	public float getSpeed()
 	{
 		return speed;
 	}
@@ -328,12 +328,12 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Return the X offset within the current cell
 	 */
-	public double getX()
+	public float getX()
 	{
 		return cellX + dx;
 	}
 
-	public double getDX()
+	public float getDX()
 	{
 		return dx;
 	}
@@ -341,12 +341,12 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Return the Y offset within the current ceel
 	 */
-	public double getY()
+	public float getY()
 	{
 		return cellY + dy;
 	}
 
-	public double getDY()
+	public float getDY()
 	{
 		return dy;
 	}

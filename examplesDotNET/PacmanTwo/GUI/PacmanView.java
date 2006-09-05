@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: PacmanView.java,v 1.3 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: PacmanView.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo.GUI;
 
@@ -38,7 +38,7 @@ public class PacmanView extends ImageView
 		getImages(files);
 	}
 
-	public void render(Graphics g, GameElement ge, double delta)
+	public void render(Graphics g, GameElement ge, float delta)
 	{
 		int margin = (MazeCell.SIZE-images[0].getWidth(viewport))/2;
 		Pacman pm = (Pacman) ge;
@@ -48,13 +48,13 @@ public class PacmanView extends ImageView
 	/**
 	 * Return the image to use for the pacman in it's current state
 	 */
-	public Image getImage(Pacman pm, double delta) 
+	public Image getImage(Pacman pm, float delta) 
 	{
 		int i = 0;
 		int j = 0;
 
 		i = pm.getDirection() % 4;
-		double offset = pm.getDX()+pm.getDY();
+		float offset = pm.getDX()+pm.getDY();
 		if( i % 2 == 0 ) offset = 1-offset;
 		j = (int) Math.round(offset * 4);
 		if (j < 0 || j > 3) j = 0;

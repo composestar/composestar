@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pacman.java,v 1.6 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: Pacman.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -20,11 +20,11 @@ public class Pacman extends Pawn
 	/**
 	 * number of seconds evil lasts
 	 */
-	protected double evilDuration = 5;
+	protected float evilDuration = 5;
 	/**
 	 * number of seconds of evil being remaining
 	 */
-	protected double evilTime;
+	protected float evilTime;
 
 	public Pacman(int X, int Y)
 	{
@@ -32,7 +32,7 @@ public class Pacman extends Pawn
 		lives = 3;
 	}
 
-	public void tick(double delta)
+	public void tick(float delta)
 	{
 		if (evilTime > 0)
 		{
@@ -80,7 +80,7 @@ public class Pacman extends Pawn
 		return evilTime > 0;
 	}
 
-	public double getEviltime()
+	public float getEviltime()
 	{
 		return evilTime;
 	}

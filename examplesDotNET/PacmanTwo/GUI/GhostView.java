@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: GhostView.java,v 1.3 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: GhostView.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo.GUI;
 
@@ -41,7 +41,7 @@ public class GhostView extends ImageView
 		getImages(files);
 	}
 
-	public void render(Graphics g, GameElement ge, double delta)
+	public void render(Graphics g, GameElement ge, float delta)
 	{
 		int margin = (MazeCell.SIZE-images[0].getWidth(viewport))/2;
 		Ghost gh = (Ghost) ge;
@@ -61,7 +61,7 @@ public class GhostView extends ImageView
 	/**
 	 * Return the image to use for the pacman in it's current state
 	 */
-	public Image getImage(Ghost gh, double delta) 
+	public Image getImage(Ghost gh, float delta) 
 	{
 		int id = 0;
 		int j = 0;
@@ -72,10 +72,10 @@ public class GhostView extends ImageView
 		return images[(4*id) + j];
 	}
 
-	public Image getEvilImage(double delta) 
+	public Image getEvilImage(float delta) 
 	{
 		int j = 0;
-		double evilremain = Game.instance().getEvilPacman().getEviltime();
+		float evilremain = Game.instance().getEvilPacman().getEviltime();
 		if (evilremain < 2) 
 		{
 			j = (int) Math.round(evilremain * 2) % 2;

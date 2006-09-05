@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: View.java,v 1.3 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: View.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo.GUI;
 
@@ -36,7 +36,7 @@ public abstract class View
 	/**
 	 * Render the given game element
 	 */
-	public void render(Graphics g, GameElement ge, double delta)
+	public void render(Graphics g, GameElement ge, float delta)
 	{
 	}
 }

@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Viewport.java,v 1.3 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: Viewport.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo.GUI;
 
@@ -42,7 +42,7 @@ public class Viewport extends Panel implements Tickable
 	 */
 	public Hashtable views;
 
-	protected double fpsTime;
+	protected float fpsTime;
 	protected int fpsCnt;
 	protected int realFPS;
 
@@ -59,7 +59,7 @@ public class Viewport extends Panel implements Tickable
 		createViews();
 	}
 
-	public void tick(double delta)
+	public void tick(float delta)
 	{
 		if (fpsTime > 1)
 		{
@@ -79,11 +79,11 @@ public class Viewport extends Panel implements Tickable
 
 	/* Rendering code */
 
-	protected void renderAll(double delta)
+	protected void renderAll(float delta)
 	{
 		if (graphics == null) graphics = getGraphics();
 
-		// double buffering --
+		// float buffering --
 		if ( bufferGraphics == null && getSize().width > 0 && getSize().height > 0 )
 		{
 			bufferImage = createImage(getSize().width, getSize().height );
@@ -96,7 +96,7 @@ public class Viewport extends Panel implements Tickable
 		}
 		
 		clearBuffer();
-		// -- double buffering
+		// -- float buffering
 
 		renderLevel(bufferGraphics, delta);
 		renderGameElements(bufferGraphics, delta);
@@ -116,7 +116,7 @@ public class Viewport extends Panel implements Tickable
 		}
 	}
 
-	protected void renderLevel(Graphics g, double delta)
+	protected void renderLevel(Graphics g, float delta)
 	{
 		int bigdotcolor = 192;
 		int dbigdotcolor = -2;
@@ -179,7 +179,7 @@ public class Viewport extends Panel implements Tickable
 		}    
 	}
 
-	protected void renderGameElements(Graphics g, double delta)
+	protected void renderGameElements(Graphics g, float delta)
 	{
 		for( Enumeration e = game.getGameElements(); e.hasMoreElements(); )
 		{

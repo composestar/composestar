@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Tickable.java,v 1.4 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: Tickable.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -22,7 +22,7 @@ public interface Tickable
 	/**
 	 * Called every frame to update the world
 	 */
-	public void tick(double delta);
+	public void tick(float delta);
 
 	/**
 	 * Called when the game is reset

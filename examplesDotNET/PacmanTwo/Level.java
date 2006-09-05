@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Level.java,v 1.5 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: Level.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -41,7 +41,7 @@ public class Level implements Tickable
 		reset();
 	}
 
-	public void tick(double delta)
+	public void tick(float delta)
 	{
 	}
 
