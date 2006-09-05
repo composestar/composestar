@@ -17,9 +17,6 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
@@ -32,7 +29,6 @@ import Composestar.Core.FIRE2.model.FireModel;
 import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
-import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.FIRE2.util.queryengine.ctl.CtlChecker;
 import Composestar.Core.FIRE2.util.queryengine.predicates.IsState;
 import Composestar.Core.FIRE2.util.queryengine.predicates.StateType;
@@ -209,7 +205,7 @@ public class Sign implements CTCommonModule {
                 // first distinguishable:
                 while (messages.hasNext()) {
                     message = (String) messages.next();
-                    changed = checkMessage2(concern, model, message,
+                    changed = checkMessage(concern, model, message,
                             distinguishable)
                             || changed;
                 }
@@ -219,7 +215,7 @@ public class Sign implements CTCommonModule {
                 // because "*" as a selector causes
                 // problems because it is treated as a generalization and not
                 // as an undistinguishable selector.
-                changed = checkMessage2(concern, model,
+                changed = checkMessage(concern, model,
                         Message.UNDISTINGUISHABLE_SELECTOR.name,
                         distinguishable)
                         || changed;
@@ -227,136 +223,8 @@ public class Sign implements CTCommonModule {
         }
     }
 
+    
     private boolean checkMessage(Concern concern, FireModel fireModel,
-            String messageSelector, HashSet distinguishable) {
-        boolean changed = false;
-        ExecutionStateIterator stateIterator;
-        ExecutionModel execModel;
-        ExecutionState state;
-        FlowNode node;
-        Signature signature;
-        MethodInfo[] methods;
-        boolean nameMatching = false;
-        boolean earlierSignatureMatch = true;
-        Target signatureMatchingTarget = null;
-        boolean dispatch = false;
-        Vector metaStates = new Vector();
-
-        signature = getSignature(concern);
-
-        execModel = fireModel.getExecutionModel(messageSelector);
-        stateIterator = new ExecutionStateIterator(execModel);
-        while (stateIterator.hasNext()) {
-            state = (ExecutionState) stateIterator.next();
-            node = state.getFlowNode();
-
-            // check whether a signaturematch is incountered in another filter
-            // than
-            // a meta or dispatch filter. Then the status of the methods need to
-            // be
-            // unknown, else normal
-            if (node.containsName("Filter")) {
-                Filter filter = (Filter) node.getRepositoryLink();
-                // just a quick fix, no idea what this should do, can the author rewrite this to decent code?
-                if (filter.getFilterAST().type.type != FilterType.META
-                        && filter.getFilterAST().type.type != FilterType.DISPATCH
-                        && signatureMatchingTarget != null) {
-                    earlierSignatureMatch = true;
-                }
-                signatureMatchingTarget = null;
-            }
-
-            if (node.containsName("NameMatchingPart")) {
-                nameMatching = true;
-            } else if (node.containsName("SignatureMatchingPart")) {
-                nameMatching = false;
-                MatchingPart matchingPart = (MatchingPart) node
-                        .getRepositoryLink();
-                signatureMatchingTarget = matchingPart.target;
-                if (Message.checkEquals(signatureMatchingTarget,
-                        Message.STAR_TARGET)) {
-                    signatureMatchingTarget = state.getTarget();
-                }
-            } else if (node.containsName(FlowChartNames.META_ACTION_NODE)) {
-                Object[] obj = new Object[3];
-                obj[0] = new Boolean(nameMatching);
-                obj[1] = signatureMatchingTarget;
-                obj[2] = state;
-                metaStates.add(obj);
-            } else if (node.containsName(FlowChartNames.DISPATCH_ACTION_NODE)) {
-                methods = getMethods(concern, messageSelector, state,
-                        nameMatching, signatureMatchingTarget, distinguishable);
-
-                // check whether there are dispatch methods. When there are none
-                // this might mean that flow might never reach this part, due to
-                // a meta
-                // filter and so the default methods must be added for the
-                // meta-dispatch
-                if (methods.length > 0)
-                    dispatch = true;
-
-                for (int j = 0; j < methods.length; j++) {
-                    if (!signature.hasMethod(methods[j])) {
-                        signature.add(methods[j],
-                                earlierSignatureMatch ? MethodWrapper.UNKNOWN
-                                        : MethodWrapper.NORMAL);
-                        changed = true;
-                    }
-                }
-            }
-            // else if ( state.getStateType() == ExecutionState.EXIT_STATE
-            // && !state.hasOutTransitions() )
-            // {
-            // methods = getMethods( concern, messageSelector, state,
-            // true, null, distinguishable );
-            //                
-            // //check whether there are dispatch methods. When there are none
-            // //this might mean that flow might never reach this part, due to a
-            // meta
-            // //filter and so the default methods must be added for the
-            // meta-dispatch
-            // if ( methods.length > 0 )
-            // dispatch = true;
-            //                
-            // for (int j=0; j<methods.length; j++){
-            // if ( !signature.hasMethod( methods[j] ) ){
-            // signature.add( methods[j],
-            // earlierSignatureMatch ? MethodWrapper.UNKNOWN :
-            // MethodWrapper.NORMAL );
-            // changed = true;
-            // }
-            // }
-            // }
-
-        }
-
-        if (!dispatch) {
-            for (int i = 0; i < metaStates.size(); i++) {
-                Object[] obj = (Object[]) metaStates.elementAt(i);
-
-                methods = getMethods(concern, messageSelector,
-                        (ExecutionState) obj[2], ((Boolean) obj[0])
-                                .booleanValue(), (Target) obj[1],
-                        distinguishable);
-
-                for (int j = 0; j < methods.length; j++) {
-                    // remove parameters:
-                    MethodInfo m = methods[j].getClone(methods[j].name(),
-                            methods[j].parent());
-                    m.Parameters = new ArrayList();
-
-                    if (!signature.hasMethod(m)) {
-                        signature.add(m, MethodWrapper.UNKNOWN);
-                        changed = true;
-                    }
-                }
-            }
-        }
-
-        return changed;
-    }
-
-    private boolean checkMessage2(Concern concern, FireModel fireModel,
             String messageSelector, HashSet distinguishable) {
         boolean changed = false;
         ExecutionModel execModel;
@@ -421,7 +289,7 @@ public class Sign implements CTCommonModule {
             }
         }
 
-        if (dispatch)
+        if (dispatch || true)
             return changed;
 
         // do the same for metastates:
@@ -1048,8 +916,7 @@ public class Sign implements CTCommonModule {
             Concern targetConcern = ref.getRef().getType().getRef();
 
             Type type = (Type) concern.getPlatformRepresentation();
-            MethodInfo targetMethod = method.getClone(dispSelector.getName(),
-                    type);
+            
 
             Signature signature = getSignature(targetConcern);
 
@@ -1155,36 +1022,23 @@ public class Sign implements CTCommonModule {
                 for (int i = 0; i < methods.size(); i++) {
                     MethodInfo m = (MethodInfo) methods.get(i);
                     if (m.name().equals(targetMethod.name())) {
-                        Debug
-                                .out(
-                                        Debug.MODE_WARNING,
-                                        MODULE_NAME,
-                                        "The methodcall to method "
-                                                + methodInfoString(method)
-                                                + " in concern "
-                                                + concern.name
-                                                + " might be dispatched to method "
-                                                + m.name()
-                                                + " in inner with the wrong parameters "
-                                                + "and/or return type!", state
-                                                .getFlowNode()
-                                                .getRepositoryLink());
+                        Debug.out( Debug.MODE_WARNING, MODULE_NAME,
+                                "The methodcall to method " + methodInfoString(method)
+                                + " in concern " + concern.name
+                                + " might be dispatched to method " + m.name()
+                                + " in inner with the wrong parameters "
+                                + "and/or return type!", 
+                                state.getFlowNode().getRepositoryLink());
                         return;
                     }
                 }
 
-                Debug
-                        .out(
-                                Debug.MODE_WARNING,
-                                MODULE_NAME,
-                                "The methodcall to method "
-                                        + methodInfoString(method)
-                                        + " in concern "
-                                        + concern.name
-                                        + " might be dispatched to the unresolved "
-                                        + "method " + targetMethod.name()
-                                        + " in inner", state.getFlowNode()
-                                        .getRepositoryLink());
+                Debug.out( Debug.MODE_WARNING, MODULE_NAME,
+                        "The methodcall to method " + methodInfoString(method)
+                        + " in concern " + concern.name
+                        + " might be dispatched to the unresolved "
+                        + "method " + targetMethod.name() + " in inner", 
+                        state.getFlowNode().getRepositoryLink());
             }
         } else {
             DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget
@@ -1198,20 +1052,13 @@ public class Sign implements CTCommonModule {
             Signature signature = getSignature(targetConcern);
             if (!signature.hasMethod(targetMethod)) {
                 if (signature.hasMethod(targetMethod.name())) {
-                    Debug
-                            .out(
-                                    Debug.MODE_WARNING,
-                                    MODULE_NAME,
-                                    "The methodcall to method "
-                                            + methodInfoString(method)
-                                            + " in concern "
-                                            + concern.name
-                                            + " might be dispatched to method "
-                                            + targetMethod.name()
-                                            + " in concern "
-                                            + targetConcern.getName()
-                                            + " with the wrong parameters and/or return type!",
-                                    state.getFlowNode().getRepositoryLink());
+                    Debug.out( Debug.MODE_WARNING, MODULE_NAME,
+                            "The methodcall to method " + methodInfoString(method)
+                            + " in concern " + concern.name
+                            + " might be dispatched to method " + targetMethod.name()
+                            + " in concern " + targetConcern.getName()
+                            + " with the wrong parameters and/or return type!",
+                            state.getFlowNode().getRepositoryLink());
                 } else {
                     Debug.out(Debug.MODE_WARNING, MODULE_NAME,
                             "The methodcall to method "
