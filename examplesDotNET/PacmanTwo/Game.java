@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Game.java,v 1.3 2006/09/05 12:43:08 reddog33hummer Exp $
+ * @version $Id: Game.java,v 1.4 2006/09/05 13:03:37 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -21,9 +21,9 @@ import java.util.Enumeration;
 public class Game implements Runnable
 {
 	/**
-	 * Cap framerate to 100fps. The actual FPS cap can be lower due to the system
+	 * Cap framerate to 60fps. The actual FPS cap can be lower due to the system
 	 */
-	public static long FRAMESCAP = 10;
+	public static long FRAMESCAP = 16;
 
 	static protected Game _instance;
 
@@ -89,9 +89,6 @@ public class Game implements Runnable
 
 			tick(frameTime / 1000.0f);
 
-			// cap framerate to 100fps
-			// although for some reason the FPS never exceeds 64fps
-			long FRAMESCAP = 2;
 			if (frameTime < FRAMESCAP)
 			{
 				try 
