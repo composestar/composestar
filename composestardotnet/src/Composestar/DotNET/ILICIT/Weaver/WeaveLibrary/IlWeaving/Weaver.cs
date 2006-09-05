@@ -356,7 +356,7 @@ namespace Weavers.IlWeaving
 				else if (returntype.Equals("float64"))
 				{
 					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.r4"));
+					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.r8"));
 				}
 				else if (returntype.Equals("unsigned int8"))
 				{
