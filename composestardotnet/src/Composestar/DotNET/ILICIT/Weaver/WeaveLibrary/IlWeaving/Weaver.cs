@@ -486,7 +486,7 @@ namespace Weavers.IlWeaving
 					fullType = "[mscorlib]System.Char";					
 					break;
 				case "float32":
-					fullType = "[mscorlib]System.Float";
+					fullType = "[mscorlib]System.Single";
 					break;
 				case "float64":
 					fullType = "[mscorlib]System.Double";

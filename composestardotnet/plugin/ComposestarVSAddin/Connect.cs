@@ -1279,29 +1279,7 @@ namespace ComposestarVSAddin
 				}
 
 				string debugger = "";
-
 				string buildPath = BuildConfigurationManager.Instance.Settings.Paths["Base"];
-				if(buildPath != null)
-				{
-					if(!buildPath.EndsWith("/"))
-					{
-						buildPath += '/';
-					}
-					buildPath += "obj/weaver/";
-					string[] files = Directory.GetFiles(buildPath,"*.pdb");
-					for(int i = 0; i < files.Length; i++)
-					{
-						try
-						{
-							string filename = dir +  files[i].Substring(files[i].LastIndexOf('/') +1);						
-							File.Copy(files[i],filename);
-						}
-						catch(Exception)
-						{
-							//To bad
-						}
-					}
-				}
 
 				if (BuildConfigurationManager.Instance.Settings.GetModule("CODER") != null  )
 				{
