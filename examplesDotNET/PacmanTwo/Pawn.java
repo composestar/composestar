@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pawn.java,v 1.8 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: Pawn.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -47,7 +47,7 @@ public abstract class Pawn extends GameElement
 
 	public Pawn()
 	{
-		super();
+		new Exception("Invalid construction of Pawn");
 	}
 
 	public Pawn(int X, int Y)
@@ -115,16 +115,6 @@ public abstract class Pawn extends GameElement
 
 	public void tick(double delta)
 	{
-		double _x = this.getX();
-		System.out.println("getx = "+_x+" vs "+(cellX+dx));
-		Composestar.RuntimeCore.FLIRT.Debugger.Debugger.getInstance().stop();
-		try 
-		{
-			System.in.read();
-		}
-		catch (Exception e)
-		{
-		}
 		if ((speed > 0) && (controller != null)) move(delta);
 	}
 
@@ -340,7 +330,6 @@ public abstract class Pawn extends GameElement
 	 */
 	public double getX()
 	{
-		//System.out.println(">>>>  "+ cellX + " + " + dx + " = "+ (cellX + dx));
 		return cellX + dx;
 	}
 

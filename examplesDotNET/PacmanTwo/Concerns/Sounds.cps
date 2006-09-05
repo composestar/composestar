@@ -5,10 +5,10 @@ concern Sounds in PacmanTwo
 		internals
 			beeper : PacmanTwo.ConcernImplementations.Beeper;
 		inputfilters
-			beep_filter : Dispatch = 
+			beep_filter : Meta = 
 				{ 
-					//[*.xxxxeatPill] beeper.eatPill,
-					//[*.xxxxeatPowerPill] beeper.eatPowerPill, 
+					[*.eatPill] beeper.eatPill,
+					[*.eatPowerPill] beeper.eatPowerPill, 
 					[*.died] beeper.pawnDied
 				}
 	}
@@ -19,7 +19,7 @@ concern Sounds in PacmanTwo
 			lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
 			pawns = { C | isClassWithNameInList(C, ['PacmanTwo.Pacman']) };
 		filtermodules
-			//lvl <- beepSound;
+			lvl <- beepSound;
 			pawns <- beepSound;
 	}
 
@@ -36,19 +36,19 @@ public class Beeper
 
 	public void eatPill(ReifiedMessage rm)
 	{		
-		//rm.proceed();
+		rm.proceed();
 		System.out.println("Sound.eatPill");
 	}
 
 	public void eatPowerPill(ReifiedMessage rm)
 	{		
-		//rm.proceed();
+		rm.proceed();
 		System.out.println("Sound.eatPowerPill");
 	}
 
 	public void pawnDied(ReifiedMessage rm)
 	{		
-		//rm.proceed();
+		rm.proceed();
 		System.out.println("Sound.pawnDied");
 	}
 }

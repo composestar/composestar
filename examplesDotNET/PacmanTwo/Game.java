@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Game.java,v 1.8 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: Game.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -20,6 +20,11 @@ import java.util.Enumeration;
  */
 public class Game implements Runnable
 {
+	/**
+	 * Cap framerate to 100fps. The actual FPS cap can be lower due to the system
+	 */
+	public static long FRAMESCAP = 10;
+
 	static protected Game _instance;
 
 	/**
@@ -84,14 +89,11 @@ public class Game implements Runnable
 
 			tick(frameTime / 1000.0f);
 
-			// cap framerate to 100fps
-			// although for some reason the FPS never exceeds 64fps
-			long FRAMEMSCAP = 300;
-			if (frameTime < FRAMEMSCAP)
+			if (frameTime < FRAMESCAP)
 			{
 				try 
 				{
-					Thread.sleep(FRAMEMSCAP-frameTime);
+					Thread.sleep(FRAMESCAP-frameTime);
 				}
 				catch(Exception e)
 				{
@@ -171,6 +173,14 @@ public class Game implements Runnable
 		return evilPacman;
 	}
 
+	/**
+	 * Sets the number of ghosts for the next game played
+	 */
+	public void setNumberOfGhosts(int inval)
+	{
+		numberOfGhosts = inval;
+	}
+
 	protected void tick(double delta)
 	{
 		for( Enumeration e = tickList.elements(); e.hasMoreElements(); )
@@ -183,18 +193,6 @@ public class Game implements Runnable
 			System.out.println("Maze completed, start a new game");
 			startGame();
 		}
-		/*
-		Composestar.RuntimeCore.Utils.Debug.programmerOut("","---");
-		Composestar.RuntimeCore.FLIRT.Debugger.Debugger.getInstance().stop();
-		try 
-		{
-			System.in.read();
-		}
-		catch (Exception e)
-		{
-		}
-		Composestar.RuntimeCore.FLIRT.Debugger.Debugger.getInstance().start();
-		*/
 	}
 
 	/**
@@ -208,7 +206,7 @@ public class Game implements Runnable
 			((Tickable) e.nextElement()).reset();
 		}
 		createPlayers();
-		//createGhosts();
+		createGhosts();
 	}
 
 	public void createPlayers()

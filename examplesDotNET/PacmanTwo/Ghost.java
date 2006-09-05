@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Ghost.java,v 1.6 2006/09/03 16:17:04 elmuerte Exp $
+ * @version $Id: Ghost.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -34,6 +34,12 @@ public class Ghost extends Pawn
 	{
 		id = inval % names.length;
 		name = names[id];
+	}
+
+	public void restart()
+	{
+		super.restart();
+		direction = id % 4;
 	}
 
 	public int getId()

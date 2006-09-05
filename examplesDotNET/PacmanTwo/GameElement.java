@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: GameElement.java,v 1.6 2006/09/05 06:58:49 elmuerte Exp $
+ * @version $Id: GameElement.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -31,7 +31,7 @@ public abstract class GameElement implements Tickable
 
 	public GameElement()
 	{
-		// should never happen
+		new Exception("Invalid construction of GameElement");
 	}
 
 	public GameElement(int X, int Y)

@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Main.java,v 1.3 2006/09/03 13:58:04 elmuerte Exp $
+ * @version $Id: Main.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -28,11 +28,15 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 
 /**
- * Main class, creates the game and a viewport
+ * Main class, creates the game and a viewport.
+ * 
+ * The following commandline arguments are accepted:
+ *	--fps n			set the FPS cap to n frames
+ *  --ghosts n		set the number of ghosts to n
  */
 public class Main extends Frame
 {
-	public Main()
+	public Main(String[] args)
 	{
 		this.setSize(512, 512);
 		this.setTitle("Pacman* 2.0");
@@ -55,6 +59,22 @@ public class Main extends Frame
 		);
 
 		Game g = new Game();
+
+		for (int i = 0; i < args.length-1; i++)
+		{
+			if (args[i].equals("--fps"))
+			{
+				i++;
+				g.FRAMESCAP = 1000 / Integer.parseInt(args[i], 10);
+				System.out.println("FRAMESCAP = "+g.FRAMESCAP);
+			}
+			else if (args[i].equals("--ghosts"))
+			{
+				i++;
+				g.setNumberOfGhosts(Integer.parseInt(args[i], 10)); 
+			}
+		}
+
 		PacmanTwo.GUI.Viewport v = new PacmanTwo.GUI.Viewport();
 		this.add(v,BorderLayout.CENTER);
 		this.setVisible(true);
@@ -65,6 +85,6 @@ public class Main extends Frame
 	public static void main(String[] args) 
 	{
 		System.out.println("Pacman2 Starting ...");
-		new Main();
+		new Main(args);
 	}
 }
