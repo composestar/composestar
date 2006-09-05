@@ -1,7 +1,0 @@
-# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\FilterElementFlowFalse.gpr
-# Each line contains layout information about a node or edge
-# Node Format: n <node id> <bounds>
-# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n4870 213 138 18 18 
-n n4868 366 339 18 18 
-n n4869 0 336 18 18 

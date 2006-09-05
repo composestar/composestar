@@ -1,13 +1,12 @@
-# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\generateflow.gps\SEQCompOper.gpr
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\SEQFilterCompOper.gpr
 # Each line contains layout information about a node or edge
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-e n3320 n3319 "new:flowIn" 290 621 113 136 142 208 831 343 12
-n n3322 314 51 18 18 
-e n3322 n3319 "rightArg" 448 434 374 60 831 343 11
-n n3320 73 127 18 18 
-e n3322 n3321 "del:flowNext" 847 752 374 60 340 185 457 243 13
-e n3320 n3322 "del:flowIn" 745 361 169 62 280 352 11
-e n3322 n3319 "new:flowIn" 600 360 374 60 525 32 831 343 12
-n n3319 791 334 18 18 
-n n3321 417 234 18 18 
+e n2946 n2949 "del:flowIn" 745 361 169 62 280 352 11
+n n2947 417 234 18 18 
+e n2949 n2948 "rightArg" 448 434 374 60 831 343 11
+e n2949 n2947 "flowNext" 847 752 374 60 340 185 457 243 13
+n n2949 314 51 18 18 
+n n2948 791 334 18 18 
+n n2946 73 127 18 18 
+e n2946 n2948 "new:flowIn" 290 621 113 136 142 208 831 343 12

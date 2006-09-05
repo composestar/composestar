@@ -1,111 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n529"/>
-        <node id="n530"/>
-        <node id="n528"/>
-        <node id="n527"/>
-        <node id="n525"/>
-        <node id="n524"/>
-        <node id="n526"/>
-        <edge from="n524" to="n524">
-            <attr name="label">
-                <string>FilterCompOper</string>
-            </attr>
-        </edge>
-        <edge from="n530" to="n527">
-            <attr name="label">
-                <string>accept</string>
-            </attr>
-        </edge>
-        <edge from="n526" to="n530">
-            <attr name="label">
-                <string>del:flowIn</string>
-            </attr>
-        </edge>
-        <edge from="n529" to="n530">
+        <node id="n4400"/>
+        <node id="n4401"/>
+        <node id="n4398"/>
+        <node id="n4399"/>
+        <node id="n4402"/>
+        <node id="n4404"/>
+        <node id="n4405"/>
+        <node id="n4403"/>
+        <edge from="n4405" to="n4399">
             <attr name="label">
                 <string>new:flowNext</string>
             </attr>
         </edge>
-        <edge from="n528" to="n529">
-            <attr name="label">
-                <string>new:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n530" to="n528">
-            <attr name="label">
-                <string>orderFirst</string>
-            </attr>
-        </edge>
-        <edge from="n529" to="n529">
-            <attr name="label">
-                <string>FilterAction</string>
-            </attr>
-        </edge>
-        <edge from="n526" to="n528">
-            <attr name="label">
-                <string>new:flowIn</string>
-            </attr>
-        </edge>
-        <edge from="n527" to="n527">
-            <attr name="label">
-                <string>FilterAction</string>
-            </attr>
-        </edge>
-        <edge from="n526" to="n526">
-            <attr name="label">
-                <string>FlowElement</string>
-            </attr>
-        </edge>
-        <edge from="n528" to="n527">
-            <attr name="label">
-                <string>new:flowAccept</string>
-            </attr>
-        </edge>
-        <edge from="n530" to="n524">
-            <attr name="label">
-                <string>new:flowIn</string>
-            </attr>
-        </edge>
-        <edge from="n524" to="n525">
-            <attr name="label">
-                <string>new:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n527" to="n530">
-            <attr name="label">
-                <string>new:flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n530" to="n529">
-            <attr name="label">
-                <string>reject</string>
-            </attr>
-        </edge>
-        <edge from="n525" to="n525">
-            <attr name="label">
-                <string>FlowElement</string>
-            </attr>
-        </edge>
-        <edge from="n530" to="n524">
+        <edge from="n4403" to="n4405">
             <attr name="label">
                 <string>rightOper</string>
             </attr>
         </edge>
-        <edge from="n528" to="n528">
+        <edge from="n4398" to="n4398">
             <attr name="label">
-                <string>FilterElement</string>
+                <string>FlowTmp</string>
             </attr>
         </edge>
-        <edge from="n530" to="n525">
+        <edge from="n4402" to="n4403">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n4402" to="n4402">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n4403" to="n4401">
+            <attr name="label">
+                <string>reject</string>
+            </attr>
+        </edge>
+        <edge from="n4403" to="n4399">
             <attr name="label">
                 <string>del:flowNext</string>
             </attr>
         </edge>
-        <edge from="n530" to="n530">
+        <edge from="n4402" to="n4403">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n4403" to="n4400">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n4400" to="n4401">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n4398" to="n4398">
+            <attr name="label">
+                <string>new:</string>
+            </attr>
+        </edge>
+        <edge from="n4398" to="n4405">
+            <attr name="label">
+                <string>flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n4403" to="n4403">
             <attr name="label">
                 <string>Filter</string>
+            </attr>
+        </edge>
+        <edge from="n4401" to="n4401">
+            <attr name="label">
+                <string>FilterAction</string>
+            </attr>
+        </edge>
+        <edge from="n4405" to="n4405">
+            <attr name="label">
+                <string>FilterCompOper</string>
+            </attr>
+        </edge>
+        <edge from="n4403" to="n4400">
+            <attr name="label">
+                <string>orderFirst</string>
+            </attr>
+        </edge>
+        <edge from="n4403" to="n4404">
+            <attr name="label">
+                <string>accept</string>
+            </attr>
+        </edge>
+        <edge from="n4399" to="n4399">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n4404" to="n4404">
+            <attr name="label">
+                <string>FilterAction</string>
+            </attr>
+        </edge>
+        <edge from="n4401" to="n4398">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n4400" to="n4404">
+            <attr name="label">
+                <string>new:flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n4400" to="n4400">
+            <attr name="label">
+                <string>FilterElement</string>
+            </attr>
+        </edge>
+        <edge from="n4404" to="n4398">
+            <attr name="label">
+                <string>flowNext</string>
             </attr>
         </edge>
     </graph>
