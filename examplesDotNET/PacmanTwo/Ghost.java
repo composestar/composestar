@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Ghost.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: Ghost.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -47,13 +47,13 @@ public class Ghost extends Pawn
 		return id;
 	}
 
-	public boolean doTouchingCheck(GameElement ge)
+	protected boolean doTouchingCheck(GameElement ge)
 	{
 		// only check against pacman
 		return (ge instanceof Pacman);
 	}
 
-	public void touch(GameElement ge)
+	protected void touch(GameElement ge)
 	{
 		if (ge instanceof Pacman)
 		{

@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: GameElement.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
+ * @version $Id: GameElement.java,v 1.3 2006/09/05 12:43:08 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -24,6 +24,9 @@ public abstract class GameElement implements Tickable
 	protected int cellX;
 	protected int cellY;
 
+	protected Game game;
+	protected Level level;
+
 	/**
 	 * collision radius of this element in cell size
 	 */
@@ -36,7 +39,9 @@ public abstract class GameElement implements Tickable
 
 	public GameElement(int X, int Y)
 	{
-		Game.instance().addGameElement(this);
+		game = Game.instance();
+		game.addGameElement(this);
+		level = game.level();
 		cellX = X;
 		cellY = Y;
 	}
@@ -58,7 +63,7 @@ public abstract class GameElement implements Tickable
 	 */
 	public void reset()
 	{
-		Game.instance().removeGameElement(this);
+		game.removeGameElement(this);
 	}
 
 	/**

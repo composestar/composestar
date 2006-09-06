@@ -17,7 +17,7 @@ concern Sounds in PacmanTwo
 	{
 		selectors
 			lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
-			pawns = { C | isClassWithNameInList(C, ['PacmanTwo.Pacman']) };
+			pawns = { C | isClassWithNameInList(C, ['PacmanTwo.Pacman', 'PacmanTwo.Ghost']) };
 		filtermodules
 			lvl <- beepSound;
 			pawns <- beepSound;
@@ -26,7 +26,9 @@ concern Sounds in PacmanTwo
 	implementation in JSharp by Beeper as "Beeper.java"
 	{
 package PacmanTwo.ConcernImplementations;
+
 import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
+import PacmanTwo.Pacman;
 
 /**
  * Summary description for Beeper.
@@ -56,20 +58,20 @@ public class Beeper
 		}
 	}
 
-	public void eatGhostBeep(ReifiedMessage rm)
-	{		
-		rm.proceed();
-		if(soundOn) Beep( 500, 90 );
-	}
-
-	
 	public void pawnDied(ReifiedMessage rm)
 	{		
 		rm.proceed();
 		if(soundOn) 
 		{
-			Beep( 700, 110 );
-			Beep( 400, 110 );
+			if (rm.getTarget() instanceof Pacman)
+			{
+				Beep( 700, 110 );
+				Beep( 400, 110 );
+			}
+			else 
+			{
+				Beep( 500, 90 );
+			}
 		}
 	}
 

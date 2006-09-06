@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: AIController.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id: AIController.java,v 1.2 2006/09/05 12:43:08 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -23,11 +23,14 @@ public class AIController extends Controller implements Tickable
 	protected float dircnt = 0;
 	protected java.util.Random random;
 
+	protected Game game;
+
 	public AIController()
 	{
 		random = new java.util.Random();
 		dircnt = 3+random.nextFloat()*3;
-		Game.instance().addTickElement(this);
+		game = Game.instance();
+		game.addTickElement(this);
 	}
 
 	public void tick(float delta)
@@ -42,7 +45,7 @@ public class AIController extends Controller implements Tickable
 
 	public void reset()
 	{
-		direction = RandomMovement.getNextMove(pawn, Game.instance().level());
+		direction = RandomMovement.getNextMove(pawn, game.level());
 	}
 
 	public int getDirection()
@@ -52,6 +55,6 @@ public class AIController extends Controller implements Tickable
 
 	public void getNextMove()
 	{
-		direction = RandomMovement.getNextMove(pawn, Game.instance().level());
+		direction = RandomMovement.getNextMove(pawn, game.level());
 	}
 }

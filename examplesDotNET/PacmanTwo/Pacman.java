@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pacman.java,v 1.2 2006/09/05 12:43:08 reddog33hummer Exp $
+ * @version $Id: Pacman.java,v 1.3 2006/09/05 13:03:37 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -42,16 +42,15 @@ public class Pacman extends Pawn
 		super.tick(delta);
 	}
 
-	public void newCell()
+	protected void newCell()
 	{
-		Level l = Game.instance().level();
-		if (l.hasPill(cellX, cellY))
+		if (level.hasPill(cellX, cellY))
 		{
-			l.eatPill(cellX, cellY);
+			level.eatPill(cellX, cellY);
 		}
-		else if (l.hasPowerPill(cellX, cellY))
+		else if (level.hasPowerPill(cellX, cellY))
 		{
-			if (l.eatPowerPill(cellX, cellY))
+			if (level.eatPowerPill(cellX, cellY))
 			{
 				//System.out.println("Evil pacman");
 				setEvil(true);
@@ -65,12 +64,12 @@ public class Pacman extends Pawn
 		if (makeEvil)
 		{
 			evilTime = evilDuration;
-			Game.instance().setEvilPacman(this);
+			game.setEvilPacman(this);
 			speed = 3;
 		}
 		else 
 		{
-			Game.instance().setEvilPacman(null);
+			game.setEvilPacman(null);
 			speed = 2;
 		}
 	}
@@ -85,7 +84,7 @@ public class Pacman extends Pawn
 		return evilTime;
 	}
 
-	public void touch(GameElement ge)
+	protected void touch(GameElement ge)
 	{
 		if (ge instanceof Ghost)
 		{

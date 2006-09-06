@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pawn.java,v 1.3 2006/09/05 12:43:08 reddog33hummer Exp $
+ * @version $Id: Pawn.java,v 1.4 2006/09/05 13:03:37 reddog33hummer Exp $
  */
 package PacmanTwo;
 
@@ -121,7 +121,7 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Move the pawn in the requested direction
 	 */
-	public void move(float delta)
+	protected void move(float delta)
 	{
 		if (dx == 0 && dy == 0)
 		{
@@ -199,12 +199,11 @@ public abstract class Pawn extends GameElement
 	 *	1 if movement in the same direction can be performed,
 	 *  0 if a wall was hit,
 	 */
-	public int continueMovement()
+	protected int continueMovement()
 	{
 		int newdir = controller.getDirection();
-		Level l = Game.instance().level();
 		// if newdirection and can move in that direction move to it
-		if ((newdir != direction) && l.canMove(newdir, cellX, cellY))
+		if ((newdir != direction) && level.canMove(newdir, cellX, cellY))
 		{
 			dx = 0;
 			dy = 0;
@@ -212,7 +211,7 @@ public abstract class Pawn extends GameElement
 			return 2;
 		}
 		// if we can move in that direction
-		if (l.canMove(direction, cellX, cellY))
+		if (level.canMove(direction, cellX, cellY))
 		{
 			return 1;
 		}
@@ -229,7 +228,7 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Called when the pawn hits a wall
 	 */
-	public void bumpWall()
+	protected void bumpWall()
 	{
 		//System.out.println("Bumped into the wall");
 		if (controller != null && !controller.isHumanControlled())
@@ -258,29 +257,35 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Called when a new cell is (completely) entered
 	 */
-	public void newCell()
+	protected void newCell()
 	{
 	}
 
 	/**
 	 * Called to check if the game element collides with an other game element
 	 */
-	public void checkTouching()
+	protected void checkTouching()
 	{
-		float cXu = getX()+getCollisionRadius();
-		float cXl = getX()-getCollisionRadius();
-		float cYu = getY()+getCollisionRadius();
-		float cYl = getY()-getCollisionRadius();
+		float cr = getCollisionRadius();
+		float n = getX();
+		float cXu = n+cr;
+		float cXl = n-cr;
+		n = getY();
+		float cYu = n+cr;
+		float cYl = n-cr;
 
-		for( Enumeration e = Game.instance().getGameElements(); e.hasMoreElements(); )
+		for( Enumeration e = game.getGameElements(); e.hasMoreElements(); )
 		{
 			GameElement ge = ((GameElement) e.nextElement());
 			if (!doTouchingCheck(ge)) continue;
 
-			float gXu = ge.getX()+ge.getCollisionRadius();
-			float gXl = ge.getX()-ge.getCollisionRadius();
-			float gYu = ge.getY()+ge.getCollisionRadius();
-			float gYl = ge.getY()-ge.getCollisionRadius();
+			cr = ge.getCollisionRadius();
+			n = ge.getX();
+			float gXu = n+cr;
+			float gXl = n-cr;
+			n = ge.getY();
+			float gYu = n+cr;
+			float gYl = n-cr;
 
 			// check touching
 			if (
@@ -298,7 +303,7 @@ public abstract class Pawn extends GameElement
 		}
 	}
 
-	public boolean doTouchingCheck(GameElement ge)
+	protected boolean doTouchingCheck(GameElement ge)
 	{
 		return (ge != this);
 	}
@@ -306,7 +311,7 @@ public abstract class Pawn extends GameElement
 	/**
 	 * Touching this game element
 	 */
-	public void touch(GameElement ge)
+	protected void touch(GameElement ge)
 	{
 		//System.out.println(this+" touched "+ge);
 	}
