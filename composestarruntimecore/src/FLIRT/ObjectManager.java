@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.7 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: ObjectManager.java,v 1.8 2006/09/06 08:05:42 reddog33hummer Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -323,14 +323,15 @@ public class ObjectManager implements ChildRunnable
     public static ObjectManager getObjectManagerFor(Object o, DataStore store) 
 	{
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object manager for object of type '"+o.GetType().ToString()+"'.");
-			if (GlobalObjectManager.getObjectManagerFor(o) == null) 
-			{ // No object manager present, so create one
-				ObjectManager obj = new ObjectManager(o, store);
-				GlobalObjectManager.setObjectManagerFor(o, obj);
 
-				return obj;
+			ObjectManager obj = (ObjectManager) GlobalObjectManager.getObjectManagerFor(o);
+			if (obj == null) 
+			{ 
+				// No object manager present, so create one
+				obj = new ObjectManager(o, store);
+				GlobalObjectManager.setObjectManagerFor(o, obj);
 			}
-			return (ObjectManager) GlobalObjectManager.getObjectManagerFor(o);     
+			return obj;     
     }
     
 	public static boolean hasFilterModules(Object o, DataStore store)
