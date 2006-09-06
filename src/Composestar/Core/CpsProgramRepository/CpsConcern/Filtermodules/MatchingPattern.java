@@ -13,10 +13,13 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.CPSIterator;
 
 public class MatchingPattern extends ContextRepositoryEntity {
   public MatchingPatternAST mpa; 
-  //public Vector matchingParts;
+  
+  public Vector matchingParts;
   //public Vector substitutionParts;
 
 
@@ -26,11 +29,21 @@ public class MatchingPattern extends ContextRepositoryEntity {
    */
   public MatchingPattern() {
     super();
+    matchingParts = new Vector();
   }
   
   public MatchingPattern(MatchingPatternAST mpAST){
 	  super();
 	  mpa = mpAST;
+	  matchingParts = new Vector();
+	  
+	  Iterator it = mpa.getMatchingPartsIterator();
+	  while(it.hasNext()){
+		  MatchingPart mp = new MatchingPart((MatchingPartAST) it.next());
+		  mp.setParent(this);
+		  matchingParts.add(mp);
+		  DataStore.instance().addObject(mp);
+	  }
   }
 
 
@@ -40,11 +53,11 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65006B
    */
   public Vector getMatchingParts() {
-    return mpa.matchingParts;
+    return matchingParts;
   }
 
   public Iterator getMatchingPartsIterator() {
-    return mpa.getMatchingPartsIterator();
+	return new CPSIterator( matchingParts );
   }
 
 
@@ -53,7 +66,7 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65007E
    */
   public void addMatchingPart(MatchingPart matchingPartValue) {
-    mpa.addMatchingPart( matchingPartValue );
+	this.matchingParts.addElement( matchingPartValue );
   }
 
 

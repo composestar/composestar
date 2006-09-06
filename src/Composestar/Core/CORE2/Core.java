@@ -168,8 +168,8 @@ public class Core implements CTCommonModule{
                                     "Matchingpart never accepts!", 
                                     startNode.getRepositoryLink() );
                         }
-                        else if ( !part.selector.getName().equals( "*" )  ||
-                                    !part.target.getName().equals( "*" ) )
+                        else if ( !part.getSelector().getName().equals( "*" )  ||
+                                    !part.getTarget().getName().equals( "*" ) )
                         {
                             Debug.out( Debug.MODE_WARNING, MODULE_NAME, 
                                     "Matchingpart always accepts!", 

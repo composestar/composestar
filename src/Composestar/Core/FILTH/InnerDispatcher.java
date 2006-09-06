@@ -15,8 +15,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElem
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPatternAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
@@ -95,7 +94,7 @@ public class InnerDispatcher {
 		MessageSelector selector = new MessageSelector();
 		selector.setName("*");
 		MatchingPatternAST mpattern = new MatchingPatternAST();
-		MatchingPart mpart = new MatchingPart();
+		MatchingPartAST mpart = new MatchingPartAST();
 		mpart.setTarget(mtarget);
 		mpart.setSelector(selector);
 		mpart.setMatchType(new SignatureMatchingType());

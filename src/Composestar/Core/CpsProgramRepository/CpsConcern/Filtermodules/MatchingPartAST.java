@@ -10,23 +10,17 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 
-public class MatchingPart extends AbstractPattern {
-  //public MatchingType matchType; -> get from MatchingPartAST
-  public MatchingPartAST mpa; 
+public class MatchingPartAST extends AbstractPattern {
+  public MatchingType matchType;
 
 
   /**
    * @roseuid 401FAA66001C
-   * @deprecated
    */
-  public MatchingPart() {
+  public MatchingPartAST() {
     super();
   }
-  
-  public MatchingPart(MatchingPartAST abstr) {
-	super();
-	mpa = abstr;
-  }
+
 
   /**
    * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType
@@ -34,7 +28,7 @@ public class MatchingPart extends AbstractPattern {
    * @roseuid 401FAA66001D
    */
   public MatchingType getMatchType() {
-    return mpa.getMatchType();
+    return matchType;
   }
 
 
@@ -43,30 +37,6 @@ public class MatchingPart extends AbstractPattern {
    * @roseuid 401FAA660030
    */
   public void setMatchType(MatchingType matchTypeValue) {
-    mpa.setMatchType(matchTypeValue);
+    this.matchType = matchTypeValue;
   }
-
-public MessageSelector getSelector() {
-	return mpa.getSelector();
-}
-
-public Target getTarget() {
-	return mpa.getTarget();
-}
-
-public void Pattern() {
-	mpa.Pattern();
-}
-
-public void setSelector(MessageSelector selectorValue) {
-	mpa.setSelector(selectorValue);
-}
-
-public void setTarget(Target targetValue) {
-	mpa.setTarget(targetValue);
-}
-
-public MatchingPartAST getMpa() {
-	return mpa;
-}
 }

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.10 2006/09/05 15:54:10 reddog33hummer Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.11 2006/09/06 12:36:15 doornenbal Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -33,7 +33,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameterAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.InternalAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPatternAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
@@ -92,7 +92,7 @@ public class CpsRepositoryBuilder
   private FilterModuleAST fm;
   private FilterModuleBinding fmb;
   private FilterModuleReference fmref;
-  private MatchingPart mp;
+  private MatchingPartAST mp;
   private MatchingPatternAST mpat;
   private MatchingType mt;
   private MessageSelector s;
@@ -940,7 +940,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addMatchingPart(String target, String selector, Vector argTypes, int matching,int lineNumber) {
     workingOnMatching = true; //busy with matching
-    mp = new MatchingPart();
+    mp = new MatchingPartAST();
     mp.setParent(mpat);
 	  mp.setDescriptionFileName(filename);
 	  mp.setDescriptionLineNumber(lineNumber);

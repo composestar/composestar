@@ -350,7 +350,7 @@ public class Sign implements CTCommonModule {
                     distinguishable);
         } else if (node.containsName("SignatureMatchingPart")) {
             MatchingPart matchingPart = (MatchingPart) node.getRepositoryLink();
-            Target signatureMatchingTarget = matchingPart.target;
+            Target signatureMatchingTarget = matchingPart.getTarget();
             if (Message.checkEquals(signatureMatchingTarget,
                     Message.STAR_TARGET)) {
                 signatureMatchingTarget = dispatchState.getTarget();

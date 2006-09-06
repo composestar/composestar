@@ -229,12 +229,12 @@ public class FireModel {
                 (MatchingPart) state.getFlowNode().getRepositoryLink();
             
             //get the matching target:
-            Target matchTarget = matchingPart.target;
+            Target matchTarget = matchingPart.getTarget();
             if ( Message.checkEquals( matchTarget, Message.STAR_TARGET ) )
                 matchTarget = state.getMessage().getTarget();
             
             //get the matching selector:
-            MessageSelector matchSelector = matchingPart.selector;
+            MessageSelector matchSelector = matchingPart.getSelector();
             if ( Message.checkEquals( matchSelector, Message.STAR_SELECTOR ) )
                 matchSelector = state.getMessage().getSelector();
             
