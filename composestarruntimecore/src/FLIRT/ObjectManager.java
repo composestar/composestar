@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.8 2006/09/06 08:05:42 reddog33hummer Exp $
+ * $Id: ObjectManager.java,v 1.9 2006/09/06 08:30:15 elmuerte Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -453,11 +453,12 @@ public class ObjectManager implements ChildRunnable
 				
 				filterList = (aMessage.getDirection()==Message.INCOMING?fm.getInputFilters():fm.getOutputFilters());
 				
-				if(filterList.isEmpty() && aMessage.getDirection() == Message.OUTGOING )
-				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No outputfilters, returning message.");
-					return aMessage;
-				}
+				//michielh: Why this code? if the first FM doesn't have outputfilters and the other do it won't work
+				//if(filterList.isEmpty() && aMessage.getDirection() == Message.OUTGOING )
+				//{
+				//	if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No outputfilters, returning message.");
+				//	return aMessage;
+				//}
 				
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tNumber of filters is "+ filterList.size() + ".");
 				
