@@ -19,7 +19,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.7 2006/06/29 08:46:01 reddog33hummer Exp $
+ * $Id: MetaFilterPolicy.java,v 1.8 2006/06/29 11:51:56 reddog33hummer Exp $
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -136,8 +136,8 @@ class MetaFilterPolicy extends FilterPolicy
 			//csa.updateMessage( aMessage );
 			aMessage.copyFromMessageList( csa.getMessageToContinueWith() );
 			
-			messageWasFiltered = messageWasFiltered | eval;
-			shouldDispatchToInner = shouldDispatchToInner & csa.getShouldContinue();
+			messageWasFiltered = messageWasFiltered || eval;
+			shouldDispatchToInner = shouldDispatchToInner && csa.getShouldContinue();
 		}
 
 		if(Debug.SHOULD_DEBUG)

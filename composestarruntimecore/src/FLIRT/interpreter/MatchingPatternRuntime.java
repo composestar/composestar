@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MatchingPatternRuntime.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: MatchingPatternRuntime.java,v 1.3 2006/09/05 12:31:01 doornenbal Exp $
  */
 public class MatchingPatternRuntime extends ReferenceEntityRuntime implements Interpretable 
 {
@@ -58,7 +58,7 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		return returnvalue;
 		*/
 		boolean returnvalue = this.match( m, context );
-		if( returnvalue && substitutionParts.size() > 0 ) 
+		if( returnvalue && !substitutionParts.isEmpty() )
 		{
 			returnvalue = substitute( m, context );
 		}

@@ -91,7 +91,7 @@ public class FilterExecutionGuiComponent extends Panel {
         items.addElement(new ObjectGuiComponent(0, 0, OBJECTSIZE, OBJECTSIZE, source));
         items.addElement(new ObjectGuiComponent(width - OBJECTSIZE, 0, OBJECTSIZE, OBJECTSIZE, target));
 
-        if (filters == null || filters.size() == 0) {
+        if (filters == null || filters.isEmpty()) {
             paintMessage(g, message, OBJECTSIZE, OBJECTSIZE >> 1, width - (OBJECTSIZE << 1), ARROWSIZE);
         } else {
             int messageLength = (width - (2 * OBJECTSIZE + filters.size() * FILTERWIDTH)) / (filters.size() + 1);

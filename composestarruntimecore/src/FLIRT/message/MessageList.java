@@ -13,7 +13,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageList.java,v 1.6 2006/06/26 13:48:20 reddog33hummer Exp $
+ * $Id: MessageList.java,v 1.7 2006/06/29 08:46:01 reddog33hummer Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -479,7 +479,7 @@ public class MessageList
 
 	public Message getFirstMessage() 
 	{
-		if( messages.size() == 0 )
+		if(messages.isEmpty() )
 			return null;
 		else
 			return (Message) messages.get( 0 );

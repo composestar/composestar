@@ -42,7 +42,7 @@ public class FileUtils
 		for(int i=0; i<cmd.length; i++)
 		{
 			if(cmd[i] == '/')
-				buffer.append(File.separator+File.separator);
+                buffer.append(File.separator).append(File.separator);
 			else if(cmd[i] == '\\')
 				buffer.append(File.separator);
 			else

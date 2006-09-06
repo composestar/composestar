@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.6 2006/03/17 08:42:29 reddog33hummer Exp $
+ * $Id: ObjectManager.java,v 1.7 2006/06/25 19:33:21 wminnen Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -452,7 +452,7 @@ public class ObjectManager implements ChildRunnable
 				
 				filterList = (aMessage.getDirection()==Message.INCOMING?fm.getInputFilters():fm.getOutputFilters());
 				
-				if( filterList.size() == 0 && aMessage.getDirection() == Message.OUTGOING )
+				if(filterList.isEmpty() && aMessage.getDirection() == Message.OUTGOING )
 				{
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No outputfilters, returning message.");
 					return aMessage;
@@ -475,13 +475,13 @@ public class ObjectManager implements ChildRunnable
 				{
 					return per.getActionResult();
 				}
-				wasAccepted = wasAccepted | per.wasAccepted();
+				wasAccepted = wasAccepted || per.wasAccepted();
 			}
 
 			if( aMessage.getDirection() == Message.OUTGOING )
 				return aMessage;
 		
-			if(filterModules.size() == 0)
+			if(filterModules.isEmpty())
 			{
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No filtermodules, returning DefaultDispatchToInnerAction");
 				//return Invoker.getInstance().invoke(aMessage.getTarget(), aMessage.getSelector(), aMessage.getArguments());

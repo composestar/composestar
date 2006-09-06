@@ -101,11 +101,11 @@ public class FILTHServiceImpl extends FILTHService{
 		buffer.append("<html>\n");
 		buffer.append("\t<head>\n");
 		buffer.append("\t\t<title>Filter Composition and Checking report</title>\n");
-		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\""+cssFile+"\"/>\n");
+        buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+Configuration.instance().getPathSettings().getPath("Composestar")+"/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
-		buffer.append("<h3>Report generated on:  "+new Date().toString()+"</h3>\n");
+        buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://" + Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
+        buffer.append("<h3>Report generated on:  ").append(new Date().toString()).append("</h3>\n");
 
 		FILTHService.log.print(buffer.toString());
 		

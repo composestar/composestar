@@ -45,6 +45,6 @@ public class SyncBuffer
 
 	public boolean isEmpty()
 	{
-		return (this.queue.size()==0);
+		return (this.queue.isEmpty());
 	}
 }

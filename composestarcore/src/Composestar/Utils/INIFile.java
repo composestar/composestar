@@ -1261,7 +1261,7 @@ public final class INIFile
 
             if (this.mstrComment != null)
                 objBuf.append(addRemChars(this.mstrComment));
-            objBuf.append('[' + this.mstrName + "]\r\n");
+            objBuf.append('[').append(this.mstrName).append("]\r\n");
             colKeys = this.mhmapProps.keySet();
             if (colKeys != null)
             {

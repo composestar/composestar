@@ -17,7 +17,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DefaultFilterPolicy.java,v 1.5 2006/06/29 08:46:01 reddog33hummer Exp $
+ * $Id: DefaultFilterPolicy.java,v 1.6 2006/06/29 11:51:56 reddog33hummer Exp $
  * 
  * Filter policy with support for the Dispatch, Error and Substitution filters.
  */
@@ -96,8 +96,8 @@ class DefaultFilterPolicy extends FilterPolicy
 				exit = true;
 			}
 			aMessage = modifiedMessage;
-			messageWasFiltered = messageWasFiltered | eval;
-			shouldDispatchToInner = shouldDispatchToInner & csa.getShouldContinue();
+			messageWasFiltered = messageWasFiltered || eval;
+			shouldDispatchToInner = shouldDispatchToInner && csa.getShouldContinue();
 		}
 
 	    if(Debug.SHOULD_DEBUG)

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Logic.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id: Logic.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
  * 
  */
  
@@ -78,7 +78,7 @@ class Logic
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
-			lh[i] = !lh[i] | rh[i];
+			lh[i] = !lh[i] || rh[i];
 		}
 	}
 
@@ -86,7 +86,7 @@ class Logic
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
-			lh[i] = (lh[i] & rh[i]) | (!lh[i] & !rh[i]) ;
+			lh[i] = (lh[i] && rh[i]) || (!lh[i] && !rh[i]) ;
 		}
 	}
 

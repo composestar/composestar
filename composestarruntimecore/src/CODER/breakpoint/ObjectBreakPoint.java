@@ -53,7 +53,7 @@ public abstract class ObjectBreakPoint extends BreakPoint {
 
 	public void setSelector(String selector) throws BreakPointParseException
 	{
-		if(selector == null || selector.equals("")) selector = "*";
+		if(selector == null || selector.length() == 0) selector = "*";
 		
 		final char[] seperator = {','};
 

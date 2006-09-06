@@ -13,7 +13,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterElementRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id: FilterElementRuntime.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  */
 public class FilterElementRuntime extends ReferenceEntityRuntime implements Interpretable 
 {
@@ -63,7 +63,7 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
 			for(int i=0; i<this.matchingPatterns.size(); i++)
 			{
 				MatchingPatternRuntime mpr = (MatchingPatternRuntime)this.matchingPatterns.get(i);
-				matches = matches | mpr.interpret(m,context);
+				matches = matches || mpr.interpret(m, context);
 			}
     		if(this.theEnableOperatorTypeRuntime instanceof EnableOperatorRuntime) // =>
     		{

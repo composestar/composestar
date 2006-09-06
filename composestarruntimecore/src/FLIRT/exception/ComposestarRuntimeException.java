@@ -54,7 +54,7 @@ public class ComposestarRuntimeException extends RuntimeException {
 	 */
 	public Throwable getCause()
 	{
-		return cause == this ? null : cause;
+		return cause.equals(this) ? null : cause;
 	}
 
 	/**
@@ -70,9 +70,9 @@ public class ComposestarRuntimeException extends RuntimeException {
 	 */
 	public Throwable initCause(Throwable cause)
 	{
-		if (cause == this)
+		if (cause.equals(this))
 			throw new IllegalArgumentException();
-		if (this.cause != this)
+		if (!this.cause.equals(this))
 			throw new IllegalStateException();
 		this.cause = cause;
 		return this;
