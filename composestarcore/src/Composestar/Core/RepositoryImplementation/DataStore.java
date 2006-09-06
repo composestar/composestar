@@ -5,14 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DataStore.java,v 1.2 2006/02/24 16:02:05 dspenkel Exp $
+ * $Id: DataStore.java,v 1.3 2006/05/05 09:05:45 pascal_durr Exp $
  */
 /**
  *   The Repository part of the Compose* project.
  *   It supports reading and writing objects.
  *   It allows for basic store and restore operations
  *   @author Pascal DŸrr
- *   @version $Id: DataStore.java,v 1.2 2006/02/24 16:02:05 dspenkel Exp $
+ *   @version $Id: DataStore.java,v 1.3 2006/05/05 09:05:45 pascal_durr Exp $
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -41,7 +41,7 @@ public class DataStore implements Serializable, Cloneable {
   /**
    * @modelguid {8A9901E3-C698-49E4-8F98-71D347F0AE9E}
    */
-  private static boolean DEBUG = false;
+  private final static boolean DEBUG = false;
 
   /**
    * @modelguid {861306A9-BFA5-4625-9C29-0C9F6C32D49D}
@@ -422,22 +422,5 @@ public class DataStore implements Serializable, Cloneable {
    */
   public void clean() {
     map.clear();
-  }
-
-  /**
-   * @param debug
-   * @roseuid 40EBCD8202F5
-   */
-  public void setDebug(boolean debug) {
-    DEBUG = debug;
-  }
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40EBCD8F00C2
-   */
-  public boolean isDebug() {
-    return DEBUG;
   }
 }

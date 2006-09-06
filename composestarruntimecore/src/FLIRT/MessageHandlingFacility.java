@@ -23,15 +23,14 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.5 2006/06/29 08:46:00 reddog33hummer Exp $
+ * $Id: MessageHandlingFacility.java,v 1.6 2006/06/29 11:51:56 reddog33hummer Exp $
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT
  */
 public abstract class MessageHandlingFacility 
 {
-	protected static RepositoryDeserializer rd = null;
-	public static DataStore datastore = null;
+	protected static DataStore datastore = null;
     
 	/**
 	 * @roseuid 40EA969503AB
@@ -550,7 +549,7 @@ public abstract class MessageHandlingFacility
 			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Deserializing compile time structure from '" + filename + "'...");
 		}
 		
-		rd = provider.getRepositoryDeserializer();
+		RepositoryDeserializer rd = provider.getRepositoryDeserializer();
 		datastore = rd.deserialize(filename);
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Linking compile time structure...");
 		try

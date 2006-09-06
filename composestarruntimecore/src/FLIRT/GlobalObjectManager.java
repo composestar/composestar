@@ -7,7 +7,7 @@ import java.util.Hashtable;
 
 public class GlobalObjectManager 
 {
-	static Hashtable objectmanagers = new Hashtable ();
+	protected static Hashtable objectmanagers = new Hashtable (100);
     
 	/**
 	 * @param key

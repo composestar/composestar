@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Signature.java,v 1.2 2006/03/08 16:34:59 dspenkel Exp $
+ * $Id: Signature.java,v 1.3 2006/09/05 15:54:10 reddog33hummer Exp $
  */
 package Composestar.Core.CpsProgramRepository;
 
@@ -29,11 +29,11 @@ public class Signature implements SerializableRepositoryEntity
   public DataMap methodByKey = null;
   public DataMap methodByName = null;
   
-  public static int RECALCMAXSIG = -1;
-  public static int UNKNOWN = 0;
-  public static int UNSOLVED = 1;
-  public static int SOLVING = 2;
-  public static int SOLVED = 3;
+  public final static int RECALCMAXSIG = -1;
+  public final static int UNKNOWN = 0;
+  public final static int UNSOLVED = 1;
+  public final static int SOLVING = 2;
+  public final static int SOLVED = 3;
   
   protected int status = Signature.UNKNOWN;
   

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterType.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: FilterType.java,v 1.2 2006/06/25 19:24:10 wminnen Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -24,25 +24,15 @@ import Composestar.Core.CpsProgramRepository.*;
  */
 public class FilterType extends Concern {
   public String type;
-  public static String WAIT = "Wait";
-  public static String DISPATCH = "Dispatch";
-  public static String ERROR = "Error";
-  public static String META = "Meta";
-  public static String SUBSTITUTION = "Substitution";
-  public static String CUSTOM = "Custom";
-  public static String SEND	  = "Send";
-  public static String PREPEND = "Prepend";
-  public static String APPEND  = "Append";
-
-  /**
-   * @modelguid {6E580DFE-8DED-49DC-A73D-EFAAE97C4827}
-   * @roseuid 401FAA650205
-   */
-  public FilterType() 
-  {
-    super();
-  }
-
+  public final static String WAIT = "Wait";
+  public final static String DISPATCH = "Dispatch";
+  public final static String ERROR = "Error";
+  public final static String META = "Meta";
+  public final static String SUBSTITUTION = "Substitution";
+  public final static String CUSTOM = "Custom";
+  public final static String SEND	  = "Send";
+  public final static String PREPEND = "Prepend";
+  public final static String APPEND  = "Append";
 
   /**
    * @return java.lang.String

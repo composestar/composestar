@@ -25,9 +25,5 @@ public abstract class Invoker
 	
 	public ArrayList getAttributesFor(Object target, String selector) { return null; };
 	
-	public boolean objectHasMethod (Object inner, String m_selector, Dictionary context)
-	{
-		Debug.out(Debug.MODE_ERROR,"Invoker","WARNING INVOKER DIDN'T IMPLEMENT objectHasMethod(Object, String, Dictionary)!!!");
-		return false;
-	};
+	public abstract boolean objectHasMethod (Object inner, String m_selector, Dictionary context);
 }

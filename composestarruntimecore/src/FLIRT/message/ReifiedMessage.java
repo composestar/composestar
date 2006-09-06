@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.FLIRT.Message;
 
 import Composestar.RuntimeCore.FLIRT.ObjectManager;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
+import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.RuntimeCore.Utils.*;
 
 /**
@@ -9,7 +10,7 @@ import Composestar.RuntimeCore.Utils.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ReifiedMessage.java,v 1.3 2006/03/10 15:58:05 oohlaf Exp $
+ * $Id: ReifiedMessage.java,v 1.4 2006/06/25 19:33:21 wminnen Exp $
  */
 public class ReifiedMessage implements ChildRunnable
 {
@@ -161,7 +162,7 @@ public class ReifiedMessage implements ChildRunnable
 
 	public Object send(Object target)
 	{
-		ObjectManager om = ObjectManager.getObjectManagerFor(target,MessageHandlingFacility.datastore);
+		ObjectManager om = ObjectManager.getObjectManagerFor(target,DataStore.instance());
 		Message m = new Message(this.message.getSelector(),this.message.getArguments());
 		m.setSender(this.message.getSender());
 		m.setServer(target);

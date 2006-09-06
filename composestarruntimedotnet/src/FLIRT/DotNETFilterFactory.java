@@ -61,10 +61,7 @@ public class DotNETFilterFactory extends FilterFactory
 							if(Debug.SHOULD_DEBUG) Debug.out( Debug.MODE_INFORMATION, "FLIRT", "Found custom filter '" +cf.getName()+ "' in class '" +name+ "'." );
 							return cf;
 						}
-						else
-						{
-							if(Debug.SHOULD_DEBUG) Debug.out( Debug.MODE_INFORMATION, "FLIRT", "Custom filter '" +cf.getName()+ "' in class '" +name+ "' is not the one we are looking for." );
-						}
+						else if(Debug.SHOULD_DEBUG) Debug.out( Debug.MODE_INFORMATION, "FLIRT", "Custom filter '" +cf.getName()+ "' in class '" +name+ "' is not the one we are looking for." );
 					}
 					catch (Exception e)
 					{

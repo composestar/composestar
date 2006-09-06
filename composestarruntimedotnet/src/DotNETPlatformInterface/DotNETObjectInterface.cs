@@ -59,7 +59,7 @@ namespace Composestar.RuntimeDotNET.Interface
 				| System.Reflection.BindingFlags.FlattenHierarchy);
 		} 
 
-		public object GetFieldValue(object PassedObject, string
+		public static object GetFieldValue(object PassedObject, string
 			FieldName)
 		{
 
