@@ -14,7 +14,7 @@ import java.util.Locale;
  * can be explicitly terminated by the argument '--'.
  *
  * @author Steve Purcell
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @see jargs.examples.gnu.OptionTest
  */
 public class CmdLineParser {
@@ -307,8 +307,8 @@ public class CmdLineParser {
         }
 
         this.remainingArgs = new String[otherArgs.size()];
-        int i = 0;
-        for (Enumeration e = otherArgs.elements(); e.hasMoreElements(); ++i) {
+        Enumeration e = otherArgs.elements();
+        for (int i = 0; e.hasMoreElements(); i++) {
             this.remainingArgs[i] = (String)e.nextElement();
         }
     }

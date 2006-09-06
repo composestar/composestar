@@ -75,9 +75,10 @@ public class OrderTraverser {
 			}
 
 			if (candidates.size()>1){
-				int c=0;
+				Iterator i=candidates.iterator();
+
 				/* multiple candidates -> the case of recursion, a new path is available */
-				for (Iterator i=candidates.iterator(); i.hasNext(); ++c){
+				for (int c=0; i.hasNext(); c++){
 					LinkedList newNodes=OrderTraverser.cloneLinkedList(nodes);
 					LinkedList newOrder=OrderTraverser.cloneLinkedList(order);
 					if (c==0)

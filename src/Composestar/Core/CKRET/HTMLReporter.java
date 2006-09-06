@@ -122,7 +122,7 @@ public class HTMLReporter implements Reporter {
 				for( Iterator conflictIterator = conflicts.iterator(); conflictIterator.hasNext(); )
 				{
 					Conflict conflict = (Conflict)conflictIterator.next();
-					buffer.append("<tr><td>"+conflict.getResource()+"</td><td>"+conflict.getSequence()+"</td><td>"+conflict.getExpr()+"</td><td>"+conflict.getMsg()+"</td></tr>");
+                    buffer.append("<tr><td>" + conflict.getResource() + "</td><td>" + conflict.getSequence() + "</td><td>" + conflict.getExpr() + "</td><td>" + conflict.getMsg()).append("</td></tr>");
 				}
 				buffer.append("</table>");
 				buffer.append("</td></tr>");
@@ -138,12 +138,12 @@ public class HTMLReporter implements Reporter {
 		buffer.append("<html>\n");
 		buffer.append("\t<head>\n");
 		buffer.append("\t\t<title>SEmantiC Reasoning Tool</title>\n");
-		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\""+cssFile+"\"/>\n");
+        buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\""+"file://"+Configuration.instance().getPathSettings().getPath("Composestar")+"/logo.gif\"/>  /TRESE/Compose*/SECRET</i></b></font></div>\n");
-		
-		buffer.append("<h3>"+(new java.util.Date()).toString());
+        buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://" + Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/SECRET</i></b></font></div>\n");
+
+        buffer.append("<h3>").append((new Date()).toString());
 		buffer.append("<BR>");
         buffer.append("Platform: ").append(Configuration.instance().getProperty("Platform"));
         buffer.append("<BR>");
