@@ -48,7 +48,7 @@ public class MatchingPatternAST extends ContextRepositoryEntity {
    * @param matchingPartValue
    * @roseuid 401FAA65007E
    */
-  public void addMatchingPart(MatchingPart matchingPartValue) {
+  public void addMatchingPart(MatchingPartAST matchingPartValue) {
     this.matchingParts.addElement( matchingPartValue );
   }
 

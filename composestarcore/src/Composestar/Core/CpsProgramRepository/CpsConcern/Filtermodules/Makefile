@@ -28,8 +28,9 @@ CLASSES=AbstractPattern.class \
 	Internal.class \
 	InternalAST.class \
 	MatchingPart.class \
+        MatchingPartAST.class \
 	MatchingPattern.class \
-MatchingPatternAST.class \
+        MatchingPatternAST.class \
 	MatchingType.class \
         MessageSelector.class \
 	Method.class \

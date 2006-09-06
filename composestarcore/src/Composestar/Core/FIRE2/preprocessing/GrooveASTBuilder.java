@@ -618,7 +618,7 @@ public class GrooveASTBuilder {
                 matchingPartNode );
         graph.addEdge( edge );
         
-        if ( matchingPart.matchType instanceof NameMatchingType ){
+        if ( matchingPart.getMatchType() instanceof NameMatchingType ){
             edge = new AnnotatedEdge( 
                     matchingPartNode, FlowChartNames.NAME_MATCHING_NODE, 
                     matchingPartNode );
@@ -632,7 +632,7 @@ public class GrooveASTBuilder {
         }
         
         //selector:
-        MessageSelector selector = matchingPart.selector;
+        MessageSelector selector = matchingPart.getSelector();
         Node selectorNode = (Node) selectorTable.get( selector.name );
         if ( selectorNode == null ){
             selectorNode = buildSelectorNode( selector, graph );
@@ -643,7 +643,7 @@ public class GrooveASTBuilder {
         graph.addEdge( edge );
         
         //target:
-        Target target = matchingPart.target;
+        Target target = matchingPart.getTarget();
         Node targetNode = (Node) targetTable.get( target.name );
         if ( targetNode == null ){
             targetNode = buildTargetNode( target, graph );
