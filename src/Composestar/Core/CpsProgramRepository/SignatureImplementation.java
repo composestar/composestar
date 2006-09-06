@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: SignatureImplementation.java,v 1.2 2006/02/16 12:51:20 composer Exp $
+ * $Id: SignatureImplementation.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
  */
 package Composestar.Core.CpsProgramRepository;
 
@@ -17,10 +17,10 @@ import Composestar.Core.RepositoryImplementation.*;
  */
 public class SignatureImplementation implements SerializableRepositoryEntity {
   public int RelationType;
-  public static int NORMAL = 1;
-  public static int ADDED = 2;
-  public static int REMOVED = 4;
-  public static int ALL = 255;
+  public final static int NORMAL = 1;
+  public final static int ADDED = 2;
+  public final static int REMOVED = 4;
+  public final static int ALL = 255;
   private MethodInfo DotNETPresentation;
 
 
