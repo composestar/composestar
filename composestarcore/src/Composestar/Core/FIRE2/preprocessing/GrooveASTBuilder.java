@@ -492,7 +492,7 @@ public class GrooveASTBuilder {
         
         //matchingpart:
         MatchingPart matchingPart = 
-            (MatchingPart) pattern.matchingParts.elementAt( 0 );
+            (MatchingPart) pattern.getMatchingParts().elementAt( 0 );
         Node matchingPartNode = buildMatchingPartNode( matchingPart, graph );
         edge = new AnnotatedEdge( patternNode, FlowChartNames.MATCHING_PART_EDGE,
                 matchingPartNode );
@@ -501,8 +501,8 @@ public class GrooveASTBuilder {
         //substitutionpart:
         Node substitutionPartNode;
         SubstitutionPart substitutionPart = 
-            (pattern.substitutionParts.isEmpty()) ? null :
-                (SubstitutionPart) pattern.substitutionParts.elementAt(0);
+            (pattern.getSubstitutionParts().isEmpty()) ? null :
+                (SubstitutionPart) pattern.getSubstitutionParts().elementAt(0);
         
         substitutionPartNode = buildSubstitutionPartNode(
                 substitutionPart, graph );

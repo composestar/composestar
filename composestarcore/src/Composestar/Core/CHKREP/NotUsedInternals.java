@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedInternals.java,v 1.2 2006/03/09 10:36:13 whavinga Exp $
+* $Id: NotUsedInternals.java,v 1.3 2006/06/25 19:24:10 wminnen Exp $
 */
 package Composestar.Core.CHKREP;
 
@@ -129,7 +129,7 @@ public class NotUsedInternals implements BaseChecker {
 				 * and the Debug warning
 				 */
 				if(!isInternalUsed){
-					Debug.out(Debug.MODE_WARNING, "CHKREP","Internal " + internalID + " is declared but never used", internal.getDescriptionFileName(), internal.getDescriptionLineNumber());
+					Debug.out(Debug.MODE_WARNING, "CHKREP","Internal " + internalID + " is declared but never used", internal.getDescriptionFileName() , internal.getDescriptionLineNumber());
 				}
 			}
 		}

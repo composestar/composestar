@@ -9,23 +9,28 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+import java.util.Iterator;
 import java.util.Vector;
-import Composestar.Utils.*;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 public class MatchingPattern extends ContextRepositoryEntity {
-  public Vector matchingParts;
-  public Vector substitutionParts;
+  public MatchingPatternAST mpa; 
+  //public Vector matchingParts;
+  //public Vector substitutionParts;
 
 
   /**
    * @roseuid 404C4B6B0167
+   * @depricated
    */
   public MatchingPattern() {
     super();
-	matchingParts = new Vector();
-	substitutionParts = new Vector();
+  }
+  
+  public MatchingPattern(MatchingPatternAST mpAST){
+	  super();
+	  mpa = mpAST;
   }
 
 
@@ -35,11 +40,11 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65006B
    */
   public Vector getMatchingParts() {
-    return matchingParts;
+    return mpa.matchingParts;
   }
 
-  public java.util.Iterator getMatchingPartsIterator() {
-    return new CPSIterator( matchingParts );
+  public Iterator getMatchingPartsIterator() {
+    return mpa.getMatchingPartsIterator();
   }
 
 
@@ -48,7 +53,7 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65007E
    */
   public void addMatchingPart(MatchingPart matchingPartValue) {
-    this.matchingParts.addElement( matchingPartValue );
+    mpa.addMatchingPart( matchingPartValue );
   }
 
 
@@ -59,11 +64,11 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65008A
    */
   public Vector getSubstitutionParts() {
-    return substitutionParts;
+    return mpa.getSubstitutionParts();
   }
 
-  public java.util.Iterator getSubstitutionPartsIterator() {
-    return new CPSIterator( substitutionParts );
+  public Iterator getSubstitutionPartsIterator() {
+    return mpa.getSubstitutionPartsIterator();
   }
 
 
@@ -72,6 +77,10 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65009D
    */
   public void addSubstitutionPart(SubstitutionPart substitutionPartValue) {
-    this.substitutionParts.addElement( substitutionPartValue );
+    mpa.addSubstitutionPart(substitutionPartValue );
   }
+
+public MatchingPatternAST getMpa() {
+	return mpa;
+}
 }

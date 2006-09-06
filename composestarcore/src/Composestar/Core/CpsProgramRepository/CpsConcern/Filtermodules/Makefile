@@ -29,6 +29,7 @@ CLASSES=AbstractPattern.class \
 	InternalAST.class \
 	MatchingPart.class \
 	MatchingPattern.class \
+MatchingPatternAST.class \
 	MatchingType.class \
         MessageSelector.class \
 	Method.class \

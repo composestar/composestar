@@ -5,14 +5,16 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterElement.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: FilterElement.java,v 1.2 2006/09/05 14:17:31 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {5976EB5C-BFC4-46BF-995B-AD41D42C48C7}
@@ -22,7 +24,7 @@ public class FilterElement extends RepositoryEntity {
   //public ConditionExpression conditionPart; -> delegate to FilterElementAST
   //public EnableOperatorType enableOperatorType; -> delegate to FilterElementAST
   //public FilterElementCompOper rightOperator; -> delegate to FilterElementAST
-  //public Vector matchingPatterns;
+  public Vector matchingPatterns;
 
   /**
    * @modelguid {51317331-0B65-4CD1-AE8A-20C987FD14D0}
@@ -31,11 +33,20 @@ public class FilterElement extends RepositoryEntity {
    */
   public FilterElement() {
     super();
-    //matchingPatterns = new Vector();
+    matchingPatterns = new Vector();
   }
   
   public FilterElement(FilterElementAST ast){
 	  filterElementAST = ast;
+	  matchingPatterns = new Vector();
+	  
+	  Iterator it = filterElementAST.getMatchingPatternIterator();
+	  while (it.hasNext()){
+		  MatchingPattern mp = new MatchingPattern((MatchingPatternAST) it.next());
+		  mp.setParent(this);
+		  matchingPatterns.add(mp);
+		  DataStore.instance().addObject(mp);
+	  }
   }
 
 
@@ -89,7 +100,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA6302CA
    */
   public boolean addMatchingPattern(MatchingPattern filterObject) {
-	  filterElementAST.addMatchingPattern(filterObject);
+	  matchingPatterns.addElement(filterObject);
     return (true);
   }
 
@@ -103,7 +114,9 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA6302E9
    */
   public MatchingPattern removeMatchingPattern(int index) {
-    return filterElementAST.removeMatchingPattern(index);
+    Object o = matchingPatterns.elementAt(index);
+    matchingPatterns.removeElementAt(index);
+    return ((MatchingPattern) o);
   }
 
 
@@ -114,7 +127,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 401FAA630312
    */
   public Iterator getMatchingPatternIterator() {
-    return filterElementAST.getMatchingPatternIterator();
+	  return (new CPSIterator(matchingPatterns));
   }
 
 
@@ -126,7 +139,7 @@ public class FilterElement extends RepositoryEntity {
    * @roseuid 402AB4E5039D
    */
   public MatchingPattern getMatchingPattern(int index) {
-    return filterElementAST.getMatchingPattern(index);
+	  return ((MatchingPattern) matchingPatterns.elementAt(index));
   }
 
 

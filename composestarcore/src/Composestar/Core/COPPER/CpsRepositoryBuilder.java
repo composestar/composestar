@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.9 2006/09/05 14:17:31 doornenbal Exp $
+ * $Id: CpsRepositoryBuilder.java,v 1.10 2006/09/05 15:54:10 reddog33hummer Exp $
  */
 package Composestar.Core.COPPER;
 
@@ -34,7 +34,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.InternalAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPatternAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
@@ -93,7 +93,7 @@ public class CpsRepositoryBuilder
   private FilterModuleBinding fmb;
   private FilterModuleReference fmref;
   private MatchingPart mp;
-  private MatchingPattern mpat;
+  private MatchingPatternAST mpat;
   private MatchingType mt;
   private MessageSelector s;
   private Method m;
@@ -882,7 +882,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   public void addMessagePattern( /*Vector objv, Vector typev, Vector typev2, int orgmatching */ ) {
     //int matching;
 
-    mpat = new MatchingPattern();
+    mpat = new MatchingPatternAST();
     mpat.setParent(fe);
     fe.addMatchingPattern(mpat);
     this.addToRepository(mpat);

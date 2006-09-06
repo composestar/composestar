@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterElementAST.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id: FilterElementAST.java,v 1.1 2006/09/05 14:17:31 doornenbal Exp $
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -90,7 +90,7 @@ public class FilterElementAST extends RepositoryEntity {
    * @modelguid {B83FCFDA-49F8-4E83-9519-1A110C32EE86}
    * @roseuid 401FAA6302CA
    */
-  public boolean addMatchingPattern(MatchingPattern filterObject) {
+  public boolean addMatchingPattern(MatchingPatternAST filterObject) {
     matchingPatterns.addElement(filterObject);
     return (true);
   }
@@ -104,10 +104,10 @@ public class FilterElementAST extends RepositoryEntity {
    * @modelguid {03C4435A-96E5-49B1-A4E2-6961355E6DFD}
    * @roseuid 401FAA6302E9
    */
-  public MatchingPattern removeMatchingPattern(int index) {
+  public MatchingPatternAST removeMatchingPattern(int index) {
     Object o = matchingPatterns.elementAt(index);
     matchingPatterns.removeElementAt(index);
-    return ((MatchingPattern) o);
+    return ((MatchingPatternAST) o);
   }
 
 
@@ -129,8 +129,8 @@ public class FilterElementAST extends RepositoryEntity {
    *
    * @roseuid 402AB4E5039D
    */
-  public MatchingPattern getMatchingPattern(int index) {
-    return ((MatchingPattern) matchingPatterns.elementAt(index));
+  public MatchingPatternAST getMatchingPattern(int index) {
+    return ((MatchingPatternAST) matchingPatterns.elementAt(index));
   }
 
 

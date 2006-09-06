@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.11 2006/08/31 09:34:05 doornenbal Exp $
+ * $Id: cps.g,v 1.12 2006/09/01 12:11:39 doornenbal Exp $
  */
 
 /**
@@ -248,7 +248,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
     superImpositionBlock : LCURLY! superImpositionInner RCURLY!;
 
-      superImpositionInner : (selectorDef)? (conditionBind)? (methodBind)? (filtermoduleBind)? (annotationBind)? (constraints)?;
+      superImpositionInner : (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?;
 
 
     /*---------------------------------------------------------------------------*/
@@ -272,38 +272,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
       	selectorRef : concernElemReference;
 
       	weaveOperation : ARROW_LEFT!;
-
-    /*---------------------------------------------------------------------------*/
-    conditionBind : "conditions"^ (singleConditionBind)* ;
-
-      singleConditionBind : commonBindingPart conditionNameSet SEMICOLON!
-                          { #singleConditionBind = #([CONDITION_, "condition"], #singleConditionBind); } ;
-
-        conditionNameSet : (LCURLY! conditionName (COMMA! conditionName)* RCURLY!
-                           | conditionName (COMMA! conditionName)*)
-                           { #conditionNameSet = #([CONDNAMESET_, "condition name set"], #conditionNameSet);} ;
-
-          conditionName : (((~(STAR|SEMICOLON))* STAR) => fmElemReferenceStar
-                          | fmElemReference)             //condition_name_id
-                          { #conditionName = #([CONDNAME_, "condition name"], #conditionName);} ;
-
-    /*---------------------------------------------------------------------------*/
-    methodBind : "methods"^ (singleMethodBind )* ;
-
-      singleMethodBind : commonBindingPart methodNameSet SEMICOLON!
-                       { #singleMethodBind = #([METHOD2_, "method"], #singleMethodBind);} ;
-
-        methodNameSet : ( LCURLY! methodName (COMMA methodName)* RCURLY!
-                        | methodName (COMMA methodName)*)
-                        { #methodNameSet = #([METHODNAMESET_, "method name set"], #methodNameSet);} ;
-
-          methodName : (((~(STAR|SEMICOLON))* STAR) => fmElemReferenceStar
-                       | fmElemReference (LPARENTHESIS! (typeList)? RPARENTHESIS!)?)     //method_name_id
-                       { #methodName = #([METHODNAME_, "method name"], #methodName);} ;
-
-            typeList : type (COMMA! type)*              //or instead of COMMA!: SEMICOLON!??
-                       { #typeList = #([TYPELIST_, "typelist"], #typeList);} ;
-
 
     /*---------------------------------------------------------------------------*/
     filtermoduleBind : "filtermodules"^ (singleFmBind)* ;
@@ -422,7 +390,7 @@ PARAMETER_NAME          : QUESTIONMARK NAME;
 WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
                           | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
 
-PROLOG_EXPRESSION       :   '|'  (PROLOG_SUB_EXPRESSION)* RCURLY!;
+PROLOG_EXPRESSION       :   '|' (PROLOG_SUB_EXPRESSION)* RCURLY!;
 
 protected PROLOG_SUB_EXPRESSION : (~ ('{'|'}'|'\n'|'\r'))
 					| (LCURLY (PROLOG_SUB_EXPRESSION)* RCURLY)

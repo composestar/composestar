@@ -229,6 +229,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingPatternAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingType.java"
                     SubType = "Code"
                     BuildAction = "Compile"
