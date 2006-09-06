@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.6 2006/06/25 19:24:10 wminnen Exp $
+ * $Id: cpsw.g,v 1.7 2006/08/31 09:34:05 doornenbal Exp $
  */
 /**
  * Treewalker for parsed .cps files
@@ -162,7 +162,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
 
   /////////////////////////////////////////////////////////////////////////
-  superImposition : #("superimposition" {b.addSuperImposition();} (selectorDef)? (conditionBind)? (methodBind)? (filtermoduleBind)? (annotationBind)? (constraints)?);
+  superImposition : #("superimposition" {b.addSuperImposition();} (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?);
 
     /*---------------------------------------------------------------------------*/
      selectorDef : #("selectors" (singleSelectorDefinition)*);
@@ -175,35 +175,6 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
      //singleSelectorDefinition : #(SELEC2_ n:NAME {b.addSelectorDefinition(n.getText(),n.getLine());} (selExpression)+);
      
      selExpressionPred : n:NAME pe:PROLOG_EXPRESSION {b.addPredicateSelectorExpression(n.getText(), pe.getText(),n.getLine()); };
-
-    /*---------------------------------------------------------------------------*/
-    conditionBind : #("conditions" (singleConditionBind)*);
-
-      singleConditionBind : #(CONDITION_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addConditionBinding(namev, n.getLine());} conditionNameSet);
-
-        conditionNameSet : #(CONDNAMESET_ (#(CONDNAME_ {namev.clear();} conditionName))+);
-
-          conditionName : (((NAME)+ STAR) => (n:NAME {namev.add(n.getText());})+ s:STAR { b.addConditionName(namev, true); }
-                          | (n2:NAME {namev.add(n2.getText());})+ { b.addConditionName(namev, false); } );
-
-
-    /*---------------------------------------------------------------------------*/
-    methodBind : #("methods" (singleMethodBind)*);
-
-      singleMethodBind : #(METHOD2_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
-      //singleMethodBind : #(METHOD2_ {namev.clear();} (n:NAME {namev.add(n.getText());})+ {b.addMethodBinding(namev, n.getLine());} methodNameSet);
-
-        methodNameSet : #(METHODNAMESET_ (#(METHODNAME_ methodName))+);
-
-          methodName : (((NAME)+ STAR) => (n:NAME {namev.add(n.getText());})+ s:STAR { b.addMethodName(namev, true, null); }
-                     | {typel.clear();} (n2:NAME {namev.add(n2.getText());})+ (typeList)? { b.addMethodName(namev, false, typel); } );
-
-            typeList: #(TYPELIST_ {typev.clear();} (type {typel.add(typev);} )*);
-
-       concernReference : (NAME)+;
-
-       conditionRef : (NAME)+;
-
 
     /*---------------------------------------------------------------------------*/
     filtermoduleBind : #("filtermodules" (singleFmBind)*);

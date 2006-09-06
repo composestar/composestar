@@ -37,4 +37,20 @@ public class ParameterizedInternal extends Internal {
 	public void setType(ConcernReference ref){
 		type = ref;
 	}
+
+	public int getDescriptionLineNumber() {
+		return pin_ast.getDescriptionLineNumber();
+	}
+
+	public void setDescriptionLineNumber(int newLineNumber) {
+		pin_ast.setDescriptionLineNumber(newLineNumber);
+	}
+
+	public String getDescriptionFileName() {
+		return pin_ast.getDescriptionFileName();
+	}
+
+	public void setDescriptionFileName(String newFileName) {
+		pin_ast.setDescriptionFileName(newFileName);
+	}
 }
