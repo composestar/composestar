@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "StarlLightJavaCompiletime", "StarlLightJavaCompiletime.vjsproj", "{55E29217-7071-4FA1-8810-79614584BBBB}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "StarLightJavaCompiletime", "StarLightJavaCompiletime.vjsproj", "{55E29217-7071-4FA1-8810-79614584BBBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "Starlight\cecil-0.4.3\Mono.Cecil.csproj", "{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}"
 EndProject
