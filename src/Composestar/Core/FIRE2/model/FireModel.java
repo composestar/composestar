@@ -596,7 +596,7 @@ public class FireModel {
                 else{
                     newLayer = startState.layer;
                 }
-                endState = (ExtendedExecutionState) deriveState(
+                endState = deriveState(
                         baseTransition.getEndState(), startState, newLayer );
                 
                 //if state already in 

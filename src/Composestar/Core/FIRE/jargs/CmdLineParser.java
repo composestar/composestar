@@ -14,7 +14,7 @@ import java.util.Locale;
  * can be explicitly terminated by the argument '--'.
  *
  * @author Steve Purcell
- * @version $Revision: 1.2 $
+ * @version $Revision$
  * @see jargs.examples.gnu.OptionTest
  */
 public class CmdLineParser {
@@ -156,7 +156,7 @@ public class CmdLineParser {
                 throws IllegalOptionValueException {
                 try {
                     NumberFormat format = NumberFormat.getNumberInstance(locale);
-                    Number num = (Number)format.parse(arg);
+                    Number num = format.parse(arg);
                     return new Double(num.doubleValue());
                 }
                 catch (ParseException e) {
@@ -281,7 +281,7 @@ public class CmdLineParser {
                 if ( opt == null ) {
                     throw new UnknownOptionException(curArg);
                 }
-                Object value = null;
+                Object value;
                 if ( opt.wantsValue() ) {
                     if ( valueArg == null ) {
                         position += 1;

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE.Reporter;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Reporter.java,v 1.1 2006/02/16 23:03:57 pascal_durr Exp $
+ * $Id$
  * 
 **/
 
@@ -186,7 +186,7 @@ public class Reporter
 
 		for (int t = 0; t < tables.size(); t++)
 		{
-			buffer += "[ " + (String) tableNames.get(t) + "]\n";
+			buffer += "[ " + tableNames.get(t) + "]\n";
 			LinkedList rows = (LinkedList) tables.get(t);
 
 			for (int r = 0; r < rows.size(); r++)

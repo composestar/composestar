@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: MetaFilter.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id$
  * 
 **/
 
@@ -22,34 +22,34 @@ public class MetaFilter extends Filter
 
 		//doesMeta = true;
 	}
-	public String toString() { return "Meta";};
+	public String toString() { return "Meta";}
 
-	private void metaAction(StatusColumn status, StateTable stateTable)
-	{
-		// All right, this is the situation:
-		// We do not know what a meta filter does exactly. This can be anything, so all
-		// options are open again. 
-		//
-		// Therefore get the original permutations arrays from the symbol table.
-		// Extend each symbol-column with these new permutations
-		
-		SymbolTable st = SymbolTable.getInstance(); 
-		Symbol [] symbols = st.getAllSymbols();
+    private void metaAction(StatusColumn status, StateTable stateTable)
+    {
+        // All right, this is the situation:
+        // We do not know what a meta filter does exactly. This can be anything, so all
+        // options are open again.
+        //
+        // Therefore get the original permutations arrays from the symbol table.
+        // Extend each symbol-column with these new permutations
 
-		for (int i = 0; i < symbols.length; i++)
-		{
-			symbols[i].column.addElements(symbols[i].originalColumn);
-		}
+        SymbolTable st = SymbolTable.getInstance();
+        Symbol [] symbols = st.getAllSymbols();
 
-		// Extend the actionlist. Let the matching values point to the newtable.
-		stateTable.addElements(symbols[0].getOriginalLength(), status);
-		
-		// Terminate this action.
+        for (int i = 0; i < symbols.length; i++)
+        {
+            symbols[i].column.addElements(symbols[i].originalColumn);
+        }
+
+        // Extend the actionlist. Let the matching values point to the newtable.
+        stateTable.addElements(symbols[0].getOriginalLength(), status);
+
+        // Terminate this action.
 //		stateTable.snapshot(status, new Terminated());
-		status.finish(true);
-		
-		status.addElements(symbols[0].getOriginalLength(), true);
-	}
+        status.finish(true);
+
+        status.addElements(symbols[0].getOriginalLength(), true);
+    }
 
 
 	public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )

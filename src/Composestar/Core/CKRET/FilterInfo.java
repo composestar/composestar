@@ -156,7 +156,7 @@ public class FilterInfo {
      * @roseuid 40D846D5011A
      */
     private void run(Filter filter) {
-		Iterator iterator = (CPSIterator)filter.getFilterElementIterator();
+		Iterator iterator = filter.getFilterElementIterator();
 		while(iterator.hasNext())
 		{
 			FilterElement fe = (FilterElement)iterator.next();

@@ -15,7 +15,7 @@ public class StringConverter extends Object implements Cloneable, Serializable {
      * @roseuid 404DCD030018
      */
     public static int stringToInt(String value, int defaultvalue) {
-    	int i = 0;
+    	int i;
         try
         {
             i = Integer.valueOf(value).intValue();

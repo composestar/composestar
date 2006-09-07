@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CPSFileParser.java,v 1.2 2006/02/28 09:56:19 whavinga Exp $
+ * $Id$
  */
 package Composestar.Core.COPPER;
 
@@ -34,7 +34,7 @@ public class CPSFileParser {
 
       COPPER.setParseTree((CommonAST)parser.getAST());
  
-    	Debug.out(Debug.MODE_DEBUG,"COPPER","Parse tree: "+((CommonAST)parser.getAST()).toStringTree());
+    	Debug.out(Debug.MODE_DEBUG,"COPPER","Parse tree: "+parser.getAST().toStringTree());
         if(COPPER.isShowtree()) {
         	System.out.println(COPPER.getParseTree().toStringList() + "\n\n");
         	ASTFrame frame = new ASTFrame("The tree", COPPER.getParseTree());

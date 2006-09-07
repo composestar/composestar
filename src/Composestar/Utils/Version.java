@@ -94,7 +94,7 @@ public class Version {
     		String archiveFile = "ComposestarCORE.jar";
     		String versionFileName = "Composestar/.version";
     		
-    		File versionFile = null;
+    		File versionFile;
     		BufferedReader br = null;
     		
     		File f = new File(archiveFile);

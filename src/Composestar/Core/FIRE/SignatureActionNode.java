@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SignatureActionNode.java,v 1.2 2006/03/06 09:25:50 reddog33hummer Exp $
+ * $Id$
  * 
 **/
 
@@ -170,7 +170,7 @@ public class SignatureActionNode extends ActionNode
 		}
 		
 		
-		return (Concern) concern;
+		return concern;
 	}
 	
 	public int isSignatureMatch(HashSet dependencies, String selector, String concernName)

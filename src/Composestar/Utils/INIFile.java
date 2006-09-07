@@ -99,22 +99,16 @@ public final class INIFile
      */
     public String getStringProperty(String pstrSection, String pstrProp)
     {
-        String      strRet   = null;
-        INIProperty objProp  = null;
-        INISection  objSec   = null;
-
-        objSec = (INISection) this.mhmapSections.get(pstrSection);
+        INISection objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
         {
-            objProp = objSec.getProperty(pstrProp);
+            INIProperty objProp = objSec.getProperty(pstrProp);
             if (objProp != null)
             {
-                strRet = objProp.getPropValue();
-                objProp = null;
-            }
-            objSec = null;
+                return objProp.getPropValue();
+             }
         }
-        return strRet;
+        return null;
     }
 
     /**
@@ -135,9 +129,9 @@ public final class INIFile
     public Boolean getBooleanProperty(String pstrSection, String pstrProp)
     {
         boolean     blnRet  = false;
-        String      strVal  = null;
-        INIProperty objProp = null;
-        INISection  objSec  = null;
+        String      strVal;
+        INIProperty objProp;
+        INISection  objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -167,9 +161,9 @@ public final class INIFile
     public Integer getIntegerProperty(String pstrSection, String pstrProp)
     {
         Integer     intRet  = null;
-        String      strVal  = null;
-        INIProperty objProp = null;
-        INISection  objSec  = null;
+        String      strVal;
+        INIProperty objProp;
+        INISection  objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -204,9 +198,9 @@ public final class INIFile
     public Long getLongProperty(String pstrSection, String pstrProp)
     {
         Long        lngRet  = null;
-        String      strVal  = null;
-        INIProperty objProp = null;
-        INISection  objSec  = null;
+        String      strVal;
+        INIProperty objProp;
+        INISection  objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -241,9 +235,9 @@ public final class INIFile
     public Double getDoubleProperty(String pstrSection, String pstrProp)
     {
         Double      dblRet  = null;
-        String      strVal  = null;
-        INIProperty objProp = null;
-        INISection  objSec  = null;
+        String      strVal;
+        INIProperty objProp;
+        INISection  objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -279,9 +273,9 @@ public final class INIFile
     {
         Date        dtRet   = null;
         String      strVal  = null;
-        DateFormat  dtFmt   = null;
-        INIProperty objProp = null;
-        INISection  objSec  = null;
+        DateFormat  dtFmt;
+        INIProperty objProp;
+        INISection  objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -320,11 +314,11 @@ public final class INIFile
     public Date getTimestampProperty(String pstrSection, String pstrProp)
     {
         Timestamp   tsRet   = null;
-        Date        dtTmp   = null;
+        Date        dtTmp;
         String      strVal  = null;
-        DateFormat  dtFmt   = null;
-        INIProperty objProp = null;
-        INISection  objSec  = null;
+        DateFormat  dtFmt;
+        INIProperty objProp;
+        INISection  objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -365,7 +359,7 @@ public final class INIFile
      */
     public void addSection(String pstrSection, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -386,7 +380,7 @@ public final class INIFile
     public void setStringProperty(String pstrSection, String pstrProp, 
                     				String pstrVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -406,7 +400,7 @@ public final class INIFile
     public void setBooleanProperty(String pstrSection, String pstrProp, 
                     				boolean pblnVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -429,7 +423,7 @@ public final class INIFile
     public void setIntegerProperty(String pstrSection, String pstrProp, 
                     				int pintVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -449,7 +443,7 @@ public final class INIFile
     public void setLongProperty(String pstrSection, String pstrProp, 
                     			long plngVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -469,7 +463,7 @@ public final class INIFile
     public void setDoubleProperty(String pstrSection, String pstrProp, 
                     				double pdblVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -489,7 +483,7 @@ public final class INIFile
     public void setDateProperty(String pstrSection, String pstrProp, 
                     			Date pdtVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -510,7 +504,7 @@ public final class INIFile
     public void setTimestampProperty(String pstrSection, String pstrProp, 
                     					Timestamp ptsVal, String pstrComments)
     {
-        INISection objSec   = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec == null)
@@ -594,7 +588,7 @@ public final class INIFile
     public String[] getPropertyNames(String pstrSection)
     {
         String[]   arrRet = null;
-        INISection objSec = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -613,7 +607,7 @@ public final class INIFile
     public Map getProperties(String pstrSection)
     {
         Map        hmRet = null;
-        INISection objSec = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -632,7 +626,7 @@ public final class INIFile
      */
     public void removeProperty(String pstrSection, String pstrProp)
     {
-        INISection objSec = null;
+        INISection objSec;
 
         objSec = (INISection) this.mhmapSections.get(pstrSection);
         if (objSec != null)
@@ -660,10 +654,10 @@ public final class INIFile
     {
         boolean    blnRet    = false;
         File       objFile   = null;
-        String     strName   = null;
-        String     strTemp   = null;
+        String     strName;
+        String     strTemp;
         Iterator   itrSec    = null;
-        INISection objSec    = null;
+        INISection objSec;
         FileWriter objWriter = null;
 
         try
@@ -709,7 +703,7 @@ public final class INIFile
      */
     private Properties getEnvVars()
     {
-        Process p = null;
+        Process p;
         Properties envVars = new Properties();
 
         try
@@ -782,8 +776,8 @@ public final class INIFile
      */
     private void loadFile()
     {
-        int            iPos       = -1;
-        String         strLine    = null;
+        int            iPos;
+        String         strLine;
         String         strSection = null;
         String         strRemarks = null;
         BufferedReader objBRdr    = null;
@@ -998,7 +992,7 @@ public final class INIFile
      */
     private String delRemChars(String pstrSrc)
     {
-        int    intPos = 0;
+        int    intPos;
 
         if (pstrSrc == null) return null;
         while ((intPos = pstrSrc.indexOf(';')) >= 0)
@@ -1018,12 +1012,12 @@ public final class INIFile
      */
     private String addRemChars(String pstrSrc)
     {
-        int intLen  = 2;
+        int intLen;
         int intPos  = 0;
         int intPrev = 0;
 
-        String strLeft  = null;
-        String strRight = null;
+        String strLeft;
+        String strRight;
 
         if (pstrSrc == null) return null;
         while (intPos >= 0)
@@ -1213,7 +1207,7 @@ public final class INIFile
         {
             int      iCntr  = 0;
             String[] arrRet = null;
-            Iterator iter   = null;
+            Iterator iter;
 
             try
             {
@@ -1253,10 +1247,10 @@ public final class INIFile
          */
         public String toString()
         {
-            Set          colKeys = null;
-            String       strRet  = "";
-            Iterator     iter    = null;
-            INIProperty  objProp = null;
+            Set          colKeys;
+            String       strRet;
+            Iterator     iter;
+            INIProperty  objProp;
             StringBuffer objBuf  = new StringBuffer();
 
             if (this.mstrComment != null)
@@ -1345,11 +1339,11 @@ public final class INIFile
          */
         public String getPropValue()
         {
-            int    intStart = 0;
-            int    intEnd   = 0;
-            String strVal   = null;
-            String strVar   = null;
-            String strRet   = null;
+            int    intStart;
+            int    intEnd;
+            String strVal;
+            String strVar;
+            String strRet;
 
             strRet = this.mstrValue;
             intStart = strRet.indexOf('%');

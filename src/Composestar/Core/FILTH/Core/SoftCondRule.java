@@ -25,7 +25,7 @@ public class SoftCondRule extends Rule {
 	 */
 	public void apply() {
 
-		System.out.print(" *applying: SoftCond <"+(Action)_left+ ',' +(Action)_right+">*\n");
+		System.out.print(" *applying: SoftCond <"+_left + ',' +_right +">*\n");
 		if ( (_left.evaluate()!=null) &&
 			 (((Action)_left).isExecuted()) && 
 			 (!_left.evaluate().booleanValue()) )

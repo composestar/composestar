@@ -107,15 +107,15 @@ public class SANE implements CTCommonModule {
             concern.getSuperImposition().getFilterModuleBindingIterator();
          FilterModuleBinding fmBinding;
          SelectorReference selRef;
-         SelectorDefinition sel= null;
-         Vector selConcerns= null; // all concerns that a selector defines
+         SelectorDefinition sel;
+         Vector selConcerns; // all concerns that a selector defines
          CPSIterator selConcIter; // iterator over "
          SIinfo siInfo;
          Concern siConcern; // used to refer to a superimposed concern
 
          while (fmBindingIter.hasNext()) {
             fmBinding= (FilterModuleBinding)fmBindingIter.next();
-            selRef= (SelectorReference)fmBinding.getSelector();
+            selRef= fmBinding.getSelector();
             sel= selRef.getRef();
             //System.out.println("SANE>"+selRef.getName());
             selConcerns= (Vector)sel.getDynObject("interpretation");
@@ -131,7 +131,7 @@ public class SANE implements CTCommonModule {
             	Reference aRef = (Reference)selConcIter.next();
             	if (aRef instanceof ConcernReference)
             	{
-	               siConcern= (Concern)((ConcernReference)aRef).getRef();
+	               siConcern= ((ConcernReference)aRef).getRef();
 	               if (siConcern != null) //TODO: now exception generated!
 	                  {
 	                  siInfo= (SIinfo)siConcern.getDynObject("superImpInfo");
@@ -167,11 +167,11 @@ public class SANE implements CTCommonModule {
     */
    protected static void bindMethods(CpsConcern concern)
       throws ModuleException {
-      Iterator methodBindingIter= null;
+      Iterator methodBindingIter;
       MethodBinding methodBinding;
       SelectorReference selRef;
-      SelectorDefinition sel= null;
-      Vector selConcerns= null; // all concerns that a selector defines
+      SelectorDefinition sel;
+      Vector selConcerns; // all concerns that a selector defines
       CPSIterator selConcIter; // iterator over "
       //		   CPSIterator methodIter;		// Iterator over method references
       SIinfo siInfo;
@@ -180,7 +180,7 @@ public class SANE implements CTCommonModule {
          methodBindingIter= concern.getSuperImposition().getMethodBindingIterator();
 	      while (methodBindingIter.hasNext()) {
 	         methodBinding= (MethodBinding)methodBindingIter.next();
-	         selRef= (SelectorReference)methodBinding.getSelector();
+	         selRef= methodBinding.getSelector();
 	         sel= selRef.getRef();
 	         selConcerns= (Vector)sel.getDynObject("interpretation");
 	         if (selConcerns == null) {
@@ -192,7 +192,7 @@ public class SANE implements CTCommonModule {
 	         selConcIter= new CPSIterator(selConcerns);
 	         while (selConcIter.hasNext()) {
 	            siConcern=
-	               (Concern) ((ConcernReference)selConcIter.next()).getRef();
+	               ((ConcernReference)selConcIter.next()).getRef();
 	            siInfo= (SIinfo)siConcern.getDynObject("superImpInfo");
 	            // if this is not available yet, create it, including one alternative.
 	            if (siInfo == null) {
@@ -215,11 +215,11 @@ public class SANE implements CTCommonModule {
       throws ModuleException {
 	  // get an iterator over all the condition bindings; 
 	  // if there is no superimposition, get an iterator over an empty vector
-      Iterator condBindingIter= null;
+      Iterator condBindingIter;
       ConditionBinding condBinding;
       SelectorReference selRef;
-      SelectorDefinition sel= null;
-      Vector selConcerns= null; // all concerns that a selector defines
+      SelectorDefinition sel;
+      Vector selConcerns; // all concerns that a selector defines
       CPSIterator selConcIter; // iterator over "
       //		   Iterator methodIter;		// Iterator over method references
       SIinfo siInfo;
@@ -228,7 +228,7 @@ public class SANE implements CTCommonModule {
           condBindingIter = concern.getSuperImposition().getConditionBindingIterator(); 
 	      while (condBindingIter.hasNext()) {
 	         condBinding= (ConditionBinding)condBindingIter.next();
-	         selRef= (SelectorReference)condBinding.getSelector();
+	         selRef= condBinding.getSelector();
 	         sel= selRef.getRef();
 	         selConcerns= (Vector)sel.getDynObject("interpretation");
 	         if (selConcerns == null) {
@@ -240,7 +240,7 @@ public class SANE implements CTCommonModule {
 	         selConcIter= new CPSIterator(selConcerns);
 	         while (selConcIter.hasNext()) {
 	            siConcern=
-	               (Concern) ((ConcernReference)selConcIter.next()).getRef();
+	               ((ConcernReference)selConcIter.next()).getRef();
 	            siInfo= (SIinfo)siConcern.getDynObject("superImpInfo");
 	            // if this is not available yet, create it, including one alternative.
 	            if (siInfo == null) {

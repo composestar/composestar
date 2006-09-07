@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: RepositoryEntity.java,v 1.3 2006/02/16 12:51:22 composer Exp $
+ * $Id$
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -138,7 +138,7 @@ public class RepositoryEntity implements SerializableRepositoryEntity, Cloneable
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		RepositoryEntity entity = null;
+		RepositoryEntity entity;
 		
 		entity = (RepositoryEntity) super.clone();
 		

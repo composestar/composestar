@@ -43,7 +43,7 @@ public class ResourceHandler extends DefaultHandler {
      * @roseuid 405026C5013D
      */
     public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException {
-    	Resource resource = null;
+    	Resource resource;
     	if(local_name.equalsIgnoreCase("resource"))
 		{
     		resource = new Resource(amap.getValue("name"));

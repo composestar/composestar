@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Main.java,v 1.2 2006/03/10 12:41:51 pascal_durr Exp $
+ * $Id$
  * 
 **/
 
@@ -124,7 +124,7 @@ public class Main
         // null.
         Boolean isVerbose = (Boolean)parser.getOptionValue(verbose);
         Boolean isTestFile = (Boolean)parser.getOptionValue(testfile);
-	String fileName = (String)otherArgs[0];
+	String fileName = otherArgs[0];
 
 
 	// set verbose

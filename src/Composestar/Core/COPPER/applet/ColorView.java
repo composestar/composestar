@@ -41,7 +41,7 @@ public class ColorView extends PlainView
 			while ( str.hasMoreTokens() )
 	        {
                 String t = str.nextToken();
-                Color c = null;
+                Color c;
             	if((lineIndex+1) == ComposeStarGrammarApplet.getErrorLine())
                 {
             		//System.out.println("Drawing line: "+(lineIndex+1)+" == "+ComposeStarGrammarApplet.getErrorLine());

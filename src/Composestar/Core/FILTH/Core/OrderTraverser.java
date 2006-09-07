@@ -23,7 +23,7 @@ public class OrderTraverser {
 	}
 	
 	public LinkedList multiTraverse(Graph g){
-		LinkedList startingNodes=(LinkedList)g.getNodes();
+		LinkedList startingNodes=g.getNodes();
 		LinkedList multiOrder=new LinkedList();
 		LinkedList order=new LinkedList();
 		
@@ -123,7 +123,7 @@ public class OrderTraverser {
 	
 ////////////////////////////////////////////////////	
 	public LinkedList traverse(Graph g){
-		LinkedList nodes=(LinkedList)g.getNodes();
+		LinkedList nodes=g.getNodes();
 		LinkedList order=new LinkedList();
 		
 		

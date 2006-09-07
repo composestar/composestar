@@ -55,7 +55,7 @@ public class FlowModelExtractor {
             edge = (Edge) iter.next();
             
             String label = edge.label().text();
-            int type = 0;
+            int type;
             if ( label.equals( FLOW_NEXT_LABEL ) ){
                 type = FlowTransition.FLOW_NEXT_TRANSITION;
             }

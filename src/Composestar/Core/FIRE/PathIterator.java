@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: PathIterator.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id$
  * 
 **/
 
@@ -49,7 +49,7 @@ public class PathIterator extends Iterator
 	
 		if (!isDone())
 		{
-			PathNode pn = (PathNode) path[childInArray];
+			PathNode pn = path[childInArray];
 			parent = pn.parent;
 			currentChild = pn.child;
 		}

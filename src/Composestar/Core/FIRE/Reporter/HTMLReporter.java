@@ -7,7 +7,7 @@ package Composestar.Core.FIRE.Reporter;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: HTMLReporter.java,v 1.1 2006/02/16 23:03:57 pascal_durr Exp $
+ * $Id$
  * 
 **/
 
@@ -42,7 +42,7 @@ public class HTMLReporter extends Reporter
 
 		for (int t = 0; t < tables.size(); t++)
 		{
-			buffer +=  "<table border=1><tr bgcolor=\"lightblue\"><th>" + (String) tableNames.get(t) + "</th></tr><tr><td align=left><table align=left>\n";
+			buffer +=  "<table border=1><tr bgcolor=\"lightblue\"><th>" + tableNames.get(t) + "</th></tr><tr><td align=left><table align=left>\n";
 			LinkedList rows = (LinkedList) tables.get(t);
 
 			for (int r = 0; r < rows.size(); r++)

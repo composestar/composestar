@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Match.java,v 1.2 2006/03/14 12:53:54 pascal_durr Exp $
+ * $Id$
  * 
 **/
 import Composestar.Utils.Debug;
@@ -37,7 +37,7 @@ public class Match extends FilterLeaf
 		}
 		
 
-		Logic.and((StatusColumn) status, symbol.column); 
+		Logic.and(status, symbol.column);
 
 		//Debug.out(Debug.MODE_INFORMATION, "FIRE" ,"Match stop: " + symbol.name);
 		return status;

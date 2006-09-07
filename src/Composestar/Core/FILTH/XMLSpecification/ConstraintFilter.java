@@ -97,7 +97,7 @@ public class ConstraintFilter extends ArgumentFilter{
 			/* we add a rule only if both arguments are active */
 			if ((l!=null) && (r!=null))
 				if ("pre_soft".equals(value)){
-					Rule _rule=new SoftPreRule((Parameter)l, (Parameter)r);
+					Rule _rule=new SoftPreRule(l, r);
 					_rule.insert(_graph);
 
 					//FILTHService.print("FILTH::adding rule> "+value+"( "+l+" , "+r+" )\n");

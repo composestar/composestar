@@ -61,7 +61,6 @@ public class CtlChecker {
     public boolean matchesState( ExecutionState state ){
         HashSet satSet = (HashSet) satTable.get( state );
 
-        HashSet reverseSatSet = (HashSet) reverseSatTable.get( state );
         Vector v = (Vector) reverseTable.get( state );
 
         ExecutionState state2 = null;
@@ -75,9 +74,7 @@ public class CtlChecker {
             v2 = (Vector) reverseTable.get( state2 );
         }
 
-        int x = 0;
-        if ( state2 == null  ||  satSet2 == null  ||  reverseSatSet2 == null  ||  v2 == null )
-            x = 1;
+
         return satSet.contains( formula );
     }
 

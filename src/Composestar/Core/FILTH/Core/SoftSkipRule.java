@@ -21,13 +21,13 @@ public class SoftSkipRule extends SkipRule{
 	}
 		
 	public void apply(){
-		System.out.print(" *applying: SoftSkip <"+(Action)_left+ ',' +(Action)_right+">*\n");
+		System.out.print(" *applying: SoftSkip <"+_left + ',' +_right +">*\n");
 		if ( (_left.evaluate()==null) ||
 		     (_left.evaluate().booleanValue()) ){
 				((Action)_right).setExecutable(false);
 				((Action)_right).setReturnValue( _newValue.evaluate() );
 				((Action)_right).setExecuted();
-				System.out.print(" * skipping>> "+(Action)_right+" with "+_newValue.evaluate()+"*\n");
+				System.out.print(" * skipping>> "+_right +" with "+_newValue.evaluate()+"*\n");
 					
 		     }
 	}

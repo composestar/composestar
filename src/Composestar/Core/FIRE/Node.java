@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Node.java,v 1.2 2006/09/05 15:54:11 reddog33hummer Exp $
+ * $Id$
  * 
 **/
 
@@ -154,7 +154,7 @@ public abstract class Node implements Comparable, Cloneable
 		try
 		{
 			Class [] parameterTypes = new Class[1];
-			parameterTypes[0] = (Class) Node.class;
+			parameterTypes[0] = Node.class;
 
 			Object [] parameterValues = new Object[1];
 			parameterValues[0] = this;

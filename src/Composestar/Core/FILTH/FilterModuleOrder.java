@@ -53,7 +53,7 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 
 
 	public List orderAsList(){
-		return (List)_order;
+		return _order;
 	}
 	
 	public boolean equals(Object other)

@@ -65,7 +65,7 @@ public class Module
 	}
    
 	public void addComparableObject(String key, Object obj){
-		ArrayList list = null;
+		ArrayList list;
 		if(this.comparableObjects.containsKey(key))
 			list = (ArrayList)comparableObjects.get(key);
 		else list = new ArrayList();
@@ -75,7 +75,7 @@ public class Module
 	}
 	
 	public void removeComparableObject(String key, Object obj){
-		ArrayList list = null;
+		ArrayList list;
 		if(this.comparableObjects.containsKey(key))
 			list = (ArrayList)comparableObjects.get(key);
 		else list = new ArrayList();

@@ -56,7 +56,7 @@ public class DummyManager implements CTCommonModule {
 			emitter.createDummies(p, sources, outputFilenames);
 			
 			/** compile dummies */
-			LangCompiler comp = (LangCompiler)p.getLanguage().compilerSettings.getCompiler();
+			LangCompiler comp = p.getLanguage().compilerSettings.getCompiler();
 			try {
 				comp.compileDummies(p);
 			}

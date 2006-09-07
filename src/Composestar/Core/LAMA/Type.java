@@ -71,7 +71,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public MethodInfo getMethod(String name, String[] types) 
 	{
-        MethodInfo method = null;
+        MethodInfo method;
         for( ListIterator iter = Methods.listIterator(); iter.hasNext(); ) 
         {
         	method = (MethodInfo)iter.next();

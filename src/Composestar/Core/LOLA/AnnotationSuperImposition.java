@@ -305,7 +305,7 @@ public class AnnotationSuperImposition
   		throw new ModuleException("Internal error; selector resultsets differ in size", "LOLA");
   	
   	for (int i = 0; i < res1.size(); i++)
-  		if (! ((Set)res1.elementAt(i)).equals(((Set)res2.elementAt(i))))
+  		if (! res1.elementAt(i).equals(res2.elementAt(i)))
   			return false;  		
   	return true;
   }
@@ -374,7 +374,7 @@ public class AnnotationSuperImposition
 					removeMeLater.add(annotInst);
 				}
 				else // We don't attach the same annotation twice right now (!)
-					Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName() + "' to '" + ((ProgramElement)elem).getUnitName() + "' a second time!");
+					Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName() + "' to '" + elem.getUnitName() + "' a second time!");
 			}
   		}
   		currAction = currState.lastAction;

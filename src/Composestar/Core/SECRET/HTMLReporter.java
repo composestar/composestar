@@ -103,8 +103,8 @@ public class HTMLReporter extends ConflictReporter {
     	writeBuffer("<tr><td bgcolor=\"lightblue\"><font size=\"+1\"><i>Violation on: "+resource+"</i></font></td></tr>");
     	writeBuffer("<tr><td><table cellspacing=\"2\">");
     	writeBuffer("<TR><TD bgcolor=\"white\" width=\"500\" align=\"center\"><font size=\"+1\"><b>Filter</b></font></TD><TD bgcolor=\"white\" width=\"500\" align=\"center\"><font size=\"+1\"><b>Action</b></font></TD></TR>");
-		String html_name = "";
-    	String html_type = "";
+		String html_name;
+    	String html_type;
     	String html_action = "";
     	ArrayList thefilters = new ArrayList();
     	java.util.HashMap map = new java.util.HashMap();
@@ -127,10 +127,9 @@ public class HTMLReporter extends ConflictReporter {
     	for(int i=0; i<actionseq.size(); i++)
     	{
     		html_name = "";
-        	html_type = "";
-    		ActionDescription ad = (ActionDescription)actionseq.get(i);
+     		ActionDescription ad = (ActionDescription)actionseq.get(i);
     		//System.out.println("AD: "+ad);
-    		String actionname = "";
+    		String actionname;
 			if(ad.getActor().indexOf('.') > 0) actionname = ad.getActor().substring(0,ad.getActor().indexOf('.'));
 			else actionname = ad.getActor();
 			html_type = actionname;
@@ -147,7 +146,7 @@ public class HTMLReporter extends ConflictReporter {
 	     			/* TODO: html_type = filter.getFilterType().getType(); */
 					html_type = "";
 	     			//System.out.println("\tType: "+filter.getFilterType().getType());
-					ArrayList list = (ArrayList)sr.getAllActionsForType(html_type);
+					ArrayList list = sr.getAllActionsForType(html_type);
 					for(int k=0; k<list.size(); k++)
 					{
 						FilterActionDescription fad = (FilterActionDescription)list.get(k);

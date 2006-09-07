@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Iterator.java,v 1.1 2006/02/13 11:16:56 pascal Exp $
+ * $Id$
  * 
 **/
 
@@ -99,7 +99,7 @@ public abstract class Iterator implements Cloneable
 		for (int i = 0; i < stack.size(); i++)
 		{
 			PathNode pn = (PathNode) stack.get(i);
-			ll.add((Node) pn.parent.getChild(pn.child));
+			ll.add(pn.parent.getChild(pn.child));
 		}
 		pop();
 
