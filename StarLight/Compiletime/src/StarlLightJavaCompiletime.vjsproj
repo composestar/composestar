@@ -1,0 +1,116 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{55E29217-7071-4FA1-8810-79614584BBBB}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ComposestarCoreDotNET</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ComposestarCoreDotNET</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugSymbols>false</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\BACO\DotNETBACO.java" />
+    <Compile Include="Composestar\dotnet\COMP\DotNETCompiler.java" />
+    <Compile Include="Composestar\dotnet\LAMA\DotNETAttribute.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETCallingConventions.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETFieldInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETMethodInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETModule.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETParameterInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETType.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LOLA\DotNETLOLA.java" />
+    <Compile Include="Composestar\dotnet\LOLA\metamodel\DotNETLanguageModel.java" />
+    <Compile Include="Composestar\dotnet\MASTER\DotNETMaster.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\Assembler.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\AssemblerException.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ClassModifier.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\DotNETSignatureTransformer.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\DummyUnlinker.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ILCodeParser.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ModifierException.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\MSAssembler.java" />
+    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\TransformerBase.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\AttributeCollector.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DocumentHandler.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETCollectorRunner.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETFieldInfoHandler.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETMethodInfoHandler.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETParameterInfoHandler.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETTypeHandler.java" />
+    <Compile Include="Composestar\dotnet\TYM\TypeHarvester\DotNETHarvestRunner.java" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Composestar\dotnet\ACTING\AttributeHarvester.cs" />
+    <Content Include="Composestar\dotnet\TYM\TypeHarvester\TypeHarvester.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
