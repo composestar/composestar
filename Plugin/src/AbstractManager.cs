@@ -17,9 +17,9 @@ namespace Composestar.StarLight.VSAddin
 			
 		}
 
-		public abstract void run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action);
+		public abstract void Run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action);
 	
-		protected Object getProperty(Properties properties, string propertyName)
+		protected Object GetProperty(Properties properties, string propertyName)
 		{
 			if (properties.Item(propertyName) != null)
 			{

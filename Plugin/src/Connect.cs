@@ -16,7 +16,6 @@ using DTE = EnvDTE80.DTE2;
 using Extensibility;
 using Ini;
 
-
 namespace Composestar.StarLight.VSAddin
 {
 
@@ -62,17 +61,14 @@ namespace Composestar.StarLight.VSAddin
 	{
 
 		#region Private Variables
-		private const string RegistryPath = "Software\\Microsoft\\VisualStudio\\7.1\\Addins\\Composestar.StarLight.VSAddin.Connect";
+		private const string RegistryPath = "Software\\Microsoft\\VisualStudio\\8.0\\Addins\\Composestar.StarLight.VSAddin.Connect";
                                      
-		private DummyManager dummymanager;
 		private MasterManager mastermanager;
-		private AttributeManager attributemanager;
 	
 		private bool buildSuccess = false;
 		private EnvDTE.TaskListEvents taskListEvents;
 
 		private _DTE applicationObject;
-		private AddIn addInInstance;
 
 		private const string commandBarValue = "StarLight";
 		private const string CommandBarName = "StarLight";
@@ -168,7 +164,6 @@ namespace Composestar.StarLight.VSAddin
 			if (connectMode == Extensibility.ext_ConnectMode.ext_cm_Startup || connectMode == Extensibility.ext_ConnectMode.ext_cm_AfterStartup) 
 			{
 				applicationObject = (_DTE)application;
-				addInInstance = (AddIn)addInInst;
 		
 				Debug.Instance.Init(DebugModes.Information, applicationObject);
 
@@ -384,7 +379,6 @@ namespace Composestar.StarLight.VSAddin
 
 				Debug.Instance.Log(DebugModes.Information, "AddIn", "Unloaded the StarLight Add-In.");   
 				
-				this.addInInstance = null;
 				this.applicationObject = null;
 	
 			}
@@ -432,10 +426,8 @@ namespace Composestar.StarLight.VSAddin
 			m_referenceBuildCommand = null;
 			m_referenceCancelBuildCommand = null;
 
-			dummymanager = null;
 			mastermanager=null;
-			attributemanager=null;
-
+	
 			// Remove the buttons
 			this.DeleteCommand( m_commandNameBuild );
 			this.DeleteCommand( m_commandNameRun );
@@ -667,24 +659,7 @@ namespace Composestar.StarLight.VSAddin
 		/// </summary>
 		private void CreateToolBar() 
 		{
-			/*VS 2003:
-             * // checks if toolbar exists
-			foreach (CommandBar bar in this.applicationObject.CommandBars) 
-			{
-				if (bar.Type == MsoBarType.msoBarTypeNormal) 
-				{
-					if (bar.Name.Equals(commandBarValue)) 
-					{
-						m_Bar = bar;
-						break;
-					}
-				}
-			}
-			// if not found, creates it
-			if (m_Bar == null) 
-			{
-				m_Bar = applicationObject.CommandBars.Add(commandBarValue, MsoBarPosition.msoBarTop, null, null);				
-			}*/
+			
             try
             {
                 m_Bar = ((Microsoft.VisualStudio.CommandBars._CommandBars)applicationObject.CommandBars)[commandBarValue];
@@ -701,21 +676,7 @@ namespace Composestar.StarLight.VSAddin
 
 		private void DeleteToolBar() 
 		{
-            /* VS2003:
-             * // checks if toolbar exists
-			foreach (CommandBar bar in this.applicationObject.CommandBars) 
-			{
-				if (bar.Type == MsoBarType.msoBarTypeNormal) 
-				{
-					if (bar.Name.Equals(commandBarValue)) 
-					{
-						m_Bar = bar;
-						break;
-					}
-				}
-			}
-			// if not found, creates it
-			*/
+           
             try
             {
                 m_Bar = ((Microsoft.VisualStudio.CommandBars._CommandBars)applicationObject.CommandBars)[commandBarValue];
@@ -738,13 +699,11 @@ namespace Composestar.StarLight.VSAddin
 		private void CreateMenu() 
 		{
 			// checks if menu exists
-			//VS 2003: m_Menu = applicationObject.CommandBars.ActiveMenuBar.FindControl(MsoControlType.msoControlPopup, 1, CommandBarName, false, false);
             m_Menu = (Microsoft.VisualStudio.CommandBars.CommandBarPopup)((Microsoft.VisualStudio.CommandBars.CommandBars)applicationObject.CommandBars).ActiveMenuBar.FindControl(Microsoft.VisualStudio.CommandBars.MsoControlType.msoControlPopup, 1, CommandBarName, false, false);
 			// if not found, appends it to the menu bar
 			if (m_Menu == null) 
 			{
-				// VS 2003: m_Menu = applicationObject.CommandBars.ActiveMenuBar.Controls.Add(MsoControlType.msoControlPopup, Type.Missing, Type.Missing, Type.Missing, false);
-                m_Menu = (Microsoft.VisualStudio.CommandBars.CommandBarPopup)((Microsoft.VisualStudio.CommandBars.CommandBars)applicationObject.CommandBars).ActiveMenuBar.Controls.Add(Microsoft.VisualStudio.CommandBars.MsoControlType.msoControlPopup, Type.Missing, Type.Missing, Type.Missing, true);
+		        m_Menu = (Microsoft.VisualStudio.CommandBars.CommandBarPopup)((Microsoft.VisualStudio.CommandBars.CommandBars)applicationObject.CommandBars).ActiveMenuBar.Controls.Add(Microsoft.VisualStudio.CommandBars.MsoControlType.msoControlPopup, Type.Missing, Type.Missing, Type.Missing, true);
 				m_Menu.Caption = "Star&Light";
 				m_Menu.Tag = CommandBarName;
 				m_Menu.Visible = true;
@@ -754,8 +713,7 @@ namespace Composestar.StarLight.VSAddin
 		private void DeleteMenu() 
 		{
 			// checks if menu exists
-			// VS 2003: m_Menu = applicationObject.CommandBars.ActiveMenuBar.FindControl(MsoControlType.msoControlPopup, 1, CommandBarName, false, false);
-            m_Menu = (Microsoft.VisualStudio.CommandBars.CommandBarPopup)((Microsoft.VisualStudio.CommandBars.CommandBars)applicationObject.CommandBars).ActiveMenuBar.FindControl(Microsoft.VisualStudio.CommandBars.MsoControlType.msoControlPopup, 1, CommandBarName, false, false);
+	        m_Menu = (Microsoft.VisualStudio.CommandBars.CommandBarPopup)((Microsoft.VisualStudio.CommandBars.CommandBars)applicationObject.CommandBars).ActiveMenuBar.FindControl(Microsoft.VisualStudio.CommandBars.MsoControlType.msoControlPopup, 1, CommandBarName, false, false);
 			// if not found, appends it to the menu bar
 			if (m_Menu != null) 
 			{
@@ -1082,50 +1040,24 @@ namespace Composestar.StarLight.VSAddin
 
 						Debug.Instance.DebugMode = BuildConfigurationManager.Instance.Settings.BuildDebugLevel ;
 
-						bool dummiesOK = false;
+                        Debug.Instance.ShowProgress("Creating config", 30);
+                        Debug.Instance.Log(DebugModes.Debug, "AddIn", "Creating solution specific configuration file...");
 
-						Debug.Instance.ShowProgress("Creating dummies", 40);
-						Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating dummies...");
+                        // Find and dump attributes (annotations)
+                        Debug.Instance.ShowProgress("Harvesting annotations", 40);
+                        Debug.Instance.Log(DebugModes.Debug, "AddIn", "Harvesting annotations...");
 
-						// TODO: This should be removed!
-						dummymanager = new DummyManager();
-						dummymanager.run(applicationObject, scope, action);
-						dummiesOK = dummymanager.CompletedSuccessfully();
+                        // Call Master to do its run
+                        Debug.Instance.ShowProgress("Invoking Master", 50);
 
-						if (!dummiesOK)
-						{
-							Debug.Instance.Log("---------------------- Done ----------------------");
-							Debug.Instance.Log("Dummy creation failed. See the task window for more information.");
-							Debug.Instance.Log("");
-							Debug.Instance.Log("StarLight build failed.");
-							Debug.Instance.Log("");
-							Debug.Instance.Log("");
-							Debug.Instance.ActivateTaskListWindow();
-						}
-						else
-						{
-							Debug.Instance.ShowProgress("Creating config", 50);
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Creating solution specific configuration file...");
-								
-							// Find and dump attributes (annotations)
-							Debug.Instance.ShowProgress("Harvesting annotations", 60);
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Harvesting annotations...");
+                        BuildConfigurationManager.Instance.SaveToXml();
 
-							attributemanager = new AttributeManager();
-							attributemanager.run(applicationObject, scope, action);
-							
-							// Call Master to do its second run
-							Debug.Instance.ShowProgress("Invoking Master", 70);
+                        Debug.Instance.Log(DebugModes.Debug, "AddIn", "Invoking Master...");
 
-							BuildConfigurationManager.Instance.SaveToXml();
+                        mastermanager = new MasterManager();
+                        mastermanager.Run(applicationObject, scope, action);				
 
-							Debug.Instance.Log(DebugModes.Debug,"AddIn","Invoking Master...");
-
-							mastermanager = new MasterManager();
-							mastermanager.run(applicationObject, scope, action);
-						}
-
-						this.buildSuccess = dummiesOK && mastermanager.CompletedSuccessfully();
+						this.buildSuccess = mastermanager.CompletedSuccessfully();
 					
 						if (this.buildSuccess)
 						{
@@ -1387,7 +1319,7 @@ namespace Composestar.StarLight.VSAddin
 			}
 			catch (Exception e)
 			{
-				Debug.Instance.Log("*** Composestar internal error ***"); 
+				Debug.Instance.Log("*** StarLight internal error ***"); 
 				Debug.Instance.Log(" message : " + e.Message );
 				Debug.Instance.Log("   stack : " + e.StackTrace);
 				Debug.Instance.ActivateOutputWindowPane();

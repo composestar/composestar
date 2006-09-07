@@ -16,7 +16,7 @@ namespace Composestar.StarLight.VSAddin
 	public class MasterManager : AbstractManager
 	{
 		private bool mSuccess = false;
-		private string moduleName = "Compose* Master; {0}";
+		private string moduleName = "StarLight Master; {0}";
 		const int ERROR_FILE_NOT_FOUND =2;
 		const int ERROR_ACCESS_DENIED = 5;
 
@@ -30,7 +30,7 @@ namespace Composestar.StarLight.VSAddin
 			return mSuccess;
 		}
 
-		public override void run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action)
+		public override void Run(_DTE applicationObject, vsBuildScope scope, vsBuildAction action)
 		{
 			this.mApplicationObject = applicationObject;
 
