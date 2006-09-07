@@ -126,9 +126,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AttributeManager\AttributeManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="BuildConfiguration\Configuration.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -163,18 +160,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DebugModes.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DummyManager\DependencyInserter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DummyManager\Dummy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DummyManager\DummyGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DummyManager\DummyManager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ini.cs">

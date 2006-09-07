@@ -23,12 +23,12 @@ namespace Composestar.StarLight.VSAddin
 		/// <summary>
 		/// Indicates which pane to be used when outputting data.
 		/// </summary>
-		private const string OutputPaneComposestar = "Composestar";
+		private const string OutputPaneStarLight = "StarLight";
 
 		/// <summary>
 		/// Category name for the tasks.
 		/// </summary>
-		private const string TaskCategoryComposestar = "Composestar";
+		private const string TaskCategoryStarLight = "StarLight";
 
 		/// <summary>
 		/// Private constructor for singleton instance.
@@ -46,7 +46,7 @@ namespace Composestar.StarLight.VSAddin
 			currentDebugMode = mode;
 			this.applicationObject = applicationObject;
 			SBar = applicationObject.StatusBar;
-			owp = this.GetOutputWindowPane(OutputPaneComposestar);
+			owp = this.GetOutputWindowPane(OutputPaneStarLight);
 		}
 
 		/// <summary>
@@ -366,7 +366,7 @@ namespace Composestar.StarLight.VSAddin
 		/// </summary>
 		public void ActivateOutputWindowPane()
 		{
-			ActivateOutputWindowPane(OutputPaneComposestar);
+			ActivateOutputWindowPane(OutputPaneStarLight);
 		}
 
 		/// <summary>
@@ -387,7 +387,7 @@ namespace Composestar.StarLight.VSAddin
 		/// </summary>
 		public void ClearOutputWindowPane()
 		{
-			ClearOutputWindowPane(OutputPaneComposestar);
+			ClearOutputWindowPane(OutputPaneStarLight);
 		}
 
 				
@@ -404,7 +404,7 @@ namespace Composestar.StarLight.VSAddin
 
 			foreach(TaskItem item in tl.TaskItems)
 			{
-				if(item.Category.Equals(TaskCategoryComposestar)) 
+				if(item.Category.Equals(TaskCategoryStarLight)) 
 				{
 					applicationObject.Windows.Item(Constants.vsWindowKindTaskList).Activate();
 					break;
@@ -425,7 +425,7 @@ namespace Composestar.StarLight.VSAddin
 
 			foreach(TaskItem item in tl.TaskItems)
 			{
-				if(item.Category.Equals(TaskCategoryComposestar)) 
+				if(item.Category.Equals(TaskCategoryStarLight)) 
 					try 
 					{
 						item.Delete(); 
@@ -456,7 +456,7 @@ namespace Composestar.StarLight.VSAddin
 		{
 			EnvDTE.TaskList tl = GetTaskListWindow();
     
-			tl.TaskItems.Add(TaskCategoryComposestar , "",
+			tl.TaskItems.Add(TaskCategoryStarLight , "",
 				text,
 				taskPriority ,
 				taskIcon, false,
@@ -475,7 +475,7 @@ namespace Composestar.StarLight.VSAddin
 		{
 			EnvDTE.TaskList tl = GetTaskListWindow();
     
-			tl.TaskItems.Add(TaskCategoryComposestar , "",
+			tl.TaskItems.Add(TaskCategoryStarLight , "",
 				text,
 				taskPriority ,
 				taskIcon, false,

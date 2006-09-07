@@ -1,6 +1,8 @@
 namespace Composestar.StarLight.VSAddin
 {
-
+    /// <summary>
+    /// Debug mode used for compile time
+    /// </summary>
 	public enum DebugModes
 	{
 		NotSet = -1,

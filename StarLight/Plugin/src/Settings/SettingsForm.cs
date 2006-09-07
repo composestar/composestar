@@ -66,87 +66,82 @@ namespace Composestar.StarLight.VSAddin
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.propertyGrid = new System.Windows.Forms.PropertyGrid();
-			this.btnOk = new System.Windows.Forms.Button();
-			this.btnCancel = new System.Windows.Forms.Button();
-			this.lblSettingsType = new System.Windows.Forms.Label();
-			this.cmbProjects = new System.Windows.Forms.ComboBox();
-			this.SuspendLayout();
-			// 
-			// propertyGrid
-			// 
-			this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.propertyGrid.CommandsVisibleIfAvailable = true;
-			this.propertyGrid.LargeButtons = false;
-			this.propertyGrid.LineColor = System.Drawing.SystemColors.ScrollBar;
-			this.propertyGrid.Location = new System.Drawing.Point(8, 40);
-			this.propertyGrid.Name = "propertyGrid";
-			this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-			this.propertyGrid.Size = new System.Drawing.Size(401, 378);
-			this.propertyGrid.TabIndex = 0;
-			this.propertyGrid.Text = "propertyGrid";
-			this.propertyGrid.ViewBackColor = System.Drawing.SystemColors.Window;
-			this.propertyGrid.ViewForeColor = System.Drawing.SystemColors.WindowText;
-			// 
-			// btnOk
-			// 
-			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnOk.Location = new System.Drawing.Point(248, 426);
-			this.btnOk.Name = "btnOk";
-			this.btnOk.Size = new System.Drawing.Size(76, 23);
-			this.btnOk.TabIndex = 1;
-			this.btnOk.Text = "&Ok";
-			this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-			// 
-			// btnCancel
-			// 
-			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(330, 426);
-			this.btnCancel.Name = "btnCancel";
-			this.btnCancel.Size = new System.Drawing.Size(74, 23);
-			this.btnCancel.TabIndex = 2;
-			this.btnCancel.Text = "&Cancel";
-			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-			// 
-			// lblSettingsType
-			// 
-			this.lblSettingsType.Location = new System.Drawing.Point(8, 10);
-			this.lblSettingsType.Name = "lblSettingsType";
-			this.lblSettingsType.Size = new System.Drawing.Size(64, 23);
-			this.lblSettingsType.TabIndex = 3;
-			this.lblSettingsType.Text = "Project:";
-			// 
-			// cmbProjects
-			// 
-			this.cmbProjects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.cmbProjects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cmbProjects.Location = new System.Drawing.Point(80, 8);
-			this.cmbProjects.Name = "cmbProjects";
-			this.cmbProjects.Size = new System.Drawing.Size(329, 24);
-			this.cmbProjects.TabIndex = 4;
-			this.cmbProjects.SelectedIndexChanged += new System.EventHandler(this.cmbProjects_SelectedIndexChanged);
-			// 
-			// SettingsForm
-			// 
-			this.AcceptButton = this.btnOk;
-			this.AutoScaleBaseSize = new System.Drawing.Size(7, 17);
-			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(416, 455);
-			this.Controls.Add(this.cmbProjects);
-			this.Controls.Add(this.lblSettingsType);
-			this.Controls.Add(this.btnCancel);
-			this.Controls.Add(this.btnOk);
-			this.Controls.Add(this.propertyGrid);
-			this.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((System.Byte)(0)));
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.Name = "SettingsForm";
-			this.Text = "Compose* Settings";
-			this.ResumeLayout(false);
+            this.propertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.btnOk = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.lblSettingsType = new System.Windows.Forms.Label();
+            this.cmbProjects = new System.Windows.Forms.ComboBox();
+            this.SuspendLayout();
+            // 
+            // propertyGrid
+            // 
+            this.propertyGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid.LineColor = System.Drawing.SystemColors.ScrollBar;
+            this.propertyGrid.Location = new System.Drawing.Point(8, 40);
+            this.propertyGrid.Name = "propertyGrid";
+            this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.propertyGrid.Size = new System.Drawing.Size(401, 378);
+            this.propertyGrid.TabIndex = 0;
+            // 
+            // btnOk
+            // 
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.Location = new System.Drawing.Point(248, 426);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(76, 23);
+            this.btnOk.TabIndex = 1;
+            this.btnOk.Text = "&Ok";
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(330, 426);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(74, 23);
+            this.btnCancel.TabIndex = 2;
+            this.btnCancel.Text = "&Cancel";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // lblSettingsType
+            // 
+            this.lblSettingsType.Location = new System.Drawing.Point(8, 10);
+            this.lblSettingsType.Name = "lblSettingsType";
+            this.lblSettingsType.Size = new System.Drawing.Size(64, 23);
+            this.lblSettingsType.TabIndex = 3;
+            this.lblSettingsType.Text = "Project:";
+            // 
+            // cmbProjects
+            // 
+            this.cmbProjects.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbProjects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbProjects.Location = new System.Drawing.Point(80, 8);
+            this.cmbProjects.Name = "cmbProjects";
+            this.cmbProjects.Size = new System.Drawing.Size(329, 24);
+            this.cmbProjects.TabIndex = 4;
+            this.cmbProjects.SelectedIndexChanged += new System.EventHandler(this.cmbProjects_SelectedIndexChanged);
+            // 
+            // SettingsForm
+            // 
+            this.AcceptButton = this.btnOk;
+            this.AutoScaleBaseSize = new System.Drawing.Size(7, 17);
+            this.CancelButton = this.btnCancel;
+            this.ClientSize = new System.Drawing.Size(416, 455);
+            this.Controls.Add(this.cmbProjects);
+            this.Controls.Add(this.lblSettingsType);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnOk);
+            this.Controls.Add(this.propertyGrid);
+            this.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "SettingsForm";
+            this.Text = "StarLight Settings";
+            this.ResumeLayout(false);
 
 		}
 		#endregion
