@@ -14,8 +14,8 @@ concern Sounds in PacmanTwo
 		outputfilters
 			pillEater : Send =
 				{
-					//[*.eatPill_] beeper.eatPill,
-					[*.eatPowerPill_] *.eatPowerPill, [*.*] *.*
+					[*.eatPill] beeper.eatPill,
+					[*.eatPowerPill] *.eatPowerPill, [*.*] *.*
 				}
 	}
 
