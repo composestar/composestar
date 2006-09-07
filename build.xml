@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Core/Runtime" default="build">
+
+	<import file="..${file.separator}common.xml" />
+	
+	<echo message="${ant.project.name}" />
+	
+	<description>
+	The Compose* Core Compiletime
+	The core of the compose* compiler
+	</description>
+
+	<target name="clean">
+		<make target="clean" />
+	</target>	
+	
+	<target name="build">
+		<make target="build" />
+	</target>
+
+</project>
