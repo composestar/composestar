@@ -39,7 +39,7 @@ public class ViewPanel extends JPanel {
     private int height = 0;
     private int width = 0;
     
-    
+    private final static Edge[] EmptyEdgeArray = {};
     public ViewPanel( ExecutionModel model ){
         super();
         
@@ -178,8 +178,8 @@ public class ViewPanel extends JPanel {
             }
         }
         
-        node.primaryEdges = (Edge[]) primaryEdges.toArray( new Edge[0] );
-        node.secondaryEdges = (Edge[]) secondaryEdges.toArray( new Edge[0] );
+        node.primaryEdges = (Edge[]) primaryEdges.toArray( EmptyEdgeArray );
+        node.secondaryEdges = (Edge[]) secondaryEdges.toArray( EmptyEdgeArray );
     }
     
     

@@ -28,14 +28,15 @@ public class Module
      * A map containing objects to be compared by MyComparator. 
      */
     private HashMap comparableObjects = new HashMap();
-     
-   /**
-    * @roseuid 420A1C42000F
-    */
-	public Module(String name) 
-	{
-		this.name = name;
-	}
+    private static final Object[] EmptyObjectArray = {};
+
+    /**
+     * @roseuid 420A1C42000F
+     */
+     public Module(String name)
+     {
+         this.name = name;
+     }
    
 	public void setFullType(String ftype)
 	{
@@ -161,7 +162,7 @@ public class Module
 				Method runmethod = myclass.getMethod("run",methodparams);
 				Object[] myparams = {resources};
 				if(myparams == null){
-					myparams = new Object[0];
+					myparams = EmptyObjectArray;
 				}
 				INCRE incre = INCRE.instance();
 				INCRETimer module = incre.getReporter().openProcess(this.name,this.name,INCRETimer.TYPE_ALL);
