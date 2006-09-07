@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Common routines. Always include this file in every build.xml file
+
+-->
+<project name="ComposeStarCommon">
+
+	<!-- some magic to figure out the core path -->
+	<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
+	<condition property="build.core" value="${build.core.tmp}">
+		<not>
+			<isset property="build.core" />
+		</not>
+	</condition>
+
+	<macrodef name="make">
+		<attribute name="target" default="" />
+		<sequential>
+			<exec executable="${build.core}\Compiletime\binaries\make\make">
+				<env key="PATH" path="${env.PATH};${build.core}\Compiletime\binaries\make\" />
+				<arg value="@{target}" />
+			</exec>
+		</sequential>
+	</macrodef>
+	
+	<property environment="env" />
+	<condition property="env.PATH" value="${env.Path}">
+		<not>
+			<isset property="env.PATH" />
+		</not>
+	</condition>
+	
+	<!-- generic target to rebuild all -->
+	<target name="rebuild" depends="clean,build">
+	</target>
+
+</project>
