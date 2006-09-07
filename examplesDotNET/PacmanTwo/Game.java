@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Game.java,v 1.4 2006/09/05 13:03:37 reddog33hummer Exp $
+ * @version $Id: Game.java,v 1.5 2006/09/05 13:15:30 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -201,6 +201,7 @@ public class Game implements Runnable
 	public void startGame()
 	{
 		if (_level == null) _level = new Level();
+		setEvilPacman(null);
 		for( Enumeration e = tickList.elements(); e.hasMoreElements(); )
 		{
 			((Tickable) e.nextElement()).reset();

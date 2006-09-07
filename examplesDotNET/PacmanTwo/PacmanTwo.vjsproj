@@ -170,6 +170,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Bonus\Bonus.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Bonus\BonusPickup.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Bonus\BonusView.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Concerns\Sounds.cps"
                     BuildAction = "None"
                 />

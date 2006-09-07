@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: AIController.java,v 1.2 2006/09/05 12:43:08 reddog33hummer Exp $
+ * @version $Id: AIController.java,v 1.3 2006/09/06 11:05:39 elmuerte Exp $
  */
 package PacmanTwo;
 
@@ -45,7 +45,7 @@ public class AIController extends Controller implements Tickable
 
 	public void reset()
 	{
-		direction = RandomMovement.getNextMove(pawn, game.level());
+		game.removeTickElement(this);
 	}
 
 	public int getDirection()

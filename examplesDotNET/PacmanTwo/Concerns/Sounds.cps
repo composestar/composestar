@@ -7,19 +7,25 @@ concern Sounds in PacmanTwo
 		inputfilters
 			beep_filter : Meta = 
 				{ 
-					[*.eatPill] beeper.eatPill,
-					[*.eatPowerPill] beeper.eatPowerPill, 
+					//[*.eatPill] beeper.eatPill,
+					//[*.eatPowerPill] beeper.eatPowerPill, 
 					[*.died] beeper.pawnDied
+				}
+		outputfilters
+			pillEater : Send =
+				{
+					//[*.eatPill_] beeper.eatPill,
+					[*.eatPowerPill_] *.eatPowerPill, [*.*] *.*
 				}
 	}
 
 	superimposition
 	{
 		selectors
-			lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
+			//lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
 			pawns = { C | isClassWithNameInList(C, ['PacmanTwo.Pacman', 'PacmanTwo.Ghost']) };
 		filtermodules
-			lvl <- beepSound;
+			//lvl <- beepSound;
 			pawns <- beepSound;
 	}
 
