@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.7 2006/09/06 09:07:47 reddog33hummer Exp $
+ * $Id$
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT
@@ -226,7 +226,7 @@ public abstract class MessageHandlingFacility
 		msg.setServer(target);
 		msg.STATE = Message.MESSAGE_NONSTATIC_NONSTATIC_RETURN;
 		ObjectManager om;
-		Object returnvalue = null;
+		Object returnvalue;
 
 		try 
 		{
@@ -350,7 +350,7 @@ public abstract class MessageHandlingFacility
 		msg.setServer(target);
 		msg.STATE = Message.MESSAGE_STATIC_NONSTATIC_RETURN;
 		msg.setDirection(Message.INCOMING);
-		Object returnvalue = null;
+		Object returnvalue;
 
 		try 
 		{
@@ -438,7 +438,7 @@ public abstract class MessageHandlingFacility
 	public static Object handleReturnMethodCall(Object caller, String target, String selector, Object[] args) 
 	{
 		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static return message",caller.GetType().ToString(),target,selector,args);
-		Object returnvalue = null;
+		Object returnvalue;
 
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Invoking message...");
 		returnvalue = Invoker.getInstance().invoke(target,selector,args);		
@@ -477,7 +477,7 @@ public abstract class MessageHandlingFacility
 	{
 		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> static return message",staticcaller,target,selector,args);
 
-		Object returnvalue = null;
+		Object returnvalue;
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Invoking message...");
 		returnvalue = Invoker.getInstance().invoke(target,selector,args);
 

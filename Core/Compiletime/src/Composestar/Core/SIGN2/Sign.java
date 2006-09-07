@@ -199,7 +199,6 @@ public class Sign implements CTCommonModule {
             iter = unsolvedConcerns.iterator();
             while (iter.hasNext()) {
                 concern = (Concern) iter.next();
-                Signature signature = getSignature(concern);
                 model = (FireModel) analysisModels.get(concern);
                 distinguishable = model.getDistinguishable();
                 messages = distinguishable.iterator();
@@ -233,7 +232,7 @@ public class Sign implements CTCommonModule {
         ExecutionState entranceState, state;
         Signature signature;
         MethodInfo[] methods;
-        boolean earlierSignatureMatch = true;
+        boolean earlierSignatureMatch;
         boolean dispatch = false;
 
         signature = getSignature(concern);

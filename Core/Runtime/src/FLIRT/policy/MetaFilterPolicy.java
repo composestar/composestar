@@ -19,7 +19,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MetaFilterPolicy.java,v 1.8 2006/06/29 11:51:56 reddog33hummer Exp $
+ * $Id$
  * 
  * Policy that extends the DefaultFilterPolicy by adding support for the Meta 
  * Filter
@@ -38,8 +38,6 @@ class MetaFilterPolicy extends FilterPolicy
 		boolean messageWasFiltered = false;
 		boolean exit = false;
 		boolean shouldDispatchToInner = true;
-
-		FilterModule filtermod = (FilterModule)fm.getReference();
 
 		Object result = null;
 		ComposeStarAction csa;

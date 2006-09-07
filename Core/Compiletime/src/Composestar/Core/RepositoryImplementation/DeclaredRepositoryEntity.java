@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DeclaredRepositoryEntity.java,v 1.3 2006/08/31 11:03:54 doornenbal Exp $
+ * $Id$
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -72,7 +72,7 @@ public String name;
    */
   public String getQualifiedName() {
     String out = null;
-    DeclaredRepositoryEntity o = null;
+    DeclaredRepositoryEntity o;
     Vector temp = new Vector(); //here we store the names of parents
     int i;
     boolean ready = false;
@@ -124,7 +124,7 @@ public String name;
 
 	public Object clone () throws CloneNotSupportedException
 	{
-		DeclaredRepositoryEntity newObject = null;
+		DeclaredRepositoryEntity newObject;
 
 		newObject = (DeclaredRepositoryEntity)super.clone();
 

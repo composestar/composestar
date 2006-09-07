@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: ActionNode.java,v 1.2 2006/09/05 15:54:11 reddog33hummer Exp $
+ * $Id$
  * 
 **/
 
@@ -77,7 +77,7 @@ public class ActionNode extends Node implements Cloneable
 	{
 		for (int i = 0; i < conditionArray.length; i++) 
 		{
-			addCondition((Symbol) conditionArray[i]);
+			addCondition(conditionArray[i]);
 		}
 	}
 

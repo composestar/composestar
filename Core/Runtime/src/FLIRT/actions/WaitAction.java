@@ -10,7 +10,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: WaitAction.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id$
  * 
  * Not implemented!!
  */
@@ -20,11 +20,11 @@ public class WaitAction extends ComposeStarAction
     MessageList message;
     
     /**
-     * @param currentFiliter
+     * @param currentFilter
      * @param m
      * @roseuid 3F3652D10095
      */
-    public WaitAction(FilterRuntime currentFiliter, MessageList m) {
+    public WaitAction(FilterRuntime currentFilter, MessageList m) {
 		super(m, true);
 		this.currentFilter = currentFilter;
 		this.message = m;   

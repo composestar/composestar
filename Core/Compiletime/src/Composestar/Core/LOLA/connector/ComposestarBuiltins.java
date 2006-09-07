@@ -245,8 +245,8 @@ class binaryRelationBuiltin extends FunBuiltin
   
   private ProgramElement termToUnit(Term t)
   {
-    if (((JavaObject)t).toObject() instanceof ProgramElement)
-      return (ProgramElement)((JavaObject)t).toObject(); 
+    if (t.toObject() instanceof ProgramElement)
+      return (ProgramElement)t.toObject();
    return null;
   }
   

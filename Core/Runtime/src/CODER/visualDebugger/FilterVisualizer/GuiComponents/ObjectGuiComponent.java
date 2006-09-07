@@ -32,6 +32,6 @@ public class ObjectGuiComponent extends DebugGuiComponent {
         g.setColor(Color.black);
         g.drawOval(x, y, xi, yi);
         String text = object == null ? "Null" : object.getClass().getName();
-        g.drawString(text, x + (int) (xi / 2 - FONTRATIO * text.length()), y + (int) (yi >> 1) - FONTLOCATION);
+        g.drawString(text, x + (int) (xi / 2 - FONTRATIO * text.length()), y + (yi >> 1) - FONTLOCATION);
     }
 }

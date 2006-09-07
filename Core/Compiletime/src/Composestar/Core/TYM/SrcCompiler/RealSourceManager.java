@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: RealSourceManager.java,v 1.6 2006/03/14 13:32:46 dspenkel Exp $
+ * $Id$
  */
 
 package Composestar.Core.TYM.SrcCompiler;
@@ -45,7 +45,7 @@ public class RealSourceManager implements CTCommonModule {
 			Project p = (Project)projIt.next();
 			Language lang = p.getLanguage();
 			CompilerSettings compsettings = lang.compilerSettings;
-			LangCompiler comp = (LangCompiler)compsettings.getCompiler();
+			LangCompiler comp = compsettings.getCompiler();
 			
 			String exec = Configuration.instance().getProjects().getProperty("Executable");
 	        String exefile = "";

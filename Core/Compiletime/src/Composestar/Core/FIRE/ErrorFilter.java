@@ -7,23 +7,23 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: ErrorFilter.java,v 1.1 2006/02/13 11:16:55 pascal Exp $
+ * $Id$
  * 
 **/
 
 public class ErrorFilter extends Filter
 {
-	public String toString() { return "Error";};
+	public String toString() { return "Error";}
 
-	public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )
-	{
-		Logic.not((StatusColumn) status);
-		stateTable.snapshot(status, component);
-		Logic.not((StatusColumn) status);
-		status.finish(false);
+    public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )
+    {
+        Logic.not(status);
+        stateTable.snapshot(status, component);
+        Logic.not(status);
+        status.finish(false);
 
-		return status;
-	}
+        return status;
+    }
 
 	
 	public ActionNode createNode()

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: PrimitiveConcern.java,v 1.2 2006/02/16 12:51:20 composer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository;
 
@@ -26,7 +26,7 @@ public class PrimitiveConcern extends Concern {
 
 	public Object clone ()
 	{
-		PrimitiveConcern newObject = null;
+		PrimitiveConcern newObject;
 		try
 		{
 			newObject = (PrimitiveConcern)super.clone();

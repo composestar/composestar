@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Tor.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id$
  * 
 **/
 import Composestar.Utils.*;
@@ -31,17 +31,17 @@ public class Tor extends FilterComposite
 		StatusColumn a = (StatusColumn) status.clone();
 
 		// b
-		fc1.calculateStatus((StatusColumn) status, stateTable);
+		fc1.calculateStatus(status, stateTable);
 		StatusColumn b = (StatusColumn) status.clone();
 
 		// (a & ~b)
-		Logic.not((StatusColumn) status);
-		Logic.and((StatusColumn) status, a);
+		Logic.not(status);
+		Logic.and(status, a);
 
-		fc2.calculateStatus((StatusColumn) status, stateTable);
+		fc2.calculateStatus(status, stateTable);
 
 		// (b | c)
-		Logic.or((StatusColumn) status, b);
+		Logic.or(status, b);
 
 	//	Debug.out (3, "TOR stop ");
 		return status;

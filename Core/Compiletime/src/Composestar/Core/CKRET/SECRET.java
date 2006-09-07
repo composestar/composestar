@@ -231,14 +231,14 @@ public class SECRET implements CTCommonModule {
 		concern.addDynObject("SingleOrder",oldconcern.getDynObject("SingleOrder"));
 				
 		//get SECRET reports and let HTMLReporter print them
-		ArrayList reports = new ArrayList();				
+		ArrayList reports;
 		reports = (ArrayList)oldconcern.getDynObject("SECRETReports");
 					
 		if(reports!=null)
 		{
 			Debug.out(Debug.MODE_INFORMATION,"INCRE","Skipping SECRET run for "+oldconcern.getQualifiedName());
 			getReporter().openConcern(oldconcern);
-			Iterator repItr = (Iterator)reports.iterator();
+			Iterator repItr = reports.iterator();
 			while(repItr.hasNext())
 			{
 				SECRETReport report = (SECRETReport)repItr.next();

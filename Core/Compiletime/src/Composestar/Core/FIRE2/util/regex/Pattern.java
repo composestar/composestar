@@ -66,14 +66,10 @@ public class Pattern {
                 resultMachine.setStartState( startState );
                 RegularState endState = new RegularState();
                 resultMachine.setEndState( endState );
-                RegularTransition transition1 = new RegularTransition(
-                        startState, machine1.getStartState() );
-                RegularTransition transition2 = new RegularTransition(
-                        startState, machine2.getStartState() );
-                RegularTransition transition3 = new RegularTransition(
-                        machine1.getEndState(), endState );
-                RegularTransition transition4 = new RegularTransition(
-                        machine2.getEndState(), endState );
+                new RegularTransition(startState, machine1.getStartState() );
+                new RegularTransition(startState, machine2.getStartState() );
+                new RegularTransition(machine1.getEndState(), endState );
+                new RegularTransition(machine2.getEndState(), endState );
                 
                 return resultMachine;
             }

@@ -10,12 +10,12 @@ import java.util.*;
  */
 public abstract class BreakPointBi extends BreakPointMono
 {
-	protected BreakPoint left = null;;
+	protected BreakPoint left = null;
 
-	public BreakPointBi(Halter halt, BreakPoint right)
-	{
-		super(halt, right);
-	}
+    public BreakPointBi(Halter halt, BreakPoint right)
+    {
+        super(halt, right);
+    }
 
 	public BreakPointBi(Halter halt, BreakPoint left, BreakPoint right)
 	{

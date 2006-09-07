@@ -20,7 +20,7 @@ IF "%1"=="" (
 
 SUBST %DRIVE% .
 IF %ERRORLEVEL% == 0 (
-        CMD /C "%DRIVE% && cd Core && cd Compiletime && make clean && make && cd .. && cd runtime && make clean && make && cd .. && cd .. && cd DotNET &&cd compiletime && make clean && make && cd .. &&cd runtime && make clean && make && cd .. "
+        CMD /C "%DRIVE% && cd .. && DotNET\build.bat"
 	IF not %ERRORLEVEL% == 0 (
 		pause
 	)

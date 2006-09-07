@@ -111,7 +111,7 @@ public class PredicateSelector extends SimpleSelExpression
       else
       {
     	  ProgramElement unit = (ProgramElement)element;
-          Reference ref = null;
+          Reference ref;
           ref = resolveUnit(unit);
           result.add(ref);
           resultSet.add(unit);      
@@ -242,7 +242,7 @@ public class PredicateSelector extends SimpleSelExpression
       Fun varBindings = (Fun)r.numbervars();
       Term answer = varBindings.getArg(answerVarPos);
       if (answer instanceof JavaObject){
-        answers.add(((JavaObject)answer).toObject());
+        answers.add(answer.toObject());
       }
       else{
         Debug.out(Debug.MODE_ERROR, "LOLA", "Internal error: Query should, but did not return a java object!", this);
@@ -401,7 +401,7 @@ public class PredicateSelector extends SimpleSelExpression
   
   public Reference resolveUnit(ProgramElement unit){
   
-  	Reference ref = null;
+  	Reference ref;
   	if (unit instanceof Type)
     {
   		Type type = (Type)unit;

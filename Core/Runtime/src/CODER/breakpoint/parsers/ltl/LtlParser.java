@@ -66,9 +66,9 @@ public LtlParser(ParserSharedInputState state) {
 }
 
 	public final BreakPoint  formula() throws RecognitionException, TokenStreamException {
-		BreakPoint result = null;
+		BreakPoint result;
 		
-		BreakPoint right = null;
+		BreakPoint right;
 		
 		switch ( LA(1)) {
 		case GLOBAL:
@@ -123,7 +123,7 @@ public LtlParser(ParserSharedInputState state) {
 	public final BreakPoint  subformula() throws RecognitionException, TokenStreamException {
 		BreakPoint result = null;
 		
-		Value left = null; Value right = null;int operatorType = 0;
+		Value left; Value right;int operatorType;
 		
 		switch ( LA(1)) {
 		case LPARENTHESIS:
@@ -163,7 +163,7 @@ public LtlParser(ParserSharedInputState state) {
 	}
 	
 	public final BreakPoint  rightpart() throws RecognitionException, TokenStreamException {
-		BreakPoint result = null;
+		BreakPoint result;
 		
 		
 		switch ( LA(1)) {
@@ -204,10 +204,10 @@ public LtlParser(ParserSharedInputState state) {
 	}
 	
 	public final Value  expression() throws RecognitionException, TokenStreamException {
-		Value result = null;
+		Value result;
 		
-		Token  s = null;
-		Token  c = null;
+		Token  s;
+		Token  c;
 		
 		if ((LA(1)==NAME) && (_tokenSet_0.member(LA(2)))) {
 			s = LT(1);
@@ -229,7 +229,7 @@ public LtlParser(ParserSharedInputState state) {
 	}
 	
 	public final int  operator() throws RecognitionException, TokenStreamException {
-		int result = 0;
+		int result;
 		
 		
 		switch ( LA(1)) {

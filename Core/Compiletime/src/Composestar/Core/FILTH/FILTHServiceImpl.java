@@ -115,7 +115,7 @@ public class FILTHServiceImpl extends FILTHService{
 		
 		LinkedList modulrefs;
 		
-		Graph g=new Graph(); g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph(); g.setRoot(new Node("root"));
 
 		FILTHService.log.print("<h4>Superimposed Filter Modules: </h4>\n");
 		FILTHService.log.print("<ul>\n");
@@ -168,7 +168,7 @@ public class FILTHServiceImpl extends FILTHService{
 		FILTHService.log.print("<h4>Selected Order: </h4>\n");
 		FILTHService.log.print("<ol>\n");
 		//FILTHService.printTab(3,"<-- Alternative ("+ alt++ +") -->\n");
-		for (Iterator j=((List)(LinkedList)forders.getFirst()).iterator(); j.hasNext();)
+		for (Iterator j=((LinkedList)forders.getFirst()).iterator(); j.hasNext();)
 		{
 			FilterModuleReference fmr = (FilterModuleReference)j.next();
 			if(!(fmr.getRef().getQualifiedName().equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))

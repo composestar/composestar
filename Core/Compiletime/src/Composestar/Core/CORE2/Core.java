@@ -125,7 +125,7 @@ public class Core implements CTCommonModule{
         while( enumer.hasMoreElements() ){
             Filter filter = (Filter) enumer.nextElement();
             Boolean b = (Boolean) filterContinueTable.get( filter );
-            if ( b.booleanValue() == true ){
+            if (b.booleanValue() ){
                 Debug.out( Debug.MODE_ERROR, MODULE_NAME, 
                         "Redundant filter found!", filter );
             }

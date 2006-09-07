@@ -16,8 +16,8 @@ import java.util.*;
 
 public class Node {	
 	 private LinkedList incomingEdges=new LinkedList();
-	 private LinkedList outgoingEdges=new LinkedList();;
-	 private Object _element;
+	 private LinkedList outgoingEdges=new LinkedList();
+    private Object _element;
 	 
 	 public Node(Object element){ _element=element; }
 	 public Object getElement(){ return _element; }

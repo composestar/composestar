@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SymbolTable.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id$
  * 
 **/
 
@@ -150,24 +150,24 @@ public class SymbolTable
 	/**
 	 * @Return the hard coded number of types that are available
 	 */
-	public int totalTypes () {return totalTypes;};
+	public int totalTypes () {return totalTypes;}
 
-	/**
-	 * @Return a string representation of the SymbolTypes. 
-	 */
-	public String toString()
-	{
-		if (allSymbols == null) return "Symbol table not done";
+    /**
+     * @Return a string representation of the SymbolTypes.
+     */
+    public String toString()
+    {
+        if (allSymbols == null) return "Symbol table not done";
 
-		String out = "Symbol table\n-----------\n";
-			
-		for (int i = 0; i < allSymbols.length; i++)
-		{
-			out += i + " --> " + (String) (allSymbols[i]).toString() + '\n';
-		}
+        String out = "Symbol table\n-----------\n";
 
-		return out;
-	}
+        for (int i = 0; i < allSymbols.length; i++)
+        {
+            out += i + " --> " + (allSymbols[i]).toString() + '\n';
+        }
+
+        return out;
+    }
 
 	public int getColumnLength()
 	{
@@ -200,7 +200,7 @@ public class SymbolTable
 		Symbol symbols[] = new Symbol[symbolObjects.length];
 		for (int i = 0; i < symbolObjects.length; i++)
 		{
-			symbols[i] = (Symbol) symbolMap.get((String) symbolObjects[i]);
+			symbols[i] = (Symbol) symbolMap.get(symbolObjects[i]);
 		}
 
 		return symbols;

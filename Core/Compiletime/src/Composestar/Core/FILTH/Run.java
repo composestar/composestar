@@ -27,10 +27,10 @@ public class Run {
 		Action p=new Action("p", Boolean.TRUE,true);
 		Action m=new Action("m", Boolean.TRUE,true);
 		Action u=new Action("u", Boolean.TRUE,true);
-		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
-		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
+		Rule p1=new SoftPreRule(c, p);
+		Rule p2=new SoftPreRule(m, u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -51,18 +51,18 @@ public class Run {
 		Action u=new Action("u", Boolean.TRUE,true);
 
 		/* 1. cycle */
-		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
-		Rule p2=new SoftPreRule((Parameter)p, (Parameter)m);
-		Rule p3=new SoftPreRule((Parameter)m, (Parameter)c); 
+		Rule p1=new SoftPreRule(c, p);
+		Rule p2=new SoftPreRule(p, m);
+		Rule p3=new SoftPreRule(m, c);
 		/* 2. cycle */
-		Rule p4=new SoftPreRule((Parameter)m, (Parameter)p); 
+		Rule p4=new SoftPreRule(m, p);
 		/* 3. cycle */
-		Rule p5=new SoftPreRule((Parameter)u, (Parameter)m); 
-		Rule p6=new SoftPreRule((Parameter)p, (Parameter)u); 
+		Rule p5=new SoftPreRule(u, m);
+		Rule p6=new SoftPreRule(p, u);
 		/* 4. cycle */
-		Rule p7=new SoftPreRule((Parameter)p, (Parameter)p); 
+		Rule p7=new SoftPreRule(p, p);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -88,14 +88,14 @@ public class Run {
 		Action p=new Action("p", Boolean.TRUE,true);
 		Action m=new Action("m", Boolean.TRUE,true);
 		Action u=new Action("u", Boolean.TRUE,true);
-		Rule p1=new SoftCondRule((Parameter)c, (Parameter)p);
-		Rule p2=new SoftSkipRule((Parameter)p, (Parameter)u, new True());
-		Rule p3=new SoftPreRule((Parameter)p, (Parameter)m);
+		Rule p1=new SoftCondRule(c, p);
+		Rule p2=new SoftSkipRule(p, u, new True());
+		Rule p3=new SoftPreRule(p, m);
 
 
 //		PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -122,9 +122,9 @@ public class Run {
 		Action p=new Action("p", Boolean.TRUE,true);
 		Action m=new Action("m", Boolean.TRUE,true);
 		Action u=new Action("u", Boolean.TRUE,true);
-		Rule p1=new IncludeRule((Parameter)c, (Parameter)p);
-		Rule p2=new IncludeRule((Parameter)p, (Parameter)m);
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Rule p1=new IncludeRule(c, p);
+		Rule p2=new IncludeRule(p, m);
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -144,13 +144,13 @@ public class Run {
 		Action a=new Action("a", Boolean.TRUE,true);
 		Action b=new Action("b", Boolean.FALSE,true);
 		Action c=new Action("c", Boolean.TRUE,true);
-		Rule p1=new HardCondRule((Parameter)a, (Parameter)c);
-		Rule p2=new HardCondRule((Parameter)b, (Parameter)c);
+		Rule p1=new HardCondRule(a, c);
+		Rule p2=new HardCondRule(b, c);
 
 
 //		PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(a,g);
 		Action.insert(b,g);
 		Action.insert(c,g);
@@ -175,13 +175,13 @@ public class Run {
 		Action a=new Action("a", Boolean.TRUE,true);
 		Action b=new Action("b", Boolean.FALSE,true);
 		Action c=new Action("c", Boolean.TRUE,true);
-		Rule p1=new HardSkipRule((Parameter)a, (Parameter)c, new False());
-		Rule p2=new HardCondRule((Parameter)b, (Parameter)c);
+		Rule p1=new HardSkipRule(a, c, new False());
+		Rule p2=new HardCondRule(b, c);
 
 
 //		PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(a,g);
 		Action.insert(b,g);
 		Action.insert(c,g);
@@ -206,13 +206,13 @@ public class Run {
 		Action a=new Action("a", Boolean.TRUE,true);
 		Action b=new Action("b", Boolean.TRUE,true);
 		Action c=new Action("c", Boolean.TRUE,true);
-		Rule p1=new HardSkipRule((Parameter)a, (Parameter)c, new False());
-		Rule p2=new HardSkipRule((Parameter)b, (Parameter)c, new True());
+		Rule p1=new HardSkipRule(a, c, new False());
+		Rule p2=new HardSkipRule(b, c, new True());
 
 
 //		PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(a,g);
 		Action.insert(b,g);
 		Action.insert(c,g);
@@ -236,13 +236,13 @@ public class Run {
 		Action a=new Action("a", Boolean.TRUE,true);
 		Action b=new Action("b", Boolean.TRUE,false);
 		Action c=new Action("c", Boolean.TRUE,true);
-		Rule p1=new HardPreRule((Parameter)b, (Parameter)c);
+		Rule p1=new HardPreRule(b, c);
 //		Rule p2=new HardSkipRule((Parameter)b, (Parameter)c, new True());
 
 
 //		PreRule p2=new PreRule((Parameter)m, (Parameter)u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(a,g);
 		Action.insert(b,g);
 		Action.insert(c,g);
@@ -268,10 +268,10 @@ public class Run {
 		Action p=new Action("p", Boolean.TRUE,true);
 		Action m=new Action("m", Boolean.TRUE,true);
 		Action u=new Action("u", Boolean.TRUE,true);
-		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
-		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
+		Rule p1=new SoftPreRule(c, p);
+		Rule p2=new SoftPreRule(m, u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -298,7 +298,7 @@ public class Run {
 //		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
 //		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -322,11 +322,11 @@ public class Run {
 		Action p=new Action("p", Boolean.TRUE,true);
 		Action m=new Action("m", Boolean.TRUE,true);
 		Action u=new Action("u", Boolean.TRUE,true);
-		Rule p1=new SoftPreRule((Parameter)c, (Parameter)p);
-		Rule p2=new SoftPreRule((Parameter)m, (Parameter)u);
-		Rule p3=new SoftPreRule((Parameter)u, (Parameter)m); //cycle
+		Rule p1=new SoftPreRule(c, p);
+		Rule p2=new SoftPreRule(m, u);
+		Rule p3=new SoftPreRule(u, m); //cycle
 		
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		Action.insert(c,g);
 		Action.insert(p,g);
 		Action.insert(m,g);
@@ -346,7 +346,7 @@ public class Run {
 	}
 	public void test11(){
 
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		/* TODO: augment the active filtermodules in memory and in the graph */
 		
 		/* process XML specification */
@@ -372,7 +372,7 @@ public class Run {
 
 	}
 	public void test12(){
-		Graph g=new Graph();g.setRoot(new Node((Object)"root"));
+		Graph g=new Graph();g.setRoot(new Node("root"));
 		
 		Action a=new Action("a", Boolean.TRUE, true);
 		Action.insert(a,g);

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: DispatchFilter.java,v 1.1 2006/02/13 11:16:55 pascal Exp $
+ * $Id$
  * 
 **/
 
@@ -22,16 +22,16 @@ class DispatchFilter extends Filter
 
 		//doesMeta = false;
 	}
-	public String toString() { return "Dispatch";};
+	public String toString() { return "Dispatch";}
 
-	public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )
-	{
-		stateTable.snapshot(status, component);
-		status.finish(true);
+    public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )
+    {
+        stateTable.snapshot(status, component);
+        status.finish(true);
 
-		status.setAllValues(true); // TODO check this out.
-		return status;
-	}
+        status.setAllValues(true); // TODO check this out.
+        return status;
+    }
 	
 
 	public ActionNode createNode()

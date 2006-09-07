@@ -25,5 +25,5 @@ public class Main implements CTCommonModule {
     public void run(CommonResources resources) throws ModuleException {
       DoResolve dr = new DoResolve();
       dr.go(DataStore.instance());
-    };
+    }
 }

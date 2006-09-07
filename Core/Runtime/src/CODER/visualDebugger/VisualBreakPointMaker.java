@@ -137,7 +137,7 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 
 	public BreakPoint createBreakPoint()
 	{
-		String wasBussyWith = "Selector Expression";
+		String wasBussyWith;
 		try
 		{
 			ObjectBreakPoint selector = new SenderBreakPoint(debugger.getHalter(),selectors.getText());

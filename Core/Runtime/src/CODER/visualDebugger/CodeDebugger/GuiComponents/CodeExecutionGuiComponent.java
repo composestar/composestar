@@ -143,7 +143,7 @@ public class CodeExecutionGuiComponent extends Panel {
 
 	private String getCodeFormfile(String filename, int lineNumber)
 	{
-		String line = null;
+		String line;
 		if(filename == null)
 		{
 			return "Unable to read codefile";

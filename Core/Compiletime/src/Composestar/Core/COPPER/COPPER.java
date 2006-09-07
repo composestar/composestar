@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: COPPER.java,v 1.5 2006/03/10 14:43:58 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.Core.COPPER;
 
@@ -92,7 +92,7 @@ public class COPPER implements CTCommonModule
   	  Object[] objects = inc.history.getAllObjects();
   	  for(int i=0;i<objects.length;i++)
   	  {
-  	  	  Object obj = (Object)objects[i];
+  	  	  Object obj = objects[i];
   	  	  if(obj instanceof RepositoryEntity)
   	  	  {
   	  	  		// COPPER only adds RepositoryEntities
@@ -283,7 +283,7 @@ public class COPPER implements CTCommonModule
 	    	for(int i=0; i<cpsfiles.size(); i++)
 	    	{
 	    		try {
-		    		Debug.out(Debug.MODE_INFORMATION, "COPPER", "Parsing concernfile '" + (String)cpsfiles.get(i) + "'...");
+		    		Debug.out(Debug.MODE_INFORMATION, "COPPER", "Parsing concernfile '" + cpsfiles.get(i) + "'...");
 		    		copper.parseCpsFile((String)cpsfiles.get(i),ALL_PHASES);
 
 		    		Debug.out(Debug.MODE_INFORMATION, "COPPER", "Serializing repository...");
@@ -310,7 +310,7 @@ public class COPPER implements CTCommonModule
 	    	
 	    	for(int i=0; i<cpsfiles.size(); i++)
 	    	{
-	    		Debug.out(Debug.MODE_INFORMATION, "COPPER", "Parsing concernfile '" + (String)cpsfiles.get(i) + "'...");
+	    		Debug.out(Debug.MODE_INFORMATION, "COPPER", "Parsing concernfile '" + cpsfiles.get(i) + "'...");
 	    		try {
 	    			copper.parseCpsFile((String)cpsfiles.get(i),PARSE_PHASES);
 	    		}

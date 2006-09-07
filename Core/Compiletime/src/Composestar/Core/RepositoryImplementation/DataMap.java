@@ -183,7 +183,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable {
      * @roseuid 40EBC9CD017C
      */
     public Collection values() {
-		return (Collection) values;     
+		return values;
     }
     
     public void excludeUnreferenced(Class c)
@@ -214,7 +214,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable {
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		DataMap map = null;
+		DataMap map;
 		map = (DataMap) super.clone();
 		
 		// At this point, the newObject shares all data with the object

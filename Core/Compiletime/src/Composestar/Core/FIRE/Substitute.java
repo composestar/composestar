@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Substitute.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id$
  * 
 **/
 
@@ -15,16 +15,16 @@ public class Substitute extends FilterLeaf
 {
 	Symbol symbol = null;
 
-	public Substitute(Symbol _symbol) {symbol = _symbol;};
-	public Substitute(Symbol _symbol, int filterNumber) 
-	{	symbol = _symbol;
-		setFilterNumber(filterNumber);
-	};
-	
-	public String toString () 
-	{
-		return "replace(" + symbol + ')';
-	} 
+	public Substitute(Symbol _symbol) {symbol = _symbol;}
+    public Substitute(Symbol _symbol, int filterNumber)
+    {	symbol = _symbol;
+        setFilterNumber(filterNumber);
+    }
+
+    public String toString ()
+    {
+        return "replace(" + symbol + ')';
+    }
 
 	// TODO: implement
 	public StatusColumn calculateStatus(StatusColumn status, StateTable stateTable)
@@ -37,7 +37,7 @@ public class Substitute extends FilterLeaf
 		//stateTable.snapshot(status, new SubstituteActionNode(symbol));
 		
 		// replacing the symbol, instead of changing the status.
-		Logic.or(symbol.column, (StatusColumn) status);
+		Logic.or(symbol.column, status);
 
 
 		Symbol [] symbols = (SymbolTable.getInstance()).getSymbols(symbol.type);
@@ -48,7 +48,7 @@ public class Substitute extends FilterLeaf
 			if (!symbols[i].equals(symbol))
 			{
 				// Remove not matching stuff.
-				Logic.and(symbols[i].column, (StatusColumn) status);
+				Logic.and(symbols[i].column, status);
 			}
 
 		}

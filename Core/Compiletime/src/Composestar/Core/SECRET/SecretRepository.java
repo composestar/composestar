@@ -95,7 +95,7 @@ public class SecretRepository implements CTCommonModule {
 		if(name != null)
 		{
 			// TODO: is the return value right? maybe return the OKRegEx
-			return ((ResourceDescription)this.conflictResourceMap.get(name)).toString();
+			return this.conflictResourceMap.get(name).toString();
 		}
      	return null;     
     }
@@ -162,7 +162,7 @@ public class SecretRepository implements CTCommonModule {
      * @roseuid 40BF0292014F
      */
     public void run(CommonResources resources) throws ModuleException {
-		DataStore ds = DataStore.instance();
+		DataStore.instance();
 		String secretconfigfile = Configuration.instance().getModuleSettings().getModule("SECRET").getProperty("SECRET_CONFIG");	
 		SecretFilterXMLParser xmlparser = new SecretFilterXMLParser();
 		xmlparser.parse(secretconfigfile, this);     

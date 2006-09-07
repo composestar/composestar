@@ -17,7 +17,6 @@ public class DynamicNode extends Node
 	{
 		if(obj instanceof RepositoryEntity)
 		{
-			String objtype = ((RepositoryEntity)obj).getDynObject(reference).getClass().getName();
 			return ((RepositoryEntity)obj).getDynObject(reference);
 		}
 		else 

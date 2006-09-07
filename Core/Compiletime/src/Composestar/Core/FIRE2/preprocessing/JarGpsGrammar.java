@@ -96,7 +96,7 @@ public class JarGpsGrammar extends GpsGrammar {
         FileInputStream fis=new FileInputStream( grammarName );
         BufferedInputStream bis=new BufferedInputStream(fis);
         ZipInputStream zis=new ZipInputStream(bis);
-        ZipEntry ze=null;
+        ZipEntry ze;
         while ((ze=zis.getNextEntry())!=null) {
             String name = ze.getName();
             if ( name.startsWith( grammarLocation )  &&  name.endsWith( ".gpr")  &&  !ze.isDirectory() ){

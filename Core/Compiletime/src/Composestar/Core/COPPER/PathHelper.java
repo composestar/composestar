@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: PathHelper.java,v 1.1 2006/02/13 11:16:54 pascal Exp $
+* $Id$
 */
 package Composestar.Core.COPPER;
 
@@ -53,7 +53,7 @@ public class PathHelper {
 
   private Piece splitPiece(String pathpart) {
     StringTokenizer strTok;
-    Piece piece = null;
+    Piece piece;
     String temp;
 
     piece = new Piece();

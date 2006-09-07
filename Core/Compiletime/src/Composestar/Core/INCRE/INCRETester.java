@@ -211,7 +211,7 @@ public class INCRETester
 			
 			// add object to instances
 			instances.put(""+obj.hashCode(),obj);
-			int count = 0;
+			int count;
 			
 			// update instancesByType
 			String type = obj.getClass().getName();

@@ -344,7 +344,7 @@ public abstract class LOLA implements CTCommonModule
 							while(selExpressions.hasNext()){
 								SimpleSelExpression simpleSel = (SimpleSelExpression)selExpressions.next();
 								if(simpleSel instanceof PredicateSelector){
-									if(toBeProcessed.contains((PredicateSelector)simpleSel) && toBeSkipped.contains(predSel)){
+									if(toBeProcessed.contains(simpleSel) && toBeSkipped.contains(predSel)){
 										moveSelector(predSel,toBeSkipped,toBeProcessed);
 										restart = true;
 									}

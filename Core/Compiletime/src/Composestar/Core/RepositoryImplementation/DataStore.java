@@ -5,14 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DataStore.java,v 1.3 2006/05/05 09:05:45 pascal_durr Exp $
+ * $Id$
  */
 /**
  *   The Repository part of the Compose* project.
  *   It supports reading and writing objects.
  *   It allows for basic store and restore operations
  *   @author Pascal DŸrr
- *   @version $Id: DataStore.java,v 1.3 2006/05/05 09:05:45 pascal_durr Exp $
+ *   @version $Id$
  */
 package Composestar.Core.RepositoryImplementation;
 
@@ -97,10 +97,10 @@ public class DataStore implements Serializable, Cloneable {
    * @roseuid 401FAA62020C
    */
   public Object readObject(String filename) {
-    Object obj = null;
+    Object obj;
     try {
       if (DEBUG) Debug.out(Debug.MODE_INFORMATION,"DataStore","Reading object from file '" + filename + "'... ");
-      FileInputStream fis = null;
+      FileInputStream fis;
       if (filename == null) {
         fis = new FileInputStream(this.filename);
       } else {
@@ -133,7 +133,7 @@ public class DataStore implements Serializable, Cloneable {
   public boolean writeObject(String filename, Object obj) {
     try {
       if (DEBUG) Debug.out(Debug.MODE_INFORMATION,"DataStore","Writing object '" + obj + "' to file '" + filename + "'...");
-      FileOutputStream fos = null;
+      FileOutputStream fos;
       if (filename == null) {
         fos = new FileOutputStream(this.filename);
       } else {
@@ -242,7 +242,7 @@ public class DataStore implements Serializable, Cloneable {
    * @roseuid 401FAA62023F
    */
   public String addObject(Object obj) {
-    String id = "";
+    String id;
     if (obj instanceof RepositoryEntity)
     {
       id = ((RepositoryEntity) obj).getUniqueID();

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsConcern.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern;
 
@@ -235,7 +235,7 @@ public class CpsConcern extends Concern
 
 	public Object clone ()
 	{
-		CpsConcern newObject = null;
+		CpsConcern newObject;
 		try
 		{
 			newObject = (CpsConcern)super.clone();

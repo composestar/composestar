@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: SIGN.java,v 1.14 2006/08/31 11:07:29 doornenbal Exp $
+ * $Id$
  * 
 **/
 
@@ -331,7 +331,7 @@ public class SIGN implements CTCommonModule
 	
 		for (int i = 0; i < dnmi.size(); i++)
 		{
-			if((MethodInfo)dnmi.get(i)!=null)
+			if(dnmi.get(i) !=null)
 			{
 					signature.add ((MethodInfo)dnmi.get(i), MethodWrapper.NORMAL);
 			}

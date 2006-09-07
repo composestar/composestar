@@ -72,9 +72,9 @@ public RegParser(ParserSharedInputState state) {
 }
 
 	public final RegularExpression  expression() throws RecognitionException, TokenStreamException {
-		RegularExpression result = null;
+		RegularExpression result;
 		
-		RegularExpression right = null;
+		RegularExpression right;
 		
 		result=subexpression();
 		{
@@ -102,9 +102,9 @@ public RegParser(ParserSharedInputState state) {
 	}
 	
 	public final RegularExpression  subexpression() throws RecognitionException, TokenStreamException {
-		RegularExpression result = null;
+		RegularExpression result;
 		
-		Token  n = null;
+		Token  n;
 		
 		switch ( LA(1)) {
 		case LPARENTHESIS:
@@ -130,7 +130,7 @@ public RegParser(ParserSharedInputState state) {
 	}
 	
 	public final RegularExpression  rightpart() throws RecognitionException, TokenStreamException {
-		RegularExpression result = null;
+		RegularExpression result;
 		
 		
 		switch ( LA(1)) {

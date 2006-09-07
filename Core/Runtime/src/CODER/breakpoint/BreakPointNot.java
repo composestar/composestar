@@ -16,6 +16,6 @@ public abstract class BreakPointNot extends BreakPointMono
 	}
 
 	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
-			return !right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);;
-	}
+			return !right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
+    }
 }

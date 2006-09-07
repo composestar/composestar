@@ -41,7 +41,7 @@ public class AbstractVM {
      * @roseuid 404ED6A800A6
      */
     public void addActionDescription(String rsrc, ActionDescription ad) {
-    	ArrayList tmp = null;
+    	ArrayList tmp;
     	if(this.RUM.containsKey(rsrc))
     	{
     		tmp = (ArrayList)this.RUM.get(rsrc);

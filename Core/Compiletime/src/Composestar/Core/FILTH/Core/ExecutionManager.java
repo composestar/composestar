@@ -55,8 +55,8 @@ public class ExecutionManager {
 			_order.removeFirst();
 			//if the execution is not executable, go on the nexr action in the order
 			
-				/* check its rules ~ edges, evaluate the necessery members, and do the semantics*/;
-		}
+				/* check its rules ~ edges, evaluate the necessery members, and do the semantics*/
+        }
 	}
 	
 	/* ordering the rules of an action according to the pref. table */

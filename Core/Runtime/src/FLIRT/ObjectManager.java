@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.10 2006/09/06 09:47:22 elmuerte Exp $
+ * $Id$
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -196,7 +196,7 @@ public class ObjectManager implements ChildRunnable
 			Internal internal = (Internal)internalIterator.next();
 			String internalname = internal.getName();
 			String internaltype = internal.getType().getQualifiedName();
-			Object internalobject = null;
+			Object internalobject;
 			//try
 			{
 				internalobject = Invoker.getInstance().requestInstance(internaltype,EmptyObjectArray);
@@ -220,7 +220,7 @@ public class ObjectManager implements ChildRunnable
 			External external = (External)externalIterator.next();
 			String externalname = external.getName();
 			String externaltype = external.getType().getQualifiedName();
-			Object externalobject = null;
+			Object externalobject;
 
 			if(external.shortinit != null)
 			{
@@ -374,9 +374,7 @@ public class ObjectManager implements ChildRunnable
 		this.notifyMessageConsumer();
 
 		// read the returnvalue from the message's response buffer
-		Object reply = m.getResponse();
-		
-		return reply;
+		return m.getResponse();
     }
 
 	/**
@@ -436,9 +434,8 @@ public class ObjectManager implements ChildRunnable
      */
     public Object receiveMessage(Message aSingleMessage) {
 		// Set used vars
-		Object retVal = null;
 		boolean wasAccepted = false;
-		ArrayList filterList = new ArrayList();
+		ArrayList filterList;
 		
 		MessageList aMessage = new MessageList( aSingleMessage );
 		//try 

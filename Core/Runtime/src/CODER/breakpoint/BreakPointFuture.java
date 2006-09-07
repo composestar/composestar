@@ -17,6 +17,6 @@ public class BreakPointFuture extends BreakPointMono
 
     public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){		
 		//Just check the last one.
-		return right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);;
-	}
+		return right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
+    }
 }

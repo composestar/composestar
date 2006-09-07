@@ -336,7 +336,7 @@ public class INCRE implements CTCommonModule
 				return ((ArrayList)dsObjectsOrdered.get(c.getName())).iterator();
 		}
 		
-		ArrayList list = new ArrayList();
+		ArrayList list;
 		if(searchingHistory)
 			list = history.getListOfAllInstances(c);
 		else
@@ -400,7 +400,7 @@ public class INCRE implements CTCommonModule
    			
    			Iterator objIter = history.getAllInstancesOf(obj.getClass());
    			while( objIter.hasNext() ){
-   				Object nextobject = (Object)objIter.next();
+   				Object nextobject = objIter.next();
    				if(obj instanceof DeclaredRepositoryEntity){
    					DeclaredRepositoryEntity dre = (DeclaredRepositoryEntity)nextobject;
    					if(dre.getQualifiedName().equals(((DeclaredRepositoryEntity)obj).getQualifiedName()))
@@ -465,7 +465,7 @@ public class INCRE implements CTCommonModule
 		
 		boolean isAdded = true;
 		String fixedFile = FileUtils.fixFilename(filename).toLowerCase();
-		String searchStr = "";
+		String searchStr;
 		StringBuffer searchBuffer = new StringBuffer("");	
 		
 		// As an optimalization: 
@@ -516,9 +516,9 @@ public class INCRE implements CTCommonModule
 			// file could be referenced by a ConfigNode of the FileDependency
 			Path p = fdep.getPath();
 			if(!p.isEmpty()){
-				Node n = (Node)p.getFirstNode();
+				Node n = p.getFirstNode();
 				if(n instanceof ConfigNode){
-					searchBuffer.append((String)configurations.getHistory().getProperty(n.getReference()));
+					searchBuffer.append(configurations.getHistory().getProperty(n.getReference()));
 				}
 			}
 		}
@@ -683,8 +683,8 @@ public class INCRE implements CTCommonModule
 	   	searchingHistory = false;
 	   	Object inputobject = input;
 		Object historyobject = null;
-		Object depofinputobject = null;
-		Object depofhistoryobject = null; 
+		Object depofinputobject;
+		Object depofhistoryobject;
 		INCRETimer overhead = getReporter().openProcess(modulename,"INCRE::isProcessedBy("+input+ ')',INCRETimer.TYPE_OVERHEAD);
 		
 	   	if(!isModuleInc(modulename))
@@ -711,7 +711,7 @@ public class INCRE implements CTCommonModule
 				searchingHistory = false;
 				Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
 				try {
-					depofinputobject = (Object)dep.getDepObject(inputobject);
+					depofinputobject = dep.getDepObject(inputobject);
 				}
 				catch(Exception e){
 					Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+inputobject);
@@ -781,7 +781,7 @@ public class INCRE implements CTCommonModule
 							// get dependent object of the 'history' object
 							currentRepository = history;
 							searchingHistory = true;
-							depofhistoryobject = (Object)dep.getDepObject(historyobject);
+							depofhistoryobject = dep.getDepObject(historyobject);
 								
 							// compare both dependent objects for modification
 							boolean modified = !comparator.compare(depofinputobject,depofhistoryobject);

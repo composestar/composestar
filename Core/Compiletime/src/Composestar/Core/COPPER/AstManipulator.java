@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: AstManipulator.java,v 1.1 2006/02/16 23:03:49 pascal_durr Exp $
+* $Id$
 */
 package Composestar.Core.COPPER;
 
@@ -41,7 +41,7 @@ public class AstManipulator implements CpsTokenTypes {
 
     AST ast;
     int i;
-    Piece piece = null;
+    Piece piece;
 
     adding = false;
     ast = astroot;
@@ -69,7 +69,7 @@ public class AstManipulator implements CpsTokenTypes {
 
     AST ast;
     int i;
-    Piece piece = null;
+    Piece piece;
 
     adding = false;
     ast = astroot;
@@ -98,7 +98,7 @@ public class AstManipulator implements CpsTokenTypes {
 
     AST ast, astback;
     int i;
-    Piece piece = null;
+    Piece piece;
 
     adding = true;      //we're adding stuff, so don't display 'not found' errors
     ast = astroot;
@@ -229,7 +229,7 @@ public class AstManipulator implements CpsTokenTypes {
 
   private AST navigateTo(Piece piece, AST ast, String totalpath) {
     Vector children;
-    AST correctast = null;
+    AST correctast;
 
     children = getAllChildren(ast);
     if (children == null) return (null);    //fixme: give error message?

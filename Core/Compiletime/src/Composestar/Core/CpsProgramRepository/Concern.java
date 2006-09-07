@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Concern.java,v 1.2 2006/02/16 12:51:20 composer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository;
 
@@ -69,7 +69,7 @@ public class Concern extends DeclaredRepositoryEntity {
 
 	public Object clone () throws CloneNotSupportedException
 	{
-		Concern newObject = null;
+		Concern newObject;
 		newObject = (Concern)super.clone();
 
 			// At this point, the newObject shares all data with the object

@@ -26,7 +26,7 @@ public class MethodNode extends Node
 	{
 		try 
 		{
-			Method mymethod = null;
+			Method mymethod;
 			
             if(reference.indexOf('.')>0){
             	// reference => FULLNAME_OF_CLASS.NAME_OF_METHOD
@@ -70,7 +70,7 @@ public class MethodNode extends Node
 			if(!this.parameters.isEmpty()){
 				Class[] classes = new Class[this.parameters.size()];
 				for(int i=0;i<this.parameters.size();i++){
-					Object obj = (Object)parameters.get(i);
+					Object obj = parameters.get(i);
 					classes[i] = obj.getClass();
 				}
 				return classes;

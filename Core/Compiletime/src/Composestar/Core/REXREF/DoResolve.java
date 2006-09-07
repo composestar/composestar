@@ -145,7 +145,7 @@ public class DoResolve {
         	
         	if(o instanceof ParameterizedInternal){
         		ParameterizedInternal pi = (ParameterizedInternal) o; 
-        		Vector pack = (Vector)((FilterModuleParameter) fm.getParameter(pi.getParameter())).getValue();
+        		Vector pack = (Vector)fm.getParameter(pi.getParameter()).getValue();
         		ConcernReference cref = new ConcernReference();
         		ds.removeObject(cref);
         		Splitter split = new Splitter(); 

@@ -116,7 +116,7 @@ public abstract class BACO implements CTCommonModule
 			FileInputStream fis  = new FileInputStream(in);
 			FileOutputStream fos = new FileOutputStream(out);
 			byte[] buf = new byte[1024];
-			for(int i = 0;(i=fis.read(buf))!=-1;)
+			for(int i;(i=fis.read(buf))!=-1;)
 			{
 			     fos.write(buf, 0, i);
 			}

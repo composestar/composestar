@@ -4,7 +4,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: ExistFilterModule.java,v 1.1 2006/02/16 23:03:48 pascal_durr Exp $
+* $Id$
 */
 package Composestar.Core.CHKREP;
 
@@ -69,7 +69,7 @@ public class ExistFilterModule implements BaseChecker {
 	 * @see Composestar.Core.CHKREP.BaseChecker#performCheck()
 	 */
 	public boolean performCheck() {
-		boolean nonFatal = true;
+		boolean nonFatal;
 		nonFatal = checkFilterMethodBinding();
 		return nonFatal;
 	}

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: EndOfFilter.java,v 1.1 2006/02/13 11:16:55 pascal Exp $
+ * $Id$
  * 
 **/
 
@@ -21,15 +21,15 @@ class EndOfFilter extends Filter
 		rejectAction = false;
 	}
 
-	public String toString() { return "EndOfSet";};
+	public String toString() { return "EndOfSet";}
 
-	public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )
-	{
-		stateTable.snapshot(status, component);
-		status.finish(true);
-		status.finish(false);
-		return status;
-	}
+    public StatusColumn calc (StatusColumn status, StateTable stateTable, Action component )
+    {
+        stateTable.snapshot(status, component);
+        status.finish(true);
+        status.finish(false);
+        return status;
+    }
 
 	public ActionNode createNode()
 	{

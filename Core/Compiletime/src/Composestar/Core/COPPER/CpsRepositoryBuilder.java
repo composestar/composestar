@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CpsRepositoryBuilder.java,v 1.11 2006/09/06 12:36:15 doornenbal Exp $
+ * $Id$
  */
 package Composestar.Core.COPPER;
 
@@ -1117,7 +1117,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     Iterator cpsit = StringConverter.stringToStringList(cpsc.getQualifiedName(),".");
     while(cpsit.hasNext())
     {
-    	vtemp.add((String)cpsit.next());
+    	vtemp.add(cpsit.next());
     }
     addSelectorExpression(1, vtemp);
   }
@@ -1588,7 +1588,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   private void completeInputFilters() {
     int i;
-    FilterModule temp = null;
+    FilterModule temp;
     Filter current;
     Filter next;
     
@@ -1627,7 +1627,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   private void completeOutputFilters() {
     int i;
-    FilterModule temp = null;
+    FilterModule temp;
     Filter current;
     Filter next;
 
@@ -1666,7 +1666,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   private void completeFilterElements() {
     int i;
-    Filter temp = null;
+    Filter temp;
     FilterElement current;
     FilterElement next;
 
