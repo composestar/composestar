@@ -1,0 +1,125 @@
+<?xml version="1.0"?> 
+<!-- NAnt Build File -->
+<project name="The Composestar Project" default="buildall" basedir=".">
+
+	<!-- Properties -->
+	<property name="init-executed" value="false"/>
+	<property name="test.sources" value="Tests"/>
+	<property name="build.configuration" value="debug"/>
+
+	<target name="init" unless="${init-executed}">
+		<!-- Create the time stamp -->
+		<tstamp/>
+
+		<property name="init-executed" value="true"/>
+	</target>
+	
+	<target name="buildall" depends="init" description="Build weavers, test cases">
+		<!-- Build IlWeaver and PeWeaver -->
+		<call target="build-weavers"/>
+		
+		<!-- Build test cases -->
+		<call target="build-tests"/>
+
+		<!-- Run Nunit test cases -->
+		<call target="test"/>
+	</target>
+	
+	<target name="build-weavers" depends="init" description="Build IlWeaver and PeWeaver">
+	  <!--	Build weavers -->
+		<solution configuration="${build.configuration}" solutionfile="Weavers.sln" />
+	 </target>
+	
+	<target name="build-tests" depends="init" description="Build test cases">
+		<!-- Build all test cases -->
+		<solution configuration="${build.configuration}" solutionfile="Samples/Samples.sln" />
+	</target>
+	
+	<target name="test" description="Run test cases">
+		<echo level="Info">Running NUnit tests against 'WeaveLibrary.dll'...</echo>
+		<nunit2>
+  	  <formatter type="Plain" />
+    	<test assemblyname="bin/Debug/WeaverTests.dll" />
+		</nunit2>
+
+		<foreach item="File" property="file.weavespec">
+   		<in>
+        	<items>
+            <include name="Samples/**/weavespec.xml" />
+        	</items>
+    	</in>
+    	<do>
+    		<property name="projectpath" value="${path::get-directory-name(file.weavespec)}"/>
+    		
+    		<!-- Weave  -->
+        <foreach item="File" property="file.weavesource" if="true">
+   						<in>
+        				<items>
+         			   <include name="${projectpath}/bin/Debug/*.exe" />
+         			   <exclude name="${projectpath}/bin/Debug/Test*.exe" />
+         			   <include name="${projectpath}/bin/Debug/*.dll" />
+         			   <exclude name="${projectpath}/bin/Debug/Test*.dll" />
+        				</items>
+   					 	</in>
+    				<do>
+    					<echo level="Info">Weaving '${path::get-file-name(file.weavesource)}'...</echo>
+    				
+    					<property name="file.output" value="${string::replace(file.weavesource, '\bin\Debug\', '\bin\Debug\Test') }" />
+    					<property name="file.log" value="${projectpath}/bin/Debug/weaver.log" />
+							
+              <exec program="bin/Debug/PeWeaver.exe" output="${projectpath}/bin/Debug/weaver.log" failonerror="false" resultproperty="result">
+    						<arg value='/nologo /debug /verify /out="${file.output}" /ws="${file.weavespec}" "${file.weavesource}"' />
+							</exec>
+							<if test="${result == '0'}">
+								<echo level="Info">Weave result: Success</echo>
+							</if>
+							<ifnot test="${result == '0'}">
+								<fail failonerror="false">Weave result: Failure (exitcode ${result})</fail>
+							</ifnot>
+							<echo level="Info"></echo><echo level="Info"></echo><echo level="Info"></echo>
+						</do>
+				</foreach>
+				
+				<!-- Verify output, only if correct output file is supplied -->
+				<property name="file.correctoutput" value="${projectpath}\correctoutput.txt" />
+				<if test="${file::exists(file.correctoutput)}">
+            <foreach item="File" property="file.runnable">
+   						<in>
+        				<items>
+         			  	<include name="${projectpath}/bin/Debug/Test*.exe" />
+        				</items>
+   					 	</in>
+   					 	<do>
+   					 		<echo level="Info">Execution test of '${path::get-file-name(file.runnable)}'...</echo>
+   					 		<property name="file.output" value="${string::replace(file.runnable, '.exe', '-testoutput.txt')}" />
+   					 		<exec program="${file.runnable}" output="${file.output}" failonerror="false"/>
+   					 		<loadfile file="${file.correctoutput}" property="text.correctoutput" />
+   					 		<loadfile file="${file.output}" property="text.output" />
+   		   				<if test="${text.correctoutput == text.output}">
+   					 			<echo level="Info">Test result: Success</echo>
+   					 		</if>			 		
+   					 		<ifnot test="${text.correctoutput == text.output}">
+   					 			<fail failonerror="false">Test result: Failure (incorrect output)</fail>
+   					 		</ifnot>
+								<echo level="Info"></echo><echo level="Info"></echo><echo level="Info"></echo>
+   					 	</do>
+   					 </foreach>
+				</if>
+
+    	</do>
+		</foreach>
+
+	</target>
+	
+
+	
+  <target name="clean" description="Clean up" >
+      <delete includeemptydirs="true">
+  			<fileset dir="${folder.dist}" includes="**/*"/>
+   			<fileset dir="${folder.build}" includes="**/*"/>
+  			<fileset dir="${folder.generatedgrammar}" includes="*.java,*.txt"/>
+  		</delete>
+  </target>
+ 
+
+</project>
