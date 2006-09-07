@@ -6,7 +6,7 @@ using Ini;
 using VSLangProj;
 using BuildConfiguration;
 
-namespace ComposestarVSAddin 
+namespace Composestar.StarLight.VSAddin 
 {
 	/// <summary>
 	/// Summary description for DummyGenerator.

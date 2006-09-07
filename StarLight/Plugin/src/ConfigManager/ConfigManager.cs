@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.IO;
 using Ini;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// Summary description for ConfigManager.

@@ -1,12 +1,12 @@
 import System.Reflection.*;
 import System.Runtime.CompilerServices.*;
 
-/** @assembly AssemblyTitle("ComposeStarDotNETCore") */
-/** @assembly AssemblyDescription("The ComposeStar DotNET Core") */
+/** @assembly AssemblyTitle("StarLightCompiletime") */
+/** @assembly AssemblyDescription("The ComposeStar StarLight Compiletime") */
 /** @assembly AssemblyConfiguration("") */
 /** @assembly AssemblyCompany("University Twente") */
 /** @assembly AssemblyProduct("Compose*") */
-/** @assembly AssemblyCopyright("TRESE") */
+/** @assembly AssemblyCopyright("TRESE 2006") */
 /** @assembly AssemblyTrademark("") */
 /** @assembly AssemblyCulture("") */
 /** @assembly AssemblyVersion("1.0.*") */

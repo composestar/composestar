@@ -8,7 +8,7 @@ using System.Text;
 using System.Globalization;
 using System.Data;
 using Ini;
-using ComposestarVSAddin;
+using Composestar.StarLight.VSAddin;
 
 namespace BuildConfiguration
 {
@@ -21,7 +21,7 @@ namespace BuildConfiguration
 
 		#region Privates
 
-		private ComposestarVSAddin.SupportedLanguages languages = null;
+		private Composestar.StarLight.VSAddin.SupportedLanguages languages = null;
 		private ArrayList mUsedCompilers;
 		private string _tempFolder = "";
 		#endregion
@@ -115,8 +115,8 @@ namespace BuildConfiguration
 			}
 		}
 
-		private ComposestarVSAddin.DebugModes _runDebugLevel = ComposestarVSAddin.DebugModes.NotSet   ;
-		public ComposestarVSAddin.DebugModes RunDebugLevel
+		private Composestar.StarLight.VSAddin.DebugModes _runDebugLevel = Composestar.StarLight.VSAddin.DebugModes.NotSet   ;
+		public Composestar.StarLight.VSAddin.DebugModes RunDebugLevel
 		{
 			get
 			{
@@ -567,7 +567,7 @@ namespace BuildConfiguration
 
 					p.OutputPath = tempfolder + "bin\\";
 					p.BuildPath = tempfolder + "obj\\";
-					StringCollection dependencies = ComposestarVSAddin.DependencyHarvester.Collect(project, false);
+					StringCollection dependencies = Composestar.StarLight.VSAddin.DependencyHarvester.Collect(project, false);
 					p.Dependencies.AddRange(dependencies) ;
 
 					Projects.Add(p); 
@@ -707,7 +707,7 @@ namespace BuildConfiguration
 				}
 				else 
 				{
-					ComposestarVSAddin.Language l = languages.GetLanguage(projectitem.Name);
+					Composestar.StarLight.VSAddin.Language l = languages.GetLanguage(projectitem.Name);
 
 
 					// Set the language of the project 

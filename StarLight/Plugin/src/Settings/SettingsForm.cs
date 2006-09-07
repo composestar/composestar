@@ -10,7 +10,7 @@ using System.Text;
 using EnvDTE;
 using Ini;
 
-namespace ComposestarVSAddin 
+namespace Composestar.StarLight.VSAddin 
 {
 	/// <summary>
 	/// Summary description for SettingsForm.
@@ -496,7 +496,7 @@ namespace ComposestarVSAddin
 			string iniFileName = "Composestar.ini";
 			try
 			{
-				path = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("VisualStudio").OpenSubKey("7.1").OpenSubKey("Addins").OpenSubKey("ComposestarVSAddin.Connect").GetValue("ComposestarPath").ToString();
+				path = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Microsoft").OpenSubKey("VisualStudio").OpenSubKey("7.1").OpenSubKey("Addins").OpenSubKey("Composestar.StarLight.VSAddin.Connect").GetValue("ComposestarPath").ToString();
 				fullname = System.IO.Path.Combine(path, iniFileName);
 			}
 			catch (Exception)

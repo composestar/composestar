@@ -52,8 +52,8 @@ namespace BuildConfiguration
 				_composestarIni = value;
 			}
 		}
-		private ComposestarVSAddin.DebugModes _buildDebugLevel = ComposestarVSAddin.DebugModes.NotSet   ;
-		public ComposestarVSAddin.DebugModes BuildDebugLevel
+		private Composestar.StarLight.VSAddin.DebugModes _buildDebugLevel = Composestar.StarLight.VSAddin.DebugModes.NotSet   ;
+		public Composestar.StarLight.VSAddin.DebugModes BuildDebugLevel
 		{
 			get
 			{
