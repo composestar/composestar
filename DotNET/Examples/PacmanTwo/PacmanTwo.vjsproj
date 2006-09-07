@@ -83,17 +83,7 @@
                 <Reference
                     Name = "ComposeStarRuntimeInterpreter"
                     AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
-                />
-                <Reference
-                    Name = "ComposeStarUtilities"
-                    AssemblyName = "ComposeStarUtilities"
-                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
-                />
-                <Reference
-                    Name = "ComposeStarFilterDebugger"
-                    AssemblyName = "ComposeStarFilterDebugger"
-                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarFilterDebugger.dll"
+                    HintPath = "..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
             </References>
         </Build>
