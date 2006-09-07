@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>concern</Title>
+			<Shortcut>concern</Shortcut>
+			<Description>Code snippet for a new concern</Description>
+			<Author>University of Twente</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+				<SnippetType>SurroundsWith</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>name</ID>
+					<ToolTip>Concern name</ToolTip>
+					<Default>MyConcern</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="StarLight">
+<![CDATA[concern $name$
+	$selected$$end$
+]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>
