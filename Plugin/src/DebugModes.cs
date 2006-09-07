@@ -1,4 +1,4 @@
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 
 	public enum DebugModes

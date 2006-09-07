@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms.Design;
 using System.Drawing.Design;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// SettingsContainer to be displayed in the property grid. 

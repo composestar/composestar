@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// A single language unit. Contains information about the name, extensions etc.

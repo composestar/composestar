@@ -2,7 +2,7 @@ using System;
 using EnvDTE;
 using System.Globalization; 
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// The Debug class is a singleton class which provides access to the debugging functions of the Composestar addin.

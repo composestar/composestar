@@ -2,7 +2,7 @@ using EnvDTE;
 using Ini;
 using System;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// Summary description for AbstractManager.

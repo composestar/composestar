@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.IO;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// Summary description for MasterManager.

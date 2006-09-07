@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// Summary description for DummyManager.

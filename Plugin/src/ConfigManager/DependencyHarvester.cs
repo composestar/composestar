@@ -5,7 +5,7 @@ using System.Xml.XPath;
 using EnvDTE;
 using VSLangProj;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// Summary description for DependencyHarvester.

@@ -1,6 +1,6 @@
 using System;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <remarks>
 	/// Attribute used to indicate if a property should be configured

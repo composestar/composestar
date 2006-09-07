@@ -1,7 +1,7 @@
 using Win32 = Microsoft.Win32;
 using System;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 
 	/// <summary>

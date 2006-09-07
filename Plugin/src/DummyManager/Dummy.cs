@@ -3,7 +3,7 @@ using System.CodeDom;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace ComposestarVSAddin
+namespace Composestar.StarLight.VSAddin
 {
 	/// <summary>
 	/// Summary description for Dummy.
