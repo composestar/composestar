@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MessageHandlingFacility.java,v 1.6 2006/06/29 11:51:56 reddog33hummer Exp $
+ * $Id: MessageHandlingFacility.java,v 1.7 2006/09/06 09:07:47 reddog33hummer Exp $
  * 
  * This class handles the intercepted messages and directs them to the rest of 
  * FLIRT
@@ -31,13 +31,14 @@ import java.util.*;
 public abstract class MessageHandlingFacility 
 {
 	protected static DataStore datastore = null;
-    
-	/**
-	 * @roseuid 40EA969503AB
-	 */
-	public MessageHandlingFacility() 
-	{
-	}
+    private static final Object[] EmptyObjectArray = {};
+
+    /**
+     * @roseuid 40EA969503AB
+     */
+    public MessageHandlingFacility()
+    {
+    }
 
 	/**
 	 * Instance creation from a nonstatic context
@@ -181,7 +182,7 @@ public abstract class MessageHandlingFacility
 
 	private static void handleConstructorCall(Object creator, Object createdObject, Message msg)
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming constructor message",creator.GetType().ToString(),msg.getTarget().GetType().ToString(),msg.getSelector(),new Object[]{});
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming constructor message",creator.GetType().ToString(),msg.getTarget().GetType().ToString(),msg.getSelector(),EmptyObjectArray);
 		
 		// First check do the output filters
 		//ObjectManager om = ObjectManager.getObjectManagerFor(creator, datastore);

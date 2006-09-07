@@ -184,7 +184,7 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 
 	public void parseException(String parsing, BreakPointParseException e)
 	{
-		popup.update("Parsing error", "Error while parsing " + parsing + "\n" + e.getMessage());
+		popup.update("Parsing error", "Error while parsing " + parsing + '\n' + e.getMessage());
 	}
 
 	private class PopUp extends JFrame implements ActionListener

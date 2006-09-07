@@ -70,11 +70,11 @@ public class ObjectInspector extends Panel implements ActionListener{
 			Object value = inter.getFieldValue(target, variables[i]);
 			if(value == null || value instanceof java.lang.String)
 			{
-				internals.add(variables[i] + "=" + value);
+				internals.add(variables[i] + '=' + value);
 			}
 			else
 			{
-				internals.add(value.getClass().getName() + ":" + variables[i] + '=' + value);
+				internals.add(value.getClass().getName() + ':' + variables[i] + '=' + value);
 			}
         }
     }

@@ -3,7 +3,7 @@
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: RepositoryLinker.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
+ * $Id: RepositoryLinker.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
  * 
  */
 package Composestar.RuntimeCore.FLIRT;
@@ -43,7 +43,7 @@ public class RepositoryLinker
 				String fullname = cc.getName();
 				FilterModule fm = new FilterModule();
 				fm = (FilterModule)filterModuleIter.next();
-				fullname = fullname + "." +fm.getName();
+				fullname = fullname + '.' +fm.getName();
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"Repository Linker","Adding filtermodule '"+fm.getName()+"' from '"+fm+"'.");
 				RepositoryLinker.filterModuleReferenceMap.put(fullname,linkFilterModule(fm));
 			}

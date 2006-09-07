@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: ActionNode.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id: ActionNode.java,v 1.2 2006/09/05 15:54:11 reddog33hummer Exp $
  * 
 **/
 
@@ -23,6 +23,8 @@ public class ActionNode extends Node implements Cloneable
         protected Symbol target = null;
         protected Symbol selector = null;
         protected String preferedSelector = "";
+
+    private static final Symbol[] EmptySymbolList = {};
 
 /////// Target /////////////
         public void setTarget (Symbol targetSymbol) {target = targetSymbol;}
@@ -86,7 +88,7 @@ public class ActionNode extends Node implements Cloneable
 
         public Symbol[] getConditions ()
         {
-                return (Symbol []) conditions.toArray(new Symbol[0]);
+                return (Symbol []) conditions.toArray(EmptySymbolList);
         }
 
 

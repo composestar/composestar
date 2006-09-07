@@ -13,7 +13,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Message.java,v 1.3 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: Message.java,v 1.4 2006/06/29 08:46:01 reddog33hummer Exp $
  * 
  * Models the Message as it is being Filtered
  * Keeps the name and arguments of the message. It also keeps some of the
@@ -442,7 +442,7 @@ public class Message
 
 	public String toString()
 	{
-		return "Message,caller(" + this.getSender() + "),target(" + this.getTarget() + "::" + this.getSelector() + ")";
+		return "Message,caller(" + this.getSender() + "),target(" + this.getTarget() + "::" + this.getSelector() + ')';
 	}
 
 	private boolean matched;

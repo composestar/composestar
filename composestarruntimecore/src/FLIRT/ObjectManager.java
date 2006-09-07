@@ -23,7 +23,7 @@ import java.util.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ObjectManager.java,v 1.9 2006/09/06 08:30:15 elmuerte Exp $
+ * $Id: ObjectManager.java,v 1.10 2006/09/06 09:47:22 elmuerte Exp $
  * 
  * This class manages the filtering process for each object.
  * The an object's objectManager is obtained by with the static
@@ -50,37 +50,38 @@ public class ObjectManager implements ChildRunnable
     
 	private SyncBuffer messageQueue;
 	private boolean working = false;
+    private static final Object[] EmptyObjectArray = {};
 
     /**
      * @roseuid 41161A8D008E
      */
-	public synchronized void run() 
-	{
-		this.working = true;
+    public synchronized void run()
+    {
+        this.working = true;
 
-		do
-		{
-			Message msg = (Message) this.messageQueue.consume();
-			Object reply = null;
-			try 
-			{
-				reply = this.receiveMessage(msg);
-			}
-			catch (Exception e)
-			{
-				Debug.out(Debug.MODE_ERROR, "FLIRT", "An exception was thrown from within a filter.");
-				Debug.out(Debug.MODE_ERROR, "FLIRT", "Message was `" + msg.getSelector() + "' for target `" + msg.getTarget() + "' from sender `" + msg.getSender() + "'.");
-				Debug.out(Debug.MODE_ERROR, "FLIRT", "Internal Compose* stack trace:");
-				e.printStackTrace();
-				// This method is executed in a seperate thread and will die on exceptions.
-			}
-			finally
-			{
-				msg.setResponse(reply);
-			}
-		}while (!this.messageQueue.isEmpty()); //dowhile because of concurency
-		this.working = false;
-	}
+        do
+        {
+            Message msg = (Message) this.messageQueue.consume();
+            Object reply = null;
+            try
+            {
+                reply = this.receiveMessage(msg);
+            }
+            catch (Exception e)
+            {
+                Debug.out(Debug.MODE_ERROR, "FLIRT", "An exception was thrown from within a filter.");
+                Debug.out(Debug.MODE_ERROR, "FLIRT", "Message was `" + msg.getSelector() + "' for target `" + msg.getTarget() + "' from sender `" + msg.getSender() + "'.");
+                Debug.out(Debug.MODE_ERROR, "FLIRT", "Internal Compose* stack trace:");
+                e.printStackTrace();
+                // This method is executed in a seperate thread and will die on exceptions.
+            }
+            finally
+            {
+                msg.setResponse(reply);
+            }
+        }while (!this.messageQueue.isEmpty()); //dowhile because of concurency
+        this.working = false;
+    }
 
 	public void notifyMessageConsumer()
 	{
@@ -198,7 +199,7 @@ public class ObjectManager implements ChildRunnable
 			Object internalobject = null;
 			//try
 			{
-				internalobject = Invoker.getInstance().requestInstance(internaltype,new Object[0]);
+				internalobject = Invoker.getInstance().requestInstance(internaltype,EmptyObjectArray);
 			}
 			/*catch(Exception exp)
 			{
@@ -229,15 +230,15 @@ public class ObjectManager implements ChildRunnable
 				if(Debug.SHOULD_DEBUG)
 				{
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tFound external '"+extarget+"' of type '"+externaltype+"'.");
-					Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tGet it from '"+extarget+"."+exselector+"'.");
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tGet it from '"+extarget+ '.' +exselector+"'.");
 				}
 				try
 				{
-					externalobject = Invoker.getInstance().invoke(extarget,exselector,new Object[0]);
+					externalobject = Invoker.getInstance().invoke(extarget,exselector,EmptyObjectArray);
 				}
 				catch(Exception exp)
 				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR,"FLIRT","Failed to invoke '"+extarget+"."+exselector+"'.");
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR,"FLIRT","Failed to invoke '"+extarget+ '.' +exselector+"'.");
 					throw new ExternalNotFoundException(externaltype,externalname,concern.getName());
 				}
 				if(externalobject != null)
@@ -287,7 +288,7 @@ public class ObjectManager implements ChildRunnable
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tFound target '"+ctarget+"' and selector '"+cselector+"'.");
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tAdding condition["+conditionname+"]: "+ctarget+" = "+cselector);
 				}
-				fmruntime.addCondition(conditionname, ctarget+"="+cselector);
+				fmruntime.addCondition(conditionname, ctarget+ '=' +cselector);
 			}
 			else if(condition.getLongref() != null)
 			{ // Condition to other filtermodule
@@ -442,14 +443,14 @@ public class ObjectManager implements ChildRunnable
 		MessageList aMessage = new MessageList( aSingleMessage );
 		//try 
 		//{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Number of filtermodules is " + filterModules.size() + ".");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Number of filtermodules is " + filterModules.size() + '.');
 			// Test each filter, in the filterModules list.
 			for (int i = 0; i < filterModules.size(); i++) 
 			{
 				// Get the filtermodule
 				FilterModuleRuntime fm = (FilterModuleRuntime) filterModules.get(i);
 				
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Message is " + (aMessage.getDirection()==Message.INCOMING?"INCOMING":"OUTGOING")+".");
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Message is " + (aMessage.getDirection()==Message.INCOMING?"INCOMING":"OUTGOING")+ '.');
 				
 				filterList = (aMessage.getDirection()==Message.INCOMING?fm.getInputFilters():fm.getOutputFilters());
 				
@@ -460,7 +461,7 @@ public class ObjectManager implements ChildRunnable
 				//	return aMessage;
 				//}
 				
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tNumber of filters is "+ filterList.size() + ".");
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tNumber of filters is "+ filterList.size() + '.');
 				
 				// Get the policy, for now this returns a MetaPolicy!
 				FilterPolicy fp = FilterPolicy.getPolicy();

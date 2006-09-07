@@ -159,15 +159,15 @@ public class CodeExecutionGuiComponent extends Panel {
 			{
 				line = in.readLine();
 				if(line == null)
-					return "Unable to read " + filename + ":" + lineNumber;
+					return "Unable to read " + filename + ':' + lineNumber;
 				lines--;
 			}
 		}
 		catch(Exception e)
 		{
-			return "Unable to read " + filename + ":" + lineNumber;
+			return "Unable to read " + filename + ':' + lineNumber;
 		}
-		return filename + ":" + lineNumber + '\n' + line;
+		return filename + ':' + lineNumber + '\n' + line;
 	}
 
 	public String getCode(FilterRuntime filter)

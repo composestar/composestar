@@ -22,9 +22,9 @@ public class CastingFacility
 	{
 		Object result = null;
 
-		if (to.indexOf("]") >= 0) 
+		if (to.indexOf(']') >= 0)
 		{
-			to = to.Remove(0, to.indexOf("]")+1);
+			to = to.Remove(0, to.indexOf(']')+1);
 		}
 		
 		ObjectManager om = (ObjectManager)GlobalObjectManager.getObjectManagerFor(from);

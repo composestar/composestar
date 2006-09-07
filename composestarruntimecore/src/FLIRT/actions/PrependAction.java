@@ -10,7 +10,7 @@ import Composestar.RuntimeCore.Utils.Debug;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: DispatchAction.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
+ * $Id: PrependAction.java,v 1.1 2006/06/25 19:33:21 wminnen Exp $
  * 
  * Models the action to carry out when a Dispatch Filter accepts a message.
  * When executed, it redirects the message to the target specified during
@@ -28,32 +28,33 @@ public class PrependAction extends ComposeStarAction
 	 * Arguments of the message
 	 */
 	Object args[];
-    
-	/**
-	 * Constructs a Dispatch Action with all the necessary information to do
-	 * the invocation.
-	 * @param target the instance to which the message is to be directed
-	 * @param selector method to send the message to
-	 * @param args arguments of the message
-	 * @param accepted
-	 * @roseuid 3F3652C9038D
-	 */
-	public PrependAction( MessageList originalMessage, MessageList modifiedMessage, Object[] args) 
-	{
-		super(originalMessage, true);
-		this.modifiedMessage = modifiedMessage;
-		this.args = args;
-		shouldContinue = true;  
-		this.continueMessage = originalMessage;
-		if(Debug.SHOULD_DEBUG) 
-		{
-			Debug.out( Debug.MODE_DEBUG, "FLIRT", "Constructing a PrependAction with these messagelists:" );
-			Debug.out( Debug.MODE_DEBUG, "FLIRT", originalMessage.toString() );
-			Debug.out( Debug.MODE_DEBUG, "FLIRT", modifiedMessage.toString() );
-		}
+    private static final Composestar.RuntimeCore.FLIRT.Message.Message[] EmptyMessagesArray = new Composestar.RuntimeCore.FLIRT.Message.Message[0];
 
-		
-	}
+    /**
+     * Constructs a Dispatch Action with all the necessary information to do
+     * the invocation.
+     * @param target the instance to which the message is to be directed
+     * @param selector method to send the message to
+     * @param args arguments of the message
+     * @param accepted
+     * @roseuid 3F3652C9038D
+     */
+    public PrependAction( MessageList originalMessage, MessageList modifiedMessage, Object[] args)
+    {
+        super(originalMessage, true);
+        this.modifiedMessage = modifiedMessage;
+        this.args = args;
+        shouldContinue = true;
+        this.continueMessage = originalMessage;
+        if(Debug.SHOULD_DEBUG)
+        {
+            Debug.out( Debug.MODE_DEBUG, "FLIRT", "Constructing a PrependAction with these messagelists:" );
+            Debug.out( Debug.MODE_DEBUG, "FLIRT", originalMessage.toString() );
+            Debug.out( Debug.MODE_DEBUG, "FLIRT", modifiedMessage.toString() );
+        }
+
+
+    }
     
     /**
      * Does nothing particular.
@@ -80,7 +81,7 @@ public class PrependAction extends ComposeStarAction
 			Debug.out( Debug.MODE_DEBUG, "FLIRT", aMessage.toString() );
 		}
 
-		Message[] messages = new Message[0];
+		Message[] messages = EmptyMessagesArray;
 		messages = (Message[]) modifiedMessage.getMessages().toArray( messages );
 		for( int i = messages.length - 1; i >= 0; i-- )
 		{

@@ -76,6 +76,8 @@ public class Sign implements CTCommonModule {
 
     private final static String MODULE_NAME = "SIGN";
 
+    private static final Composestar.Core.LAMA.MethodInfo[] EmptyMethodInfoArray = {};
+
     public Sign() {
         init();
     }
@@ -377,7 +379,7 @@ public class Sign implements CTCommonModule {
                     + "' leads to infinite signature!", state.getFlowNode()
                     .getRepositoryLink());
 
-            return new MethodInfo[0];
+            return EmptyMethodInfoArray;
         }
         // case 3:
         else if (nameMatching
@@ -388,7 +390,7 @@ public class Sign implements CTCommonModule {
                     + "' leads to infinite signature!", state.getFlowNode()
                     .getRepositoryLink());
 
-            return new MethodInfo[0];
+            return EmptyMethodInfoArray;
         }
         // case 4:
         else if (nameMatching
@@ -411,7 +413,7 @@ public class Sign implements CTCommonModule {
         }
         // case 1:
         else {
-            return new MethodInfo[0];
+            return EmptyMethodInfoArray;
         }
     }
 

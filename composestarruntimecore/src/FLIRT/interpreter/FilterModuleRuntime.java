@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleRuntime.java,v 1.4 2006/06/25 19:33:21 wminnen Exp $
+ * $Id: FilterModuleRuntime.java,v 1.5 2006/06/27 15:39:34 reddog33hummer Exp $
  */
 public class FilterModuleRuntime extends ReferenceEntityRuntime implements Interpretable, ConditionResolver, Cloneable 
 {
@@ -33,17 +33,19 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
     private ArrayList inputfilters = null;
     private ObjectManager parent;
 	public String parentname = null;
-    
+
+    private static final Object[] EmptyObjectList = {};
+
     /**
      * @roseuid 40DD8B1901B3
      */
     public FilterModuleRuntime() {
-		this.inputfilters = new ArrayList();
-		this.outputfilters = new ArrayList();
-		this.externals = new Hashtable();
-		this.internals = new Hashtable();
-		this.methods = new ArrayList();
-		this.conditions = new HashMap(); 
+        this.inputfilters = new ArrayList();
+        this.outputfilters = new ArrayList();
+        this.externals = new Hashtable();
+        this.internals = new Hashtable();
+        this.methods = new ArrayList();
+        this.conditions = new HashMap();
     }
     
     /**
@@ -278,10 +280,10 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 			if(cname != null)
 			{
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tFound link '"+cname+"'.");	
-				String ctarget = cname.substring(0,cname.lastIndexOf("="));
-				String cselector = cname.substring(cname.lastIndexOf("=")+1);
+				String ctarget = cname.substring(0,cname.lastIndexOf('='));
+				String cselector = cname.substring(cname.lastIndexOf('=')+1);
 				
-				Object[] args = new Object[0];
+				Object[] args = EmptyObjectList;
 
 				// Check to see if it is condition on inner!
 				if(ctarget.equals("inner"))
@@ -289,19 +291,19 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is inner call: "+MessageInfo.getInner()+" == "+cselector);
 					returnvalue = Invoker.getInstance().invoke(MessageInfo.getInner(),cselector,args);
 				}
-				else if(this.getInternal(ctarget.substring(ctarget.lastIndexOf(":")+1)) != null)
+				else if(this.getInternal(ctarget.substring(ctarget.lastIndexOf(':')+1)) != null)
 				{ // It was an internal
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is internal call: "+this.getInternal(ctarget.substring(ctarget.lastIndexOf(":")+1)));
-					returnvalue = Invoker.getInstance().invoke(this.getInternal(ctarget.substring(ctarget.lastIndexOf(":")+1)),cselector,args);
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is internal call: "+this.getInternal(ctarget.substring(ctarget.lastIndexOf(':')+1)));
+					returnvalue = Invoker.getInstance().invoke(this.getInternal(ctarget.substring(ctarget.lastIndexOf(':')+1)),cselector,args);
 				}
-				else if(this.getExternal(ctarget.substring(ctarget.lastIndexOf(":")+1)) != null)
+				else if(this.getExternal(ctarget.substring(ctarget.lastIndexOf(':')+1)) != null)
 				{ // It was an external
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is external call: "+this.getExternal(ctarget.substring(ctarget.lastIndexOf(":")+1)));
-					returnvalue = Invoker.getInstance().invoke(this.getExternal(ctarget.substring(ctarget.lastIndexOf(":")+1)),cselector,args);
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is external call: "+this.getExternal(ctarget.substring(ctarget.lastIndexOf(':')+1)));
+					returnvalue = Invoker.getInstance().invoke(this.getExternal(ctarget.substring(ctarget.lastIndexOf(':')+1)),cselector,args);
 				}
 				else
 				{ // It was a static call 
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is static call: "+ctarget+"."+cselector);
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is static call: "+ctarget+ '.' +cselector);
 					returnvalue = Invoker.getInstance().invoke(ctarget,cselector,args);
 				}
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","\t\tCondition returned '"+returnvalue.ToString()+"'.");
