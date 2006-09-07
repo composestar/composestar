@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/DotNET/Compiletime" default="build">
+
+	<import file="${build.core}${file.separator}common.xml" />
+	
+	<echo message="${ant.project.name}" />
+	
+	<description>
+	The Compose* DotNET Compiletime
+	</description>
+
+	<target name="clean">
+		<make target="clean" />
+	</target>	
+	
+	<target name="build">
+		<make target="build" />
+	</target>
+
+</project>
