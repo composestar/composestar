@@ -1,8 +1,0 @@
-Compose* System Test 
-********************** 
-Operating System: Windows XP [Version 5.1.2600]. 
-Test started on 01/09/2006 at PM. 
- 
-Required tool 'PuTTY Link' not found! 
- 
-System test failed! 
