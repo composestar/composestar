@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "Bridge", "Bridge.vjsproj", "{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Debug.ActiveCfg = Debug|.NET
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Debug.Build.0 = Debug|.NET
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Release.ActiveCfg = Release|.NET
+		{AE83431F-9D91-40B0-9DB3-3571D5F8FCAD}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,14 @@
+
+<<< Sample Compose* implementation of Composite pattern >>>
+
+Creating Composite structure ...
+done.
+This is the Structure:
+<Composite>Directory: Directory1
+    <Leaf>File: File1 (123 KB)
+    <Composite>Directory: Directory2
+        <Leaf>File: File2 (4556 KB)
+    <Leaf>File: File3 (16 KB)
+
+<<< Test completed >>>
+

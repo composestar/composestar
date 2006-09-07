@@ -1,0 +1,62 @@
+/**
+ * "The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ * 
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * The Original Code is ca.ubc.cs.spl.aspectPatterns. 
+ * 
+ * The Initial Developers of the Original Code are Jan Hannemann and Gregor Kiczales.
+ * 
+ * For more details and the latest version of the original code, please see: 
+ * http://www.cs.ubc.ca/labs/spl/projects/aodps.html
+ * 
+ * Contributor(s): Stephan Huttenhuis.
+ * 
+ * The modified version of the code is part of the Compose* project which can be found at: 
+ * http://composestar.sf.net
+ * 
+ */
+package Composestar.Patterns.Mediator;
+
+import java.awt.event.*;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Main {
+
+	public static void main(String[] args) {;
+
+		javax.swing.JFrame frame   = new javax.swing.JFrame("Mediator Demo");
+		Button button1 = new Button("Button1");
+		Button button2 = new Button("Button2");
+		Label  label   = new Label ("Click a button!");
+
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {System.exit(0);}
+		});
+
+		javax.swing.JPanel panel = new javax.swing.JPanel();
+		panel.add(label);
+		panel.add(button1);
+		panel.add(button2);
+
+		frame.getContentPane().add(panel);
+		frame.pack();
+		frame.setVisible(true);
+
+		//Mediator specific behavior
+		//we need to create the mediator in order to set the colleagues
+		ConcreteMediator mediator = ConcreteMediator.instance();
+		List colleagues = new LinkedList();
+		colleagues.add(label);
+		colleagues.add(button1);
+		colleagues.add(button2);
+		mediator.setColleagues(colleagues);
+	}
+}

@@ -1,0 +1,27 @@
+package Composestar.Patterns.Strategy;
+
+import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
+import java.util.List;
+
+/** @attribute Composestar.Patterns.Strategy.Annotations.Context() */
+public class Sorter
+{ 
+	private int numbersLength=0;
+
+	public boolean lessThanTen()
+	{
+		return numbersLength<10;
+	}
+
+	public boolean lessThanTwenty()
+	{
+		return numbersLength<20;
+	}
+
+	public void determineStrategy(ReifiedMessage message)
+	{
+		Integer[] numbers = (Integer[]) message.getArg(0);
+		numbersLength = numbers.length;
+	}
+}
+

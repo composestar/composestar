@@ -1,0 +1,40 @@
+package PlatypusExample;
+final class Food 
+{
+	private Food () {}
+
+	public static final Food Milk = new Food();
+	public static final Food Insect = new Food();
+
+	public static String getFoodName(Food f) 
+	{
+		if (f == Food.Milk) return "milk";
+		if (f == Food.Insect) return "insect";
+
+		return "?";
+	}
+}
+
+public abstract class Animal
+{
+	public String name;
+	protected boolean hungry = true;
+	
+	public abstract Object reproduce();
+	public abstract void eat(Food f);
+
+	public boolean isHungry() 
+	{
+		return hungry;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+}

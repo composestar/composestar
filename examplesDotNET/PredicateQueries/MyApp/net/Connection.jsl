@@ -1,0 +1,44 @@
+package MyApp.net;
+
+import java.net.*;
+
+public class Connection
+{
+	DatagramSocket peer;
+
+	String otherHost;
+	int otherPort;
+
+	public Connection()
+	{
+		try
+		{
+			this.peer = new DatagramSocket();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("Could not bind datagram socket");
+		}
+	}
+
+	public Connection(int listenPort)
+	{
+		try
+		{
+			this.peer = new DatagramSocket(listenPort);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("Could not bind datagram socket");
+		}
+	}
+
+    /* Set the 'other party' that we want to communicate with */
+	public void connect(String host, int port)
+	{
+		this.otherHost = host;
+		this.otherPort = port;
+	}
+}

@@ -1,0 +1,23 @@
+package ProtocolLibrary;
+
+import System.DateTime;
+
+public class SimpleTimeStampProtocol implements ProtocolObject
+{
+	public String sendData(String data)
+	{
+		return DateTime.get_Now().get_Ticks()+":"+data;
+	}
+
+	public String receiveData(String data)
+	{
+		if(data.indexOf(":") > 0)
+		{
+			return data.substring(data.indexOf(":")+1);
+		}
+		else
+		{
+			return data;
+		}
+	}
+}

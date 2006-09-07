@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "VenusFlyTrap", "VenusFlyTrap.vjsproj", "{CCA022B0-195C-467E-A3EE-19DA46009B51}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{CCA022B0-195C-467E-A3EE-19DA46009B51}.Debug.ActiveCfg = Debug|.NET
+		{CCA022B0-195C-467E-A3EE-19DA46009B51}.Debug.Build.0 = Debug|.NET
+		{CCA022B0-195C-467E-A3EE-19DA46009B51}.Release.ActiveCfg = Release|.NET
+		{CCA022B0-195C-467E-A3EE-19DA46009B51}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

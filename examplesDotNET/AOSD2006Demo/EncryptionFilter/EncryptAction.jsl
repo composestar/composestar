@@ -1,0 +1,50 @@
+package SecureLib;
+
+import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Actions.*;
+
+public class EncryptAction extends ComposeStarAction {
+    
+	Message message = null;
+	Object[] args = null;
+
+    public EncryptAction(MessageList m, boolean accepted, Object target, String selector, Object[] args) 
+	{
+		super(m, accepted);
+		this.args = args;
+		shouldContinue = false;  
+		this.continueMessage = m;
+    }
+    
+    public Object execute()
+	{
+		if(args.length < 1)
+			return null;
+		
+		if( ! (args[0] instanceof String) )
+			return null;
+
+		String data = (String)args[0];
+
+		char[] tmp = new char[data.length()];
+		char[] tmp1 = data.toCharArray();
+		for(int i=0; i<tmp1.length; i++)
+		{
+			tmp[i] = (char)(tmp1[i]+20);
+		}
+		System.out.println("Encrypting: "+data+" to: "+new String(tmp));
+		
+		args[0] = new String(tmp);
+
+		this.continueMessage.setArguments(args);
+		
+		this.shouldContinue = true;
+
+		return null;     
+    }
+
+	public MessageList getMessageToContinueWith()
+	{
+		return this.continueMessage;
+	}
+}

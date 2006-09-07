@@ -1,0 +1,187 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{A8DA6989-28D1-4644-ADD0-40DFD483D9A0}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = "App.ico"
+                AssemblyKeyContainerName = ""
+                AssemblyName = "FilterModule"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Exe"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "FilterModule"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = "FilterModuleParameter.FilterModuleParameter"
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "WeaveLibrary"
+                    AssemblyName = "WeaveLibrary"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\WeaveLibrary.dll"
+                />
+                <Reference
+                    Name = "antlr.runtime"
+                    AssemblyName = "antlr.runtime"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\antlr.runtime.dll"
+                />
+                <Reference
+                    Name = "AntlrDotNet"
+                    AssemblyName = "AntlrDotNet"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\AntlrDotNet.dll"
+                />
+                <Reference
+                    Name = "ComposestarCore"
+                    AssemblyName = "ComposestarCore"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposestarCore.dll"
+                />
+                <Reference
+                    Name = "ComposestarCoreDotNET"
+                    AssemblyName = "ComposestarCoreDotNET"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposestarCoreDotNET.dll"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETRuntimeInterpreter"
+                    AssemblyName = "ComposeStarDotNETRuntimeInterpreter"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarDotNETRuntimeInterpreter.dll"
+                />
+                <Reference
+                    Name = "ComposeStarDotNETUtilities"
+                    AssemblyName = "ComposeStarDotNETUtilities"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarDotNETUtilities.dll"
+                />
+                <Reference
+                    Name = "ComposeStarFilterDebugger"
+                    AssemblyName = "ComposeStarFilterDebugger"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarFilterDebugger.dll"
+                />
+                <Reference
+                    Name = "ComposeStarRuntimeInterpreter"
+                    AssemblyName = "ComposeStarRuntimeInterpreter"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
+                />
+                <Reference
+                    Name = "ComposeStarUtilities"
+                    AssemblyName = "ComposeStarUtilities"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
+                />
+                <Reference
+                    Name = "DotNETPlatformInterface"
+                    AssemblyName = "DotNETPlatformInterface"
+                    HintPath = "..\..\..\Program Files\ComposeStar\binaries\DotNETPlatformInterface.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "Animal.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "App.ico"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Cat.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FilterModuleParameter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Iguanidae.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Inheritance.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Logger.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Logging.cps"
+                    BuildAction = "None"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+

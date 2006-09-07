@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "TemplateMethod", "TemplateMethod.vjsproj", "{1AE63D3B-3F7C-43EE-B70B-213DD4F58FC9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{1AE63D3B-3F7C-43EE-B70B-213DD4F58FC9}.Debug.ActiveCfg = Debug|.NET
+		{1AE63D3B-3F7C-43EE-B70B-213DD4F58FC9}.Debug.Build.0 = Debug|.NET
+		{1AE63D3B-3F7C-43EE-B70B-213DD4F58FC9}.Release.ActiveCfg = Release|.NET
+		{1AE63D3B-3F7C-43EE-B70B-213DD4F58FC9}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

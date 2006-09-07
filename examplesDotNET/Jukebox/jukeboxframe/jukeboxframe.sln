@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "jukeboxframe", "jukeboxframe.vjsproj", "{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Debug.ActiveCfg = Debug|.NET
+		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Debug.Build.0 = Debug|.NET
+		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Release.ActiveCfg = Release|.NET
+		{7D1DB6C3-9661-42A5-AEAE-3765BE1DD436}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,50 @@
+/**
+ * "The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ * 
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * The Original Code is ca.ubc.cs.spl.aspectPatterns. 
+ * 
+ * The Initial Developers of the Original Code are Jan Hannemann and Gregor Kiczales.
+ * 
+ * For more details and the latest version of the original code, please see: 
+ * http://www.cs.ubc.ca/labs/spl/projects/aodps.html
+ * 
+ * Contributor(s): Stephan Huttenhuis.
+ * 
+ * The modified version of the code is part of the Compose* project which can be found at: 
+ * http://composestar.sf.net
+ * 
+ */
+package Composestar.Patterns.Strategy;
+
+import java.util.List;
+import java.util.LinkedList;
+
+public class BubbleSort implements SortingStrategy {
+
+	private void exchange(List numbers, int pos1, int pos2) {
+		Integer tmp = (Integer)numbers.get(pos1);
+		numbers.set(pos1,numbers.get(pos2));
+		numbers.set(pos2,tmp);
+	}
+
+	public void sort(List numbers) {
+		System.out.print("Sorting by BubbleSort...");		
+		for (int end = numbers.size(); end > 1; end --) {
+			for (int current = 0; current < end - 1; current ++) {
+				if (((Integer)numbers.get(current)).intValue() > ((Integer)numbers.get(current+1)).intValue()) {
+					exchange(numbers, current, current+1);
+				}
+			}
+		}
+		System.out.println("done.");
+	}
+}
+		

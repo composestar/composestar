@@ -1,0 +1,20 @@
+package Composestar.Patterns.Builder;
+
+public class Director
+{
+	public Director(){System.out.println("Created Director");}
+
+	public void build()
+	{
+		//Cast the Compose* "supertype" Director (internal) to subtype Creator (inner)
+		//The actual object is again a subtype of Creator
+		Creator builder = (Creator)((Object)this);
+		builder.processType("Person");
+		builder.processAttribute("Name");
+		builder.processValue("James Brick");
+		builder.processAttribute("Age");
+		builder.processValue("33");
+		builder.processAttribute("Occupation");
+		builder.processValue("Builder"); 
+	}
+}

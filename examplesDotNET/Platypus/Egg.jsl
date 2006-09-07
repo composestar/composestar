@@ -1,0 +1,18 @@
+package PlatypusExample;
+
+public class Egg
+{
+	private Animal mHatchling;
+	public String name = "";
+	
+	public Egg(Animal hatchling)
+	{
+		this.mHatchling = hatchling;
+        this.name = "Egg#1";
+	}
+
+	public Animal hatch() 
+	{
+        return mHatchling;
+	}
+}

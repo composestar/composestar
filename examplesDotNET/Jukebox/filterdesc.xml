@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?> 
+<secret>
+	
+	<filters>
+		<filter type="Error">
+			<accept action="continue"/>
+			<reject action="error"/>
+		</filter>
+		<filter type="Dispatch">
+			<accept action="dispatch"/>
+			<reject action="continue"/>
+		</filter>
+		<filter type="Meta">
+			<accept action="meta"/>
+			<reject action="continue"/>
+		</filter>
+    <filter type="Substitute">
+      <accept action="substitute"/>
+      <reject action="continue"/>
+    </filter>
+    <filter type="Wait">
+      <accept action="continue"/>
+      <reject action="wait"/>
+     </filter>
+	</filters>
+	
+	<actions>
+    <action name="continue"/>
+		
+		<action name="meta">
+		</action>
+		
+		<action name="error" endofset="true">
+      <operation name="c" resource="args"/>
+      <operation name="e" resource="message"/>
+      <operation name="return" resource="message"/> <!-- return operation -->
+		</action>
+		
+		<action name="dispatch" endofset="true">
+		  <operation name="d" resource="message"/>
+		  <operation name="w" resource="target"/>
+		  <operation name="w" resource="selector"/>
+		  <operation name="r" resource="args"/>
+		  <operation name="return" resource="message"/> <!-- return operation -->
+		</action>
+		  
+		<action name="substitute">
+			<operation name="w" resource="target"/>
+			<operation name="w" resource="selector"/>
+		</action>
+		
+		<action name="wait">
+		  <operation name="w" resource="timing"/>
+		</action>
+		
+	</actions>
+	
+	<constraints>
+	  <conflict pattern="[rR]+(.*)e" resource="message" message="Message is returned before it could error.."/>
+		<conflict pattern="l[rw]+" resource="args" message="Locked resources can not be written."/>
+		<conflict pattern="[rw]+(.*)c" resource="*" message="Resource has been used where it's required untouched."/>
+	</constraints>
+
+</secret>

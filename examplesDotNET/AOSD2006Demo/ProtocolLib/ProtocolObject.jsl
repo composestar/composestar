@@ -1,0 +1,8 @@
+package ProtocolLibrary;
+
+public interface ProtocolObject
+{
+	public String sendData(String data);
+
+	public String receiveData(String data);
+}

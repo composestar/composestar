@@ -1,0 +1,22 @@
+package PlatypusExample;
+
+public class Platypus extends Animal
+{
+	public Platypus()
+	{
+	}
+
+	public Object reproduce()
+	{
+		Platypus pl = new Platypus();
+		pl.setName("Kevin");
+		Egg egg = new Egg( pl );
+		System.out.println("Platypus '" + name + "' has laid an egg: " + egg.name);
+		return egg;
+	}
+
+	public void eat(Food f)
+	{
+		// CF should take care of this!
+	}
+}

@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "PredicateQueries", "PredicateQueries.vjsproj", "{443DB29D-F314-47AC-80BF-92AA56E8A5CB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{443DB29D-F314-47AC-80BF-92AA56E8A5CB}.Debug.ActiveCfg = Debug|.NET
+		{443DB29D-F314-47AC-80BF-92AA56E8A5CB}.Debug.Build.0 = Debug|.NET
+		{443DB29D-F314-47AC-80BF-92AA56E8A5CB}.Release.ActiveCfg = Release|.NET
+		{443DB29D-F314-47AC-80BF-92AA56E8A5CB}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

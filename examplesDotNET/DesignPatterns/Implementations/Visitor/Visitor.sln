@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "Visitor", "Visitor.vjsproj", "{9396CC61-B13A-419F-8F46-7A3593C4FD1C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Debug.ActiveCfg = Debug|.NET
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Debug.Build.0 = Debug|.NET
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Release.ActiveCfg = Release|.NET
+		{9396CC61-B13A-419F-8F46-7A3593C4FD1C}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
