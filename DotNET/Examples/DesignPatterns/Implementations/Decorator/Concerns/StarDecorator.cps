@@ -1,6 +1,6 @@
-concern StarDecorator
+concern StarDecoratorConcern
 {
-	filtermodule StarDecorator
+	filtermodule StarDecoratorFM
 	{
 		internals
 			star		: Composestar.Patterns.Decorator.StarDecorator;
@@ -17,7 +17,7 @@ concern StarDecorator
 			component = { Component | classHasAnnotationWithName(Component, 'Composestar.Patterns.Decorator.Annotations.ConcreteComponent') };
 			
 		filtermodules
-			component <- StarDecorator;
+			component <- StarDecoratorFM;
 	}
 	implementation in JSharp by	StarDecorator as "StarDecorator.jsl"
 	{

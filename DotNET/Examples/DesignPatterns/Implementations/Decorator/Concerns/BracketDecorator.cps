@@ -1,6 +1,6 @@
-concern BracketDecorator
+concern BracketDecoratorConcern
 {
-	filtermodule BracketDecorator
+	filtermodule BracketDecoratorFM
 	{
 		internals
 			bracket		: Composestar.Patterns.Decorator.BracketDecorator;
@@ -17,7 +17,7 @@ concern BracketDecorator
 			component = { Component | classHasAnnotationWithName(Component, 'Composestar.Patterns.Decorator.Annotations.ConcreteComponent') };
 
 		filtermodules
-			component <- BracketDecorator;
+			component <- BracketDecoratorFM;
 	}
 	implementation in JSharp by	BracketDecorator as	"BracketDecorator.jsl"
 	{

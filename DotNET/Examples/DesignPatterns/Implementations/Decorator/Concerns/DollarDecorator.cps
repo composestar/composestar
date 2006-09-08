@@ -1,6 +1,6 @@
-concern DollarDecorator
+concern DollarDecoratorConcern
 {
-	filtermodule DollarDecorator
+	filtermodule DollarDecoratorFM
 	{
 		internals
 			dollar		: Composestar.Patterns.Decorator.DollarDecorator;
@@ -17,7 +17,7 @@ concern DollarDecorator
 			component = { Component | classHasAnnotationWithName(Component, 'Composestar.Patterns.Decorator.Annotations.ConcreteComponent') };
 			
 		filtermodules
-			component <- DollarDecorator;
+			component <- DollarDecoratorFM;
 	}
 	implementation in JSharp by	DollarDecorator as "DollarDecorator.jsl"
 	{
