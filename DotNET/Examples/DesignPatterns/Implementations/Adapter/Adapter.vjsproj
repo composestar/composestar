@@ -78,7 +78,7 @@
                 <Reference
                     Name = "ComposeStarRuntimeInterpreter"
                     AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
+                    HintPath = "..\..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
             </References>
         </Build>

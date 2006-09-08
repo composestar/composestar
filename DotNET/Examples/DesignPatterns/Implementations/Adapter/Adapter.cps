@@ -1,6 +1,6 @@
-concern Adapter
+concern AdapterConcern
 {
-	filtermodule Adapter
+	filtermodule AdapterFM
 	{
 		internals
 			adapter : Composestar.Patterns.Adapter.Adapter;
@@ -16,6 +16,6 @@ concern Adapter
 			adaptee = { Adaptee | classHasAnnotationWithName(Adaptee, 'Composestar.Patterns.Adapter.Annotations.Adaptee') };
 			
 		filtermodules
-			adaptee <- Adapter;
+			adaptee <- AdapterFM;
 	}
 }
