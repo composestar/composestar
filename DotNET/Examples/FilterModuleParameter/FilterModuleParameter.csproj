@@ -67,27 +67,27 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    HintPath = "System.XML.dll"
                 />
                 <Reference
                     Name = "ComposeStarRuntimeInterpreter"
                     AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
                 <Reference
                     Name = "ComposeStarUtilities"
                     AssemblyName = "ComposeStarUtilities"
-                    HintPath = "..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarUtilities.dll"
                 />
             </References>
         </Build>
