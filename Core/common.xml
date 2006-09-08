@@ -17,10 +17,12 @@ Common routines. Always include this file in every build.xml file
 	<macrodef name="make">
 		<attribute name="target" default="" />
 		<sequential>
-			<exec executable="${build.core}\Compiletime\binaries\make\make">
+			<!-- TODO: this should run for all windows variants -->
+			<exec executable="${build.core}\Compiletime\binaries\make\make" os="Windows XP">
 				<env key="PATH" path="${env.PATH};${build.core}\Compiletime\binaries\make\" />
 				<arg value="@{target}" />
 			</exec>
+			<!-- TODO: simply call make for linux/... -->
 		</sequential>
 	</macrodef>
 	

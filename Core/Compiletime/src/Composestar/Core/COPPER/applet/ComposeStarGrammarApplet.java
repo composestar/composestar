@@ -18,11 +18,11 @@ import Composestar.Core.COPPER.*;
 
 public class ComposeStarGrammarApplet extends JApplet implements ActionListener, KeyListener
 {
-	private JButton button = null;
-	private JEditorPane textpane = null;
-	private JTextArea msgpane = null;
-	private String src = "";
-	private static int errline = -1;
+	protected JButton button = null;
+	protected JEditorPane textpane = null;
+	protected JTextArea msgpane = null;
+	protected String src = "";
+	protected static int errline = -1; //michielh: why was this declared static?
     protected static final double RESIZEWEIGHT = 0.75;
 
     public void init()
@@ -60,7 +60,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		if(e.getSource().equals(button))
 		{
 			src = textpane.getText();
-			errline = -1;
+			setErrorLine(-1);
 			msgpane.setText("Invoking parser...\n");
 			if(src.trim().length() == 0)
 			{
@@ -88,11 +88,11 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 						String line = tmp.substring(startline,endline);
 						try
 						{
-							errline = Integer.parseInt(line);
+							setErrorLine(Integer.parseInt(line));
 						}
 						catch(Exception ex)
 						{
-							errline = -1;
+							setErrorLine(-1);
 						}
 						this.showStatus("Syntax error occurred on line: "+line);
 						this.textpane.repaint();
@@ -104,7 +104,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 	}
 	
 	public void keyTyped(KeyEvent e) {
-		errline = -1;
+		setErrorLine(-1);
     }
 	public void keyPressed(KeyEvent e) {
     }
@@ -125,7 +125,7 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 		}
     }
     
-    private void initColors()
+    protected void initColors()
     {
 		Hashtable keys = new Hashtable();
 		Color color = Color.blue;
@@ -159,6 +159,11 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
         ColorView.keywords = keys;
     }
     
+	public static void setErrorLine(int inval)
+	{
+		errline = inval;
+	}
+
     public static int getErrorLine()
     {
     	return errline;

@@ -1098,7 +1098,7 @@ public class Sign implements CTCommonModule {
                         "The methodcall to method '" + methodInfoString(method)
                                 + "' in concern '" + concern.name
                                 + "' might lead to a meta-call to an"
-                                + " unresolved meta-method '" + m.name()
+                                + " unresolved meta-method '" + dispSelector.getName() //michielh: this used to be "m.name()" but m is null
                                 + "' in inner!", state.getFlowNode()
                                 .getRepositoryLink());
             }

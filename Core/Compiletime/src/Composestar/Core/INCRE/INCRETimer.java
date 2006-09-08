@@ -2,10 +2,10 @@ package Composestar.Core.INCRE;
 
 public class INCRETimer 
 {
-	public static int TYPE_ALL = 0;
-    public static int TYPE_NORMAL = 1;
-    public static int TYPE_INCREMENTAL = 2;
-    public static int TYPE_OVERHEAD = 3;	
+	public static final int TYPE_ALL = 0;
+    public static final int TYPE_NORMAL = 1;
+    public static final int TYPE_INCREMENTAL = 2;
+    public static final int TYPE_OVERHEAD = 3;	
    
     private String module;
     private String description;
