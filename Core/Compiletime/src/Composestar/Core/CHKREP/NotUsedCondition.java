@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedCondition.java,v 1.2 2006/02/13 11:53:07 pascal Exp $
+* $Id$
 */
 package Composestar.Core.CHKREP;
 
@@ -39,7 +39,7 @@ public class NotUsedCondition implements BaseChecker {
 				boolean used = (isUsedInFilters(c, fm.getInputFilterIterator()) || isUsedInFilters(c, fm.getOutputFilterIterator()));
 			
 				if(!used){
-					Debug.out(Debug.MODE_WARNING, "CHKREP", "Condition " + c.getName() + " is declared not never used", c.getDescriptionFileName(), c.getDescriptionLineNumber());
+					Debug.out(Debug.MODE_WARNING, "CHKREP", "Condition " + c.getName() + " is declared, but never used", c.getDescriptionFileName(), c.getDescriptionLineNumber());
 				}
 			}
 		}	
