@@ -38,15 +38,15 @@ concern MementoAccess{
 				else
 				{
 					originator = message.getSender();
-					System.out.println("Setting Originator: "+originator);
+					System.out.println("Setting Originator: "+originator.getClass());
 				}
 			}
 
 			public void checkOriginator(ReifiedMessage message) throws Exception
 			{
 				System.out.println("The sender should be the originator");
-				System.out.println("originator "+originator);
-				System.out.println("sender "+message.getSender());
+				System.out.println("originator "+originator.getClass());
+				System.out.println("sender "+message.getSender().getClass());
 				if(!(originator == message.getSender()))
 				{
 					System.out.println("WARNING: Sender is not Originator and is not allowed to access state");

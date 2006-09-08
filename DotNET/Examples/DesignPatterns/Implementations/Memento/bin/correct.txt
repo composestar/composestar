@@ -1,7 +1,7 @@
 Originator value is 1
 Originator value is 2
 Originator value is 3
-Setting Originator: Composestar.Patterns.Memento.MementoCreation@3a9
+Setting Originator: class Composestar.Patterns.Memento.MementoCreation
 Originator value is 4
 Originator value is 5
 
@@ -10,13 +10,13 @@ WARNING: State is not allowed to be set by another object then originator
 
 Trying to access the state of memento directly (should fail)...
 The sender should be the originator
-originator Composestar.Patterns.Memento.MementoCreation@3a9
-sender Main
+originator class Composestar.Patterns.Memento.MementoCreation
+sender class java.lang.String
 WARNING: Sender is not Originator and is not allowed to access state
 
 Trying to reinstate state (3)...
 The sender should be the originator
-originator Composestar.Patterns.Memento.MementoCreation@3a9
-sender Composestar.Patterns.Memento.MementoCreation@3a9
+originator class Composestar.Patterns.Memento.MementoCreation
+sender class Composestar.Patterns.Memento.MementoCreation
 Sender is Originator and is allowed to access state
 Originator value is 3
