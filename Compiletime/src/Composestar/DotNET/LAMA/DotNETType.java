@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETType.java,v 1.6 2006/05/03 14:35:34 stephan_h Exp $
+ * $Id$
  */
 
 package Composestar.DotNET.LAMA;
@@ -544,9 +544,11 @@ public class DotNETType extends Type {
      */
     public DotNETMethodInfo getConstructor(String[] types) {
         DotNETMethodInfo method = null;
-        for( ListIterator iter = Methods.listIterator();
-             iter.hasNext(); method = (DotNETMethodInfo)iter.next() ) {
-            if( method.isConstructor() && method.hasParameters( types ) ) {
+        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); /* nop */ ) 
+		{
+			method = (DotNETMethodInfo)iter.next();
+            if( method.isConstructor() && method.hasParameters( types ) ) 
+			{
                 return method;
             }
         }
@@ -560,9 +562,11 @@ public class DotNETType extends Type {
     public List getConstructors() {
         DotNETMethodInfo method = null;
         List constructors = new ArrayList();
-        for( ListIterator iter = Methods.listIterator();
-             iter.hasNext(); method = (DotNETMethodInfo)iter.next() ) {
-            if( method.isConstructor() ) {
+        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); /* nop */ ) 
+		{
+			method = (DotNETMethodInfo)iter.next();
+            if( method.isConstructor() ) 
+			{
                 constructors.add( method );
             }
         }
@@ -586,13 +590,16 @@ public class DotNETType extends Type {
     }
     
     public DotNETFieldInfo getField(String name) {
-      DotNETFieldInfo field = null;
-      for (ListIterator iter = Fields.listIterator();
-           iter.hasNext(); field = (DotNETFieldInfo)iter.next() ) {
-        if (field.name().equals(name))
-          return field;
-      }
-      return null;
+		DotNETFieldInfo field = null;
+		for (ListIterator iter = Fields.listIterator(); iter.hasNext(); /* nop */ ) 
+		{
+			field = (DotNETFieldInfo)iter.next();
+			if (field.name().equals(name))
+			{
+				return field;
+			}
+		}
+		return null;
     }
     
     public void addImplementedInterface(String iface) {
