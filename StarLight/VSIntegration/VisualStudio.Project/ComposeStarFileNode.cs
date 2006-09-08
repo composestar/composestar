@@ -110,7 +110,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         }
 
         /// <summary>
-        /// Returs an Iron Python FileNode specific object implmenting DTE.ProjectItem
+        /// Returs an StarLight FileNode specific object implmenting DTE.ProjectItem
         /// </summary>
         /// <returns></returns>
         public override object GetAutomationObject()

@@ -319,6 +319,5 @@ namespace Composestar.StarLight.VisualStudio.Project
 
         #endregion
 
-
     }
 }

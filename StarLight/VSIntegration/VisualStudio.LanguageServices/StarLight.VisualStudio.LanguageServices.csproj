@@ -46,6 +46,7 @@
     <Compile Include="ComposeStarColorizer.cs" />
     <Compile Include="ComposeStarLangServ.cs" />
     <Compile Include="ComposeStarScanner.cs" />
+    <Compile Include="CpsLexer.cs" />
     <Compile Include="Declaration.cs" />
     <Compile Include="Engine\Analyzer.cs" />
     <Compile Include="Engine\Concerns.cs" />
