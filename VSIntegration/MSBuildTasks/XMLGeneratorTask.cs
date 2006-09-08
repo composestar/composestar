@@ -11,9 +11,9 @@ using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using ComposeStar.MSBuild.Tasks.BuildConfiguration;
+using Composestar.StarLight.MSBuild.Tasks.BuildConfiguration;
 
-namespace ComposeStar.MSBuild.Tasks
+namespace Composestar.StarLight.MSBuild.Tasks
 {
     public class XMLGeneratorTask : Task
     {
@@ -24,7 +24,7 @@ namespace ComposeStar.MSBuild.Tasks
         private string ApplicationStart = "";
         private string OutputPath = "";
         private string BuildFolder = "";
-        private List<ComposeStar.MSBuild.Tasks.BuildConfiguration.Project> _projects = new List<ComposeStar.MSBuild.Tasks.BuildConfiguration.Project>();
+        private List<Composestar.StarLight.MSBuild.Tasks.BuildConfiguration.Project> _projects = new List<Composestar.StarLight.MSBuild.Tasks.BuildConfiguration.Project>();
     
         #endregion
 
@@ -282,7 +282,7 @@ namespace ComposeStar.MSBuild.Tasks
 
 
                 // All the projects
-                foreach (ComposeStar.MSBuild.Tasks.BuildConfiguration.Project p in this._projects)
+                foreach (Composestar.StarLight.MSBuild.Tasks.BuildConfiguration.Project p in this._projects)
                 {
                     writer.WriteStartElement("Project");
                     writer.WriteAttributeString("name", p.Name);

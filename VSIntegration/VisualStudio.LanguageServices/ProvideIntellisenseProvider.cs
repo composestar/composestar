@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices {
+namespace Composestar.StarLight.VisualStudio.LanguageServices {
     /// <summary>
     /// This attribute adds a intellisense provider for a specific language 
     /// type. 

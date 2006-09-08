@@ -7,8 +7,8 @@
     <ProjectGuid>{6F6C0C53-6489-439D-A92F-2EBA93D8A889}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComposeStar.VisualStudio.Project</RootNamespace>
-    <AssemblyName>ComposeStar.VisualStudio.Project</AssemblyName>
+    <RootNamespace>Composestar.StarLight.VisualStudio.Project</RootNamespace>
+    <AssemblyName>Composestar.StarLight.VisualStudio.Project</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -97,10 +97,109 @@
     <Compile Include="ComposeStarFileNode.cs" />
     <Compile Include="ComposeStarFileNodeProperties.cs" />
     <Compile Include="ComposeStarConfigProvider.cs" />
+    <Compile Include="Package.LoadKey.cs" />
+    <Compile Include="Package.Splash.HelpAbout.cs" />
+    <Compile Include="Package.Splash.HelpAbout.LoadKey.cs" />
+    <Compile Include="Project\AggregatableProjectInterops.cs" />
+    <Compile Include="Project\AssemblyReferenceNode.cs" />
+    <Compile Include="Project\Attributes.cs" />
+    <Compile Include="Project\Automation\OAFileItem.cs" />
+    <Compile Include="Project\Automation\OAFolderItem.cs" />
+    <Compile Include="Project\Automation\OANavigableProjectItems.cs" />
+    <Compile Include="Project\Automation\OANestedProjectItem.cs" />
+    <Compile Include="Project\Automation\OANullProperty.cs" />
+    <Compile Include="Project\Automation\OAProject.cs" />
+    <Compile Include="Project\Automation\OAProjectItem.cs" />
+    <Compile Include="Project\Automation\OAProjectItems.cs" />
+    <Compile Include="Project\Automation\OAProperties.cs" />
+    <Compile Include="Project\Automation\OAProperty.cs" />
+    <Compile Include="Project\Automation\OAReferenceFolderItem.cs" />
+    <Compile Include="Project\Automation\OAReferenceItem.cs" />
+    <Compile Include="Project\Automation\OASolutionFolder.cs" />
+    <Compile Include="Project\Automation\VSProject\OAAssemblyReference.cs" />
+    <Compile Include="Project\Automation\VSProject\OABuildManager.cs" />
+    <Compile Include="Project\Automation\VSProject\OAComReference.cs" />
+    <Compile Include="Project\Automation\VSProject\OAProjectReference.cs" />
+    <Compile Include="Project\Automation\VSProject\OAReferenceBase.cs" />
+    <Compile Include="Project\Automation\VSProject\OAReferences.cs" />
+    <Compile Include="Project\Automation\VSProject\OAVSProject.cs" />
+    <Compile Include="Project\Automation\VSProject\OAVSProjectItem.cs" />
+    <Compile Include="Project\BuildDependency.cs" />
+    <Compile Include="Project\BuildPropertyPage.cs" />
+    <Compile Include="Project\ComReferenceNode.cs" />
+    <Compile Include="Project\ConfigProvider.cs" />
+    <Compile Include="Project\ConfigurationProperties.cs" />
+    <Compile Include="Project\DataObject.cs" />
+    <Compile Include="Project\DependentFileNode.cs" />
+    <Compile Include="Project\DesignPropertyDescriptor.cs" />
+    <Compile Include="Project\DocumentManager.cs" />
+    <Compile Include="Project\EnumDependencies.cs" />
+    <Compile Include="Project\FileChangeManager.cs" />
+    <Compile Include="Project\FileDocumentManager.cs" />
+    <Compile Include="Project\FileNode.cs" />
+    <Compile Include="Project\FlavoredProjectBase.cs" />
+    <Compile Include="Project\FlavoredProjectFactoryBase.cs" />
+    <Compile Include="Project\FolderNode.cs" />
+    <Compile Include="Project\HierarchyNode.cs" />
+    <Compile Include="Project\IDEBuildLogger.cs" />
+    <Compile Include="Project\Interfaces.cs" />
+    <Compile Include="Project\LocalizableProperties.cs" />
+    <Compile Include="Project\Microsoft.VisualStudio.Package.Project.cs" />
+    <Compile Include="Project\Misc\ConnectionPointContainer.cs" />
+    <Compile Include="Project\Misc\ExternDll.cs" />
+    <Compile Include="Project\Misc\NativeMethods.cs" />
+    <Compile Include="Project\Misc\SafeNativeMethods.cs" />
+    <Compile Include="Project\Misc\UnsafeNativeMethods.cs" />
+    <Compile Include="Project\NestedProjectBuildDependency.cs" />
+    <Compile Include="Project\NestedProjectNode.cs" />
+    <Compile Include="Project\NodeProperties.cs" />
+    <Compile Include="Project\OleServiceProvider.cs" />
+    <Compile Include="Project\Output.cs" />
+    <Compile Include="Project\OutputGroup.cs" />
+    <Compile Include="Project\ProjectAggregator2Interops.cs" />
+    <Compile Include="Project\ProjectConfig.cs" />
+    <Compile Include="Project\ProjectContainerNode.cs" />
+    <Compile Include="Project\ProjectDesignerDocumentManager.cs" />
+    <Compile Include="Project\ProjectElement.cs" />
+    <Compile Include="Project\ProjectFactory.cs" />
+    <Compile Include="Project\ProjectFileConstants.cs" />
+    <Compile Include="Project\ProjectNode.cs" />
+    <Compile Include="Project\ProjectOptions.cs" />
+    <Compile Include="Project\ProjectPackage.cs" />
+    <Compile Include="Project\ProjectReferenceNode.cs" />
+    <Compile Include="Project\PropertiesEditorLauncher.cs" />
+    <Compile Include="Project\ReferenceContainerNode.cs" />
+    <Compile Include="Project\ReferenceNode.cs" />
+    <Compile Include="Project\RegisteredProjectType.cs" />
+    <Compile Include="Project\SelectionListener.cs" />
+    <Compile Include="Project\SettingsPage.cs" />
+    <Compile Include="Project\SolutionListener.cs" />
+    <Compile Include="Project\SolutionListenerForBuildDependencyUpdate.cs" />
+    <Compile Include="Project\SolutionListenerForProjectEvents.cs" />
+    <Compile Include="Project\SolutionListenerForProjectOpen.cs" />
+    <Compile Include="Project\SolutionListenerForProjectReferenceUpdate.cs" />
+    <Compile Include="Project\StructuresEnums.cs" />
+    <Compile Include="Project\SuspendFileChanges.cs" />
+    <Compile Include="Project\TokenProcessor.cs" />
+    <Compile Include="Project\Tracing.cs" />
+    <Compile Include="Project\TrackDocumentsHelper.cs" />
+    <Compile Include="Project\TypeConverters.cs" />
+    <Compile Include="Project\Url.cs" />
+    <Compile Include="Project\Utilities.cs" />
+    <Compile Include="Project\VsCommands.cs" />
+    <Compile Include="Project\VSMDCodeDomProvider.cs" />
+    <Compile Include="Project\VSShellUtilities.cs" />
+    <Compile Include="Project\Web\CodeBehindCodeGenerator.cs" />
+    <Compile Include="Project\Web\FieldData.cs" />
+    <Compile Include="Project\Web\LockedDocData.cs" />
+    <Compile Include="Project\Web\VsHierarchyItem.cs" />
+    <Compile Include="Project\Web\WAUtilities.cs" />
     <Compile Include="PropertyPages.cs" />
     <Compile Include="ComposeStarProjectNodeProperties.cs" />
+    <Compile Include="ComposeStarMenus.cs" />
     <Compile Include="RegistrationAttributes\SingleFileGeneratorSupportRegistrationAttribute.cs" />
     <Compile Include="Resources.cs" />
+    <Compile Include="SelectionElementValueChangedListener.cs" />
     <Compile Include="VSMDComposeStarProvider.cs" />
     <Compile Include="VSPackage.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -132,6 +231,12 @@
     </CtcFile>
     <None Include="CtcComponents\Guids.h" />
     <None Include="CtcComponents\PkgCmdID.h" />
+    <None Include="Project\Diagrams\AutomationClasses.cd" />
+    <None Include="Project\Diagrams\ConfigurationClasses.cd" />
+    <None Include="Project\Diagrams\DocumentManagerClasses.cd" />
+    <None Include="Project\Diagrams\HierarchyClasses.cd" />
+    <None Include="Project\Diagrams\PropertiesClasses.cd" />
+    <None Include="Project\Diagrams\ReferenceClasses.cd" />
   </ItemGroup>
   <ItemGroup>
     <ZipItem Include="Templates\ProjectItems\Concern\__TemplateIcon.ico" />
@@ -152,7 +257,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Project\Microsoft.VisualStudio.Package.Project.resx">
+      <Visible>true</Visible>
+      <LogicalName>Microsoft.VisualStudio.Package.Project.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Project\Resources\imagelis.bmp" />
+    <None Include="Resources\300.bmp" />
+    <Content Include="Resources\GenericPackage.bmp" />
+    <Content Include="Resources\GenericPackage.ico" />
     <Content Include="Resources\Package.ico" />
+    <EmbeddedResource Include="Resources\StarLightImageList.bmp" />
   </ItemGroup>
   <PropertyGroup>
     <TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>
@@ -174,7 +290,6 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <Import Project="$(ProjectBasePath)\ProjectBase.Files" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Visual Studio SDK\Microsoft.VsSDK.targets" />
   <ProjectExtensions>

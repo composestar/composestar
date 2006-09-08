@@ -83,6 +83,7 @@ Global
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.DebugVSIntegration|Any CPU.ActiveCfg = DebugVSIntegration|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.DebugVSIntegration|Any CPU.Build.0 = DebugVSIntegration|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.DebugVSIntegration|Mixed Platforms.ActiveCfg = DebugVSIntegration|Any CPU
+		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.DebugVSIntegration|Mixed Platforms.Build.0 = DebugVSIntegration|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.DebugVSIntegration|x86.ActiveCfg = DebugVSIntegration|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -102,6 +103,7 @@ Global
 		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.DebugVSIntegration|Any CPU.ActiveCfg = DebugVSIntegration|Any CPU
 		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.DebugVSIntegration|Any CPU.Build.0 = DebugVSIntegration|Any CPU
 		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.DebugVSIntegration|Mixed Platforms.ActiveCfg = DebugVSIntegration|Any CPU
+		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.DebugVSIntegration|Mixed Platforms.Build.0 = DebugVSIntegration|Any CPU
 		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.DebugVSIntegration|x86.ActiveCfg = DebugVSIntegration|Any CPU
 		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -140,6 +142,7 @@ Global
 		{7A30904D-40C9-408D-813E-12E16C488EAA}.DebugVSIntegration|Any CPU.ActiveCfg = DebugVSIntegration|Any CPU
 		{7A30904D-40C9-408D-813E-12E16C488EAA}.DebugVSIntegration|Any CPU.Build.0 = DebugVSIntegration|Any CPU
 		{7A30904D-40C9-408D-813E-12E16C488EAA}.DebugVSIntegration|Mixed Platforms.ActiveCfg = DebugVSIntegration|Any CPU
+		{7A30904D-40C9-408D-813E-12E16C488EAA}.DebugVSIntegration|Mixed Platforms.Build.0 = DebugVSIntegration|Any CPU
 		{7A30904D-40C9-408D-813E-12E16C488EAA}.DebugVSIntegration|x86.ActiveCfg = DebugVSIntegration|Any CPU
 		{7A30904D-40C9-408D-813E-12E16C488EAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A30904D-40C9-408D-813E-12E16C488EAA}.Release|Any CPU.Build.0 = Release|Any CPU

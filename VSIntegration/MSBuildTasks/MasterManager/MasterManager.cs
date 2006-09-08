@@ -1,9 +1,9 @@
 using EnvDTE;
 using System;
 using System.Collections;
-using ComposeStar.MSBuild.Tasks.BuildConfiguration;
+using Composestar.StarLight.MSBuild.Tasks.BuildConfiguration;
 
-namespace ComposeStar.MSBuild.Tasks.MasterManager
+namespace Composestar.StarLight.MSBuild.Tasks.MasterManager
 {
 	/// <summary>
 	/// Summary description for MasterManager.

@@ -16,8 +16,8 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 
 // Guid of this package
-// {0C19E6A4-C91A-4b29-B7D3-4C24AEB4C1CD}
-#define guidComposeStarProjectPkg { 0xc19e6a4, 0xc91a, 0x4b29, { 0xb7, 0xd3, 0x4c, 0x24, 0xae, 0xb4, 0xc1, 0xcd } }
+// {9D31CB73-40A7-4dcc-8C01-BBFBBB66001C}
+#define guidComposeStarProjectPkg { 0x9d31cb73, 0x40a7, 0x4dcc, { 0x8c, 0x1, 0xbb, 0xfb, 0xbb, 0x66, 0x0, 0x1c } };
 
 // Guid of the command set containing the command IDs of this package
 // {F2048BCB-30CA-4f8b-90E0-DC260C611B42}

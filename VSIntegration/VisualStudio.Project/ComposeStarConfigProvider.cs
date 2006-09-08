@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Package;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     /// <summary>
     /// Enables the Any CPU Platform form name for ComposeStar Projects

@@ -21,7 +21,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices {
+namespace Composestar.StarLight.VisualStudio.LanguageServices {
 
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideLoadKey("standard", "1.0", "Visual Studio Integration of ComposeStar Language Service", "University of Twente", 1)]

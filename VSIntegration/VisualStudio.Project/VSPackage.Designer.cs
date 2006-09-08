@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ComposeStar.VisualStudio.Project {
+namespace Composestar.StarLight.VisualStudio.Project {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ComposeStar.VisualStudio.Project {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ComposeStar.VisualStudio.Project.VSPackage", typeof(VSPackage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Composestar.StarLight.VisualStudio.Project.VSPackage", typeof(VSPackage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace ComposeStar.VisualStudio.Project {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ComposeStar StarLight Language Service.
+        ///   Looks up a localized string similar to ComposeStar StarLight.
         /// </summary>
         internal static string _100 {
             get {
@@ -70,11 +70,63 @@ namespace ComposeStar.VisualStudio.Project {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ComposeStar StarLight Language services.
+        ///   Looks up a localized string similar to ComposeStar StarLight VS IDE integration.
         /// </summary>
         internal static string _102 {
             get {
                 return ResourceManager.GetString("102", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to University of Twente.
+        /// </summary>
+        internal static string _103 {
+            get {
+                return ResourceManager.GetString("103", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 8.0.
+        /// </summary>
+        internal static string _104 {
+            get {
+                return ResourceManager.GetString("104", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard.
+        /// </summary>
+        internal static string _105 {
+            get {
+                return ResourceManager.GetString("105", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CJH1EIMHAAJDHRC9HJRRIRPAPEK8DJRAK3APR3CZERATPCE1IKE2KRKAPIZMR9K8J9J0QZK0ATJIAPDHRAZRE8MTEAI8Q3RPKIH2ARK1ETJ2AMAIMZKPQHA1ARIPQJAE.
+        /// </summary>
+        internal static string _150 {
+            get {
+                return ResourceManager.GetString("150", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ZPE2ZMK0K3PKHPI8PMDJPZJ2DDKEPDARHMIQPQPEE2IIQDMCE0CEP3PCK3ZDKZKJIRMHAQEKEAHEDAI9QHCCE9EAHZREE1JQZQRAZPP1M1KDK2HQCMDJHKCRMMMEMIP0.
+        /// </summary>
+        internal static string _151 {
+            get {
+                return ResourceManager.GetString("151", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap _300 {
+            get {
+                object obj = ResourceManager.GetObject("300", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

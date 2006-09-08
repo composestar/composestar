@@ -26,7 +26,7 @@ using Microsoft.Win32;
 using EnvDTE;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     [ComVisible(true), CLSCompliant(false)]
     public class ComposeStarProjectNodeProperties : ProjectNodeProperties
@@ -38,7 +38,7 @@ namespace ComposeStar.VisualStudio.Project
         }
         #endregion
 
-        #region properties
+           #region properties
         [Browsable(false)]
         public string OutputFileName
         {
@@ -90,19 +90,33 @@ namespace ComposeStar.VisualStudio.Project
             }
         }
 
-		[Browsable(false)]
-		public string RootNamespace
-		{
-			get
-			{
-				return this.Node.ProjectMgr.GetProjectProperty(ProjectFileConstants.RootNamespace);
-			}
-			set
-			{
-				this.Node.ProjectMgr.SetProjectProperty(ProjectFileConstants.RootNamespace, value);
-			}
-		}
+        [Browsable(false)]
+        public string RootNamespace
+        {
+            get
+            {
+                return this.Node.ProjectMgr.GetProjectProperty(ProjectFileConstants.RootNamespace);
+            }
+            set
+            {
+                this.Node.ProjectMgr.SetProjectProperty(ProjectFileConstants.RootNamespace, value);
+            }
+        }
 
-		#endregion
+        [Browsable(false)]
+        public string OutputType
+        {
+            get
+            {
+                return this.Node.ProjectMgr.GetProjectProperty(ProjectFileConstants.OutputType);
+            }
+            set
+            {
+                this.Node.ProjectMgr.SetProjectProperty(ProjectFileConstants.OutputType, value);
+            }
+        }
+
+        #endregion
+        	
     }
 }

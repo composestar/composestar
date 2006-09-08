@@ -38,7 +38,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 
 // The Org.Mentalis.Files contains a number of classes that read from or write to special files.
-namespace ComposeStar.MSBuild.Tasks.BuildConfiguration
+namespace Composestar.StarLight.MSBuild.Tasks.BuildConfiguration
 {
 	/// <summary>
 	/// The INIReader class can read keys from and write keys to an INI file.

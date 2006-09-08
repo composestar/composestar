@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Collections;
 
-namespace ComposeStar.MSBuild.Tasks.BuildConfiguration
+namespace Composestar.StarLight.MSBuild.Tasks.BuildConfiguration
 {
 	/// <summary>
 	/// Create a New INI file to store or load data

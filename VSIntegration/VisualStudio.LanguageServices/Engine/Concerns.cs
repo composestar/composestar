@@ -6,7 +6,7 @@ using System.IO;
 
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices.Engine {
+namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine {
 
     // Disable the "IdentifiersShouldNotMatchKeywords" warning.
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716")]

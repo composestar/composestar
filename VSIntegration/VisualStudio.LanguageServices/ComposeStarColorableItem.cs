@@ -2,7 +2,7 @@ using System;
 
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
     public class ComposeStarColorableItem : IVsColorableItem {
 

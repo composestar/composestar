@@ -21,6 +21,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <WeaveProject Include="C:\Documents and Settings\Michiel\My Documents\Visual Studio 2005\Projects\Testing\CecilTesting\TestApp\TestApp.csproj">
+    </WeaveProject>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
 

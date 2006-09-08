@@ -9,6 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ComposeStar.VisualStudio.LanguageServices</RootNamespace>
     <AssemblyName>ComposeStar.VisualStudio.LanguageServices</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,6 +49,9 @@
     <Compile Include="Declaration.cs" />
     <Compile Include="Engine\Analyzer.cs" />
     <Compile Include="Engine\Concerns.cs" />
+    <Compile Include="HierarchyListener.cs" />
+    <Compile Include="Library.cs" />
+    <Compile Include="LibraryNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ComposeStarPackage.cs" />
     <Compile Include="ComposeStarConstants.cs" />
@@ -59,6 +64,9 @@
     <Compile Include="ComposeStarViewFilter.cs" />
     <Compile Include="ProvideIntellisenseProvider.cs" />
     <Compile Include="ComposeStarIntellisenseProvider.cs" />
+    <Compile Include="ComposeStarLibraryManager.cs" />
+    <Compile Include="ComposeStarLibraryNode.cs" />
+    <Compile Include="ComposeStarConcernId.cs" />
     <Compile Include="RegisterSnippetsAttribute.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -66,6 +74,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SnippetsEnumerator.cs" />
+    <Compile Include="TextLineEventListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -83,6 +92,9 @@
     <Content Include="CodeSnippets\Snippets\concern.snippet">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="key.snk" />
   </ItemGroup>
   <PropertyGroup>
     <TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>

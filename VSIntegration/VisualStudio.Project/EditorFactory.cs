@@ -23,7 +23,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     /// <summary>
     /// Factory for creating our editor

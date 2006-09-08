@@ -4,24 +4,30 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
 
   <!--Reference the assembly where our tasks are defined-->
-  <UsingTask TaskName="ComposeStar.MSBuild.Tasks.BuildProjectsTask" AssemblyFile="ComposeStar.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="ComposeStar.MSBuild.Tasks.XMLGeneratorTask" AssemblyFile="ComposeStar.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="ComposeStar.MSBuild.Tasks.MasterCallerTask" AssemblyFile="ComposeStar.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.BuildProjectTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.XMLGeneratorTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.AnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="CreateCSharpManifestResourceName" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
-
+  
   <!--Compile target (this is the target that calls the compiler task)-->
   <Target Name="ComposeStarCompilerTarget">
     <Message Text="Building target projects." />
-    <BuildProjectsTask      
-      ProjectFile="$(MSBuildProjectFullPath)"
-      ReferencedProjects="$(ReferencedProjects)"
-      />
+    <BuildProjectTask        
+            Projects="@(WeaveProject)" 
+            Targets="Build"            
+      >
+      <Output TaskParameter="AssemblyFiles" ItemName="AssemblyFiles"/>
+    </BuildProjectTask >
+    <Message Text="Analyzing assemblies." />
+    <AnalyzerTask        
+            AssemblyFiles="@(AssemblyFiles)"             />
     <Message Text="Generating Xml configuration file for Compose*." />
     <XMLGeneratorTask
       SourceFiles="@(Compile)"
       OutputAssembly="@(IntermediateAssembly)"
       ReferencedAssemblies="@(ReferencePath)"
-      ResourceFiles="@(ManifestResourceWithNoCulture);@(ManifestNonResxWithNoCultureOnDisk);@(CompiledLicenseFile)"
+      ResourceFiles="@(CompiledLicenseFile)"
       MainFile="$(MainFile)"
       TargetKind="$(OutputType)"
       IncludeDebugInformation="$(IncludeDebugInformation)"
@@ -113,5 +119,4 @@
 
     </CreateCSharpManifestResourceName>
   </Target>
-
 </Project>
