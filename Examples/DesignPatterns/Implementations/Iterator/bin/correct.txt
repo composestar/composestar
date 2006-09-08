@@ -1,8 +1,0 @@
-List created, containing int objects 1, 2, 3, 4, 5.
-Using ReverseIterator to print list elements in reverse order...
-5
-4
-3
-2
-1
-done.

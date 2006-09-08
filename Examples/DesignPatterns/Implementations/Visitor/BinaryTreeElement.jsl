@@ -1,4 +1,0 @@
-package Composestar.Patterns.Visitor;
-
-public class BinaryTreeElement{}
-	

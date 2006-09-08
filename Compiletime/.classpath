@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="AssemblyInfo.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/prolog/prolog.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
-	<classpathentry kind="lib" path="/ComposestarCORE/binaries/antlr/antlr.jar"/>
-	<classpathentry kind="output" path="src"/>
-</classpath>
