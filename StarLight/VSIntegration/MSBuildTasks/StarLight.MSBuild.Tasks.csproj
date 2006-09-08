@@ -7,8 +7,8 @@
     <ProjectGuid>{B37EA36C-9C56-4EC2-BD17-4B884F9D6ACE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComposeStar.MSBuild.Tasks</RootNamespace>
-    <AssemblyName>ComposeStar.MSBuild.Tasks</AssemblyName>
+    <RootNamespace>ComposeStar.StarLight.MSBuild.Tasks</RootNamespace>
+    <AssemblyName>ComposeStar.StarLight.MSBuild.Tasks</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalyzerTask.cs" />
     <Compile Include="BuildConfiguration\Configuration.cs" />
     <Compile Include="BuildConfiguration\CustomFilter.cs" />
     <Compile Include="BuildConfiguration\Debug.cs" />
@@ -66,7 +67,7 @@
       <Link>Target\StarLight.targets</Link>
     </None>
     <None Include="ComposeStarCompilerTask.cs" />
-    <Compile Include="BuildProjectsTask.cs" />
+    <Compile Include="BuildProjectTask.cs" />
     <Compile Include="MasterCallerTask.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="XMLGeneratorTask.cs" />
@@ -84,6 +85,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Compiletime\src\Starlight\ILAnalyzer\ILAnalyzer.csproj">
+      <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
+      <Name>ILAnalyzer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

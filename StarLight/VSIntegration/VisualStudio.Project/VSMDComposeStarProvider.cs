@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Designer.Interfaces;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using IServiceProvider = System.IServiceProvider;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
 	internal class VSMDComposeStarProvider : IVSMDCodeDomProvider, IDisposable
 	{

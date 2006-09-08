@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.Package.Automation;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     /// <summary>
     /// Add support for automation on cps files.

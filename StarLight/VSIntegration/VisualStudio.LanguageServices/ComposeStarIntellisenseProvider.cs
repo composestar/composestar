@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 using VSConstants = Microsoft.VisualStudio.VSConstants;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices {
+namespace Composestar.StarLight.VisualStudio.LanguageServices {
     /// <summary>
     /// This class implements an intellisense provider for Web projects.
     /// An intellisense provider is a specialization of a language service where it is able to

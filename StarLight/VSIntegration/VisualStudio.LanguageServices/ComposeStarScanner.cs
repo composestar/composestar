@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.VisualStudio.Package;
 using System.Text.RegularExpressions;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
      /// <summary>
     /// This class implements IScanner interface and performs

@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using ComposeStar.StarLight.VisualStudio.LanguageServices;
+using Composestar.StarLight.VisualStudio.LanguageServices;
    
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices.Engine
+namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine
 {
    
     public class Analyzer  {

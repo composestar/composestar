@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ComposeStar.MSBuild.Tasks.Properties {
+namespace Composestar.StarLight.MSBuild.Tasks.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ComposeStar.MSBuild.Tasks.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ComposeStar.MSBuild.Tasks.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Composestar.StarLight.MSBuild.Tasks.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

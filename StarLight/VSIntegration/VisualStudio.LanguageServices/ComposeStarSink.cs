@@ -6,7 +6,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices {
+namespace Composestar.StarLight.VisualStudio.LanguageServices {
     
     public class ComposeStarSink  {
 

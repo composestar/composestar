@@ -6,9 +6,9 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-using ComposeStar.StarLight.VisualStudio.LanguageServices.Engine;   
+using Composestar.StarLight.VisualStudio.LanguageServices.Engine;   
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
  
     class ComposeStarScope : AuthoringScope {

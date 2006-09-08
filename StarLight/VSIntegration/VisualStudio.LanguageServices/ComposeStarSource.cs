@@ -4,7 +4,7 @@ using System;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Package;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices {
+namespace Composestar.StarLight.VisualStudio.LanguageServices {
     public delegate AuthoringScope ScopeCreatorCallback(ParseRequest request);
 
     public class ComposeStarSource : Source {

@@ -10,7 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 ***************************************************************************/
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     using System;
     using System.Reflection;

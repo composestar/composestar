@@ -9,7 +9,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 ***************************************************************************/
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
     using System;
     using System.Globalization;

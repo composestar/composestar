@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 using Microsoft.VisualStudio.Package;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices {
+namespace Composestar.StarLight.VisualStudio.LanguageServices {
 
     public class ComposeStarDeclarations : Declarations {
 

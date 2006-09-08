@@ -26,7 +26,7 @@ using Microsoft.Win32;
 using EnvDTE;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     [ComVisible(true), CLSCompliant(false)]
     public class ComposeStarFileNodeProperties : FileNodeProperties

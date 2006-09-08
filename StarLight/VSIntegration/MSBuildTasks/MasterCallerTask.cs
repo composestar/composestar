@@ -12,9 +12,9 @@ using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using ComposeStar.MSBuild.Tasks.BuildConfiguration;
+using Composestar.StarLight.MSBuild.Tasks.BuildConfiguration;
 
-namespace ComposeStar.MSBuild.Tasks
+namespace Composestar.StarLight.MSBuild.Tasks
 {
     /// <summary>
     /// Calls the Master to perform the actual weaving of composestar.

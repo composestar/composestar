@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 using VSConstants = Microsoft.VisualStudio.VSConstants;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
     internal class SnippetsEnumerator : IEnumerable<VsExpansion> {
         /// <summary>

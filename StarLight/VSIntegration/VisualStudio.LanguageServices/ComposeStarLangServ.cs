@@ -11,9 +11,9 @@ using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using VSConstants = Microsoft.VisualStudio.VSConstants;
-using ComposeStar.StarLight.VisualStudio.LanguageServices.Engine;
+using Composestar.StarLight.VisualStudio.LanguageServices.Engine;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
     /// <summary>
     /// This class implements language service that supplies syntax highlighting based on the CPS format.

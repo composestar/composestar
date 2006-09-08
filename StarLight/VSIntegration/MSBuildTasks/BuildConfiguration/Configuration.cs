@@ -8,7 +8,7 @@ using System.Text;
 using System.Globalization;
 using System.Data;
 
-namespace ComposeStar.MSBuild.Tasks.BuildConfiguration
+namespace Composestar.StarLight.MSBuild.Tasks.BuildConfiguration
 {
 	/// <summary>
 	/// Summary description for Configuration. This class stores all the Configuration settings and saves this file to Xml format.

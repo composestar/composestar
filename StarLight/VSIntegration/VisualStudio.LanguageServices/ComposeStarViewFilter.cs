@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using VSConstants = Microsoft.VisualStudio.VSConstants;
 using ErrorHanlder = Microsoft.VisualStudio.ErrorHandler;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
 
     /// <summary>

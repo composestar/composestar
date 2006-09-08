@@ -5,7 +5,7 @@ using System.Text;
 
 using Microsoft.VisualStudio.Package;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices
+namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
     class ComposeStarMethods : Methods {
 

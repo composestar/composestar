@@ -28,12 +28,13 @@ using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
 using VsCommands = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
 using VsCommands2K = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 
-namespace ComposeStar.VisualStudio.Project
+namespace Composestar.StarLight.VisualStudio.Project
 {
     class ComposeStarFileNode : FileNode
     {
         #region fields
         private OAVSProjectItem vsProjectItem;
+        private SelectionElementValueChangedListener selectionChangedListener;
         #endregion
 
         #region properties
@@ -44,15 +45,11 @@ namespace ComposeStar.VisualStudio.Project
         {
             get
             {
-                string result = this.ItemNode.GetMetadata(ProjectFileConstants.SubType);
-                if (!String.IsNullOrEmpty(result) && string.Compare(result, ProjectFileAttributeValue.Form, true, CultureInfo.InvariantCulture) == 0)
-                    return true;
-                else
-                    return false;
+                return false;
             }
         }
         /// <summary>
-        /// Returns the SubType of an ComposeStar FileNode. It is 
+        /// Returns the SubType of an Concern FileNode. It is 
         /// </summary>
         public string SubType
         {
@@ -84,10 +81,16 @@ namespace ComposeStar.VisualStudio.Project
             : base(root, e)
         {
             this.NodeProperties = new ComposeStarFileNodeProperties(this);
+            selectionChangedListener = new SelectionElementValueChangedListener(new ServiceProvider((IOleServiceProvider)root.GetService(typeof(IOleServiceProvider))), root);
+            selectionChangedListener.Init();
+            ((FileNodeProperties)this.NodeProperties).OnCustomToolChanged += new EventHandler<HierarchyNodeEventArgs>(OnCustomToolChanged);
+            ((FileNodeProperties)this.NodeProperties).OnCustomToolNameSpaceChanged += new EventHandler<HierarchyNodeEventArgs>(OnCustomToolNameSpaceChanged);
+
         }
         #endregion
 
         #region overridden properties
+
         internal override object Object
         {
             get
@@ -98,6 +101,14 @@ namespace ComposeStar.VisualStudio.Project
         #endregion
 
         #region overridden methods
+
+        public override int Close()
+        {
+            if (selectionChangedListener != null)
+                selectionChangedListener.Dispose();
+            return base.Close();
+        }
+
         /// <summary>
         /// Returs an Iron Python FileNode specific object implmenting DTE.ProjectItem
         /// </summary>
@@ -107,21 +118,31 @@ namespace ComposeStar.VisualStudio.Project
             return new OAComposeStarFileItem(this.ProjectMgr.GetAutomationObject() as OAProject, this);
         }
 
+        public override object GetIconHandle(bool open)
+        {
+            if (IsFormSubType)
+                return PackageUtilities.GetIntPointerFromImage(this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.WindowsForm]);
+            if (this.FileName.ToLower().EndsWith(".cps"))
+                return PackageUtilities.GetIntPointerFromImage(ComposeStarProjectNode.ComposeStarImageList.Images[(int)ComposeStarProjectNode.composeStarImageName.cpsFile]);
+            return base.GetIconHandle(open); 
+        }
+
         /// <summary>
         /// Open a file depending on the SubType property associated with the file item in the project file
         /// </summary>
         protected override void DoDefaultAction()
         {
             FileDocumentManager manager = this.GetDocumentManager() as FileDocumentManager;
+        
             Debug.Assert(manager != null, "Could not get the FileDocumentManager");
 
-            Guid viewGuid = (IsFormSubType ? NativeMethods.LOGVIEWID_Designer : NativeMethods.LOGVIEWID_TextView);
+            Guid viewGuid = (IsFormSubType ? NativeMethods.LOGVIEWID_Designer : NativeMethods.LOGVIEWID_Code);
             IVsWindowFrame frame;
             manager.Open(false, false, viewGuid, out frame, WindowFrameShowAction.Show);
         }
 
         protected override int ExecCommandOnNode(Guid guidCmdGroup, uint cmd, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-        {
+        {           
             Debug.Assert(this.ProjectMgr != null, "The ComposeStarFileNode has no project manager");
 
             if (this.ProjectMgr == null)
@@ -129,15 +150,15 @@ namespace ComposeStar.VisualStudio.Project
                 throw new InvalidOperationException();
             }
 
-            //if (guidCmdGroup == PythonMenus.guidIronPythonProjectCmdSet)
-            //{
-            //    if (cmd == (uint)PythonMenus.SetAsMain.ID)
-            //    {
-            //        // Set the MainFile project property to the Filename of this Node
-            //        ((PythonProjectNode)this.ProjectMgr).SetProjectProperty(PythonProjectFileConstants.MainFile, this.GetRelativePath());
-            //        return VSConstants.S_OK;
-            //    }
-            //}
+            if (guidCmdGroup == ComposeStarMenus.guidComposeStarProjectCmdSet)
+            {
+                if (cmd == (uint)ComposeStarMenus.SetAsMain.ID)
+                {
+                    // Set the MainFile project property to the Filename of this Node
+                    ((ComposeStarProjectNode)this.ProjectMgr).SetProjectProperty(ComposeStarProjectFileConstants.MainFile, this.GetRelativePath());
+                    return VSConstants.S_OK;
+                }
+            }
             return base.ExecCommandOnNode(guidCmdGroup, cmd, nCmdexecopt, pvaIn, pvaOut);
         }
 
@@ -162,19 +183,19 @@ namespace ComposeStar.VisualStudio.Project
                 }
             }
 
-            //else if (guidCmdGroup == PythonMenus.guidIronPythonProjectCmdSet)
-            //{
-            //    if (cmd == (uint)PythonMenus.SetAsMain.ID)
-            //    {
-            //        result |= QueryStatusResult.SUPPORTED | QueryStatusResult.ENABLED;
-            //        return VSConstants.S_OK;
-            //    }
-            //}
+            else if (guidCmdGroup == ComposeStarMenus.guidComposeStarProjectCmdSet)
+            {
+                if (cmd == (uint)ComposeStarMenus.SetAsMain.ID)
+                {
+                    result |= QueryStatusResult.SUPPORTED | QueryStatusResult.ENABLED;
+                    return VSConstants.S_OK;
+                }
+            }
             return base.QueryStatusOnNode(guidCmdGroup, cmd, pCmdText, ref result);
         }
 
         #endregion
-
+        
         #region helper methods
         protected string GetRelativePath()
         {
@@ -188,6 +209,5 @@ namespace ComposeStar.VisualStudio.Project
             return relativePath;
         }
         #endregion
-
     }
 }

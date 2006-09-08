@@ -10,7 +10,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 using System;
 
-namespace ComposeStar.StarLight.VisualStudio.LanguageServices{
+namespace Composestar.StarLight.VisualStudio.LanguageServices{
 
     internal static class ComposeStarConstants {
         public const string composeStarFileExtension = ".cps";

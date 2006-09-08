@@ -5,9 +5,9 @@ using System.Globalization;
 using System.Reflection;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
-using ComposeStar.MSBuild.Tasks.Compiler;
+using Composestar.StarLight.MSBuild.Tasks.Compiler;
 
-namespace ComposeStar.MSBuild.Tasks
+namespace Composestar.StarLight.MSBuild.Tasks
 {
     public class ComposeStarCompilerTask : Task 
     {

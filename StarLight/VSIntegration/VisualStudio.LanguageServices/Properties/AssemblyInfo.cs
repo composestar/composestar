@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ComposeStar.StarLight.VisualStudio.LanguageServices")]
+[assembly: AssemblyTitle("Composestar.StarLight.VisualStudio.LanguageServices")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ComposeStar.StarLight.VisualStudio.LanguageServices")]
+[assembly: AssemblyProduct("Composestar.StarLight.VisualStudio.LanguageServices")]
 [assembly: AssemblyCopyright("Copyright ©  2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

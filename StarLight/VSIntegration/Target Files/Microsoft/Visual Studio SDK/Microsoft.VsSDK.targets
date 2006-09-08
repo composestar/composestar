@@ -26,15 +26,16 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
   <UsingTask TaskName="Ctc" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
   <UsingTask TaskName="CtoResourceMerger" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
   <UsingTask TaskName="DevEnvSetup" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="MPLex" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
   <UsingTask TaskName="RegPkg" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
   <UsingTask TaskName="VsTemplatePaths" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
-  <UsingTask TaskName="Zip" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
+  <UsingTask TaskName="ZipItems" AssemblyFile="Microsoft.VsSDK.Build.Tasks.dll" />
 
   <!--
     Set the general properties for this installation of the SDK
   -->
   <PropertyGroup>
-    <VsSDKVersion>8.0.60407</VsSDKVersion>
+    <VsSDKVersion>8.0.60728</VsSDKVersion>
   </PropertyGroup>
 
   <Target Name="FindSDKInstallation"
@@ -42,6 +43,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
     <FindVsSDKInstallation SDKVersion="$(VsSDKVersion)">
       <Output TaskParameter="InstallationPath" PropertyName="VsSDKInstall" />
       <Output TaskParameter="IncludesPath" PropertyName="VsSDKIncludes" />
+      <Output TaskParameter="ToolsPath" PropertyName="VsSDKToolsPath" />
     </FindVsSDKInstallation>
   </Target>
 
@@ -65,7 +67,8 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
   <Target Name="CtcCompile"
           Inputs="@(CtcFile)" 
           Outputs="@(CtcFile->'$(IntermediateOutputPath)%(FileName).cto')" 
-          DependsOnTargets="$(CtcCompileDependsOn)">
+          DependsOnTargets="$(CtcCompileDependsOn)"
+          Condition="'$(BuildingProject)'!='false'">
 
     <Ctc IncludeDirs="@(CtcIncludePath);$(VsSDKIncludes);$(VsSDKIncludes)\office10" 
          Inputs="@(CtcFile)" 
@@ -73,6 +76,16 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
          ProductVersion="$(ProductVersion)" 
          SDKVersion="$(VsSDKVersion)" >
     </Ctc>
+
+    <!--Record the CTC compile CTO outputs.-->
+    <CreateItem Include="@(CtcFile->'$(IntermediateOutputPath)%(FileName).cto')" Condition="Exists('@(CtcFile->'$(IntermediateOutputPath)%(FileName).cto')')">
+      <Output TaskParameter="Include" ItemName="FileWrites"/>
+    </CreateItem>
+
+    <!--Record the CTC compile CTSYM outputs.-->
+    <CreateItem Include="@(CtcFile->'$(IntermediateOutputPath)%(FileName).ctsym')" Condition="Exists('@(CtcFile->'$(IntermediateOutputPath)%(FileName).ctsym')')">
+      <Output TaskParameter="Include" ItemName="FileWrites"/>
+    </CreateItem>
 
   </Target>
 
@@ -99,7 +112,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
   </Target>
   
   <Target Name="MergeCtoResource"
-          Condition="'@(CtcFile)'!=''"
+          Condition="'@(CtcFile)'!='' And '$(BuildingProject)'!='false'"
           DependsOnTargets="$(MergeCtoResourceDependsOn)">
 
     <CtoResourceMerger DestinationResource="$(PackageResources)"
@@ -115,6 +128,62 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
       <InProject>false</InProject>
     </ManifestResourceWithNoCulture>
   </ItemGroup>
+
+  <!--
+    =======================================================================================================
+                                       Generate code from LEX files
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <!--Make sure that the lexer runs before the C# compiler-->
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);GenerateCodeFromLex</CoreCompileDependsOn>
+  </PropertyGroup>
+  <!--
+    TODO: When MPLex.exe will allow us to specify the name / path of the output file we should change this
+    target to use custom output names and use @(MPLexCompile->'$(IntermediateOutputPath)%(FileName).cs')
+    as default.
+  -->
+  <Target Name="GenerateCodeFromLex"
+          Condition="'$(BuildingProject)'!='false'"
+          Inputs="@(MPLexCompile);$(LexFrameFile)"
+          Outputs="@(MPLexCompile->'$(IntermediateOutputPath)%(FileName).cs')"
+          DependsOnTargets="$(GenerateCodeFromLexDependsOn)">
+
+    <MPLex InputFile="@(MPLexCompile)"
+           OutputFile="@(MPLexCompile->'$(IntermediateOutputPath)%(FileName).cs')"
+           CompressTables="$(CompressTables)"
+           FrameFile="$(LexFrameFile)" 
+           SDKVersion="$(VsSDKVersion)">
+      <Output TaskParameter="OutputFile" ItemName="Compile" />
+      <Output TaskParameter="OutputFile" ItemName="FileWrites"/>
+    </MPLex>
+
+  </Target>
+
+  <!--
+    =======================================================================================================
+                                      Generate parser code from Y files
+    =======================================================================================================
+  -->
+  <PropertyGroup>
+    <GenerateParserCodeFromGrammarDependsOn>$(GenerateParserCodeFromGrammarDependsOn);FindSDKInstallation</GenerateParserCodeFromGrammarDependsOn>
+    <CoreCompileDependsOn>$(CoreCompileDependsOn);GenerateParserCodeFromGrammar</CoreCompileDependsOn>
+  </PropertyGroup>
+  <Target Name="GenerateParserCodeFromGrammar"
+          Condition="'$(BuildingProject)'!='false'"
+          Inputs="@(MPPGCompile)"
+          Outputs="@(MPPGCompile->'$(IntermediateOutputPath)%(FileName).cs')"
+          DependsOnTargets="$(GenerateParserCodeFromGrammarDependsOn)">
+    
+    <!--Run the command line tool that generates the cs files.-->
+    <Exec Command="&quot;$(VsSDKToolsPath)\MPPG.exe&quot; @(MPPGCompile) > @(MPPGCompile->'$(IntermediateOutputPath)%(FileName).cs')" />
+
+    <!--Add the generated files to the list of the files to compile.-->
+    <CreateItem Include="@(MPPGCompile->'$(IntermediateOutputPath)%(FileName).cs')">
+      <Output TaskParameter="Include" ItemName="Compile" />
+      <Output TaskParameter="Include" ItemName="FileWrites"/>
+    </CreateItem>
+  </Target>
 
   <!--
     =======================================================================================================
@@ -195,8 +264,8 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
     -->
 
     <!--Project using RootPath-->
-    <Zip 
-        Condition="'%(ZipProject.RootPath)'!=''" 
+    <ZipItems 
+        Condition="'%(ZipProject.RootPath)'!='' AND '@(ZipProject)' != ''" 
         Files="@(ZipProject)"
         Action="New"
         ProjectPath="$(MSBuildProjectDirectory)"
@@ -205,11 +274,11 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         TargetPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
       <Output  TaskParameter="ZipFile"
           ItemName="IntermediateZipProject"/>
-    </Zip>
+    </ZipItems>
 
     <!--Project using Directory-->
-    <Zip 
-        Condition="'%(ZipProject.RootPath)'==''" 
+    <ZipItems 
+        Condition="'%(ZipProject.RootPath)'=='' AND '@(ZipProject)' != ''" 
         Files="@(ZipProject)"
         Action="New"
         ProjectPath="$(MSBuildProjectDirectory)"
@@ -218,11 +287,11 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         TargetPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
       <Output  TaskParameter="ZipFile"
           ItemName="IntermediateZipProject"/>
-    </Zip>
+    </ZipItems>
 
     <!--Item using RootPath-->
-    <Zip 
-        Condition="'%(ZipItem.RootPath)'!=''" 
+    <ZipItems 
+        Condition="'%(ZipItem.RootPath)'!='' AND '@(ZipItem)' != ''" 
         Files="@(ZipItem)"
         Action="New"
         ProjectPath="$(MSBuildProjectDirectory)"
@@ -231,11 +300,11 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         TargetPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
       <Output  TaskParameter="ZipFile"
           ItemName="IntermediateZipItem"/>
-    </Zip>
+    </ZipItems>
 
     <!--Item using Directory-->
-    <Zip 
-        Condition="'%(ZipItem.RootPath)'==''" 
+    <ZipItems 
+        Condition="'%(ZipItem.RootPath)'=='' AND '@(ZipItem)' != ''" 
         Files="@(ZipItem)"
         Action="New"
         ProjectPath="$(MSBuildProjectDirectory)"
@@ -244,7 +313,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         TargetPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
       <Output  TaskParameter="ZipFile"
           ItemName="IntermediateZipItem"/>
-    </Zip>
+    </ZipItems>
 
     <Copy SourceFiles="@(IntermediateZipProject)" DestinationFolder="$(ZipProjectOutput)" />
     <Copy SourceFiles="@(IntermediateZipItem)" DestinationFolder="$(ZipItemOutput)" />

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 
-namespace ComposeStar.MSBuild.Tasks.BuildConfiguration
+namespace Composestar.StarLight.MSBuild.Tasks.BuildConfiguration
 {
 	/// <summary>
 	/// A single language unit. Contains information about the name, extensions etc.
