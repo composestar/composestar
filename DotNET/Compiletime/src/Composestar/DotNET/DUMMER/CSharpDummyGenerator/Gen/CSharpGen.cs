@@ -139,12 +139,16 @@ namespace DDW.CSharp.Gen
 										break;
 									case LiteralType.Void:
 									default:
+										//TODO: this won't work for 'struct' types
 										sb.WriteLine("null;"); // and hope this works...
 										break;
 								}
 							}
-							else
+							else 
+							{
+								//TODO: this won't work for 'struct' types
 								sb.WriteLine("null;"); // Assign null to any normal type
+							}
 						}
 					}
 				}
@@ -188,13 +192,17 @@ namespace DDW.CSharp.Gen
 						case LiteralType.Void:
 							break; // write nothing
 						default:
-							sb.WriteLine("return null;"); // and hope this works...
+							// 'throw ...' is a legal way to work around the return requirement
+							// throwing this exception adds the extra advantage of catching incorrect use of a dummy aseembly
+							sb.WriteLine("throw new System.NotImplementedException(\"Compose* Dummy assembly used.\");");
 							break;
 					}
 				}
 				else
 				{ // For all 'normal' types, null should be a valid return value
-					sb.WriteLine("return null;");
+					// 'throw ...' is a legal way to work around the return requirement
+					// throwing this exception adds the extra advantage of catching incorrect use of a dummy aseembly
+					sb.WriteLine("throw new System.NotImplementedException(\"Compose* Dummy assembly used.\");");
 				}
 				/* WH - Edit: remove contents of methods! */
 				//Parse(gr.Statements);

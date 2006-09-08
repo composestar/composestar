@@ -543,7 +543,7 @@
                 />
                 <File
                     RelPath = "antlr.debug.misc\ASTFrame.cs"
-                    SubType = "Form"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -553,7 +553,7 @@
                 />
                 <File
                     RelPath = "antlr.debug.misc\JTreeASTPanel.cs"
-                    SubType = "UserControl"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
