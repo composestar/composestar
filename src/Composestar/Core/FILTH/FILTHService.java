@@ -31,10 +31,10 @@ public abstract class FILTHService {
 	public static final int NORMAL = 2;
 	 
 	public static void setLog(PrintStream stream){
-		log=stream;
+		log = stream;
 	}
 
-	public void setLog(String out) throws Exception
+	public static void setLog(String out) throws Exception
 	{
 		log = new PrintStream(new java.io.FileOutputStream(out));
 	}
@@ -44,21 +44,37 @@ public abstract class FILTHService {
 	}
 	
 	public static void print(String mesg){
-		if (printMode==FILTHService.HTML){ log.print(mesg+"<br>"); }
-		else
+		if (printMode == FILTHService.HTML)
+		{
+			log.print(mesg+"<br>");
+		}
+		else 
+		{
 			log.print(mesg);
+		}
 	}
 
 	public static void printTab(int n, String mesg){
-		String s= "";
+		String s = "";
 		for (int i=0; i<n; i++)
+		{
 			if (printMode==FILTHService.HTML)
+			{
 				s+="&nbsp;";
-			else
+			}
+			else 
+			{
 				s+=" ";
-		if (printMode==FILTHService.HTML){ log.print(s+mesg+"<br>"); }
-		else
+			}
+		}
+		if (printMode==FILTHService.HTML)
+		{
+			log.print(s+mesg+"<br>"); 
+		}
+		else 
+		{
 			log.print(s+mesg);
+		}
 	}
 
 	public abstract List getOrder(Concern c);

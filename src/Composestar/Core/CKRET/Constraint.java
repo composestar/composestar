@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
  */
 public class Constraint {
 
-	public static boolean CONFLICT = true;
-	public static boolean REQUIREMENT = false;
+	public static final boolean CONFLICT = true;
+	public static final boolean REQUIREMENT = false;
 	
 	private boolean type;
 	
