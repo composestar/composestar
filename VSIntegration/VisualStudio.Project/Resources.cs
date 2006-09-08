@@ -21,14 +21,15 @@ namespace Composestar.StarLight.VisualStudio.Project
     using System.ComponentModel;
     using System.Security.Permissions;
 
-   [AttributeUsage(AttributeTargets.All)]
-   internal sealed class SRDescriptionAttribute : DescriptionAttribute
-   {
+    [AttributeUsage(AttributeTargets.All)]
+    internal sealed class SRDescriptionAttribute : DescriptionAttribute
+    {
 
         private bool replaced = false;
 
-        public SRDescriptionAttribute(string description) : base(description)
-	    {
+        public SRDescriptionAttribute(string description)
+            : base(description)
+        {
 
         }
 
@@ -50,7 +51,8 @@ namespace Composestar.StarLight.VisualStudio.Project
     internal sealed class SRCategoryAttribute : CategoryAttribute
     {
 
-        public SRCategoryAttribute(string category) : base(category)
+        public SRCategoryAttribute(string category)
+            : base(category)
         {
         }
 
@@ -60,7 +62,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         }
     }
     internal sealed class SR
-	{
+    {
         internal const string Application = "Application";
         internal const string ApplicationIcon = "ApplicationIcon";
         internal const string ApplicationIconDescription = "ApplicationIconDescription";
@@ -91,83 +93,83 @@ namespace Composestar.StarLight.VisualStudio.Project
 
         private static Object s_InternalSyncObject;
         private static Object InternalSyncObject
-		{
+        {
             get
-			{
+            {
                 if (s_InternalSyncObject == null)
-				{
+                {
                     Object o = new Object();
                     Interlocked.CompareExchange(ref s_InternalSyncObject, o, null);
                 }
                 return s_InternalSyncObject;
             }
         }
-        
+
         internal SR()
-		{
+        {
             resources = new System.Resources.ResourceManager("Resources", this.GetType().Assembly);
         }
-        
+
         private static SR GetLoader()
-		{
+        {
             if (loader == null)
-			{
+            {
                 lock (InternalSyncObject)
-				{
-                   if (loader == null)
-				   {
-                       loader = new SR();
-                   }
-               }
+                {
+                    if (loader == null)
+                    {
+                        loader = new SR();
+                    }
+                }
             }
-            
+
             return loader;
         }
 
         private static CultureInfo Culture
-		{
+        {
             get { return CultureInfo.CurrentUICulture; } // null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources
-		{
+        {
             get
-			{
+            {
                 return GetLoader().resources;
             }
         }
-        
+
         public static string GetString(string name, params object[] args)
-		{
+        {
             SR sys = GetLoader();
             if (sys == null)
                 return null;
             string res = sys.resources.GetString(name, SR.Culture);
 
             if (args != null && args.Length > 0)
-			{
+            {
                 return String.Format(CultureInfo.CurrentCulture, res, args);
             }
             else
-			{
+            {
                 return res;
             }
         }
 
         public static string GetString(string name)
-		{
+        {
             SR sys = GetLoader();
             if (sys == null)
                 return null;
             return sys.resources.GetString(name, SR.Culture);
         }
-        
+
         public static object GetObject(string name)
-		{
+        {
             SR sys = GetLoader();
             if (sys == null)
                 return null;
             return sys.resources.GetObject(name, SR.Culture);
         }
-}
+    }
 }
