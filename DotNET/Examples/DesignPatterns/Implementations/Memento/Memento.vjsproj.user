@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <VISUALJSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\local\ComposeStar\binaries\;C:\Program Files\ComposeStar\binaries\;C:\ComposestarCVS\examplesDotNET\DesignPatterns\Annotations\bin\Debug\" >
+            <Settings ReferencePath = "C:\local\ComposeStar\binaries\;C:\Program Files\ComposeStar\binaries\;C:\ComposestarCVS\examplesDotNET\DesignPatterns\Annotations\bin\Debug\;C:\sandbox\DotNET\Examples\DesignPatterns\Annotations\bin\Debug\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
