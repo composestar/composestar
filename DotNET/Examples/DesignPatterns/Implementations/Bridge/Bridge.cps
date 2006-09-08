@@ -1,6 +1,6 @@
-concern CreateBridge
+concern CreateBridgeConcern
 {	
-	filtermodule CreateBridge
+	filtermodule CreateBridgeFM
 	{
 		internals
 			impl2 : Composestar.Patterns.Bridge.CrossCapitalImplementation;
@@ -18,7 +18,7 @@ concern CreateBridge
 			implementor = { Implementor | classHasAnnotationWithName(Implementor, 'Composestar.Patterns.Bridge.Annotations.Implementor') };
 
 		filtermodules
-			implementor <- CreateBridge;
+			implementor <- CreateBridgeFM;
 	}
 }	
 
