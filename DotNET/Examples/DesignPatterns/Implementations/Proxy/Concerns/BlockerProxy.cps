@@ -1,5 +1,5 @@
 concern BlockerProxy{
-	filtermodule BlockerProxy{
+	filtermodule BlockerProxyFM{
 		internals
 			blocker : Composestar.Patterns.Proxy.RequestBlocker;
 
@@ -11,7 +11,7 @@ concern BlockerProxy{
 			realSubject = { RealSubject | classHasAnnotationWithName(RealSubject, 'Composestar.Patterns.Proxy.Annotations.RealSubject') };
 			
 		filtermodules
-			realSubject <- BlockerProxy;
+			realSubject <- BlockerProxyFM;
 	}
 	implementation in JSharp by	RequestBlocker as "RequestBlocker.jsl"
 	{

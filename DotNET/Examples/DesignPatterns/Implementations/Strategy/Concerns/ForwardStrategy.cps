@@ -1,6 +1,6 @@
 concern ForwardStrategy
 {
-	filtermodule ForwardStrategy
+	filtermodule ForwardStrategyFM
 	{
 		internals
 			bubble : Composestar.Patterns.Strategy.BubbleSort;
@@ -23,6 +23,6 @@ concern ForwardStrategy
 			context = { Context | classHasAnnotationWithName(Context, 'Composestar.Patterns.Strategy.Annotations.Context') };
 			
 		filtermodules
-			context <- ForwardStrategy;
+			context <- ForwardStrategyFM;
 	}
 }

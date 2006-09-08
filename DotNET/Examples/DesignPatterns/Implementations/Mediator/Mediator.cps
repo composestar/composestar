@@ -1,4 +1,4 @@
-concern Mediator
+concern MediatorConcern
 {
 	filtermodule ColleagueToMediator
 	{
@@ -9,7 +9,7 @@ concern Mediator
 			//the action to take depends of the changed Colleague, so send to a meta filter.
 			change : Meta = { [*.clicked] mediator.colleagueChanged }
 	}
-	filtermodule Mediator
+	filtermodule MediatorFM
 	{
 		conditions
 			isButton1 : inner.isButton1();
@@ -28,6 +28,6 @@ concern Mediator
 			
 		filtermodules
 			colleague <- ColleagueToMediator;
-			mediator <- Mediator;
+			mediator <- MediatorFM;
 	}
 }

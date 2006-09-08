@@ -1,4 +1,4 @@
-concern AddRemoveObservers{
+concern AddRemoveObservers in Composestar.Patterns.Observer{
 	filtermodule AddRemoveObservers
 	{
 		externals

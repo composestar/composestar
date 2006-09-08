@@ -1,6 +1,6 @@
 concern ShowNumbers
 {
-	filtermodule ShowNumbers
+	filtermodule ShowNumbersFM
 	{
 		internals
 			show : Composestar.Patterns.Strategy.Show;
@@ -14,7 +14,7 @@ concern ShowNumbers
 			context = { Context | classHasAnnotationWithName(Context, 'Composestar.Patterns.Strategy.Annotations.Context') };
 			
 		filtermodules
-			context <- ShowNumbers;
+			context <- ShowNumbersFM;
 	}
 	implementation in JSharp by	Show as	"Show.jsl"
 	{

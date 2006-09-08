@@ -71,14 +71,14 @@
                     HintPath = "..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "ComposeStarRuntimeInterpreter"
-                    AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "..\..\..\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
-                />
-                <Reference
                     Name = "DesignPatternAnnotations"
                     AssemblyName = "DesignPatternAnnotations"
                     HintPath = "..\..\Annotations\bin\Debug\DesignPatternAnnotations.dll"
+                />
+                <Reference
+                    Name = "ComposeStarRuntimeInterpreter"
+                    AssemblyName = "ComposeStarRuntimeInterpreter"
+                    HintPath = "..\..\..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
             </References>
         </Build>

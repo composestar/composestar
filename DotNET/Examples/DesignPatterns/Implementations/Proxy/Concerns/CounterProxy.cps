@@ -1,5 +1,5 @@
 concern CounterProxy{
-	filtermodule CounterProxy{
+	filtermodule CounterProxyFM{
 		internals
 			counter : Composestar.Patterns.Proxy.RequestCounter;
 
@@ -11,7 +11,7 @@ concern CounterProxy{
 			realSubject = { RealSubject | classHasAnnotationWithName(RealSubject, 'Composestar.Patterns.Proxy.Annotations.RealSubject') };
 			
 		filtermodules
-			realSubject <- CounterProxy;
+			realSubject <- CounterProxyFM;
 	}
 	implementation in JSharp by	RequestCounter as "RequestCounter.jsl"
 	{

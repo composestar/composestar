@@ -13,15 +13,15 @@ public class Subject
 		this.observersPerSubject = new HashMap();
 	}
 
-	private static Subject instance;
+	private static Subject _instance;
 
 	public static Subject instance()
 	{
-		if(instance==null)
+		if(_instance==null)
 		{
-			instance = new Subject();
+			_instance = new Subject();
 		}
-		return instance;
+		return _instance;
 	}
 
 	public void addObserver(Object subject, Object observer){
