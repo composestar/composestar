@@ -95,9 +95,9 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "antlr.runtime"
-                    AssemblyName = "antlr.runtime"
-                    HintPath = "antlr.runtime.dll"
+                    Name = "antlr.runtime-2.7.2"
+                    Project = "{CB7CC882-ED47-46C0-AAAE-7A437F22F1C6}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
