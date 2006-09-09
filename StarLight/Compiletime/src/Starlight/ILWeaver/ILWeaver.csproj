@@ -7,8 +7,8 @@
     <ProjectGuid>{7A30904D-40C9-408D-813E-12E16C488EAA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ILWeaver</RootNamespace>
-    <AssemblyName>ILWeaver</AssemblyName>
+    <RootNamespace>Composestar.StarLight.ILWeaver</RootNamespace>
+    <AssemblyName>Composestar.StarLight.ILWeaverb</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

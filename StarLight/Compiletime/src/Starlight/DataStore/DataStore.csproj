@@ -40,6 +40,7 @@
     <Compile Include="DataStore.cs" />
     <Compile Include="LanguageModel\AssemblyInfo.cs" />
     <Compile Include="LanguageModel\ClassInfo.cs" />
+    <Compile Include="LanguageModel\LanguageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -19,8 +19,9 @@ namespace Composestar.StarLight.ILWeaver
     /// </summary>
     public class CecilILWeaver : IILWeaver 
     {
+        private AssemblyDefinition _targetAssemblyDefinition;
+        private WeaverConfiguration _configuration;
 
-        private string _fileName;
         private bool _isInitialized = false;
         private TimeSpan _lastDuration=TimeSpan.MinValue;
 
@@ -29,15 +30,68 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="config">The config.</param>
-        public void Initialize(string fileName, NameValueCollection config)
+        public void Initialize(string inputImage, NameValueCollection config)
         {
-            if (String.IsNullOrEmpty(fileName))
-                throw new ArgumentNullException("fileName", Properties.Resources.FileNameNullOrEmpty);
+            #region fileName
+            if (String.IsNullOrEmpty(inputImage))
+                throw new ArgumentNullException("inputImage", Properties.Resources.FileNameNullOrEmpty);
 
-            if (!File.Exists(fileName))
-                throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, fileName), "fileName");
-             
-            _fileName = fileName;
+            if (!File.Exists(inputImage))
+                throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, inputImage), "inputImage");
+
+            try
+            {
+                _targetAssemblyDefinition = AssemblyFactory.GetAssembly(inputImage);
+            }
+            catch (EndOfStreamException)
+            {
+                throw new BadImageFormatException(String.Format(Properties.Resources.ImageIsBad, inputImage));
+            }
+            #endregion
+
+            #region config
+
+            if (null == config)
+            {
+                _configuration = WeaverConfiguration.CreateDefaultConfiguration(inputImage);
+            }
+            else
+            {
+                string outputImagePath = config.Get("OutputImagePath");
+                string shouldSignAssembly = config.Get("ShouldSignAssembly");
+                string outputImageSNK = config.Get("OutputImageSNK");
+
+                if (string.IsNullOrEmpty(outputImagePath))
+                {
+                    outputImagePath = inputImage;
+                }
+
+                if (!string.IsNullOrEmpty(shouldSignAssembly))
+                {
+                    bool shouldSignAssemblyB = false;
+                    Boolean.TryParse(shouldSignAssembly, out shouldSignAssemblyB);
+
+                    if (shouldSignAssemblyB)
+                    {
+                        if (string.IsNullOrEmpty(outputImageSNK))
+                        {
+                            throw new ArgumentException(Properties.Resources.NoSNKSpecified, "config");
+                        }
+
+                        if (File.Exists(outputImageSNK))
+                        {
+                            throw new ArgumentException(string.Format(Properties.Resources.SNKFileNotFound, outputImageSNK), "config");
+                        }
+                        _configuration = new WeaverConfiguration(outputImagePath, shouldSignAssemblyB, outputImageSNK);
+                    }
+                    else
+                    {
+                        _configuration = new WeaverConfiguration(outputImagePath, false, string.Empty);
+                    }
+                }
+            }
+
+            #endregion
 
             _isInitialized = true;
 
@@ -77,5 +131,45 @@ namespace Composestar.StarLight.ILWeaver
         }
 
 
+        public void DoWeave()
+        {
+            CheckForInit();
+        }
+
+        #region nested class WeaverConfiguration
+        private sealed class WeaverConfiguration
+        {
+            private string _outputImageSNK;
+            private bool _shouldSignOutput;
+            private string _outputImagePath;
+
+            public WeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK)
+            {
+                _outputImageSNK = outputImageSNK;
+                _shouldSignOutput = shouldSignOutput;
+                _outputImagePath = outputImagePath;
+            }
+
+            public string OutputImageSNK
+            {
+                get { return _outputImageSNK; }
+            }
+
+            public bool ShouldSignOutput
+            {
+                get { return _shouldSignOutput; }
+            }
+
+            public string OutputImagePath
+            {
+                get { return _outputImagePath; }
+            }
+
+            public static WeaverConfiguration CreateDefaultConfiguration(string inputImagePath)
+            {
+                return new WeaverConfiguration(inputImagePath, false, string.Empty);
+            }
+        }
+        #endregion
     }
 }

@@ -16,8 +16,12 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="config">The config settings.</param>
-        void Initialize(string fileName, NameValueCollection config );
+        void Initialize(string inputImage, NameValueCollection config );
 
+        /// <summary>
+        /// Does the actual weaving.
+        /// </summary>
+        void DoWeave();
         
 
         /// <summary>

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Composestar.DataStoreDotNET.LanguageModel
 {
-    class ClassInfo
+    public class ClassInfo
     {
     }
 }
