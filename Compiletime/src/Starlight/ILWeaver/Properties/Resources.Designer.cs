@@ -39,7 +39,7 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ILWeaver.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Composestar.StarLight.ILWeaver.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -79,11 +79,38 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The analyzer has not yet been initialized. Call the Initialize function first..
+        ///   Looks up a localized string similar to The format of binary image {0} is invalid..
+        /// </summary>
+        internal static string ImageIsBad {
+            get {
+                return ResourceManager.GetString("ImageIsBad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Strong Name Key file specified..
+        /// </summary>
+        internal static string NoSNKSpecified {
+            get {
+                return ResourceManager.GetString("NoSNKSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ILWeaver has not yet been initialized. Call the Initialize function first..
         /// </summary>
         internal static string NotYetInitialized {
             get {
                 return ResourceManager.GetString("NotYetInitialized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to find Strong Name Key file at {0}..
+        /// </summary>
+        internal static string SNKFileNotFound {
+            get {
+                return ResourceManager.GetString("SNKFileNotFound", resourceCulture);
             }
         }
     }

@@ -27,7 +27,7 @@ namespace Composestar.DataStoreDotNET.LanguageModel
 
         public void AddClass(ClassInfo ci)
         {
-            
+            throw new NotImplementedException();
         }
     }
 }
