@@ -1,0 +1,11 @@
+.\bin\Debug\TestILWeaver.dll
+.\bin\Debug\TestILWeaver.pdb
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\TestILWeaver.dll
+obj\Debug\TestILWeaver.pdb
+.\bin\Debug\Composestar.StarLight.ILWeaverb.dll
+.\bin\Debug\Mono.Cecil.dll
+.\bin\Debug\Composestar.StarLight.ILWeaverb.pdb
+.\bin\Debug\Mono.Cecil.pdb
+.\bin\Debug\TestTarget.exe
+.\bin\Debug\InvalidImage.Exe
