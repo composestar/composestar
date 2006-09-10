@@ -7,7 +7,7 @@
     <ProjectGuid>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ILAnalyzer</RootNamespace>
+    <RootNamespace>Composestar.StarLight.ILAnalyzer</RootNamespace>
     <AssemblyName>ILAnalyzer</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILInstruction.cs" />
+    <Compile Include="ILReader.cs" />
+    <Compile Include="ReflectionILAnalyzer.cs" />
     <Compile Include="Model\CallConstruction.cs" />
     <Compile Include="CecilILAnalyzer.cs" />
     <Compile Include="IILAnalyzer.cs" />

@@ -119,10 +119,10 @@ namespace Microsoft.VisualStudio.Package
 		}
 
 
-		public override object GetIconHandle(bool open)
-		{
-			return PackageUtilities.GetIntPointerFromImage(open ? this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.OpenReferenceFolder] : this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.ReferenceFolder]);
-		}
+        public override object GetIconHandle(bool open)
+        {
+            return PackageUtilities.GetIntPointerFromImage(open ? this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.OpenReferenceFolder] : this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.ReferenceFolder]);
+        }
 
 		
 		/// <summary>

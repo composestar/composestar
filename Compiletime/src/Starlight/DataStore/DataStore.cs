@@ -5,34 +5,47 @@ using com.db4o;
 
 namespace Composestar.DataStoreDotNET
 {
-    class DataStore
+    /// <summary>
+    /// Contains the DataStore.
+    /// </summary>
+    class DataStoreContainer
     {
-        private static DataStore instance;
+        private const string databaseFilename = "test.yap";
+
         private ObjectContainer database;
 
-        // Constructor, opens the database file
-        private DataStore()
+        #region Singleton
+        static readonly DataStoreContainer instance =new DataStoreContainer();
+
+        // Explicit static constructor to tell C# compiler
+        // not to mark type as beforefieldinit
+        static DataStoreContainer()
         {
-            database = Db4o.OpenFile("test.yap");
         }
 
+        DataStoreContainer()
+        {
+            database = Db4o.OpenFile(databaseFilename);
+        }
+
+        public static DataStoreContainer Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+        #endregion
+
         // Destructor, closes the database file
-        ~DataStore()
+        ~DataStoreContainer()
         {
             database.Close();
             database.Dispose();
         }
 
-        public static DataStore GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new DataStore();
-            }
-
-            return instance;
-        }
 
 
+   
     }
 }

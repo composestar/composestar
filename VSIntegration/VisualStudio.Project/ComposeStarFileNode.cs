@@ -123,7 +123,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             if (IsFormSubType)
                 return PackageUtilities.GetIntPointerFromImage(this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.WindowsForm]);
             if (this.FileName.ToLower().EndsWith(".cps"))
-                return PackageUtilities.GetIntPointerFromImage(ComposeStarProjectNode.ComposeStarImageList.Images[(int)ComposeStarProjectNode.composeStarImageName.cpsFile]);
+                return PackageUtilities.GetIntPointerFromImage(ComposeStarProjectNode.ComposeStarImageList.Images[(int)ComposeStarProjectNode.ComposeStarImageName.cpsFile]);
             return base.GetIconHandle(open); 
         }
 
