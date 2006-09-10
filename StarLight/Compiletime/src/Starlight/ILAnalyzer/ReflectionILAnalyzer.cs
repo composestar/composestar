@@ -105,6 +105,7 @@ namespace Composestar.StarLight.ILAnalyzer
                         if (il.OpCode == OpCodes.Call)
                         {
                           //  Console.WriteLine("Call");
+                            
                         }
                     }
 
