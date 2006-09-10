@@ -121,8 +121,7 @@ namespace Composestar.DataStore.LanguageModel
         /// <param name="methodinfo">The methodinfo.</param>
         public void AddMethod(MethodInfo methodinfo)
         {
-            // FIXME: Could not compile; disabled
-            //   if (_methods == null) _methods = DataStoreContainer.GetInstance().GetObjectContainer().Ext().Collections().NewLinkedList();
+             if (_methods == null) _methods = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
   
             _methods.Add(methodinfo);
         }
@@ -147,13 +146,13 @@ namespace Composestar.DataStore.LanguageModel
             if (_methods == null) return null;
 
             // FIXME: Could not compile; disabled           
-            //IList<LanguageModel.MethodInfo> methods = DataStore.GetInstance().GetObjectContainer().Query<LanguageModel.MethodInfo>(delegate(LanguageModel.MethodInfo mi)
+            //IList<LanguageModel.MethodInfo> methods = DataStoreContainer.Instance.GetObjectContainer().Query<LanguageModel.MethodInfo>(delegate(LanguageModel.MethodInfo mi)
             //{
             //    return true;
             //});
 
             // FIXME: Could not compile; disabled   
-            //return _methods.GetEnumerator();
+            //return methods.GetEnumerator();
 
             return null;
         }

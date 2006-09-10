@@ -3,15 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-using Composestar.DataStoreDotNET;
-
 namespace Composestar.DataStore.LanguageModel
 {
     public class MethodInfo
     {
         private string _name;
         private string _returntype;
-        private IList _parameters;
+        private IList _parameters;  // initialize db-aware with ObjectContainer().Ext().Collections().NewLinkedList(), which doesnt support generics
         
         // TODO: add the folling properties: callconstruction??, iscontructor, isabstract, isfinal, isprivate, ispublic, isstactic, isvirtual
 
@@ -43,14 +41,12 @@ namespace Composestar.DataStore.LanguageModel
         public IList Parameters
         {
             get {
-                // FIXME; did not compile, disabled
-              //  if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
+                if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
                 
                 return _parameters; 
             }
             set {
-                // FIXME; did not compile, disabled
-                //if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
+                if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
  
                 _parameters = value; 
             }
