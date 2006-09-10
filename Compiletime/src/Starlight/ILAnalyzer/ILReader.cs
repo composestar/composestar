@@ -99,43 +99,43 @@ namespace Composestar.StarLight.ILAnalyzer
                     return new ShortInlineBrTargetInstruction(m_enclosingMethod, offset, opCode, shortDelta);
                 case OperandType.InlineBrTarget:
                     Int32 delta = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, delta);
+                    return new InlineBrTargetInstruction(m_enclosingMethod, offset, opCode, delta);
                 case OperandType.ShortInlineI:
                     Byte int8 = ReadByte();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, int8);
+                    return new ShortInlineIInstruction(m_enclosingMethod, offset, opCode, int8);
                 case OperandType.InlineI:
                     Int32 int32 = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, int32);
+                    return new InlineIInstruction(m_enclosingMethod, offset, opCode, int32);
                 case OperandType.InlineI8:
                     Int64 int64 = ReadInt64();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, int64);
+                    return new InlineI8Instruction(m_enclosingMethod, offset, opCode, int64);
                 case OperandType.ShortInlineR:
                     Single float32 = ReadSingle();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, float32);
+                    return new ShortInlineRInstruction(m_enclosingMethod, offset, opCode, float32);
                 case OperandType.InlineR:
                     Double float64 = ReadDouble();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, float64);
+                    return new InlineRInstruction(m_enclosingMethod, offset, opCode, float64);
                 case OperandType.ShortInlineVar:
                     Byte index8 = ReadByte();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, index8);
+                    return new ShortInlineVarInstruction(m_enclosingMethod, offset, opCode, index8);
                 case OperandType.InlineVar:
                     UInt16 index16 = ReadUInt16();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, index16);
+                    return new InlineVarInstruction(m_enclosingMethod, offset, opCode, index16);
                 case OperandType.InlineString:
                     token = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, token);
+                    return new InlineStringInstruction(m_enclosingMethod, offset, opCode, token);
                 case OperandType.InlineSig:
                     token = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, token);
+                    return new InlineSigInstruction(m_enclosingMethod, offset, opCode, token);
                 case OperandType.InlineField:
                     token = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, token);
+                    return new InlineFieldInstruction(m_enclosingMethod, offset, opCode, token);
                 case OperandType.InlineType:
                     token = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, token);
+                    return new InlineTypeInstruction(m_enclosingMethod, offset, opCode, token);
                 case OperandType.InlineTok:
                     token = ReadInt32();
-                    return new InlineInstruction(m_enclosingMethod, offset, opCode, token);
+                    return new InlineTokInstruction(m_enclosingMethod, offset, opCode, token);
                 case OperandType.InlineMethod:
                     token = ReadInt32();
                     return new InlineMethodInstruction(m_enclosingMethod, offset, opCode, token);
