@@ -6,7 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Drawing;
-using System.Windows.Forms; 
+using System.Windows.Forms;
 
 using Microsoft.VisualStudio;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -16,7 +16,7 @@ using Shell = Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 
-using Composestar.StarLight.VisualStudio.LanguageServices;  
+using Composestar.StarLight.VisualStudio.LanguageServices;
 
 using EnvDTE;
 
@@ -38,14 +38,14 @@ namespace Composestar.StarLight.VisualStudio.Project
     {
         protected override void Initialize()
         {
-            base.Initialize();            
+            base.Initialize();
             this.RegisterProjectFactory(new ComposeStarProjectFactory(this));
             this.RegisterEditorFactory(new EditorFactory(this));
         }
     }
 
 
-     [GuidAttribute(ComposeStarProjectFactory.ComposeStarProjectFactoryGuid)]
+    [GuidAttribute(ComposeStarProjectFactory.ComposeStarProjectFactoryGuid)]
     public class ComposeStarProjectFactory : Microsoft.VisualStudio.Package.ProjectFactory
     {
         public const string ComposeStarProjectFactoryGuid = "D0A7707A-04E2-4aa9-A44E-89783E5BD8A8";
@@ -73,35 +73,23 @@ namespace Composestar.StarLight.VisualStudio.Project
     {
         #region fields
         private ComposeStarProjectPackage package;
-        private Guid GUID_MruPage = new Guid("{6B9690FC-20D6-4ae2-87FF-E92EE76F57E4}");
+        private Guid GUID_MruPage = new Guid("{19B97F03-9594-4c1c-BE28-25FF030113B3}");
         private VSLangProj.VSProject vsProject = null;
         private Microsoft.VisualStudio.Designer.Interfaces.IVSMDCodeDomProvider codeDomProvider;
-        private static ImageList composeStarImageList;    
-#endregion
-            
+        private static ImageList composeStarImageList;
+        #endregion
+
         #region enums
 
-        public enum composeStarImageName
+        public enum ComposeStarImageName
         {
             cpsFile = 0,
             cpsProject = 1,
         }
 
         #endregion
-        
+
         #region Properties
-          public static ImageList ComposeStarImageList
-        {
-            get
-            {
-                return composeStarImageList;
-            }
-            set
-            {
-                composeStarImageList = value;
-            }
-        }
-        
         /// <summary>
         /// Returns the outputfilename based on the output type
         /// </summary>
@@ -154,21 +142,82 @@ namespace Composestar.StarLight.VisualStudio.Project
                 return hier;
             }
         }
-        #endregion
 
-        #region ctor
-        public ComposeStarProjectNode(ComposeStarProjectPackage pkg)
-        {            
-            this.package = pkg;
-            this.NodeProperties = new ComposeStarProjectNodeProperties(this);
-            this.CanFileNodesHaveChilds = true;
-            this.OleServiceProvider.AddService(typeof(VSLangProj.VSProject), this.VSProject, false);
-            ComposeStarImageList = Utilities.GetImageList(typeof(ComposeStarProjectNode).Assembly.GetManifestResourceStream("Resources.StarLightImageList.bmp"));
-
+        /// <summary>
+        /// ComposeStar specific project images
+        /// </summary>
+        public static ImageList ComposeStarImageList
+        {
+            get
+            {
+                return composeStarImageList;
+            }
+            set
+            {
+                composeStarImageList = value;
+            }
         }
         #endregion
 
+        #region ctor
+
+        static ComposeStarProjectNode()
+        {
+            ComposeStarImageList = Utilities.GetImageList(typeof(ComposeStarProjectNode).Assembly.GetManifestResourceStream("Composestar.StarLight.VisualStudio.Project.Resources.StarLightImageList.bmp"));
+        }
+
+        public ComposeStarProjectNode(ComposeStarProjectPackage pkg)
+        {
+            this.package = pkg;
+            this.NodeProperties = new ComposeStarProjectNodeProperties(this);
+            this.CanFileNodesHaveChilds = true;
+            this.OleServiceProvider.AddService(typeof(VSLangProj.VSProject), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
+            this.SupportsProjectDesigner = true;
+
+            InitializeCATIDs();
+        }
+
+        public override object GetIconHandle(bool open)
+        {
+            return PackageUtilities.GetIntPointerFromImage(ComposeStarImageList.Images[(int)ComposeStarImageName.cpsProject]);
+        }     
+
+        /// <summary>
+        /// Provide mapping from our browse objects and automation objects to our CATIDs
+        /// </summary>
+        private void InitializeCATIDs()
+        {
+            // The following properties classes are specific to python so we can use their GUIDs directly
+            this.AddCATIDMapping(typeof(ComposeStarProjectNodeProperties), typeof(ComposeStarProjectNodeProperties).GUID);
+            this.AddCATIDMapping(typeof(ComposeStarFileNodeProperties), typeof(ComposeStarFileNodeProperties).GUID);
+            this.AddCATIDMapping(typeof(OAComposeStarFileItem), typeof(OAComposeStarFileItem).GUID);
+            // The following are not specific to ComposeStar and as such we need a separate GUID (we simply used guidgen.exe to create new guids)
+            this.AddCATIDMapping(typeof(FolderNodeProperties), new Guid("91ACC179-D77D-4624-8325-C2ABA2B3987D"));
+            // This one we use the same as python file nodes since both refer to files
+            this.AddCATIDMapping(typeof(FileNodeProperties), typeof(ComposeStarFileNodeProperties).GUID);
+            // Because our property page pass itself as the object to display in its grid, we need to make it have the same CATID
+            // as the browse object of the project node so that filtering is possible.
+            this.AddCATIDMapping(typeof(GeneralPropertyPage), typeof(ComposeStarProjectNodeProperties).GUID);
+
+            // We could also provide CATIDs for references and the references container node, if we wanted to.
+        }
+
+        #endregion
+
         #region overridden properties
+
+        /// <summary>
+        /// Return -1 from the ImageIndex so that VS will use the result from 
+        /// GetIconHandle() instead
+        /// </summary>
+        public override int ImageIndex
+        {
+            get
+            {
+                return -1;
+            }
+        }
+
         public override Guid ProjectGuid
         {
             get
@@ -197,24 +246,54 @@ namespace Composestar.StarLight.VisualStudio.Project
         {
             if (null != Site)
             {
-                //IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
-                //if (null != libraryManager)
-                //{
-                //    libraryManager.UnregisterHierarchy(this.InteropSafeHierarchy);
-                //}
+                IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
+                if (null != libraryManager)
+                {
+                    libraryManager.UnregisterHierarchy(this.InteropSafeHierarchy);
+                }
             }
+
             return base.Close();
         }
         public override void Load(string filename, string location, string name, uint flags, ref Guid iidProject, out int canceled)
         {
             base.Load(filename, location, name, flags, ref iidProject, out canceled);
-            //IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
-            //if (null != libraryManager)
-            //{
-            //    libraryManager.RegisterHierarchy(this.InteropSafeHierarchy);
-            //}
+            // WAP ask the designer service for the CodeDomProvider corresponding to the project node.
+            this.OleServiceProvider.AddService(typeof(SVSMDCodeDomProvider), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
+            this.OleServiceProvider.AddService(typeof(System.CodeDom.Compiler.CodeDomProvider), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
+
+            IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
+            if (null != libraryManager)
+            {
+                libraryManager.RegisterHierarchy(this.InteropSafeHierarchy);
+            }
         }
-   
+        /// <summary>
+        /// Overriding to provide project general property page
+        /// </summary>
+        /// <returns></returns>
+        protected override Guid[] GetConfigurationIndependentPropertyPages()
+        {
+            Guid[] result = new Guid[1];
+            result[0] = typeof(GeneralPropertyPage).GUID;
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the configuration dependent property pages.
+        /// Specify here a property page. By returning no property page the configuartion dependent properties will be neglected.
+        /// Overriding, but current implementation does nothing
+        /// To provide configuration specific page project property page, this should return an array bigger then 0
+        /// (you can make it do the same as GetPropertyPageGuids() to see its impact)
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        protected override Guid[] GetConfigurationDependentPropertyPages()
+        {
+            Guid[] result = new Guid[1];
+            result[0] = typeof(ComposeStarBuildPropertyPage).GUID;
+            return result;
+        }
 
         /// <summary>
         /// Overriding to provide customization of files on add files.
@@ -225,7 +304,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         public override void AddFileFromTemplate(string source, string target)
         {
             if (!System.IO.File.Exists(source))
-                throw new FileNotFoundException(String.Format("StarLight template file not found: {0}", source));
+                throw new FileNotFoundException(String.Format("Template file not found: {0}", source));
 
             // The class name is based on the new file name
             string className = Path.GetFileNameWithoutExtension(target);
@@ -243,7 +322,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             }
         }
         /// <summary>
-        /// Evaluates if a file is an ComposeStar code file based on is extension
+        /// Evaluates if a file is an Concern code file based on is extension
         /// </summary>
         /// <param name="strFileName">The filename to be evaluated</param>
         /// <returns>true if is a code file</returns>
@@ -262,7 +341,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         /// Create a file node based on an msbuild item.
         /// </summary>
         /// <param name="item">The msbuild item to be analyzed</param>
-        /// <returns>PythonFileNode or FileNode</returns>
+        /// <returns>ComposeStarFileNode or FileNode</returns>
         public override FileNode CreateFileNode(ProjectElement item)
         {
             if (item == null)
@@ -271,15 +350,17 @@ namespace Composestar.StarLight.VisualStudio.Project
             }
 
             string include = item.GetMetadata(ProjectFileConstants.Include);
+            ComposeStarFileNode newNode = new ComposeStarFileNode(this, item);
+            newNode.OleServiceProvider.AddService(typeof(EnvDTE.Project), this.ProjectMgr.GetAutomationObject(), false);
+            newNode.OleServiceProvider.AddService(typeof(EnvDTE.ProjectItem), newNode.GetAutomationObject(), false);
+            newNode.OleServiceProvider.AddService(typeof(VSLangProj.VSProject), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
             if (IsCodeFile(include))
             {
-                ComposeStarFileNode newNode = new ComposeStarFileNode(this, item);
-                newNode.OleServiceProvider.AddService(typeof(VSLangProj.VSProject), this.VSProject, false);
-                newNode.OleServiceProvider.AddService(typeof(SVSMDCodeDomProvider), this.CodeDomProvider, false);
-                return newNode;
+                newNode.OleServiceProvider.AddService(
+                    typeof(SVSMDCodeDomProvider), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
             }
 
-            return base.CreateFileNode(item);
+            return newNode;
         }
 
         /// <summary>
@@ -381,6 +462,29 @@ namespace Composestar.StarLight.VisualStudio.Project
 
         #endregion
 
+        #region Methods
+        /// <summary>
+        /// Creates the services exposed by this project.
+        /// </summary>
+        private object CreateServices(Type serviceType)
+        {
+            object service = null;
+            if (typeof(SVSMDCodeDomProvider) == serviceType)
+            {
+                service = this.CodeDomProvider;
+            }
+            else if (typeof(System.CodeDom.Compiler.CodeDomProvider) == serviceType)
+            {
+                service = this.CodeDomProvider.CodeDomProvider;
+            }
+            else if (typeof(VSLangProj.VSProject) == serviceType)
+            {
+                service = this.VSProject;
+            }
+            return service;
+        }
+        #endregion
+
 
         #region IVsProjectSpecificEditorMap2 Members
 
@@ -408,7 +512,7 @@ namespace Composestar.StarLight.VisualStudio.Project
                     result = true;
                     break;
                 case (int)__VSPSEPROPID.VSPSEPROPID_ProjectDefaultEditorName:
-                    result = "ComposeStar Form Editor";
+                    result = "Form Editor";
                     break;
             }
 
@@ -419,7 +523,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         {
             // Ideally we should at this point initalize a File extension to EditorFactory guid Map e.g.
             // in the registry hive so that more editors can be added without changing this part of the
-            // code. Composestar only makes usage of one Editor Factory and therefore we will return 
+            // code. StarLight only makes usage of one Editor Factory and therefore we will return 
             // that guid
             guidEditorType = EditorFactory.guidEditorFactory;
             return VSConstants.S_OK;
@@ -451,8 +555,9 @@ namespace Composestar.StarLight.VisualStudio.Project
             }
         }
         #endregion
+
     }
-    
+
     /// <summary>
     /// Type of outputfile extension supported by ComposeStar Project
     /// </summary>

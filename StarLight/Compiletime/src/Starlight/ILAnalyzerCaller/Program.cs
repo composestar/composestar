@@ -12,8 +12,8 @@ namespace Composestar.StarLight.ILAnalyzerCaller
         {
             if (args.Length != 1)
                 return;
-
-
+            
+            //IILAnalyzer analyzer = new ReflectionILAnalyzer();
             IILAnalyzer analyzer = new CecilILAnalyzer();
             analyzer.Initialize(args[0], null);
             

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Reflection;
+ 
 namespace Composestar.DataStore.LanguageModel
 {
     /// <summary>
@@ -12,6 +13,24 @@ namespace Composestar.DataStore.LanguageModel
         private string _name;
         private Int16 _ordinal;
         private string _parameterType;
+        private ParameterAttributes _parameterAttributes;
+
+
+        /// <summary>
+        /// Gets or sets the parameter attributes.
+        /// </summary>
+        /// <value>The parameter attributes.</value>
+        public ParameterAttributes ParameterAttributes
+        {
+            get
+            {
+                return _parameterAttributes;
+            }
+            set
+            {
+                _parameterAttributes = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the name.
