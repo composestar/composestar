@@ -72,6 +72,16 @@ public class Message {
 		this._selector = selector;
 	}
 
+	public Object getInner(){
+		if(_direction == OUTGOING)
+		{
+			return _sender;
+		}
+		else
+		{
+			return _target;
+		}
+	}
 	public Object getSender() {
 		return this._sender;
 	}
@@ -110,7 +120,18 @@ public class Message {
 		return MessagePool.getMessage(_sender, _target, _selector, _arguments, _messageKind);
 	}
 	
+	public void appendMessage(Object target, String selector){
+		//TODO
+	}
+	
+	public void prependMessage(Object target, String selector){
+		//TODO
+	}
+	
+	
 	public void returnMessage(){
 		MessagePool.returnMessage(this);
 	}
+	
+	
 }

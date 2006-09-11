@@ -1,9 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Actions;
 
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
-
-import java.util.Dictionary;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -15,12 +13,12 @@ import java.util.Dictionary;
  * Models the action that is produced when a message is rejected by an Error Filter
  * The action defined is the throw of a ErrorFilterException.
  */
-public class ErrorAction extends ComposeStarAction {
+public class ErrorAction extends StopFilterEvaluationAction {
     
     /**
      * The exception to be thrown when the action is executed
      */
-    private ErrorFilterException theErrorFilterException;
+    protected ErrorFilterException _theErrorFilterException;
     
     /**
      * Constructs an error action
@@ -30,10 +28,8 @@ public class ErrorAction extends ComposeStarAction {
      * @param exception the exception to throw when the action is executed
      * @roseuid 3F3652CA0027
      */
-    public ErrorAction(MessageList m, boolean accepted, ErrorFilterException exception) {
-		super(m, accepted);
-		theErrorFilterException = exception;
-		this.continueMessage = m;
+    public ErrorAction(ErrorFilterException exception) {
+    	_theErrorFilterException = exception;
     }
     
     /**
@@ -41,12 +37,7 @@ public class ErrorAction extends ComposeStarAction {
      * @return allways return null.
      * @roseuid 3F3652CA0031
      */
-    public Object execute() {
-		throw theErrorFilterException;     
+    public void execute(Message ignore) {
+		throw _theErrorFilterException;     
     }
-
-	public MessageList getMessageToContinueWith()
-	{
-		return this.continueMessage;
-	}
 }

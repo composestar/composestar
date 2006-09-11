@@ -1,10 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Actions;
 
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.*;
-import Composestar.RuntimeCore.Utils.Debug;
-
-import java.util.Dictionary;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -17,8 +13,11 @@ import java.util.Dictionary;
  * When executed, it redirects the message to the target specified during
  * filtering of the message in the Filter Specification.
  */
-public class SendAction extends ComposeStarAction 
+public class SendAction extends StopFilterEvaluationAction 
 {
+	protected Object _target;
+	protected String _selector;
+	
 	/**
 	 * Constructs a Dispatch Action with all the necessary information to do
 	 * the invocation.
@@ -28,28 +27,14 @@ public class SendAction extends ComposeStarAction
 	 * @param accepted
 	 * @roseuid 3F3652C9038D
 	 */
-	public SendAction(MessageList m, boolean accepted)
+	public SendAction(String target, String selector)
 	{
-		super(m, accepted);
-		shouldContinue = false;
-		this.continueMessage = m;
+		_target = target;
+		_selector = selector;
 	}
     
-	/**
-	 * Dispatches the message and returns what comes from the invocation.
-	 * This is actually delegated to the Invoker in the util package
-	 * @see dotNetComposeStar.util.Invoker#invoke
-	 * @return what ever the message dispatched returned.
-	 * @roseuid 3F3652C90392
-	 */
-	public Object execute() 
-	{
-		return this.continueMessage;
+	public void execute(Message message){
+		message.setSelector(_selector);
+		message.setTarget(_target);
 	}
-
-	public MessageList getMessageToContinueWith()
-	{
-		return this.continueMessage;
-	}
-	
 }

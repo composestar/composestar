@@ -15,7 +15,7 @@ public abstract class MessagePool {
 	{
 		_top++;
 		if(_top == _pool.length){
-			_top--;
+			_top--; //Drop Message from pool
 		}
 		else{
 			_pool[_top] = message;

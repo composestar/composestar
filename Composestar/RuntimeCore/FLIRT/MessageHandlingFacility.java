@@ -32,7 +32,7 @@ public abstract class MessageHandlingFacility {
 	
 	protected static Message deliver(Message message)
 	{
-		JoinPoint joinPoint = JoinPointPool.getJoinPoint(message);
-		return joinPoint.evaluateMessage(message);
+		JoinPoint.evaluateMessage(message);
+		return message;
 	}
 }
