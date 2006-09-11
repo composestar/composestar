@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar" default="build">
+
+	<import file="..${file.separator}common.xml" />	
+	
+	<!-- clean tasks -->
+	
+	<target name="clean">
+		<ant target="clean" dir="${build.core}" />
+		<antcall target="clean_dotnet" />
+		<antcall target="clean_java" />
+		<antcall target="clean_c" />
+	</target>
+	
+	<target name="clean_dotnet" if="available.dotnet">
+		<ant target="clean" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="clean_java" if="available.java">
+		<ant target="clean" dir="${build.java}" />
+	</target>
+	
+	<target name="clean_c" if="available.c">
+		<ant target="clean" dir="${build.c}" />
+	</target>
+	
+	<!-- build tasks -->
+	
+	<target name="core">
+		<ant target="build" dir="${build.core}" />
+	</target>
+	
+	<target name="dotnet" depends="core" if="available.dotnet">
+		<ant target="build" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="java" depends="core" if="available.java">
+		<ant target="build" dir="${build.java}" />
+	</target>
+	
+	<target name="c" depends="core" if="available.c">
+		<ant target="build" dir="${build.c}" />
+	</target>
+	
+	<target name="all" depends="core,dotnet,java,c" />
+	<target name="build" depends="all" />
+	
+	<!-- QA tasks -->
+	
+	<!-- execute the findbugs tool -->
+	<target name="findbugs">
+		<ant target="findbugs" dir="${build.core}" />
+		<antcall target="findbugs_dotnet" />
+	</target>
+	
+	<target name="findbugs_dotnet" if="available.dotnet">
+		<ant target="findbugs" dir="${build.dotnet}" />
+	</target>
+	
+	<!-- task selector -->
+	
+	<target name="select">
+        <input message="Enter the desired action"
+               validargs="clean,build,rebuild,core,dotnet,java,c,findbugs"
+               addproperty="build.target"
+               defaultvalue="core"
+        />
+        <antcall target="${build.target}" />
+    </target>
+
+</project>

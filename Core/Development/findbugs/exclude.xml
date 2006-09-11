@@ -1,0 +1,5 @@
+<FindBugsFilter>
+	<Match classregex=".*TreeWalker">
+	
+	</Match>
+</FindBugsFilter>
