@@ -1,0 +1,16 @@
+package LanguageModel;
+
+/**
+ * Summary description for BodyInfo.
+ */
+public class BodyInfo
+{
+	private java.util.List _calls;
+	//private java.util.List _inputfilters;    ??
+	//private java.util.List _outputfilters;   ??
+
+	public BodyInfo()
+	{
+		_calls = new java.util.ArrayList();
+	}
+}

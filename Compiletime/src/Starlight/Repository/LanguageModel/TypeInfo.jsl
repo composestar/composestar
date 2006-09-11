@@ -1,0 +1,47 @@
+package Repository.LanguageModel;
+
+
+/**
+ * Summary description for Class1
+ */
+public class TypeInfo
+{
+	private String _name;
+	private String _fullname;
+	private String _basetype;
+	private AssemblyInfo _assembly;
+	private boolean _isabstract;
+	private boolean _isinterface;
+	private boolean _issealed;
+	private boolean _isvaluetype;
+	private boolean _isenum;
+	private java.util.List _methods; 
+	
+	public TypeInfo()
+	{
+		_methods = new java.util.ArrayList();
+
+	}
+
+	// Name Property
+	public void set_name(String v) { _name = v; }
+	public String get_name() { return _name; }
+
+	// FullName Property
+	public void set_fullname(String v) { _fullname = v; }
+	public String get_fullname() { return _fullname; }
+
+	// BaseType Property
+	public void set_basetype(String v) { _basetype = v; }
+	public String get_basetype() { return _basetype; }
+
+	// AssemblyInfo Property
+	public void set_assembly(AssemblyInfo v) { _assembly = v; }
+	public AssemblyInfo get_assembly() { return _assembly; }
+
+	// Methods Property
+	public void set_methods(java.util.List v) { _methods = v; }
+	public java.util.List get_methods() { return _methods; }
+
+
+}

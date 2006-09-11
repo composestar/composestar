@@ -1,0 +1,14 @@
+package LanguageModel;
+
+/**
+ * Summary description for CallInfo.
+ */
+public class CallInfo
+{
+	public CallInfo()
+	{
+		//
+		// TODO: Add Constructor Logic here
+		//
+	}
+}
