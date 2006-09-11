@@ -15,6 +15,7 @@ namespace Composestar.DataStore.LanguageModel
         private string _name;
         private string _fullname;
         private string _basetype;
+        private AssemblyInfo _assembly;
         private bool _isabstract;
         private bool _isinterface;
         private bool _issealed;
@@ -57,6 +58,16 @@ namespace Composestar.DataStore.LanguageModel
         {
             get { return _basetype; }
             set { _basetype = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the assembly information for the type.
+        /// </summary>
+        /// <value>The assembly information.</value>
+        public AssemblyInfo Assembly
+        {
+            get { return _assembly; }
+            set { _assembly = value; }
         }
 
         /// <summary>
@@ -119,11 +130,19 @@ namespace Composestar.DataStore.LanguageModel
         /// Adds the method.
         /// </summary>
         /// <param name="methodinfo">The methodinfo.</param>
-        public void AddMethod(MethodInfo methodinfo)
+        public IList Methods
         {
-             if (_methods == null) _methods = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
-  
-            _methods.Add(methodinfo);
+            get {
+                if (_methods == null) _methods = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
+
+                return _methods;
+            }
+            set
+            {
+                if (_methods == null) _methods = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
+
+                _methods = value;
+            }
         }
 
         /// <summary>
