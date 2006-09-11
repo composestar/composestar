@@ -116,6 +116,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                 preferences.EnableCommenting = true;
                 preferences.AutoListMembers = true;
                 preferences.ParameterInformation = true;
+                preferences.LineNumbers = true;
                 
               //  preferences.Init();  
             }

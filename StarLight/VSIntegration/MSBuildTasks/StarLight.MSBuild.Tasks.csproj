@@ -69,6 +69,7 @@
     <None Include="ComposeStarCompilerTask.cs" />
     <Compile Include="BuildProjectTask.cs" />
     <Compile Include="MasterCallerTask.cs" />
+    <Compile Include="ReferencesHandlerTask.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="XMLGeneratorTask.cs" />
     <Compile Include="MasterManager\MasterManager.cs" />
