@@ -27,7 +27,7 @@ namespace Composestar.DataStore
 
         DataStoreContainer()
         {
-            database = Db4o.OpenFile(databaseFilename);
+            this.Open();
         }
 
         public static DataStoreContainer Instance
@@ -41,8 +41,8 @@ namespace Composestar.DataStore
         // Destructor, closes the database file
         ~DataStoreContainer()
         {
-            database.Close();
-            //database.Dispose();
+            this.Close();
+            database.Dispose();
         }
         #endregion
 
