@@ -123,6 +123,9 @@
   <data name="FileNotFound" xml:space="preserve">
     <value>The file {0} could not be found.</value>
   </data>
+  <data name="ImageIsBad" xml:space="preserve">
+    <value>The format of binary image {0} is invalid.</value>
+  </data>
   <data name="NotYetInitialized" xml:space="preserve">
     <value>The analyzer has not yet been initialized. Call the Initialize function first.</value>
   </data>

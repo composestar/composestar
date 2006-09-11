@@ -53,8 +53,23 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnalyzerFixture.cs" />
+    <Compile Include="CecilILAnalyzerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="InvalidImage.Exe">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestTarget.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Starlight\ILAnalyzer\ILAnalyzer.csproj">
+      <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
+      <Name>ILAnalyzer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
 </Project>

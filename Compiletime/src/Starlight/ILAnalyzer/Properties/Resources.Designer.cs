@@ -79,6 +79,15 @@ namespace Composestar.StarLight.ILAnalyzer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The format of binary image {0} is invalid..
+        /// </summary>
+        internal static string ImageIsBad {
+            get {
+                return ResourceManager.GetString("ImageIsBad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The analyzer has not yet been initialized. Call the Initialize function first..
         /// </summary>
         internal static string NotYetInitialized {
