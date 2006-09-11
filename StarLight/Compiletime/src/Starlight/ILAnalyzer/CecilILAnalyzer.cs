@@ -24,6 +24,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private string _fileName;
         private bool _isInitialized = false;
         private TimeSpan _lastDuration=TimeSpan.MinValue;
+        private AssemblyDefinition _targetAssemblyDefinition;
 
         /// <summary>
         /// Initializes the analyzer with the specified assembly name.
@@ -32,12 +33,23 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <param name="config">The config.</param>
         public void Initialize(string fileName, NameValueCollection config)
         {
+            #region Filename
             if (String.IsNullOrEmpty(fileName))
                 throw new ArgumentNullException("fileName", Properties.Resources.FileNameNullOrEmpty);
 
             if (!File.Exists(fileName))
                 throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, fileName), "fileName");
-             
+
+            try
+            {
+                _targetAssemblyDefinition = AssemblyFactory.GetAssembly(fileName);
+            }
+            catch (EndOfStreamException)
+            {
+                throw new BadImageFormatException(String.Format(Properties.Resources.ImageIsBad, fileName));
+            }
+            #endregion
+
             _fileName = fileName;
 
             _isInitialized = true;
@@ -57,19 +69,8 @@ namespace Composestar.StarLight.ILAnalyzer
             Stopwatch sw = new Stopwatch();
             sw.Start(); 
 
-            //Gets the AssemblyDefinition of "_assemblyName"
-            AssemblyDefinition assembly;
-            try
-            {
-                assembly = AssemblyFactory.GetAssembly(_fileName);
-            }
-            catch (Exception ex) // TODO catch more specific exception
-            {
-                throw;
-            }
-
             //Gets all types of the MainModule of the assembly
-            foreach (TypeDefinition type in assembly.MainModule.Types)
+            foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
             {
                 foreach (MethodDefinition method in type.Methods)
                 {
