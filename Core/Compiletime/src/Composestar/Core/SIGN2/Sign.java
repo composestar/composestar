@@ -217,7 +217,7 @@ public class Sign implements CTCommonModule {
                 // problems because it is treated as a generalization and not
                 // as an undistinguishable selector.
                 changed = checkMessage(concern, model,
-                        Message.UNDISTINGUISHABLE_SELECTOR.name,
+                        Message.UNDISTINGUISHABLE_SELECTOR.getName(),
                         distinguishable)
                         || changed;
             }
@@ -367,7 +367,7 @@ public class Sign implements CTCommonModule {
             ExecutionState state, boolean nameMatching,
             Target signatureMatchingTarget, HashSet distinguishable) {
         // case 2:
-        if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR.name)) {
+        if (!selector.equals(Message.UNDISTINGUISHABLE_SELECTOR.getName())) {
             return createFromTarget(concern, state, selector);
         }
         // case 7:
@@ -498,7 +498,7 @@ public class Sign implements CTCommonModule {
                     Message.UNDISTINGUISHABLE_SELECTOR)) {
                 targetMethod = method.getClone(method.Name, targetType);
             } else {
-                targetMethod = method.getClone(dispSelector.name, targetType);
+                targetMethod = method.getClone(dispSelector.getName(), targetType);
             }
 
             if (dispTarget.name.equals("inner")) {
@@ -618,7 +618,7 @@ public class Sign implements CTCommonModule {
                     Message.UNDISTINGUISHABLE_SELECTOR)) {
                 targetMethod = method.getClone(method.Name, targetType);
             } else {
-                targetMethod = method.getClone(dispSelector.name, targetType);
+                targetMethod = method.getClone(dispSelector.getName(), targetType);
             }
 
             // then do the check:
@@ -724,7 +724,7 @@ public class Sign implements CTCommonModule {
                     + "' is not added" + " to the signature of concern '"
                     + concern.name + "' " + "because the dispatch target '"
                     + dispTarget.name + '(' + targetConcern.name
-                    + ")' does not contain method '" + dispSelector.name + '\'',
+                    + ")' does not contain method '" + dispSelector.getName() + '\'',
                     state.getFlowNode().getRepositoryLink());
         }
     }

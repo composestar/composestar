@@ -5,15 +5,14 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: MatchingPart.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 
 public class MatchingPart extends AbstractPattern {
   //public MatchingType matchType; -> get from MatchingPartAST
-  public MatchingPartAST mpa; 
-
+  public MatchingPartAST mpa;
 
   /**
    * @roseuid 401FAA66001C
@@ -26,6 +25,8 @@ public class MatchingPart extends AbstractPattern {
   public MatchingPart(MatchingPartAST abstr) {
 	super();
 	mpa = abstr;
+	target = mpa.getTarget();
+	selector = new MessageSelector(mpa.getSelector());
   }
 
   /**
@@ -46,24 +47,8 @@ public class MatchingPart extends AbstractPattern {
     mpa.setMatchType(matchTypeValue);
   }
 
-public MessageSelector getSelector() {
-	return mpa.getSelector();
-}
-
-public Target getTarget() {
-	return mpa.getTarget();
-}
-
 public void Pattern() {
 	mpa.Pattern();
-}
-
-public void setSelector(MessageSelector selectorValue) {
-	mpa.setSelector(selectorValue);
-}
-
-public void setTarget(Target targetValue) {
-	mpa.setTarget(targetValue);
 }
 
 public MatchingPartAST getMpa() {

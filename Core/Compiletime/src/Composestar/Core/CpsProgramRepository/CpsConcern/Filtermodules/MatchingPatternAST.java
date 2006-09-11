@@ -72,7 +72,7 @@ public class MatchingPatternAST extends ContextRepositoryEntity {
    * @param substitutionPartValue
    * @roseuid 401FAA65009D
    */
-  public void addSubstitutionPart(SubstitutionPart substitutionPartValue) {
+  public void addSubstitutionPart(SubstitutionPartAST substitutionPartValue) {
     this.substitutionParts.addElement( substitutionPartValue );
   }
 }

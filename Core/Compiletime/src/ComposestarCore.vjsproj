@@ -99,6 +99,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\AbstractPatternAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\And.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -249,6 +254,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MessageSelectorAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Method.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -290,6 +300,11 @@
                 />
                 <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SubstitutionPart.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SubstitutionPartAST.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
