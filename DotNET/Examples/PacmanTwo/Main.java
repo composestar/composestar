@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Main.java,v 1.2 2006/09/05 11:33:48 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo;
 
@@ -38,7 +38,7 @@ public class Main extends Frame
 {
 	public Main(String[] args)
 	{
-		this.setSize(512, 512);
+		this.setSize(640, 512);
 		this.setTitle("Pacman* 2.0");
 		this.setBackground(java.awt.Color.black);
 		this.setLayout(new BorderLayout());
@@ -84,7 +84,7 @@ public class Main extends Frame
 
 	public static void main(String[] args) 
 	{
-		//System.out.println("Pacman2 Starting ...");
+		System.out.println("Pacman* 2.0 Starting ...");
 		new Main(args);
 	}
 }

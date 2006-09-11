@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Viewport.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.GUI;
 
@@ -70,7 +70,7 @@ public class Viewport extends Panel implements Tickable
 		fpsTime += delta;
 		fpsCnt++;
 		if ((game == null) || (game.level() == null)) return;
-		renderAll(delta);
+		render(delta);
 	}
 
 	public void reset()
@@ -79,7 +79,7 @@ public class Viewport extends Panel implements Tickable
 
 	/* Rendering code */
 
-	protected void renderAll(float delta)
+	protected void render(float delta)
 	{
 		if (graphics == null) graphics = getGraphics();
 
@@ -98,8 +98,7 @@ public class Viewport extends Panel implements Tickable
 		clearBuffer();
 		// -- float buffering
 
-		renderLevel(bufferGraphics, delta);
-		renderGameElements(bufferGraphics, delta);
+		renderAll(bufferGraphics, delta);
 
 		bufferGraphics.setColor(Color.YELLOW);
 		bufferGraphics.drawString("FPS: "+realFPS, 50, 50);
@@ -107,7 +106,13 @@ public class Viewport extends Panel implements Tickable
 		graphics.drawImage(bufferImage, 0, 0, this);
 	}
 
-	public void clearBuffer() 
+	protected void renderAll(Graphics g, float delta)
+	{
+		renderLevel(bufferGraphics, delta);
+		renderGameElements(bufferGraphics, delta);
+	}
+
+	protected void clearBuffer() 
 	{
 		if( bufferGraphics != null )
 		{
@@ -192,7 +197,7 @@ public class Viewport extends Panel implements Tickable
 	/**
 	 * Create the used view classes
 	 */
-	public void createViews()
+	protected void createViews()
 	{
 		new PacmanView(this);
 		new GhostView(this);
@@ -201,7 +206,7 @@ public class Viewport extends Panel implements Tickable
 	/**
 	 * Get the view instance to render the given game elements
 	 */
-	public View getViewFor(GameElement ge)
+	protected View getViewFor(GameElement ge)
 	{
 		View v = (View) views.get(ge.getClass());
 		return v;

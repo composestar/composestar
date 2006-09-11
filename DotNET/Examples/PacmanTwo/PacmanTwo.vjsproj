@@ -83,7 +83,7 @@
                 <Reference
                     Name = "ComposeStarRuntimeInterpreter"
                     AssemblyName = "ComposeStarRuntimeInterpreter"
-                    HintPath = "..\..\..\..\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
+                    HintPath = "C:\Program Files\ComposeStar\binaries\ComposeStarRuntimeInterpreter.dll"
                 />
             </References>
         </Build>
@@ -175,6 +175,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Concerns\Scoring.cps"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Concerns\Sounds.cps"
                     BuildAction = "None"
                 />
@@ -200,6 +204,16 @@
                 />
                 <File
                     RelPath = "GUI\Viewport.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scoring\Score.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Scoring\ScoreView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

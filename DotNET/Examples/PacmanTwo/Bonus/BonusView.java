@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Controller.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.Bonus;
 
@@ -32,7 +32,9 @@ public class BonusView extends PacmanTwo.GUI.ImageView
 
 		final String[] files = 
 				  { 
-					  "bonus/cherry.gif"
+					  "bonus/cherry.gif",
+					  "bonus/strawberry.gif",
+					  "bonus/orange.gif"
 				  };
 		getImages(files);
 	}
