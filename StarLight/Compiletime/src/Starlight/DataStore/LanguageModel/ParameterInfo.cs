@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
- 
+
 namespace Composestar.DataStore.LanguageModel
 {
     /// <summary>
@@ -79,6 +79,7 @@ namespace Composestar.DataStore.LanguageModel
                 _parameterType = value;
             }
         }
-   
+
     }
 }
+

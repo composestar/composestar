@@ -98,7 +98,7 @@ namespace TestILAnalyzer
 
         [TestMethod]      
         [DeploymentItem("TestTarget.exe")]
-        public void ExtractTypesreturnValues()
+        public void ExtractTypesReturnValues()
         {
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
             analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);

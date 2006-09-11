@@ -103,7 +103,7 @@ namespace Composestar.DataStore
             {
                 return true;
             });
-            
+
             return types.GetEnumerator();
         }
 
@@ -123,6 +123,6 @@ namespace Composestar.DataStore
         }
         #endregion
 
-
     }
 }
+
