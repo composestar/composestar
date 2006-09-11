@@ -5,7 +5,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
-import Composestar.RuntimeCore.Utils.List;
 
 import java.util.Dictionary;
 
@@ -14,7 +13,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: SubstitutionPartRuntime.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id$
  */
 public class SubstitutionPartRuntime extends AbstractPatternRuntime 
 {

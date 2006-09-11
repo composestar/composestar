@@ -13,7 +13,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterElementRuntime.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
+ * $Id$
  */
 public class FilterElementRuntime extends ReferenceEntityRuntime implements Interpretable 
 {
@@ -55,7 +55,6 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     public boolean interpret(MessageList m, Dictionary context) {
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tInterpreting FilterElementCompositionOperatorRuntime...");
     	boolean returnvalue = true;
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tCondition: "+this.conditionpart.GetType());
     	if(this.conditionpart.interpret(m,context))
     	{
     		boolean matches = false;
