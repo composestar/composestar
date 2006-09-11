@@ -60,7 +60,7 @@ namespace Composestar.StarLight.VisualStudio.Project
                         ComposeStarFileNode node = projMgr.NodeFromItemId(itemid) as ComposeStarFileNode;
                         if (null != node)
                         {
-                            node.RunGenerator((string)document);
+                           // node.RunGenerator((string)document);
                         }
                     }
                  }

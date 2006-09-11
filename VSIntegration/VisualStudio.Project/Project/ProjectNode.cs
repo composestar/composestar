@@ -5746,7 +5746,7 @@ namespace Microsoft.VisualStudio.Package
 		{
 			this.ID = VSConstants.VSITEMID_ROOT;
 			this.tracker = new TrackDocumentsHelper(this);
-			this.imageList = Utilities.GetImageList(typeof(ProjectNode).Assembly.GetManifestResourceStream("Resources.imagelis.bmp"));
+			this.imageList = Utilities.GetImageList(typeof(ProjectNode).Assembly.GetManifestResourceStream("Composestar.StarLight.VisualStudio.Project.Resources.imagelis.bmp"));
 			this.NodeProperties = new ProjectNodeProperties(this);
 		}
 
