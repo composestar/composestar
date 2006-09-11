@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Composestar.DataStore.LanguageModel
 {
+
     public class MethodInfo
     {
         private string _name;
@@ -40,15 +41,17 @@ namespace Composestar.DataStore.LanguageModel
         /// <value>The parameters.</value>
         public IList Parameters
         {
-            get {
+            get
+            {
                 if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
-                
-                return _parameters; 
+
+                return _parameters;
             }
-            set {
+            set
+            {
                 if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
- 
-                _parameters = value; 
+
+                _parameters = value;
             }
         }
 

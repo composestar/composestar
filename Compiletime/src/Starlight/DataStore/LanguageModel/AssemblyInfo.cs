@@ -28,10 +28,11 @@ namespace Composestar.DataStore.LanguageModel
             {
                 return _version;
             }
-            set {
+            set
+            {
                 _version = value;
             }
         }
-        
+
     }
 }

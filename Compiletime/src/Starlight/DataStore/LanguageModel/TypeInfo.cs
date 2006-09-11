@@ -6,7 +6,6 @@ using System.Text;
 
 namespace Composestar.DataStore.LanguageModel
 {
-
     /// <summary>
     /// Contains information about the types.
     /// </summary>
@@ -132,7 +131,8 @@ namespace Composestar.DataStore.LanguageModel
         /// <param name="methodinfo">The methodinfo.</param>
         public IList Methods
         {
-            get {
+            get
+            {
                 if (_methods == null) _methods = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
 
                 return _methods;

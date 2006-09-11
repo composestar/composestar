@@ -253,7 +253,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VisualStudio.LanguageServices\StarLight.VisualStudio.LanguageServices.csproj">
       <Project>{74788B39-49AB-4708-AD96-B5558AF48C7A}</Project>
-      <Name>ComposeStar.VisualStudio.LanguageServices</Name>
+      <Name>StarLight.VisualStudio.LanguageServices</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
