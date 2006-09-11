@@ -39,7 +39,7 @@
     <Compile Include="CecilILWeaverInitializationFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Compiletime\src\Starlight\ILWeaver\ILWeaver.csproj">
+    <ProjectReference Include="..\..\Compiletime\src\Starlight\ILWeaver\ILWeaver.csproj">
       <Project>{7A30904D-40C9-408D-813E-12E16C488EAA}</Project>
       <Name>ILWeaver</Name>
     </ProjectReference>
