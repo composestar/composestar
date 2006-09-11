@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: MessageSelector.java,v 1.3 2006/02/16 12:51:21 composer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -22,21 +22,29 @@ import java.util.*;
  */
 public class MessageSelector extends ContextRepositoryEntity {
 
-  /**
-   * @modelguid {CA61B6DA-3A70-4676-BE31-559D50E68699}
+  public MessageSelectorAST msAST;
+  /*name -> get from AST -> have to copy name from the  MessageSelectorAST, FIRE2 uses the class as well and delegation gets us a null pointer
+   * so from the two options: copying and creating a dummy AST, the first is preferrable 
    */
-  public String name;
-  public Vector typeList;
+  public String name;  
+  
+  //public Vector typeList; -> get from AST
 
 
   /**
    * @roseuid 404DDA6F03AC
+   * @deprecated
    */
   public MessageSelector() {
     super();
-    typeList = new Vector();
+    //typeList = new Vector();
   }
 
+  public MessageSelector(MessageSelectorAST amsAST){
+	  super();
+	  msAST = amsAST;
+	  name = msAST.getName();
+  }
 
   /**
    * @return java.lang.String
@@ -45,7 +53,7 @@ public class MessageSelector extends ContextRepositoryEntity {
    * @roseuid 401FAA6703CB
    */
   public String getName() {
-    return name;
+    return name;//msAST.getName();
   }
 
 
@@ -55,7 +63,8 @@ public class MessageSelector extends ContextRepositoryEntity {
    * @roseuid 401FAA6703CC
    */
   public void setName(String nameValue) {
-    this.name = nameValue;
+    //msAST.setName(nameValue);
+	  name = nameValue;
   }
 
 
@@ -69,8 +78,7 @@ public class MessageSelector extends ContextRepositoryEntity {
    * @roseuid 401FAA6703D6
    */
   public boolean addParameterType(ConcernReference type) {
-    typeList.addElement(type);
-    return (true);
+    return msAST.addParameterType(type);
   }
 
 
@@ -82,9 +90,7 @@ public class MessageSelector extends ContextRepositoryEntity {
    * @roseuid 401FAA680001
    */
   public ConcernReference removeParameterType(int index) {
-    Object o = typeList.elementAt(index);
-    typeList.removeElementAt(index);
-    return ((ConcernReference) o);
+    return msAST.removeParameterType(index);
   }
 
 
@@ -96,7 +102,7 @@ public class MessageSelector extends ContextRepositoryEntity {
    * @roseuid 401FAA68000C
    */
   public ConcernReference getParameterType(int index) {
-    return ((ConcernReference) typeList.elementAt(index));
+    return msAST.getParameterType(index);
   }
 
 
@@ -107,6 +113,10 @@ public class MessageSelector extends ContextRepositoryEntity {
    * @roseuid 401FAA680020
    */
   public Iterator getParameterTypeIterator() {
-    return (new CPSIterator(typeList));
+    return msAST.getParameterTypeIterator();
+  }
+
+  public MessageSelectorAST getMsAST() {
+	return msAST;
   }
 }

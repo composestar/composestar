@@ -5,14 +5,13 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: MatchingPart.java,v 1.1 2006/02/16 23:03:50 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 
-public class MatchingPartAST extends AbstractPattern {
+public class MatchingPartAST extends AbstractPatternAST {
   public MatchingType matchType;
-
 
   /**
    * @roseuid 401FAA66001C

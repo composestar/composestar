@@ -20,7 +20,7 @@ public class MatchingPattern extends ContextRepositoryEntity {
   public MatchingPatternAST mpa; 
   
   public Vector matchingParts;
-  //public Vector substitutionParts;
+  public Vector substitutionParts;
 
 
   /**
@@ -30,12 +30,14 @@ public class MatchingPattern extends ContextRepositoryEntity {
   public MatchingPattern() {
     super();
     matchingParts = new Vector();
+    substitutionParts = new Vector();
   }
   
   public MatchingPattern(MatchingPatternAST mpAST){
 	  super();
 	  mpa = mpAST;
 	  matchingParts = new Vector();
+	  substitutionParts = new Vector();
 	  
 	  Iterator it = mpa.getMatchingPartsIterator();
 	  while(it.hasNext()){
@@ -43,6 +45,14 @@ public class MatchingPattern extends ContextRepositoryEntity {
 		  mp.setParent(this);
 		  matchingParts.add(mp);
 		  DataStore.instance().addObject(mp);
+	  }
+	  
+	  it = mpa.getSubstitutionPartsIterator();
+	  while(it.hasNext()){
+		  SubstitutionPart sp = new SubstitutionPart((SubstitutionPartAST) it.next());
+		  sp.setParent(this);
+		  substitutionParts.add(sp);
+		  DataStore.instance().addObject(sp);
 	  }
   }
 
@@ -77,11 +87,11 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65008A
    */
   public Vector getSubstitutionParts() {
-    return mpa.getSubstitutionParts();
+	  return substitutionParts;
   }
 
   public Iterator getSubstitutionPartsIterator() {
-    return mpa.getSubstitutionPartsIterator();
+	  return new CPSIterator( substitutionParts );
   }
 
 
@@ -90,7 +100,7 @@ public class MatchingPattern extends ContextRepositoryEntity {
    * @roseuid 401FAA65009D
    */
   public void addSubstitutionPart(SubstitutionPart substitutionPartValue) {
-    mpa.addSubstitutionPart(substitutionPartValue );
+	  this.substitutionParts.addElement( substitutionPartValue );
   }
 
 public MatchingPatternAST getMpa() {

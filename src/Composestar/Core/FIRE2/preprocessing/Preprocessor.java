@@ -172,7 +172,7 @@ public class Preprocessor implements CTCommonModule{
             URL genUrl = this.getClass().getResource( GENERATE_FLOW_GRAMMAR_FILE );
             String fileName = genUrl.getFile();
             Debug.out( Debug.MODE_DEBUG, MODULE_NAME, fileName );
-            if ( fileName.indexOf('!' ) >= 0 ){
+            if ( fileName.indexOf('!' ) >= 0){
                 //load from jar:
                 JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
                 
@@ -185,8 +185,10 @@ public class Preprocessor implements CTCommonModule{
                 //load from directory:
                 GpsGrammar gpsLoader = new GpsGrammar(new LayedOutXml());
                 
-                this.generateFlowGrammar = 
-            	    (RuleViewGrammar) gpsLoader.unmarshal( new File(genUrl.getFile()) );
+                File f = new File(genUrl.getFile());
+                RuleViewGrammar rvg = (RuleViewGrammar)gpsLoader.unmarshal(f); 
+                
+                this.generateFlowGrammar = rvg;
                 
                 URL runUrl = this.getClass().getResource( RUNTIME_GRAMMAR_FILE );
             	this.runtimeGrammar =
@@ -194,7 +196,8 @@ public class Preprocessor implements CTCommonModule{
             }
         }
         catch (Exception exc){
-            throw new RuntimeException( "Loading grammars failed", exc );
+            exc.printStackTrace();
+        	//throw new RuntimeException( "Loading grammars failed", exc );
         }
     }
     

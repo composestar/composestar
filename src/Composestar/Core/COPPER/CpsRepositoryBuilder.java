@@ -36,7 +36,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.InternalAS
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPatternAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.NameMatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
@@ -45,6 +45,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Parameteri
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SEQfilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
@@ -95,11 +96,11 @@ public class CpsRepositoryBuilder
   private MatchingPartAST mp;
   private MatchingPatternAST mpat;
   private MatchingType mt;
-  private MessageSelector s;
+  private MessageSelectorAST s;
   private Method m;
   private MethodBinding mb;
   private SelectorDefinition sd;
-  private SubstitutionPart sp;
+  private SubstitutionPartAST sp;
   private SuperImposition si;
   private Target ta;
 
@@ -987,7 +988,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addSubstitutionPart(String target, String selector, Vector argTypes,int lineNumber) {
     workingOnMatching = false; //busy with substitution
-    sp = new SubstitutionPart();
+    sp = new SubstitutionPartAST();
 	  sp.setDescriptionFileName(filename);
 	  sp.setDescriptionLineNumber(lineNumber);
     sp.setParent(mpat);
@@ -1045,7 +1046,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     int j;
 
     //fixme: do something special with * here
-    s = new MessageSelector();
+    s = new MessageSelectorAST();
 	  s.setDescriptionFileName(filename);
 	  s.setDescriptionLineNumber(lineNumber);
     s.setName(name);

@@ -17,9 +17,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPatternAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
@@ -91,7 +91,7 @@ public class InnerDispatcher {
 		dor.setConcern(cc.getName());
 		mtarget.setRef(dor);
 		dor.setFilterModule(fm.getName());
-		MessageSelector selector = new MessageSelector();
+		MessageSelectorAST selector = new MessageSelectorAST();
 		selector.setName("*");
 		MatchingPatternAST mpattern = new MatchingPatternAST();
 		MatchingPartAST mpart = new MatchingPartAST();
@@ -100,7 +100,7 @@ public class InnerDispatcher {
 		mpart.setMatchType(new SignatureMatchingType());
 		mpattern.addMatchingPart(mpart);
 		
-		SubstitutionPart spart = new SubstitutionPart();
+		SubstitutionPartAST spart = new SubstitutionPartAST();
 		Target starget = new Target();
 		starget.setName("inner");
 		

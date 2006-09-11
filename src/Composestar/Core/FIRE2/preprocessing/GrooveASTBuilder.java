@@ -532,7 +532,7 @@ public class GrooveASTBuilder {
         
         //selector:
         MessageSelector selector = substitutionPart.selector;
-        Node selectorNode = (Node) selectorTable.get( selector.name );
+        Node selectorNode = (Node) selectorTable.get( selector.getName() );
         if ( selectorNode == null ){
             selectorNode = buildSelectorNode( selector, graph );
         }
@@ -542,7 +542,7 @@ public class GrooveASTBuilder {
         graph.addEdge( edge );
         
         //target:
-        Target target = substitutionPart.target;
+        Target target = substitutionPart.getTarget();
         Node targetNode = (Node) targetTable.get( target.name );
         if ( targetNode == null ){
             targetNode = buildTargetNode( target, graph );
@@ -576,7 +576,7 @@ public class GrooveASTBuilder {
             selector = Message.STAR_SELECTOR;
         else
             selector = substitutionPart.selector;
-        Node selectorNode = (Node) selectorTable.get( selector.name );
+        Node selectorNode = (Node) selectorTable.get( selector.getName() );
         if ( selectorNode == null ){
             selectorNode = buildSelectorNode( selector, graph );
         }
@@ -590,7 +590,7 @@ public class GrooveASTBuilder {
         if ( substitutionPart == null )
             target = Message.STAR_TARGET;
         else
-            target = substitutionPart.target;
+            target = substitutionPart.getTarget();
         Node targetNode = (Node) targetTable.get( target.name );
         if ( targetNode == null ){
             targetNode = buildTargetNode( target, graph );
@@ -633,7 +633,7 @@ public class GrooveASTBuilder {
         
         //selector:
         MessageSelector selector = matchingPart.getSelector();
-        Node selectorNode = (Node) selectorTable.get( selector.name );
+        Node selectorNode = (Node) selectorTable.get( selector.getName() );
         if ( selectorNode == null ){
             selectorNode = buildSelectorNode( selector, graph );
         }

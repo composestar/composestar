@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: AbstractPattern.java,v 1.2 2006/02/16 12:51:20 composer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -15,11 +15,21 @@ public abstract class AbstractPattern extends ContextRepositoryEntity {
     public Target target;
     public MessageSelector selector;
     
+    public AbstractPatternAST apAST;
+    
     /**
      * @roseuid 404DDA71039C
+     * @deprecated
      */
     public AbstractPattern() {
-    super();     
+    	super();     
+    }
+    
+    public AbstractPattern(AbstractPatternAST anapAST) {
+    	super();
+    	apAST = anapAST;
+    	
+    	selector = new MessageSelector(anapAST.getSelector());
     }
     
     /**
@@ -43,7 +53,7 @@ public abstract class AbstractPattern extends ContextRepositoryEntity {
      * @roseuid 401FAA670140
      */
     public void setTarget(Target targetValue) {
-    this.target = targetValue;     
+    	target = targetValue;     
     }
     
     /**

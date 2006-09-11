@@ -19,6 +19,7 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -363,8 +364,8 @@ public class FireModel {
     public static Message getEntranceMessage( String selector ){
         Target t = new Target();
         t.name = "inner";
-        MessageSelector s = new MessageSelector();
-        s.name = selector;
+        MessageSelector s = new MessageSelector(new MessageSelectorAST());
+        s.setName(selector);
         
         return new Message( t, s );
     }
@@ -385,7 +386,7 @@ public class FireModel {
                 if ( !Message.checkEquals( 
                         message.getSelector(), Message.STAR_SELECTOR) )
                 {
-                    distinguishable.add( message.getSelector().name );
+                    distinguishable.add( message.getSelector().getName() );
                 }
             }
         }
