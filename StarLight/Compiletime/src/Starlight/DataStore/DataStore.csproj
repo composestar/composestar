@@ -7,8 +7,8 @@
     <ProjectGuid>{7276176D-8B5A-436F-A685-AA3D8A23C981}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Composestar.DataStoreDotNET</RootNamespace>
-    <AssemblyName>DataStoreDotNET</AssemblyName>
+    <RootNamespace>Composestar.DataStore</RootNamespace>
+    <AssemblyName>DataStore</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,6 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStore.cs" />
+    <Compile Include="LanguageModel\AssemblyInfo.cs" />
+    <Compile Include="LanguageModel\CallInfo.cs" />
     <Compile Include="LanguageModel\MethodInfo.cs" />
     <Compile Include="LanguageModel\ParameterInfo.cs" />
     <Compile Include="LanguageModel\TypeInfo.cs" />

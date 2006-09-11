@@ -10,7 +10,7 @@ namespace Composestar.DataStore.LanguageModel
         private string _name;
         private string _returntype;
         private IList _parameters;  // initialize db-aware with ObjectContainer().Ext().Collections().NewLinkedList(), which doesnt support generics
-        
+        private IList _calls;
         // TODO: add the folling properties: callconstruction??, iscontructor, isabstract, isfinal, isprivate, ispublic, isstactic, isvirtual
 
 
@@ -49,6 +49,26 @@ namespace Composestar.DataStore.LanguageModel
                 if (_parameters == null) _parameters = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
  
                 _parameters = value; 
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the calls.
+        /// </summary>
+        /// <value>The calls made by this method.</value>
+        public IList Calls
+        {
+            get
+            {
+                if (_calls == null) _calls = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
+
+                return _calls;
+            }
+            set
+            {
+                if (_calls == null) _calls = DataStoreContainer.Instance.GetObjectContainer().Ext().Collections().NewLinkedList();
+
+                _calls = value;
             }
         }
 

@@ -37,16 +37,17 @@ namespace Composestar.DataStore
                 return instance;
             }
         }
-        #endregion
 
         // Destructor, closes the database file
         ~DataStoreContainer()
         {
             database.Close();
-            database.Dispose();
+            //database.Dispose();
         }
+        #endregion
 
-       [MethodImpl(MethodImplOptions.Synchronized)]
+        #region Database IO
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Open()
         {
             if (!_open)
@@ -67,12 +68,13 @@ namespace Composestar.DataStore
             }
         }
 
-
         public ObjectContainer GetObjectContainer()
         {
             return database;
         }
+        #endregion
 
+        #region Type Accessabilty
         public void AddType(LanguageModel.TypeInfo typeinfo)
         {
             if (!_open) this.Open();
@@ -119,8 +121,8 @@ namespace Composestar.DataStore
 
             return null;
         }
+        #endregion
 
 
-   
     }
 }
