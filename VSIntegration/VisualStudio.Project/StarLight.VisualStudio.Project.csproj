@@ -225,9 +225,9 @@
     <None Include="Project\Diagrams\ReferenceClasses.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ZipItem Include="Templates\ProjectItems\Concern\__TemplateIcon.ico" />
     <ZipItem Include="Templates\ProjectItems\Concern\Concern.cps" />
     <ZipItem Include="Templates\ProjectItems\Concern\StarLight.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\Concern\__TemplateIcon.ico" />
     <ZipItem Include="Templates\ProjectItems\Text\TextFile.txt" />
     <ZipItem Include="Templates\ProjectItems\Text\TextFile.vstemplate" />
     <ZipItem Include="Templates\ProjectItems\Text\Text.ico" />
