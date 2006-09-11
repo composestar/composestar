@@ -6,5 +6,10 @@
 	<classpathentry kind="lib" path="binaries/prolog/prolog.jar"/>
 	<classpathentry kind="lib" path="binaries/prolog/prolog-src.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="binaries/groove/castor-0_9_5_2-xml.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/groove-1_2_0.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/jgraph.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/xerces-2_6_0-xercesImpl.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/xerces-2_6_0-xml-apis.jar"/>
 	<classpathentry kind="output" path="src"/>
 </classpath>
