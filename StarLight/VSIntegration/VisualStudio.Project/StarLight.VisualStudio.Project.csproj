@@ -97,9 +97,6 @@
     <Compile Include="ComposeStarFileNode.cs" />
     <Compile Include="ComposeStarFileNodeProperties.cs" />
     <Compile Include="ComposeStarConfigProvider.cs" />
-    <Compile Include="Package.LoadKey.cs" />
-    <Compile Include="Package.Splash.HelpAbout.cs" />
-    <Compile Include="Package.Splash.HelpAbout.LoadKey.cs" />
     <Compile Include="Project\AggregatableProjectInterops.cs" />
     <Compile Include="Project\AssemblyReferenceNode.cs" />
     <Compile Include="Project\Attributes.cs" />
@@ -201,11 +198,6 @@
     <Compile Include="Resources.cs" />
     <Compile Include="SelectionElementValueChangedListener.cs" />
     <Compile Include="VSMDComposeStarProvider.cs" />
-    <Compile Include="VSPackage.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VSPackage.resx</DependentUpon>
-    </Compile>
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -213,13 +205,7 @@
     <EmbeddedResource Include="Resources.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="VSPackage.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>VSPackage.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -264,10 +250,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Project\Resources\imagelis.bmp" />
-    <None Include="Resources\300.bmp" />
     <Content Include="Resources\GenericPackage.bmp" />
     <Content Include="Resources\GenericPackage.ico" />
-    <Content Include="Resources\Package.ico" />
+    <EmbeddedResource Include="Resources\imagelis.bmp" />
     <EmbeddedResource Include="Resources\StarLightImageList.bmp" />
   </ItemGroup>
   <PropertyGroup>

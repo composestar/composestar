@@ -107,7 +107,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 
         internal SR()
         {
-            resources = new System.Resources.ResourceManager("Resources", this.GetType().Assembly);
+            resources = new System.Resources.ResourceManager("Composestar.StarLight.VisualStudio.Project.Resources", this.GetType().Assembly);
         }
 
         private static SR GetLoader()

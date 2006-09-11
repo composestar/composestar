@@ -1,32 +1,22 @@
-
-/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-This code is licensed under the Visual Studio SDK license terms.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
-
 using System;
-using System.Text;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
+using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
+using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.Package.Automation;
-using Microsoft.Win32;
-using EnvDTE;
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-using OleConstants = Microsoft.VisualStudio.OLE.Interop.Constants;
-using VsCommands = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using VsCommands2K = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
+using VsCommands = Microsoft.VisualStudio.VSConstants.VSStd97CmdID;
+using Microsoft.Win32;
+
+using EnvDTE;
 
 namespace Composestar.StarLight.VisualStudio.Project
 {
@@ -49,7 +39,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             }
         }
         /// <summary>
-        /// Returns the SubType of an Concern FileNode. It is 
+        /// Returns the SubType of a Concern FileNode. 
         /// </summary>
         public string SubType
         {
