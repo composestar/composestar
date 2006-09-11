@@ -1,0 +1,12 @@
+package Repository.LanguageModel;
+
+/**
+ * Summary description for AssemblyInfo.
+ */
+public class AssemblyInfo
+{
+	public AssemblyInfo()
+	{
+
+	}
+}

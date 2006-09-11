@@ -1,0 +1,30 @@
+package Repository.LanguageModel;
+
+/**
+ * Summary description for MethodInfo.
+ */
+public class MethodInfo
+{
+	private String _name;
+	private String _returntype;
+	private AssemblyInfo _assembly;
+	private java.util.List _parameters;
+
+	public MethodInfo()
+	{
+		_parameters = new java.util.ArrayList();
+	}
+
+	// Name Property
+	public void set_name(String v) { _name = v; }
+	public String get_name() { return _name; }
+
+	// ReturnType Property
+	public void set_returntype(String v) { _returntype = v; }
+	public String get_returntype() { return _returntype; }
+
+	// Parameters Property
+	public void set_parameters(java.util.List v) { _parameters = v; }
+	public java.util.List get_parameters() { return _parameters; }
+
+}

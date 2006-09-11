@@ -1,0 +1,14 @@
+package Repository.LanguageModel;
+
+/**
+ * Summary description for ParameterInfo.
+ */
+public class ParameterInfo
+{
+	public ParameterInfo()
+	{
+		//
+		// TODO: Add Constructor Logic here
+		//
+	}
+}
