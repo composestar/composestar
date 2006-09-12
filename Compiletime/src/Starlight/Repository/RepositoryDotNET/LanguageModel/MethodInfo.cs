@@ -6,16 +6,23 @@ using System.Text;
 namespace Composestar.Repository.LanguageModel
 {
 
+    /// <summary>
+    /// Contains information about a method.
+    /// </summary>
     public class MethodInfo
     {
         private string _name;
         private string _returntype;
-        private IList<ParameterInfo> _parameters;  // initialize db-aware with ObjectContainer().Ext().Collections().NewLinkedList(), which doesnt support generics
-        private IList<CallInfo> _calls;
-        // TODO: add the folling properties: callconstruction??, iscontructor, isabstract, isfinal, isprivate, ispublic, isstactic, isvirtual
+        private IList<ParameterInfo> _parameters; 
+        private MethodBody _methodBody;
+         // TODO: add the folling properties: callconstruction??, iscontructor, isabstract, isfinal, isprivate, ispublic, isstactic, isvirtual
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:MethodInfo"/> class.
+        /// </summary>
         public MethodInfo()
         {
+            _methodBody = new MethodBody();
             _parameters = new List<Repository.LanguageModel.ParameterInfo>();
             _calls = new List<Repository.LanguageModel.CallInfo>();
         }
@@ -57,20 +64,20 @@ namespace Composestar.Repository.LanguageModel
         }
 
         /// <summary>
-        /// Gets or sets the calls.
+        /// Gets or sets the method body.
         /// </summary>
-        /// <value>The calls made by this method.</value>
-        public IList<CallInfo> Calls
+        /// <value>The method body.</value>
+        public MethodBody MethodBody
         {
             get
             {
-                return _calls;
+                return _methodBody;
             }
             set
             {
-                _calls = value;
+                _methodBody = value;
             }
-        }
+        }    
 
     }
 }

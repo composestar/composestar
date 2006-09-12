@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="Composestar.Repository.LanguageModel.AssemblyInfo">
+    <Position X="11.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>AssemblyInfo.cs</FileName>
+      <HashCode>IAAAIAAAAAAAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.CallInfo">
+    <Position X="4" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>CallInfo.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.MethodInfo">
+    <Position X="1.25" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <FileName>MethodInfo.cs</FileName>
+      <HashCode>AAAAIAAAAgAEAAAAAAAAAAQAAAAAACAAAIAACAAEAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MethodBody" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ParameterInfo">
+    <Position X="0.5" Y="5" Width="3" />
+    <TypeIdentifier>
+      <FileName>ParameterInfo.cs</FileName>
+      <HashCode>AAAAMAAABABAAAAAABAAAAQEAAAAACAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.TypeInfo">
+    <Position X="6.75" Y="6.25" Width="3.5" />
+    <TypeIdentifier>
+      <FileName>TypeInfo.cs</FileName>
+      <HashCode>AAQgIAAAEBAAgMAAAIAAAAYAAIAAAIAYAAAQAQAAAEA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Assembly" />
+    </ShowAsAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.MethodBody">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MethodBody.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Calls" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+</ClassDiagram>

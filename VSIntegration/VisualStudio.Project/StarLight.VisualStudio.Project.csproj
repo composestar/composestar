@@ -246,6 +246,7 @@
     <EmbeddedResource Include="Project\Microsoft.VisualStudio.Package.Project.resx">
       <Visible>true</Visible>
       <LogicalName>Microsoft.VisualStudio.Package.Project.resources</LogicalName>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
