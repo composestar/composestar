@@ -68,6 +68,20 @@ Common routines. Always include this file in every build.xml file
 			</sequential>
 		</macrodef>
 		
+		<!-- calling of devenv.exe -->
+		<macrodef name="devenv">
+			<attribute name="solution" />
+			<attribute name="target" default="Release" />
+			<sequential>
+				<echo message="Building soltiuon @{solution} (@{target})" />
+				<exec executable="devenv" failonerror="true">
+					<arg value="@{solution}" />
+					<arg value="/rebuild" />
+					<arg value="@{target}" />
+				</exec>
+			</sequential>
+		</macrodef>
+		
 		<!-- register environment variables -->
 		<property environment="env" />
 		<condition property="env.PATH" value="${env.Path}">
@@ -78,12 +92,17 @@ Common routines. Always include this file in every build.xml file
 		
 		<!-- register additional libraries -->
 		<path id="lib.core">	  
-		<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>
+		</path>
+		
+		<path id="lib.dotnet">
+			<path refid="lib.core" />
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="ComposestarCORE.jar"/>
 		</path>
 		
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">	  
-		<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
+			<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
 		</path>
 		
 		<!-- register findbugs tags -->
