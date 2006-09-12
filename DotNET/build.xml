@@ -32,5 +32,16 @@
 			</auxClasspath>
 		</findbugs>
 	</target>
+	
+	<target name="runtests">
+		<condition property="systemtest.config" value="config.ini">
+			<not>
+				<isset property="systemtest.config" />
+			</not>
+		</condition>
+		<exec executable="${build.dotnet}${file.separator}testing${file.separator}SystemTest${file.separator}SystemTest.exe" dir="${build.dotnet}${file.separator}testing${file.separator}SystemTest${file.separator}" output="${build.dotnet}${file.separator}SystemTest.log">
+			<arg value="${systemtest.config}" />
+		</exec>
+	</target>
 
 </project>
