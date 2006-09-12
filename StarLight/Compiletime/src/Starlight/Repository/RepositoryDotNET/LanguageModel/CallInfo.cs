@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Composestar.Repository.LanguageModel.InlineInstructions;   
+
 namespace Composestar.Repository.LanguageModel
 {
     /// <summary>
@@ -26,5 +28,24 @@ namespace Composestar.Repository.LanguageModel
                 _methodReference = value;
             }
         }
+
+        private Instruction _outputFilter;
+
+        /// <summary>
+        /// Gets or sets the output filter.
+        /// </summary>
+        /// <value>The output filter.</value>
+        public Instruction OutputFilter
+        {
+            get
+            {
+                return _outputFilter;
+            }
+            set
+            {
+                _outputFilter = value;
+            }
+        }
+
     }
 }
