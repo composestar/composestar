@@ -5,7 +5,7 @@
 	
 	<!-- clean tasks -->
 	
-	<target name="clean">
+	<target name="clean" depends="init">
 		<ant target="clean" dir="${build.core}" />
 		<antcall target="clean_dotnet" />
 		<antcall target="clean_java" />
@@ -26,7 +26,7 @@
 	
 	<!-- build tasks -->
 	
-	<target name="core">
+	<target name="core" depends="init">
 		<ant target="build" dir="${build.core}" />
 	</target>
 	
@@ -42,39 +42,36 @@
 		<ant target="build" dir="${build.c}" />
 	</target>
 	
-	<target name="all" depends="core,dotnet,java,c" />
+	<target name="all" depends="init,core,dotnet,java,c" />
 	<target name="build" depends="all" />
 	
 	<!-- QA tasks -->
 	
 	<!-- execute the findbugs tool -->
-	<target name="findbugs">
+	<target name="findbugs" depends="init">
 		<ant target="findbugs" dir="${build.core}" />
 		<antcall target="findbugs_dotnet" />
 	</target>
 	
-	<target name="findbugs_dotnet" if="available.dotnet">
+	<target name="findbugs_dotnet" depends="init" if="available.dotnet">
 		<ant target="findbugs" dir="${build.dotnet}" />
 	</target>
 	
-	<!-- version control -->
+	<!-- system test -->
 	
-	<!--
-	<target name="svn_update">
-		<ant target="svn_update" dir="${build.core}" />
-		<antcall target="svn_update_dotnet" />
+	<target name="runtests" depends="init">
+		<antcall target="runtests_dotnet" />
 	</target>
 	
-	<target name="svn_update_dotnet" if="available.dotnet">
-		<ant target="svn_update" dir="${build.dotnet}" />
+	<target name="runtests_dotnet" depends="init" if="available.dotnet">
+		<ant target="runtests" dir="${build.dotnet}" />
 	</target>
-	-->
 	
 	<!-- task selector -->
 	
-	<target name="select">
+	<target name="select" depends="init">
         <input message="Enter the desired action"
-               validargs="clean,build,rebuild,core,dotnet,java,c,findbugs"
+               validargs="clean,build,rebuild,core,dotnet,java,c,findbugs,runtests"
                addproperty="build.target"
                defaultvalue="core"
         />

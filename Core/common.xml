@@ -6,93 +6,90 @@ Common routines. Always include this file in every build.xml file
 -->
 <project name="ComposeStarCommon">
 
-	<!-- some magic to figure out the core path -->
-	<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
-	<condition property="build.core" value="${build.core.tmp}">
-		<not>
-			<isset property="build.core" />
-		</not>
-	</condition>
+	<target name="init" unless="build.initialized">
+		<property name="build.initialized" value="false" />
+		<tstamp/>
 	
-	<!-- set the root path -->
-	<dirname property="build.root" file="${build.core}" />
-	
-	<!-- set the dotnet path -->
-	<condition property="build.dotnet" value="${build.root}${file.separator}DotNET">
-		<not>
-			<isset property="build.dotnet" />
-		</not>
-	</condition>
-	
-	<!-- set the java path -->
-	<condition property="build.java" value="${build.root}${file.separator}Java">
-		<not>
-			<isset property="build.java" />
-		</not>
-	</condition>
-	
-	<!-- set the c path -->
-	<condition property="build.c" value="${build.root}${file.separator}C">
-		<not>
-			<isset property="build.c" />
-		</not>
-	</condition>
-	
-	<!-- check what is available -->
-	<available file="${build.dotnet}${file.separator}build.xml" property="available.dotnet" />
-	<available file="${build.java}${file.separator}build.xml" property="available.java" />
-	<available file="${build.c}${file.separator}build.xml" property="available.c" />
-	
-	<!-- calling of "make" -->
-	<macrodef name="make">
-		<attribute name="target" default="" />
-		<sequential>
-			<condition property="bin.make" value="${build.core}\Compiletime\binaries\make\make" else="make">
-				<os family="windows"/>
-			</condition>
-			<exec executable="${bin.make}" searchpath="true">
-				<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}" />
-				<arg value="@{target}" />
-			</exec>
-		</sequential>
-	</macrodef>
-	
-	<!-- register environment variables -->
-	<property environment="env" />
-	<condition property="env.PATH" value="${env.Path}">
-		<not>
-			<isset property="env.PATH" />
-		</not>
-	</condition>
-	
-	<!-- register additional libraries -->
-	<path id="lib.core">	  
-	  <fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>
-	</path>
-	
-	  <!-- findbugs jars -->
-	<path id="lib.findbugs">	  
-      <fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
-    </path>
-	
-	<!-- register findbugs tags -->
-	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs" />
-	<condition property="bin.findbugs" value="${build.core}${file.separator}Development${file.separator}findbugs">
-		<not>
-			<isset property="bin.findbugs" />
-		</not>
-	</condition>
-	
-	<!-- register svnant tags -->
-	<!--
-	<path id="lib.svnant">	  
-      <fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib${file.separator}" includes="*.jar"/>
-    </path>
-	<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant"/>
-	-->
+		<!-- some magic to figure out the core path -->
+		<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
+		<condition property="build.core" value="${build.core.tmp}">
+			<not>
+				<isset property="build.core" />
+			</not>
+		</condition>
+		
+		<!-- set the root path -->
+		<dirname property="build.root" file="${build.core}" />
+		
+		<!-- set the dotnet path -->
+		<condition property="build.dotnet" value="${build.root}${file.separator}DotNET">
+			<not>
+				<isset property="build.dotnet" />
+			</not>
+		</condition>
+		
+		<!-- set the java path -->
+		<condition property="build.java" value="${build.root}${file.separator}Java">
+			<not>
+				<isset property="build.java" />
+			</not>
+		</condition>
+		
+		<!-- set the c path -->
+		<condition property="build.c" value="${build.root}${file.separator}C">
+			<not>
+				<isset property="build.c" />
+			</not>
+		</condition>
+		
+		<!-- check what is available -->
+		<available file="${build.dotnet}${file.separator}build.xml" property="available.dotnet" />
+		<available file="${build.java}${file.separator}build.xml" property="available.java" />
+		<available file="${build.c}${file.separator}build.xml" property="available.c" />
+		
+		<!-- calling of "make" -->
+		<macrodef name="make">
+			<attribute name="target" default="" />
+			<sequential>
+				<condition property="bin.make" value="${build.core}\Compiletime\binaries\make\make" else="make">
+					<os family="windows"/>
+				</condition>
+				<exec executable="${bin.make}" searchpath="true">
+					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}" />
+					<arg value="@{target}" />
+				</exec>
+			</sequential>
+		</macrodef>
+		
+		<!-- register environment variables -->
+		<property environment="env" />
+		<condition property="env.PATH" value="${env.Path}">
+			<not>
+				<isset property="env.PATH" />
+			</not>
+		</condition>
+		
+		<!-- register additional libraries -->
+		<path id="lib.core">	  
+		<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>
+		</path>
+		
+		<!-- findbugs jars -->
+		<path id="lib.findbugs">	  
+		<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
+		</path>
+		
+		<!-- register findbugs tags -->
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs" />
+		<condition property="bin.findbugs" value="${build.core}${file.separator}Development${file.separator}findbugs">
+			<not>
+				<isset property="bin.findbugs" />
+			</not>
+		</condition>
+	</target>
 	
 	<!-- generic target to rebuild all -->
-	<target name="rebuild" depends="clean,build">
+	<target name="rebuild" depends="init,clean,build">
 	</target>
 
 </project>
