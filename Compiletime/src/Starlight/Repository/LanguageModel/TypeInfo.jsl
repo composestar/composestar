@@ -2,46 +2,137 @@ package Repository.LanguageModel;
 
 
 /**
- * Summary description for Class1
+ * Contains information about the types.
  */
 public class TypeInfo
 {
-	private String _name;
-	private String _fullname;
-	private String _basetype;
-	private AssemblyInfo _assembly;
-	private boolean _isabstract;
-	private boolean _isinterface;
-	private boolean _issealed;
-	private boolean _isvaluetype;
-	private boolean _isenum;
-	private java.util.List _methods; 
-	
-	public TypeInfo()
-	{
-		_methods = new java.util.ArrayList();
 
+	private String _name;
+
+	/** @property */
+	public String get_Name()
+	{
+		return _name;
 	}
 
-	// Name Property
-	public void set_name(String v) { _name = v; }
-	public String get_name() { return _name; }
+	/** @property */
+	public void set_Name(String value)
+	{
+		_name = value;
+	}
 
-	// FullName Property
-	public void set_fullname(String v) { _fullname = v; }
-	public String get_fullname() { return _fullname; }
+	private String _fullName;
 
-	// BaseType Property
-	public void set_basetype(String v) { _basetype = v; }
-	public String get_basetype() { return _basetype; }
+	/** @property */
+	public String get_FullName()
+	{
+		return _fullName;
+	}
 
-	// AssemblyInfo Property
-	public void set_assembly(AssemblyInfo v) { _assembly = v; }
-	public AssemblyInfo get_assembly() { return _assembly; }
+	/** @property */
+	public void set_FullName(String value)
+	{
+		_fullName = value;
+	}
 
-	// Methods Property
-	public void set_methods(java.util.List v) { _methods = v; }
-	public java.util.List get_methods() { return _methods; }
+	private String _baseType;
 
+	/** @property */
+	public String get_BaseType()
+	{
+		return _baseType;
+	}
+
+	/** @property */
+	public void set_BaseType(String value)
+	{
+		_baseType = value;
+	}
+
+	private AssemblyInfo _assemblyInfo;
+
+	/** @property */
+	public AssemblyInfo get_AssemblyInfo()
+	{
+		return _assemblyInfo;
+	}
+
+	/** @property */
+	public void set_AssemblyInfo(AssemblyInfo value)
+	{
+		_assemblyInfo = value;
+	}
+
+	private boolean _isAbstract;
+
+	/** @property */
+	public boolean get_IsAbstract()
+	{
+		return _isAbstract;
+	}
+
+	/** @property */
+	public void set_IsAbstract(boolean value)
+	{
+		_isAbstract = value;
+	}
+
+	private boolean _isInterface;
+
+	/** @property */
+	public boolean get_IsInterface()
+	{
+		return _isInterface;
+	}
+
+	/** @property */
+	public void set_IsInterface(boolean value)
+	{
+		_isInterface = value;
+	}
+
+	private boolean _isSealed;
+
+	/** @property */
+	public boolean get_IsSealed()
+	{
+		return _isSealed;
+	}
+
+	/** @property */
+	public void set_IsSealed(boolean value)
+	{
+		_isSealed = value;
+	}
+
+	private boolean _isValueType;
+
+	/** @property */
+	public boolean get_IsValueType()
+	{
+		return _isValueType;
+	}
+
+	/** @property */
+	public void set_IsValueType(boolean value)
+	{
+		_isValueType = value;
+	}
+
+	private boolean _isEnum;
+
+	/** @property */
+	public boolean get_IsEnum()
+	{
+		return _isEnum;
+	}
+
+	/** @property */
+	public void set_IsEnum(boolean value)
+	{
+		_isEnum = value;
+	}
+
+	
 
 }

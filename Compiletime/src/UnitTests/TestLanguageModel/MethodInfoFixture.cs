@@ -2,9 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-using Composestar.Repository.LanguageModel;
-using Composestar.Repository.LanguageModel.InlineInstructions;
-using Composestar.Repository.LanguageModel.ConditionExpressions;
+using Repository.LanguageModel;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -65,23 +63,23 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, mi.Name, "Name does not persists data");
         }
 
-        [Description("Test if the MethodInfo class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void MethodInfoPersistParameters()
-        {
-            MethodInfo mi = new MethodInfo();
-            ParameterInfo pi = new ParameterInfo();
+        //[Description("Test if the MethodInfo class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
+        //public void MethodInfoPersistParameters()
+        //{
+        //    MethodInfo mi = new MethodInfo();
+        //    ParameterInfo pi = new ParameterInfo();
 
-            string v = "test";
-            pi.Name = v;
+        //    string v = "test";
+        //    pi.Name = v;
 
-            Assert.IsNotNull(mi.Parameters, "Parameters list is null.");
-            Assert.IsTrue(mi.Parameters.Count == 0, "Parameters list is not empty.");
+        //    Assert.IsNotNull(mi.Parameters, "Parameters list is null.");
+        //    Assert.IsTrue(mi.Parameters.Count == 0, "Parameters list is not empty.");
 
-            mi.Parameters.Add(pi);
+        //    mi.Parameters.Add(pi);
 
-            Assert.AreEqual(pi, mi.Parameters[0], "MethodInfo.Parameters does not contain the just added parameterinfo.");
+        //    Assert.AreEqual(pi, mi.Parameters[0], "MethodInfo.Parameters does not contain the just added parameterinfo.");
             
-        }
+        //}
 
         [Description("Checks if the methodinfo class stores the methodbody object."), Owner("Michiel van Oudheusden"), TestMethod]
         public void MethodInfoStoresMethodBody()

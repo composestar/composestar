@@ -33,12 +33,17 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfoFixture.cs" />
     <Compile Include="MethodInfoFixture.cs" />
     <Compile Include="ParameterInfoFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeInfoFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Starlight\Repository\LanguageModel\LanguageModel.vjsproj">
+      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
+      <Name>LanguageModel %28Source\Data Store\LanguageModel%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Starlight\Repository\RepositoryDotNET\LanguageModel\LanguageModel.csproj">
       <Project>{C08D43A4-238E-4317-87BC-D1E72EA4E343}</Project>
       <Name>LanguageModel</Name>

@@ -1,0 +1,12 @@
+package Repository.LanguageModel;
+
+
+public abstract class Instruction
+{
+
+}
+
+public class Block extends Instruction
+{
+	
+}

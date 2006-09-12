@@ -30,12 +30,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.jsl" />
-    <Compile Include="BodyInfo.jsl" />
+    <Compile Include="Properties\AssemblyInfo.jsl" />
+    <Compile Include="MethodBody.jsl" />
     <Compile Include="CallInfo.jsl" />
     <Compile Include="MethodInfo.jsl" />
     <Compile Include="ParameterInfo.jsl" />
     <Compile Include="TypeInfo.jsl" />
-    <Compile Include="Properties\AssemblyInfo.jsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Inlining\InlineInstructions.jsl" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

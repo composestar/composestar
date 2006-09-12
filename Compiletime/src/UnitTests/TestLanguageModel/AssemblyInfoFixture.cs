@@ -1,8 +1,8 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
- 
-using Repository.LanguageModel;  
+
+using Repository.LanguageModel;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,12 +17,12 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace TestLanguageModel
 {
     /// <summary>
-    /// Summary description for UnitTest1
+    /// Summary description for AssemblyInfoFixture
     /// </summary>
     [TestClass]
-    public class ParameterInfoFixture
+    public class AssemblyInfoFixture
     {
-        public ParameterInfoFixture()
+        public AssemblyInfoFixture()
         {
             //
             // TODO: Add constructor logic here
@@ -51,34 +51,19 @@ namespace TestLanguageModel
         //
         #endregion
 
-        [Owner("Michiel van Oudheusden"), Description("Test if the ParameterInfo class persists the strings."), TestMethod]
-        public void ParameterInfoPersistStringData()
+        [Owner("Michiel van Oudheusden"), Description("Test if the AssemblyInfo class persists the strings."), TestMethod]
+        public void AssemblyInfoPersistStringData()
         {
-            ParameterInfo pi = new ParameterInfo();
-            
+            AssemblyInfo ai = new AssemblyInfo();
             string testValue = "test";
-            
-            pi.Name = testValue;
-            pi.ParameterType = testValue;
-            pi.ParameterAttributes = testValue;
-
-            Assert.AreEqual(testValue, pi.Name, "Name does not persists data"); 
-            Assert.AreEqual(testValue,pi.ParameterType, "ParameterType does not persists data");       
-            Assert.AreEqual(testValue,pi.ParameterAttributes, "ParameterAttributes does not persists data");    
+            ai.Name = testValue;
+            ai.Version = testValue;
+                       
+            Assert.AreEqual(testValue, ai.Name, "Name does not persists data"); 
+            Assert.AreEqual(testValue, ai.Version, "Version does not persists data"); 
+           
         }
 
-        [Description("Test if the ParameterInfo class persists the integers."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void ParameterInfoPersistBoolData()
-        {
-            ParameterInfo pi = new ParameterInfo();
-            
-            short testValue = 1;
-            
-            pi.Ordinal  = testValue;
-            
-            Assert.AreEqual(testValue, pi.Ordinal, "Ordinal does not persists data");        
-        }
-
-                    
+      
     }
 }
