@@ -43,5 +43,9 @@
 			<arg value="${systemtest.config}" />
 		</exec>
 	</target>
+	
+	<target name="install" depends="build">
+		<ant target="install" dir="Compiletime" />
+	</target>
 
 </project>
