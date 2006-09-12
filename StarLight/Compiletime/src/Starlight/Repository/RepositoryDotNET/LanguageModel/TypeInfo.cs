@@ -20,7 +20,7 @@ namespace Composestar.Repository.LanguageModel
         private bool _issealed;
         private bool _isvaluetype;
         private bool _isenum;
-        private IList<MethodInfo> _methods;  // initialize db-aware with ObjectContainer().Ext().Collections().NewLinkedList(), which doesnt support generics
+        private IList<MethodInfo> _methods;  
 
         // TODO: Add the following properties
         // assemblyname/assemblyinfo type is contained in
@@ -29,6 +29,9 @@ namespace Composestar.Repository.LanguageModel
         //type.CustomAttributes
         //type.Properties
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:TypeInfo"/> class.
+        /// </summary>
         public TypeInfo()
         {
             _methods = new List<MethodInfo>();
@@ -145,37 +148,7 @@ namespace Composestar.Repository.LanguageModel
                 _methods = value;
             }
         }
-
-        /// <summary>
-        /// Count the number of methods.
-        /// </summary>
-        /// <returns></returns>
-        public int MethodCount()
-        {
-            if (_methods == null) return 0;
-
-            return _methods.Count;
-        }
-
-        /// <summary>
-        /// Gets the method enumerator.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<LanguageModel.MethodInfo> GetMethodEnumerator()
-        {
-            if (_methods == null) return null;
-
-            // FIXME: Could not compile; disabled           
-            //IList<LanguageModel.MethodInfo> methods = DataStoreContainer.Instance.GetObjectContainer().Query<LanguageModel.MethodInfo>(delegate(LanguageModel.MethodInfo mi)
-            //{
-            //    return true;
-            //});
-
-            // FIXME: Could not compile; disabled   
-            //return methods.GetEnumerator();
-
-            return null;
-        }
+              
 
     }
 }

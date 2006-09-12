@@ -4,11 +4,13 @@ using System.Text;
 
 namespace Composestar.Repository.LanguageModel
 {
+    /// <summary>
+    /// Contains information about the calls to other methods.
+    /// </summary>
     public class CallInfo
     {
         private string _methodReference;
-
-
+        
         /// <summary>
         /// Gets or sets the method reference.
         /// </summary>
