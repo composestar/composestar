@@ -45,6 +45,17 @@
 	<target name="all" depends="init,core,dotnet,java,c" />
 	<target name="build" depends="all" />
 	
+	<!-- install tasks -->
+	
+	<target name="install" depends="init">
+		<ant target="install" dir="${build.core}" />
+		<antcall target="install_dotnet" />
+	</target>
+	
+	<target name="install_dotnet" if="available.dotnet">
+		<ant target="install" dir="${build.dotnet}" />
+	</target>
+	
 	<!-- QA tasks -->
 	
 	<!-- execute the findbugs tool -->
@@ -71,7 +82,7 @@
 	
 	<target name="select" depends="init">
         <input message="Enter the desired action"
-               validargs="clean,build,rebuild,core,dotnet,java,c,findbugs,runtests"
+               validargs="clean,build,rebuild,install,core,dotnet,java,c,findbugs,runtests"
                addproperty="build.target"
                defaultvalue="core"
         />

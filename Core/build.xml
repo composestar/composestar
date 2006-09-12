@@ -22,6 +22,10 @@
 		<ant target="build" dir="Runtime" />
 	</target>
 	
+	<target name="install" depends="build">
+		<ant target="install" dir="Compiletime" />
+	</target>
+	
 	<target name="findbugs">
 		<findbugs home="${bin.findbugs}" output="html" effort="max" reportLevel="medium" outputFile="${build.core}${file.separator}findbugs-result.html" excludeFilter="${bin.findbugs}${file.separator}exclude.xml">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}ComposestarCORE.jar" />

@@ -9,6 +9,13 @@ Common routines. Always include this file in every build.xml file
 	<target name="init" unless="build.initialized">
 		<property name="build.initialized" value="false" />
 		<tstamp/>
+		
+		<!-- TODO: read this from registry? -->
+		<condition property="composestar.installdir" value="C:/Program Files/ComposeStar">
+			<not>
+				<isset property="composestar.installdir" />
+			</not>
+		</condition>
 	
 		<!-- some magic to figure out the core path -->
 		<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />

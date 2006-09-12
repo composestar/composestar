@@ -10,12 +10,37 @@
 	The core of the compose* compiler
 	</description>
 
-	<target name="clean">
-		<make target="clean" />
+	<target name="clean" depends="init">
+		<!--<make target="clean" />-->
+		<delete>
+			<fileset dir="src/CODER/breakpoint/parsers/ltl">
+				<include name="LtlLexer.java" />
+				<include name="LtlParser.java" />
+				<include name="LtlTokenTypes.*" />
+				<include name="*.smap" />
+			</fileset>
+		</delete>
+		<delete>
+			<fileset dir="src/CODER/breakpoint/parsers/reg">
+				<include name="RegLexer.java" />
+				<include name="RegParser.java" />
+				<include name="RegTokenTypes.*" />
+				<include name="*.smap" />
+			</fileset>
+		</delete>
 	</target>	
 	
-	<target name="build">
-		<make target="build" />
+	<target name="build" depends="init,antlr">
+		<!--<make target="build" />-->
+	</target>
+	
+	<target name="antlr">
+		<antlr target="src/CODER/breakpoint/parsers/ltl/grammar/ltl.g" outputdirectory="src/CODER/breakpoint/parsers/ltl">
+			<classpath refid="lib.core"/>
+		</antlr>
+		<antlr target="src/CODER/breakpoint/parsers/reg/grammar/reg.g" outputdirectory="src/CODER/breakpoint/parsers/reg">
+			<classpath refid="lib.core"/>
+		</antlr>
 	</target>
 
 </project>
