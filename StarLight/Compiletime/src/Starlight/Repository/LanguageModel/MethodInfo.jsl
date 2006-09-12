@@ -1,30 +1,73 @@
 package Repository.LanguageModel;
 
 /**
- * Summary description for MethodInfo.
+ * Contains information about a method.
  */
 public class MethodInfo
 {
-	private String _name;
-	private String _returntype;
-	private AssemblyInfo _assembly;
-	private java.util.List _parameters;
-
+	
 	public MethodInfo()
 	{
-		_parameters = new java.util.ArrayList();
+		_methodBody = new MethodBody(); 
 	}
 
-	// Name Property
-	public void set_name(String v) { _name = v; }
-	public String get_name() { return _name; }
 
-	// ReturnType Property
-	public void set_returntype(String v) { _returntype = v; }
-	public String get_returntype() { return _returntype; }
+	private String _name;
 
-	// Parameters Property
-	public void set_parameters(java.util.List v) { _parameters = v; }
-	public java.util.List get_parameters() { return _parameters; }
+	/** @property */
+	public String get_Name()
+	{
+		return _name;
+	}
+
+	/** @property */
+	public void set_Name(String value)
+	{
+		_name = value;
+	}
+
+	private String _returnType;
+
+	/** @property */
+	public String get_ReturnType()
+	{
+		return _returnType;
+	}
+
+	/** @property */
+	public void set_ReturnType(String value)
+	{
+		_returnType = value;
+	}
+
+	private MethodBody _methodBody;
+
+	/** @property */
+	public MethodBody get_MethodBody()
+	{
+		return _methodBody;
+	}
+
+	/** @property */
+	public void set_MethodBody(MethodBody value)
+	{
+		_methodBody = value;
+	}
+
+	private TypeInfo _referenceTypeInfo;
+
+	/** @property */
+	public TypeInfo get_ParentTypeInfo()
+	{
+		return _referenceTypeInfo;
+	}
+
+	/** @property */
+	public void set_ParentTypeInfo(TypeInfo value)
+	{
+		_referenceTypeInfo = value;
+	} 
+
+
 
 }

@@ -2,9 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-using Composestar.Repository.LanguageModel;  
-using Composestar.Repository.LanguageModel.InlineInstructions; 
-using Composestar.Repository.LanguageModel.ConditionExpressions;
+using Repository.LanguageModel;  
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -86,37 +84,37 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, ti.IsSealed, "IsSealed does not persists data");
         }
 
-        [Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void TypeInfoPersistMethodData()
-        {
-            TypeInfo ti = new TypeInfo();
-            MethodInfo mi = new MethodInfo();
-            mi.Name = "test";
+        //[Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
+        //public void TypeInfoPersistMethodData()
+        //{
+        //    TypeInfo ti = new TypeInfo();
+        //    MethodInfo mi = new MethodInfo();
+        //    mi.Name = "test";
 
-            Assert.IsNotNull(ti.Methods, "Method list is null");
+        //    Assert.IsNotNull(ti.Methods, "Method list is null");
 
-            ti.Methods.Add(mi);
+        //    ti.Methods.Add(mi);
 
-            Assert.IsTrue(ti.Methods.Count == 1, "Method list does not contain a single methodinfo.");
-            Assert.AreEqual(mi, ti.Methods[0], "Method list does not contain the same method info as added to the list.");
+        //    Assert.IsTrue(ti.Methods.Count == 1, "Method list does not contain a single methodinfo.");
+        //    Assert.AreEqual(mi, ti.Methods[0], "Method list does not contain the same method info as added to the list.");
             
-        }
+        //}
 
-        [Description("Checks if the AssemblyInfo is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void TypeInfoPersistAssemblyInfoData()
-        {
-            TypeInfo ti = new TypeInfo();
+        //[Description("Checks if the AssemblyInfo is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
+        //public void TypeInfoPersistAssemblyInfoData()
+        //{
+        //    TypeInfo ti = new TypeInfo();
             
-            AssemblyInfo ai = new AssemblyInfo();
-            string v = "test";
-            ai.Name = v;
+        //    AssemblyInfo ai = new AssemblyInfo();
+        //    string v = "test";
+        //    ai.Name = v;
 
-            Assert.IsNotNull(ti.Assembly, "Assembly info is null");
+        //    Assert.IsNotNull(ti.Assembly, "Assembly info is null");
 
-            ti.Assembly = ai;
+        //    ti.Assembly = ai;
 
-            Assert.AreEqual(ai, ti.Assembly, "TypeInfo does not persists AssemblyInfo");
-            Assert.AreEqual(v, ti.Assembly.Name, "AssemblyInfo does not persists the data"); 
-        }
+        //    Assert.AreEqual(ai, ti.Assembly, "TypeInfo does not persists AssemblyInfo");
+        //    Assert.AreEqual(v, ti.Assembly.Name, "AssemblyInfo does not persists the data"); 
+        //}
     }
 }
