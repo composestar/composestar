@@ -35,7 +35,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallInfo.cs" />
-    <Compile Include="Inlining\Actions.cs" />
     <Compile Include="Inlining\ConditionExpression.cs" />
     <Compile Include="Inlining\InlineInstructions.cs" />
     <Compile Include="MethodBody.cs" />

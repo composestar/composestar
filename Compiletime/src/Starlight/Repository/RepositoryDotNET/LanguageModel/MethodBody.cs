@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Composestar.Repository.LanguageModel.Actions;
+using Composestar.Repository.LanguageModel.InlineInstructions;
 
 namespace Composestar.Repository.LanguageModel
 {
@@ -12,51 +12,32 @@ namespace Composestar.Repository.LanguageModel
     public class MethodBody
     {
         private IList<CallInfo> _calls;
-        private IList<Action> _inputFilters;
-        private IList<Action> _outputFilters;
-
+        private Instruction _inputFilter;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MethodBody"/> class.
         /// </summary>
         public MethodBody()
         {
             _calls = new List<CallInfo>();
-            _inputFilters = new List<Action>();
-            _outputFilters = new List<Action>();
         }
 
         /// <summary>
-        /// Gets or sets the input filters.
+        /// Gets or sets the input filter.
         /// </summary>
-        /// <value>The input filters.</value>
-        public IList<Action> InputFilters
+        /// <value>The input filter.</value>
+        public Instruction InputFilter
         {
             get
             {
-                return _inputFilters;
+                return _inputFilter;
             }
             set
             {
-                _inputFilters = value;
+                _inputFilter = value;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the output filters.
-        /// </summary>
-        /// <value>The output filters.</value>
-        public IList<Action> OutputFilters
-        {
-            get
-            {
-                return _outputFilters;
-            }
-            set
-            {
-                _outputFilters = value;
-            }
-        }
-
+             
         /// <summary>
         /// Gets or sets the calls.
         /// </summary>
