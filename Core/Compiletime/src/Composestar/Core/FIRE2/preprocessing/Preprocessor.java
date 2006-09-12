@@ -54,9 +54,9 @@ public class Preprocessor implements CTCommonModule{
     private final static ExploreStrategy FULL_STRATEGY = new FullStrategy();
     
     
-    private final static String GENERATE_FLOW_GRAMMAR_FILE = 
+    private final static String GENERATE_FLOW_GRAMMAR_PATH = 
         "groovegrammars/generateflow.gps";
-    private final static String RUNTIME_GRAMMAR_FILE = 
+    private final static String RUNTIME_GRAMMAR_PATH = 
         "groovegrammars/runtime.gps";
     
     private final static File AST_OUT = new File( "./ast.gst" );
@@ -88,14 +88,14 @@ public class Preprocessor implements CTCommonModule{
             DataStore.instance().getAllInstancesOf(FilterModule.class);
 
         Debug.out( Debug.MODE_DEBUG, MODULE_NAME, "Starting FIRE Preprocessing" );
-        
-		while( moduleIter.hasNext() ){
+
+        while( moduleIter.hasNext() ){
             FilterModule module = (FilterModule) moduleIter.next();
             preprocessModule( module );
         }
-		
-		
-		Debug.out( Debug.MODE_DEBUG, MODULE_NAME, "FIRE Preprocessing done" );
+
+
+        Debug.out( Debug.MODE_DEBUG, MODULE_NAME, "FIRE Preprocessing done" );
     }
     
     private void preprocessModule( FilterModule module ){
@@ -169,7 +169,7 @@ public class Preprocessor implements CTCommonModule{
         graphLoader = new LayedOutXml();
         
         try{
-            URL genUrl = this.getClass().getResource( GENERATE_FLOW_GRAMMAR_FILE );
+            URL genUrl = this.getClass().getResource( GENERATE_FLOW_GRAMMAR_PATH );
             String fileName = genUrl.getFile();
             Debug.out( Debug.MODE_DEBUG, MODULE_NAME, fileName );
             if ( fileName.indexOf('!' ) >= 0){
@@ -177,9 +177,9 @@ public class Preprocessor implements CTCommonModule{
                 JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
                 
                 this.generateFlowGrammar = 
-            	    (RuleViewGrammar) jarGpsLoader.unmarshal( GENERATE_FLOW_GRAMMAR_FILE );
+            	    (RuleViewGrammar) jarGpsLoader.unmarshal( GENERATE_FLOW_GRAMMAR_PATH );
                 this.runtimeGrammar =
-            	    (RuleViewGrammar) jarGpsLoader.unmarshal( RUNTIME_GRAMMAR_FILE );
+            	    (RuleViewGrammar) jarGpsLoader.unmarshal( RUNTIME_GRAMMAR_PATH );
             }
             else{
                 //load from directory:
@@ -190,7 +190,7 @@ public class Preprocessor implements CTCommonModule{
                 
                 this.generateFlowGrammar = rvg;
                 
-                URL runUrl = this.getClass().getResource( RUNTIME_GRAMMAR_FILE );
+                URL runUrl = this.getClass().getResource( RUNTIME_GRAMMAR_PATH );
             	this.runtimeGrammar =
             	    (RuleViewGrammar) gpsLoader.unmarshal( new File(runUrl.getFile()) );
             }
