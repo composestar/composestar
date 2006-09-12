@@ -57,6 +57,19 @@
 		<ant target="findbugs" dir="${build.dotnet}" />
 	</target>
 	
+	<!-- version control -->
+	
+	<!--
+	<target name="svn_update">
+		<ant target="svn_update" dir="${build.core}" />
+		<antcall target="svn_update_dotnet" />
+	</target>
+	
+	<target name="svn_update_dotnet" if="available.dotnet">
+		<ant target="svn_update" dir="${build.dotnet}" />
+	</target>
+	-->
+	
 	<!-- task selector -->
 	
 	<target name="select">

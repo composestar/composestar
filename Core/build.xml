@@ -29,5 +29,13 @@
 			<auxClasspath refid="lib.core" />
 		</findbugs>
 	</target>
+	
+	<!--
+	<target name="svn_update">
+		<svn username="guest" password="">
+			<update dir="${build.core}" />
+		</svn>
+	</target>
+	-->
 
 </project>

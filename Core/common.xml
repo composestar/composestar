@@ -75,13 +75,21 @@ Common routines. Always include this file in every build.xml file
       <fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
     </path>
 	
-	<!-- register findbugs tasg -->
+	<!-- register findbugs tags -->
 	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs" />
 	<condition property="bin.findbugs" value="${build.core}${file.separator}Development${file.separator}findbugs">
 		<not>
 			<isset property="bin.findbugs" />
 		</not>
 	</condition>
+	
+	<!-- register svnant tags -->
+	<!--
+	<path id="lib.svnant">	  
+      <fileset dir="${build.core}${file.separator}Development${file.separator}svnant${file.separator}lib${file.separator}" includes="*.jar"/>
+    </path>
+	<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant"/>
+	-->
 	
 	<!-- generic target to rebuild all -->
 	<target name="rebuild" depends="clean,build">
