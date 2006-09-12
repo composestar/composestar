@@ -34,6 +34,7 @@ namespace Composestar.Repository.LanguageModel
         /// </summary>
         public TypeInfo()
         {
+            _assembly = new AssemblyInfo();
             _methods = new List<MethodInfo>();
         }
 

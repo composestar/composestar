@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageModel", "Compiletim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStoreContainer", "Compiletime\src\Starlight\Repository\RepositoryDotNET\DataStoreContainer\DataStoreContainer.csproj", "{40B1F906-58AC-42AD-837C-3F31B289659C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLanguageModel", "Compiletime\src\UnitTests\TestLanguageModel\TestLanguageModel.csproj", "{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = StarLight1.vsmdi
@@ -313,6 +315,26 @@ Global
 		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|x86.ActiveCfg = Release|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugNUnit|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugNUnit|Any CPU.Build.0 = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugNUnit|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugNUnit|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugNUnit|x86.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugVSIntegration|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugVSIntegration|Any CPU.Build.0 = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugVSIntegration|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugVSIntegration|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.DebugVSIntegration|x86.ActiveCfg = Debug|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -331,6 +353,7 @@ Global
 		{1B4B4933-6267-4AEC-9F9C-1FF8B6C7546B} = {C0F8605A-5ACF-4D1E-AA33-8D059E509998}
 		{40C9556A-C48D-4E1C-875C-80A45D2AAC5C} = {C0F8605A-5ACF-4D1E-AA33-8D059E509998}
 		{8EAD531D-F959-4445-9C5B-68E82F639550} = {C0F8605A-5ACF-4D1E-AA33-8D059E509998}
+		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63} = {C0F8605A-5ACF-4D1E-AA33-8D059E509998}
 		{CDABFDB2-E16D-4DAA-BD96-4322A799F93B} = {6E971B59-9204-44E3-91FD-1E26213802BE}
 		{74788B39-49AB-4708-AD96-B5558AF48C7A} = {C71100E4-D848-4173-BCA9-578E6E874CB1}
 		{6F6C0C53-6489-439D-A92F-2EBA93D8A889} = {C71100E4-D848-4173-BCA9-578E6E874CB1}
