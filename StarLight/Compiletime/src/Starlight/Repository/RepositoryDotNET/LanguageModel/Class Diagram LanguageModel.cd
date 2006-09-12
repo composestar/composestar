@@ -64,13 +64,22 @@
     <Position X="4.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>MethodBody.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAABAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAQAAAAAAABAAAAAAgAIABAAQAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Calls" />
+      <Property Name="InputFilters" />
+      <Property Name="OutputFilters" />
     </ShowAsCollectionAssociation>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.Actions.Action" Collapsed="true">
+    <Position X="7.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\Actions.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
   </Class>
 </ClassDiagram>

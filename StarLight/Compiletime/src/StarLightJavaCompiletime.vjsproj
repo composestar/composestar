@@ -79,6 +79,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Composestar\dotnet\BACO\DotNETBACO.java" />
+    <Compile Include="Composestar\dotnet\INLINE\DotNETInliner.java" />
+    <Compile Include="Composestar\dotnet\INLINE\DotNETInlineStrategy.java" />
     <Compile Include="Composestar\dotnet\LAMA\DotNETAttribute.java">
       <SubType>Code</SubType>
     </Compile>

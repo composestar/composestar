@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="Composestar.Repository.LanguageModel.Actions.Action" Collapsed="true">
+    <Position X="6.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\Actions.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.Actions.FilterAction" Collapsed="true">
+    <Position X="7.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\Actions.cs</FileName>
+      <HashCode>AMAAAAAAAAAABAAAAAAAACAAQAAAAAAAAAAAAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.Actions.ContextAction" Collapsed="true">
+    <Position X="5.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\Actions.cs</FileName>
+      <HashCode>AAAAIAAAAIAAAAAAAAFgAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.InlineInstructions.Instruction" Collapsed="true">
+    <Position X="3.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\InlineInstructions.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.InlineInstructions.Block" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\InlineInstructions.cs</FileName>
+      <HashCode>AAAAAAABAAAAAAAAAABAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.InlineInstructions.Branch" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\InlineInstructions.cs</FileName>
+      <HashCode>AAAAAAAAAAAAgAACAAAAAAAEAAAAAgACAAAAIAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.InlineInstructions.Jump" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\InlineInstructions.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.InlineInstructions.FilterBlock" Collapsed="true">
+    <Position X="2.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\InlineInstructions.cs</FileName>
+      <HashCode>AAAAAAAAEAAAAAAAABAAACAAAAAAAAAAAAAACAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.ConditionExpression" Collapsed="true">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAQAAQAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.AndExpression" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgQCACAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.NotExpression" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAQAAAAAAEAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.OrExpression" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQgQCACAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.TrueExpression" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.FalseExpression" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.ConditionExpressions.ConditionLiteral" Collapsed="true">
+    <Position X="12" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\ConditionExpression.cs</FileName>
+      <HashCode>AAAAIAAAAABAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Composestar.Repository.LanguageModel.InlineInstructions.Label" Collapsed="true">
+    <Position X="7.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Inlining\InlineInstructions.cs</FileName>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

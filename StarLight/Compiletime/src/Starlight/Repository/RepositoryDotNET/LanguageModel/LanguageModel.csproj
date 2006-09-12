@@ -35,6 +35,9 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallInfo.cs" />
+    <Compile Include="Inlining\Actions.cs" />
+    <Compile Include="Inlining\ConditionExpression.cs" />
+    <Compile Include="Inlining\InlineInstructions.cs" />
     <Compile Include="MethodBody.cs" />
     <Compile Include="MethodInfo.cs" />
     <Compile Include="ParameterInfo.cs" />
@@ -43,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Class Diagram LanguageModel.cd" />
+    <None Include="Inlining\Class Diagram Inlining.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
