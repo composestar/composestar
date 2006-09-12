@@ -23,8 +23,7 @@ namespace Composestar.Repository.LanguageModel
         public MethodInfo()
         {
             _methodBody = new MethodBody();
-            _parameters = new List<Repository.LanguageModel.ParameterInfo>();
-            _calls = new List<Repository.LanguageModel.CallInfo>();
+            _parameters = new List<Repository.LanguageModel.ParameterInfo>();           
         }
 
         /// <summary>

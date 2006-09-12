@@ -79,7 +79,7 @@ namespace Composestar.Repository.LanguageModel.Actions
         /// <param name="selector">The selector.</param>
         public FilterAction(String filterType, string target, string selector)
         {
-            _filterType = type;
+            _filterType = filterType;
             _target = target;
             _selector = selector;
         }
@@ -151,9 +151,9 @@ namespace Composestar.Repository.LanguageModel.Actions
         /// </summary>
         /// <param name="_contextType">Type of the _context.</param>
         /// <param name="method">The method.</param>
-        public ContextAction(String _contextType, MethodInfo method)
+        public ContextAction(String contextType, MethodInfo method)
         {
-            this._contextType = type;
+            this._contextType = contextType;
             this._method = method;
         }
 
