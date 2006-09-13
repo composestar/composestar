@@ -8,6 +8,8 @@ using System.Reflection.Emit;
 using System.Text;
 
 using Composestar.StarLight.ILAnalyzer.ILInstructions;
+using Composestar.Repository.LanguageModel;
+using Composestar.Repository;
 
 namespace Composestar.StarLight.ILAnalyzer
 {
@@ -42,89 +44,99 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
         /// <summary>
+        /// Gets access to the repository.
+        /// </summary>
+        /// <value>The repository access.</value>
+        public RepositoryAccess RepositoryAccess
+        {
+            get { throw new NotImplementedException("not yet implemented"); }
+        }
+
+        /// <summary>
         /// Extracts the methods.
         /// </summary>
         /// <returns></returns>
-        public List<MethodElement> ExtractMethods()
+        public IList<MethodElement> ExtractMethods()
         {
-            CheckForInit();
+            return null;
+            //CheckForInit();
 
-            List<MethodElement> retList = new List<MethodElement>();
+            //List<MethodElement> retList = new List<MethodElement>();
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
 
-            Assembly assembly;
-            try
-            {
-                assembly = Assembly.LoadFile(_fileName);
-            }
-            catch (BadImageFormatException ex)
-            {
-                throw;
-            }
-            catch (FileLoadException ex)
-            {
-                throw;
-            }
-            catch (FileNotFoundException ex)
-            {
-                throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, _fileName), ex);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new ArgumentNullException(Properties.Resources.FileNameNullOrEmpty, ex);
-            }
+            //Assembly assembly;
+            //try
+            //{
+            //    assembly = Assembly.LoadFile(_fileName);
+            //}
+            //catch (BadImageFormatException ex)
+            //{
+            //    throw;
+            //}
+            //catch (FileLoadException ex)
+            //{
+            //    throw;
+            //}
+            //catch (FileNotFoundException ex)
+            //{
+            //    throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, _fileName), ex);
+            //}
+            //catch (ArgumentNullException ex)
+            //{
+            //    throw new ArgumentNullException(Properties.Resources.FileNameNullOrEmpty, ex);
+            //}
 
-            //Gets all types of the MainModule of the assembly
-            foreach (Type type in assembly.GetTypes())
-            {
-                foreach (MethodInfo method in type.GetMethods())
-                {
-                    // Create a new method element
-                    MethodElement me = new MethodElement();
-                    me.MethodName = String.Format("{0}.{1}", type.FullName, method.Name);
-                    me.ReturnType = method.ReturnType.FullName;
+            ////Gets all types of the MainModule of the assembly
+            //foreach (Type type in assembly.GetTypes())
+            //{
+            //    foreach (MethodInfo method in type.GetMethods())
+            //    {
+            //        // Create a new method element
+            //        MethodElement me = new MethodElement();
+            //        me.MethodName = String.Format("{0}.{1}", type.FullName, method.Name);
+            //        me.ReturnType = method.ReturnType.FullName;
 
-                    // Add the parameters
-                    foreach (ParameterInfo param in method.GetParameters())
-                    {
-                        // Create a new parameter element
-                        ParameterElement pe = new ParameterElement();
-                        pe.Name = param.Name;
-                        pe.Ordinal = (short)(param.Position);
-                        pe.ParameterType = param.ParameterType.FullName;
+            //        // Add the parameters
+            //        foreach (ParameterInfo param in method.GetParameters())
+            //        {
+            //            // Create a new parameter element
+            //            ParameterElement pe = new ParameterElement();
+            //            pe.Name = param.Name;
+            //            pe.Ordinal = (short)(param.Position);
+            //            pe.ParameterType = param.ParameterType.FullName;
 
-                        // Add to the method
-                        me.Parameters.Add(pe);
-                    }
+            //            // Add to the method
+            //            me.Parameters.Add(pe);
+            //        }
 
-                    foreach (ILInstruction il in new ILReader(method))
-                    {
-                        /* do something with il */
-                        if (il.OpCode == OpCodes.Call)
-                        {
-                          //  Console.WriteLine("Call");
+            //        foreach (ILInstruction il in new ILReader(method))
+            //        {
+            //            /* do something with il */
+            //            if (il.OpCode == OpCodes.Call)
+            //            {
+            //              //  Console.WriteLine("Call");
                             
-                        }
-                    }
+            //            }
+            //        }
 
-                    // Add the method to the return list
-                    retList.Add(me);
-                }
-            }
+            //        // Add the method to the return list
+            //        retList.Add(me);
+            //    }
+            //}
 
-            sw.Stop();
-            _lastDuration = sw.Elapsed;
+            //sw.Stop();
+            //_lastDuration = sw.Elapsed;
 
-            return retList;
+            //return retList;
         }
 
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        public List<string> ExtractTypes()
+        public IList<TypeElement> ExtractTypeElements()
         {
             CheckForInit();
 

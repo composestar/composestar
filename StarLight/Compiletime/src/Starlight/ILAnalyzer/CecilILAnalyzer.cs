@@ -12,6 +12,9 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
+using Composestar.Repository;  
+using Composestar.Repository.LanguageModel;
+  
 namespace Composestar.StarLight.ILAnalyzer
 {
 
@@ -25,6 +28,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private bool _isInitialized = false;
         private TimeSpan _lastDuration=TimeSpan.MinValue;
         private AssemblyDefinition _targetAssemblyDefinition;
+        private RepositoryAccess _repositoryAccess;
 
         /// <summary>
         /// Initializes the analyzer with the specified assembly name.
@@ -52,160 +56,139 @@ namespace Composestar.StarLight.ILAnalyzer
 
             _fileName = fileName;
 
+            _repositoryAccess = new RepositoryAccess();
+
             _isInitialized = true;
 
+        }
+
+        public RepositoryAccess RepositoryAccess
+        {
+            get { return _repositoryAccess; }
         }
 
         /// <summary>
         /// Extracts the methods.
         /// </summary>
         /// <returns></returns>
-        public List<MethodElement> ExtractMethods()
-        {
-            CheckForInit();
-
-            List<MethodElement> retList = new List<MethodElement>();
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start(); 
-
-            //Gets all types of the MainModule of the assembly
-            foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
-            {
-                foreach (MethodDefinition method in type.Methods)
-                {
-                    // Create a new method element
-                    MethodElement me = new MethodElement();
-                    me.MethodName = String.Format("{0}.{1}", type.Name, method.Name);
-                    me.ReturnType = method.ReturnType.ReturnType.ToString();  
-
-                    // Add the parameters
-                    foreach (ParameterDefinition param in method.Parameters)
-                    {
-                        // Create a new parameter element
-                        ParameterElement pe = new ParameterElement();
-                        pe.Name = param.Name;
-                        pe.Ordinal = (short)(param.Sequence);
-                        pe.ParameterType = param.ParameterType.ToString();
-                          
-                        // Add to the method
-                        me.Parameters.Add(pe);
-                    }
-
-                    if (method.Body != null)
-                    {
-                        foreach (Instruction instr in method.Body.Instructions)
-                        {
-                           if (instr.OpCode.Value == OpCodes.Call.Value ||
-                               instr.OpCode.Value == OpCodes.Calli.Value ||
-                               instr.OpCode.Value == OpCodes.Callvirt.Value
-                               )
-                           {
-                               CallConstruction cc = new CallConstruction();
-                               MethodReference mr = (MethodReference)(instr.Operand);
-                               cc.MethodReference = mr.ToString() ; 
-
-                               // Add to the list of the method
-                               me.Calls.Add(cc); 
-                           }
-                        }
-                    }
-
-                    // Add the method to the return list
-                    retList.Add(me);
-                }
-            }            
-
-            sw.Stop();
-            _lastDuration = sw.Elapsed; 
-
-            return retList;
-        }
-
-        public List<String> ExtractTypes()
+        public IList<MethodElement> ExtractMethods()
         {
             return null;
+            //CheckForInit();
+
+            //List<MethodElement> retList = new List<MethodElement>();
+
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start(); 
+
+            ////Gets all types of the MainModule of the assembly
+            //foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
+            //{
+            //    foreach (MethodDefinition method in type.Methods)
+            //    {
+            //        // Create a new method element
+            //        MethodElement me = new MethodElement();
+            //        me.MethodName = String.Format("{0}.{1}", type.Name, method.Name);
+            //        me.ReturnType = method.ReturnType.ReturnType.ToString();  
+
+            //        // Add the parameters
+            //        foreach (ParameterDefinition param in method.Parameters)
+            //        {
+            //            // Create a new parameter element
+            //            ParameterElement pe = new ParameterElement();
+            //            pe.Name = param.Name;
+            //            pe.Ordinal = (short)(param.Sequence);
+            //            pe.ParameterType = param.ParameterType.ToString();
+                          
+            //            // Add to the method
+            //            me.Parameters.Add(pe);
+            //        }
+
+            //        if (method.Body != null)
+            //        {
+            //            foreach (Instruction instr in method.Body.Instructions)
+            //            {
+            //               if (instr.OpCode.Value == OpCodes.Call.Value ||
+            //                   instr.OpCode.Value == OpCodes.Calli.Value ||
+            //                   instr.OpCode.Value == OpCodes.Callvirt.Value
+            //                   )
+            //               {
+            //                   CallConstruction cc = new CallConstruction();
+            //                   MethodReference mr = (MethodReference)(instr.Operand);
+            //                   cc.MethodReference = mr.ToString() ; 
+
+            //                   // Add to the list of the method
+            //                   me.Calls.Add(cc); 
+            //               }
+            //            }
+            //        }
+
+            //        // Add the method to the return list
+            //        retList.Add(me);
+            //    }
+            //}            
+
+            //sw.Stop();
+            //_lastDuration = sw.Elapsed; 
+
+            //return retList;
         }
 
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        public IList<Composestar.Repository.LanguageModel.TypeElement> ExtractTypeInformation()
+        public IList<TypeElement> ExtractTypeElements()
         {
             CheckForInit();
-
-            //List<Repository.LanguageModel.TypeInfo> retList = new List<Repository.LanguageModel.TypeInfo>();
-
+                        
             Stopwatch sw = new Stopwatch();
-            sw.Start(); 
-
-            //Gets the AssemblyDefinition of "_assemblyName"
-            AssemblyDefinition assembly;
-            try
-            {
-                assembly = AssemblyFactory.GetAssembly(_fileName);
-            }
-            catch (Exception ex) // TODO catch more specific exception
-            {
-                throw;
-            }
+            sw.Start();            
            
 
             //Gets all types of the MainModule of the assembly
-            foreach (TypeDefinition type in assembly.MainModule.Types)
+            foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
             {
-                Composestar.Repository.LanguageModel.TypeElement ti = new Composestar.Repository.LanguageModel.TypeElement();
+                TypeElement ti = new TypeElement();
                 
                 ti.Name = type.Name;
                 ti.FullName = type.FullName;
                 if (type.BaseType != null) { ti.BaseType = type.BaseType.Name; }
 
-                Composestar.Repository.DataStoreContainer.Instance.AddTypeElement(ti);
-
+                // Add to the repository
+                RepositoryAccess.AddType(ti);
+                
                 foreach (MethodDefinition method in type.Methods)
                 {
                     // Create a new method element
-                    //MethodElement me = new MethodElement();
-                    //me.MethodName = String.Format("{0}.{1}", type.Name, method.Name);
-                    //me.ReturnType = method.ReturnType.ReturnType.ToString();
-
-                    Composestar.Repository.LanguageModel.MethodElement mi = new Composestar.Repository.LanguageModel.MethodElement();
-                    mi.ParentTypeId = ti.Id;
+                    MethodElement mi = new MethodElement();                
                     mi.Name = method.Name;
                     mi.ReturnType = method.ReturnType.ReturnType.ToString();
                     
-                    Composestar.Repository.DataStoreContainer.Instance.AddMethodElement(mi);
-
+                    // Add to the repository
+                    RepositoryAccess.AddMethod(ti, mi);
+                    
                     // Add the parameters
                     foreach (ParameterDefinition param in method.Parameters)
                     {
                         // Create a new parameter element
-                        Composestar.Repository.LanguageModel.ParameterElement pe = new Composestar.Repository.LanguageModel.ParameterElement();
+                       ParameterElement pe = new ParameterElement();
                         pe.ParentMethodId = mi.Id;
                         pe.Name = param.Name;
                         pe.Ordinal = (short)(param.Sequence);
                         pe.ParameterType = param.ParameterType.ToString();
                           
                         // Add to the method
-                        Composestar.Repository.DataStoreContainer.Instance.AddParameterElement(pe);
+                        RepositoryAccess.AddParameter(mi, pe); 
+                        
                     }
-
-                  
-                    // Add the method to the return list
-                    //retList.Add(me);
-                    //ti.Methods.Add(mi);
                 }
-
-                //retList.Add(ti);
             }
-
-
 
             sw.Stop();
             _lastDuration = sw.Elapsed; 
 
-            return Composestar.Repository.DataStoreContainer.Instance.GetTypeElements();
+            return RepositoryAccess.GetTypeElements();
         }
 
         /// <summary>
