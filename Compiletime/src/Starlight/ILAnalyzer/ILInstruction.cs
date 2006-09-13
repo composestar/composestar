@@ -519,7 +519,7 @@ namespace Composestar.StarLight.ILAnalyzer.ILInstructions
             {
                 throw new NotImplementedException("This functionality is not yet implemented");
                 //if (m_method == null) m_method = m_resolver.AsMethod(m_token);
-                return m_method;
+                //return m_method;
             }
         }
         /// <summary>
