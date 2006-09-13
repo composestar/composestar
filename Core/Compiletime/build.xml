@@ -21,7 +21,7 @@
 	<target name="clean" depends="init">
 		<!--<make target="clean" />-->
 		<delete dir="${out.build}" />
-		<delete file="${out.jar.core}" />		
+		<delete dir="${out.dist}" />
 		<delete>
 			<fileset dir="src/Composestar/Core/COPPER">
 				<include name="CpsLexer.java" />
@@ -41,6 +41,7 @@
 	
 	<target name="local_init" depends="init">
 		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
 	</target>
 	
 	<target name="build" depends="local_init,antlr,compile,jar">
@@ -57,7 +58,7 @@
 	</target>
 	
 	<target name="compile">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" includeJavaRuntime="true">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4">
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="Composestar/Core/SECRET/*"/>
 			<exclude name="Composestar/Core/CORE/*"/>
@@ -74,7 +75,9 @@
 	</target>
 	
 	<target name="install" depends="build">
-		<copy file="${out.jar.core}" todir="${composestar.installdir}${file.separator}Binaries" />
+		<copy todir="${composestar.installdir}${file.separator}Binaries">
+			<fileset dir="${out.dist}" />
+		</copy>
 		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}${file.separator}Binaries" />
 		<copy file="binaries/prolog/prolog.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
 		<copy file="binaries/prolog/lib.pro" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
@@ -83,7 +86,7 @@
 		<copy file="binaries/groove/castor-0_9_5_2-xml.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
 		<copy file="binaries/groove/jgraph.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
 		<copy file="binaries/groove/xerces-2_6_0-xercesImpl.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
-		<copy file="binaries/groove/xerces-2_6_0-xml-apis.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />		
+		<copy file="binaries/groove/xerces-2_6_0-xml-apis.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
 		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}" />
 		<copy file="src/Composestar/Core/INCRE/INCREconfig.xml" todir="${composestar.installdir}" />
 		<copy file="src/Composestar/Core/CKRET/SECRET.css" todir="${composestar.installdir}" />
