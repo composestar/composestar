@@ -12,8 +12,14 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
+using Composestar.Repository.LanguageModel;  
+using Composestar.Repository.LanguageModel.Inlining;
+
+using Composestar.StarLight.ILWeaver.DataRetriever;
+
 namespace Composestar.StarLight.ILWeaver
 {
+
     /// <summary>
     /// Cecil implementation of the IL Weaver
     /// </summary>
@@ -21,6 +27,7 @@ namespace Composestar.StarLight.ILWeaver
     {
         private AssemblyDefinition _targetAssemblyDefinition;
         private WeaverConfiguration _configuration;
+        private RepositoryRetriever _repositoryRetriever;
 
         private bool _isInitialized = false;
         private TimeSpan _lastDuration = TimeSpan.MinValue;
@@ -99,8 +106,19 @@ namespace Composestar.StarLight.ILWeaver
 
             #endregion
             
+            _repositoryRetriever = new RepositoryRetriever();
+
             _isInitialized = true;
 
+        }
+
+        /// <summary>
+        /// Gets the repository retriever.
+        /// </summary>
+        /// <value>The repository retriever.</value>
+        private RepositoryRetriever RepositoryRetriever
+        {
+            get { return _repositoryRetriever; }
         }
 
         /// <summary>
@@ -144,6 +162,14 @@ namespace Composestar.StarLight.ILWeaver
             // See if we are initialized.
             CheckForInit();
 
+            // Start timing
+            Stopwatch sw = new Stopwatch();
+            sw.Start(); 
+
+            // Declare typeinfo and methodinfo
+            Composestar.Repository.LanguageModel.TypeInfo typeInformation;
+            Composestar.Repository.LanguageModel.MethodInfo methodInfo;
+
             // Check if the _targetAssemblyDefinition is still available
             if (_targetAssemblyDefinition == null)
                 throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
@@ -154,13 +180,25 @@ namespace Composestar.StarLight.ILWeaver
                 // Walk over each type in the module
                 foreach (TypeDefinition type in module.Types)
 	            {
+                    // Get the information from the repository about this type
+                    typeInformation = RepositoryRetriever.GetTypeInfo(type.FullName);
+                    // Skip this type if we do not have information about it 
+                    if (typeInformation == null)
+                        continue;
+
                     // Add the externals and internals
-                    WeaveExternals(type);
-                    WeaveInternals(type);
+                    WeaveExternals(type, typeInformation);
+                    WeaveInternals(type, typeInformation);
 
                     foreach (MethodDefinition method in type.Methods)
                     {
-                        WeaveMethod( method);
+                        // Get the methodinfo
+                        methodInfo = RepositoryRetriever.GetMethodInfo(typeInformation, method.Name);
+                        // Skip if there is no methodinfo
+                        if (methodInfo == null)
+                            continue;
+
+                        WeaveMethod(method, methodInfo);
                     }
 
                     //Import the modifying type into the AssemblyDefinition
@@ -171,13 +209,18 @@ namespace Composestar.StarLight.ILWeaver
             
             //Save the modified assembly
             AssemblyFactory.SaveAssembly(_targetAssemblyDefinition, _configuration.OutputFile);
+
+            // Stop timing
+            sw.Stop();
+            _lastDuration = sw.Elapsed; 
         }
 
         /// <summary>
         /// Weaves the internals.
         /// </summary>
         /// <param name="type">The type.</param>
-        public void WeaveInternals(TypeDefinition type)
+        /// <param name="typeInformation">The type information.</param>
+        public void WeaveInternals(TypeDefinition type, TypeInfo typeInformation)
         {
             // Declarations
             FieldDefinition internalDef;
@@ -197,8 +240,14 @@ namespace Composestar.StarLight.ILWeaver
             type.Fields.Add(internalDef);  
         }
 
-        public void WeaveExternals(TypeDefinition type)
+        /// <summary>
+        /// Weaves the externals.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="typeInformation">The type information.</param>
+        public void WeaveExternals(TypeDefinition type, TypeInfo typeInformation)
         {
+           
 
         }
 
@@ -206,9 +255,12 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the code into the method.
         /// </summary>
         /// <param name="method">The method definition.</param>
-        public void WeaveMethod(MethodDefinition method)
+        public void WeaveMethod(MethodDefinition method, Composestar.Repository.LanguageModel.MethodInfo methodInfo)
         {
             if (method == null)
+                return;
+
+            if (methodInfo == null)
                 return;
  
             // Add the inputfilters
