@@ -38,8 +38,19 @@
 		<mkdir dir="dest" />
 	</target>
 	
-	<target name="build" depends="init_local,compile_java,compile_dotnet,jar">
+	<target name="build" depends="init_local,antlr,compile_java,compile_dotnet,jar">
 		<!--<make target="build" />-->
+	</target>
+	
+	<target name="antlr">
+		<!--
+		<antlr target="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/csharp.g" outputdirectory="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
+			<classpath refid="lib.dotnet"/>
+		</antlr>
+		-->
+		<exec executable="${basedir}/src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/antlr-2.7.2.exe" dir="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
+			<arg value="csharp.g" />
+		</exec>
 	</target>
 	
 	<target name="compile_java">
@@ -49,14 +60,6 @@
 	</target>
 	
 	<target name="compile_dotnet">
-		<!--
-		<antlr target="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/csharp.g" outputdirectory="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
-			<classpath refid="lib.dotnet"/>
-		</antlr>
-		-->
-		<exec executable="${basedir}/src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/antlr-2.7.2.exe" dir="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
-			<arg value="csharp.g" />
-		</exec>
 		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" />
 		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />		
 		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\ACTING" />
