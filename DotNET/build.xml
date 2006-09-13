@@ -32,11 +32,11 @@
 	
 	<target name="findbugs">
 		<findbugs home="${bin.findbugs}" output="html" effort="max" reportLevel="medium" outputFile="${build.dotnet}${file.separator}findbugs-result.html" excludeFilter="${bin.findbugs}${file.separator}exclude.xml">
-			<class location="${build.dotnet}${file.separator}Compiletime${file.separator}ComposestarDotNET.jar" />
+			<class location="${build.dotnet}${file.separator}Compiletime${file.separator}${out.jar.dotnet}" />
 			<sourcePath path="${build.dotnet}${file.separator}Compiletime${file.separator}src" />
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
-				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}ComposestarCORE.jar" />
+				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
 			</auxClasspath>
 		</findbugs>
 	</target>
