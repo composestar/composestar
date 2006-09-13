@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Compiletime" default="build">
 
+	<property name="debug" value="on"/>
+	
 	<condition property="build.core" value="${basedir}${file.separator}..">
 		<and>
 			<not>
@@ -13,10 +15,7 @@
 	
 	<echo message="${ant.project.name}" />
 	
-	<description>
-	The Compose* Core Compiletime
-	The core of the compose* compiler
-	</description>
+	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler (YARLY).</description>
 
 	<target name="clean" depends="init">
 		<!--<make target="clean" />-->
@@ -58,7 +57,7 @@
 	</target>
 	
 	<target name="compile">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${debug}">
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="Composestar/Core/SECRET/*"/>
 			<exclude name="Composestar/Core/CORE/*"/>
