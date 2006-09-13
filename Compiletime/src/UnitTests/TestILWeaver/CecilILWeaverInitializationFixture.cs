@@ -1,12 +1,12 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-
-#if !NUNIT
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Composestar.StarLight.ILWeaver;
 using System.Collections.Specialized;
 using System.IO;
+
+#if !NUNIT
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 #else
 using NUnit.Framework;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
