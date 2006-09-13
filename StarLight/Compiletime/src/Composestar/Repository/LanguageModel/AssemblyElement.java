@@ -1,9 +1,9 @@
 package Composestar.Repository.LanguageModel;
 
 /**
- * Summary description for AssemblyInfo.
+ * Summary description for AssemblyElement.
  */
-public class AssemblyInfo
+public class AssemblyElement
 {
 	private String _name;
 	private String _version;

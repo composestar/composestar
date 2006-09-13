@@ -29,19 +29,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.java" />
+    <Compile Include="AssemblyElement.java" />
+    <Compile Include="CallElement.java" />
     <Compile Include="Inlining\Block.java" />
     <Compile Include="Inlining\Instruction.java" />
     <Compile Include="MethodBody.java" />
-    <Compile Include="MethodInfo.java" />
-    <Compile Include="ParameterInfo.java" />
-    <Compile Include="TypeInfo.java" />
+    <Compile Include="MethodElement.java" />
+    <Compile Include="ParameterElement.java" />
+    <Compile Include="Properties\AssemblyInfo.jsl" />
+    <Compile Include="TypeElement.java" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

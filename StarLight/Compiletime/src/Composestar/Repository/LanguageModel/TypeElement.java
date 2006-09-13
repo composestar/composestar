@@ -4,24 +4,25 @@ package Composestar.Repository.LanguageModel;
 /**
  * Summary description for Class1
  */
-public class TypeInfo
+public class TypeElement
 {
 	private int _id;
 	private String _name;
 	private String _fullName;
 	private String _baseType;
-	private AssemblyInfo _assemblyInfo;
+	private AssemblyElement _assemblyElement;
 	private boolean _isAbstract;
 	private boolean _isInterface;
 	private boolean _isSealed;
 	private boolean _isValueType;
 	private boolean _isEnum;
-	
-	public TypeInfo()
+
+	public TypeElement()
 	{
 		_id = this.hashCode();
 	}
-	
+
+	/** @property */
 	public int get_id() { return _id; }
 
 	/** @property */
@@ -61,15 +62,15 @@ public class TypeInfo
 	}
 	
 	/** @property */
-	public AssemblyInfo get_AssemblyInfo()
+	public AssemblyElement get_AssemblyElement()
 	{
-		return _assemblyInfo;
+		return _assemblyElement;
 	}
 
 	/** @property */
-	public void set_AssemblyInfo(AssemblyInfo value)
+	public void set_AssemblyElement(AssemblyElement value)
 	{
-		_assemblyInfo = value;
+		_assemblyElement = value;
 	}
 
 	/** @property */
