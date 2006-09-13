@@ -23,7 +23,6 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         void DoWeave();
         
-
         /// <summary>
         /// Gets the duration of the last executed method.
         /// </summary>

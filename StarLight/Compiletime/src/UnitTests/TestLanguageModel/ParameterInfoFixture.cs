@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
  
-using Repository.LanguageModel;  
+using Composestar.Repository.LanguageModel;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
