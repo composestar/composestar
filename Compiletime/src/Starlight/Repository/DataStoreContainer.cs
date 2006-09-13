@@ -26,8 +26,15 @@ namespace Composestar.Repository
         DataStoreContainer()
         {
             System.IO.File.Delete(YapFileName);
+            
+            // Indexes
+            Db4o.Configure().ObjectClass(typeof(MethodElement)).ObjectField("_parentTypeId").Indexed(true);
+            Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
+
             Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("id").Indexed(true);  
             Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);
+            
+            
             dbContainer = Db4o.OpenFile(YapFileName);
         }
 
@@ -47,6 +54,8 @@ namespace Composestar.Repository
         #endregion
 
         #region Types functionality
+
+
         /// <summary>
         /// Gets the type elements.
         /// </summary>
@@ -86,6 +95,7 @@ namespace Composestar.Repository
 
         #endregion
 
+
         /// <summary>
         /// Adds the method.
         /// </summary>
@@ -94,6 +104,12 @@ namespace Composestar.Repository
         {
             dbContainer.Set(methodElement);
         }
+
+        public void AddParameterElement(Composestar.Repository.LanguageModel.ParameterElement parameterelement)
+        {
+            dbContainer.Set(parameterelement);
+        }
+
 
         /// <summary>
         /// Gets the method element.
@@ -105,7 +121,7 @@ namespace Composestar.Repository
         {
             IList<MethodElement> ret = dbContainer.Query<MethodElement>(delegate (MethodElement me)
             {
-                return (me.TypeId == typeId) && (me.Name.Equals(methodName));  
+                return (me.ParentTypeId == typeId) && (me.Name.Equals(methodName));  
             });
 
             if (ret.Count == 1)
