@@ -28,7 +28,10 @@ public class DataStoreContainer {
 		
 		Db4o.configure().callConstructors(false);
 
-		dbContainer = Db4o.openFile("test.yap");
+		// Indexes
+        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
+		
+        dbContainer = Db4o.openFile("test.yap");
     }
     
     private void adjustClassNames()
@@ -63,8 +66,8 @@ public class DataStoreContainer {
 	{
 		
 		//db.set(new Composestar.Repository.LanguageModel.TypeInfo());
-		ObjectSet result=dbContainer.get(Composestar.Repository.LanguageModel.TypeInfo.class);
-//System.out.println("GetTypes says: " + result.size());
+		ObjectSet result=dbContainer.get(Composestar.Repository.LanguageModel.TypeElement.class);
+System.out.println("GetTypes says: " + result.size());
 		//return (Composestar.Repository.LanguageModel.TypeInfo[])result.toArray();
 		ArrayList types = new ArrayList();
 		while (result.hasNext()) {
@@ -74,8 +77,19 @@ public class DataStoreContainer {
 		
 		return types;
 	}
+
+	public int getMethods(Composestar.Repository.LanguageModel.TypeElement type)
+	{
+		Query query=dbContainer.query();
+		query.constrain(Composestar.Repository.LanguageModel.MethodElement.class);
+		query.descend("_parentTypeId").constrain(new Integer(type.get_Id()));
+		ObjectSet result=query.execute();
+		
+			
+		return result.size();
+	}
 	
-	public int getMethods(int typeid)
+	public int getMethods1(int typeid)
 	{
 		if (_methods == null) {
 		
@@ -83,25 +97,25 @@ public class DataStoreContainer {
 			_methods = new Hashtable();
 		
 			Query query = dbContainer.query();
-			query.constrain(Composestar.Repository.LanguageModel.MethodInfo.class);
+			query.constrain(Composestar.Repository.LanguageModel.MethodElement.class);
 
 			ObjectSet result = query.execute();
 			
-			while (result.hasNext())
-			{
-				ArrayList m = null;
-				Composestar.Repository.LanguageModel.MethodInfo mi = (Composestar.Repository.LanguageModel.MethodInfo)result.next();
-				if (_methods.containsKey(new Integer(mi.get_TypeId())))
-				{
-					m = (ArrayList)_methods.get(new Integer(mi.get_TypeId()));
-				}
-				else {
-					m = new ArrayList();
+			//while (result.hasNext())
+			//{
+			//	ArrayList m = null;
+			//	Composestar.Repository.LanguageModel.MethodElement mi = (Composestar.Repository.LanguageModel.MethodElement)result.next();
+			//	if (_methods.containsKey(new Integer(mi.get_TypeId())))
+			//	{
+			//		m = (ArrayList)_methods.get(new Integer(mi.get_TypeId()));
+			//	}
+			//	else {
+			//		m = new ArrayList();
 
-				}
-				m.add(mi);
-				_methods.put(new Integer(mi.get_TypeId()), m);				
-			}
+			//	}
+			//	m.add(mi);
+			//	_methods.put(new Integer(mi.get_TypeId()), m);				
+			//}
 		
 		}
 		

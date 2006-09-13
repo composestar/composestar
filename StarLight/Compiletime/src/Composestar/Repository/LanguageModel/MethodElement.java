@@ -6,14 +6,13 @@ package Composestar.Repository.LanguageModel;
 public class MethodElement
 {
 	private int _id;
-	private int _typeId;
+	private int _parentTypeId;
 	private String _name;
 	private String _returnType;
 	private MethodBody _methodBody;
 
 	public MethodElement()
 	{
-		//_parameters = new java.util.ArrayList();
 		_id = this.hashCode();
 		_methodBody = new MethodBody(); 
 	}
@@ -22,15 +21,15 @@ public class MethodElement
 	public int get_Id() { return _id; }
 	
 	/** @property */
-	public void set_TypeId(int value)
+	public void set_ParentTypeId(int value)
 	{
-		_typeId = value; 
+	    _parentTypeId = value; 
 	}
 	
 	/** @property */
-	public int get_TypeId() 
+	public int get_ParentTypeId() 
 	{
-		return _typeId; 
+	    return _parentTypeId; 
 	}
 	
 	/** @property */
