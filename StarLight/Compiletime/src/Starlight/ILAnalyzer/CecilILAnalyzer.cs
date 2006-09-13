@@ -122,15 +122,20 @@ namespace Composestar.StarLight.ILAnalyzer
             return retList;
         }
 
+        public List<String> ExtractTypes()
+        {
+            return null;
+        }
+
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        public List<string> ExtractTypes()
+        public IList<Composestar.Repository.LanguageModel.TypeElement> ExtractTypeInformation()
         {
             CheckForInit();
 
-            List<MethodElement> retList = new List<MethodElement>();
+            //List<Repository.LanguageModel.TypeInfo> retList = new List<Repository.LanguageModel.TypeInfo>();
 
             Stopwatch sw = new Stopwatch();
             sw.Start(); 
@@ -150,36 +155,57 @@ namespace Composestar.StarLight.ILAnalyzer
             //Gets all types of the MainModule of the assembly
             foreach (TypeDefinition type in assembly.MainModule.Types)
             {
+                Composestar.Repository.LanguageModel.TypeElement ti = new Composestar.Repository.LanguageModel.TypeElement();
+                
+                ti.Name = type.Name;
+                ti.FullName = type.FullName;
+                if (type.BaseType != null) { ti.BaseType = type.BaseType.Name; }
+
+                Composestar.Repository.DataStoreContainer.Instance.AddTypeElement(ti);
+
                 foreach (MethodDefinition method in type.Methods)
                 {
                     // Create a new method element
-                    MethodElement me = new MethodElement();
-                    me.MethodName = String.Format("{0}.{1}", type.Name, method.Name);
-                    me.ReturnType = method.ReturnType.ReturnType.ToString();  
+                    //MethodElement me = new MethodElement();
+                    //me.MethodName = String.Format("{0}.{1}", type.Name, method.Name);
+                    //me.ReturnType = method.ReturnType.ReturnType.ToString();
+
+                    Composestar.Repository.LanguageModel.MethodElement mi = new Composestar.Repository.LanguageModel.MethodElement();
+                    mi.ParentTypeId = ti.Id;
+                    mi.Name = method.Name;
+                    mi.ReturnType = method.ReturnType.ReturnType.ToString();
+                    
+                    Composestar.Repository.DataStoreContainer.Instance.AddMethodElement(mi);
 
                     // Add the parameters
                     foreach (ParameterDefinition param in method.Parameters)
                     {
                         // Create a new parameter element
-                        ParameterElement pe = new ParameterElement();
+                        Composestar.Repository.LanguageModel.ParameterElement pe = new Composestar.Repository.LanguageModel.ParameterElement();
+                        pe.ParentMethodId = mi.Id;
                         pe.Name = param.Name;
                         pe.Ordinal = (short)(param.Sequence);
                         pe.ParameterType = param.ParameterType.ToString();
                           
                         // Add to the method
-                        me.Parameters.Add(pe);
+                        Composestar.Repository.DataStoreContainer.Instance.AddParameterElement(pe);
                     }
 
                   
                     // Add the method to the return list
-                    retList.Add(me);
+                    //retList.Add(me);
+                    //ti.Methods.Add(mi);
                 }
-            }            
+
+                //retList.Add(ti);
+            }
+
+
 
             sw.Stop();
             _lastDuration = sw.Elapsed; 
 
-            return null;
+            return Composestar.Repository.DataStoreContainer.Instance.GetTypeElements();
         }
 
         /// <summary>
