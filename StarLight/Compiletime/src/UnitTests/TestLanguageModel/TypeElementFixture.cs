@@ -20,9 +20,9 @@ namespace TestLanguageModel
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class TypeInfoFixture
+    public class TypeElementFixture
     {
-        public TypeInfoFixture()
+        public TypeElementFixture()
         {
             //
             // TODO: Add constructor logic here
@@ -51,10 +51,10 @@ namespace TestLanguageModel
         //
         #endregion
 
-        [Owner("Michiel van Oudheusden"), Description("Test if the TypeInfo class persists the strings."), TestMethod]
-        public void TypeInfoPersistStringData()
+        [Owner("Michiel van Oudheusden"), Description("Test if the TypeElement class persists the strings."), TestMethod]
+        public void TypeElementPersistStringData()
         {
-            TypeInfo ti = new TypeInfo();
+            TypeElement ti = new TypeElement();
             string testValue = "test";
             ti.FullName = testValue;
             ti.BaseType = testValue;
@@ -65,10 +65,10 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, ti.Name, "Name does not persists data"); 
         }
 
-        [Description("Test if the TypeInfo class persists the booleans."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void TypeInfoPersistBoolData()
+        [Description("Test if the TypeElement class persists the booleans."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void TypeElementPersistBoolData()
         {
-            TypeInfo ti = new TypeInfo();
+            TypeElement ti = new TypeElement();
             bool testValue = true;
 
             ti.IsAbstract = testValue;
@@ -84,35 +84,35 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, ti.IsSealed, "IsSealed does not persists data");
         }
 
-        //[Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
-        //public void TypeInfoPersistMethodData()
+        //[Description("Checks if the methods added to the TypeElement object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
+        //public void TypeElementPersistMethodData()
         //{
-        //    TypeInfo ti = new TypeInfo();
-        //    MethodInfo mi = new MethodInfo();
+        //    TypeElement ti = new TypeElement();
+        //    MethodElement mi = new MethodElement();
         //    mi.Name = "test";
 
-        //    Assert.IsNull(mi.ParentTypeInfo, "Method should not have a type.");
+        //    Assert.IsNull(mi.ParentTypeElement, "Method should not have a type.");
 
-        //    mi.ParentTypeInfo = ti;
+        //    mi.ParentTypeElement = ti;
 
-        //    Assert.IsNotNull(mi.ParentTypeInfo, "Method should have a typeinfo object assigned to it." ); 
-        //    Assert.AreEqual(ti, mi.ParentTypeInfo, "Method does not have the same type info.");
+        //    Assert.IsNotNull(mi.ParentTypeElement, "Method should have a typeinfo object assigned to it." ); 
+        //    Assert.AreEqual(ti, mi.ParentTypeElement, "Method does not have the same type info.");
             
         //}
 
-        [Description("Checks if the AssemblyInfo is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void TypeInfoPersistAssemblyInfoData()
+        [Description("Checks if the AssemblyElement is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void TypeElementPersistAssemblyElementData()
         {
-            TypeInfo ti = new TypeInfo();
+            TypeElement ti = new TypeElement();
             
-            AssemblyInfo ai = new AssemblyInfo();
+            AssemblyElement ai = new AssemblyElement();
             string v = "test";
             ai.Name = v;
 
-            ti.AssemblyInfo = ai;
+            ti.AssemblyElement = ai;
 
-            Assert.AreEqual(ai, ti.AssemblyInfo, "TypeInfo does not persists AssemblyInfo");
-            Assert.AreEqual(v, ti.AssemblyInfo.Name, "AssemblyInfo does not persists the data"); 
+            Assert.AreEqual(ai, ti.AssemblyElement, "TypeElement does not persists AssemblyElement");
+            Assert.AreEqual(v, ti.AssemblyElement.Name, "AssemblyElement does not persists the data"); 
         }
     }
 }

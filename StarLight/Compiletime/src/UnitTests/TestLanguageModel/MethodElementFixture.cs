@@ -17,12 +17,12 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace TestLanguageModel
 {
     /// <summary>
-    /// Summary description for MethodInfoFixture
+    /// Summary description for MethodElementFixture
     /// </summary>
     [TestClass]
-    public class MethodInfoFixture
+    public class MethodElementFixture
     {
-        public MethodInfoFixture()
+        public MethodElementFixture()
         {
             //
             // TODO: Add constructor logic here
@@ -51,10 +51,10 @@ namespace TestLanguageModel
         //
         #endregion
 
-        [Owner("Michiel van Oudheusden"), Description("Test if the MethodInfo class persists the strings."), TestMethod]
-        public void MethodInfoPersistStringData()
+        [Owner("Michiel van Oudheusden"), Description("Test if the MethodElement class persists the strings."), TestMethod]
+        public void MethodElementPersistStringData()
         {
-            MethodInfo mi = new MethodInfo();
+            MethodElement mi = new MethodElement();
             string testValue = "test";
             mi.Name = testValue;
             mi.ReturnType = testValue;
@@ -63,32 +63,32 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, mi.Name, "Name does not persists data");
         }
 
-        [Description("Test if the MethodInfo class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void MethodInfoPersistParameters()
+        [Description("Test if the MethodElement class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void MethodElementPersistParameters()
         {
-            MethodInfo mi = new MethodInfo();
-            ParameterInfo pi = new ParameterInfo();
+            MethodElement mi = new MethodElement();
+            ParameterElement pi = new ParameterElement();
 
             string v = "test";
             pi.Name = v;
 
-            Assert.IsNull(pi.ParentMethodInfo, "Parameter should not have a parent method.");
-            pi.ParentMethodInfo = mi;
-            Assert.IsNotNull(pi.ParentMethodInfo, "Parameter should have a method.");
+            Assert.IsNull(pi.ParentMethodElement, "Parameter should not have a parent method.");
+            pi.ParentMethodElement = mi;
+            Assert.IsNotNull(pi.ParentMethodElement, "Parameter should have a method.");
                        
         }
 
         [Description("Checks if the methodinfo class stores the methodbody object."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void MethodInfoStoresMethodBody()
+        public void MethodElementStoresMethodBody()
         {
-            MethodInfo mi = new MethodInfo();
+            MethodElement mi = new MethodElement();
             Assert.IsNotNull(mi.MethodBody, "MethodBody is null.");
  
             MethodBody mb = new MethodBody();
             mi.MethodBody = mb;
 
             Assert.IsNotNull(mi.MethodBody, "MethodBody is null.");
-            Assert.AreEqual(mb, mi.MethodBody, "MethodBody is not stored in MethodInfo.");
+            Assert.AreEqual(mb, mi.MethodBody, "MethodBody is not stored in MethodElement.");
  
             
         }
