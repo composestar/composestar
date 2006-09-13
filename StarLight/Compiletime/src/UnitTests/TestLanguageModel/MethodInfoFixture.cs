@@ -63,23 +63,20 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, mi.Name, "Name does not persists data");
         }
 
-        //[Description("Test if the MethodInfo class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
-        //public void MethodInfoPersistParameters()
-        //{
-        //    MethodInfo mi = new MethodInfo();
-        //    ParameterInfo pi = new ParameterInfo();
+        [Description("Test if the MethodInfo class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void MethodInfoPersistParameters()
+        {
+            MethodInfo mi = new MethodInfo();
+            ParameterInfo pi = new ParameterInfo();
 
-        //    string v = "test";
-        //    pi.Name = v;
+            string v = "test";
+            pi.Name = v;
 
-        //    Assert.IsNotNull(mi.Parameters, "Parameters list is null.");
-        //    Assert.IsTrue(mi.Parameters.Count == 0, "Parameters list is not empty.");
-
-        //    mi.Parameters.Add(pi);
-
-        //    Assert.AreEqual(pi, mi.Parameters[0], "MethodInfo.Parameters does not contain the just added parameterinfo.");
-            
-        //}
+            Assert.IsNull(pi.ParentMethodInfo, "Parameter should not have a parent method.");
+            pi.ParentMethodInfo = mi;
+            Assert.IsNotNull(pi.ParentMethodInfo, "Parameter should have a method.");
+                       
+        }
 
         [Description("Checks if the methodinfo class stores the methodbody object."), Owner("Michiel van Oudheusden"), TestMethod]
         public void MethodInfoStoresMethodBody()

@@ -84,37 +84,35 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, ti.IsSealed, "IsSealed does not persists data");
         }
 
-        //[Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
-        //public void TypeInfoPersistMethodData()
-        //{
-        //    TypeInfo ti = new TypeInfo();
-        //    MethodInfo mi = new MethodInfo();
-        //    mi.Name = "test";
+        [Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void TypeInfoPersistMethodData()
+        {
+            TypeInfo ti = new TypeInfo();
+            MethodInfo mi = new MethodInfo();
+            mi.Name = "test";
 
-        //    Assert.IsNotNull(ti.Methods, "Method list is null");
+            Assert.IsNull(mi.ParentTypeInfo, "Method should not have a type.");
 
-        //    ti.Methods.Add(mi);
+            mi.ParentTypeInfo = ti;
 
-        //    Assert.IsTrue(ti.Methods.Count == 1, "Method list does not contain a single methodinfo.");
-        //    Assert.AreEqual(mi, ti.Methods[0], "Method list does not contain the same method info as added to the list.");
+            Assert.IsNotNull(mi.ParentTypeInfo, "Method should have a typeinfo object assigned to it." ); 
+            Assert.AreEqual(ti, mi.ParentTypeInfo, "Method does not have the same type info.");
             
-        //}
+        }
 
-        //[Description("Checks if the AssemblyInfo is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
-        //public void TypeInfoPersistAssemblyInfoData()
-        //{
-        //    TypeInfo ti = new TypeInfo();
+        [Description("Checks if the AssemblyInfo is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void TypeInfoPersistAssemblyInfoData()
+        {
+            TypeInfo ti = new TypeInfo();
             
-        //    AssemblyInfo ai = new AssemblyInfo();
-        //    string v = "test";
-        //    ai.Name = v;
+            AssemblyInfo ai = new AssemblyInfo();
+            string v = "test";
+            ai.Name = v;
 
-        //    Assert.IsNotNull(ti.Assembly, "Assembly info is null");
+            ti.AssemblyInfo = ai;
 
-        //    ti.Assembly = ai;
-
-        //    Assert.AreEqual(ai, ti.Assembly, "TypeInfo does not persists AssemblyInfo");
-        //    Assert.AreEqual(v, ti.Assembly.Name, "AssemblyInfo does not persists the data"); 
-        //}
+            Assert.AreEqual(ai, ti.AssemblyInfo, "TypeInfo does not persists AssemblyInfo");
+            Assert.AreEqual(v, ti.AssemblyInfo.Name, "AssemblyInfo does not persists the data"); 
+        }
     }
 }
