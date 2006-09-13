@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 
-using Repository.LanguageModel;  
+using Composestar.Repository.LanguageModel;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -84,21 +84,21 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, ti.IsSealed, "IsSealed does not persists data");
         }
 
-        [Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void TypeInfoPersistMethodData()
-        {
-            TypeInfo ti = new TypeInfo();
-            MethodInfo mi = new MethodInfo();
-            mi.Name = "test";
+        //[Description("Checks if the methods added to the TypeInfo object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
+        //public void TypeInfoPersistMethodData()
+        //{
+        //    TypeInfo ti = new TypeInfo();
+        //    MethodInfo mi = new MethodInfo();
+        //    mi.Name = "test";
 
-            Assert.IsNull(mi.ParentTypeInfo, "Method should not have a type.");
+        //    Assert.IsNull(mi.ParentTypeInfo, "Method should not have a type.");
 
-            mi.ParentTypeInfo = ti;
+        //    mi.ParentTypeInfo = ti;
 
-            Assert.IsNotNull(mi.ParentTypeInfo, "Method should have a typeinfo object assigned to it." ); 
-            Assert.AreEqual(ti, mi.ParentTypeInfo, "Method does not have the same type info.");
+        //    Assert.IsNotNull(mi.ParentTypeInfo, "Method should have a typeinfo object assigned to it." ); 
+        //    Assert.AreEqual(ti, mi.ParentTypeInfo, "Method does not have the same type info.");
             
-        }
+        //}
 
         [Description("Checks if the AssemblyInfo is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
         public void TypeInfoPersistAssemblyInfoData()

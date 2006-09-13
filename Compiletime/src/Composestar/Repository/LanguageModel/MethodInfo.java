@@ -15,6 +15,7 @@ public class MethodInfo
 	{
 		//_parameters = new java.util.ArrayList();
 		_id = this.hashCode();
+		_methodBody = new MethodBody(); 
 	}
 
 	/** @property */

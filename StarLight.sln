@@ -12,22 +12,43 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILWeaver", "Compiletime\src\Starlight\ILWeaver\ILWeaver.csproj", "{7A30904D-40C9-408D-813E-12E16C488EAA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{37EFCE76-0C25-4760-90C9-CCB69ABA61C5}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{B750A861-A08C-4E1A-82BC-DE4B521FF221}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{C0F8605A-5ACF-4D1E-AA33-8D059E509998}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestILAnalyzer", "Compiletime\src\UnitTests\ILAnalyzer\TestILAnalyzer.csproj", "{1B4B4933-6267-4AEC-9F9C-1FF8B6C7546B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IL Analyzer and Weaver", "IL Analyzer and Weaver", "{187D6F5F-8A84-4527-B63B-5037CD93E1E6}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Java Compiletime", "Java Compiletime", "{8E22E764-B44D-41C7-81AF-EF9D491081ED}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugin", "Plugin", "{6E971B59-9204-44E3-91FD-1E26213802BE}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLightVSAddin", "Plugin\src\StarLightVSAddin.csproj", "{CDABFDB2-E16D-4DAA-BD96-4322A799F93B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visual Studio Integration", "Visual Studio Integration", "{C71100E4-D848-4173-BCA9-578E6E874CB1}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.VisualStudio.LanguageServices", "VSIntegration\VisualStudio.LanguageServices\StarLight.VisualStudio.LanguageServices.csproj", "{74788B39-49AB-4708-AD96-B5558AF48C7A}"
 EndProject
@@ -36,28 +57,33 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.MSBuild.Tasks", "VSIntegration\MSBuildTasks\StarLight.MSBuild.Tasks.csproj", "{B37EA36C-9C56-4EC2-BD17-4B884F9D6ACE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data Store", "Data Store", "{5942A443-37C5-49CE-AB3A-E47154593FBD}"
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{40C9556A-C48D-4E1C-875C-80A45D2AAC5C}"
 	ProjectSection(SolutionItems) = preProject
 		localtestrun.testrunconfig = localtestrun.testrunconfig
 		StarLight1.vsmdi = StarLight1.vsmdi
 	EndProjectSection
+	ProjectSection(FolderStartupServices) = postProject
+		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestILWeaver", "UnitTests\TestILWeaver\TestILWeaver.csproj", "{8EAD531D-F959-4445-9C5B-68E82F639550}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageModel", "Compiletime\src\Starlight\Repository\RepositoryDotNET\LanguageModel\LanguageModel.csproj", "{C08D43A4-238E-4317-87BC-D1E72EA4E343}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStoreContainer", "Compiletime\src\Starlight\Repository\RepositoryDotNET\DataStoreContainer\DataStoreContainer.csproj", "{40B1F906-58AC-42AD-837C-3F31B289659C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLanguageModel", "Compiletime\src\UnitTests\TestLanguageModel\TestLanguageModel.csproj", "{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "temp", "temp", "{E117753B-547D-4D7A-B6CE-F64BD403E0CA}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "LanguageModel", "Compiletime\src\Composestar\Repository\LanguageModel\LanguageModel.vjsproj", "{12970BDF-D7FE-4206-A988-1940B7B9A93B}"
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "LanguageModel", "Compiletime\src\Starlight\Repository\LanguageModel\LanguageModel.vjsproj", "{12970BDF-D7FE-4206-A988-1940B7B9A93B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStoreContainer", "Compiletime\src\Starlight\Repository\DataStoreContainer.csproj", "{40B1F906-58AC-42AD-837C-3F31B289659C}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = StarLight1.vsmdi
+	EndGlobalSection
+	GlobalSection(TextTemplating) = postSolution
+		TextTemplating = 1
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -279,46 +305,6 @@ Global
 		{8EAD531D-F959-4445-9C5B-68E82F639550}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8EAD531D-F959-4445-9C5B-68E82F639550}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8EAD531D-F959-4445-9C5B-68E82F639550}.Release|x86.ActiveCfg = Release|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugNUnit|Any CPU.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugNUnit|Any CPU.Build.0 = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugNUnit|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugNUnit|Mixed Platforms.Build.0 = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugNUnit|x86.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugVSIntegration|Any CPU.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugVSIntegration|Any CPU.Build.0 = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugVSIntegration|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugVSIntegration|Mixed Platforms.Build.0 = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.DebugVSIntegration|x86.ActiveCfg = Debug|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343}.Release|x86.ActiveCfg = Release|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Any CPU.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Any CPU.Build.0 = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Mixed Platforms.Build.0 = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|x86.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Any CPU.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Any CPU.Build.0 = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Mixed Platforms.Build.0 = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|x86.ActiveCfg = Debug|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CA26E71-2EE9-4CCB-99DD-C7839F0D0E63}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -359,6 +345,26 @@ Global
 		{12970BDF-D7FE-4206-A988-1940B7B9A93B}.Release|Mixed Platforms.Build.0 = Release|x86
 		{12970BDF-D7FE-4206-A988-1940B7B9A93B}.Release|x86.ActiveCfg = Release|x86
 		{12970BDF-D7FE-4206-A988-1940B7B9A93B}.Release|x86.Build.0 = Release|x86
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Any CPU.Build.0 = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|Mixed Platforms.Build.0 = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugNUnit|x86.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Any CPU.Build.0 = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|Mixed Platforms.Build.0 = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.DebugVSIntegration|x86.ActiveCfg = Debug|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{40B1F906-58AC-42AD-837C-3F31B289659C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -382,9 +388,7 @@ Global
 		{74788B39-49AB-4708-AD96-B5558AF48C7A} = {C71100E4-D848-4173-BCA9-578E6E874CB1}
 		{6F6C0C53-6489-439D-A92F-2EBA93D8A889} = {C71100E4-D848-4173-BCA9-578E6E874CB1}
 		{B37EA36C-9C56-4EC2-BD17-4B884F9D6ACE} = {C71100E4-D848-4173-BCA9-578E6E874CB1}
-		{40B1F906-58AC-42AD-837C-3F31B289659C} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
-		{E117753B-547D-4D7A-B6CE-F64BD403E0CA} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
 		{12970BDF-D7FE-4206-A988-1940B7B9A93B} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
-		{C08D43A4-238E-4317-87BC-D1E72EA4E343} = {E117753B-547D-4D7A-B6CE-F64BD403E0CA}
+		{40B1F906-58AC-42AD-837C-3F31B289659C} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
 	EndGlobalSection
 EndGlobal
