@@ -28,6 +28,14 @@
 			</fileset>
 		</delete>
 		<delete>
+			<fileset dir="src/Composestar/DotNET/DUMMER">
+				<include name="JSharpLexer.java" />
+				<include name="JSharpRecognizer.java" />
+				<include name="JSharpTokenTypes.*" />
+				<include name="*.smap" />
+			</fileset>
+		</delete>
+		<delete>
 			<fileset dir="src">
 				<include name="**/*.class" />
 			</fileset>
@@ -51,6 +59,9 @@
 		<exec executable="${basedir}/src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/antlr-2.7.2.exe" dir="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
 			<arg value="csharp.g" />
 		</exec>
+		<antlr target="src/Composestar/DotNET/DUMMER/grammars/jsharp.g" outputdirectory="src/Composestar/DotNET/DUMMER">
+			<classpath refid="lib.dotnet"/>
+		</antlr>
 	</target>
 	
 	<target name="compile_java">
