@@ -1,9 +1,9 @@
 package Composestar.Repository.LanguageModel;
 
 /**
- * Summary description for ParameterInfo.
+ * Summary description for ParameterElement.
  */
-public class ParameterInfo
+public class ParameterElement
 {
 
 	private String _name;
@@ -47,18 +47,18 @@ public class ParameterInfo
 		_parameterType = value;
 	}
 
-	private MethodInfo _referencedMethodInfo;
+	private MethodElement _referencedMethodElement;
 
 	/** @property */
-	public MethodInfo get_ParentMethodInfo()
+	public MethodElement get_ParentMethodElement()
 	{
-		return _referencedMethodInfo;
+		return _referencedMethodElement;
 	}
 
 	/** @property */
-	public void set_ParentMethodInfo(MethodInfo value)
+	public void set_ParentMethodElement(MethodElement value)
 	{
-		_referencedMethodInfo = value;
+		_referencedMethodElement = value;
 	}
 
 	private String _parameterAttributes;

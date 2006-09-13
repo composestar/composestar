@@ -1,9 +1,9 @@
 package Composestar.Repository.LanguageModel;
 
 /**
- * Summary description for MethodInfo.
+ * Summary description for MethodElement.
  */
-public class MethodInfo
+public class MethodElement
 {
 	private int _id;
 	private int _typeId;
@@ -11,7 +11,7 @@ public class MethodInfo
 	private String _returnType;
 	private MethodBody _methodBody;
 
-	public MethodInfo()
+	public MethodElement()
 	{
 		//_parameters = new java.util.ArrayList();
 		_id = this.hashCode();
