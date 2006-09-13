@@ -26,6 +26,8 @@ public class Message{
     
     public final static Target STAR_TARGET = getStarTarget();
     public final static Target INNER_TARGET = getInnerTarget();
+    public final static Target SELF_TARGET = getSelfTarget();
+    public final static Target UNDISTINGUISHABLE_TARGET = getUndistinguishableTarget();
     
     public final static MessageSelector STAR_SELECTOR = getStarSelector();
     public final static MessageSelector UNDISTINGUISHABLE_SELECTOR = 
@@ -50,6 +52,18 @@ public class Message{
         Target target = new Target();
         target.setName( "inner" );
         return target;
+    }
+    
+    private static Target getSelfTarget(){
+	Target target = new Target();
+	target.setName( "self" );
+	return target;
+    }
+    
+    private static Target getUndistinguishableTarget(){
+	Target target = new Target();
+	target.setName( "+" );
+	return target;
     }
     
     private static MessageSelector getStarSelector(){
