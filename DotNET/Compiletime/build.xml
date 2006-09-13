@@ -20,13 +20,7 @@
 	<target name="clean" depends="init">
 		<!--<make target="clean" />-->
 		<delete dir="${out.build}" />
-		<delete file="${out.jar.dotnet}" />
-		<delete file="AttributeHarvester.exe" />
-		<delete file="TypeHarvester.exe" />
-		<delete file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" />
-		<delete file="src/Composestar/DotNET/ILICIT/Weaver/bin/Release/IlWeaver.exe" />
-		<delete file="src/Composestar/DotNET/ILICIT/Weaver/bin/Release/PeWeaver.exe" />
-		<delete file="src/Composestar/DotNET/ILICIT/Weaver/bin/Release/WeaveLibrary.dll" />
+		<delete dir="${out.dist}" />
 		<delete>
 			<fileset dir="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
 				<include name="CSharpLexer.cs" />
@@ -52,6 +46,7 @@
 	
 	<target name="init_local" depends="init">
 		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
 	</target>
 	
 	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet">
@@ -79,14 +74,22 @@
 	</target>
 			
 	<target name="compile_dotnet">
-		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\ACTING" />
-		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\TYM\TypeHarvester" />
+		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\ACTING\" destfile="${out.dist}${file.separator}AttributeHarvester.exe" />
+		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\TYM\TypeHarvester\" destfile="${out.dist}${file.separator}TypeHarvester.exe" />
 		<antcall target="compile_dotnet_devenv" />
 	</target>
 	
 	<target name="compile_dotnet_devenv" if="available.devenv">
 		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" />
-		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />		
+		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" todir="${out.dist}" />
+		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />
+		<copy todir="${out.dist}">
+			<fileset dir="src/Composestar/DotNET/ILICIT/Weaver/bin/Release">
+				<include name="IlWeaver.exe" />
+				<include name="PeWeaver.exe" />
+				<include name="WeaveLibrary.dll" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="jar">
@@ -94,14 +97,9 @@
 	</target>
 	
 	<target name="install" depends="build">
-		<copy file="${out.jar.dotnet}" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="AttributeHarvester.exe" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="TypeHarvester.exe" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/antlr.runtime.dll" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="src/Composestar/DotNET/ILICIT/Weaver/bin/Release/IlWeaver.exe" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="src/Composestar/DotNET/ILICIT/Weaver/bin/Release/PeWeaver.exe" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="src/Composestar/DotNET/ILICIT/Weaver/bin/Release/WeaveLibrary.dll" todir="${composestar.installdir}${file.separator}Binaries" />
+		<copy todir="${composestar.installdir}${file.separator}Binaries">
+			<fileset dir="${out.dist}" />
+		</copy>
 	</target>
 
 </project>

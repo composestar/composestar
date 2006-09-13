@@ -18,11 +18,29 @@
 	</description>
 
 	<target name="clean" depends="init">
-		<make target="clean" />
+		<!--<make target="clean" />-->
+		<delete dir="${out.dist}" />
 	</target>	
 	
-	<target name="build" depends="init">
-		<make target="build" />
+	<target name="init_local" depends="init">
+		<mkdir dir="${out.dist}" />
+	</target>
+	
+	<target name="build" depends="init_local">
+		<!--<make target="build" />-->
+		<devenv solution="${basedir}\composestarruntimedotnet.sln" />
+		<copy todir="${out.dist}">
+			<fileset dir="src${file.separator}FLIRT${file.separator}bin${file.separator}Release${file.separator}">
+				<include name="*.dll" />
+				<include name="*.pdb" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="install" depends="build">
+		<copy todir="${composestar.installdir}${file.separator}Binaries">
+			<fileset dir="${out.dist}" />
+		</copy>
 	</target>
 
 </project>
