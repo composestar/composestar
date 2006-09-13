@@ -16,7 +16,9 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
@@ -392,6 +394,17 @@ public class FireModel {
         }
         
         return distinguishable;
+    }
+    
+    
+    public Target getTarget( External external ){
+	//TODO
+	return null;
+    }
+    
+    public Target getTarget( Internal internal ){
+	//TODO
+	return null;
     }
     
     
