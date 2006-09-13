@@ -149,63 +149,38 @@ public class Module
 		if (this.enabled)
 		{
 			// module is enabled for the phase so continue
+			
 			if (this.summary.length() != 0)
 				Debug.out(Debug.MODE_CRUCIAL, "Master",this.summary);
 
 			try 
 			{
 				Class moduleClass = Class.forName(this.fulltype);
-			/*
-				Class[] paramTypes = { resources.getClass() };
-				Method runmethod = moduleClass.getMethod("run", paramTypes);
-				Object[] params = {resources};
-				INCRE incre = INCRE.instance();
-				INCRETimer timer = incre.getReporter().openProcess(this.name,this.name,INCRETimer.TYPE_ALL);
-				runmethod.invoke(moduleClass.newInstance(),params);
-				timer.stop();
-			*/
 				CTCommonModule module = (CTCommonModule)moduleClass.newInstance();
 				INCRETimer timer = INCRE.instance().getReporter().openProcess(this.name,this.name,INCRETimer.TYPE_ALL);
 				module.run(resources);
 				timer.stop();
 			}
-			catch (StackOverflowError ex1){
+			catch (StackOverflowError ex1) {
 				ex1.printStackTrace();
 				throw new ModuleException("I need more stack!", "INCRE running " + this.name);
 			}
-			catch (OutOfMemoryError ex2){
+			catch (OutOfMemoryError ex2) {
 				ex2.printStackTrace();
 				throw new ModuleException("I am using too much memory!", "INCRE running " + this.name);
 			}
-			catch (ClassNotFoundException ex3){
+			catch (ClassNotFoundException ex3) {
 				ex3.printStackTrace();
 				throw new ModuleException("Cannot find class "+this.fulltype, "INCRE running " + this.name);
 			}
-		/*	catch (InvocationTargetException ex4){
-				ex4.printStackTrace();
-				if (ex4.getCause() instanceof ModuleException)
-					throw (ModuleException)ex4.getCause();
-				else if(ex4.getTargetException()  instanceof ModuleException)
-					throw (ModuleException)ex4.getTargetException();
-				else
-					throw new ModuleException(ex4.getMessage(), "INCRE running " + this.name);
-			}*/
-			catch (IllegalAccessException ex5){
-				ex5.printStackTrace();
-				throw new ModuleException(ex5.getMessage() + " Caused by:" + ex5.getCause().getMessage(), "INCRE running " + this.name);
-			}
-		/*	catch (NoSuchMethodException ex6){
-				ex6.printStackTrace();
-				throw new ModuleException(ex6.getMessage(), "INCRE running " + this.name);
-			}*/
-			catch (InstantiationException ex6){
+			catch (InstantiationException ex6) {
 				ex6.printStackTrace();
 				throw new ModuleException(ex6.getMessage(), "INCRE running " + this.name);
 			}
-			catch (Exception e){
+			catch (Exception e) {
 				e.printStackTrace();
-				Debug.out(Debug.MODE_DEBUG, "Master",e.getCause().toString());
-				throw new ModuleException(e.getCause().toString(),"INCRE running " + this.name);
+				Debug.out(Debug.MODE_DEBUG, "Master", e.toString());
+				throw new ModuleException(e.toString(),"INCRE running " + this.name);
 			}
 		}
 	}
