@@ -54,8 +54,7 @@ namespace Composestar.Repository
         #endregion
 
         #region Types functionality
-
-
+        
         /// <summary>
         /// Gets the type elements.
         /// </summary>
@@ -105,7 +104,7 @@ namespace Composestar.Repository
             dbContainer.Set(methodElement);
         }
 
-        public void AddParameterElement(Composestar.Repository.LanguageModel.ParameterElement parameterelement)
+        public void AddParameterElement(ParameterElement parameterelement)
         {
             dbContainer.Set(parameterelement);
         }

@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="DataStoreContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryAccess.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">

@@ -13,8 +13,7 @@ using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
 using Composestar.Repository.LanguageModel;  
-
-using Composestar.StarLight.ILWeaver.DataRetriever;
+using Composestar.Repository; 
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -26,7 +25,7 @@ namespace Composestar.StarLight.ILWeaver
     {
         private AssemblyDefinition _targetAssemblyDefinition;
         private WeaverConfiguration _configuration;
-        private RepositoryRetriever _repositoryRetriever;
+        private RepositoryAccess _repositoryAccess;
 
         private bool _isInitialized = false;
         private TimeSpan _lastDuration = TimeSpan.MinValue;
@@ -105,7 +104,7 @@ namespace Composestar.StarLight.ILWeaver
 
             #endregion
             
-            _repositoryRetriever = new RepositoryRetriever();
+            _repositoryAccess = new RepositoryAccess();
 
             _isInitialized = true;
 
@@ -115,9 +114,9 @@ namespace Composestar.StarLight.ILWeaver
         /// Gets the repository retriever.
         /// </summary>
         /// <value>The repository retriever.</value>
-        private RepositoryRetriever RepositoryRetriever
+        private RepositoryAccess RepositoryAccess
         {
-            get { return _repositoryRetriever; }
+            get { return _repositoryAccess; }
         }
 
         /// <summary>
@@ -180,7 +179,7 @@ namespace Composestar.StarLight.ILWeaver
                 foreach (TypeDefinition type in module.Types)
 	            {
                     // Get the information from the repository about this type
-                    typeElement = RepositoryRetriever.GetTypeElement(type.FullName);
+                    typeElement = RepositoryAccess.GetTypeElement(type.FullName);
                     // Skip this type if we do not have information about it 
                     if (typeElement == null)
                         continue;
@@ -192,7 +191,7 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = RepositoryRetriever.GetMethodElement(typeElement, method.Name);
+                        methodElement = RepositoryAccess.GetMethodElement(typeElement, method.Name);
                         // Skip if there is no methodinfo
                         if (methodElement == null)
                             continue;

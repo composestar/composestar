@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;   
 using System.Text;
 
+using Composestar.Repository.LanguageModel;
+using Composestar.Repository;
+
 namespace Composestar.StarLight.ILAnalyzer
 {
     /// <summary>
@@ -22,13 +25,13 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Extracts the methods.
         /// </summary>
         /// <returns></returns>
-        List<MethodElement> ExtractMethods();
+        IList<MethodElement> ExtractMethods();
         
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        List<string> ExtractTypes();
+        IList<TypeElement> ExtractTypeElements();
 
         /// <summary>
         /// Gets the duration of the last executed method.
@@ -36,5 +39,10 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <value>The last duration.</value>
         TimeSpan LastDuration{ get; }
 
+        /// <summary>
+        /// Gets access to the repository.
+        /// </summary>
+        /// <value>The repository access.</value>
+        RepositoryAccess RepositoryAccess { get; }
     }
 }

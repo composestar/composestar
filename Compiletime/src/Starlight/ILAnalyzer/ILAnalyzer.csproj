@@ -58,11 +58,8 @@
     <Compile Include="ILInstruction.cs" />
     <Compile Include="ILReader.cs" />
     <Compile Include="ReflectionILAnalyzer.cs" />
-    <Compile Include="Model\CallConstruction.cs" />
     <Compile Include="CecilILAnalyzer.cs" />
     <Compile Include="IILAnalyzer.cs" />
-    <Compile Include="Model\MethodElement.cs" />
-    <Compile Include="Model\ParameterElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

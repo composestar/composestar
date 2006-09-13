@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;   
 using System.Text;
 
+using Composestar.Repository;   
+
 namespace Composestar.StarLight.ILWeaver
 {
     /// <summary>
@@ -29,5 +31,10 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The last duration.</value>
         TimeSpan LastDuration{ get; }
 
+        /// <summary>
+        /// Gets access to the repository.
+        /// </summary>
+        /// <value>The repository access.</value>
+        RepositoryAccess RepositoryAccess { get; }
     }
 }
