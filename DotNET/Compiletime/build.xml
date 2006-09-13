@@ -68,7 +68,7 @@
 	</target>
 	
 	<target name="compile_java">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="1.4" target="1.4" includeJavaRuntime="true">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="1.4" target="1.4" debug="${build.debug}">
 			<exclude name="**/AssemblyInfo.java" />
 		</javac>
 	</target>

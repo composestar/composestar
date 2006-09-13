@@ -18,14 +18,14 @@
 	The .NET implementation of Compose*
 	</description>
 
-	<target name="clean">
+	<target name="clean" depends="init">
 		<delete file="${build.dotnet}${file.separator}findbugs-result.html" />
 		<ant target="clean" dir="Compiletime" />
 		<ant target="clean" dir="Runtime" />
 	</target>
 	
 	
-	<target name="build">
+	<target name="build" depends="init">
 		<ant target="build" dir="Compiletime" />
 		<ant target="build" dir="Runtime" />
 	</target>
@@ -41,9 +41,9 @@
 		</findbugs>
 	</target>
 	
-	<target name="test" depends="systemtest" />
+	<target name="test" depends="init,systemtest" />
 	
-	<target name="systemtest">
+	<target name="systemtest" depends="init">
 		<condition property="systemtest.config" value="config.ini">
 			<not>
 				<isset property="systemtest.config" />
@@ -56,6 +56,7 @@
 	
 	<target name="install" depends="build">
 		<ant target="install" dir="Compiletime" />
+		<ant target="install" dir="Runtime" />
 	</target>
 
 </project>
