@@ -17,6 +17,12 @@ Common routines. Always include this file in every build.xml file
 		<property name="out.jar.core" value="${out.dist}${file.separator}ComposestarCORE.jar" />
 		<property name="out.jar.dotnet" value="${out.dist}${file.separator}ComposestarDotNET.jar" />
 		
+		<condition property="build.debug" value="true">
+			<not>
+				<isset property="build.debug" />
+			</not>
+		</condition>
+		
 		<!-- register environment variables -->
 		<property environment="env" />
 		<condition property="env.PATH" value="${env.Path}">
