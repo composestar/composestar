@@ -5,8 +5,20 @@ package Composestar.Repository.LanguageModel;
  */
 public class ParameterElement
 {
-
+	private int _parentMethodId;
 	private String _name;
+
+	/** @property */
+	public void set_ParentMethodId(int value)
+	{
+		_parentMethodId = value;
+	}
+
+	/** @property */
+	public int get_ParentMethodId()
+	{
+		return _parentMethodId;
+	}
 
 	/** @property */
 	public String get_Name()
@@ -45,20 +57,6 @@ public class ParameterElement
 	public void set_ParameterType(String value)
 	{
 		_parameterType = value;
-	}
-
-	private MethodElement _referencedMethodElement;
-
-	/** @property */
-	public MethodElement get_ParentMethodElement()
-	{
-		return _referencedMethodElement;
-	}
-
-	/** @property */
-	public void set_ParentMethodElement(MethodElement value)
-	{
-		_referencedMethodElement = value;
 	}
 
 	private String _parameterAttributes;
