@@ -28,7 +28,7 @@
 	
 	<target name="findbugs">
 		<findbugs home="${bin.findbugs}" output="html" effort="max" reportLevel="medium" outputFile="${build.core}${file.separator}findbugs-result.html" excludeFilter="${bin.findbugs}${file.separator}exclude.xml">
-			<class location="${build.core}${file.separator}Compiletime${file.separator}ComposestarCORE.jar" />
+			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
 			<sourcePath path="${build.core}${file.separator}Compiletime${file.separator}src" />
 			<auxClasspath refid="lib.core" />
 		</findbugs>
