@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/DotNET/Compiletime" default="build">
 
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 	
 	<echo message="${ant.project.name}" />
@@ -11,8 +19,8 @@
 
 	<target name="clean" depends="init">
 		<!--<make target="clean" />-->
-		<delete dir="dest" />
-		<delete file="ComposestarDotNET.jar" />
+		<delete dir="${out.build}" />
+		<delete file="${out.jar.dotnet}" />
 		<delete file="AttributeHarvester.exe" />
 		<delete file="TypeHarvester.exe" />
 		<delete file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" />
@@ -43,10 +51,10 @@
 	</target>
 	
 	<target name="init_local" depends="init">
-		<mkdir dir="dest" />
+		<mkdir dir="${out.build}" />
 	</target>
 	
-	<target name="build" depends="init_local,antlr,compile_java,compile_dotnet,jar">
+	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet">
 		<!--<make target="build" />-->
 	</target>
 	
@@ -65,24 +73,28 @@
 	</target>
 	
 	<target name="compile_java">
-		<javac srcdir="src" destdir="dest" classpathref="lib.dotnet" source="1.4" target="1.4" includeJavaRuntime="true">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="1.4" target="1.4" includeJavaRuntime="true">
 			<exclude name="**/AssemblyInfo.java" />
 		</javac>
 	</target>
-	
+			
 	<target name="compile_dotnet">
-		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" />
-		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />		
 		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\ACTING" />
 		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\TYM\TypeHarvester" />
+		<antcall target="compile_dotnet_devenv" />
+	</target>
+	
+	<target name="compile_dotnet_devenv" if="available.devenv">
+		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" />
+		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />		
 	</target>
 	
 	<target name="jar">
-		<jar destfile="ComposestarDotNET.jar" basedir="dest" manifest="src/MANIFEST.MF" />
+		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 	
 	<target name="install" depends="build">
-		<copy file="ComposestarDotNET.jar" todir="${composestar.installdir}${file.separator}Binaries" />
+		<copy file="${out.jar.dotnet}" todir="${composestar.installdir}${file.separator}Binaries" />
 		<copy file="AttributeHarvester.exe" todir="${composestar.installdir}${file.separator}Binaries" />
 		<copy file="TypeHarvester.exe" todir="${composestar.installdir}${file.separator}Binaries" />
 		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" todir="${composestar.installdir}${file.separator}Binaries" />

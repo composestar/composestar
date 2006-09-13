@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/DotNET" default="build">
 
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 
 	<echo message="${ant.project.name}" />
@@ -33,7 +41,9 @@
 		</findbugs>
 	</target>
 	
-	<target name="runtests">
+	<target name="test" depends="systemtest" />
+	
+	<target name="systemtest">
 		<condition property="systemtest.config" value="config.ini">
 			<not>
 				<isset property="systemtest.config" />

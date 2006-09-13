@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/DotNET/Runtime" default="build">
 
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 	
 	<echo message="${ant.project.name}" />
@@ -9,11 +17,11 @@
 	The Compose* DotNET Runtime
 	</description>
 
-	<target name="clean">
+	<target name="clean" depends="init">
 		<make target="clean" />
 	</target>	
 	
-	<target name="build">
+	<target name="build" depends="init">
 		<make target="build" />
 	</target>
 
