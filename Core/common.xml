@@ -10,6 +10,21 @@ Common routines. Always include this file in every build.xml file
 		<property name="build.initialized" value="false" />
 		<tstamp/>
 		
+		<!-- various config items -->
+		<property name="out.build" value="build" />
+		<property name="out.dist" value="dist" />
+		
+		<property name="out.jar.core" value="ComposestarCORE.jar" />
+		<property name="out.jar.dotnet" value="ComposestarDotNET.jar" />
+		
+		<!-- register environment variables -->
+		<property environment="env" />
+		<condition property="env.PATH" value="${env.Path}">
+			<not>
+				<isset property="env.PATH" />
+			</not>
+		</condition>		
+		
 		<!-- TODO: read this from registry? -->
 		<condition property="composestar.installdir" value="C:/Program Files/ComposeStar">
 			<not>
@@ -69,6 +84,8 @@ Common routines. Always include this file in every build.xml file
 		</macrodef>
 		
 		<!-- calling of devenv.exe -->
+		<available file="devenv.exe" filepath="${env.PATH}" property="available.devenv" />
+		
 		<macrodef name="devenv">
 			<attribute name="solution" />
 			<attribute name="target" default="Release" />
@@ -82,14 +99,6 @@ Common routines. Always include this file in every build.xml file
 			</sequential>
 		</macrodef>
 		
-		<!-- register environment variables -->
-		<property environment="env" />
-		<condition property="env.PATH" value="${env.Path}">
-			<not>
-				<isset property="env.PATH" />
-			</not>
-		</condition>
-		
 		<!-- register additional libraries -->
 		<path id="lib.core">	  
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>
@@ -97,7 +106,7 @@ Common routines. Always include this file in every build.xml file
 		
 		<path id="lib.dotnet">
 			<path refid="lib.core" />
-			<fileset dir="${build.core}${file.separator}Compiletime" includes="ComposestarCORE.jar"/>
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
 		</path>
 		
 		<!-- findbugs jars -->

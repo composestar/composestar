@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Compiletime" default="build">
 
+	<condition property="build.core" value="${basedir}${file.separator}..">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}common.xml" />
+		</and>
+	</condition>
 	<import file="..${file.separator}common.xml" />
 	
 	<echo message="${ant.project.name}" />
@@ -12,8 +20,8 @@
 
 	<target name="clean" depends="init">
 		<!--<make target="clean" />-->
-		<delete dir="dest" />
-		<delete file="ComposestarCORE.jar" />		
+		<delete dir="${out.build}" />
+		<delete file="${out.jar.core}" />		
 		<delete>
 			<fileset dir="src/Composestar/Core/COPPER">
 				<include name="CpsLexer.java" />
@@ -32,7 +40,7 @@
 	</target>
 	
 	<target name="local_init" depends="init">
-		<mkdir dir="dest" />
+		<mkdir dir="${out.build}" />
 	</target>
 	
 	<target name="build" depends="local_init,antlr,compile,jar">
@@ -49,7 +57,7 @@
 	</target>
 	
 	<target name="compile">
-		<javac srcdir="src" destdir="dest" classpathref="lib.core" source="1.4" target="1.4" includeJavaRuntime="true">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" includeJavaRuntime="true">
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="Composestar/Core/SECRET/*"/>
 			<exclude name="Composestar/Core/CORE/*"/>
@@ -57,16 +65,16 @@
 	</target>
 	
 	<target name="jar">
-		<copy todir="dest"><!-- copy groove grammars -->
+		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
 			</fileset>
 		</copy>
-		<jar destfile="ComposestarCORE.jar" basedir="dest" manifest="src/MANIFEST.MF" />
+		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 	
 	<target name="install" depends="build">
-		<copy file="ComposestarCORE.jar" todir="${composestar.installdir}${file.separator}Binaries" />
+		<copy file="${out.jar.core}" todir="${composestar.installdir}${file.separator}Binaries" />
 		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}${file.separator}Binaries" />
 		<copy file="binaries/prolog/prolog.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
 		<copy file="binaries/prolog/lib.pro" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />

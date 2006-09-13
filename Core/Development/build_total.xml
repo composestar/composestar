@@ -42,8 +42,7 @@
 		<ant target="build" dir="${build.c}" />
 	</target>
 	
-	<target name="all" depends="init,core,dotnet,java,c" />
-	<target name="build" depends="all" />
+	<target name="build" depends="init,core,dotnet,java,c" />
 	
 	<!-- install tasks -->
 	
@@ -70,19 +69,22 @@
 	
 	<!-- system test -->
 	
-	<target name="runtests" depends="init">
-		<antcall target="runtests_dotnet" />
+	<target name="test" depends="init">
+		<antcall target="test_dotnet" />
 	</target>
 	
-	<target name="runtests_dotnet" depends="init" if="available.dotnet">
+	<target name="test_dotnet" depends="init" if="available.dotnet">
 		<ant target="runtests" dir="${build.dotnet}" />
 	</target>
+	
+	<!-- do everything -->
+	<target name="all" depends="build,install,findbugs,test" />
 	
 	<!-- task selector -->
 	
 	<target name="select" depends="init">
-        <input message="Enter the desired action"
-               validargs="clean,build,rebuild,install,core,dotnet,java,c,findbugs,runtests"
+        <input message="Enter the desired action: "
+               validargs="clean,build,rebuild,install,core,dotnet,java,c,findbugs,test"
                addproperty="build.target"
                defaultvalue="core"
         />
