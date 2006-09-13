@@ -2,25 +2,51 @@ package Composestar.Repository;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.query.*;
 
 public class DataStoreContainer {
 	private static DataStoreContainer instance;
 	
 	private ObjectContainer dbContainer;
+	
+	private Hashtable _methods;
 
     private DataStoreContainer()
     {
-		Db4o.configure().addAlias(
-  				new WildcardAlias(
-    				"Composestar.Repository.LanguageModel.*, Repository.LanguageModel", "Composestar.Repository.LanguageModel.*"));
+    	// Werkt alleen de 1ste keer, daarna is de db gewijzigd en mapped ie naar niet bestaande stored types
+		//Db4o.configure().addAlias(
+  		//		new WildcardAlias(
+    	//			"Composestar.Repository.LanguageModel.*, Repository.LanguageModel", "Composestar.Repository.LanguageModel.*"));
 
 		
-		dbContainer = Db4o.openFile("test.yap");
+		
+		adjustClassNames();
+		
+		Db4o.configure().callConstructors(false);
 
+		dbContainer = Db4o.openFile("test.yap");
+    }
     
+    private void adjustClassNames()
+    {
+    	dbContainer = Db4o.openFile("test.yap");
+
+        StoredClass[] classes = dbContainer.ext().storedClasses();
+        for (int i = 0; i < classes.length; i++) {
+            StoredClass storedClass = classes[i];
+            String name = storedClass.getName();
+
+            int pos = name.indexOf(",");
+            if(pos > 0){
+                name = name.substring(0, pos);
+                storedClass.rename(name);
+            }
+        }
+        dbContainer.close();
     }
 
     public static synchronized DataStoreContainer getInstance()
@@ -51,17 +77,41 @@ public class DataStoreContainer {
 	
 	public int getMethods(int typeid)
 	{
-		//SLLLLLLLOOOOOOOOOOWWWWWWWWWWWWWWWWWWWWWWWWWWW
-		final int finaltypeid = typeid;
+		if (_methods == null) {
 		
-		List methods = dbContainer.query(new Predicate() {
-		    public boolean match(Composestar.Repository.LanguageModel.MethodInfo mi) {
-		        return mi.get_TypeId() == finaltypeid;
-		    }
-		});
+
+			_methods = new Hashtable();
 		
-		return methods.size();
-	
+			Query query = dbContainer.query();
+			query.constrain(Composestar.Repository.LanguageModel.MethodInfo.class);
+
+			ObjectSet result = query.execute();
+			
+			while (result.hasNext())
+			{
+				ArrayList m = null;
+				Composestar.Repository.LanguageModel.MethodInfo mi = (Composestar.Repository.LanguageModel.MethodInfo)result.next();
+				if (_methods.containsKey(new Integer(mi.get_TypeId())))
+				{
+					m = (ArrayList)_methods.get(new Integer(mi.get_TypeId()));
+				}
+				else {
+					m = new ArrayList();
+
+				}
+				m.add(mi);
+				_methods.put(new Integer(mi.get_TypeId()), m);				
+			}
+		
+		}
+		
+		if (_methods.containsKey(new Integer(typeid)))
+		{
+			return ((ArrayList)_methods.get(new Integer(typeid))).size();
+		
+		}
+			
+		return 0;
 	}
 	
 	
