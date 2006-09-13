@@ -13,7 +13,6 @@ using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
 using Composestar.Repository.LanguageModel;  
-using Composestar.Repository.LanguageModel.Inlining;
 
 using Composestar.StarLight.ILWeaver.DataRetriever;
 
@@ -167,8 +166,8 @@ namespace Composestar.StarLight.ILWeaver
             sw.Start(); 
 
             // Declare typeinfo and methodinfo
-            Composestar.Repository.LanguageModel.TypeInfo typeInformation;
-            Composestar.Repository.LanguageModel.MethodInfo methodInfo;
+            Composestar.Repository.LanguageModel.TypeElement typeElement;
+            Composestar.Repository.LanguageModel.MethodElement methodInfo;
 
             // Check if the _targetAssemblyDefinition is still available
             if (_targetAssemblyDefinition == null)
@@ -181,19 +180,19 @@ namespace Composestar.StarLight.ILWeaver
                 foreach (TypeDefinition type in module.Types)
 	            {
                     // Get the information from the repository about this type
-                    typeInformation = RepositoryRetriever.GetTypeInfo(type.FullName);
+                    typeElement = RepositoryRetriever.GetTypeElement(type.FullName);
                     // Skip this type if we do not have information about it 
-                    if (typeInformation == null)
+                    if (typeElement == null)
                         continue;
 
                     // Add the externals and internals
-                    WeaveExternals(type, typeInformation);
-                    WeaveInternals(type, typeInformation);
+                    WeaveExternals(type, typeElement);
+                    WeaveInternals(type, typeElement);
 
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodInfo = RepositoryRetriever.GetMethodInfo(typeInformation, method.Name);
+                        methodInfo = RepositoryRetriever.GetMethodElement(typeElement, method.Name);
                         // Skip if there is no methodinfo
                         if (methodInfo == null)
                             continue;
@@ -219,8 +218,8 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the internals.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="typeInformation">The type information.</param>
-        public void WeaveInternals(TypeDefinition type, TypeInfo typeInformation)
+        /// <param name="typeElement">The type information.</param>
+        public void WeaveInternals(TypeDefinition type, TypeElement typeElement)
         {
             // Declarations
             FieldDefinition internalDef;
@@ -244,8 +243,8 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the externals.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="typeInformation">The type information.</param>
-        public void WeaveExternals(TypeDefinition type, TypeInfo typeInformation)
+        /// <param name="typeElement">The type information.</param>
+        public void WeaveExternals(TypeDefinition type, TypeElement typeElement)
         {
            
 
@@ -255,7 +254,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the code into the method.
         /// </summary>
         /// <param name="method">The method definition.</param>
-        public void WeaveMethod(MethodDefinition method, Composestar.Repository.LanguageModel.MethodInfo methodInfo)
+        public void WeaveMethod(MethodDefinition method, Composestar.Repository.LanguageModel.MethodElement methodInfo)
         {
             if (method == null)
                 return;
@@ -273,7 +272,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public void WeaveInputFilters(MethodDefinition method)
         {
-                 //Gets the MethodInfo of Console.WriteLine() method
+                 //Gets the MethodElement of Console.WriteLine() method
             MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[]{typeof(string)});
 
       //Gets the CilWorker of the method for working with CIL instructions

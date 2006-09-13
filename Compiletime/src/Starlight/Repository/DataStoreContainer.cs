@@ -4,6 +4,8 @@ using System.Text;
 
 using com.db4o;
 
+using Composestar.Repository.LanguageModel;
+
 namespace Composestar.Repository
 {
     public class DataStoreContainer
@@ -24,8 +26,9 @@ namespace Composestar.Repository
         DataStoreContainer()
         {
             System.IO.File.Delete(YapFileName);
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("id").Indexed(true);  
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);
             dbContainer = Db4o.OpenFile(YapFileName);
-
         }
 
         public static DataStoreContainer Instance
@@ -44,22 +47,71 @@ namespace Composestar.Repository
         #endregion
 
         #region Types functionality
-        public IList<Composestar.Repository.LanguageModel.TypeInfo> GetTypes()
+        /// <summary>
+        /// Gets the type elements.
+        /// </summary>
+        /// <returns></returns>
+        public IList<TypeElement> GetTypeElements()
         {
-            return dbContainer.Query<Repository.LanguageModel.TypeInfo>(typeof(Repository.LanguageModel.TypeInfo));
+            return dbContainer.Query<TypeElement>(typeof(TypeElement));
         }
 
-        public void AddType(Composestar.Repository.LanguageModel.TypeInfo typeinfo)
+        /// <summary>
+        /// Gets the type element.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        /// <returns></returns>
+        public TypeElement GetTypeElement(string fullName)
         {
-            dbContainer.Set(typeinfo);
+            IList<TypeElement> ret = dbContainer.Query<TypeElement>(delegate (TypeElement te)
+            {
+                return te.FullName.Equals(fullName);  
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+            else 
+                return null;
+        }
+
+        /// <summary>
+        /// Adds the type.
+        /// </summary>
+        /// <param name="typeElement">The type element.</param>
+        public void AddTypeElement(TypeElement typeElement)
+        {
+            dbContainer.Set(typeElement);
 
         }
 
         #endregion
 
-        public void AddMethod(Composestar.Repository.LanguageModel.MethodInfo methodinfo)
+        /// <summary>
+        /// Adds the method.
+        /// </summary>
+        /// <param name="methodElement">The method element.</param>
+        public void AddMethodElement(MethodElement methodElement)
         {
-            dbContainer.Set(methodinfo);
+            dbContainer.Set(methodElement);
+        }
+
+        /// <summary>
+        /// Gets the method element.
+        /// </summary>
+        /// <param name="typeId">The type id.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <returns></returns>
+        public MethodElement GetMethodElement(int typeId, string methodName)
+        {
+            IList<MethodElement> ret = dbContainer.Query<MethodElement>(delegate (MethodElement me)
+            {
+                return (me.TypeId == typeId) && (me.Name.Equals(methodName));  
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+            else 
+                return null;
         }
     }
 }

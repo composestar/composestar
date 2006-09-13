@@ -20,10 +20,10 @@ namespace Composestar.StarLight.ILWeaver.DataRetriever
         /// </summary>
         /// <param name="fullName">The full name.</param>
         /// <returns></returns>
-        public TypeInfo GetTypeInfo(string fullName)
+        public TypeElement GetTypeElement(string fullName)
         {
-            TypeInfo ti;
-            ti = DataStoreContainer.Instance.GetTypeInfo(fullName);
+            TypeElement ti;
+            ti = DataStoreContainer.Instance.GetTypeElement(fullName);
    
             return ti;
         }
@@ -34,9 +34,9 @@ namespace Composestar.StarLight.ILWeaver.DataRetriever
         /// <param name="typeInfo">The type info.</param>
         /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public MethodInfo GetMethodInfo(TypeInfo typeInfo, string methodName)
+        public MethodElement GetMethodElement(TypeElement typeInfo, string methodName)
         {
-            MethodInfo mi;
+            MethodElement mi;
 
             if (typeInfo == null)
                 return null;
@@ -44,7 +44,7 @@ namespace Composestar.StarLight.ILWeaver.DataRetriever
             if (string.IsNullOrEmpty(methodName) )
                 return null;
 
-            mi = DataStoreContainer.Instance.GetMethodInfo(typeInfo.id, methodName);
+            mi = DataStoreContainer.Instance.GetMethodElement(typeInfo.id, methodName);
             return mi;
         }
     }
