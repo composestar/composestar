@@ -1,44 +1,37 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\core\\ACTING\\AttributeCollector.java
-
 package Composestar.DotNET.TYM.TypeCollector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.InputSource;
-import org.xml.sax.helpers.DefaultHandler;
-
-import Composestar.Core.LAMA.*;
-import Composestar.DotNET.LAMA.*;
-import Composestar.Utils.CommandLineExecutor;
-import Composestar.Core.Master.*;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Projects;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.Exception.ModuleException;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-public class AttributeCollector extends DefaultHandler {
-        
-    /**
-     * @roseuid 40AB496E00C2
-     */
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Projects;
+import Composestar.Core.RepositoryImplementation.DataStore;
+
+public class AttributeCollector extends DefaultHandler implements CTCommonModule
+{        
     public AttributeCollector() {
     }
     
-    /**
-     * @param resources
-     * @throws Composestar.core.Exception.ModuleException
-     * @roseuid 40AB48FB0299
-     */
     public void run(CommonResources resources) throws ModuleException {
 		
     	Projects prjs = Configuration.instance().getProjects();
@@ -103,13 +96,6 @@ public class AttributeCollector extends DefaultHandler {
      	}
     }
     
-    /**
-     * @param uri
-     * @param localName
-     * @param qName
-     * @throws org.xml.sax.SAXException
-     * @roseuid 40AB53DC0213
-     */
     public void endElement(String uri, String localName, String qName) throws SAXException {
     }
     
