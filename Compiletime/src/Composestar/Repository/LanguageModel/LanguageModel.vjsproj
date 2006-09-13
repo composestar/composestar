@@ -31,7 +31,13 @@
   <ItemGroup>
     <Compile Include="AssemblyElement.java" />
     <Compile Include="CallElement.java" />
+    <Compile Include="ConditionExpressions\ConditionExpression.java" />
     <Compile Include="Inlining\Block.java" />
+    <Compile Include="Inlining\Branch.java" />
+    <Compile Include="Inlining\FilterAction.java" />
+    <Compile Include="Inlining\FilterBlock.java" />
+    <Compile Include="Inlining\Jump.java" />
+    <Compile Include="Inlining\Label.java" />
     <Compile Include="Inlining\Instruction.java" />
     <Compile Include="MethodBody.java" />
     <Compile Include="MethodElement.java" />

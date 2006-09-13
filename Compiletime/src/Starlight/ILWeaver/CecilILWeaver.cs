@@ -166,8 +166,8 @@ namespace Composestar.StarLight.ILWeaver
             sw.Start(); 
 
             // Declare typeinfo and methodinfo
-            Composestar.Repository.LanguageModel.TypeElement typeElement;
-            Composestar.Repository.LanguageModel.MethodElement methodInfo;
+            TypeElement typeElement;
+            MethodElement methodElement;
 
             // Check if the _targetAssemblyDefinition is still available
             if (_targetAssemblyDefinition == null)
@@ -192,12 +192,12 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodInfo = RepositoryRetriever.GetMethodElement(typeElement, method.Name);
+                        methodElement = RepositoryRetriever.GetMethodElement(typeElement, method.Name);
                         // Skip if there is no methodinfo
-                        if (methodInfo == null)
+                        if (methodElement == null)
                             continue;
 
-                        WeaveMethod(method, methodInfo);
+                        WeaveMethod(method, methodElement);
                     }
 
                     //Import the modifying type into the AssemblyDefinition
@@ -254,28 +254,28 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the code into the method.
         /// </summary>
         /// <param name="method">The method definition.</param>
-        public void WeaveMethod(MethodDefinition method, Composestar.Repository.LanguageModel.MethodElement methodInfo)
+        public void WeaveMethod(MethodDefinition method, MethodElement methodElement)
         {
             if (method == null)
                 return;
 
-            if (methodInfo == null)
+            if (methodElement == null)
                 return;
  
             // Add the inputfilters
-            WeaveInputFilters(method);
+            WeaveInputFilters(method, methodElement);
 
             // Add the outputfilters
-            WeaveOutputFilters(method);
+            WeaveOutputFilters(method, methodElement);
               
         }
 
-        public void WeaveInputFilters(MethodDefinition method)
+        public void WeaveInputFilters(MethodDefinition method, MethodElement methodElement)
         {
-                 //Gets the MethodElement of Console.WriteLine() method
+            //Gets the MethodElement of Console.WriteLine() method
             MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[]{typeof(string)});
 
-      //Gets the CilWorker of the method for working with CIL instructions
+            //Gets the CilWorker of the method for working with CIL instructions
 			CilWorker worker = method.Body.CilWorker;
 
  
@@ -306,7 +306,7 @@ namespace Composestar.StarLight.ILWeaver
 			worker.InsertAfter(insertSentence, callWriteLine);
         }
 
-        public void WeaveOutputFilters(MethodDefinition method)
+        public void WeaveOutputFilters(MethodDefinition method, MethodElement methodElement)
         {
 
         }
