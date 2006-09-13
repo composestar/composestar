@@ -1,5 +1,11 @@
 <FindBugsFilter>
-	<Match classregex=".*TreeWalker">
+	<Match classregex=".*TreeWalker" />
+	<!-- old\obsolete code -->
+	<Match classregex="Composestar\.Core\.FIRE\..*" />
+	<Match classregex="Composestar\.Core\.SIGN\..*" />
 	
+	<Match classregex="Composestar\.DotNET\.LAMA\..*">
+		<!-- don't check for leading lowercase in these classe -->
+		<BugCode name="Nm" />
 	</Match>
 </FindBugsFilter>
