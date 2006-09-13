@@ -82,6 +82,7 @@
 	<target name="compile_dotnet_devenv" if="available.devenv">
 		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" />
 		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" todir="${out.dist}" />
+		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/antlr.runtime.dll" todir="${out.dist}" />
 		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />
 		<copy todir="${out.dist}">
 			<fileset dir="src/Composestar/DotNET/ILICIT/Weaver/bin/Release">
