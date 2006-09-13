@@ -20,9 +20,9 @@ namespace TestLanguageModel
     /// Summary description for UnitTest1
     /// </summary>
     [TestClass]
-    public class ParameterInfoFixture
+    public class ParameterElementFixture
     {
-        public ParameterInfoFixture()
+        public ParameterElementFixture()
         {
             //
             // TODO: Add constructor logic here
@@ -51,10 +51,10 @@ namespace TestLanguageModel
         //
         #endregion
 
-        [Owner("Michiel van Oudheusden"), Description("Test if the ParameterInfo class persists the strings."), TestMethod]
-        public void ParameterInfoPersistStringData()
+        [Owner("Michiel van Oudheusden"), Description("Test if the ParameterElement class persists the strings."), TestMethod]
+        public void ParameterElementPersistStringData()
         {
-            ParameterInfo pi = new ParameterInfo();
+            ParameterElement pi = new ParameterElement();
             
             string testValue = "test";
             
@@ -67,10 +67,10 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue,pi.ParameterAttributes, "ParameterAttributes does not persists data");    
         }
 
-        [Description("Test if the ParameterInfo class persists the integers."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void ParameterInfoPersistBoolData()
+        [Description("Test if the ParameterElement class persists the integers."), Owner("Michiel van Oudheusden"), TestMethod]
+        public void ParameterElementPersistBoolData()
         {
-            ParameterInfo pi = new ParameterInfo();
+            ParameterElement pi = new ParameterElement();
             
             short testValue = 1;
             

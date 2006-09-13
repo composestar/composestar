@@ -17,12 +17,12 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace TestLanguageModel
 {
     /// <summary>
-    /// Summary description for AssemblyInfoFixture
+    /// Summary description for AssemblyElementFixture
     /// </summary>
     [TestClass]
-    public class AssemblyInfoFixture
+    public class AssemblyElementFixture
     {
-        public AssemblyInfoFixture()
+        public AssemblyElementFixture()
         {
             //
             // TODO: Add constructor logic here
@@ -51,10 +51,10 @@ namespace TestLanguageModel
         //
         #endregion
 
-        [Owner("Michiel van Oudheusden"), Description("Test if the AssemblyInfo class persists the strings."), TestMethod]
-        public void AssemblyInfoPersistStringData()
+        [Owner("Michiel van Oudheusden"), Description("Test if the AssemblyElement class persists the strings."), TestMethod]
+        public void AssemblyElementPersistStringData()
         {
-            AssemblyInfo ai = new AssemblyInfo();
+            AssemblyElement ai = new AssemblyElement();
             string testValue = "test";
             ai.Name = testValue;
             ai.Version = testValue;
