@@ -3,7 +3,7 @@
 
 set BUILD_FILE=Development\build_total.xml
 set ANT_HOME=%CD%\Development\Ant
-if "%JAVA_HOME%" == "" set JAVA_HOME=c:\j2sdk1.4.2_12
+if "%JAVA_HOME%" == "" set JAVA_HOME=c:\j2sdk1.4.2
 
 set TARGET=select
 if not "%1" == "" set TARGET=%1
