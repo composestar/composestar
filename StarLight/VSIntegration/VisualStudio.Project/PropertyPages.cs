@@ -91,7 +91,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 			if (outputType != null && outputType.Length > 0)
 			{
 				try
-				{
+				{                    
 					this.outputType = (OutputType)Enum.Parse(typeof(OutputType), outputType);
 				}
 				catch

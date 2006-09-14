@@ -153,6 +153,10 @@
     <value>Compile</value>
     <comment>Build Action - drop down option</comment>
   </data>
+  <data name="Concern" xml:space="preserve">
+    <value>Concern</value>
+    <comment>Build Action - drop down option</comment>
+  </data>
   <data name="ConfirmExtensionChange" xml:space="preserve">
     <value>If you change a file name extension, the file may become unusable. Are you sure you want to change it?</value>
   </data>

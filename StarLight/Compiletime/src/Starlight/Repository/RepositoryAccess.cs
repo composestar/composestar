@@ -148,7 +148,7 @@ namespace Composestar.Repository
             if (callElement == null)
                   throw new ArgumentNullException("callElement");
 
-            callElement.ParentMethodBody = methodElement.MethodBody; 
+            callElement.ParentMethodBodyId = methodElement.MethodBody.Id; 
 
             Composestar.Repository.DataStoreContainer.Instance.StoreObject(callElement);
         }

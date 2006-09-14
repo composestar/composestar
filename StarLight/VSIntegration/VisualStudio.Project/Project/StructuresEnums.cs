@@ -45,7 +45,7 @@ namespace Microsoft.VisualStudio.Package
 	public enum DebugMode { Project, Program, URL }
 
 	[PropertyPageTypeConverterAttribute(typeof(BuildActionConverter))]
-	public enum BuildAction { None, Compile, Content, EmbeddedResource }
+	public enum BuildAction { None, Compile, Concern, Content, EmbeddedResource }
 
 
 	[PropertyPageTypeConverterAttribute(typeof(PlatformTypeConverter))]

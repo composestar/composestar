@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Composestar.StarLight.ILAnalyzer</RootNamespace>
-    <AssemblyName>ILAnalyzer</AssemblyName>
+    <AssemblyName>Composestar.StarLight.ILAnalyzer</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

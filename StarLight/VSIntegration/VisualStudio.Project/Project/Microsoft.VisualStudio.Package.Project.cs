@@ -66,6 +66,7 @@ namespace Microsoft.VisualStudio.Package {
         internal const string CanNotSaveFileNotOpeneInEditor = "CanNotSaveFileNotOpeneInEditor";
         internal const string cli1 = "cli1";
         internal const string Compile = "Compile";
+        internal const string Concern = "Concern";
         internal const string ConfirmExtensionChange = "ConfirmExtensionChange";
         internal const string Content = "Content";
         internal const string CopyToLocal = "CopyToLocal";
