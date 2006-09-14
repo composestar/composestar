@@ -66,13 +66,10 @@
     <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
       <Link>Target\StarLight.targets</Link>
     </None>
-    <None Include="ComposeStarCompilerTask.cs" />
-    <Compile Include="BuildProjectTask.cs" />
+    <Compile Include="ILWeaverTask.cs" />
     <Compile Include="MasterCallerTask.cs" />
-    <Compile Include="ReferencesHandlerTask.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="XMLGeneratorTask.cs" />
-    <Compile Include="MasterManager\MasterManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -88,9 +85,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
+      <Name>LanguageModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Compiletime\src\Starlight\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Compiletime\src\Starlight\ILWeaver\ILWeaver.csproj">
+      <Project>{7A30904D-40C9-408D-813E-12E16C488EAA}</Project>
+      <Name>ILWeaver</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,18 +13,28 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.ILAnalyzer; 
+using Composestar.Repository.LanguageModel;  
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
     public class AnalyzerTask : Task
     {
-        private string[] _assemblyFiles;
+        private ITaskItem[] _assemblyFiles;
 
         [Required()]
-        public string[] AssemblyFiles
+        public ITaskItem[] AssemblyFiles
         {
             get { return _assemblyFiles; }
             set { _assemblyFiles = value; }
+        }
+
+        private string _repositoryFilename;
+
+        [Required()]
+        public string RepositoryFilename
+        {
+            get { return _repositoryFilename; }
+            set { _repositoryFilename = value; }
         }
 
         private IILAnalyzer analyzer;
@@ -44,13 +55,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
-            foreach (string filename in AssemblyFiles)
-            {
-                 analyzer.Initialize(filename, null);
-                List<MethodElement> methods = analyzer.ExtractMethods(); 
+            // TODO must perform a cleanup before executing the analyzer.
+            // Otherelse the repository will be dirty
 
-                 Log.LogMessage("{0} methods found in {1} seconds.", methods.Count, analyzer.LastDuration.TotalSeconds);
-        
+            Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
+
+            NameValueCollection config = new NameValueCollection();
+            config.Add("RepositoryFilename", RepositoryFilename);
+             
+            foreach (ITaskItem item in AssemblyFiles)
+            {
+                Log.LogMessage("Analyzing file {0}", item.ToString()); 
+
+                analyzer.Initialize(item.ToString(), config);
+                IList<TypeElement> ret = analyzer.ExtractTypeElements();
+
+                Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);                       
             }
            
             return true;

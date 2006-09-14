@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Name>"$safeprojectname$"</Name>
@@ -8,6 +8,7 @@
     <RootNamespace>$safeprojectname$</RootNamespace>
     <AssemblyName>$safeprojectname$</AssemblyName>
     <MainFile>Concern.cps</MainFile>
+    <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -19,19 +20,8 @@
     <OutputPath>bin\Release\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
-
   <ItemGroup>
-    <WeaveProject Include="C:\Documents and Settings\Michiel\My Documents\Visual Studio 2005\Projects\Testing\CecilTesting\TestApp\TestApp.csproj">
-    </WeaveProject>
+    <Concern Include="Concern.cps" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Concern.cps" />
-  </ItemGroup>
-
   <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
 </Project>

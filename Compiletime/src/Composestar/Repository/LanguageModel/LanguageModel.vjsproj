@@ -7,7 +7,7 @@
     <ProjectGuid>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Repository.LanguageModel</RootNamespace>
-    <AssemblyName>Repository.LanguageModel</AssemblyName>
+    <AssemblyName>Composestar.Repository.LanguageModel</AssemblyName>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

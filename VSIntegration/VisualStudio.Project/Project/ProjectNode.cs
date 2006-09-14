@@ -2753,6 +2753,7 @@ namespace Microsoft.VisualStudio.Package
 			if (String.Compare(type, BuildAction.Compile.ToString(), StringComparison.OrdinalIgnoreCase) == 0
 				|| String.Compare(type, BuildAction.Content.ToString(), StringComparison.OrdinalIgnoreCase) == 0
 				|| String.Compare(type, BuildAction.EmbeddedResource.ToString(), StringComparison.OrdinalIgnoreCase) == 0
+                || String.Compare(type, BuildAction.Concern.ToString(), StringComparison.OrdinalIgnoreCase) == 0
 				|| String.Compare(type, BuildAction.None.ToString(), StringComparison.OrdinalIgnoreCase) == 0)
 				return true;
 

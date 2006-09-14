@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Composestar.StarLight.ILWeaver</RootNamespace>
-    <AssemblyName>Composestar.StarLight.ILWeaverb</AssemblyName>
+    <AssemblyName>Composestar.StarLight.ILWeaver</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

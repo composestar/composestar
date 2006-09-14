@@ -1,35 +1,175 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Weave">
   <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-
+ 
   <!--Reference the assembly where our tasks are defined-->
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ReferencesHandlerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.BuildProjectTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.XMLGeneratorTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.AnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="CreateCSharpManifestResourceName" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   
-  <!--Compile target (this is the target that calls the compiler task)-->
-  <Target Name="ComposeStarCompilerTarget">
-    <Message Text="Analyzing references..." />
-    <ReferencesHandlerTask      
-  ProjectFile="$(MSBuildProjectFullPath)"
-  ReferencedProjects="$(ReferencedProjects)"
+  <!--
+    ============================================================
+                                        Weave
+
+    The main build entry point.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <WeaveDependsOn>
+      BeforeWeave;
+      CoreWeave;
+      AfterWeave
+    </WeaveDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="Weave"
+      Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
+    Outputs="$(TargetPath)"  
+    DependsOnTargets="$(WeaveDependsOn)"
       />
-    <Message Text="Building target projects." />    
-    <BuildProjectTask        
-            Projects="@(WeaveProject)" 
-            Targets="Build"            
-      >
-      <Output TaskParameter="AssemblyFiles" ItemName="AssemblyFiles"/>
-    </BuildProjectTask >
+  <!--
+    ============================================================
+                                        BeforeWeave
+    
+    Redefine this target in your project in order to run tasks just before Weave
+    ============================================================
+    -->
+  <Target Name="BeforeWeave"/>
+
+  <!--
+    ============================================================
+                                        AfterWeave
+
+    Redefine this target in your project in order to run tasks just after Weave 
+    ============================================================
+    -->
+  <Target Name="AfterWeave"/>
+
+  <!--
+    ============================================================
+                                        CoreWeave
+
+    The core build step calls each of the weave targets.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CoreWeaveDependsOn>
+      PrepareForBuild;
+      ResolveReferences;
+      CopyFilesToOutputDirectory;
+      ILAnalyzerRunner;
+      ILWeaverRunner;
+      IncrementalClean;
+    </CoreWeaveDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="CoreWeave"
+      DependsOnTargets="$(CoreWeaveDependsOn)">
+    <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>
+  </Target>
+
+  <PropertyGroup>
+    <!-- "None" is not technically a valid DebugType, so we can't pass it in as such
+             to the compiler.  So here, we modify the properties so they make sense. -->
+    <DebugSymbols Condition=" '$(DebugType)' == 'none' ">false</DebugSymbols>
+    <DebugType    Condition=" '$(DebugType)' == 'none' "></DebugType>
+
+    <!-- Provide a facility to override UseHostCompilerIfAvailable-->
+    <UseHostCompilerIfAvailable>false</UseHostCompilerIfAvailable>
+  </PropertyGroup>
+
+  <!-- Override the GetCopyToOutputDirectoryItems target -->
+  <Target
+        Name="GetCopyToOutputDirectoryItems"
+        Outputs="@(AllItemsFullPathWithTargetPath)" 
+        DependsOnTargets="AssignTargetPaths;_SplitProjectReferencesByFileExistence">
+
+    <!-- Get items from child projects first. -->
+    <Message Text ="Retrieving reference files" />
+    <MSBuild
+        Projects="@(_MSBuildProjectReferenceExistent)"
+        Targets="GetCopyToOutputDirectoryItems"
+        Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform)"
+        Condition="'@(_MSBuildProjectReferenceExistent)'!=''">
+      <Output TaskParameter="TargetOutputs" ItemName="_AllChildProjectItemsWithTargetPath"/>
+    </MSBuild>
+
+    <!-- Target outputs must be full paths because they will be consumed by a different project. -->
+    <CreateItem 
+        Include="@(_AllChildProjectItemsWithTargetPath->'%(FullPath)')"
+        Condition="'%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <!-- Get items from this project last so that they will be copied last. -->
+    <CreateItem
+        Include="@(ContentWithTargetPath->'%(FullPath)')"
+        Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(_EmbeddedResourceWithTargetPath->'%(FullPath)')"
+        Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(Compile->'%(FullPath)')"
+        Condition="'%(Compile.CopyToOutputDirectory)'=='Always' or '%(Compile.CopyToOutputDirectory)'=='PreserveNewest'">
+      <Output TaskParameter="Include" ItemName="_CompileItemsToCopy"/>
+    </CreateItem>
+    <AssignTargetPath Files="@(_CompileItemsToCopy)" RootFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="AssignedFiles" ItemName="_CompileItemsToCopyWithTargetPath" />
+    </AssignTargetPath>
+    <CreateItem Include="@(_CompileItemsToCopyWithTargetPath)">
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_CompileItemsToCopyWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(_CompileItemsToCopyWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+    <CreateItem
+        Include="@(_NoneWithTargetPath->'%(FullPath)')"
+        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
+                >
+      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
+              Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
+      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
+              Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
+    </CreateItem>
+
+  </Target>
+
+  <Target Name="CreateManifestResourceNames"/>
+
+  <!--ILAnalyzerRunner target -->
+  <Target
+       Name="ILAnalyzerRunner">
     <Message Text="Analyzing assemblies." />
-    <AnalyzerTask        
-            AssemblyFiles="@(AssemblyFiles)"             />
-    <Message Text="Generating Xml configuration file for Compose*." />
-    <XMLGeneratorTask
+    <AnalyzerTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />
+
+    <!--<Message Text="Generating Xml configuration file for Compose*." />-->
+    <!--<XMLGeneratorTask
       SourceFiles="@(Compile)"
       OutputAssembly="@(IntermediateAssembly)"
       ReferencedAssemblies="@(ReferencePath)"
@@ -42,87 +182,72 @@
       ProjectFile="$(MSBuildProjectFullPath)"
       />
     <Message Text="Weaving concerns into @(IntermediateAssembly)." />
-    <MasterCallerTask     ProjectFile="$(MSBuildProjectFullPath)"   />
+    <MasterCallerTask     ProjectFile="$(MSBuildProjectFullPath)"   />-->
   </Target>
 
-  <!--This is an override of CoreCompile to have our CompilerTarget be called at compile time-->
+  <!--ILAnalyzerRunner target -->
   <Target
-      Name="CoreCompile"
-      Inputs="@(Compile);
-              @(ReferencePath)"
-      Outputs="@(IntermediateAssembly)" 
-      DependsOnTargets="$(CoreCompileDependsOn);ComposeStarCompilerTarget"
-    >
+       Name="ILWeaverRunner">
+    <Message Text="Performing IL weaving..." />
+    <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />  
   </Target>
 
-  <!--
-    The CreateManifestResourceNames target create the manifest resource names from the .RESX
-    files.
-
-        [IN]
-        @(ResxWithNoCulture) - The names the non-culture .RESX files.
-        @(ResxWithCulture) - The names the culture .RESX files.
-        @(NonResxWithNoCulture) - The names of the non-culture non-RESX files (like bitmaps, etc).
-        @(NonResxWithCulture) - The names of the culture non-RESX files (like bitmaps, etc).
-
-        [OUT]
-        @(ManifestResourceWithNoCultureName) - The corresponding manifest resource name (.RESOURCE)
-        @(ManifestResourceWithCultureName) - The corresponding manifest resource name (.RESOURCE)
-        @(ManifestNonResxWithNoCulture) - The corresponding manifest resource name.
-        @(ManifestNonResxWithCulture) - The corresponding manifest resource name.
-
-    For ComposeStar applications the transformation is like:
-
-        Resources1.resx => RootNamespace.Resources1 => Build into main assembly
-        SubFolder\Resources1.resx => RootNamespace.SubFolder.Resources1 => Build into main assembly
-        Resources1.fr.resx => RootNamespace.Resources1.fr => Build into satellite assembly
-        Resources1.notaculture.resx => RootNamespace.Resources1.notaculture => Build into main assembly
-
-    For other project systems, this transformation may be different.
-    -->
-  <PropertyGroup>
-    <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
-  </PropertyGroup>
+  <!--This is an override of targets-->
   <Target
-      Name="CreateManifestResourceNames"
-      Condition="'@(ResxWithNoCulture)@(ResxWithCulture)@(NonResxWithNoCulture)@(NonResxWithCulture)'!=''"
-      DependsOnTargets="$(CreateManifestResourceNamesDependsOn)"
-        >
+     Name="CopyFilesToOutputDirectory"
+      DependsOnTargets="
+            ComputeIntermediateSatelliteAssemblies;
+            _CopyFilesMarkedCopyLocal;
+            _CopySourceItemsToOutputDirectory;
+            _CopyAppConfigFile;
+            _CopyManifestFiles;">
+    <Message Text="Copying assemblies..." />
+    <MakeDir Directories="$(OutDir)\Test"></MakeDir>
+    <!-- Copy the serialization assembly if it exists. -->
+    <!--<Copy
+        SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"
+        DestinationFiles="$(OutDir)$(_SGenDllName)"
+        SkipUnchangedFiles="true"
+        Condition="'$(_SGenDllCreated)'=='true'">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+    </Copy>-->
+    <!--<Copy
+        SourceFiles="@(TargetOutputs)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true">
 
-    <!-- Create the target resource names for non-culture resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(ResxWithNoCulture)'!=''"
-          ResourceFiles="@(ResxWithNoCulture)"
-          RootNamespace="$(RootNamespace)">
+      <Output TaskParameter="DestinationFiles" ItemName="MainAssembly"/>
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 
-      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestResourceWithNoCultureName"/>
+    </Copy>-->
+    <!-- Copy the debug information file (.pdb), if any -->
+    <!--<Copy
+        SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb"
+        DestinationFiles="$(OutDir)$(TargetName).pdb"
+        SkipUnchangedFiles="true"
+        Condition="'$(_DebugSymbolsProduced)'=='true'">
 
-    </CreateCSharpManifestResourceName>
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 
-    <!-- Create the target resource names for culture resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(ResxWithCulture)'!=''"
-          ResourceFiles="@(ResxWithCulture)"
-          RootNamespace="$(RootNamespace)">
-
-      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestResourceWithCultureName"/>
-
-    </CreateCSharpManifestResourceName>
-
-    <!-- Create the target resource names for non-culture non-resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(NonResxWithNoCulture)'!=''"
-          ResourceFiles="@(NonResxWithNoCulture)"
-          RootNamespace="$(RootNamespace)">
-
-      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestNonResxWithNoCulture"/>
-
-    </CreateCSharpManifestResourceName>
-
-    <!-- Create the target resource names for culture non-resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(NonResxWithCulture)'!=''"
-          ResourceFiles="@(NonResxWithCulture)"
-          RootNamespace="$(RootNamespace)">
-
-      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestNonResxWithCulture"/>
-
-    </CreateCSharpManifestResourceName>
+    </Copy>-->
+    <!-- Copy satellite assemblies. -->
+    <!--<Copy
+        SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)"
+        DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(OutDir)%(Culture)\$(TargetName).resources.dll')"
+        SkipUnchangedFiles="true">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+    </Copy>-->
+    <!-- 
+        Copy COM reference wrappers, isolated COM references, COM references included by 
+        native (manifest) references, native (manifest) reference files themselves. 
+        -->
+    <Copy
+        SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWritesShareable"/>
+    </Copy>
   </Target>
+
+
 </Project>

@@ -39,6 +39,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         #endregion
 
         #region properties
+             
         [Browsable(false)]
         public string Url
         {
