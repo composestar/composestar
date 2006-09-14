@@ -8,18 +8,18 @@ import Composestar.Repository.LanguageModel.Inlining.*;
 public class CallElement
 {
 
-	private MethodBody _referencedMethodBody;
+	private int _parentMethodBodyId;
 
 	/** @property */
-	public MethodBody get_ParentMethodBody()
+	public int get_ParentMethodBodyId()
 	{
-		return _referencedMethodBody;
+		return _parentMethodBodyId;
 	}
 
 	/** @property */
-	public void set_ParentMethodBody(MethodBody value)
+	public void set_ParentMethodBodyId(int value)
 	{
-		_referencedMethodBody = value;
+		_parentMethodBodyId = value;
 	}
 
 	private String _methodReference;

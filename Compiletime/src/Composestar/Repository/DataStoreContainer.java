@@ -31,7 +31,8 @@ public class DataStoreContainer {
 		// Indexes
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("_parentMethodId").indexed(true);
-
+        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("parentMethodBodyId").indexed(true);
+        
         
         dbContainer = Db4o.openFile("test.yap");
     }
@@ -102,4 +103,13 @@ public class DataStoreContainer {
 		return ObjectSetToArrayList(result);
 	}
 	
+	public ArrayList getCallElements(Composestar.Repository.LanguageModel.MethodBody methodBody)
+	{
+		Query query = dbContainer.query();
+		query.constrain(Composestar.Repository.LanguageModel.MethodBody.class);
+		query.descend("_parentMethodBodyId").constrain(new Integer(methodBody.get_Id()));
+		ObjectSet result = query.execute();
+					
+		return ObjectSetToArrayList(result);
+	}
 }
