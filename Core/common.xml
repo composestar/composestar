@@ -30,13 +30,6 @@ Common routines. Always include this file in every build.xml file
 				<isset property="env.PATH" />
 			</not>
 		</condition>		
-		
-		<!-- TODO: read this from registry? -->
-		<condition property="composestar.installdir" value="C:/Program Files/ComposeStar">
-			<not>
-				<isset property="composestar.installdir" />
-			</not>
-		</condition>
 	
 		<!-- some magic to figure out the core path -->
 		<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
@@ -75,6 +68,20 @@ Common routines. Always include this file in every build.xml file
 		<available file="${build.java}${file.separator}build.xml" property="available.java" />
 		<available file="${build.c}${file.separator}build.xml" property="available.c" />
 		
+		<!-- resolve system variables -->		
+		<exec executable="${build.core}\Development\AntHelper.exe" failifexecutionfails="false">
+			<arg value="getsystemproperties" />
+			<arg value="${build.core}\Development\system.properties" />
+		</exec>
+		<property file="${build.core}/Development/system.properties" />
+		
+		<!-- force defaults -->
+		<condition property="composestar.installdir" value="C:/Program Files/ComposeStar">
+			<not>
+				<isset property="composestar.installdir" />
+			</not>
+		</condition>
+		
 		<!-- calling of "make" -->
 		<macrodef name="make">
 			<attribute name="target" default="" />
@@ -107,6 +114,16 @@ Common routines. Always include this file in every build.xml file
 					<arg value="@{solution}" />
 					<arg value="/rebuild" />
 					<arg value="@{target}" />
+				</exec>
+			</sequential>
+		</macrodef>
+		
+		<macrodef name="registerAssembly">
+			<attribute name="dll" />
+			<sequential>
+				<exec executable="regasm.exe" failifexecutionfails="false">
+					<arg value="/silent" />
+					<arg value="@{dll}" />
 				</exec>
 			</sequential>
 		</macrodef>
