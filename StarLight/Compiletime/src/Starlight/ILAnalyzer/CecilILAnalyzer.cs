@@ -28,7 +28,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private bool _isInitialized = false;
         private TimeSpan _lastDuration=TimeSpan.MinValue;
         private AssemblyDefinition _targetAssemblyDefinition;
-        private RepositoryAccess _repositoryAccess;
+        private RepositoryAccess _repositoryAccess = new RepositoryAccess();
 
         /// <summary>
         /// Initializes the analyzer with the specified assembly name.
@@ -54,10 +54,22 @@ namespace Composestar.StarLight.ILAnalyzer
             }
             #endregion
 
+            #region Config
+            string repositoryFilename = string.Empty;
+            if (config != null)
+            {
+                repositoryFilename = config.Get("RepositoryFilename"); 
+            }
+
+            if (string.IsNullOrEmpty(repositoryFilename))
+                throw new ArgumentException(Properties.Resources.RepositoryFilenameNotSpecified, "RepositoryFilename");
+ 
+            RepositoryAccess.Filename = repositoryFilename;
+
+            #endregion
+
             _fileName = fileName;
-
-            _repositoryAccess = new RepositoryAccess();
-
+                        
             _isInitialized = true;
 
         }
@@ -66,74 +78,7 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             get { return _repositoryAccess; }
         }
-
-        /// <summary>
-        /// Extracts the methods.
-        /// </summary>
-        /// <returns></returns>
-        public IList<MethodElement> ExtractMethods()
-        {
-            return null;
-            //CheckForInit();
-
-            //List<MethodElement> retList = new List<MethodElement>();
-
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start(); 
-
-            ////Gets all types of the MainModule of the assembly
-            //foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
-            //{
-            //    foreach (MethodDefinition method in type.Methods)
-            //    {
-            //        // Create a new method element
-            //        MethodElement me = new MethodElement();
-            //        me.MethodName = String.Format("{0}.{1}", type.Name, method.Name);
-            //        me.ReturnType = method.ReturnType.ReturnType.ToString();  
-
-            //        // Add the parameters
-            //        foreach (ParameterDefinition param in method.Parameters)
-            //        {
-            //            // Create a new parameter element
-            //            ParameterElement pe = new ParameterElement();
-            //            pe.Name = param.Name;
-            //            pe.Ordinal = (short)(param.Sequence);
-            //            pe.ParameterType = param.ParameterType.ToString();
-                          
-            //            // Add to the method
-            //            me.Parameters.Add(pe);
-            //        }
-
-            //        if (method.Body != null)
-            //        {
-            //            foreach (Instruction instr in method.Body.Instructions)
-            //            {
-            //               if (instr.OpCode.Value == OpCodes.Call.Value ||
-            //                   instr.OpCode.Value == OpCodes.Calli.Value ||
-            //                   instr.OpCode.Value == OpCodes.Callvirt.Value
-            //                   )
-            //               {
-            //                   CallConstruction cc = new CallConstruction();
-            //                   MethodReference mr = (MethodReference)(instr.Operand);
-            //                   cc.MethodReference = mr.ToString() ; 
-
-            //                   // Add to the list of the method
-            //                   me.Calls.Add(cc); 
-            //               }
-            //            }
-            //        }
-
-            //        // Add the method to the return list
-            //        retList.Add(me);
-            //    }
-            //}            
-
-            //sw.Stop();
-            //_lastDuration = sw.Elapsed; 
-
-            //return retList;
-        }
-
+      
         /// <summary>
         /// Extracts the types.
         /// </summary>
@@ -153,6 +98,12 @@ namespace Composestar.StarLight.ILAnalyzer
                 
                 ti.Name = type.Name;
                 ti.FullName = type.FullName;
+                ti.IsAbstract = type.IsAbstract;
+                ti.IsEnum = type.IsEnum;
+                ti.IsInterface = type.IsInterface;
+                ti.IsSealed = type.IsSealed;
+                ti.IsValueType = type.IsValueType;
+                
                 if (type.BaseType != null) { ti.BaseType = type.BaseType.Name; }
 
                 // Add to the repository
@@ -162,7 +113,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 {
                     // Create a new method element
                     MethodElement mi = new MethodElement();                
-                    mi.Name = method.Name;
+                    mi.Name = method.Name;                    
                     mi.ReturnType = method.ReturnType.ReturnType.ToString();
                     
                     // Add to the repository
@@ -181,6 +132,25 @@ namespace Composestar.StarLight.ILAnalyzer
                         // Add to the method
                         RepositoryAccess.AddParameter(mi, pe); 
                         
+                    }
+
+                    if (method.Body != null)
+                    {
+                        foreach (Instruction instr in method.Body.Instructions)
+                        {
+                           if (instr.OpCode.Value == OpCodes.Call.Value ||
+                               instr.OpCode.Value == OpCodes.Calli.Value ||
+                               instr.OpCode.Value == OpCodes.Callvirt.Value
+                               )
+                           {
+                               CallElement ce = new CallElement();
+                               MethodReference mr = (MethodReference)(instr.Operand);
+                               ce.MethodReference = mr.ToString() ; 
+
+                               // Add to the list of the method
+                               RepositoryAccess.AddCallToMethod(mi, ce); 
+                           }
+                        }
                     }
                 }
             }

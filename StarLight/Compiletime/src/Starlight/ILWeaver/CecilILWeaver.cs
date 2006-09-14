@@ -12,8 +12,8 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
-using Composestar.Repository.LanguageModel;  
-using Composestar.Repository; 
+using Composestar.Repository.LanguageModel;
+using Composestar.Repository;
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -96,14 +96,27 @@ namespace Composestar.StarLight.ILWeaver
                     }
                 }
 
-                if (String.IsNullOrEmpty(outputFilename) )
+                if (String.IsNullOrEmpty(outputFilename))
                     _configuration.OutputFilename = Path.GetFileName(inputImage);
                 else
                     _configuration.OutputFilename = outputFilename;
+
             }
 
+            // Get the repositoryfilename
+            string repositoryFilename = string.Empty;
+            if (config != null)
+            {
+                repositoryFilename = config.Get("RepositoryFilename");
+            }
+
+            if (string.IsNullOrEmpty(repositoryFilename))
+                throw new ArgumentException(Properties.Resources.RepositoryFilenameNotSpecified, "RepositoryFilename");
+
+            RepositoryAccess.Filename = repositoryFilename;
+
             #endregion
-            
+
             _repositoryAccess = new RepositoryAccess();
 
             _isInitialized = true;
@@ -114,7 +127,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Gets the repository retriever.
         /// </summary>
         /// <value>The repository retriever.</value>
-        private RepositoryAccess RepositoryAccess
+        public RepositoryAccess RepositoryAccess
         {
             get { return _repositoryAccess; }
         }
@@ -162,7 +175,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Start timing
             Stopwatch sw = new Stopwatch();
-            sw.Start(); 
+            sw.Start();
 
             // Declare typeinfo and methodinfo
             TypeElement typeElement;
@@ -174,10 +187,10 @@ namespace Composestar.StarLight.ILWeaver
 
             // Lets walk over all the modules in the assembly
             foreach (ModuleDefinition module in _targetAssemblyDefinition.Modules)
-	        {
+            {
                 // Walk over each type in the module
                 foreach (TypeDefinition type in module.Types)
-	            {
+                {
                     // Get the information from the repository about this type
                     typeElement = RepositoryAccess.GetTypeElement(type.FullName);
                     // Skip this type if we do not have information about it 
@@ -201,16 +214,15 @@ namespace Composestar.StarLight.ILWeaver
 
                     //Import the modifying type into the AssemblyDefinition
                     module.Import(type);
-	            }
-		        
-	        }
-            
+                }
+            }
+
             //Save the modified assembly
             AssemblyFactory.SaveAssembly(_targetAssemblyDefinition, _configuration.OutputFile);
 
             // Stop timing
             sw.Stop();
-            _lastDuration = sw.Elapsed; 
+            _lastDuration = sw.Elapsed;
         }
 
         /// <summary>
@@ -227,15 +239,15 @@ namespace Composestar.StarLight.ILWeaver
             Mono.Cecil.FieldAttributes attrs;
 
             // Prepare the data
-            name = "test";            
+            name = "test";
             fieldType = _targetAssemblyDefinition.MainModule.Import(typeof(String));
-            attrs = Mono.Cecil.FieldAttributes.Public;  
-            
+            attrs = Mono.Cecil.FieldAttributes.Public;
+
             // Create the field
             internalDef = new FieldDefinition(name, fieldType, attrs);
 
             // Add the field
-            type.Fields.Add(internalDef);  
+            type.Fields.Add(internalDef);
         }
 
         /// <summary>
@@ -245,7 +257,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="typeElement">The type information.</param>
         public void WeaveExternals(TypeDefinition type, TypeElement typeElement)
         {
-           
+
 
         }
 
@@ -260,49 +272,49 @@ namespace Composestar.StarLight.ILWeaver
 
             if (methodElement == null)
                 return;
- 
+
             // Add the inputfilters
             WeaveInputFilters(method, methodElement);
 
             // Add the outputfilters
             WeaveOutputFilters(method, methodElement);
-              
+
         }
 
         public void WeaveInputFilters(MethodDefinition method, MethodElement methodElement)
         {
             //Gets the MethodElement of Console.WriteLine() method
-            MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[]{typeof(string)});
+            MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
 
             //Gets the CilWorker of the method for working with CIL instructions
-			CilWorker worker = method.Body.CilWorker;
+            CilWorker worker = method.Body.CilWorker;
 
- 
-			//Creating a sentence according to the current method
-			string sentence;
-			sentence = String.Concat("Code added in ", method.Name);
- 
-			//Import the Console.WriteLine() method
-			MethodReference writeLine;
-			writeLine = _targetAssemblyDefinition.MainModule.Import(writeLineMethod);
- 
-			//Creates the MSIL instruction for inserting the sentence
-			Instruction insertSentence;
-			insertSentence = worker.Create(OpCodes.Ldstr, sentence);
- 
-			//Creates the CIL instruction for calling the 
-			//Console.WriteLine(string value) method
-			Instruction callWriteLine;
-			callWriteLine = worker.Create(OpCodes.Call, writeLine);
- 			
-			//Getting the first instruction of the current method
-			Instruction ins = method.Body.Instructions[0];
- 
-			//Inserts the insertSentence instruction before the first instruction
-			method.Body.CilWorker.InsertBefore(ins, insertSentence);
- 
-			//Inserts the callWriteLineMethod after the //insertSentence instruction
-			worker.InsertAfter(insertSentence, callWriteLine);
+
+            //Creating a sentence according to the current method
+            string sentence;
+            sentence = String.Concat("Code added in ", method.Name);
+
+            //Import the Console.WriteLine() method
+            MethodReference writeLine;
+            writeLine = _targetAssemblyDefinition.MainModule.Import(writeLineMethod);
+
+            //Creates the MSIL instruction for inserting the sentence
+            Instruction insertSentence;
+            insertSentence = worker.Create(OpCodes.Ldstr, sentence);
+
+            //Creates the CIL instruction for calling the 
+            //Console.WriteLine(string value) method
+            Instruction callWriteLine;
+            callWriteLine = worker.Create(OpCodes.Call, writeLine);
+
+            //Getting the first instruction of the current method
+            Instruction ins = method.Body.Instructions[0];
+
+            //Inserts the insertSentence instruction before the first instruction
+            method.Body.CilWorker.InsertBefore(ins, insertSentence);
+
+            //Inserts the callWriteLineMethod after the //insertSentence instruction
+            worker.InsertAfter(insertSentence, callWriteLine);
         }
 
         public void WeaveOutputFilters(MethodDefinition method, MethodElement methodElement)
@@ -371,7 +383,7 @@ namespace Composestar.StarLight.ILWeaver
             /// <value>The output file.</value>
             public string OutputFile
             {
-                get { return Path.Combine(_outputImagePath, _outputFilename); } 
+                get { return Path.Combine(_outputImagePath, _outputFilename); }
             }
 
             /// <summary>

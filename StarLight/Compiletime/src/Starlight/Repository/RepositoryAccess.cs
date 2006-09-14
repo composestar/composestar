@@ -15,6 +15,22 @@ namespace Composestar.Repository
     {
 
         /// <summary>
+        /// Gets or sets the filename of the repository.
+        /// </summary>
+        /// <value>The filename.</value>
+        public string Filename
+        {
+            get
+            {
+                return DataStoreContainer.Instance.RepositoryFileName;
+            }
+            set
+            {
+                DataStoreContainer.Instance.RepositoryFileName = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the type info.
         /// </summary>
         /// <param name="fullName">The full name.</param>
@@ -65,7 +81,7 @@ namespace Composestar.Repository
             if (typeElement == null)
                 throw new ArgumentNullException("typeElement") ;
 
-            Composestar.Repository.DataStoreContainer.Instance.AddTypeElement(typeElement);
+            Composestar.Repository.DataStoreContainer.Instance.StoreObject(typeElement);
         }
 
         /// <summary>
@@ -83,7 +99,7 @@ namespace Composestar.Repository
 
             methodElement.ParentTypeId = typeElement.Id;
  
-            Composestar.Repository.DataStoreContainer.Instance.AddMethodElement(methodElement);
+            Composestar.Repository.DataStoreContainer.Instance.StoreObject(methodElement);
         }
 
 
@@ -102,7 +118,26 @@ namespace Composestar.Repository
 
             paramElement.ParentMethodId = methodElement.Id; 
 
-            Composestar.Repository.DataStoreContainer.Instance.AddParameterElement(paramElement);
+            Composestar.Repository.DataStoreContainer.Instance.StoreObject(paramElement);
+        }
+
+
+        /// <summary>
+        /// Adds the call to method.
+        /// </summary>
+        /// <param name="methodElement">The method element.</param>
+        /// <param name="callElement">The call element.</param>
+        public void AddCallToMethod(MethodElement methodElement, CallElement callElement)
+        {
+            if (methodElement == null)
+                throw new ArgumentNullException("methodElement") ;
+
+            if (callElement == null)
+                  throw new ArgumentNullException("callElement");
+
+            callElement.ParentMethodBody = methodElement.MethodBody; 
+
+            Composestar.Repository.DataStoreContainer.Instance.StoreObject(callElement);
         }
     }
 }

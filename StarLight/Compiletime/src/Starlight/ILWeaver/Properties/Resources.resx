@@ -135,6 +135,9 @@
   <data name="NotYetInitialized" xml:space="preserve">
     <value>The ILWeaver has not yet been initialized. Call the Initialize function first.</value>
   </data>
+  <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
+    <value>The config collection did not contain a valid filename to the repository file.</value>
+  </data>
   <data name="SNKFileNotFound" xml:space="preserve">
     <value>Failed to find Strong Name Key file at {0}.</value>
   </data>

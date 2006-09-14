@@ -95,5 +95,14 @@ namespace Composestar.StarLight.ILAnalyzer.Properties {
                 return ResourceManager.GetString("NotYetInitialized", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The config collection did not contain a valid filename to the repository file..
+        /// </summary>
+        internal static string RepositoryFilenameNotSpecified {
+            get {
+                return ResourceManager.GetString("RepositoryFilenameNotSpecified", resourceCulture);
+            }
+        }
     }
 }
