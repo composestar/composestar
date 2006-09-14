@@ -9,8 +9,11 @@ namespace Trese.ComposestarTasks
 	{
 		const string c_filename = "BuildConfiguration.xml";
 
-		public ConfigWriter()
+		private readonly Config m_config;
+
+		public ConfigWriter(Config config)
 		{
+			m_config = config;
 		}
 
 		public void write()
@@ -49,15 +52,14 @@ namespace Trese.ComposestarTasks
 		private void WriteProjects(XmlWriter xw)
 		{
 			xw.WriteStartElement("Projects");
-			xw.WriteAttributeString("executable", "");
-			xw.WriteAttributeString("startupProject", "");
-			xw.WriteAttributeString("applicationStart", "");
-			xw.WriteAttributeString("runDebugLevel", "");
-			xw.WriteAttributeString("outputPath", "");
+			xw.WriteAttributeString("executable", m_config.executable);
+			xw.WriteAttributeString("applicationStart", m_config.applicationStart);
+			xw.WriteAttributeString("runDebugLevel", m_config.runDebugLevel);
+			xw.WriteAttributeString("outputPath", m_config.outputPath);
 
 			// individual project items
-			for (int i = 0; i < 2; i++)
-				WriteProject(xw);
+			foreach (Project p in m_config.projects)
+				WriteProject(xw, p);
 
 			// concern sources
 			WriteConcernSources(xw);
@@ -68,43 +70,43 @@ namespace Trese.ComposestarTasks
 			xw.WriteEndElement();
 		}
 
-		private void WriteProject(XmlWriter xw)
+		private void WriteProject(XmlWriter xw, Project p)
 		{
 			xw.WriteStartElement("Project");
-			xw.WriteAttributeString("name", "");
-			xw.WriteAttributeString("language", "");
-			xw.WriteAttributeString("buildPath", "");
-			xw.WriteAttributeString("basePath", "");
-			xw.WriteAttributeString("outputPath", "");
-			xw.WriteAttributeString("assemblyName", "");
+			xw.WriteAttributeString("name", p.name);
+			xw.WriteAttributeString("language", p.language);
+			xw.WriteAttributeString("basePath", p.basePath);
+			xw.WriteAttributeString("buildPath", p.buildPath);
+			xw.WriteAttributeString("outputPath", p.outputPath);
+			xw.WriteAttributeString("assemblyName", p.assemblyName);
 
 			// sources
 			xw.WriteStartElement("Sources");
-			for (int i = 0; i < 2; i++)
+			foreach (String s in p.sources)
 			{
 				xw.WriteStartElement("Source");
-				xw.WriteAttributeString("fileName", "source.file" + i);
+				xw.WriteAttributeString("fileName", s);
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
 
 			// Dependencies
 			xw.WriteStartElement("Dependencies");
-			for (int i = 0; i < 2; i++)
+			foreach (String d in p.deps)
 			{
 				xw.WriteStartElement("Dependency");
-				xw.WriteAttributeString("fileName", "dep.file" + i);
+				xw.WriteAttributeString("fileName", d);
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
 
 			// TypeSources
 			xw.WriteStartElement("TypeSources");
-			for (int i = 0; i < 2; i++)
+			foreach (TypeSource ts in p.typeSources)
 			{
 				xw.WriteStartElement("TypeSource");
-				xw.WriteAttributeString("name", "source.name" + i);
-				xw.WriteAttributeString("fileName", "source.file" + i);
+				xw.WriteAttributeString("name", ts.name);
+				xw.WriteAttributeString("fileName", ts.file);
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
@@ -116,10 +118,10 @@ namespace Trese.ComposestarTasks
 		private void WriteConcernSources(XmlWriter xw)
 		{
 			xw.WriteStartElement("ConcernSources");
-			for (int i = 0; i < 2; i++)
+			foreach (String s in m_config.concernSources)
 			{
 				xw.WriteStartElement("ConcernSource");
-				xw.WriteAttributeString("fileName", "concern.file" + i);
+				xw.WriteAttributeString("fileName", s);
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
@@ -128,11 +130,11 @@ namespace Trese.ComposestarTasks
 		private void WriteCustomFilters(XmlWriter xw)
 		{
 			xw.WriteStartElement("CustomFilters");
-			for (int i = 0; i < 2; i++)
+			foreach (Filter f in m_config.customFilters)
 			{
 				xw.WriteStartElement("Filter");
-				xw.WriteAttributeString("filterName", "filter.name" + i);
-				xw.WriteAttributeString("library", "filter.library" + i);
+				xw.WriteAttributeString("filterName", f.name);
+				xw.WriteAttributeString("library", f.library);
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
@@ -141,12 +143,12 @@ namespace Trese.ComposestarTasks
 		private void WriteSettings(XmlWriter xw)
 		{
 			xw.WriteStartElement("Settings");
-			xw.WriteAttributeString("composestarIni", "settings.ini");
-			xw.WriteAttributeString("buildDebugLevel", "3");
+			xw.WriteAttributeString("composestarIni", m_config.settingsIni);
+			xw.WriteAttributeString("buildDebugLevel", m_config.buildDebugLevel);
 			xw.WriteAttributeString("platform", "dotNET");
 
 			// modules
-			WriteModules(xw);
+			WriteModuleSettings(xw);
 
 			// paths
 			WritePaths(xw);
@@ -154,17 +156,17 @@ namespace Trese.ComposestarTasks
 			xw.WriteEndElement();
 		}
 
-		private void WriteModules(XmlWriter xw)
+		private void WriteModuleSettings(XmlWriter xw)
 		{
 			xw.WriteStartElement("Modules");
-			for (int i = 0; i < 2; i++)
+			foreach (ModuleSettings m in m_config.modules)
 			{
 				xw.WriteStartElement("Module");
-				xw.WriteAttributeString("name", "module.name");
+				xw.WriteAttributeString("name", m.name);
 
 				// add all properties
-				for (int j = 0; j < 2; j++)
-					xw.WriteAttributeString("a" + i + "x" + j, "b" + i + "x" + j);
+				foreach (KeyValuePair<String,String> p in m.props)
+					xw.WriteAttributeString(p.Key, p.Value);
 
 				xw.WriteEndElement();
 			}
@@ -174,11 +176,11 @@ namespace Trese.ComposestarTasks
 		private void WritePaths(XmlWriter xw)
 		{
 			xw.WriteStartElement("Paths");
-			for (int i = 0; i < 2; i++)
+			foreach (Path p in m_config.paths)
 			{
 				xw.WriteStartElement("Path");
-				xw.WriteAttributeString("name", "path.name" + i);
-				xw.WriteAttributeString("pathName", "path.pn" + i);
+				xw.WriteAttributeString("name", p.name);
+				xw.WriteAttributeString("pathName", p.pathName);
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
