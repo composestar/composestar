@@ -25,7 +25,7 @@ namespace Composestar.StarLight.ILWeaver
     {
         private AssemblyDefinition _targetAssemblyDefinition;
         private WeaverConfiguration _configuration;
-        private RepositoryAccess _repositoryAccess =new RepositoryAccess();
+        private RepositoryAccess _repositoryAccess ;
 
         private bool _isInitialized = false;
         private TimeSpan _lastDuration = TimeSpan.MinValue;
@@ -113,7 +113,7 @@ namespace Composestar.StarLight.ILWeaver
             if (string.IsNullOrEmpty(repositoryFilename))
                 throw new ArgumentException(Properties.Resources.RepositoryFilenameNotSpecified, "RepositoryFilename");
 
-            RepositoryAccess.Filename = repositoryFilename;
+            _repositoryAccess = new RepositoryAccess(repositoryFilename);
 
             #endregion
                         

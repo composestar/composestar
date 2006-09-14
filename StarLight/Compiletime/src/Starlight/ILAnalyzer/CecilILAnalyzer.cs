@@ -28,7 +28,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private bool _isInitialized = false;
         private TimeSpan _lastDuration=TimeSpan.MinValue;
         private AssemblyDefinition _targetAssemblyDefinition;
-        private RepositoryAccess _repositoryAccess = new RepositoryAccess();
+        private RepositoryAccess _repositoryAccess ;
 
         /// <summary>
         /// Initializes the analyzer with the specified assembly name.
@@ -64,7 +64,7 @@ namespace Composestar.StarLight.ILAnalyzer
             if (string.IsNullOrEmpty(repositoryFilename))
                 throw new ArgumentException(Properties.Resources.RepositoryFilenameNotSpecified, "RepositoryFilename");
  
-            RepositoryAccess.Filename = repositoryFilename;
+            _repositoryAccess = new RepositoryAccess(repositoryFilename);
 
             #endregion
 
