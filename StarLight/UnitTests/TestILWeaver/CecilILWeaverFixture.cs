@@ -59,6 +59,7 @@ namespace TestILWeaver
             config.Add("OutputImagePath", AppDomain.CurrentDomain.BaseDirectory);
             config.Add("ShouldSignAssembly", "false");
             config.Add("OutputImageSNK", "");
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
             //config.Add("OutputFilename", FilenameWoven);
 
             cecilWeaver.Initialize(CreateFullPath(FilenameSource), config); 

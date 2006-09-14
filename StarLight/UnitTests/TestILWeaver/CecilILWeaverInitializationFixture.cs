@@ -54,6 +54,15 @@ namespace TestILWeaver
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        [DeploymentItem("TestTarget.exe")]
+        public void InitializeThrowsArgumentExceptionIfRepositoryFilenameIsNotSupplied()
+        {
+            CecilILWeaver analyzer = new CecilILWeaver();
+            analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void DoWeaveThrowsExceptionIfInitializeWasNotCalled()
         {
