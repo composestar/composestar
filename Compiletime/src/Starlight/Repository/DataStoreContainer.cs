@@ -13,12 +13,35 @@ namespace Composestar.Repository
 {
     public class DataStoreContainer
     {
-        private const string YapFileName = "test.yap";
+        private string _yapFileName = String.Empty;
 
         private static String[] ASSEMBLY_MAP = new String[]{
             "Composestar.Repository.LanguageModel",
             "Repository.LanguageModel",
         };
+
+        /// <summary>
+        /// Gets or sets the name of the repository file.
+        /// </summary>
+        /// <value>The name of the repository file.</value>
+        public string RepositoryFileName
+        {
+            get
+            {
+                return _yapFileName;
+            }
+            set
+            {
+                if (!_yapFileName.Equals(value, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if (dbContainer != null) 
+                        dbContainer.Close(); 
+
+                     _yapFileName = value;
+                    OpenDatabase();
+                }
+            }
+        }
 
         private ObjectContainer dbContainer;
 
@@ -32,9 +55,7 @@ namespace Composestar.Repository
         }
 
         DataStoreContainer()
-        {
-            adjustClassNames();
-
+        {        
             Db4o.Configure().CallConstructors(false);
 
             // Indexes
@@ -42,12 +63,13 @@ namespace Composestar.Repository
             Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
 
             Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("id").Indexed(true);  
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);
-            
-            
-            dbContainer = Db4o.OpenFile(YapFileName);
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);                                    
         }
 
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <value>The instance.</value>
         public static DataStoreContainer Instance
         {
             get
@@ -56,16 +78,34 @@ namespace Composestar.Repository
             }
         }
 
-        // Destructor, closes the database file
+        /// <summary>
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="T:Composestar.Repository.DataStoreContainer"/> is reclaimed by garbage collection.
+        /// </summary>
+        /// <remarks>
+        /// Destructor, closes the database file
+        /// </remarks> 
         ~DataStoreContainer()
         {
              dbContainer.Close();
         }
         #endregion
 
-        public static void adjustClassNames()
+        /// <summary>
+        /// Opens the database.
+        /// </summary>
+        public void OpenDatabase()
         {
-            ObjectContainer objectContainer = Db4o.OpenFile(YapFileName);
+            adjustClassNames();
+            dbContainer = Db4o.OpenFile(RepositoryFileName);
+        }
+
+        /// <summary>
+        /// Adjusts the class names.
+        /// </summary>
+        private void adjustClassNames()
+        {
+            ObjectContainer objectContainer = Db4o.OpenFile(RepositoryFileName);
             
             StoredClass[] classes = objectContainer.Ext().StoredClasses();
             for (int i = 0; i < classes.Length; i++)
@@ -157,22 +197,22 @@ namespace Composestar.Repository
             return m;
 	    }
 
-
         /// <summary>
-        /// Adds the method.
+        /// Store the object.
         /// </summary>
-        /// <param name="methodElement">The method element.</param>
-        public void AddMethodElement(MethodElement methodElement)
+        /// <param name="o">The object to store.</param>
+        public void StoreObject(Object o)
         {
-            dbContainer.Set(methodElement);
+            if (o == null)
+                throw new ArgumentNullException("object");
+ 
+            if (String.IsNullOrEmpty(_yapFileName))
+                throw new ArgumentException("Database filename not supplied so database is not opened.", "RepositoryFileName"); 
+
+            dbContainer.Set(o);
         }
 
-        public void AddParameterElement(ParameterElement parameterelement)
-        {
-            dbContainer.Set(parameterelement);
-        }
-
-
+        
         /// <summary>
         /// Gets the method element.
         /// </summary>

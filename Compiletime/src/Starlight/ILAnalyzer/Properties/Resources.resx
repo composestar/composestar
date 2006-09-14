@@ -129,4 +129,7 @@
   <data name="NotYetInitialized" xml:space="preserve">
     <value>The analyzer has not yet been initialized. Call the Initialize function first.</value>
   </data>
+  <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
+    <value>The config collection did not contain a valid filename to the repository file.</value>
+  </data>
 </root>

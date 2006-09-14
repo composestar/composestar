@@ -25,7 +25,7 @@ public class TypeElement
 	/** @property */
 	public int get_Id() { return _id; }
 
-	///** @property */
+	/** @property */
 	public String get_Name()
 	{
 	    return _name;

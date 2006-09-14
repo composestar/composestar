@@ -20,13 +20,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <param name="fileName">Name of the file.</param>
         /// <param name="config">The config settings.</param>
         void Initialize(string fileName, NameValueCollection config );
-
-        /// <summary>
-        /// Extracts the methods.
-        /// </summary>
-        /// <returns></returns>
-        IList<MethodElement> ExtractMethods();
-        
+       
         /// <summary>
         /// Extracts the types.
         /// </summary>

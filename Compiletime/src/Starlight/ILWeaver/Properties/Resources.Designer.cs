@@ -115,6 +115,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The config collection did not contain a valid filename to the repository file..
+        /// </summary>
+        internal static string RepositoryFilenameNotSpecified {
+            get {
+                return ResourceManager.GetString("RepositoryFilenameNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to find Strong Name Key file at {0}..
         /// </summary>
         internal static string SNKFileNotFound {
