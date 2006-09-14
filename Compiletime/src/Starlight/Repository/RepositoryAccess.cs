@@ -15,6 +15,19 @@ namespace Composestar.Repository
     {
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
+        /// </summary>
+        /// <param name="filename">The repository filename.</param>
+        public RepositoryAccess(string filename)
+        {
+            if (string.IsNullOrEmpty(filename))
+                throw new ArgumentNullException("filename");
+
+            DataStoreContainer.Instance.RepositoryFileName = filename;
+            
+        }
+
+        /// <summary>
         /// Gets or sets the filename of the repository.
         /// </summary>
         /// <value>The filename.</value>
