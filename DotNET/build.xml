@@ -30,6 +30,10 @@
 		<ant target="build" dir="Runtime" />
 	</target>
 	
+	<target name="plugin" depends="init">
+		<ant target="build" dir="Plugin" />
+	</target>
+	
 	<target name="findbugs">
 		<findbugs home="${bin.findbugs}" output="html" effort="max" reportLevel="medium" outputFile="${build.dotnet}${file.separator}findbugs-result.html" excludeFilter="${bin.findbugs}${file.separator}exclude.xml">
 			<class location="${build.dotnet}${file.separator}Compiletime${file.separator}${out.jar.dotnet}" />
@@ -57,6 +61,7 @@
 	<target name="install" depends="build">
 		<ant target="install" dir="Compiletime" />
 		<ant target="install" dir="Runtime" />
+		<ant target="install" dir="Plugin" />
 	</target>
 
 </project>

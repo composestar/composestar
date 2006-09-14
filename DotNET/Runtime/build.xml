@@ -41,6 +41,16 @@
 		<copy todir="${composestar.installdir}${file.separator}Binaries">
 			<fileset dir="${out.dist}" />
 		</copy>
+		<echo message="Registering assemblies" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCore.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCoreDotNET.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETRuntimeInterpreter.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETUtilities.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarFilterDebugger.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarRuntimeInterpreter.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarUtilities.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/DotNETPlatformInterface.dll" />
+		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/AntlrDotNet.dll" />
 	</target>
 
 </project>
