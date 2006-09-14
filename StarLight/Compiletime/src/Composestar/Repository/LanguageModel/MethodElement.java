@@ -14,7 +14,7 @@ public class MethodElement
 	public MethodElement()
 	{
 		_id = this.hashCode();
-		_methodBody = new MethodBody(); 
+		_methodBody = new MethodBody(_id); 
 	}
 
 	/** @property */

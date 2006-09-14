@@ -7,8 +7,38 @@ import Composestar.Repository.LanguageModel.Inlining.*;
  */
 public class MethodBody
 {
-
+	private int _id;
+	private int _parentMethodId;
 	private Instruction _inputFilter;
+	
+	public MethodBody()
+	{
+		_id = this.hashCode();
+	}
+	
+	public MethodBody(int parentId)
+	{
+		this();
+		_parentMethodId = parentId;
+	}
+	
+	/** @property */
+	public void set_ParentMethodId(int value)
+	{
+	    _parentMethodId = value; 
+	}
+	
+	/** @property */
+	public int get_ParentMethodId() 
+	{
+	    return _parentMethodId; 
+	}
+	
+	/** @property */
+	public int get_Id()
+	{
+		return _id;
+	}
 
 	/** @property */
 	public Instruction get_InputFilter()
