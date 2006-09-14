@@ -72,9 +72,9 @@ namespace TestLanguageModel
             string v = "test";
             pi.Name = v;
 
-            Assert.IsNull(pi.ParentMethodElement, "Parameter should not have a parent method.");
-            pi.ParentMethodElement = mi;
-            Assert.IsNotNull(pi.ParentMethodElement, "Parameter should have a method.");
+            Assert.IsTrue(pi.ParentMethodId <= 0, "Parameter should not have a parent method.");
+            pi.ParentMethodId = mi.Id;
+            Assert.IsTrue(pi.ParentMethodId > 0, "Parameter should have a method.");
                        
         }
 

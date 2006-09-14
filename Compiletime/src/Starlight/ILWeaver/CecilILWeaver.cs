@@ -25,7 +25,7 @@ namespace Composestar.StarLight.ILWeaver
     {
         private AssemblyDefinition _targetAssemblyDefinition;
         private WeaverConfiguration _configuration;
-        private RepositoryAccess _repositoryAccess;
+        private RepositoryAccess _repositoryAccess =new RepositoryAccess();
 
         private bool _isInitialized = false;
         private TimeSpan _lastDuration = TimeSpan.MinValue;
@@ -116,9 +116,7 @@ namespace Composestar.StarLight.ILWeaver
             RepositoryAccess.Filename = repositoryFilename;
 
             #endregion
-
-            _repositoryAccess = new RepositoryAccess();
-
+                        
             _isInitialized = true;
 
         }

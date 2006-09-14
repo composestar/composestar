@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using Composestar.StarLight.ILAnalyzer;
+using Composestar.Repository.LanguageModel;  
 using System.Collections.Specialized;
 using System.IO;
 
@@ -69,11 +70,20 @@ namespace TestILAnalyzer
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        [DeploymentItem("TestTarget.exe")]
+        public void InitializeThrowsArgumentExceptionIfRepositoryFilenameIsNotSupplied()
+        {
+            CecilILAnalyzer analyzer = new CecilILAnalyzer();
+            analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
         public void ExtractTypesThrowsExceptionIfInitializeWasNotCalled()
         {
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            List<string> ret = analyzer.ExtractTypes();
+            IList<TypeElement> ret = analyzer.ExtractTypeElements();
         }
 
         [TestMethod]
@@ -82,29 +92,37 @@ namespace TestILAnalyzer
         public void InitializeThrowsBadImageExceptionOnInvalidInputImage()
         {
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("InvalidImage.exe"), null);
+            analyzer.Initialize(CreateFullPath("InvalidImage.exe"), GetDefaultConfig());
         }
 
         [TestMethod]      
         [DeploymentItem("TestTarget.exe")]
-        public void ExtractTypesMustReturnMethodElements()
+        public void ExtractTypesMustReturnTypeElements()
         {
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);
-            List<MethodElement> ret = analyzer.ExtractMethods();
+            analyzer.Initialize(CreateFullPath("TestTarget.exe"), GetDefaultConfig());
+            IList<TypeElement> ret = analyzer.ExtractTypeElements();
 
-            Assert.IsNotNull(ret, "Extract methods returned null instead of a generic list of MethodElements.") ;
+            Assert.IsNotNull(ret, "ExtractTypeElements returned null instead of a generic list of TypeElement.") ;
         }
 
         [TestMethod]      
         [DeploymentItem("TestTarget.exe")]
-        public void ExtractTypesReturnValues()
+        public void ExtractTypesReturnsValues()
         {
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);
-            List<MethodElement> ret = analyzer.ExtractMethods();
+            analyzer.Initialize(CreateFullPath("TestTarget.exe"), GetDefaultConfig());
+            IList<TypeElement> ret = analyzer.ExtractTypeElements();
 
-            Assert.IsTrue(ret.Count == 1, "There are more than one method in the testtarget.exe"); 
+            Assert.IsTrue(ret.Count == 2, "There are more than one type in the testtarget.exe. Expected <module> and program type."); 
+        }
+
+        private NameValueCollection GetDefaultConfig()
+        {
+            NameValueCollection config = new NameValueCollection();
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
+
+            return config;
         }
 
         private string CreateFullPath(string fileName)
