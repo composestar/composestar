@@ -164,11 +164,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
                 if (p.ExitCode == 0)
                 {
+                    _repositoryAccess.CloseDatabase(); 
                     return true;
                 }
                 else
                 {
-                    Log.LogError("Master", 1000, "", "", 0, 0, 0, 0, "Master run failure reported by process. Exit code is {0}.", p.ExitCode);
+                    Log.LogErrorFromResources("MasterRunFailed", p.ExitCode);
+                    _repositoryAccess.CloseDatabase(); 
                     return false;
                 }
             }
@@ -179,21 +181,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     //Console.WriteLine(e.Message + ". Check the path.");
                     //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", is not found, please add the Java executable to your path!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
                     //Debug.Instance.ActivateTaskListWindow();
-                    Log.LogError("The java executable, " + p.StartInfo.FileName + ", is not found, please add the Java executable to your path!");
+                    Log.LogErrorFromResources("JavaExecutableNotFound", p.StartInfo.FileName);
                 }
 
                 else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)
                 {
                     //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", can not be accessed!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
                     //Debug.Instance.ActivateTaskListWindow();
-                    Log.LogError("The java executable, " + p.StartInfo.FileName + ", can not be accessed!");
+                    Log.LogErrorFromResources("JavaExecutableAccessDenied", p.StartInfo.FileName);
                 }
+                _repositoryAccess.CloseDatabase(); 
                 return false;
-            }
-
-            // Close the database
-            Log.LogMessage(MessageImportance.Low, "Closing repository.");
-            _repositoryAccess.CloseDatabase();
+            }                      
 
             return true;
                       

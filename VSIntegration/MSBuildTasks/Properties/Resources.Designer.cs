@@ -77,5 +77,32 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
                 return ResourceManager.GetString("CouldNotReadRegistryValues", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not execute the Java executable &apos;{0}&apos; because of access permission errors..
+        /// </summary>
+        internal static string JavaExecutableAccessDenied {
+            get {
+                return ResourceManager.GetString("JavaExecutableAccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Java executable &apos;{0}&apos; could not be found. Either add the location of this file to the path or place the folder in the JavaFolder key in the HKEY_LOCAL_MACHINE\SOFTWARE\Composestar\StarLight hive in the registry..
+        /// </summary>
+        internal static string JavaExecutableNotFound {
+            get {
+                return ResourceManager.GetString("JavaExecutableNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master run failure reported by process. Exit code is {0}..
+        /// </summary>
+        internal static string MasterRunFailed {
+            get {
+                return ResourceManager.GetString("MasterRunFailed", resourceCulture);
+            }
+        }
     }
 }
