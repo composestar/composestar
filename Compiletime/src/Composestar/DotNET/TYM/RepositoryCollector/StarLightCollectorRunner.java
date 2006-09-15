@@ -8,14 +8,18 @@ import Composestar.Core.LAMA.*;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.*;
-import Composestar.Repository.*;
+import Composestar.Repository.RepositoryAccess;
 import Composestar.Repository.LanguageModel.*;
 
 public class StarLightCollectorRunner implements CollectorRunner 
 {
+	private RepositoryAccess repository;
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
+		repository = new RepositoryAccess();
+		//TODO: repository.setDatabaseFileName("??");
+		
 		// Collect all types from the persistent repository
 		collectTypes();
 	}
@@ -23,7 +27,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectTypes() throws ModuleException
 	{
 		// Get all types from repository
-		ArrayList storedTypes = DataStoreContainer.getInstance().getTypes();
+		ArrayList storedTypes = repository.LanguageModel().getTypeElements();
 		
 		// Process all types, i.e. map them to LAMA
 		Iterator typeIterator = storedTypes.iterator();
@@ -42,30 +46,30 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			type.setAssemblyQualifedName( storedType.get_AssemblyElement().get_Name() );
 			type.setBaseType( storedType.get_BaseType() );
-			//type.addImplementedInterface( lastCharData );
+			//TODO: type.addImplementedInterface( lastCharData );
 			type.setIsAbstract( storedType.get_IsAbstract() );
-			//type.setIsAnsiClass( Boolean.valueOf( lastCharData ).booleanValue() );
-			//type.setIsArray( Boolean.valueOf( lastCharData ).booleanValue() );
-			//type.setIsAutoClass( Boolean.valueOf( lastCharData ).booleanValue() );
-			//type.setIsAutoLayout( Boolean.valueOf( lastCharData ).booleanValue() );
-			//type.setIsByRef( Boolean.valueOf( lastCharData ).booleanValue() );
-			//type.setIsClass( Boolean.valueOf( lastCharData ).booleanValue() );
-			//type.setIsContextful( Boolean.valueOf( lastCharData ).booleanValue() );
+			//--type.setIsAnsiClass( Boolean.valueOf( lastCharData ).booleanValue() );
+			type.setIsArray( storedType.get_IsArray() );
+			//--type.setIsAutoClass( Boolean.valueOf( lastCharData ).booleanValue() );
+			//--type.setIsAutoLayout( Boolean.valueOf( lastCharData ).booleanValue() );
+			//--type.setIsByRef( Boolean.valueOf( lastCharData ).booleanValue() );
+			type.setIsClass( storedType.get_IsClass() );
+			//--type.setIsContextful( Boolean.valueOf( lastCharData ).booleanValue() );
 			type.setIsEnum( storedType.get_IsEnum() );
-			//type.setIsImport( Boolean.valueOf( lastCharData ).booleanValue() );
+			//--type.setIsImport( Boolean.valueOf( lastCharData ).booleanValue() );
 			type.setIsInterface( storedType.get_IsInterface() ); 
-			//type.setIsMarshalByRef( Boolean.valueOf( lastCharData ).booleanValue() );
+			//--type.setIsMarshalByRef( Boolean.valueOf( lastCharData ).booleanValue() );
             //  TODO: Missing    Type.setIsNestedFamAndAssem( Boolean.valueOf( LastCharData ).booleanValue() );
-//			type.setIsNestedAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
-//			type.setIsNestedFamOrAssem( Boolean.valueOf( lastCharData ).booleanValue() );
-//			type.setIsNestedPrivate( Boolean.valueOf( lastCharData ).booleanValue() );
-//			type.setIsNestedPublic( Boolean.valueOf( lastCharData ).booleanValue() );
-//			type.setIsNotPublic( Boolean.valueOf( lastCharData ).booleanValue() );
-//			type.setIsPointer( Boolean.valueOf( lastCharData ).booleanValue() );
-//			type.setIsPrimitive( Boolean.valueOf( lastCharData ).booleanValue() );			
-//		    type.setIsPublic( Boolean.valueOf( lastCharData ).booleanValue() );
+//			--type.setIsNestedAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
+//			--type.setIsNestedFamOrAssem( Boolean.valueOf( lastCharData ).booleanValue() );
+//			--type.setIsNestedPrivate( Boolean.valueOf( lastCharData ).booleanValue() );
+//			--type.setIsNestedPublic( Boolean.valueOf( lastCharData ).booleanValue() );
+			type.setIsNotPublic( storedType.get_IsNotPublic() );
+//			--type.setIsPointer( Boolean.valueOf( lastCharData ).booleanValue() );
+			type.setIsPrimitive( storedType.get_IsPrimitive() );			
+		    type.setIsPublic( storedType.get_IsPublic() );
 		    type.setIsSealed( storedType.get_IsSealed() );
-//		    type.setIsSerializable( Boolean.valueOf( lastCharData ).booleanValue() );
+		    type.setIsSerializable( storedType.get_IsSerializable() );
 		    type.setIsValueType( storedType.get_IsValueType() );
 
             // TODO: Name
@@ -74,12 +78,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 //            mod.setFullyQualifiedName( lastCharData );
 //            type.setModule( mod );
            
-/*			type.setNamespace( lastCharData );
-			type.setunderlyingSystemType( lastCharData );
-			type.setHashCode( Integer.parseInt( lastCharData ) );
-			type.fromDLL = lastCharData.replaceAll("\"","");
-*/			
-			
+			type.setNamespace( storedType.get_Namespace() );
+//			--type.setunderlyingSystemType( lastCharData );
+//			--type.setHashCode( Integer.parseInt( lastCharData ) );
+			type.fromDLL = storedType.get_FromDLL().replaceAll("\"","");
+						
 			collectMethods(storedType, type);
 	
 			// Add the DotNETType to the TypeMap
@@ -91,7 +94,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectMethods(TypeElement storedType, DotNETType type) throws ModuleException
 	{
 		// Get all methods for the type 'storedtype'
-		ArrayList storedMethods = DataStoreContainer.getInstance().getMethodElements(storedType);		
+		ArrayList storedMethods = repository.LanguageModel().getMethodElements(storedType);
+			//DataStoreContainer.getInstance().getMethodElements(storedType);		
 
 		// Process all methods
 		Iterator methodIterator = storedMethods.iterator();
@@ -106,25 +110,24 @@ public class StarLightCollectorRunner implements CollectorRunner
             } else {
                 throw new ModuleException( "MethodInfo must have a name attribute", "TYM" );
             }
-            
-            
-//            methodInfo.setCallingConvention( Integer.parseInt( lastCharData ) );
-//            methodInfo.setIsAbstract( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsConstructor( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsFamily( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsFamilyAndAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsFamilyOrAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsFinal( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsHideBySig( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsprivate( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsPublic( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsStatic( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setIsVirtual( Boolean.valueOf( lastCharData ).booleanValue() );
-//            methodInfo.setHashCode( Integer.parseInt( lastCharData ) );
-              method.setReturnType( storedMethod.get_ReturnType() );
-//          	methodInfo.setIsDeclaredHere( Boolean.valueOf( lastCharData ).booleanValue() );
-//            Ignored: MethodAttrributes
+                        
+//            --methodInfo.setCallingConvention( Integer.parseInt( lastCharData ) );
+            method.setIsAbstract( storedMethod.get_IsAbstract() );
+//            --methodInfo.setIsAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
+            method.setIsConstructor( storedMethod.get_IsConstructor() );
+//            --methodInfo.setIsFamily( Boolean.valueOf( lastCharData ).booleanValue() );
+//            --methodInfo.setIsFamilyAndAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
+//            --methodInfo.setIsFamilyOrAssembly( Boolean.valueOf( lastCharData ).booleanValue() );
+//            --methodInfo.setIsFinal( Boolean.valueOf( lastCharData ).booleanValue() );
+//            --methodInfo.setIsHideBySig( Boolean.valueOf( lastCharData ).booleanValue() );
+            method.setIsprivate( storedMethod.get_IsPrivate() );
+            method.setIsPublic( storedMethod.get_IsPublic() );
+            method.setIsStatic( storedMethod.get_IsStatic() );
+            method.setIsVirtual( storedMethod.get_IsVirtual() );
+//            --methodInfo.setHashCode( Integer.parseInt( lastCharData ) );
+            method.setReturnType( storedMethod.get_ReturnType() );
+//          --	methodInfo.setIsDeclaredHere( Boolean.valueOf( lastCharData ).booleanValue() );
+//           - Ignored: MethodAttrributes
           	
             collectParameters(storedMethod, method);
             collectMethodBody(storedMethod.get_MethodBody(), method);
@@ -136,7 +139,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectParameters(MethodElement storedMethod, DotNETMethodInfo method) throws ModuleException
 	{
 		// Get all parameters for the method 'storedmethod'
-		ArrayList storedParameters = DataStoreContainer.getInstance().getParameterElements(storedMethod);		
+		ArrayList storedParameters = repository.LanguageModel().getParameterElements(storedMethod);		
 
 		// Process all parameters
 		Iterator parameterIterator = storedParameters.iterator();
@@ -154,12 +157,12 @@ public class StarLightCollectorRunner implements CollectorRunner
             
             parameter.setPosition( storedParameter.get_Ordinal() );
             parameter.setParameterType( storedParameter.get_ParameterType() );
-//            ParamInfo.setIsln( Boolean.valueOf( LastCharData ).booleanValue() );
-//            ParamInfo.setIsLcid( Boolean.valueOf( LastCharData ).booleanValue() );
-//            ParamInfo.setIsOptional( Boolean.valueOf( LastCharData ).booleanValue() );
-//            ParamInfo.setIsOut( Boolean.valueOf( LastCharData ).booleanValue() );
-//            ParamInfo.setIsRetVal( Boolean.valueOf( LastCharData ).booleanValue() );
-//            ParamInfo.setHashCode( Integer.parseInt( LastCharData ) );
+            parameter.setIsln( storedParameter.get_IsIn() );
+            parameter.setIsOptional( storedParameter.get_IsOptional() );
+            parameter.setIsOut( storedParameter.get_IsOut() );
+            parameter.setIsRetVal( storedParameter.get_IsRetVal() );
+//          --ParamInfo.setIsLcid( Boolean.valueOf( LastCharData ).booleanValue() );
+//          --ParamInfo.setHashCode( Integer.parseInt( LastCharData ) );
             
             method.addParameter(parameter);
 		}
@@ -169,7 +172,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
 	{
 		// Get the call elements for this method body
-		ArrayList storedCalls = DataStoreContainer.getInstance().getCallElements(storedMethodBody);		
+		ArrayList storedCalls = repository.LanguageModel().getCallElements(storedMethodBody);		
 
 		Iterator callIterator = storedCalls.iterator();
 		while (callIterator.hasNext())

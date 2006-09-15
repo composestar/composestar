@@ -7,11 +7,11 @@ package Composestar.Repository.LanguageModel;
 public class TypeElement
 {
 	private int _id;
-	private String _name;
-	private String _fullName;
-	private String _baseType;
+	private String _name = "";
+	private String _fullName = "";
+	private String _baseType = "";
 	private AssemblyElement _assemblyElement;
-	private String _namespace;
+	private String _namespace = "";
 	private boolean _isAbstract;
 	private boolean _isInterface;
 	private boolean _isSealed;
@@ -23,11 +23,12 @@ public class TypeElement
 	private boolean _isPublic;
 	private boolean _isSerializable;
 	private String module; // TODO: object ???????
-	private String _fromDLL;
+	private String _fromDLL = "";
 	
 	public TypeElement()
 	{
 		_id = this.hashCode();
+		_assemblyElement = new AssemblyElement();
 	}
 
 	private String _implementedInterface;

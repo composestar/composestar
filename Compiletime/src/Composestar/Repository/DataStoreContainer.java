@@ -17,7 +17,7 @@ public class DataStoreContainer {
 
     private DataStoreContainer()
     {
-    	// Werkt alleen de 1ste keer, daarna is de db gewijzigd en mapped ie naar niet bestaande stored types
+    	//Werkt alleen de 1ste keer, daarna is de db gewijzigd en mapped ie naar niet bestaande stored types
 		//Db4o.configure().addAlias(
   		//		new WildcardAlias(
     	//			"Composestar.Repository.LanguageModel.*, Repository.LanguageModel", "Composestar.Repository.LanguageModel.*"));
@@ -31,7 +31,7 @@ public class DataStoreContainer {
 		// Indexes
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("_parentMethodId").indexed(true);
-        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("parentMethodBodyId").indexed(true);
+        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.CallElement.class).objectField("_parentMethodBodyId").indexed(true);
         
         
         dbContainer = Db4o.openFile(yapFileName);
@@ -121,40 +121,32 @@ public class DataStoreContainer {
             return null;
     }
     
-	public ArrayList getTypes()
+	public ObjectSet getTypeElements()
 	{
-		ObjectSet result=dbContainer.get(Composestar.Repository.LanguageModel.TypeElement.class);
-
-		return ObjectSetToArrayList(result);
+		return dbContainer.get(Composestar.Repository.LanguageModel.TypeElement.class);
 	}
 
-	public ArrayList getMethodElements(Composestar.Repository.LanguageModel.TypeElement type)
+	public ObjectSet getMethodElements(Composestar.Repository.LanguageModel.TypeElement type)
 	{
 		Query query = dbContainer.query();
 		query.constrain(Composestar.Repository.LanguageModel.MethodElement.class);
 		query.descend("_parentTypeId").constrain(new Integer(type.get_Id()));
-		ObjectSet result = query.execute();
-					
-		return ObjectSetToArrayList(result);
+		return query.execute();
 	}
 	
-	public ArrayList getParameterElements(Composestar.Repository.LanguageModel.MethodElement method)
+	public ObjectSet getParameterElements(Composestar.Repository.LanguageModel.MethodElement method)
 	{
 		Query query = dbContainer.query();
 		query.constrain(Composestar.Repository.LanguageModel.ParameterElement.class);
 		query.descend("_parentMethodId").constrain(new Integer(method.get_Id()));
-		ObjectSet result = query.execute();
-					
-		return ObjectSetToArrayList(result);
+		return query.execute();
 	}
 	
-	public ArrayList getCallElements(Composestar.Repository.LanguageModel.MethodBody methodBody)
+	public ObjectSet getCallElements(Composestar.Repository.LanguageModel.MethodBody methodBody)
 	{
 		Query query = dbContainer.query();
 		query.constrain(Composestar.Repository.LanguageModel.MethodBody.class);
 		query.descend("_parentMethodBodyId").constrain(new Integer(methodBody.get_Id()));
-		ObjectSet result = query.execute();
-					
-		return ObjectSetToArrayList(result);
+		return query.execute();
 	}
 }
