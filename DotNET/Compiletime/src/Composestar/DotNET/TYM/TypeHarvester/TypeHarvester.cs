@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: TypeHarvester.cs,v 1.1 2006/02/16 23:11:02 pascal_durr Exp $
+ * $Id$
  */
 
 using System.Xml;
@@ -15,526 +15,273 @@ using System;
 
 public class TypeHarvester
 {
-	XmlTextWriter Writer = null;
-	Hashtable PendingTypes;
-	Hashtable ProcessedTypes;
-	bool writerEnabled = true;
+	private XmlTextWriter writer = null;
+	private Hashtable pendingTypes;
+	private Hashtable processedTypes;
+	private Hashtable genericParameters;
+	private bool writerEnabled = true;
+	private int genericParameterCount = 0;
 	
 	public int count = 0;
 
     public TypeHarvester()
     {
 		// both hashtables contain key = qualifiedname -> type pointer
-		PendingTypes = new Hashtable(); // set initial size?
-		ProcessedTypes = new Hashtable(); // set initial size?
+		pendingTypes = new Hashtable(); // set initial size?
+		processedTypes = new Hashtable(); // set initial size?
+		genericParameters = new Hashtable();
 	}
 
-	//////////// Pending functionality ///////////////////
-	private void addPendingType( HarvesterType htype )
+	#region Pending functionality
+
+	private void AddPendingType(HarvesterType htype)
 	{
 		Type t = htype.theType;
+		object key = t;
+
+//		Console.WriteLine("AddPendingType: " + t);
 
 		// check if not done already
-		if( ProcessedTypes.Contains( t.FullName ) ) return;
-		// check if not in pending
-		if( PendingTypes.Contains( t.FullName ) )	return;
-		// add to pending
-		PendingTypes.Add( t.FullName, htype );
-		//PendingTypes.Add( t.FullName, t );
-	}
-
-	private void typeProcessed( Type t )
-	{
-		// check if in pending
-		if( PendingTypes.Contains( t.FullName ) )
-				PendingTypes.Remove( t.FullName );
+		if (processedTypes.Contains(key)) return;
 		
-		if( !ProcessedTypes.Contains( t.FullName) ) 
-				ProcessedTypes.Add( t.FullName, "dummy" );
+		// check if not in pending
+		if (pendingTypes.Contains(key)) return;
+		
+		// add to pending
+		pendingTypes.Add(key, htype);
 	}
 
-	private void processPendingTypes()
+	private void AddProcessedType(Type t)
+	{
+		object key = t;
+		
+		// check if in pending
+		if (pendingTypes.Contains(key))
+			pendingTypes.Remove(key);
+		
+		// check if in processed
+		if (!processedTypes.Contains(key)) 
+			processedTypes.Add(key, "dummy");
+	}
+
+	private void ProcessPendingTypes()
 	{
 		// currently just displays the pending list..
-		IDictionaryEnumerator typeEnumerator = PendingTypes.GetEnumerator();
+		IDictionaryEnumerator typeEnumerator = pendingTypes.GetEnumerator();
 
-//    Console.WriteLine( "\t-KEY-\t-VALUE-" );
-        while ( typeEnumerator.MoveNext() )
-        {
-//      Console.WriteLine("\t{0}:\t{1}", typeEnumerator.Key, typeEnumerator.Value);
+//		Console.WriteLine("\t-KEY-\t-VALUE-");
+		while (typeEnumerator.MoveNext())
+		{
+//			Console.WriteLine("\t{0}:\t{1}", typeEnumerator.Key, typeEnumerator.Value);
 			//Type singleType = (Type)typeEnumerator.Value;
 			HarvesterType singleType = (HarvesterType)typeEnumerator.Value;
 			//this.count++;
-			getTypeInfo( singleType );
-            // Enumerator pukes on MoveNext if hashmap is changed
-            typeEnumerator = PendingTypes.GetEnumerator();
+			ProcessTypes(singleType);
+			// Enumerator pukes on MoveNext if hashmap is changed
+			typeEnumerator = pendingTypes.GetEnumerator();
 		}
 	}
-	//////////// end Pending ////////////////////////////
-	public void start(string outFolder)
+
+	#endregion
+
+	public void Start(string outFolder)
     {
-		if( Writer != null )
+		if (writer != null)
 		{
-			Console.WriteLine( "WARNING: start() called twice!\n" );
+			Console.WriteLine("WARNING: Start() called twice!\n");
 			return;
 		}
-		Writer = new XmlTextWriter(outFolder + "types.xml", null);
-		Writer.WriteStartDocument();
-		Writer.Formatting = Formatting.Indented;
+		
+		writer = new XmlTextWriter(outFolder + "types.xml", null);
+		writer.WriteStartDocument();
+		writer.Formatting = Formatting.Indented;
+		
 		// open root element
-		Writer.WriteStartElement( "Types" );
+		writer.WriteStartElement("Types");
 	}
 
-	public void finish()
+	public void Finish()
 	{
-		if( Writer == null )
+		if (writer == null)
 		{
-			Console.WriteLine( "WARNING: finish() called before start!\n" );
+			Console.WriteLine("WARNING: Finish() called before Start!\n");
 			return;
 		}
-			// end Types
-		Writer.WriteEndElement();
-		Writer.Close();
-		Writer = null;
+		
+		// close root element
+		writer.WriteEndElement();
+		writer.Close();
 	}
 
-  public void getParameterInfo( ParameterInfo p )
-  {
-	  if(writerEnabled)
-	  {	
-		  Writer.WriteStartElement( "ParameterInfo" );
-		  Writer.WriteStartAttribute( "", "name" , "");
-		  Writer.WriteString( p.Name );
-		  Writer.WriteEndAttribute();
-
-		  //<!ELEMENT IsIn (#PCDATA)>
-		  Writer.WriteStartElement( "IsIn" );
-		  Writer.WriteString( p.IsIn.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsLcid (#PCDATA)>
-		  Writer.WriteStartElement( "IsLcid" );
-		  Writer.WriteString( p.IsLcid.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsOptional (#PCDATA)>
-		  Writer.WriteStartElement( "IsOptional" );
-		  Writer.WriteString( p.IsOptional.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsOut (#PCDATA)>
-		  Writer.WriteStartElement( "IsOut" );
-		  Writer.WriteString( p.IsOut.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsRetval (#PCDATA)>
-		  Writer.WriteStartElement( "IsRetval" );
-		  Writer.WriteString( p.IsRetval.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT ParameterType (#PCDATA)>
-		  Writer.WriteStartElement( "ParameterType" );
-		  if( p.ParameterType != null ) // may be null if Object
-			  Writer.WriteString( p.ParameterType.FullName );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT Position (#PCDATA)>
-		  Writer.WriteStartElement( "Position" );
-		  Writer.WriteString( p.Position.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT HashCode (#PCDATA)>
-		  Writer.WriteStartElement( "HashCode" );
-		  Writer.WriteString( p.GetHashCode().ToString() );
-		  Writer.WriteEndElement();
-
-		  // end parameter
-		  Writer.WriteEndElement();
-	  }
-  }
-
-  public void getMethodInfo( MethodInfo m, bool declaredHere, string fromDLL )
+	public void ProcessTypes(HarvesterType mytype)
 	{
-	  if(writerEnabled)
-	  {		
-		  Writer.WriteStartElement( "MethodInfo" );
-		  Writer.WriteStartAttribute( "", "name" , "");
-		  Writer.WriteString( m.Name ); // qualified name?
-		  Writer.WriteEndAttribute();
-
-		  //<!ELEMENT CallingConvention (#PCDATA)>
-		  Writer.WriteStartElement( "CallingConvention" );
-		  Writer.WriteString( ((int)m.CallingConvention).ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsAbstract (#PCDATA)>
-		  Writer.WriteStartElement( "IsAbstract" );
-		  Writer.WriteString( m.IsAbstract.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsAssembly (#PCDATA)>
-		  Writer.WriteStartElement( "IsAssembly" );
-		  Writer.WriteString( m.IsAssembly.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsConstructor (#PCDATA)>
-		  Writer.WriteStartElement( "IsConstructor" );
-		  Writer.WriteString( m.IsConstructor.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsFamily (#PCDATA)>
-		  Writer.WriteStartElement( "IsFamily" );
-		  Writer.WriteString( m.IsFamily.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsFamilyAndAssembly (#PCDATA)> // inconsistent with type, .NET error not me
-		  Writer.WriteStartElement( "IsFamilyAndAssembly" );
-		  Writer.WriteString( m.IsFamilyAndAssembly.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsFamilyOrAssembly (#PCDATA)>
-		  Writer.WriteStartElement( "IsFamilyOrAssembly" );
-		  Writer.WriteString( m.IsFamilyOrAssembly.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsFinal (#PCDATA)>
-		  Writer.WriteStartElement( "IsFinal" );
-		  Writer.WriteString( m.IsFinal.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsHideBySig (#PCDATA)>
-		  Writer.WriteStartElement( "IsHideBySig" );
-		  Writer.WriteString( m.IsHideBySig.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsPrivate (#PCDATA)>
-		  Writer.WriteStartElement( "IsPrivate" );
-		  Writer.WriteString( m.IsPrivate.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsPublic (#PCDATA)>
-		  Writer.WriteStartElement( "IsPublic" );
-		  Writer.WriteString( m.IsPublic.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsStatic (#PCDATA)>
-		  Writer.WriteStartElement( "IsStatic" );
-		  Writer.WriteString( m.IsStatic.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsVirtual (#PCDATA)>
-		  Writer.WriteStartElement( "IsVirtual" );
-		  Writer.WriteString( m.IsVirtual.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT IsDeclaredHere (#PCDATA)>
-		  Writer.WriteStartElement( "IsDeclaredHere" );
-		  Writer.WriteString( declaredHere.ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT HashCode (#PCDATA)>
-		  Writer.WriteStartElement( "HashCode" );
-		  Writer.WriteString( m.GetHashCode().ToString() );
-		  Writer.WriteEndElement();
-		  //<!ELEMENT ReturnType (#PCDATA)>  // TODO: Store for processing
-		  Writer.WriteStartElement( "ReturnType" );
-		  if( m.ReturnType != null ) // may be null if Object
-		  {
-			  Writer.WriteString( m.ReturnType.FullName );
-			  HarvesterType htype = new HarvesterType(fromDLL,m.ReturnType);
-			  addPendingType( htype );
-			  //addPendingType( m.ReturnType );
-		  }
-		  Writer.WriteEndElement();
-
-		  //process parameters
-		  ParameterInfo[] parameters = m.GetParameters();
-		  if(parameters.Length != 0)
-		  {
-			  foreach( ParameterInfo paramInfo in parameters )
-			  {
-				  getParameterInfo( paramInfo );	
-			  }
-		  }
-
-		  // end methodinfo
-		  Writer.WriteEndElement();
-	  }
-	  else 
-	  {
-			// skip writing to xml but still look for return type and parameters
-		  if( m.ReturnType != null ) // may be null if Object
-		  {
-			  HarvesterType htype = new HarvesterType(fromDLL,m.ReturnType);
-			  addPendingType( htype );
-		  }
-		  
-		  //process parameters
-		  ParameterInfo[] parameters = m.GetParameters();
-		  if(parameters.Length != 0)
-		  {
-			  foreach( ParameterInfo paramInfo in parameters )
-			  {
-				  getParameterInfo( paramInfo );	
-			  }
-		  }
-	   }
-	}
-
-  public void getFieldInfo( FieldInfo f, bool declaredHere, string fromDLL )
-	{
-	  if(writerEnabled)
-	  {
-		  Writer.WriteStartElement( "FieldInfo" );
-		  Writer.WriteStartAttribute( "", "name" , "");
-		  Writer.WriteString( f.Name ); // qualified name?
-		  Writer.WriteEndAttribute();
-
-		  //<!ELEMENT FieldType (#PCDATA)>
-		  Writer.WriteStartElement( "FieldType" );
-		  if( f.FieldType != null ) // may be null if Object
-		  {
-			  Writer.WriteString( f.FieldType.FullName );
-			  HarvesterType htype = new HarvesterType(fromDLL,f.FieldType);
-			  addPendingType( htype );
-			  //addPendingType( f.FieldType );
-		  }
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsAssembly (#PCDATA)>
-		  Writer.WriteStartElement( "IsAssembly" );
-		  Writer.WriteString( f.IsAssembly.ToString() );
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsFamily(#PCDATA)>
-		  Writer.WriteStartElement( "IsFamily" );
-		  Writer.WriteString( f.IsFamily.ToString() );
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsFamilyAndAssembly (#PCDATA)>
-		  Writer.WriteStartElement( "IsFamilyAndAssembly" );
-		  Writer.WriteString( f.IsFamilyAndAssembly.ToString() );
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsFamilyOrAssembly (#PCDATA)>
-		  Writer.WriteStartElement( "IsFamilyOrAssembly" );
-		  Writer.WriteString( f.IsFamilyOrAssembly.ToString() );
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsInitOnly (#PCDATA)>
-		  Writer.WriteStartElement( "IsInitOnly" );
-		  Writer.WriteString( f.IsInitOnly.ToString() );
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsLiteral (#PCDATA)>
-		  Writer.WriteStartElement( "IsLiteral" );
-		  Writer.WriteString( f.IsLiteral.ToString() );
-		  Writer.WriteEndElement();
-		
-		  /*
-		  Uncomment these if you think you need them for some reason
-		  //<!ELEMENT IsNotSerialized (#PCDATA)>
-		  Writer.WriteStartElement( "IsNotSerialized" );
-		  Writer.WriteString( f.IsNotSerialized.ToString() );
-		  Writer.WriteEndElement();
-		
-		  //<!ELEMENT IsPinvokeImpl (#PCDATA)>
-		  Writer.WriteStartElement( "IsPinvokeImpl" );
-		  Writer.WriteString( f.IsPinvokeImpl.ToString() );
-		  Writer.WriteEndElement(); */
-		
-		  //<!ELEMENT IsPrivate (#PCDATA)>
-		  Writer.WriteStartElement( "IsPrivate" );
-		  Writer.WriteString( f.IsPrivate.ToString() );
-		  Writer.WriteEndElement();
-
-		  //<!ELEMENT IsPublic (#PCDATA)>
-		  Writer.WriteStartElement( "IsPublic" );
-		  Writer.WriteString( f.IsPublic.ToString() );
-		  Writer.WriteEndElement();
-
-		  //<!ELEMENT IsStatic (#PCDATA)>
-		  Writer.WriteStartElement( "IsStatic" );
-		  Writer.WriteString( f.IsStatic.ToString() );
-		  Writer.WriteEndElement();
-
-		  //<!ELEMENT IsDeclaredHere (#PCDATA)>
-		  Writer.WriteStartElement( "IsDeclaredHere" );
-		  Writer.WriteString( declaredHere.ToString() );
-		  Writer.WriteEndElement();
-
-		  //<!ELEMENT HashCode (#PCDATA)>
-		  Writer.WriteStartElement( "HashCode" );
-		  Writer.WriteString( f.GetHashCode().ToString() );
-		  Writer.WriteEndElement();
-
-		  // end fieldinfo
-		  Writer.WriteEndElement();
-	  }
-	  else 
-	  {	
-		  // skip writing to xml but still look for fieldtypes
-		  if( f.FieldType != null ) // may be null if Object
-		  {
-			  HarvesterType htype = new HarvesterType(fromDLL,f.FieldType);
-			  addPendingType( htype );
-		 }
-	  }
-	}
-
-    public void getTypeInfo(HarvesterType mytype)
-    {
 		Type t = mytype.theType;
 
-		/*if(t.FullName == "Composestar.Runtime.util.SyncBuffer")
-		{
-			Console.WriteLine("Type "+t.FullName+" in "+mytype.fromDLL);
-			Console.WriteLine("\tprocessed: "+ProcessedTypes.Contains( t.FullName ));
-			Console.WriteLine("\tpending: "+PendingTypes.Contains( t.FullName ));
-		}*/
-		
-		if(ProcessedTypes.Contains( t.FullName )) return;
-        // this type is processed
-		typeProcessed( t );
-		
-		if(writerEnabled)
-		{
-			Writer.WriteStartElement( "Type" );
-			Writer.WriteStartAttribute( "", "name" , "");
-			Writer.WriteString( t.Name ); // qualified name?
-			Writer.WriteEndAttribute();
+		object key = t; // t.FullName
+		if (processedTypes.Contains(key)) return;
 
-			// start of elements of this type
+		// this type is processed
+		AddProcessedType(t);
+
+		if (writerEnabled)
+		{
+			writer.WriteStartElement("Type");
+			writer.WriteStartAttribute("", "name", "");
+			writer.WriteString(t.Name); // qualified name?
+			writer.WriteEndAttribute();
+
+			// Start of elements of this type
 			//<!ELEMENT AssemblyQualifiedName (#PCDATA)>
-			Writer.WriteStartElement( "AssemblyQualifiedName" );
-			Writer.WriteString( t.AssemblyQualifiedName );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("AssemblyQualifiedName");
+			writer.WriteString(t.AssemblyQualifiedName);
+			writer.WriteEndElement();
 			//<!ELEMENT BaseType (#PCDATA)> TODO: Store for processing..
-			Writer.WriteStartElement( "BaseType" );
-			if( t.BaseType != null ) // may be null if Object
+			writer.WriteStartElement("BaseType");
+			if (t.BaseType != null) // may be null if Object
 			{
-				Writer.WriteString( t.BaseType.FullName );
-				HarvesterType htype = new HarvesterType(mytype.fromDLL,t.BaseType);
-				addPendingType( htype );
-				//addPendingType( t.BaseType );
+				writer.WriteString(GetFullName(t.BaseType));
+				HarvesterType htype = new HarvesterType(mytype.fromDLL, t.BaseType);
+				AddPendingType(htype);
+				//AddPendingType(t.BaseType);
 			}
-			Writer.WriteEndElement();
+			writer.WriteEndElement();
 			//<!ELEMENT FullName (#PCDATA)> TODO: maybe use this for name (change)
-			Writer.WriteStartElement( "FullName" );
-			Writer.WriteString( t.FullName );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("FullName");
+			writer.WriteString(GetFullName(t));
+			writer.WriteEndElement();
 			//<!ELEMENT IsAbstract (#PCDATA)>
-			Writer.WriteStartElement( "IsAbstract" );
-			Writer.WriteString( t.IsAbstract.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsAbstract");
+			writer.WriteString(t.IsAbstract.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsAnsiClass (#PCDATA)>
-			Writer.WriteStartElement( "IsAnsiClass" );
-			Writer.WriteString( t.IsAnsiClass.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsAnsiClass");
+			writer.WriteString(t.IsAnsiClass.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsArray (#PCDATA)>
-			Writer.WriteStartElement( "IsArray" );
-			Writer.WriteString( t.IsArray.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsArray");
+			writer.WriteString(t.IsArray.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsAutoClass (#PCDATA)>
-			Writer.WriteStartElement( "IsAutoClass" );
-			Writer.WriteString( t.IsAutoClass.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsAutoClass");
+			writer.WriteString(t.IsAutoClass.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsAutoLayout (#PCDATA)>
-			Writer.WriteStartElement( "IsAutoLayout" );
-			Writer.WriteString( t.IsAutoLayout.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsAutoLayout");
+			writer.WriteString(t.IsAutoLayout.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsByRef (#PCDATA)>
-			Writer.WriteStartElement( "IsByRef" );
-			Writer.WriteString( t.IsByRef.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsByRef");
+			writer.WriteString(t.IsByRef.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsClass (#PCDATA)>
-			Writer.WriteStartElement( "IsClass" );
-			Writer.WriteString( t.IsClass.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsClass");
+			writer.WriteString(t.IsClass.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsContextful (#PCDATA)>
-			Writer.WriteStartElement( "IsContextful" );
-			Writer.WriteString( t.IsContextful.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsContextful");
+			writer.WriteString(t.IsContextful.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsEnum (#PCDATA)>
-			Writer.WriteStartElement( "IsEnum" );
-			Writer.WriteString( t.IsEnum.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsEnum");
+			writer.WriteString(t.IsEnum.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsImport (#PCDATA)>
-			Writer.WriteStartElement( "IsImport" );
-			Writer.WriteString( t.IsImport.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsImport");
+			writer.WriteString(t.IsImport.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsInterface (#PCDATA)>
-			Writer.WriteStartElement( "IsInterface" );
-			Writer.WriteString( t.IsInterface.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsInterface");
+			writer.WriteString(t.IsInterface.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsMarshalByRef (#PCDATA)>
-			Writer.WriteStartElement( "IsMarshalByRef" );
-			Writer.WriteString( t.IsMarshalByRef.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsMarshalByRef");
+			writer.WriteString(t.IsMarshalByRef.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsNestedFamANDAssem (#PCDATA)>
-			Writer.WriteStartElement( "IsNestedFamANDAssem" );
-			Writer.WriteString( t.IsNestedFamANDAssem.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsNestedFamANDAssem");
+			writer.WriteString(t.IsNestedFamANDAssem.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsNestedAssembly (#PCDATA)>
-			Writer.WriteStartElement( "IsNestedAssembly" );
-			Writer.WriteString( t.IsNestedAssembly.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsNestedAssembly");
+			writer.WriteString(t.IsNestedAssembly.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsNestedFamORAssem (#PCDATA)>
-			Writer.WriteStartElement( "IsNestedFamORAssem" );
-			Writer.WriteString( t.IsNestedFamORAssem.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsNestedFamORAssem");
+			writer.WriteString(t.IsNestedFamORAssem.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsNestedPrivate (#PCDATA)>
-			Writer.WriteStartElement( "IsNestedPrivate" );
-			Writer.WriteString( t.IsNestedPrivate.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsNestedPrivate");
+			writer.WriteString(t.IsNestedPrivate.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsNestedPublic (#PCDATA)>
-			Writer.WriteStartElement( "IsNestedPublic" );
-			Writer.WriteString( t.IsNestedPublic.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsNestedPublic");
+			writer.WriteString(t.IsNestedPublic.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsNotPublic (#PCDATA)>
-			Writer.WriteStartElement( "IsNotPublic" );
-			Writer.WriteString( t.IsNotPublic.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsNotPublic");
+			writer.WriteString(t.IsNotPublic.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsPointer (#PCDATA)>
-			Writer.WriteStartElement( "IsPointer" );
-			Writer.WriteString( t.IsPointer.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsPointer");
+			writer.WriteString(t.IsPointer.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsPrimitive (#PCDATA)>
-			Writer.WriteStartElement( "IsPrimitive" );
-			Writer.WriteString( t.IsPrimitive.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsPrimitive");
+			writer.WriteString(t.IsPrimitive.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsPublic (#PCDATA)>
-			Writer.WriteStartElement( "IsPublic" );
-			Writer.WriteString( t.IsPublic.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsPublic");
+			writer.WriteString(t.IsPublic.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsSealed (#PCDATA)>
-			Writer.WriteStartElement( "IsSealed" );
-			Writer.WriteString( t.IsSealed.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsSealed");
+			writer.WriteString(t.IsSealed.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsSerializable (#PCDATA)>
-			Writer.WriteStartElement( "IsSerializable" );
-			Writer.WriteString( t.IsSerializable.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsSerializable");
+			writer.WriteString(t.IsSerializable.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT IsValueType (#PCDATA)>
-			Writer.WriteStartElement( "IsValueType" );
-			Writer.WriteString( t.IsValueType.ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("IsValueType");
+			writer.WriteString(t.IsValueType.ToString());
+			writer.WriteEndElement();
 			//<!ELEMENT Module (#PCDATA)>
-			Writer.WriteStartElement( "Module" );
-			Writer.WriteString( t.Module.FullyQualifiedName );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("Module");
+			writer.WriteString(t.Module.FullyQualifiedName);
+			writer.WriteEndElement();
 			//<!ELEMENT Namespace (#PCDATA)>
-			Writer.WriteStartElement( "Namespace" );
-			Writer.WriteString( t.Namespace );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("Namespace");
+			writer.WriteString(t.Namespace);
+			writer.WriteEndElement();
 			//<!ELEMENT UnderlyingSystemType (#PCDATA)>
-			Writer.WriteStartElement( "UnderlyingSystemType" );
-			if( t.UnderlyingSystemType != null )
+			writer.WriteStartElement("UnderlyingSystemType");
+			if (t.UnderlyingSystemType != null)
 			{
-				Writer.WriteString( t.UnderlyingSystemType.FullName ); // TODO: handle type
-				HarvesterType htype = new HarvesterType(mytype.fromDLL,t.UnderlyingSystemType);
-				addPendingType( htype );
-				//addPendingType( t.UnderlyingSystemType );
+				writer.WriteString(t.UnderlyingSystemType.FullName); // TODO: handle type
+				HarvesterType htype = new HarvesterType(mytype.fromDLL, t.UnderlyingSystemType);
+				AddPendingType(htype);
+				//AddPendingType(t.UnderlyingSystemType);
 			}
-			Writer.WriteEndElement();
+			writer.WriteEndElement();
 			//<!ELEMENT HashCode (#PCDATA)>
-			Writer.WriteStartElement( "HashCode" );
-			Writer.WriteString( t.GetHashCode().ToString() );
-			Writer.WriteEndElement();
+			writer.WriteStartElement("HashCode");
+			writer.WriteString(t.GetHashCode().ToString());
+			writer.WriteEndElement();
 
 			// process methods
 			MethodInfo[] methods = t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			MethodInfo[] methodsDeclaredHere = t.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			foreach (MethodInfo m in methods)
 			{
-				getMethodInfo( m, ((IList)methodsDeclaredHere).Contains(m), mytype.fromDLL );
+				ProcessMethods(m, ((IList)methodsDeclaredHere).Contains(m), mytype.fromDLL);
 			}
-        
+
 			// process fields (WH20041018)
 			FieldInfo[] fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			FieldInfo[] fieldsDeclaredHere = t.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			foreach (FieldInfo f in fields)
 			{
-				getFieldInfo( f, ((IList)fieldsDeclaredHere).Contains(f) , mytype.fromDLL );
+				ProcessFields(f, ((IList)fieldsDeclaredHere).Contains(f), mytype.fromDLL);
 			}
 
 			// Add implemented interfaces (WH20041129)
@@ -542,144 +289,422 @@ public class TypeHarvester
 			foreach (Type interf in interfaces)
 			{
 				//<!ELEMENT ImplementedInterface (#PCDATA)>
-				Writer.WriteStartElement( "ImplementedInterface" );
-				Writer.WriteString( interf.FullName );
-				HarvesterType htype = new HarvesterType(mytype.fromDLL,interf);
-				addPendingType( htype );
-				//addPendingType( interf );
-				Writer.WriteEndElement(); // End of implemented interfaces
+				writer.WriteStartElement("ImplementedInterface");
+				writer.WriteString(interf.FullName);
+				HarvesterType htype = new HarvesterType(mytype.fromDLL, interf);
+				AddPendingType(htype);
+				//AddPendingType(interf);
+				writer.WriteEndElement(); // End of implemented interfaces
 			}
-        
+
 			// add fromDLL
-			Writer.WriteStartElement( "FromDLL" );
-			Writer.WriteString("\""+mytype.fromDLL+"\"");
-			Writer.WriteEndElement();
+			writer.WriteStartElement("FromDLL");
+			writer.WriteString("\"" + mytype.fromDLL + "\"");
+			writer.WriteEndElement();
 
 			// end of Type
-			Writer.WriteEndElement();
+			writer.WriteEndElement();
 		}
-		else 
+		else
 		{
 			// do not write the type to the xml file
 			// but still check for underlying types, base types, interfaces, fields and methods
-			if( t.BaseType != null ) // may be null if Object
+			if (t.BaseType != null) // may be null if Object
 			{
-				HarvesterType htype = new HarvesterType(mytype.fromDLL,t.BaseType);
-				addPendingType( htype );
+				HarvesterType htype = new HarvesterType(mytype.fromDLL, t.BaseType);
+				AddPendingType(htype);
 			}
-			if( t.UnderlyingSystemType != null )
+			if (t.UnderlyingSystemType != null)
 			{
-				HarvesterType htype = new HarvesterType(mytype.fromDLL,t.UnderlyingSystemType);
-				addPendingType( htype );
+				HarvesterType htype = new HarvesterType(mytype.fromDLL, t.UnderlyingSystemType);
+				AddPendingType(htype);
 			}
 			// process methods
 			MethodInfo[] methods = t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			MethodInfo[] methodsDeclaredHere = t.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			foreach (MethodInfo m in methods)
 			{
-				getMethodInfo( m, ((IList)methodsDeclaredHere).Contains(m), mytype.fromDLL );
+				ProcessMethods(m, ((IList)methodsDeclaredHere).Contains(m), mytype.fromDLL);
 			}
-        
+
 			// process fields (WH20041018)
 			FieldInfo[] fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			FieldInfo[] fieldsDeclaredHere = t.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			foreach (FieldInfo f in fields)
 			{
-				getFieldInfo( f, ((IList)fieldsDeclaredHere).Contains(f) , mytype.fromDLL );
+				ProcessFields(f, ((IList)fieldsDeclaredHere).Contains(f), mytype.fromDLL);
 			}
 
 			// Add implemented interfaces (WH20041129)
 			Type[] interfaces = t.GetInterfaces();
 			foreach (Type interf in interfaces)
 			{
-				HarvesterType htype = new HarvesterType(mytype.fromDLL,interf);
-				addPendingType( htype );
+				HarvesterType htype = new HarvesterType(mytype.fromDLL, interf);
+				AddPendingType(htype);
 			}
 		}
-   }
+	}
 
-   public static int Main(string[] args)
-   {
-       if (args.Length == 0 )
-       {
-           Console.WriteLine( "Usage: <outputfolder> [<dll names>]" );
-       }
-       else
-       {
-           TypeHarvester thing = new TypeHarvester();
-           
-           // forall dll's check out all types
-           String outFolder = null;
-		   foreach( string dllName in args )
-           {
-               if( outFolder == null )
-			   {
-				   outFolder = dllName;
-				   thing.start(outFolder);
-				   continue;
-			   }
+	public void ProcessMethods(MethodInfo m, bool declaredHere, string fromDLL)
+	{
+		if (writerEnabled)
+		{
+			writer.WriteStartElement("MethodInfo");
+			writer.WriteStartAttribute("", "name", "");
+			writer.WriteString(m.Name); // qualified name?
+			writer.WriteEndAttribute();
 
-			   string dll = dllName;		
-			   if(dll.IndexOf("!")==0)
-			   {
-				   dll = dll.Substring(1);
-				   thing.writerEnabled = false;
-			   }
-			   else
-				   thing.writerEnabled = true;
+			//<!ELEMENT CallingConvention (#PCDATA)>
+			writer.WriteStartElement("CallingConvention");
+			writer.WriteString(((int)m.CallingConvention).ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsAbstract (#PCDATA)>
+			writer.WriteStartElement("IsAbstract");
+			writer.WriteString(m.IsAbstract.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsAssembly (#PCDATA)>
+			writer.WriteStartElement("IsAssembly");
+			writer.WriteString(m.IsAssembly.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsConstructor (#PCDATA)>
+			writer.WriteStartElement("IsConstructor");
+			writer.WriteString(m.IsConstructor.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsFamily (#PCDATA)>
+			writer.WriteStartElement("IsFamily");
+			writer.WriteString(m.IsFamily.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsFamilyAndAssembly (#PCDATA)> // inconsistent with type, .NET error not me
+			writer.WriteStartElement("IsFamilyAndAssembly");
+			writer.WriteString(m.IsFamilyAndAssembly.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsFamilyOrAssembly (#PCDATA)>
+			writer.WriteStartElement("IsFamilyOrAssembly");
+			writer.WriteString(m.IsFamilyOrAssembly.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsFinal (#PCDATA)>
+			writer.WriteStartElement("IsFinal");
+			writer.WriteString(m.IsFinal.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsHideBySig (#PCDATA)>
+			writer.WriteStartElement("IsHideBySig");
+			writer.WriteString(m.IsHideBySig.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsPrivate (#PCDATA)>
+			writer.WriteStartElement("IsPrivate");
+			writer.WriteString(m.IsPrivate.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsPublic (#PCDATA)>
+			writer.WriteStartElement("IsPublic");
+			writer.WriteString(m.IsPublic.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsStatic (#PCDATA)>
+			writer.WriteStartElement("IsStatic");
+			writer.WriteString(m.IsStatic.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsVirtual (#PCDATA)>
+			writer.WriteStartElement("IsVirtual");
+			writer.WriteString(m.IsVirtual.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT IsDeclaredHere (#PCDATA)>
+			writer.WriteStartElement("IsDeclaredHere");
+			writer.WriteString(declaredHere.ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT HashCode (#PCDATA)>
+			writer.WriteStartElement("HashCode");
+			writer.WriteString(m.GetHashCode().ToString());
+			writer.WriteEndElement();
+			//<!ELEMENT ReturnType (#PCDATA)>  // TODO: Store for processing
+			writer.WriteStartElement("ReturnType");
 
-			   Assembly asm = null;
-               try{
-                   asm = Assembly.LoadFrom( dll );
-               } catch( System.IO.FileNotFoundException ) {
-                   Console.Error.WriteLine( "File not found " + dll + ". Skipping." );
-                   continue;
-               }
-			   catch(System.ArgumentException)
-			   {
-				   Console.Error.WriteLine( "Cannot harvest type of " + dll + ". Skipping." );
-				   continue;
-			   }
-			   Type[] types = null;
-			   try
-			   {
-				   types = asm.GetTypes();
-				   foreach( Type singleType in types )
-				   {
-					   //Console.Error.WriteLine("Type "+singleType.Name+" in "+dllName);
-					   HarvesterType htype = new HarvesterType(dll,singleType);
-					   //thing.getTypeInfo( singleType );
-					   thing.getTypeInfo(htype);
-					   thing.count++;
+			if (m.ReturnType != null) // may be null if Object
+			{
+				writer.WriteString(GetFullName(m.ReturnType));
+				HarvesterType htype = new HarvesterType(fromDLL, m.ReturnType);
+				AddPendingType(htype);
+				//AddPendingType(m.ReturnType);
+			}
 
-				   }
-			   }
-			   catch(Exception e)
-			   {
-				   string inner = "";
-				   while(e != null)
-				   {
+			writer.WriteEndElement();
+
+			//process parameters
+			ParameterInfo[] parameters = m.GetParameters();
+			if (parameters.Length != 0)
+			{
+				foreach (ParameterInfo paramInfo in parameters)
+				{
+					ProcessParameters(paramInfo);
+				}
+			}
+
+			// end methodinfo
+			writer.WriteEndElement();
+		}
+		else
+		{
+			// skip writing to xml but still look for return type and parameters
+			if (m.ReturnType != null) // may be null if Object
+			{
+				HarvesterType htype = new HarvesterType(fromDLL, m.ReturnType);
+				AddPendingType(htype);
+			}
+
+			//process parameters
+			ParameterInfo[] parameters = m.GetParameters();
+			if (parameters.Length != 0)
+			{
+				foreach (ParameterInfo paramInfo in parameters)
+				{
+					ProcessParameters(paramInfo);
+				}
+			}
+		}
+	}
+
+	public void ProcessParameters(ParameterInfo p)
+  {
+	  if (writerEnabled)
+	  {	
+		  writer.WriteStartElement("ParameterInfo");
+		  writer.WriteStartAttribute("", "name" , "");
+		  writer.WriteString(p.Name);
+		  writer.WriteEndAttribute();
+
+		  //<!ELEMENT IsIn (#PCDATA)>
+		  writer.WriteStartElement("IsIn");
+		  writer.WriteString(p.IsIn.ToString());
+		  writer.WriteEndElement();
+		  //<!ELEMENT IsLcid (#PCDATA)>
+		  writer.WriteStartElement("IsLcid");
+		  writer.WriteString(p.IsLcid.ToString());
+		  writer.WriteEndElement();
+		  //<!ELEMENT IsOptional (#PCDATA)>
+		  writer.WriteStartElement("IsOptional");
+		  writer.WriteString(p.IsOptional.ToString());
+		  writer.WriteEndElement();
+		  //<!ELEMENT IsOut (#PCDATA)>
+		  writer.WriteStartElement("IsOut");
+		  writer.WriteString(p.IsOut.ToString());
+		  writer.WriteEndElement();
+		  //<!ELEMENT IsRetval (#PCDATA)>
+		  writer.WriteStartElement("IsRetval");
+		  writer.WriteString(p.IsRetval.ToString());
+		  writer.WriteEndElement();
+		  //<!ELEMENT ParameterType (#PCDATA)>
+		  writer.WriteStartElement("ParameterType");
+		  writer.WriteString(GetFullName(p.ParameterType));
+		  writer.WriteEndElement();
+		  //<!ELEMENT Position (#PCDATA)>
+		  writer.WriteStartElement("Position");
+		  writer.WriteString(p.Position.ToString());
+		  writer.WriteEndElement();
+		  //<!ELEMENT HashCode (#PCDATA)>
+		  writer.WriteStartElement("HashCode");
+		  writer.WriteString(p.GetHashCode().ToString());
+		  writer.WriteEndElement();
+
+		  // end parameter
+		  writer.WriteEndElement();
+	  }
+  }
+
+	public void ProcessFields(FieldInfo f, bool declaredHere, string fromDLL)
+	{
+	  if (writerEnabled)
+	  {
+		  writer.WriteStartElement("FieldInfo");
+		  writer.WriteStartAttribute("", "name" , "");
+		  writer.WriteString(f.Name); // qualified name?
+		  writer.WriteEndAttribute();
+
+		  //<!ELEMENT FieldType (#PCDATA)>
+		  writer.WriteStartElement("FieldType");
+		  writer.WriteString(GetFullName(f.FieldType));
+		  HarvesterType htype = new HarvesterType(fromDLL,f.FieldType);
+		  AddPendingType(htype);
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsAssembly (#PCDATA)>
+		  writer.WriteStartElement("IsAssembly");
+		  writer.WriteString(f.IsAssembly.ToString());
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsFamily(#PCDATA)>
+		  writer.WriteStartElement("IsFamily");
+		  writer.WriteString(f.IsFamily.ToString());
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsFamilyAndAssembly (#PCDATA)>
+		  writer.WriteStartElement("IsFamilyAndAssembly");
+		  writer.WriteString(f.IsFamilyAndAssembly.ToString());
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsFamilyOrAssembly (#PCDATA)>
+		  writer.WriteStartElement("IsFamilyOrAssembly");
+		  writer.WriteString(f.IsFamilyOrAssembly.ToString());
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsInitOnly (#PCDATA)>
+		  writer.WriteStartElement("IsInitOnly");
+		  writer.WriteString(f.IsInitOnly.ToString());
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsLiteral (#PCDATA)>
+		  writer.WriteStartElement("IsLiteral");
+		  writer.WriteString(f.IsLiteral.ToString());
+		  writer.WriteEndElement();
+		
+		  /*
+		  Uncomment these if you think you need them for some reason
+		  //<!ELEMENT IsNotSerialized (#PCDATA)>
+		  writer.WriteStartElement("IsNotSerialized");
+		  writer.WriteString(f.IsNotSerialized.ToString());
+		  writer.WriteEndElement();
+		
+		  //<!ELEMENT IsPinvokeImpl (#PCDATA)>
+		  writer.WriteStartElement("IsPinvokeImpl");
+		  writer.WriteString(f.IsPinvokeImpl.ToString());
+		  writer.WriteEndElement(); */
+		
+		  //<!ELEMENT IsPrivate (#PCDATA)>
+		  writer.WriteStartElement("IsPrivate");
+		  writer.WriteString(f.IsPrivate.ToString());
+		  writer.WriteEndElement();
+
+		  //<!ELEMENT IsPublic (#PCDATA)>
+		  writer.WriteStartElement("IsPublic");
+		  writer.WriteString(f.IsPublic.ToString());
+		  writer.WriteEndElement();
+
+		  //<!ELEMENT IsStatic (#PCDATA)>
+		  writer.WriteStartElement("IsStatic");
+		  writer.WriteString(f.IsStatic.ToString());
+		  writer.WriteEndElement();
+
+		  //<!ELEMENT IsDeclaredHere (#PCDATA)>
+		  writer.WriteStartElement("IsDeclaredHere");
+		  writer.WriteString(declaredHere.ToString());
+		  writer.WriteEndElement();
+
+		  //<!ELEMENT HashCode (#PCDATA)>
+		  writer.WriteStartElement("HashCode");
+		  writer.WriteString(f.GetHashCode().ToString());
+		  writer.WriteEndElement();
+
+		  // end fieldinfo
+		  writer.WriteEndElement();
+	  }
+	  else 
+	  {	
+		  // skip writing to xml but still look for fieldtypes
+		  if(f.FieldType != null) // may be null if Object
+		  {
+			  HarvesterType htype = new HarvesterType(fromDLL,f.FieldType);
+			  AddPendingType(htype);
+		 }
+	  }
+	}
+
+	private string GetFullName(Type t)
+	{
+		if (t.FullName == null)
+		{
+			if (genericParameters.Contains(t))
+				return (string)genericParameters[t];
+			else
+			{
+				string name = "GenericTypeParam" + (genericParameterCount++);
+				genericParameters[t] = name;
+				return name;
+			}
+		}
+		else
+			return t.FullName;
+	}
+
+	public static int Main(string[] args)
+	{
+		if (args.Length == 0)
+		{
+			Console.WriteLine("Usage: <outputfolder> [<dll names>]");
+		}
+		else
+		{
+			TypeHarvester th = new TypeHarvester();
+
+			// forall dll's check out all types
+			String outFolder = null;
+			foreach (string arg in args)
+			{
+				if (outFolder == null)
+				{
+					outFolder = arg;
+					th.Start(outFolder);
+					continue;
+				}
+
+				string dll = arg;
+				if (dll.IndexOf("!") == 0)
+				{
+					dll = dll.Substring(1);
+					th.writerEnabled = false;
+				}
+				else
+					th.writerEnabled = true;
+
+				Assembly asm = LoadAssembly(dll);
+				if (asm == null) continue;
+
+				Type[] types = null;
+				try {
+					types = asm.GetTypes();
+					foreach (Type singleType in types)
+					{
+						HarvesterType htype = new HarvesterType(dll, singleType);
+						th.ProcessTypes(htype);
+						th.count++;
+					}
+				}
+				catch (Exception e) {
+					string inner = "";
+					while (e != null)
+					{
 						Console.Error.WriteLine(inner + "Exception:" + e.Message);
-					   inner += "Inner";
-					   e = e.InnerException;
-				   }
-				   return 1; // Error!
-			   }
+						inner += "Inner";
+						e = e.InnerException;
+					}
+					return 1; // Error!
+				}
 
-			   // take care of the pending types
-			   thing.processPendingTypes();
-           }
-           
-           thing.finish();
-		   //Console.WriteLine(""+thing.count+ " types found!");
-       }
-	   return 0;
-   }
+				// take care of the pending types
+				th.ProcessPendingTypes();
+			}
+
+			th.Finish();
+			//Console.WriteLine(""+thing.count+ " types found!");
+		}
+		return 0;
+	}
+
+	private static Assembly LoadAssembly(String dll)
+	{
+		try {
+			return Assembly.LoadFrom(dll);
+		}
+		catch (System.IO.FileNotFoundException) {
+			Console.Error.WriteLine("File not found " + dll + ". Skipping.");
+			return null;
+		}
+		catch (System.ArgumentException) {
+			Console.Error.WriteLine("Cannot harvest type of " + dll + ". Skipping.");
+			return null;
+		}
+	}
 
 	public class HarvesterType
 	{
 		public String fromDLL;
-		public Type theType;		
+		public Type theType;
 
 		public HarvesterType(String fromDLL, Type t)
 		{
@@ -687,5 +712,4 @@ public class TypeHarvester
 			this.theType = t;
 		}
 	}
-
-}//class
+}

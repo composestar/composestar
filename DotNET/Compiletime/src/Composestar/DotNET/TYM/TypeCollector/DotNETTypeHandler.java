@@ -1,7 +1,3 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\CTAdaption\\TYM\\TypeCollector\\DotNETTypeHandler.java
-
-//Source file: H:\\cvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\TypeCollector\\DotNETTypeHandler.java
-
 /*
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.
@@ -9,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETTypeHandler.java,v 1.1 2006/02/16 23:11:01 pascal_durr Exp $
+ * $Id$
  */
 
 package Composestar.DotNET.TYM.TypeCollector;
