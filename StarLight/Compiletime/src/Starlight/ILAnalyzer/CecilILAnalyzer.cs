@@ -126,6 +126,15 @@ namespace Composestar.StarLight.ILAnalyzer
                 // Add to the repository
                 RepositoryAccess.AddType(ti);
 
+                foreach (CustomAttribute attr in type.CustomAttributes)
+                {
+                    AttributeElement ae = new AttributeElement();
+                    ae.Type = attr.Constructor.Name;
+                    ae.Value = attr.ConstructorParameters[0].ToString();
+
+                    RepositoryAccess.AddAttribute(ti, ae);
+                }
+
                 foreach (FieldDefinition field in type.Fields)
                 {
                     // Create a new field element

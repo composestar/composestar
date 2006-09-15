@@ -59,9 +59,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
+      <Name>LanguageModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\DataStoreContainer.csproj">
+      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
+      <Name>DataStoreContainer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

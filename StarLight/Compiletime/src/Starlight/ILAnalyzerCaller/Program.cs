@@ -21,10 +21,12 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
 
-                IList<Composestar.Repository.LanguageModel.TypeElement> dbtypes = Composestar.Repository.DataStoreContainer.Instance.GetTypeElements();
+                Repository.RepositoryAccess repository = new Repository.RepositoryAccess(args[0]);
+
+                IList<Composestar.Repository.LanguageModel.TypeElement> dbtypes = repository.GetTypeElements();
                 foreach (Composestar.Repository.LanguageModel.TypeElement type in dbtypes)
                 {
-                    int numOfMethods = Composestar.Repository.DataStoreContainer.Instance.GetMethodElements(type).Count;
+                    int numOfMethods = repository.GetMethodElements(type).Count;
                     methodCount = methodCount + numOfMethods;
                     Console.WriteLine("Type {0} ({1}) found with {2} methods.", type.Name, type.BaseType, numOfMethods);
                 }
@@ -40,9 +42,9 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             analyzer.Initialize(args[0], null);
             
             //List<MethodElement> methods = analyzer.ExtractMethods();
-            IList<Composestar.Repository.LanguageModel.TypeElement> types = ((CecilILAnalyzer)analyzer).ExtractTypeInformation();
+            //IList<Composestar.Repository.LanguageModel.TypeElement> types = ((CecilILAnalyzer)analyzer).ExtractTypeInformation();
 
-            Console.WriteLine("{0} types found in {1} seconds.", types.Count, analyzer.LastDuration.TotalSeconds);
+            //Console.WriteLine("{0} types found in {1} seconds.", types.Count, analyzer.LastDuration.TotalSeconds);
             Console.ReadKey(); 
         }
     }
