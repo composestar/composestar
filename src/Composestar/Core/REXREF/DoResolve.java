@@ -9,12 +9,16 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleParameter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedInternal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedMessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
@@ -26,6 +30,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorRefer
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * Tries to resolves all references in the repository
@@ -68,6 +73,8 @@ public class DoResolve {
     resolveFilterReferences();
     resolveConditionReferences();
     resolveDeclaredObjectReferences();
+    
+    resolveFilterModuleParameters();
   }
 
 
@@ -87,6 +94,8 @@ public class DoResolve {
         ref.setRef(concern);
         ref.setResolved(true);
       } else {
+    	  ref.getClass();
+    	  ref.getClass();
         throw new ModuleException("ConcernReference '" + ref.getQualifiedName() + "' cannot be resolved (are you referencing a non-existent concern or is the startup object incorrect?)", "REXREF", ref);
       }
     }
@@ -527,5 +536,19 @@ public class DoResolve {
                 throw new ModuleException("DeclaredObjectReference '" + ref.getName() + "' cannot be resolved (are you referencing a non-existent object?)", "REXREF", ref);
           }
       }
+  }
+  
+  private void resolveFilterModuleParameters(){
+	  Iterator i = ds.getAllInstancesOf(ParameterizedMessageSelector.class);
+	  while(i.hasNext()){
+		  ParameterizedMessageSelector pms = (ParameterizedMessageSelector) i.next();
+		  try{
+			  FilterModule mp = (FilterModule)((Filter)((FilterElement)((MatchingPattern) ((MatchingPart) pms.getParent()).getParent()).getParent()).getParent()).getParent();
+			  String paraValue = (String) ((Vector) mp.getParameter(pms.getName()).getValue()).get(0);
+			  pms.setName(paraValue);
+		  }catch(Exception e){
+			  Debug.out(Debug.MODE_ERROR, "REXREF", "Getting the value for a message slecotr parameter failed, probably the parent chain is broken.");
+		  }
+	  }
   }
 }

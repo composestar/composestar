@@ -5,21 +5,21 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterElement.java,v 1.2 2006/09/05 14:17:31 doornenbal Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 import java.util.Iterator;
 import java.util.Vector;
 
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {5976EB5C-BFC4-46BF-995B-AD41D42C48C7}
  */
-public class FilterElement extends RepositoryEntity {
+public class FilterElement extends ContextRepositoryEntity {
   public FilterElementAST filterElementAST;
   //public ConditionExpression conditionPart; -> delegate to FilterElementAST
   //public EnableOperatorType enableOperatorType; -> delegate to FilterElementAST

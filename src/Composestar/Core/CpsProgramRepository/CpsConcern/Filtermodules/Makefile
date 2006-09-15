@@ -33,12 +33,15 @@ CLASSES=AbstractPattern.class \
         MatchingPatternAST.class \
 	MatchingType.class \
         MessageSelector.class \
+        MessageSelectorAST.class \
 	Method.class \
 	NameMatchingType.class \
 	Not.class \
 	Or.class \
 	ParameterizedInternal.class \
 	ParameterizedInternalAST.class \
+	ParameterizedMessageSelector.class \
+	ParameterizedMessageSelectorAST.class \
 	SEQfilterCompOper.class \
 	SignatureMatchingType.class \
 	SubstitutionPart.class \

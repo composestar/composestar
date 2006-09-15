@@ -89,8 +89,7 @@ public class Sign implements CTCommonModule {
         dictionary.put("isDispatch", new StateType(
                 FlowChartNames.DISPATCH_ACTION_NODE));
 
-        dictionary
-                .put("isMeta", new StateType(FlowChartNames.META_ACTION_NODE));
+        dictionary.put("isMeta", new StateType(FlowChartNames.META_ACTION_NODE));
 
         isStatePredicate = new IsState(null);
         dictionary.put("isState", isStatePredicate);
@@ -139,16 +138,16 @@ public class Sign implements CTCommonModule {
         unsolvedConcerns = new HashSet();
         solvedConcerns = new HashSet();
         analysisModels = new Hashtable();
+        FilterModuleOrder filterModules;
+        FireModel model;
 
-        Iterator conIter = DataStore.instance()
-                .getAllInstancesOf(Concern.class);
+        Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
         while (conIter.hasNext()) {
             Concern concern = (Concern) conIter.next();
-
+            
             if (concern.getDynObject("superImpInfo") != null) {
-                FilterModuleOrder filterModules = (FilterModuleOrder) concern
-                        .getDynObject("SingleOrder");
-                FireModel model = new FireModel(concern, filterModules);
+                filterModules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+                model = new FireModel(concern, filterModules);
                 analysisModels.put(concern, model);
 
                 unsolvedConcerns.add(concern);
@@ -158,9 +157,9 @@ public class Sign implements CTCommonModule {
 
                 // Add all (usr src) methods to the signature with status
                 // unknown.
-                for (int i = 0; i < methods.size(); i++)
-                    signature.add((MethodInfo) methods.get(i),
-                            MethodWrapper.NORMAL);
+                for (int i = 0; i < methods.size(); i++){
+                    signature.add((MethodInfo) methods.get(i), MethodWrapper.NORMAL);
+                }
 
                 signature.setStatus(Signature.SOLVED);
 

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Filter.java,v 1.2 2006/09/05 12:30:49 doornenbal Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -54,6 +54,7 @@ public class Filter extends DeclaredRepositoryEntity {
 	  FilterElement fe = new FilterElement((FilterElementAST) fei.next());
 	  filterElements.add(fe);
 	  DataStore.instance().addObject(fe);
+	  fe.setParent(this);
 	}
   }
 
