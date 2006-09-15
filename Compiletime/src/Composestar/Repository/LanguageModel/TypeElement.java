@@ -4,7 +4,7 @@ package Composestar.Repository.LanguageModel;
 /**
  * Summary description for Class1
  */
-public class TypeElement
+public class TypeElement implements IRepositoryElement
 {
 	private int _id;
 	private String _name = "";
@@ -25,7 +25,7 @@ public class TypeElement
 	private String module; // TODO: object ???????
 	private String _fromDLL = "";
 	
-	public TypeElement()
+	public TypeElement() 
 	{
 		_id = this.hashCode();
 		_assemblyElement = new AssemblyElement();
