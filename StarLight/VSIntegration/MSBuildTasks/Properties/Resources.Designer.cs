@@ -61,11 +61,20 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TargetType {0} is not valid. Valid values are: Exe, WinExe, Library..
+        ///   Looks up a localized string similar to Unable to convert the debuglevel &apos;{0}&apos; to an integer value..
         /// </summary>
-        internal static string InvalidTargetType {
+        internal static string CouldNotConvertDebugLevel {
             get {
-                return ResourceManager.GetString("InvalidTargetType", resourceCulture);
+                return ResourceManager.GetString("CouldNotConvertDebugLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to read the requested registry values. Make sure the registry contains the correct settings by running the setup application..
+        /// </summary>
+        internal static string CouldNotReadRegistryValues {
+            get {
+                return ResourceManager.GetString("CouldNotReadRegistryValues", resourceCulture);
             }
         }
     }

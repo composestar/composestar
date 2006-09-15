@@ -7,8 +7,8 @@
     <ProjectGuid>{B37EA36C-9C56-4EC2-BD17-4B884F9D6ACE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComposeStar.StarLight.MSBuild.Tasks</RootNamespace>
-    <AssemblyName>ComposeStar.StarLight.MSBuild.Tasks</AssemblyName>
+    <RootNamespace>Composestar.StarLight.MSBuild.Tasks</RootNamespace>
+    <AssemblyName>Composestar.StarLight.MSBuild.Tasks</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +71,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
+      <Project>{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}</Project>
+      <Name>ConfigurationModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
       <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
       <Name>LanguageModel</Name>

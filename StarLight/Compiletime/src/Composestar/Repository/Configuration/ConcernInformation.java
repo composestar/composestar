@@ -1,17 +1,40 @@
 package Composestar.Repository.Configuration;
 
 public class ConcernInformation {
-	private String _name;
-	
-	/** @property */
-	public String get_Name()
+
+	public ConcernInformation(String filename, String path)
 	{
-	    return _name;
+		this._filename = filename;
+		this._path = path;
+	}
+
+	private String _path;
+
+	/** @property */
+	public String get_Path()
+	{
+		return _path;
 	}
 
 	/** @property */
-	public void set_Name(String value)
+	public void set_Path(String value)
 	{
-		_name = value;
+		_path = value;
+	} 
+
+
+	private String _filename;
+
+	/** @property */
+	public String get_Filename()
+	{
+		return _filename;
 	}
+
+	/** @property */
+	public void set_Filename(String value)
+	{
+		_filename = value;
+	} 
+
 }

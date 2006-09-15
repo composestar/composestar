@@ -171,7 +171,7 @@
   <Target
        Name="MasterCaller">
     <Message Text="Executing Composestar Master..." />
-    <MasterCallerTask RepositoryFilename="$(RepositoryFilename)" ConcernFiles="@(Concern->'%(FullPath)')" DebugLevel="$(DebugLevel)" />
+    <MasterCallerTask RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" ConcernFiles="@(Concern->'%(FullPath)')" DebugLevel="$(DebugLevel)" />
   </Target>
 
   <!--ILWeaverRunner target -->

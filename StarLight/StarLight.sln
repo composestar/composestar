@@ -78,6 +78,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLanguageModel", "UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestILAnalyzer", "UnitTests\TestILAnalyzer\TestILAnalyzer.csproj", "{1B4B4933-6267-4AEC-9F9C-1FF8B6C7546B}"
 EndProject
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ConfigurationModel", "Compiletime\src\Composestar\Repository\Configuration\ConfigurationModel.vjsproj", "{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = StarLight1.vsmdi
@@ -366,6 +368,26 @@ Global
 		{1B4B4933-6267-4AEC-9F9C-1FF8B6C7546B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1B4B4933-6267-4AEC-9F9C-1FF8B6C7546B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1B4B4933-6267-4AEC-9F9C-1FF8B6C7546B}.Release|x86.ActiveCfg = Release|Any CPU
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Debug|x86.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Debug|x86.Build.0 = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugNUnit|Any CPU.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugNUnit|Mixed Platforms.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugNUnit|Mixed Platforms.Build.0 = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugNUnit|x86.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugNUnit|x86.Build.0 = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugVSIntegration|Any CPU.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugVSIntegration|Mixed Platforms.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugVSIntegration|Mixed Platforms.Build.0 = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugVSIntegration|x86.ActiveCfg = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.DebugVSIntegration|x86.Build.0 = Debug|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Release|Any CPU.ActiveCfg = Release|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Release|x86.ActiveCfg = Release|x86
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -391,5 +413,6 @@ Global
 		{B37EA36C-9C56-4EC2-BD17-4B884F9D6ACE} = {C71100E4-D848-4173-BCA9-578E6E874CB1}
 		{12970BDF-D7FE-4206-A988-1940B7B9A93B} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
 		{40B1F906-58AC-42AD-837C-3F31B289659C} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
+		{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF} = {5942A443-37C5-49CE-AB3A-E47154593FBD}
 	EndGlobalSection
 EndGlobal

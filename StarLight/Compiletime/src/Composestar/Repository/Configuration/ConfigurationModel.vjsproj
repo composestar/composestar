@@ -4,10 +4,10 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</ProjectGuid>
+    <ProjectGuid>{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Repository.LanguageModel</RootNamespace>
-    <AssemblyName>Composestar.Repository.LanguageModel</AssemblyName>
+    <RootNamespace>Composestar.Repository.ConfigurationModel</RootNamespace>
+    <AssemblyName>Composestar.Repository.ConfigurationModel</AssemblyName>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -29,24 +29,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyElement.java" />
-    <Compile Include="AttributeElement.java" />
-    <Compile Include="CallElement.java" />
-    <Compile Include="ConditionExpressions\ConditionExpression.java" />
-    <Compile Include="FieldElement.java" />
-    <Compile Include="Inlining\Block.java" />
-    <Compile Include="Inlining\Branch.java" />
-    <Compile Include="Inlining\ContextInstruction.java" />
-    <Compile Include="Inlining\FilterAction.java" />
-    <Compile Include="Inlining\FilterBlock.java" />
-    <Compile Include="Inlining\Jump.java" />
-    <Compile Include="Inlining\Label.java" />
-    <Compile Include="Inlining\Instruction.java" />
-    <Compile Include="MethodBody.java" />
-    <Compile Include="MethodElement.java" />
-    <Compile Include="ParameterElement.java" />
+    <Compile Include="CommonConfiguration.java" />
+    <Compile Include="ConcernInformation.java" />
     <Compile Include="Properties\AssemblyInfo.jsl" />
-    <Compile Include="TypeElement.java" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
