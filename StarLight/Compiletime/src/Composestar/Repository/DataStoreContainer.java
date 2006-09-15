@@ -11,9 +11,9 @@ import com.db4o.query.*;
 public class DataStoreContainer {
 	private static DataStoreContainer instance;
 	
-	private ObjectContainer dbContainer;
+	private static String yapFileName;
 	
-	private Hashtable _methods;
+	private ObjectContainer dbContainer;
 
     private DataStoreContainer()
     {
@@ -22,7 +22,7 @@ public class DataStoreContainer {
   		//		new WildcardAlias(
     	//			"Composestar.Repository.LanguageModel.*, Repository.LanguageModel", "Composestar.Repository.LanguageModel.*"));
 
-		
+		if (yapFileName == null) yapFileName = "database.yap";
 		
 		adjustClassNames();
 		
@@ -34,12 +34,21 @@ public class DataStoreContainer {
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("parentMethodBodyId").indexed(true);
         
         
-        dbContainer = Db4o.openFile("test.yap");
+        dbContainer = Db4o.openFile(yapFileName);
+    }
+    
+    protected void finalize () {
+    	dbContainer.close();
+    }
+    
+    public static void setYapFileName(String fileName)
+    {
+    	yapFileName = fileName;
     }
     
     private void adjustClassNames()
     {
-    	dbContainer = Db4o.openFile("test.yap");
+    	dbContainer = Db4o.openFile(yapFileName);
 
         StoredClass[] classes = dbContainer.ext().storedClasses();
         for (int i = 0; i < classes.length; i++) {
@@ -74,13 +83,49 @@ public class DataStoreContainer {
 		
 		return result; 
     }
+    
+    public Composestar.Repository.Configuration.CommonConfiguration GetCommonConfiguration()
+    {
+		Query query = dbContainer.query();
+		query.constrain(Composestar.Repository.Configuration.CommonConfiguration.class);
+		ObjectSet result = query.execute();   	
+    	
+        if (result.size() == 1)
+            return (Composestar.Repository.Configuration.CommonConfiguration)result.get(0);
+        else 
+            return null;   	
+    }
+    
+    public ArrayList GetConcernInformation()
+    {
+		ObjectSet result=dbContainer.get(Composestar.Repository.Configuration.ConcernInformation.class);
+
+		return ObjectSetToArrayList(result);   	
+    }
 	
+    public void addTypeElement(Composestar.Repository.LanguageModel.TypeElement typeElement)
+    {
+        dbContainer.set(typeElement);
+    }
+    
+    public Composestar.Repository.LanguageModel.TypeElement GetTypeElement(String fullName)
+    {
+		Query query = dbContainer.query();
+		query.constrain(Composestar.Repository.LanguageModel.TypeElement.class);
+		query.descend("_fullName").constrain(fullName);
+		ObjectSet result = query.execute();   	
+    	
+        if (result.size() == 1)
+            return (Composestar.Repository.LanguageModel.TypeElement)result.get(0);
+        else 
+            return null;
+    }
+    
 	public ArrayList getTypes()
 	{
 		ObjectSet result=dbContainer.get(Composestar.Repository.LanguageModel.TypeElement.class);
 
 		return ObjectSetToArrayList(result);
-
 	}
 
 	public ArrayList getMethodElements(Composestar.Repository.LanguageModel.TypeElement type)

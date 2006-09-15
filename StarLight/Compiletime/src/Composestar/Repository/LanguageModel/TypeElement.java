@@ -11,12 +11,22 @@ public class TypeElement
 	private String _fullName;
 	private String _baseType;
 	private AssemblyElement _assemblyElement;
+	private String _namespace;
+	private String _implementedInterface; // TODO: list ??????
 	private boolean _isAbstract;
 	private boolean _isInterface;
 	private boolean _isSealed;
 	private boolean _isValueType;
 	private boolean _isEnum;
-
+	private boolean _isArray;
+	private boolean _isClass;
+	private boolean _isNotPublic;
+	private boolean _isPrimitive;
+	private boolean _isPublic;
+	private boolean _isSerializable;
+	private String module; // TODO: object ???????
+	private String _fromDLL;
+	
 	public TypeElement()
 	{
 		_id = this.hashCode();
@@ -71,6 +81,18 @@ public class TypeElement
 	public void set_AssemblyElement(AssemblyElement value)
 	{
 		_assemblyElement = value;
+	}
+	
+	/** @property */
+	public String get_Namespace()
+	{
+		return _namespace;
+	}
+
+	/** @property */
+	public void set_Namespace(String value)
+	{
+		_namespace = value;
 	}
 
 	/** @property */
@@ -133,6 +155,89 @@ public class TypeElement
 		_isEnum = value;
 	}
 
+	/** @property */
+	public boolean get_IsArray()
+	{
+		return _isArray;
+	}
+
+	/** @property */
+	public void set_IsArray(boolean value)
+	{
+		_isArray = value;
+	}
+	
+	/** @property */
+	public boolean get_IsClass()
+	{
+		return _isClass;
+	}
+
+	/** @property */
+	public void set_IsClass(boolean value)
+	{
+		_isClass = value;
+	}
+
+	/** @property */
+	public boolean get_IsNotPublic()
+	{
+		return _isNotPublic;
+	}
+
+	/** @property */
+	public void set_IsNotPublic(boolean value)
+	{
+		_isNotPublic = value;
+	}
+
+	/** @property */
+	public boolean get_IsPrimitive()
+	{
+		return _isPrimitive;
+	}
+
+	/** @property */
+	public void set_IsPrimitive(boolean value)
+	{
+		_isPrimitive = value;
+	}
+
+	/** @property */
+	public boolean get_IsPublic()
+	{
+		return _isPublic;
+	}
+
+	/** @property */
+	public void set_IsPublic(boolean value)
+	{
+		_isPublic = value;
+	}
+
+	/** @property */
+	public boolean get_IsSerializable()
+	{
+		return _isSerializable;
+	}
+
+	/** @property */
+	public void set_IsSerializable(boolean value)
+	{
+		_isSerializable = value;
+	}
+	
+	/** @property */
+	public String get_FromDLL()
+	{
+		return _fromDLL;
+	}
+
+	/** @property */
+	public void set_FromDLL(String value)
+	{
+		_fromDLL = value;
+	}
 
 
 }
