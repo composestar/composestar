@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cpsw.g,v 1.7 2006/08/31 09:34:05 doornenbal Exp $
+ * $Id$
  */
 /**
  * Treewalker for parsed .cps files
@@ -45,6 +45,7 @@ options {
   public Vector typel = new Vector();     //temp vector for type list (in methods)
   public String target;   // temp string for target name
   public String selector; // temp string for selector name
+  public int paratype=0; 						// flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
   
   public CpsRepositoryBuilder getRepositoryBuilder()
   {
@@ -68,7 +69,8 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
         
     filterModuleParameters :  #(FILTERMODULEPARAMETERS_ {parameterv.clear();} filterModuleParameterSet {b.addFilterModuleParameters(parameterv, 0);}); 
     filterModuleParameterSet : #(DECLAREDPARAMETER_ (p:PARAMETER_NAME {parameterv.add(p.getText());} | p2:PARAMETERLIST_NAME {parameterv.add(p2.getText());})+ );
-  	parameter : #(PARAMETER_ p:PARAMETER_NAME {parameterv.add(p.getText());} );    
+  	parameter : #(PARAMETER_ p:PARAMETER_NAME {parameterv.add(p.getText());} );
+  	parameterlist : #(PARAMETERLIST_ p:PARAMETER_NAME {parameterv.add(p.getText());} );    
 
     /*---------------------------------------------------------------------------*/
     internals : #("internals" (singleInternal)*);
@@ -126,28 +128,30 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
                 substitutionPart : #(SPART_ targetSelector2 (SEMICOLON targetSelector2)* );
                 
                 singleTargetSelector : 
-                					{ matching = 1; target = null; selector = null; typev.clear(); }
+                					{ matching = 1; target = null; selector = null; typev.clear(); paratype= 0; }
                                     (
                                         LSQUARE {matching=0;}
                                       | LANGLE {matching=1;}
                                       | SINGLEQUOTE {matching=0;}
                                     )?
                                     targetSelector
-                                    { b.addMatchingPart( target, selector, typev, matching, 0 ); }
+                                    { b.addMatchingPart( target, selector, typev, matching, paratype, 0 );}
                                     ;
 
-                  targetSelector : (target)? selector;
+                  targetSelector : (target)? {parameterv.clear();} (selector {paratype=1;}
+                                   | parameter {selector = (String) parameterv.get(0); paratype=2;}
+                                   | parameterlist {selector = (String) parameterv.get(0); paratype=3;});
 
                   targetSelector2 : { target = null; selector=null; typev2.clear(); }
                                     (target)? selector2                //extra rule to distinguish between selector matching / substitution part
                                     { b.addSubstitutionPart( target, selector, typev2, 0 ); }
                                     ;
-
-                  selector : #(SELEC_ (((n:NAME { selector=n.getText(); typev.clear();} (type3)*)) | (STAR { selector="*"; } )));
+                                    
+					selector : #(SELEC_ (((n:NAME { selector=n.getText(); typev.clear();} (type3)*)) | (STAR { selector="*"; } )));
 
                     type3 : #(TYPE_ {temptypes = new Vector();} (t:NAME {temptypes.add(t.getText());} )+ {typev.add(temptypes);});   //extra rule
 
-                  selector2 : #(SELEC_ (((n:NAME { selector=n.getText(); typev2.clear();} (type2)*)) | (STAR { selector="*"; } )));
+                  selector2 : #(SELEC_ (((n:NAME { selector=n.getText(); typev2.clear();} (type2)*)) | (STAR { selector="*";})));
 
         type2 : #(TYPE_ {temptypes = new Vector();} (t:NAME {temptypes.add(t.getText());} )+ {typev2.add(temptypes);});  //extra rule
 
@@ -184,8 +188,8 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
         filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} {parameterv.clear();} filterModuleElement))+);
 
 		filterModuleElement : (n:NAME {namev.add(n.getText());})+ (fmBindingArguments)? { b.addFilterModuleName(namev, parameterv, n.getLine()); } ;
-        fmBindingArguments : #(DECLAREDARGUMENT_ {parameterv.clear();} (argument {parameterv.add(arg);})* );
-          argument : #(ARGUMENT_ {arg.clear();} (n:NAME {arg.add(n.getText());})*) ;
+        fmBindingArguments : #(DECLAREDARGUMENT_ {parameterv.clear();arg = new Vector();} (argument {parameterv.add(arg); arg = new Vector();})* );
+          argument : #(ARGUMENT_ (n:NAME {arg.add(n.getText());})*) ;
              
     /*---------------------------------------------------------------------------*/
     annotationBind : #("annotations" (singleAnnotBind)*);

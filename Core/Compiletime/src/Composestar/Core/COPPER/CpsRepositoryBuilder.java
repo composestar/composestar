@@ -42,9 +42,9 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.NameMatchi
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedInternalAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedMessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SEQfilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
@@ -939,7 +939,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *                 Consists of multiple vectors within this vector (each parameter a separate vector)
    * @param matching Whether the matching is name or signature (0=name, 1=signature)
    */
-  public void addMatchingPart(String target, String selector, Vector argTypes, int matching,int lineNumber) {
+  public void addMatchingPart(String target, String selector, Vector argTypes, int matching, int paratype, int lineNumber) {
     workingOnMatching = true; //busy with matching
     mp = new MatchingPartAST();
     mp.setParent(mpat);
@@ -956,8 +956,14 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     ta.setParent(mp);
     
     if (selector != null) {
-      addSelector(selector, argTypes,lineNumber);
-      s.setParent(mp);
+    	if(paratype == 1){
+    		addSelector(selector, argTypes,lineNumber);
+    		s.setParent(mp);
+    	}
+    	if(paratype == 2){
+    		addParameterizedSelector(selector, argTypes,lineNumber);
+    		s.setParent(mp);
+    	}    	
     }
     addMatchingType(matching);
     mp.setMatchType(mt);
@@ -1062,7 +1068,36 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       s.setParent(sp);
     }
   }
+  
+  /**
+   * Adds a ParameterizedSelectorAST object to a Matching //- or SubstitutionPart
+   *
+   * @param name  The method name
+   * @param typev The types of parameters of the method
+   *              Consists of Vectors within a Vector (each parameter has a separate Vector,
+   *              so it can contain a package in front of the type)
+   */
+  public void addParameterizedSelector(String name, Vector typev,int lineNumber) {
+    int j;
 
+    //fixme: do something special with * here
+    ParameterizedMessageSelectorAST temp = new ParameterizedMessageSelectorAST();
+    s = temp;
+	  s.setDescriptionFileName(filename);
+	  s.setDescriptionLineNumber(lineNumber);
+    s.setName(name);
+    this.addToRepository(s);
+    for (j = 0; j < typev.size(); j++)
+      s.addParameterType(addConcernReference((Vector) typev.elementAt(j)));
+
+    if (workingOnMatching) {
+      mp.setSelector(s);
+      s.setParent(mp);
+    } else {
+      sp.setSelector(s);
+      s.setParent(sp);
+    }
+  }
 
   /**
    * Adds an OutputFilter to the repository

@@ -10,7 +10,7 @@ header {
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: cps.g,v 1.12 2006/09/01 12:11:39 doornenbal Exp $
+ * $Id$
  */
 
 /**
@@ -65,6 +65,7 @@ tokens {                                //extra tokens used in constructing the 
         OFILTER_;
         OREXPR_;
         PARAMETER_;
+        PARAMETERLIST_;
         SELEC2_;
         SELEC_;
         SELEXP_;
@@ -112,6 +113,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
     
   parameter : PARAMETER_NAME 
   {#parameter = #([PARAMETER_, "parameter"], #parameter);} ;
+  
+  parameterlist : PARAMETERLIST_NAME 
+  {#parameterlist = #([PARAMETERLIST_, "parameterlist"], #parameterlist);} ;
 
     /*---------------------------------------------------------------------------*/
     internals : "internals"^ (singleInternal)* ;
@@ -223,8 +227,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                         | targetSelector
                                         ) ;
                   
-                   targetSelector : (target DOT) => target DOT! selector      //extra rule to help parse target.selector correctly
-                                  | selector;
+                   targetSelector : (target DOT) => target DOT! (selector|parameter|parameterlist)      //extra rule to help parse target.selector correctly
+                                  | (selector|parameter|parameterlist);
 
                     target : (NAME                      //removed inner
                            | STAR)
