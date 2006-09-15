@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Composestar.Repository.Configuration;  
 using Composestar.Repository.LanguageModel;  
 using Composestar.Repository.LanguageModel.Inlining;
 
@@ -211,20 +212,47 @@ namespace Composestar.Repository
         /// <summary>
         /// Adds the concern.
         /// </summary>
-        /// <param name="concernElement">The concern element.</param>
-        public void AddConcern(ConcernElement concernElement)
+        /// <param name="concernInformation">The concern information.</param>
+        public void AddConcern(ConcernInformation concernInformation)
         {
-            if (concernElement == null)
-                throw new ArgumentNullException("concernElement") ;
+            if (concernInformation == null)
+                throw new ArgumentNullException("concernInformation") ;
            
             // Check if concern already exists
-            if (DataStoreContainer.Instance.GetObjectQuery<ConcernElement>(delegate(ConcernElement ce)
+            if (DataStoreContainer.Instance.GetObjectQuery<ConcernInformation>(delegate(ConcernInformation ce)
             {
-                return ce.Filename.Equals(concernElement.Filename, StringComparison.CurrentCultureIgnoreCase);
+                return ce.Filename.Equals(concernInformation.Filename, StringComparison.CurrentCultureIgnoreCase);
             }).Count == 0)
             {
-                DataStoreContainer.Instance.StoreObject(concernElement);
+                DataStoreContainer.Instance.StoreObject(concernInformation);
             }
         }
+
+        /// <summary>
+        /// Gets the common configuration.
+        /// </summary>
+        /// <returns></returns>
+        public CommonConfiguration GetCommonConfiguration()
+        {
+            CommonConfiguration cc;
+            IList<CommonConfiguration> ret = DataStoreContainer.Instance.GetObjects<CommonConfiguration>();
+            if (ret.Count == 1)
+                return ret[0];
+            else
+                return new CommonConfiguration();
+        }
+
+        /// <summary>
+        /// Sets the common configuration.
+        /// </summary>
+        /// <param name="cc">The cc.</param>
+        public void SetCommonConfiguration(CommonConfiguration cc)
+        {
+            if (cc == null)
+                throw new ArgumentNullException("commonconfiguration");
+ 
+            DataStoreContainer.Instance.StoreObject(cc);  
+        }
+
     }
 }

@@ -7,6 +7,9 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.ComponentModel;
+using System.Security.Permissions;  
+
+using Microsoft.Win32;
 
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
@@ -14,6 +17,7 @@ using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.LanguageModel;
+using Composestar.Repository.Configuration;
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -23,6 +27,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class MasterCallerTask : Task
     {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:MasterCallerTask"/> class.
+        /// </summary>
+        public MasterCallerTask() : base(Properties.Resources.ResourceManager)
+        {
+            
+        }
 
         private string _repositoryFilename;
 
@@ -71,110 +83,120 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 string path = Path.GetDirectoryName(fullname);
                 string filename = Path.GetFileName(fullname);
  
-                ConcernElement ce = new ConcernElement(filename, path);
+                ConcernInformation ci = new ConcernInformation(filename, path);
 
                 Log.LogMessage("Adding concern '{0}' to the repository.", filename);
-                _repositoryAccess.AddConcern(ce);
+                _repositoryAccess.AddConcern(ci);
             }
 
             // Place debuglevel
             Log.LogMessage("Debug level is {0}.", DebugLevel); 
 
+            // Set the Common Configuration
+            CommonConfiguration cc = _repositoryAccess.GetCommonConfiguration();                
+            int debugLevelValue;
+            if (!int.TryParse(DebugLevel, out debugLevelValue ))
+            {
+                Log.LogErrorFromResources("CouldNotConvertDebugLevel", DebugLevel); 
+                _repositoryAccess.CloseDatabase(); 
+                return false;
+            }
+            cc.CompiletimeDebugLevel = debugLevelValue;
+            _repositoryAccess.SetCommonConfiguration(cc);
 
+            // Prepare to run java
+            string classPath = "";
+            string mainClass = "";
+            string jvmOptions = "";
+            string javaLocation = "";
+
+            // Retrieve the settings from the registry
+            RegistryPermission keyPermissions = new RegistryPermission(
+               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\Software\Composestar\StarLight");
+
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
+
+            if (regKey != null)
+            {
+                classPath = (string)regKey.GetValue("JavaClassPath", "");
+                mainClass = (string)regKey.GetValue("JavaMainClass", "Composestar.DotNET.MASTER.StarLightMaster");
+                jvmOptions = (string)regKey.GetValue("JavaOptions", "");
+                javaLocation = (string)regKey.GetValue("JavaFolder", "");
+            }
+            else
+            {
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");
+                _repositoryAccess.CloseDatabase();
+                return false;
+            }
+
+            // Check for empty values
+            if (string.IsNullOrEmpty(classPath) | string.IsNullOrEmpty(mainClass))
+            {
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");
+                _repositoryAccess.CloseDatabase();
+                return false;
+            }
+                                              
+            // Start java                  
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+
+            if (!string.IsNullOrEmpty(javaLocation) )
+            {
+                p.StartInfo.FileName = Path.Combine(javaLocation, "java.exe");
+            }
+            else
+                p.StartInfo.FileName = "java"; // In path
+            
+            p.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", jvmOptions ,classPath , mainClass, RepositoryFilename);
+            Log.LogMessage("Java will be called with the arguments: {0}", p.StartInfo.Arguments ) ;
+            
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.UseShellExecute = false;
+            
+            try
+            {
+                p.Start();
+                while (!p.HasExited)
+                {            
+                    Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.Normal) ;
+                }
+                if (p.ExitCode == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    Log.LogError("Master", 1000, "", "", 0, 0, 0, 0, "Master run failure reported by process. Exit code is {0}.", p.ExitCode);
+                    return false;
+                }
+            }
+            catch (Win32Exception e)
+            {
+                if (e.NativeErrorCode == ERROR_FILE_NOT_FOUND)
+                {
+                    //Console.WriteLine(e.Message + ". Check the path.");
+                    //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", is not found, please add the Java executable to your path!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+                    //Debug.Instance.ActivateTaskListWindow();
+                    Log.LogError("The java executable, " + p.StartInfo.FileName + ", is not found, please add the Java executable to your path!");
+                }
+
+                else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)
+                {
+                    //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", can not be accessed!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
+                    //Debug.Instance.ActivateTaskListWindow();
+                    Log.LogError("The java executable, " + p.StartInfo.FileName + ", can not be accessed!");
+                }
+                return false;
+            }
+
+            // Close the database
             Log.LogMessage(MessageImportance.Low, "Closing repository.");
             _repositoryAccess.CloseDatabase();
 
             return true;
-
-            //if (Utilities.searchComposeStarIniFile(Log) == false)
-            //{
-            //    return false;
-            //}
-
-            //Utilities.ReadIniFile();
-            //Utilities.ReadDotNetPlatform();
-
-            //if (Settings.Paths["Base"] == null)
-            //{
-            //    String ObjFolder = String.Concat(Path.GetDirectoryName(ProjectFile), "\\obj\\");
-            //    Settings.Paths.Add("Base", ObjFolder);
-            //}
-
-            //System.Diagnostics.Process p = new System.Diagnostics.Process();
-            //if (Settings.Paths["JavaBin"] != null)
-            //{
-            //    p.StartInfo.FileName = Path.Combine(Settings.Paths["JavaBin"], "java.exe");
-            //}
-            //else
-            //    p.StartInfo.FileName = "java";
-
-            //if (Settings.Paths["Composestar"] == null)
-            //{
-            //    Log.LogError("Could not find ComposeStar folder location.") ;
-            //    return false;
-            //}
-
-            //string composestarJar = Settings.Paths["Composestar"];
-            //composestarJar = composestarJar.Replace("\"", "");
-            //composestarJar = "\"" + composestarJar + "Composestar.jar\"";
-
-            //string classPath = "";
-            //string mainClass = "";
-            //string jvmOptions = "";
-
-            //classPath = BuildConfigurationManager.Instance.DotNetPlatform.ClassPath;
-            //mainClass = BuildConfigurationManager.Instance.DotNetPlatform.MainClass;
-            //jvmOptions = BuildConfigurationManager.Instance.DotNetPlatform.Options;
-
-            //string projectIni;
-            //projectIni = "\"" + Settings.Paths["Base"] + "BuildConfiguration.xml\"";
-
-            ////p.StartInfo.Arguments = "-cp " + composestarJar + " Composestar.CTCommon.Master.Master " + projectIni;
-            ////p.StartInfo.Arguments = "-cp \"" + classPath + "\" " + mainClass + " " + projectIni;
-
-            //p.StartInfo.Arguments = jvmOptions + " -cp \"" + classPath + "\" " + mainClass + " " + projectIni;
-            //Log.LogMessage("Arguments are: {0}", p.StartInfo.Arguments ) ;
-            //p.StartInfo.CreateNoWindow = true;
-            //p.StartInfo.RedirectStandardOutput = true;
-            //p.StartInfo.UseShellExecute = false;
-            //try
-            //{
-            //    p.Start();
-            //    while (!p.HasExited)
-            //    {
-            //        //Debug.Instance.ParseLog(p.StandardOutput.ReadLine());
-            //        Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.Normal) ;
-            //    }
-            //    if (p.ExitCode == 0)
-            //    {
-            //        return true;
-            //    }
-            //    else
-            //    {
-            //        Log.LogError("Master", 1000, "", "", 0, 0, 0, 0, "Master run failure reported by process. Exit code is {0}.", p.ExitCode);
-            //        return false;
-            //    }
-            //}
-            //catch (Win32Exception e)
-            //{
-            //    if (e.NativeErrorCode == ERROR_FILE_NOT_FOUND)
-            //    {
-            //        //Console.WriteLine(e.Message + ". Check the path.");
-            //        //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", is not found, please add the Java executable to your path!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
-            //        //Debug.Instance.ActivateTaskListWindow();
-            //        Log.LogError("The java executable, " + p.StartInfo.FileName + ", is not found, please add the Java executable to your path!");
-            //    }
-
-            //    else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)
-            //    {
-            //        // Note that if your word processor might generate exceptions
-            //        // such as this, which are handled first.
-            //        //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", can not be accessed!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
-            //        //Debug.Instance.ActivateTaskListWindow();
-            //        Log.LogError("The java executable, " + p.StartInfo.FileName + ", can not be accessed!");
-            //    }
-            //    return false;
-            //}
+                      
         }
 
     }

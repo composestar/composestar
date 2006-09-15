@@ -47,6 +47,10 @@
     <Compile Include="RepositoryAccess.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
+      <Project>{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}</Project>
+      <Name>ConfigurationModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
       <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
       <Name>LanguageModel</Name>

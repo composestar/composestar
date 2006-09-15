@@ -3,6 +3,7 @@ package Composestar.Repository.Configuration;
 public class CommonConfiguration {
 	private int _compiletimeDebugLevel = 0;
 	
+
 	/** @property */
 	public int get_CompiletimeDebugLevel()
 	{
@@ -12,8 +13,8 @@ public class CommonConfiguration {
 	/** @property */
 	public void set_CompiletimeDebugLevel(int value)
 	{
-		if (value < 0 || value > 3) {
-			_compiletimeDebugLevel = 0;
+		if (value < 0 || value > 4) {
+			_compiletimeDebugLevel = 3;
 		}
 		else {
 			_compiletimeDebugLevel = value;
