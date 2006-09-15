@@ -7,7 +7,11 @@ public class ParameterElement
 {
 	private int _parentMethodId;
 	private String _name;
-
+	private boolean _isIn;
+	private boolean _isOptional;
+	private boolean _isOut;
+	private boolean _isRetVal;
+	
 	/** @property */
 	public void set_ParentMethodId(int value)
 	{
@@ -72,6 +76,53 @@ public class ParameterElement
 	{
 		_parameterAttributes = value;
 	}
+	
+	/** @property */
+	public boolean get_IsIn()
+	{
+		return _isIn;
+	}
 
+	/** @property */
+	public void set_IsIn(boolean value)
+	{
+		_isIn = value;
+	}
+	
+	/** @property */
+	public boolean get_IsOptional()
+	{
+		return _isOptional;
+	}
+
+	/** @property */
+	public void set_IsOptional(boolean value)
+	{
+		_isOptional = value;
+	}
+
+	/** @property */
+	public boolean get_IsOut()
+	{
+		return _isOut;
+	}
+
+	/** @property */
+	public void set_IsOut(boolean value)
+	{
+		_isOut = value;
+	}
+	
+	/** @property */
+	public boolean get_IsRetVal()
+	{
+		return _isRetVal;
+	}
+
+	/** @property */
+	public void set_IsRetVal(boolean value)
+	{
+		_isRetVal = value;
+	}
 
 }
