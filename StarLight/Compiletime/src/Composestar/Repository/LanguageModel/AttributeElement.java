@@ -10,6 +10,10 @@ public class AttributeElement {
 	private String _type; // attribute type
 	private String _value; // attribute value
 
+	public AttributeElement()
+	{
+	}
+
 	public AttributeElement(String parentType, int parentId) 
 	{
 		_parentType = parentType;
@@ -17,15 +21,27 @@ public class AttributeElement {
 	}
 	
 	/** @property */
-	public String get_parentType() 
+	public String get_ParentType() 
 	{
 	    return _parentType; 
 	}
+
+	/** @property */
+	public void set_ParentType(String value)
+	{
+		_parentType = value;
+	}
 	
 	/** @property */
-	public int get_parentId() 
+	public int get_ParentId() 
 	{
 	    return _parentId; 
+	}
+
+	/** @property */
+	public void set_ParentId(int value)
+	{
+		_parentId = value;
 	}
 	
 	/** @property */

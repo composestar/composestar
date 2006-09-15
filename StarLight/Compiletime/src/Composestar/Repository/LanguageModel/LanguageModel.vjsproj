@@ -51,6 +51,7 @@
     <Compile Include="Inlining\Label.java" />
     <Compile Include="Inlining\Instruction.java" />
     <Compile Include="Internal.java" />
+    <Compile Include="IRepositoryElement.java" />
     <Compile Include="MethodBody.java" />
     <Compile Include="MethodElement.java" />
     <Compile Include="ParameterElement.java" />
