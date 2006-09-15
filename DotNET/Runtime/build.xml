@@ -20,6 +20,7 @@
 	<target name="clean" depends="init">
 		<!--<make target="clean" />-->
 		<delete dir="${out.dist}" />
+		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="clean" />
 	</target>	
 	
 	<target name="init_local" depends="init">
@@ -28,7 +29,7 @@
 	
 	<target name="build" depends="init_local">
 		<!--<make target="build" />-->
-		<devenv solution="${basedir}\composestarruntimedotnet.sln" />
+		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="build" />
 		<copy todir="${out.dist}">
 			<fileset dir="src${file.separator}FLIRT${file.separator}bin${file.separator}Release${file.separator}">
 				<include name="*.dll" />

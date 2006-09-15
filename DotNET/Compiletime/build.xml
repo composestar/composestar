@@ -21,6 +21,8 @@
 		<!--<make target="clean" />-->
 		<delete dir="${out.build}" />
 		<delete dir="${out.dist}" />
+		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" action="clean" />
+		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" action="clean" />
 		<delete>
 			<fileset dir="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
 				<include name="CSharpLexer.cs" />
@@ -80,10 +82,10 @@
 	</target>
 	
 	<target name="compile_dotnet_devenv" if="available.devenv">
-		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" />
+		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" action="build" />
 		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/CSharpDummyGenerator.exe" todir="${out.dist}" />
 		<copy file="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/antlr.runtime.dll" todir="${out.dist}" />
-		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" />
+		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" action="build" />
 		<copy todir="${out.dist}">
 			<fileset dir="src/Composestar/DotNET/ILICIT/Weaver/bin/Release">
 				<include name="IlWeaver.exe" />

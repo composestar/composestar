@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/DotNET/Plugin" default="build">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+	
+	<echo message="${ant.project.name}" />
+	
+	<description>
+	The Compose* DotNET Plugins
+	</description>
+	
+	<target name="init_local" depends="init">
+		<condition property="plugin.vs2003">
+			<istrue value="${available.devenv}" />
+		</condition>
+	</target>
+	
+	<target name="clean">
+	</target>
+	
+	<target name="build" depends="init_local" if="plugin.vs2003">
+		<devenv solution="${basedir}\VSAddin\ComposestarVSAddin.sln" />
+	</target>
+	
+	<target name="install" depends="init_local,build" if="plugin.vs2003">
+		<copy todir="${composestar.installdir}${file.separator}ComposestarVSAddin">
+			<fileset dir="VSAddin${file.separator}bin">
+				<include name="ComposestarVSAddin.*" />
+			</fileset>
+		</copy>
+		<registerAssembly dll="${composestar.installdir}${file.separator}ComposestarVSAddin${file.separator}ComposestarVSAddin.dll" />
+	</target>
+
+</project>
