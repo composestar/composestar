@@ -123,4 +123,13 @@
   <data name="CouldNotReadRegistryValues" xml:space="preserve">
     <value>Unable to read the requested registry values. Make sure the registry contains the correct settings by running the setup application.</value>
   </data>
+  <data name="JavaExecutableAccessDenied" xml:space="preserve">
+    <value>Could not execute the Java executable '{0}' because of access permission errors.</value>
+  </data>
+  <data name="JavaExecutableNotFound" xml:space="preserve">
+    <value>The Java executable '{0}' could not be found. Either add the location of this file to the path or place the folder in the JavaFolder key in the HKEY_LOCAL_MACHINE\SOFTWARE\Composestar\StarLight hive in the registry.</value>
+  </data>
+  <data name="MasterRunFailed" xml:space="preserve">
+    <value>Master run failure reported by process. Exit code is {0}.</value>
+  </data>
 </root>
