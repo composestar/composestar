@@ -28,6 +28,14 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Closes the database.
+        /// </summary>
+        public void CloseDatabase()
+        {
+            DataStoreContainer.Instance.CloseDatabase();  
+        }
+
+        /// <summary>
         /// Gets or sets the filename of the repository.
         /// </summary>
         /// <value>The filename.</value>
@@ -50,10 +58,15 @@ namespace Composestar.Repository
         /// <returns></returns>
         public TypeElement GetTypeElement(string fullName)
         {
-            TypeElement ti;
-            ti = DataStoreContainer.Instance.GetTypeElement(fullName);
-   
-            return ti;
+            IList<TypeElement> ret = DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate (TypeElement te)
+            {
+                return te.FullName.Equals(fullName);  
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+            else 
+                return null;          
         }
 
         /// <summary>
@@ -62,7 +75,7 @@ namespace Composestar.Repository
         /// <returns></returns>
         public IList<TypeElement> GetTypeElements()
         {
-            return DataStoreContainer.Instance.GetTypeElements();  
+            return DataStoreContainer.Instance.GetObjects<TypeElement>(); 
         }
 
         /// <summary>
@@ -73,16 +86,52 @@ namespace Composestar.Repository
         /// <returns></returns>
         public MethodElement GetMethodElement(TypeElement typeInfo, string methodName)
         {
-            MethodElement mi;
-
+            
             if (typeInfo == null)
                 return null;
 
             if (string.IsNullOrEmpty(methodName) )
                 return null;
 
-            mi = DataStoreContainer.Instance.GetMethodElement(typeInfo.Id, methodName);
-            return mi;
+            IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate (MethodElement me)
+            {
+                return (me.ParentTypeId == typeInfo.Id) && (me.Name.Equals(methodName));  
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+            else 
+                return null;
+                       
+        }
+
+        /// <summary>
+        /// Gets the method elements.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public IList<MethodElement> GetMethodElements(TypeElement type)
+        {
+            //Query query = dbContainer.Query();
+            //query.Constrain(typeof(Composestar.Repository.LanguageModel.MethodElement));
+            //query.Descend("_parentTypeId").Constrain(type.Id);
+            //ObjectSet result = query.Execute();
+
+            // >>> this is slow, no idea why ?
+            IList<MethodElement> result = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
+            {
+                return me.ParentTypeId == type.Id;
+            });
+
+            return result;
+
+            //List<MethodElement> m = new List<MethodElement>();
+            //foreach (MethodElement me in result)
+            //{
+            //    m.Add(me);
+            //}
+            
+            //return m;
         }
 
         /// <summary>
@@ -94,7 +143,7 @@ namespace Composestar.Repository
             if (typeElement == null)
                 throw new ArgumentNullException("typeElement") ;
 
-            Composestar.Repository.DataStoreContainer.Instance.StoreObject(typeElement);
+            DataStoreContainer.Instance.StoreObject(typeElement);
         }
 
         /// <summary>
@@ -112,9 +161,8 @@ namespace Composestar.Repository
 
             methodElement.ParentTypeId = typeElement.Id;
  
-            Composestar.Repository.DataStoreContainer.Instance.StoreObject(methodElement);
+            DataStoreContainer.Instance.StoreObject(methodElement);
         }
-
 
         /// <summary>
         /// Adds the parameter.
@@ -131,9 +179,8 @@ namespace Composestar.Repository
 
             paramElement.ParentMethodId = methodElement.Id; 
 
-            Composestar.Repository.DataStoreContainer.Instance.StoreObject(paramElement);
+            DataStoreContainer.Instance.StoreObject(paramElement);
         }
-
 
         /// <summary>
         /// Adds the call to method.
@@ -150,7 +197,7 @@ namespace Composestar.Repository
 
             callElement.ParentMethodBodyId = methodElement.MethodBody.Id; 
 
-            Composestar.Repository.DataStoreContainer.Instance.StoreObject(callElement);
+            DataStoreContainer.Instance.StoreObject(callElement);
         }
     }
 }

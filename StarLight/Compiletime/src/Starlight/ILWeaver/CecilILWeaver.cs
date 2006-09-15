@@ -221,6 +221,9 @@ namespace Composestar.StarLight.ILWeaver
             // Stop timing
             sw.Stop();
             _lastDuration = sw.Elapsed;
+
+            // Close DB
+              _repositoryAccess.CloseDatabase(); 
         }
 
         /// <summary>
