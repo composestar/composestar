@@ -49,7 +49,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			//TODO: type.addImplementedInterface( lastCharData );
 			type.setIsAbstract( storedType.get_IsAbstract() );
 			//--type.setIsAnsiClass( Boolean.valueOf( lastCharData ).booleanValue() );
-			type.setIsArray( storedType.get_IsArray() );
+			//--type.setIsArray( storedType.get_IsArray() );
 			//--type.setIsAutoClass( Boolean.valueOf( lastCharData ).booleanValue() );
 			//--type.setIsAutoLayout( Boolean.valueOf( lastCharData ).booleanValue() );
 			//--type.setIsByRef( Boolean.valueOf( lastCharData ).booleanValue() );
@@ -83,6 +83,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 //			--type.setHashCode( Integer.parseInt( lastCharData ) );
 			type.fromDLL = storedType.get_FromDLL().replaceAll("\"","");
 						
+			collectFields(storedType, type);
 			collectMethods(storedType, type);
 	
 			// Add the DotNETType to the TypeMap
@@ -91,9 +92,32 @@ public class StarLightCollectorRunner implements CollectorRunner
 		
 	}
 	
+	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException
+	{
+		// Get all fields for the type 'storedType'
+		ArrayList storedFields = repository.LanguageModel().getFieldElements(storedType);
+	
+		// Process all fields
+		Iterator fieldIterator = storedFields.iterator();
+		while (fieldIterator.hasNext())
+		{
+			FieldElement storedField = (FieldElement)fieldIterator.next();
+			
+			DotNETFieldInfo field = new DotNETFieldInfo();
+			
+			field.setName(storedField.get_Name());
+			field.setFieldType(storedField.get_Type());
+			field.setIsPrivate(storedField.get_IsPrivate());
+			field.setIsPublic(storedField.get_IsPublic());
+			field.setIsStatic(storedField.get_IsStatic());
+			
+			type.addField(field);
+		}
+	}
+	
 	private void collectMethods(TypeElement storedType, DotNETType type) throws ModuleException
 	{
-		// Get all methods for the type 'storedtype'
+		// Get all methods for the type 'storedType'
 		ArrayList storedMethods = repository.LanguageModel().getMethodElements(storedType);
 			//DataStoreContainer.getInstance().getMethodElements(storedType);		
 
