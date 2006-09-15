@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
     <Concern Include="Concern.cps" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />

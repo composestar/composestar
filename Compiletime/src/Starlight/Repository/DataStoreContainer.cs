@@ -87,17 +87,27 @@ namespace Composestar.Repository
         /// </remarks> 
         ~DataStoreContainer()
         {
-             dbContainer.Close();
+             CloseDatabase();
         }
         #endregion
 
         /// <summary>
         /// Opens the database.
-        /// </summary>
+        /// Setting the repository filename has the same effect.
+        /// </summary>        
         public void OpenDatabase()
         {
             adjustClassNames();
             dbContainer = Db4o.OpenFile(RepositoryFileName);
+        }
+
+        /// <summary>
+        /// Closes the database.
+        /// </summary>
+        public void CloseDatabase()
+        {
+            if (dbContainer != null)
+                dbContainer.Close(); 
         }
 
         /// <summary>
@@ -132,70 +142,7 @@ namespace Composestar.Repository
                 }
             }
             objectContainer.Close();
-        }
-
-        #region Types functionality
-
-        /// <summary>
-        /// Gets the type elements.
-        /// </summary>
-        /// <returns></returns>
-        public IList<TypeElement> GetTypeElements()
-        {
-            return dbContainer.Query<TypeElement>(typeof(TypeElement));
-        }
-
-        /// <summary>
-        /// Gets the type element.
-        /// </summary>
-        /// <param name="fullName">The full name.</param>
-        /// <returns></returns>
-        public TypeElement GetTypeElement(string fullName)
-        {
-            IList<TypeElement> ret = dbContainer.Query<TypeElement>(delegate (TypeElement te)
-            {
-                return te.FullName.Equals(fullName);  
-            });
-
-            if (ret.Count == 1)
-                return ret[0];
-            else 
-                return null;
-        }
-
-        /// <summary>
-        /// Adds the type.
-        /// </summary>
-        /// <param name="typeElement">The type element.</param>
-        public void AddTypeElement(TypeElement typeElement)
-        {
-            dbContainer.Set(typeElement);
-
-        }
-
-        #endregion
-
-        public IList<MethodElement> GetMethodElements(Composestar.Repository.LanguageModel.TypeElement type)
-	    {
-		    Query query = dbContainer.Query();
-		    query.Constrain(typeof(Composestar.Repository.LanguageModel.MethodElement));
-		    query.Descend("_parentTypeId").Constrain(type.Id);
-		    ObjectSet result = query.Execute();
-
-            // >>> this is slow, no idea why ?
-            //IList<MethodElement> result = dbContainer.Query<MethodElement>(delegate(MethodElement me)
-            //{
-            //    return me.ParentTypeId == type.Id;
-            //});
-
-            List<MethodElement> m = new List<MethodElement>();
-            foreach (MethodElement me in result)
-            {
-                m.Add(me);
-            }
-            
-            return m;
-	    }
+        }    
 
         /// <summary>
         /// Store the object.
@@ -206,30 +153,43 @@ namespace Composestar.Repository
             if (o == null)
                 throw new ArgumentNullException("object");
  
-            if (String.IsNullOrEmpty(_yapFileName))
-                throw new ArgumentException("Database filename not supplied so database is not opened.", "RepositoryFileName"); 
+           CheckForOpenDatabase();
 
             dbContainer.Set(o);
         }
 
-        
         /// <summary>
-        /// Gets the method element.
+        /// Gets the objects.
         /// </summary>
-        /// <param name="typeId">The type id.</param>
-        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public MethodElement GetMethodElement(int typeId, string methodName)
+        public IList<T> GetObjects<T>()
         {
-            IList<MethodElement> ret = dbContainer.Query<MethodElement>(delegate (MethodElement me)
-            {
-                return (me.ParentTypeId == typeId) && (me.Name.Equals(methodName));  
-            });
+            CheckForOpenDatabase();
+            Type t = typeof(T);
+  
+            return dbContainer.Query<T>(t); 
+        }
 
-            if (ret.Count == 1)
-                return ret[0];
-            else 
-                return null;
+        /// <summary>
+        /// Gets the object query.
+        /// </summary>
+        /// <param name="match">The match.</param>
+        /// <returns></returns>
+        public IList<T> GetObjectQuery<T>(Predicate<T> match)
+        {
+            CheckForOpenDatabase();
+             
+            return dbContainer.Query<T>(match); 
+        }
+
+        /// <summary>
+        /// Checks for open database.
+        /// </summary>
+        private void CheckForOpenDatabase()
+        {
+            if (String.IsNullOrEmpty(_yapFileName) | dbContainer == null)
+                throw new ArgumentException(Properties.Resources.DatabaseNotOpen, "RepositoryFilename"); 
+
         }
     }
 }

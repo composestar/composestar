@@ -158,7 +158,11 @@ namespace Composestar.StarLight.ILAnalyzer
             sw.Stop();
             _lastDuration = sw.Elapsed; 
 
-            return RepositoryAccess.GetTypeElements();
+            IList<TypeElement> ret = RepositoryAccess.GetTypeElements();
+            
+            _repositoryAccess.CloseDatabase(); 
+
+            return ret;
         }
 
         /// <summary>
