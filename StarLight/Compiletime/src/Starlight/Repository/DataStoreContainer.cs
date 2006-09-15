@@ -38,11 +38,17 @@ namespace Composestar.Repository
             {
                 if (!_yapFileName.Equals(value, StringComparison.CurrentCultureIgnoreCase))
                 {
+                    // Changing the name, so close and reopen.
                     if (dbContainer != null)
                         dbContainer.Close();
 
                     _yapFileName = value;
                     OpenDatabase();
+                }
+                else
+                {
+                    // Name of db did not change, see if the db is open
+                    OpenDatabase();                    
                 }
             }
         }
@@ -92,6 +98,7 @@ namespace Composestar.Repository
         ~DataStoreContainer()
         {
             CloseDatabase();
+            dbContainer.Dispose(); 
         }
         #endregion
 

@@ -96,14 +96,31 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 TypeElement ti = new TypeElement();
                 
+                // Name
                 ti.Name = type.Name;
                 ti.FullName = type.FullName;
+
+                // Properties
                 ti.IsAbstract = type.IsAbstract;
                 ti.IsEnum = type.IsEnum;
                 ti.IsInterface = type.IsInterface;
                 ti.IsSealed = type.IsSealed;
                 ti.IsValueType = type.IsValueType;
+                ti.FromDLL = _fileName;
+                ti.IsClass = !type.IsValueType & !type.IsInterface;
+                ti.IsNotPublic = type.Attributes == Mono.Cecil.TypeAttributes.NotPublic; 
+                ti.IsPrimitive = false;
+                ti.IsPublic = type.Attributes == Mono.Cecil.TypeAttributes.Public; 
+                ti.IsSerializable = type.Attributes == Mono.Cecil.TypeAttributes.Serializable; 
+                ti.Namespace = type.Namespace;
                 
+                // Interface
+                foreach (TypeReference interfaceDef in type.Interfaces)
+                {
+                    ti.ImplementedInterface = String.Format("{0};{1}", ti.ImplementedInterface, interfaceDef.FullName);
+                }
+              
+                // Basetype
                 if (type.BaseType != null) { ti.BaseType = type.BaseType.Name; }
 
                 // Add to the repository
@@ -115,6 +132,12 @@ namespace Composestar.StarLight.ILAnalyzer
                     MethodElement mi = new MethodElement();                
                     mi.Name = method.Name;                    
                     mi.ReturnType = method.ReturnType.ReturnType.ToString();
+                    mi.IsAbstract = method.IsAbstract;
+                    mi.IsConstructor = method.IsConstructor;
+                    mi.IsPrivate = method.Attributes == Mono.Cecil.MethodAttributes.Private;
+                    mi.IsPublic = method.Attributes == Mono.Cecil.MethodAttributes.Public;
+                    mi.IsStatic = method.IsStatic;
+                    mi.IsVirtual = method.IsVirtual;
                     
                     // Add to the repository
                     RepositoryAccess.AddMethod(ti, mi);
@@ -123,15 +146,18 @@ namespace Composestar.StarLight.ILAnalyzer
                     foreach (ParameterDefinition param in method.Parameters)
                     {
                         // Create a new parameter element
-                       ParameterElement pe = new ParameterElement();
+                        ParameterElement pe = new ParameterElement();
                         pe.ParentMethodId = mi.Id;
                         pe.Name = param.Name;
                         pe.Ordinal = (short)(param.Sequence);
                         pe.ParameterType = param.ParameterType.ToString();
-                          
+                        pe.IsIn = param.Attributes == ParamAttributes.In;
+                        pe.IsOptional = param.Attributes == ParamAttributes.Optional;
+                        pe.IsOut = param.Attributes == ParamAttributes.Out;
+                        pe.IsRetVal = !param.ParameterType.FullName.Equals("System.Void", StringComparison.CurrentCultureIgnoreCase);
+
                         // Add to the method
-                        RepositoryAccess.AddParameter(mi, pe); 
-                        
+                        RepositoryAccess.AddParameter(mi, pe);                         
                     }
 
                     if (method.Body != null)

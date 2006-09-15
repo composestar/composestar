@@ -53,6 +53,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 
             return VSConstants.S_OK;
         }
+        
         #endregion
     }
 }

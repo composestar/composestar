@@ -31,6 +31,7 @@
   <ItemGroup>
     <Compile Include="AssemblyElement.java" />
     <Compile Include="CallElement.java" />
+    <Compile Include="ConcernElement.java" />
     <Compile Include="ConditionExpressions\ConditionExpression.java" />
     <Compile Include="Inlining\Block.java" />
     <Compile Include="Inlining\Branch.java" />

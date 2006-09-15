@@ -3,22 +3,18 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Name>"$safeprojectname$"</Name>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>$guid1$</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>$safeprojectname$</RootNamespace>
-    <AssemblyName>$safeprojectname$</AssemblyName>
-    <MainFile>Concern.cps</MainFile>
+    <ProjectGuid>$guid1$</ProjectGuid>   
     <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Debug\</OutputPath>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugLevel>4</DebugLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Release\</OutputPath>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DebugLevel>1</DebugLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
