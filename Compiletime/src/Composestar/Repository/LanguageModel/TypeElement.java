@@ -12,13 +12,11 @@ public class TypeElement
 	private String _baseType;
 	private AssemblyElement _assemblyElement;
 	private String _namespace;
-	private String _implementedInterface; // TODO: list ??????
 	private boolean _isAbstract;
 	private boolean _isInterface;
 	private boolean _isSealed;
 	private boolean _isValueType;
 	private boolean _isEnum;
-	private boolean _isArray;
 	private boolean _isClass;
 	private boolean _isNotPublic;
 	private boolean _isPrimitive;
@@ -31,6 +29,21 @@ public class TypeElement
 	{
 		_id = this.hashCode();
 	}
+
+	private String _implementedInterface;
+
+	/** @property */
+	public String get_ImplementedInterface()
+	{
+		return _implementedInterface;
+	}
+
+	/** @property */
+	public void set_ImplementedInterface(String value)
+	{
+		_implementedInterface = value;
+	} 
+
 
 	/** @property */
 	public int get_Id() { return _id; }
@@ -155,18 +168,6 @@ public class TypeElement
 		_isEnum = value;
 	}
 
-	/** @property */
-	public boolean get_IsArray()
-	{
-		return _isArray;
-	}
-
-	/** @property */
-	public void set_IsArray(boolean value)
-	{
-		_isArray = value;
-	}
-	
 	/** @property */
 	public boolean get_IsClass()
 	{

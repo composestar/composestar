@@ -183,12 +183,8 @@ namespace Composestar.StarLight.VisualStudio.Project
         {
             get
             {
-                string assemblyName = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.AssemblyName.ToString(), true);
-
-                string outputTypeAsString = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.OutputType.ToString(), false);
-                OutputType outputType = (OutputType)Enum.Parse(typeof(OutputType), outputTypeAsString);
-
-                return assemblyName + GetOuputExtension(outputType);
+                return "";
+                
             }
         }
         /// <summary>
@@ -397,7 +393,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             string namespce = this.FileTemplateProcessor.GetFileNamespace(target, this);
 
             this.FileTemplateProcessor.AddReplace("%className%", className);
-            this.FileTemplateProcessor.AddReplace("%namespace%", namespce);
+           // this.FileTemplateProcessor.AddReplace("%namespace%", namespce);
             try
             {
                 this.FileTemplateProcessor.UntokenFile(source, target);

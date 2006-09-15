@@ -64,29 +64,18 @@ namespace Composestar.StarLight.VisualStudio.Project
     internal sealed class SR
     {
         internal const string Application = "Application";
-        internal const string ApplicationIcon = "ApplicationIcon";
-        internal const string ApplicationIconDescription = "ApplicationIconDescription";
-        internal const string AssemblyName = "AssemblyName";
-        internal const string AssemblyNameDescription = "AssemblyNameDescription";
-        internal const string DefaultNamespace = "DefaultNamespace";
-        internal const string DefaultNamespaceDescription = "DefaultNamespaceDescription";
+        internal const string RepositoryFilename = "RepositoryFilename";
+        internal const string RepositoryFilenameDescription = "RepositoryFilenameDescription";
+        internal const string DebugLevel = "DebugLevel";
+        internal const string DebugLevelDescription = "DebugLevelDescription";
         internal const string GeneralCaption = "GeneralCaption";
-        internal const string OutputFile = "OutputFile";
-        internal const string OutputFileDescription = "OutputFileDescription";
-        internal const string OutputType = "OutputType";
-        internal const string OutputTypeDescription = "OutputTypeDescription";
         internal const string Project = "Project";
         internal const string ProjectFile = "ProjectFile";
         internal const string ProjectFileDescription = "ProjectFileDescription";
         internal const string ProjectFileExtensionFilter = "ProjectFileExtensionFilter";
         internal const string ProjectFolder = "ProjectFolder";
         internal const string ProjectFolderDescription = "ProjectFolderDescription";
-        internal const string StartupObject = "StartupObject";
-        internal const string StartupObjectDescription = "StartupObjectDescription";
-        internal const string TargetPlatform = "TargetPlatform";
-        internal const string TargetPlatformDescription = "TargetPlatformDescription";
-        internal const string TargetPlatformLocation = "TargetPlatformLocation";
-        internal const string TargetPlatformLocationDescription = "TargetPlatformLocationDescription";
+
 
         static SR loader = null;
         ResourceManager resources;

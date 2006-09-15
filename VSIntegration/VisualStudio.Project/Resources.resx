@@ -123,35 +123,11 @@
   <data name="GeneralCaption" xml:space="preserve">
     <value>General</value>
   </data>
-  <data name="AssemblyName" xml:space="preserve">
-    <value>Assembly Name</value>
+  <data name="RepositoryFilename" xml:space="preserve">
+    <value>Repository filename</value>
   </data>
-  <data name="AssemblyNameDescription" xml:space="preserve">
-    <value>The name of the output file that will hold assembly metadata.</value>
-  </data>
-  <data name="OutputType" xml:space="preserve">
-    <value>Output Type</value>
-  </data>
-  <data name="OutputTypeDescription" xml:space="preserve">
-    <value>The type of application to build.</value>
-  </data>
-  <data name="DefaultNamespace" xml:space="preserve">
-    <value>Default Namespace</value>
-  </data>
-  <data name="DefaultNamespaceDescription" xml:space="preserve">
-    <value>Specifies the default namespace for added items, such as classes, that are added via the Add New Item Dialog Box.</value>
-  </data>
-  <data name="StartupObject" xml:space="preserve">
-    <value>Startup Object</value>
-  </data>
-  <data name="StartupObjectDescription" xml:space="preserve">
-    <value>The name of the class that contains the static Main method that you want called when you launch your application.</value>
-  </data>
-  <data name="ApplicationIcon" xml:space="preserve">
-    <value>Application Icon</value>
-  </data>
-  <data name="ApplicationIconDescription" xml:space="preserve">
-    <value>Sets the .ico file to use as your application icon.</value>
+  <data name="RepositoryFilenameDescription" xml:space="preserve">
+    <value>The filename of the repository used by StarLight to store the data needed for weaving.</value>
   </data>
   <data name="Project" xml:space="preserve">
     <value>Project</value>
@@ -168,23 +144,11 @@
   <data name="ProjectFolderDescription" xml:space="preserve">
     <value>The absolute location of the project.</value>
   </data>
-  <data name="OutputFile" xml:space="preserve">
-    <value>Output File</value>
+  <data name="DebugLevel" xml:space="preserve">
+    <value>Debug level</value>
   </data>
-  <data name="OutputFileDescription" xml:space="preserve">
-    <value>The name of the project's primary output file.</value>
-  </data>
-  <data name="TargetPlatform" xml:space="preserve">
-    <value>Target Platform</value>
-  </data>
-  <data name="TargetPlatformDescription" xml:space="preserve">
-    <value>The version of the Common Language Runtime to use for output assembly</value>
-  </data>
-  <data name="TargetPlatformLocation" xml:space="preserve">
-    <value>Target Platform Location</value>
-  </data>
-  <data name="TargetPlatformLocationDescription" xml:space="preserve">
-    <value>The location of the target platform</value>
+  <data name="DebugLevelDescription" xml:space="preserve">
+    <value>Debug level used by the Composestar Java part.</value>
   </data>
   <data name="ProjectFileExtensionFilter" xml:space="preserve">
     <value>ComposeStar Project File (*.cpsproj){0}*.cpsproj{1}</value>

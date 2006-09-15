@@ -1,13 +1,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Weave">
   <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
- 
+
   <!--Reference the assembly where our tasks are defined-->
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.XMLGeneratorTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.AnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  
+
   <!--
     ============================================================
                                         Weave
@@ -59,6 +59,7 @@
       ResolveReferences;
       CopyFilesToOutputDirectory;
       ILAnalyzerRunner;
+      MasterCaller;
       ILWeaverRunner;
       IncrementalClean;
     </CoreWeaveDependsOn>
@@ -111,8 +112,7 @@
     <!-- Get items from this project last so that they will be copied last. -->
     <CreateItem
         Include="@(ContentWithTargetPath->'%(FullPath)')"
-        Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
-                >
+        Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
       <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
       <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
               Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
@@ -122,8 +122,7 @@
 
     <CreateItem
         Include="@(_EmbeddedResourceWithTargetPath->'%(FullPath)')"
-        Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
-                >
+        Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
       <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
       <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
               Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
@@ -149,8 +148,7 @@
 
     <CreateItem
         Include="@(_NoneWithTargetPath->'%(FullPath)')"
-        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
-                >
+        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
       <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
       <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
               Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
@@ -167,29 +165,20 @@
        Name="ILAnalyzerRunner">
     <Message Text="Analyzing assemblies." />
     <AnalyzerTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />
-
-    <!--<Message Text="Generating Xml configuration file for Compose*." />-->
-    <!--<XMLGeneratorTask
-      SourceFiles="@(Compile)"
-      OutputAssembly="@(IntermediateAssembly)"
-      ReferencedAssemblies="@(ReferencePath)"
-      ResourceFiles="@(CompiledLicenseFile)"
-      MainFile="$(MainFile)"
-      TargetKind="$(OutputType)"
-      IncludeDebugInformation="$(IncludeDebugInformation)"
-      ProjectPath="$(MSBuildProjectDirectory)"
-      Resources="test"
-      ProjectFile="$(MSBuildProjectFullPath)"
-      />
-    <Message Text="Weaving concerns into @(IntermediateAssembly)." />
-    <MasterCallerTask     ProjectFile="$(MSBuildProjectFullPath)"   />-->
   </Target>
 
-  <!--ILAnalyzerRunner target -->
+  <!--MasterCaller target -->
+  <Target
+       Name="MasterCaller">
+    <Message Text="Executing Composestar Master..." />
+    <MasterCallerTask RepositoryFilename="$(RepositoryFilename)" ConcernFiles="@(Concern->'%(FullPath)')" DebugLevel="$(DebugLevel)" />
+  </Target>
+
+  <!--ILWeaverRunner target -->
   <Target
        Name="ILWeaverRunner">
     <Message Text="Performing IL weaving..." />
-    <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />  
+    <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />
   </Target>
 
   <!--This is an override of targets-->
@@ -248,6 +237,4 @@
       <Output TaskParameter="DestinationFiles" ItemName="FileWritesShareable"/>
     </Copy>
   </Target>
-
-
 </Project>

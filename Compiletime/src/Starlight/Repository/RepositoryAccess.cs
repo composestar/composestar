@@ -143,7 +143,15 @@ namespace Composestar.Repository
             if (typeElement == null)
                 throw new ArgumentNullException("typeElement") ;
 
-            DataStoreContainer.Instance.StoreObject(typeElement);
+            // Check if type already exists
+            if (DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            {
+                return te.FromDLL.Equals(typeElement.FromDLL, StringComparison.CurrentCultureIgnoreCase) &
+                       te.FullName.Equals(typeElement.FullName, StringComparison.CurrentCultureIgnoreCase);
+            }).Count == 0)
+            {
+                DataStoreContainer.Instance.StoreObject(typeElement);
+            }
         }
 
         /// <summary>
@@ -198,6 +206,25 @@ namespace Composestar.Repository
             callElement.ParentMethodBodyId = methodElement.MethodBody.Id; 
 
             DataStoreContainer.Instance.StoreObject(callElement);
+        }
+
+        /// <summary>
+        /// Adds the concern.
+        /// </summary>
+        /// <param name="concernElement">The concern element.</param>
+        public void AddConcern(ConcernElement concernElement)
+        {
+            if (concernElement == null)
+                throw new ArgumentNullException("concernElement") ;
+           
+            // Check if concern already exists
+            if (DataStoreContainer.Instance.GetObjectQuery<ConcernElement>(delegate(ConcernElement ce)
+            {
+                return ce.Filename.Equals(concernElement.Filename, StringComparison.CurrentCultureIgnoreCase);
+            }).Count == 0)
+            {
+                DataStoreContainer.Instance.StoreObject(concernElement);
+            }
         }
     }
 }
