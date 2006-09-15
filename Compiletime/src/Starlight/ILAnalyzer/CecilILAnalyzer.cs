@@ -125,6 +125,20 @@ namespace Composestar.StarLight.ILAnalyzer
 
                 // Add to the repository
                 RepositoryAccess.AddType(ti);
+
+                foreach (FieldDefinition field in type.Fields)
+                {
+                    // Create a new field element
+                    FieldElement fe = new FieldElement();
+                    fe.Name = field.Name;
+                    fe.Type = field.FieldType.FullName;
+                    fe.IsPrivate = field.Attributes == Mono.Cecil.FieldAttributes.Private;
+                    fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
+                    fe.IsStatic = field.IsStatic;
+
+                    // Add to the repository
+                    RepositoryAccess.AddField(ti, fe);
+                }
                 
                 foreach (MethodDefinition method in type.Methods)
                 {
