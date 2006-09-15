@@ -23,6 +23,11 @@ public class LanguageModelAccess {
 	{
 		return ObjectSetToArrayList(DataStoreContainer.getInstance().getTypeElements());
 	}
+	
+	public ArrayList getFieldElements(TypeElement type)
+	{
+		return ObjectSetToArrayList(DataStoreContainer.getInstance().getFieldElements(type));		
+	}	
 
 	public ArrayList getMethodElements(TypeElement type)
 	{

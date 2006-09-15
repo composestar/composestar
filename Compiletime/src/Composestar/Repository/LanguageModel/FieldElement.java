@@ -2,6 +2,8 @@ package Composestar.Repository.LanguageModel;
 
 public class FieldElement {
 	private int _parentTypeId;
+	private String _name = "";
+	private String _type = "";
 	private boolean _isPrivate;  
 	private boolean _isPublic; 
 	private boolean _isStatic;
@@ -15,7 +17,31 @@ public class FieldElement {
 		super();
 		_parentTypeId = parentTypeId;
 	}
-	
+
+	/** @property */
+	public String get_Name()
+	{
+		return _name;
+	}
+
+	/** @property */
+	public void set_Name(String value)
+	{
+		_name = value;
+	}
+
+	/** @property */
+	public String get_Type()
+	{
+		return _type;
+	}
+
+	/** @property */
+	public void set_Type(String value)
+	{
+		_type = value;
+	}
+
 	/** @property */
 	public void set_ParentTypeId(int value)
 	{
