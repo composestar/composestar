@@ -156,6 +156,24 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Adds the field element.
+        /// </summary>
+        /// <param name="typeElement">The type element.</param>
+        /// <param name="methodElement">The method element.</param>
+        public void AddField(TypeElement typeElement, FieldElement fieldElement)
+        {
+            if (typeElement == null)
+                throw new ArgumentNullException("typeElement");
+
+            if (fieldElement == null)
+                throw new ArgumentNullException("fieldElement");
+
+            fieldElement.ParentTypeId = typeElement.Id;
+
+            DataStoreContainer.Instance.StoreObject(fieldElement);
+        }
+
+        /// <summary>
         /// Adds the method element.
         /// </summary>
         /// <param name="typeElement">The type element.</param>
