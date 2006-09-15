@@ -32,6 +32,7 @@
     <Compile Include="AssemblyElement.java" />
     <Compile Include="AttributeElement.java" />
     <Compile Include="CallElement.java" />
+    <Compile Include="Condition.java" />
     <Compile Include="ConditionExpressions\And.java" />
     <Compile Include="ConditionExpressions\ConditionExpression.java" />
     <Compile Include="ConditionExpressions\ConditionLiteral.java" />
@@ -39,6 +40,7 @@
     <Compile Include="ConditionExpressions\Not.java" />
     <Compile Include="ConditionExpressions\Or.java" />
     <Compile Include="ConditionExpressions\True.java" />
+    <Compile Include="External.java" />
     <Compile Include="FieldElement.java" />
     <Compile Include="Inlining\Block.java" />
     <Compile Include="Inlining\Branch.java" />
@@ -48,6 +50,7 @@
     <Compile Include="Inlining\Jump.java" />
     <Compile Include="Inlining\Label.java" />
     <Compile Include="Inlining\Instruction.java" />
+    <Compile Include="Internal.java" />
     <Compile Include="MethodBody.java" />
     <Compile Include="MethodElement.java" />
     <Compile Include="ParameterElement.java" />
