@@ -156,10 +156,10 @@ namespace Composestar.Repository
         }
 
         /// <summary>
-        /// Adds the field element.
+        /// Adds the field.
         /// </summary>
         /// <param name="typeElement">The type element.</param>
-        /// <param name="methodElement">The method element.</param>
+        /// <param name="fieldElement">The field element.</param>
         public void AddField(TypeElement typeElement, FieldElement fieldElement)
         {
             if (typeElement == null)
