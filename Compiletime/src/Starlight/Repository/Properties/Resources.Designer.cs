@@ -68,5 +68,14 @@ namespace Composestar.Repository.Properties {
                 return ResourceManager.GetString("DatabaseNotOpen", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The object to be stored is null..
+        /// </summary>
+        internal static string ObjectIsNull {
+            get {
+                return ResourceManager.GetString("ObjectIsNull", resourceCulture);
+            }
+        }
     }
 }

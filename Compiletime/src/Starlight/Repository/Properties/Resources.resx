@@ -120,4 +120,7 @@
   <data name="DatabaseNotOpen" xml:space="preserve">
     <value>The repository database file is not open. Supply a valid repository filename and open the database.</value>
   </data>
+  <data name="ObjectIsNull" xml:space="preserve">
+    <value>The object to be stored is null.</value>
+  </data>
 </root>

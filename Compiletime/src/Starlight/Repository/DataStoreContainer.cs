@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 using com.db4o;
 using com.db4o.config;
@@ -13,6 +14,9 @@ namespace Composestar.Repository
 {
     public class DataStoreContainer
     {
+        /// <summary>
+        /// Filename of the yap database.
+        /// </summary>
         private string _yapFileName = String.Empty;
 
         private static String[] ASSEMBLY_MAP = new String[]{
@@ -34,10 +38,10 @@ namespace Composestar.Repository
             {
                 if (!_yapFileName.Equals(value, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (dbContainer != null) 
-                        dbContainer.Close(); 
+                    if (dbContainer != null)
+                        dbContainer.Close();
 
-                     _yapFileName = value;
+                    _yapFileName = value;
                     OpenDatabase();
                 }
             }
@@ -55,15 +59,15 @@ namespace Composestar.Repository
         }
 
         DataStoreContainer()
-        {        
+        {
             Db4o.Configure().CallConstructors(false);
 
             // Indexes
             Db4o.Configure().ObjectClass(typeof(MethodElement)).ObjectField("_parentTypeId").Indexed(true);
             Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
 
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("id").Indexed(true);  
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);                                    
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("id").Indexed(true);
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);
         }
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace Composestar.Repository
         /// </remarks> 
         ~DataStoreContainer()
         {
-             CloseDatabase();
+            CloseDatabase();
         }
         #endregion
 
@@ -107,7 +111,19 @@ namespace Composestar.Repository
         public void CloseDatabase()
         {
             if (dbContainer != null)
-                dbContainer.Close(); 
+                dbContainer.Close();
+        }
+
+        /// <summary>
+        /// Deletes the database.
+        /// </summary>
+        public void DeleteDatabase()
+        {
+            CheckForOpenDatabase();
+
+            CloseDatabase();
+
+            File.Delete(_yapFileName);
         }
 
         /// <summary>
@@ -116,7 +132,7 @@ namespace Composestar.Repository
         private void adjustClassNames()
         {
             ObjectContainer objectContainer = Db4o.OpenFile(RepositoryFileName);
-            
+
             StoredClass[] classes = objectContainer.Ext().StoredClasses();
             for (int i = 0; i < classes.Length; i++)
             {
@@ -142,7 +158,7 @@ namespace Composestar.Repository
                 }
             }
             objectContainer.Close();
-        }    
+        }
 
         /// <summary>
         /// Store the object.
@@ -151,9 +167,9 @@ namespace Composestar.Repository
         public void StoreObject(Object o)
         {
             if (o == null)
-                throw new ArgumentNullException("object");
- 
-           CheckForOpenDatabase();
+                throw new ArgumentNullException("object", Properties.Resources.ObjectIsNull);
+
+            CheckForOpenDatabase();
 
             dbContainer.Set(o);
         }
@@ -166,8 +182,8 @@ namespace Composestar.Repository
         {
             CheckForOpenDatabase();
             Type t = typeof(T);
-  
-            return dbContainer.Query<T>(t); 
+              
+            return dbContainer.Query<T>(t);
         }
 
         /// <summary>
@@ -178,8 +194,8 @@ namespace Composestar.Repository
         public IList<T> GetObjectQuery<T>(Predicate<T> match)
         {
             CheckForOpenDatabase();
-             
-            return dbContainer.Query<T>(match); 
+
+            return dbContainer.Query<T>(match);
         }
 
         /// <summary>
@@ -188,7 +204,7 @@ namespace Composestar.Repository
         private void CheckForOpenDatabase()
         {
             if (String.IsNullOrEmpty(_yapFileName) | dbContainer == null)
-                throw new ArgumentException(Properties.Resources.DatabaseNotOpen, "RepositoryFilename"); 
+                throw new ArgumentException(Properties.Resources.DatabaseNotOpen, "RepositoryFilename");
 
         }
     }
