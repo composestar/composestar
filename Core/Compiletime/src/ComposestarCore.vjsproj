@@ -289,6 +289,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedMessageSelector.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedMessageSelectorAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SEQfilterCompOper.java"
                     SubType = "Code"
                     BuildAction = "Compile"
