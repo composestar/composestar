@@ -7,8 +7,8 @@ public class MethodElement
 {
 	private int _id;
 	private int _parentTypeId;
-	private String _name;
-	private String _returnType;
+	private String _name = "";
+	private String _returnType = "";
 	private boolean _isAbstract;
 	private boolean _isConstructor;
 	private boolean _isPrivate;
