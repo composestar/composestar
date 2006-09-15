@@ -29,7 +29,8 @@ public class DataStoreContainer {
 		Db4o.configure().callConstructors(false);
 
 		// Indexes
-        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
+        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.FieldElement.class).objectField("_parentTypeId").indexed(true);
+		Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("_parentMethodId").indexed(true);
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.CallElement.class).objectField("_parentMethodBodyId").indexed(true);
         
@@ -125,6 +126,14 @@ public class DataStoreContainer {
 	{
 		return dbContainer.get(Composestar.Repository.LanguageModel.TypeElement.class);
 	}
+	
+	public ObjectSet getFieldElements(Composestar.Repository.LanguageModel.TypeElement type)
+	{
+		Query query = dbContainer.query();
+		query.constrain(Composestar.Repository.LanguageModel.FieldElement.class);
+		query.descend("_parentTypeId").constrain(new Integer(type.get_Id()));
+		return query.execute();
+	}	
 
 	public ObjectSet getMethodElements(Composestar.Repository.LanguageModel.TypeElement type)
 	{
