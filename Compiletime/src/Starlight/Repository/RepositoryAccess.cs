@@ -228,6 +228,25 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Adds the atribute element.
+        /// </summary>
+        /// <param name="repositoryElement">The repository element.</param>
+        /// <param name="attributeElement">The attribute element.</param>
+        public void AddAttribute(IRepositoryElement repositoryElement, AttributeElement attributeElement)
+        {
+            if (repositoryElement == null)
+                throw new ArgumentNullException("repositoryElement");
+
+            if (attributeElement == null)
+                throw new ArgumentNullException("attributeElement");
+
+            attributeElement.ParentId = repositoryElement.Id;
+            attributeElement.ParentType = repositoryElement.GetType().ToString();
+
+            DataStoreContainer.Instance.StoreObject(attributeElement);
+        }
+
+        /// <summary>
         /// Adds the concern.
         /// </summary>
         /// <param name="concernInformation">The concern information.</param>
