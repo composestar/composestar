@@ -161,21 +161,21 @@ public class Module
 				module.run(resources);
 				timer.stop();
 			}
-			catch (StackOverflowError ex1) {
-				ex1.printStackTrace();
+			catch (StackOverflowError e) {
+				e.printStackTrace();
 				throw new ModuleException("I need more stack!", "INCRE running " + this.name);
 			}
-			catch (OutOfMemoryError ex2) {
-				ex2.printStackTrace();
+			catch (OutOfMemoryError e) {
+				e.printStackTrace();
 				throw new ModuleException("I am using too much memory!", "INCRE running " + this.name);
 			}
-			catch (ClassNotFoundException ex3) {
-				ex3.printStackTrace();
+			catch (ClassNotFoundException e) {
+				e.printStackTrace();
 				throw new ModuleException("Cannot find class "+this.fulltype, "INCRE running " + this.name);
 			}
-			catch (InstantiationException ex6) {
-				ex6.printStackTrace();
-				throw new ModuleException(ex6.getMessage(), "INCRE running " + this.name);
+			catch (InstantiationException e) {
+				e.printStackTrace();
+				throw new ModuleException(e.getMessage(), "INCRE running " + this.name);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

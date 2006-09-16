@@ -1,8 +1,9 @@
 package Composestar.Core.DUMMER;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Exception.ModuleException;
@@ -11,66 +12,73 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
-import Composestar.Utils.FileUtils;
 
-public class DummyManager implements CTCommonModule {
-
-	public DummyManager() {
-		
+public class DummyManager implements CTCommonModule
+{
+	public DummyManager() 
+	{		
 	}
 	
-	public void run(CommonResources resources) throws ModuleException {
-		
-		/** create dummies */
-		
+	public void run(CommonResources resources) throws ModuleException
+	{
+		createDummies();
+	}
+	
+	private void createDummies() throws ModuleException
+	{
 		Configuration config = Configuration.instance();
-		ArrayList projects = config.getProjects().getProjects();
-		Iterator projIt = projects.iterator();
+		String dummyPath = config.getPathSettings().getPath("Dummy");
 		
-		while( projIt.hasNext() ) {
-			Project p = (Project)projIt.next();
-			DummyEmitter emitter = p.getLanguage().getEmitter();
-			ArrayList sources = p.getSources();
-			Vector outputFilenames = new Vector(sources.size());
-			
-			Iterator sourceIt = sources.iterator();
-			while( sourceIt.hasNext() ) {				
-				
-				//create target of source 
-				Source source = (Source)sourceIt.next();
-				String dummyPath = config.getPathSettings().getPath("Dummy");
-				try {
-					String target = FileUtils.createOutputFilename(p.getProperty("basePath"),"obj/"+dummyPath,source.getFileName());
-					String targetPath = FileUtils.getDirectoryPart(target);
-					FileUtils.createFullPath(targetPath); // Make sure the directory exists
+		List projects = config.getProjects().getProjects();
+		Iterator projIt = projects.iterator();		
+		while (projIt.hasNext())
+		{
+			Project project = (Project)projIt.next();
+			createProjectDummies(dummyPath, project);
+		}
+	}
 
-					outputFilenames.add(target);
-					source.setDummy(target);
-				}
-				catch(Exception e) {
-					throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),"DUMMER");
-				}
-				//emitter.createDummy(source,target);
-			}
-			// Create all the dummies in one go.
-			emitter.createDummies(p, sources, outputFilenames);
-			
-			/** compile dummies */
-			LangCompiler comp = p.getLanguage().compilerSettings.getCompiler();
+	private void createProjectDummies(String dummyPath, Project project) throws ModuleException
+	{
+		DummyEmitter emitter = project.getLanguage().getEmitter();
+		List sources = project.getSources();
+		List outputFilenames = new ArrayList(sources.size());
+		
+		String basePath = project.getProperty("basePath");
+		File base = new File(basePath);
+		File dummyDir = new File(base, "obj/" + dummyPath);
+
+		// Make sure the directory exists
+		dummyDir.mkdirs();
+
+		Iterator sourceIt = sources.iterator();
+		while (sourceIt.hasNext())
+		{				
+			Source source = (Source)sourceIt.next();			
 			try {
-				comp.compileDummies(p);
+				File sourceFile = new File(source.getFileName());				
+				File dummyFile = new File(dummyDir, sourceFile.getName());
+				
+				String absolutePath = dummyFile.getAbsolutePath();
+				outputFilenames.add(absolutePath);
+				source.setDummy(absolutePath);
 			}
-			catch(Exception e) {
-				throw new ModuleException("CANNOT compile dummies: "+e.getMessage(),"DUMMER");
+			catch (Exception e) {
+				throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),"DUMMER");
 			}
 		}
-	}	
 		
-	/**
-	 * For testing purposes
-	 * @param args
-	 */
-	public static void main(String[] args) throws ModuleException{
+		// Create all dummies in one go.
+		emitter.createDummies(project, sources, outputFilenames);
 		
+		// compile dummies
+		LangCompiler comp = project.getLanguage().compilerSettings.getCompiler();
+		try {
+			comp.compileDummies(project);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new ModuleException("Cannot compile dummies: "+e.getMessage(),"DUMMER");
+		}
 	}
 }
