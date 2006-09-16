@@ -1,267 +1,311 @@
 package Composestar.DotNET.COMP;
 
-
-import Composestar.Core.COMP.LangCompiler;
-import Composestar.Core.COMP.CompilerException;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.Master.Config.CompilerAction;
-import Composestar.Core.Master.Config.CompilerConverter;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.Language;
-import Composestar.Core.Master.Config.Project;
-import Composestar.Core.Master.Config.Source;
-import Composestar.Core.TYM.TypeLocations;
-import Composestar.Utils.CommandLineExecutor;
-import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class DotNETCompiler implements LangCompiler{
+import Composestar.Core.COMP.CompilerException;
+import Composestar.Core.COMP.LangCompiler;
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.Master.Config.CompilerAction;
+import Composestar.Core.Master.Config.CompilerConverter;
+import Composestar.Core.Master.Config.CompilerSettings;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.Language;
+import Composestar.Core.Master.Config.PathSettings;
+import Composestar.Core.Master.Config.Project;
+import Composestar.Core.Master.Config.Source;
+import Composestar.Core.TYM.TypeLocations;
+import Composestar.Utils.CommandLineExecutor;
+import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
+import Composestar.Utils.TokenReplacer;
+
+public class DotNETCompiler implements LangCompiler
+{
+	private final static String TOKEN_LIB		= "\\{LIB\\}";
+	private final static String TOKEN_OUT		= "\\{OUT\\}";
+	private final static String TOKEN_LIBS		= "\\{LIBS\\}";
+	private final static String TOKEN_OPTIONS	= "\\{OPTIONS\\}";
+	private final static String TOKEN_SOURCES	= "\\{SOURCES\\}";
+
 	private String compilerOutput;
-	
+
+	public DotNETCompiler()
+	{		
+	}
+
 	public void compileSources(Project p) throws CompilerException,ModuleException
 	{
 		String command = ""; 
 		this.compilerOutput = "";
-        String libString = "";
-        String options = "";
-        Language lang = p.getLanguage();
-        ArrayList compiledSources = new ArrayList();
-        
-        if(lang!=null){
-        	// set the compiler options            	
-        	options = lang.compilerSettings.getProperty("options");
-        }
-        else {
-           	throw new CompilerException("Project has no language object");            	
-        }
-        // work out the libraries string
-        CompilerConverter compconv = lang.compilerSettings.getCompilerConverter("libraryParam");
-        if(compconv==null)
-        	throw new CompilerException("Cannot obtain compilerconverter");  
-        String clstring = compconv.getReplaceBy();
-        Iterator dependencies = p.getDependencies().iterator();
-        while(dependencies.hasNext())
-        {
-            // set the libraries
-        	Dependency dependency = (Dependency)dependencies.next();
-        	
-        	//Add dependencies to the libString i.e. use in the compile comand
-        	//Do not add to the configuration i.e. add to ILICIT list 
-        	//if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
-        	//{
-        		libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-        			//if(!(dependency.getFileName().startsWith(Configuration.instance().getPathSettings().getPath("Composestar"))))
-        				//Configuration.instance().getLibraries().addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
-        	//}
-        	//set J# specific libraries
-        	/*
+		String libString = "";
+		String options = "";
+		Language lang = p.getLanguage();
+//		List compiledSources = new ArrayList();
+
+		if (lang == null)
+			throw new CompilerException("Project has no language object");            	
+
+		options = lang.compilerSettings.getProperty("options");
+
+		// work out the libraries string
+		CompilerConverter compconv = lang.compilerSettings.getCompilerConverter("libraryParam");
+		if (compconv == null)
+			throw new CompilerException("Cannot obtain CompilerConverter");  
+		
+		String clstring = compconv.getReplaceBy();
+		Iterator dependencies = p.getDependencies().iterator();
+		while (dependencies.hasNext())
+		{
+			// set the libraries
+			Dependency dependency = (Dependency)dependencies.next();
+
+			//Add dependencies to the libString i.e. use in the compile comand
+			//Do not add to the configuration i.e. add to ILICIT list 
+			//if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
+			//{
+			libString += clstring.replaceAll(TOKEN_LIB, ("\""+dependency.getFileName()+"\"")) + " ";
+			//if(!(dependency.getFileName().startsWith(Configuration.instance().getPathSettings().getPath("Composestar"))))
+			//Configuration.instance().getLibraries().addLibrary(FileUtils.prepareCommand(dependency.getFileName()));
+			//}
+			//set J# specific libraries
+			/*
         	if(dependency.getFileName().indexOf("vjslib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
         	if(dependency.getFileName().indexOf("VJSSupUILib.dll") > 0)
     			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-    		*/
-        }
-        
-        String dummiesdll = p.getCompiledDummies();
-        libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dummiesdll+"\"") ) + " ";
-
-        // generate and execute command for each source
-        ArrayList sources = p.getSources();
-        Iterator sourcesItr = sources.iterator();
-        
-        while(sourcesItr.hasNext()){
-        	Source s = (Source)sourcesItr.next();
-        	String target = FileUtils.prepareCommand(Configuration.instance().getPathSettings().getPath("Base")+"obj/"+s.getTarget());
-        	
-        	// incremental compilation
-        	INCRE incre = INCRE.instance();
-        	if(new File(target).exists() && incre.isProcessedByModule(s,"RECOMA") ){
-        		Debug.out(Debug.MODE_DEBUG, "INCRE","No need to recompile "+s.getFileName());
-        		Configuration.instance().getLibraries().addLibrary(target);
-        		//compiledSources.add(target);
-        		p.addCompiledSource(target);
-        		TypeLocations tl = TypeLocations.instance();
-            	tl.setSourceAssembly(s.getFileName(),s.getTarget());
-        		continue; // next source plz
-        	}
-        	
-        	// time compilation of source
-        	INCRETimer compsource = incre.getReporter().openProcess("RECOMA",s.getFileName(),INCRETimer.TYPE_NORMAL);
-        	
-        	if(s.isExecutable())
-        	{
-        		CompilerAction action = lang.compilerSettings.getCompilerAction("CompileExecutable");
-        		if(action==null)
-        			throw new CompilerException("Cannot obtain compileraction");  
-        		command = action.getArgument();
-        	}
-        	else {
-        		CompilerAction action = lang.compilerSettings.getCompilerAction("CompileLibrary");
-        		if(action==null)
-        			throw new CompilerException("Cannot obtain compileraction");  
-        		command = action.getArgument();
-        	}
-        	
-        	command = lang.compilerSettings.getProperty("executable")+" "+ command;
-        	
-        	Configuration.instance().getLibraries().addLibrary(target);
-        	//compiledSources.add(target);
-        	p.addCompiledSource(target);
-        	
-        	TypeLocations tl = TypeLocations.instance();
-        	tl.setSourceAssembly(s.getFileName(),s.getTarget());
-        	
-        	command = command.replaceAll( "\\{OUT\\}", "\""+target+"\"");
-            command = command.replaceAll( "\\{LIBS\\}", libString );
-            command = command.replaceAll( "\\{OPTIONS\\}", options );
-            command = command.replaceAll( "\\{SOURCES\\}", "\""+FileUtils.prepareCommand(s.getFileName())+"\"");
-             
-             Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
-             
-             // execute command
-             CommandLineExecutor cmdExec = new CommandLineExecutor();
-             int result = cmdExec.exec(  "call " + command);
-             //System.out.println("COMPILER: "+result);
-             compilerOutput = cmdExec.outputNormal();
-            
-             if( result != 0 ) { // there was an error
-             	if (compilerOutput.length() == 0){
-                		compilerOutput = "Could not execute compiler. Make sure the .NET Framework folder is set in the path and restart Visual Studio.";
-             	}
-                	try
-     			{
-     				java.util.StringTokenizer st = new java.util.StringTokenizer(
-     						compilerOutput, "\n");
-     				//System.out.println("Tokens: "+st.countTokens());
-     				String lastToken = null;
-     				while (st.hasMoreTokens()) {
-     					lastToken = st.nextToken();
-     					Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: "
-     							+ lastToken);
-
-     				}
-
-     				throw new CompilerException("COMP reported errors during compilation.");
-     			}
-             	catch (Exception ex)
-     			{
-             		 throw new CompilerException( ex.getMessage() );
-     			}
-             }  
-             else {
-             	// no errors during compilation
-             	compsource.stop();
-             }
-        }
-    }
-	
-	public void compileDummies(Project p) throws CompilerException{
-		String command = ""; 
-		this.compilerOutput = "";
-       	String libString = "";
-        String options = "";
-        Language lang = p.getLanguage();
-        
-        if(lang!=null){
-        	// set the compiler options            	
-        	options = lang.compilerSettings.getProperty("options");
-        }
-        else {
-        	throw new CompilerException("Project has no language object");            	
-        }
-        
-		// work out the libraries string
-        CompilerConverter compconv = lang.compilerSettings.getCompilerConverter("libraryParam");
-        if(compconv==null)
-        	throw new CompilerException("Cannot obtain compilerconverter");  
-        	
-		String clstring = compconv.getReplaceBy();
-        	Iterator dependencies = p.getDependencies().iterator();
-        	while(dependencies.hasNext())
-        	{
-            	// set the libraries
-        		Dependency dependency = (Dependency)dependencies.next();
-        		//if(!(dependency.getFileName().indexOf("Microsoft.NET/Framework") > 0))
-        			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-        		
-        		/*
-        		if(dependency.getFileName().indexOf("vjslib.dll") > 0)
-    				libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-            	if(dependency.getFileName().indexOf("VJSSupUILib.dll") > 0)
-        			libString += clstring.replaceAll( "\\{LIB\\}", ("\""+dependency.getFileName()+"\"") ) + " ";
-        		*/
-        		
-        	}
-
-		// generate and execute command
-        CompilerAction action = lang.compilerSettings.getCompilerAction("CompileLibrary");
-        if(action==null)
-        	throw new CompilerException("Cannot obtain compileraction");  
-        command = action.getArgument();
-        command = lang.compilerSettings.getProperty("executable")+" "+ command;
-        	
-		//what's the outputfile? --> obj/dummies/projectname.dummies.dll	
-        String output = Configuration.instance().getPathSettings().getPath("Base")+"obj/"+"dummies/"+p.getProperty("name")+".dummies.dll";
-        p.setCompiledDummies(output);
-        output = FileUtils.prepareCommand(output);
-        	
-		command = command.replaceAll( "\\{OUT\\}", "\""+output+"\"");
-        command = command.replaceAll( "\\{LIBS\\}", libString );
-        command = command.replaceAll( "\\{OPTIONS\\}", options );
-                        
-		String sourcefiles = "";
-		ArrayList sources = p.getSources();
-        Iterator sourcesItr = sources.iterator();
-		while(sourcesItr.hasNext()){
-        	Source s = (Source)sourcesItr.next();
-			sourcefiles = sourcefiles + " " +"\""+s.getDummy()+"\"";
+			 */
 		}
-		command = command.replaceAll( "\\{SOURCES\\}", FileUtils.prepareCommand(sourcefiles));
- 
-        Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
-             
-        // execute command
-        CommandLineExecutor cmdExec = new CommandLineExecutor();
-        int result = cmdExec.exec(  "call " + command);
-        compilerOutput = cmdExec.outputNormal();
-            
-        if( result != 0 ) { // there was an error
-        	if (compilerOutput.length() == 0){
-              		compilerOutput = "Could not execute compiler. Make sure the .net framework 1.1 folder is set in the path and restart Visual Studio.";
-            }
-            try	{
-     			java.util.StringTokenizer st = new java.util.StringTokenizer(compilerOutput, "\n");
-     			String lastToken = null;
-     			while (st.hasMoreTokens()) {
-     				lastToken = st.nextToken();
-     				Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: "+ lastToken);
-  				}
-     			throw new CompilerException("COMP reported errors during compilation.");
-     		}
-            catch (Exception ex)	{
-            	throw new CompilerException( ex.getMessage() );
-     		}
-        } 
+
+		String dummiesdll = p.getCompiledDummies();
+		libString += clstring.replaceAll(TOKEN_LIB, ("\""+dummiesdll+"\"") ) + " ";
+
+		// generate and execute command for each source
+		List sources = p.getSources();
+		Iterator sourcesItr = sources.iterator();
+
+		while (sourcesItr.hasNext())
+		{
+			Source s = (Source)sourcesItr.next();
+			String target = FileUtils.fixSlashes(Configuration.instance().getPathSettings().getPath("Base")+"obj/"+s.getTarget());
+
+			// incremental compilation
+			INCRE incre = INCRE.instance();
+			if (new File(target).exists() && incre.isProcessedByModule(s,"RECOMA"))
+			{
+				Debug.out(Debug.MODE_DEBUG, "INCRE","No need to recompile "+s.getFileName());
+				Configuration.instance().getLibraries().addLibrary(target);
+				//compiledSources.add(target);
+				p.addCompiledSource(target);
+				TypeLocations tl = TypeLocations.instance();
+				tl.setSourceAssembly(s.getFileName(),s.getTarget());
+				continue; // next source plz
+			}
+
+			// time compilation of source
+			INCRETimer compsource = incre.getReporter().openProcess("RECOMA",s.getFileName(),INCRETimer.TYPE_NORMAL);
+
+			if (s.isExecutable())
+			{
+				CompilerAction action = lang.compilerSettings.getCompilerAction("CompileExecutable");
+				if (action==null)
+					throw new CompilerException("Cannot obtain compileraction");  
+				command = action.getArgument();
+			}
+			else
+			{
+				CompilerAction action = lang.compilerSettings.getCompilerAction("CompileLibrary");
+				if (action==null)
+					throw new CompilerException("Cannot obtain compileraction");  
+				command = action.getArgument();
+			}
+
+			command = lang.compilerSettings.getProperty("executable")+" "+ command;
+
+			Configuration.instance().getLibraries().addLibrary(target);
+			//compiledSources.add(target);
+			p.addCompiledSource(target);
+
+			TypeLocations tl = TypeLocations.instance();
+			tl.setSourceAssembly(s.getFileName(),s.getTarget());
+
+			command = command.replaceAll(TOKEN_OUT, FileUtils.quote(target));
+			command = command.replaceAll(TOKEN_LIBS, libString );
+			command = command.replaceAll(TOKEN_OPTIONS, options );
+			command = command.replaceAll(TOKEN_SOURCES, FileUtils.quote(FileUtils.fixSlashes(s.getFileName())));
+
+			Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
+
+			// execute command
+			CommandLineExecutor cmdExec = new CommandLineExecutor();
+			int result = cmdExec.exec("call " + command);
+			//System.out.println("COMPILER: "+result);
+			compilerOutput = cmdExec.outputNormal();
+
+			if( result != 0 ) { // there was an error
+				if (compilerOutput.length() == 0){
+					compilerOutput = "Could not execute compiler. Make sure the .NET Framework folder is set in the path and restart Visual Studio.";
+				}
+				try
+				{
+					StringTokenizer st = new StringTokenizer(compilerOutput, "\n");
+					//System.out.println("Tokens: "+st.countTokens());
+					String lastToken = null;
+					while (st.hasMoreTokens()) {
+						lastToken = st.nextToken();
+						Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: "
+								+ lastToken);
+
+					}
+
+					throw new CompilerException("COMP reported errors during compilation.");
+				}
+				catch (Exception ex)
+				{
+					throw new CompilerException( ex.getMessage() );
+				}
+			}  
+			else {
+				// no errors during compilation
+				compsource.stop();
+			}
+		}
 	}
 	
 	/**
-	 * @param src Source
-	 * @return Arraylist containing the filenames of all external linked sources
+	 * Compiles the dummy files for the specified project into an assembly.
+	 * @see getDummiesFilePath
+	 */
+	public void compileDummies(Project p) throws CompilerException
+	{
+		this.compilerOutput = "";
+		
+		Language lang = p.getLanguage();
+		if (lang == null)
+			throw new CompilerException("Project has no language object");
+		
+		CompilerSettings cs = lang.compilerSettings;
+
+		// generate and execute command
+		CompilerAction action = cs.getCompilerAction("CompileLibrary");
+		if (action == null)
+			throw new CompilerException("Cannot obtain CompilerAction");  
+
+		// what's the target file?
+		String targetPath = getDummiesFilePath(p);
+		p.setCompiledDummies(targetPath);
+		
+		String command = cs.getProperty("executable")+" "+action.getArgument();
+		TokenReplacer tr = new TokenReplacer();
+		tr.addReplacement("OUT", FileUtils.quote(targetPath));
+		tr.addReplacement("LIBS", getLibrariesString(p, cs));
+		tr.addReplacement("OPTIONS", cs.getProperty("options"));
+		tr.addReplacement("SOURCES", getSourceFiles(p));
+		command = tr.process(command);
+
+		Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
+
+		// execute command
+		CommandLineExecutor cmdExec = new CommandLineExecutor();
+		int result = cmdExec.exec("call " + command);
+		compilerOutput = cmdExec.outputNormal();
+
+		processOutput(result, compilerOutput); 
+	}
+
+	private void processOutput(int result, String output) throws CompilerException
+	{
+		if (result != 0) // there was an error
+		{			
+			if (output.length() == 0)
+				output = "Could not execute compiler. Make sure the .NET Framework 1.1 folder is set in the path and restart Visual Studio.";
+
+			StringTokenizer st = new StringTokenizer(compilerOutput, "\n");
+			while (st.hasMoreTokens()) 
+			{
+				String token = st.nextToken();
+				Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: " + token);
+			}
+
+			throw new CompilerException("COMP reported errors during compilation: " + compilerOutput);
+		}
+	}
+	
+	/**
+	 * Returns the filename of the dummy-assembly to generate for the specified project.
+	 * "{basepath}/obj/dummies/{projectname}.dummies.dll"
+	 */
+	private String getDummiesFilePath(Project p)
+	{
+		String dummiesFile = p.getProperty("name") + ".dummies.dll";		
+		String basePath = Configuration.instance().getPathSettings().getPath("Base");
+		
+		File base = new File(basePath);
+		File target = new File(base, "obj/dummies/" + dummiesFile);
+		
+		return target.getAbsolutePath().replaceAll("\\\\", "/");
+	}
+	
+	/**
+	 * Returns a space-separated list of sourcefiles in the specified project.
+	 */
+	private String getSourceFiles(Project p)
+	{
+		StringBuffer sb = new StringBuffer();
+		
+		List sources = p.getSources();
+		Iterator sourcesIter = sources.iterator();
+		while (sourcesIter.hasNext())
+		{
+			Source s = (Source)sourcesIter.next();
+			String dummy = s.getDummy();
+			sb.append(' ').append(FileUtils.quote(dummy));
+		}
+		
+		return sb.toString();
+	}
+
+	private String getLibrariesString(Project p, CompilerSettings cs) throws CompilerException
+	{
+		CompilerConverter cc = cs.getCompilerConverter("libraryParam");
+		if (cc == null)
+			throw new CompilerException("Cannot obtain compilerconverter");  
+
+		StringBuffer sb = new StringBuffer();
+		TokenReplacer tr = new TokenReplacer();
+		String replaceBy = cc.getReplaceBy();		
+		
+		Iterator depIter = p.getDependencies().iterator();
+		while (depIter.hasNext())
+		{
+			Dependency dependency = (Dependency)depIter.next();
+			String filename = dependency.getFileName();
+			
+			tr.addReplacement("LIB", FileUtils.quote(filename));
+			String dep = tr.process(replaceBy);
+			
+			sb.append(dep).append(' ');
+		//	Debug.out(Debug.MODE_DEBUG,"COMP","Replace: " + replaceBy + ", File: " + filename + ", Dep: " + dep);	
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * returns a list containing the filenames of all externally linked sources
 	 */
 	public ArrayList externalSources(Source src) throws ModuleException
 	{ 
@@ -269,42 +313,40 @@ public class DotNETCompiler implements LangCompiler{
 		ArrayList extSources = new ArrayList();
 		ArrayList asmReferences = new ArrayList();
 		String line = "";
-		
+
 		//	step 1: open il code of source
-		String targetFile = Configuration.instance().getPathSettings().getPath("Base")+"obj/"+src.getTarget();
-		String ilFile = Configuration.instance().getPathSettings().getPath("Base")+"obj/Weaver/"+src.getTarget();
-		if(src.isExecutable())
-			ilFile = ilFile.replaceAll( ".exe", ".il" );
-		else
-			ilFile = ilFile.replaceAll( ".dll", ".il" );
+		PathSettings ps = Configuration.instance().getPathSettings();
+		String targetFile = ps.getPath("Base")+"obj/"+src.getTarget();
+		String ilFile = ps.getPath("Base")+"obj/Weaver/"+src.getTarget();
 		
+		String ext = (src.isExecutable() ? ".exe" : ".dll");
+		ilFile = ilFile.replaceAll(ext, ".il");
+
 		// step 2: extract all external assemblies
 		BufferedReader in = null;
-		try
-		{
-			in = new BufferedReader( new InputStreamReader( new FileInputStream( ilFile ) ) );
-		}
-		catch( FileNotFoundException e ) 
-		{
-			throw new ModuleException( "Cannot read " + ilFile, "RECOMA" );
-		}
-
-		try
-		{
-			while( (line=in.readLine()) != null )
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(ilFile)));
+			while ((line = in.readLine()) != null)
 			{
 				// read the lines
-				if( line.trim().startsWith( ".assembly extern" ) ) 
+				if (line.trim().startsWith(".assembly extern")) 
 				{
 					// get name of external assembly
-					String[] elems = line.split( " " );
-					String asmref = elems[elems.length-1];
+					String[] elems = line.split(" ");
+					String asmref = elems[elems.length - 1];
 					asmReferences.add(asmref);
 				}
 			}
-			in.close();
 		}
-		catch(IOException ioexc){throw new ModuleException("Error occured while reading "+ilFile);}
+		catch (FileNotFoundException e) {
+			throw new ModuleException( "Cannot read " + ilFile, "COMP");
+		}
+		catch (IOException e) {
+			throw new ModuleException("Error occured while reading " + ilFile, "COMP");
+		}
+		finally {
+			FileUtils.close(in);
+		}
 		
 		// step 3: convert external assemblies to user sources on disk
 		TypeLocations locations = TypeLocations.instance();
@@ -313,15 +355,15 @@ public class DotNETCompiler implements LangCompiler{
 		{
 			String ref = (String)refs.next();
 			String source = locations.getSourceByType(ref);
-			if(source!=null)
+			if (source != null)
 				extSources.add(source);
 		}
-			
+
 		incre.externalSourcesBySource.put(FileUtils.removeExtension(targetFile),extSources);
 		return extSources;
 	}
 
-/**
+	/**
 	 * @param src Source
 	 * @return ArrayList containing modified signatures (signatures with ADDED/REMOVED methodwrappers)
 	 * of concerns extracted from external linked source files
@@ -329,14 +371,14 @@ public class DotNETCompiler implements LangCompiler{
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();
-     	ArrayList extSources = new ArrayList();
+		ArrayList extSources = new ArrayList();
 		ArrayList signatures = new ArrayList();
 		ArrayList concernsToCheck = new ArrayList();
 		HashSet concernsCheckedByKey = new HashSet();
-		
+
 		String buildPath = Configuration.instance().getPathSettings().getPath("Base")+"obj/";
 		concernsToCheck = incre.getConcernsWithModifiedSignature();
-		
+
 		/** add full signatures of src 
 		 * When compiling a source the compiler does not use 
 		 * the modified signature from its dummy source
@@ -351,18 +393,18 @@ public class DotNETCompiler implements LangCompiler{
 				concernsCheckedByKey.add(c.getQualifiedName());
 			}
 		}
-		
+
 		if(!concernsToCheck.isEmpty())
 		{
 			/* add full signatures of external linked sources */
 			//String target = buildPath+createTargetFile(src.getFileName(),false);
 			String target = buildPath+src.getTarget();
 			extSources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(target));
-			
+
 			if(extSources == null){		
 				extSources = this.externalSources(src);
 			}
-					
+
 			Iterator externals = extSources.iterator();
 			while(externals.hasNext()){
 				String external = (String)externals.next();
@@ -370,7 +412,7 @@ public class DotNETCompiler implements LangCompiler{
 				while ( conIter.hasNext() )
 				{
 					Concern c = (Concern)conIter.next();
-					
+
 					if(incre.declaredInSource(c,external))
 					{
 						if(!concernsCheckedByKey.contains(c.getQualifiedName()))
@@ -382,11 +424,12 @@ public class DotNETCompiler implements LangCompiler{
 				}
 			}
 		}
-		
+
 		return signatures;
 	}
-	
-	public String getOutput(){
+
+	public String getOutput()
+	{
 		return this.compilerOutput; 
 	}
 }

@@ -8,10 +8,11 @@
  * $Id$
  */
 
+using System;
+using System.IO;
 using System.Xml;
 using System.Reflection;
 using System.Collections;
-using System;
 
 public class TypeHarvester
 {
@@ -39,7 +40,7 @@ public class TypeHarvester
 		Type t = htype.theType;
 		object key = t;
 
-//		Console.WriteLine("AddPendingType: " + t);
+	//	Console.WriteLine("AddPendingType: " + t);
 
 		// check if not done already
 		if (processedTypes.Contains(key)) return;
@@ -691,11 +692,11 @@ public class TypeHarvester
 		try {
 			return Assembly.LoadFrom(dll);
 		}
-		catch (System.IO.FileNotFoundException) {
+		catch (FileNotFoundException) {
 			Console.Error.WriteLine("File not found " + dll + ". Skipping.");
 			return null;
 		}
-		catch (System.ArgumentException) {
+		catch (ArgumentException) {
 			Console.Error.WriteLine("Cannot harvest type of " + dll + ". Skipping.");
 			return null;
 		}

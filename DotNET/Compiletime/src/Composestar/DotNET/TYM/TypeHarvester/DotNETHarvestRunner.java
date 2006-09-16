@@ -13,6 +13,7 @@ import Composestar.Core.TYM.TypeHarvester.HarvestRunner;
 import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 /**
  * This Module is responsible for running the .NET assembly harvester.
@@ -124,37 +125,39 @@ public class DotNETHarvestRunner implements HarvestRunner {
      * @throws ModuleException If a ModuleException is thrown the Master will stop its activity immediately.
      */
     public void run(CommonResources resources) throws ModuleException {
-    	ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
-    	ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
+    	Configuration config = Configuration.instance();
+    	ArrayList dummies = config.getProjects().getCompiledDummies();
+    	ArrayList dependencyList = config.getProjects().getDependencies();  
+		String tempFolder = config.getPathSettings().getPath("Base");
 		
-		//dummies.add(Configuration.instance().getPathSettings().getPath("Base")+"obj/dummies.dll");
-		
-		if( dummies == null )
+		if (dummies == null)
 			throw new ModuleException("TYM TypeHarvester needs compiled dummies which is missing.");
-		if( dependencyList == null )
+		
+		if (dependencyList == null)
 			throw new ModuleException("TYM TypeHarvester needs \"ProjectConfiguration.Dependencies\" which is missing.");
 		
 		String arg = "";
 
 		Iterator it = dependencyList.iterator();
-		while(it.hasNext()) 
+		while (it.hasNext()) 
 		{
 			Dependency dependency = (Dependency)it.next();
 			String name = dependency.getFileName();
-			if( name.indexOf("Microsoft.NET/Framework/") == -1 )
+
+			// FIXME: this makes an assumption on the location of the framework 
+			if (name.indexOf("Microsoft.NET/Framework/") == -1)
 			{
 				name = checkDLL(name);
-                arg += "\"" +name + "\"" + " ";
+                arg += FileUtils.quote(name) + ' ';
 			}
 		}
 
 		Iterator dumIt = dummies.iterator();
-		while(dumIt.hasNext()) 
+		while (dumIt.hasNext()) 
 		{
 			String name = (String)dumIt.next();
 			name = checkDLL(name);
-            arg += "\"" +name + "\"" + " ";
+            arg += FileUtils.quote(name) + " ";
             //Add additional dll's (from compiled inner's) and list of classes that we still need.
 		}
 		
@@ -167,12 +170,11 @@ public class DotNETHarvestRunner implements HarvestRunner {
 
       	CommandLineExecutor exec = new CommandLineExecutor();
       	Configuration.instance().getPathSettings().getPath("Composestar");
-      	String cmd =  "\"" + typeHarvester + "\"" + " \"" + tempFolder + "\" " + arg;
+      	String cmd =  FileUtils.quote(typeHarvester) + " " + FileUtils.quote(tempFolder) + " " + arg;
 		Debug.out(Debug.MODE_DEBUG,"TYM","Command for TYM Harvester: "+cmd);
-      	int result = exec.exec( "call " + cmd );
+      	
+		int result = exec.exec( "call " + cmd );
       	if( result != 0 )
-      	{
       		throw new ModuleException("TypeHarvester failed with error: " + exec.outputError(),"TYM");
-      	}
     } 
 }
