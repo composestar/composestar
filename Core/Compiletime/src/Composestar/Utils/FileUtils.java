@@ -22,6 +22,14 @@ public class FileUtils
 	private FileUtils() {}
 
 	/**
+	 * @deprecated
+	 */
+	public static String prepareCommand(String filename)
+	{
+		return fixSlashes(filename);
+	}
+
+	/**
 	 * Adds double quotes around the specified filename.
 	 * @param filename
 	 * @return
