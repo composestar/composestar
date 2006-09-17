@@ -8,12 +8,13 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Level.java,v 1.2 2006/09/05 12:43:08 reddog33hummer Exp $
+ * @version $Id$
  */
 package PacmanTwo;
 
 import java.awt.Point;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The game level, contains the level layout
@@ -30,14 +31,14 @@ public class Level implements Tickable
 	 */
 	protected int pillsLeft = 0;
 
-	protected Vector playerStarts;
-	protected Vector enemyStarts;
+	protected List playerStarts;
+	protected List enemyStarts;
 
 	public Level()
 	{
 		Game.instance().addTickElement(this);
-		playerStarts = new Vector();
-		enemyStarts = new Vector();
+		playerStarts = new ArrayList();
+		enemyStarts = new ArrayList();
 		reset();
 	}
 
@@ -117,13 +118,13 @@ public class Level implements Tickable
 				//       y  x
 				if((maze[i][j] & MazeCell.PLAYERSTART) != 0)
 				{
-					playerStarts.addElement(new Point(j, i));
+					playerStarts.add(new Point(j, i));
 					//System.out.println("Player Start @ "+j+"x"+i);
 				}
 				//       y  x
 				if((maze[i][j] & MazeCell.GHOSTSTART) != 0)
 				{
-					enemyStarts.addElement(new Point(j, i));
+					enemyStarts.add(new Point(j, i));
 					//System.out.println("Enemy Start @ "+j+"x"+i);
 				}
 			}
@@ -133,22 +134,22 @@ public class Level implements Tickable
 
 	/* Collision detection */
 
-	private boolean canMoveLeft(int x, int y) 
+	protected boolean canMoveLeft(int x, int y) 
 	{
 		return ((maze[y][x] & MazeCell.LEFT) == 0 );    
 	}
    
-	private boolean canMoveRight(int x, int y) 
+	protected boolean canMoveRight(int x, int y) 
 	{
 		return ((maze[y][x] & MazeCell.RIGHT) == 0 );    
 	}
    
-	private boolean canMoveDown(int x, int y) 
+	protected boolean canMoveDown(int x, int y) 
 	{
 		return ((maze[y][x] & MazeCell.DOWN) == 0 );    
 	}
    
-	private boolean canMoveUp(int x, int y) 
+	protected boolean canMoveUp(int x, int y) 
 	{
 		return ((maze[y][x] & MazeCell.UP) == 0 );    
 	}
@@ -206,7 +207,7 @@ public class Level implements Tickable
 	 */
 	public Point getPlayerStart(int idx)
 	{
-		return (Point) playerStarts.elementAt(idx % playerStarts.size());
+		return (Point) playerStarts.get(idx % playerStarts.size());
 	}
 
 	/**
@@ -214,6 +215,6 @@ public class Level implements Tickable
 	 */
 	public Point getEnemyStart(int idx)
 	{
-		return (Point) enemyStarts.elementAt(idx % enemyStarts.size());
+		return (Point) enemyStarts.get(idx % enemyStarts.size());
 	}
 }

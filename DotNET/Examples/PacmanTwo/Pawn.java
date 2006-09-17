@@ -8,11 +8,11 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pawn.java,v 1.4 2006/09/05 13:03:37 reddog33hummer Exp $
+ * @version $Id$
  */
 package PacmanTwo;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * A moving entity.
@@ -274,9 +274,9 @@ public abstract class Pawn extends GameElement
 		float cYu = n+cr;
 		float cYl = n-cr;
 
-		for( Enumeration e = game.getGameElements(); e.hasMoreElements(); )
+		for( Iterator i = game.getGameElements(); i.hasNext(); )
 		{
-			GameElement ge = ((GameElement) e.nextElement());
+			GameElement ge = ((GameElement) i.next());
 			if (!doTouchingCheck(ge)) continue;
 
 			cr = ge.getCollisionRadius();

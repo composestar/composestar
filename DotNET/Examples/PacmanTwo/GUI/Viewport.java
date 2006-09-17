@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * This is a client's viewport, it will render the current game on the screen
@@ -186,9 +186,9 @@ public class Viewport extends Panel implements Tickable
 
 	protected void renderGameElements(Graphics g, float delta)
 	{
-		for( Enumeration e = game.getGameElements(); e.hasMoreElements(); )
+		for( Iterator i = game.getGameElements(); i.hasNext(); )
 		{
-			GameElement ge = ((GameElement) e.nextElement());
+			GameElement ge = ((GameElement) i.next());
 			View v = getViewFor(ge);
 			if (v != null) v.render(g, ge, delta);
 		}

@@ -8,12 +8,13 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Game.java,v 1.5 2006/09/05 13:15:30 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo;
 
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * The main game loop. Singleton
@@ -30,7 +31,7 @@ public class Game implements Runnable
 	/**
 	 * List with elements that receive game events like Tick and Reset
 	 */
-	protected Vector tickList;
+	protected List tickList;
 
 	/**
 	 * The current level
@@ -39,11 +40,11 @@ public class Game implements Runnable
 	/**
 	 * All game elements (Pacman, Ghosts, Fruit, ...)
 	 */
-	protected Vector gameElements;
+	protected List gameElements;
 	/**
 	 * All human controllers (e.g. players)
 	 */
-	protected Vector players;
+	protected List players;
 
 	/**
 	 * Number of ghosts in the game
@@ -58,9 +59,9 @@ public class Game implements Runnable
 	public Game()
 	{
 		_instance = this;
-		tickList = new Vector();
-		gameElements = new Vector();
-		players = new Vector();
+		tickList = new ArrayList();
+		gameElements = new ArrayList();
+		players = new ArrayList();
 		new Thread(this).start();
 	}
 
@@ -109,7 +110,7 @@ public class Game implements Runnable
 	 */
 	public void addTickElement(Tickable elm)
 	{
-		tickList.addElement(elm);
+		tickList.add(elm);
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class Game implements Runnable
 	 */
 	public boolean removeTickElement(Tickable elm)
 	{
-		return tickList.removeElement(elm);
+		return tickList.remove(elm);
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class Game implements Runnable
 	public void addGameElement(GameElement elm)
 	{
 		addTickElement(elm);
-		gameElements.addElement(elm);
+		gameElements.add(elm);
 	}
 
 	/**
@@ -135,16 +136,16 @@ public class Game implements Runnable
 	 */
 	public boolean removeGameElement(GameElement elm)
 	{
-		return gameElements.removeElement(elm) && removeTickElement(elm);
+		return gameElements.remove(elm) && removeTickElement(elm);
 	}
 
 	/**
 	 * Return all registered game elements. Used by the viewport to get
 	 * the elements to render
 	 */
-	public Enumeration getGameElements()
+	public Iterator getGameElements()
 	{
-		return gameElements.elements();
+		return gameElements.iterator();
 	}
 
 	/**
@@ -152,7 +153,7 @@ public class Game implements Runnable
 	 */
 	public void addPlayer(HumanController c)
 	{
-		players.addElement(c);
+		players.add(c);
 	}
 
 	/**
@@ -160,7 +161,7 @@ public class Game implements Runnable
 	 */
 	public boolean removePlayer(HumanController c)
 	{
-		return players.removeElement(c);
+		return players.remove(c);
 	}
 
 	public void setEvilPacman(Pacman pm)
@@ -175,9 +176,9 @@ public class Game implements Runnable
 
 	protected void tick(float delta)
 	{
-		for( Enumeration e = tickList.elements(); e.hasMoreElements(); )
+		for( Iterator i = tickList.iterator(); i.hasNext(); )
 		{
-			((Tickable) e.nextElement()).tick(delta);
+			((Tickable) i.next()).tick(delta);
 		}
 
 		if ((_level != null) && _level.mazeCompleted())
@@ -202,9 +203,9 @@ public class Game implements Runnable
 	{
 		if (_level == null) _level = new Level();
 		setEvilPacman(null);
-		for( Enumeration e = tickList.elements(); e.hasMoreElements(); )
+		for( Iterator i = tickList.iterator(); i.hasNext(); )
 		{
-			((Tickable) e.nextElement()).reset();
+			((Tickable) i.next()).reset();
 		}
 		createPlayers();
 		createGhosts();
@@ -212,11 +213,11 @@ public class Game implements Runnable
 
 	public void createPlayers()
 	{
-		int i = 0;
-		for( Enumeration e = players.elements(); e.hasMoreElements(); )
+		int idx = 0;
+		for( Iterator i = players.iterator(); i.hasNext(); )
 		{
-			Controller c = ((HumanController) e.nextElement());
-			java.awt.Point start = _level.getPlayerStart(i++);
+			Controller c = ((HumanController) i.next());
+			java.awt.Point start = _level.getPlayerStart(idx++);
 			Pacman p = new Pacman(start.x, start.y);
 			p.setController(c);
 		}
