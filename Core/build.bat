@@ -8,7 +8,7 @@ if "%JAVA_HOME%" == "" set JAVA_HOME=c:\j2sdk1.4.2
 set TARGET=select
 if not "%1" == "" set TARGET=%1
 
-if NOT EXIST %JAVA_HOME%\bin\javac.exe goto nojavahome
+if NOT EXIST "%JAVA_HOME%\bin\javac.exe" goto nojavahome
 
 if EXIST build.ini goto withini
 if NOT EXIST build.ini goto withoutini
