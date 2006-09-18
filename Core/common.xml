@@ -110,7 +110,7 @@ Common routines. Always include this file in every build.xml file
 			<attribute name="target" default="Release" />
 			<attribute name="action" default="rebuild" />
 			<sequential>
-				<echo message="Running devenv [@{action}] for soltiuon @{solution} (@{target})" />
+				<echo message="Running devenv [@{action}] for solution @{solution} (@{target})" />
 				<exec executable="${bin.devenv}" failonerror="true">
 					<arg value="@{solution}" />
 					<arg value="/@{action}" />
