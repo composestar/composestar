@@ -88,7 +88,7 @@
 	</target>
 	
 	<target name="test_dotnet" depends="init" if="available.dotnet">
-		<ant target="runtests" dir="${build.dotnet}" />
+		<ant target="test" dir="${build.dotnet}" />
 	</target>
 	
 	<!-- do everything -->
@@ -130,7 +130,7 @@
 			<link label="Clean &amp; Build" target="rebuild" />
 			<link label="Install" target="install" />
 			<link label="Run Findbugs" target="findbugs" />
-			<link label="Run the system test" target="test" />
+			<!--<link label="Run the system test" target="test" />-->
 			
 			<separator />
 			
