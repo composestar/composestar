@@ -27,17 +27,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class MasterCallerTask : Task
     {
-
-        private const string JavaExecutable = "java.exe";
-
+        
+        #region Constructor
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MasterCallerTask"/> class.
         /// </summary>
-        public MasterCallerTask() : base(Properties.Resources.ResourceManager)
+        public MasterCallerTask()
+            : base(Properties.Resources.ResourceManager)
         {
-            
-        }
 
+        }
+        #endregion
+
+        #region Properties
         private string _repositoryFilename;
 
         /// <summary>
@@ -75,11 +77,29 @@ namespace Composestar.StarLight.MSBuild.Tasks
             get { return debugLevel; }
             set { debugLevel = value; }
         }
+        #endregion
+
+        #region Declarations
+        private const string JavaExecutable = "java.exe";
+        
+        private bool BuildErrorsEncountered = false;
+        private DebugMode CurrentDebugMode;
 
         private RepositoryAccess _repositoryAccess;
 
         const int ERROR_FILE_NOT_FOUND = 2;
         const int ERROR_ACCESS_DENIED = 5;
+
+        public enum DebugMode
+        {
+            NotSet = -1,
+            Error = 0,
+            Crucial = 1,
+            Warning = 2,
+            Information = 3,
+            Debug = 4
+        }
+        #endregion
 
         /// <summary>
         /// When overridden in a derived class, executes the task.
@@ -110,7 +130,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Place debuglevel
-            Log.LogMessage("Debug level is {0}.", DebugLevel); 
+            Log.LogMessage("Debug level is {0}.", DebugLevel);             
 
             // Set the Common Configuration
             CommonConfiguration cc = _repositoryAccess.GetCommonConfiguration();                
@@ -121,6 +141,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 _repositoryAccess.CloseDatabase(); 
                 return false;
             }
+            CurrentDebugMode = (DebugMode)debugLevelValue;
             cc.CompiletimeDebugLevel = debugLevelValue;
             _repositoryAccess.SetCommonConfiguration(cc);
 
@@ -181,12 +202,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 p.Start();
                 while (!p.HasExited)
                 {            
-                    Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.Normal) ;
+                    ParseMasterOutput(p.StandardOutput.ReadLine());
+                    //Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.Normal) ;
                 }
                 if (p.ExitCode == 0)
                 {
                     _repositoryAccess.CloseDatabase(); 
-                    return true;
+                    return !Log.HasLoggedErrors;
                 }
                 else
                 {
@@ -213,5 +235,153 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 return false;
             }                                              
         }
+
+        #region Parse Master Output and Logger helper functions
+
+        /// <summary>
+        /// Parses the master output.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void ParseMasterOutput(string message)
+        {
+
+            if (message == null) return;
+
+            // Parse the message
+            string[] parsed = message.Split("~".ToCharArray(), 5);
+            if (parsed.Length == 5)
+            {
+                string module = parsed[0];
+                string warninglevel = parsed[1];
+                string filename = parsed[2];
+                string line = parsed[3];
+                string msg = parsed[4];
+                DebugMode mode;
+
+                try
+                {
+                    mode = (DebugMode)DebugMode.Parse(typeof(DebugMode), warninglevel, true);
+                }
+                catch (Exception)
+                {
+                    mode = DebugMode.Warning;
+                }
+
+                int linenumber = 0;
+                try
+                {
+                    linenumber = Convert.ToInt32(parsed[3]);
+                }
+                catch (Exception) { linenumber = 0; }
+
+                if (this.BuildErrorsEncountered && message.Equals(""))
+                {
+                    this.BuildErrorsEncountered = false;
+                }
+
+                // Check for compilation errors
+                if (msg != null && msg.StartsWith("RECOMACOMERROR:"))
+                    this.BuildErrorsEncountered = true;
+                else
+                    this.BuildErrorsEncountered = false;
+
+                // Update task list with compilation errors
+                if (this.BuildErrorsEncountered)
+                {
+                    try
+                    {
+                        string comError = "RECOMACOMERROR:";
+                        string file = msg.Substring(comError.Length, msg.IndexOf("(") - comError.Length).Replace("/", "\\");
+                        string rest = msg.Substring(file.Length + 1 + comError.Length);
+                        int lineRecoma = 0;
+
+                        lineRecoma = int.Parse((rest.Substring(0, rest.IndexOf(","))));
+
+                        rest = rest.Substring(rest.IndexOf(")") + 2).TrimStart();
+                        DebugMode dm;
+                        if (rest.StartsWith("warning"))
+                            dm = DebugMode.Warning;
+                        else
+                            dm = DebugMode.Error;
+                        this.LogMessage(dm, "RECOMA", rest, file, lineRecoma);
+                    }
+                    catch (Exception)
+                    {
+                        Log.LogError(msg);
+                    }
+                }
+                else
+                    this.LogMessage(mode, module, msg, filename, linenumber);
+
+            }
+            else
+            {
+                this.LogMessage(message);
+            }
+        }
+
+        /// <summary>
+        /// Log the message.
+        /// </summary>
+        /// <param name="debugMode">Debugmode to use.</param>
+        /// <param name="module">Module creating this log message.</param>
+        /// <param name="message">The logmessage</param>
+        private void LogMessage(DebugMode debugMode, string module, string message)
+        {
+            this.LogMessage(debugMode, module, message, "", 0);
+        }
+
+        private void LogMessage(DebugMode debugMode, string module, string message, string filename, int line)
+        {
+            if (CurrentDebugMode >= debugMode)
+            {
+                String modeDescription = "";
+
+                switch (debugMode)
+                {
+                    case DebugMode.Warning:                     
+                        modeDescription = "warning";
+                        Log.LogWarning(module, "", "", filename, line, 0, line + 1, 0, message);
+                        break;
+                    case DebugMode.Information:
+                        modeDescription = "info";
+                        Log.LogMessage(MessageImportance.Normal, String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module, modeDescription, message));
+                        break;
+                    case DebugMode.Debug:
+                        modeDescription = "DEBUG";
+                        Log.LogMessage(MessageImportance.Normal, String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module,modeDescription, message));
+                        break;
+                    case DebugMode.Crucial:
+                        modeDescription = "";
+                        Log.LogMessage(MessageImportance.Normal, String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module,modeDescription, message));
+                        break;
+                    case DebugMode.Error:
+                        modeDescription = "ERROR";
+                        Log.LogError(module, "", "", filename, line, 0, line + 1, 0, message);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Log the message with the current debugmode.
+        /// </summary>
+        /// <param name="module">Module creating this log message.</param>
+        /// <param name="message">The logmessage</param>
+        private void LogMessage(string module, string message)
+        {
+            LogMessage(this.CurrentDebugMode, module, message);
+        }
+
+        /// <summary>
+        /// This log method allows you to print a complete string to the output pane. So no formatting etc.
+        /// </summary>
+        /// <param name="message"></param>
+        private void LogMessage(string message)
+        {
+            Log.LogMessage(message);
+        }
+
+        #endregion
     }
 }

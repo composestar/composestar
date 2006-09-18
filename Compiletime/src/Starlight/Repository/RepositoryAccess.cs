@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Composestar.Repository.Configuration;  
-using Composestar.Repository.LanguageModel;  
+using Composestar.Repository.Configuration;
+using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.Inlining;
 
 namespace Composestar.Repository
@@ -25,7 +25,7 @@ namespace Composestar.Repository
                 throw new ArgumentNullException("filename");
 
             DataStoreContainer.Instance.RepositoryFileName = filename;
-            
+
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Composestar.Repository
         /// </summary>
         public void CloseDatabase()
         {
-            DataStoreContainer.Instance.CloseDatabase();  
+            DataStoreContainer.Instance.CloseDatabase();
         }
 
         /// <summary>
@@ -59,15 +59,15 @@ namespace Composestar.Repository
         /// <returns></returns>
         public TypeElement GetTypeElement(string fullName)
         {
-            IList<TypeElement> ret = DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate (TypeElement te)
+            IList<TypeElement> ret = DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
-                return te.FullName.Equals(fullName);  
+                return te.FullName.Equals(fullName);
             });
 
             if (ret.Count == 1)
                 return ret[0];
-            else 
-                return null;          
+            else
+                return null;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Composestar.Repository
         /// <returns></returns>
         public IList<TypeElement> GetTypeElements()
         {
-            return DataStoreContainer.Instance.GetObjects<TypeElement>(); 
+            return DataStoreContainer.Instance.GetObjects<TypeElement>();
         }
 
         /// <summary>
@@ -87,23 +87,23 @@ namespace Composestar.Repository
         /// <returns></returns>
         public MethodElement GetMethodElement(TypeElement typeInfo, string methodName)
         {
-            
+
             if (typeInfo == null)
                 return null;
 
-            if (string.IsNullOrEmpty(methodName) )
+            if (string.IsNullOrEmpty(methodName))
                 return null;
 
-            IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate (MethodElement me)
+            IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
-                return (me.ParentTypeId == typeInfo.Id) && (me.Name.Equals(methodName));  
+                return (me.ParentTypeId == typeInfo.Id) && (me.Name.Equals(methodName));
             });
 
             if (ret.Count == 1)
                 return ret[0];
-            else 
+            else
                 return null;
-                       
+
         }
 
         /// <summary>
@@ -131,8 +131,62 @@ namespace Composestar.Repository
             //{
             //    m.Add(me);
             //}
-            
+
             //return m;
+        }
+
+        /// <summary>
+        /// Gets the externals by type element.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public IList<External> GetExternalsByTypeElement(TypeElement type)
+        {
+            if (type == null)
+                return null;
+
+            IList<External> result = DataStoreContainer.Instance.GetObjectQuery<External>(delegate(External external)
+            {
+                return external.ParentTypeId == type.Id;
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the internals by type element.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public IList<Internal> GetInternalsByTypeElement(TypeElement type)
+        {
+            if (type == null)
+                return null;
+
+            IList<Internal> result = DataStoreContainer.Instance.GetObjectQuery<Internal>(delegate(Internal intern)
+            {
+                return intern.ParentTypeId == type.Id;
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the call by method element.
+        /// </summary>
+        /// <param name="methodElement">The method element.</param>
+        /// <returns></returns>
+        public IList<CallElement> GetCallByMethodElement(MethodElement methodElement)
+        {
+            if (methodElement == null | methodElement.MethodBody == null)
+                return null;
+
+            IList<CallElement> result = DataStoreContainer.Instance.GetObjectQuery<CallElement>(delegate(CallElement ce)
+           {
+               return ce.ParentMethodBodyId == methodElement.MethodBody.Id;
+           });
+
+            return result;
         }
 
         /// <summary>
@@ -142,7 +196,7 @@ namespace Composestar.Repository
         public void AddType(TypeElement typeElement)
         {
             if (typeElement == null)
-                throw new ArgumentNullException("typeElement") ;
+                throw new ArgumentNullException("typeElement");
 
             // Check if type already exists
             if (DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate(TypeElement te)
@@ -181,13 +235,13 @@ namespace Composestar.Repository
         public void AddMethod(TypeElement typeElement, MethodElement methodElement)
         {
             if (typeElement == null)
-                throw new ArgumentNullException("typeElement") ;
+                throw new ArgumentNullException("typeElement");
 
             if (methodElement == null)
-                throw new ArgumentNullException("methodElement") ;
+                throw new ArgumentNullException("methodElement");
 
             methodElement.ParentTypeId = typeElement.Id;
- 
+
             DataStoreContainer.Instance.StoreObject(methodElement);
         }
 
@@ -199,12 +253,12 @@ namespace Composestar.Repository
         public void AddParameter(MethodElement methodElement, ParameterElement paramElement)
         {
             if (methodElement == null)
-                throw new ArgumentNullException("methodElement") ;
+                throw new ArgumentNullException("methodElement");
 
             if (paramElement == null)
-                  throw new ArgumentNullException("paramElement");
+                throw new ArgumentNullException("paramElement");
 
-            paramElement.ParentMethodId = methodElement.Id; 
+            paramElement.ParentMethodId = methodElement.Id;
 
             DataStoreContainer.Instance.StoreObject(paramElement);
         }
@@ -217,12 +271,12 @@ namespace Composestar.Repository
         public void AddCallToMethod(MethodElement methodElement, CallElement callElement)
         {
             if (methodElement == null)
-                throw new ArgumentNullException("methodElement") ;
+                throw new ArgumentNullException("methodElement");
 
             if (callElement == null)
-                  throw new ArgumentNullException("callElement");
+                throw new ArgumentNullException("callElement");
 
-            callElement.ParentMethodBodyId = methodElement.MethodBody.Id; 
+            callElement.ParentMethodBodyId = methodElement.MethodBody.Id;
 
             DataStoreContainer.Instance.StoreObject(callElement);
         }
@@ -253,8 +307,8 @@ namespace Composestar.Repository
         public void AddConcern(ConcernInformation concernInformation)
         {
             if (concernInformation == null)
-                throw new ArgumentNullException("concernInformation") ;
-           
+                throw new ArgumentNullException("concernInformation");
+
             // Check if concern already exists
             if (DataStoreContainer.Instance.GetObjectQuery<ConcernInformation>(delegate(ConcernInformation ce)
             {
@@ -287,8 +341,8 @@ namespace Composestar.Repository
         {
             if (cc == null)
                 throw new ArgumentNullException("commonconfiguration");
- 
-            DataStoreContainer.Instance.StoreObject(cc);  
+
+            DataStoreContainer.Instance.StoreObject(cc);
         }
 
     }

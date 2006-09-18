@@ -25,7 +25,7 @@ namespace Composestar.StarLight.ILWeaver
     {
         private AssemblyDefinition _targetAssemblyDefinition;
         private WeaverConfiguration _configuration;
-        private RepositoryAccess _repositoryAccess ;
+        private RepositoryAccess _repositoryAccess;
 
         private bool _isInitialized = false;
         private TimeSpan _lastDuration = TimeSpan.MinValue;
@@ -116,7 +116,7 @@ namespace Composestar.StarLight.ILWeaver
             _repositoryAccess = new RepositoryAccess(repositoryFilename);
 
             #endregion
-                        
+
             _isInitialized = true;
 
         }
@@ -223,7 +223,7 @@ namespace Composestar.StarLight.ILWeaver
             _lastDuration = sw.Elapsed;
 
             // Close DB
-              _repositoryAccess.CloseDatabase(); 
+            _repositoryAccess.CloseDatabase();
         }
 
         /// <summary>
@@ -233,6 +233,31 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="typeElement">The type information.</param>
         public void WeaveInternals(TypeDefinition type, TypeElement typeElement)
         {
+            #region Check for null
+
+            if (type == null)
+                return;
+
+            if (typeElement == null)
+                return;
+
+            #endregion
+
+            #region Get the internals
+
+            IList<Internal> internals = _repositoryAccess.GetInternalsByTypeElement(typeElement);
+
+            if (internals == null | internals.Count == 0)
+                return;
+            
+            #endregion
+
+            foreach (Internal inter in internals)
+            {
+
+            }
+
+            #region Test code, must be removed
             // Declarations
             FieldDefinition internalDef;
             String name;
@@ -242,13 +267,14 @@ namespace Composestar.StarLight.ILWeaver
             // Prepare the data
             name = "test";
             fieldType = _targetAssemblyDefinition.MainModule.Import(typeof(String));
-            attrs = Mono.Cecil.FieldAttributes.Public;
+            attrs = Mono.Cecil.FieldAttributes.Static;
 
             // Create the field
             internalDef = new FieldDefinition(name, fieldType, attrs);
 
             // Add the field
             type.Fields.Add(internalDef);
+            #endregion
         }
 
         /// <summary>
@@ -258,7 +284,29 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="typeElement">The type information.</param>
         public void WeaveExternals(TypeDefinition type, TypeElement typeElement)
         {
+            #region Check for null
 
+            if (type == null)
+                return;
+
+            if (typeElement == null)
+                return;
+
+            #endregion
+
+            #region Get the externals
+
+            IList<External> externals = _repositoryAccess.GetExternalsByTypeElement(typeElement);
+
+            if (externals == null | externals.Count == 0)
+                return;
+            
+            #endregion
+
+            foreach (External external in externals)
+            {
+                
+            }
 
         }
 
@@ -268,11 +316,15 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="method">The method definition.</param>
         public void WeaveMethod(MethodDefinition method, MethodElement methodElement)
         {
+            #region Check for null values
+
             if (method == null)
                 return;
 
             if (methodElement == null)
                 return;
+            
+            #endregion
 
             // Add the inputfilters
             WeaveInputFilters(method, methodElement);
@@ -282,8 +334,27 @@ namespace Composestar.StarLight.ILWeaver
 
         }
 
+        /// <summary>
+        /// Weaves the input filters.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="methodElement">The method element.</param>
         public void WeaveInputFilters(MethodDefinition method, MethodElement methodElement)
         {
+            #region Check for null and retrieve inputFilter
+            
+            if (methodElement.MethodBody == null)
+                return;
+
+            Composestar.Repository.LanguageModel.Inlining.Instruction inputFilter =
+                methodElement.MethodBody.InputFilter;
+
+            if (inputFilter == null)
+                return;
+
+            #endregion
+
+            #region Test code, must be removed
             //Gets the MethodElement of Console.WriteLine() method
             MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
 
@@ -316,11 +387,58 @@ namespace Composestar.StarLight.ILWeaver
 
             //Inserts the callWriteLineMethod after the //insertSentence instruction
             worker.InsertAfter(insertSentence, callWriteLine);
+            #endregion
+
         }
 
+        /// <summary>
+        /// Weaves the output filters.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="methodElement">The method element.</param>
         public void WeaveOutputFilters(MethodDefinition method, MethodElement methodElement)
         {
+            #region Check for null and retrieve calls for this method
 
+            if (methodElement.MethodBody == null)
+                return;
+
+            IList<CallElement> calls = _repositoryAccess.GetCallByMethodElement(methodElement);
+
+            if (calls == null | calls.Count == 0)
+                return;
+            
+            #endregion
+
+            // Gets the CilWorker of the method for working with CIL instructions
+            CilWorker worker = method.Body.CilWorker;
+
+            // Loop through all the instructions
+            foreach (Instruction instruction in method.Body.Instructions)
+            {
+                // Check for a call instruction
+                if (IsCallInstruction(instruction))
+                {
+                    // Find the corresponding call in the list of calls
+                    MethodReference mr = (MethodReference)(instruction.Operand);
+                    CallElement call = FindCallInList(calls, mr.ToString());
+
+                    // If we found a callElement in the repository, then see if we have to perform weaving
+                    if (call != null)
+                    {
+                        // Get the outputFilter for this call
+                        Composestar.Repository.LanguageModel.Inlining.Instruction outputFilter =
+                            call.OutputFilter; 
+
+                        // Check for null, an output filter is not required
+                        if (outputFilter == null)
+                            continue;
+
+                        
+                        //worker.Replace(instruction, instruction); 
+                    }
+                }
+            }            
         }
 
         /// <summary>
@@ -329,10 +447,42 @@ namespace Composestar.StarLight.ILWeaver
         public void Close()
         {
             if (_repositoryAccess != null)
-                _repositoryAccess.CloseDatabase(); 
+                _repositoryAccess.CloseDatabase();
         }
 
 
+        #region Helper functions
+        /// <summary>
+        /// Finds the call in list.
+        /// </summary>
+        /// <param name="calls">The calls.</param>
+        /// <param name="callTo">The call to.</param>
+        /// <returns></returns>
+        private CallElement FindCallInList(IList<CallElement> calls, string callTo)
+        {
+            foreach (CallElement call in calls)
+            {
+                if (call.MethodReference.Equals(callTo, StringComparison.CurrentCultureIgnoreCase))
+                    return call;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Determines whether the instruction is a method call instruction.
+        /// </summary>
+        /// <param name="instruction">The instruction.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified instruction is a method call instruction; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsCallInstruction(Instruction instruction)
+        {
+            return (instruction.OpCode == OpCodes.Call |
+                    instruction.OpCode == OpCodes.Calli |
+                    instruction.OpCode == OpCodes.Callvirt);
+        }
+        #endregion
+             
         #region nested class WeaverConfiguration
         /// <summary>
         /// Contains the configuration for the weaver.

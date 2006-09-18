@@ -226,6 +226,15 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
         /// <summary>
+        /// Closes this instance. Cleanup any used resources.
+        /// </summary>
+        public void Close()
+        {
+            if (_repositoryAccess != null)
+                _repositoryAccess.CloseDatabase();
+        }
+
+        /// <summary>
         /// Checks for initialization. Throw exception when not inited.
         /// </summary>
         private void CheckForInit()

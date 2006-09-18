@@ -33,5 +33,9 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <value>The last duration.</value>
         TimeSpan LastDuration{ get; }
 
+        /// <summary>
+        /// Closes this instance. Cleanup any used resources.
+        /// </summary>
+        void Close();
     }
 }
