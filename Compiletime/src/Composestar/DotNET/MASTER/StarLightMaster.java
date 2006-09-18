@@ -154,7 +154,7 @@ public class StarLightMaster extends Master  {
     public void run() {
     	// This is the 'hardcoded' version
 
-		try{
+		try {
 
 			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
 			
@@ -171,19 +171,25 @@ public class StarLightMaster extends Master  {
 				concern.setFileName(ci.get_Path() + "\\" + ci.get_Filename());
 				projects.addConcernSource(concern);
 			}			
-
 			Configuration.instance().setProjects(projects);
-			
-			
+		
+		
 			// COPPER (Parsing the .cps files)
 			Composestar.Core.COPPER.COPPER copper = new Composestar.Core.COPPER.COPPER();
 			copper.run(resources);
 			
-			
+				
+				
 			System.out.println("Master exit (0)");
 			System.exit(0);
 
-		} catch(ModuleException e)  { // MasterStopException
+		}
+		catch(ModuleException e)  { // MasterStopException
+		}
+		catch (Exception ex) {
+			Debug.out(Debug.MODE_DEBUG, "Master", printStackTrace(ex));
+		}
+//		} catch(ModuleException e)  { // MasterStopException
 //			String error = e.getMessage();
 //			if(error == null || "null".equals(error)) //great information
 //			{
@@ -205,7 +211,7 @@ public class StarLightMaster extends Master  {
 //			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
 //			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + printStackTrace(e));
 //			//System.exit(1);
-		}
+//		}
 	}
 
 	public String printStackTrace(Exception e) 
