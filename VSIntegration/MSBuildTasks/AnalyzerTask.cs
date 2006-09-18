@@ -73,12 +73,23 @@ namespace Composestar.StarLight.MSBuild.Tasks
              
             foreach (ITaskItem item in AssemblyFiles)
             {
-                Log.LogMessage("Analyzing file {0}", item.ToString()); 
+                try
+                {
+                    Log.LogMessage("Analyzing file {0}", item.ToString());
 
-                analyzer.Initialize(item.ToString(), config);
-                IList<TypeElement> ret = analyzer.ExtractTypeElements();
+                    analyzer.Initialize(item.ToString(), config);
+                    IList<TypeElement> ret = analyzer.ExtractTypeElements();
 
-                Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);                       
+                    Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);
+                }
+                catch (ILAnalyzerException ex)
+                {
+                    Log.LogErrorFromException(ex, true); 
+                }
+                catch (ArgumentException ex)
+                {
+                    Log.LogErrorFromException(ex, true); 
+                }
 
             }
            

@@ -55,8 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILInstruction.cs" />
-    <Compile Include="ILReader.cs" />
+    <Compile Include="Exceptions\ILAnalyzerException.cs" />
+    <Compile Include="ReflectionILReader\ILInstruction.cs" />
+    <Compile Include="ReflectionILReader\ILReader.cs" />
     <Compile Include="ReflectionILAnalyzer.cs" />
     <Compile Include="CecilILAnalyzer.cs" />
     <Compile Include="IILAnalyzer.cs" />
