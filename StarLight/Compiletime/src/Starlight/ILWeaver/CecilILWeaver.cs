@@ -216,8 +216,15 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             //Save the modified assembly
-            AssemblyFactory.SaveAssembly(_targetAssemblyDefinition, _configuration.OutputFile);
-
+            try
+            {
+                AssemblyFactory.SaveAssembly(_targetAssemblyDefinition, _configuration.OutputFile);
+            }
+            catch (Exception ex)
+            {
+                throw new ILWeaverException(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputFile, ex);
+            }
+            
             // Stop timing
             sw.Stop();
             _lastDuration = sw.Elapsed;
@@ -254,7 +261,7 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (Internal inter in internals)
             {
-
+                
             }
 
             #region Test code, must be removed
@@ -305,7 +312,7 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (External external in externals)
             {
-                
+                 
             }
 
         }
@@ -343,6 +350,10 @@ namespace Composestar.StarLight.ILWeaver
         {
             #region Check for null and retrieve inputFilter
             
+            // Only proceed when there is a message body
+            if (method.HasBody == false )
+                return;
+
             if (methodElement.MethodBody == null)
                 return;
 
@@ -352,15 +363,15 @@ namespace Composestar.StarLight.ILWeaver
             if (inputFilter == null)
                 return;
 
-            #endregion
+            #endregion    
 
-            #region Test code, must be removed
-            //Gets the MethodElement of Console.WriteLine() method
-            MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
-
-            //Gets the CilWorker of the method for working with CIL instructions
+            // Gets the CilWorker of the method for working with CIL instructions
             CilWorker worker = method.Body.CilWorker;
 
+            #region Test code, must be removed
+      
+            //Gets the MethodElement of Console.WriteLine() method
+            MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
 
             //Creating a sentence according to the current method
             string sentence;
@@ -403,6 +414,10 @@ namespace Composestar.StarLight.ILWeaver
             if (methodElement.MethodBody == null)
                 return;
 
+            // Only proceed when there is a message body
+            if (method.HasBody == false )
+                return;
+
             IList<CallElement> calls = _repositoryAccess.GetCallByMethodElement(methodElement);
 
             if (calls == null | calls.Count == 0)
@@ -423,7 +438,7 @@ namespace Composestar.StarLight.ILWeaver
                     MethodReference mr = (MethodReference)(instruction.Operand);
                     CallElement call = FindCallInList(calls, mr.ToString());
 
-                    // If we found a callElement in the repository, then see if we have to perform weaving
+                    // If we found a CallElement in the repository, then see if we have to perform weaving
                     if (call != null)
                     {
                         // Get the outputFilter for this call
