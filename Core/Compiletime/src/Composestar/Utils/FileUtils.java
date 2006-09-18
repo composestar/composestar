@@ -22,21 +22,26 @@ public class FileUtils
 	private FileUtils() {}
 
 	/**
-	 * @deprecated
-	 */
-	public static String prepareCommand(String filename)
-	{
-		return fixSlashes(filename);
-	}
-
-	/**
 	 * Adds double quotes around the specified filename.
-	 * @param filename
-	 * @return
 	 */
 	public static String quote(String filename)
 	{
 		return '"' + filename + '"';
+	}
+	
+	/**
+	 * Removes double quotes around the specified filename.
+	 */
+	public static String unquote(String filename)
+	{
+		if (filename.charAt(0) == '"')
+			filename = filename.substring(1);
+		
+		int end = filename.length() - 1;
+		if (filename.charAt(end) == '"')
+			filename = filename.substring(0, end);
+		
+		return filename;
 	}
 
 	/**
@@ -62,7 +67,7 @@ public class FileUtils
 	/**
 	 * FIXME: wtf!? It makes no sense I tell you!
 	 * The places where this method is used should be checked out, 
-	 * to see what functionality is really needed.
+	 * to see what functionality is really needed. 
 	 */
 	public static String fixSlashes(String command)
 	{
@@ -78,6 +83,14 @@ public class FileUtils
 				buffer.append(cmd[i]);
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static String prepareCommand(String filename)
+	{
+		return fixSlashes(filename);
 	}
 
 	/**
@@ -134,7 +147,7 @@ public class FileUtils
 	 * @return The converted (output)-filename.
 	 */
 	public static String createOutputFilename(String basePath, String prefix, String sourceName)
-	throws Exception
+		throws Exception
 	{
 		if (!sourceName.startsWith(basePath))
 			throw new Exception("File + '" + sourceName
@@ -183,7 +196,7 @@ public class FileUtils
 	 * this file reader.
 	 */
 	public static FileInputStream getCleanInputStream(File xmlFile)
-	throws FileNotFoundException, IOException
+		throws FileNotFoundException, IOException
 	{
 		FileInputStream in = new FileInputStream(xmlFile);
 		int bomKount = getBOMCount(xmlFile);
@@ -199,8 +212,8 @@ public class FileUtils
 	 * Get count of leading characters that denote the byte order mark, part of
 	 * the unicode standard. These make SaxParser barf
 	 */
-	private static int getBOMCount(File xmlFile) throws FileNotFoundException,
-	IOException
+	private static int getBOMCount(File xmlFile) 
+		throws FileNotFoundException, IOException
 	{
 		DataInputStream din = new DataInputStream(new FileInputStream(xmlFile));
 		int bomKount = 0;
