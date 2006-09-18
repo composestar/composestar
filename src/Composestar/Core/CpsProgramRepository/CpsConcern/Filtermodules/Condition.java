@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Condition.java,v 1.2 2006/02/16 12:51:20 composer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
@@ -20,7 +20,7 @@ public class Condition extends DeclaredRepositoryEntity {
   /**
    * @modelguid {87B0B644-6B80-4544-8BCA-9E2AE2244340}
    */
-  public String name;
+  //public String name; // declared in parent class
   public BooleanOclExpression OCL;
   public Reference shortref;
   public FilterModuleElementReference longref;

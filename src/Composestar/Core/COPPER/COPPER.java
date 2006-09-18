@@ -248,9 +248,11 @@ public class COPPER implements CTCommonModule
 		    		if ( f.exists() ) {
 		    			BufferedReader br = new BufferedReader( new FileReader(f.getName()) );
 		    			String line = br.readLine();
-		    			String[] files = line.split(";");
-		    			for (int k=0; k<files.length; k++) {
-		    				cpsfiles.add(files[k]);
+		    			if (line != null) {
+			    			String[] files = line.split(";");
+			    			for (int k=0; k<files.length; k++) {
+			    				cpsfiles.add(files[k]);
+			    			}
 		    			}
 		    			br.close();
 		    		}

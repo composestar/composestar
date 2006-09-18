@@ -55,11 +55,18 @@ public class CPSFileParser {
 	{
 	    COPPER.setCpscontents("");
 	    d = new BufferedReader(new InputStreamReader((new FileInputStream(file))));
-        String line = d.readLine();
-	    while (line != null){
-            COPPER.setCpscontents(COPPER.getCpscontents() + (line + "\r\n"));
-            line = d.readLine();
-        }
+	    try 
+	    {
+	        String line = d.readLine();
+		    while (line != null) {
+	            COPPER.setCpscontents(COPPER.getCpscontents() + (line + "\r\n"));
+	            line = d.readLine();
+	        }
+	    }
+	    finally 
+	    {
+	    	d.close();
+	    }
 	}
     catch(IOException ioe)
 	{

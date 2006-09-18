@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: SyntacticSugarExpander.java,v 1.3 2006/03/09 16:09:26 doornenbal Exp $
+* $Id$
 */
 package Composestar.Core.COPPER;
 
@@ -30,7 +30,8 @@ import Composestar.Utils.StringConverter;
  */
 public class SyntacticSugarExpander {
 	AstManipulator am;
-
+	
+	/* deprecated
     private void AddDefault()
     {
 	    String concernName;
@@ -50,7 +51,9 @@ public class SyntacticSugarExpander {
 	    am.add("concern\\superimposition\\filtermodules\\filtermodule@lastnew\\self");    //maak een nieuwe
 	    am.add("concern\\superimposition\\filtermodules\\filtermodule@last\\filtermodule set\\filtermodule element\\" + fmName); //fmname staat nu al goed
 	  }
+	   */
 
+    /* deprecated     
 	  private void ExpandOnSelf() {
 	    String fmName;
 	    boolean check = true;
@@ -70,6 +73,7 @@ public class SyntacticSugarExpander {
           i++;
 	    }
 	  }
+	  */
 
 
 	  /**
@@ -96,6 +100,7 @@ public class SyntacticSugarExpander {
 	  }
 
 
+	  /* deprecated 
 	  private void AddSelfReference() {
 	    String concernName;
 	
@@ -104,6 +109,7 @@ public class SyntacticSugarExpander {
 	    am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\=");
 	    am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\" + concernName);
 	  }
+	  */
   
   	public void resolveEmptySuperImposition()
 	{
