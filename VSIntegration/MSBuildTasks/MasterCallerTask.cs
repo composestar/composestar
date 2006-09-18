@@ -142,17 +142,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 return false;
             }
             CurrentDebugMode = (DebugMode)debugLevelValue;
-            cc.CompiletimeDebugLevel = debugLevelValue;
-            _repositoryAccess.SetCommonConfiguration(cc);
-
-            // Close database so MASTER can access it
-            _repositoryAccess.CloseDatabase(); 
+            cc.CompiletimeDebugLevel = debugLevelValue;                   
 
             // Prepare to run java
             string classPath = "";
             string mainClass = "";
             string jvmOptions = "";
             string javaLocation = "";
+            string installFolder = "";
 
             // Retrieve the settings from the registry
             RegistryPermission keyPermissions = new RegistryPermission(
@@ -166,6 +163,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 mainClass = (string)regKey.GetValue("JavaMainClass", "Composestar.DotNET.MASTER.StarLightMaster");
                 jvmOptions = (string)regKey.GetValue("JavaOptions", "");
                 javaLocation = (string)regKey.GetValue("JavaFolder", "");
+                installFolder = (string)regKey.GetValue("StarLightInstallFolder", "");
             }
             else
             {
@@ -174,11 +172,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Check for empty values
-            if (string.IsNullOrEmpty(classPath) | string.IsNullOrEmpty(mainClass))
+            if (string.IsNullOrEmpty(classPath) | string.IsNullOrEmpty(mainClass) | string.IsNullOrEmpty(installFolder) )
             {
                 Log.LogErrorFromResources("CouldNotReadRegistryValues");                
                 return false;
             }
+
+            cc.InstallFolder = installFolder;
+
+            // Save common config
+            _repositoryAccess.SetCommonConfiguration(cc);
+        
+            // Close database so MASTER can access it
+            _repositoryAccess.CloseDatabase(); 
                                               
             // Start java                  
             System.Diagnostics.Process p = new System.Diagnostics.Process();

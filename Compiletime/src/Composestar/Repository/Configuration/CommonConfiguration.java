@@ -2,7 +2,22 @@ package Composestar.Repository.Configuration;
 
 public class CommonConfiguration {
 	private int _compiletimeDebugLevel = 0;
-	
+
+	private String _installFolder;
+
+	/** @property */
+	public String get_InstallFolder()
+	{
+		return _installFolder;
+	}
+
+	/** @property */
+	public void set_InstallFolder(String value)
+	{
+		_installFolder = value;
+	} 
+
+
 
 	/** @property */
 	public int get_CompiletimeDebugLevel()
