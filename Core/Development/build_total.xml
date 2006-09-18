@@ -55,12 +55,26 @@
 		<ant target="install" dir="${build.dotnet}" />
 	</target>
 	
+	<!-- plugin tasks -->
+	
+	<target name="plugin" depends="init">
+		<antcall target="plugin_dotnet" />
+	</target>
+	
+	<target name="plugin_dotnet" depends="init" if="available.dotnet">
+		<ant target="plugin" dir="${build.dotnet}" />
+	</target>
+	
 	<!-- QA tasks -->
 	
 	<!-- execute the findbugs tool -->
 	<target name="findbugs" depends="init">
-		<ant target="findbugs" dir="${build.core}" />
+		<antcall target="findbugs_core" />
 		<antcall target="findbugs_dotnet" />
+	</target>
+	
+	<target name="findbugs_core" depends="init">
+		<ant target="findbugs" dir="${build.core}" />
 	</target>
 	
 	<target name="findbugs_dotnet" depends="init" if="available.dotnet">
@@ -78,10 +92,11 @@
 	</target>
 	
 	<!-- do everything -->
-	<target name="all" depends="build,install,findbugs,test" />
+	<target name="all" depends="clean,build,install,findbugs,test" />
 	
 	<!-- task selector -->
 	
+	<!--
 	<target name="select" depends="init">
         <input message="Enter the desired action: "
                validargs="clean,build,rebuild,install,core,dotnet,java,c,findbugs,test"
@@ -90,5 +105,39 @@
         />
         <antcall target="${build.target}" />
     </target>
+    -->
+
+	<!-- fancy selection -->
+	
+	<target name="select">	
+		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar" />
+		<antmenu image="${basedir}/logo.gif" title="Compose* Build">
+		
+			<antMenuItem name="Advanced" >
+				<antMenuItem name="Build">
+					<antMenuItem name="Core" target="core" />
+					<antMenuItem name="DotNET" target="dotnet" />
+					<antMenuItem name="Java" target="java" />
+					<antMenuItem name="C" target="c" />
+				</antMenuItem>
+				<antMenuItem name="Plugin">
+					<antMenuItem name="DotNET" target="plugin_dotnet" />
+				</antMenuItem>
+			</antMenuItem>
+		
+			<link label="Clean the whole project" target="clean" />
+			<link label="Build the whole project" target="build" />
+			<link label="Clean &amp; Build" target="rebuild" />
+			<link label="Install" target="install" />
+			<link label="Run Findbugs" target="findbugs" />
+			<link label="Run the system test" target="test" />
+			
+			<separator />
+			
+			<!--<link label="Advanced" target="selector_advanced" />-->
+		
+			<link label="Cancel" target="cancel" />
+		</antmenu>
+	</target>
 
 </project>

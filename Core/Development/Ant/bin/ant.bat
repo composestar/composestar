@@ -19,6 +19,8 @@ if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 if "%OS%"=="Windows_NT" @setlocal
 if "%OS%"=="WINNT" @setlocal
 
+set _ERRLVL=0
+
 rem %~dp0 is expanded pathname of the current script under NT
 set DEFAULT_ANT_HOME=%~dp0..
 
@@ -92,14 +94,17 @@ if not "%JIKESPATH%"=="" goto runAntWithJikes
 if "%_USE_CLASSPATH%"=="no" goto runAntNoClasspath
 if not "%CLASSPATH%"=="" goto runAntWithClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+set _ERRLVL=%ERRORLEVEL%
 goto end
 
 :runAntNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+set _ERRLVL=%ERRORLEVEL%
 goto end
 
 :runAntWithClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+set _ERRLVL=%ERRORLEVEL%
 goto end
 
 :runAntWithJikes
@@ -108,19 +113,22 @@ if not "%CLASSPATH%"=="" goto runAntWithJikesAndClasspath
 
 :runAntWithJikesNoClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+set _ERRLVL=%ERRORLEVEL%
 goto end
 
 :runAntWithJikesAndClasspath
 "%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%\lib\ant-launcher.jar" "-Dant.home=%ANT_HOME%" "-Djikes.class.path=%JIKESPATH%" org.apache.tools.ant.launch.Launcher %ANT_ARGS%  -cp "%CLASSPATH%" %ANT_CMD_LINE_ARGS%
+set _ERRLVL=%ERRORLEVEL%
 goto end
 
 :end
 set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
+exit /B %_ERRLVL%
+
 if "%OS%"=="Windows_NT" @endlocal
 if "%OS%"=="WINNT" @endlocal
 
 :mainEnd
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
-
