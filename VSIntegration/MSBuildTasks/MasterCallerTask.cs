@@ -145,6 +145,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
             cc.CompiletimeDebugLevel = debugLevelValue;
             _repositoryAccess.SetCommonConfiguration(cc);
 
+            // Close database so MASTER can access it
+            _repositoryAccess.CloseDatabase(); 
+
             // Prepare to run java
             string classPath = "";
             string mainClass = "";
@@ -166,16 +169,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
             else
             {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues");
-                _repositoryAccess.CloseDatabase();
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");                
                 return false;
             }
 
             // Check for empty values
             if (string.IsNullOrEmpty(classPath) | string.IsNullOrEmpty(mainClass))
             {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues");
-                _repositoryAccess.CloseDatabase();
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");                
                 return false;
             }
                                               
@@ -206,14 +207,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     //Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.Normal) ;
                 }
                 if (p.ExitCode == 0)
-                {
-                    _repositoryAccess.CloseDatabase(); 
+                {                 
                     return !Log.HasLoggedErrors;
                 }
                 else
                 {
-                    Log.LogErrorFromResources("MasterRunFailed", p.ExitCode);
-                    _repositoryAccess.CloseDatabase(); 
+                    Log.LogErrorFromResources("MasterRunFailed", p.ExitCode);                 
                     return false;
                 }
             }
@@ -230,8 +229,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 else
                 {
                     Log.LogErrorFromResources("ExecutionException", e.ToString());
-                }
-                _repositoryAccess.CloseDatabase(); 
+                }             
                 return false;
             }                                              
         }
