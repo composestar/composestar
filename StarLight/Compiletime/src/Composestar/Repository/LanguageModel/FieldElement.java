@@ -1,6 +1,8 @@
 package Composestar.Repository.LanguageModel;
 
-public class FieldElement {
+public class FieldElement implements IRepositoryElement
+{
+	private int _id;
 	private int _parentTypeId;
 	private String _name = "";
 	private String _type = "";
@@ -9,7 +11,8 @@ public class FieldElement {
 	private boolean _isStatic;
 	
 	public FieldElement()
-	{	
+	{
+		_id = this.hashCode();
 	}
 	
 	public FieldElement(int parentTypeId)
@@ -17,6 +20,9 @@ public class FieldElement {
 		super();
 		_parentTypeId = parentTypeId;
 	}
+
+	/** @property */
+	public int get_Id() { return _id; }
 
 	/** @property */
 	public String get_Name()

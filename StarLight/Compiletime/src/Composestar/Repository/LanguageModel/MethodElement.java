@@ -3,7 +3,7 @@ package Composestar.Repository.LanguageModel;
 /**
  * Summary description for MethodElement.
  */
-public class MethodElement
+public class MethodElement implements IRepositoryElement
 {
 	private int _id;
 	private int _parentTypeId;
