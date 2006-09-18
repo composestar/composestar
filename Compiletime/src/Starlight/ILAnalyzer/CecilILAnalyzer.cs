@@ -78,6 +78,18 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             get { return _repositoryAccess; }
         }
+
+        private void ExtractAttributeElements(IRepositoryElement parent, CustomAttributeCollection attributes)
+        {
+            foreach (CustomAttribute attr in attributes)
+            {
+                AttributeElement ae = new AttributeElement();
+                ae.Type = attr.Constructor.Name;
+                ae.Value = attr.ConstructorParameters[0].ToString();
+
+                RepositoryAccess.AddAttribute(parent, ae);
+            }
+        }
       
         /// <summary>
         /// Extracts the types.
@@ -126,14 +138,8 @@ namespace Composestar.StarLight.ILAnalyzer
                 // Add to the repository
                 RepositoryAccess.AddType(ti);
 
-                foreach (CustomAttribute attr in type.CustomAttributes)
-                {
-                    AttributeElement ae = new AttributeElement();
-                    ae.Type = attr.Constructor.Name;
-                    ae.Value = attr.ConstructorParameters[0].ToString();
-
-                    RepositoryAccess.AddAttribute(ti, ae);
-                }
+                // Add attributes for type
+                ExtractAttributeElements(ti, type.CustomAttributes);
 
                 foreach (FieldDefinition field in type.Fields)
                 {
@@ -147,6 +153,9 @@ namespace Composestar.StarLight.ILAnalyzer
 
                     // Add to the repository
                     RepositoryAccess.AddField(ti, fe);
+
+                    // Add attributes for field
+                    //sExtractAttributeElements(fe, field.CustomAttributes);
                 }
                 
                 foreach (MethodDefinition method in type.Methods)
@@ -162,8 +171,10 @@ namespace Composestar.StarLight.ILAnalyzer
                     mi.IsStatic = method.IsStatic;
                     mi.IsVirtual = method.IsVirtual;
                     
-                    // Add to the repository
+                    // Add to the repositorys
                     RepositoryAccess.AddMethod(ti, mi);
+
+                    //ExtractAttributeElements(mi, method.CustomAttributes);
                     
                     // Add the parameters
                     foreach (ParameterDefinition param in method.Parameters)
