@@ -31,8 +31,8 @@ public class EMBEX implements CTCommonModule
 
 	public EMBEX() 
 	{     	
-    }
-    
+	}
+
 	/**
 	 * Iterates over cps concerns and calls saveToFile for embedded sources found
 	 * Creates directory for embedded sources  
@@ -49,7 +49,7 @@ public class EMBEX implements CTCommonModule
 		tempPath = config.getPathSettings().getPath("Base");
 		if (tempPath == null) 
 			throw new ModuleException("Error in configuration file: no such property Base", "EMBEX");
-		
+
 		// fetch embedded sources directory
 		embeddedDir = Configuration.instance().getPathSettings().getPath("EmbeddedSources");
 		if (embeddedDir == null || embeddedDir.length() == 0 )
@@ -65,7 +65,7 @@ public class EMBEX implements CTCommonModule
 			Debug.out(Debug.MODE_WARNING,"EMBEX",msg);	
 			embeddedDir.delete();
 		}
-		
+
 		// iterate over all cps concerns
 		while (cpsConcernIter.hasNext()) 
 		{
@@ -81,15 +81,15 @@ public class EMBEX implements CTCommonModule
 				// fetch embedded source and save
 				Source src = (Source)imp;
 				String language = src.getLanguage();
-				
+
 				Debug.out(Debug.MODE_DEBUG,"EMBEX","Found embedded source: "+src.getClassName());
 				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tLanguage: "+language);
 				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tFile: "+src.getSourceFile());
-				
+
 				List languageProjects = allProjects.getProjectsByLanguage(language);
 				if (languageProjects == null)
 					throw new ModuleException("No projects for language " + language, "EMBEX");
-				
+
 				Iterator lpIter = languageProjects.iterator();
 				if (!lpIter.hasNext())
 					throw new ModuleException("There is no project to add the embedded source to, the embedded code: "+src.className+" is added to the first project of type: "+src.language, "EMBEX");
@@ -97,16 +97,16 @@ public class EMBEX implements CTCommonModule
 				{
 					Project prj = (Project)lpIter.next();
 					Debug.out(Debug.MODE_DEBUG,"EMBEX","Adding embedded code to project: "+prj.getProperty("name"));
-					
+
 					Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
 					source.setFileName(embeddedPath+src.getSourceFile());
 					prj.addSource(source);
-					
+
 					TypeSource tsource = new TypeSource();
 					tsource.setFileName(embeddedPath+src.getSourceFile());
 					tsource.setName(src.getClassName());
 					prj.addTypeSource(tsource);
-					
+
 					this.saveToFile(src,resources);
 				}
 			}

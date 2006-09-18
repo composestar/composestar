@@ -664,16 +664,23 @@ public class INCRE implements CTCommonModule
 	}
 	
 	/**
-	 * step 1. Get module
-	 * step 2. Get dependencies of modules
-	 * step 3. iterate over dependencies
-	 * step 4. get dependent object
-	 * step 5. search history for same object
-	 * step 6. compare two objects (only in case not a file)
-	 * step 7. stop if modification found
-	 * 
-	 * return true in case all dependencies have not been modified
+	 * Returns true in case all dependencies have not been modified
 	 * return false otherwise
+	 *
+	 * (aka Returns whether all dependencies are unmodified?)
+	 * 
+	 * FIXME: this can use some clarification.
+	 * also the method name doesnt seem related to the description.
+	 * 
+	 * Procedure:
+	 * 1. Get module
+	 * 2. Get dependencies of modules
+	 * 3. iterate over dependencies
+	 * 4. get dependent object
+	 * 5. search history for same object
+	 * 6. compare two objects (only in case not a file)
+	 * 7. stop if modification found
+	 * 
 	 * @roseuid 41F4E50900CB
 	 */
 	public boolean isProcessedByModule(Object input, String modulename) throws ModuleException  

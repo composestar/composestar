@@ -1,5 +1,14 @@
 package Composestar.Core.BACO;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
@@ -11,11 +20,6 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-
 public abstract class BACO implements CTCommonModule
 {
 
@@ -23,10 +27,6 @@ public abstract class BACO implements CTCommonModule
 	{
 		Debug.out(Debug.MODE_DEBUG, "BACO","Copying files to output directory...");
 		Configuration config = Configuration.instance();
-        
-        //config.assemblies.addAssembly("D:/ComposestarSource/examplesDotNET/Pacman/obj/Weaver/pacman.ConcernImplementations.ChangingLevel.dll");
-        //config.assemblies.addAssembly("D:/ComposestarSource/examplesDotNET/Pacman/obj/Weaver/pacman.ConcernImplementations.ScoreIncreaser.dll");
-        //config.assemblies.addAssembly("D:/ComposestarSource/examplesDotNET/Pacman/obj/Weaver/pacman.Direction.dll");
         
         String composestarpath = config.getPathSettings().getPath("Composestar");
         //System.out.println("ComposestartPath: "+composestarpath);
@@ -39,16 +39,17 @@ public abstract class BACO implements CTCommonModule
         copyDependencies(config, filesToCopy);
         
         String examplepath = config.getPathSettings().getPath("Base");
-        // Repsotory.xml: 
+
+        // repository.xml: 
         filesToCopy.add(this.processString(examplepath+"repository.xml"));
         
         // ouputpath:
         String outputpath = config.getProjects().getProperty("OuputPath");
         
-        Iterator filesit = filesToCopy.iterator();
-        while(filesit.hasNext())
+        Iterator filesIt = filesToCopy.iterator();
+        while (filesIt.hasNext())
         {
-        	String file = (String)filesit.next();
+        	String file = (String)filesIt.next();
         	Debug.out(Debug.MODE_DEBUG,"BACO","Copying file: "+file+" to "+outputpath);
         	this.copyFile(file,outputpath);
         }		
@@ -104,7 +105,8 @@ public abstract class BACO implements CTCommonModule
         	filesToCopy.add(this.processString((String)it.next()));
         }
 	}
-	
+
+	// FIXME: double with FileUtils.copyFile ?
 	public void copyFile(String file, String outputpath) throws ModuleException
 	{
 		try
@@ -123,26 +125,26 @@ public abstract class BACO implements CTCommonModule
 			fis.close();
 			fos.close();
 		}
-		catch(FileNotFoundException fnfe)
+		catch (FileNotFoundException e)
 		{
-			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not Found:" + fnfe.getMessage());
-			fnfe.printStackTrace();
+			// FIXME: shouldnt this throw a ModuleException?
+			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not Found:" + e.getMessage());
+			e.printStackTrace();
 		}
-		catch(IOException fnfe)
+		catch (IOException e)
 		{
-			Debug.out(Debug.MODE_CRUCIAL,"BACO","IOException:" + fnfe.getMessage());
-			fnfe.printStackTrace();
+			// FIXME: shouldnt this throw a ModuleException?
+			Debug.out(Debug.MODE_CRUCIAL,"BACO","IOException:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * @deprecated use FileUtils.unquote(String) instead.
+	 */
 	protected String processString(String in)
 	{
-		String tmp = in;
-		if(tmp.startsWith("\""))
-			tmp = tmp.substring(1);
-		if(tmp.endsWith("\""))
-			tmp = tmp.substring(0,tmp.length()-1);
-		return tmp;
+		return FileUtils.unquote(in);
 	}
 
 }

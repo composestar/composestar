@@ -153,8 +153,7 @@ public class Module
 			if (this.summary.length() != 0)
 				Debug.out(Debug.MODE_CRUCIAL, "Master",this.summary);
 
-			try 
-			{
+			try {
 				Class moduleClass = Class.forName(this.fulltype);
 				CTCommonModule module = (CTCommonModule)moduleClass.newInstance();
 				INCRETimer timer = INCRE.instance().getReporter().openProcess(this.name,this.name,INCRETimer.TYPE_ALL);
