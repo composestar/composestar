@@ -91,7 +91,7 @@ public class DotNETCompiler implements LangCompiler
 		Configuration config = Configuration.instance();
 		TypeLocations tl = TypeLocations.instance();
 
-		String filename = source.getFileName();
+		String filename = new File(source.getFileName()).getAbsolutePath();
 		String targetPath = basePath + source.getTarget();
 
 		// incremental compilation
@@ -125,8 +125,9 @@ public class DotNETCompiler implements LangCompiler
 		tr.addReplacement("LIBS", libs);
 		tr.addReplacement("OPTIONS", cs.getProperty("options"));
 		tr.addReplacement("SOURCES", FileUtils.quote(filename));
+		
 		command = tr.process(command);
-		Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
+		Debug.out(Debug.MODE_DEBUG,"COMP","Command " + command);
 
 		config.getLibraries().addLibrary(targetPath);
 		project.addCompiledSource(targetPath);
