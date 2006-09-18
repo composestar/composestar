@@ -78,7 +78,6 @@
     <Compile Include="AssemblyInfo.java">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Composestar\dotnet\BACO\DotNETBACO.java" />
     <Compile Include="Composestar\dotnet\INLINE\DotNETInliner.java" />
     <Compile Include="Composestar\dotnet\INLINE\DotNETInlineStrategy.java" />
     <Compile Include="Composestar\dotnet\LAMA\DotNETAttribute.java">
@@ -104,7 +103,8 @@
     </Compile>
     <Compile Include="Composestar\dotnet\LOLA\DotNETLOLA.java" />
     <Compile Include="Composestar\dotnet\LOLA\metamodel\DotNETLanguageModel.java" />
-    <Compile Include="Composestar\dotnet\MASTER\DotNETMaster.java" />
+    <Compile Include="Composestar\dotnet\MASTER\StarLightMaster.java" />
+    <Compile Include="Composestar\dotnet\TYM\RepositoryCollector\StarLightCollectorRunner.java" />
     <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\Assembler.java" />
     <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\AssemblerException.java" />
     <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ClassModifier.java" />
@@ -121,11 +121,6 @@
     <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETMethodInfoHandler.java" />
     <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETParameterInfoHandler.java" />
     <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETTypeHandler.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeHarvester\DotNETHarvestRunner.java" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Composestar\dotnet\ACTING\AttributeHarvester.cs" />
-    <Content Include="Composestar\dotnet\TYM\TypeHarvester\TypeHarvester.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

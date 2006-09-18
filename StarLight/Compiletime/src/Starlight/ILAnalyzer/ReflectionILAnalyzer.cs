@@ -74,6 +74,14 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
         /// <summary>
+        /// Closes this instance. Cleanup any used resources.
+        /// </summary>
+        public void Close()
+        {
+           
+        }
+
+        /// <summary>
         /// Checks for initialization. Throw exception when not inited.
         /// </summary>
         private void CheckForInit()

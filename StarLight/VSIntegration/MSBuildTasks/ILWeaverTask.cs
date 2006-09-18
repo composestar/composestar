@@ -12,8 +12,8 @@ using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.StarLight.ILWeaver; 
-using Composestar.Repository.LanguageModel;  
+using Composestar.StarLight.ILWeaver;
+using Composestar.Repository.LanguageModel;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
@@ -47,7 +47,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             weaver = new CecilILWeaver();
         }
-        
+
         /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
@@ -60,22 +60,29 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             String filename;
 
-            NameValueCollection config = new NameValueCollection();
-            config.Add("RepositoryFilename", RepositoryFilename);
-             
+            foreach (ITaskItem item in AssemblyFiles)
+            {
+                filename = item.ToString();
+                Log.LogMessage("Weaving file {0}", filename);
 
-            //foreach (ITaskItem item in AssemblyFiles)
-            //{
-            //    filename = item.ToString();
-            //    Log.LogMessage("Weaving file {0}", filename); 
+                // Preparing config
+                NameValueCollection config = new NameValueCollection();
+                config.Add("RepositoryFilename", RepositoryFilename);
+                config.Add("OutputImagePath", Path.GetDirectoryName(filename));
+                config.Add("ShouldSignAssembly", "false");
+                config.Add("OutputImageSNK", "");
 
-            //    weaver.Initialize(filename, config);
-            //    weaver.DoWeave(); 
-                
-            //    Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);                       
+                // Initialize
+                weaver.Initialize(filename, config);
 
-            //    weaver.Close(); 
-            //}                     
+                // Perform weaving
+                weaver.DoWeave();
+
+                Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);
+
+                // Close the weaver, so it closes the database, performs cleanups etc
+                weaver.Close();
+            }
 
             return true;
         }

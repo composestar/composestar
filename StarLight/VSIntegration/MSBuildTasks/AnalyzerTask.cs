@@ -21,6 +21,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
     {
         private ITaskItem[] _assemblyFiles;
 
+        /// <summary>
+        /// Gets or sets the assembly files to analyze.
+        /// </summary>
+        /// <value>The assembly files.</value>
         [Required()]
         public ITaskItem[] AssemblyFiles
         {
@@ -30,6 +34,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private string _repositoryFilename;
 
+        /// <summary>
+        /// Gets or sets the repository filename.
+        /// </summary>
+        /// <value>The repository filename.</value>
         [Required()]
         public string RepositoryFilename
         {
@@ -71,8 +79,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 IList<TypeElement> ret = analyzer.ExtractTypeElements();
 
                 Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);                       
+
             }
            
+            // Close the analyzer
+            analyzer.Close();
+ 
             return true;
 
         }
