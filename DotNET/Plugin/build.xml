@@ -11,7 +11,7 @@
 	</condition>
 	<import file="${build.core}${file.separator}common.xml" />
 	
-	<echo message="${ant.project.name}" />
+	<echo>Processing: ${ant.project.name} ...</echo>
 	
 	<description>
 	The Compose* DotNET Plugins
