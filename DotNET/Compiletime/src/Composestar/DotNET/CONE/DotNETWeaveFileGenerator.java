@@ -40,6 +40,7 @@ import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 /**
  * This class generates the interception specification file for ILICIT based on 
@@ -49,10 +50,10 @@ import Composestar.Utils.Debug;
  */
 public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 {
+	private final static String s_repository = "repository.xml";
+
 	private PrintWriter out = null;
-	private String repository = "repository.xml";
 	private int debugLevel = 0;
-//	private String application = "";
 
 	/**
 	 * @roseuid 40EBC2AE0112
@@ -65,22 +66,23 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	 * @roseuid 40EBC2AE0113
 	 */
 	private void writeAssemblyReferenceDefinitions(CommonResources resources, String applicationStart)
-		throws ModuleException
+	throws ModuleException
 	{
+		TypeLocations typeLocations = TypeLocations.instance();
+		Configuration config = Configuration.instance();
+
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing assembly reference block...");
 		out.println("<assemblies>");
-		TypeLocations typeLocations = TypeLocations.instance();
 
 		writeAssemblyDefinitionRecord("ComposeStarRuntimeInterpreter", "1.0.0.0");
 		writeAssemblyDefinitionRecord("ComposeStarDotNETRuntimeInterpreter", "1.0.0.0");
 
-		Configuration config = Configuration.instance();
 		Iterator prjIt = config.getProjects().getProjects().iterator();
-		while( prjIt.hasNext() ) {
+		while (prjIt.hasNext()) 
+		{
 			Project p = (Project)prjIt.next();
-			String dummies = p.getProperty("name")+".dummies";
+			String dummies = p.getProperty("name") + ".dummies";
 			writeAssemblyDefinitionRecord(dummies, "0.0.0.0", true);
-
 		}
 
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolving entry assembly...");
@@ -91,71 +93,70 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			entryAssembly = typeLocations.getAssemblyByType(applicationStart);
 			Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolved '" + entryAssembly + "' as entry assembly.");     
 		}
-		else {
+		else
 			throw new ModuleException("Application has no startup object defined!","CONE_IS");
-		}
 
 		Iterator it = config.getProjects().getProjects().iterator();
 		while(it.hasNext())
 		{
-			Project prj = (Project)it.next();
-			Iterator depit = prj.getDependencies().iterator();
-			while(depit.hasNext())
+			Project project = (Project)it.next();
+			Iterator depIt = project.getDependencies().iterator();
+			while (depIt.hasNext())
 			{
-				Dependency dependency = (Dependency)depit.next();
+				Dependency dependency = (Dependency)depIt.next();
 				String dep = dependency.getFileName();
 
 				// Do not add the dependency when it is a .NET assembly or a composestar assembly
 				// FIXME: this makes assumptions about the location of the .NET framework
-				if( dep.indexOf("Microsoft.NET/Framework/") >= 0 )
+				if (dep.indexOf("Microsoft.NET/Framework/") >= 0)
 					continue;
 
-				if( dep.indexOf("ComposeStarRuntimeInterpreter") >= 0 )
+				if (dep.indexOf("ComposeStarRuntimeInterpreter") >= 0)
 					continue;
 
-				if( dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0 )
+				if (dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0)
 					continue;
 
-				File f = new File( dep );
+				File f = new File(dep);
 
 				String filename = f.getName();
-				String dllname  = filename.substring( 0, filename.lastIndexOf( "." ) );
-				writeAssemblyDefinitionRecord( dllname, "0.0.0.0", entryAssembly );
+				String dllname  = FileUtils.getFilenamePart(filename);
+				
+				writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
 			}
 		}
 
 		Enumeration cfNames = resources.CustomFilters.propertyNames();
-		while( cfNames.hasMoreElements() ) {
+		while (cfNames.hasMoreElements())
+		{
 			String cfName = (String) cfNames.nextElement();
 			String cfPath = resources.CustomFilters.getProperty( cfName );
 			//cfPath = System.getProperty("user.dir")+File.separator+cfName;
+			
 			try {
-				File f = new File( cfPath );
-				if (f == null) {
-					Debug.out( Debug.MODE_WARNING, "CONE_IS", "Cannot create file handle for referenced DLL '"+cfPath+"'.");
-				} else {
-					if( !f.exists() || !f.isFile() )
-						// TODO Is it possible to point to the line in project.ini?
-						//      But it could also be in composestar.ini.
-						Debug.out( Debug.MODE_WARNING, "CONE_IS", "Referenced DLL '" + f.getAbsolutePath() + "' does not exist (see 'project.ini')." );
-					else {
-						String filename = f.getName();
+				File file = new File(cfPath);
+				if (file == null)
+					Debug.out(Debug.MODE_WARNING, "CONE_IS", "Cannot create file handle for referenced DLL '"+cfPath+"'.");
+				else
+				{
+					if (file.exists() && file.isFile())
+					{
+						String filename = file.getName();
 						String dllname  = filename.substring( 0, filename.lastIndexOf( "." ) );
 						Debug.out( Debug.MODE_DEBUG, "CONE_IS", "Adding DLL '" +dllname+ "'." );
 						writeAssemblyDefinitionRecord( dllname, "0.0.0.0", entryAssembly);
 					}
+					else 
+						Debug.out(Debug.MODE_WARNING, "CONE_IS", "Referenced DLL '" + file.getAbsolutePath() + "' does not exist." );
 				}
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				Debug.out(Debug.MODE_ERROR,"CONE_IS","An exception occurred while creating file handle for referenced DLL '"+cfPath+"': "+e.getMessage());
 				throw new ModuleException("Unhandled exception: " + e.getClass().toString() + ";"+ e.getMessage(),"CONE_IS");
 			}
 		}
 
 		Set assemblyNames = typeLocations.assemblies();
-//		HashSet asmExterns = (HashSet) assemblyNames.clone();
-//		String[] externSet = (String[])asmExterns.toArray(new String[asmExterns.size()]);
 		Iterator anIt = assemblyNames.iterator();
 		while (anIt.hasNext())
 		{
@@ -184,7 +185,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Inserting method definition for 'handleApplicationStart'.");     
 		out.println("<method id=\"application_start\" assembly=\"ComposeStarDotNETRuntimeInterpreter\" class=\"Composestar.RuntimeDotNET.FLIRT.DotNETMessageHandlingFacility\" name=\"handleDotNETApplicationStart\">");
-		out.println("<argument value=\"" + repository + "\" type=\"string\"/>");
+		out.println("<argument value=\"" + s_repository + "\" type=\"string\"/>");
 		out.println("<argument value=\"" + debugLevel + "\" type=\"int\"/>");
 		out.println("</method>");
 
@@ -221,18 +222,18 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Method definitions block has been written.");     
 	}
 
-	public ArrayList getAfterInstantiationClasses() 
+	private List getAfterInstantiationClasses() 
 	{
-		ArrayList result = new ArrayList();
+		List result = new ArrayList();
 		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Searching for instantiation interceptions...");
 
 		DataStore ds = DataStore.instance();
 		Iterator it = ds.getAllInstancesOf(CompiledImplementation.class);
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			CompiledImplementation ci = (CompiledImplementation)it.next();
 			String className = ci.getClassName();
-			if(className != null)
+			if (className != null)
 			{
 				result.add(className);
 				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for instantiation of class '" + className + "' to our internal list.");
@@ -240,26 +241,28 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		}
 
 		it = ds.getAllInstancesOf(CpsConcern.class);
-		while (it.hasNext()) {
+		while (it.hasNext())
+		{
 			CpsConcern c = (CpsConcern)it.next();
-
 			Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found CpsConcern with name["+c.getName()+"]: " + c.getQualifiedName());
 
-			Object o = c.getDynObject("IMPLEMENTATION");
-			if ( o != null) {
-
-				PrimitiveConcern pc = (PrimitiveConcern)o;
+			Object impl = c.getDynObject("IMPLEMENTATION");
+			if (impl != null)
+			{
+				PrimitiveConcern pc = (PrimitiveConcern)impl;
 
 				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found primitive concern with name: " + pc.getQualifiedName());
 				result.add(pc.getQualifiedName());
 				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for instantiation of class '" + pc.getQualifiedName() + "' to our internal list.");
 			}
 		}
+
 		it = ds.getAllInstancesOf(Concern.class);
-		while (it.hasNext()) {
+		while (it.hasNext())
+		{
 			Concern c = (Concern)it.next();
 			//Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found Concern with name["+c.getName()+"]: " + c.getQualifiedName());
-			if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
+			if (c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
 			{
 				result.add(c.getQualifiedName());
 				Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for instantiation of class '" + c.getQualifiedName() + "' to our internal list.");
@@ -271,21 +274,19 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 	private void writeMethodInvocations(CommonResources resources)
 	{
-		// Get a FILTHService instance
 		FILTHService filthservice = FILTHService.getInstance(resources);
 
 		out.println("<methodInvocations>");
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
-		while( iterConcerns.hasNext() )
+		while (iterConcerns.hasNext())
 		{
 			Concern c = (Concern)iterConcerns.next();
 
 			try {
 				List list = filthservice.getOrder(c);
-				if (!list.isEmpty()) {
+				if (!list.isEmpty())
 					writeMethodInvocationRecord(c.getQualifiedName());
-				}
 			}
 			catch (Exception e) {
 				Debug.out(Debug.MODE_WARNING, "CONE-IS", "Unable to get ordering for concern '" + c.getName() + "' from FILTH.");
@@ -297,42 +298,46 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 	private void writeCastingInterceptions()
 	{
-		Set s = new HashSet();
+		Set qns = new HashSet();
 
 		out.println("<casts>");
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
-		while ( iterConcerns.hasNext() )
+		while (iterConcerns.hasNext())
 		{
 			Concern c = (Concern)iterConcerns.next();
 			boolean castConcern = false;
 
-			if ( c.getDynObject("SingleOrder") != null) {
+			if (c.getDynObject("SingleOrder") != null) 
+			{
 				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
 
 				Iterator iterFilterModules = fmo.orderAsList().iterator();
-				while ( iterFilterModules.hasNext() )
+				while (iterFilterModules.hasNext())
 				{
-					FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID((String)iterFilterModules.next());
+					String fmn = (String)iterFilterModules.next();
+					FilterModule fm = (FilterModule)DataStore.instance().getObjectByID(fmn);
 
-					Iterator iterInternals = fm.getInternalIterator() ;
-					while ( iterInternals.hasNext() )
+					Iterator iterInternals = fm.getInternalIterator();
+					while (iterInternals.hasNext())
 					{
 						Internal internal = (Internal)iterInternals.next();
-						String internalQFN = internal.getType().getQualifiedName();
+						String internalQN = internal.getType().getQualifiedName();
 						castConcern = true;
-						if ( !s.contains(internalQFN) )
+						
+						if (!qns.contains(internalQN))
 						{
-							s.add( internalQFN );
-							writeCastingInterceptionRecord( internalQFN );
+							qns.add(internalQN);
+							writeCastingInterceptionRecord(internalQN);
 						}
 					}
 				}
 			}
 
-			if ( castConcern && !s.contains(c.getQualifiedName()) ) {
-				s.add(c.getQualifiedName());
-				writeCastingInterceptionRecord( c.getQualifiedName() );
+			if (castConcern && !qns.contains(c.getQualifiedName()))
+			{
+				qns.add(c.getQualifiedName());
+				writeCastingInterceptionRecord(c.getQualifiedName());
 			}
 		}
 
@@ -347,7 +352,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 		out.println("<classReplacements>");
 
-		List typeNames = typeLocations.typeNames();
+		Set typeNames = typeLocations.typeNames();
 		Iterator it = typeNames.iterator();
 		while (it.hasNext())
 		{
@@ -360,7 +365,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			Source source = (Source)projects.getSource(sourceFile);
 			String projectName = source.getProject().getProperty("name");
 			String dummies = (source == null ? "" : projectName + ".dummies");
-			
+
 			writeClassReplacementRecord(dummies, typeName, assembly, typeName);
 		}
 
@@ -372,7 +377,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	 * @param resources
 	 * @roseuid 40EBC2AE0316
 	 */
-	private void writeClassDefinitions(CommonResources resources) {
+	private void writeClassDefinitions(CommonResources resources)
+	{
 		// Write definitions for inputfilters and dummy unlinking
 		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '*'...");
 
@@ -387,22 +393,24 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Class definition for class '*' has been written.");
 
 		// Write definitions for outputfilters and instantiations
-		ArrayList instantiationClasses = getAfterInstantiationClasses();
+		List instantiationClasses = getAfterInstantiationClasses();
 
 		Iterator iterConcerns = DataStore.instance().getAllInstancesOf(Concern.class);
-		while ( iterConcerns.hasNext() )
+		while (iterConcerns.hasNext())
 		{
 			Concern c = (Concern)iterConcerns.next();
-
-			if ( c.getDynObject("SingleOrder") != null) {
+			
+			if (c.getDynObject("SingleOrder") != null)
+			{
 				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
 
 				Iterator iterFilterModules = fmo.orderAsList().iterator();
-				while ( iterFilterModules.hasNext() )
+				while (iterFilterModules.hasNext())
 				{
-					FilterModule fm = (FilterModule) (DataStore.instance()).getObjectByID((String)iterFilterModules.next());
+					String fmn = (String)iterFilterModules.next();
+					FilterModule fm = (FilterModule)DataStore.instance().getObjectByID(fmn);
 
-					if ( !fm.getOutputFilters().isEmpty() )
+					if (!fm.getOutputFilters().isEmpty())
 					{
 						// Outputfilters defined for this concern
 						Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '" + c.getQualifiedName() + "'...");
@@ -413,7 +421,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 						writeMethodInvocationRecord();
 						out.println("</methodInvocations>");
 
-						if ( instantiationClasses.contains(c.getQualifiedName()) )
+						if (instantiationClasses.contains(c.getQualifiedName()))
 						{
 							writeAfterInstantiationRecord();
 							instantiationClasses.remove(c.getQualifiedName());
@@ -431,7 +439,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 		// Write remaining class instantiations
 		Iterator iterClasses = instantiationClasses.iterator();
-		while ( iterClasses.hasNext() )
+		while (iterClasses.hasNext())
 		{
 			String className = (String)iterClasses.next();
 			Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing definition for class '" + className + "'...");
@@ -572,65 +580,66 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 	}
 
-	class MethodInformation
-	{
-		private String mClassName;
-		private String mMethodName;
-
-		/**
-		 * @param className
-		 * @param methodName
-		 * @roseuid 40EBC2C9001B
-		 */
-		public MethodInformation(String className, String methodName) {
-			mClassName = className;
-			mMethodName = methodName;
-		}
-
-		/**
-		 * @return java.lang.String
-		 * @roseuid 40EBC2C9003B
-		 */
-		public String getClassName() {
-			return mClassName;
-		}
-
-		/**
-		 * @return java.lang.String
-		 * @roseuid 40EBC2C9005A
-		 */
-		public String getMethodName() {
-			return mMethodName;
-		}
-	}
+//	FIXME: unused
+//	private class MethodInformation
+//	{
+//		private String mClassName;
+//		private String mMethodName;
+//
+//		/**
+//		 * @param className
+//		 * @param methodName
+//		 * @roseuid 40EBC2C9001B
+//		 */
+//		public MethodInformation(String className, String methodName) {
+//			mClassName = className;
+//			mMethodName = methodName;
+//		}
+//
+//		/**
+//		 * @return java.lang.String
+//		 * @roseuid 40EBC2C9003B
+//		 */
+//		public String getClassName() {
+//			return mClassName;
+//		}
+//
+//		/**
+//		 * @return java.lang.String
+//		 * @roseuid 40EBC2C9005A
+//		 */
+//		public String getMethodName() {
+//			return mMethodName;
+//		}
+//	}
 
 //	FIXME: unused
 //	private class ClassInformation {
-//	private ArrayList mInvocations;
-//	private String mClassName = "";
-
-//	/**
-//	* @return java.lang.String
-//	* @roseuid 40EBC2C80155
-//	*/
-//	public String getClassName() {
-//	return mClassName;
-//	}
-
-//	/**
-//	* @param invocation
-//	* @roseuid 40EBC2C80173
-//	*/
-//	public void AddInvocation(DotNETWeaveFileGenerator.MethodInformation invocation) {
-//	mInvocations.add(invocation);
-//	}
-
-//	/**
-//	* @return java.util.Iterator
-//	* @roseuid 40EBC2C801A2
-//	*/
-//	public Iterator getInvocationsIterator() {
-//	return mInvocations.iterator();
-//	}
+//		private ArrayList mInvocations;
+//		private String mClassName = "";
+//
+//		/**
+//		 * @return java.lang.String
+//		 * @roseuid 40EBC2C80155
+//		 */
+//		public String getClassName() {
+//			return mClassName;
+//		}
+//
+//		/**
+//		 * @param invocation
+//		 * @roseuid 40EBC2C80173
+//		 */
+//		public void AddInvocation(DotNETWeaveFileGenerator.MethodInformation invocation) {
+//			mInvocations.add(invocation);
+//		}
+//
+//		/**
+//		 * @return java.util.Iterator
+//		 * @roseuid 40EBC2C801A2
+//		 */
+//		public Iterator getInvocationsIterator() {
+//			return mInvocations.iterator();
+//		}
 //	}
 }

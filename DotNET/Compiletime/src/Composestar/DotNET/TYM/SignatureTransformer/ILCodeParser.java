@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,6 +14,7 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Utils.FileUtils;
 
 /**
  * Responsible for dissassembling an assembly,  parsing the contents of its
@@ -80,48 +80,50 @@ public class ILCodeParser extends TransformerBase
      * @throws ModifierException
      * @roseuid 406AB00303AF
      */
-    public void run() throws ModifierException {
-        if("".equals(getAssemblyName())) return; // nothing to do
-        
-        
-        String ilName = getAssemblyName().replaceAll( "\\.\\w+", ".il" );
+    public void run() throws ModifierException
+    {
+        if ("".equals(getAssemblyName())) return; // nothing to do
+                
+        String ilName = getAssemblyName().replaceAll("\\.\\w+", ".il");
 
         // disassemble
         Assembler asm = new MSAssembler();
-        try{
-            asm.disassemble( getAssemblyName(), ilName );
-        } catch( AssemblerException e ){
-            throw new ModifierException( e.getMessage() + " (Assembly: '" + getAssemblyName() + "', IL: '" + ilName + "')");
+        try {
+            asm.disassemble(getAssemblyName(), ilName);
+        }
+        catch (AssemblerException e) {
+        	e.printStackTrace();
+            throw new ModifierException(e.getMessage() + " (Assembly: '" + getAssemblyName() + "', IL: '" + ilName + "')");
         }
         
-        File file = new File(ilName+".il");
+        // remove the source file (?)
+        File file = new File(ilName + ".il");
         file.delete();
 
         // open dissassembled file
         BufferedReader in = null;
         try {
-            in = new BufferedReader( new InputStreamReader( new FileInputStream( ilName ) ) );
-        }catch( FileNotFoundException e ) {
-            throw new ModifierException( "Can't open newly created il file " + ilName + " in AssemblyModifier::dissect" );
+            in = new BufferedReader(new InputStreamReader(new FileInputStream(ilName)));
+        }
+        catch (FileNotFoundException e) {
+            throw new ModifierException("Cannot open newly created il file " + ilName);
         }
 
         // run main assembly transformation
-        setIn( in );
-        openOut( ilName + ".il" );
-        dissect( ilName );
+        setIn(in);
+        openOut(ilName + ".il");
+        dissect(ilName);
         closeOut();
-        try{
-        	in.close();
-        }catch( IOException e ) {
-   			// silent eat: what do we care if we couldn't close the input file.
-        }
+        
+        FileUtils.close(in);
 
         // assemble
         try {
             asm.assemble( ilName + ".il", getAssemblyName() );
-        } catch( AssemblerException e ){
-            throw new ModifierException( e.getMessage() );
-        }     
+        }
+        catch (AssemblerException e) {
+            throw new ModifierException(e.getMessage());
+        }
     }
     
     /**
