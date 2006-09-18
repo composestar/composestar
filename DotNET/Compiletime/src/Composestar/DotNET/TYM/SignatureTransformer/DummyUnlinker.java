@@ -105,7 +105,7 @@ public class DummyUnlinker implements CTCommonModule
 
 	private String createExternDeclarations(String selfName, Set externSet)
 	{
-		StringBuilder sb = new StringBuilder();
+		StringBuffer sb = new StringBuffer();
 		Iterator esIt = externSet.iterator();
 		while (esIt.hasNext())
 		{
