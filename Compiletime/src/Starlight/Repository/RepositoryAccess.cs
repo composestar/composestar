@@ -9,8 +9,9 @@ using Composestar.Repository.LanguageModel.Inlining;
 namespace Composestar.Repository
 {
     /// <summary>
-    /// A layer between the StarLight code and the repository objects. 
-    /// Strong typed retrieval of the elements in the repository.
+    /// A layer between the StarLight .NET code and the repository objects. 
+    /// Strong typed retrieval of the elements in the repository and 
+    /// the ability to add objects to the underlying datastore.
     /// </summary>
     public class RepositoryAccess
     {
