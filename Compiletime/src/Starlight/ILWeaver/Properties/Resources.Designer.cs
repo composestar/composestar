@@ -70,6 +70,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not write the assembly to a file. Check if the file is not in use and has the correct access permissions..
+        /// </summary>
+        internal static string CouldNotSaveAssembly {
+            get {
+                return ResourceManager.GetString("CouldNotSaveAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The supplied filename is null or empty..
         /// </summary>
         internal static string FileNameNullOrEmpty {

@@ -120,6 +120,9 @@
   <data name="AssemblyNotOpen" xml:space="preserve">
     <value>The assembly is not open.</value>
   </data>
+  <data name="CouldNotSaveAssembly" xml:space="preserve">
+    <value>Could not write the assembly to a file. Check if the file is not in use and has the correct access permissions.</value>
+  </data>
   <data name="FileNameNullOrEmpty" xml:space="preserve">
     <value>The supplied filename is null or empty.</value>
   </data>
