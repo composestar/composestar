@@ -28,6 +28,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
     public class MasterCallerTask : Task
     {
 
+        private const string JavaExecutable = "java.exe";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MasterCallerTask"/> class.
         /// </summary>
@@ -38,6 +40,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private string _repositoryFilename;
 
+        /// <summary>
+        /// Gets or sets the repository filename.
+        /// </summary>
+        /// <value>The repository filename.</value>
         [Required()]
         public string RepositoryFilename
         {
@@ -47,6 +53,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private ITaskItem[] _concernFiles;
 
+        /// <summary>
+        /// Gets or sets the concern files.
+        /// </summary>
+        /// <value>The concern files.</value>
         [Required()]
         public ITaskItem[] ConcernFiles
         {
@@ -56,6 +66,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private string debugLevel;
 
+        /// <summary>
+        /// Gets or sets the debug level.
+        /// </summary>
+        /// <value>The debug level.</value>
         public string DebugLevel
         {
             get { return debugLevel; }
@@ -67,6 +81,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
         const int ERROR_FILE_NOT_FOUND = 2;
         const int ERROR_ACCESS_DENIED = 5;
 
+        /// <summary>
+        /// When overridden in a derived class, executes the task.
+        /// </summary>
+        /// <returns>
+        /// true if the task successfully executed; otherwise, false.
+        /// </returns>
         public override bool Execute()
         {
             // Open DB
@@ -141,14 +161,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // Start java                  
             System.Diagnostics.Process p = new System.Diagnostics.Process();
 
+            // Determine filename
             if (!string.IsNullOrEmpty(javaLocation) )
             {
-                p.StartInfo.FileName = Path.Combine(javaLocation, "java.exe");
+                p.StartInfo.FileName = Path.Combine(javaLocation, JavaExecutable);
             }
             else
-                p.StartInfo.FileName = "java"; // In path
+                p.StartInfo.FileName = JavaExecutable; // In path
             
-            p.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", jvmOptions ,classPath , mainClass, RepositoryFilename);
+            p.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", jvmOptions, classPath, mainClass, RepositoryFilename);
             Log.LogMessage("Java will be called with the arguments: {0}", p.StartInfo.Arguments ) ;
             
             p.StartInfo.CreateNoWindow = true;
@@ -178,25 +199,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 if (e.NativeErrorCode == ERROR_FILE_NOT_FOUND)
                 {
-                    //Console.WriteLine(e.Message + ". Check the path.");
-                    //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", is not found, please add the Java executable to your path!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
-                    //Debug.Instance.ActivateTaskListWindow();
                     Log.LogErrorFromResources("JavaExecutableNotFound", p.StartInfo.FileName);
                 }
-
                 else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)
                 {
-                    //Debug.Instance.AddTaskItem("The java execuatble, "+p.StartInfo.FileName+", can not be accessed!", vsTaskPriority.vsTaskPriorityHigh , vsTaskIcon.vsTaskIconCompile  );
-                    //Debug.Instance.ActivateTaskListWindow();
                     Log.LogErrorFromResources("JavaExecutableAccessDenied", p.StartInfo.FileName);
+                }
+                else
+                {
+                    Log.LogErrorFromResources("ExecutionException", e.ToString());
                 }
                 _repositoryAccess.CloseDatabase(); 
                 return false;
-            }                      
-
-            return true;
-                      
+            }                                              
         }
-
     }
 }

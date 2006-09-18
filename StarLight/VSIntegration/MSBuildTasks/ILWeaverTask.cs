@@ -58,21 +58,26 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             Log.LogMessage("Weaving the filter code using the Cecil IL Weaver");
 
+            String filename;
+
             NameValueCollection config = new NameValueCollection();
             config.Add("RepositoryFilename", RepositoryFilename);
              
-            foreach (ITaskItem item in AssemblyFiles)
-            {
-                Log.LogMessage("Weaving file {0}", item.ToString()); 
 
-                //analyzer.Initialize(item.ToString(), config);
-                //IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            //foreach (ITaskItem item in AssemblyFiles)
+            //{
+            //    filename = item.ToString();
+            //    Log.LogMessage("Weaving file {0}", filename); 
 
-                //Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);                       
-            }
-           
+            //    weaver.Initialize(filename, config);
+            //    weaver.DoWeave(); 
+                
+            //    Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);                       
+
+            //    weaver.Close(); 
+            //}                     
+
             return true;
-
         }
 
 

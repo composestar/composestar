@@ -79,6 +79,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An exception occured while executing Java. The message is &apos;{0}&apos;..
+        /// </summary>
+        internal static string ExecutionException {
+            get {
+                return ResourceManager.GetString("ExecutionException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not execute the Java executable &apos;{0}&apos; because of access permission errors..
         /// </summary>
         internal static string JavaExecutableAccessDenied {

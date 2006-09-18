@@ -323,6 +323,16 @@ namespace Composestar.StarLight.ILWeaver
 
         }
 
+        /// <summary>
+        /// Closes this instance. Cleanup any used resources.
+        /// </summary>
+        public void Close()
+        {
+            if (_repositoryAccess != null)
+                _repositoryAccess.CloseDatabase(); 
+        }
+
+
         #region nested class WeaverConfiguration
         /// <summary>
         /// Contains the configuration for the weaver.
