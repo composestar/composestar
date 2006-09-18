@@ -142,9 +142,9 @@ public abstract class Type extends ProgramElement{
 		return this.annotationInstances;
 	}
 	
-	/** Stuff for LOLA **/
+	// stuff for LOLA
 	
-	/* (non-Javadoc)
+	/**
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitName()
 	 */
 	public String getUnitName()
@@ -152,7 +152,7 @@ public abstract class Type extends ProgramElement{
       return fullName();
     }
 	
-	/* (non-Javadoc)
+	/**
 	 * @see Composestar.Core.LAMA.ProgramElement#hasUnitAttribute(java.lang.String)
 	 */
 	public boolean hasUnitAttribute(String attribute)

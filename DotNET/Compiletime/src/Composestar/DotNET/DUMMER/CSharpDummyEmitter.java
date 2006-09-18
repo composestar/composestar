@@ -31,7 +31,7 @@ public class CSharpDummyEmitter implements DummyEmitter {
 	public void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException
 	{
 		int result = 0;
-		StringBuffer processOutput = new StringBuffer();
+	//	StringBuffer processOutput = new StringBuffer();
 		CSharpDummyProcess dummyGen = new CSharpDummyProcess();
 		try
 		{

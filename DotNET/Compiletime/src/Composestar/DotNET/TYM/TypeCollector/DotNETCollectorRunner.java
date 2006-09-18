@@ -1,7 +1,3 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\CTAdaption\\TYM\\TypeCollector\\CollectorRunner.java
-
-//Source file: H:\\sfcvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\TypeCollector\\CollectorRunner.java
-
 package Composestar.DotNET.TYM.TypeCollector;
 
 import java.io.IOException;
@@ -50,7 +46,6 @@ public class DotNETCollectorRunner implements CollectorRunner {
      * e.g the Repository.
      * @throws Composestar.core.Exception.ModuleException If a ModuleException is 
      * thrown the Master will stop its activity immediately.
-     * @roseuid 4057006D0252
      */
     public void run(CommonResources resources) throws ModuleException {
     	

@@ -1,27 +1,28 @@
-//Source file: H:\\sfcvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\AssemblyTransformer\\ILCodeParser.java
-
-//Source file: H:\\cvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\AssemblyTransformer\\ILCodeParser.java
-
 package Composestar.DotNET.TYM.SignatureTransformer;
 
-
-
-import java.io.*;
-import java.util.Iterator;
-import Composestar.DotNET.LAMA.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETType;
 
 /**
  * Responsible for dissassembling an assembly,  parsing the contents of its
  * dissassembled file  and delegating the modification to it and finally
  * assemblying the output.
  */
-public class ILCodeParser extends TransformerBase {
+public class ILCodeParser extends TransformerBase
+{
     private HashMap LinkToAssemblies;
     private HashMap Concerns;
     protected String AssemblyName;

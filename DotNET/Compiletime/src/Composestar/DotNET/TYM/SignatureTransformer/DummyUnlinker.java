@@ -1,180 +1,165 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\CTAdaption\\TYM\\AssemblyTransformer\\DummyUnlinker.java
-
-/*
- * Created on 19-jul-2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 package Composestar.DotNET.TYM.SignatureTransformer;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.TYM.TypeLocations;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import Composestar.Core.Exception.ModuleException;
-
 /**
+ * This class will modify references to the dummies dll so that 
+ * the types from the 'real' dlls are used.
+ * 
  * @author Staijen
- * This class will modify references to the dummies dll so that the types from the 
- * 'real' dlls are used.
  */
-public class DummyUnlinker implements CTCommonModule {
-
+public class DummyUnlinker implements CTCommonModule
+{
 	private TypeLocations typeLocations;
-    
-    public DummyUnlinker()
-    {
-    	typeLocations = TypeLocations.instance();
-    }
-    
-    /**
-     * (non-Javadoc)
-     * @see 
-     * Composestar.core.Master.coreModule#run(Composestar.core.Master.Commo
-     * nResources)
-     * @param resources
-     * @throws Composestar.core.Exception.ModuleException
-     * @roseuid 40FD27B20117
-     */
-    public void run(CommonResources resources) throws ModuleException {
-		ArrayList assemblies = (ArrayList) resources.getResource("BuiltAssemblies");
+
+	public DummyUnlinker()
+	{
+		typeLocations = TypeLocations.instance();
+	}
+
+	public void run(CommonResources resources) throws ModuleException
+	{
+		MSAssembler assembler = new MSAssembler();		
+		List assemblies = (List)resources.getResource("BuiltAssemblies");
 		HashSet assemblyNames = typeLocations.assemblies();
-		MSAssembler assembler = new MSAssembler();
-		String[] types = reverseBubbleSort(typeLocations.types());
-		
-		/*
-		for( Iterator i = assemblies.iterator(); i.hasNext(); )
+	//	String[] types = reverseBubbleSort(typeLocations.types());
+		List typeNames = typeLocations.typeNames();
+
+		Iterator asmIt = assemblies.iterator();
+		while (asmIt.hasNext())
 		{
-			String assemblyFilename = (String) i.next();
-			String assemblyName = assemblyFilename.substring(assemblyFilename.lastIndexOf("/")+1);
-			assemblyName = assemblyName.substring(0, assemblyName.lastIndexOf(".")); 
-			assemblyNames.add(assemblyName);
-		}
-		*/
-        Iterator i = assemblies.iterator();
-		while(i.hasNext())
-		{
-			String asmpath = ((String) i.next()).replaceAll("\"", "");
+			String asm = (String)asmIt.next();
+			String asmpath = asm.replaceAll("\"", "");
 			String ilpath = asmpath + ".il";
-			
-			String asmname = asmpath.substring(asmpath.lastIndexOf("/")+1).replaceAll("\"", "");
-			
-			try
-			{
+			String asmname = asmpath.substring(asmpath.lastIndexOf("/") + 1);
+
+			try {
 				assembler.disassemble(asmpath, ilpath);
 				String[] ilCode = readLines(ilpath);
-				HashSet asmExterns = (HashSet) assemblyNames.clone();
-				asmExterns.remove(asmname);
-				String newCode = unlinkDummies(ilCode, asmname, (String[])asmExterns.toArray(new String[asmExterns.size()]), types);
+
+				HashSet externSet = (HashSet)assemblyNames.clone();
+				externSet.remove(asmname);
+
+				String newCode = unlinkDummies(ilCode, asmname, externSet, typeNames);
 				writeFile(ilpath, newCode);
 				assembler.assemble(ilpath, asmpath);
 			}
-			catch(Exception e)
-			{
+			catch (Exception e) {
 				throw new ModuleException("Dummy Unlinking failure in " + asmpath + ", reason: " + e.getMessage());
 			}
 		}     
-    }
-    
-    /**
-     * @param names
-     * @return java.lang.String[]
-     * @roseuid 40FD27B20194
-     */
-    public String[] reverseBubbleSort(String[] names) {
-		for (int i = names.length -1; i >= 0; i--)
+	}
+
+//	/**
+//	 * @param names
+//	 * @return java.lang.String[]
+//	 * @roseuid 40FD27B20194
+//	 */
+//	private String[] reverseBubbleSort(String[] names)
+//	{
+//		for (int i = names.length -1; i >= 0; i--)
+//		{
+//			for (int j = 0; j < i; j++)
+//			{
+//				if (names[j].compareTo(names[j+1]) < 0 )
+//				{
+//					String temp = names[j];
+//					names[j] = names[j + 1];
+//					names[j + 1] = temp;
+//				}
+//			}
+//		}
+//
+//		return names;     
+//	}
+
+	/**
+	 * @param ilCode
+	 * @param selfName
+	 * @param externSet
+	 * @return java.lang.String
+	 * @roseuid 40FD27B201A3
+	 */
+	private String unlinkDummies(String[] ilCode, String selfName, Set externSet, List typeNames)
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append("// Generated by Compose* DummyUnlinker");
+
+		for (int i = 0; i < ilCode.length; i++)
 		{
-			for (int j = 0; j < i; j++)
+			String line = ilCode[i];
+			if (line.trim().startsWith(".assembly extern dummies"))
 			{
-				if (names[j].compareTo(names[j+1]) < 0 )
-				{
-			  		String temp = names[j];
-			  		names[j] = names[j + 1];
-			  		names[j + 1] = temp;
-				}
-			}
-		}
-		
-		return names;     
-    }
-    
-    /**
-     * @param ilCode
-     * @param selfName
-     * @param externSet
-     * @return java.lang.String
-     * @roseuid 40FD27B201A3
-     */
-    public String unlinkDummies(String[] ilCode, String selfName, String[] externSet, String[] types) {
-		String returnCode = "";
-		String line;
-		for( int i = 0; i < ilCode.length; i++ )
-		{
-			line = ilCode[i];
-			if( line.trim().startsWith( ".assembly extern dummies" ) ) {
-				returnCode += createExternDeclarations(externSet);
+				sb.append(createExternDeclarations(externSet));
 				i += 3; // TODO: use dropSection
 			}
-			else {
-				returnCode += line + "\r\n";
-			}
+			else
+				sb.append(line).append("\r\n");
 		}
 		
-		if ( returnCode.indexOf( "[dummies]" ) >= 0 ) 
+		String result = sb.toString();
+
+		// TODO: describe what this does (extract method?)
+		if (result.indexOf("[dummies]") != -1) 
 		{
-			for( int i = 0; i < types.length; i++ )
+			Iterator it = typeNames.iterator();
+			while (it.hasNext())
 			{
-				String type = types[i];
-				String assembly = typeLocations.getAssemblyByType(type);
-				returnCode = returnCode.replaceAll("\\[dummies\\]" + type, "\\[" + assembly + "\\]" + type);
-			
-				if (returnCode.indexOf( "[dummies]" ) < 0 ){
-                    break;
-                }
-				//String extern = externSet[i];
-			//returnCode = returnCode.replaceAll("\\[dummies\\]([a-zA-Z\\.]*)\\." + extern, "\\[" + extern + "\\]$1\\." + extern);
-			
+				String typeName = (String)it.next();
+				String assembly = typeLocations.getAssemblyByType(typeName);
+				result = result.replaceAll("\\[dummies\\]" + typeName, "\\[" + assembly + "\\]" + typeName);
+
+				if (result.indexOf("[dummies]") == -1)
+					break;
 			}
 		}
-		
-		return returnCode;     
-    }
-    
-    /**
-     * @param externSet
-     * @return java.lang.String
-     * @roseuid 40FD27B201C2
-     */
-    public String createExternDeclarations(String[] externSet) {
-		String declarations = "";
-		for( int i = 0; i < externSet.length; i++ )
+
+		return result;     
+	}
+
+	/**
+	 * @param externSet
+	 * @return java.lang.String
+	 * @roseuid 40FD27B201C2
+	 */
+	public String createExternDeclarations(Set externSet)
+	{
+		StringBuilder sb = new StringBuilder();
+		Iterator esIt = externSet.iterator();
+		while (esIt.hasNext())
 		{
-			String name = externSet[i];
-			declarations += ".assembly extern " + name + "\r\n";
-			declarations += "{\r\n";
-  			declarations += "\t.ver 0:0:0:0\r\n";
-			declarations += "}\r\n"; 
+			String name = (String)esIt.next();
+			sb.append(".assembly extern ").append(name).append("\r\n");
+			sb.append("{\r\n");
+			sb.append("\t.ver 0:0:0:0\r\n");
+			sb.append("}\r\n"); 
 		}
-		return declarations;
-    }
-    
-    /**
-     * @param path
-     * @return java.lang.String[]
-     * @throws Exception
-     * @roseuid 40FD27B201D2
-     */
-    public String[] readLines(String path) throws Exception {
+		return sb.toString();
+	}
+
+	/**
+	 * @param path
+	 * @return java.lang.String[]
+	 * @throws Exception
+	 * @roseuid 40FD27B201D2
+	 */
+	public String[] readLines(String path) throws Exception {
 		ArrayList lines = new ArrayList();
-		
+
 		BufferedReader reader = new BufferedReader(new FileReader(path));
-		
+
 		String line = reader.readLine();
 		do
 		{
@@ -182,21 +167,21 @@ public class DummyUnlinker implements CTCommonModule {
 			line = reader.readLine();
 		}
 		while( line != null );
-		
+
 		reader.close();
 
 		return (String[])lines.toArray(new String[lines.size()]);     
-    }
-    
-    /**
-     * @param path
-     * @param content
-     * @throws Exception
-     * @roseuid 40FD27B2028D
-     */
-    public void writeFile(String path, String content) throws Exception {
+	}
+
+	/**
+	 * @param path
+	 * @param content
+	 * @throws Exception
+	 * @roseuid 40FD27B2028D
+	 */
+	public void writeFile(String path, String content) throws Exception {
 		FileWriter w = new FileWriter(path);
 		w.write(content);
 		w.close();     
-    }
+	}
 }

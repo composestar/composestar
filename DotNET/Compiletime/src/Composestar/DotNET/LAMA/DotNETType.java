@@ -10,8 +10,9 @@
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,9 +21,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LAMA.UnitRegister;
+import Composestar.Core.LAMA.UnitResult;
 
 /**
  * Corresponds to the Type class in the .NET framework. For more information on 
@@ -189,10 +195,6 @@ public class DotNETType extends Type {
         return IsAutoClass;     
     }
     
-    /**
-     * @param isAuto
-     * @roseuid 4029F6770162
-     */
     public void setIsAutoClass(boolean isAuto) {
         IsAutoClass = isAuto;     
     }
@@ -915,15 +917,17 @@ public class DotNETType extends Type {
     	DotNETType baseType = this.baseType();
     	while (baseType != null)
     	{
-    		if (baseType.getUnitName().equals("System.Attribute"))
+    		String unitName = baseType.getUnitName();    		
+    		if ("System.Attribute".equals(unitName))
     			return true;
+    		
     		baseType = baseType.baseType();
     	}
     	return false;
     	//return (0!=attributeInstances.size());
     }
     
-    /* (non-Javadoc)
+    /**
      * @see Composestar.Core.LAMA.ProgramElement#getUnitAttributes()
      */
     public Collection getUnitAttributes()
