@@ -123,8 +123,9 @@ Common routines. Always include this file in every build.xml file
 			<attribute name="dll" />
 			<sequential>
 				<exec executable="regasm.exe" failifexecutionfails="false">
-					<arg value="/silent" />
 					<arg value="@{dll}" />
+					<arg value="/silent" />
+					<arg value="/codebase" />
 				</exec>
 			</sequential>
 		</macrodef>
