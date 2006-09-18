@@ -805,15 +805,19 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addFilterOperatorType(String filterop,int lineNumber) {
     EnableOperatorType eot = null;
-    if (filterop.equals("=>"))
+    if (filterop.equals("=>")) {
       eot = new EnableOperator();
-    else if (filterop.equals("~>"))
+    }
+    else if (filterop.equals("~>")) {
       eot = new DisableOperator();
-    else
+    }
+    else {
       Debug.out(Debug.MODE_ERROR,"COPPER", "Filter operation must be => or ~>");
+      return;
+    }
     eot.setParent(fe);
-	  eot.setDescriptionFileName(filename);
-	  eot.setDescriptionLineNumber(lineNumber);
+	eot.setDescriptionFileName(filename);
+	eot.setDescriptionLineNumber(lineNumber);
     fe.setEnableOperatorType(eot);
     this.addToRepository(eot);
   }

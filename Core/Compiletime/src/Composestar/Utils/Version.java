@@ -111,28 +111,33 @@ public class Version {
     			br = new BufferedReader(new FileReader(versionFile));
     		}
     			 
-			if (br != null) {
-				String line;
-		    	while ( (line = br.readLine()) != null) {
-		    		if ( !line.startsWith("#") && !line.equalsIgnoreCase("") ) {
-						if (line.indexOf('=') > 0) {
-							String key = line.substring(0, line.indexOf('='));
-							String value = "";
-							if (line.indexOf('=')+1 != line.length()) {
-								value = line.substring(line.indexOf('=') + 1, line.length());
+    		try {
+				if (br != null) {
+					String line;
+			    	while ( (line = br.readLine()) != null) {
+			    		if ( !line.startsWith("#") && !line.equalsIgnoreCase("") ) {
+							if (line.indexOf('=') > 0) {
+								String key = line.substring(0, line.indexOf('='));
+								String value = "";
+								if (line.indexOf('=')+1 != line.length()) {
+									value = line.substring(line.indexOf('=') + 1, line.length());
+								}
+								if (key.equalsIgnoreCase("version.major")) versionMajor = value;
+								else if (key.equalsIgnoreCase("version.minor")) versionMinor = value;
+								else if (key.equalsIgnoreCase("version.build")) versionBuild = value;
+								else if (key.equalsIgnoreCase("version.revision")) versionRevision = value;
 							}
-							if (key.equalsIgnoreCase("version.major")) versionMajor = value;
-							else if (key.equalsIgnoreCase("version.minor")) versionMinor = value;
-							else if (key.equalsIgnoreCase("version.build")) versionBuild = value;
-							else if (key.equalsIgnoreCase("version.revision")) versionRevision = value;
-						}
-		    		}
-		    	}
-			}
+			    		}
+			    	}
+				}
+    		}
+			finally {
+	    		if (br != null) br.close();
+	    	}
     	}
     	catch (IOException e) {
     		//System.out.print(e.getMessage() );
-    	}
+    	}    	
     }
 
 }
