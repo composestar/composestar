@@ -72,16 +72,30 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 config.Add("ShouldSignAssembly", "false");
                 config.Add("OutputImageSNK", "");
 
-                // Initialize
-                weaver.Initialize(filename, config);
+                try
+                {
+                    // Initialize
+                    weaver.Initialize(filename, config);
 
-                // Perform weaving
-                weaver.DoWeave();
+                    // Perform weaving
+                    weaver.DoWeave();
 
-                Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);
+                    Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);
+                }
+                catch (ILWeaverException ex)
+                {
+                    Log.LogErrorFromException(ex, true);
+                }
+                catch (ArgumentException ex)
+                {
+                    Log.LogErrorFromException(ex, true);
+                }
+                finally
+                {
+                    // Close the weaver, so it closes the database, performs cleanups etc
+                    weaver.Close();
+                }
 
-                // Close the weaver, so it closes the database, performs cleanups etc
-                weaver.Close();
             }
 
             return true;
