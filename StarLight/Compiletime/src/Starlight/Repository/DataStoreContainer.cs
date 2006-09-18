@@ -72,8 +72,8 @@ namespace Composestar.Repository
             Db4o.Configure().ObjectClass(typeof(MethodElement)).ObjectField("_parentTypeId").Indexed(true);
             Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
 
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("id").Indexed(true);
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("FullName").Indexed(true);
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_id").Indexed(true);
+            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_fullName").Indexed(true);
         }
 
         /// <summary>
