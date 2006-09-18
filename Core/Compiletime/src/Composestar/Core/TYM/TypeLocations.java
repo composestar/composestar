@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class TypeLocations
 		return instance;
 	}
 	
-	private Set typeNames = new HashSet();		// all typenames
+	private Set typeNames = new HashSet();			// all typenames
 	private Set assemblies = new HashSet();			// all assemblies
 	private Map typeToAssembly = new HashMap();		// typename -> assemblyname
 	private Map sourceToAssembly = new HashMap();	// sourcefile -> assemblyname
@@ -71,8 +72,20 @@ public class TypeLocations
 
 		assemblies.add(assembly);
 		sourceToAssembly.put(path, assembly);
+		
+		setTypesAssembly(getTypesBySource(path), assembly);
 
 		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Source " + source + " is compiled to " + assembly + ".dll");
+	}
+	
+	private void setTypesAssembly(List types, String assembly)
+	{
+		Iterator it = types.iterator();
+		while (it.hasNext())
+		{
+			String type = (String)it.next();
+			typeToAssembly.put(type, assembly);
+		}		
 	}
 
 	/**
@@ -89,9 +102,9 @@ public class TypeLocations
 	 * declared in the specified source file.
 	 * @param source Absolute path of a source file
 	 */
-	public ArrayList getTypesBySource(String source)
+	public List getTypesBySource(String source)
 	{
-		ArrayList types = new ArrayList();
+		List types = new ArrayList();
 		Iterator entries = typeToSource.entrySet().iterator();
 		while (entries.hasNext())
 		{
