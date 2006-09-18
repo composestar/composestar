@@ -28,7 +28,7 @@ import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.*;
 import Composestar.Core.Master.Config.XmlHandlers.BuildXMLHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
@@ -49,13 +49,29 @@ public class StarLightMaster extends Master  {
      * @roseuid 401B9C520251
      */
     public StarLightMaster(String configurationFile) throws ModuleException{
+    	java.io.File f = new java.io.File(configurationFile);
+    	if (!f.exists()) {
+    		Debug.out(Debug.MODE_CRUCIAL,"Master","Configuration file '"+configurationFile+"; not found!");
+    		System.exit(-1);
+    	}
+    	Debug.out(Debug.MODE_DEBUG,"Master","Configuration file: "+configurationFile);
+    	Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
+    	repository.setDatabaseFileName(configurationFile);
     	
 		//configfile = configurationFile;
     	//Debug.setMode(4);
 	    //resources = new CommonResources();
+	    
+	    // Disable INCRE
+	    Configuration config = Configuration.instance();
+	    ModuleSettings ms = new ModuleSettings();
+	    Composestar.Core.Master.Config.Module m = new Composestar.Core.Master.Config.Module();
+	    m.addProperty("enabled", "false");
+	    ms.addModule("INCRE", m);
+	    config.setModuleSettings(ms);
 
 	    //  create the repository
-	    //DataStore ds = DataStore.instance();
+	    DataStore ds = DataStore.instance();
 
 	    //ds.addObject(RESOURCES_KEY, resources );
 
@@ -118,7 +134,7 @@ public class StarLightMaster extends Master  {
     	}
     	
     	try {
-    		Debug.setMode(0);
+    		Debug.setMode(4);
     		Debug.out(Debug.MODE_DEBUG,"Master","Invoking Master " + Version.getVersionString() +" now...");
     		master = new StarLightMaster(args[0]);
     		Debug.out(Debug.MODE_DEBUG,"Master","Master initialized.");
@@ -138,31 +154,36 @@ public class StarLightMaster extends Master  {
     public void run() {
     	// This is the 'hardcoded' version
 
-		//try{
+		try{
 
 			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
 			
 			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
-			//DataStore.instance();
+			DataStore.instance();
 
-			// initialize INCRE
-			//INCRE incre = INCRE.instance();
-			//incre.run(resources);
-									
-			//Iterator modulesIter = incre.getModules();
-			//while(modulesIter.hasNext())
-			//{
-			//	// execute enabled modules one by one
-			//	Module m = (Module)modulesIter.next();
-			//	m.execute(resources);
-			//}
+			Debug.out(Debug.MODE_DEBUG, "Master", "Reading configuration...");
+			Projects projects = new Projects();
+			Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
+			Iterator concernIterator = repository.Configuration().getConcerns().iterator();
+			while (concernIterator.hasNext()) {
+				Composestar.Repository.Configuration.ConcernInformation ci = (Composestar.Repository.Configuration.ConcernInformation)concernIterator.next();
+				ConcernSource concern = new ConcernSource();
+				concern.setFileName(ci.get_Path() + "\\" + ci.get_Filename());
+				projects.addConcernSource(concern);
+			}			
+
+			Configuration.instance().setProjects(projects);
 			
-			//incre.getReporter().close();
-		    //if (Debug.getMode() >= Debug.MODE_WARNING ) Debug.outWarnings();
-			System.out.println("Exiting with code 0");
+			
+			// COPPER (Parsing the .cps files)
+			Composestar.Core.COPPER.COPPER copper = new Composestar.Core.COPPER.COPPER();
+			copper.run(resources);
+			
+			
+			System.out.println("Master exit (0)");
 			System.exit(0);
 
-//		} catch(ModuleException e)  { // MasterStopException
+		} catch(ModuleException e)  { // MasterStopException
 //			String error = e.getMessage();
 //			if(error == null || "null".equals(error)) //great information
 //			{
@@ -184,7 +205,7 @@ public class StarLightMaster extends Master  {
 //			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
 //			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + printStackTrace(e));
 //			//System.exit(1);
-//		}
+		}
 	}
 
 	public String printStackTrace(Exception e) 
