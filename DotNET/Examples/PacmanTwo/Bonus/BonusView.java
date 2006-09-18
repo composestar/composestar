@@ -28,7 +28,7 @@ public class BonusView extends PacmanTwo.GUI.ImageView
 	public BonusView(Viewport inviewport)
 	{
 		super(inviewport);
-		inviewport.views.put(BonusPickup.class, this);
+		inviewport.registerView(BonusPickup.class, this);
 
 		final String[] files = 
 				  { 

@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: GhostView.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.GUI;
 
@@ -29,7 +29,7 @@ public class GhostView extends ImageView
 	public GhostView(Viewport inviewport)
 	{
 		super(inviewport);
-		inviewport.views.put(Ghost.class, this);
+		inviewport.registerView(Ghost.class, this);
 
 		final String[] files = { 
 			"blinky/up.gif", "blinky/down.gif", "blinky/left.gif", "blinky/right.gif", 

@@ -12,7 +12,7 @@
  */
 package PacmanTwo;
 
-import java.util.Iterator;
+import java.util.Enumeration;
 
 /**
  * A moving entity.
@@ -274,9 +274,9 @@ public abstract class Pawn extends GameElement
 		float cYu = n+cr;
 		float cYl = n-cr;
 
-		for( Iterator i = game.getGameElements(); i.hasNext(); )
+		for( Enumeration e = game.getGameElements(); e.hasMoreElements(); /* nop */ )
 		{
-			GameElement ge = ((GameElement) i.next());
+			GameElement ge = ((GameElement) e.nextElement());
 			if (!doTouchingCheck(ge)) continue;
 
 			cr = ge.getCollisionRadius();

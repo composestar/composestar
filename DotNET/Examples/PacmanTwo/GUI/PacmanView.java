@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: PacmanView.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.GUI;
 
@@ -27,7 +27,7 @@ public class PacmanView extends ImageView
 	public PacmanView(Viewport inviewport)
 	{
 		super(inviewport);
-		inviewport.views.put(Pacman.class, this);
+		inviewport.registerView(Pacman.class, this);
 
 		final String[] files = { 
 			"pacman/up1.gif", "pacman/up2.gif", "pacman/up3.gif", "pacman/up4.gif", 

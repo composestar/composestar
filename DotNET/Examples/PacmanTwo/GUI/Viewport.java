@@ -18,8 +18,9 @@ import java.awt.Panel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Enumeration;
 
 /**
  * This is a client's viewport, it will render the current game on the screen
@@ -40,7 +41,7 @@ public class Viewport extends Panel implements Tickable
 	/**
 	 * Hashtable containing "class -> view instance"
 	 */
-	public Hashtable views;
+	protected Map views;
 
 	protected float fpsTime;
 	protected int fpsCnt;
@@ -55,7 +56,7 @@ public class Viewport extends Panel implements Tickable
 		game.addTickElement(this);
 		game.addPlayer(player);
 		graphics = getGraphics();
-		views = new Hashtable();
+		views = new HashMap();
 		createViews();
 	}
 
@@ -186,9 +187,9 @@ public class Viewport extends Panel implements Tickable
 
 	protected void renderGameElements(Graphics g, float delta)
 	{
-		for( Iterator i = game.getGameElements(); i.hasNext(); )
+		for( Enumeration e = game.getGameElements(); e.hasMoreElements() ; /* nop */ )
 		{
-			GameElement ge = ((GameElement) i.next());
+			GameElement ge = ((GameElement) e.nextElement());
 			View v = getViewFor(ge);
 			if (v != null) v.render(g, ge, delta);
 		}
@@ -201,6 +202,22 @@ public class Viewport extends Panel implements Tickable
 	{
 		new PacmanView(this);
 		new GhostView(this);
+	}
+
+	/**
+	 * Register a view for a class
+	 */
+	public void registerView(Class forClass, View view)
+	{
+		views.put(forClass, view);
+	}
+
+	/**
+	 * Unregister a view
+	 */
+	public void unregisterView(Class forClass)
+	{
+		views.remove(forClass);
 	}
 
 	/**

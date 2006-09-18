@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: GameElement.java,v 1.3 2006/09/05 12:43:08 reddog33hummer Exp $
+ * @version $Id$
  */
 package PacmanTwo;
 
