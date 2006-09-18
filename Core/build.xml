@@ -3,7 +3,7 @@
 
 	<import file="common.xml" />
 
-	<echo message="${ant.project.name}" />
+	<echo>Processing: ${ant.project.name} ...</echo>
 	
 	<description>
 	The Compose* Core

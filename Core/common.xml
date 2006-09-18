@@ -155,7 +155,6 @@ Common routines. Always include this file in every build.xml file
 	</target>
 	
 	<!-- generic target to rebuild all -->
-	<target name="rebuild" depends="init,clean,build">
-	</target>
+	<target name="rebuild" depends="init,clean,build" description="Clean and then compile" />
 
 </project>

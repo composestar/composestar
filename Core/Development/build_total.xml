@@ -3,9 +3,13 @@
 
 	<import file="..${file.separator}common.xml" />	
 	
+	<description>
+	Compose* - General build script
+	</description>
+	
 	<!-- clean tasks -->
 	
-	<target name="clean" depends="init">
+	<target name="clean" depends="init" description="Cleanup compilation results">
 		<ant target="clean" dir="${build.core}" />
 		<antcall target="clean_dotnet" />
 		<antcall target="clean_java" />
@@ -26,11 +30,11 @@
 	
 	<!-- build tasks -->
 	
-	<target name="core" depends="init">
+	<target name="core" depends="init" description="Compile the Core of Compose*">
 		<ant target="build" dir="${build.core}" />
 	</target>
 	
-	<target name="dotnet" depends="core" if="available.dotnet">
+	<target name="dotnet" depends="core" if="available.dotnet" description="Compile the .NET port">
 		<ant target="build" dir="${build.dotnet}" />
 	</target>
 	
@@ -42,11 +46,11 @@
 		<ant target="build" dir="${build.c}" />
 	</target>
 	
-	<target name="build" depends="init,core,dotnet,java,c" />
+	<target name="build" depends="init,core,dotnet,java,c" description="Compile the whole Compose* project" />
 	
 	<!-- install tasks -->
 	
-	<target name="install" depends="init">
+	<target name="install" depends="init" description="Copy the resulting binaries to the installation directory.">
 		<ant target="install" dir="${build.core}" />
 		<antcall target="install_dotnet" />
 	</target>
@@ -57,7 +61,7 @@
 	
 	<!-- plugin tasks -->
 	
-	<target name="plugin" depends="init">
+	<target name="plugin" depends="init" description="Compile the IDE plugins">
 		<antcall target="plugin_dotnet" />
 	</target>
 	
@@ -68,7 +72,7 @@
 	<!-- QA tasks -->
 	
 	<!-- execute the findbugs tool -->
-	<target name="findbugs" depends="init">
+	<target name="findbugs" depends="init" description="Analyse the compiled Java code for possible bugs.">
 		<antcall target="findbugs_core" />
 		<antcall target="findbugs_dotnet" />
 	</target>
@@ -83,7 +87,7 @@
 	
 	<!-- system test -->
 	
-	<target name="test" depends="init">
+	<target name="test" depends="init" description="Execute system tests.">
 		<antcall target="test_dotnet" />
 	</target>
 	
@@ -92,21 +96,23 @@
 	</target>
 	
 	<!-- do everything -->
-	<target name="all" depends="clean,build,install,findbugs,test" />
+	<target name="all" depends="clean,build,install,findbugs,test" description="Recompile, install and test the whole system." />
+	
+	<target name="nightlybuild" description="Execute the nightly build">
+		<tstamp />
+		<echo>
+========================================================================
+                  Compose* Nightly Build - Report
+
+The following in the report of the nightly build of Compose* on:
+ ${TODAY}
+If the build failed the cause will be listed at the end of the report.
+========================================================================
+		</echo>
+		<antcall target="all" />
+	</target>
 	
 	<!-- task selector -->
-	
-	<!--
-	<target name="select" depends="init">
-        <input message="Enter the desired action: "
-               validargs="clean,build,rebuild,install,core,dotnet,java,c,findbugs,test"
-               addproperty="build.target"
-               defaultvalue="core"
-        />
-        <antcall target="${build.target}" />
-    </target>
-    -->
-
 	<!-- fancy selection -->
 	
 	<target name="select">	
@@ -124,7 +130,7 @@
 					<antMenuItem name="DotNET" target="plugin_dotnet" />
 				</antMenuItem>
 			</antMenuItem>
-		
+					
 			<link label="Clean the whole project" target="clean" />
 			<link label="Build the whole project" target="build" />
 			<link label="Clean &amp; Build" target="rebuild" />
