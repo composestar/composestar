@@ -105,22 +105,6 @@
     <Compile Include="Composestar\dotnet\LOLA\metamodel\DotNETLanguageModel.java" />
     <Compile Include="Composestar\dotnet\MASTER\StarLightMaster.java" />
     <Compile Include="Composestar\dotnet\TYM\RepositoryCollector\StarLightCollectorRunner.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\Assembler.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\AssemblerException.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ClassModifier.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\DotNETSignatureTransformer.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\DummyUnlinker.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ILCodeParser.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\ModifierException.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\MSAssembler.java" />
-    <Compile Include="Composestar\dotnet\TYM\SignatureTransformer\TransformerBase.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\AttributeCollector.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DocumentHandler.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETCollectorRunner.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETFieldInfoHandler.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETMethodInfoHandler.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETParameterInfoHandler.java" />
-    <Compile Include="Composestar\dotnet\TYM\TypeCollector\DotNETTypeHandler.java" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
