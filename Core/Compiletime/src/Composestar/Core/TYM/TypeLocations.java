@@ -49,9 +49,9 @@ public class TypeLocations
 			Iterator tsit = prj.getTypeSources().iterator();
 			while (tsit.hasNext())
 			{
-				TypeSource source = (TypeSource)tsit.next();
-				String type = source.getName();
-				String file = source.getFileName();
+				TypeSource ts = (TypeSource)tsit.next();
+				String type = ts.getName();
+				String file = ts.getFileName();
 				addTypeSource(type, file);
 			}
 		}
@@ -60,6 +60,7 @@ public class TypeLocations
 	private void addTypeSource(String typeName, String sourceFile)
 	{
 		String sourcePath = (new File(sourceFile)).getAbsolutePath();
+		typeNames.add(typeName);
 		typeToSource.put(typeName, sourcePath);
 		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type " + typeName + " is in " + sourceFile);
 	}
