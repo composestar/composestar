@@ -189,7 +189,7 @@ public class DotNETInliner{
 	callStructure.callBlocks.add( callBlock );
 	
 	//unknown:
-	callBlock = createCallBlock( Message.UNDISTINGUISHABLE_TARGET );
+	//callBlock = createCallBlock( Message.UNDISTINGUISHABLE_TARGET );
 	callStructure.callBlocks.add( callBlock );
     }
     

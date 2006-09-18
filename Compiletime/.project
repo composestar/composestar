@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ComposestarDOTNET</name>
+	<name>StarLight</name>
 	<comment></comment>
 	<projects>
+		<project>ComposeStar</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

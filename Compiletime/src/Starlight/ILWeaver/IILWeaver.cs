@@ -36,5 +36,10 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <value>The repository access.</value>
         RepositoryAccess RepositoryAccess { get; }
+
+        /// <summary>
+        /// Closes this instance. Cleanup any used resources.
+        /// </summary>
+        void Close();
     }
 }
