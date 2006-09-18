@@ -70,7 +70,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
     filterModuleParameters :  #(FILTERMODULEPARAMETERS_ {parameterv.clear();} filterModuleParameterSet {b.addFilterModuleParameters(parameterv, 0);}); 
     filterModuleParameterSet : #(DECLAREDPARAMETER_ (p:PARAMETER_NAME {parameterv.add(p.getText());} | p2:PARAMETERLIST_NAME {parameterv.add(p2.getText());})+ );
   	parameter : #(PARAMETER_ p:PARAMETER_NAME {parameterv.add(p.getText());} );
-  	parameterlist : #(PARAMETERLIST_ p:PARAMETER_NAME {parameterv.add(p.getText());} );    
+  	parameterlist : #(PARAMETERLIST_ p:PARAMETERLIST_NAME {parameterv.add(p.getText());} );    
 
     /*---------------------------------------------------------------------------*/
     internals : #("internals" (singleInternal)*);
