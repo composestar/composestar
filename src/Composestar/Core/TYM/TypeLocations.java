@@ -1,214 +1,133 @@
-/*
- * Created on 21-jul-2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 package Composestar.Core.TYM;
 
-import Composestar.Utils.Debug;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.TypeSource;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.HashSet;
-import java.util.HashMap;
+import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 /**
  * @author Staijen
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class TypeLocations {
-	
+public class TypeLocations
+{
 	private static TypeLocations instance;
 
 	public static TypeLocations instance()
 	{
-		if( TypeLocations.instance == null )
-			TypeLocations.instance = new TypeLocations(); 	
-		return TypeLocations.instance;
-	}
+		if (instance == null)
+			instance = new TypeLocations(); 	
 
-	private HashMap types = new HashMap();
-	private HashMap sources = new HashMap();
-	private HashMap sourceByType = new HashMap();
-	private HashSet assemblies = new HashSet();
+		return instance;
+	}
 	
+	private Set typeNames = new HashSet();		// all typenames
+	private Set assemblies = new HashSet();			// all assemblies
+	private Map typeToAssembly = new HashMap();		// typename -> assemblyname
+	private Map sourceToAssembly = new HashMap();	// sourcefile -> assemblyname
+	private Map typeToSource = new HashMap();		// typename -> sourcefile
+
+	/**
+	 * Constructs the TypeLocation singleton based on data from Configuration.
+	 */
 	private TypeLocations()
 	{
 		Configuration config = Configuration.instance();
-		Iterator it = config.getProjects().getProjects().iterator();
-        while(it.hasNext())
-        {
-        	Project prj = (Project)it.next();
-        	Iterator projectit = prj.getTypeSources().iterator();
-        	while(projectit.hasNext())
-        	{
-        		TypeSource source = (TypeSource)projectit.next();
-        		String type = source.getName();
-        		String file = source.getFileName();
-        		setTypeSource(type, file);
-        	}
-        }
+		Iterator prit = config.getProjects().getProjects().iterator();
+		while (prit.hasNext())
+		{
+			Project prj = (Project)prit.next();
+			Iterator tsit = prj.getTypeSources().iterator();
+			while (tsit.hasNext())
+			{
+				TypeSource source = (TypeSource)tsit.next();
+				String type = source.getName();
+				String file = source.getFileName();
+				addTypeSource(type, file);
+			}
+		}
 	}
-	
-	public void setTypeSource(String type, String source)
+
+	private void addTypeSource(String typeName, String sourceFile)
 	{
-		Type t = getType(type);
-		source = (new java.io.File(source)).getAbsolutePath();
-		
-		Source s = getSource(source);
-		t.setSource(s);
-		this.sourceByType.put(type,source);
-		
-		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type " + type + " is in " + source);
+		String sourcePath = (new File(sourceFile)).getAbsolutePath();
+		typeToSource.put(typeName, sourcePath);
+		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type " + typeName + " is in " + sourceFile);
 	}
-	
+
+	// invoked by DoTNETCompiler.compileSources
 	public void setSourceAssembly(String source, String assembly)
 	{
-		source = (new java.io.File(source)).getAbsolutePath();
-		Source s = getSource(source);
-		
-		if(assembly == null) 
-		{ 
-			assembly = "";
-		}
+		String path = (new File(source)).getAbsolutePath();
+		assembly = (assembly == null ? "" : FileUtils.removeExtension(assembly));
 
-		int index = assembly.lastIndexOf('.');
-		if(index < 0)
-		{
-			assembly = "";
-		}
-		else
-		{
-			assembly = assembly.substring(0, index);
-		}
-		Assembly a = new Assembly(assembly);
-		s.setAssembly(a);
-		this.assemblies.add(a.getName());
-		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Source " + source + " is compiled to  " + assembly);
+		assemblies.add(assembly);
+		sourceToAssembly.put(path, assembly);
+
+		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Source " + source + " is compiled to " + assembly + ".dll");
 	}
-	
-	public Type getType(String name)
-	{
-		Type t = (Type) this.types.get(name);
-		if( t == null )
-		{
-			t = new Type();
-			this.types.put(name, t);
-		}
-		return t;
-	}
-	
-	public String getSourceByType(String type){
-		if(this.sourceByType.containsKey(type))
-			return (String)this.sourceByType.get(type);
-		else
-			return null;
-	}
-	
+
 	/**
-	 * Returns all types declared in a source
-	 * @param source Absolute path of a source
-	 * @return ArrayList 
+	 * Returns the source path for the type with the specified name,
+	 * or null if there is no mapping.
 	 */
-	public ArrayList getTypesBySource(String source){
+	public String getSourceByType(String type)
+	{
+		return (String)typeToSource.get(type);
+	}
+
+	/**
+	 * Returns a list containing the names of all types 
+	 * declared in the specified source file.
+	 * @param source Absolute path of a source file
+	 */
+	public ArrayList getTypesBySource(String source)
+	{
 		ArrayList types = new ArrayList();
-		Iterator keys = this.sourceByType.keySet().iterator();
-		while(keys.hasNext()){
-			String key = (String)keys.next();
-			String src = (String)this.sourceByType.get(key);
-			if(src.equals(source)){
-				types.add(key);
-			}
+		Iterator entries = typeToSource.entrySet().iterator();
+		while (entries.hasNext())
+		{
+			Map.Entry entry = (Map.Entry)entries.next();
+			String typeName = (String)entry.getKey();
+			String sourceFile = (String)entry.getValue();
+			if (sourceFile.equals(source))
+				types.add(typeName);
 		}
 		return types;
 	}
-	
-	private Source getSource(String name)
+
+	/**
+	 * Returns the name of the assembly that the class 
+	 * with the specified name will compiled to (or is in?)
+	 */
+	public String getAssemblyByType(String typeName)
 	{
-		Source s = (Source) this.sources.get(name);
-		if( s == null )
-		{
-			s = new Source();
-			this.sources.put(name, s);
-		}
-		return s;
-	}
-	
-	public String getAssemblyByType(String type)
-	{
-		Type theType = this.getType(type);
-		String result = theType.assemblyName();
-		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type " + type + " is in assembly " + result);
+		String result = (String)typeToAssembly.get(typeName);
+		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type '" + typeName + "' is in assembly '" + result + "'");
 		return result;
 	}
-	
-	public String[] types()
-	{
-		return (String[]) this.types.keySet().toArray(new String[types.size()]);
-	}
-	
-	public HashSet assemblies()
-	{
-		return this.assemblies;
-	}
-	
-	private class Type
-	{
-        private Source source;
-		
-		public String assemblyName()
-		{
-			return this.source == null ? "": this.source.assemblyName();
-		}
-		
-		public void setSource(Source s)
-		{
-			this.source = s;
-		}
-		
-		public Source getSource()
-		{
-			return this.source;
-		}
-	}
-	
-	private class Source
-	{
-		private Assembly assembly;
-	
-		public void setAssembly(Assembly a)
-		{
-			this.assembly = a;
-		}
-		public Assembly getAssembly()
-		{
-			return this.assembly;
-		}
 
-		public String assemblyName()
-		{
-			return this.assembly == null ? "": this.assembly.getName();
-		}
+	/**
+	 * Returns a list containing the names of all types that are known to the compiler (?)
+	 */
+	public Set typeNames()
+	{
+		return typeNames;
 	}
 	
-	private class Assembly
+	/**
+	 * Returns a set of all assemblies that are known to the compiler (?)
+	 */
+	public Set assemblies()
 	{
-		private String name;
-		
-		public Assembly(String name)
-		{
-			this.name = name;
-		}
-		
-		public String getName()
-		{
-			return this.name == null ? "": this.name;
-		}
+		return assemblies;
 	}
 }

@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 
 import Composestar.Core.Exception.ModuleException;
 
@@ -239,7 +240,22 @@ public class FileUtils
 		}
 		catch (IOException e) {
 			// this shouldnt happen
-			throw new RuntimeException("Unable to close stream: " + e.getMessage());
+			throw new RuntimeException("Unable to close reader: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Closes the specified Writer instance, provided it is not null.
+	 */
+	public static void close(Writer writer)
+	{
+		try {
+			if (writer != null)
+				writer.close();
+		}
+		catch (IOException e) {
+			// this shouldnt happen
+			throw new RuntimeException("Unable to close writer: " + e.getMessage());
 		}
 	}
 }
