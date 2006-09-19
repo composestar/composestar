@@ -2,7 +2,6 @@ package Composestar.Utils;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
-
 /**
  * Summary description for Debug.
  */
@@ -17,19 +16,11 @@ public class Debug
 	public static final int MODE_INFORMATION = 3;
 	public static final int MODE_DEBUG = 4;
     
-	/**
-	 * @param mode
-	 * @roseuid 41161EA901B7
-	 */
 	public static void setMode(int mode) 
 	{
 		currentMode = mode;     
 	}
     
-	/**
-	 * @return int
-	 * @roseuid 41161EA901B9
-	 */
 	public static int getMode() 
 	{
 		return currentMode;     
@@ -41,7 +32,7 @@ public class Debug
 		{
 			String modeDescription = "";
     	
-			switch(mode)
+			switch (mode)
 			{
 				case MODE_ERROR:
 					modeDescription = "error";
@@ -63,8 +54,13 @@ public class Debug
 				case MODE_DEBUG:
 					modeDescription = "debug";
 					break;
+
+				default:
+					modeDescription = "error";
+					break;
 			}
-			System.out.println (module+ '~' +modeDescription+ '~' +filename+ '~' +line+ '~' +msg);
+
+			System.out.println(module+ '~' +modeDescription+ '~' +filename+ '~' +line+ '~' +msg);
 		}
 	}
 	
@@ -87,7 +83,7 @@ public class Debug
     
 	public static void outWarnings() 
 	{
-		if( warnings > 0 )
-			System.out.println ( "Warnings: " + warnings + '.');
+		if (warnings > 0)
+			System.out.println("Warnings: " + warnings + '.');
 	}
 }
