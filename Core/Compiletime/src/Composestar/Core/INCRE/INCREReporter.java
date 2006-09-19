@@ -24,8 +24,15 @@ public class INCREReporter
 		Configuration config = Configuration.instance();
 		
 		//this.cssFile = resources.getProperty( "ComposestarPath", "ERROR" ) + "INCRE.css";
-		this.cssFile = config.getPathSettings().getPath("Composestar")+"INCRE.css";
-		if( !(new File(cssFile).exists()))
+		File cssFile1 = new File(config.getPathSettings().getPath("Base")+"INCRE.css");
+		File cssFile2 = new File(config.getPathSettings().getPath("Composestar")+"INCRE.css");
+		if (cssFile1.exists()) {
+			this.cssFile = config.getPathSettings().getPath("Base")+"INCRE.css";
+		}
+		else if (cssFile2.exists()) {
+			this.cssFile = config.getPathSettings().getPath("Composestar")+"INCRE.css";
+		}
+		else
 		{
 			Debug.out(Debug.MODE_WARNING, "INCRE", "Could not find stylesheet for INCRE reporter: "+cssFile);
 		}
