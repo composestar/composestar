@@ -11,6 +11,7 @@ CLASSES=CommandLineExecutor.class \
 	PropertyManager.class \
 	StreamGobbler.class \
 	StringConverter.class \
+	TokenReplacer.class \
 	Version.class
 
 include ${ROOTDIR}default.mk
