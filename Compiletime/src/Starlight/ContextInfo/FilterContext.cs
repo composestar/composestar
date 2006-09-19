@@ -13,8 +13,6 @@ namespace Composestar.StarLight.ContextInfo
     public sealed class FilterContext
     {
 
-        // TODO Not complete yet
-
         private static Dictionary<int, InnerFilterContext> _innercalls;
 
         /// <summary>
@@ -45,6 +43,11 @@ namespace Composestar.StarLight.ContextInfo
 
         }
 
+        /// <summary>
+        /// Sets the inner call data.
+        /// </summary>
+        /// <param name="currentInstance">The current instance.</param>
+        /// <param name="methodSignature">The method signature.</param>
         public static void SetInnerCall(object currentInstance, string methodSignature)
         {
             InnerFilterContext ifc =new InnerFilterContext(currentInstance, methodSignature);
@@ -84,6 +87,9 @@ namespace Composestar.StarLight.ContextInfo
             return Thread.CurrentThread.ManagedThreadId;
         }
 
+        /// <summary>
+        /// Internal class used to contain the FilterContext
+        /// </summary>
         private sealed class InnerFilterContext
         {
 
@@ -121,8 +127,6 @@ namespace Composestar.StarLight.ContextInfo
                 get { return _instance; }
                 set { _instance = value; }
             }
-
-
         }
     }
 }

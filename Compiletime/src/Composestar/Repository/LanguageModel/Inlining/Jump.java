@@ -1,6 +1,8 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
-public class Jump extends Instruction {
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;  
+
+public class Jump extends Instruction implements IVisitable  {
 	private Label target;
 
 	public Jump(Label target)
@@ -15,5 +17,10 @@ public class Jump extends Instruction {
 	public Label get_Target()
 	{
 		return target;
+	}
+
+	public void Accept(IVisitor visitor)
+	{
+		visitor.VisitJumpInstruction(this);
 	}
 }

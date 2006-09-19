@@ -1,7 +1,9 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class ContextInstruction extends Instruction {
+public class ContextInstruction extends Instruction implements IVisitable
+{
 	private String type;
 	private String method;
 	private boolean enabled;
@@ -48,4 +50,8 @@ public class ContextInstruction extends Instruction {
 		this.enabled = enabled;
 	}
 
+	public void Accept(IVisitor visitor)
+	{
+		visitor.VisitContextInstruction(this); 
+	}
 }
