@@ -354,12 +354,15 @@ namespace Composestar.StarLight.ILWeaver
             if (method.HasBody == false )
                 return;
 
+            // If the methodbody is null, then return
             if (methodElement.MethodBody == null)
                 return;
 
+            // Get the input filter
             Composestar.Repository.LanguageModel.Inlining.Instruction inputFilter =
                 methodElement.MethodBody.InputFilter;
 
+            // Only proceed when we have an inputfilter
             if (inputFilter == null)
                 return;
 
@@ -367,6 +370,11 @@ namespace Composestar.StarLight.ILWeaver
 
             // Gets the CilWorker of the method for working with CIL instructions
             CilWorker worker = method.Body.CilWorker;
+
+            // We add the filter code to the start of the method body
+
+
+            //Instruction branchInstruction = worker.Create(OpCodes.Brtrue); 
 
             #region Test code, must be removed
       
