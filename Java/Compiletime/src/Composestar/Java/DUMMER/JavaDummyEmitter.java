@@ -29,11 +29,10 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	{
 		setupTokenNames();
 	}
-   
-	public void createDummy(Source source, String targetFilename) throws ModuleException 
+	
+	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException 
 	{	   
-	 	
-		dummy = new StringBuffer();
+	 	dummy = new StringBuffer();
 		//Create a root AST node with id 0
 		ASTFactory factory = new ASTFactory();
 		AST root = factory.create(ROOT_ID,"AST ROOT");
@@ -66,7 +65,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		//emit dummy to file
 		try 
 		{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(targetFilename));			
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilename));			
 			bw.write(dummy.toString());
 			bw.close();
 		}
