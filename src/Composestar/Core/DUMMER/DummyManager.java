@@ -12,6 +12,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
+import Composestar.Utils.FileUtils;
 
 public class DummyManager implements CTCommonModule
 {
@@ -57,8 +58,11 @@ public class DummyManager implements CTCommonModule
 			Source source = (Source)sourceIt.next();			
 			try {
 				File sourceFile = new File(source.getFileName());				
-				File dummyFile = new File(dummyDir, sourceFile.getName());
+				String target = FileUtils.createOutputFilename(base.getAbsolutePath(), "/obj/" + dummyPath, sourceFile.getAbsolutePath());
+				String targetPath = FileUtils.getDirectoryPart(target);
+				FileUtils.createFullPath(targetPath); // Make sure the directory exists
 				
+				File dummyFile = new File(target);
 				String absolutePath = dummyFile.getAbsolutePath();
 				outputFilenames.add(absolutePath);
 				source.setDummy(absolutePath);
@@ -70,7 +74,6 @@ public class DummyManager implements CTCommonModule
 		
 		// Create all dummies in one go.
 		emitter.createDummies(project, sources, outputFilenames);
-		
 		// compile dummies
 		LangCompiler comp = project.getLanguage().compilerSettings.getCompiler();
 		try {
