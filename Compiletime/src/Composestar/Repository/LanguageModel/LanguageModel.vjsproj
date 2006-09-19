@@ -49,8 +49,8 @@
     <Compile Include="Inlining\Jump.java" />
     <Compile Include="Inlining\Label.java" />
     <Compile Include="Inlining\Instruction.java" />
-    <Compile Include="Inlining\Visitor\IVisitable.jsl" />
-    <Compile Include="Inlining\Visitor\IVisitor.jsl" />
+    <Compile Include="Inlining\Visitor\IVisitable.java" />
+    <Compile Include="Inlining\Visitor\IVisitor.java" />
     <Compile Include="Internal.java" />
     <Compile Include="IRepositoryElement.java" />
     <Compile Include="MethodBody.java" />
