@@ -50,7 +50,7 @@ public class FILTHServiceImpl extends FILTHService{
 	private CommonResources _cr;
 		
 	protected FILTHServiceImpl(CommonResources cr){
-		Configuration.instance().getModuleSettings().getModule("FILTH").getProperty("FILTH_INPUT");
+		//Configuration.instance().getModuleSettings().getModule("FILTH").getProperty("FILTH_INPUT");
 		_ds = DataStore.instance();
 	}
 	
