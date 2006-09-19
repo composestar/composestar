@@ -1,0 +1,48 @@
+package PlatypusExample;
+import System.Collections.ArrayList;
+
+public class Caretaker
+{
+	private ArrayList mBag = null;
+	public String name = "";
+	
+	public Caretaker(String name)
+	{
+		this.name = name;
+		this.mBag = new ArrayList();
+	}
+
+	public void collectEggs(Bird mother, Egg egg)
+	{
+		this.mBag.Add(egg);
+		System.out.println("Caretaker '" + name + "' has collected the egg '" + egg.name +"'");
+	}
+
+	public Bird hatchEgg() 
+	{
+		if (this.mBag.get_Count() == 0) 
+		{
+			return null;
+		}
+
+		Egg hatchingEgg = (Egg)this.mBag.get_Item(0);
+		System.out.println("Caretaker '" + name + "' is waiting for '" + hatchingEgg.name + "' to hatch...");
+		this.mBag.RemoveAt(0);
+		Animal a = (Animal)hatchingEgg.hatch();
+		Bird hatchling = (Bird)a;
+		System.out.println("Hatchling '" + a.getName() + "' has hatched from '" + hatchingEgg.name + "'.");
+		return hatchling;
+	}
+
+	public void feedInsect(Bird youngster)
+	{
+        System.out.println("Caretaker '" + name + "' is feeding '" + youngster.name + "' an insect...");
+		youngster.eat(Food.Insect);
+	}
+
+	public void feedMilk(Mammal youngster)
+	{
+		System.out.println("Caretaker '" + name + "' is feeding '" + youngster.name + "' with a bottle of milk...");
+		youngster.eat(Food.Milk);
+	}
+}
