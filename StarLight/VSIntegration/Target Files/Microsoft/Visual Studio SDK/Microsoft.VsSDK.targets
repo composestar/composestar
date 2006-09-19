@@ -35,7 +35,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
     Set the general properties for this installation of the SDK
   -->
   <PropertyGroup>
-    <VsSDKVersion>8.0.60728</VsSDKVersion>
+    <VsSDKVersion>8.0.60912</VsSDKVersion>
   </PropertyGroup>
 
   <Target Name="FindSDKInstallation"
@@ -244,6 +244,12 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
     <ZipFilesDependsOn>VsTemplatePathsTarget</ZipFilesDependsOn>
   </PropertyGroup>
 
+  <!--Make sure that the zip output is set-->
+  <PropertyGroup>
+    <ZipProjectOutput Condition="'$(ZipProjectOutput)' == ''">$(OutputPath)</ZipProjectOutput>
+    <ZipItemOutput Condition="'$(ZipItemOutput)' == ''">$(OutputPath)</ZipItemOutput>
+  </PropertyGroup>
+
   <Target Name="ZipFiles"            
           DependsOnTargets="$(ZipFilesDependsOn)"
           Condition="'@(ZipProject)_@(ZipItem)' != '_'">
@@ -268,6 +274,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         Condition="'%(ZipProject.RootPath)'!='' AND '@(ZipProject)' != ''" 
         Files="@(ZipProject)"
         Action="New"
+        OutputSubPath="%(ZipProject.OutputSubPath)"
         ProjectPath="$(MSBuildProjectDirectory)"
         RootPath="$(MSBuildProjectDirectory)\%(ZipProject.RootPath)" 
         ZipName="%(ZipProject.RootPath)"
@@ -281,6 +288,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         Condition="'%(ZipProject.RootPath)'=='' AND '@(ZipProject)' != ''" 
         Files="@(ZipProject)"
         Action="New"
+        OutputSubPath="%(ZipProject.OutputSubPath)"
         ProjectPath="$(MSBuildProjectDirectory)"
         RootPath="%(ZipProject.RootDir)%(ZipProject.Directory)" 
         ZipName="%(ZipProject.Directory)"
@@ -294,6 +302,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         Condition="'%(ZipItem.RootPath)'!='' AND '@(ZipItem)' != ''" 
         Files="@(ZipItem)"
         Action="New"
+        OutputSubPath="%(ZipItem.OutputSubPath)"
         ProjectPath="$(MSBuildProjectDirectory)"
         RootPath="$(MSBuildProjectDirectory)\%(ZipItem.RootPath)" 
         ZipName="%(ZipItem.RootPath)"
@@ -307,6 +316,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
         Condition="'%(ZipItem.RootPath)'=='' AND '@(ZipItem)' != ''" 
         Files="@(ZipItem)"
         Action="New"
+        OutputSubPath="%(ZipItem.OutputSubPath)"
         ProjectPath="$(MSBuildProjectDirectory)"
         RootPath="%(ZipItem.RootDir)%(ZipItem.Directory)" 
         ZipName="%(ZipItem.Directory)"
@@ -315,7 +325,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
           ItemName="IntermediateZipItem"/>
     </ZipItems>
 
-    <Copy SourceFiles="@(IntermediateZipProject)" DestinationFolder="$(ZipProjectOutput)" />
+    <Copy SourceFiles="@(IntermediateZipProject)" DestinationFiles="@(IntermediateZipProject->'$(ZipProjectOutput)\%(OutputSubPath)\%(FileName)%(Extension)')" />
     <Copy SourceFiles="@(IntermediateZipItem)" DestinationFolder="$(ZipItemOutput)" />
 
   </Target>
