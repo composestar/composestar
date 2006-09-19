@@ -362,7 +362,7 @@ namespace Composestar.StarLight.ILWeaver
                 return;
 
             // Get the input filter
-            Composestar.Repository.LanguageModel.Inlining.Instruction inputFilter =
+            Composestar.Repository.LanguageModel.Inlining.InlineInstruction inputFilter =
                 methodElement.MethodBody.InputFilter;
 
             // Only proceed when we have an inputfilter
@@ -398,10 +398,22 @@ namespace Composestar.StarLight.ILWeaver
             // Get the new location for the next instructions
             ins = method.Body.Instructions[instructionsCount]; 
 
-            // Add filters
-            
-            
+            // Add filters using the visitor
+            CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
+            visitor.Method = method;
+            visitor.Worker = worker;
+            visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
 
+            // Visit the elements in the block
+            block.Accept(visitor);
+
+            // Only add instructions if we have instructions
+            if (visitor.Instructions.Count > 0)
+            {
+                // Add the instructions
+                instructionsCount = InsertInstructionList(ref worker, ins, visitor.Instructions);
+                ins = method.Body.Instructions[instructionsCount];
+            }
 
             // Add the end of the filter code
             worker.InsertAfter(ins, branchToInstruction);          
@@ -450,7 +462,7 @@ namespace Composestar.StarLight.ILWeaver
                     if (call != null)
                     {
                         // Get the outputFilter for this call
-                        Composestar.Repository.LanguageModel.Inlining.Instruction outputFilter =
+                        Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter =
                             call.OutputFilter; 
 
                         // Check for null, an output filter is not required
@@ -473,7 +485,6 @@ namespace Composestar.StarLight.ILWeaver
                 _repositoryAccess.CloseDatabase();
         }
 
-
         #region Helper functions
 
         /// <summary>
@@ -492,6 +503,33 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             return instructionsToAdd.Count; 
+        }
+
+        /// <summary>
+        /// Replaces the startinstruction and insert instruction list.
+        /// </summary>
+        /// <param name="worker">The worker.</param>
+        /// <param name="startInstruction">The start instruction.</param>
+        /// <param name="instructionsToAdd">The instructions to add.</param>
+        /// <returns></returns>
+        private int ReplaceAndInsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+        {
+            bool first = true;
+            foreach (Instruction instr in instructionsToAdd)
+            {
+                if (first)
+                {
+                    worker.Replace(startInstruction, instr);
+                    first = false;
+                }
+                else
+                {
+                    worker.InsertAfter(startInstruction, instr);
+                }
+                startInstruction = instr;
+            }
+
+            return instructionsToAdd.Count - 1; 
         }
 
         /// <summary>

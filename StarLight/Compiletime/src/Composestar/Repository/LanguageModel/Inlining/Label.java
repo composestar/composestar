@@ -1,8 +1,8 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
-import Composestar.Repository.LanguageModel.Inlining.Visitor.*;  
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class Label extends Instruction implements IVisitable
+public class Label extends InlineInstruction implements IVisitable
 {
 	private int id;
 

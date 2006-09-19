@@ -233,6 +233,21 @@ namespace TestContextInfo
             
         }
 
+
+        [TestMethod()]
+        public void SenderTest()
+        {
+            global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
+
+            object val = "tete";
+
+            target.Sender = val;
+
+
+            Assert.AreEqual(val, target.Sender, "Composestar.StarLight.ContextInfo.JoinPointContext.Sender was not set correctly.");
+            
+        }
+
     }
 
 

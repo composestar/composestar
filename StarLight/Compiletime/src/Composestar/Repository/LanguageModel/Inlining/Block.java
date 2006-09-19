@@ -4,9 +4,10 @@ import java.util.Enumeration;
 import java.util.Vector;
 import java.util.Iterator;
 
-import Composestar.Repository.LanguageModel.Inlining.Visitor.*;   
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class Block extends Instruction implements IVisitable  {
+public class Block extends InlineInstruction implements IVisitable
+{
 	private Vector instructions;
 
 	public Block()
@@ -14,7 +15,7 @@ public class Block extends Instruction implements IVisitable  {
 		instructions = new Vector();
 	}
 
-	public void addInstruction(Instruction instruction)
+	public void addInstruction(InlineInstruction instruction)
 	{
 		instructions.addElement(instruction);
 	}

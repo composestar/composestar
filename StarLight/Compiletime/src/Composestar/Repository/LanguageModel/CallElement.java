@@ -37,16 +37,16 @@ public class CallElement
 	}
 
 
-	private Instruction _outputFilter;
+	private InlineInstruction _outputFilter;
 
 	/** @property */
-	public Instruction get_OutputFilter()
+	public InlineInstruction get_OutputFilter()
 	{
 		return _outputFilter;
 	}
 
 	/** @property */
-	public void set_OutputFilter(Instruction value)
+	public void set_OutputFilter(InlineInstruction value)
 	{
 		_outputFilter = value;
 	}

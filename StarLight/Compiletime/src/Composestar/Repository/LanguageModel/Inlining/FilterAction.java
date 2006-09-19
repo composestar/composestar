@@ -2,7 +2,7 @@ package Composestar.Repository.LanguageModel.Inlining;
 
 import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class FilterAction extends Instruction implements IVisitable
+public class FilterAction extends InlineInstruction implements IVisitable
 {
 	private String type;
 	private String selector;
