@@ -170,8 +170,8 @@ public class Preprocessor implements CTCommonModule{
         
         try{
             URL genUrl = this.getClass().getResource( GENERATE_FLOW_GRAMMAR_PATH );
-            String fileName = genUrl.getFile();
-            Debug.out( Debug.MODE_DEBUG, MODULE_NAME, fileName );
+            String fileName = genUrl.getFile().replaceAll("%20", " ");
+            //Debug.out( Debug.MODE_DEBUG, MODULE_NAME, fileName );
             if ( fileName.indexOf('!' ) >= 0){
                 //load from jar:
                 JarGpsGrammar jarGpsLoader = new JarGpsGrammar();
@@ -185,14 +185,14 @@ public class Preprocessor implements CTCommonModule{
                 //load from directory:
                 GpsGrammar gpsLoader = new GpsGrammar(new LayedOutXml());
                 
-                File f = new File(genUrl.getFile());
+                File f = new File(genUrl.getFile().replaceAll("%20", " "));
                 RuleViewGrammar rvg = (RuleViewGrammar)gpsLoader.unmarshal(f); 
                 
                 this.generateFlowGrammar = rvg;
                 
                 URL runUrl = this.getClass().getResource( RUNTIME_GRAMMAR_PATH );
             	this.runtimeGrammar =
-            	    (RuleViewGrammar) gpsLoader.unmarshal( new File(runUrl.getFile()) );
+            	    (RuleViewGrammar) gpsLoader.unmarshal( new File(runUrl.getFile().replaceAll("%20", " ")) );
             }
         }
         catch (Exception exc){
