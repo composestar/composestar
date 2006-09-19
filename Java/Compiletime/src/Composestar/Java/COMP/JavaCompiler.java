@@ -171,7 +171,7 @@ public class JavaCompiler implements LangCompiler
 		while ( sourceIt.hasNext() ) 
 		{
 			Source source = (Source) sourceIt.next();
-			String dummyfile = source.getDummy();
+			String dummyfile = FileUtils.fixFilename(source.getDummy());
 			String classPath = dummyfile.substring(dummyfile.indexOf(dummyPath) + dummyPath.length());
 			classPath = classPath.replaceAll(FileUtils.getFilenamePart(dummyfile),"*.class");
 			classpaths.add( classPath );
@@ -234,8 +234,8 @@ public class JavaCompiler implements LangCompiler
 		while ( sourceIt.hasNext() ) 
 		{
 			Source s = (Source)sourceIt.next();
-			if(dummies)
-				sourcefiles.append("\""+s.getDummy()+"\""+"\n");
+			if(dummies) 
+				sourcefiles.append("\""+FileUtils.fixFilename(s.getDummy())+"\"");
 			else
 				sourcefiles.append("\""+s.getFileName()+"\""+"\n");
 		}
