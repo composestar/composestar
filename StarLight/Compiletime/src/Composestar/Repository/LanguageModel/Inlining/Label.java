@@ -1,6 +1,9 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
-public class Label extends Instruction {
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;  
+
+public class Label extends Instruction implements IVisitable
+{
 	private int id;
 
 	public Label()
@@ -29,5 +32,10 @@ public class Label extends Instruction {
 	public void set_Id(int id)
 	{
 		this.id = id;
+	}
+
+	public void Accept(IVisitor visitor)
+	{
+
 	}
 }

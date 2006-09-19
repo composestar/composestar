@@ -35,4 +35,19 @@ public class CommonConfiguration {
 			_compiletimeDebugLevel = value;
 		}
 	}
+
+	private String _intermediateOutputPath;
+
+	/** @property */
+	public String get_IntermediateOutputPath()
+	{
+		return _intermediateOutputPath;
+	}
+
+	/** @property */
+	public void set_IntermediateOutputPath(String value)
+	{
+		_intermediateOutputPath = value;
+	} 
+
 }

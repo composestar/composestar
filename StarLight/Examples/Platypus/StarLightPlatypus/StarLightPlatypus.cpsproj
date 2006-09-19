@@ -21,9 +21,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Platypus.cps">
-      <SubType>Code</SubType>
-    </Compile>
+    <Concern Include="Platypus.cps" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SourcePlatypus\Platypus.vjsproj">

@@ -1,8 +1,9 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
 import Composestar.Repository.LanguageModel.ConditionExpressions.*;
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class Branch extends Instruction
+public class Branch extends Instruction implements IVisitable
 {
 	private ConditionExpression conditionExpression;
 
@@ -27,7 +28,7 @@ public class Branch extends Instruction
      * @return the falseBlock
 	 * @property 
 	 */
-		public Block get_FalseBlock()
+	public Block get_FalseBlock()
 	{
 		return falseBlock;
 	}
@@ -36,19 +37,19 @@ public class Branch extends Instruction
      * @param falseBlock the falseBlock to set
 	 * @property 
 	 */
-		public void set_FalseBlock(Block falseBlock)
+	public void set_FalseBlock(Block falseBlock)
 	{
-			this.falseBlock = falseBlock;
+		this.falseBlock = falseBlock;
 	}
 
 	/**
      * @return the trueBlock
 	 * @property 
      */
-		public Block get_TrueBlock()
+	public Block get_TrueBlock()
 	{
-			return trueBlock;
-		}
+		return trueBlock;
+	}
 
 	/**
      * @param trueBlock the trueBlock to set
@@ -57,5 +58,10 @@ public class Branch extends Instruction
 	public void set_TrueBlock(Block trueBlock)
 	{
 		this.trueBlock = trueBlock;
-		}
+	}
+
+	public void Accept(IVisitor visitor)
+	{
+		visitor.VisitBranch(this);
+	}
 }

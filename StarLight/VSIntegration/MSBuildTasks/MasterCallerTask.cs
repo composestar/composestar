@@ -77,6 +77,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
             get { return debugLevel; }
             set { debugLevel = value; }
         }
+
+        private String _intermediateOutputPath;
+
+        /// <summary>
+        /// Gets or sets the intermediate output path.
+        /// </summary>
+        /// <value>The intermediate output path.</value>
+        [Required()]
+        public String IntermediateOutputPath
+        {
+            get { return _intermediateOutputPath; }
+            set { _intermediateOutputPath = value; }
+        }
+	
         #endregion
 
         #region Declarations
@@ -142,7 +156,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 return false;
             }
             CurrentDebugMode = (DebugMode)debugLevelValue;
-            cc.CompiletimeDebugLevel = debugLevelValue;                   
+            cc.CompiletimeDebugLevel = debugLevelValue;  
+            cc.IntermediateOutputPath = IntermediateOutputPath;     
 
             // Prepare to run java
             string classPath = "";

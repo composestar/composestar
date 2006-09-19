@@ -1,6 +1,8 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
-public abstract class Instruction {
+import Composestar.Repository.LanguageModel.Inlining.Visitor.*;  
+
+public abstract class Instruction implements IVisitable {
 	private Label label;
 
 	public Instruction()
@@ -20,5 +22,10 @@ public abstract class Instruction {
 	public Label get_Label()
 	{
 		return label;
+	}
+
+	public void Accept(IVisitor visitor)
+	{
+
 	}
 }
