@@ -11,12 +11,13 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Java.LAMA.*;
 import Composestar.Java.TYM.TypeHarvester.ClassMap;
 import Composestar.Utils.Debug;
 
-public class AnnotationCollector 
+public class AnnotationCollector implements CTCommonModule 
 {
 
 	public void run(CommonResources resources) throws ModuleException 
