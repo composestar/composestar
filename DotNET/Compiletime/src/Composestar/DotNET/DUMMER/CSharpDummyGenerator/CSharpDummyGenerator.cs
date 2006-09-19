@@ -44,7 +44,12 @@ namespace DDW.CSharpUI
 					IGraph ig = GetGraph(filename);
 					// Arg[0] = output directory.
 					string outputFilename = Console.ReadLine();
-					StreamWriter sr = File.CreateText(outputFilename);
+
+					// Create directory when missing
+					FileInfo fi = new FileInfo(outputFilename);
+					Directory.CreateDirectory(fi.DirectoryName);
+
+					StreamWriter sr = fi.CreateText();
 					CSharpGen csg = new CSharpGen(sr);
 					csg.Parse(ig);
 					csg.Close();
