@@ -372,41 +372,49 @@ namespace Composestar.StarLight.ILWeaver
             CilWorker worker = method.Body.CilWorker;
 
             // We add the filter code to the start of the method body
+            // But place a filtercontext first
+            
+            // Generate the following code
+            // if (!FilterContext.IsInnerCall(this, methodName)) 
+            // {
+            //   filtercode
+            // }
+            
+            // Get a methodinfo to the IsInnerCall check
+            MethodInfo checkInnerCallInfo = typeof(Composestar.StarLight.ContextInfo.FilterContext).GetMethod("IsInnerCall", new Type[] {typeof(object), typeof(string)});
+            // Create a methodreference for the IsInnerCall
+            MethodReference checkInnerCall=  _targetAssemblyDefinition.MainModule.Import(checkInnerCallInfo);
 
+            // Create instructions to load the arguments of the IsInnerCall on the stack
+            Instruction loadThis;
+            if (method.HasThis)
+                loadThis = worker.Create(OpCodes.Ldarg, method.This);
+            else
+                loadThis = worker.Create(OpCodes.Ldnull);
+            Instruction loadMethodName = worker.Create(OpCodes.Ldstr, method.Name);
+ 
+            // Create the call instruction
+            Instruction callIsInnerCall = worker.Create(OpCodes.Call, checkInnerCall);
+            
+            // Result is placed on the stack, so use it to branch to the skipFiltersInstruction
+            Instruction skipFiltersInstruction = worker.Create(OpCodes.Nop); 
+            Instruction branchInstruction = worker.Create(OpCodes.Brtrue, skipFiltersInstruction); 
 
-            //Instruction branchInstruction = worker.Create(OpCodes.Brtrue); 
-
-            #region Test code, must be removed
-      
-            //Gets the MethodElement of Console.WriteLine() method
-            MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
-
-            //Creating a sentence according to the current method
-            string sentence;
-            sentence = String.Concat("Code added in ", method.Name);
-
-            //Import the Console.WriteLine() method
-            MethodReference writeLine;
-            writeLine = _targetAssemblyDefinition.MainModule.Import(writeLineMethod);
-
-            //Creates the MSIL instruction for inserting the sentence
-            Instruction insertSentence;
-            insertSentence = worker.Create(OpCodes.Ldstr, sentence);
-
-            //Creates the CIL instruction for calling the 
-            //Console.WriteLine(string value) method
-            Instruction callWriteLine;
-            callWriteLine = worker.Create(OpCodes.Call, writeLine);
-
-            //Getting the first instruction of the current method
+            // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
 
-            //Inserts the insertSentence instruction before the first instruction
-            method.Body.CilWorker.InsertBefore(ins, insertSentence);
+            // Inserts the loadMethodName instruction before the first instruction
+            worker.InsertBefore(ins, loadThis);
 
-            //Inserts the callWriteLineMethod after the //insertSentence instruction
-            worker.InsertAfter(insertSentence, callWriteLine);
-            #endregion
+            // Inserts the other instructions loadMethodName instruction
+            worker.InsertAfter(loadThis, loadMethodName);
+            worker.InsertAfter(loadMethodName, callIsInnerCall);
+            worker.InsertAfter(callIsInnerCall, branchInstruction);
+
+            // Add filters
+
+            // Add the end of the filter code
+            worker.InsertAfter(branchInstruction, skipFiltersInstruction);          
 
         }
 
