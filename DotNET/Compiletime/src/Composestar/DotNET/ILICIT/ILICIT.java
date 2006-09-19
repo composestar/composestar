@@ -37,8 +37,11 @@ import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
-public class ILICIT implements WEAVER {
-
+/**
+ * Applies the changes as specified by CONE-IS to the assemblies in order to impose the behavior defined in the concern specifications.
+ */
+public class ILICIT implements WEAVER
+{
 	public static final String version = "$Revision$";
 
 	public void run(CommonResources resources) throws ModuleException
@@ -69,11 +72,11 @@ public class ILICIT implements WEAVER {
 			File source = new File(asm);
 			String target = FileUtils.fixFilename(weavePath+File.separator+source.getName());
 			if(!INCRE.instance().isProcessedByModule(asm,"ILICIT")){
-				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory...");
+				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory");
 				FileUtils.copyFile(target,source.getAbsolutePath());
 				String pdbFileName = FileUtils.removeExtension(source.getAbsolutePath()) + ".pdb";
 				if(FileUtils.fileExist(pdbFileName)){
-					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+pdbFileName+" to Weaver directory...");
+					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+pdbFileName+" to Weaver directory");
 					File pdb = new File(pdbFileName);
 					FileUtils.copyFile(FileUtils.removeExtension(target) + ".pdb",pdb.getAbsolutePath());
 				}
@@ -98,13 +101,13 @@ public class ILICIT implements WEAVER {
 			String asm = FileUtils.fixSlashes(dummy);
 			
 			File asmFile = new File(asm);
-			Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory...");
+			Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory");
 			FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
 		}
 
 //		String asm = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
 //		File asmFile = new File(asm);
-//		Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory...");
+//		Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory");
 //		FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
 //		String pdbFileName = FileUtils.removeExtension(weavePath+File.separator+asmFile.getName()) + ".pdb";
 
@@ -184,7 +187,7 @@ public class ILICIT implements WEAVER {
 				if ( Debug.getMode() == Debug.MODE_DEBUG ) 
 					cmd += " > \"" + weavePath + "/peweaver.log\"";
 
-				Debug.out(Debug.MODE_DEBUG, "ILICIT", "Starting execution of the 'PE Weaver' tool with arguments '" + args + "'...");
+				Debug.out(Debug.MODE_DEBUG, "ILICIT", "Starting execution of the 'PE Weaver' tool with arguments '" + args + "'");
 				int exitcode = cle.exec(cmd);
 
 				if (exitcode != 0) {

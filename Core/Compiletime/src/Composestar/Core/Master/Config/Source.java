@@ -2,7 +2,9 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 
-public class Source implements Serializable{
+public class Source implements Serializable
+{
+	private static final long serialVersionUID = -5054531327936357776L;
 
 	private boolean isExecutable = false;
 	private String fileName;

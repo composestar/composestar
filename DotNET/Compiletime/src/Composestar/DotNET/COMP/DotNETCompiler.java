@@ -35,7 +35,7 @@ import Composestar.Utils.TokenReplacer;
 
 public class DotNETCompiler implements LangCompiler
 {
-	private final static String TOKEN_LIB		= "\\{LIB\\}";
+	private final static String TOKEN_LIB = "\\{LIB\\}";
 
 	private String compilerOutput;
 
@@ -132,7 +132,7 @@ public class DotNETCompiler implements LangCompiler
 		config.getLibraries().addLibrary(targetPath);
 		project.addCompiledSource(targetPath);
 
-		tl.setSourceAssembly(filename, targetPath);
+		tl.setSourceAssembly(source.getFileName(), source.getTarget());
 		
 		// execute command
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
@@ -140,7 +140,7 @@ public class DotNETCompiler implements LangCompiler
 		compilerOutput = cmdExec.outputNormal();
 
 		processOutput(result, compilerOutput);
-		timer.stop();		
+		timer.stop();
 	}
 	
 	/**
@@ -174,7 +174,7 @@ public class DotNETCompiler implements LangCompiler
 		tr.addReplacement("SOURCES", getSourceFiles(project));
 		command = tr.process(command);
 
-		Debug.out(Debug.MODE_DEBUG,"COMP","Command "+command);
+		Debug.out(Debug.MODE_DEBUG,"COMP","Command " + command);
 
 		// execute command
 		CommandLineExecutor cmdExec = new CommandLineExecutor();

@@ -66,7 +66,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	 * @roseuid 40EBC2AE0113
 	 */
 	private void writeAssemblyReferenceDefinitions(CommonResources resources, String applicationStart)
-	throws ModuleException
+		throws ModuleException
 	{
 		TypeLocations typeLocations = TypeLocations.instance();
 		Configuration config = Configuration.instance();
@@ -86,11 +86,10 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		}
 
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolving entry assembly...");
-		String entryAssembly = "";
+		String entryAssembly = typeLocations.getAssemblyByType(applicationStart);
 
-		if ((applicationStart != null) && (applicationStart != ""))
+		if (entryAssembly != null)
 		{
-			entryAssembly = typeLocations.getAssemblyByType(applicationStart);
 			Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolved '" + entryAssembly + "' as entry assembly.");     
 		}
 		else
@@ -362,6 +361,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			String sourceFile = typeLocations.getSourceByType(typeName);
 			if (sourceFile == null)
 				throw new RuntimeException("sourceFile for " + typeName + " is null");
+			
 			Source source = (Source)projects.getSource(sourceFile);
 			String projectName = source.getProject().getProperty("name");
 			String dummies = (source == null ? "" : projectName + ".dummies");
