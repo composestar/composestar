@@ -151,7 +151,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Internal class for storing the arguments.
         /// </summary>
-        private class ArgumentInfo
+        private sealed class ArgumentInfo
         {
 
             /// <summary>

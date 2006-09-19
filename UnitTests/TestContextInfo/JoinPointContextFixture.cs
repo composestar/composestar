@@ -32,6 +32,7 @@ namespace TestContextInfo
                 testContextInstance = value;
             }
         }
+
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -105,6 +106,8 @@ namespace TestContextInfo
 
             Assert.AreEqual(expected, actual, "Composestar.StarLight.ContextInfo.JoinPointContext.GetArgumentType did not return" +
                     " the expected value.");           
+
+            Assert.IsNull(target.GetArgumentType(3), "Should return null for ordinals not found"); 
         }
 
         /// <summary>
@@ -124,7 +127,7 @@ namespace TestContextInfo
             actual = target.GetArgumentValue(ordinal);
 
             Assert.AreEqual(expected, actual, "Composestar.StarLight.ContextInfo.JoinPointContext.GetArgumentValue did not return the expected value.");
-            
+            Assert.IsNull(target.GetArgumentValue(3), "Should return null for ordinals not found");
         }
 
         /// <summary>
@@ -195,6 +198,25 @@ namespace TestContextInfo
         }
 
         /// <summary>
+        ///A test for ReturnValue
+        ///</summary>
+        [TestMethod()]
+        public void ReturnValueCanBeSetWhenTypeHasBeenSet()
+        {
+            global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
+
+            object val = "234"; 
+            Type t = typeof(string);
+
+            target.ReturnType = t; 
+
+            target.ReturnValue = val;
+
+            Assert.AreEqual(val, target.ReturnValue); 
+            
+        }
+
+        /// <summary>
         ///A test for Target
         ///</summary>
         [TestMethod()]
@@ -202,13 +224,13 @@ namespace TestContextInfo
         {
             global::Composestar.StarLight.ContextInfo.JoinPointContext target = new global::Composestar.StarLight.ContextInfo.JoinPointContext();
 
-            object val = null; // TODO: Assign to an appropriate value for the property
+            object val = "tete";
 
             target.Target = val;
 
 
             Assert.AreEqual(val, target.Target, "Composestar.StarLight.ContextInfo.JoinPointContext.Target was not set correctly.");
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            
         }
 
     }
