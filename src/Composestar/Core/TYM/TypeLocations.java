@@ -62,7 +62,7 @@ public class TypeLocations
 		String sourcePath = (new File(sourceFile)).getAbsolutePath();
 		typeNames.add(typeName);
 		typeToSource.put(typeName, sourcePath);
-		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type " + typeName + " is in " + sourceFile);
+		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Type '" + typeName + "' is in source '" + sourceFile + "'");
 	}
 
 	// invoked by DoTNETCompiler.compileSources
@@ -76,7 +76,7 @@ public class TypeLocations
 		
 		setTypesAssembly(getTypesBySource(path), assembly);
 
-		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Source " + source + " is compiled to " + assembly + ".dll");
+		Debug.out(Debug.MODE_DEBUG, "TYM_LOCATION", "Source '" + source + "' is compiled to assembly '" + assembly + ".dll'");
 	}
 	
 	private void setTypesAssembly(List types, String assembly)

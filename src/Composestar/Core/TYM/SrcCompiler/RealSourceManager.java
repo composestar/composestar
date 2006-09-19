@@ -28,6 +28,7 @@ import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Core.TYM.TypeLocations;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 /**
  * Takes care of compiling the real user sources. Links with the dummies and takes 
@@ -35,99 +36,107 @@ import Composestar.Utils.Debug;
  */
 public class RealSourceManager implements CTCommonModule {
 
-	private List compiledSources;
-
-	public RealSourceManager() {
-		compiledSources = new ArrayList();
+	public RealSourceManager()
+	{
 	}
 
-	public void run(CommonResources resources) throws ModuleException {
+	public void run(CommonResources resources) throws ModuleException
+	{
+		List compiledSources = new ArrayList();
+
 		//compile sources of project
 		Configuration config = Configuration.instance();
-		ArrayList projects = config.getProjects().getProjects();
+		List projects = config.getProjects().getProjects();
+		
 		Iterator projIt = projects.iterator();
-		while(projIt.hasNext()) {
-			Project p = (Project)projIt.next();
-			Language lang = p.getLanguage();
+		while (projIt.hasNext())
+		{
+			Project project = (Project)projIt.next();
+			Language lang = project.getLanguage();
 			CompilerSettings compsettings = lang.compilerSettings;
 			LangCompiler comp = compsettings.getCompiler();
 
 			String exec = Configuration.instance().getProjects().getProperty("Executable");
 			String exefile = "";
-			Iterator typesourcesit = p.getTypeSources().iterator();
-			while(typesourcesit.hasNext())
+			
+			Iterator typesourcesit = project.getTypeSources().iterator();
+			while (typesourcesit.hasNext())
 			{
 				TypeSource source = (TypeSource)typesourcesit.next();
-				if(source.getName().equals(exec))
+				if (source.getName().equals(exec))
 					exefile = source.getFileName();
 			}
 
 			//set target of sources
-			Iterator sourceIt = p.getSources().iterator();
-			while( sourceIt.hasNext() ) {
+			Iterator sourceIt = project.getSources().iterator();
+			while (sourceIt.hasNext())
+			{
 				Source source = (Source)sourceIt.next();
-				if(source.getFileName().equals(exefile))
+				if (source.getFileName().equals(exefile))
 					source.setIsExecutable(true);
 				else
 					source.setIsExecutable(false);
-				String target = createTargetFile(source.getFileName(),source.isExecutable());
+				
+				String target = getTargetFile(source.getFileName(), source.isExecutable());
+				Debug.out(Debug.MODE_DEBUG, "RECOMA", "Source '" + source.getFileName() + "' will be compiled to assembly '" + target + "'");				
 				source.setTarget(target);
 			}
 			
 			// do the actual compilation
 			try {
-				comp.compileSources(p);
+				comp.compileSources(project);
 			}
 			catch (CompilerException e) {
-				throw new ModuleException( "Compilation error: " + e.getMessage() , "RECOMA");
+				e.printStackTrace();
+				throw new ModuleException("Compilation error: " + e.getMessage() , "RECOMA");
 			}
 		}
 
-		finish(resources);
-	}
-
-	public void finish(CommonResources resources) {
 		resources.addResource("CompiledSources", compiledSources);
 	}
 
 	/**
 	 * Converts sourcefile to a compilation targetfile
-	 * @param sourcefile
+	 * @param sourcePath
 	 * @param isExec whether sourcefile contains executable
 	 */
-	public static String createTargetFile(String sourcefile,boolean isExec){
-
+	private static String getTargetFile(String sourcePath, boolean isExec)
+	{
 		String targetFile = "";
+		
 		// convert / to \ because of build.ini format
-		String source = sourcefile.replace('/','\\'); 
+		// nsp = normalized source path
+		String nsp = sourcePath.replace('/','\\'); 
 
-		/* last part of sourcefile's path, without extension
-		 * e.g C:/pacman/Main.jsl => Main
-		 */
-		String srcType = source.substring(source.lastIndexOf('\\')+1);
-		srcType = srcType.replaceAll("\\.\\w+", "");
+		// last part of sourcefile's path, without extension
+		// e.g. C:\pacman\Main.jsl => Main
+		String srcType = nsp.substring(nsp.lastIndexOf('\\') + 1);
+		srcType = FileUtils.removeExtension(srcType);
 
 		TypeLocations locations = TypeLocations.instance();
-		List types = locations.getTypesBySource(source);
+		List types = locations.getTypesBySource(nsp);
 
-		// iterates over typesources to find type with full namespace
+		// iterate over typesources to find type with full namespace
 		Iterator typesItr = types.iterator();
-		while(typesItr.hasNext()){
+		while (typesItr.hasNext())
+		{
 			String type = (String)typesItr.next();
 			String[] elems = type.split("\\.");
-			List list = new ArrayList(Arrays.asList(elems));
-			if(list.contains(srcType)){
+			List list = Arrays.asList(elems);
+			if (list.contains(srcType))
+			{
 				targetFile = type;
 				break; // found full namespace
 			}
 		}
 
-		if(targetFile.length() == 0) { // full namespace not found
-			if(!types.isEmpty()){
+		if (targetFile.length() == 0) // full namespace not found
+		{
+			if (!types.isEmpty())
 				targetFile = (String)types.get(0); // first type declared in sourcefile
-			}
-			else {
-				Debug.out(Debug.MODE_WARNING, "RECOMA",srcType+" is not a fully qualified target of source "+sourcefile);
+			else 
+			{
+				Debug.out(Debug.MODE_WARNING, "RECOMA",srcType+" is not a fully qualified target of source "+sourcePath);
 				targetFile = srcType; // last part of sourcefile's path
 			}
 		}   
@@ -137,6 +146,5 @@ public class RealSourceManager implements CTCommonModule {
 
 		return targetFile; 
 	}
-
 }
 
