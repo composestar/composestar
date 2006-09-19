@@ -60,18 +60,24 @@ public class StarLightMaster extends Master  {
     	
 		//configfile = configurationFile;
     	//Debug.setMode(4);
-	    //resources = new CommonResources();
+	    resources = new CommonResources();
 	    
-	    // Disable INCRE
-	    Configuration config = Configuration.instance();
-	    ModuleSettings ms = new ModuleSettings();
-	    Composestar.Core.Master.Config.Module m = new Composestar.Core.Master.Config.Module();
-	    m.addProperty("enabled", "false");
-	    ms.addModule("INCRE", m);
-	    config.setModuleSettings(ms);
-
 	    //  create the repository
 	    DataStore ds = DataStore.instance();
+	    
+	    Configuration.instance().getPathSettings().addPath("Base", repository.Configuration().getIntermediateOutputPath());
+		Configuration.instance().getPathSettings().addPath("Composestar", repository.Configuration().getInstallFolder());
+
+		
+	    //getPathSettings().getPath("Base")
+	    
+	    
+	   // ModuleSettings ms = new ModuleSettings();
+	    //Composestar.Core.Master.Config.Module m = new Composestar.Core.Master.Config.Module();
+	    //m.addProperty("enabled", "false");
+	   // ms.addModule("INCRE", m);
+	    //config.setModuleSettings(ms);
+
 
 	    //ds.addObject(RESOURCES_KEY, resources );
 
@@ -144,7 +150,13 @@ public class StarLightMaster extends Master  {
     		System.exit(-1);
     	}
 
+    	if (master==null) {
+    		System.out.println("Unable to initialize Master process.");
+    		System.exit(-1);
+    	}
+    	
     	master.run();
+    	  	
     }
     
     /**
@@ -155,13 +167,13 @@ public class StarLightMaster extends Master  {
     	// This is the 'hardcoded' version
 
 		try {
-
 			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
 			
 			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
 			DataStore.instance();
 
 			Debug.out(Debug.MODE_DEBUG, "Master", "Reading configuration...");
+			
 			Projects projects = new Projects();
 			Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
 			Iterator concernIterator = repository.Configuration().getConcerns().iterator();
@@ -173,18 +185,24 @@ public class StarLightMaster extends Master  {
 			}			
 			Configuration.instance().setProjects(projects);
 		
-		
-			// COPPER (Parsing the .cps files)
-			Composestar.Core.COPPER.COPPER copper = new Composestar.Core.COPPER.COPPER();
-			copper.run(resources);
 			
-				
-				
+			// initialize INCRE
+			INCRE incre = INCRE.instance();
+			incre.run(resources);
+					
+			Iterator modulesIter = incre.getModules();
+			while(modulesIter.hasNext())
+			{
+				// execute enabled modules one by one
+				Module m = (Module)modulesIter.next();
+				m.execute(resources);
+			}
+			
+			incre.getReporter().close();
+		
 			System.out.println("Master exit (0)");
 			System.exit(0);
 
-		}
-		catch(ModuleException e)  { // MasterStopException
 		}
 		catch (Exception ex) {
 			Debug.out(Debug.MODE_DEBUG, "Master", printStackTrace(ex));
