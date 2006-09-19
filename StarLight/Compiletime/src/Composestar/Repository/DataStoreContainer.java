@@ -50,7 +50,12 @@ public class DataStoreContainer {
     private void adjustClassNames()
     {
     	dbContainer = Db4o.openFile(yapFileName);
-
+    	
+    	// Unable to open the database
+    	if (dbContainer == null) {
+    		System.exit(-2);
+    	}
+    	
         StoredClass[] classes = dbContainer.ext().storedClasses();
         for (int i = 0; i < classes.length; i++) {
             StoredClass storedClass = classes[i];

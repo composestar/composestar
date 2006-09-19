@@ -21,4 +21,25 @@ public class ConfigurationAccess {
 	{
 		return DataStoreContainer.getInstance().GetConcernInformation();
 	}
+	
+	public String getIntermediateOutputPath()
+	{
+		if ( DataStoreContainer.getInstance().GetCommonConfiguration() == null )
+		{
+			return "";
+		}
+		
+		return DataStoreContainer.getInstance().GetCommonConfiguration().get_IntermediateOutputPath();
+	}
+	
+	public String getInstallFolder()
+	{
+		if ( DataStoreContainer.getInstance().GetCommonConfiguration() == null )
+		{
+			return "";
+		}
+		
+		return DataStoreContainer.getInstance().GetCommonConfiguration().get_InstallFolder();
+		
+	}
 }
