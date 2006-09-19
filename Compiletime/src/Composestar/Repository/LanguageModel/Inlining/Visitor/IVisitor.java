@@ -4,7 +4,7 @@ import Composestar.Repository.LanguageModel.Inlining.*;
    
 public interface IVisitor
 {
-	void VisitBlock(Block block);
+	
 	void VisitBranch(Branch branch);
 	void VisitContextInstruction(ContextInstruction contextInstruction);
 	void VisitFilterAction(FilterAction filterAction);

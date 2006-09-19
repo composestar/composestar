@@ -20,6 +20,19 @@ namespace Composestar.StarLight.ContextInfo
             _arguments = new Dictionary<short, ArgumentInfo>();
         }
 
+        private object _sender;
+
+        /// <summary>
+        /// Gets or sets the sender.
+        /// </summary>
+        /// <value>The sender.</value>
+        public object Sender
+        {
+            get { return _sender; }
+            set { _sender = value; }
+        }
+	
+
         private object _target;
 
         /// <summary>

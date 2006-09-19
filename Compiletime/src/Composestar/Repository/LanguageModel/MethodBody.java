@@ -9,7 +9,7 @@ public class MethodBody
 {
 	private int _id;
 	private int _parentMethodId;
-	private Instruction _inputFilter;
+	private InlineInstruction _inputFilter;
 	
 	public MethodBody()
 	{
@@ -41,13 +41,13 @@ public class MethodBody
 	}
 
 	/** @property */
-	public Instruction get_InputFilter()
+	public InlineInstruction get_InputFilter()
 	{
 		return _inputFilter;
 	}
 
 	/** @property */
-	public void set_InputFilter(Instruction value)
+	public void set_InputFilter(InlineInstruction value)
 	{
 		_inputFilter = value;
 	} 

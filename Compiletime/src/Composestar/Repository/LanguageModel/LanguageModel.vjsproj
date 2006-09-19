@@ -46,9 +46,9 @@
     <Compile Include="Inlining\Branch.java" />
     <Compile Include="Inlining\ContextInstruction.java" />
     <Compile Include="Inlining\FilterAction.java" />
+    <Compile Include="Inlining\InlineInstruction.java" />
     <Compile Include="Inlining\Jump.java" />
     <Compile Include="Inlining\Label.java" />
-    <Compile Include="Inlining\Instruction.java" />
     <Compile Include="Inlining\Visitor\IVisitable.java" />
     <Compile Include="Inlining\Visitor\IVisitor.java" />
     <Compile Include="Internal.java" />

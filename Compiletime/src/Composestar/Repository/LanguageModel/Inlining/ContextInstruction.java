@@ -2,7 +2,7 @@ package Composestar.Repository.LanguageModel.Inlining;
 
 import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class ContextInstruction extends Instruction implements IVisitable
+public class ContextInstruction extends InlineInstruction implements IVisitable
 {
 	private String type;
 	private String method;

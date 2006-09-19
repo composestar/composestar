@@ -3,7 +3,7 @@ package Composestar.Repository.LanguageModel.Inlining;
 import Composestar.Repository.LanguageModel.ConditionExpressions.*;
 import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
-public class Branch extends Instruction implements IVisitable
+public class Branch extends InlineInstruction implements IVisitable
 {
 	private ConditionExpression conditionExpression;
 
