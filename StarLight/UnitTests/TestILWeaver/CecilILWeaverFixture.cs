@@ -108,17 +108,27 @@ namespace TestILWeaver
 
             TypeElement te = null;
             Internal i;
-            #region Add internal 'HelloWorldInternal' to ConsoleTestTarget.HelloWorld
+            #region Add internal 'HelloWorldStringInternal' (String) to ConsoleTestTarget.HelloWorld
                 te = repository.GetTypeElement("ConsoleTestTarget.HelloWorld");
                 i = new Internal();
                 i.ParentTypeId = te.Id;
-                i.Name = "HelloWorldInternal";
+                i.Name = "HelloWorldStringInternal";
                 i.NameSpace = "ConsoleTestTarget.HelloWorld";
                 i.Type = "System.String, mscorlib";
                 Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
             #endregion
 
-            #region Add internal 'ProgramInternal' to ConsoleTestTarget.Program
+            #region Add internal 'HelloWorldIntegerInternal' (Int32) to ConsoleTestTarget.HelloWorld
+                te = repository.GetTypeElement("ConsoleTestTarget.HelloWorld");
+                i = new Internal();
+                i.ParentTypeId = te.Id;
+                i.Name = "HelloWorldIntegerInternal";
+                i.NameSpace = "ConsoleTestTarget.HelloWorld";
+                i.Type = "System.Int32, mscorlib";
+                Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
+            #endregion
+
+            #region Add internal 'ProgramInternal' (ConsoleTestTarget.HelloWorld) to ConsoleTestTarget.Program
                 te = repository.GetTypeElement("ConsoleTestTarget.Program");
                 i = new Internal();
                 i.ParentTypeId = te.Id;
