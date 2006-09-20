@@ -27,7 +27,7 @@ namespace TestILWeaver
     public class CecilILWeaverFixture
     {
         private const string FilenameWoven = "TestTargetWoven.exe";
-        private const string FilenameSource = "TestTarget.exe";
+        private const string FilenameSource = "ConsoleTestTarget.exe";
 
         public CecilILWeaverFixture()
         {
@@ -102,7 +102,29 @@ namespace TestILWeaver
             analyzer.Close();
  
             // Change the types
+            Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess(CreateFullPath("starlight.yap"));
 
+            TypeElement te = null;
+            Internal i;
+            #region Add internal 'HelloWorldInternal' to ConsoleTestTarget.HelloWorld
+                te = repository.GetTypeElement("ConsoleTestTarget.HelloWorld");
+                i = new Internal();
+                i.ParentTypeId = te.Id;
+                i.Name = "HelloWorldInternal";
+                i.NameSpace = "ConsoleTestTarget.HelloWorld";
+                i.Type = "System.String";
+                Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
+            #endregion
+
+            #region Add internal 'ProgramInternal' to ConsoleTestTarget.Program
+                te = repository.GetTypeElement("ConsoleTestTarget.Program");
+                i = new Internal();
+                i.ParentTypeId = te.Id;
+                i.Name = "ProgramInternal";
+                i.NameSpace = "ConsoleTestTarget.Program";
+                i.Type = "ConsoleTestTarget.HelloWorld";
+                Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
+            #endregion
 
             // Run the weaver
             CecilILWeaver weaver = new CecilILWeaver();
