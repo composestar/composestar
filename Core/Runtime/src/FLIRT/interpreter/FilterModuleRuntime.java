@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleRuntime.java,v 1.5 2006/06/27 15:39:34 reddog33hummer Exp $
+ * $Id$
  */
 public class FilterModuleRuntime extends ReferenceEntityRuntime implements Interpretable, ConditionResolver, Cloneable 
 {

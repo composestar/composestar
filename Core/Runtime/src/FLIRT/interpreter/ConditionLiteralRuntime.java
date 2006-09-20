@@ -10,7 +10,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ConditionLiteralRuntime.java,v 1.3 2006/02/13 12:59:36 composer Exp $
+ * $Id$
  */
 public class ConditionLiteralRuntime extends ConditionExpressionRuntime implements Interpretable 
 {

@@ -4,7 +4,7 @@ package antlr;
  * Project led by Terence Parr at http://www.cs.usfca.edu
  * Software rights: http://www.antlr.org/license.html
  *
- * $Id: TokenBuffer.java,v 1.1 2006/02/13 09:12:47 pascal Exp $
+ * $Id$
  */
 
 /**A Stream of Token objects fed to the parser from a Tokenizer that can

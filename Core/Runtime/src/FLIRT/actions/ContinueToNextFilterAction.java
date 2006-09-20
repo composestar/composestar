@@ -9,7 +9,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ContinueToNextFilterAction.java,v 1.1 2006/02/16 23:15:53 pascal_durr Exp $
+ * $Id$
  * 
  * Continues to the next filter.
  * This action does nothing, and allows for the continuing of the filtering of the 

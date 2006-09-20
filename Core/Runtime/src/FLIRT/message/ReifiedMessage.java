@@ -10,7 +10,7 @@ import Composestar.RuntimeCore.Utils.*;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ReifiedMessage.java,v 1.4 2006/06/25 19:33:21 wminnen Exp $
+ * $Id$
  */
 public class ReifiedMessage implements ChildRunnable
 {

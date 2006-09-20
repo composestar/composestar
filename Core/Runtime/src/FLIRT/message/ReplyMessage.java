@@ -5,7 +5,7 @@ package Composestar.RuntimeCore.FLIRT.Message;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: ReplyMessage.java,v 1.3 2006/02/13 15:44:40 composer Exp $
+ * $Id$
  * 
  * Models the reified message that is handed over to the ACTcallbacks
  * It allows for the replacement of the return value of the message

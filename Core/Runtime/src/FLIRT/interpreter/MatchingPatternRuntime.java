@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: MatchingPatternRuntime.java,v 1.3 2006/09/05 12:31:01 doornenbal Exp $
+ * $Id$
  */
 public class MatchingPatternRuntime extends ReferenceEntityRuntime implements Interpretable 
 {

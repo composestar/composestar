@@ -17,7 +17,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterRuntime.java,v 1.5 2006/06/29 08:46:00 reddog33hummer Exp $
+ * $Id$
  */
 public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable
 {

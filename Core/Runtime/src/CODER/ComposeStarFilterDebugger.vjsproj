@@ -90,11 +90,6 @@
                     Project = "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
                     Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
                 />
-                <Reference
-                    Name = "ComposestarCore"
-                    Project = "{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}"
-                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
-                />
             </References>
         </Build>
         <Files>

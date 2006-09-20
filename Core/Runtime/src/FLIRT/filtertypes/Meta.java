@@ -12,7 +12,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Meta.java,v 1.2 2006/06/25 19:33:21 wminnen Exp $
+ * $Id$
  * 
  * Models the Meta filter
  * If a message is accepted, it is reified and offered to a method defined in the

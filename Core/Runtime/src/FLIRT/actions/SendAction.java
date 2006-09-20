@@ -11,7 +11,7 @@ import java.util.Dictionary;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: SendAction.java,v 1.2 2006/02/13 12:01:32 composer Exp $
+ * $Id$
  * 
  * Models the action to carry out when a Dispatch Filter accepts a message.
  * When executed, it redirects the message to the target specified during

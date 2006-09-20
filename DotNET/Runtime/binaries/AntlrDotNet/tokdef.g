@@ -2,7 +2,7 @@
  * Project led by Terence Parr at http://www.cs.usfca.edu
  * Software rights: http://www.antlr.org/license.html
  *
- * $Id: tokdef.g,v 1.1 2006/02/13 09:12:47 pascal Exp $
+ * $Id$
  */
 
 header { package antlr; }

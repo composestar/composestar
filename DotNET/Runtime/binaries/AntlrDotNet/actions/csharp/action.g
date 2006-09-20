@@ -14,7 +14,7 @@ header {
  *
  * Port to C# by Kunle Odutola : kunle UNDERSCORE odutola AT hotmail DOT com
  *
- * $Id: action.g,v 1.1 2006/02/13 09:12:47 pascal Exp $
+ * $Id$
  */
 
 // HISTORY:

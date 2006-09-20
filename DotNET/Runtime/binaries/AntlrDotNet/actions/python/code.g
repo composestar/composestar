@@ -1,7 +1,7 @@
 // This file is part of PyANTLR. See LICENSE.txt for license
 // details..........Copyright (C) Wolfgang Haefelinger, 2004.
 //
-// $Id: code.g,v 1.1 2006/02/13 09:12:48 pascal Exp $
+// $Id$
 
 header {
 package antlr.actions.python;

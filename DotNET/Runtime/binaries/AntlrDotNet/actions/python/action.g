@@ -1,7 +1,7 @@
 // This file is part of PyANTLR. See LICENSE.txt for license
 // details..........Copyright (C) Wolfgang Haefelinger, 2004.
 //
-// $Id: action.g,v 1.1 2006/02/13 09:12:48 pascal Exp $
+// $Id$
 
 header {
 package antlr.actions.python;
@@ -17,7 +17,7 @@ import antlr.*;
  * Project led by Terence Parr at http://www.cs.usfca.edu
  * Software rights: http://www.antlr.org/license.html
  *
- * $Id: action.g,v 1.1 2006/02/13 09:12:48 pascal Exp $
+ * $Id$
  */
 
 /** Perform the following translations:

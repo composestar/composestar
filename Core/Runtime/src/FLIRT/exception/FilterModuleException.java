@@ -5,7 +5,7 @@ package Composestar.RuntimeCore.FLIRT.Exception;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: FilterModuleException.java,v 1.1 2006/02/16 23:15:54 pascal_durr Exp $
+ * $Id$
  * 
  * Exception at the filter module level.
  * This exception can occur, for example, when a call to a non existing condition 

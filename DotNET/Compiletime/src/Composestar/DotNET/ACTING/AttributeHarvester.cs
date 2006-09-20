@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: AttributeHarvester.cs,v 1.1 2006/02/13 11:54:42 pascal Exp $
+ * $Id$
  */
 
 using System.Xml;

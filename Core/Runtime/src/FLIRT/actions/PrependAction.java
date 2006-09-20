@@ -10,7 +10,7 @@ import Composestar.RuntimeCore.Utils.Debug;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: PrependAction.java,v 1.1 2006/06/25 19:33:21 wminnen Exp $
+ * $Id$
  * 
  * Models the action to carry out when a Dispatch Filter accepts a message.
  * When executed, it redirects the message to the target specified during

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMethodInfo.java,v 1.4 2006/03/14 18:19:16 roy_ Exp $
+ * $Id$
  */
 
 package Composestar.DotNET.LAMA;
