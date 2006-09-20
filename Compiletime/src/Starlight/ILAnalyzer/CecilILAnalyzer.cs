@@ -161,7 +161,8 @@ namespace Composestar.StarLight.ILAnalyzer
                 foreach (MethodDefinition method in type.Methods)
                 {
                     // Create a new method element
-                    MethodElement mi = new MethodElement();                
+                    MethodElement mi = new MethodElement();    
+                    mi.Signature = SignatureBuilder.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), GetParameterTypesList(method)); 
                     mi.Name = method.Name;                    
                     mi.ReturnType = method.ReturnType.ReturnType.ToString();
                     mi.IsAbstract = method.IsAbstract;
@@ -187,7 +188,7 @@ namespace Composestar.StarLight.ILAnalyzer
                         pe.ParameterType = param.ParameterType.ToString();
                         pe.IsIn = param.Attributes == ParamAttributes.In;
                         pe.IsOptional = param.Attributes == ParamAttributes.Optional;
-                        pe.IsOut = param.Attributes == ParamAttributes.Out;
+                        pe.IsOut = param.Attributes == ParamAttributes.Out;                          
                         pe.IsRetVal = !param.ParameterType.FullName.Equals("System.Void", StringComparison.CurrentCultureIgnoreCase);
 
                         // Add to the method
@@ -223,6 +224,22 @@ namespace Composestar.StarLight.ILAnalyzer
             _repositoryAccess.CloseDatabase(); 
 
             return ret;
+        }
+
+        /// <summary>
+        /// Gets the parameter types list.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        private String[] GetParameterTypesList(MethodDefinition method)
+        {
+            List<String> ret = new List<String>();
+            foreach (ParameterDefinition param in method.Parameters)
+            {
+                ret.Add(param.ParameterType.FullName);
+            }
+
+            return ret.ToArray(); 
         }
 
         /// <summary>

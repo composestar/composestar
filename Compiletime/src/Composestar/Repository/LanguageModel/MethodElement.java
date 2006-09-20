@@ -16,12 +16,26 @@ public class MethodElement implements IRepositoryElement
 	private boolean _isStatic;
 	private boolean _isVirtual;
 	private MethodBody _methodBody;
-	
+	private String _signature;
+
 	public MethodElement()
 	{
 		_id = this.hashCode();
 		_methodBody = new MethodBody(_id); 
 	}
+
+	/** @property */
+	public String get_Signature()
+	{
+		return _signature;
+	}
+
+	/** @property */
+	public void set_Signature(String value)
+	{
+		_signature = value;
+	} 
+
 
 	/** @property */
 	public int get_Id() { return _id; }

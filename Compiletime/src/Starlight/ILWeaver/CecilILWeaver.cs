@@ -202,7 +202,9 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = RepositoryAccess.GetMethodElement(typeElement, method.Name);
+                        methodElement = RepositoryAccess.GetMethodElementBySignature(typeElement, 
+                            SignatureBuilder.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), GetParameterTypesList(method)));
+                        
                         // Skip if there is no methodinfo
                         if (methodElement == null)
                             continue;
@@ -442,6 +444,7 @@ namespace Composestar.StarLight.ILWeaver
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
             visitor.Worker = worker;
+            visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;  
             visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
 
             // Visit the elements in the block
@@ -451,8 +454,8 @@ namespace Composestar.StarLight.ILWeaver
             if (visitor.Instructions.Count > 0)
             {
                 // Add the instructions
-                instructionsCount = InsertInstructionList(ref worker, ins, visitor.Instructions);
-                ins = method.Body.Instructions[instructionsCount];
+               instructionsCount += InsertInstructionList(ref worker, ins, visitor.Instructions);
+               ins = method.Body.Instructions[instructionsCount];
             }
 
             // Add the end of the filter code marker, the IsInnerCall branch will jump to this location
@@ -528,6 +531,22 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #region Helper functions
+
+        /// <summary>
+        /// Gets the parameter types list.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        private String[] GetParameterTypesList(MethodDefinition method)
+        {
+            List<String> ret = new List<String>();
+            foreach (ParameterDefinition param in method.Parameters)
+            {
+                ret.Add(param.ParameterType.FullName);
+            }
+
+            return ret.ToArray(); 
+        }
 
         /// <summary>
         /// Inserts the instruction list after a specified instruction.
@@ -620,7 +639,7 @@ namespace Composestar.StarLight.ILWeaver
             instructions.Add(loadThis);
             instructions.Add(loadMethodName);
             instructions.Add(callIsInnerCall);
-            instructions.Add(branchToInstruction); 
+            instructions.Add(branchInstruction); 
 
             return instructions;
         }

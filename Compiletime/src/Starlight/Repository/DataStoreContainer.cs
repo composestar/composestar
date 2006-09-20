@@ -68,6 +68,8 @@ namespace Composestar.Repository
         {
             Db4o.Configure().CallConstructors(false);
 
+             Db4o.Configure().ObjectClass(typeof(MethodElement)).CascadeOnUpdate(true);
+
             // Indexes
             Db4o.Configure().ObjectClass(typeof(MethodElement)).ObjectField("_parentTypeId").Indexed(true);
             Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
