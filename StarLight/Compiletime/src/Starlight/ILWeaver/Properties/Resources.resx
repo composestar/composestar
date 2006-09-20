@@ -120,6 +120,9 @@
   <data name="AssemblyNotOpen" xml:space="preserve">
     <value>The assembly is not open.</value>
   </data>
+  <data name="ConstructorNotFound" xml:space="preserve">
+    <value>The constructor .ctor() for the type {0} could not be found.</value>
+  </data>
   <data name="CouldNotSaveAssembly" xml:space="preserve">
     <value>Could not write the assembly to a file. Check if the file is not in use and has the correct access permissions.</value>
   </data>
