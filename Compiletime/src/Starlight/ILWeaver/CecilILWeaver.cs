@@ -261,26 +261,44 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (Internal inter in internals)
             {
+                FieldDefinition internalDef;
+                TypeReference internalType;
+                Mono.Cecil.FieldAttributes internalAttrs;
                 
+                internalType = _targetAssemblyDefinition.MainModule.TypeReferences[inter.Type];
+                internalAttrs = Mono.Cecil.FieldAttributes.Private;
+
+                // Create the field
+                internalDef = new FieldDefinition(inter.Name, internalType, internalAttrs);
+            
+                // Add the field
+                type.Fields.Add(internalDef);
+
+                // Add initialization code to type constructor(s)
+                foreach (MethodDefinition constructor in type.Constructors)
+                {
+                    constructor.Body.CilWorker.Append(constructor.Body.CilWorker.Create(OpCodes.Newobj, "instance void "+inter.Type+"::.ctor()"));
+                    constructor.Body.CilWorker.Append(constructor.Body.CilWorker.Create(OpCodes.Stfld, inter.Type+" "+inter.NameSpace+":"+inter.Name));
+                }
             }
 
             #region Test code, must be removed
-            // Declarations
-            FieldDefinition internalDef;
-            String name;
-            TypeReference fieldType;
-            Mono.Cecil.FieldAttributes attrs;
+            //// Declarations
+            //FieldDefinition internalDef;
+            //String name;
+            //TypeReference fieldType;
+            //Mono.Cecil.FieldAttributes attrs;
 
-            // Prepare the data
-            name = "test";
-            fieldType = _targetAssemblyDefinition.MainModule.Import(typeof(String));
-            attrs = Mono.Cecil.FieldAttributes.Static;
+            //// Prepare the data
+            //name = "test";
+            //fieldType = _targetAssemblyDefinition.MainModule.Import(typeof(String));
+            //attrs = Mono.Cecil.FieldAttributes.Static;
 
-            // Create the field
-            internalDef = new FieldDefinition(name, fieldType, attrs);
+            //// Create the field
+            //internalDef = new FieldDefinition(name, fieldType, attrs);
 
-            // Add the field
-            type.Fields.Add(internalDef);
+            //// Add the field
+            //type.Fields.Add(internalDef);
             #endregion
         }
 
