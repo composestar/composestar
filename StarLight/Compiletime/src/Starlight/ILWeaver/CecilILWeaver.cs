@@ -433,10 +433,12 @@ namespace Composestar.StarLight.ILWeaver
                 ins = method.Body.Instructions[instructionsCount];
             }
 
-            // Add the end of the filter code
+            // Add the end of the filter code marker, the IsInnerCall branch will jump to this location
             worker.InsertAfter(ins, branchToInstruction);          
 
+            //
             // What follows are the original instructions
+            //
 
         }
 
