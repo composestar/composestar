@@ -89,10 +89,12 @@ namespace TestILWeaver
         public void AnalyzeAndWeave()
         {
             NameValueCollection config = new NameValueCollection();
-            config.Add("OutputImagePath", AppDomain.CurrentDomain.BaseDirectory);
+            config.Add("OutputImagePath", Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Woven"));
             config.Add("ShouldSignAssembly", "false");
             config.Add("OutputImageSNK", "");
-            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap"));
+
+            Directory.CreateDirectory(config["OutputImagePath"]);
             
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
             analyzer.Initialize(FilenameSource, config); 
@@ -112,7 +114,7 @@ namespace TestILWeaver
                 i.ParentTypeId = te.Id;
                 i.Name = "HelloWorldInternal";
                 i.NameSpace = "ConsoleTestTarget.HelloWorld";
-                i.Type = "System.String";
+                i.Type = "System.String, mscorlib";
                 Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
             #endregion
 
@@ -122,7 +124,7 @@ namespace TestILWeaver
                 i.ParentTypeId = te.Id;
                 i.Name = "ProgramInternal";
                 i.NameSpace = "ConsoleTestTarget.Program";
-                i.Type = "ConsoleTestTarget.HelloWorld";
+                i.Type = "ConsoleTestTarget.HelloWorld, ConsoleTestTarget";
                 Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
             #endregion
 
