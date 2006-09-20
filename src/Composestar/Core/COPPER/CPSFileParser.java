@@ -85,7 +85,8 @@ public class CPSFileParser {
 			  sr = new StringReader(COPPER.getCpscontents());
 			  lexer = new CpsPosLexer(sr);
 			  parser = new CpsParser(lexer);
-			  parser.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
+			  parser.getASTFactory().setASTNodeClass( CpsAST.class );
+//			  parser.setASTNodeClass("Composestar.Core.COPPER.CpsAST");
 			  parser.concern();
 		  }
 		  catch (NoViableAltException e)
