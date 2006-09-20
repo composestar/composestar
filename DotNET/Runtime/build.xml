@@ -59,5 +59,18 @@
 		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/DotNETPlatformInterface.dll" />
 		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/AntlrDotNet.dll" />
 	</target>
+	
+	<target name="uninstall" depends="init">
+		<echo message="Unregistering assemblies" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCore.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCoreDotNET.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETRuntimeInterpreter.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETUtilities.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarFilterDebugger.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarRuntimeInterpreter.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarUtilities.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/DotNETPlatformInterface.dll" />
+		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/AntlrDotNet.dll" />
+	</target>
 
 </project>

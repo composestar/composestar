@@ -63,5 +63,11 @@
 		<ant target="install" dir="Runtime" />
 		<ant target="install" dir="Plugin" />
 	</target>
+	
+	<target name="uninstall" depends="init">
+		<!--<ant target="uninstall" dir="Compiletime" />-->
+		<ant target="uninstall" dir="Runtime" />
+		<!--<ant target="uninstall" dir="Plugin" />-->
+	</target>
 
 </project>
