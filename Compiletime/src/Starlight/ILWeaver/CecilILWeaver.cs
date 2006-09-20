@@ -262,23 +262,44 @@ namespace Composestar.StarLight.ILWeaver
             foreach (Internal inter in internals)
             {
                 FieldDefinition internalDef;
-                TypeReference internalType;
+                Type internalType;
+                TypeReference internalTypeRef;
                 Mono.Cecil.FieldAttributes internalAttrs;
-                
-                internalType = _targetAssemblyDefinition.MainModule.TypeReferences[inter.Type];
-                internalAttrs = Mono.Cecil.FieldAttributes.Private;
 
+                internalType = Type.ReflectionOnlyGetType(inter.Type, false, false);
+                if (internalType == null) throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, inter.Type));
+                internalTypeRef = _targetAssemblyDefinition.MainModule.Import(internalType);
+                if (internalTypeRef == null) throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, inter.Type));
+
+                internalAttrs = Mono.Cecil.FieldAttributes.Private;
+                
                 // Create the field
-                internalDef = new FieldDefinition(inter.Name, internalType, internalAttrs);
+                internalDef = new FieldDefinition(inter.Name, internalTypeRef, internalAttrs);
             
                 // Add the field
                 type.Fields.Add(internalDef);
 
                 // Add initialization code to type constructor(s)
-                foreach (MethodDefinition constructor in type.Constructors)
+                if (internalType.IsClass && internalType.Name != "String" && internalType.Name != "Array")
                 {
-                    constructor.Body.CilWorker.Append(constructor.Body.CilWorker.Create(OpCodes.Newobj, "instance void "+inter.Type+"::.ctor()"));
-                    constructor.Body.CilWorker.Append(constructor.Body.CilWorker.Create(OpCodes.Stfld, inter.Type+" "+inter.NameSpace+":"+inter.Name));
+                    // Get the .ctor() constructor for the internal type
+                    MethodBase constructorMethod = (MethodBase)internalType.GetConstructor(new Type[0]);
+
+                    foreach (MethodDefinition constructor in type.Constructors)
+                    {
+                        Instruction hookInstruction;
+                        if (constructor.HasBody)
+                        {
+                            if (constructor.Body.Instructions.Count >= 1)
+                            {
+                                hookInstruction = constructor.Body.Instructions[0];
+                                MethodReference constructorReference = _targetAssemblyDefinition.MainModule.Import(constructorMethod);
+                                constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Ldarg_0));
+                                constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Newobj, constructorReference));
+                                constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Stfld, internalDef));
+                            }
+                        }
+                    }
                 }
             }
 
