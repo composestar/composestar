@@ -82,13 +82,11 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			throw new ModuleException("Error while creating AST for " +source.getFileName()+": "+ e.getMessage(), "DUMMER");
 		}
 		
-		this.target = outputFilename;
-		
 		//create dummy
 		visit(root);
 		
 		//emit dummy to file
-		emit();
+		emit(outputFilename);
 	}
 	
 	public void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException {
@@ -138,10 +136,12 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 	}
 	
-	public void emit() throws ModuleException 
+	public void emit(String outputFilename) throws ModuleException 
 	{
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(target));			
+			File f = (new File(outputFilename)).getParentFile();			
+			f.mkdirs();
+			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilename));			
 			bw.write(dummy.toString());
 			bw.close();
 		}
