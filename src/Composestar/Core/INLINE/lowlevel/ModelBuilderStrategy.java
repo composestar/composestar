@@ -152,13 +152,17 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 	currentLabelId = jumpLabel;
 	
 	if( filter.getFilterType().getType().equals( FilterType.META ) ){
+	    Block block = new Block();
+	    block.setLabel( new Label( jumpLabel ) );
+	    currentBlock.addInstruction( block );
 	    
-	    
-	    filterBlock = new FilterBlock( new Label(), filter.getFilterType().getType() );
+	    filterBlock = new FilterBlock( filter.getFilterType().getType() );
+	    filterBlock.setLabel( new Label() );
 	    afterFilterBlocks.add( filterBlock );
 	}
 	else{
-	    filterBlock = new FilterBlock( new Label( jumpLabel ), filter.getFilterType().getType() );
+	    filterBlock = new FilterBlock( filter.getFilterType().getType() );
+	    filterBlock.setLabel( new Label( jumpLabel ) );
 	    currentBlock.addInstruction( filterBlock );
 	}
 	
@@ -258,7 +262,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
                 empty = false;
             }
         }
-        else if ( node.containsName( "before action" ) ){
+        else if ( node.containsName( FlowChartNames.META_ACTION_NODE ) ){//"before action" ) ){
             Message callMessage = getCallMessage( state );
 
             setInnerCallContext( callMessage );
@@ -284,6 +288,14 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         }
         else if ( node.containsName( FlowChartNames.ERROR_ACTION_NODE ) ){
             filterAction = new FilterAction( "error", null );
+            empty = false;
+        }
+        else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
+            filterAction = new FilterAction( "continue", null );
+            empty = false;
+        }
+        else if ( node.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) ){
+            filterAction = new FilterAction( "continue", null );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.CUSTOM_ACTION_NODE ) ){
@@ -319,9 +331,18 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     private void setInnerCallContext( Message callMessage ){
 	if ( Message.checkEquals( callMessage.getTarget(), Message.INNER_TARGET ) )
         {
-	    MethodInfo calledMethod = currentMethod.getClone( callMessage.getSelector().getName(),
-		    currentMethod.parent() );
-	    ContextInstruction contextAction = new ContextInstruction( "InnerCall", calledMethod );
+	    MethodInfo calledMethod;
+	    
+	    if ( callMessage.getSelector().getName().equals( currentMethod.name() ) ){
+		calledMethod = currentMethod;
+	    }
+	    else{
+		calledMethod = MethodInfo.getMethodInfo( callMessage.getSelector().getName(), 
+			currentMethod.parent(), currentMethod );
+	    }
+	    
+	    ContextInstruction contextAction = 
+		new ContextInstruction( ContextInstruction.SET_INNER_CALL, calledMethod );
 	    currentBlock.addInstruction( contextAction );
 	    builder.addInnerCallCheckTask( contextAction );
         }

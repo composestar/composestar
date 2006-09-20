@@ -7,11 +7,15 @@ package Composestar.Core.INLINE.model;
 import Composestar.Core.LAMA.MethodInfo;
 
 public class ContextInstruction extends Instruction{
-    private String type;
+    private int type;
     private MethodInfo method;
     private boolean enabled;
 
-    public ContextInstruction( String type, MethodInfo method ){
+    public final static int REMOVED = 0;
+    public final static int SET_INNER_CALL = 10;
+    public final static int CHECK_INNER_CALL = 11;
+    
+    public ContextInstruction( int type, MethodInfo method ){
 	this.type = type;
 	this.method = method;
     }
@@ -26,8 +30,15 @@ public class ContextInstruction extends Instruction{
     /**
      * @return the type
      */
-    public String getType(){
+    public int getType(){
 	return type;
+    }
+    
+    /**
+     * @param type the type to set
+     */
+    public void setType(int type){
+        this.type = type;
     }
 
     /**

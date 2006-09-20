@@ -494,39 +494,20 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param type the type of the filter (e.g. Meta)
    */
   public void addFilterType(String type,int lineNumber) {
-    FilterType ft = new FilterType();
-	  ft.setDescriptionFileName(filename);
-	  ft.setDescriptionLineNumber(lineNumber);
-    if ("wait".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.WAIT);
-    } else if ("dispatch".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.DISPATCH);
-    } else if ("error".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.ERROR);
-    } else if ("meta".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.META);
-    } else if ("substitution".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.SUBSTITUTION);
-    } else if ("send".equalsIgnoreCase(type))  {
-      ft.setType(FilterType.SEND);
-    } else if ("append".equalsIgnoreCase(type))  {
-        ft.setType(FilterType.APPEND);
-    } else if ("prepend".equalsIgnoreCase(type))  {
-        ft.setType(FilterType.PREPEND);
-    } else {
-      ft.setType(FilterType.CUSTOM);
-    }
-    ft.setName(type); //fixme: should we do this?
-    this.addToRepository(ft);
-    if (parsingInput) {
-      inf.setFilterType(ft);
-      ft.setParent(inf);
-    }
-    else
-    {
-      of.setFilterType(ft);
-      ft.setParent(of);
-    }
+      FilterType ft = FilterType.createFilterType( type );
+      ft.setDescriptionFileName(filename);
+      ft.setDescriptionLineNumber(lineNumber);
+      ft.setName(type); //fixme: should we do this?
+      this.addToRepository(ft);
+      if (parsingInput) {
+	  inf.setFilterType(ft);
+	  ft.setParent(inf);
+      }
+      else
+      {
+	  of.setFilterType(ft);
+	  ft.setParent(of);
+      }
   }
 
 
