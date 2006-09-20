@@ -6,6 +6,7 @@ namespace ConsoleTestTarget
 {
     class HelloWorld
     {
+        
         private String messageEN;
         private String messageDU;
 
