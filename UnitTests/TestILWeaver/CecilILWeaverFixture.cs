@@ -1,10 +1,13 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
-using Composestar.StarLight.ILWeaver;
 using System.Collections.Specialized;
 using System.IO;
+using System.Text;
 
+using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.ILAnalyzer;
+using Composestar.StarLight.ILWeaver;
+  
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #else
@@ -29,9 +32,7 @@ namespace TestILWeaver
         public CecilILWeaverFixture()
         {
         }
-
-        private static CecilILWeaver cecilWeaver;
-
+           
         #region Additional test attributes
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace TestILWeaver
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
-        private static string CreateFullPath(string fileName)
+        private string CreateFullPath(string fileName)
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
         }
@@ -47,32 +48,21 @@ namespace TestILWeaver
         // You can use the following additional attributes as you write your tests:
         //
         // Use ClassInitialize to run code before running the first test in the class
-        [ClassInitialize()]
-        [DeploymentItem("TestTarget.exe")]
-        public static void MyClassInitialize(TestContext testContext)
-        {
-            // Perform cleanup
-            CleanPreviousWovenFile();
+        //[ClassInitialize()]
+        //[DeploymentItem("TestTarget.exe")]
+        //public static void MyClassInitialize(TestContext testContext)
+        //{
+           
+        //}
 
-            cecilWeaver = new CecilILWeaver();
-            NameValueCollection config = new NameValueCollection();
-            config.Add("OutputImagePath", AppDomain.CurrentDomain.BaseDirectory);
-            config.Add("ShouldSignAssembly", "false");
-            config.Add("OutputImageSNK", "");
-            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
-            //config.Add("OutputFilename", FilenameWoven);
-
-            cecilWeaver.Initialize(CreateFullPath(FilenameSource), config); 
-        }
-
-        /// <summary>
-        /// Cleans the previous woven file.
-        /// </summary>
-        private static void CleanPreviousWovenFile()
-        {
-            if (File.Exists(CreateFullPath(FilenameWoven)))
-                File.Delete(CreateFullPath(FilenameWoven)); 
-        }
+        ///// <summary>
+        ///// Cleans the previous woven file.
+        ///// </summary>
+        //private void CleanPreviousWovenFile()
+        //{
+        //    if (File.Exists(CreateFullPath(FilenameWoven)))
+        //        File.Delete(CreateFullPath(FilenameWoven)); 
+        //}
 
         // Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
@@ -87,11 +77,38 @@ namespace TestILWeaver
         //
         #endregion
 
+        //[TestMethod]        
+        //[DeploymentItem("TestTarget.exe")]
+        //public void PerformWeaving()
+        //{
+        //    cecilWeaver.DoWeave(); 
+        //}
+
         [TestMethod]
-        [DeploymentItem("TestTarget.exe")]
-        public void PerformWeaving()
+        [DeploymentItem("ConsoleTestTarget.exe")]
+        public void AnalyzeAndWeave()
         {
-            cecilWeaver.DoWeave(); 
+            NameValueCollection config = new NameValueCollection();
+            config.Add("OutputImagePath", AppDomain.CurrentDomain.BaseDirectory);
+            config.Add("ShouldSignAssembly", "false");
+            config.Add("OutputImageSNK", "");
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
+            
+            CecilILAnalyzer analyzer = new CecilILAnalyzer();
+            analyzer.Initialize(FilenameSource, config); 
+            
+            // Run the analyzer
+            IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            analyzer.Close();
+ 
+            // Change the types
+
+
+            // Run the weaver
+            CecilILWeaver weaver = new CecilILWeaver();
+            weaver.Initialize(FilenameSource, config);
+            weaver.DoWeave(); // Place debugger here or perform Asserts
+            weaver.Close(); 
         }
     }
 }
