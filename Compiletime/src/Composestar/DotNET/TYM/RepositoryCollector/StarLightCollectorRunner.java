@@ -1,6 +1,5 @@
 package Composestar.DotNET.TYM.RepositoryCollector;
 
-import org.xml.sax.SAXNotRecognizedException;
 import java.util.*;
 
 import Composestar.Core.Exception.ModuleException;
@@ -10,6 +9,21 @@ import Composestar.Core.TYM.TypeCollector.CollectorRunner;
 import Composestar.DotNET.LAMA.*;
 import Composestar.Repository.RepositoryAccess;
 import Composestar.Repository.LanguageModel.*;
+import Composestar.Utils.Debug;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.TYM.TypeCollector.CollectorRunner;
+import Composestar.DotNET.LAMA.DotNETType;
 
 public class StarLightCollectorRunner implements CollectorRunner 
 {
@@ -18,10 +32,83 @@ public class StarLightCollectorRunner implements CollectorRunner
 	public void run(CommonResources resources) throws ModuleException 
 	{
 		repository = new RepositoryAccess();
-		//TODO: repository.setDatabaseFileName("??");
 		
 		// Collect all types from the persistent repository
 		collectTypes();
+		
+		
+		
+		
+		
+        int count = 0;
+		DataStore dataStore = DataStore.instance();
+        HashMap typeMap = TypeMap.instance().map();
+        /* TODO : The only types of embedded code are the imported dll's like in the VenusFlytrap
+         * Therefore:
+         * 1) embedded code that it fully programmed, like the Sound concern of Pacman must be ignored in this part of code;
+         * 2) embedded code from dll's do need to pass this part of code (Like VenusFlyTrap)
+        */
+        // loop through all current concerns, fetch implementation and remove from types map.
+        Iterator repIt = dataStore.getIterator();
+        while( repIt.hasNext() ) {
+        	Object next = repIt.next();
+        	if( next instanceof CpsConcern ) {
+        		CpsConcern concern = (CpsConcern)next;
+        		Debug.out(Debug.MODE_DEBUG,"TYM","Processing concern '"+concern.name+"'");
+        		// fetch implementation name
+        		Object impl = concern.getImplementation();
+        		String className = "";
+				if( impl == null ) { 
+					continue; 
+				}
+				else if( impl instanceof Source )
+				{ 
+					//fixes the problem with the embedded code not being in the type map at all.
+					continue; 
+					//Source source = (Source)impl;
+					//className = source.getClassName();
+				}
+				else if( impl instanceof SourceFile ) 
+				{
+					// TO DO: remove this?
+					SourceFile source = (SourceFile)impl;
+					String sourceFile = source.getSourceFile();
+					className = sourceFile.replaceAll( "\\.\\w+", "" );
+				}
+				else if( impl instanceof CompiledImplementation )
+				{
+					className = ((CompiledImplementation)impl).getClassName();
+				}
+				else 
+				{
+					throw new ModuleException( "CollectorRunner: Can only handle concerns with source file implementations or direct class links.", "TYM" );
+				}
+        		
+        		// transform source name into assembly name blaat.java --> blaat.dll
+        		if( !typeMap.containsKey( className ) ) {
+        			throw new ModuleException( "Implementation: " + className + " for concern: " + concern.getName() + " not found!", "TYM" );
+        			
+        		}
+        		Debug.out(Debug.MODE_DEBUG,"TYM","Processing type "+className);
+        		DotNETType type = (DotNETType)typeMap.get(className);
+        		concern.setPlatformRepresentation( type );
+        		type.setParentConcern(concern);
+        		typeMap.remove( className );
+				count++;
+        	}
+        }
+        
+        // loop through rest of the concerns and add to the repository in the form of primitive concerns
+        Iterator it = typeMap.values().iterator();
+        while( it.hasNext() ) {
+			DotNETType type = (DotNETType)it.next();
+			PrimitiveConcern pc = new PrimitiveConcern();
+			pc.setName( type.fullName() );
+			pc.setPlatformRepresentation( type );
+			type.setParentConcern(pc);
+			dataStore.addObject( type.fullName(), pc );
+			Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
+		}
 	}
 	
 	private void collectTypes() throws ModuleException
@@ -37,8 +124,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			DotNETType type = new DotNETType();
 			
+			type.setName(storedType.get_Name());
+			
 			if (storedType.get_FullName() != null) {
-	            type.setName( storedType.get_FullName() );
+	            type.setFullName( storedType.get_FullName() );
 	        } 
 			else {
 	            throw new ModuleException( "Type must have a name attribute", "TYM" );
@@ -89,7 +178,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// Add the DotNETType to the TypeMap
 			TypeMap.instance().addType(storedType.get_FullName(), type);
 		}
-		
 	}
 	
 	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException
