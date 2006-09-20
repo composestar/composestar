@@ -70,6 +70,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The constructor .ctor() for the type {0} could not be found..
+        /// </summary>
+        internal static string ConstructorNotFound {
+            get {
+                return ResourceManager.GetString("ConstructorNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not write the assembly to a file. Check if the file is not in use and has the correct access permissions..
         /// </summary>
         internal static string CouldNotSaveAssembly {

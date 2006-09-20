@@ -284,6 +284,8 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     // Get the .ctor() constructor for the internal type
                     MethodBase constructorMethod = (MethodBase)internalType.GetConstructor(new Type[0]);
+                    if (constructorMethod == null) throw new ILWeaverException(String.Format(Properties.Resources.ConstructorNotFound, inter.Type));
+                    MethodReference constructorReference = _targetAssemblyDefinition.MainModule.Import(constructorMethod);
 
                     foreach (MethodDefinition constructor in type.Constructors)
                     {
@@ -293,7 +295,6 @@ namespace Composestar.StarLight.ILWeaver
                             if (constructor.Body.Instructions.Count >= 1)
                             {
                                 hookInstruction = constructor.Body.Instructions[0];
-                                MethodReference constructorReference = _targetAssemblyDefinition.MainModule.Import(constructorMethod);
                                 constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Ldarg_0));
                                 constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Newobj, constructorReference));
                                 constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Stfld, internalDef));
