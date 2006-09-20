@@ -8,7 +8,7 @@ package Composestar.Core.WEAVER;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: WEAVER.java,v 1.1 2006/02/13 11:16:58 pascal Exp $
+ * $Id$
  */
 
 import Composestar.Core.Exception.ModuleException;

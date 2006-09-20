@@ -5,7 +5,7 @@
 * Licensed under LGPL v2.1 or (at your option) any later version.
 * [http://www.fsf.org/copyleft/lgpl.html]
 *
-* $Id: NotUsedInternals.java,v 1.3 2006/06/25 19:24:10 wminnen Exp $
+* $Id$
 */
 package Composestar.Core.CHKREP;
 

@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: TandNot.java,v 1.2 2006/02/13 11:53:08 pascal Exp $
+ * $Id$
  * 
 **/
 import Composestar.Utils.Debug;

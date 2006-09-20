@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 /**
@@ -22,90 +21,23 @@ public class CallToOtherMethod implements SerializableRepositoryEntity {
 	public String OperationName;
 	public String ClassName;       
 	public Type Parent;
-	public MethodInfo calledMethod;
-	public Block outputFilterCode;//doesn't need to be serialized
 	
 	public CallToOtherMethod()
 	{
 		
 	}
 	
-		
-	/**
-	 * @return the calledMethod
-	 */
-	public MethodInfo getCalledMethod(){
-	    return calledMethod;
-	}
-
-	/**
-	 * @param calledMethod the calledMethod to set
-	 */
-	public void setCalledMethod(MethodInfo calledMethod){
-	    this.calledMethod = calledMethod;
-	}
-
-	/**
-	 * @return the className
-	 */
-	public String getClassName(){
-	    return ClassName;
-	}
-
-	/**
-	 * @param className the className to set
-	 */
-	public void setClassName(String className){
-	    ClassName = className;
-	}
-
-	/**
-	 * @return the operationName
-	 */
-	public String getOperationName(){
-	    return OperationName;
-	}
-
-	/**
-	 * @param operationName the operationName to set
-	 */
-	public void setOperationName(String operationName){
-	    OperationName = operationName;
-	}
-
-	/**
-	 * @return the parent
-	 */
-	public Type getParent(){
-	    return Parent;
+	public Type parent() 
+	{
+		return Parent;
 	}
 	
-	/**
-	 * @param parent the parent to set
-	 */
-	public void setParent(Type parent){
+	public void setParent(Type parent) 
+	{
 	    Parent = parent;
 	}
-
-
-
-
-	/**
-	 * @return the outputFilterCode
-	 */
-	public Block getOutputFilterCode(){
-	    return outputFilterCode;
-	}
-
-
-	/**
-	 * @param outputFilterCode the outputFilterCode to set
-	 */
-	public void setOutputFilterCode(Block outputFilterCode){
-	    this.outputFilterCode = outputFilterCode;
-	}
-
-
+	
+		
 	/**
 	 * Custom deserialization of this object
 	 */
@@ -114,7 +46,6 @@ public class CallToOtherMethod implements SerializableRepositoryEntity {
 		OperationName = in.readUTF();
 		Parent = (Type)in.readObject();
 		ClassName = in.readUTF();
-		calledMethod = (MethodInfo) in.readObject();
 	}
 	
 	/**
@@ -125,7 +56,6 @@ public class CallToOtherMethod implements SerializableRepositoryEntity {
 		out.writeUTF(OperationName);
 		out.writeObject(Parent);
 		out.writeUTF(ClassName);
-		out.writeObject( calledMethod );
 	}
 	
 }

@@ -11,22 +11,22 @@ public class FilterAction extends Instruction{
     private Message message;
 
     public FilterAction( String type, Message message ){
-        this.type = type;
-        this.message = message;
+	this.type = type;
+	this.message = message;
     }
 
     /**
      * @return the message
      */
     public Message getMessage(){
-        return message;
+	return message;
     }
 
     /**
      * @return the type
      */
     public String getType(){
-        return type;
+	return type;
     }
 
 }

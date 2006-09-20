@@ -7,7 +7,7 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: Logic.java,v 1.1 2006/02/16 23:03:56 pascal_durr Exp $
+ * $Id$
  * 
  */
  

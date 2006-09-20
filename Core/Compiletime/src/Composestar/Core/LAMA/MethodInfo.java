@@ -1,13 +1,13 @@
 package Composestar.Core.LAMA;
 
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+import java.util.HashSet;
 
 public abstract class MethodInfo extends ProgramElement implements SerializableRepositoryEntity{
 	
@@ -48,19 +48,6 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
      */
     public abstract MethodInfo getClone( String name, Type actualParent );
 
-    public static MethodInfo getMethodInfo( String name, Type actualParent, MethodInfo templateMethod ){
-	List params = templateMethod.getParameters();
-	int count = params.size();
-	String[] types = new String[count];
-	for (int i=0; i<count; i++){
-	    ParameterInfo paramInfo = (ParameterInfo) params.get( i );
-	    types[i] = paramInfo.ParameterTypeString;
-	}
-	
-	return actualParent.getMethod( name, types );
-    }
-    
-    
 	/**
 	 * @return java.lang.String
 	 * @roseuid 401B84CF020E

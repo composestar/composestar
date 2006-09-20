@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: Signature.java,v 1.3 2006/09/05 15:54:10 reddog33hummer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository;
 

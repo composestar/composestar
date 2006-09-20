@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterElementAST.java,v 1.1 2006/09/05 14:17:31 doornenbal Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 

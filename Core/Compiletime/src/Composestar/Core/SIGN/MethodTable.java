@@ -7,7 +7,7 @@ package Composestar.Core.SIGN;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id: MethodTable.java,v 1.1 2006/02/13 11:16:57 pascal Exp $
+ * $Id$
  * 
 **/
 
