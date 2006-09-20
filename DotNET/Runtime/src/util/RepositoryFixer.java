@@ -3,7 +3,7 @@
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: RepositoryFixer.java,v 1.1 2006/02/16 23:16:20 pascal_durr Exp $
+ * $Id$
  * 
  */
 package Composestar.RuntimeDotNET.Utils;
@@ -13,7 +13,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.CTCommon.CpsProgramRepository.CpsConcern.References.*;
 

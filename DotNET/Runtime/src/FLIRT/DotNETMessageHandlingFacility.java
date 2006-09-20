@@ -1,7 +1,7 @@
 package Composestar.RuntimeDotNET.FLIRT;
 
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
-import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
+import Composestar.RuntimeCore.FLIRT.*;
+import Composestar.RuntimeCore.Utils.*;
 
 public class DotNETMessageHandlingFacility extends MessageHandlingFacility
 {

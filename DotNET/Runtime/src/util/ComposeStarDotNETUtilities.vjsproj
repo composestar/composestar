@@ -85,6 +85,11 @@
                     Project = "{5C1D7A8F-5EF0-4633-8283-D4017C0F88FE}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "ComposestarDotNETCore"
+                    Project = "{55E29217-7071-4FA1-8810-79614584BBBB}"
+                    Package = "{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}"
+                />
             </References>
         </Build>
         <Files>
