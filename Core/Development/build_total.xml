@@ -135,6 +135,7 @@ If the build failed the cause will be listed at the end of the report.
 			<link label="Build the whole project" target="build" />
 			<link label="Clean &amp; Build" target="rebuild" />
 			<link label="Install" target="install" />
+			<link label="Clean install" target="cleaninstall" />
 			<link label="Run Findbugs" target="findbugs" />
 			<!--<link label="Run the system test" target="test" />-->
 			
@@ -146,4 +147,5 @@ If the build failed the cause will be listed at the end of the report.
 		</antmenu>
 	</target>
 
+	<target name="cleaninstall" depends="init,clean,build,install" description="Clean, compile, and then install" />
 </project>

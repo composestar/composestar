@@ -162,5 +162,4 @@ Common routines. Always include this file in every build.xml file
 	
 	<!-- generic target to rebuild all -->
 	<target name="rebuild" depends="init,clean,build" description="Clean and then compile" />
-
 </project>
