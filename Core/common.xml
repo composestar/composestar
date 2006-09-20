@@ -97,7 +97,13 @@ Common routines. Always include this file in every build.xml file
 		</macrodef>
 		
 		<!-- calling of devenv.exe -->
-		<available file="devenv.com" filepath="${env.PATH}${path.separator}C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\" property="available.devenv" />
+		<condition property="available.devenv">
+			<and>
+				<available file="devenv.com" filepath="${env.PATH}${path.separator}C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\" />
+				<isfalse value="${ignore.devenv}" />
+			</and>
+		</condition>
+		
 		<available file="devenv.com" filepath="${env.PATH}" property="available.devenv.path" />				
 		<condition property="bin.devenv" value="C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.com" else="devenv.com">
 			<not>
