@@ -1,13 +1,14 @@
 package Composestar.Core.LAMA;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
+
+import Composestar.Core.INLINE.model.Block;
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 public abstract class MethodInfo extends ProgramElement implements SerializableRepositoryEntity{
 	
@@ -21,6 +22,12 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	private HashSet CallsToOtherMethods;
 	private HashSet ReifiedMessageBehavior;
 	private HashSet ResourceUsage;
+	
+	/**
+	 * The Abstract Instruction Block containing the abstract code for the input filters
+	 * on this method.
+	 */
+	private Block inputFilterCode;
 	
 	public MethodInfo()
 	{
@@ -48,6 +55,19 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
      */
     public abstract MethodInfo getClone( String name, Type actualParent );
 
+    public static MethodInfo getMethodInfo( String name, Type actualParent, MethodInfo templateMethod ){
+	List params = templateMethod.getParameters();
+	int count = params.size();
+	String[] types = new String[count];
+	for (int i=0; i<count; i++){
+	    ParameterInfo paramInfo = (ParameterInfo) params.get( i );
+	    types[i] = paramInfo.ParameterTypeString;
+	}
+	
+	return actualParent.getMethod( name, types );
+    }
+    
+    
 	/**
 	 * @return java.lang.String
 	 * @roseuid 401B84CF020E
@@ -218,6 +238,23 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
     {
       return getUnitAttributes().contains(attribute);
     }
+	
+	
+	
+
+	/**
+	 * @return the inputFilterCode
+	 */
+	public Block getInputFilterCode(){
+	    return inputFilterCode;
+	}
+
+	/**
+	 * @param inputFilterCode the inputFilterCode to set
+	 */
+	public void setInputFilterCode(Block inputFilterCode){
+	    this.inputFilterCode = inputFilterCode;
+	}
 
 	/**
 	 * Custom deserialization of this object

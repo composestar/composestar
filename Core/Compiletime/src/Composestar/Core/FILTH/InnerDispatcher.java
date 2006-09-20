@@ -65,8 +65,7 @@ public class InnerDispatcher {
 		f.setName("CpsDefaultInnerDispatchFilter");
 
 		// create the filtertype and set it in the filter (typeImplementation as well)
-		FilterType filterType = new FilterType();
-		filterType.setType("Dispatch");
+		FilterType filterType = FilterType.createFilterType( "Dispatch" );
 		filterType.setName("Dispatch");
 		ConcernReference typeImplementation = new ConcernReference();
 		typeImplementation.setName(filterType.getName()); 

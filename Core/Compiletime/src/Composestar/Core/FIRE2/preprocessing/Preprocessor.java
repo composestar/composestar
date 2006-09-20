@@ -59,6 +59,8 @@ public class Preprocessor implements CTCommonModule{
     private final static String RUNTIME_GRAMMAR_PATH = 
         "groovegrammars/runtime.gps";
     
+    private final static boolean GROOVE_DEBUG = false;
+    
     private final static File AST_OUT = new File( "./ast.gst" );
     private final static File FLOW_OUT = new File( "./flow.gst" );
     private final static File EXECUTION_OUT = new File( "./execution.gst" );
@@ -104,7 +106,7 @@ public class Preprocessor implements CTCommonModule{
         
         //build AST:
         Graph grooveAst = buildAst( module );
-        if ( Debug.getMode() == Debug.MODE_DEBUG ){
+        if ( GROOVE_DEBUG ){
             //output ast:
             try {
                 graphLoader.marshal( grooveAst, AST_OUT );
@@ -120,7 +122,7 @@ public class Preprocessor implements CTCommonModule{
         
         //generate flow model:
         Graph grooveFlowModel = generateFlow( grooveAst );
-        if ( Debug.getMode() == Debug.MODE_DEBUG ){
+        if ( GROOVE_DEBUG ){
             //output flowgraph:
             try {
                 graphLoader.marshal( grooveFlowModel, FLOW_OUT );
@@ -140,7 +142,7 @@ public class Preprocessor implements CTCommonModule{
         
         //Simulate execution:
         GTS stateSpace = execute( grooveFlowModel );
-        if ( Debug.getMode() == Debug.MODE_DEBUG ){
+        if ( GROOVE_DEBUG ){
             //output execution-statespace:
             try {
                 graphLoader.marshal( stateSpace, EXECUTION_OUT );

@@ -21,4 +21,11 @@ public abstract class Instruction{
     public Label getLabel(){
 	return label;
     }
+
+    /**
+     * @param label the label to set
+     */
+    public void setLabel(Label label){
+        this.label = label;
+    }
 }

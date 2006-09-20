@@ -5,11 +5,13 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterType.java,v 1.2 2006/06/25 19:24:10 wminnen Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.CpsProgramRepository.*;
+import java.util.Hashtable;
+
+import Composestar.Core.CpsProgramRepository.Concern;
 
 /**
  * @modelguid {FAFD0EAB-6BB2-4634-835C-74619506D1A1}
@@ -33,7 +35,44 @@ public class FilterType extends Concern {
   public final static String SEND	  = "Send";
   public final static String PREPEND = "Prepend";
   public final static String APPEND  = "Append";
+  public final static String BEFORE = "Before";
+  public final static String AFTER = "After";
+  public final static String SKIP = "Skip";
 
+  private static Hashtable typeTable;
+  
+  static{
+      typeTable = new Hashtable();
+      
+      typeTable.put( "wait", WAIT );
+      typeTable.put( "dispatch", DISPATCH );
+      typeTable.put( "error", ERROR );
+      typeTable.put( "meta", META );
+      typeTable.put( "substitution", SUBSTITUTION );
+      typeTable.put( "send", SEND );
+      typeTable.put( "append", APPEND );
+      typeTable.put( "prepend", PREPEND );
+      typeTable.put( "before", BEFORE );
+      typeTable.put( "after", AFTER );
+      typeTable.put( "skip", SKIP );
+  }
+  
+  private FilterType(){
+      
+  }
+  
+  public static FilterType createFilterType( String type ){
+      String ft = (String) typeTable.get( type.toLowerCase() );
+      if ( ft == null ){
+	  ft = CUSTOM;
+      }
+      
+      FilterType filterType = new FilterType();
+      filterType.setType( ft );
+      
+      return filterType;
+  }
+  
   /**
    * @return java.lang.String
    *

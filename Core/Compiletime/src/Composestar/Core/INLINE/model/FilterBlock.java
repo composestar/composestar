@@ -9,7 +9,7 @@ public class FilterBlock extends Block{
     
     private String type;
 
-    public FilterBlock( Label label, String type ){
+    public FilterBlock( String type ){
 	this.type = type;
     }
     
