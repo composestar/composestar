@@ -57,7 +57,7 @@ public class FilterType extends Concern {
       typeTable.put( "skip", SKIP );
   }
   
-  private FilterType(){
+  public FilterType(){
       
   }
   

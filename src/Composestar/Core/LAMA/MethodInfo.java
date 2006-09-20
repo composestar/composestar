@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 public abstract class MethodInfo extends ProgramElement implements SerializableRepositoryEntity{
@@ -22,12 +21,6 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	private HashSet CallsToOtherMethods;
 	private HashSet ReifiedMessageBehavior;
 	private HashSet ResourceUsage;
-	
-	/**
-	 * The Abstract Instruction Block containing the abstract code for the input filters
-	 * on this method.
-	 */
-	private Block inputFilterCode;
 	
 	public MethodInfo()
 	{
@@ -238,23 +231,6 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
     {
       return getUnitAttributes().contains(attribute);
     }
-	
-	
-	
-
-	/**
-	 * @return the inputFilterCode
-	 */
-	public Block getInputFilterCode(){
-	    return inputFilterCode;
-	}
-
-	/**
-	 * @param inputFilterCode the inputFilterCode to set
-	 */
-	public void setInputFilterCode(Block inputFilterCode){
-	    this.inputFilterCode = inputFilterCode;
-	}
 
 	/**
 	 * Custom deserialization of this object
