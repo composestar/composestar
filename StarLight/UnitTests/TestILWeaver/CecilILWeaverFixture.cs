@@ -144,5 +144,52 @@ namespace TestILWeaver
             weaver.DoWeave(); // Place debugger here or perform Asserts
             weaver.Close(); 
         }
+
+
+        [TestMethod]
+        [DeploymentItem("ConsoleTestTarget.exe")]
+        public void AnalyzeAndWeaveTestFilters()
+        {
+            NameValueCollection config = new NameValueCollection();
+            config.Add("OutputImagePath", AppDomain.CurrentDomain.BaseDirectory);
+            config.Add("ShouldSignAssembly", "false");
+            config.Add("OutputImageSNK", "");
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
+            
+            CecilILAnalyzer analyzer = new CecilILAnalyzer();
+            analyzer.Initialize(FilenameSource, config); 
+            
+            // Run the analyzer
+            IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            analyzer.Close();
+ 
+            // Change the types
+            Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess(CreateFullPath("starlight.yap"));
+
+            TypeElement te = null;
+            te = repository.GetTypeElement("ConsoleTestTarget.HelloWorld");
+            MethodElement me = null;
+            me = repository.GetMethodElementBySignature(te, "System.String GetMessage()"); 
+            
+            // Add some inputfilters
+            Composestar.Repository.LanguageModel.Inlining.Block block = new Composestar.Repository.LanguageModel.Inlining.Block();
+            Composestar.Repository.LanguageModel.Inlining.FilterAction beforeAction = new Composestar.Repository.LanguageModel.Inlining.FilterAction("BeforeAction", "", "");
+            block.Label.Id = 2;
+            beforeAction.Label.Id = 3;
+            block.addInstruction(beforeAction);
+           
+            me.MethodBody.InputFilter = block;
+            Composestar.Repository.DataStoreContainer.Instance.StoreObject(me);
+
+            repository.CloseDatabase(); 
+
+            // Run the weaver
+            CecilILWeaver weaver = new CecilILWeaver();
+            weaver.Initialize(FilenameSource, config);
+            weaver.DoWeave(); // Place debugger here or perform Asserts
+            weaver.Close(); 
+        }
+
+        
     }
 }

@@ -86,7 +86,7 @@ namespace Composestar.Repository
         /// <param name="typeInfo">The type info.</param>
         /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
-        public MethodElement GetMethodElement(TypeElement typeInfo, string methodName)
+        public MethodElement GetMethodElementByName(TypeElement typeInfo, string methodName)
         {
 
             if (typeInfo == null)
@@ -97,7 +97,34 @@ namespace Composestar.Repository
 
             IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
-                return (me.ParentTypeId == typeInfo.Id) && (me.Name.Equals(methodName));
+                return (me.ParentTypeId == typeInfo.Id) & (me.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase));
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+            else
+                return null;
+
+        }
+
+        /// <summary>
+        /// Gets the method element by signature.
+        /// </summary>
+        /// <param name="typeInfo">The type info.</param>
+        /// <param name="methodSignature">The method signature.</param>
+        /// <returns></returns>
+        public MethodElement GetMethodElementBySignature(TypeElement typeInfo, string methodSignature)
+        {
+
+            if (typeInfo == null)
+                return null;
+
+            if (string.IsNullOrEmpty(methodSignature))
+                return null;
+
+            IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
+            {
+                return (me.ParentTypeId == typeInfo.Id) & (me.Signature.Equals(methodSignature, StringComparison.CurrentCultureIgnoreCase));
             });
 
             if (ret.Count == 1)

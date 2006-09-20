@@ -147,73 +147,73 @@ namespace Composestar.StarLight.ILWeaver
         /// Creates the local var.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>Returns the ordinal number given to this variable</returns>
-        private int CreateLocalVar(Type type)
+        /// <returns>Returns the variable</returns>
+        private VariableDefinition CreateLocalVar(Type type)
         {
             TypeReference typeRef = _targetAssemblyDefinition.MainModule.Import(type);
             VariableDefinition var = new VariableDefinition(typeRef);
+            var.Name = type.ToString(); 
 
             Method.Body.Variables.Add(var);
 
-            return Method.Body.Variables.Count - 1 + (Method.HasThis ? 1 : 0);
+            return var;
         }
 
         /// <summary>
         /// Creates the method reference.
         /// </summary>
-        /// <param name="methodInfo">The method info.</param>
+        /// <param name="methodBase">The method info.</param>
         /// <returns></returns>
-        private MethodReference CreateMethodReference(MethodInfo methodInfo)
-        {
-            return TargetAssemblyDefinition.MainModule.Import(methodInfo);
+        private MethodReference CreateMethodReference(MethodBase methodBase)
+        {            
+            return TargetAssemblyDefinition.MainModule.Import(methodBase);
         }
 
         // Because we need local vars to store the object and type of arguments in, we have to add these local vars.
         // But only once, so these functions make sure we only have one of this variables
-        private int _objectOrdinal = -1;
-        private int _typeOrdinal = -1;
-        private int _jpcOrdinal = -1;
+        private VariableDefinition _objectLocal = null;
+        private VariableDefinition _typeLocal = null;
+        private VariableDefinition _jpcLocal = null;
 
         /// <summary>
         /// Creates the object ordinal.
         /// </summary>
         /// <returns></returns>
-        private int CreateObjectOrdinal()
+        private VariableDefinition CreateObjectLocal()
         {
-            if (_objectOrdinal == -1)
+            if (_objectLocal == null)
             {
-                _objectOrdinal = CreateLocalVar(typeof(Object));
+                _objectLocal = CreateLocalVar(typeof(Object));
             }
 
-            return _objectOrdinal;
+            return _objectLocal;
         }
 
         /// <summary>
         /// Creates the type ordinal.
         /// </summary>
         /// <returns></returns>
-        private int CreateTypeOrdinal()
+        private VariableDefinition CreateTypeLocal()
         {
-            if (_typeOrdinal == -1)
+            if (_typeLocal == null)
             {
-                _typeOrdinal = CreateLocalVar(typeof(System.Type));
+                _typeLocal = CreateLocalVar(typeof(System.Type));
             }
 
-            return _typeOrdinal;
+            return _typeLocal;
         }
 
         /// <summary>
-        /// Creates the join point context ordinal.
+        /// Creates the join point context variable.
         /// </summary>
-        /// <returns></returns>
-        private int CreateJoinPointContextOrdinal()
+        private VariableDefinition CreateJoinPointContextLocal()
         {
-            if (_jpcOrdinal == -1)
+            if (_jpcLocal == null)
             {
-                _jpcOrdinal = CreateLocalVar(typeof(JoinPointContext));
+                _jpcLocal = CreateLocalVar(typeof(JoinPointContext));
             }
 
-            return _jpcOrdinal;
+            return _jpcLocal;
         }
         #endregion
 
@@ -236,21 +236,21 @@ namespace Composestar.StarLight.ILWeaver
         {           
 
             // Create a new or use an existing local variable for the JoinPointContext
-            int jpcOrdinal = CreateJoinPointContextOrdinal();
-
+            VariableDefinition jpcVar = CreateJoinPointContextLocal();
+      
             //
             // Create new joinpointcontext object
             //
-            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(JoinPointContext).GetMethod(".ctor", new Type[] { }))));
+            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(JoinPointContext).GetConstructors()[0])));
             
             // Store the just created joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Stloc, jpcOrdinal));
+            Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
 
             //
             // Set the target
             //
             // Load the joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcOrdinal));
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
             
             // Load the this pointer
             if (Method.HasThis)
@@ -275,8 +275,8 @@ namespace Composestar.StarLight.ILWeaver
                 // We have to use temporary local varibales, because we cannot swap the elements on the stack
                 // and we have to place the pointer to the jpc on the stack also
                 // Create the local vars, but only once in this method.
-                int objectOrdinal = CreateObjectOrdinal();
-                int typeOrdinal = CreateTypeOrdinal();
+                VariableDefinition objectVar = CreateObjectLocal();
+                VariableDefinition typeVar = CreateTypeLocal();
                 
                 for (int i = numberOfArguments; i >= 0; i--) // We start at the top, because the last element is at to top of the stack
                 {
@@ -287,23 +287,23 @@ namespace Composestar.StarLight.ILWeaver
                     Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(System.Type).GetMethod("GetType", new Type[] { }))));
 
                     // Save the type
-                    Instructions.Add(Worker.Create(OpCodes.Stloc, typeOrdinal));
+                    Instructions.Add(Worker.Create(OpCodes.Stloc, typeVar));
                      
                     // Save the object
-                    Instructions.Add(Worker.Create(OpCodes.Stloc, objectOrdinal));
+                    Instructions.Add(Worker.Create(OpCodes.Stloc, objectVar));
 
                     // Perpare to call AddArgument by loading the parameters onto the stack
                     // Load jpc
-                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcOrdinal));
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
                      
                     // Load the ordinal
                     Instructions.Add(Worker.Create(OpCodes.Ldc_I4, i));
 
                     // Load the type
-                    Instructions.Add(Worker.Create(OpCodes.Ldloc, typeOrdinal));
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, typeVar));
                      
                     // Load the object
-                    Instructions.Add(Worker.Create(OpCodes.Ldloc, objectOrdinal));
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, objectVar));
 
                     // Call the AddArgument function
                     Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("AddArgument", new Type[] { typeof(Int16), typeof(System.Type), typeof(object) }))));
@@ -314,7 +314,7 @@ namespace Composestar.StarLight.ILWeaver
             // Set the selector
             //
             // Load joinpointcontext first
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcOrdinal));
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
              
             // Load the name onto the stack
             Instructions.Add(Worker.Create(OpCodes.Ldstr, filterAction.Selector));
@@ -326,19 +326,20 @@ namespace Composestar.StarLight.ILWeaver
             // Call the target
             //
             // Load the JoinPointObject first
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcOrdinal));
+            //Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
             // Call the Target
-            Instructions.Add(Worker.Create(OpCodes.Call, filterAction.Target)); 
+            //Instructions.Add(Worker.Create(OpCodes.Call, filterAction.Target)); 
             // TODO This will most likely not work, difference between call and callvirt etc 
+            // Have to resolve this to a valid type
 
             //
             // Retrieve the arguments
             //               
-            for (int i = numberOfArguments; i >= 0; i--) // We start at the top, because the last element is at to top of the stack
+            for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
             {
                 // Load jpc
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcOrdinal));
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Load the ordinal
                 Instructions.Add(Worker.Create(OpCodes.Ldc_I4, i));
