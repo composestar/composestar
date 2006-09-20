@@ -130,6 +130,17 @@ Common routines. Always include this file in every build.xml file
 			</sequential>
 		</macrodef>
 		
+		<macrodef name="unregisterAssembly">
+			<attribute name="dll" />
+			<sequential>
+				<exec executable="regasm.exe" failifexecutionfails="false">
+					<arg value="@{dll}" />
+					<arg value="/silent" />
+					<arg value="/unregister" />
+				</exec>
+			</sequential>
+		</macrodef>
+		
 		<!-- register additional libraries -->
 		<path id="lib.core">	  
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>

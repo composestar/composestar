@@ -59,6 +59,17 @@
 		<ant target="install" dir="${build.dotnet}" />
 	</target>
 	
+	<!-- uninstall tasks -->
+	
+	<target name="uninstall" depends="init" description="Uninstall">
+		<!--<ant target="uninstall" dir="${build.core}" />-->
+		<antcall target="uninstall_dotnet" />
+	</target>
+	
+	<target name="uninstall_dotnet" if="available.dotnet">
+		<ant target="uninstall" dir="${build.dotnet}" />
+	</target>
+	
 	<!-- plugin tasks -->
 	
 	<target name="plugin" depends="init" description="Compile the IDE plugins">
@@ -129,6 +140,7 @@ If the build failed the cause will be listed at the end of the report.
 				<antMenuItem name="Plugin">
 					<antMenuItem name="DotNET" target="plugin_dotnet" />
 				</antMenuItem>
+				<antMenuItem name="Uninstall" target="uninstall" />
 			</antMenuItem>
 					
 			<link label="Clean the whole project" target="clean" />
