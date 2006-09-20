@@ -3,6 +3,8 @@
 	<!-- old\obsolete code -->
 	<Match classregex="Composestar\.Core\.FIRE\..*" />
 	<Match classregex="Composestar\.Core\.SIGN\..*" />
+	<Match classregex="Composestar\.Core\.SECRET\..*" />
+	
 	<Match class="Composestar.Utils.INIFile" />
 	
 	<Match classregex="Composestar\.DotNET\.LAMA\..*">

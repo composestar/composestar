@@ -24,7 +24,7 @@
          doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
          encoding="UTF-8"/>
 
-   <xsl:key name="lbc-category-key"    match="/BugCollection/BugInstance" use="@category" />
+   <!--xsl:key name="lbc-category-key"    match="/BugCollection/BugInstance" use="@category" /-->
    <xsl:key name="lbc-code-key"        match="/BugCollection/BugInstance" use="concat(@category,@abbrev)" />
    <xsl:key name="lbc-bug-key"         match="/BugCollection/BugInstance" use="concat(@category,@abbrev,@type)" />
 
@@ -130,6 +130,7 @@
            margin: 2px;
            border: 1px black solid;
            padding: 2px;
+           overflow:auto;
          }
          #analyzed-files {
            width: 25%;
@@ -251,7 +252,7 @@
             </li>
             <li id='analysis-data-tab' class='menu-tab'>
                <xsl:attribute name="onclick">showmenu('analysis-data');return false;</xsl:attribute>
-               <a href='' onclick='return false;'>Analysis Informations</a>
+               <a href='' onclick='return false;'>Analysis Information</a>
             </li>
             <li id='list-by-category-tab' class='menu-tab'>
                <xsl:attribute name="onclick">showmenu('list-by-category');return false;</xsl:attribute>
@@ -347,6 +348,9 @@
                <xsl:for-each select="/BugCollection/Project/AuxClasspathEntry">
                   <li><xsl:apply-templates /></li>
                </xsl:for-each>
+               <xsl:if test="count(/BugCollection/Project/AuxClasspathEntry)=0" >
+                  <li>None</li>
+               </xsl:if>
             </ul>
          </div>
          <div id='analysis-error'>
@@ -426,7 +430,8 @@
 <xsl:template name="list-by-category" >
    <div id='list-by-category' class='data-box' style='display:none;'>
       <xsl:call-template name="helpPriorities" />
-      <xsl:variable name="unique-category" select="/BugCollection/BugInstance[generate-id() = generate-id(key('lbc-category-key',@category))]/@category" />
+      <xsl:variable name="unique-category" select="/BugCollection/BugCategory/@category"/>
+      <!--xsl:variable name="unique-category" select="/BugCollection/BugInstance[generate-id() = generate-id(key('lbc-category-key',@category))]/@category" /-->
       <xsl:for-each select="$unique-category">
          <xsl:sort select="." order="ascending" />
             <xsl:call-template name="categories">
