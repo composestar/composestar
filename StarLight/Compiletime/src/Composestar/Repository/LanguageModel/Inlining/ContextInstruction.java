@@ -52,6 +52,7 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 
 	public void Accept(IVisitor visitor)
 	{
+		super.Accept(visitor);
 		visitor.VisitContextInstruction(this); 
 	}
 }

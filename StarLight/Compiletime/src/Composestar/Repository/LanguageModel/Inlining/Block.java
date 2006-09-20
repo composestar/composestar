@@ -28,6 +28,8 @@ public class Block extends InlineInstruction implements IVisitable
 
 	public void Accept(IVisitor visitor)
 	{
+		super.Accept(visitor); 
+
 		Iterator instr = instructions.iterator();
 
 		while (instr.hasNext())

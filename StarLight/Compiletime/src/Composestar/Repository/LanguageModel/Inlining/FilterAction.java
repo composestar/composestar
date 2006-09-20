@@ -44,6 +44,8 @@ public class FilterAction extends InlineInstruction implements IVisitable
 
 	public void Accept(IVisitor visitor)
 	{
+		super.Accept(visitor);
+
 		if (type.equalsIgnoreCase("ContinueAction"))
 			visitor.VisitContinueAction(this);
 		else if (type.equalsIgnoreCase("SubstitutionAction"))

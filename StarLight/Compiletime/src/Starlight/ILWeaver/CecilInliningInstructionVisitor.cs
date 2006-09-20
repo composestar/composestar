@@ -30,6 +30,7 @@ namespace Composestar.StarLight.ILWeaver
         MethodDefinition _method;
         AssemblyDefinition _targetAssemblyDefinition;
         FilterTypes _filterType;
+        Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
         #endregion
 
         public enum FilterTypes
@@ -123,6 +124,26 @@ namespace Composestar.StarLight.ILWeaver
         #region Helper functions
 
         /// <summary>
+        /// Gets the jump label.
+        /// </summary>
+        /// <param name="labelId">The label id.</param>
+        /// <returns></returns>
+        private Instruction GetJumpLabel(int labelId)
+        {
+            if (labelId < 0)
+                return null;
+
+            Instruction jumpNopInstruction;
+            if (!_jumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
+            {
+                jumpNopInstruction = Worker.Create(OpCodes.Nop);
+                _jumpInstructions.Add(labelId, jumpNopInstruction);
+            }
+
+            return jumpNopInstruction;
+        }
+
+        /// <summary>
         /// Creates the local var.
         /// </summary>
         /// <param name="type">The type.</param>
@@ -196,9 +217,15 @@ namespace Composestar.StarLight.ILWeaver
         }
         #endregion
 
+        public void VisitInlineInstruction(InlineInstruction inlineInstruction)
+        {
+            if (inlineInstruction.Label != null & inlineInstruction.Label.Id != -1 )
+                Instructions.Add(GetJumpLabel(inlineInstruction.Label.Id)); 
+        }
+
         public void VisitAfterAction(FilterAction filterAction)
         {
-
+           
         }
 
         /// <summary>
@@ -206,7 +233,8 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="filterAction"></param>
         public void VisitBeforeAction(FilterAction filterAction)
-        {
+        {           
+
             // Create a new or use an existing local variable for the JoinPointContext
             int jpcOrdinal = CreateJoinPointContextOrdinal();
 
@@ -325,7 +353,14 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitBranch(Branch branch)
         {
-
+           
+            // Add condition code
+            // TODO condition
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));  // Load a constant value of 1 for now
+ 
+            // Add branch code
+            Instructions.Add(Worker.Create(OpCodes.Brtrue, GetJumpLabel(branch.TrueBlock.Label.Id)));
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.FalseBlock.Label.Id)));
         }
 
         public void VisitContextInstruction(ContextInstruction contextInstruction)
@@ -340,6 +375,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitDispatchAction(FilterAction filterAction)
         {
+            
 
         }
 
@@ -363,8 +399,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </example> 
         public void VisitErrorAction(FilterAction filterAction)
-        {
-
+        {           
             // Create an exception
             Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(Exception).GetMethod(".ctor", new Type[] { }))));
 
@@ -378,12 +413,17 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitFilterAction(FilterAction filterAction)
         {
-
+            // Currently not used (not visited)
         }
 
         public void VisitJumpInstruction(Jump jump)
         {
+            Instruction jumpToInstruction = GetJumpLabel(jump.Label.Id);
+            if (jumpToInstruction == null)
+                throw new ILWeaverException(Properties.Resources.FilterJumpLabelIsNotSet);
 
+            // Add a branch instruction
+            Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction)); 
         }
 
         public void VisitSkipAction(FilterAction filterAction)

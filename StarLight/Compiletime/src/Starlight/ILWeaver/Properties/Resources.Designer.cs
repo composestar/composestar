@@ -97,6 +97,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The label for the JumpFilterAction has not been set..
+        /// </summary>
+        internal static string FilterJumpLabelIsNotSet {
+            get {
+                return ResourceManager.GetString("FilterJumpLabelIsNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The format of binary image {0} is invalid..
         /// </summary>
         internal static string ImageIsBad {
