@@ -9,13 +9,13 @@ public class Jump extends Instruction{
     private Label target;
 
     public Jump( Label target ){
-        this.target = target;
+	this.target = target;
     }
 
     /**
      * @return the target
      */
     public Label getTarget(){
-        return target;
+	return target;
     }
 }

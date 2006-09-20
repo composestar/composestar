@@ -16,7 +16,9 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
@@ -395,57 +397,16 @@ public class FireModel {
     }
     
     
-    public void getInternals(){
-	
+    public Target getTarget( External external ){
+	//TODO
+	return null;
     }
     
-    public void getExternals(){
-	
+    public Target getTarget( Internal internal ){
+	//TODO
+	return null;
     }
     
-    
-//    /**
-//     * External and internal names in different layer are appended with the number of the module
-//     * to avoid naming conflicts. This method changes the name in the target to that format.
-//     * @param layer
-//     * @param baseTarget
-//     * @return
-//     */
-//    private Target getTarget( int layer, Target baseTarget ){
-//	if ( Message.checkEquals( baseTarget, Message.STAR_TARGET )
-//		||  Message.checkEquals( baseTarget, Message.INNER_TARGET )
-//		||  Message.checkEquals( baseTarget, Message.SELF_TARGET )
-//		)
-//	{
-//	    return baseTarget;
-//	}
-//	else{
-//	    Target target = new Target();
-//	    target.setName( baseTarget.getName() + "_" + layer );
-//	    target.setRef( baseTarget.getRef() );
-//	    
-//	    return target;
-//	}
-//    }
-//    
-//    /**
-//     * Changes the name of the target to the correct value
-//     * @see FireModel.getTarget
-//     * @param layer
-//     * @param message
-//     * @return
-//     */
-//    private Message getMessage( int layer, Message message ){
-//	Target target = message.getTarget();
-//	Target newTarget = getTarget( layer, target );
-//	if ( newTarget != target ){
-//	    Message newMessage = new Message( target, message.getSelector() );
-//	    return newMessage;
-//	}
-//	else{
-//	    return message;
-//	}
-//    }
     
     private class ExtendedExecutionModel implements ExecutionModel{
         private Hashtable entranceTable = new Hashtable();
@@ -588,17 +549,9 @@ public class FireModel {
                 ExecutionState baseState, Message message, 
                 int signatureCheck, MethodInfo signatureCheckInfo, int layer )
         {
-            super( baseState.getFlowNode(), 
-        	    message, 
+            super( baseState.getFlowNode(), message, 
                     baseState.getSubstitutionSelector(), 
-                    baseState.getSubstitutionTarget(), 
-                    baseState.getStateType() );
-            
-//            super( baseState.getFlowNode(), 
-//        	    FireModel.this.getMessage( layer, message ), 
-//                    baseState.getSubstitutionSelector(), 
-//                    FireModel.this.getTarget(layer, baseState.getSubstitutionTarget()), 
-//                    baseState.getStateType() );
+                    baseState.getSubstitutionTarget(), baseState.getStateType() );
             
             this.model = model;
             this.baseState = baseState;
@@ -614,8 +567,6 @@ public class FireModel {
             
             return outTransitions.elements();
         }
-        
-        
     }
     
     

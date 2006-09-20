@@ -63,14 +63,14 @@ public class StandAloneDriver {
     	fm1.addInputFilter(filter2);
 		 */
 		
-		FilterType rttype = FilterType.createFilterType( "Realtime" );
-    	rttype.setName("Realtime");
+		FilterType rttype = new FilterType();
+    	rttype.setType("Realtime");
 		Filter filter1 = new Filter();
 		filter1.setName("check");
 		filter1.setFilterType(rttype);
 
-		FilterType waittype = FilterType.createFilterType( "Wait" );
-    	waittype.setName("Wait");
+		FilterType waittype = new FilterType();
+    	waittype.setType("Wait");
     	Filter filter2 = new Filter();
     	filter2.setName("sync");
     	filter2.setFilterType(waittype);

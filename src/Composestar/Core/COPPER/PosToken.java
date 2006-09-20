@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: PosToken.java,v 1.1 2006/02/13 11:16:54 pascal Exp $
+ * $Id$
  */
 /**
  * class to override the common antlr tokens so we can keep track of the starting

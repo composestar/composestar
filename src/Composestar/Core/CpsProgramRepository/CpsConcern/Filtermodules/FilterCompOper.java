@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: FilterCompOper.java,v 1.2 2006/02/16 12:51:21 composer Exp $
+ * $Id$
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
