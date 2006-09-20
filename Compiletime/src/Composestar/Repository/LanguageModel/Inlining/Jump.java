@@ -22,6 +22,7 @@ public class Jump extends InlineInstruction implements IVisitable
 
 	public void Accept(IVisitor visitor)
 	{
+		super.Accept(visitor);
 		visitor.VisitJumpInstruction(this);
 	}
 }

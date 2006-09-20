@@ -26,6 +26,6 @@ public abstract class InlineInstruction implements IVisitable {
 
 	public void Accept(IVisitor visitor)
 	{
-
+		visitor.VisitInlineInstruction(this);
 	}
 }

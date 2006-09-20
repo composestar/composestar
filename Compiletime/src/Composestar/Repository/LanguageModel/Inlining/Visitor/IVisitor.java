@@ -16,5 +16,5 @@ public interface IVisitor
 	void VisitAfterAction(FilterAction filterAction);
 	void VisitSkipAction(FilterAction filterAction);
 	void VisitJumpInstruction(Jump jump);
-	
+	void VisitInlineInstruction(InlineInstruction inlineInstruction);
 }
