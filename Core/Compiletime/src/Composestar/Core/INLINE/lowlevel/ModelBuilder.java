@@ -161,7 +161,7 @@ public class ModelBuilder implements CTCommonModule{
         //store inlineModel in methodElement:
         Block inlineBlock = builderStrategy.getInlineBlock();
         if ( inlineBlock != null ){
-            methodInfo.setInputFilterCode( inlineBlock );
+            //methodInfo.setInputFilterCode( inlineBlock );
             inlinedMethodSet.add( methodInfo );
         }
 
