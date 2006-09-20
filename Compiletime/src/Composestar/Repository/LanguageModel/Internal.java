@@ -42,6 +42,19 @@ public class Internal
 	}
 
 
+	private String _type;
+
+	/** @property */
+	public String get_Type()
+	{
+		return _type;
+	}
+
+	/** @property */
+	public void set_Type(String value)
+	{
+		_type = value;
+	}
 
 
 	private String _concern;
