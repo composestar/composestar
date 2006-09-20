@@ -11,14 +11,14 @@ public class Block extends Instruction{
     private Vector instructions;
 
     public Block(){
-	instructions = new Vector();
+        instructions = new Vector();
     }
 
     public void addInstruction( Instruction instruction ){
-	instructions.addElement( instruction );
+        instructions.addElement( instruction );
     }
 
     public Enumeration getInstructions(){
-	return instructions.elements();
+        return instructions.elements();
     }
 }

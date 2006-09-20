@@ -13,18 +13,18 @@ import Composestar.Core.LAMA.MethodInfo;
 public interface LowLevelInlineStrategy {
     public void startInline( FilterModule[] filterSet, MethodInfo method, String[] argReferences );
     public void endInline();
-    
+
     public void startFilter( Filter filter, int jumpLabel );
     public void endFilter();
-    
+
     public void evalCondExpr( ConditionExpression condition );
     public void beginTrueBranch();
     public void endTrueBranch();
-    
+
     public void beginFalseBranch();
     public void endFalseBranch();
-    
+
     public void jump( int jumpLabel );
-    
+
     public void generateAction( ExecutionState state );
 }

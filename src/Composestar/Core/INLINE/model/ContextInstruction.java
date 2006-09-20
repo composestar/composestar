@@ -14,26 +14,26 @@ public class ContextInstruction extends Instruction{
     public final static int REMOVED = 0;
     public final static int SET_INNER_CALL = 10;
     public final static int CHECK_INNER_CALL = 11;
-    
+
     public ContextInstruction( int type, MethodInfo method ){
-	this.type = type;
-	this.method = method;
+        this.type = type;
+        this.method = method;
     }
 
     /**
      * @return the method
      */
     public MethodInfo getMethod(){
-	return method;
+        return method;
     }
 
     /**
      * @return the type
      */
     public int getType(){
-	return type;
+        return type;
     }
-    
+
     /**
      * @param type the type to set
      */
@@ -45,13 +45,13 @@ public class ContextInstruction extends Instruction{
      * @return the enabled
      */
     public boolean isEnabled(){
-	return enabled;
+        return enabled;
     }
 
     /**
      * @param enabled the enabled to set
      */
     public void setEnabled(boolean enabled){
-	this.enabled = enabled;
+        this.enabled = enabled;
     }
 }
