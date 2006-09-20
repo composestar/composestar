@@ -17,18 +17,24 @@
 	The Compose* DotNET Runtime
 	</description>
 
-	<target name="clean" depends="init">
-		<!--<make target="clean" />-->
+	<target name="clean" depends="init">		
 		<delete dir="${out.dist}" />
-		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="clean" />
+		<antcall target="clean_devenv" />
 	</target>	
+	
+	<target name="clean_devenv" if="available.devenv">
+		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="clean" />
+	</target>
 	
 	<target name="init_local" depends="init">
 		<mkdir dir="${out.dist}" />
 	</target>
 	
 	<target name="build" depends="init_local">
-		<!--<make target="build" />-->
+		<antcall target="build_devenv" />
+	</target>
+	
+	<target name="build_devenv" if="available.devenv">
 		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="build" />
 		<copy todir="${out.dist}">
 			<fileset dir="src${file.separator}FLIRT${file.separator}bin${file.separator}Release${file.separator}">

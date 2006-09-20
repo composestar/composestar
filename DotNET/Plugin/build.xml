@@ -19,24 +19,49 @@
 	
 	<target name="init_local" depends="init">
 		<condition property="plugin.vs2003">
-			<istrue value="${available.devenv}" />
+			<and>
+				<istrue value="${available.devenv}" />
+				<isfalse value="${ignore.plugin.vs2003}" />
+				<isfalse value="${ignore.plugin}" />
+			</and>
+		</condition>
+		<condition property="plugin.vs2005">
+			<and>
+				<istrue value="${available.msbuild}" />
+				<isfalse value="${ignore.plugin.vs2005}" />
+				<isfalse value="${ignore.plugin}" />
+			</and>
 		</condition>
 	</target>
 	
-	<target name="clean">
+	<target name="clean" unless="ignore.plugin" >
 	</target>
 	
-	<target name="build" depends="init_local" if="plugin.vs2003">
+	<!-- build -->	
+	<target name="build" depends="init_local,build_vs2003,build_vs2005" unless="ignore.plugin" />
+	
+	<target name="build_vs2003" depends="init_local" if="plugin.vs2003">
 		<devenv solution="${basedir}\VSAddin\ComposestarVSAddin.sln" />
 	</target>
 	
-	<target name="install" depends="init_local,build" if="plugin.vs2003">
+	<target name="build_vs2005" depends="init_local" if="plugin.vs2005">
+		
+	</target>
+	
+	<!-- install -->	
+	<target name="install" depends="init_local,install_vs2003,install_vs2005" unless="ignore.plugin" />
+	
+	<target name="install_vs2003" depends="init_local,build_vs2003" if="plugin.vs2003">
 		<copy todir="${composestar.installdir}${file.separator}ComposestarVSAddin">
 			<fileset dir="VSAddin${file.separator}bin">
 				<include name="ComposestarVSAddin.*" />
 			</fileset>
 		</copy>
 		<registerAssembly dll="${composestar.installdir}${file.separator}ComposestarVSAddin${file.separator}ComposestarVSAddin.dll" />
+	</target>
+	
+	<target name="install_vs2005" depends="init_local,build_vs2005" if="plugin.vs2005">
+	
 	</target>
 
 </project>
