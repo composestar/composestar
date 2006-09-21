@@ -90,7 +90,7 @@
 	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" enabled="true" incremental="false" summary="">
+	<module name="ASTRA" fulltype="Composestar.DotNET.TYM.SignatureTransformer.DotNETSignatureTransformer" enabled="true" incremental="false" summary="Transforming signatures...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="Composestar.Core.Master.Config.Source" enabled="true" incremental="true" summary="Compiling all sources...">
