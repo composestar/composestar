@@ -4,55 +4,53 @@ import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
 public class ContextInstruction extends InlineInstruction implements IVisitable
 {
-	private String type;
-	private String method;
-	private boolean enabled;
+	private int type;
+	private long methodId;
+	private Block innerBlock;
 
-	public ContextInstruction(String type, String method)
+	public final static int REMOVED = 0; //do nothing for this context instruction
+	public final static int SET_INNER_CALL = 10;
+	public final static int CHECK_INNER_CALL = 11;
+	public final static int RESET_INNER_CALL = 12;
+
+	public ContextInstruction(int type, long methodId, Block innerBlock)
 	{
 		this.type = type;
-		this.method = method;
+		this.methodId = methodId;
+		this.innerBlock = innerBlock;
 	}
 
 	/**
      * @return the method
 	 * @property 
 	 */
-	public String get_Method()
+	public long get_MethodId()
 	{
-		return method;
+		return methodId;
 	}
 
 	/**
      * @return the type
 	 * @property 
      */
-	public String get_Type()
+	public int get_Type()
 	{
 			return type;
 	}
 
 	/**
-     * @return the enabled
+     * @return the innerBlock
 	 * @property 
      */
-	public boolean get_IsEnabled()
+	public Block get_InnerBlock()
 	{
-			return enabled;
-	}
-
-	/**
-     * @param enabled the enabled to set
-	 * @property 
-     */
-	public void set_IsEnabled(boolean enabled)
-	{
-		this.enabled = enabled;
+		return innerBlock;
 	}
 
 	public void Accept(IVisitor visitor)
 	{
 		super.Accept(visitor);
-		visitor.VisitContextInstruction(this); 
+		visitor.VisitContextInstruction(this);
+		//TODO visit innerblock, if not null
 	}
 }
