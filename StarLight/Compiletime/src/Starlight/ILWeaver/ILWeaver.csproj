@@ -55,9 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CecilConditionsVisitor.cs" />
-    <Compile Include="CecilILWeaver.cs" />
-    <Compile Include="CecilInliningInstructionVisitor.cs" />
+    <Compile Include="Cecil\CecilILWeaver.cs" />
+    <Compile Include="Cecil\Visitors\CecilConditionsVisitor.cs" />
+    <Compile Include="Cecil\Visitors\CecilInliningInstructionVisitor.cs" />
     <Compile Include="Exceptions\ILWeaverException.cs" />
     <Compile Include="IILWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
