@@ -229,6 +229,15 @@ namespace Composestar.StarLight.ILWeaver
         }
         #endregion
 
+        /// <summary>
+        /// Visits the inline instruction.
+        /// </summary>
+        /// <remarks>
+        /// Place a label Id if an Id is available. Labels are Nop instructions and are used by the jump and branch action.
+        /// They are cached so we can reference ahead of time to labels not yet introduced. 
+        /// If the inlining tool did not generate the correct labels (it forgot one), then the branch will jump to the end of the method.
+        /// </remarks> 
+        /// <param name="inlineInstruction">The inline instruction.</param>
         public void VisitInlineInstruction(InlineInstruction inlineInstruction)
         {
             if (inlineInstruction.Label != null && inlineInstruction.Label.Id != -1 )
@@ -237,7 +246,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitAfterAction(FilterAction filterAction)
         {
-           
+           // Copy beforeAction and adapt
         }
 
         /// <summary>
@@ -272,6 +281,22 @@ namespace Composestar.StarLight.ILWeaver
 
             // Assign to the Target property
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
+
+            if (FilterType == FilterTypes.OutputFilter )
+            {
+                // Also set the sender
+                // Load the joinpointcontext object
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                // Load the this pointer
+                if (Method.HasThis)
+                    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+                else
+                    Instructions.Add(Worker.Create(OpCodes.Ldnull));
+
+                // Assign to the Target property
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
+            }
 
             //
             // Add the arguments, these are stored at the top of the stack
@@ -453,27 +478,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Call the SetInnerCall
             Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
-       
-            //
-            // Call the same method
-            //
-
-            // Get the methodReference
-            MethodReference methodReference = (MethodReference)Method;
-            
-            // Place the arguments on the stack first
-            if (methodReference.HasThis)                
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-
-            int numberOfArguments = Method.Parameters.Count;  
-            for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
-            {
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence)); 
-            }
-
-            // Call the same method
-            Instructions.Add(Worker.Create(OpCodes.Call, methodReference));             
-           
+                            
         }
 
         public void VisitResetInnerCall(ContextInstruction contextInstruction)
@@ -494,7 +499,27 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitDispatchAction(FilterAction filterAction)
         {
+             //
+            // Call the same method
+            //
+
+            // TODO not correct yet
+
+            // Get the methodReference
+            MethodReference methodReference = (MethodReference)Method;
             
+            // Place the arguments on the stack first
+            if (methodReference.HasThis)                
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+            int numberOfArguments = Method.Parameters.Count;  
+            for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
+            {
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence)); 
+            }
+
+            // Call the same method
+            Instructions.Add(Worker.Create(OpCodes.Call, methodReference));             
 
         }
 

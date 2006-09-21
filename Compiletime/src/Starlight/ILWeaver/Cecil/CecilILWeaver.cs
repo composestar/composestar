@@ -168,7 +168,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         public void DoWeave()
         {
-    
+
             // See if we are initialized.
             CheckForInit();
 
@@ -203,9 +203,9 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = RepositoryAccess.GetMethodElementBySignature(typeElement, 
+                        methodElement = RepositoryAccess.GetMethodElementBySignature(typeElement,
                             SignatureBuilder.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), GetParameterTypesList(method)));
-                        
+
                         // Skip if there is no methodinfo
                         if (methodElement == null)
                             continue;
@@ -227,7 +227,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 throw new ILWeaverException(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputFile, ex);
             }
-            
+
             // Stop timing
             sw.Stop();
             _lastDuration = sw.Elapsed;
@@ -259,26 +259,27 @@ namespace Composestar.StarLight.ILWeaver
 
             if (internals == null | internals.Count == 0)
                 return;
-            
+
             #endregion
+
+            FieldDefinition internalDef;
+            Type internalType;
+            TypeReference internalTypeRef;
+            Mono.Cecil.FieldAttributes internalAttrs;
 
             foreach (Internal inter in internals)
             {
-                FieldDefinition internalDef;
-                Type internalType;
-                TypeReference internalTypeRef;
-                Mono.Cecil.FieldAttributes internalAttrs;
-
                 internalType = Type.ReflectionOnlyGetType(inter.Type, false, false);
                 if (internalType == null) throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, inter.Type));
+
                 internalTypeRef = _targetAssemblyDefinition.MainModule.Import(internalType);
                 if (internalTypeRef == null) throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, inter.Type));
 
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
-                
+
                 // Create the field
                 internalDef = new FieldDefinition(inter.Name, internalTypeRef, internalAttrs);
-            
+
                 // Add the field
                 type.Fields.Add(internalDef);
 
@@ -287,44 +288,33 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     // Get the .ctor() constructor for the internal type
                     MethodBase constructorMethod = (MethodBase)internalType.GetConstructor(new Type[0]);
-                    if (constructorMethod == null) throw new ILWeaverException(String.Format(Properties.Resources.ConstructorNotFound, inter.Type));
+                    if (constructorMethod == null)
+                        throw new ILWeaverException(String.Format(Properties.Resources.ConstructorNotFound, inter.Type));
                     MethodReference constructorReference = _targetAssemblyDefinition.MainModule.Import(constructorMethod);
 
                     foreach (MethodDefinition constructor in type.Constructors)
                     {
-                        Instruction hookInstruction;
                         if (constructor.HasBody)
                         {
                             if (constructor.Body.Instructions.Count >= 1)
                             {
-                                hookInstruction = constructor.Body.Instructions[0];
-                                constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Ldarg_0));
-                                constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Newobj, constructorReference));
-                                constructor.Body.CilWorker.InsertBefore(hookInstruction, constructor.Body.CilWorker.Create(OpCodes.Stfld, internalDef));
+                                // Gets the CilWorker of the method for working with CIL instructions
+                                CilWorker worker = constructor.Body.CilWorker;
+                                
+                                // Create instructions
+                                IList<Instruction> instructions = new List<Instruction>();
+                                instructions.Add(worker.Create(OpCodes.Ldarg_0));
+                                instructions.Add(worker.Create(OpCodes.Newobj, constructorReference));
+                                instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
+
+                                // Add the instructions
+                                int noi = InsertInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
                             }
                         }
                     }
                 }
             }
 
-            #region Test code, must be removed
-            //// Declarations
-            //FieldDefinition internalDef;
-            //String name;
-            //TypeReference fieldType;
-            //Mono.Cecil.FieldAttributes attrs;
-
-            //// Prepare the data
-            //name = "test";
-            //fieldType = _targetAssemblyDefinition.MainModule.Import(typeof(String));
-            //attrs = Mono.Cecil.FieldAttributes.Static;
-
-            //// Create the field
-            //internalDef = new FieldDefinition(name, fieldType, attrs);
-
-            //// Add the field
-            //type.Fields.Add(internalDef);
-            #endregion
         }
 
         /// <summary>
@@ -350,12 +340,12 @@ namespace Composestar.StarLight.ILWeaver
 
             if (externals == null | externals.Count == 0)
                 return;
-            
+
             #endregion
 
             foreach (External external in externals)
             {
-                 
+
             }
 
         }
@@ -373,7 +363,7 @@ namespace Composestar.StarLight.ILWeaver
 
             if (methodElement == null)
                 return;
-            
+
             #endregion
 
             // Add the inputfilters
@@ -390,14 +380,15 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="method">The method.</param>
         /// <param name="methodElement">The method element.</param>
         /// <remarks>
-        /// InputFilters are added at the top of the methodbody.
+        /// InputFilters are added at the top of the methodbody. 
+        /// We call a visitor to generate IL instructions and we add those to the top of the method.
         /// </remarks>        
         public void WeaveInputFilters(MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve inputFilter
-            
+
             // Only proceed when there is a message body
-            if (method.HasBody == false )
+            if (method.HasBody == false)
                 return;
 
             // If the methodbody is null, then return
@@ -412,22 +403,18 @@ namespace Composestar.StarLight.ILWeaver
             if (inputFilter == null)
                 return;
 
-            #endregion    
+            #endregion
 
             // Gets the CilWorker of the method for working with CIL instructions
             CilWorker worker = method.Body.CilWorker;
-                                           
+
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
-
-            // Add the check for IsInnerCall
-            int instructionsCount = 0;
-                        
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
             visitor.Worker = worker;
-            visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;  
+            visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
 
             // Visit the elements in the block
@@ -437,16 +424,17 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (Exception ex)
             {
-                _repositoryAccess.CloseDatabase(); 
-                throw new ILWeaverException("", ex);
+                // Close the database and throw the error wrapped in an ILWeaverException
+                _repositoryAccess.CloseDatabase();
+                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputFilename, ex);
             }
 
             // Only add instructions if we have instructions
             if (visitor.Instructions.Count > 0)
             {
                 // Add the instructions
-               instructionsCount += InsertInstructionList(ref worker, ins, visitor.Instructions);
-               ins = method.Body.Instructions[instructionsCount];
+                int instructionsCount = 0;
+                instructionsCount += InsertInstructionList(ref worker, ins, visitor.Instructions);
             }
 
             //
@@ -460,6 +448,10 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="method">The method.</param>
         /// <param name="methodElement">The method element.</param>
+        /// <remarks>
+        /// We look for each call and see if we have an outputfilter for it.
+        /// If we do, then call the visitor to generate code to replace the call.
+        /// </remarks> 
         public void WeaveOutputFilters(MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve calls for this method
@@ -468,14 +460,14 @@ namespace Composestar.StarLight.ILWeaver
                 return;
 
             // Only proceed when there is a message body
-            if (method.HasBody == false )
+            if (method.HasBody == false)
                 return;
 
             IList<CallElement> calls = _repositoryAccess.GetCallByMethodElement(methodElement);
 
             if (calls == null | calls.Count == 0)
                 return;
-            
+
             #endregion
 
             // Gets the CilWorker of the method for working with CIL instructions
@@ -496,7 +488,7 @@ namespace Composestar.StarLight.ILWeaver
                     {
                         // Get the outputFilter for this call
                         Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter =
-                            call.OutputFilter; 
+                            call.OutputFilter;
 
                         // Check for null, an output filter is not required
                         if (outputFilter == null)
@@ -510,18 +502,27 @@ namespace Composestar.StarLight.ILWeaver
                         visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
 
                         // Visit the elements in the block
-                        outputFilter.Accept(visitor);
+                        try
+                        {
+                            outputFilter.Accept(visitor);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Close the database and throw the error wrapped in an ILWeaverException
+                            _repositoryAccess.CloseDatabase();
+                            throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputFilename, ex);
+                        }
 
                         // Only add instructions if we have instructions
                         if (visitor.Instructions.Count > 0)
                         {
-                            int instructionsCount=0;
+                            int instructionsCount = 0;
                             // Add the instructions
                             instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
-                        }                        
+                        }
                     }
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -548,7 +549,7 @@ namespace Composestar.StarLight.ILWeaver
                 ret.Add(param.ParameterType.FullName);
             }
 
-            return ret.ToArray(); 
+            return ret.ToArray();
         }
 
         /// <summary>
@@ -566,7 +567,7 @@ namespace Composestar.StarLight.ILWeaver
                 startInstruction = instr;
             }
 
-            return instructionsToAdd.Count; 
+            return instructionsToAdd.Count;
         }
 
         /// <summary>
@@ -593,9 +594,9 @@ namespace Composestar.StarLight.ILWeaver
                 startInstruction = instr;
             }
 
-            return instructionsToAdd.Count - 1; 
+            return instructionsToAdd.Count - 1;
         }
-     
+
         /// <summary>
         /// Finds the call in list.
         /// </summary>
@@ -626,7 +627,7 @@ namespace Composestar.StarLight.ILWeaver
                     instruction.OpCode == OpCodes.Callvirt);
         }
         #endregion
-             
+
         #region nested class WeaverConfiguration
         /// <summary>
         /// Contains the configuration for the weaver.

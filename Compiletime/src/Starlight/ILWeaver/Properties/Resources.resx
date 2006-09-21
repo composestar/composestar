@@ -153,4 +153,7 @@
   <data name="TypeNotFound" xml:space="preserve">
     <value>The type {0} could not be found.</value>
   </data>
+  <data name="CecilVisitorRaisedException" xml:space="preserve">
+    <value>An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details.</value>
+  </data>
 </root>

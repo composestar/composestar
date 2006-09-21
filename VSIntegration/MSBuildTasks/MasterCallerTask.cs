@@ -193,21 +193,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.UseShellExecute = false;
+            p.StartInfo.RedirectStandardError = true; 
             
             try
             {
                 p.Start();
                 while (!p.HasExited)
                 {            
-                    ParseMasterOutput(p.StandardOutput.ReadLine());
-                    //Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.Normal) ;
+                    ParseMasterOutput(p.StandardOutput.ReadLine());                    
                 }
                 if (p.ExitCode == 0)
                 {                 
                     return !Log.HasLoggedErrors;
                 }
                 else
-                {
+                {                  
+                    Log.LogMessagesFromStream(p.StandardError, MessageImportance.High); 
                     Log.LogErrorFromResources("MasterRunFailed", p.ExitCode);                 
                     return false;
                 }
