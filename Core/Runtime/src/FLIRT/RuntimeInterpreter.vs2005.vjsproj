@@ -1,0 +1,353 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{44C00A21-5832-4331-BEBB-0669F4CA299A}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ComposeStarRuntimeInterpreter</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Flirt</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="vjslib">
+      <Name>vjslib</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="actions\AppendAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ComposeStarAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ContinueToNextFilterAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\DispatchAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\DispatchToInnerAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ErrorAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\MetaAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\PrependAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\SendAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\WaitAction.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CastingFacility.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="debugger\Debugger.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="debugger\Ignore.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\ComposestarRuntimeException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\ErrorFilterException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\ExternalNotFoundException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\FilterException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\FilterModuleException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\FilterSpecificationException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\InternalNotFoundException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\InvalidConditionException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\InvalidPatternExpressionException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\MessageNotFilteredException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\SelectorNotFoundException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="exception\TargetNotFoundException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Append.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\CustomFilter.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Dispatch.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\ErrorFilter.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\FilterFactory.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\FilterTypeRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Meta.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Prepend.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Send.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Substitution.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="filtertypes\Wait.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FLIRT.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GlobalObjectManager.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\AbstractPatternRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\AndRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\ConditionExpressionRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\ConditionLiteralRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\ConditionResolver.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\CorFilterElementCompositionOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\DisableOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\EnableOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\EnableOperatorTypeRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\FalseRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\FilterCompositionOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\FilterElementCompositionOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\FilterElementRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\FilterModuleRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\FilterRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\Interpretable.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\MatchingPartRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\MatchingPatternRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\MatchingTypeRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\NameMatchingRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\NotRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\OrRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\ReferenceEntityRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\SelectorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\SeqFilterCompositionOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\SignatureMatchingRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\SubstitutionPartRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\TargetRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\TrueRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\VoidFilterCompositionOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="interpreter\VoidFilterElementCompositionOperatorRuntime.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MessageHandlingFacility.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="message\Message.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="message\MessageList.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="message\ReifiedMessage.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="message\ReplyMessage.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ObjectManager.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlatformProvider.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="policy\DefaultFilterPolicy.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="policy\FilterPolicy.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="policy\MetaFilterPolicy.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="policy\PolicyExecutionResult.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reflection\JoinPoint.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reflection\JoinPointInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reflection\JoinPointInfoProxy.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reflection\MessageInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="reflection\MessageInfoProxy.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RepositoryLinker.java">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Compiletime\src\Core.vs2005.vjsproj">
+      <Project>{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}</Project>
+      <Name>Core.vs2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\util\CoreUtilities.vs2005.vjsproj">
+      <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
+      <Name>CoreUtilities.vs2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

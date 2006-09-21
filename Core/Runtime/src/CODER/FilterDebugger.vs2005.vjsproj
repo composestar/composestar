@@ -1,0 +1,193 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{227D8FE5-F6DA-4D40-BADB-C19320F6BD01}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ComposeStarFilterDebugger</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CODER</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+      <HintPath>System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+      <HintPath>System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+      <HintPath>System.XML.dll</HintPath>
+    </Reference>
+    <Reference Include="vjslib">
+      <Name>vjslib</Name>
+      <HintPath>vjslib.dll</HintPath>
+    </Reference>
+    <Reference Include="VJSSupUILib">
+      <Name>VJSSupUILib</Name>
+      <HintPath>VJSSupUILib.dll</HintPath>
+    </Reference>
+    <ProjectReference Include="..\..\..\..\DotNET\Runtime\binaries\AntlrDotNet\AntlrDotNet.vs2005.vjsproj">
+      <Project>{105127C9-CD0A-43C8-9314-D3C67A0C529A}</Project>
+      <Name>AntlrDotNet.vs2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FLIRT\RuntimeInterpreter.vs2005.vjsproj">
+      <Project>{44C00A21-5832-4331-BEBB-0669F4CA299A}</Project>
+      <Name>RuntimeInterpreter.vs2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\util\CoreUtilities.vs2005.vjsproj">
+      <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
+      <Name>CoreUtilities.vs2005</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BreakPointListener.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="breakpoint\AlwaysBreakBreakPoint.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="breakpoint\BreakPoint.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="breakpoint\parsers\BreakPointParseException.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="consoleDebugger\ConsolePrinterDebugger.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DebuggerFactory.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DebuggerProvider.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Halter.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="StateHandler.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="value\FunctionCallValue.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="value\Value.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="value\VariableValue.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\CodeDebugger\CodeDebugger.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\CodeDebugger\GuiComponents\AcceptRejectGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\CodeDebugger\GuiComponents\CodeExecutionGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\FilterVisualizer.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\CustomGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\DebugGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\DispatchGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\ErrorGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\FilterExecutionGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\FilterGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\MessageGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\MetaGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\FilterVisualizer\GuiComponents\ObjectGuiComponent.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\Inspectors\FilterInspector.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\Inspectors\MessageInspector.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\Inspectors\ObjectInspector.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\VisualDebugger.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="visualDebugger\Visualizer.java">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
