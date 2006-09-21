@@ -1,9 +1,11 @@
 package Composestar.Repository.LanguageModel.ConditionExpressions;
 
+import Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.*;
+
 /**
  * Summary description for True.
  */
-public class True extends ConditionExpression
+public class True extends ConditionExpression implements IVisitable 
 {
 	public True()
 	{
@@ -11,4 +13,10 @@ public class True extends ConditionExpression
 		// TODO: Add Constructor Logic here
 		//
 	}
+
+	public void Accept(IVisitor visitor)
+	{
+		visitor.VisitTrue(this);  
+	}
+
 }

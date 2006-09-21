@@ -514,8 +514,23 @@ namespace Composestar.StarLight.ILWeaver
                         if (outputFilter == null)
                             continue;
 
-                        
-                        //worker.Replace(instruction, instruction); 
+                        // Add filters using the visitor
+                        CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
+                        visitor.Method = method;
+                        visitor.Worker = worker;
+                        visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
+                        visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
+
+                        // Visit the elements in the block
+                        outputFilter.Accept(visitor);
+
+                        // Only add instructions if we have instructions
+                        if (visitor.Instructions.Count > 0)
+                        {
+                            int instructionsCount=0;
+                            // Add the instructions
+                            instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
+                        }                        
                     }
                 }
             }            

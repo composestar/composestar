@@ -40,6 +40,8 @@
     <Compile Include="ConditionExpressions\Not.java" />
     <Compile Include="ConditionExpressions\Or.java" />
     <Compile Include="ConditionExpressions\True.java" />
+    <Compile Include="ConditionExpressions\Visitor\IVisitable.java" />
+    <Compile Include="ConditionExpressions\Visitor\IVisitor.java" />
     <Compile Include="External.java" />
     <Compile Include="FieldElement.java" />
     <Compile Include="Inlining\Block.java" />
