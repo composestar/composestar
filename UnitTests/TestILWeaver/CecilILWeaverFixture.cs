@@ -7,7 +7,8 @@ using System.Text;
 using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.StarLight.ILWeaver;
-  
+using Composestar.Repository.LanguageModel.Inlining;
+
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #else
@@ -172,11 +173,23 @@ namespace TestILWeaver
             me = repository.GetMethodElementBySignature(te, "System.String GetMessage()"); 
             
             // Add some inputfilters
-            Composestar.Repository.LanguageModel.Inlining.Block block = new Composestar.Repository.LanguageModel.Inlining.Block();
-            Composestar.Repository.LanguageModel.Inlining.FilterAction beforeAction = new Composestar.Repository.LanguageModel.Inlining.FilterAction("BeforeAction", "", "");
+            Block block = new Block();
+            Block block2 = new Block();
+            block2.Label.Id = 4; 
+            FilterAction beforeAction = new FilterAction("BeforeAction", "", "");
+            Composestar.Repository.LanguageModel.ConditionExpressions.ConditionExpression ce = new Composestar.Repository.LanguageModel.ConditionExpressions.True();
+            Branch branch = new Composestar.Repository.LanguageModel.Inlining.Branch(ce);
+            branch.TrueBlock = block;
+            branch.FalseBlock = block2;
+            FilterAction errorAction = new FilterAction("ErrorAction", "", "");
+            Jump jump = new Jump(new Label(2));         
+
             block.Label.Id = 2;
             beforeAction.Label.Id = 3;
             block.addInstruction(beforeAction);
+            block.addInstruction(errorAction);
+            block.addInstruction(branch); 
+            block.addInstruction(jump); 
            
             me.MethodBody.InputFilter = block;
             Composestar.Repository.DataStoreContainer.Instance.StoreObject(me);

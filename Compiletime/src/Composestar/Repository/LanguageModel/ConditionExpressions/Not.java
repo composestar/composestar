@@ -1,9 +1,11 @@
 package Composestar.Repository.LanguageModel.ConditionExpressions;
 
+import Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.*;
+
 /**
  * Summary description for Not.
  */
-public class Not extends ConditionExpression
+public class Not extends ConditionExpression implements IVisitable 
 {
 	public Not()
 	{
@@ -24,5 +26,10 @@ public class Not extends ConditionExpression
 	public void set_Operand(ConditionExpression value)
 	{
 		_operand = value;
+	}
+
+	public void Accept(IVisitor visitor)
+	{
+		visitor.VisitNot(this);
 	}
 }

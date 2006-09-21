@@ -215,6 +215,18 @@ namespace Composestar.StarLight.ILWeaver
 
             return _jpcLocal;
         }
+
+        /// <summary>
+        /// Adds an instruction list to the Instructions list.
+        /// </summary>
+        /// <param name="instructions">The instructions.</param>
+        private void AddInstructionList(IList<Instruction> instructions)
+        {
+            foreach (Instruction instruction in instructions)
+            {
+                Instructions.Add(instruction); 
+            }
+        }
         #endregion
 
         public void VisitInlineInstruction(InlineInstruction inlineInstruction)
@@ -352,10 +364,22 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Nop)); 
         }
 
+        /// <summary>
+        /// Branching for conditions
+        /// </summary>
+        /// <param name="branch"></param>
         public void VisitBranch(Branch branch)
         {
            
             // Add condition code
+            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
+            conditionsVisitor.Method = Method;
+            conditionsVisitor.Worker = Worker;
+            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
+            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);  
+
+            AddInstructionList(conditionsVisitor.Instructions);
+ 
             // TODO condition
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));  // Load a constant value of 1 for now
  
@@ -366,7 +390,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitContextInstruction(ContextInstruction contextInstruction)
         {
-
+            
         }
 
         public void VisitContinueAction(FilterAction filterAction)
@@ -402,12 +426,12 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitErrorAction(FilterAction filterAction)
         {           
             // Create an exception
-            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(Exception).GetMethod(".ctor", new Type[] { }))));
+            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(Exception).GetConstructors()[0] )));
 
             // Throw the exception
             Instructions.Add(Worker.Create(OpCodes.Throw));
 
-            // Add the NOP to enable debugging
+            // Add the Nop to enable debugging
             Instructions.Add(Worker.Create(OpCodes.Nop)); 
             
         }
@@ -417,9 +441,13 @@ namespace Composestar.StarLight.ILWeaver
             // Currently not used (not visited)
         }
 
+        /// <summary>
+        /// Add a jump to another block
+        /// </summary>
+        /// <param name="jump"></param>
         public void VisitJumpInstruction(Jump jump)
         {
-            Instruction jumpToInstruction = GetJumpLabel(jump.Label.Id);
+            Instruction jumpToInstruction = GetJumpLabel(jump.Target.Id);
             if (jumpToInstruction == null)
                 throw new ILWeaverException(Properties.Resources.FilterJumpLabelIsNotSet);
 

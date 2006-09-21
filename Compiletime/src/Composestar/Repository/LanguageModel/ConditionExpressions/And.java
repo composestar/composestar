@@ -1,20 +1,20 @@
 package Composestar.Repository.LanguageModel.ConditionExpressions;
 
+import Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.*;     
+
 /**
  * Summary description for And.
  */
-public class And extends ConditionExpression
+public class And extends ConditionExpression implements IVisitable 
 {
-
-
+	
 	public And()
 	{
 		//
 		// TODO: Add Constructor Logic here
 		//
 	}
-
-
+	
 	private ConditionExpression _left;
 
 	/** @property */
@@ -29,8 +29,6 @@ public class And extends ConditionExpression
 		_left = value;
 	}
 
-
-
 	private ConditionExpression _right;
 
 	/** @property */
@@ -43,5 +41,12 @@ public class And extends ConditionExpression
 	public void set_Right(ConditionExpression value)
 	{
 		_right = value;
+	}
+
+	public void Accept(IVisitor visitor)
+	{		
+		((IVisitable)_left).Accept(visitor);
+		((IVisitable)_right).Accept(visitor);
+		visitor.VisitAnd(this);
 	}
 }

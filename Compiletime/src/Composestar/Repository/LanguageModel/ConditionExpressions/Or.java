@@ -1,9 +1,11 @@
 package Composestar.Repository.LanguageModel.ConditionExpressions;
 
+import Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.*;
+
 /**
  * Summary description for Or.
  */
-public class Or extends ConditionExpression
+public class Or extends ConditionExpression implements IVisitable 
 {
 	public Or()
 	{
@@ -40,5 +42,12 @@ public class Or extends ConditionExpression
 	public void set_Right(ConditionExpression value)
 	{
 		_right = value;
+	}
+
+	public void Accept(IVisitor visitor)
+	{		
+		((IVisitable)_left).Accept(visitor);
+		((IVisitable)_right).Accept(visitor);
+		visitor.VisitOr(this);
 	}
 }
