@@ -364,7 +364,7 @@ public class DotNETType extends Type {
      * @roseuid 4029F794018A
      */
     public void setIsNestedPrivate(boolean isNested) {
-        IsNestedPrivate = isNested;     
+        m_isNestedPrivate = isNested;     
     }
     
     /**
@@ -372,7 +372,7 @@ public class DotNETType extends Type {
      * @roseuid 4029F7A1012E
      */
     public void setIsNestedPublic(boolean isNested) {
-        IsNestedPublic = isNested;     
+        m_isNestedPublic = isNested;     
     }
     
     /**
@@ -546,7 +546,7 @@ public class DotNETType extends Type {
      */
     public DotNETMethodInfo getConstructor(String[] types) {
         DotNETMethodInfo method = null;
-        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); /* nop */ ) 
+        for( ListIterator iter = m_methods.listIterator(); iter.hasNext(); /* nop */ ) 
 		{
 			method = (DotNETMethodInfo)iter.next();
             if( method.isConstructor() && method.hasParameters( types ) ) 
@@ -564,7 +564,7 @@ public class DotNETType extends Type {
     public List getConstructors() {
         DotNETMethodInfo method = null;
         List constructors = new ArrayList();
-        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); /* nop */ ) 
+        for( ListIterator iter = m_methods.listIterator(); iter.hasNext(); /* nop */ ) 
 		{
 			method = (DotNETMethodInfo)iter.next();
             if( method.isConstructor() ) 
@@ -593,7 +593,7 @@ public class DotNETType extends Type {
     
     public DotNETFieldInfo getField(String name) {
 		DotNETFieldInfo field = null;
-		for (ListIterator iter = Fields.listIterator(); iter.hasNext(); /* nop */ ) 
+		for (ListIterator iter = m_fields.listIterator(); iter.hasNext(); /* nop */ ) 
 		{
 			field = (DotNETFieldInfo)iter.next();
 			if (field.name().equals(name))
@@ -662,7 +662,7 @@ public class DotNETType extends Type {
      * @return an IL datatype
      */ 
     public String ilType() {
-    	String fullName = this.FullName;
+    	String fullName = this.m_fullName;
     	String arrayPart = "";
     	if(fullName.endsWith("[]")){
     		fullName = fullName.substring(0,fullName.length()-2);
@@ -753,9 +753,9 @@ public class DotNETType extends Type {
       else if (argumentName.equals("ChildClasses"))
         return new UnitResult(childTypes);
       else if (argumentName.equals("ChildMethods"))
-        return new UnitResult(filterDeclaredHere(Methods));
+        return new UnitResult(filterDeclaredHere(m_methods));
       else if (argumentName.equals("ChildFields"))
-        return new UnitResult(filterDeclaredHere(Fields));
+        return new UnitResult(filterDeclaredHere(m_fields));
       else if (argumentName.equals("ParameterClass"))
         return new UnitResult(parameterTypes);
       else if (argumentName.equals("MethodReturnClass"))
@@ -785,7 +785,7 @@ public class DotNETType extends Type {
       else if (argumentName.equals("ChildInterfaces"))
         return new UnitResult(childTypes);
       else if (argumentName.equals("ChildMethods"))
-        return new UnitResult(filterDeclaredHere(Methods));
+        return new UnitResult(filterDeclaredHere(m_methods));
       else if (argumentName.equals("ParameterInterface"))
         return new UnitResult(parameterTypes);
       else if (argumentName.equals("MethodReturnInterface"))
@@ -948,7 +948,7 @@ public class DotNETType extends Type {
 		UnitRegister.instance().registerLanguageUnit(this);  
 		
 		// register fields
-		Iterator fiter = Fields.iterator();
+		Iterator fiter = m_fields.iterator();
 		while (fiter.hasNext())
 		{
 			DotNETFieldInfo field = (DotNETFieldInfo)fiter.next();
@@ -957,7 +957,7 @@ public class DotNETType extends Type {
 		}
 
 		// register methods and its parameters
-		Iterator miter = Methods.iterator();
+		Iterator miter = m_methods.iterator();
 		while (miter.hasNext())
 		{
 			DotNETMethodInfo method = (DotNETMethodInfo)miter.next();

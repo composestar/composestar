@@ -26,14 +26,12 @@ public class RepositoryFixer
 	public static void fixRepository(DataStore ds)
 	{
 		RepositoryFixer rf = new RepositoryFixer();
-		try
-		{	
+		try {	
 			rf.fixClones(ds);
 			rf.fixReferences(ds);
 			rf.fixParentLinks(ds);
 		}
-		catch(java.lang.Exception e)
-		{
+		catch (java.lang.Exception e) {
 			Debug.out(Debug.MODE_ERROR,"FLIRT","Could not fix repository.");
 			e.printStackTrace();
 		}
@@ -41,25 +39,21 @@ public class RepositoryFixer
 
 	private void fixClones(DataStore ds)
 	{
-		Object o = ds.map.values.elements();
+		Collection values = ds.map.values();
 		
-		try
-		{
-			Enumeration e = (Enumeration) o;
-			// fixme Why not while loop?
-			for( ; e.hasMoreElements(); )
+		try {
+			Iterator it = values.iterator();
+			while (it.hasNext())
 			{
-				Object obj = e.nextElement();
-			
-				if( obj instanceof DeclaredRepositoryEntity )
+				Object obj = it.next();			
+				if (obj instanceof DeclaredRepositoryEntity)
 				{
 					//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing clone " + ((DeclaredRepositoryEntity)obj).repositoryKey + "." );
 					fixChildren(obj, ds);																
 				}
 			}
 		}
-		catch(java.lang.Exception ex)
-		{
+		catch (java.lang.Exception ex) {
 			Debug.out(Debug.MODE_ERROR,"FLIRT","An exception occurred during fixing of clones.");
 			ex.printStackTrace();
 		}
@@ -70,35 +64,32 @@ public class RepositoryFixer
 		FieldInfo[] fields = o.GetType().GetFields();
 		Object child;
 		
-		for( int i = 0; i < fields.length; i++ )
+		for (int i = 0; i < fields.length; i++)
 		{
-			child = fields[i].GetValue(o);
-			
-			if( child == null )
+			child = fields[i].GetValue(o);			
+			if (child == null)
 			{
 			}
-			else if( child instanceof RepositoryEntity )
+			else if (child instanceof RepositoryEntity)
 			{
-				 if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
+				Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
 					
-					Object temp = fixEntity((RepositoryEntity) child, ds);
-					fields[i].SetValue(o, temp);
+				Object temp = fixEntity((RepositoryEntity)child, ds);
+				fields[i].SetValue(o, temp);
 			}
-			else if( child instanceof Vector )
+			else if (child instanceof Vector)
 			{
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
-				fields[i].SetValue(o, fixVector((Vector) child, ds) );
+				Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() + "'.");
+				fields[i].SetValue(o, fixVector((Vector)child, ds) );
 			}
-			else if( child instanceof DataMap )
+			else if (child instanceof DataMap)
 			{
-				
-				//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","TODO: Fix DataMap '" + fields[i].get_Name()+"'." );
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() +"'.");
+				Debug.out(Debug.MODE_DEBUG,"FLIRT","Fixing '" + fields[i].get_Name() + "' of type '" + child.getClass().getName() +"'.");
 				//fields[i].SetValue(o, fixVector((Vector) child, ds) );
 			}
 			else
 			{
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Field '" + fields[i].get_Name() + "' has unknown type '" + child.getClass().getName() +"'.");
+				Debug.out(Debug.MODE_DEBUG,"FLIRT","Field '" + fields[i].get_Name() + "' has unknown type '" + child.getClass().getName() +"'.");
 			}
 			
 		}

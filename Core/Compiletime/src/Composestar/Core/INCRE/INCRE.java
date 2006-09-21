@@ -582,7 +582,7 @@ public class INCRE implements CTCommonModule
 	      	// 2. concern extracted from modified assembly
 	        if(unit instanceof Type){
 	        	 Type dtype = (Type)unit;
-	        	 String sourceFile = locations.getSourceByType(dtype.FullName);
+	        	 String sourceFile = locations.getSourceByType(dtype.m_fullName);
 	        	 if(sourceFile!=null && !incre.isFileAdded(sourceFile,null) && !incre.isFileModified(sourceFile)){
 	        	 	/*skip because sourcefile unmodified*/
 	        	 }
@@ -627,12 +627,12 @@ public class INCRE implements CTCommonModule
 		
 		if(repr instanceof Type){
 			Type type = (Type)repr;
-			if(type.IsNestedPrivate || type.IsNestedPublic){
+			if(type.m_isNestedPrivate || type.m_isNestedPublic){
 				/* undecided yet, safety first */
 				return true;
 			}
 			
-			String location = locations.getSourceByType(type.FullName);
+			String location = locations.getSourceByType(type.m_fullName);
 			if(location!=null){
 				if(location.equals(source))
 					return true;

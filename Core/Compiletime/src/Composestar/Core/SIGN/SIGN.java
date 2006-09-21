@@ -730,7 +730,7 @@ public class SIGN implements CTCommonModule
 					//TODO: remove this, needed for demo!
 					if(!Configuration.instance().getProperty("Platform").equalsIgnoreCase("c"))
 					{
-						String returntype = mw.theMethodInfo.returnType().Name ;
+						String returntype = mw.theMethodInfo.returnType().m_name ;
 						
 						String parameters = "";
 						Iterator itrpara = mw.theMethodInfo.getParameters().iterator();
@@ -738,7 +738,7 @@ public class SIGN implements CTCommonModule
 						{
 							ParameterInfo parainfo = (ParameterInfo) itrpara.next();
 							if (parameters.equalsIgnoreCase("") && parainfo.parameterType() != null) {
-								parameters = parainfo.parameterType().Name;
+								parameters = parainfo.parameterType().m_name;
 							}
 							else {
 								parameters = parameters + ", " + parainfo.Name;
