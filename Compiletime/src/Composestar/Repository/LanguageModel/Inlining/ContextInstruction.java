@@ -50,7 +50,14 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 	public void Accept(IVisitor visitor)
 	{
 		super.Accept(visitor);
-		visitor.VisitContextInstruction(this);
-		//TODO visit innerblock, if not null
+		if (type == SET_INNER_CALL)
+			visitor.VisitSetInnerCall(this);
+		else if (type == CHECK_INNER_CALL)
+			visitor.VisitCheckInnerCall(this);
+		else if (type == RESET_INNER_CALL)
+			visitor.VisitResetInnerCall(this);
+
+		if (innerBlock != null)
+			innerBlock.Accept(visitor); 		
 	}
 }

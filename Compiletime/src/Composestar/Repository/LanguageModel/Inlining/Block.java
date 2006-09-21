@@ -9,7 +9,7 @@ import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 public class Block extends InlineInstruction implements IVisitable
 {
 	private InlineInstruction[] instructions;
-	private int instrunctionCount = 0;
+	private int instructionCount = 0;
 
 	public Block()
 	{
@@ -18,7 +18,7 @@ public class Block extends InlineInstruction implements IVisitable
 
 	public void addInstruction(InlineInstruction instruction)
 	{
-		instructions[instrunctionCount++] = instruction;
+		instructions[instructionCount++] = instruction;
 	}
 
 	/** @property */
@@ -31,7 +31,7 @@ public class Block extends InlineInstruction implements IVisitable
 	{
 		super.Accept(visitor);
 
-		for (int i = 0; i < instrunctionCount; i++)
+		for (int i = 0; i < instructionCount; i++)
 		{
 			Object o= instructions[i];
 			((IVisitable)o).Accept(visitor);

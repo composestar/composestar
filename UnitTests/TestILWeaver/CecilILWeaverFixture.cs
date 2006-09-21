@@ -173,6 +173,7 @@ namespace TestILWeaver
             me = repository.GetMethodElementBySignature(te, "System.String GetMessage()"); 
             
             // Add some inputfilters
+            
             Block block = new Block();
             Block block2 = new Block();
             block2.Label.Id = 4; 
@@ -183,13 +184,20 @@ namespace TestILWeaver
             branch.FalseBlock = block2;
             FilterAction errorAction = new FilterAction("ErrorAction", "", "");
             Jump jump = new Jump(new Label(2));         
-
             block.Label.Id = 2;
             beforeAction.Label.Id = 3;
-            block.addInstruction(beforeAction);
-            block.addInstruction(errorAction);
-            block.addInstruction(branch); 
-            block.addInstruction(jump); 
+            block2.addInstruction(beforeAction);
+            block2.addInstruction(errorAction);
+
+            ContextInstruction ci = new ContextInstruction(ContextInstruction.CHECK_INNER_CALL, 1000, block2);
+            ContextInstruction ci2 = new ContextInstruction(ContextInstruction.RESET_INNER_CALL, 1000, null);
+            ContextInstruction ci3 = new ContextInstruction(ContextInstruction.SET_INNER_CALL, 1000, null);
+            block.addInstruction(ci);
+            block.addInstruction(ci2);
+            block.addInstruction(ci3);
+       
+           // block2.addInstruction(branch); 
+           // block2.addInstruction(jump); 
            
             me.MethodBody.InputFilter = block;
             Composestar.Repository.DataStoreContainer.Instance.StoreObject(me);

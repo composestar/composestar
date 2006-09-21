@@ -18,6 +18,7 @@ namespace ConsoleTestTarget
 
         public String GetMessage()
         {
+           // string a = GetMessage();
             return messageEN;
         }
 

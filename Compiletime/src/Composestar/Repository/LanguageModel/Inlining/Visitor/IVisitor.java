@@ -6,7 +6,9 @@ public interface IVisitor
 {
 	
 	void VisitBranch(Branch branch);
-	void VisitContextInstruction(ContextInstruction contextInstruction);
+	void VisitCheckInnerCall(ContextInstruction contextInstruction);
+	void VisitSetInnerCall(ContextInstruction contextInstruction);
+	void VisitResetInnerCall(ContextInstruction contextInstruction);
 	void VisitFilterAction(FilterAction filterAction);
 	void VisitContinueAction(FilterAction filterAction);
 	void VisitSubstitutionAction(FilterAction filterAction);

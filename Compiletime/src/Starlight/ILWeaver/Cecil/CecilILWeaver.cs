@@ -168,6 +168,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         public void DoWeave()
         {
+    
             // See if we are initialized.
             CheckForInit();
 
@@ -413,33 +414,15 @@ namespace Composestar.StarLight.ILWeaver
 
             #endregion    
 
-            #region Convert inputfilter to a block
-
-            Composestar.Repository.LanguageModel.Inlining.Block block;
-            block = inputFilter as Composestar.Repository.LanguageModel.Inlining.Block;
-            if (block == null)
-                return;
-            
-            #endregion
-
             // Gets the CilWorker of the method for working with CIL instructions
             CilWorker worker = method.Body.CilWorker;
-
-            // Get the instructions for the IsInnerCall check
-            Instruction branchToInstruction = worker.Create(OpCodes.Nop); 
-            String methodSignature = method.Name; // TODO get the correct signature from the contextinstruction
-            IList<Instruction> inInnerCallInstructions =
-                GenerateFilterContextIsInnerCallCheck(method, methodSignature, ref worker, branchToInstruction);
-                        
+                                           
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
 
             // Add the check for IsInnerCall
-            int instructionsCount = InsertInstructionList(ref worker, ins, inInnerCallInstructions);
-            
-            // Get the new location for the next instructions
-            ins = method.Body.Instructions[instructionsCount]; 
-
+            int instructionsCount = 0;
+                        
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
@@ -448,7 +431,15 @@ namespace Composestar.StarLight.ILWeaver
             visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
 
             // Visit the elements in the block
-            block.Accept(visitor);
+            try
+            {
+                ((Composestar.Repository.LanguageModel.Inlining.Visitor.IVisitable)inputFilter).Accept(visitor);
+            }
+            catch (Exception ex)
+            {
+                _repositoryAccess.CloseDatabase(); 
+                throw new ILWeaverException("", ex);
+            }
 
             // Only add instructions if we have instructions
             if (visitor.Instructions.Count > 0)
@@ -457,9 +448,6 @@ namespace Composestar.StarLight.ILWeaver
                instructionsCount += InsertInstructionList(ref worker, ins, visitor.Instructions);
                ins = method.Body.Instructions[instructionsCount];
             }
-
-            // Add the end of the filter code marker, the IsInnerCall branch will jump to this location
-            worker.InsertAfter(ins, branchToInstruction);          
 
             //
             // What follows are the original instructions
@@ -607,58 +595,7 @@ namespace Composestar.StarLight.ILWeaver
 
             return instructionsToAdd.Count - 1; 
         }
-
-        /// <summary>
-        /// Generates the filter context is inner call check.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        /// <param name="methodSignature">The method signature.</param>
-        /// <param name="worker">The worker.</param>
-        /// <param name="branchToInstruction">The branch to instruction.</param>
-        /// <returns>A list of <see cref="T:Instruction"/>s to add to the current output.</returns>
-        /// <example>
-        /// Generate the following code:
-        /// <code>        
-        /// if (!FilterContext.IsInnerCall(this, methodName)) 
-        /// {
-        ///   <b>filtercode</b>
-        /// }
-        /// </code>
-        /// The <b>filtercode</b> are the inputfilters added to the method.
-        /// </example> 
-        private IList<Instruction> GenerateFilterContextIsInnerCallCheck(MethodDefinition method, string methodSignature, ref CilWorker worker, Instruction branchToInstruction)
-        {
-            IList<Instruction> instructions = new List<Instruction>();
-
-            // Get a methodinfo to the IsInnerCall check
-            MethodInfo checkInnerCallInfo = typeof(Composestar.StarLight.ContextInfo.FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(string) });
-           
-            // Create a methodreference for the IsInnerCall
-            MethodReference checkInnerCall = _targetAssemblyDefinition.MainModule.Import(checkInnerCallInfo);
-
-            // Create instructions to load the arguments for the IsInnerCall on the stack
-            Instruction loadThis;
-            if (method.HasThis)
-                loadThis = worker.Create(OpCodes.Ldarg, method.This);
-            else
-                loadThis = worker.Create(OpCodes.Ldnull);
-            Instruction loadMethodName = worker.Create(OpCodes.Ldstr, methodSignature);
-
-            // Create the call instruction
-            Instruction callIsInnerCall = worker.Create(OpCodes.Call, checkInnerCall);
-
-            // Result is placed on the stack, so use it to branch to the skipFiltersInstruction
-            Instruction  branchInstruction = worker.Create(OpCodes.Brtrue, branchToInstruction);
-
-            // Add to the list
-            instructions.Add(loadThis);
-            instructions.Add(loadMethodName);
-            instructions.Add(callIsInnerCall);
-            instructions.Add(branchInstruction); 
-
-            return instructions;
-        }
-
+     
         /// <summary>
         /// Finds the call in list.
         /// </summary>
