@@ -21,44 +21,45 @@ public class INCRETester
 {
 	private FileRecord record1;
 	private FileRecord record2;
-	
+
 	private BufferedWriter writer;
 	private StringBuffer buffer;
 	private static String filename1 = "Data1/history.dat";
-	private static String filename2 = "Data2/history.dat";
-	
-	
-	public INCRETester(){
+	private static String filename2 = "Data2/history.dat";	
+
+	public INCRETester()
+	{
 		record1 = new FileRecord(filename1);
 		record2 = new FileRecord(filename2);
 		buffer = new StringBuffer("");
 	}
-	
-	public void setOutputFile(String filename){
-		try 
-		{
+
+	public void setOutputFile(String filename)
+	{
+		try {
 			writer = new BufferedWriter(new FileWriter(filename));
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			System.out.println("Output file creation failed!");
 			System.exit(-1);
 		}
 	}
 
-	public void importData(){
+	public void importData()
+	{
 		record1.readData();
 		record2.readData();
 	}
-		
-	public void write(){
+
+	public void write()
+	{
 		buffer.append("<html><head><title>INCRE Report</title></head>");
-        buffer.append("<body bgcolor=#EEEEEE><b>INCRETEST REPORT</b><br><b>Date: </b>").append(new Date().toString()).append("<br>");
+		buffer.append("<body bgcolor=#EEEEEE><b>INCRETEST REPORT</b><br><b>Date: </b>").append(new Date().toString()).append("<br>");
 		buffer.append("<br>Testing number of instances [per type]<hr><table cellspacing=0 cellpadding=2 width=100% border=0><tr>");
 		buffer.append("<td width=50% align=center><b>Data1</b></td><td width=50% align=center><b>Data2</b></td></tr><tr>");
 		createCell("["+record1.instances.size()+"] Instances");
 		createCell("["+record2.instances.size()+"] Instances");
-		
+
 		/* Compare number of type */
 		Iterator types1 = record1.instancesByType.keySet().iterator();
 		while(types1.hasNext()){
@@ -68,7 +69,7 @@ public class INCRETester
 			Object obj = record2.instancesByType.get(type);
 			if(obj!=null)
 				count2 = ((Integer)obj).intValue();
-			
+
 			if(count1!=count2)
 				openTag("tr bgcolor=#AA8888");
 			else
@@ -77,13 +78,13 @@ public class INCRETester
 			createCell("["+count2+"] "+type.substring(type.lastIndexOf('.')+1));
 			closeTag("tr");
 		}
-		
+
 		openTag("tr");
 		createCell("<br><br>Testing objects by ID [keys with hashcodes excluded]<hr><br>",2);
 		closeTag("tr");
-		
+
 		/* Compare objects by ID */
-		Iterator datakeys = record1.ds.map.keys.iterator();
+		Iterator datakeys = record1.ds.map.m_keys.iterator();
 		while(datakeys.hasNext()){
 			String key = (String)datakeys.next();
 			if(key.indexOf('_')==-1){
@@ -101,104 +102,104 @@ public class INCRETester
 				}
 			}
 		}
-		
+
 		openTag("tr");
 		createCell("<br><br>Testing objects by fields<hr><br>",2);
 		closeTag("tr");
-		
+
 		/* Compare all fields */
 		openTag("tr");
 		createCell("TODO",2);
 		closeTag("tr");
-		
+
 		buffer.append("</tr></table></body></html>");
-		try
-		{	// write buffer to file
+		try {	// write buffer to file
 			writer.write(buffer.toString());
 			writer.flush();
 			writer.close();	
 		}
-		catch(Exception e)
-		{
+		catch (Exception e) {
 			// ignore	
 		}
-		
+
 		System.exit(1);
 	}
-	
+
 	public void createCell(String s){
-        buffer.append("<td width=50%>").append(s).append("</td>");
+		buffer.append("<td width=50%>").append(s).append("</td>");
 	}
-	
+
 	public void createCell(String s,int colspan){
-        buffer.append("<td width=50% colspan=").append(colspan).append('>').append(s).append("</td>");
+		buffer.append("<td width=50% colspan=").append(colspan).append('>').append(s).append("</td>");
 	}
-	
+
 	public void openTag(String tag){
-        buffer.append('<').append(tag).append('>');
+		buffer.append('<').append(tag).append('>');
 	}
-	
+
 	public void closeTag(String tag){
-        buffer.append("</").append(tag).append('>');
+		buffer.append("</").append(tag).append('>');
 	}
-	
+
 	public static void main(String args[])
 	{  
-		 INCRETester it = new INCRETester();
-		 if(args.length != 1)
-	     {
-	    	System.out.println("Usage: java INCRETester *.html");
+		INCRETester it = new INCRETester();
+		if(args.length != 1)
+		{
+			System.out.println("Usage: java INCRETester *.html");
 			System.exit(-1);
-		 } 
-		 else {
-		 	it.setOutputFile(args[0]);/* open output file */
-		 	it.importData(); /* read history.dat files from /Data1 and /Data2*/
-		 	it.write(); /* write result and close streams */
-		 }
+		} 
+		else
+		{
+			it.setOutputFile(args[0]);/* open output file */
+			it.importData(); /* read history.dat files from /Data1 and /Data2*/
+			it.write(); /* write result and close streams */
+		}
 	}
-	
+
 	/* inner class FileRecord for analyzing files */
-	class FileRecord {
-		
+	private static class FileRecord
+	{
 		private String filename;
 		public DataStore ds;
 		public Date compilationDate;
-				
+
 		/* Maps containing type information */
 		public HashMap instancesByType = new HashMap();
 		public HashMap instances = new HashMap();
-		
-		public FileRecord(String filename){
+
+		public FileRecord(String filename)
+		{
 			this.filename = filename;
 			ds = new DataStore();
 		}
-		
+
 		public void readData(){
 			try {
 				FileInputStream fis = new FileInputStream(filename);
 				BufferedInputStream bis = new BufferedInputStream(fis);
 				ObjectInputStream ois = new ObjectInputStream(bis);
-				
+
 				compilationDate = (Date)ois.readObject();
 				System.out.println("Reading history created at ["+compilationDate.toString()+"]...");	
 
 				// read project configurations
 				ds.addObject("config",ois.readObject());
-				
+
 				int numberofobjects = ois.readInt();	
 				for(int i=0;i<numberofobjects;i++)
 				{
-					   try 
-					   {
-					   		Object obj = ois.readObject();
-					   		analyze(obj);
-					   		ds.addObject(obj);
-					   }
-					   catch(EOFException ex){
-							System.out.println("[WARNING] End of file exception occurred");
-							continue;
-					   }	
-				   }
+					try 
+					{
+						Object obj = ois.readObject();
+						analyze(obj);
+						ds.addObject(obj);
+					}
+					catch(EOFException ex){
+						System.out.println("[WARNING] End of file exception occurred");
+						continue;
+					}	
+				}
 				ois.close(); /* close objectinputstream */
 			}
 			catch(Exception e){
@@ -206,13 +207,13 @@ public class INCRETester
 				System.exit(-1);
 			}		
 		}
-		
+
 		public void analyze(Object obj){
-			
+
 			// add object to instances
 			instances.put(""+obj.hashCode(),obj);
 			int count;
-			
+
 			// update instancesByType
 			String type = obj.getClass().getName();
 			if(instancesByType.containsKey(type)){

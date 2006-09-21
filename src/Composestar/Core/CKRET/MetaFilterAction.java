@@ -92,7 +92,7 @@ public class MetaFilterAction extends FilterAction {
 								if( !grammer.matcher(spec).matches() )
 								{
 									MethodInfo dnmi = ((MethodInfo)dna.getTarget());
-									String fullMethodName = dnmi.parent().FullName+ '.' + dnmi.name();
+									String fullMethodName = dnmi.parent().m_fullName+ '.' + dnmi.name();
 									throw new ModuleException("Error in annotation semantics of method " + fullMethodName + " for filter " + filter.getQualifiedName(),"SECRET");
 								}
 								StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"",""),",");

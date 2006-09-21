@@ -5,68 +5,70 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Annotation implements Serializable{
+public class Annotation implements Serializable
+{
+	private static final long serialVersionUID = 2225517155784402517L;
 
-	public Type type;
-	public String value;
-	public ProgramElement target;
+	public Type m_type;
+	public String m_value;
+	public ProgramElement m_target;
     
-	public boolean isSuperImposed; // Set to true if this annotation was superimposed by Compose*
-    								// This info can be used by the weaver (?) to write the new annots
-									// back into the assembly.
+	public boolean m_isSuperImposed;	// Set to true if this annotation was superimposed by Compose*
+    									// This info can be used by the weaver (?) to write the new annos
+										// back into the assembly.
 	
     public Annotation()
     {
-    	this.isSuperImposed = false;
+    	m_isSuperImposed = false;
     }
     
     public Annotation(boolean isSuperImposed)
     {
-    	this.isSuperImposed = isSuperImposed;
+    	m_isSuperImposed = isSuperImposed;
     }
     
 	public void register(Type annotationType, ProgramElement target)
     {
-    	this.type = annotationType;
-		this.target = target;
-    	type.addAnnotationInstance(this);
+    	m_type = annotationType;
+		m_target = target;
+    	m_type.addAnnotationInstance(this);
 		target.addAnnotation(this);
     }
 	
 	public void deregister()
     {
-    	type.removeAnnotationInstance(this);
-    	target.removeAnnotation(this);
+    	m_type.removeAnnotationInstance(this);
+    	m_target.removeAnnotation(this);
     }
     
 	public Type getType()
 	{
-		return type;
+		return m_type;
 	}
 	
 	public void setValue(String theValue)
 	{
-		value = theValue;
+		m_value = theValue;
 	}
 	
 	public String getValue()
 	{
-		return value;
+		return m_value;
 	}
 	
 	public boolean isSuperImposed()
 	{
-		return this.isSuperImposed;
+		return this.m_isSuperImposed;
 	}
 	
 	public void setIsSuperImposed(boolean isSI)
 	{
-		this.isSuperImposed = isSI;
+		m_isSuperImposed = isSI;
 	}
 
 	public ProgramElement getTarget()
 	{
-		return target;
+		return m_target;
 	}
 	
 	/**
@@ -74,12 +76,12 @@ public class Annotation implements Serializable{
 	 */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
-		type = (Type)in.readObject();
-		target = (ProgramElement)in.readObject();
-		value = in.readUTF();
-		if(value.length() == 0)
-			value = null;
-		isSuperImposed = in.readBoolean();
+		m_type = (Type)in.readObject();
+		m_target = (ProgramElement)in.readObject();
+		m_value = in.readUTF();
+		if (m_value.length() == 0)
+			m_value = null;
+		m_isSuperImposed = in.readBoolean();
 	}
 	 
 	/**
@@ -87,12 +89,9 @@ public class Annotation implements Serializable{
 	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		out.writeObject(type);
-		out.writeObject(target);
-		if(value!=null)
-			out.writeUTF(value);
-		else
-			out.writeUTF("");
-		out.writeBoolean(isSuperImposed);
+		out.writeObject(m_type);
+		out.writeObject(m_target);
+		out.writeUTF(m_value == null ? "" : m_value);
+		out.writeBoolean(m_isSuperImposed);
 	}
 }

@@ -1,25 +1,25 @@
 package Composestar.Core.LAMA; 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public abstract class Type extends ProgramElement{
 
-	public ArrayList Methods;
-	public ArrayList Fields;
+	public ArrayList m_methods;
+	public ArrayList m_fields;
 		
-	public String Name;
-	public String FullName;
+	public String m_name;
+	public String m_fullName;
 	
-	public boolean IsNestedPrivate;
-    public boolean IsNestedPublic;
+	public boolean m_isNestedPrivate;
+    public boolean m_isNestedPublic;
     
     public Type()
     {
     	UnitRegister.instance().registerLanguageUnit(this);
-    	Methods = new ArrayList();
-    	Fields = new ArrayList();
+    	m_methods = new ArrayList();
+    	m_fields = new ArrayList();
     }
     
     /**
@@ -27,7 +27,7 @@ public abstract class Type extends ProgramElement{
      */
     public void addField(FieldInfo field) 
     {
-        Fields.add(field);
+        m_fields.add(field);
         field.setParent(this);
     }
     
@@ -36,7 +36,7 @@ public abstract class Type extends ProgramElement{
      */
     public void addMethod(MethodInfo method) 
     {
-        Methods.add( method );
+        m_methods.add( method );
         method.setParent(this);     
     }
 	
@@ -45,7 +45,7 @@ public abstract class Type extends ProgramElement{
 	 */
     public List getFields() 
     {
-        return Fields;
+        return m_fields;
     }
     
 	/**
@@ -53,7 +53,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public String fullName() 
 	{
-		return FullName;     
+		return m_fullName;     
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public void setFullName(String name) 
 	{
-		FullName = name;     
+		m_fullName = name;     
     }
 	
 	/**
@@ -71,14 +71,11 @@ public abstract class Type extends ProgramElement{
 	 */
 	public MethodInfo getMethod(String name, String[] types) 
 	{
-        MethodInfo method;
-        for( ListIterator iter = Methods.listIterator(); iter.hasNext(); ) 
+        for (Iterator it = m_methods.iterator(); it.hasNext(); ) 
         {
-        	method = (MethodInfo)iter.next();
-            // if same name && param length
-            if( method.name().equals( name ) && method.hasParameters( types ) ) {
-                return method;
-            }
+        	MethodInfo mi = (MethodInfo)it.next();
+            if (mi.name().equals(name) && mi.hasParameters(types))
+                return mi;
         }
         return null;
 	}    
@@ -88,7 +85,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public List getMethods() 
 	{
-		return Methods;     
+		return m_methods;     
 	}
 	
 	/**
@@ -96,7 +93,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public boolean isNestedPrivate() 
 	{
-		return IsNestedPrivate;     
+		return m_isNestedPrivate;     
     }
 	
 	/**
@@ -104,7 +101,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public boolean isNestedPublic() 
 	{
-		return IsNestedPublic;     
+		return m_isNestedPublic;     
     }
 	
 	/**
@@ -112,7 +109,7 @@ public abstract class Type extends ProgramElement{
 	 */
 	public String name() 
 	{
-		return Name;     
+		return m_name;     
     }
 	
 	/**
@@ -120,7 +117,7 @@ public abstract class Type extends ProgramElement{
      * @roseuid 4029F83F0366
      */
     public void setName(String name) {
-        Name = name;     
+        m_name = name;     
     }
 	
 	/** Stuff for annotations **/

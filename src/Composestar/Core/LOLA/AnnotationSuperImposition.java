@@ -258,7 +258,7 @@ public class AnnotationSuperImposition
 				if(lu instanceof Type)
 				{
 					Type dotnettype = (Type)lu;
-					names += dotnettype.FullName+ ' ';
+					names += dotnettype.m_fullName+ ' ';
 				}
 			}
 			Debug.out(Debug.MODE_INFORMATION, "LOLA", "Selector " +((Selector)selectors.elementAt(i)).name+" matches the following program elements: "+names);
