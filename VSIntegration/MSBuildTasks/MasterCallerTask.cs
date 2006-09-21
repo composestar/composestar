@@ -160,40 +160,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
             cc.IntermediateOutputPath = IntermediateOutputPath;     
 
             // Prepare to run java
-            string classPath = "";
-            string mainClass = "";
-            string jvmOptions = "";
-            string javaLocation = "";
-            string installFolder = "";
-
-            // Retrieve the settings from the registry
-            RegistryPermission keyPermissions = new RegistryPermission(
-               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\Software\Composestar\StarLight");
-
-            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
-
-            if (regKey != null)
+            RegistrySettings rs = new RegistrySettings();
+            if (!rs.ReadSettings())
             {
-                classPath = (string)regKey.GetValue("JavaClassPath", "");
-                mainClass = (string)regKey.GetValue("JavaMainClass", "Composestar.DotNET.MASTER.StarLightMaster");
-                jvmOptions = (string)regKey.GetValue("JavaOptions", "");
-                javaLocation = (string)regKey.GetValue("JavaFolder", "");
-                installFolder = (string)regKey.GetValue("StarLightInstallFolder", "");
-            }
-            else
-            {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues");                
+                Log.LogErrorFromResources("CouldNotReadRegistryValues"); 
+                _repositoryAccess.CloseDatabase(); 
                 return false;
             }
 
-            // Check for empty values
-            if (string.IsNullOrEmpty(classPath) | string.IsNullOrEmpty(mainClass) | string.IsNullOrEmpty(installFolder) )
-            {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues");                
-                return false;
-            }
-
-            cc.InstallFolder = installFolder;
+            cc.InstallFolder = rs.InstallFolder;
 
             // Save common config
             _repositoryAccess.SetCommonConfiguration(cc);
@@ -205,14 +180,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
             System.Diagnostics.Process p = new System.Diagnostics.Process();
 
             // Determine filename
-            if (!string.IsNullOrEmpty(javaLocation) )
+            if (!string.IsNullOrEmpty(rs.JavaLocation) )
             {
-                p.StartInfo.FileName = Path.Combine(javaLocation, JavaExecutable);
+                p.StartInfo.FileName = Path.Combine(rs.JavaLocation, JavaExecutable);
             }
             else
                 p.StartInfo.FileName = JavaExecutable; // In path
             
-            p.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", jvmOptions, classPath, mainClass, RepositoryFilename);
+            p.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
             Log.LogMessage("Java will be called with the arguments: {0}", p.StartInfo.Arguments ) ;
             
             p.StartInfo.CreateNoWindow = true;
