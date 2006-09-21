@@ -27,19 +27,19 @@ namespace Composestar.StarLight.ContextInfo
         /// Determines whether [is inner call] [the specified current instance].
         /// </summary>
         /// <param name="currentInstance">The current instance.</param>
-        /// <param name="methodSignature">The method signature.</param>
+        /// <param name="methodId">The method id.</param>
         /// <returns>
         /// 	<c>true</c> if [is inner call] [the specified current instance]; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static bool IsInnerCall(object currentInstance, string methodSignature)
+        public static bool IsInnerCall(object currentInstance, long methodId)
         {
 
             InnerFilterContext ifc = GetInnerFilterContext();
             if (ifc == null)
                 return false;
             else
-                return (ifc.Instance.Equals(currentInstance) & ifc.MethodSignature.Equals(methodSignature));
+                return (ifc.Instance.Equals(currentInstance) & ifc.MethodId == methodId);
 
         }
 
@@ -47,11 +47,15 @@ namespace Composestar.StarLight.ContextInfo
         /// Sets the inner call data.
         /// </summary>
         /// <param name="currentInstance">The current instance.</param>
-        /// <param name="methodSignature">The method signature.</param>
-        public static void SetInnerCall(object currentInstance, string methodSignature)
+        /// <param name="methodId">The method id.</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void SetInnerCall(object currentInstance, long methodId)
         {
-            InnerFilterContext ifc =new InnerFilterContext(currentInstance, methodSignature);
-            _innercalls.Add(GetThreadId(), ifc); 
+            InnerFilterContext ifc = new InnerFilterContext(currentInstance, methodId);
+            if (_innercalls.ContainsKey(GetThreadId()))
+                _innercalls[GetThreadId()] = ifc;
+            else
+                _innercalls.Add(GetThreadId(), ifc);
         }
 
         /// <summary>
@@ -97,23 +101,24 @@ namespace Composestar.StarLight.ContextInfo
             /// Initializes a new instance of the <see cref="T:InnerFilterContext"/> class.
             /// </summary>
             /// <param name="instance">The instance.</param>
-            /// <param name="methodSignature">The method signature.</param>
-            public InnerFilterContext(object instance, string methodSignature)
+            /// <param name="methodId">The method id.</param>
+            public InnerFilterContext(object instance, long methodId)
             {
                 _instance = instance;
-                _methodSignature = methodSignature;
+                _methodId = methodId;
             }
 
-            private string _methodSignature;
+            private long _methodId;
+
 
             /// <summary>
-            /// Gets or sets the name of the method.
+            /// Gets or sets the method id.
             /// </summary>
-            /// <value>The name of the method.</value>
-            public string MethodSignature
+            /// <value>The method id.</value>
+            public long MethodId
             {
-                get { return _methodSignature; }
-                set { _methodSignature = value; }
+                get { return _methodId; }
+                set { _methodId = value; }
             }
 
             private object _instance;

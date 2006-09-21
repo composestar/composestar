@@ -11,7 +11,7 @@ using Mono.Cecil.Cil;
 namespace Composestar.StarLight.ILWeaver
 {
     /// <summary>
-    /// A visitor used to visit all the conditionexpressions and build a IL representation of the expressions
+    /// A visitor used to visit all the condition expressions and build a IL representation of the expressions.
     /// </summary>
     public class CecilConditionsVisitor : IVisitor
     {

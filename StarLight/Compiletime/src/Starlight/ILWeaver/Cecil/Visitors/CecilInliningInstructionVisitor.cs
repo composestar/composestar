@@ -231,7 +231,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitInlineInstruction(InlineInstruction inlineInstruction)
         {
-            if (inlineInstruction.Label != null & inlineInstruction.Label.Id != -1 )
+            if (inlineInstruction.Label != null && inlineInstruction.Label.Id != -1 )
                 Instructions.Add(GetJumpLabel(inlineInstruction.Label.Id)); 
         }
 
@@ -337,6 +337,10 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Call the target
             //
+
+            //MethodReference methodToCall;
+            //methodToCall = CreateMethodReference();
+
             // Load the JoinPointObject first
             //Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
@@ -379,18 +383,108 @@ namespace Composestar.StarLight.ILWeaver
             ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);  
 
             AddInstructionList(conditionsVisitor.Instructions);
- 
-            // TODO condition
-            Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));  // Load a constant value of 1 for now
- 
+        
             // Add branch code
             Instructions.Add(Worker.Create(OpCodes.Brtrue, GetJumpLabel(branch.TrueBlock.Label.Id)));
             Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.FalseBlock.Label.Id)));
         }
 
-        public void VisitContextInstruction(ContextInstruction contextInstruction)
-        {
+         /// <summary>
+        /// Generates the filter context is inner call check.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="methodSignature">The method signature.</param>
+        /// <param name="worker">The worker.</param>
+        /// <param name="branchToInstruction">The branch to instruction.</param>
+        /// <returns>A list of <see cref="T:Instruction"/>s to add to the current output.</returns>
+        /// <example>
+        /// Generate the following code:
+        /// <code>        
+        /// if (!FilterContext.IsInnerCall(this, methodName)) 
+        /// {
+        ///   <b>filtercode</b>
+        /// }
+        /// </code>
+        /// The <b>filtercode</b> are the inputfilters added to the method.
+        /// </example> 
+        public void VisitCheckInnerCall(ContextInstruction contextInstruction)
+        { 
+            // Load the this parameter
+            if (!Method.HasThis)
+                Instructions.Add(Worker.Create(OpCodes.Ldnull));
+            else
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+            // Load the methodId
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I8, contextInstruction.MethodId));
+ 
+            // Call the IsInnerCall
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
             
+            // Create the call instruction
+            Instruction branchToInstruction = GetJumpLabel(9999);
+
+            // Result is placed on the stack, so use it to branch to the skipFiltersInstruction
+            Instructions.Add(Worker.Create(OpCodes.Brtrue, branchToInstruction));
+        }
+    
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contextInstruction"></param>
+        /// <example>
+        /// Generate the following code:
+        /// <code>        
+        /// FilterContext.SetInnerCall(this, methodId);
+        /// this.calledMethod();
+        /// </code>
+        /// The <b>filtercode</b> are the inputfilters added to the method.
+        /// </example> 
+        public void VisitSetInnerCall(ContextInstruction contextInstruction)
+        {
+            // Load the this parameter
+            if (!Method.HasThis)
+                Instructions.Add(Worker.Create(OpCodes.Ldnull));
+            else
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+            // Load the methodId
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I8, contextInstruction.MethodId));
+
+            // Call the SetInnerCall
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
+       
+            //
+            // Call the same method
+            //
+
+            // Get the methodReference
+            MethodReference methodReference = (MethodReference)Method;
+            
+            // Place the arguments on the stack first
+            if (methodReference.HasThis)                
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+            int numberOfArguments = Method.Parameters.Count;  
+            for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
+            {
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence)); 
+            }
+
+            // Call the same method
+            Instructions.Add(Worker.Create(OpCodes.Call, methodReference));             
+           
+        }
+
+        public void VisitResetInnerCall(ContextInstruction contextInstruction)
+        {
+            // Add the jump label first
+            Instruction branchToInstruction = GetJumpLabel(9999);
+
+            Instructions.Add(branchToInstruction);
+ 
+            // Call the reset inner call function
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] {  }))) ); 
         }
 
         public void VisitContinueAction(FilterAction filterAction)
