@@ -70,6 +70,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details..
+        /// </summary>
+        internal static string CecilVisitorRaisedException {
+            get {
+                return ResourceManager.GetString("CecilVisitorRaisedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The constructor .ctor() for the type {0} could not be found..
         /// </summary>
         internal static string ConstructorNotFound {

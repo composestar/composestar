@@ -106,7 +106,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Master run failure reported by process. Exit code is {0}..
+        ///   Looks up a localized string similar to Master run failure reported by process. Exit code is {0}. Messages above this line might give an indication of the problem..
         /// </summary>
         internal static string MasterRunFailed {
             get {

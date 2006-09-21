@@ -133,6 +133,6 @@
     <value>The Java executable '{0}' could not be found. Either add the location of this file to the path or place the folder in the JavaFolder key in the HKEY_LOCAL_MACHINE\SOFTWARE\Composestar\StarLight hive in the registry.</value>
   </data>
   <data name="MasterRunFailed" xml:space="preserve">
-    <value>Master run failure reported by process. Exit code is {0}.</value>
+    <value>Master run failure reported by process. Exit code is {0}. Messages above this line might give an indication of the problem.</value>
   </data>
 </root>
