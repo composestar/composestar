@@ -74,8 +74,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing assembly reference block...");
 		out.println("<assemblies>");
 
-		writeAssemblyDefinitionRecord("ComposeStarRuntimeInterpreter", "1.0.0.0");
-		writeAssemblyDefinitionRecord("ComposeStarDotNETRuntimeInterpreter", "1.0.0.0");
+		writeAssemblyDefinitionRecord("ComposeStarRuntimeInterpreter", "0.0.0.0");
+		writeAssemblyDefinitionRecord("ComposeStarDotNETRuntimeInterpreter", "0.0.0.0");
 
 		Iterator prjIt = config.getProjects().getProjects().iterator();
 		while (prjIt.hasNext()) 
@@ -119,8 +119,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				File f = new File(dep);
 
 				String filename = f.getName();
-				String dllname  = FileUtils.getFilenamePart(filename);
-				
+				String dllname  = FileUtils.removeExtension(FileUtils.getFilenamePart(filename));			
 				writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
 			}
 		}
@@ -140,8 +139,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				{
 					if (file.exists() && file.isFile())
 					{
-						String filename = file.getName();
-						String dllname  = filename.substring( 0, filename.lastIndexOf( "." ) );
+						String dllname  = FileUtils.removeExtension(file.getName()); 
 						Debug.out( Debug.MODE_DEBUG, "CONE_IS", "Adding DLL '" +dllname+ "'." );
 						writeAssemblyDefinitionRecord( dllname, "0.0.0.0", entryAssembly);
 					}
