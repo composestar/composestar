@@ -40,18 +40,8 @@ namespace Composestar.StarLight.VisualStudio.Project
 	internal enum GeneralPropertyPageTag
 	{
 		RepositoryFilename,
-        DebugLevel,
 	}
 
-    public enum DebugLevel
-    {
-        NotSet = -1,
-		Error = 0,
-		Crucial = 1,
-		Warning = 2,
-		Information = 3,
-		Debug = 4
-    }
 
 	/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage"]/*' />
 	[ComVisible(true), Guid("C30AC387-23B0-4488-AF5E-C31A9DAC58A6")]
@@ -59,7 +49,6 @@ namespace Composestar.StarLight.VisualStudio.Project
 	{
 		#region fields
 		private string repositoryFilename = @"obj\starlight.yap";
-        private DebugLevel debugLevel = DebugLevel.Information;
 		#endregion
 
 		/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.GeneralPropertyPage"]/*' />
@@ -86,17 +75,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 
 			this.repositoryFilename  = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.RepositoryFilename.ToString(), true);
           
-            string dlevel = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.DebugLevel.ToString(), false);
-
-			if (dlevel != null && dlevel.Length > 0)
-			{
-				try
-				{
-					this.debugLevel = (DebugLevel)Enum.Parse(typeof(DebugLevel), dlevel);
-				}
-				catch
-				{ } //Should only fail if project file is corrupt
-			}
+      
 
 		}
 
@@ -110,8 +89,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 			}
 
 			this.ProjectMgr.SetProjectProperty(GeneralPropertyPageTag.RepositoryFilename.ToString(), this.repositoryFilename);
-			this.ProjectMgr.SetProjectProperty(GeneralPropertyPageTag.DebugLevel.ToString(), this.debugLevel.ToString());
-            
+	        
 			this.IsDirty = false;
 
 			return VSConstants.S_OK;
@@ -128,17 +106,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 			get { return this.repositoryFilename ; }
 			set { this.repositoryFilename = value; this.IsDirty = true; }
 		}
-
-		/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.OutputType"]/*' />
-		[SRCategoryAttribute(SR.Application)]
-		[LocDisplayName(SR.DebugLevel)]
-		[SRDescriptionAttribute(SR.DebugLevelDescription)]
-		public DebugLevel DebugLevel
-		{
-			get { return this.debugLevel; }
-			set { this.debugLevel = value; this.IsDirty = true; }
-		}
-        
+	        
 		/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.ProjectFile"]/*' />
 		[SRCategoryAttribute(SR.Project)]
 		[LocDisplayName(SR.ProjectFile)]

@@ -69,6 +69,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal const string DebugLevel = "DebugLevel";
         internal const string DebugLevelDescription = "DebugLevelDescription";
         internal const string GeneralCaption = "GeneralCaption";
+        internal const string BuildCaption = "BuildCaption";
         internal const string Project = "Project";
         internal const string ProjectFile = "ProjectFile";
         internal const string ProjectFileDescription = "ProjectFileDescription";

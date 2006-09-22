@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Release\</OutputPath>
-    <DebugLevel>1</DebugLevel>
+    <DebugLevel>4</DebugLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

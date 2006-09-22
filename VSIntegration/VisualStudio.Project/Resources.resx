@@ -123,6 +123,9 @@
   <data name="GeneralCaption" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="BuildCaption" xml:space="preserve">
+    <value>Build</value>
+  </data>
   <data name="RepositoryFilename" xml:space="preserve">
     <value>Repository filename</value>
   </data>
