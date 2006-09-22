@@ -275,7 +275,7 @@ public class Sign implements CTCommonModule {
                 // a meta
                 // filter and so the default methods must be added for the
                 // meta-dispatch
-                if (methods.length > 0)
+                if (methods.length != 0)
                     dispatch = true;
 
                 for (int j = 0; j < methods.length; j++) {
