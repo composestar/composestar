@@ -52,8 +52,8 @@ public class DotNETMaster extends Master  {
 	/**
 	 * Default ctor.
 	 */
-	public DotNETMaster(String configurationFile) throws ModuleException{
-
+	public DotNETMaster(String configurationFile) throws ModuleException
+	{
 		configfile = configurationFile;
 		Debug.setMode(3);
 		resources = new CommonResources();
@@ -214,7 +214,7 @@ public class DotNETMaster extends Master  {
 		}
 
 	}
-
+	
 	/**
 	 * Compose* main function.
 	 * Creates the Master object. Adds the desired modules and then calls run on each

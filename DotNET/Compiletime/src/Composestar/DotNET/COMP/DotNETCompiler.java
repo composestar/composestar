@@ -136,7 +136,7 @@ public class DotNETCompiler implements LangCompiler
 		
 		// execute command
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec("call " + command);
+		int result = cmdExec.exec(command);
 		compilerOutput = cmdExec.outputNormal();
 
 		processOutput(result, compilerOutput);
@@ -166,7 +166,7 @@ public class DotNETCompiler implements LangCompiler
 		String targetPath = getDummiesFilePath(project);
 		project.setCompiledDummies(targetPath);
 		
-		String command = cs.getProperty("executable")+" "+action.getArgument();
+		String command = cs.getProperty("executable") + " " + action.getArgument();
 		TokenReplacer tr = new TokenReplacer();
 		tr.addReplacement("OUT", FileUtils.quote(targetPath));
 		tr.addReplacement("LIBS", getLibrariesString(project, cs));
@@ -178,7 +178,7 @@ public class DotNETCompiler implements LangCompiler
 
 		// execute command
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec("call " + command);
+		int result = cmdExec.exec(command);
 		compilerOutput = cmdExec.outputNormal();
 
 		processOutput(result, compilerOutput); 
@@ -324,6 +324,8 @@ public class DotNETCompiler implements LangCompiler
 	/**
 	 * returns a list containing modified signatures (signatures with ADDED/REMOVED methodwrappers)
 	 * of concerns extracted from external linked source files
+	 * 
+	 * Used by INCRE
 	 */
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{ 
