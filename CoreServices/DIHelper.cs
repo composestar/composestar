@@ -61,10 +61,7 @@ namespace Composestar.StarLight.CoreServices
 
             public override bool ReadOnly
             {
-                get
-                {
-                    return false;
-                }
+                get{return false;}
             }
 
             private Type GetTypeFromKey(object key)
