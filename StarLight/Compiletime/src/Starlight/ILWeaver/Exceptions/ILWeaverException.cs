@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Runtime.Serialization;
+ 
 namespace Composestar.StarLight.ILWeaver
 {
 
     /// <summary>
     /// Exception throw by the weaver.
     /// </summary>
+    [Serializable()]
     public class ILWeaverException : Exception
     {
 
@@ -31,6 +33,15 @@ namespace Composestar.StarLight.ILWeaver
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// </summary>
+        /// <param name="serInfo">The ser info.</param>
+        /// <param name="streamContext">The stream context.</param>
+        protected ILWeaverException(SerializationInfo serInfo, StreamingContext streamContext) : base(serInfo, streamContext)
+        {
+
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
