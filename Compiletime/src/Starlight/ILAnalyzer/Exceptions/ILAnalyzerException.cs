@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Runtime.Serialization;
+  
 namespace Composestar.StarLight.ILAnalyzer
 {
 
     /// <summary>
     /// Exception throw by the analyzer.
     /// </summary>
+    [Serializable()]
     public class ILAnalyzerException : Exception
     {
 
@@ -31,6 +33,15 @@ namespace Composestar.StarLight.ILAnalyzer
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:ILAnalyzerException"/> class.
+        /// </summary>
+        /// <param name="serInfo">The ser info.</param>
+        /// <param name="streamContext">The stream context.</param>
+        protected ILAnalyzerException(SerializationInfo serInfo, StreamingContext streamContext) : base(serInfo, streamContext)
+        {
+
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILAnalyzerException"/> class.

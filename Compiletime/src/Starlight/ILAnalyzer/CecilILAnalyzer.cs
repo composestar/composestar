@@ -257,7 +257,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private void CheckForInit()
         {
             if (!_isInitialized)
-                throw new ApplicationException(Properties.Resources.NotYetInitialized);
+                throw new ILAnalyzerException(Properties.Resources.NotYetInitialized);
             
         }
 
