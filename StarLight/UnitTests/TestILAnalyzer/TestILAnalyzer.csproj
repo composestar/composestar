@@ -74,6 +74,10 @@
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

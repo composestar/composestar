@@ -11,6 +11,8 @@
     <AssemblyName>Composestar.StarLight.VisualStudio.Project</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <GacOutput>true</GacOutput>
+    <GacDeploy>true</GacDeploy>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

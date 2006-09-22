@@ -140,10 +140,11 @@ namespace TestILWeaver
             #endregion
 
             // Run the weaver
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.Initialize(FilenameSource, config);
-            weaver.DoWeave(); // Place debugger here or perform Asserts
-            weaver.Close(); 
+            // OC: CecilWeaver should not be created directly!
+            //CecilILWeaver weaver = new CecilILWeaver();
+            //weaver.Initialize(FilenameSource, config);
+            //weaver.DoWeave(); // Place debugger here or perform Asserts
+            //weaver.Close(); 
         }
 
 
@@ -205,10 +206,11 @@ namespace TestILWeaver
             repository.CloseDatabase(); 
 
             // Run the weaver
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.Initialize(FilenameSource, config);
-            weaver.DoWeave(); // Place debugger here or perform Asserts
-            weaver.Close(); 
+            // OC: CecilWeaver should not be created directly!
+            //CecilILWeaver weaver = new CecilILWeaver();
+            //weaver.Initialize(FilenameSource, config);
+            //weaver.DoWeave(); // Place debugger here or perform Asserts
+            //weaver.Close(); 
         }
 
         

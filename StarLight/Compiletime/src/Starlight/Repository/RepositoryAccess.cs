@@ -5,6 +5,7 @@ using System.Text;
 using Composestar.Repository.Configuration;
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.Inlining;
+using Composestar.StarLight.CoreServices;
 
 namespace Composestar.Repository
 {
@@ -13,7 +14,7 @@ namespace Composestar.Repository
     /// Strong typed retrieval of the elements in the repository and 
     /// the ability to add objects to the underlying datastore.
     /// </summary>
-    public class RepositoryAccess
+    public class RepositoryAccess : ILanguageModelAccessor
     {
 
         /// <summary>

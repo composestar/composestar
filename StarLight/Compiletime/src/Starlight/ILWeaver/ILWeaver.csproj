@@ -18,6 +18,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -57,10 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\CecilILWeaver.cs" />
+    <Compile Include="Cecil\CecilWeaverConfiguration.cs" />
     <Compile Include="Cecil\Visitors\CecilConditionsVisitor.cs" />
     <Compile Include="Cecil\Visitors\CecilInliningInstructionVisitor.cs" />
     <Compile Include="Exceptions\ILWeaverException.cs" />
-    <Compile Include="IILWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
@@ -76,6 +77,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
       <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
       <Name>LanguageModel</Name>

@@ -4,9 +4,14 @@ using System.Collections.Generic;
 using Composestar.StarLight.ILWeaver;
 using System.Collections.Specialized;
 using System.IO;
+using System.ComponentModel.Design;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Composestar.StarLight.CoreServices;
+using TestILWeaver.Mocks;
+using Microsoft.Practices.ObjectBuilder;
+using TestILWeaver.DIConfiguration;
 #else
 using NUnit.Framework;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
@@ -23,70 +28,53 @@ namespace TestILWeaver
     [TestClass]
     public class CecilILWeaverInitializationFixture
     {
-        NameValueCollection weaverConfiguration;
-        NameValueCollection _invalidWeaverConfiguration;
+        ServiceContainer svcContainer = new ServiceContainer();
+
         [TestInitialize]
         public void TestInitialize()
         {
-            weaverConfiguration = new NameValueCollection();
-
-
-            //Cofniguration with 'ShouldSignAssembly' = 'true', without a SNKPath is invalid;
-            _invalidWeaverConfiguration = new NameValueCollection();
-            _invalidWeaverConfiguration.Add("ShouldSignAssembly", "true");
+            svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverTestBuilderConfigurator());
+            svcContainer.AddService(typeof(CecilWeaverConfiguration), CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe")));
+            svcContainer.AddService(typeof(ILanguageModelAccessor), new LanguageModelAccessorMock());
         }
 
+
+        [TestMethod]
+        [DeploymentItem("TestTarget.exe")]
+        public void CanCreateWeaverThroughDIHelper()
+        {
+            CecilILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(svcContainer);
+            Assert.IsNotNull(weaver);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void WeaveThrowsInvalidOperationExceptionIfFileDoesntExists()
+        {
+            CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration("c:\\this_file_doesnt_exist");
+            ILanguageModelAccessor langModelAccessor = new LanguageModelAccessorMock();
+
+            new CecilILWeaver(configuration, langModelAccessor).DoWeave();
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void InitializeThrowsArgumentExceptionIfFileIsNull()
-        {
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.Initialize(null, weaverConfiguration);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void InitializeThrowsArgumentExceptionIfFileDoesntExists()
-        {
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.Initialize(@"c:\this_file_doesnt_exist", weaverConfiguration);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         [DeploymentItem("TestTarget.exe")]
-        public void InitializeThrowsArgumentExceptionIfRepositoryFilenameIsNotSupplied()
+        public void CreatingConfigurationThrowsArgumentExceptionIfRepositoryFilenameIsNotSupplied()
         {
-            CecilILWeaver analyzer = new CecilILWeaver();
-            analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);
+            new CecilWeaverConfiguration(string.Empty, false, string.Empty, string.Empty, false);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void DoWeaveThrowsExceptionIfInitializeWasNotCalled()
-        {
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.DoWeave();
-        }
-
+       
         [TestMethod]
         [ExpectedException(typeof(BadImageFormatException))]
         [DeploymentItem("InvalidImage.exe")]
         public void InitializeThrowsBadImageExceptionOnInvalidInputImage()
         {
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.Initialize(CreateFullPath("InvalidImage.exe"), weaverConfiguration);
-        }
+            CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("InvalidImage.exe"));
+            ILanguageModelAccessor langModelAccessor = new LanguageModelAccessorMock();
 
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        [DeploymentItem("TestTarget.exe")]
-        public void InitializeThrowsArgumentExceptionForInvalidConfiguration()
-        {
-            CecilILWeaver weaver = new CecilILWeaver();
-            weaver.Initialize(CreateFullPath("TestTarget.exe"), _invalidWeaverConfiguration);
+            new CecilILWeaver(configuration, langModelAccessor).DoWeave();
         }
 
         /// <summary>
