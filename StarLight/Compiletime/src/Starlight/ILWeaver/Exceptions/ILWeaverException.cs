@@ -10,22 +10,11 @@ namespace Composestar.StarLight.ILWeaver
     /// Exception throw by the weaver.
     /// </summary>
     [Serializable()]
-    public class ILWeaverException : Exception
+    public class ILWeaverException : Exception, ISerializable
     {
+        private readonly string _filename;
 
-        private string _filename;
-
-        /// <summary>
-        /// Gets or sets the filename.
-        /// </summary>
-        /// <value>The filename.</value>
-        public string Filename
-        {
-            get { return _filename; }
-            set { _filename = value; }
-        }
-
-
+        #region ctor
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
         /// </summary>
@@ -38,9 +27,10 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="serInfo">The ser info.</param>
         /// <param name="streamContext">The stream context.</param>
-        protected ILWeaverException(SerializationInfo serInfo, StreamingContext streamContext) : base(serInfo, streamContext)
+        protected ILWeaverException(SerializationInfo serializationInformation, StreamingContext streamContext) 
+            : base(serializationInformation, streamContext)
         {
-
+            _filename = serializationInformation.GetString("ILWeaverException._filename");
         }
 
         /// <summary>
@@ -85,5 +75,24 @@ namespace Composestar.StarLight.ILWeaver
             _filename = filename;
         }
 
+        /// <summary>
+        /// Gets or sets the filename.
+        /// </summary>
+        /// <value>The filename.</value>
+        public string Filename
+        {
+            get { return _filename; }
+        }
+        #endregion
+
+        #region ISerializable Members
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("ILWeaverException._filename", _filename);
+            base.GetObjectData(info, context);
+        }
+
+        #endregion
     }
 }

@@ -32,7 +32,9 @@ namespace TestILWeaver.Mocks
 
         public IList<Internal> GetInternalsByTypeElement(TypeElement typeElement)
         {
-            return new List<Internal>();
+            List<Internal> internals = new List<Internal>();
+
+            return internals;
         }
 
         public IList<External> GetExternalsByTypeElement(TypeElement typeElement)
