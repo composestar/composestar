@@ -280,6 +280,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             // Because our property page pass itself as the object to display in its grid, we need to make it have the same CATID
             // as the browse object of the project node so that filtering is possible.
             this.AddCATIDMapping(typeof(GeneralPropertyPage), typeof(ComposeStarProjectNodeProperties).GUID);
+            this.AddCATIDMapping(typeof(ComposeStarBuildPropertyPage), typeof(ComposeStarProjectNodeProperties).GUID);
 
             // We could also provide CATIDs for references and the references container node, if we wanted to.
         }
