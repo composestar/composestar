@@ -34,18 +34,6 @@
 		<ant target="build" dir="Plugin" />
 	</target>
 	
-	<target name="findbugs" depends="init">
-		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${build.dotnet}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
-			<class location="${build.dotnet}${file.separator}Compiletime${file.separator}${out.build}" />
-			<sourcePath path="${build.dotnet}${file.separator}Compiletime${file.separator}src" />
-			<auxClasspath refid="lib.core" />
-			<auxClasspath>
-				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
-			</auxClasspath>
-		</findbugs>
-		<xslt in="${build.dotnet}${file.separator}findbugs-result.xml" out="${build.dotnet}${file.separator}findbugs-result.html" style="${findbugs.style}" />
-	</target>
-	
 	<target name="test" depends="init,systemtest" />
 	
 	<target name="systemtest" depends="init">
@@ -69,6 +57,30 @@
 		<!--<ant target="uninstall" dir="Compiletime" />-->
 		<ant target="uninstall" dir="Runtime" />
 		<!--<ant target="uninstall" dir="Plugin" />-->
+	</target>
+	
+	
+	<target name="findbugs" depends="init">
+		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${build.dotnet}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
+			<class location="${build.dotnet}${file.separator}Compiletime${file.separator}${out.build}" />
+			<sourcePath path="${build.dotnet}${file.separator}Compiletime${file.separator}src" />
+			<auxClasspath refid="lib.core" />
+			<auxClasspath>
+				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
+			</auxClasspath>
+		</findbugs>
+		<xslt in="${build.dotnet}${file.separator}findbugs-result.xml" out="${build.dotnet}${file.separator}findbugs-result.html" style="${findbugs.style}" />
+	</target>
+	
+	<target name="checkstyle" depends="init">
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false">
+			<formatter type="xml" toFile="${build.dotnet}${file.separator}checkstyle-result.xml" />
+			<property key="checkstyle.basedir" value="${build.dotnet}${file.separator}Compiletime${file.separator}src" />
+			<FileSet dir="${build.dotnet}${file.separator}Compiletime${file.separator}src">
+				<include name="**/*.java" />
+			</FileSet>
+		</checkstyle>
+		<xslt in="${build.dotnet}${file.separator}checkstyle-result.xml" out="${build.dotnet}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
 
 </project>
