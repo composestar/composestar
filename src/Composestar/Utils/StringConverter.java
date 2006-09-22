@@ -76,19 +76,16 @@ public class StringConverter extends Object implements Cloneable, Serializable {
      * @roseuid 404DCD030122
      */
     public static String intListToString(int[] values, String separator) {
-    	String val = "";         
+		StringBuffer buffer = new StringBuffer(values.length * 2); 
     	for(int i=0; i<values.length; i++)
     	{
-    		if(i!=values.length-1)
-    		{
-    			val+=values[i]+separator;
-    		}
-    		else
-    		{
-    			val+=values[i];
-    		}
+			if(i != 0)
+			{
+				buffer.append(separator);
+			}
+   			buffer.append(values[i]);
     	}
-    	return(val);     
+    	return buffer.toString();     
     }
     
     /**
@@ -136,19 +133,16 @@ public class StringConverter extends Object implements Cloneable, Serializable {
      * @roseuid 404DCD03020C
      */
     public static String stringListToString(String[] values, String separator) {
-    	String val = "";
-    	for(int i=0; i<values.length; i++)
-    	{
-    			if(i!=values.length-1)
-    			{
-    				val+=values[i]+separator;
-    			}
-    			else
-    			{
-    				val+=values[i];
-    			}
-    	}
-    	return(val);     
+		StringBuffer buffer = new StringBuffer(values.length * 2); 
+		for(int i=0; i<values.length; i++)
+		{
+			if(i != 0)
+			{
+				buffer.append(separator);
+			}
+			buffer.append(values[i]);
+		}
+		return buffer.toString();  
     }
     
     /**
