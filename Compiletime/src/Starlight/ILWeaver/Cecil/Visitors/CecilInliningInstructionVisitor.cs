@@ -35,6 +35,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public enum FilterTypes
         {
+            None = 0,
             InputFilter = 1,
 	        OutputFilter = 2,
         }
@@ -171,9 +172,9 @@ namespace Composestar.StarLight.ILWeaver
 
         // Because we need local vars to store the object and type of arguments in, we have to add these local vars.
         // But only once, so these functions make sure we only have one of this variables
-        private VariableDefinition _objectLocal = null;
-        private VariableDefinition _typeLocal = null;
-        private VariableDefinition _jpcLocal = null;
+        private VariableDefinition _objectLocal;
+        private VariableDefinition _typeLocal;
+        private VariableDefinition _jpcLocal;
 
         /// <summary>
         /// Creates the object ordinal.

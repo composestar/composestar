@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Globalization; 
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -27,7 +28,7 @@ namespace Composestar.StarLight.ILWeaver
         private WeaverConfiguration _configuration;
         private RepositoryAccess _repositoryAccess;
 
-        private bool _isInitialized = false;
+        private bool _isInitialized;
         private TimeSpan _lastDuration = TimeSpan.MinValue;
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("inputImage", Properties.Resources.FileNameNullOrEmpty);
 
             if (!File.Exists(inputImage))
-                throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, inputImage), "inputImage");
+                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNotFound, inputImage), "inputImage");
 
             try
             {
@@ -50,7 +51,7 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (EndOfStreamException)
             {
-                throw new BadImageFormatException(String.Format(Properties.Resources.ImageIsBad, inputImage));
+                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, inputImage));
             }
             #endregion
 
@@ -86,7 +87,7 @@ namespace Composestar.StarLight.ILWeaver
 
                         if (File.Exists(outputImageSNK))
                         {
-                            throw new ArgumentException(string.Format(Properties.Resources.SNKFileNotFound, outputImageSNK), "config");
+                            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.SNKFileNotFound, outputImageSNK), "config");
                         }
                         _configuration = new WeaverConfiguration(outputImagePath, shouldSignAssemblyB, outputImageSNK);
                     }
@@ -136,7 +137,7 @@ namespace Composestar.StarLight.ILWeaver
         private void CheckForInit()
         {
             if (!_isInitialized)
-                throw new ApplicationException(Properties.Resources.NotYetInitialized);
+                throw new ILWeaverException(Properties.Resources.NotYetInitialized);
 
         }
 
@@ -270,10 +271,10 @@ namespace Composestar.StarLight.ILWeaver
             foreach (Internal inter in internals)
             {
                 internalType = Type.ReflectionOnlyGetType(inter.Type, false, false);
-                if (internalType == null) throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, inter.Type));
+                if (internalType == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type));
 
                 internalTypeRef = _targetAssemblyDefinition.MainModule.Import(internalType);
-                if (internalTypeRef == null) throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, inter.Type));
+                if (internalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type));
 
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
 
@@ -289,7 +290,7 @@ namespace Composestar.StarLight.ILWeaver
                     // Get the .ctor() constructor for the internal type
                     MethodBase constructorMethod = (MethodBase)internalType.GetConstructor(new Type[0]);
                     if (constructorMethod == null)
-                        throw new ILWeaverException(String.Format(Properties.Resources.ConstructorNotFound, inter.Type));
+                        throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, inter.Type));
                     MethodReference constructorReference = _targetAssemblyDefinition.MainModule.Import(constructorMethod);
 
                     foreach (MethodDefinition constructor in type.Constructors)
