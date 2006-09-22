@@ -9,20 +9,20 @@
  */
 package Composestar.Core.CpsProgramRepository;
 
-
 /**
  * all 'native' implementations (including .NET objects and primitive data types)
  * should subclass and/or be wrapped by me.
  * we can't reason about the implementation here.
  */
-public class PrimitiveConcern extends Concern {
-
-  /**
-   * @roseuid 404C4B660391
-   */
-  public PrimitiveConcern() {
-    super();
-  }
+public class PrimitiveConcern extends Concern
+{
+	/**
+	 * @roseuid 404C4B660391
+	 */
+	public PrimitiveConcern()
+	{
+		super();
+	}
 
 	public Object clone ()
 	{
@@ -34,7 +34,7 @@ public class PrimitiveConcern extends Concern {
 			// At this point, the newObject shares all data with the object
 			// running clone. If you want newObject to have its own
 			// copy of data, you must clone this data yourself.
-		
+
 		}
 		catch (CloneNotSupportedException e) 
 		{
