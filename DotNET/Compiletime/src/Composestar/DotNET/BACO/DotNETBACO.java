@@ -16,19 +16,19 @@ public class DotNETBACO extends BACO
 		// FIXME: assumption about .NET installation
 		return !(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0);
 	}
-	
+
 	protected void copyBuildAssemblies(HashSet filesToCopy)
 	{
 		List builtLibs = (List)DataStore.instance().getObjectByID("BuiltLibs");
-        Iterator it = builtLibs.iterator();
-        while (it.hasNext())
-        {
-        	String dll = FileUtils.unquote((String)it.next());
-        	String pdb = FileUtils.removeExtension(dll) + ".pdb";
+		Iterator it = builtLibs.iterator();
+		while (it.hasNext())
+		{
+			String dll = FileUtils.unquote((String)it.next());
+			String pdb = FileUtils.removeExtension(dll) + ".pdb";
 
-        	filesToCopy.add(pdb);
-        }
-        
-        super.copyBuildAssemblies(filesToCopy);
+			filesToCopy.add(pdb);
+		}
+
+		super.copyBuildAssemblies(filesToCopy);
 	}
 }
