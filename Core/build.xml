@@ -35,4 +35,15 @@
 		<xslt in="${build.core}${file.separator}findbugs-result.xml" out="${build.core}${file.separator}findbugs-result.html" style="${findbugs.style}" />
 	</target>
 	
+	<target name="checkstyle" depends="init">
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false">
+			<formatter type="xml" toFile="${build.core}${file.separator}checkstyle-result.xml" />
+			<property key="checkstyle.basedir" value="${build.core}${file.separator}Compiletime${file.separator}src" />
+			<FileSet dir="${build.core}${file.separator}Compiletime${file.separator}src">
+				<include name="**/*.java" />
+			</FileSet>
+		</checkstyle>
+		<xslt in="${build.core}${file.separator}checkstyle-result.xml" out="${build.core}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
+	</target>
+	
 </project>

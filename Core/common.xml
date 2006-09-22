@@ -177,6 +177,24 @@ Common routines. Always include this file in every build.xml file
 			<not><isset property="findbugs.reportLevel" /></not>
 		</condition>
 		
+		<!-- checkstyle jars -->
+		<path id="lib.checkstyle">	  
+			<fileset dir="${build.core}${file.separator}Development${file.separator}checkstyle${file.separator}lib${file.separator}" includes="*.jar"/>
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr" includes="*.jar"/>
+		</path>
+		
+		<!-- register checkstyle tags -->
+		<taskdef resource="checkstyletask.properties" classpathref="lib.checkstyle" />
+		<condition property="bin.checkstyle" value="${build.core}${file.separator}Development${file.separator}checkstyle">
+			<not>
+				<isset property="bin.checkstyle" />
+			</not>
+		</condition>
+		
+		<condition property="checkstyle.style" value="${bin.checkstyle}/checkstyle.xsl">
+			<not><isset property="checkstyle.style" /></not>
+		</condition>
+		
 	</target>
 	
 	<!-- generic target to rebuild all -->

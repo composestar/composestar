@@ -96,6 +96,20 @@
 		<ant target="findbugs" dir="${build.dotnet}" />
 	</target>
 	
+	<!-- execute the findbugs tool -->
+	<target name="checkstyle" depends="init" description="Run CheckStyle source code proof reader.">
+		<antcall target="checkstyle_core" />
+		<antcall target="checkstyle_dotnet" />
+	</target>
+	
+	<target name="checkstyle_core" depends="init">
+		<ant target="checkstyle" dir="${build.core}" />
+	</target>
+	
+	<target name="checkstyle_dotnet" depends="init" if="available.dotnet">
+		<ant target="checkstyle" dir="${build.dotnet}" />
+	</target>
+	
 	<!-- system test -->
 	
 	<target name="test" depends="init" description="Execute system tests.">
