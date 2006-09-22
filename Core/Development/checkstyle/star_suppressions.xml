@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+	<suppress checks=".*" files="^.*AssemblyInfo\.java$" />
+	<suppress checks=".*" files="^.*CpsLexer\.java$" />
+	<suppress checks=".*" files="^.*CpsParser\.java$" />
+	<suppress checks=".*" files="^.*CpsTokenTypes\.java$" />
+	<suppress checks=".*" files="^.*CpsTreeWalker\.java$" />
+	<suppress checks=".*" files="^.*CpsTreeWalkerTokenTypes\.java$" />
+	
+	<suppress checks=".*" files="^.*(\\|/)FIRE(\\|/).*$" />
+	<suppress checks=".*" files="^.*(\\|/)SECRET(\\|/).*$" />
+	<suppress checks=".*" files="^.*(\\|/)SIGN(\\|/).*$" />
+	<suppress checks=".*" files="^.*INIFile\.java$" />
+</suppressions>
