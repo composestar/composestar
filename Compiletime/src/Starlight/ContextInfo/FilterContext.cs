@@ -13,14 +13,11 @@ namespace Composestar.StarLight.ContextInfo
     public sealed class FilterContext
     {
 
-        private static Dictionary<int, InnerFilterContext> _innercalls;
+        private static Dictionary<int, InnerFilterContext> _innercalls = new Dictionary<int, InnerFilterContext>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:FilterContext"/> class.
-        /// </summary>
-        static FilterContext()
+        private FilterContext()
         {
-            _innercalls = new Dictionary<int, InnerFilterContext>();
+
         }
 
         /// <summary>
@@ -75,7 +72,7 @@ namespace Composestar.StarLight.ContextInfo
         {
             int threadId = GetThreadId();
 
-            InnerFilterContext ifc;
+            InnerFilterContext ifc;            
             if (_innercalls.TryGetValue(threadId, out ifc))
                 return ifc;
             else
@@ -110,12 +107,11 @@ namespace Composestar.StarLight.ContextInfo
 
             private long _methodId;
 
-
             /// <summary>
             /// Gets or sets the method id.
             /// </summary>
             /// <value>The method id.</value>
-            public long MethodId
+            internal long MethodId
             {
                 get { return _methodId; }
                 set { _methodId = value; }
@@ -126,8 +122,8 @@ namespace Composestar.StarLight.ContextInfo
             /// <summary>
             /// Gets or sets the instance.
             /// </summary>
-            /// <value>The instance.</value>
-            public object Instance
+            /// <value>The instance.</value>            
+            internal object Instance
             {
                 get { return _instance; }
                 set { _instance = value; }
