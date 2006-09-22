@@ -57,8 +57,8 @@ public class StarLightMaster extends Master  {
     	Debug.out(Debug.MODE_DEBUG,"Master","Configuration file: "+configurationFile);
     	Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
     	repository.setDatabaseFileName(configurationFile);
-    	
-		//configfile = configurationFile;
+    	Debug.setMode(repository.Configuration().getCompiletimeDebugLevel());  
+		
     	//Debug.setMode(4);
 	    resources = new CommonResources();
 	    
@@ -84,24 +84,7 @@ public class StarLightMaster extends Master  {
 	    // init the project configuration file
 	    //resources.CustomFilters = new Properties();
 
-//	    try {
-//	    	Debug.out(Debug.MODE_DEBUG,"Master","Reading build configuration from: "+configurationFile);
-//            SAXParserFactory saxParserFactory =
-//                SAXParserFactory.newInstance();
-//            SAXParser saxParser = saxParserFactory.newSAXParser();
-//            XMLReader  parser  = saxParser.getXMLReader();
-//            //BuildXMLHandler handler = new BuildXMLHandler( parser );
-//            BuildXMLHandler handler = new BuildXMLHandler(parser);
-//            parser.setContentHandler( handler );
-//            parser.parse( new InputSource( configurationFile ));
-//            
-//            //System.out.println("Done... "+config.pathSettings.getPath("Base"));
-//            //System.exit(-1);
-//        }
-//	    catch( Exception e )
-//	    { 
-//            throw new ModuleException("An error occured while reading the build configuration file: "+configurationFile+", reason: "+e.getMessage(),"Master");
-//        }
+
 		
 	    //ds.addObject(Master.RESOURCES_KEY,resources);
 
@@ -138,23 +121,24 @@ public class StarLightMaster extends Master  {
     		System.out.println(Version.getAuthorString());
     		System.exit(0);
     	}
+    	    
+    	Debug.setMode(4);
     	
-    	try {
-    		Debug.setMode(4);
-    		Debug.out(Debug.MODE_DEBUG,"Master","Invoking Master " + Version.getVersionString() +" now...");
+    	try {    		
+    		Debug.out(Debug.MODE_DEBUG,"Master","Master initializing.");
     		master = new StarLightMaster(args[0]);
     		Debug.out(Debug.MODE_DEBUG,"Master","Master initialized.");
     	} catch(ModuleException e) {
-    		System.out.println("Could not open configuration file: " + args[0]);
-    		System.out.println("Exiting...");
+    		Debug.out(Debug.MODE_ERROR,"Master", "Could not open configuration file: " + args[0]);    		
     		System.exit(-1);
     	}
 
     	if (master==null) {
-    		System.out.println("Unable to initialize Master process.");
+    		Debug.out(Debug.MODE_ERROR,"Master", "Unable to initialize Master process.");
     		System.exit(-1);
     	}
     	
+    	// Run the master process
     	master.run();
     	  	
     }
@@ -167,12 +151,13 @@ public class StarLightMaster extends Master  {
     	// This is the 'hardcoded' version
 
 		try {
-			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
+			String version = "1.0 alpha";
+			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar StarLight compiletime " + version);
 			
-			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
+			Debug.out(Debug.MODE_DEBUG, "Master", "Creating DataStore...");
 			DataStore.instance();
 
-			Debug.out(Debug.MODE_DEBUG, "Master", "Reading configuration...");
+			Debug.out(Debug.MODE_DEBUG, "Master", "Reading Configuration...");
 			
 			Projects projects = new Projects();
 			Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
@@ -199,28 +184,28 @@ public class StarLightMaster extends Master  {
 			}
 			
 			incre.getReporter().close();
-		
-			System.out.println("Master exit (0)");
+
 			System.exit(0);
 
-		}
+		}	
+		catch(ModuleException e)  { // MasterStopException
+			String error = e.getMessage();
+			if(error == null || "null".equals(error)) //great information
+			{
+				error = e.toString();
+			}
+
+			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals(""))
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e.getErrorLocationLineNumber());
+			else
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+			//Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
+			System.exit(1);
+		} 
 		catch (Exception ex) {
 			Debug.out(Debug.MODE_DEBUG, "Master", printStackTrace(ex));
 		}
-//		} catch(ModuleException e)  { // MasterStopException
-//			String error = e.getMessage();
-//			if(error == null || "null".equals(error)) //great information
-//			{
-//				error = e.toString();
-//			}
-//
-//			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals(""))
-//				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e.getErrorLocationLineNumber());
-//			else
-//				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
-//			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
-//			System.exit(1);
-//		} catch(Exception e) {
+		//catch(Exception e) {
 //			String error = e.getMessage();
 //			if(error == null || "null".equals(error)) //great information
 //			{
@@ -246,43 +231,7 @@ public class StarLightMaster extends Master  {
 			return "Stack Trace Failed";
 		}
 	} 
-
-	public void SaveModifiedConfigurationKeys(CommonResources resources) {
-  	  ArrayList builtAssemblies = (ArrayList) resources.getResource("BuiltAssemblies");
-	  java.util.ArrayList configlines = new java.util.ArrayList();
-  	  
-	  try { 
-		BufferedReader br = new BufferedReader(new FileReader(configfile));
-		String line = br.readLine();
-    	while ( line != null) {
-    		if (line.startsWith("BuiltAssemblies=")) {
-    			line = "BuiltAssemblies=" + builtAssemblies.size();
-    			configlines.add(line);
-    			for (int i=0; i<builtAssemblies.size(); i++)
-    			{
-					Object temp = builtAssemblies.get(i);
-					if(temp != null)
-    					configlines.add("BuiltAssembly" + i + "=" + temp.toString());
-    			}
-    		}
-    		else {
-    			configlines.add(line);
-    		}
-			line = br.readLine();
-    	}
-    	br.close(); 
- 
-	  	BufferedWriter bw = new BufferedWriter(new FileWriter(configfile));
-	  	Iterator iterLines = configlines.iterator();
-	  	while (iterLines.hasNext()) {
-	  		line = (String)iterLines.next();
-	  		bw.write(line + "\n");
-	  	}
-		bw.close();
-	  }
-	  catch (IOException e) {
-	  	Debug.out(Debug.MODE_WARNING, "Master", "Unable to update configuration file '" + configfile + "'!");
-	  }
-
-    }
+	
+	public void SaveModifiedConfigurationKeys(CommonResources resources){}
+	
 }
