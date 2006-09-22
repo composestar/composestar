@@ -9,53 +9,53 @@ import java.util.HashSet;
 /**
  * @author havingaw
  *
- * TODO Insert description of class here
+ * TODO: Insert description of class here
  */
 public class UnitResult
 {
-  private HashSet multiRes;
-  private ProgramElement singleRes;
-  
-  public UnitResult()
-  { // Has to exist for .NET serialization
-  }
-  
-  public UnitResult(ProgramElement single)
-  {
-    this.singleRes = single;
-    this.multiRes = null;
-  }
-  
-  public UnitResult(HashSet multi)
-  {
-    this.multiRes = multi;
-    this.singleRes = null;
-  }
+	private HashSet multiRes;			// Used by INCRE
+	private ProgramElement singleRes;	// Used by INCRE
 
-  /*
-   * @return a single program element, or null if the relation is not unique
-   */
-  
-  public ProgramElement singleValue()
-  {
-    return singleRes;
-  }
+	public UnitResult()
+	{ // Has to exist for .NET serialization
+	}
 
-  /*
-   * @return a hashset containing program elements, or null if the relation is unique
-   */
-  public HashSet multiValue()
-  {
-    return multiRes;
-  }
-  
-  public boolean isSingleValue()
-  {
-    return (singleRes != null);
-  }
-  
-  public boolean isMultiValue()
-  {
-    return (multiRes != null);
-  }
+	public UnitResult(ProgramElement single)
+	{
+		this.singleRes = single;
+		this.multiRes = null;
+	}
+
+	public UnitResult(HashSet multi)
+	{
+		this.multiRes = multi;
+		this.singleRes = null;
+	}
+
+	/*
+	 * @return a single program element, or null if the relation is not unique
+	 */
+
+	public ProgramElement singleValue()
+	{
+		return singleRes;
+	}
+
+	/*
+	 * @return a hashset containing program elements, or null if the relation is unique
+	 */
+	public HashSet multiValue()
+	{
+		return multiRes;
+	}
+
+	public boolean isSingleValue()
+	{
+		return (singleRes != null);
+	}
+
+	public boolean isMultiValue()
+	{
+		return (multiRes != null);
+	}
 }
