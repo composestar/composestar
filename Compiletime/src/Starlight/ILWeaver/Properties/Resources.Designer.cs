@@ -70,6 +70,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid configuration. Cannot specify delaysign without shouldSign set to true.
+        /// </summary>
+        internal static string CannotDelaySignWithoutSigning {
+            get {
+                return ResourceManager.GetString("CannotDelaySignWithoutSigning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details..
         /// </summary>
         internal static string CecilVisitorRaisedException {
@@ -133,20 +142,21 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Strong Name Key file specified..
+        ///   Looks up a localized string similar to The input image {0} could not be found.
+        ///.
         /// </summary>
-        internal static string NoSNKSpecified {
+        internal static string InputImageNotFound {
             get {
-                return ResourceManager.GetString("NoSNKSpecified", resourceCulture);
+                return ResourceManager.GetString("InputImageNotFound", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ILWeaver has not yet been initialized. Call the Initialize function first..
+        ///   Looks up a localized string similar to Invalid configuration. No Strong Name Key file specified..
         /// </summary>
-        internal static string NotYetInitialized {
+        internal static string NoSNKSpecified {
             get {
-                return ResourceManager.GetString("NotYetInitialized", resourceCulture);
+                return ResourceManager.GetString("NoSNKSpecified", resourceCulture);
             }
         }
         

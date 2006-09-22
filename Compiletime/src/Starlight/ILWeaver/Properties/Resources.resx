@@ -139,10 +139,7 @@
     <value>The format of binary image {0} is invalid.</value>
   </data>
   <data name="NoSNKSpecified" xml:space="preserve">
-    <value>No Strong Name Key file specified.</value>
-  </data>
-  <data name="NotYetInitialized" xml:space="preserve">
-    <value>The ILWeaver has not yet been initialized. Call the Initialize function first.</value>
+    <value>Invalid configuration. No Strong Name Key file specified.</value>
   </data>
   <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
     <value>The config collection did not contain a valid filename to the repository file.</value>
@@ -155,5 +152,12 @@
   </data>
   <data name="CecilVisitorRaisedException" xml:space="preserve">
     <value>An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details.</value>
+  </data>
+  <data name="CannotDelaySignWithoutSigning" xml:space="preserve">
+    <value>Invalid configuration. Cannot specify delaysign without shouldSign set to true</value>
+  </data>
+  <data name="InputImageNotFound" xml:space="preserve">
+    <value>The input image {0} could not be found.
+</value>
   </data>
 </root>

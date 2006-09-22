@@ -15,6 +15,8 @@ using Mono.Cecil.Signatures;
 
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
+using Composestar.StarLight.CoreServices;
+using Composestar.Repository.Properties;
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -24,120 +26,19 @@ namespace Composestar.StarLight.ILWeaver
     /// </summary>
     public class CecilILWeaver : IILWeaver
     {
-        private AssemblyDefinition _targetAssemblyDefinition;
-        private WeaverConfiguration _configuration;
-        private RepositoryAccess _repositoryAccess;
+        TimeSpan _lastDuration;
+        CecilWeaverConfiguration _configuration;
+        ILanguageModelAccessor _languageModelAccessor;
 
-        private bool _isInitialized;
-        private TimeSpan _lastDuration = TimeSpan.MinValue;
+        
 
-        /// <summary>
-        /// Initializes the analyzer with the specified assembly name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="config">The config.</param>
-        public void Initialize(string inputImage, NameValueCollection config)
+        public CecilILWeaver(CecilWeaverConfiguration configuration, ILanguageModelAccessor languageModelAccessor)
         {
-            #region fileName
-            if (String.IsNullOrEmpty(inputImage))
-                throw new ArgumentNullException("inputImage", Properties.Resources.FileNameNullOrEmpty);
+            if (configuration == null) throw new ArgumentNullException("configuration");
+            if (languageModelAccessor == null) throw new ArgumentNullException("languageModelAccessor");
 
-            if (!File.Exists(inputImage))
-                throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNotFound, inputImage), "inputImage");
-
-            try
-            {
-                _targetAssemblyDefinition = AssemblyFactory.GetAssembly(inputImage);
-            }
-            catch (EndOfStreamException)
-            {
-                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, inputImage));
-            }
-            #endregion
-
-            #region config
-
-            if (null == config)
-            {
-                _configuration = WeaverConfiguration.CreateDefaultConfiguration(inputImage);
-            }
-            else
-            {
-                string outputImagePath = config.Get("OutputImagePath");
-                string shouldSignAssembly = config.Get("ShouldSignAssembly");
-                string outputImageSNK = config.Get("OutputImageSNK");
-                string outputFilename = config.Get("OutputFilename");
-
-                if (string.IsNullOrEmpty(outputImagePath))
-                {
-                    outputImagePath = Path.GetFullPath(inputImage);
-                }
-
-                if (!string.IsNullOrEmpty(shouldSignAssembly))
-                {
-                    bool shouldSignAssemblyB = false;
-                    Boolean.TryParse(shouldSignAssembly, out shouldSignAssemblyB);
-
-                    if (shouldSignAssemblyB)
-                    {
-                        if (string.IsNullOrEmpty(outputImageSNK))
-                        {
-                            throw new ArgumentException(Properties.Resources.NoSNKSpecified, "config");
-                        }
-
-                        if (File.Exists(outputImageSNK))
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.SNKFileNotFound, outputImageSNK), "config");
-                        }
-                        _configuration = new WeaverConfiguration(outputImagePath, shouldSignAssemblyB, outputImageSNK);
-                    }
-                    else
-                    {
-                        _configuration = new WeaverConfiguration(outputImagePath, false, string.Empty);
-                    }
-                }
-
-                if (String.IsNullOrEmpty(outputFilename))
-                    _configuration.OutputFilename = Path.GetFileName(inputImage);
-                else
-                    _configuration.OutputFilename = outputFilename;
-
-            }
-
-            // Get the repositoryfilename
-            string repositoryFilename = string.Empty;
-            if (config != null)
-            {
-                repositoryFilename = config.Get("RepositoryFilename");
-            }
-
-            if (string.IsNullOrEmpty(repositoryFilename))
-                throw new ArgumentException(Properties.Resources.RepositoryFilenameNotSpecified, "RepositoryFilename");
-
-            _repositoryAccess = new RepositoryAccess(repositoryFilename);
-
-            #endregion
-
-            _isInitialized = true;
-
-        }
-
-        /// <summary>
-        /// Gets the repository retriever.
-        /// </summary>
-        /// <value>The repository retriever.</value>
-        public RepositoryAccess RepositoryAccess
-        {
-            get { return _repositoryAccess; }
-        }
-
-        /// <summary>
-        /// Checks for initialization. Throw exception when not inited.
-        /// </summary>
-        private void CheckForInit()
-        {
-            if (!_isInitialized)
-                throw new ILWeaverException(Properties.Resources.NotYetInitialized);
+            _configuration = configuration;
+            _languageModelAccessor = languageModelAccessor;
 
         }
 
@@ -169,9 +70,22 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         public void DoWeave()
         {
+            if (!File.Exists(_configuration.InputImagePath))
+            {
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.InputImageNotFound, _configuration.InputImagePath));
+            }
 
-            // See if we are initialized.
-            CheckForInit();
+            AssemblyDefinition targetAssembly;
+
+            try
+            {
+                targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
+            }
+            catch (EndOfStreamException)
+            {
+                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, _configuration.InputImagePath));
+            }
+
 
             // Start timing
             Stopwatch sw = new Stopwatch();
@@ -182,36 +96,36 @@ namespace Composestar.StarLight.ILWeaver
             MethodElement methodElement;
 
             // Check if the _targetAssemblyDefinition is still available
-            if (_targetAssemblyDefinition == null)
+            if (targetAssembly == null)
                 throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
 
             // Lets walk over all the modules in the assembly
-            foreach (ModuleDefinition module in _targetAssemblyDefinition.Modules)
+            foreach (ModuleDefinition module in targetAssembly.Modules)
             {
                 // Walk over each type in the module
                 foreach (TypeDefinition type in module.Types)
                 {
                     // Get the information from the repository about this type
-                    typeElement = RepositoryAccess.GetTypeElement(type.FullName);
+                    typeElement = _languageModelAccessor.GetTypeElement(type.FullName);
                     // Skip this type if we do not have information about it 
                     if (typeElement == null)
                         continue;
 
                     // Add the externals and internals
-                    WeaveExternals(type, typeElement);
-                    WeaveInternals(type, typeElement);
+                    WeaveExternals(targetAssembly, type, typeElement);
+                    WeaveInternals(targetAssembly, type, typeElement);
 
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = RepositoryAccess.GetMethodElementBySignature(typeElement,
+                        methodElement = _languageModelAccessor.GetMethodElementBySignature(typeElement,
                             SignatureBuilder.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), GetParameterTypesList(method)));
 
                         // Skip if there is no methodinfo
                         if (methodElement == null)
                             continue;
 
-                        WeaveMethod(method, methodElement);
+                        WeaveMethod(targetAssembly, method, methodElement);
                     }
 
                     //Import the modifying type into the AssemblyDefinition
@@ -222,19 +136,16 @@ namespace Composestar.StarLight.ILWeaver
             //Save the modified assembly
             try
             {
-                AssemblyFactory.SaveAssembly(_targetAssemblyDefinition, _configuration.OutputFile);
+                AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
             }
             catch (Exception ex)
             {
-                throw new ILWeaverException(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputFile, ex);
+                throw new ILWeaverException(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath, ex);
             }
 
             // Stop timing
             sw.Stop();
             _lastDuration = sw.Elapsed;
-
-            // Close DB
-            _repositoryAccess.CloseDatabase();
         }
 
         /// <summary>
@@ -242,21 +153,23 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
-        public void WeaveInternals(TypeDefinition type, TypeElement typeElement)
+        public void WeaveInternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
         {
             #region Check for null
+            if (targetAssembly == null)
+                throw new ArgumentNullException("targetAssembly");
 
             if (type == null)
-                return;
+                throw new ArgumentNullException("type");
 
             if (typeElement == null)
-                return;
+                throw new ArgumentNullException("typeElement");
 
             #endregion
 
             #region Get the internals
 
-            IList<Internal> internals = _repositoryAccess.GetInternalsByTypeElement(typeElement);
+            IList<Internal> internals = _languageModelAccessor.GetInternalsByTypeElement(typeElement);
 
             if (internals == null | internals.Count == 0)
                 return;
@@ -273,7 +186,7 @@ namespace Composestar.StarLight.ILWeaver
                 internalType = Type.ReflectionOnlyGetType(inter.Type, false, false);
                 if (internalType == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type));
 
-                internalTypeRef = _targetAssemblyDefinition.MainModule.Import(internalType);
+                internalTypeRef = targetAssembly.MainModule.Import(internalType);
                 if (internalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type));
 
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
@@ -291,7 +204,7 @@ namespace Composestar.StarLight.ILWeaver
                     MethodBase constructorMethod = (MethodBase)internalType.GetConstructor(new Type[0]);
                     if (constructorMethod == null)
                         throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, inter.Type));
-                    MethodReference constructorReference = _targetAssemblyDefinition.MainModule.Import(constructorMethod);
+                    MethodReference constructorReference = targetAssembly.MainModule.Import(constructorMethod);
 
                     foreach (MethodDefinition constructor in type.Constructors)
                     {
@@ -323,21 +236,24 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
-        public void WeaveExternals(TypeDefinition type, TypeElement typeElement)
+        public void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
         {
+
             #region Check for null
+            if (targetAssembly == null)
+                throw new ArgumentNullException("targetAssembly");
 
             if (type == null)
-                return;
+                throw new ArgumentNullException("type");
 
             if (typeElement == null)
-                return;
+                throw new ArgumentNullException("typeElement");
 
             #endregion
 
             #region Get the externals
 
-            IList<External> externals = _repositoryAccess.GetExternalsByTypeElement(typeElement);
+            IList<External> externals = _languageModelAccessor.GetExternalsByTypeElement(typeElement);
 
             if (externals == null | externals.Count == 0)
                 return;
@@ -355,23 +271,26 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the code into the method.
         /// </summary>
         /// <param name="method">The method definition.</param>
-        public void WeaveMethod(MethodDefinition method, MethodElement methodElement)
+        public void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
-            #region Check for null values
+
+            #region Check for null
+            if (targetAssembly == null)
+                throw new ArgumentNullException("targetAssembly");
 
             if (method == null)
-                return;
+                throw new ArgumentNullException("method");
 
             if (methodElement == null)
-                return;
+                throw new ArgumentNullException("methodElement");
 
             #endregion
 
             // Add the inputfilters
-            WeaveInputFilters(method, methodElement);
+            WeaveInputFilters(targetAssembly, method, methodElement);
 
             // Add the outputfilters
-            WeaveOutputFilters(method, methodElement);
+            WeaveOutputFilters(targetAssembly, method, methodElement);
 
         }
 
@@ -384,9 +303,12 @@ namespace Composestar.StarLight.ILWeaver
         /// InputFilters are added at the top of the methodbody. 
         /// We call a visitor to generate IL instructions and we add those to the top of the method.
         /// </remarks>        
-        public void WeaveInputFilters(MethodDefinition method, MethodElement methodElement)
+        public void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve inputFilter
+
+            if (targetAssembly == null)
+                throw new ArgumentNullException("targetAssembly");
 
             // Only proceed when there is a message body
             if (method.HasBody == false)
@@ -416,7 +338,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Method = method;
             visitor.Worker = worker;
             visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
-            visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
+            visitor.TargetAssemblyDefinition = targetAssembly;
 
             // Visit the elements in the block
             try
@@ -426,8 +348,7 @@ namespace Composestar.StarLight.ILWeaver
             catch (Exception ex)
             {
                 // Close the database and throw the error wrapped in an ILWeaverException
-                _repositoryAccess.CloseDatabase();
-                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputFilename, ex);
+                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
             }
 
             // Only add instructions if we have instructions
@@ -453,10 +374,13 @@ namespace Composestar.StarLight.ILWeaver
         /// We look for each call and see if we have an outputfilter for it.
         /// If we do, then call the visitor to generate code to replace the call.
         /// </remarks> 
-        public void WeaveOutputFilters(MethodDefinition method, MethodElement methodElement)
+        public void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve calls for this method
-
+            
+            if (targetAssembly == null)
+                throw new ArgumentNullException("targetAssembly");
+            
             if (methodElement.MethodBody == null)
                 return;
 
@@ -464,7 +388,7 @@ namespace Composestar.StarLight.ILWeaver
             if (method.HasBody == false)
                 return;
 
-            IList<CallElement> calls = _repositoryAccess.GetCallByMethodElement(methodElement);
+            IList<CallElement> calls = _languageModelAccessor.GetCallByMethodElement(methodElement);
 
             if (calls == null | calls.Count == 0)
                 return;
@@ -500,7 +424,7 @@ namespace Composestar.StarLight.ILWeaver
                         visitor.Method = method;
                         visitor.Worker = worker;
                         visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
-                        visitor.TargetAssemblyDefinition = _targetAssemblyDefinition;
+                        visitor.TargetAssemblyDefinition = targetAssembly;
 
                         // Visit the elements in the block
                         try
@@ -509,9 +433,7 @@ namespace Composestar.StarLight.ILWeaver
                         }
                         catch (Exception ex)
                         {
-                            // Close the database and throw the error wrapped in an ILWeaverException
-                            _repositoryAccess.CloseDatabase();
-                            throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputFilename, ex);
+                            throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
                         }
 
                         // Only add instructions if we have instructions
@@ -524,15 +446,6 @@ namespace Composestar.StarLight.ILWeaver
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Closes this instance. Cleanup any used resources.
-        /// </summary>
-        public void Close()
-        {
-            if (_repositoryAccess != null)
-                _repositoryAccess.CloseDatabase();
         }
 
         #region Helper functions
@@ -629,107 +542,6 @@ namespace Composestar.StarLight.ILWeaver
         }
         #endregion
 
-        #region nested class WeaverConfiguration
-        /// <summary>
-        /// Contains the configuration for the weaver.
-        /// </summary>
-        private sealed class WeaverConfiguration
-        {
-            private string _outputImageSNK;
-            private bool _shouldSignOutput;
-            private string _outputImagePath;
-            private string _outputFilename;
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
-            /// </summary>
-            /// <param name="outputImagePath">The output image path.</param>
-            /// <param name="shouldSignOutput">if set to <c>true</c> [should sign output].</param>
-            /// <param name="outputImageSNK">The output image SNK.</param>
-            public WeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK)
-            {
-                _outputImageSNK = outputImageSNK;
-                _shouldSignOutput = shouldSignOutput;
-                _outputImagePath = outputImagePath;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
-            /// </summary>
-            /// <param name="outputImagePath">The output image path.</param>
-            /// <param name="outputFilename">The output filename.</param>
-            /// <param name="shouldSignOutput">if set to <c>true</c> [should sign output].</param>
-            /// <param name="outputImageSNK">The output image SNK.</param>
-            public WeaverConfiguration(string outputImagePath, string outputFilename, bool shouldSignOutput, string outputImageSNK)
-            {
-                _outputImageSNK = outputImageSNK;
-                _outputFilename = outputFilename;
-                _shouldSignOutput = shouldSignOutput;
-                _outputImagePath = outputImagePath;
-            }
-
-            /// <summary>
-            /// Gets or sets the output filename.
-            /// </summary>
-            /// <value>The output filename.</value>
-            public string OutputFilename
-            {
-                get
-                {
-                    return _outputFilename;
-                }
-                set
-                {
-                    _outputFilename = value;
-                }
-            }
-
-            /// <summary>
-            /// Gets the output file.
-            /// </summary>
-            /// <value>The output file.</value>
-            public string OutputFile
-            {
-                get { return Path.Combine(_outputImagePath, _outputFilename); }
-            }
-
-            /// <summary>
-            /// Gets the output image SNK.
-            /// </summary>
-            /// <value>The output image SNK.</value>
-            public string OutputImageSNK
-            {
-                get { return _outputImageSNK; }
-            }
-
-            /// <summary>
-            /// Gets a value indicating whether the output should be signed.
-            /// </summary>
-            /// <value><c>true</c> if should sign output; otherwise, <c>false</c>.</value>
-            public bool ShouldSignOutput
-            {
-                get { return _shouldSignOutput; }
-            }
-
-            /// <summary>
-            /// Gets the output image path.
-            /// </summary>
-            /// <value>The output image path.</value>
-            public string OutputImagePath
-            {
-                get { return _outputImagePath; }
-            }
-
-            /// <summary>
-            /// Creates the default configuration.
-            /// </summary>
-            /// <param name="inputImagePath">The input image path.</param>
-            /// <returns></returns>
-            public static WeaverConfiguration CreateDefaultConfiguration(string inputImagePath)
-            {
-                return new WeaverConfiguration(inputImagePath, false, string.Empty);
-            }
-        }
-        #endregion
     }
 }

@@ -32,12 +32,6 @@ namespace Composestar.StarLight.ILWeaver
         TimeSpan LastDuration{ get; }
 
         /// <summary>
-        /// Gets access to the repository.
-        /// </summary>
-        /// <value>The repository access.</value>
-        RepositoryAccess RepositoryAccess { get; }
-
-        /// <summary>
         /// Closes this instance. Cleanup any used resources.
         /// </summary>
         void Close();
