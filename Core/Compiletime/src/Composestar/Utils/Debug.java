@@ -101,6 +101,6 @@ public class Debug
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);			
 		t.printStackTrace(pw);
-		return pw.toString();
+		return sw.toString();
 	}
 }
