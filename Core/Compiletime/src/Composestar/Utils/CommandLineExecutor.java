@@ -11,6 +11,7 @@
 package Composestar.Utils;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * CommandLineExecutor is a tool for running command line programs. 
@@ -30,15 +31,10 @@ public class CommandLineExecutor
 	private StreamGobbler OutputGobbler;
 
 	/**
-	 * Execute command.
-	 * exec executes the command and waits for it to return. WARNING: If the program 
-	 * hangs this function will never return.
+	 * Executess the command and waits for it to return. 
+	 * WARNING: If the program hangs this function will never return.
 	 * Please note that return values indicating error differ between programs and 
 	 * operating systems.
-	 * 
-	 * @param command The command to execute.
-	 * @return The exit code of the program to run.
-	 * @roseuid 404DCCF50112
 	 */
 	public int exec(String command)
 	{
@@ -48,9 +44,10 @@ public class CommandLineExecutor
 	public int exec(String command, File dir)
 	{
 		try {
-			String osName = System.getProperty("os.name");
 
 			// "some" OSs need special treatment to be able to use built in functions
+			// shouldnt be needed, since we're not using 'built in functions' (aka 'call')
+			String osName = System.getProperty("os.name");
 			if (osName.equals( "Windows NT")
 					|| osName.equals("Windows 2000")
 					|| osName.equals("Windows CE")
@@ -87,15 +84,48 @@ public class CommandLineExecutor
 		catch (Throwable t) {
 			// TODO: New throw specific to project
 			t.printStackTrace();
+			return -1;
 		}
-		return -1;
+	}
+	
+	public int exec(List cmdList)
+	{
+		String[] cmdArray = new String[cmdList.size()];
+		cmdList.toArray(cmdArray);
+		
+		return exec(cmdArray);
+	}
+	
+	public int exec(String[] command)
+	{
+		try {
+			Runtime rt = Runtime.getRuntime();
+			Process proc = rt.exec(command);
+			
+			// connect error and output filters
+			ErrorGobbler = new StreamGobbler(proc.getErrorStream());
+			OutputGobbler = new StreamGobbler(proc.getInputStream());
+			ErrorGobbler.start();
+			OutputGobbler.start();
+
+			// wait for program return.
+			int result = proc.waitFor();
+			
+			// wait for the output threads
+			OutputGobbler.waitForResult();
+			ErrorGobbler.waitForResult();
+
+			return result;
+		}
+		catch (Exception e) {
+			// TODO: New throw specific to project
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
-
 	/**
-	 * Get the program output to STDOUT.
-	 * @return java.lang.String
-	 * @roseuid 404DCCF500D4
+	 * Returns the program output to STDOUT.
 	 */
 	public String outputNormal()
 	{
@@ -103,9 +133,7 @@ public class CommandLineExecutor
 	}
 
 	/**
-	 * Get the program output to STDERR.
-	 * @return java.lang.String
-	 * @roseuid 404DCCF500F3
+	 * Returns the program output to STDERR.
 	 */
 	public String outputError()
 	{
