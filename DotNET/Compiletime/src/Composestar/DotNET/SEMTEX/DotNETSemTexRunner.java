@@ -1,83 +1,78 @@
 package Composestar.DotNET.SEMTEX;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.DotNET.LAMA.DotNETType;
-
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
-
-import java.util.*;
+import Composestar.Utils.FileUtils;
+import Composestar.Utils.StringUtils;
 
 /**
  * Calls the SemanticAnalyser with the just created assemblies and the SemanticComposestarPlugin.
  * The result will be stored in the semtex.xml file.
  * @author Michiel van Oudheusden
- *
  */
-public class DotNETSemTexRunner implements CTCommonModule {
+public class DotNETSemTexRunner implements CTCommonModule
+{
+	public DotNETSemTexRunner()
+	{
+	}
 
-	private INCRE incre;
-	
-    public DotNETSemTexRunner() {
-		this.incre = INCRE.instance();
-	} 
-   	
-	/* 
+	/**
 	 * Calls the SemanticExtractor to generate the semtex.xml file
-	 * @see Composestar.Core.Master.CTCommonModule#run(Composestar.Core.Master.CommonResources)
 	 */
-	public void run(CommonResources resources) throws ModuleException {
-		
-		String assemblyList = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies"); 
-		ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();  
-		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
-		
+	public void run(CommonResources resources) throws ModuleException
+	{
 		Configuration config = Configuration.instance();
-		
-		// ouputpath:
-		String outputpath = config.getProjects().getProperty("OuputPath");
-		
-		String arg = "";
-		
-		Iterator it = ((ArrayList)DataStore.instance().getObjectByID("BuiltLibs")).iterator();
-		while(it.hasNext())
+		String cpsPath = config.getPathSettings().getPath("Composestar");
+		String projectPath = config.getPathSettings().getPath("Base");
+
+		String exe = getExecutable();
+		if (exe == null)
 		{
-			arg += "\"" + (String)it.next() + "\"" + " ";
-		}
-		
-		arg += " /plugin:\"" + Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/SemanticComposestarPlugins.dll\"";
-		arg += " /exportFilename:\"" + Configuration.instance().getPathSettings().getPath("Base") + "obj/semtex.xml\"";
-		
-		Debug.out(Debug.MODE_DEBUG,"SEMTEX","Arguments for DotNet SemTex: "+arg);
-		String semTexAnalyser =  Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/SemanticExtractorConsole.exe" ;
-		java.io.File semTexFile = new java.io.File(semTexAnalyser);
-		if( !semTexFile.exists() )
-		{
-			Debug.out(Debug.MODE_WARNING , "SEMTEX", "SemTex Analyzer not found on it's expected location: " + semTexAnalyser + ". Semantic Analyzing will be skipped.");
-			Debug.out(Debug.MODE_INFORMATION , "SEMTEX", "Semantic Analyzer cannot be executed because of missing files. See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
+			Debug.out(Debug.MODE_WARNING , "SEMTEX", "SemTex Analyzer not found on it's expected location: " + exe + ". Semantic Analyzing will be skipped.");
+			Debug.out(Debug.MODE_INFORMATION , "SEMTEX", "Semantic Analyzer cannot be executed because of missing files. See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");			
 		}
 		else
 		{
-			CommandLineExecutor exec = new CommandLineExecutor();
-			Configuration.instance().getPathSettings().getPath("Composestar");
-			String cmd =  "\"" + semTexAnalyser + "\" "  + arg;
-			
-			Debug.out(Debug.MODE_DEBUG,"SEMTEX","Calling SemTex Analyzer...");
-			
-			int result = exec.exec( "call " + cmd );
-			
-			if( result != 0 )
+			List cmdList = new ArrayList();
+			cmdList.add(exe);
+
+			List builtLibs = (List)DataStore.instance().getObjectByID("BuiltLibs");
+			Iterator it = builtLibs.iterator();
+			while (it.hasNext())
 			{
-				throw new ModuleException("SemTex Analyzer failed with error: " + exec.outputError(),"SEMTEX");
+				String lib = (String)it.next();
+				cmdList.add(FileUtils.quote(lib));
 			}
+
+			cmdList.add("/plugin:" + FileUtils.quote(cpsPath + "binaries/SemanticComposestarPlugins.dll"));
+			cmdList.add("/exportFilename:" + FileUtils.quote(projectPath + "obj/semtex.xml"));
+
+			Debug.out(Debug.MODE_DEBUG,"SEMTEX","Command for DotNet SemTex: " + StringUtils.join(cmdList));
+
+			CommandLineExecutor cle = new CommandLineExecutor();
+			int result = cle.exec(cmdList);			
+			if (result != 0)
+				throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(),"SEMTEX");
+
+			Debug.out(Debug.MODE_DEBUG,"SEMTEX","SemTex Analyzer completed.");
 		}
-		Debug.out(Debug.MODE_DEBUG,"SEMTEX","SemTex Analyzer completed.");
 	}
-		
+
+	private String getExecutable()
+	{
+		Configuration config = Configuration.instance();
+		String cpsPath = config.getPathSettings().getPath("Composestar");
+		String exe = cpsPath + "binaries/SemanticExtractorConsole.exe";
+
+		return (FileUtils.fileExist(exe) ? exe : null);
+	}
 }
