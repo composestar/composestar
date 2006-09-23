@@ -49,188 +49,185 @@ public class ILICIT implements WEAVER
 	public void run(CommonResources resources) throws ModuleException
 	{
 		Configuration config = Configuration.instance();
-		String binPath = config.getPathSettings().getPath("Composestar");
-		String tempPath = config.getPathSettings().getPath("Base");
-		String weavePath = tempPath + "obj/Weaver";
-		String peweaver = binPath + "binaries/peweaver.exe";
-		String weavefile = FileUtils.quote(tempPath + "weavespec.xml");
 
-		List compiledSources = config.getProjects().getCompiledSources();
-		List builtAssemblies = new ArrayList();
-		List toBeWoven = new ArrayList();
+		String cpsPath = config.getPathSettings().getPath("Composestar");
+		String projectPath = config.getPathSettings().getPath("Base");
 
-		// make a copy of the built binaries 
+		String weavePath = projectPath + "obj/Weaver";
 		File weaveDir = new File(weavePath);
 		if (!weaveDir.exists()) weaveDir.mkdir();
 
-		Iterator binItr = compiledSources.iterator();
-		while (binItr.hasNext())
+		// make a copy of the built binaries and do more stuff
+		// TODO: describe 'more stuff'
+		List toBeWoven = new ArrayList();
+		List compiledSources = config.getProjects().getCompiledSources();
+		addBuiltAssemblies(weaveDir, compiledSources, toBeWoven);
+		Debug.out(Debug.MODE_DEBUG,"ILICIT","To be woven file list: " + toBeWoven);
+
+		// also copy dummies 
+		copyDummies(weavePath);
+
+		if (toBeWoven.size() > 0)
 		{
-			String asm = (String)binItr.next();
-			File source = new File(asm);
-			String target = FileUtils.fixFilename(weavePath+File.separator+source.getName());
-			if (!INCRE.instance().isProcessedByModule(asm,"ILICIT"))
-			{
-				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory");
-				FileUtils.copyFile(target,source.getAbsolutePath());
-				String pdbFileName = FileUtils.removeExtension(source.getAbsolutePath()) + ".pdb";
-				if (FileUtils.fileExist(pdbFileName))
-				{
-					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+pdbFileName+" to Weaver directory");
-					File pdb = new File(pdbFileName);
-					FileUtils.copyFile(FileUtils.removeExtension(target) + ".pdb",pdb.getAbsolutePath());
-				}
-				builtAssemblies.add(target);
-				toBeWoven.add(target);
+			// build command line
+			String peweaver = cpsPath + "binaries/peweaver.exe";
+			if (!FileUtils.fileExist(peweaver))
+				throw new ModuleException("Unable to locate the executable '" + peweaver + "'!");
+
+			List cmdList = new ArrayList();
+			cmdList.add(peweaver);
+			cmdList.add("/nologo");
+
+			// verify libraries?
+			Module m = config.getModuleSettings().getModule("ILICIT");
+			if (m != null) {
+				String v = m.getProperty("verifyAssemblies");
+				if ("True".equalsIgnoreCase(v))
+					cmdList.add("/verify");
 			}
+
+			// if debugging supply the /debug switch
+			if (Debug.getMode() == Debug.MODE_DEBUG)
+				cmdList.add("/debug");
+			
+			// add weave specification
+			String weaveFile = projectPath + "weavespec.xml";
+			cmdList.add("/ws=" + weaveFile);
+
+			// add build file
+			String buildfile = projectPath + "filelist.peweaver";
+			createBuildfile(buildfile, toBeWoven);
+			cmdList.add("/filelist=" + FileUtils.quote(buildfile));
+
+			// If debugging write output from PeWeaver to log file
+			//	if (Debug.getMode() == Debug.MODE_DEBUG) 
+			//		command += " > \"" + weavePath + "/peweaver.log\"";
+
+			//	Debug.out(Debug.MODE_DEBUG, "ILICIT", "Starting execution of the 'PE Weaver' tool with arguments '" + args + "'");
+
+			CommandLineExecutor cle = new CommandLineExecutor();
+			int exitcode = cle.exec(cmdList);
+			
+			if (exitcode == 0)
+				Debug.out(Debug.MODE_DEBUG, "ILICIT", "Successfully executed the 'PE Weaver' tool.");
 			else
 			{
-				// no need to weave the file
-				Debug.out(Debug.MODE_DEBUG,"INCRE","No need to re-weave "+asm);
-				builtAssemblies.add(target);
+				Debug.out(Debug.MODE_DEBUG, "ILICIT", cle.outputNormal());
+				throw new ModuleException(getExitMessage(exitcode), "ILICIT");
 			}
 		}
+	}
 
-		DataStore.instance().addObject("BuiltLibs", builtAssemblies);
+	private void copyDummies(String weavePath) throws ModuleException 
+	{
+		Configuration config = Configuration.instance();
 
-		//also copy dummies 
 		List dummies = config.getProjects().getCompiledDummies();
 		Iterator dumIt = dummies.iterator();
 		while (dumIt.hasNext()) 
 		{
 			String dummy = (String)dumIt.next();
 			String asm = FileUtils.fixSlashes(dummy);
-			
-			File asmFile = new File(asm);
+
 			Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory");
-			FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
+
+			File asmFile = new File(asm);
+			FileUtils.copyFile(weavePath + File.separator + asmFile.getName(), asm);
 		}
-	/*
-		String asm = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
-		File asmFile = new File(asm);
-		Debug.out(Debug.MODE_DEBUG,"ILICIT","copying "+asm+" to Weaver directory");
-		FileUtils.copyFile(weavePath+File.separator+asmFile.getName(),asm);
-		String pdbFileName = FileUtils.removeExtension(weavePath+File.separator+asmFile.getName()) + ".pdb";
-	*/
-		Debug.out(Debug.MODE_DEBUG,"ILICIT","To be woven file list: "+toBeWoven);
-		//ArrayList libraries = Configuration.instance().assemblies.getAssemblies();
-		String[] assemblyPaths = (String[])toBeWoven.toArray(new String[toBeWoven.size()]);
-		String targets = "";
-		
-		int assembliesSize = assemblyPaths.length;
-		if (assembliesSize > 0)
+	}
+
+	private void addBuiltAssemblies(File weaveDir, List compiledSources, List toBeWoven) 
+		throws ModuleException 
+	{
+		List builtAssemblies = new ArrayList();
+		DataStore.instance().addObject("BuiltLibs", builtAssemblies);
+
+		Iterator it = compiledSources.iterator();
+		while (it.hasNext())
 		{
-			PrintWriter out = null; 
-			if (assembliesSize > 20)
+			String asm = (String)it.next();
+			
+			File source = new File(asm);			
+			File target = new File(weaveDir, source.getName());
+			
+			String sourceFilename = source.getAbsolutePath();
+			String targetFilename = target.getAbsolutePath();				
+
+			if (!INCRE.instance().isProcessedByModule(asm,"ILICIT"))
 			{
-				//	PrintWriter out = null; 
-				try {
-					out = new PrintWriter(new BufferedWriter(new FileWriter(tempPath + "filelist.peweaver")));
-
-					for( int i = 0; i < assembliesSize; i++ )
-					{
-						//out.println(((String)libraries.get(i)).replaceAll("\"", ""));
-						//out.println((String)builtAssemblies.get(i));
-						out.println((String)assemblyPaths[i]);
-					}
-
-					out.flush();
-					out.close();
-				}
-				catch (IOException e) {
-					throw new ModuleException("Unable to create the build file for the weaver.","CONE_IS");
-				}
-			} 
-			else {
-				for( int i = 0; i < assembliesSize; i++ )
+				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying " + asm + " to Weaver directory");
+				
+				// FIXME: use copyFile(File dest, File source) instead
+				FileUtils.copyFile(targetFilename, sourceFilename);
+				
+				String pdbFile = FileUtils.removeExtension(sourceFilename) + ".pdb";
+				if (FileUtils.fileExist(pdbFile))
 				{
-					//targets += "\""+(String)builtAssemblies.get(i)+"\" ";
-					targets += "\""+(String)assemblyPaths[i]+"\" ";
+					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying " + pdbFile + " to Weaver directory");
+					
+					String pdbSourceFilename = new File(pdbFile).getAbsolutePath(); 
+					String pdbTargetFilename = FileUtils.removeExtension(targetFilename) + ".pdb";
+					FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
 				}
-				//targets = StringConverter.stringListToString(assemblyPaths, " ");
+				
+				builtAssemblies.add(targetFilename);
+				toBeWoven.add(targetFilename);
 			}
-
-			// verify libraries?
-			boolean verify = false;
-			String verifystr = "";
-			Module m = config.getModuleSettings().getModule("ILICIT");
-			if(m!=null){
-				verifystr = m.getProperty("verifyAssemblies");
-				if ("True".equalsIgnoreCase(verifystr)) {
-					verify = true;
-				}
+			else
+			{
+				// no need to weave the file
+				Debug.out(Debug.MODE_DEBUG,"INCRE","No need to re-weave " + asm);
+				builtAssemblies.add(targetFilename);
 			}
+		}
+	}
 
-			CommandLineExecutor cle = new CommandLineExecutor();
+	private void createBuildfile(String buildfile, List toBeWoven) throws ModuleException
+	{
+		PrintWriter out = null; 
+		try {
+			out = new PrintWriter(new BufferedWriter(new FileWriter(buildfile)));
 
-			File f = new File(peweaver);
-			if (!f.exists()) {
-				throw new ModuleException("Unable to locate the executable '" + peweaver + "'!");
-			}
-			else {
-				String args = " /nologo";
+			Iterator it = toBeWoven.iterator();
+			while (it.hasNext())
+				out.println((String)it.next());
 
-				if (verify) {
-					args = args.concat(" /verify");
-				}
+			out.flush();
+		}
+		catch (IOException e) {
+			throw new ModuleException("Unable to create the build file for the weaver.","CONE_IS");
+		}
+		finally {
+			FileUtils.close(out);
+		}
+	}
 
-				// If debugging supply the /debug switch
-				if ( Debug.getMode() == Debug.MODE_DEBUG ) args = args.concat(" /debug");
-
-				args = args.concat(" /ws=" + weavefile);
-
-				if ( targets.equals("") ) {
-					args = args.concat(" /filelist=\"" + tempPath + "filelist.peweaver\"");
-				}
-				else {
-					args = args.concat(" " + targets);
-				}
-
-				String command = FileUtils.quote(peweaver) + ' ' + args;
-
-				// If debugging write output from PeWeaver to log file
-				if ( Debug.getMode() == Debug.MODE_DEBUG ) 
-					command += " > \"" + weavePath + "/peweaver.log\"";
-
-				Debug.out(Debug.MODE_DEBUG, "ILICIT", "Starting execution of the 'PE Weaver' tool with arguments '" + args + "'");
-				int exitcode = cle.exec(command);
-				if (exitcode != 0) {
-					Debug.out(Debug.MODE_DEBUG, "ILICIT", cle.outputNormal());
-				}
-
-				String msg = "";
-
-				switch(exitcode)
-				{
-					case 1: msg = "General PEWeaver failure"; break;
-					case 2: msg = "Unable to find weave specification file"; break;
-					case 3: msg = "An error occured in the weaving process"; break;
-					case 4: msg = "Missing ildasm executable (ildasm.exe)"; break;
-					case 5: msg = "Missing ilasm executable (SDK tool ilasm.exe)"; break;
-					case 6: msg = "Missing PeVerify executable (SDK tool peverify.exe)"; break;
-					case 9: msg = "Input file not found"; break;
-					case 10: msg = "IL disassembler not found (ildasm.exe)"; break;
-					case 11: msg = "IL disassembler execution failure"; break;
-					case 12: msg = "Assembly verification error"; break;
-					case 13: msg = "IL file not found"; break;
-					case 14: msg = "Unsupported file format"; break;
-					case 15: msg = "IL assemmbler not found (ilasm.exe)"; break;
-					case 16: msg = "IL assembler execution failure"; break;
-					case 17: msg = "Output file not found"; break;
-					case 18: msg = "PEVerify tool not found (SDK tool peverify.exe)"; break;
-					case 19: msg = "PEVerify execution failure"; break;
-					case 25: msg = "ILWeaver not found (ilweaver.exe)"; break;
-					case 26: msg = "ILWeaver execution failure"; break;
-					case -532459699: msg = "PeWeaver or ILWeaver had a CLR crash. Most likely your compiler created rubish from your sourcefiles."; break; //Happens if your compiler creates rubbish
-					default: msg = "PeWeaver execution failure (exitcode " + exitcode + ')'; break;
-				}
-
-				if (exitcode == 0)
-					Debug.out(Debug.MODE_DEBUG, "ILICIT", "Successfully executed the 'PE Weaver' tool.");
-				else
-					throw new ModuleException(msg, "ILICIT");        
-			}
-		}//end assemblyPaths > 0
+	private String getExitMessage(int code)
+	{
+		switch (code)
+		{
+		case  1: return "General PEWeaver failure";
+		case  2: return "Unable to find weave specification file";
+		case  3: return "An error occured in the weaving process";
+		case  4: return "Missing ildasm executable (ildasm.exe)";
+		case  5: return "Missing ilasm executable (SDK tool ilasm.exe)";
+		case  6: return "Missing PeVerify executable (SDK tool peverify.exe)";
+		case  9: return "Input file not found";
+		case 10: return "IL disassembler not found (ildasm.exe)";
+		case 11: return "IL disassembler execution failure";
+		case 12: return "Assembly verification error";
+		case 13: return "IL file not found";
+		case 14: return "Unsupported file format";
+		case 15: return "IL assemmbler not found (ilasm.exe)";
+		case 16: return "IL assembler execution failure";
+		case 17: return "Output file not found";
+		case 18: return "PEVerify tool not found (SDK tool peverify.exe)";
+		case 19: return "PEVerify execution failure";
+		case 25: return "ILWeaver not found (ilweaver.exe)";
+		case 26: return "ILWeaver execution failure";
+		case -532459699: return "PeWeaver or ILWeaver had a CLR crash. Most likely your compiler created rubish from your sourcefiles."; //Happens if your compiler creates rubbish
+		default: return "PeWeaver execution failure (exitcode " + code + ')';
+		}		
 	}
 
 	/**
