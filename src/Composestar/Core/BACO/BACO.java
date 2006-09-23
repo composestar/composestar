@@ -5,9 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -22,120 +25,145 @@ import Composestar.Utils.FileUtils;
 
 public abstract class BACO implements CTCommonModule
 {
-
 	public void run(CommonResources resources) throws ModuleException
 	{
 		Debug.out(Debug.MODE_DEBUG, "BACO","Copying files to output directory...");
 		Configuration config = Configuration.instance();
-        
-        String composestarpath = config.getPathSettings().getPath("Composestar");
-        //System.out.println("ComposestartPath: "+composestarpath);
-        
-        HashSet filesToCopy = new HashSet();
-        
-        copyRequiredFiles(filesToCopy,config,composestarpath);
-        copyBuildAssemblies(filesToCopy);
-        copyCustomFilters(filesToCopy,config);
-        copyDependencies(config, filesToCopy);
-        
-        String examplepath = config.getPathSettings().getPath("Base");
 
-        // repository.xml: 
-        filesToCopy.add(this.processString(examplepath+"repository.xml"));
-        
-        // ouputpath:
-        String outputpath = config.getProjects().getProperty("OuputPath");
-        
-        Iterator filesIt = filesToCopy.iterator();
-        while (filesIt.hasNext())
-        {
-        	String file = (String)filesIt.next();
-        	Debug.out(Debug.MODE_DEBUG,"BACO","Copying file: "+file+" to "+outputpath);
-        	this.copyFile(file,outputpath);
-        }		
+		HashSet filesToCopy = new HashSet();
+		addRequiredFiles(filesToCopy);
+		addBuiltLibraries(filesToCopy);
+		addCustomFilters(filesToCopy);
+		addDependencies(filesToCopy);
+
+		// add repository.xml: 
+		String projectPath = config.getPathSettings().getPath("Base");
+		String repository = projectPath + "repository.xml";
+		
+		Debug.out(Debug.MODE_DEBUG,"BACO","Adding repository: '" + repository + "'");
+		filesToCopy.add(repository);
+
+		// determine outputPath:
+		String outputPath = config.getProjects().getProperty("OuputPath");
+		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
+
+		Iterator filesIt = filesToCopy.iterator();
+		while (filesIt.hasNext())
+		{
+			String file = (String)filesIt.next();
+			copyFile(file, outputPath);
+		}		
+	}
+
+	protected void addRequiredFiles(Set filesToCopy)
+	{
+		Configuration config = Configuration.instance();
+		String cpsPath = config.getPathSettings().getPath("Composestar");
+		Debug.out(Debug.MODE_DEBUG,"BACO","cpsPath='" + cpsPath + "'");
+
+		Iterator it = config.getPlatform().getRequiredFiles().iterator();
+		while (it.hasNext())
+		{
+			String requiredFile = (String)it.next();
+			String filename = cpsPath + "binaries/" + requiredFile;
+			
+			Debug.out(Debug.MODE_DEBUG,"BACO","Adding required file: '" + filename + "'");
+			filesToCopy.add(filename);
+		}
+	}
+
+	protected void addBuiltLibraries(Set filesToCopy)
+	{
+		List builtLibs = (List)DataStore.instance().getObjectByID("BuiltLibs");
+		Iterator it = builtLibs.iterator();
+		while (it.hasNext())
+		{
+			String lib = (String)it.next();
+
+			Debug.out(Debug.MODE_DEBUG,"BACO","Adding built library: '" + lib + "'");
+			filesToCopy.add(FileUtils.unquote(lib));
+		}
+	}
+
+	protected void addCustomFilters(Set filesToCopy)
+	{
+		Configuration config = Configuration.instance();
+		Iterator it = config.getFilters().getCustomFilters().iterator();
+		while (it.hasNext())
+		{
+			CustomFilter filter = (CustomFilter)it.next();
+			String lib = filter.getLibrary();
+
+			Debug.out(Debug.MODE_DEBUG,"BACO","Adding custom filter: '" + lib + "'");
+			filesToCopy.add(FileUtils.unquote(lib));
+		}
+	}
+
+	protected void addDependencies(Set filesToCopy)
+	{
+		Configuration config = Configuration.instance();
+		Iterator it = config.getProjects().getProjects().iterator();
+		while(it.hasNext())
+		{
+			Project project = (Project)it.next();
+			
+			// add deps
+			Iterator projectit = project.getDependencies().iterator();
+			while(projectit.hasNext())
+			{
+				Dependency dependency = (Dependency)projectit.next();
+				if (checkNeededDependency(dependency))
+				{
+					String depFilename = dependency.getFileName();
+					filesToCopy.add(FileUtils.unquote(depFilename));
+
+					Debug.out(Debug.MODE_DEBUG,"BACO","Adding dependency: '" + depFilename + "'");
+				}
+			}
+
+			// add dummies
+			String dummies = project.getCompiledDummies();
+			Debug.out(Debug.MODE_DEBUG,"BACO","Adding dummies: '" + dummies + "'");
+
+			filesToCopy.add(FileUtils.unquote(dummies));
+		}
 	}
 
 	protected abstract boolean checkNeededDependency(Dependency dependency);
-	
-	protected void copyDependencies(Configuration config, HashSet filesToCopy) {
-        Iterator it = config.getProjects().getProjects().iterator();
-        while(it.hasNext())
-        {
-        	Project prj = (Project)it.next();
-        	Iterator projectit = prj.getDependencies().iterator();
-        	while(projectit.hasNext())
-        	{
-        		Dependency dependency = (Dependency)projectit.next();
-        		if(checkNeededDependency(dependency))
-        		{
-        			filesToCopy.add(this.processString(dependency.getFileName()));
-        			//System.err.println("COPY: "+dependency.getFileName());
-        		}
-        	}
-        	String dummies = prj.getCompiledDummies();
-        	filesToCopy.add(this.processString(dummies));
-        }
-	}
-	
-	protected void copyCustomFilters(HashSet filesToCopy, Configuration config){
-        Iterator it = config.getFilters().getCustomFilters().iterator();
-        while(it.hasNext())
-        {
-        	//System.out.println("COPY: "+composestarpath+"binaries\\\t"+it.next()+"\t"+outputpath+"bin/");
-        	CustomFilter filter = (CustomFilter)it.next();
-        	filesToCopy.add(this.processString(filter.getLibrary()));
-        }
-	}
-	
-	protected void copyRequiredFiles(HashSet filesToCopy, Configuration config, String composestarpath){
-        Iterator it = config.getPlatform().getRequiredFiles().iterator();
-        while(it.hasNext())
-        {
-        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
-        	filesToCopy.add(this.processString(composestarpath+"binaries/"+it.next()));
-        }
-	}
-	
-	protected void copyBuildAssemblies(HashSet filesToCopy){
-        //it = config.assemblies.getAssemblies().iterator();
-        Iterator it = ((ArrayList)DataStore.instance().getObjectByID("BuiltLibs")).iterator();
-        while(it.hasNext())
-        {
-        	//System.err.println("COPY: "+composestarpath+"binaries\\\t"+it.next());
-        	filesToCopy.add(this.processString((String)it.next()));
-        }
-	}
 
 	// FIXME: double with FileUtils.copyFile ?
-	public void copyFile(String file, String outputpath) throws ModuleException
+	public void copyFile(String file, String dest) throws ModuleException
 	{
+		Debug.out(Debug.MODE_DEBUG,"BACO","Copying file: '" + file + "' to '" + dest + "'");
 		try
 		{
 			File in = new File(file);
-			String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator)+1);
-			File out = new File(outputpath+tmp);
-						    
+			String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator) + 1);
+			File out = new File(dest + tmp);
+
 			FileInputStream fis  = new FileInputStream(in);
 			FileOutputStream fos = new FileOutputStream(out);
+			
 			byte[] buf = new byte[1024];
-			for(int i;(i=fis.read(buf))!=-1;)
+			for (int i; (i = fis.read(buf)) != -1;)
 			{
-			     fos.write(buf, 0, i);
+				fos.write(buf, 0, i);
 			}
+			
 			fis.close();
 			fos.close();
 		}
 		catch (FileNotFoundException e)
 		{
 			// FIXME: shouldnt this throw a ModuleException?
-			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not Found:" + e.getMessage());
-			e.printStackTrace();
+			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not found: file='" + file + "', dest='" + dest + "', msg='" + e.getMessage() + "'");
+			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
 		}
 		catch (IOException e)
 		{
 			// FIXME: shouldnt this throw a ModuleException?
 			Debug.out(Debug.MODE_CRUCIAL,"BACO","IOException:" + e.getMessage());
-			e.printStackTrace();
+			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
 		}
 	}
 
