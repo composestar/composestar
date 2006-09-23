@@ -565,12 +565,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
     if (parsingInput) {
       inf.addFilterElement(fe);
-      //TODO: permanent?
-      //fe.setParent(inf);
+      fe.setParent(inf);
     } else {
       of.addFilterElement(fe);
-      //TODO: permanent?
-      //fe.setParent(of);
+      fe.setParent(of);
     }
     this.addToRepository(fe);
 
@@ -964,10 +962,15 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     		addSelector(selector, argTypes,lineNumber);
     		s.setParent(mp);
     	}
-    	if(paratype == 2){
+    	if(paratype == 2){ 
     		addParameterizedSelector(selector, argTypes,lineNumber);
     		s.setParent(mp);
-    	}    	
+    	} 
+    	if(paratype == 3){ //lists are currently handled as single, and REXREF transforms it to a list of matchings. Therefore the boolean
+    		addParameterizedSelector(selector, argTypes,lineNumber);
+    		s.setParent(mp);
+    		(((ParameterizedMessageSelectorAST) s)).setList(true);
+    	} 
     }
     addMatchingType(matching);
     mp.setMatchType(mt);

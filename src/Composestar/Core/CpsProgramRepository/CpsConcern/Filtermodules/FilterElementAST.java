@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * @modelguid {5976EB5C-BFC4-46BF-995B-AD41D42C48C7}
  */
-public class FilterElementAST extends RepositoryEntity {
+public class FilterElementAST extends ContextRepositoryEntity {
 
   /**
    * @modelguid {6783CA89-B3A5-4BAC-959E-31BB7590D241}
