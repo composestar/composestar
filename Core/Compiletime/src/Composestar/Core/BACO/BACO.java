@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +44,12 @@ public abstract class BACO implements CTCommonModule
 		// determine outputPath:
 		String outputPath = config.getProjects().getProperty("OuputPath");
 		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
+		
+		// create the output dir if needed
+		if (!FileUtils.createFullPath(outputPath))
+			Debug.out(Debug.MODE_CRUCIAL, "BACO", "Unable to create output directory");
 
+		// start the actual copying
 		Iterator filesIt = filesToCopy.iterator();
 		while (filesIt.hasNext())
 		{
@@ -166,13 +169,4 @@ public abstract class BACO implements CTCommonModule
 			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
 		}
 	}
-
-	/**
-	 * @deprecated use FileUtils.unquote(String) instead.
-	 */
-	protected String processString(String in)
-	{
-		return FileUtils.unquote(in);
-	}
-
 }
