@@ -1,33 +1,42 @@
 package Composestar.DotNET.TYM.RepositoryCollector;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
-import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.LAMA.*;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.TYM.TypeCollector.CollectorRunner;
-import Composestar.DotNET.LAMA.*;
-import Composestar.Repository.RepositoryAccess;
-import Composestar.Repository.LanguageModel.*;
-import Composestar.Utils.Debug;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.CallToOtherMethod;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
+import Composestar.DotNET.LAMA.DotNETFieldInfo;
+import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETParameterInfo;
 import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Repository.RepositoryAccess;
+import Composestar.Repository.LanguageModel.CallElement;
+import Composestar.Repository.LanguageModel.FieldElement;
+import Composestar.Repository.LanguageModel.MethodBody;
+import Composestar.Repository.LanguageModel.MethodElement;
+import Composestar.Repository.LanguageModel.ParameterElement;
+import Composestar.Repository.LanguageModel.TypeElement;
+import Composestar.Utils.Debug;
 
 public class StarLightCollectorRunner implements CollectorRunner 
 {
 	private RepositoryAccess repository;
+	private Vector callsToOtherMethods = new Vector();
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
@@ -109,12 +118,15 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dataStore.addObject( type.fullName(), pc );
 			Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
 		}
+        
+        //resolve the MethodInfo reference in the calls within a method:
+		resolveCallsToOtherMethods();
 	}
 	
 	private void collectTypes() throws ModuleException
 	{
 		// Get all types from repository
-		ArrayList storedTypes = repository.LanguageModel().getTypeElements();
+		List storedTypes = repository.getTypeElements();
 		
 		// Process all types, i.e. map them to LAMA
 		Iterator typeIterator = storedTypes.iterator();
@@ -183,7 +195,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException
 	{
 		// Get all fields for the type 'storedType'
-		ArrayList storedFields = repository.LanguageModel().getFieldElements(storedType);
+		List storedFields = repository.getFieldElements(storedType);
 	
 		// Process all fields
 		Iterator fieldIterator = storedFields.iterator();
@@ -206,7 +218,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectMethods(TypeElement storedType, DotNETType type) throws ModuleException
 	{
 		// Get all methods for the type 'storedType'
-		ArrayList storedMethods = repository.LanguageModel().getMethodElements(storedType);
+		List storedMethods = repository.getMethodElements(storedType);
 			//DataStoreContainer.getInstance().getMethodElements(storedType);		
 
 		// Process all methods
@@ -251,7 +263,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectParameters(MethodElement storedMethod, DotNETMethodInfo method) throws ModuleException
 	{
 		// Get all parameters for the method 'storedmethod'
-		ArrayList storedParameters = repository.LanguageModel().getParameterElements(storedMethod);		
+		List storedParameters = repository.getParameterElements(storedMethod);		
 
 		// Process all parameters
 		Iterator parameterIterator = storedParameters.iterator();
@@ -284,7 +296,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
 	{
 		// Get the call elements for this method body
-		ArrayList storedCalls = repository.LanguageModel().getCallElements(storedMethodBody);		
+		List storedCalls = repository.getCallElements(storedMethodBody);		
 
 		Iterator callIterator = storedCalls.iterator();
 		while (callIterator.hasNext())
@@ -298,7 +310,62 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			
 			method.getCallsToOtherMethods().add(call);
+			
+			callsToOtherMethods.add( call );
 		}
 	}
+	
+	/**
+	 * Resolve the MethodInfo of the called method for all calls to other methods.
+	 *
+	 */
+	private void resolveCallsToOtherMethods(){
+	    CallToOtherMethod call;
+
+	    Enumeration calls = callsToOtherMethods.elements();
+	    while( calls.hasMoreElements() ){
+	        call = (CallToOtherMethod) calls.nextElement();
+
+
+	        call.setCalledMethod( getMethodInfo( call ) );
+	    }
+	}
+
+	private MethodInfo getMethodInfo( CallToOtherMethod call ){
+	    String operation = call.getOperationName();
+
+	    //separate returntype part:
+	    int pos1 = operation.indexOf( ' ' );
+
+	    //separate type:
+	    int pos2 = operation.indexOf( ':' );
+	    String typeName = operation.substring( pos1+1, pos2 );
+
+	    //separate methodname:
+	    int pos3 = operation.indexOf( '(' );
+	    String methodName = operation.substring( pos2+2, pos3 );
+
+	    //separate arguments:
+	    int pos4 = operation.indexOf( ')' );
+	    String arguments = operation.substring( pos3+1, pos4 );
+
+	    StringTokenizer tokenizer = new StringTokenizer( arguments, "," );
+	    int tokenCount = tokenizer.countTokens();
+	    String[] argTypes = new String[ tokenCount ];
+	    for (int i=0; i<tokenCount; i++){
+	        argTypes[i] = tokenizer.nextToken();
+	    }
+
+
+	    //get Methodinfo:
+	    Type type = TypeMap.instance().getType( typeName );
+        MethodInfo methodInfo = null;
+        if ( type != null ){
+            methodInfo = type.getMethod( methodName, argTypes );
+        }
+
+	    return methodInfo;
+	}
+	
 	
 }

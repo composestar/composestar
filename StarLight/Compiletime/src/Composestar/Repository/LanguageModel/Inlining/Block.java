@@ -1,10 +1,7 @@
 package Composestar.Repository.LanguageModel.Inlining;
 
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Iterator;
-
-import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
+import Composestar.Repository.LanguageModel.Inlining.Visitor.IVisitable;
+import Composestar.Repository.LanguageModel.Inlining.Visitor.IVisitor;
 
 public class Block extends InlineInstruction implements IVisitable
 {
@@ -21,6 +18,11 @@ public class Block extends InlineInstruction implements IVisitable
 		instructions[instructionCount++] = instruction;
 	}
 
+    public void set_Instructions( InlineInstruction[] instructions ){
+        this.instructions = instructions;
+        this.instructionCount = instructions.length;
+    }
+    
 	/** @property */
 	public InlineInstruction[] get_Instructions()
 	{

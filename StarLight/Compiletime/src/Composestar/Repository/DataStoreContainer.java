@@ -1,28 +1,27 @@
 package Composestar.Repository;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
+import java.util.List;
+
+import Composestar.DotNET.MASTER.StarLightMaster;
+
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.ext.StoredClass;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
 
 public class DataStoreContainer {
 	private static DataStoreContainer instance;
 	
-	private static String yapFileName;
+	private String yapFileName;
 	
 	private ObjectContainer dbContainer;
 
     private DataStoreContainer()
     {
-    	//Werkt alleen de 1ste keer, daarna is de db gewijzigd en mapped ie naar niet bestaande stored types
-		//Db4o.configure().addAlias(
-  		//		new WildcardAlias(
-    	//			"Composestar.Repository.LanguageModel.*, Repository.LanguageModel", "Composestar.Repository.LanguageModel.*"));
-
-		if (yapFileName == null) yapFileName = "database.yap";
+    	this.yapFileName = StarLightMaster.getYapFileName();
 		
 		adjustClassNames();
 		
@@ -42,10 +41,6 @@ public class DataStoreContainer {
     	dbContainer.close();
     }
     
-    public static void setYapFileName(String fileName)
-    {
-    	yapFileName = fileName;
-    }
     
     private void adjustClassNames()
     {
@@ -79,88 +74,49 @@ public class DataStoreContainer {
       return instance;
     }
     
-    private ArrayList ObjectSetToArrayList(ObjectSet os)
-    {
-		ArrayList result = new ArrayList();
-		while (os.hasNext()) {
-			result.add(os.next());
-		
-		}
-		
-		return result; 
-    }
     
-    public Composestar.Repository.Configuration.CommonConfiguration GetCommonConfiguration()
-    {
-		Query query = dbContainer.query();
-		query.constrain(Composestar.Repository.Configuration.CommonConfiguration.class);
-		ObjectSet result = query.execute();   	
-    	
-        if (result.size() == 1)
-            return (Composestar.Repository.Configuration.CommonConfiguration)result.get(0);
-        else 
-            return null;   	
-    }
     
-    public ArrayList GetConcernInformation()
-    {
-		ObjectSet result=dbContainer.get(Composestar.Repository.Configuration.ConcernInformation.class);
+    
 
-		return ObjectSetToArrayList(result);   	
-    }
-	
-    public void addTypeElement(Composestar.Repository.LanguageModel.TypeElement typeElement)
+    /**
+     * Stores the object.
+     * @param o The object to store.
+     */
+    public void StoreObject(Object o)
     {
-        dbContainer.set(typeElement);
-    }
-    
-    public Composestar.Repository.LanguageModel.TypeElement GetTypeElement(String fullName)
-    {
-		Query query = dbContainer.query();
-		query.constrain(Composestar.Repository.LanguageModel.TypeElement.class);
-		query.descend("_fullName").constrain(fullName);
-		ObjectSet result = query.execute();   	
-    	
-        if (result.size() == 1)
-            return (Composestar.Repository.LanguageModel.TypeElement)result.get(0);
-        else 
-            return null;
-    }
-    
-	public ObjectSet getTypeElements()
-	{
-		return dbContainer.get(Composestar.Repository.LanguageModel.TypeElement.class);
-	}
-	
-	public ObjectSet getFieldElements(Composestar.Repository.LanguageModel.TypeElement type)
-	{
-		Query query = dbContainer.query();
-		query.constrain(Composestar.Repository.LanguageModel.FieldElement.class);
-		query.descend("_parentTypeId").constrain(new Integer(type.get_Id()));
-		return query.execute();
-	}	
+        
+        if (o == null){
+            throw new NullPointerException();
+        }
+        
+        //TODO CheckForOpenDatabase();
 
-	public ObjectSet getMethodElements(Composestar.Repository.LanguageModel.TypeElement type)
-	{
-		Query query = dbContainer.query();
-		query.constrain(Composestar.Repository.LanguageModel.MethodElement.class);
-		query.descend("_parentTypeId").constrain(new Integer(type.get_Id()));
-		return query.execute();
-	}
-	
-	public ObjectSet getParameterElements(Composestar.Repository.LanguageModel.MethodElement method)
-	{
-		Query query = dbContainer.query();
-		query.constrain(Composestar.Repository.LanguageModel.ParameterElement.class);
-		query.descend("_parentMethodId").constrain(new Integer(method.get_Id()));
-		return query.execute();
-	}
-	
-	public ObjectSet getCallElements(Composestar.Repository.LanguageModel.MethodBody methodBody)
-	{
-		Query query = dbContainer.query();
-		query.constrain(Composestar.Repository.LanguageModel.MethodBody.class);
-		query.descend("_parentMethodBodyId").constrain(new Integer(methodBody.get_Id()));
-		return query.execute();
-	}
+        dbContainer.set(o);
+    }
+
+    
+    /**
+     * Gets the objects of a specified class
+     * @param theClass The class of which the objects are returned
+     * @return A list containing the objects.
+     */
+    public List getObjects( Class theClass ){
+        //TODO CheckForOpenDatabase();
+        
+        return dbContainer.query( theClass );
+    }
+    
+    /**
+     * Gets the objects matching the given Predicate.
+     * @param match The predicate for which we want the matching objects.
+     * @return A list containing the objects.
+     */
+    public List getObjectQuery( Predicate match ){
+        //TODO CheckForOpenDatabase();
+        
+        return dbContainer.query( match );
+    }
+
+    
+    
 }
