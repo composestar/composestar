@@ -16,9 +16,7 @@ import java.util.Vector;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
@@ -252,7 +250,7 @@ public class FireModel {
                 MethodInfo matchMethodInfo = methodInfo.getClone(
                         matchSelector.getName(), matchType );
                 
-                if ( methods.contains( matchMethodInfo ) )
+                if ( containsMethod( methods, matchMethodInfo ) )
                     return SIGNATURE_MATCH_TRUE;
                 else
                     return SIGNATURE_MATCH_FALSE;
@@ -284,6 +282,17 @@ public class FireModel {
             return SIGNATURE_MATCH_UNKNOWN;
         }
             
+    }
+    
+    private boolean containsMethod( List methods, MethodInfo method ){
+        Iterator iterator = methods.iterator();
+        while( iterator.hasNext() ){
+            MethodInfo containedMethod = (MethodInfo) iterator.next();
+            if ( containedMethod.checkEquals( method ) )
+                return true;
+        }
+        
+        return false;
     }
     
     
@@ -396,16 +405,6 @@ public class FireModel {
         return distinguishable;
     }
     
-    
-    public Target getTarget( External external ){
-	//TODO
-	return null;
-    }
-    
-    public Target getTarget( Internal internal ){
-	//TODO
-	return null;
-    }
     
     
     private class ExtendedExecutionModel implements ExecutionModel{
@@ -552,7 +551,7 @@ public class FireModel {
             super( baseState.getFlowNode(), message, 
                     baseState.getSubstitutionSelector(), 
                     baseState.getSubstitutionTarget(), baseState.getStateType() );
-            
+                        
             this.model = model;
             this.baseState = baseState;
             this.signatureCheck = signatureCheck;
@@ -567,6 +566,8 @@ public class FireModel {
             
             return outTransitions.elements();
         }
+        
+        
     }
     
     

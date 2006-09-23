@@ -248,24 +248,19 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	}
 	
 	
-	public boolean equals( Object obj ){
-	    if ( !(obj instanceof MethodInfo) )
+	public boolean checkEquals( MethodInfo method ){
+	    if ( !method.Name.equals( this.Name ) )
 	        return false;
 	    
-	    MethodInfo info = (MethodInfo) obj;
-	    
-	    if ( !info.Name.equals( this.Name ) )
+	    if ( !method.ReturnTypeString.equals( this.ReturnTypeString ) )
 	        return false;
 	    
-	    if ( !info.ReturnTypeString.equals( this.ReturnTypeString ) )
-	        return false;
-	    
-	    if ( this.Parameters.size() != info.Parameters.size() )
+	    if ( this.Parameters.size() != method.Parameters.size() )
 	        return false;
 	        
 	    for (int i=0; i<this.Parameters.size(); i++){
 	        ParameterInfo thisPar = (ParameterInfo) this.Parameters.get( i );
-	        ParameterInfo objPar = (ParameterInfo) info.Parameters.get( i );
+	        ParameterInfo objPar = (ParameterInfo) method.Parameters.get( i );
 	        if ( !thisPar.ParameterTypeString.equals( objPar.ParameterTypeString ) )
 	            return false;
 	    }
