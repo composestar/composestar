@@ -23,6 +23,15 @@ public abstract class InlineInstruction implements IVisitable {
 	{
 		return label;
 	}
+    
+    /**
+     * sets the label
+     * @property 
+     */
+    public void set_Label( Label value )
+    {
+        this.label = value;
+    }
 
 	public void Accept(IVisitor visitor)
 	{

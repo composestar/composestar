@@ -10,27 +10,25 @@
 
 package Composestar.DotNET.MASTER;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Iterator;
-import java.util.Properties;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
-import Composestar.Utils.Debug;
-import Composestar.Utils.Version;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.*;
-import Composestar.Core.Master.Config.XmlHandlers.BuildXMLHandler;
+import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.PathSettings;
+import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Repository.RepositoryAccess;
+import Composestar.Repository.Configuration.CommonConfiguration;
+import Composestar.Utils.Debug;
+import Composestar.Utils.Version;
 
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules
@@ -42,6 +40,8 @@ public class StarLightMaster extends Master  {
     private CommonResources resources;
     private String configfile;
 
+    private static String yapFileName;
+    
     /**
      * Default ctor.
      * @param configurationFile
@@ -49,24 +49,27 @@ public class StarLightMaster extends Master  {
      * @roseuid 401B9C520251
      */
     public StarLightMaster(String configurationFile) throws ModuleException{
-    	java.io.File f = new java.io.File(configurationFile);
+        yapFileName = configurationFile;
+        
+    	File f = new File(configurationFile);
     	if (!f.exists()) {
     		Debug.out(Debug.MODE_CRUCIAL,"Master","Configuration file '"+configurationFile+"; not found!");
     		System.exit(-1);
     	}
     	Debug.out(Debug.MODE_DEBUG,"Master","Configuration file: "+configurationFile);
-    	Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
-    	repository.setDatabaseFileName(configurationFile);
-    	Debug.setMode(repository.Configuration().getCompiletimeDebugLevel());  
+    	RepositoryAccess repository = new RepositoryAccess();
+        
+    	Debug.setMode(repository.GetCommonConfiguration().get_CompiletimeDebugLevel());  
 		
-    	//Debug.setMode(4);
+//    	Debug.setMode(4);
 	    resources = new CommonResources();
 	    
 	    //  create the repository
 	    DataStore ds = DataStore.instance();
 	    
-	    Configuration.instance().getPathSettings().addPath("Base", repository.Configuration().getIntermediateOutputPath());
-		Configuration.instance().getPathSettings().addPath("Composestar", repository.Configuration().getInstallFolder());
+        CommonConfiguration configuration = repository.GetCommonConfiguration();
+	    Configuration.instance().getPathSettings().addPath("Base", configuration.get_IntermediateOutputPath());
+		Configuration.instance().getPathSettings().addPath("Composestar", configuration.get_InstallFolder() + "\\" );
 
 		
 	    //getPathSettings().getPath("Base")
@@ -100,6 +103,10 @@ public class StarLightMaster extends Master  {
 	    //fixme:we need to iterate over all the cps files specified in the configuration
 	    //resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
 	}
+    
+    public static String getYapFileName(){
+        return yapFileName;
+    }
 
     /**
      * Compose* main function.
@@ -161,7 +168,7 @@ public class StarLightMaster extends Master  {
 			
 			Projects projects = new Projects();
 			Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
-			Iterator concernIterator = repository.Configuration().getConcerns().iterator();
+			Iterator concernIterator =repository.GetConcernInformation().iterator();
 			while (concernIterator.hasNext()) {
 				Composestar.Repository.Configuration.ConcernInformation ci = (Composestar.Repository.Configuration.ConcernInformation)concernIterator.next();
 				ConcernSource concern = new ConcernSource();
@@ -169,6 +176,7 @@ public class StarLightMaster extends Master  {
 				projects.addConcernSource(concern);
 			}			
 			Configuration.instance().setProjects(projects);
+            PathSettings path = Configuration.instance().getPathSettings();
 		
 			
 			// initialize INCRE

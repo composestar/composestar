@@ -64,4 +64,7 @@
 	<module name="INLINE" fulltype="Composestar.Core.INLINE.lowlevel.ModelBuilder" enabled="true" incremental="false" summary="Generating inline information...">
 		<dependencies></dependencies>	
 	</module>
+	<module name="EMITTER" fulltype="Composestar.DotNET.TYM.RepositoryEmitter.StarLightEmitterRunner" enabled="true" incremental="false" summary="Emitting weaving information...">
+		<dependencies></dependencies>	
+	</module>
 </modules>
