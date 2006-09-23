@@ -88,17 +88,15 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolving entry assembly...");
 		String entryAssembly = typeLocations.getAssemblyByType(applicationStart);
 
-		if (entryAssembly != null)
-		{
-			Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolved '" + entryAssembly + "' as entry assembly.");     
-		}
-		else
-			throw new ModuleException("Application has no startup object defined!","CONE_IS");
+		if (entryAssembly == null)
+			throw new ModuleException("The entry assembly could not be determined. ApplicationStart is '" + applicationStart + "'","CONE_IS");
 
-		Iterator it = config.getProjects().getProjects().iterator();
-		while(it.hasNext())
+		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Resolved '" + entryAssembly + "' as entry assembly.");     
+
+		prjIt = config.getProjects().getProjects().iterator();
+		while (prjIt.hasNext())
 		{
-			Project project = (Project)it.next();
+			Project project = (Project)prjIt.next();
 			Iterator depIt = project.getDependencies().iterator();
 			while (depIt.hasNext())
 			{
@@ -128,7 +126,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		while (cfNames.hasMoreElements())
 		{
 			String cfName = (String) cfNames.nextElement();
-			String cfPath = resources.CustomFilters.getProperty( cfName );
+			String cfPath = resources.CustomFilters.getProperty(cfName);
 			//cfPath = System.getProperty("user.dir")+File.separator+cfName;
 			
 			try {
