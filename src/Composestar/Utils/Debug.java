@@ -1,5 +1,8 @@
 package Composestar.Utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
@@ -7,14 +10,20 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class Debug 
 {
-	private static int currentMode = 0;
-	private static int warnings = 0;
-    
 	public static final int MODE_ERROR = 0;
 	public static final int MODE_CRUCIAL = 1;
 	public static final int MODE_WARNING = 2;
 	public static final int MODE_INFORMATION = 3;
 	public static final int MODE_DEBUG = 4;
+	
+	private static int currentMode = 0;
+	private static int warnings = 0;
+    
+	/**
+	 * Public constructor needed because this class is
+	 * serialized into the repository for some reason.
+	 */
+	public Debug() {}
     
 	public static void setMode(int mode) 
 	{
@@ -56,7 +65,7 @@ public class Debug
 					break;
 
 				default:
-					modeDescription = "error";
+					modeDescription = "unknown";
 					break;
 			}
 
@@ -85,5 +94,13 @@ public class Debug
 	{
 		if (warnings > 0)
 			System.out.println("Warnings: " + warnings + '.');
+	}
+	
+	public static String stackTrace(Throwable t)
+	{
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);			
+		t.printStackTrace(pw);
+		return pw.toString();
 	}
 }

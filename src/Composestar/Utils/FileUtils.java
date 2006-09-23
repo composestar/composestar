@@ -35,6 +35,11 @@ public class FileUtils
 	 */
 	public static String unquote(String filename)
 	{
+		filename = filename.trim();
+		
+		if ("".equals(filename) || "\"".equals(filename))
+			return "";
+		
 		if (filename.charAt(0) == '"')
 			filename = filename.substring(1);
 		
