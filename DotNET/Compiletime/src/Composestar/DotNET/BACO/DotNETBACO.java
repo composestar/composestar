@@ -1,12 +1,13 @@
 package Composestar.DotNET.BACO;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import Composestar.Core.BACO.BACO;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 public class DotNETBACO extends BACO
@@ -17,7 +18,7 @@ public class DotNETBACO extends BACO
 		return !(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0);
 	}
 
-	protected void copyBuildAssemblies(HashSet filesToCopy)
+	protected void addBuiltLibraries(Set filesToCopy)
 	{
 		List builtLibs = (List)DataStore.instance().getObjectByID("BuiltLibs");
 		Iterator it = builtLibs.iterator();
@@ -26,9 +27,10 @@ public class DotNETBACO extends BACO
 			String dll = FileUtils.unquote((String)it.next());
 			String pdb = FileUtils.removeExtension(dll) + ".pdb";
 
+			Debug.out(Debug.MODE_DEBUG,"BACO","Adding built library PDB: '" + pdb + "'");
 			filesToCopy.add(pdb);
 		}
 
-		super.copyBuildAssemblies(filesToCopy);
+		super.addBuiltLibraries(filesToCopy);
 	}
 }
