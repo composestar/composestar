@@ -9,13 +9,22 @@ public class Jump extends Instruction{
     private Label target;
 
     public Jump( Label target ){
-	this.target = target;
+        this.target = target;
     }
 
     /**
      * @return the target
      */
     public Label getTarget(){
-	return target;
+        return target;
     }
+
+    /**
+     * @see Composestar.Core.INLINE.model.Visitable#accept(Composestar.Core.INLINE.model.Visitor)
+     */
+    public Object accept(Visitor visitor){
+        return visitor.visitJump( this );
+    }
+    
+    
 }

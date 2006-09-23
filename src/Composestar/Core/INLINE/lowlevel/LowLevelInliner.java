@@ -23,68 +23,68 @@ import Composestar.Core.LAMA.MethodInfo;
 
 public class LowLevelInliner{
     private LowLevelInlineStrategy strategy;
-    
+
     private StateType isCondExpr;
     private StateType isFilter;
-    
+
     private HashMap filterMap;
-    
+
     public LowLevelInliner( LowLevelInlineStrategy strategy ){
         this.strategy = strategy;
-        
+
         initialize();
     }
-    
+
     private void initialize(){
         isFilter = new StateType( FlowChartNames.FILTER_NODE );
         isCondExpr =
             new StateType( FlowChartNames.CONDITION_EXPRESSION_NODE ); 
     }
-    
+
     public void inline( ExecutionModel model, FilterModule[] modules, 
             MethodInfo method )
     {
         filterMap = new HashMap();
-        
+
         Vector blocks = identifyFilters( model );
-        
+
         inline( blocks, modules, method );
     }
-    
-    
+
+
     private void inline( Vector blocks, FilterModule[] modules, MethodInfo method){
         strategy.startInline( modules, method, new String[0] );
-        
+
         for (int i=0; i<blocks.size(); i++){
             inlineFilterBlock( (FilterBlock) blocks.elementAt(i) );
         }
-        
+
         strategy.endInline();
     }
-    
-    
-    
+
+
+
     private void inlineFilterBlock( FilterBlock filterBlock ){
         strategy.startFilter( filterBlock.filter, filterBlock.label );
-        
+
         Enumeration filterElements = filterBlock.filterElements.elements();
-        
+
         if ( filterElements.hasMoreElements() )
             inlineFilterElements( filterElements );
-        
+
         strategy.endFilter();
     }
-    
+
     private void inlineFilterElements( Enumeration filterElements ){
         FilterElementBlock filterElement = 
             (FilterElementBlock) filterElements.nextElement();
-        
+
         ExecutionState flowFalseExitState = filterElement.flowFalseExitState;
         ExecutionState flowTrueExitState = filterElement.flowTrueExitState;
-        
+
         if ( flowFalseExitState == null ){
             //flueTrue can't be null if flowFalse is null
-            
+
             if ( isCondExpr.isTrue( flowTrueExitState ) ){
                 //continue with next filter element:
                 inlineFilterElements( filterElements );
@@ -106,19 +106,19 @@ public class LowLevelInliner{
             else{
                 ExecutionState conditionExprState = filterElement.conditionExprState;
                 FlowNode condExprFlowNode = conditionExprState.getFlowNode();
-                
+
                 strategy.evalCondExpr( (ConditionExpression) condExprFlowNode.getRepositoryLink() );
                 strategy.beginTrueBranch();
-                
+
                 strategy.generateAction( flowTrueExitState );
                 generateJump( flowTrueExitState );
-                
+
                 strategy.endTrueBranch();
                 strategy.beginFalseBranch();
-                
+
                 //do the inlining of the next filter elements:
                 inlineFilterElements( filterElements );
-                
+
                 strategy.endFalseBranch();
             }
         }
@@ -139,33 +139,33 @@ public class LowLevelInliner{
                     ExecutionState conditionExprState = 
                         filterElement.conditionExprState;
                     FlowNode condExprFlowNode = conditionExprState.getFlowNode();
-                    
-                    
+
+
                     strategy.evalCondExpr( (ConditionExpression) condExprFlowNode.getRepositoryLink() );
                     strategy.beginTrueBranch();
-                    
+
                     strategy.generateAction( flowTrueExitState );
                     generateJump( flowTrueExitState );
-                    
+
                     strategy.endTrueBranch();
                     strategy.beginFalseBranch();
-                    
+
                     strategy.generateAction( flowFalseExitState );
                     generateJump( flowFalseExitState );
-                    
+
                     strategy.endFalseBranch();
                 }
             }
         }
     }
-    
-    
+
+
     private void generateJump( ExecutionState state ){
         ExecutionState currentState = state;
         while( currentState != null  &&  !isFilter.isTrue( currentState ) ){
             currentState = getNextState( currentState );
         }
-        
+
         if ( currentState != null ){
             FilterBlock block = (FilterBlock) filterMap.get( currentState );
             strategy.jump( block.label );
@@ -174,8 +174,8 @@ public class LowLevelInliner{
             strategy.jump( -1 );
         }
     }
-    
-    
+
+
     private Vector identifyFilters( ExecutionModel model ){
         ExecutionStateIterator iterator = new ExecutionStateIterator( model );
         ExecutionState state;
@@ -189,11 +189,11 @@ public class LowLevelInliner{
                 result.add( block );
             }
         }
-        
+
         return result;
     }
-    
-    
+
+
     private FilterBlock identifyFilterBlock( ExecutionState filterState )
     {
         FilterBlock filterBlock = new FilterBlock();
@@ -202,19 +202,19 @@ public class LowLevelInliner{
         filterMap.put( filterState, filterBlock );
         return filterBlock;
     }
-    
-    
+
+
     private void identifyFilterElementBlocks( ExecutionState filterState, 
             FilterBlock filterBlock )
     {
         ExecutionState nextFilterState = null;
         ExecutionState nextState = getNextState( filterState );
         Vector result = new Vector();
-        
+
         while( nextState != null ){
             FilterElementBlock block = identifyFilterElementBlock( nextState );
             result.add( block );
-            
+
             if ( isCondExpr.isTrue( block.flowTrueExitState ) ){
                 nextState = block.flowTrueExitState;
             }
@@ -225,23 +225,23 @@ public class LowLevelInliner{
                 nextState = null;
             }
         }
-        
+
         filterBlock.filterElements = result;
     }
-    
-    
+
+
     private FilterElementBlock identifyFilterElementBlock( ExecutionState condExpr ){
         FilterElementBlock block = new FilterElementBlock();
         block.conditionExprState = condExpr;
-        
+
         Enumeration outTransitions = condExpr.getOutTransitions();
         //enumeration has 1 or 2 elements
         while( outTransitions.hasMoreElements() ){
             ExecutionTransition transition = 
                 (ExecutionTransition) outTransitions.nextElement();
-            
+
             ExecutionState exitState = getExitState( transition.getEndState() );
-            
+
             if (transition.getLabel().equals( 
                     ExecutionLabels.CONDITION_EXPRESSION_TRUE ) )
             {
@@ -251,11 +251,11 @@ public class LowLevelInliner{
                 block.flowFalseExitState = exitState;
             }
         }
-        
+
         return block;
     }
-    
-    
+
+
     /**
      * Returns the first next state of the given state, or null if there is none.
      * @param state
@@ -272,9 +272,9 @@ public class LowLevelInliner{
             return null;
         }
     }
-    
-    
-    
+
+
+
     /**
      * This method gets the exitstate from the filterelement for one trace
      * starting with the given state. This exitState is either an actionstate or
@@ -284,7 +284,7 @@ public class LowLevelInliner{
      */
     private ExecutionState getExitState( ExecutionState state ){
         ExecutionState currentState = state;
-        
+
         while( !isExitState( currentState ) ){
             //get the next state:
             Enumeration outTransitions = currentState.getOutTransitions();
@@ -292,37 +292,37 @@ public class LowLevelInliner{
                 (ExecutionTransition) outTransitions.nextElement();
             currentState = transition.getEndState();
         }
-        
+
         return currentState;
     }
-    
+
     private boolean isExitState( ExecutionState state ){
         //exitstate is either a ConditionExpression or an Action state:
         return isCondExpr.isTrue( state )
         ||  state.getFlowNode().containsName( FlowChartNames.ACTION_NODE );
     }
-    
-    
-    
+
+
+
     private class FilterBlock{
         public Filter filter;
         public Vector filterElements;
         public int label;
-        
+
         public FilterBlock(){
         }
     }
-    
-    
+
+
     private class FilterElementBlock{
         public ExecutionState conditionExprState;
         public ExecutionState flowTrueExitState;
         public ExecutionState flowFalseExitState;
-        
+
         public FilterElementBlock(){
         }
     }
-    
-    
-    
+
+
+
 }

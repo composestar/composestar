@@ -14,21 +14,21 @@ public class Branch extends Instruction{
 
     public Branch( ConditionExpression conditionExpression )
     {
-	this.conditionExpression = conditionExpression;
+        this.conditionExpression = conditionExpression;
     }
 
     /**
      * @return the conditionExpression
      */
     public ConditionExpression getConditionExpression(){
-	return conditionExpression;
+        return conditionExpression;
     }
 
     /**
      * @return the falseBlock
      */
     public Block getFalseBlock(){
-	return falseBlock;
+        return falseBlock;
     }
 
 
@@ -37,20 +37,30 @@ public class Branch extends Instruction{
      * @param falseBlock the falseBlock to set
      */
     public void setFalseBlock(Block falseBlock){
-	this.falseBlock = falseBlock;
+        this.falseBlock = falseBlock;
     }
 
     /**
      * @return the trueBlock
      */
     public Block getTrueBlock(){
-	return trueBlock;
+        return trueBlock;
     }
 
     /**
      * @param trueBlock the trueBlock to set
      */
     public void setTrueBlock(Block trueBlock){
-	this.trueBlock = trueBlock;
+        this.trueBlock = trueBlock;
     }
+
+    /**
+     * @see Composestar.Core.INLINE.model.Visitable#accept(Composestar.Core.INLINE.model.Visitor)
+     */
+    public Object accept(Visitor visitor){
+        return visitor.visitBranch( this );
+    }
+    
+    
+    
 }
