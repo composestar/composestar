@@ -503,7 +503,7 @@ public class Sign implements CTCommonModule {
             if (dispTarget.name.equals("inner")) {
                 // if inner, check inner methods:
 
-                if (methods.contains(targetMethod))
+                if (containsMethod(methods, targetMethod))
                     result.addElement(method);
             } else {
                 // get the signature of the dispatch target:
@@ -623,7 +623,7 @@ public class Sign implements CTCommonModule {
             // then do the check:
             if (dispTarget.name.equals("inner")) {
                 // if inner, check inner methods:
-                if (innerMethods.contains(targetMethod))
+                if (containsMethod(innerMethods, targetMethod))
                     result.addElement(method);
             } else {
                 // else check signature methods:
@@ -859,7 +859,7 @@ public class Sign implements CTCommonModule {
                     type);
 
             methods = getMethodList(concern);
-            if (methods.contains(targetMethod)) {
+            if (containsMethod(methods, targetMethod)) {
                 return IN_SIGNATURE;
             }
         } else {
@@ -1018,7 +1018,7 @@ public class Sign implements CTCommonModule {
                     type);
 
             methods = getMethodList(concern);
-            if (!methods.contains(targetMethod)) {
+            if (!containsMethod( methods, targetMethod )) {
                 for (int i = 0; i < methods.size(); i++) {
                     MethodInfo m = (MethodInfo) methods.get(i);
                     if (m.name().equals(targetMethod.name())) {
@@ -1107,8 +1107,6 @@ public class Sign implements CTCommonModule {
             Concern targetConcern = ref.getRef().getType().getRef();
 
             Type type = (Type) concern.getPlatformRepresentation();
-            MethodInfo targetMethod = method.getClone(dispSelector.getName(),
-                    type);
 
             Signature signature = getSignature(targetConcern);
 
@@ -1206,7 +1204,7 @@ public class Sign implements CTCommonModule {
             while (normalItr.hasNext()) {
                 MethodWrapper mw = (MethodWrapper) normalItr.next();
                 MethodInfo minfo = mw.getMethodInfo();
-                if (!dnmi.contains(minfo)) {
+                if (!containsMethod(dnmi, minfo)) {
                     mw.setRelationType(MethodWrapper.ADDED);
                 }
             }
@@ -1279,4 +1277,15 @@ public class Sign implements CTCommonModule {
                 .valueOf(signaturesmodified));
     }
 
+    
+    private boolean containsMethod( List methods, MethodInfo method ){
+        Iterator iterator = methods.iterator();
+        while( iterator.hasNext() ){
+            MethodInfo containedMethod = (MethodInfo) iterator.next();
+            if ( containedMethod.checkEquals( method ) )
+                return true;
+        }
+
+        return false;
+    }
 }
