@@ -1,0 +1,54 @@
+<project name="Composestar/DotNET/testing" default="test" basedir="../Examples">
+
+	<description>
+	Run the Compose* SystemTest for DotNET
+	</description>
+
+	<taskdef name="cstarDevenv" classname="Composestar.Ant.taskdefs.cstarDevenv" />
+	<taskdef name="cstarTest" classname="Composestar.Ant.taskdefs.cstarTest" />
+	
+	<target name="test" depends="test_build,test_exec" />
+
+	<target name="test_build">
+		<copy file="${basedir}/../testing/AntSystemTest/Composestar.vsmacros" todir="${user.home}/My Documents/Visual Studio Projects/VSMacros71/MyMacros" />
+		<cstarDevenv>
+			<FileSet dir="${basedir}">
+				<include name="**/*.sln" />
+				<exclude name="AOSD2006Demo/EncryptionFilter/*.sln" />
+				<exclude name="AOSD2006Demo/ProtocolLib/*.sln" />
+				<exclude name="DesignPatterns/Annotations/*.sln" />
+				<exclude name="Jukebox/jukeboxframe/*.sln" />
+				<exclude name="Rot13/Rot13Filter/*.sln" />
+			</FileSet>
+		</cstarDevenv>
+	</target>
+
+	<target name="test_exec">
+		<cstarTest>
+			<FileSet dir="${basedir}">
+				<include name="Platypus/bin/PlatypusExample.Main.exe" />
+				<include name="PredicateQueries/bin/MyApp.Main.exe" />
+				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe" />
+				<include name="SECRETTesting/bin/SECRETTesting.MainRunner.exe" />
+				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe" />
+				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe" />
+				<include name="Wedding/bin/wedding.Wedding.exe" />
+				<include name="Inventory/bin/ExampleAOP.Example.exe" />
+				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe" />
+				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe" />
+				<include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe" />
+				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe" />
+				<include name="DesignPatterns/Implementations/Facade/bin/Composestar.Patterns.Facade.Main.exe" />
+				<include name="DesignPatterns/Implementations/Interpreter/bin/Composestar.Patterns.Interpreter.Main.exe" />
+				<include name="DesignPatterns/Implementations/Iterator/bin/Composestar.Patterns.Iterator.Main.exe" />
+				<include name="DesignPatterns/Implementations/Memento/bin/Composestar.Patterns.Memento.Main.exe" />
+				<include name="DesignPatterns/Implementations/Prototype/bin/Composestar.Patterns.Prototype.Main.exe" />
+				<include name="DesignPatterns/Implementations/Proxy/bin/Composestar.Patterns.Proxy.Main.exe" />
+				<include name="DesignPatterns/Implementations/TemplateMethod/bin/Composestar.Patterns.TemplateMethod.Main.exe" />
+				<include name="DesignPatterns/Implementations/Visitor/bin/Composestar.Patterns.Visitor.Main.exe" />
+				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe" />
+				<include name="TestCases/BasicTests/bin/BasicTests.MainClass.exe" />
+			</FileSet>
+		</cstarTest>
+	</target>
+</project>
