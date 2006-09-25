@@ -5,13 +5,13 @@ using Composestar.StarLight.ILWeaver;
 using System.Collections.Specialized;
 using System.IO;
 using System.ComponentModel.Design;
-
-#if !NUNIT
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Composestar.StarLight.CoreServices;
 using TestILWeaver.Mocks;
 using Microsoft.Practices.ObjectBuilder;
 using TestILWeaver.DIConfiguration;
+
+#if !NUNIT
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 #else
 using NUnit.Framework;
 using TestClass = NUnit.Framework.TestFixtureAttribute;

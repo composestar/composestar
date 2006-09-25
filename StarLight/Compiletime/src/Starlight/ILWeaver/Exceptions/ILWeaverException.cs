@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Serialization;
  
 namespace Composestar.StarLight.ILWeaver
@@ -15,6 +13,7 @@ namespace Composestar.StarLight.ILWeaver
         private readonly string _filename;
 
         #region ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
         /// </summary>
@@ -76,7 +75,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Gets or sets the filename.
+        /// Gets the filename.
         /// </summary>
         /// <value>The filename.</value>
         public string Filename

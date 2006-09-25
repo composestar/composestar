@@ -23,5 +23,9 @@ namespace Composestar.StarLight.CoreServices
         /// <value>The last duration.</value>
         TimeSpan LastDuration{ get; }
 
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        void Close();
     }
 }

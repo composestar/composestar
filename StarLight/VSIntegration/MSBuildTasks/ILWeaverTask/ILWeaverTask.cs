@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -11,14 +12,25 @@ using System.Xml;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.Practices.ObjectBuilder;
 
-using Composestar.StarLight.ILWeaver;
 using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.ILWeaver;
+using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
+
+    /// <summary>
+    /// Responsible for the actual weaving of the aspects. Calls the weaving library to perform weaving at IL level.
+    /// </summary>
     public class ILWeaverTask : Task
     {
+        ServiceContainer svcContainer = new ServiceContainer();
+
+        #region Properties for MSBuild
+
         private ITaskItem[] _assemblyFiles;
 
         [Required()]
@@ -37,7 +49,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _repositoryFilename = value; }
         }
 
-        private IILWeaver weaver;
+        #endregion
+
 
 
         /// <summary>
@@ -45,7 +58,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </summary>
         public ILWeaverTask()
         {
-            weaver = new CecilILWeaver();
+            svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverBuilderConfigurator());
+            svcContainer.AddService(typeof(CecilWeaverConfiguration), CecilWeaverConfiguration.CreateDefaultConfiguration("TestTarget.exe"));
+            svcContainer.AddService(typeof(ILanguageModelAccessor), new RepositoryAccess());
+
         }
 
         /// <summary>
@@ -59,6 +75,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessage("Weaving the filter code using the Cecil IL Weaver");
 
             String filename;
+            CecilILWeaver weaver = null;
+            ILanguageModelAccessor langModelAccessor = new RepositoryAccess(RepositoryFilename);
 
             foreach (ITaskItem item in AssemblyFiles)
             {
@@ -66,17 +84,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Weaving file {0}", filename);
 
                 // Preparing config
-                NameValueCollection config = new NameValueCollection();
-                config.Add("RepositoryFilename", RepositoryFilename);
-                config.Add("OutputImagePath", Path.GetDirectoryName(filename));
-                config.Add("ShouldSignAssembly", "false");
-                config.Add("OutputImageSNK", "");
+                CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.GetDirectoryName(filename), false, "", filename, false);
 
                 try
                 {
-                    // Initialize
-                    weaver.Initialize(filename, config);
-
+                    weaver = new CecilILWeaver(configuration, langModelAccessor);
+                    
                     // Perform weaving
                     weaver.DoWeave();
 
@@ -93,7 +106,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 finally
                 {
                     // Close the weaver, so it closes the database, performs cleanups etc
-                    weaver.Close();
+                    if (weaver != null) 
+                        weaver.Close();
                 }
 
             }

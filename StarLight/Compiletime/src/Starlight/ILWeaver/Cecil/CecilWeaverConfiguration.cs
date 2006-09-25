@@ -6,8 +6,13 @@ using Composestar.StarLight.ILWeaver.Properties;
 
 namespace Composestar.StarLight.ILWeaver
 {
+
+    /// <summary>
+    /// Container to hold and manage the configuration for the Cecil IL weaver.
+    /// </summary>
     public sealed class CecilWeaverConfiguration
     {
+
         readonly bool _delaySignOutput;
         readonly string _outputImageSNK;
         readonly bool _shouldSignOutput;
@@ -66,16 +71,18 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// 
+        /// Gets the input image path.
         /// </summary>
+        /// <value>The input image path.</value>
         public string InputImagePath
         {
             get { return _inputImagePath; }
         }
 
         /// <summary>
-        /// 
+        /// Gets a value indicating whether to delay signing the output.
         /// </summary>
+        /// <value><c>true</c> if [delay sign output]; otherwise, <c>false</c>.</value>
         public bool DelaySignOutput
         {
             get { return _delaySignOutput; }
@@ -91,6 +98,12 @@ namespace Composestar.StarLight.ILWeaver
             return new CecilWeaverConfiguration(inputImagePath, false, string.Empty, inputImagePath, false);
         }
 
+        /// <summary>
+        /// Creates the default configuration.
+        /// </summary>
+        /// <param name="inputImagePath">The input image path.</param>
+        /// <param name="outputImagePath">The output image path.</param>
+        /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath, string outputImagePath)
         {
             return new CecilWeaverConfiguration(outputImagePath, false, string.Empty, inputImagePath, false);

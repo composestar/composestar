@@ -30,12 +30,19 @@ namespace Composestar.StarLight.ILWeaver
         CecilWeaverConfiguration _configuration;
         ILanguageModelAccessor _languageModelAccessor;
 
-        
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CecilILWeaver"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="languageModelAccessor">The language model accessor.</param>
         public CecilILWeaver(CecilWeaverConfiguration configuration, ILanguageModelAccessor languageModelAccessor)
         {
+            #region Check for null values
+
             if (configuration == null) throw new ArgumentNullException("configuration");
             if (languageModelAccessor == null) throw new ArgumentNullException("languageModelAccessor");
+
+            #endregion
 
             _configuration = configuration;
             _languageModelAccessor = languageModelAccessor;
@@ -333,6 +340,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
+            
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
@@ -448,6 +456,11 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
+        public void Close()
+        {
+            _languageModelAccessor.Close();
+        }
+
         #region Helper functions
 
         /// <summary>
@@ -541,7 +554,6 @@ namespace Composestar.StarLight.ILWeaver
                     instruction.OpCode == OpCodes.Callvirt);
         }
         #endregion
-
 
     }
 }

@@ -43,18 +43,23 @@
     <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities" />
+    <Reference Include="Microsoft.Practices.ObjectBuilder, Version=1.0.51205.0, Culture=neutral, PublicKeyToken=375fcb186afc7c59, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\Microsoft.Practices.ObjectBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnalyzerTask.cs" />
     <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
       <Link>Target\StarLight.targets</Link>
     </None>
-    <Compile Include="ILWeaverTask.cs" />
-    <Compile Include="MasterCallerTask.cs" />
+    <Compile Include="ILAnalyzerTask\AnalyzerTask.cs" />
+    <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
+    <Compile Include="ILWeaverTask\ILWeaverTask.cs" />
+    <Compile Include="MasterCallerTask\MasterCallerTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -90,6 +95,10 @@
     <ProjectReference Include="..\..\Compiletime\src\Starlight\Repository\DataStoreContainer.csproj">
       <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
       <Name>DataStoreContainer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
