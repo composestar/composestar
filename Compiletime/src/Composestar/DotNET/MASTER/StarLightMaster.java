@@ -1,11 +1,10 @@
 /*
- * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
+ * This file is part of Composestar StarLight project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
  *
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETMaster.java 235 2006-03-14 07:42:35Z dspenkel $
  */
 
 package Composestar.DotNET.MASTER;
@@ -46,7 +45,6 @@ public class StarLightMaster extends Master  {
      * Default ctor.
      * @param configurationFile
      * @throws Composestar.core.Exception.ModuleException
-     * @roseuid 401B9C520251
      */
     public StarLightMaster(String configurationFile) throws ModuleException{
         yapFileName = configurationFile;
@@ -58,69 +56,39 @@ public class StarLightMaster extends Master  {
     	}
     	Debug.out(Debug.MODE_DEBUG,"Master","Configuration file: "+configurationFile);
     	RepositoryAccess repository = new RepositoryAccess();
-        
+    	
+    	// Set the debugmode
     	Debug.setMode(repository.GetCommonConfiguration().get_CompiletimeDebugLevel());  
-		
-//    	Debug.setMode(4);
+
 	    resources = new CommonResources();
 	    
-	    //  create the repository
+	    // Create the repository
 	    DataStore ds = DataStore.instance();
 	    
+	    // Set the paths
         CommonConfiguration configuration = repository.GetCommonConfiguration();
 	    Configuration.instance().getPathSettings().addPath("Base", configuration.get_IntermediateOutputPath());
 		Configuration.instance().getPathSettings().addPath("Composestar", configuration.get_InstallFolder() + "\\" );
 
-		
-	    //getPathSettings().getPath("Base")
-	    
-	    
-	   // ModuleSettings ms = new ModuleSettings();
-	    //Composestar.Core.Master.Config.Module m = new Composestar.Core.Master.Config.Module();
-	    //m.addProperty("enabled", "false");
-	   // ms.addModule("INCRE", m);
-	    //config.setModuleSettings(ms);
-
-
-	    //ds.addObject(RESOURCES_KEY, resources );
-
-	    // init the project configuration file
-	    //resources.CustomFilters = new Properties();
-
-
-		
-	    //ds.addObject(Master.RESOURCES_KEY,resources);
-
-	    // Set debug level
-	    //try {
-		//	Debug.setMode(Integer.parseInt(Configuration.instance().getProperty("buildDebugLevel")));
-		//}
-	    //catch (NumberFormatException e) {
-		//	Debug.setMode(1);
-	    //}
-
-		//just added this for testing
-	    //fixme:we need to iterate over all the cps files specified in the configuration
-	    //resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
-	}
+    }
     
     public static String getYapFileName(){
         return yapFileName;
     }
 
     /**
-     * Compose* main function.
+     * Compose* StarLight main function.
      * Creates the Master object. Adds the desired modules and then calls run on each
      * of them in the order that they where added.
      * @param args
-     * @roseuid 401B89E70233
      */
     public static void main(String[] args) {
     	
 		if(args.length == 0) {
-    		System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
+    		System.out.println("Usage: java Composestar.Core.Master.StarLightMaster <config file>");
     		return;
     	}
+		
     	Master master = null;
 
     	if(args[0].equalsIgnoreCase("-v")) {
@@ -152,7 +120,6 @@ public class StarLightMaster extends Master  {
     
     /**
      * Calls run on all modules added to the master.
-     * @roseuid 401B92150325
      */
     public void run() {
     	// This is the 'hardcoded' version

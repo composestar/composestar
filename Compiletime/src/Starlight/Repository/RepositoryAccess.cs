@@ -31,6 +31,14 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
+        /// </summary>
+        public RepositoryAccess()
+        {
+                
+        }
+
+        /// <summary>
         /// Closes the database.
         /// </summary>
         public void CloseDatabase()
@@ -374,5 +382,12 @@ namespace Composestar.Repository
             DataStoreContainer.Instance.StoreObject(cc);
         }
 
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        public void Close()
+        {
+            CloseDatabase();
+        }
     }
 }

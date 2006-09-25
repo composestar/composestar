@@ -247,7 +247,7 @@ namespace Composestar.StarLight.ILWeaver
 
         public void VisitAfterAction(FilterAction filterAction)
         {
-           // Copy beforeAction and adapt
+           // TODO Copy beforeAction and adapt
         }
 
         /// <summary>

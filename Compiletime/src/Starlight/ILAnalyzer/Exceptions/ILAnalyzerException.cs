@@ -10,21 +10,12 @@ namespace Composestar.StarLight.ILAnalyzer
     /// Exception throw by the analyzer.
     /// </summary>
     [Serializable()]
-    public class ILAnalyzerException : Exception
+    public class ILAnalyzerException : Exception, ISerializable
     {
 
         private string _filename;
 
-        /// <summary>
-        /// Gets or sets the filename.
-        /// </summary>
-        /// <value>The filename.</value>
-        public string Filename
-        {
-            get { return _filename; }
-            set { _filename = value; }
-        }
-
+        #region ctor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILAnalyzerException"/> class.
@@ -38,9 +29,10 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="serInfo">The ser info.</param>
         /// <param name="streamContext">The stream context.</param>
-        protected ILAnalyzerException(SerializationInfo serInfo, StreamingContext streamContext) : base(serInfo, streamContext)
+        protected ILAnalyzerException(SerializationInfo serInfo, StreamingContext streamContext)
+            : base(serInfo, streamContext)
         {
-
+            _filename = serInfo.GetString("ILAnalyzerException._filename");
         }
 
         /// <summary>
@@ -84,6 +76,27 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             _filename = filename;
         }
+
+        /// <summary>
+        /// Gets the filename.
+        /// </summary>
+        /// <value>The filename.</value>
+        public string Filename
+        {
+            get { return _filename; }
+        }
+
+        #endregion
+
+        #region ISerializable Members
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("ILAnalyzerException._filename", _filename);
+            base.GetObjectData(info, context);
+        }
+
+        #endregion
 
     }
 }

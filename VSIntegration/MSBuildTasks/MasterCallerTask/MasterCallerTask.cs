@@ -32,12 +32,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MasterCallerTask"/> class.
         /// </summary>
-        public MasterCallerTask()
-            : base(Properties.Resources.ResourceManager)
-        {
-
-        }
-        #endregion
+        public MasterCallerTask() : base(Properties.Resources.ResourceManager)      {    }
+        
+#endregion
 
         #region Properties
         private string _repositoryFilename;
@@ -144,7 +141,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Place debuglevel
-            Log.LogMessage("Debug level is {0}.", DebugLevel);             
+            Log.LogMessage("Storing debug level {0} in the repository.", DebugLevel);             
 
             // Set the Common Configuration
             CommonConfiguration cc = _repositoryAccess.GetCommonConfiguration();                

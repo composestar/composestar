@@ -19,5 +19,7 @@ namespace Composestar.StarLight.CoreServices
         IList<External> GetExternalsByTypeElement(TypeElement typeElement);
 
         IList<CallElement> GetCallByMethodElement(MethodElement methodElement);
+
+        void Close();
     }
 }

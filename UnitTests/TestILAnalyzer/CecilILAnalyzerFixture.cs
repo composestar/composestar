@@ -79,7 +79,7 @@ namespace TestILAnalyzer
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
+        [ExpectedException(typeof(ILAnalyzerException))]
         public void ExtractTypesThrowsExceptionIfInitializeWasNotCalled()
         {
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
