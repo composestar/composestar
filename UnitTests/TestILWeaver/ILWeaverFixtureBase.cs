@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Composestar.StarLight.ILWeaver;
-using Composestar.StarLight.CoreServices;
 using System.ComponentModel.Design;
+using System.IO;
+using System.Text;
+
 using Microsoft.Practices.ObjectBuilder;
+
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.ILWeaver;
 using TestILWeaver.DIConfiguration;
 using TestILWeaver.Mocks;
-using System.IO;
 
 namespace TestILWeaver
 {

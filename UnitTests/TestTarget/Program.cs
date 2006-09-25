@@ -9,5 +9,10 @@ namespace TestTarget
         static void Main(string[] args)
         {
         }
+
+        public void TestMethod(int a)
+        {
+
+        }
     }
 }

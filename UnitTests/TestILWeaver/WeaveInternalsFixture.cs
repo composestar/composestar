@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.ComponentModel.Design;
-using Microsoft.Practices.ObjectBuilder;
-using Composestar.StarLight.ILWeaver;
-using Composestar.StarLight.CoreServices;
-using TestILWeaver.Mocks;
-using Composestar.Repository.LanguageModel;
-using TestILWeaver.DIConfiguration;
 using System.IO;
 using System.Reflection;
 using System.Security.Policy;
+using System.Text;
+
+using Microsoft.Practices.ObjectBuilder;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.ILWeaver;
+using TestILWeaver.DIConfiguration;
+using TestILWeaver.Mocks;
 
 namespace TestILWeaver
 {

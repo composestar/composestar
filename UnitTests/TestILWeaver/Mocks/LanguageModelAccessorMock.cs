@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Composestar.StarLight.CoreServices;
+
 using Composestar.Repository.LanguageModel;
+using Composestar.Repository.LanguageModel.ConditionExpressions;
+using Composestar.Repository.LanguageModel.Inlining;
+using Composestar.StarLight.CoreServices;
 
 namespace TestILWeaver.Mocks
 {
@@ -10,10 +13,14 @@ namespace TestILWeaver.Mocks
     {
         private Dictionary<string, TypeElement> _typeElementsByName = new Dictionary<string, TypeElement>();
         private Dictionary<TypeElement, List<Internal>> _internalsByTypeElement = new Dictionary<TypeElement, List<Internal>>();
+        private Dictionary<TypeElement, List<MethodElement>> _methodsByTypeElement = new Dictionary<TypeElement, List<MethodElement>>();
 
         private void AddTypeElement(TypeElement element)
         {
-            _typeElementsByName[element.FullName] = element;
+            if (!_typeElementsByName.ContainsKey(element.FullName))
+                _typeElementsByName.Add(element.FullName, element);
+            else
+                _typeElementsByName[element.FullName] = element;
         }
 
         private void AddInternal(TypeElement type, Internal @internal)
@@ -26,16 +33,31 @@ namespace TestILWeaver.Mocks
         }
 
 
+        private void AddMethod(TypeElement type, MethodElement method)
+        {
+            if (!_methodsByTypeElement.ContainsKey(type))
+            {
+                _methodsByTypeElement.Add(type, new List<MethodElement>());
+            }
+            _methodsByTypeElement[type].Add(method);
+        }
+
         #region ILanguageModelAccessor Members
 
         public MethodElement GetMethodElementBySignature(TypeElement typeInfo, string methodSignature)
         {
+            if (_methodsByTypeElement.ContainsKey(typeInfo))
+                foreach (MethodElement method in _methodsByTypeElement[typeInfo])
+                {
+                    if (method.Signature.Equals(methodSignature))
+                        return method;
+                }
             return null;
         }
 
         public IList<MethodElement> GetMethodElements(TypeElement type)
         {
-            return new List<MethodElement>();
+            return _methodsByTypeElement[type];
         }
 
         public TypeElement GetTypeElement(string fullName)
@@ -78,6 +100,7 @@ namespace TestILWeaver.Mocks
         }
 
         #endregion
+               
 
         internal void AddInternalToType(string typeName, string internalTypeName, string internalName)
         {
@@ -92,5 +115,22 @@ namespace TestILWeaver.Mocks
 
             AddInternal(typeElement, intrnal);
         }
+
+        public void AddInputFilter(string typeName, string methodSignature, InlineInstruction instruction)
+        {
+            TypeElement typeElement = new TypeElement();
+            typeElement.FullName = typeName;
+
+            AddTypeElement(typeElement);
+
+            MethodElement methodElement = new MethodElement();
+            methodElement.Signature = methodSignature;
+
+            methodElement.MethodBody.InputFilter = instruction;
+
+            AddMethod(typeElement, methodElement);
+             
+        }
+        
     }
 }
