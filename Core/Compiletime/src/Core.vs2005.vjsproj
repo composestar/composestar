@@ -376,6 +376,7 @@
     <Compile Include="Composestar\utils\Debug.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Composestar\utils\StringUtils.java" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
   <PropertyGroup>
