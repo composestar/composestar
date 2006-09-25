@@ -13,8 +13,8 @@ namespace TestILWeaver.DIConfiguration
         public override void ApplyConfiguration(IBuilder<BuilderStage> builder)
         {
             builder.Policies.Set<ITypeMappingPolicy>(new TypeMappingPolicy(typeof(LanguageModelAccessorMock), null), typeof(ILanguageModelAccessor), null);
+
+            builder.Policies.SetDefault<ISingletonPolicy>(new SingletonPolicy(true));
         }
     }
-
-
 }
