@@ -9,8 +9,9 @@ public class TypeElement implements IRepositoryElement
 	private int _id;
 	private String _name = "";
 	private String _fullName = "";
+	private String _AFQN = "";
 	private String _baseType = "";
-	private AssemblyElement _assemblyElement;
+	//private AssemblyElement _assemblyElement;
 	private String _namespace = "";
 	private boolean _isAbstract;
 	private boolean _isInterface;
@@ -28,7 +29,7 @@ public class TypeElement implements IRepositoryElement
 	public TypeElement() 
 	{
 		_id = this.hashCode();
-		_assemblyElement = new AssemblyElement();
+		//_assemblyElement = new AssemblyElement();
 	}
 
 	private String _implementedInterface;
@@ -74,6 +75,18 @@ public class TypeElement implements IRepositoryElement
 	}
 
 	/** @property */
+	public String get_AFQN()
+	{
+		return _AFQN;
+	}
+
+	/** @property */
+	public void set_AFQN(String value)
+	{
+		_AFQN = value;
+	}
+
+	/** @property */
 	public String get_BaseType()
 	{
 		return _baseType;
@@ -86,16 +99,16 @@ public class TypeElement implements IRepositoryElement
 	}
 	
 	/** @property */
-	public AssemblyElement get_AssemblyElement()
-	{
-		return _assemblyElement;
-	}
+	//public AssemblyElement get_AssemblyElement()
+	//{
+	//	return _assemblyElement;
+	//}
 
 	/** @property */
-	public void set_AssemblyElement(AssemblyElement value)
-	{
-		_assemblyElement = value;
-	}
+	//public void set_AssemblyElement(AssemblyElement value)
+	//{
+	//	_assemblyElement = value;
+	//}
 	
 	/** @property */
 	public String get_Namespace()
