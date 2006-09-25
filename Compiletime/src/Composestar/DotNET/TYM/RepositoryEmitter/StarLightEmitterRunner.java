@@ -12,13 +12,19 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
@@ -38,6 +44,7 @@ import Composestar.Repository.RepositoryAccess;
 import Composestar.Repository.LanguageModel.CallElement;
 import Composestar.Repository.LanguageModel.MethodBody;
 import Composestar.Repository.LanguageModel.MethodElement;
+import Composestar.Repository.LanguageModel.Reference;
 import Composestar.Repository.LanguageModel.TypeElement;
 import Composestar.Repository.LanguageModel.Inlining.InlineInstruction;
 
@@ -66,14 +73,141 @@ public class StarLightEmitterRunner implements CTCommonModule
             if ( type == null )
                 continue;
             
-            TypeElement storedType = repository.GetTypeElement( type.fullName() );
-            
-            //TODO store conditions, externals and internals
-            
-            emitMethods( type, storedType );
-            
-            repository.storeTypeElement( storedType );
+            if ( concern.getDynObject("superImpInfo") != null ){
+                //get filtermodules:
+                FilterModuleOrder order = 
+                    (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
+
+                TypeElement storedType = repository.GetTypeElement( type.fullName() );
+
+                Iterator filterModules = order.orderAsList().iterator();
+                while( filterModules.hasNext() ){
+                    String ref = (String) filterModules.next();
+                    FilterModule filterModule = (FilterModule) dataStore.getObjectByID( ref );
+                    
+                    //internals:
+                    Iterator internals = filterModule.getInternalIterator();
+                    
+                    while( internals.hasNext() ){
+                        Internal internal = (Internal) internals.next();
+                        Composestar.Repository.LanguageModel.Internal storedInternal =
+                            new Composestar.Repository.LanguageModel.Internal();
+                        
+                        //name:
+                        storedInternal.set_Name( internal.getName() );
+                        
+                        //namespace:
+                        StringBuffer namespace = new StringBuffer();
+                        Enumeration packages = internal.getType().getPackage().elements();
+                        while( packages.hasMoreElements() ){
+                            namespace.append( packages.nextElement() );
+                            if ( packages.hasMoreElements() ){
+                                namespace.append( "." );
+                            }
+                        }
+                        storedInternal.set_NameSpace( namespace.toString() );
+                        
+                        //typename:
+                        storedInternal.set_Type( internal.getType().getName() );
+                        
+                        storedInternal.set_ParentTypeId( storedType.get_Id() );
+                        
+                        //store internal:
+                        repository.storeInternal( storedInternal );
+                    }
+                    
+                    
+                    //externals:
+                    Iterator externals = filterModule.getExternalIterator();
+                    
+                    while( externals.hasNext() ){
+                        External external = (External) externals.next();
+                        Composestar.Repository.LanguageModel.External storedExternal =
+                            new Composestar.Repository.LanguageModel.External();
+                        
+                        //name:
+                        storedExternal.set_Name( external.getName() );
+                        
+                        //reference:
+                        ExternalConcernReference reference = external.getShortinit();
+                        Reference storedReference = createReference( reference.getPackage(), reference.getName(),
+                                reference.getInitSelector() );
+                        storedExternal.set_Reference( storedReference );
+                        
+                        //type:
+                        StringBuffer packages = new StringBuffer();
+                        Enumeration enumer = external.getType().getPackage().elements();
+                        while( enumer.hasMoreElements() ){
+                            packages.append( enumer.nextElement() );
+                            packages.append( '.' );
+                        }
+                        storedExternal.set_Type( packages.toString() + external.getType().getName() );
+                        
+                        //parent id:
+                        storedExternal.set_ParentTypeId( storedType.get_Id() );
+                        
+                        //store external:
+                        repository.storeExternal( storedExternal );
+                    }
+                    
+                    
+                    //conditions:
+                    Iterator conditions = filterModule.getConditionIterator();
+                    while( conditions.hasNext() ){
+                        Condition condition = (Condition) conditions.next();
+                        
+                        Composestar.Repository.LanguageModel.Condition storedCondition =
+                            new Composestar.Repository.LanguageModel.Condition();
+                        
+                        //name:
+                        storedCondition.set_Name( condition.getName() );
+                        
+                        //reference:
+                        Reference reference = createReference( condition.getShortref().getPackage(), 
+                                condition.getShortref().getName(), 
+                                (String) condition.getDynObject( "selector" ) );
+                        
+                        storedCondition.set_Reference( reference );
+                        
+                        storedCondition.set_ParentTypeId( storedType.get_Id() );
+                        
+                        //store condition:
+                        repository.storeCondition( storedCondition );
+                    }
+                }
+
+                //emit methods:
+                emitMethods( type, storedType );
+
+                //store type:
+                repository.storeTypeElement( storedType );
+            }
         }
+    }
+    
+    private Reference createReference( Vector pack, String target,
+            String selector )
+    {
+        Reference storedRef = new Reference();
+        
+        //namespace:
+        StringBuffer namespace = new StringBuffer();
+        Enumeration packages = pack.elements();
+        while( packages.hasMoreElements() ){
+            namespace.append( packages.nextElement() );
+            if ( packages.hasMoreElements() ){
+                namespace.append( '.' );
+            }
+        }
+        storedRef.set_NameSpace( namespace.toString() );
+        
+        //selector:
+        storedRef.set_Selector( selector );
+        
+        //target:
+        storedRef.set_Target( target );
+        
+        return storedRef;
     }
     
     
@@ -87,22 +221,31 @@ public class StarLightEmitterRunner implements CTCommonModule
         
         while( methods.hasNext() ){
             MethodInfo method = (MethodInfo) methods.next();
+            MethodElement storedMethod;
             
-            //get stored method:
-            String key = createKey( method );
-            MethodElement storedMethod = (MethodElement) index.get( key );
+            //get the block containing the filterinstructions:
+            Block filterInstructions = ModelBuilder.getInputFilterCode( method );
             
-            //add inputfilter code:
-            MethodBody body = storedMethod.get_MethodBody();
-            InlineInstruction instruction = 
-                translateInstruction( ModelBuilder.getInputFilterCode( method ) );
-            body.set_InputFilter( instruction );
+            if ( filterInstructions != null ){
+            
+                //get stored method:
+                String key = createKey( method );
+                storedMethod = (MethodElement) index.get( key );
+
+                //add inputfilter code:
+                MethodBody body = storedMethod.get_MethodBody();
+                body.set_InputFilter( translateInstruction( filterInstructions ) );
+                
+                //store methodElement:
+                System.out.println( "storing method" );
+                repository.storeMethodElement( storedMethod );
+            }
+            
             
             //emit calls:
-            emitCalls( method, storedMethod );
+//            emitCalls( method, storedMethod );
             
-            //store methodElement:
-            repository.storeMethodElement( storedMethod );
+            
         }
     }
     
