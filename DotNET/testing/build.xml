@@ -15,8 +15,8 @@
 	</description>
 
 	<!--<taskdef name="cstarDevenv" classname="Composestar.Ant.taskdefs.cstarDevenv" classpath="C:\sandbox\DotNET\testing\AntSystemTest\ComposestarAnt\build"  />-->
-	<taskdef name="cstarTest" classname="Composestar.Ant.taskdefs.cstarTest" classpath="C:\sandbox\DotNET\testing\AntSystemTest\ComposestarAnt\build"  />
-	<taskdef name="cstarVsp" classname="Composestar.Ant.taskdefs.cstarVsp" classpath="C:\sandbox\DotNET\testing\AntSystemTest\ComposestarAnt\build" />
+	<taskdef name="cstarTest" classname="Composestar.Ant.taskdefs.cstarTest" />
+	<taskdef name="cstarVsp" classname="Composestar.Ant.taskdefs.cstarVsp" />
 	
 	<target name="clean" />
 	<target name="build" />
@@ -41,7 +41,7 @@
 	-->
 	
 	<target name="test_vsp" depends="init">
-		<cstarVsp master="Composestar.DotNET.MASTER.DotNETMaster" composestarBase="${composestar.installdir}" conversionXslt="${basedir}/../testing/AntSystemTest/genBuildConfig.xslt">
+		<cstarVsp antHelperPath="${build.core}${file.separator}Development" composestarBase="${composestar.installdir}" conversionXslt="${basedir}/../testing/AntSystemTest/genBuildConfig.xslt">
 			<FileSet dir="${basedir}">
 				<include name="**/*.vjsproj" />
 				<include name="**/*.csproj" />

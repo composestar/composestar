@@ -31,6 +31,7 @@ public class cstarVsp extends Task {
 	protected String conversionXslt;
 	protected String composestarBase;
 	protected String master = "Composestar.DotNET.MASTER.DotNETMaster";
+	protected String antHelperPath;
 	
 	protected FileSet cstarJars;
 	
@@ -55,6 +56,10 @@ public class cstarVsp extends Task {
         this.master = master;
     }
 	
+	public void setAntHelperPath(String antHelperPath) {
+        this.antHelperPath = antHelperPath;
+    }
+	
 	public void setComposestarBase(String composestarBase) {
         this.composestarBase = composestarBase;
     }
@@ -67,6 +72,10 @@ public class cstarVsp extends Task {
 		cntTotal = 0;
 		cntSuccess = 0;
 		cntFail = 0;
+		
+		if (!Composestar.Ant.xsltUtils.setAntHelperEXE(antHelperPath)) {
+			throw new BuildException("Invalid antHelperPath value: "+antHelperPath);
+		}
 		
 		cstarJars = new FileSet();
 		cstarJars.setDir(new File(composestarBase+File.separator+"Binaries"));
@@ -97,8 +106,11 @@ public class cstarVsp extends Task {
 		
 		try {	
 			if (conversionXslt != "") {
+				Composestar.Ant.xsltUtils.setCurrentDirectory(projectFile.getParent());
+				
 				XSLTProcess xslt = (XSLTProcess) getProject().createTask("xslt");
 				xslt.init();
+				//xslt.setForce(true);
 				xslt.setIn(projectFile);
 				xslt.setOut(buildXML);
 				xslt.setStyle(conversionXslt);

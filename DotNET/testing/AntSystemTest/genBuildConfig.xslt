@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cstar="xalan://Composestar.Ant.xsltUtils">
 	<xsl:output method="xml" indent="yes" />
 	
 	<xsl:param name="basepath" />
@@ -159,8 +159,7 @@
 				
 			</xsl:element><!-- /Settings -->
 			
-			<!--<xsl:copy-of select="document(concat($composestarpath, 'PlatformConfigurations.xml'))" />-->
-			<xsl:copy-of select="document('C:/Program Files/ComposeStar/PlatformConfigurations.xml')" />
+			<xsl:copy-of select="document(concat($composestarpath, 'PlatformConfigurations.xml'))" />
 		</xsl:element><!-- /BuildConfiguration -->
 	</xsl:template>
 	
@@ -179,7 +178,8 @@
 			<!-- these names are not really resolved -->
 			<xsl:attribute name="fileName">
 				<xsl:call-template name="convertBackSlashes">
-					<xsl:with-param name="str" select="@HintPath" />
+					<!-- call an external function to resolve the assembly location (required for Compose*) -->
+					<xsl:with-param name="str" select="cstar:resolveAssembly( string(@AssemblyName), string(@HintPath) )" />
 				</xsl:call-template>
 			</xsl:attribute>
 		</xsl:element>
