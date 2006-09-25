@@ -41,6 +41,21 @@ public class External
 	{
 		_reference = value;
 	}
+    
+    
+    private String _type;
+    
+    /** @property */
+    public String get_Type()
+    {
+        return _type;
+    }
+    
+    /** @property */
+    public void set_Type( String value )
+    {
+        this._type = value;
+    }
 
 
 	private int _parentTypeId;

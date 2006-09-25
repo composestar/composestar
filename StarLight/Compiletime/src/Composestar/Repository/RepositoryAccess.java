@@ -6,7 +6,10 @@ import java.util.List;
 import Composestar.Repository.Configuration.CommonConfiguration;
 import Composestar.Repository.Configuration.ConcernInformation;
 import Composestar.Repository.LanguageModel.CallElement;
+import Composestar.Repository.LanguageModel.Condition;
+import Composestar.Repository.LanguageModel.External;
 import Composestar.Repository.LanguageModel.FieldElement;
+import Composestar.Repository.LanguageModel.Internal;
 import Composestar.Repository.LanguageModel.MethodBody;
 import Composestar.Repository.LanguageModel.MethodElement;
 import Composestar.Repository.LanguageModel.ParameterElement;
@@ -66,7 +69,7 @@ public class RepositoryAccess {
         } 
         );
         
-        if (result.isEmpty())
+        if (!result.isEmpty())
             return (TypeElement) result.get(0);
         else 
             return null;
@@ -130,5 +133,17 @@ public class RepositoryAccess {
     
     public void storeCallElement( CallElement element ){
         container.StoreObject( element );
+    }
+    
+    public void storeInternal( Internal internal ){
+        container.StoreObject( internal );
+    }
+    
+    public void storeExternal( External external ){
+        container.StoreObject( external );
+    }
+    
+    public void storeCondition( Condition condition ){
+        container.StoreObject( condition );
     }
 }
