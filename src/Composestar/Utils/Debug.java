@@ -2,6 +2,7 @@ package Composestar.Utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.StringTokenizer;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
@@ -88,6 +89,43 @@ public class Debug
 	public static void out(int mode, String module, String msg) 
 	{
 		out(mode,module,msg,"",0);
+	}
+	
+	public static void parseLog(String log)
+	{
+		StringTokenizer st = new StringTokenizer(log, "\n");
+		while (st.hasMoreTokens())
+		{
+			String line = st.nextToken();
+			String[] parts = line.split("~");
+			
+			if (parts.length == 5)
+			{
+				String module = parts[0];
+				String mode = parts[1];
+				String msg = parts[4];
+				
+				out(getModeLevel(mode), module, msg);
+			}
+			else
+				Debug.out(Debug.MODE_ERROR, "DEBUG", "Wrong log line: '" + line + "'");
+		}
+	}
+	
+	private static int getModeLevel(String mode)
+	{
+		if ("error".equals(mode))
+			return MODE_ERROR;
+		else if ("crucial".equals(mode))
+			return MODE_CRUCIAL;
+		else if ("warning".equals(mode))
+			return MODE_WARNING;
+		else if ("information".equals(mode))
+			return MODE_INFORMATION;
+		else if ("debug".equals(mode))
+			return MODE_DEBUG;
+		else
+			return MODE_CRUCIAL;
 	}
     
 	public static void outWarnings() 
