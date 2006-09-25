@@ -157,20 +157,24 @@ public class FileUtils
 	{
 		if (!sourceName.startsWith(basePath))
 			throw new Exception("File + '" + sourceName
-					+ "' should be within the project basePath '" + basePath + '\'');
+					+ "' should be within the project basePath '" + basePath + "'");
 
 		return basePath + prefix + sourceName.substring(basePath.length());
 	}
 
 	/**
-	 * @param pathToCreate A valid directory
+	 * @param path A valid directory path
 	 * @return Whether the entire path could be created (also true if it already exists)
 	 */
-	public static boolean createFullPath(String pathToCreate)
-	{
-		File f = new File(pathToCreate);
+	public static boolean createFullPath(String path)
+	{		
 		try {
-			return f.mkdirs(); // Returns false if the string is not a valid pathname
+			File f = new File(path);
+			
+			if (f.exists())
+				return true;
+			else
+				return f.mkdirs(); // Returns false if the string is not a valid pathname
 		}
 		catch (SecurityException e) { 
 			// We don't really care about the reason; the important thing is the path could not be created
