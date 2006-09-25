@@ -29,7 +29,6 @@ namespace Composestar.StarLight.ILWeaver
         TimeSpan _lastDuration;
         CecilWeaverConfiguration _configuration;
         ILanguageModelAccessor _languageModelAccessor;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CecilILWeaver"/> class.
         /// </summary>
