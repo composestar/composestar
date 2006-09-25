@@ -1,49 +1,67 @@
-//Source file: H:\\sfcvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\AssemblyTransformer\\MSAssembler.java
-
-//Source file: H:\\cvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\AssemblyTransformer\\MSAssembler.java
-
 package Composestar.DotNET.TYM.SignatureTransformer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Composestar.Utils.CommandLineExecutor;
+import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
+import Composestar.Utils.StringUtils;
 
 /**
  * Implementation of the Assembler interface for Microsft ilasm and ildasm.
  */
-public class MSAssembler implements Assembler {
-    
-    /**
-     * @param inputFile
-     * @param outputFile
-     * @throws AssemblerException
-     * @roseuid 406AB0050005
-     */
-    public void assemble(String inputFile, String outputFile) throws AssemblerException {
-        // ilasm /debug /dll (or exe) /quiet /output outputFile source.il
-        String execString = "ilasm /debug" +
-            (outputFile.matches( ".*\\.dll" ) ? " /dll" : " /exe") +
-            " /quiet /output=\"" + outputFile +
-            "\" \"" + inputFile + '\"';
-		//System.err.println(execString);
-        CommandLineExecutor cmdExec = new CommandLineExecutor();
-        if( cmdExec.exec( execString ) != 0 ) {
-            throw new AssemblerException( "There was a fatal assembler error!" + cmdExec.outputNormal() + "\n\n\n" + cmdExec.outputError());
-        }     
-    }
-    
-    /**
-     * @param inputFile
-     * @param outputFile
-     * @throws AssemblerException
-     * @roseuid 406AB0050087
-     */
-    public void disassemble(String inputFile, String outputFile) throws AssemblerException {
-        // ildasm /out=filename /nobar /source inputFile
-        String execString = "ildasm /linenum /out=" +
-                '\"' + outputFile + "\" /nobar \"" + inputFile + '\"';
-        //System.err.println(execString);
-        CommandLineExecutor cmdExec = new CommandLineExecutor();
-        if( cmdExec.exec( execString ) != 0 ) {
-            throw new AssemblerException( "There was a fatal disassembler error!" + cmdExec.outputNormal());
-        }     
-    }
+public class MSAssembler implements Assembler
+{    
+	// FIXME: location should be configurable like with csc and vjc
+	private final static String s_basepath = ""; //"C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\";
+
+	public void assemble(String inputFile, String outputFile) throws AssemblerException
+	{
+		List cmdList = new ArrayList();
+		cmdList.add(s_basepath + "ilasm");
+		cmdList.add("/debug");
+		cmdList.add("/quiet");
+		cmdList.add(outputFile.matches(".*\\.dll") ? "/dll" : "/exe");
+		cmdList.add("/output=" + FileUtils.quote(outputFile));
+		cmdList.add(FileUtils.quote(inputFile));
+	/*
+		// ilasm /debug /quiet /dll (or /exe) /output outputFile source.il
+		String command = s_basepath + "ilasm /debug /quiet " +
+			(outputFile.matches(".*\\.dll") ? " /dll" : " /exe") +
+			" /output=" + FileUtils.quote(outputFile) + " " +
+			FileUtils.quote(inputFile);
+	*/	
+		Debug.out(Debug.MODE_DEBUG, "TYM", "Command " + StringUtils.join(cmdList));
+	
+		CommandLineExecutor cle = new CommandLineExecutor();
+		if (cle.exec(cmdList) != 0)
+		{
+			String stdout = cle.outputNormal();
+			throw new AssemblerException("There was a fatal assembler error! Output from ilasm:\n" + stdout);
+		}
+	}
+
+	public void disassemble(String inputFile, String outputFile) throws AssemblerException
+	{
+		List cmdList = new ArrayList();
+		cmdList.add(s_basepath + "ildasm");
+		cmdList.add("/linenum");
+		cmdList.add("/nobar");
+		cmdList.add("/out=" + FileUtils.quote(outputFile));
+		cmdList.add(FileUtils.quote(inputFile));
+	/*
+		// ildasm /linenum /out=filename /nobar inputFile
+		String command = s_basepath + "ildasm /linenum /out=" +
+			FileUtils.quote(outputFile) + " /nobar " + FileUtils.quote(inputFile);
+	*/
+		Debug.out(Debug.MODE_DEBUG, "TYM", "Command " + StringUtils.join(cmdList));
+
+		CommandLineExecutor cle = new CommandLineExecutor();
+		if (cle.exec(cmdList) != 0)
+		{
+			String stdout = cle.outputNormal();
+			throw new AssemblerException("There was a fatal disassembler error! Output from ildasm:\n" + stdout);
+		}
+	}
 }
