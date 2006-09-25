@@ -97,15 +97,15 @@ public class Debug
 		while (lineTok.hasMoreTokens())
 		{
 			String line = lineTok.nextToken();
-			StringTokenizer partTok = new StringTokenizer(line, "~");
+			String[] parts = StringUtils.split(line, '~');
 			
-			if (partTok.countTokens() == 5)
+			if (parts.length == 5)
 			{
-				String module = partTok.nextToken();
-				String mode = partTok.nextToken();
-				String filename = partTok.nextToken();
-				String linenum = partTok.nextToken();
-				String msg = partTok.nextToken();
+				String module = parts[0];
+				String mode = parts[1];
+				String filename = parts[2];
+				String linenum = parts[3];
+				String msg = parts[4];
 				
 				out(getModeLevel(mode), module, msg, filename, Integer.parseInt(linenum));
 			}
