@@ -53,8 +53,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\CecilILWeaver.cs" />
@@ -92,10 +90,6 @@
     <ProjectReference Include="..\ContextInfo\ContextInfo.csproj">
       <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
       <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repository\DataStoreContainer.csproj">
-      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
-      <Name>DataStoreContainer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

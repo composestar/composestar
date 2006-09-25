@@ -59,10 +59,12 @@ namespace TestLanguageModel
             ti.FullName = testValue;
             ti.BaseType = testValue;
             ti.Name = testValue;
+            ti.AFQN = testValue;
             
             Assert.AreEqual(testValue, ti.FullName, "Fullname does not persists data"); 
             Assert.AreEqual(testValue,ti.BaseType, "BaseType does not persists data"); 
             Assert.AreEqual(testValue, ti.Name, "Name does not persists data"); 
+            Assert.AreEqual(testValue, ti.AFQN, "AFQN does not persists data"); 
         }
 
         [Description("Test if the TypeElement class persists the booleans."), Owner("Michiel van Oudheusden"), TestMethod]
@@ -84,35 +86,6 @@ namespace TestLanguageModel
             Assert.AreEqual(testValue, ti.IsSealed, "IsSealed does not persists data");
         }
 
-        //[Description("Checks if the methods added to the TypeElement object are stored."), Owner("Michiel van Oudheusden"), TestMethod]
-        //public void TypeElementPersistMethodData()
-        //{
-        //    TypeElement ti = new TypeElement();
-        //    MethodElement mi = new MethodElement();
-        //    mi.Name = "test";
-
-        //    Assert.IsNull(mi.ParentTypeElement, "Method should not have a type.");
-
-        //    mi.ParentTypeElement = ti;
-
-        //    Assert.IsNotNull(mi.ParentTypeElement, "Method should have a typeinfo object assigned to it." ); 
-        //    Assert.AreEqual(ti, mi.ParentTypeElement, "Method does not have the same type info.");
-            
-        //}
-
-        [Description("Checks if the AssemblyElement is still saved when assigned."), Owner("Michiel van Oudheusden"), TestMethod]
-        public void TypeElementPersistAssemblyElementData()
-        {
-            TypeElement ti = new TypeElement();
-            
-            AssemblyElement ai = new AssemblyElement();
-            string v = "test";
-            ai.Name = v;
-
-            ti.AssemblyElement = ai;
-
-            Assert.AreEqual(ai, ti.AssemblyElement, "TypeElement does not persists AssemblyElement");
-            Assert.AreEqual(v, ti.AssemblyElement.Name, "AssemblyElement does not persists the data"); 
-        }
+       
     }
 }

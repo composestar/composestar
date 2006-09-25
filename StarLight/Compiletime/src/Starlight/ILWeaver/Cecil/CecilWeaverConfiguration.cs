@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Composestar.Repository.Properties;
 using Composestar.StarLight.ILWeaver.Properties;
 
 namespace Composestar.StarLight.ILWeaver
