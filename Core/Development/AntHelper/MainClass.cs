@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Microsoft.Win32;
+using System.Reflection;
 
 namespace AntHelper
 {
@@ -14,11 +15,17 @@ namespace AntHelper
 				Console.Out.WriteLine("Where [command] is one of the following:");
 				Console.Out.WriteLine(" getsystemproperties <filename>");
 				Console.Out.WriteLine("\tWrite out various system properties to <filename>");
+				Console.Out.WriteLine(" lookupAssembly <assembly>");
+				Console.Out.WriteLine("\tFind the full path to the requested assembly");
 				return 1;
 			}
 			else if (args[0].Equals("getsystemproperties"))
 			{
 				return resolveGetSystemProperties(args);
+			}
+			else if (args[0].Equals("lookupAssembly"))
+			{
+				return lookupAssembly(args);
 			}
 			return 1;
 		}
@@ -55,6 +62,21 @@ namespace AntHelper
 				i = input.IndexOf(from);
 			}
 			return input;
+		}
+
+		static int lookupAssembly(string[] args)
+		{
+			if (args.Length < 2) return 1;
+			try 
+			{
+				Assembly asm = Assembly.LoadWithPartialName(args[1]);
+				Console.Out.Write("{0}", asm.Location);
+				return 0;
+			}
+			catch (Exception)
+			{
+				return 2;
+			}
 		}
 	}
 }
