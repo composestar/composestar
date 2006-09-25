@@ -24,7 +24,7 @@
 	<target name="test" depends="test_vsp,test_exec" />
 
 	<!--
-	@depricated
+	@deprecated
 	<target name="test_build">
 		<copy file="${basedir}/../testing/AntSystemTest/Composestar.vsmacros" todir="${user.home}/My Documents/Visual Studio Projects/VSMacros71/Composestar" />
 		<cstarDevenv>

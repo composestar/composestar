@@ -30,7 +30,7 @@ public class cstarVsp extends Task {
 	
 	protected String conversionXslt;
 	protected String composestarBase;
-	protected String master;
+	protected String master = "Composestar.DotNET.MASTER.DotNETMaster";
 	
 	protected FileSet cstarJars;
 	
@@ -95,19 +95,21 @@ public class cstarVsp extends Task {
 		File projectFile = new File(project);
 		File buildXML = new File(projectFile.getParent()+File.separator+BUILD_CONFIGURATION_XML);
 		
-		try {		
-			XSLTProcess xslt = (XSLTProcess) getProject().createTask("xslt");
-			xslt.init();
-			xslt.setIn(projectFile);
-			xslt.setOut(buildXML);
-			xslt.setStyle(conversionXslt);
-			Param param = xslt.createParam();
-			param.setName("basepath");
-			param.setExpression(projectFile.getParent()+File.separator);
-			param = xslt.createParam();
-			param.setName("composestarpath");
-			param.setExpression(composestarBase+"/");
-			xslt.execute();
+		try {	
+			if (conversionXslt != "") {
+				XSLTProcess xslt = (XSLTProcess) getProject().createTask("xslt");
+				xslt.init();
+				xslt.setIn(projectFile);
+				xslt.setOut(buildXML);
+				xslt.setStyle(conversionXslt);
+				Param param = xslt.createParam();
+				param.setName("basepath");
+				param.setExpression(projectFile.getParent()+File.separator);
+				param = xslt.createParam();
+				param.setName("composestarpath");
+				param.setExpression(composestarBase+"/");
+				xslt.execute();
+			}
 			
 			if (!buildXML.exists()) throw new Exception(buildXML.getName()+" does not exist.");
 			
