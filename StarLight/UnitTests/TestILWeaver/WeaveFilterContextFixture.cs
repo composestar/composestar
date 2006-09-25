@@ -13,8 +13,10 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILWeaver;
+
 using TestILWeaver.DIConfiguration;
 using TestILWeaver.Mocks;
+using Testing.CecilILReader;
 
 namespace TestILWeaver
 {
@@ -51,16 +53,29 @@ namespace TestILWeaver
             CecilILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
             weaver.DoWeave();
 
+            ILReader il = new ILReader();
+            il.OpenAssembly(CreateFullPath(OutputFileName));
+            List<ILInstruction> ils = il.GetILInstructions("TestTarget.Program", "TestMethod");
+ 
+            List<ILInstruction> shouldContainCheck = new List<ILInstruction>();
+            shouldContainCheck.Add(new ILInstruction(0, "ldarg","this"));
+            shouldContainCheck.Add(new ILInstruction(0, "ldc.i8","1000"));
+            shouldContainCheck.Add(new ILInstruction(0, "call","System.Boolean Composestar.StarLight.ContextInfo.FilterContext::IsInnerCall(System.Object,System.Int64)"));
+ 
+            Assert.IsTrue(il.ContainsILInstructions(ils, shouldContainCheck), "Generated IL code did not contain the check for IsInnerCall"); 
 
-            // test wether Internal is created
-            Assembly asm = Assembly.LoadFile(CreateFullPath(OutputFileName));
-            Type programType = asm.GetType("TestTarget.Program");
-         //   FieldInfo internalStringField = programType.GetField("InternalString", BindingFlags.NonPublic | BindingFlags.Instance);
+            List<ILInstruction> shouldContainReset = new List<ILInstruction>();
+            shouldContainReset.Add(new ILInstruction(0, "call","System.Void Composestar.StarLight.ContextInfo.FilterContext::ResetInnerCall()"));
+ 
+            Assert.IsTrue(il.ContainsILInstructions(ils, shouldContainReset), "Generated IL code did not contain the call to the ResetInnerCall"); 
 
-            // assert on requirements
-            Assert.IsNotNull(programType);
-          //  Assert.AreEqual(typeof(string), internalStringField.FieldType);
-            Assert.Inconclusive(); 
+            List<ILInstruction> shouldContainSet = new List<ILInstruction>();
+            shouldContainSet.Add(new ILInstruction(0, "ldarg","this"));
+            shouldContainSet.Add(new ILInstruction(0, "ldc.i8","1000"));
+            shouldContainSet.Add(new ILInstruction(0, "call", "System.Void Composestar.StarLight.ContextInfo.FilterContext::SetInnerCall(System.Object,System.Int64)"));
+ 
+            Assert.IsTrue(il.ContainsILInstructions(ils, shouldContainSet), "Generated IL code did not contain the call to the SetInnerCall"); 
+
         }
     }
 }

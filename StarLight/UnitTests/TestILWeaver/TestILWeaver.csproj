@@ -62,6 +62,10 @@
       <Name>StarLight.CoreServices</Name>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\ILReader\ILReader.csproj">
+      <Project>{002AEBBE-70BA-4D3F-AE41-6E49D4E11E86}</Project>
+      <Name>ILReader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestTarget\TestTarget.csproj">
       <Project>{2A0211B9-5EA6-439F-A5E7-9C16F35BDD5E}</Project>
       <Name>TestTarget</Name>
