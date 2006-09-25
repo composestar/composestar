@@ -6,7 +6,11 @@ import java.util.List;
 
 public class StringUtils
 {
-	private StringUtils() {}
+	/**
+	 * Public constructor needed because this class is
+	 * serialized into the repository for some reason.
+	 */
+	public StringUtils() {}
 
 	public static String join(List parts, String glue)
 	{
