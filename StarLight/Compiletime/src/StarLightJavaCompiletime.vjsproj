@@ -103,12 +103,10 @@
     <Compile Include="Composestar\dotnet\LOLA\metamodel\DotNETLanguageModel.java" />
     <Compile Include="Composestar\dotnet\MASTER\StarLightMaster.java" />
     <Compile Include="Composestar\dotnet\TYM\RepositoryCollector\StarLightCollectorRunner.java" />
+    <Compile Include="Composestar\dotnet\TYM\RepositoryEmitter\StarLightEmitterRunner.java" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Composestar\dotnet\INLINE\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
   <PropertyGroup>

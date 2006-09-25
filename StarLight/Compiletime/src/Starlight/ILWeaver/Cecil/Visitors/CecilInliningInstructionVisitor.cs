@@ -364,7 +364,7 @@ namespace Composestar.StarLight.ILWeaver
             // Call the target
             //
 
-            //MethodReference methodToCall;
+            MethodReference methodToCall;
             //methodToCall = CreateMethodReference();
 
             // Load the JoinPointObject first
@@ -395,9 +395,9 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Branching for conditions
+        /// Generate the branching code for the conditions.
         /// </summary>
-        /// <param name="branch"></param>
+        /// <param name="branch">The branch.</param>
         public void VisitBranch(Branch branch)
         {
            
@@ -408,6 +408,7 @@ namespace Composestar.StarLight.ILWeaver
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
             ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);  
 
+            // Add the instructions containing the conditions to the IL instruction list
             AddInstructionList(conditionsVisitor.Instructions);
         
             // Add branch code
@@ -415,7 +416,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.FalseBlock.Label.Id)));
         }
 
-         /// <summary>
+        /// <summary>
         /// Generates the filter context is inner call check.
         /// </summary>
         /// <param name="method">The method.</param>
@@ -433,6 +434,9 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// The <b>filtercode</b> are the inputfilters added to the method.
         /// </example> 
+        /// <remarks>
+        /// A call to the VisitResetInnerCall function is needed to place the branchToInstruction at the correct place.
+        /// </remarks> 
         public void VisitCheckInnerCall(ContextInstruction contextInstruction)
         { 
             // Load the this parameter
@@ -463,8 +467,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <code>        
         /// FilterContext.SetInnerCall(this, methodId);
         /// this.calledMethod();
-        /// </code>
-        /// The <b>filtercode</b> are the inputfilters added to the method.
+        /// </code>       
         /// </example> 
         public void VisitSetInnerCall(ContextInstruction contextInstruction)
         {
@@ -482,6 +485,20 @@ namespace Composestar.StarLight.ILWeaver
                             
         }
 
+        /// <summary>
+        /// Visits the reset inner call.
+        /// </summary>
+        /// <param name="contextInstruction">The context instruction.</param>
+        /// <example>
+        /// Generate the following code:
+        /// <code>        
+        /// FilterContext.ResetInnerCall();        
+        /// </code>
+        /// Also place the jump NOP instruction so the IsInnerCall branch can jump to this location.
+        /// </example> 
+        /// <remarks>
+        /// There must be a call the the IsInnerCall to generate the jump instruction.
+        /// </remarks> 
         public void VisitResetInnerCall(ContextInstruction contextInstruction)
         {
             // Add the jump label first
@@ -538,9 +555,8 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// or in IL code:
         /// <code>
-        ///   L_0000: nop 
-        ///   L_0001: newobj instance void [mscorlib]System.Exception::.ctor()
-        ///   L_0006: throw 
+        ///   newobj instance void [mscorlib]System.Exception::.ctor()
+        ///   throw 
         /// </code>
         /// </example> 
         public void VisitErrorAction(FilterAction filterAction)
