@@ -146,7 +146,7 @@ public class DotNETMaster extends Master  {
 			else
 				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
 
-			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + printStackTrace(e));
+			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
 			System.exit(1);
 		}
 		catch (Exception e) {
@@ -155,11 +155,14 @@ public class DotNETMaster extends Master  {
 				error = e.toString();
 
 			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
-			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + printStackTrace(e));
+			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + Debug.stackTrace(e));
 			System.exit(2);
 		}
 	}
 
+	/**
+	 * @deprecated Use Debug.stackTrace instead
+	 */
 	public String printStackTrace(Exception e) 
 	{
 		try {
