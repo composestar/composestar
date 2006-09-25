@@ -47,6 +47,11 @@ namespace TestILWeaver.Mocks
             return new List<CallElement>();
         }
 
+        public void Close()
+        {
+
+        }
+
         #endregion
     }
 }
