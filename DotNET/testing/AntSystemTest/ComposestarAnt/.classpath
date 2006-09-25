@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="**/*.java" kind="src" path="src"/>
+	<classpathentry including="**/*.java" excluding="**/.svn/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/dev/apache-ant-1.6.5/lib/ant.jar"/>
+	<classpathentry kind="lib" path="C:/ant/lib/ant.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
