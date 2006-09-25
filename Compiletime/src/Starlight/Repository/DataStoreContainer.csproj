@@ -33,8 +33,6 @@
       <HintPath>..\..\..\binaries\db4o\db4o.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStoreContainer.cs" />

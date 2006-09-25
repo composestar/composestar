@@ -73,7 +73,7 @@ namespace TestILWeaver
 
         [TestMethod]
         [DeploymentItem(TestInputImage)]
-        public void WeavingBeforeActionAddsPintCutContextLogic()
+        public void WeavingBeforeActionAddsPointCutContextLogic()
         {
             string OutputFileName = "WeavingBeforeActionAddsPintCutContextLogic.exe";
 
@@ -105,7 +105,14 @@ namespace TestILWeaver
             CecilILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
             weaver.DoWeave();
 
-            Assert.Inconclusive();
+            // Expecting the following IL code
+            List<ILInstruction> shouldContainBefore = new List<ILInstruction>();
+            shouldContainBefore.Add(new ILInstruction(0, "", ""));
+            shouldContainBefore.Add(new ILInstruction(0, "", ""));
+
+            // Assert.IsTrue(il.ContainsILInstructions(ils, shouldContainBefore), "Generated IL code did not contain the before action code");
+
+            Assert.Inconclusive("Add the expected IL code to make this test work.");
         }
     }
 }
