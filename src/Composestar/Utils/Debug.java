@@ -93,19 +93,21 @@ public class Debug
 	
 	public static void parseLog(String log)
 	{
-		StringTokenizer st = new StringTokenizer(log, "\n");
-		while (st.hasMoreTokens())
+		StringTokenizer lineTok = new StringTokenizer(log, "\n");
+		while (lineTok.hasMoreTokens())
 		{
-			String line = st.nextToken();
-			String[] parts = line.split("~");
+			String line = lineTok.nextToken();
+			StringTokenizer partTok = new StringTokenizer(line, "~");
 			
-			if (parts.length == 5)
+			if (partTok.countTokens() == 5)
 			{
-				String module = parts[0];
-				String mode = parts[1];
-				String msg = parts[4];
+				String module = partTok.nextToken();
+				String mode = partTok.nextToken();
+				String filename = partTok.nextToken();
+				String linenum = partTok.nextToken();
+				String msg = partTok.nextToken();
 				
-				out(getModeLevel(mode), module, msg);
+				out(getModeLevel(mode), module, msg, filename, Integer.parseInt(linenum));
 			}
 			else
 				Debug.out(Debug.MODE_ERROR, "DEBUG", "Wrong log line: '" + line + "'");
