@@ -146,41 +146,47 @@ public class Module
 	 */
 	public void execute(CommonResources resources) throws ModuleException
 	{
-		if (this.enabled)
+		if (enabled)
 		{
 			// module is enabled for the phase so continue
 			
-			if (this.summary.length() != 0)
-				Debug.out(Debug.MODE_CRUCIAL, "Master",this.summary);
+			if (summary.length() != 0)
+				Debug.out(Debug.MODE_CRUCIAL, "Master", summary);
 
 			try {
-				Class moduleClass = Class.forName(this.fulltype);
+				Class moduleClass = Class.forName(fulltype);
 				CTCommonModule module = (CTCommonModule)moduleClass.newInstance();
-				INCRETimer timer = INCRE.instance().getReporter().openProcess(this.name,this.name,INCRETimer.TYPE_ALL);
+
+				INCRETimer timer = INCRE.instance().getReporter().openProcess(name, name, INCRETimer.TYPE_ALL);
 				module.run(resources);
 				timer.stop();
 			}
+		/*
+		 	// these should not be catched; can cause more problems if you do.
 			catch (StackOverflowError e) {
-				e.printStackTrace();
 				throw new ModuleException("I need more stack!", "INCRE running " + this.name);
 			}
 			catch (OutOfMemoryError e) {
-				e.printStackTrace();
 				throw new ModuleException("I am using too much memory!", "INCRE running " + this.name);
 			}
+		*/
 			catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				throw new ModuleException("Cannot find class "+this.fulltype, "INCRE running " + this.name);
+				throw new ModuleException("Cannot find class '" + fulltype + "'", "INCRE running " + name);
 			}
 			catch (InstantiationException e) {
-				e.printStackTrace();
-				throw new ModuleException(e.getMessage(), "INCRE running " + this.name);
+				throw new ModuleException("Could not create an instance of class '" + fulltype + "': " + e.getMessage(), "INCRE running " + name);
 			}
+			catch (IllegalAccessException e) {
+				throw new ModuleException("Could not create an instance of class '" + fulltype + "': " + e.getMessage(), "INCRE running " + name);
+			}
+		/*
+		 	// the only other exception thrown is ModuleException,
+		 	// which we can just let fall through
 			catch (Exception e) {
-				e.printStackTrace();
-				Debug.out(Debug.MODE_DEBUG, "Master", e.toString());
-				throw new ModuleException(e.toString(),"INCRE running " + this.name);
+				Debug.out(Debug.MODE_DEBUG, "Master", Debug.stackTrace(e));
+				throw new ModuleException(e.toString(),"INCRE running " + name);
 			}
+		*/
 		}
 	}
 }
