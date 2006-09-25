@@ -47,7 +47,7 @@ public abstract class BACO implements CTCommonModule
 		
 		// create the output dir if needed
 		if (!FileUtils.createFullPath(outputPath))
-			Debug.out(Debug.MODE_CRUCIAL, "BACO", "Unable to create output directory");
+			throw new ModuleException("Unable to create output directory: '" + outputPath + "'", "BACO");
 
 		// start the actual copying
 		Iterator filesIt = filesToCopy.iterator();
@@ -55,7 +55,7 @@ public abstract class BACO implements CTCommonModule
 		{
 			String file = (String)filesIt.next();
 			copyFile(file, outputPath);
-		}		
+		}
 	}
 
 	protected void addRequiredFiles(Set filesToCopy)
