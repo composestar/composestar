@@ -50,9 +50,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         }
 
         #endregion
-
-
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverTask"/> class.
         /// </summary>
@@ -61,7 +59,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverBuilderConfigurator());
             svcContainer.AddService(typeof(CecilWeaverConfiguration), CecilWeaverConfiguration.CreateDefaultConfiguration("TestTarget.exe"));
             svcContainer.AddService(typeof(ILanguageModelAccessor), new RepositoryAccess());
-
+            
         }
 
         /// <summary>

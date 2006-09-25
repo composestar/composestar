@@ -1,14 +1,16 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
-using Composestar.StarLight.ILWeaver;
 using System.Collections.Specialized;
-using System.IO;
 using System.ComponentModel.Design;
-using Composestar.StarLight.CoreServices;
-using TestILWeaver.Mocks;
+using System.IO;
+using System.Text;
+
 using Microsoft.Practices.ObjectBuilder;
+
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.ILWeaver;
 using TestILWeaver.DIConfiguration;
+using TestILWeaver.Mocks;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +25,7 @@ using TestMethod = NUnit.Framework.TestAttribute;
 namespace TestILWeaver
 {
     /// <summary>
-    /// Summary description for UnitTest1
+    /// 
     /// </summary>
     [TestClass]
     public class CecilILWeaverInitializationFixture
