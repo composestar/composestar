@@ -21,15 +21,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnotherFilterTestsConcern.cps">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FilterTestsConcerns.cps">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TypeTestsConcern.cps">
-      <SubType>Code</SubType>
-    </Compile>
+    <Concern Include="FilterTestsConcerns.cps">
+    </Concern>
+    <None Include="TypeTestsConcern.cps" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BasicTests\BasicTests.csproj">
