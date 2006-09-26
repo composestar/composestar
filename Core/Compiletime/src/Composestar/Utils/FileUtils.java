@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -98,14 +100,6 @@ public class FileUtils
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public static String prepareCommand(String filename)
-	{
-		return fixSlashes(filename);
-	}
-
-	/**
 	 * Returns the if the specified filename refers to an existing file.
 	 */
 	public static boolean fileExist(String fileName)
@@ -116,24 +110,26 @@ public class FileUtils
 
 	public static void copyFile(String dst, String src) throws ModuleException
 	{
+		InputStream is = null;
+		OutputStream os = null;
 		try {
-			FileInputStream fis = new FileInputStream(src);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			FileOutputStream fos = new FileOutputStream(dst);
-			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			is = new BufferedInputStream(new FileInputStream(src));
+			os = new BufferedOutputStream(new FileOutputStream(dst));
 
 			// transfer bytes from in to out
 			byte[] buf = new byte[65536];
 			int len;
-			while ((len = bis.read(buf)) > 0)
+			while ((len = is.read(buf)) > 0)
 			{
-				bos.write(buf, 0, len);
+				os.write(buf, 0, len);
 			}
-			bis.close();
-			bos.close();
 		}
 		catch (IOException e) {
 			throw new ModuleException("Error while copying file!:\n" + e.getMessage());
+		}
+		finally {
+			close(is);
+			close(os);
 		}
 	}
 
@@ -272,5 +268,35 @@ public class FileUtils
 			// this shouldnt happen
 			throw new RuntimeException("Unable to close writer: " + e.getMessage());
 		}
+	}
+	
+	/**
+	 * Closes the specified InputStream instance, provided it is not null.
+	 */
+	public static void close(InputStream is)
+	{
+		try {
+			if (is != null)
+				is.close();
+		}
+		catch (IOException e) {
+			// this shouldnt happen
+			throw new RuntimeException("Unable to close stream: " + e.getMessage());
+		}		
+	}
+
+	/**
+	 * Closes the specified OutputStream instance, provided it is not null.
+	 */
+	public static void close(OutputStream os)
+	{
+		try {
+			if (os != null)
+				os.close();
+		}
+		catch (IOException e) {
+			// this shouldnt happen
+			throw new RuntimeException("Unable to close stream: " + e.getMessage());
+		}		
 	}
 }
