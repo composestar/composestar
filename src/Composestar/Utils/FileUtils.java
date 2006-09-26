@@ -27,6 +27,9 @@ public class FileUtils
 	 */
 	public static String quote(String filename)
 	{
+		if (filename == null)
+			throw new IllegalArgumentException("filename cannot be null");
+		
 		return '"' + filename + '"';
 	}
 	
@@ -35,6 +38,9 @@ public class FileUtils
 	 */
 	public static String unquote(String filename)
 	{
+		if (filename == null)
+			throw new IllegalArgumentException("filename cannot be null");
+
 		filename = filename.trim();
 		
 		if ("".equals(filename) || "\"".equals(filename))
