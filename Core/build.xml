@@ -45,5 +45,9 @@
 		</checkstyle>
 		<xslt in="${build.core}${file.separator}checkstyle-result.xml" out="${build.core}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
+
+	<target name="test" depends="init" description="Runs tests.">
+		<ant target="unittest" dir="Compiletime"/>
+	</target>
 	
 </project>

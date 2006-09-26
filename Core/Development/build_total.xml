@@ -109,11 +109,15 @@
 	<target name="checkstyle_dotnet" depends="init" if="available.dotnet">
 		<ant target="checkstyle" dir="${build.dotnet}" />
 	</target>
-	
-	<!-- system test -->
-	
+
+	<!-- tests -->
 	<target name="test" depends="init" description="Execute system tests.">
+		<antcall target="test_core" />
 		<antcall target="test_dotnet" />
+	</target>
+
+	<target name="test_core" depends="init" description="Execute JUnit tests.">
+		<ant target="test" dir="${build.core}"/>
 	</target>
 	
 	<target name="test_dotnet" depends="init" if="available.dotnet">
