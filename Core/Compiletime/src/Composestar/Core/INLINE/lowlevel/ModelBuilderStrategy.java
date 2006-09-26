@@ -182,6 +182,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      */
     public void evalCondExpr(ConditionExpression condition){
         Branch branch = new Branch( condition );
+        this.currentBlock.addInstruction( branch );
 
         this.currentBranch = branch;
     }
