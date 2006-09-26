@@ -13,10 +13,10 @@ public class StringUtils
 
 	public static String join(List parts, String glue)
 	{
-		StringBuffer sb = new StringBuffer();
 		int count = parts.size();
 		if (count == 0) return "";
 
+		StringBuffer sb = new StringBuffer();
 		sb.append(parts.get(0));
 		for (int i = 1; i < count; i++)
 			sb.append(glue).append(parts.get(i));
