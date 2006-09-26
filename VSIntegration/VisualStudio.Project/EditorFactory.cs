@@ -104,7 +104,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             else if (VSConstants.LOGVIEWID_Designer == logicalView)
             {
                 physicalView = "Design";
-                isSupportedView = true;
+                isSupportedView = false;
             }
 
             if (isSupportedView)

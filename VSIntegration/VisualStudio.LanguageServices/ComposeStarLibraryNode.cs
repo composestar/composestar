@@ -58,6 +58,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices {
             //        this.CanGoToSource = true;
             //    }
             //}
+            this.ownerHierarchy = hierarchy;
+            this.fileId = itemId;
+            this.Name = string.Format(CultureInfo.InvariantCulture, "{0}", namePrefix);
         }
 
         internal ComposeStarLibraryNode(ComposeStarLibraryNode node) :
@@ -156,45 +159,53 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices {
             }
         }
 
-        private IntPtr FindDocDataFromRDT() {
+        private IntPtr FindDocDataFromRDT()
+        {
             // Get a reference to the RDT.
-           // IVsRunningDocumentTable rdt = PythonPackage.GetGlobalService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable;
-           // if (null == rdt) {
+            IVsRunningDocumentTable rdt = ComposeStarPackage.GetGlobalService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable;
+            if (null == rdt)
+            {
                 return IntPtr.Zero;
-           // }
+            }
 
             // Get the enumeration of the running documents.
-            //IEnumRunningDocuments documents;
-            //ErrorHandler.ThrowOnFailure(rdt.GetRunningDocumentsEnum(out documents));
+            IEnumRunningDocuments documents;
+            ErrorHandler.ThrowOnFailure(rdt.GetRunningDocumentsEnum(out documents));
 
-            //IntPtr documentData = IntPtr.Zero;
-            //uint[] docCookie = new uint[1];
-            //uint fetched;
-            //while ((VSConstants.S_OK == documents.Next(1, docCookie, out fetched)) && (1 == fetched)) {
-            //    uint flags;
-            //    uint editLocks;
-            //    uint readLocks;
-            //    string moniker;
-            //    IVsHierarchy docHierarchy;
-            //    uint docId;
-            //    IntPtr docData = IntPtr.Zero;
-            //    try {
-            //        ErrorHandler.ThrowOnFailure(
-            //            rdt.GetDocumentInfo(docCookie[0], out flags, out readLocks, out editLocks, out moniker, out docHierarchy, out docId, out docData));
-            //        // Check if this document is the one we are looking for.
-            //        if ((docId == fileId) && (ownerHierarchy.Equals(docHierarchy))) {
-            //            documentData = docData;
-            //            docData = IntPtr.Zero;
-            //            break;
-            //        }
-            //    } finally {
-            //        if (IntPtr.Zero != docData) {
-            //            Marshal.Release(docData);
-            //        }
-            //    }
-            //}
+            IntPtr documentData = IntPtr.Zero;
+            uint[] docCookie = new uint[1];
+            uint fetched;
+            while ((VSConstants.S_OK == documents.Next(1, docCookie, out fetched)) && (1 == fetched))
+            {
+                uint flags;
+                uint editLocks;
+                uint readLocks;
+                string moniker;
+                IVsHierarchy docHierarchy;
+                uint docId;
+                IntPtr docData = IntPtr.Zero;
+                try
+                {
+                    ErrorHandler.ThrowOnFailure(
+                        rdt.GetDocumentInfo(docCookie[0], out flags, out readLocks, out editLocks, out moniker, out docHierarchy, out docId, out docData));
+                    // Check if this document is the one we are looking for.
+                    if ((docId == fileId) && (ownerHierarchy.Equals(docHierarchy)))
+                    {
+                        documentData = docData;
+                        docData = IntPtr.Zero;
+                        break;
+                    }
+                }
+                finally
+                {
+                    if (IntPtr.Zero != docData)
+                    {
+                        Marshal.Release(docData);
+                    }
+                }
+            }
 
-            //return documentData;
+            return documentData;
         }
 
     }
