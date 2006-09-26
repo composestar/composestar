@@ -14,9 +14,9 @@
 	Run the Compose* SystemTest for DotNET
 	</description>
 
-	<!--<taskdef name="cstarDevenv" classname="Composestar.Ant.taskdefs.cstarDevenv" classpath="C:\sandbox\DotNET\testing\AntSystemTest\ComposestarAnt\build"  />-->
-	<taskdef name="cstarTest" classname="Composestar.Ant.taskdefs.cstarTest" />
-	<taskdef name="cstarVsp" classname="Composestar.Ant.taskdefs.cstarVsp" />
+	<!--<taskdef name="cstarDevenv" classname="Composestar.Ant.taskdefs.cstarDevenv" />-->
+	<taskdef name="cstarTest" classname="Composestar.Ant.Taskdefs.CstarTest" />
+	<taskdef name="cstarVsp" classname="Composestar.Ant.Taskdefs.CstarVsp" />
 	
 	<target name="clean" />
 	<target name="build" />
