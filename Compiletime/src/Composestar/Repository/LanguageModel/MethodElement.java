@@ -21,7 +21,7 @@ public class MethodElement implements IRepositoryElement
 	public MethodElement()
 	{
 		_id = this.hashCode();
-		_methodBody = new MethodBody(_id); 
+
 	}
 
 	/** @property */
@@ -151,6 +151,8 @@ public class MethodElement implements IRepositoryElement
 	/** @property */
 	public MethodBody get_MethodBody()
 	{
+		if (_methodBody == null) _methodBody = new MethodBody(_id); 
+
 		return _methodBody;
 	}
 
