@@ -97,7 +97,7 @@ public class ModelBuilder implements CTCommonModule{
         if ( concern.getDynObject("superImpInfo") == null ){
             return;
         }
-
+        
         //initialize:
         innerCallCheckTasks = new Vector();
         inlinedMethodSet = new HashSet();
@@ -106,6 +106,8 @@ public class ModelBuilder implements CTCommonModule{
         FilterModuleOrder filterModules = 
             (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
 
+        currentFireModel = new FireModel( concern, filterModules );
+        
         List order = filterModules.orderAsList();
         modules = new FilterModule[ order.size() ];
         for (int i=0; i<order.size(); i++){
@@ -114,32 +116,6 @@ public class ModelBuilder implements CTCommonModule{
             modules[i] = 
                 (FilterModule) DataStore.instance().getObjectByID(ref);
         }
-
-
-//      //add methods to methodtable, for faster retrieval:
-//      Type type = (Type) concern.getPlatformRepresentation();
-//      methodTable = new Hashtable();
-//      List list = type.getMethods();
-//      Iterator iter = list.iterator();
-//      while( iter.hasNext() ){
-//      MethodInfo method = (MethodInfo) iter.next();
-
-//      Vector methods;
-//      if ( methodTable.containsKey( method.name() ) ){
-//      methods = (Vector) methodTable.get( method.name() );
-//      }
-//      else{
-//      methods = new Vector();
-//      methodTable.put( method.name(), methods );
-//      }
-
-//      methods.add( method );
-//      }
-
-        //create externals and internals:
-        //TODO
-//      structure.externals = getExternals();
-//      structure.internals = getInternals();
 
         //iterate methods:
         Type type = (Type) concern.getPlatformRepresentation();
@@ -180,12 +156,12 @@ public class ModelBuilder implements CTCommonModule{
 
 
         //process calls:
-        HashSet calls = methodInfo.getCallsToOtherMethods();
-        Iterator iter = calls.iterator();
-        while( iter.hasNext() ){
-            CallToOtherMethod call = (CallToOtherMethod) iter.next();
-            processCall( call );
-        }
+//        HashSet calls = methodInfo.getCallsToOtherMethods();
+//        Iterator iter = calls.iterator();
+//        while( iter.hasNext() ){
+//            CallToOtherMethod call = (CallToOtherMethod) iter.next();
+//            processCall( call );
+//        }
 
     }
 

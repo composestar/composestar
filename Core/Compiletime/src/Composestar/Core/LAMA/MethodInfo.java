@@ -192,8 +192,17 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
     {
        ReturnTypeString = type;     
     }
+    
+    
 	
-	/** Stuff for LOLA **/
+	/**
+     * @return the returnTypeString
+     */
+    public String getReturnTypeString(){
+        return ReturnTypeString;
+    }
+
+    /** Stuff for LOLA **/
 	
 	/* (non-Javadoc)
 	 * @see Composestar.Core.LAMA.ProgramElement#getUnitName()
