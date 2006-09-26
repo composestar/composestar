@@ -59,6 +59,8 @@
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="Composestar/Core/SECRET/*"/>
 			<exclude name="Composestar/Core/CORE/*"/>
+			<exclude name="Composestar/Core/SIGN/*"/>
+			<!--<exclude name="Composestar/Core/FIRE/*"/>-->			
 		</javac>
 	</target>
 	
