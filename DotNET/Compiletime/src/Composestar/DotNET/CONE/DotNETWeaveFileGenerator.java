@@ -107,6 +107,9 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				// FIXME: this makes assumptions about the location of the .NET framework
 				if (dep.indexOf("Microsoft.NET/Framework/") >= 0)
 					continue;
+				// FIXME: this makes assumptions about the location of the .NET GAC
+				if (dep.toLowerCase().indexOf("assembly/gac/") >= 0)
+					continue;
 
 				if (dep.indexOf("ComposeStarRuntimeInterpreter") >= 0)
 					continue;

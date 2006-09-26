@@ -18,7 +18,7 @@
 	The .NET implementation of Compose*
 	</description>
 
-	<target name="clean" depends="init">
+	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<delete file="${build.dotnet}${file.separator}findbugs-result.html" />
 		<ant target="clean" dir="Compiletime" />
 		<ant target="clean" dir="Runtime" />
@@ -26,17 +26,20 @@
 	</target>
 	
 	
-	<target name="build" depends="init">
+	<target name="build" depends="init" description="Build the .Net implementation of Compose*">
 		<ant target="build" dir="Compiletime" />
 		<ant target="build" dir="Runtime" />
 	</target>
 	
-	<target name="plugin" depends="init">
+	<target name="plugin" depends="init" description="Build the plugin for the IDE">
 		<ant target="build" dir="Plugin" />
 	</target>
 	
-	<target name="test" depends="init,systemtest" />
+	<target name="test" depends="init" description="Execute system tests">
+		<ant target="test" dir="Testing" />
+	</target>
 	
+	<!--
 	<target name="systemtest" depends="init">
 		<condition property="systemtest.config" value="config.ini">
 			<not>
@@ -47,21 +50,22 @@
 			<arg value="${systemtest.config}" />
 		</exec>
 	</target>
+	-->
 	
-	<target name="install" depends="build">
+	<target name="install" depends="build" description="Install the result">
 		<ant target="install" dir="Compiletime" />
 		<ant target="install" dir="Runtime" />
 		<ant target="install" dir="Plugin" />
 	</target>
 	
-	<target name="uninstall" depends="init">
+	<target name="uninstall" depends="init" description="Clean up and installation">
 		<!--<ant target="uninstall" dir="Compiletime" />-->
 		<ant target="uninstall" dir="Runtime" />
 		<!--<ant target="uninstall" dir="Plugin" />-->
 	</target>
 	
 	
-	<target name="findbugs" depends="init">
+	<target name="findbugs" depends="init" description="Execute FindBugs">
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${build.dotnet}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.dotnet}${file.separator}Compiletime${file.separator}${out.build}" />
 			<sourcePath path="${build.dotnet}${file.separator}Compiletime${file.separator}src" />
@@ -73,7 +77,7 @@
 		<xslt in="${build.dotnet}${file.separator}findbugs-result.xml" out="${build.dotnet}${file.separator}findbugs-result.html" style="${findbugs.style}" />
 	</target>
 	
-	<target name="checkstyle" depends="init">
+	<target name="checkstyle" depends="init" description="Run CheckStyle code proof reading">
 		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false">
 			<formatter type="xml" toFile="${build.dotnet}${file.separator}checkstyle-result.xml" />
 			<property key="checkstyle.basedir" value="${build.dotnet}${file.separator}Compiletime${file.separator}src" />

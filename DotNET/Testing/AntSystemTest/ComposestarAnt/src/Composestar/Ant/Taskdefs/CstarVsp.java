@@ -22,29 +22,66 @@ import org.apache.tools.ant.DirectoryScanner;
  */
 public class CstarVsp extends Task
 {
-	protected static final String BUILD_CONFIGURATION_XML = "BuildConfiguration.xml";
+	/**
+	 * The name of the BuildConfiguration.XML to produce
+	 */
+	protected String BUILD_CONFIGURATION_XML = "BuildConfiguration.xml";
 
+	/**
+	 * List containg visual studio projects
+	 */
 	protected Vector fileSets = new Vector();
 
+	/**
+	 * If true fail the build if a single project failed to compile
+	 */
 	protected boolean failOnError = true;
 
+	/**
+	 * If true fail on the first build that failed to compile
+	 */
 	protected boolean failOnFirstError = false;
 
+	/**
+	 * The Xslt document to convert the VisualStudio projects
+	 * to BuildConfiguration.xml
+	 */
 	protected String conversionXslt;
 
+	/**
+	 * The location of ComposeStar; assumes the jar files are in
+	 * composestarBase+"/Binaries"
+	 */
 	protected String composestarBase;
 
+	/**
+	 * The master to execute
+	 */
 	protected String master = "Composestar.DotNET.MASTER.DotNETMaster";
 
+	/**
+	 * Path to AntHelper.exe; which is used to resolve assembly locations
+	 */
 	protected String antHelperPath;
 
+	/**
+	 * Classpath for compose*; required to build the project 
+	 */
 	protected FileSet cstarJars;
 
-	// internals
+	/**
+	 * Total projects examined 
+	 */
 	protected int cntTotal;
 
+	/**
+	 * Number of succesful builds
+	 */
 	protected int cntSuccess;
 
+	/**
+	 * Number of failed builds
+	 */
 	protected int cntFail;
 
 	public void setFailOnError(boolean failOnError)
@@ -97,6 +134,8 @@ public class CstarVsp extends Task
 		cstarJars.setDir(new File(composestarBase + File.separator + "Binaries"));
 		NameEntry inc = cstarJars.createInclude();
 		inc.setName("*.jar");
+		
+		registerCstarAsms();
 
 		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
 		{
@@ -116,6 +155,24 @@ public class CstarVsp extends Task
 		if (failOnError && (cntFail > 0))
 		{
 			throw new BuildException("Compilation of " + cntFail + " project(s) failed.");
+		}
+	}
+	
+	protected void registerCstarAsms()
+	{		
+		FileSet cstarAsms = new FileSet();
+		cstarAsms.setDir(new File(composestarBase + File.separator + "Binaries"));
+		NameEntry inc = cstarAsms.createInclude();
+		inc.setName("*.dll");
+		
+		DirectoryScanner ds = cstarAsms.getDirectoryScanner(this.getProject());
+		String[] files = ds.getIncludedFiles();
+		for (int i = 0; i < files.length; i++)
+		{
+			File asmPath = new File(ds.getBasedir().getPath() + File.separator + files[i]);
+			String asm = asmPath.getName();
+			asm = asm.substring(0, asm.lastIndexOf("."));
+			Composestar.Ant.XsltUtils.registerAssembly(asm, asmPath.toString());
 		}
 	}
 

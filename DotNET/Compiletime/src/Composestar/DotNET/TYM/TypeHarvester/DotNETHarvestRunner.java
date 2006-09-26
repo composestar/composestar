@@ -101,8 +101,11 @@ public class DotNETHarvestRunner implements HarvestRunner
 				return assemblies;
 
 			// FIXME: assumption about the environment
-			if (name.indexOf("Microsoft.NET/Framework/") == -1)
+			if ((name.indexOf("Microsoft.NET/Framework/") == -1)
+					&& (name.toLowerCase().indexOf("assembly/gac/") == -1))
+			{
 				assemblies.add(name);
+			}
 		}
 
 		List dummies = config.getProjects().getCompiledDummies();
@@ -167,7 +170,8 @@ public class DotNETHarvestRunner implements HarvestRunner
 			String name = dependency.getFileName();			
 
 			// FIXME: this makes an assumption on the location of the framework 
-			if (name.indexOf("Microsoft.NET/Framework/") == -1)
+			if ((name.indexOf("Microsoft.NET/Framework/") == -1)
+					&& (name.toLowerCase().indexOf("assembly/gac") == -1))
 			{
 				name = checkDLL(name); // FIXME: checkDLL has unclear side-effect
 				cmdItems.add(name);

@@ -17,7 +17,7 @@ public class XsltUtils
 	protected static String AntHelperEXE;
 
 	protected static String currentDirectory;
-
+	
 	public static String resolveAssembly(String assembly, String hint) throws Exception
 	{
 		// try absolute
@@ -28,6 +28,16 @@ public class XsltUtils
 		if (hintFile.exists()) return hintFile.toString();
 		// try via helper
 		return lookupAssembly(assembly);
+	}
+	
+	public static void registerAssembly(String assembly, String path)
+	{
+		resolvedAsms.put(assembly, path);
+	}
+	
+	public static void clearAssemblyCache()
+	{
+		resolvedAsms.clear();
 	}
 
 	/**
@@ -42,7 +52,7 @@ public class XsltUtils
 		if (resolvedAsms.containsKey(assembly))
 		{
 			return (String) resolvedAsms.get(assembly);
-		}
+		}		
 		if (AntHelperEXE == "")
 		{
 			throw new Exception("AntHelperEXE not assigned.");

@@ -21,7 +21,7 @@
 	<target name="clean" />
 	<target name="build" />
 	
-	<target name="test" depends="test_vsp,test_exec" />
+	<target name="test" depends="test_vsp,test_exec" description="Execute the DotNET system test." />
 
 	<!--
 	@deprecated

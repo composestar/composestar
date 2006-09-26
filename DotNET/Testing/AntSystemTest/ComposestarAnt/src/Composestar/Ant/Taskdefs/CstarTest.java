@@ -17,19 +17,33 @@ import org.apache.tools.ant.DirectoryScanner;
 public class CstarTest extends Task
 {
 
-	protected static final String CORRECT_OUTPUT = "correct.txt";
+	protected String CORRECT_OUTPUT = "correct.txt";
 
 	protected Vector fileSets = new Vector();
 
+	/**
+	 * If true fail the build if a single test failed
+	 */
 	protected boolean failOnError = true;
 
+	/**
+	 * If true fail on the first test that failed
+	 */
 	protected boolean failOnFirstError = false;
 
-	// internals
+	/**
+	 * Total tests executed 
+	 */
 	protected int cntTotal;
 
+	/**
+	 * Number of succesful tests
+	 */
 	protected int cntSuccess;
 
+	/**
+	 * Number of failed tests
+	 */
 	protected int cntFail;
 
 	public void setFailOnError(boolean failOnError)

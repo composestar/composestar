@@ -20,9 +20,10 @@
 	
 	<target name="build" /><!-- dummy -->
 	
-	<target name="clean">
+	<target name="clean" description="Clean intermediate files from the examples.">
 		<delete includeemptydirs="true">
 			<FileSet dir="${basedir}" >
+				<include name="*/BuildConfiguration.xml" />
 				<include name="*/repository.xml" />
 				<include name="*/types.xml" />
 				<include name="*/weavespec.xml" />
@@ -34,6 +35,7 @@
 				<include name="*/obj/**" />
 			</FileSet>
 			<FileSet dir="${basedir}/DesignPatterns/Implementations" >
+				<include name="*/BuildConfiguration.xml" />
 				<include name="*/repository.xml" />
 				<include name="*/types.xml" />
 				<include name="*/weavespec.xml" />
@@ -45,6 +47,7 @@
 				<include name="*/obj/**" />
 			</FileSet>
 			<FileSet dir="${basedir}/TestCases" >
+				<include name="*/BuildConfiguration.xml" />
 				<include name="*/repository.xml" />
 				<include name="*/types.xml" />
 				<include name="*/weavespec.xml" />

@@ -12,10 +12,11 @@ import Composestar.Utils.FileUtils;
 
 public class DotNETBACO extends BACO
 {
-	protected boolean checkNeededDependency(Dependency dependency)
+	protected boolean isNeededDependency(Dependency dependency)
 	{
 		// FIXME: assumption about .NET installation
-		return !(dependency.getFileName().indexOf("Microsoft.NET/Framework/") > 0);
+		return (dependency.getFileName().indexOf("Microsoft.NET/Framework/") == -1)
+			&& (dependency.getFileName().toLowerCase().indexOf("assembly/gac/") == -1);
 	}
 
 	protected void addBuiltLibraries(Set filesToCopy)
