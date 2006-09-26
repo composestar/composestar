@@ -1,7 +1,6 @@
 package Composestar.DotNET.TYM.SignatureTransformer;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -17,6 +16,7 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 /**
@@ -49,7 +49,7 @@ public class ILCodeParser extends TransformerBase
 	}
 
 	/**
-	 * Adds a concern for this ILCodeParser to transform.
+	 * Adds a concern to superimpose.
 	 */
 	public void addConcern(Concern concern)
 	{
@@ -82,49 +82,63 @@ public class ILCodeParser extends TransformerBase
 
 	/**
 	 * Applies the transformations to the assembly.
+	 * 
+	 * FIXME: 'the transformations'?
 	 */
 	public void run() throws ModifierException
 	{
 		if (assemblyName == null || "".equals(assemblyName)) 
 			return; // nothing to do
 		
-		// replace extension with .il
-		String ilName = assemblyName.replaceAll("\\.\\w+", ".il");
+		// il file before transformation
+		String preIlName = FileUtils.replaceExtension(assemblyName, "pre.il");
+
+		// il file after transformation
+		String postIlName = FileUtils.replaceExtension(assemblyName, "post.il");
 
 		// disassemble
 		Assembler asm = new MSAssembler();
 		try {
-			asm.disassemble(assemblyName, ilName);
+			asm.disassemble(assemblyName, preIlName);
 		}
 		catch (AssemblerException e) {
-			throw new ModifierException(e.getMessage() + " (Assembly: '" + assemblyName + "', IL: '" + ilName + "')");
+			throw new ModifierException("Unable to disassemble '" + assemblyName + "' into '" + preIlName + "': " + e.getMessage());
 		}
 
-		// remove the old destination file (?)
-		File file = new File(ilName + ".il");
-		file.delete();
+		// remove the old .post.il file
+		if (! FileUtils.delete(postIlName))
+			Debug.out(Debug.MODE_WARNING, "TYM_TRANS", "Unable to delete '" + postIlName + "'");
 
 		// open dissassembled file
 		BufferedReader in = null;
 		try {
-			in = new BufferedReader(new InputStreamReader(new FileInputStream(ilName)));
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(preIlName)));
 			setIn(in);
-			openOut(ilName + ".il");
+			openOut(postIlName);
 
 			// run main assembly transformation
-			dissect(ilName);
+			dissect(preIlName);
 		}
 		catch (FileNotFoundException e) {
-			throw new ModifierException("Cannot open newly created il file " + ilName);
+			throw new ModifierException("Cannot open newly created il file " + preIlName);
 		}
 		finally {
 			closeOut();
 			FileUtils.close(in);
 		}
 
+		// remove the old assembly
+		if (! FileUtils.delete(assemblyName))
+			Debug.out(Debug.MODE_WARNING, "TYM_TRANS", "Unable to delete '" + assemblyName + "'");
+		
+		// remove the old pdb file
+		String pdb = FileUtils.replaceExtension(assemblyName, "pdb");
+		if (! FileUtils.delete(pdb))
+			Debug.out(Debug.MODE_WARNING, "TYM_TRANS", "Unable to delete '" + pdb + "'");
+
 		// re-assemble
 		try {
-			asm.assemble(ilName + ".il", assemblyName);
+			asm.assemble(postIlName, assemblyName);
 		}
 		catch (AssemblerException e) {
 			throw new ModifierException(e.getMessage());
