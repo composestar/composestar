@@ -124,7 +124,7 @@
     <value>The constructor .ctor() for the type {0} could not be found.</value>
   </data>
   <data name="CouldNotSaveAssembly" xml:space="preserve">
-    <value>Could not write the assembly to a file. Check if the file is not in use and has the correct access permissions.</value>
+    <value>Could not write the assembly to file '{0}'. Check if the file is not in use and has the correct access permissions.</value>
   </data>
   <data name="FileNameNullOrEmpty" xml:space="preserve">
     <value>The supplied filename is null or empty.</value>
@@ -159,5 +159,8 @@
   <data name="InputImageNotFound" xml:space="preserve">
     <value>The input image {0} could not be found.
 </value>
+  </data>
+  <data name="CouldNotResolveMethod" xml:space="preserve">
+    <value>Unable to resolve the method '{0}' from '{1}' to a Type used by the weaver. Make sure all the references are in place and the method has bee specified correctly.</value>
   </data>
 </root>

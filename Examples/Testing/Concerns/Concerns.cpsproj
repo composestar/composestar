@@ -1,0 +1,42 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"Concerns"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a2606d7a-857f-49c4-966d-65c6f2fb7d93}</ProjectGuid>
+    <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
+    <RootNamespace>Concerns</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnotherFilterTestsConcern.cps">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FilterTestsConcerns.cps">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TypeTestsConcern.cps">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BasicTests\BasicTests.csproj">
+      <Name>BasicTests</Name>
+      <Project>{c155ca4c-c982-41a9-b205-10344d86e54e}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
+</Project>

@@ -124,8 +124,7 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = _languageModelAccessor.GetMethodElementBySignature(typeElement,
-                            MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), GetParameterTypesList(method)));
+                        methodElement = _languageModelAccessor.GetMethodElementBySignature(typeElement, CecilUtilities.MethodSignature(method));
 
                         // Skip if there is no methodinfo
                         if (methodElement == null)
@@ -146,7 +145,7 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (Exception ex)
             {
-                throw new ILWeaverException(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly,  _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
             }
 
             // Stop timing
@@ -461,47 +460,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #region Helper functions
-
-        /// <summary>
-        /// Returns a method signature.
-        /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="returnType">Type of the return.</param>
-        /// <param name="paramTypes">The param types.</param>
-        /// <returns></returns>
-        public static String MethodSignature(string methodName, string returnType, string[] paramTypes)
-        {
-            StringBuilder signature = new StringBuilder();
-            signature.AppendFormat("{0} {1}(", returnType, methodName);
-           
-            for (int i = 0; i < paramTypes.Length; i++)
-            {
-                if (i < paramTypes.Length-1)
-                    signature.AppendFormat("{0}, ", paramTypes[i]); 
-                else
-                    signature.AppendFormat("{0}", paramTypes[i]);
-            }
-            signature.Append(")"); 
-
-            return signature.ToString();
-        }
-
-        /// <summary>
-        /// Gets the parameter types list.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        /// <returns></returns>
-        private String[] GetParameterTypesList(MethodDefinition method)
-        {
-            List<String> ret = new List<String>();
-            foreach (ParameterDefinition param in method.Parameters)
-            {
-                ret.Add(param.ParameterType.FullName);
-            }
-
-            return ret.ToArray();
-        }
-
+        
         /// <summary>
         /// Inserts the instruction list after a specified instruction.
         /// </summary>
