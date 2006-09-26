@@ -1,6 +1,5 @@
 package Composestar.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.DotNET.MASTER.StarLightMaster;
@@ -9,10 +8,8 @@ import Composestar.Repository.LanguageModel.Inlining.Block;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Predicate;
-import com.db4o.query.Query;
 
 public class DataStoreContainer {
 	private static DataStoreContainer instance;
@@ -29,8 +26,10 @@ public class DataStoreContainer {
 		
 		Db4o.configure().callConstructors(false);
         
+        Db4o.configure().objectClass( MethodElement.class ).cascadeOnActivate( true );
         Db4o.configure().objectClass( MethodElement.class ).cascadeOnUpdate( true );
         Db4o.configure().objectClass( Block.class ).cascadeOnActivate( true );
+        Db4o.configure().objectClass( Block.class ).cascadeOnUpdate( true );
 
         
 		// Indexes

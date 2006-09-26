@@ -53,6 +53,7 @@
     <Compile Include="Inlining\Visitor\IVisitor.java" />
     <Compile Include="Internal.java" />
     <Compile Include="IRepositoryElement.java" />
+    <Compile Include="LinkedList.java" />
     <Compile Include="MethodBody.java" />
     <Compile Include="MethodElement.java" />
     <Compile Include="ParameterElement.java" />

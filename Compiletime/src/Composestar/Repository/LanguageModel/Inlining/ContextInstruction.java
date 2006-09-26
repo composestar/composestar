@@ -60,4 +60,28 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 		if (innerBlock != null)
 			innerBlock.Accept(visitor); 		
 	}
+    
+    public String toString(){
+        String s = super.toString();
+        switch( type ){
+        case REMOVED:
+            s += "ContextInstruction Removed\n;";
+            return s;
+        case SET_INNER_CALL:
+            s += "SET innercall context " + methodId;
+            s += "\n";
+            return s;
+        case CHECK_INNER_CALL:
+            s += "CHECK innercall context " + methodId;
+            s += "\nBlock:\n";
+            s += innerBlock.toString();
+            return s;
+        case RESET_INNER_CALL:
+            s += "RESET innercall context " + methodId;
+            s += "\n";
+            return s;
+        default:
+            return "UNKNOWN CONTEXT INSTRUCTION";
+        }
+    }
 }
