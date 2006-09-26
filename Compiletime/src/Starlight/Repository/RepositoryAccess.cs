@@ -133,7 +133,7 @@ namespace Composestar.Repository
 
             IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
-                return (me.ParentTypeId == typeInfo.Id) & (me.Signature.Equals(methodSignature, StringComparison.CurrentCultureIgnoreCase));
+                return (me.ParentTypeId == typeInfo.Id) && (me.Signature.Equals(methodSignature, StringComparison.CurrentCultureIgnoreCase));
             });
 
             if (ret.Count == 1)

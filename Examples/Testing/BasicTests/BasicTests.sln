@@ -1,21 +1,19 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicTests", "BasicTests.csproj", "{C155CA4C-C982-41A9-B205-10344D86E54E}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{C155CA4C-C982-41A9-B205-10344D86E54E}.Debug.ActiveCfg = Debug|.NET
-		{C155CA4C-C982-41A9-B205-10344D86E54E}.Debug.Build.0 = Debug|.NET
-		{C155CA4C-C982-41A9-B205-10344D86E54E}.Release.ActiveCfg = Release|.NET
-		{C155CA4C-C982-41A9-B205-10344D86E54E}.Release.Build.0 = Release|.NET
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C155CA4C-C982-41A9-B205-10344D86E54E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C155CA4C-C982-41A9-B205-10344D86E54E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C155CA4C-C982-41A9-B205-10344D86E54E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C155CA4C-C982-41A9-B205-10344D86E54E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

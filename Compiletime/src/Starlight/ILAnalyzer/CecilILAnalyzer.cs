@@ -162,7 +162,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 {
                     // Create a new method element
                     MethodElement mi = new MethodElement();    
-                    mi.Signature = SignatureBuilder.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), GetParameterTypesList(method)); 
+                    mi.Signature = method.ToString(); 
                     mi.Name = method.Name;                    
                     mi.ReturnType = method.ReturnType.ReturnType.ToString();
                     mi.IsAbstract = method.IsAbstract;

@@ -21,7 +21,7 @@ namespace Composestar.Repository
 
         private static String[] ASSEMBLY_MAP = new String[]{
             "Composestar.Repository.LanguageModel",
-            "Repository.LanguageModel",
+            "Composestar.Repository.LanguageModel",
         };
 
         /// <summary>

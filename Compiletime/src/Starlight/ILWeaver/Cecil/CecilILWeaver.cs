@@ -124,7 +124,7 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = _languageModelAccessor.GetMethodElementBySignature(typeElement, CecilUtilities.MethodSignature(method));
+                        methodElement = _languageModelAccessor.GetMethodElementBySignature(typeElement, method.ToString());
 
                         // Skip if there is no methodinfo
                         if (methodElement == null)

@@ -43,7 +43,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RepositoryAccess.cs" />
-    <Compile Include="SignatureBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\CoreServices\StarLight.CoreServices.csproj">
