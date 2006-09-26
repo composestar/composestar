@@ -100,12 +100,19 @@ public class FileUtils
 	}
 
 	/**
-	 * Returns the if the specified filename refers to an existing file.
+	 * Returns true if the specified filename refers to an existing file.
 	 */
-	public static boolean fileExist(String fileName)
+	public static boolean fileExist(String filename)
 	{
-		File file = new File(fileName);
-		return file.exists();
+		return new File(filename).exists();
+	}
+	
+	/**
+	 * Returns true if the file specified by the filename was succesfully deleted.
+	 */
+	public static boolean delete(String filename)
+	{
+		return new File(filename).delete();
 	}
 
 	public static void copyFile(String dst, String src) throws ModuleException
@@ -140,6 +147,11 @@ public class FileUtils
 			return filename.substring(0, lastdot);
 
 		return filename;
+	}
+	
+	public static String replaceExtension(String filename, String newext)
+	{
+		return removeExtension(filename) + "." + newext;
 	}
 
 	/**
