@@ -113,7 +113,7 @@
 				<path refid="lib.test"/>
 			</classpath>
 			<formatter type="plain"/>
-			<batchtest todir=".">
+			<batchtest todir="test">
 				<fileset dir="test">
 					<include name="**/*Test.class"/>
 				</fileset>
