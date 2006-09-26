@@ -150,7 +150,20 @@ public class ModelBuilder implements CTCommonModule{
         //store inlineModel in methodElement:
         Block inlineBlock = builderStrategy.getInlineBlock();
         if ( inlineBlock != null ){
-            inputFilterCode.put( methodInfo, inlineBlock );
+            //create checkinnercall context instruction:
+            Block block = new Block();
+            
+            ContextInstruction checkInnercall = new ContextInstruction( 
+                    ContextInstruction.CHECK_INNER_CALL, methodInfo, inlineBlock );
+            block.addInstruction( checkInnercall );
+            
+            //create resetInnercall context instruction:
+            ContextInstruction resetInnercall = new ContextInstruction( 
+                    ContextInstruction.RESET_INNER_CALL, methodInfo );
+            block.addInstruction( resetInnercall );
+            
+            
+            inputFilterCode.put( methodInfo, block );
             inlinedMethodSet.add( methodInfo );
         }
 
