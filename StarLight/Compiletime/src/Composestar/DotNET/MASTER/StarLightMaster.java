@@ -69,6 +69,9 @@ public class StarLightMaster extends Master  {
         CommonConfiguration configuration = repository.GetCommonConfiguration();
 	    Configuration.instance().getPathSettings().addPath("Base", configuration.get_IntermediateOutputPath());
 		Configuration.instance().getPathSettings().addPath("Composestar", configuration.get_InstallFolder() + "\\" );
+        
+        //Set platform:
+        Configuration.instance().addProperty( "Platform", "dotnet" );
 
     }
     

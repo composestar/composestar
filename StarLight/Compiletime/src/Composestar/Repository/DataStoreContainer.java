@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Composestar.DotNET.MASTER.StarLightMaster;
+import Composestar.Repository.LanguageModel.MethodElement;
+import Composestar.Repository.LanguageModel.Inlining.Block;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
@@ -26,7 +28,11 @@ public class DataStoreContainer {
 		adjustClassNames();
 		
 		Db4o.configure().callConstructors(false);
+        
+        Db4o.configure().objectClass( MethodElement.class ).cascadeOnUpdate( true );
+        Db4o.configure().objectClass( Block.class ).cascadeOnActivate( true );
 
+        
 		// Indexes
         Db4o.configure().objectClass(Composestar.Repository.LanguageModel.FieldElement.class).objectField("_parentTypeId").indexed(true);
 		Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
@@ -94,6 +100,7 @@ public class DataStoreContainer {
         dbContainer.set(o);
     }
 
+    
     
     /**
      * Gets the objects of a specified class
