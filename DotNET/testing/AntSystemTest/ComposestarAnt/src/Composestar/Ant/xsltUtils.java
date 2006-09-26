@@ -43,7 +43,7 @@ public class xsltUtils {
 		cmd[0] = AntHelperEXE;
 		cmd[1] = "lookupAssembly";
 		cmd[2] = assembly;
-		Process proc = Runtime.getRuntime().exec(cmd);
+		Process proc = Runtime.getRuntime().exec(cmd, null, new File(currentDirectory));
 		
 		BufferedReader stdout = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 		
