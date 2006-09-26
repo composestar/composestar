@@ -233,6 +233,7 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //get stored method:
                 String key = createKey( method );
                 storedMethod = (MethodElement) index.get( key );
+                Debug.out( Debug.MODE_DEBUG, " emitter",  "key:" +key);
 
                 //add inputfilter code:
                 MethodBody body = storedMethod.get_MethodBody();
@@ -271,6 +272,9 @@ public class StarLightEmitterRunner implements CTCommonModule
         
         buffer.append( method.getReturnTypeString() );
         buffer.append( ' ' );
+        buffer.append( method.parent().fullName() );
+        
+        buffer.append( "::" );
         
         buffer.append( method.name() );
         
