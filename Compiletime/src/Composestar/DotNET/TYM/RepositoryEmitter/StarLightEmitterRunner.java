@@ -48,6 +48,7 @@ import Composestar.Repository.LanguageModel.MethodElement;
 import Composestar.Repository.LanguageModel.Reference;
 import Composestar.Repository.LanguageModel.TypeElement;
 import Composestar.Repository.LanguageModel.Inlining.InlineInstruction;
+import Composestar.Utils.Debug;
 
 public class StarLightEmitterRunner implements CTCommonModule 
 {
@@ -238,7 +239,8 @@ public class StarLightEmitterRunner implements CTCommonModule
                 body.set_InputFilter( translateInstruction( filterInstructions ) );
                 
                 //store methodElement:
-                System.out.println( "storing method" );
+//                String repr = stringRepresentation( storedMethod );
+                Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" );
                 repository.storeMethodElement( storedMethod );
             }
             
@@ -276,7 +278,7 @@ public class StarLightEmitterRunner implements CTCommonModule
         Iterator parameters = method.getParameters().iterator();
         while( parameters.hasNext() ){
             ParameterInfo parameter = (ParameterInfo) parameters.next();
-            buffer.append( parameter.parameterType().fullName() );
+            buffer.append( parameter.ParameterTypeString );//FIXME use parametertype instead
             if ( parameters.hasNext() ){
                 buffer.append( ',' );
             }
