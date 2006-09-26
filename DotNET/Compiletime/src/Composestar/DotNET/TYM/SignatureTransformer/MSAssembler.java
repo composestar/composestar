@@ -25,14 +25,8 @@ public class MSAssembler implements Assembler
 		cmdList.add(outputFile.matches(".*\\.dll") ? "/dll" : "/exe");
 		cmdList.add("/output=" + FileUtils.quote(outputFile));
 		cmdList.add(FileUtils.quote(inputFile));
-	/*
-		// ilasm /debug /quiet /dll (or /exe) /output outputFile source.il
-		String command = s_basepath + "ilasm /debug /quiet " +
-			(outputFile.matches(".*\\.dll") ? " /dll" : " /exe") +
-			" /output=" + FileUtils.quote(outputFile) + " " +
-			FileUtils.quote(inputFile);
-	*/	
-		Debug.out(Debug.MODE_DEBUG, "TYM", "Command " + StringUtils.join(cmdList));
+
+		Debug.out(Debug.MODE_DEBUG, "TYM", "Command: " + StringUtils.join(cmdList));
 	
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
@@ -50,12 +44,8 @@ public class MSAssembler implements Assembler
 		cmdList.add("/nobar");
 		cmdList.add("/out=" + FileUtils.quote(outputFile));
 		cmdList.add(FileUtils.quote(inputFile));
-	/*
-		// ildasm /linenum /out=filename /nobar inputFile
-		String command = s_basepath + "ildasm /linenum /out=" +
-			FileUtils.quote(outputFile) + " /nobar " + FileUtils.quote(inputFile);
-	*/
-		Debug.out(Debug.MODE_DEBUG, "TYM", "Command " + StringUtils.join(cmdList));
+
+		Debug.out(Debug.MODE_DEBUG, "TYM", "Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)

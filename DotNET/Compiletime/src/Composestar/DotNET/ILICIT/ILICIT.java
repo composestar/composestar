@@ -37,6 +37,7 @@ import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
+import Composestar.Utils.StringUtils;
 
 /**
  * Applies the changes as specified by CONE-IS to the assemblies
@@ -45,7 +46,7 @@ import Composestar.Utils.FileUtils;
 public class ILICIT implements WEAVER
 {
 	public static final String version = "$Revision$";
-
+	
 	public void run(CommonResources resources) throws ModuleException
 	{
 		Configuration config = Configuration.instance();
@@ -103,7 +104,7 @@ public class ILICIT implements WEAVER
 			//	if (Debug.getMode() == Debug.MODE_DEBUG) 
 			//		command += " > \"" + weavePath + "/peweaver.log\"";
 
-			//	Debug.out(Debug.MODE_DEBUG, "ILICIT", "Starting execution of the 'PE Weaver' tool with arguments '" + args + "'");
+			Debug.out(Debug.MODE_DEBUG, "ILICIT", "Command: " + StringUtils.join(cmdList));
 
 			CommandLineExecutor cle = new CommandLineExecutor();
 			int exitcode = cle.exec(cmdList);
@@ -157,7 +158,6 @@ public class ILICIT implements WEAVER
 			{
 				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying " + asm + " to Weaver directory");
 				
-				// FIXME: use copyFile(File dest, File source) instead
 				FileUtils.copyFile(targetFilename, sourceFilename);
 				
 				String pdbFile = FileUtils.removeExtension(sourceFilename) + ".pdb";
@@ -167,6 +167,7 @@ public class ILICIT implements WEAVER
 					
 					String pdbSourceFilename = new File(pdbFile).getAbsolutePath(); 
 					String pdbTargetFilename = FileUtils.removeExtension(targetFilename) + ".pdb";
+					
 					FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
 				}
 				
@@ -176,7 +177,7 @@ public class ILICIT implements WEAVER
 			else
 			{
 				// no need to weave the file
-				Debug.out(Debug.MODE_DEBUG,"INCRE","No need to re-weave " + asm);
+				Debug.out(Debug.MODE_DEBUG,"ILICIT","No need to re-weave " + asm);
 				builtAssemblies.add(targetFilename);
 			}
 		}
