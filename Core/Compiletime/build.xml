@@ -104,6 +104,10 @@
 	</target>
 
 	<target name="unittest" depends="compile-tests" description="Runs JUnit tests">
+		<path id="lib.junit">
+			<fileset dir="${build.core}\Compiletime\binaries\junit" includes="*.jar"/>
+		</path>
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="lib.junit"/>
 		<junit printsummary="on" haltonfailure="on">
 			<classpath>
 				<path refid="lib.test"/>
