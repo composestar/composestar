@@ -81,6 +81,7 @@
 	</target>
 	
 	<!-- QA tasks -->
+	<target name="qa" depends="findbugs,checkstyle" description="Execute Quality Assurance tasks" />
 	
 	<!-- execute the findbugs tool -->
 	<target name="findbugs" depends="init" description="Analyse the compiled Java code for possible bugs.">
@@ -125,7 +126,7 @@
 	</target>
 	
 	<!-- do everything -->
-	<target name="all" depends="clean,build,install,findbugs,test" description="Recompile, install and test the whole system." />
+	<target name="all" depends="clean,build,install,test,qa" description="Recompile, install and test the whole system." />
 	
 	<target name="nightlybuild" description="Execute the nightly build">
 		<tstamp />
@@ -167,7 +168,7 @@ If the build failed the cause will be listed at the end of the report.
 			<link label="Install" target="install" />
 			<link label="Clean install" target="cleaninstall" />
 			<link label="Run Findbugs" target="findbugs" />
-			<!--<link label="Run the system test" target="test" />-->
+			<link label="Run the system test" target="test" />
 			
 			<separator />
 			

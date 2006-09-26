@@ -92,7 +92,7 @@
 		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}" />
 	</target>
 
-	<target name="compile-tests" depends="local_init,compile">
+	<target name="compile_tests" depends="local_init,compile">
 		<path id="lib.test">
 			<path refid="lib.core"/>
 			<pathelement path="${out.build}"/>
@@ -103,7 +103,7 @@
 		</javac>
 	</target>
 
-	<target name="unittest" depends="compile-tests" description="Runs JUnit tests">
+	<target name="unittest" depends="compile_tests" description="Runs JUnit tests">
 		<path id="lib.junit">
 			<fileset dir="${build.core}\Compiletime\binaries\junit" includes="*.jar"/>
 		</path>
