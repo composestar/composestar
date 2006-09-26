@@ -8,7 +8,7 @@
     <SortOrder>10</SortOrder>
   </TemplateData>
   <TemplateContent>
-    <References />
+    <References />    
     <ProjectItem SubType="Concern" TargetFileName="$fileinputname$.cps" ReplaceParameters="true">Concern.cps</ProjectItem>
   </TemplateContent>
 </VSTemplate>

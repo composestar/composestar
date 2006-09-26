@@ -86,7 +86,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 try
                 {
-                    weaver = new CecilILWeaver(configuration, langModelAccessor);
+                    weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(langModelAccessor, configuration));
                     
                     // Perform weaving
                     weaver.DoWeave();
@@ -113,6 +113,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
             return true;
         }
 
+        internal IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilWeaverConfiguration configuration)
+        {
+            ServiceContainer serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
+            serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration);
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverBuilderConfigurator());
+
+            return serviceContainer;
+        }
 
     }
 }

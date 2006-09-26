@@ -161,6 +161,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             {
                 switch ((VsCommands)cmd)
                 {
+                    case VsCommands.Delete: 
                     case VsCommands.AddNewItem:
                     case VsCommands.AddExistingItem:
                     case VsCommands.ViewCode:
@@ -177,7 +178,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             {
                 if (cmd == (uint)ComposeStarMenus.SetAsMain.ID)
                 {
-                    result |= QueryStatusResult.SUPPORTED | QueryStatusResult.ENABLED;
+                    result |= QueryStatusResult.NOTSUPPORTED;
                     return VSConstants.S_OK;
                 }
             }

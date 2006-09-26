@@ -21,7 +21,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine
             //CompilerContext context = new CompilerContext(sink);
             //Parser parser = Parser.FromString(context, name, text);
             //Stmt stmt = parser.ParseFileInput();
-
+            //CpsLexer parser = new CpsLexer(text, 0);
+            
             //Analyzer analyzer = new Analyzer();
 
             Concern c = new Concern(name);

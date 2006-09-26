@@ -113,6 +113,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                 case TokenKind.Keyword:
                     tokenInfo.Type = TokenType.Keyword;
                     tokenInfo.Color = TokenColor.Keyword;
+                    tokenInfo.Trigger = TokenTriggers.MemberSelect; 
                     break;
 
                 case TokenKind.FilterType:
@@ -128,7 +129,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
             tokenInfo.StartIndex = token.Start;
             tokenInfo.EndIndex = token.End;
-
+             
             return true;
         }
 
