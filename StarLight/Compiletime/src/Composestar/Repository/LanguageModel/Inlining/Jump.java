@@ -25,4 +25,8 @@ public class Jump extends InlineInstruction implements IVisitable
 		super.Accept(visitor);
 		visitor.VisitJumpInstruction(this);
 	}
+    
+    public String toString(){
+        return "jump " + target.get_Id() + "\n";
+    }
 }

@@ -240,8 +240,7 @@ public class StarLightEmitterRunner implements CTCommonModule
                 body.set_InputFilter( translateInstruction( filterInstructions ) );
                 
                 //store methodElement:
-//                String repr = stringRepresentation( storedMethod );
-                Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" );
+                Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" + storedMethod.toString() );
                 repository.storeMethodElement( storedMethod );
             }
             
@@ -558,4 +557,7 @@ public class StarLightEmitterRunner implements CTCommonModule
             }
         }
     }
+    
+    
+     
 }

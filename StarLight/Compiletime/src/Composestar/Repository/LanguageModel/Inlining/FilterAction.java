@@ -63,4 +63,10 @@ public class FilterAction extends InlineInstruction implements IVisitable
 		else
 			visitor.VisitFilterAction(this); 
 	}
+    
+    public String toString(){
+        String s = super.toString();
+        s += "FILTERACTION: " + type + ", " + selector + ", " + target + "\n";
+        return s;
+    }
 }
