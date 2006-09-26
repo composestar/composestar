@@ -115,7 +115,7 @@ public abstract class BACO implements CTCommonModule
 			while(projectit.hasNext())
 			{
 				Dependency dependency = (Dependency)projectit.next();
-				if (checkNeededDependency(dependency))
+				if (isNeededDependency(dependency))
 				{
 					String depFilename = dependency.getFileName();
 					filesToCopy.add(FileUtils.unquote(depFilename));
@@ -132,7 +132,7 @@ public abstract class BACO implements CTCommonModule
 		}
 	}
 
-	protected abstract boolean checkNeededDependency(Dependency dependency);
+	protected abstract boolean isNeededDependency(Dependency dependency);
 
 	// FIXME: double with FileUtils.copyFile ?
 	public void copyFile(String file, String dest) throws ModuleException
