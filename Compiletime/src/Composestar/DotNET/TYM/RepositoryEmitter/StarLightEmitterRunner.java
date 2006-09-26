@@ -32,6 +32,7 @@ import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
+import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Visitor;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
@@ -266,7 +267,7 @@ public class StarLightEmitterRunner implements CTCommonModule
     private String createKey( MethodInfo method ){
         StringBuffer buffer = new StringBuffer();
         
-        buffer.append( method.returnType().fullName() );
+        buffer.append( method.getReturnTypeString() );
         buffer.append( ' ' );
         
         buffer.append( method.name() );
@@ -540,11 +541,15 @@ public class StarLightEmitterRunner implements CTCommonModule
         
         
         private void setLabel( Instruction oldInstruction, InlineInstruction newInstruction ){
-            Composestar.Repository.LanguageModel.Inlining.Label newLabel =
-                new Composestar.Repository.LanguageModel.Inlining.Label( 
-                        oldInstruction.getLabel().getId() );
+            Label label = oldInstruction.getLabel();
             
-            newInstruction.set_Label( newLabel );
+            if ( label != null ){
+                Composestar.Repository.LanguageModel.Inlining.Label newLabel =
+                    new Composestar.Repository.LanguageModel.Inlining.Label( 
+                            oldInstruction.getLabel().getId() );
+
+                newInstruction.set_Label( newLabel );
+            }
         }
     }
 }
