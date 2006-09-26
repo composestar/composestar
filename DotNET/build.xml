@@ -22,6 +22,7 @@
 		<delete file="${build.dotnet}${file.separator}findbugs-result.html" />
 		<ant target="clean" dir="Compiletime" />
 		<ant target="clean" dir="Runtime" />
+		<ant target="clean" dir="Examples" />
 	</target>
 	
 	

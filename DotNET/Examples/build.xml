@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Composestar/DotNET/Examples">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+
+	<echo message="Processing: ${ant.project.name}" />
+	
+	<description>
+	The Compose* .NET Examples
+	Compile, run and test the examples.
+	</description>
+	
+	<target name="build" /><!-- dummy -->
+	
+	<target name="clean">
+		<delete includeemptydirs="true">
+			<FileSet dir="${basedir}" >
+				<include name="*/repository.xml" />
+				<include name="*/types.xml" />
+				<include name="*/weavespec.xml" />
+				<include name="*/filelist.peweaver" />
+				<include name="*/filelist.ilweaver" />
+				<include name="*/attributes.xml" />
+				<include name="*/buildlog.txt" />
+				<include name="*/langmap.pro" />			
+				<include name="*/obj/**" />
+			</FileSet>
+			<FileSet dir="${basedir}/DesignPatterns/Implementations" >
+				<include name="*/repository.xml" />
+				<include name="*/types.xml" />
+				<include name="*/weavespec.xml" />
+				<include name="*/filelist.peweaver" />
+				<include name="*/filelist.ilweaver" />
+				<include name="*/attributes.xml" />
+				<include name="*/buildlog.txt" />
+				<include name="*/langmap.pro" />			
+				<include name="*/obj/**" />
+			</FileSet>
+			<FileSet dir="${basedir}/TestCases" >
+				<include name="*/repository.xml" />
+				<include name="*/types.xml" />
+				<include name="*/weavespec.xml" />
+				<include name="*/filelist.peweaver" />
+				<include name="*/filelist.ilweaver" />
+				<include name="*/attributes.xml" />
+				<include name="*/buildlog.txt" />
+				<include name="*/langmap.pro" />			
+				<include name="*/obj/**" />
+			</FileSet>
+		</delete>
+	</target>
+
+</project>
