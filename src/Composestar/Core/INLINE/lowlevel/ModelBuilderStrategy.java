@@ -286,19 +286,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.ERROR_ACTION_NODE ) ){
-            filterAction = new FilterAction( "error", null );
+            filterAction = new FilterAction( "error", state.getMessage() );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
-            filterAction = new FilterAction( "continue", null );
+            filterAction = new FilterAction( "continue", state.getMessage() );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) ){
-            filterAction = new FilterAction( "continue", null );
+            filterAction = new FilterAction( "substitution", getCallMessage( state ) );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.CUSTOM_ACTION_NODE ) ){
-            filterAction = new FilterAction( "custom", null );
+            filterAction = new FilterAction( "custom", getCallMessage( state ) );
         }
         else if ( node.containsName( "##SKIP##" ) ){
             //TODO correct flowchartname
