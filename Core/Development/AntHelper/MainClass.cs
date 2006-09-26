@@ -70,7 +70,7 @@ namespace AntHelper
 			try 
 			{
 				Assembly asm = Assembly.LoadWithPartialName(args[1]);
-				Console.Out.Write("{0}", asm.Location);
+				Console.Out.WriteLine("{0}", asm.Location);
 				return 0;
 			}
 			catch (Exception)
