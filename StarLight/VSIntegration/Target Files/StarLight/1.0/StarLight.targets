@@ -191,7 +191,7 @@
             _CopyAppConfigFile;
             _CopyManifestFiles;">
     <Message Text="Copying assemblies..." />
-    <MakeDir Directories="$(OutDir)\Test"></MakeDir>
+    <MakeDir Directories ="$(OutDir)\Woven"></MakeDir>
     <!-- Copy the serialization assembly if it exists. -->
     <!--<Copy
         SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"

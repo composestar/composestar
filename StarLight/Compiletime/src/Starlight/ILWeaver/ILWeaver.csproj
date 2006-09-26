@@ -53,9 +53,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\CecilILWeaver.cs" />
+    <Compile Include="Cecil\CecilUtilities.cs" />
     <Compile Include="Cecil\CecilWeaverConfiguration.cs" />
     <Compile Include="Cecil\Visitors\CecilConditionsVisitor.cs" />
     <Compile Include="Cecil\Visitors\CecilInliningInstructionVisitor.cs" />

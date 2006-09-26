@@ -82,7 +82,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Weaving file {0}", filename);
 
                 // Preparing config
-                CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.GetDirectoryName(filename), false, "", filename, false);
+                CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
 
                 try
                 {

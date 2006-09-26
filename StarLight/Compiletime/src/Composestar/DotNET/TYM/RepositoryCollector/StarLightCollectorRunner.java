@@ -145,7 +145,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 	            throw new ModuleException( "Type must have a name attribute", "TYM" );
 	        }
 			
-			type.setAssemblyQualifedName( storedType.get_AssemblyElement().get_Name() );
+			//type.setAssemblyQualifedName( storedType.get_AssemblyElement().get_Name() );
 			type.setBaseType( storedType.get_BaseType() );
 			//TODO: type.addImplementedInterface( lastCharData );
 			type.setIsAbstract( storedType.get_IsAbstract() );

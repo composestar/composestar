@@ -97,7 +97,16 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not write the assembly to a file. Check if the file is not in use and has the correct access permissions..
+        ///   Looks up a localized string similar to Unable to resolve the method &apos;{0}&apos; from &apos;{1}&apos; to a Type used by the weaver. Make sure all the references are in place and the method has bee specified correctly..
+        /// </summary>
+        internal static string CouldNotResolveMethod {
+            get {
+                return ResourceManager.GetString("CouldNotResolveMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not write the assembly to file &apos;{0}&apos;. Check if the file is not in use and has the correct access permissions..
         /// </summary>
         internal static string CouldNotSaveAssembly {
             get {

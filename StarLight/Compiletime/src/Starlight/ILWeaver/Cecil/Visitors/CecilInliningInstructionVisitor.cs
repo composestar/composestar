@@ -24,6 +24,8 @@ namespace Composestar.StarLight.ILWeaver
     public class CecilInliningInstructionVisitor : IVisitor
     {
 
+        private const int FilterContextJumpId = 9999;
+
         #region Private variables
         IList<Instruction> _instructions = new List<Instruction>();
         CilWorker _worker;
@@ -154,7 +156,7 @@ namespace Composestar.StarLight.ILWeaver
             TypeReference typeRef = _targetAssemblyDefinition.MainModule.Import(type);
             VariableDefinition var = new VariableDefinition(typeRef);
             var.Name = type.ToString(); 
-
+            
             Method.Body.Variables.Add(var);
 
             return var;
@@ -351,6 +353,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Set the selector
             //
+
             // Load joinpointcontext first
             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
              
@@ -364,17 +367,21 @@ namespace Composestar.StarLight.ILWeaver
             // Call the target
             //
 
-            MethodReference methodToCall;
-            //methodToCall = CreateMethodReference();
+            // TODO correct values
+            MethodBase methodBaseDef = CecilUtilities.ResolveMethod("", "", "");            
+            if (methodBaseDef == null)
+            {
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotResolveMethod, filterAction.Target));
+            }
+          
+            MethodReference methodToCall = CreateMethodReference(methodBaseDef);          
 
-            // Load the JoinPointObject first
-            //Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+            // Load the JoinPointObject as the parameter
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
             // Call the Target
-            //Instructions.Add(Worker.Create(OpCodes.Call, filterAction.Target)); 
-            // TODO This will most likely not work, difference between call and callvirt etc 
-            // Have to resolve this to a valid type
-
+            Instructions.Add(Worker.Create(OpCodes.Call, methodToCall)); 
+           
             //
             // Retrieve the arguments
             //               
@@ -452,14 +459,14 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
             
             // Create the call instruction
-            Instruction branchToInstruction = GetJumpLabel(9999);
+            Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
 
             // Result is placed on the stack, so use it to branch to the skipFiltersInstruction
             Instructions.Add(Worker.Create(OpCodes.Brtrue, branchToInstruction));
         }
     
         /// <summary>
-        /// 
+        /// Generate the SetInnerCall code.
         /// </summary>
         /// <param name="contextInstruction"></param>
         /// <example>
@@ -486,7 +493,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Visits the reset inner call.
+        /// Generates the ResetInnerCall code.
         /// </summary>
         /// <param name="contextInstruction">The context instruction.</param>
         /// <example>
@@ -502,7 +509,7 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitResetInnerCall(ContextInstruction contextInstruction)
         {
             // Add the jump label first
-            Instruction branchToInstruction = GetJumpLabel(9999);
+            Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
 
             Instructions.Add(branchToInstruction);
  
@@ -587,7 +594,7 @@ namespace Composestar.StarLight.ILWeaver
             if (jumpToInstruction == null)
                 throw new ILWeaverException(Properties.Resources.FilterJumpLabelIsNotSet);
 
-            // Add a branch instruction
+            // Add an unconditional branch instruction
             Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction)); 
         }
 
