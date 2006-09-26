@@ -91,5 +91,30 @@
 		<copy file="src/Composestar/Core/CKRET/SECRET.css" todir="${composestar.installdir}" />
 		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}" />
 	</target>
+
+	<target name="compile-tests" depends="local_init,compile">
+		<path id="lib.test">
+			<path refid="lib.core"/>
+			<pathelement path="${out.build}"/>
+		</path>
+		<javac srcdir="test" destdir="test" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
+			<include name="**/*.java"/>
+			<exclude name="**/AssemblyInfo.java"/>
+		</javac>
+	</target>
+
+	<target name="unittest" depends="compile-tests" description="Runs JUnit tests">
+		<junit printsummary="on" haltonfailure="on">
+			<classpath>
+				<path refid="lib.test"/>
+			</classpath>
+			<formatter type="plain"/>
+			<batchtest todir=".">
+				<fileset dir="test">
+					<include name="**/*Test.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
 	
 </project>
