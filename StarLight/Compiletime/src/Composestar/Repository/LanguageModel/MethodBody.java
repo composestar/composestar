@@ -7,12 +7,13 @@ import Composestar.Repository.LanguageModel.Inlining.*;
  */
 public class MethodBody
 {
-	private int _id;
+	private String _id;
 	private String _parentMethodId;
 	private InlineInstruction _inputFilter;
 		
-	public MethodBody(String parentId)
+	public MethodBody(String id, String parentId)
 	{
+		_id = id;
 		_parentMethodId = parentId;
 	}
 	
@@ -29,7 +30,7 @@ public class MethodBody
 	}
 	
 	/** @property */
-	public int get_Id()
+	public String get_Id()
 	{
 		return _id;
 	}

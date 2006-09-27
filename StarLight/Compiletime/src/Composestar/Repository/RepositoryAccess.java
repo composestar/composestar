@@ -90,7 +90,7 @@ public class RepositoryAccess {
     {
         return container.getObjectQuery( new Predicate(){
             public boolean match( FieldElement field ){
-                return (field.get_ParentTypeId() == type.get_Id());
+                return (field.get_ParentTypeId().equals(type.get_Id()));
             }
         });
     }   
@@ -99,7 +99,7 @@ public class RepositoryAccess {
     {
         return container.getObjectQuery( new Predicate(){
             public boolean match( MethodElement methodElement ){
-                return (methodElement.get_ParentTypeId() == type.get_Id());
+                return (methodElement.get_ParentTypeId().equals(type.get_Id()));
             }
         });
     }
@@ -117,7 +117,7 @@ public class RepositoryAccess {
     {
         return container.getObjectQuery( new Predicate(){
             public boolean match( ParameterElement parameterElement ){
-                return (parameterElement.get_ParentMethodId() == method.get_Id());
+                return (parameterElement.get_ParentMethodId().equals(method.get_Id()));
             }
         });
     }
@@ -126,7 +126,7 @@ public class RepositoryAccess {
     {
         return container.getObjectQuery( new Predicate(){
             public boolean match( CallElement callElement ){
-                return (callElement.get_ParentMethodBodyId() == methodBody.get_Id());
+                return (callElement.get_ParentMethodBodyId().equals(methodBody.get_Id()));
             }
         });
     }

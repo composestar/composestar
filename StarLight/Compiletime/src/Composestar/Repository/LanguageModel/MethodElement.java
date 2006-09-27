@@ -151,7 +151,7 @@ public class MethodElement implements IRepositoryElement
 	/** @property */
 	public MethodBody get_MethodBody()
 	{
-		if (_methodBody == null) _methodBody = new MethodBody(_id); 
+		//if (_methodBody == null) _methodBody = new MethodBody(_id); 
 
 		return _methodBody;
 	}
@@ -175,7 +175,7 @@ public class MethodElement implements IRepositoryElement
         buffer.append( "Method:" );
         buffer.append( _signature );
         buffer.append( "\nInputfilters:\n" );
-        buffer.append( _methodBody.get_InputFilter().toString() );
+        if (_methodBody.get_InputFilter() != null) buffer.append( _methodBody.get_InputFilter().toString() );
         return buffer.toString();
     }
 }
