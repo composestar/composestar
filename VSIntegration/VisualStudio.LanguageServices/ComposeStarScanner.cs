@@ -100,6 +100,29 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                     tokenInfo.Color = TokenColor.String;
                     break;
 
+                case TokenKind.ConditionOperator: 
+                    tokenInfo.Type = TokenType.Operator;
+                    tokenInfo.Color = TokenColor.String;  
+                    break;
+
+                case TokenKind.LeftParenthesis: 
+                    tokenInfo.Type = TokenType.Operator;
+                    tokenInfo.Color = TokenColor.String;  
+                    tokenInfo.Trigger = TokenTriggers.ParameterStart|TokenTriggers.MatchBraces;   
+                    break;
+
+                case TokenKind.RightParenthesis: 
+                    tokenInfo.Type = TokenType.Operator;
+                    tokenInfo.Color = TokenColor.String;  
+                    tokenInfo.Trigger = TokenTriggers.ParameterEnd|TokenTriggers.MatchBraces;   
+                    break;
+
+                case TokenKind.Comma: 
+                    tokenInfo.Type = TokenType.Operator;
+                    tokenInfo.Color = TokenColor.String;  
+                    tokenInfo.Trigger = TokenTriggers.ParameterNext;   
+                    break;
+
                 case TokenKind.Operator:
                     tokenInfo.Type = TokenType.Operator;
                     tokenInfo.Color = TokenColor.String;

@@ -95,9 +95,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 				result.Kind = ReadPrologExpression();
 			}
 			// <- => ~> ::
-			else if (TryRead("<-") || TryRead("=>") || TryRead("~>") || TryRead("::"))
+			else if (TryRead("<-") || TryRead("::"))
 			{
 				result.Kind = TokenKind.Operator;
+			}
+            else if (TryRead("=>") || TryRead("~>"))
+			{
+				result.Kind = TokenKind.ConditionOperator;
 			}
 			// single-char operator
 			else if (IsOperator(ch1))
@@ -105,7 +109,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 				Advance();
 				result.Kind = TokenKind.Operator;
 			}
-			else
+            else if (TryRead("{"))
+                result.Kind = TokenKind.LeftParenthesis;
+            else if (TryRead("}"))
+                result.Kind = TokenKind.RightParenthesis;
+            else if (TryRead(","))
+                result.Kind = TokenKind.Comma;
+            else
 				Advance();
 
 			result.End = m_pos - 1;
@@ -118,16 +128,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			{
 				case '&':
 				case ':':
-				case ',':
 				case '.':
 				case '#':
-				case '{':
 				case '(':
 				case '[':
 				case '!':
 			//	case '|': // conflicts with PrologExpression
 				case '>':
-				case '}':
 				case ')':
 				case ']':
 				case ';':
@@ -343,6 +350,10 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 		Number,
 		Identifier,
 		Keyword,
-		FilterType
+		FilterType,
+        ConditionOperator,
+        LeftParenthesis,
+        RightParenthesis,
+        Comma
 	}
 }

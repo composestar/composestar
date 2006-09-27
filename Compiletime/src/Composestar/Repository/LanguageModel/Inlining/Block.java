@@ -2,7 +2,7 @@ package Composestar.Repository.LanguageModel.Inlining;
 
 import Composestar.Repository.LanguageModel.Inlining.Visitor.IVisitable;
 import Composestar.Repository.LanguageModel.Inlining.Visitor.IVisitor;
-import Composestar.Utils.LinkedList;
+import Composestar.Repository.LanguageModel.LinkedList;
 
 public class Block extends InlineInstruction implements IVisitable
 {

@@ -71,8 +71,9 @@ namespace Composestar.Repository
             Db4o.Configure().ObjectClass(typeof(MethodElement)).CascadeOnUpdate(true);
             Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.Block)).CascadeOnActivate(true);
             Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.FilterAction)).CascadeOnActivate(true);
-            Db4o.Configure().ObjectClass(typeof(Composestar.Utils.LinkedList)).CascadeOnActivate(true);
-            
+            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.LinkedList)).CascadeOnActivate(true);
+            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.LinkedList.Entry)).CascadeOnActivate(true);
+    
             // Indexes
             Db4o.Configure().ObjectClass(typeof(MethodElement)).ObjectField("_parentTypeId").Indexed(true);
             Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
