@@ -83,29 +83,35 @@ namespace Composestar.Repository.Db4oContainers
         /// <summary>
         /// Opens the database.
         /// </summary>  
-        public void OpenContainer(String fileName)
+        private ObjectContainer OpenContainer(String AFQN)
         {
-            if (!dbContainer.Contains(fileName))
+            if (dbContainer.Contains(AFQN))
             {
+                return (ObjectContainer)dbContainer[AFQN];
+            }
+         
 
+            if (!Directory.Exists(Path.Combine(CacheFolder, "TypesCache")))
+            {
+                Directory.CreateDirectory(Path.Combine(CacheFolder, "TypesCache"));
             }
 
-            if (this._yapFileName == String.Empty)
-            {
-                if (!Directory.Exists(Path.Combine(CacheFolder, "TypesCache")))
-                {
-                    Directory.CreateDirectory(Path.Combine(CacheFolder, "TypesCache"));
-                }
+            String[] AFQNparts = AFQN.Split(new String[] {", "}, StringSplitOptions.None);
+            String assemblyname = AFQNparts[0];
+            String version = AFQNparts[1].Substring(AFQNparts[1].IndexOf("=")+1);
+            String culture = AFQNparts[2].Substring(AFQNparts[2].IndexOf("=") + 1);
+            String keytoken = AFQNparts[3].Substring(AFQNparts[3].IndexOf("=") + 1);
 
-                this._yapFileName = Path.Combine(CacheFolder, "TypesCache\\types.yap");
-            }
+            String yapFileName = Path.Combine(CacheFolder, String.Format("TypesCache\\{0}_{1}_{2}_{3}.yap", assemblyname, version, culture, keytoken));
 
-           // dbContainer = Db4o.OpenFile(this._yapFileName);
+            dbContainer.Add(AFQN, Db4o.OpenFile(yapFileName));
 
             if (DebugMode)
             {
                // ((YapStream)dbContainer).GetNativeQueryHandler().QueryExecution += new com.db4o.inside.query.QueryExecutionHandler(Program_QueryExecution);
             }
+
+            return (ObjectContainer)dbContainer[AFQN];
 
         }
 
@@ -123,8 +129,12 @@ namespace Composestar.Repository.Db4oContainers
         /// </summary>
         public void CloseContainer()
         {
-            //if (dbContainer != null)
-               // dbContainer.Close();
+            System.Collections.IEnumerator enumContainers = dbContainer.GetEnumerator();
+            while (enumContainers.MoveNext())
+            {
+                ((ObjectContainer)((System.Collections.DictionaryEntry)enumContainers.Current).Value).Close();
+            }
+            dbContainer.Clear();
         }
 
 
@@ -142,13 +152,11 @@ namespace Composestar.Repository.Db4oContainers
             //dbContainer.Set(o);
         }
 
-        public IList<T> GetObjectByAFQN<T>(Predicate<T> match, String AFQN)
+        public IList<T> GetObjectQuery<T>(Predicate<T> match, String AFQN)
         {
-
-
-
-            return null;
-           // return dbContainer.Query<T>(match);
+            ObjectContainer container = OpenContainer(AFQN);
+                       
+            return container.Query<T>(match);
         }
 
         /// <summary>
@@ -168,7 +176,7 @@ namespace Composestar.Repository.Db4oContainers
         /// </summary>
         /// <param name="match">The match.</param>
         /// <returns></returns>
-        public IList<T> GetObjectQuery<T>(Predicate<T> match)
+        public IList<T> GetObjectQuery11<T>(Predicate<T> match)
         {
             CheckForOpenDatabase();
 

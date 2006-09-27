@@ -7,8 +7,6 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
 
-using com.db4o;
-
 namespace Composestar.Repository
 {
  
@@ -104,7 +102,7 @@ namespace Composestar.Repository
         /// <returns></returns>
         public IList<TypeElement> GetTypeElements()
         {
-            return null;// container.GetObjects<TypeElement>();
+            return container.GetObjects<TypeElement>();
         }
 
         /// <summary>

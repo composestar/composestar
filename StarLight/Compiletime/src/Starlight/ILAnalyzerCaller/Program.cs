@@ -45,7 +45,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 }
                 sw.Stop();
 
-                Console.WriteLine("\n{0} types with in total {1} methods found in {2} seconds.", dbtypes.Count, methodCount, sw.Elapsed.TotalSeconds);
+                Console.WriteLine("\n{0} types with in total {1} methods found in {2:0.0000} seconds.", dbtypes.Count, methodCount, sw.Elapsed.TotalSeconds);
 
                 return;
             }
@@ -55,17 +55,17 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 NameValueCollection config = new NameValueCollection();
                 config.Add("RepositoryFilename", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
                 config.Add("ProcessMethodBody", "false");
-                config.Add("InstallFolder", "C:\\temp");
+                config.Add("CacheFolder", "C:\\temp");
 
                 //IILAnalyzer analyzer = new ReflectionILAnalyzer();
                 IILAnalyzer analyzer = new CecilILAnalyzer();
                 analyzer.Initialize(config);
 
                 //List<MethodElement> methods = analyzer.ExtractMethods();
-                IList<Composestar.Repository.LanguageModel.TypeElement> types = ((CecilILAnalyzer)analyzer).ExtractTypeElements(file);
+                analyzer.ExtractTypeElements(file);
                 
                 //Console.WriteLine("{0} types found in {1} seconds.", types.Count, analyzer.LastDuration.TotalSeconds);
-                Console.WriteLine("Unresolved types {0}:", analyzer.UnresolvedTypes.Count);
+                Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 if (analyzer.UnresolvedTypes.Count <= 20)
                 {
                     foreach (String ut in analyzer.UnresolvedTypes)
@@ -76,8 +76,9 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 if (analyzer.UnresolvedTypes.Count > 0)
                 {
                     analyzer.ProcessUnresolvedTypes();
-                    Console.WriteLine("Unresolved types after cache matching {0}", analyzer.UnresolvedTypes.Count);
+                    Console.WriteLine("Unresolved types after cache matching: {0}", analyzer.UnresolvedTypes.Count);
                 }
+                analyzer.Close();
             }
             else
             {
