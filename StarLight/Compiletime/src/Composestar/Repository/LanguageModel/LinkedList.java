@@ -11,11 +11,11 @@ package Composestar.Repository.LanguageModel;
  * @author Arjan de Roo
  */
 public class LinkedList{
-    private Entry header;
+	private LinkedListEntry header;
     private int count;
     
     public LinkedList(){
-        header = new Entry( null, null, null );
+		header = new LinkedListEntry(null, null, null);
         header.next = header;
         header.previous = header;
     }
@@ -26,7 +26,7 @@ public class LinkedList{
     
     public Object[] toArray(){
         Object[] objects = new Object[count];
-        Entry entry = header.next;
+		LinkedListEntry entry = header.next;
         for (int i=0; i<count; i++){
             objects[i] = entry.obj;
             entry = entry.next;
@@ -34,26 +34,14 @@ public class LinkedList{
         
         return objects;
     }
-    
-    
-    private void addAfter( Object obj, Entry entry ){
-        Entry newEntry = new Entry( obj, entry, entry.next );
+
+
+	private void addAfter(Object obj, LinkedListEntry entry)
+	{
+		LinkedListEntry newEntry = new LinkedListEntry(obj, entry, entry.next);
         newEntry.previous.next = newEntry;
         newEntry.next.previous = newEntry;
         count++;
     }
-    
-    public class Entry{
-        Object obj;
-        Entry previous;
-        Entry next;
-
-		public Entry() { } 
-        
-        public Entry( Object obj, Entry previous, Entry next ){
-            this.obj = obj;
-            this.previous = previous;
-            this.next = next;
-        }
-    }
+       
 }
