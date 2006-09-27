@@ -58,7 +58,7 @@ public class Switch extends InlineInstruction{
     
     
     public String toString(){
-        String s = "Switch(" + expression.toString() + "){\n";
+        String s = super.toString() + "Switch(" + expression.toString() + "){\n";
         
         Case[] cases = get_Cases();
         for (int i=0; i<cases.length; i++){

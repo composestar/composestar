@@ -47,7 +47,7 @@ public class Case extends InlineInstruction{
     }
     
     public String toString(){
-        String s = "Case " + checkConstant + ":\n";
+        String s = super.toString() + "Case " + checkConstant + ":\n";
         s += instructions.toString();
         return s;
     }

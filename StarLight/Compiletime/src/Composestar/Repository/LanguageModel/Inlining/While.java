@@ -47,7 +47,7 @@ public class While extends InlineInstruction{
     }
     
     public String toString(){
-        String s = "While(" + expression.toString() + "){\n";
+        String s = super.toString() + "While(" + expression.toString() + "){\n";
         s += instructions.toString();
         s += "}\n";
         
