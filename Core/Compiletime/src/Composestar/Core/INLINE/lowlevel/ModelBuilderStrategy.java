@@ -101,7 +101,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             return null;
         }
         else{
-            return currentBlock;
+            return inlineBlock;
         }
     }
 
@@ -120,7 +120,22 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
         empty = true;
 
-        currentBlock = inlineBlock;
+        //create checkinnercall context instructions:
+        Block block = new Block();
+        
+        ContextInstruction checkInnercall = new ContextInstruction( 
+                ContextInstruction.CHECK_INNER_CALL, method, block );
+        inlineBlock.addInstruction( checkInnercall );
+        
+        //create resetInnercall context instruction:
+        ContextInstruction resetInnercall = new ContextInstruction( 
+                ContextInstruction.RESET_INNER_CALL, method );
+        resetInnercall.setLabel( getLabel( 9999 ) );
+        inlineBlock.addInstruction( resetInnercall );
+        
+        
+        //set current block to inner block of checkInnercall instruction:
+        currentBlock = block;
     }
 
     /**
@@ -207,6 +222,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#jump(int)
      */
     public void jump(int labelId){
+        if ( labelId == -1 ){
+            labelId = 9999;
+        }
+        
         if ( labelId != currentLabelId + 1 ){
             Label label = getLabel( labelId );
 
