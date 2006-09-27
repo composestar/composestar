@@ -63,7 +63,14 @@ public class Branch extends InlineInstruction implements IVisitable
 	public void Accept(IVisitor visitor)
 	{
 		super.Accept(visitor);
+
 		visitor.VisitBranch(this);
+		if (trueBlock != null)
+			trueBlock.Accept(visitor);
+		visitor.VisitBranchFalse(this);
+		if (falseBlock != null)
+			falseBlock.Accept(visitor);
+ 		
 	}
     
     public String toString(){

@@ -71,6 +71,8 @@ namespace Composestar.StarLight.ILWeaver
             return "Cecil IL Weaver";
         }
 
+       
+
         /// <summary>
         /// Perform the weaving actions.
         /// </summary>
@@ -85,7 +87,20 @@ namespace Composestar.StarLight.ILWeaver
 
             try
             {
-                targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
+                byte[] bFile;
+                FileStream f = null;
+                try
+                {
+                    f = new FileStream(_configuration.InputImagePath, FileMode.Open);
+                    bFile = CecilUtilities.ReadFully(f, -1);
+                }
+                finally
+                {
+                    if (f != null) f.Close();
+                }
+                                              
+                targetAssembly = AssemblyFactory.GetAssembly(bFile);
+                //targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
             }
             catch (EndOfStreamException)
             {
@@ -345,6 +360,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Worker = worker;
             visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
+            visitor.RepositoryAccess = _languageModelAccessor;
 
             // Visit the elements in the block
             try

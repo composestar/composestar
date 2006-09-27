@@ -97,6 +97,24 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Gets the type element by id.
+        /// </summary>
+        /// <param name="typeId">The type id.</param>
+        /// <returns></returns>
+        public TypeElement GetTypeElementById(int typeId)
+        {
+             IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            {
+                return te.Id == typeId;
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the type elements.
         /// </summary>
         /// <returns></returns>
@@ -152,7 +170,7 @@ namespace Composestar.Repository
             if (ret.Count == 1)
                 return ret[0];
 
-                return null;
+            return null;
 
         }
 
@@ -285,6 +303,24 @@ namespace Composestar.Repository
            });
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the condition by name.
+        /// </summary>
+        /// <param name="name">The name of the condition.</param>
+        /// <returns></returns>
+        public Condition GetConditionByName(string name)
+        {
+             IList<Condition> ret = container.GetObjectQuery<Condition>(delegate(Condition cd)
+            {
+                return cd.Name.Equals(name) ;
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+
+            return null; 
         }
 
         /// <summary>

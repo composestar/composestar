@@ -6,6 +6,7 @@ public interface IVisitor
 {
 	
 	void VisitBranch(Branch branch);
+	void VisitBranchFalse(Branch branch);
 	void VisitCheckInnerCall(ContextInstruction contextInstruction);
 	void VisitSetInnerCall(ContextInstruction contextInstruction);
 	void VisitResetInnerCall(ContextInstruction contextInstruction);

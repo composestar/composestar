@@ -17,22 +17,39 @@ namespace Composestar.StarLight.ContextInfo
 
         private static Dictionary<int, InnerFilterContext> _innercalls = new Dictionary<int, InnerFilterContext>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:FilterContext"/> class.
+        /// </summary>
         private FilterContext()
         {
             storedActions = new Stack<int>();
         }
 
-        public void storeAction( int id )
+        /// <summary>
+        /// Stores the action.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        public void StoreAction( int id )
         {
             storedActions.Push( id );
         }
 
-        public int nextStoredAction()
+        /// <summary>
+        /// Returns the next stored action.
+        /// </summary>
+        /// <returns></returns>
+        public int NextStoredAction()
         {
             return storedActions.Pop();
         }
 
-        public bool hasMoreStoredActions()
+        /// <summary>
+        /// Determines whether there are more stored actions.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if there are more stored actions; otherwise, <c>false</c>.
+        /// </returns>
+        public bool HasMoreStoredActions()
         {
             return storedActions.Count > 0;
         }

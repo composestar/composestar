@@ -7,6 +7,7 @@ using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.Repository.LanguageModel.Inlining.Visitor;
 
 using Composestar.StarLight.ContextInfo;
+using Composestar.StarLight.CoreServices;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -25,6 +26,7 @@ namespace Composestar.StarLight.ILWeaver
     {
 
         private const int FilterContextJumpId = 9999;
+        private int numberOfBranches = 0;
 
         #region Private variables
         IList<Instruction> _instructions = new List<Instruction>();
@@ -33,6 +35,7 @@ namespace Composestar.StarLight.ILWeaver
         AssemblyDefinition _targetAssemblyDefinition;
         FilterTypes _filterType;
         Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
+        ILanguageModelAccessor _languageModelAccessor;
         #endregion
 
         public enum FilterTypes
@@ -56,6 +59,22 @@ namespace Composestar.StarLight.ILWeaver
             set
             {
                 _filterType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the repository access.
+        /// </summary>
+        /// <value>The repository access.</value>
+        public ILanguageModelAccessor RepositoryAccess
+        {
+            get
+            {
+                return _languageModelAccessor;
+            }
+            set
+            {
+                _languageModelAccessor = value;
             }
         }
 
@@ -168,7 +187,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="methodBase">The method info.</param>
         /// <returns></returns>
         private MethodReference CreateMethodReference(MethodBase methodBase)
-        {            
+        {
             return TargetAssemblyDefinition.MainModule.Import(methodBase);
         }
 
@@ -243,8 +262,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="inlineInstruction">The inline instruction.</param>
         public void VisitInlineInstruction(InlineInstruction inlineInstruction)
         {
-            if (inlineInstruction.Label != null && inlineInstruction.Label.Id != -1 )
-                Instructions.Add(GetJumpLabel(inlineInstruction.Label.Id)); 
+            if (inlineInstruction.Label != -1 )
+                Instructions.Add(GetJumpLabel(inlineInstruction.Label)); 
         }
 
         public void VisitAfterAction(FilterAction filterAction)
@@ -413,14 +432,28 @@ namespace Composestar.StarLight.ILWeaver
             conditionsVisitor.Method = Method;
             conditionsVisitor.Worker = Worker;
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
+            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
             ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);  
 
             // Add the instructions containing the conditions to the IL instruction list
             AddInstructionList(conditionsVisitor.Instructions);
         
             // Add branch code
-            Instructions.Add(Worker.Create(OpCodes.Brtrue, GetJumpLabel(branch.TrueBlock.Label.Id)));
-            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.FalseBlock.Label.Id)));
+            branch.Label =  8000+numberOfBranches;
+            numberOfBranches++;
+            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));            
+        }
+        
+        // TODO 8888 is not unique in the method!
+
+        /// <summary>
+        /// Generate the branching code for the conditions.
+        /// </summary>
+        /// <param name="branch">The branch.</param>
+        public void VisitBranchFalse(Branch branch)
+        {
+           
+            Instructions.Add(GetJumpLabel(branch.Label)); 
         }
 
         /// <summary>
@@ -442,7 +475,7 @@ namespace Composestar.StarLight.ILWeaver
         /// The <b>filtercode</b> are the inputfilters added to the method.
         /// </example> 
         /// <remarks>
-        /// A call to the VisitResetInnerCall function is needed to place the branchToInstruction at the correct place.
+        /// A call to a Label instruction is needed to place the branchToInstruction at the correct place.
         /// </remarks> 
         public void VisitCheckInnerCall(ContextInstruction contextInstruction)
         { 
@@ -453,7 +486,7 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
             // Load the methodId
-            Instructions.Add(Worker.Create(OpCodes.Ldc_I8, contextInstruction.MethodId));
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
  
             // Call the IsInnerCall
             Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
@@ -485,7 +518,7 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
             // Load the methodId
-            Instructions.Add(Worker.Create(OpCodes.Ldc_I8, contextInstruction.MethodId));
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the SetInnerCall
             Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
@@ -501,18 +534,13 @@ namespace Composestar.StarLight.ILWeaver
         /// <code>        
         /// FilterContext.ResetInnerCall();        
         /// </code>
-        /// Also place the jump NOP instruction so the IsInnerCall branch can jump to this location.
+        /// A LABEL instruction has to proceed this call.
         /// </example> 
         /// <remarks>
         /// There must be a call the the IsInnerCall to generate the jump instruction.
         /// </remarks> 
         public void VisitResetInnerCall(ContextInstruction contextInstruction)
         {
-            // Add the jump label first
-            Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
-
-            Instructions.Add(branchToInstruction);
- 
             // Call the reset inner call function
             Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] {  }))) ); 
         }
@@ -531,20 +559,20 @@ namespace Composestar.StarLight.ILWeaver
             // TODO not correct yet
 
             // Get the methodReference
-            MethodReference methodReference = (MethodReference)Method;
+            //MethodReference methodReference = (MethodReference)Method;
             
-            // Place the arguments on the stack first
-            if (methodReference.HasThis)                
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+            //// Place the arguments on the stack first
+            //if (methodReference.HasThis)                
+            //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
-            int numberOfArguments = Method.Parameters.Count;  
-            for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
-            {
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence)); 
-            }
+            //int numberOfArguments = Method.Parameters.Count;  
+            //for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
+            //{
+            //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i-1].Sequence)); 
+            //}
 
-            // Call the same method
-            Instructions.Add(Worker.Create(OpCodes.Call, methodReference));             
+            //// Call the same method
+            //Instructions.Add(Worker.Create(OpCodes.Call, methodReference));             
 
         }
 
@@ -590,7 +618,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="jump"></param>
         public void VisitJumpInstruction(Jump jump)
         {
-            Instruction jumpToInstruction = GetJumpLabel(jump.Target.Id);
+            Instruction jumpToInstruction = GetJumpLabel(jump.Target);
             if (jumpToInstruction == null)
                 throw new ILWeaverException(Properties.Resources.FilterJumpLabelIsNotSet);
 
@@ -606,6 +634,19 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitSubstitutionAction(FilterAction filterAction)
         {
             // No code needed
+        }
+
+        public void VisitSwitch(Switch switchInstr)
+        {
+            
+        }
+        public void VisitWhile(While whileInstr)
+        {
+            
+        }
+        public void VisitCase(Case caseInstr)
+        {
+            
         }
     }
 }

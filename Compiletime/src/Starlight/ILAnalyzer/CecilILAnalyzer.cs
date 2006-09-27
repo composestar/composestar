@@ -166,7 +166,7 @@ namespace Composestar.StarLight.ILAnalyzer
             }
             #endregion
 
-            this.ExtractTypeElements(String.Empty, _targetAssemblyDefinition);
+            this.ExtractTypeElements(fileName, _targetAssemblyDefinition);
         }
       
         /// <summary>

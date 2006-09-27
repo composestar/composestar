@@ -28,6 +28,14 @@ namespace Composestar.StarLight.CoreServices
         /// <returns></returns>
         TypeElement GetTypeElement(string fullName);
 
+        
+        /// <summary>
+        /// Gets the type element by Id.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        /// <returns></returns>
+        TypeElement GetTypeElementById(int typeId);
+
         /// <summary>
         /// Gets the type elements.
         /// </summary>
@@ -54,6 +62,13 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="methodElement">The method element.</param>
         /// <returns></returns>
         IList<CallElement> GetCallByMethodElement(MethodElement methodElement);
+
+        /// <summary>
+        /// Gets the condition by name.
+        /// </summary>
+        /// <param name="name">The name of the condition.</param>
+        /// <returns></returns>
+        Condition GetConditionByName(string name);
 
         /// <summary>
         /// Closes this instance.

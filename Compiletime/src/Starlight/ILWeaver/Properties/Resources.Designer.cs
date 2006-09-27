@@ -88,6 +88,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find condition named &apos;{0}&apos;..
+        /// </summary>
+        internal static string ConditionNotFound {
+            get {
+                return ResourceManager.GetString("ConditionNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The constructor .ctor() for the type {0} could not be found..
         /// </summary>
         internal static string ConstructorNotFound {
@@ -157,6 +166,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         internal static string InputImageNotFound {
             get {
                 return ResourceManager.GetString("InputImageNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not create a method reference for method named &apos;{0}&apos; in type &apos;{1}&apos; and assembly &apos;{2}&apos;..
+        /// </summary>
+        internal static string MethodNotFound {
+            get {
+                return ResourceManager.GetString("MethodNotFound", resourceCulture);
             }
         }
         

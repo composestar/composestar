@@ -21,7 +21,7 @@ namespace Composestar.StarLight.ILWeaver
 {
 
     public class CecilUtilities
-    {
+    {       
 
         /// <summary>
         /// Returns a method signature.
@@ -73,16 +73,22 @@ namespace Composestar.StarLight.ILWeaver
             return ret.ToArray();
         }
 
-        public static MethodBase ResolveMethod(string methodName, string typeName, string assemblyName)
+        /// <summary>
+        /// Resolves the method.
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns></returns>
+        public static MethodBase ResolveMethod(string methodName, string typeName, string assemblyFile)
         {
             Type t;
-            String fullName;
-            if (string.IsNullOrEmpty(assemblyName) )
-                fullName = typeName;
-            else
-                fullName = String.Format("{0}, {1}", typeName, assemblyName);
+      
+            Assembly asm = Assembly.ReflectionOnlyLoadFrom(assemblyFile);
+            if (asm == null)
+                return null;
 
-            t = Type.ReflectionOnlyGetType(fullName, false, true);
+            t = asm.GetType(typeName, false, true);
 
             if (t == null)
                 return null;
@@ -96,8 +102,58 @@ namespace Composestar.StarLight.ILWeaver
             // TODO add caching
 
             return (MethodBase)m;
- 
+
         }
 
+         /// <summary>
+        /// Reads data from a stream until the end is reached. The
+        /// data is returned as a byte array. An IOException is
+        /// thrown if any of the underlying IO calls fail.
+        /// </summary>
+        /// <param name="stream">The stream to read data from</param>
+        /// <param name="initialLength">The initial buffer length</param>
+        public static byte[] ReadFully(Stream stream, int initialLength)
+        {
+            // If we've been passed an unhelpful initial length, just
+            // use 32K.
+            if (initialLength < 1)
+            {
+                initialLength = 32768;
+            }
+
+            byte[] buffer = new byte[initialLength];
+            int read = 0;
+
+            int chunk;
+            while ((chunk = stream.Read(buffer, read, buffer.Length - read)) > 0)
+            {
+                read += chunk;
+
+                // If we've reached the end of our buffer, check to see if there's
+                // any more information
+                if (read == buffer.Length)
+                {
+                    int nextByte = stream.ReadByte();
+
+                    // End of stream? If so, we're done
+                    if (nextByte == -1)
+                    {
+                        return buffer;
+                    }
+
+                    // Nope. Resize the buffer, put in the byte we've just
+                    // read, and continue
+                    byte[] newBuffer = new byte[buffer.Length * 2];
+                    Array.Copy(buffer, newBuffer, buffer.Length);
+                    newBuffer[read] = (byte)nextByte;
+                    buffer = newBuffer;
+                    read++;
+                }
+            }
+            // Buffer is now too big. Shrink it.
+            byte[] ret = new byte[read];
+            Array.Copy(buffer, ret, read);
+            return ret;
+        }
     }
 }

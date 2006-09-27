@@ -4,7 +4,8 @@ using System.Text;
 
 using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.ConditionExpressions.Visitor;
-
+using Composestar.StarLight.CoreServices;
+  
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -22,7 +23,7 @@ namespace Composestar.StarLight.ILWeaver
         CilWorker _worker;
         MethodDefinition _method;
         AssemblyDefinition _targetAssemblyDefinition;
-
+        ILanguageModelAccessor _languageModelAccessor;  // FIXME we now pass this model through the visitors because we need the repository to get the conditions. Not a good seperation...
         #endregion
 
         #region Properties
@@ -90,15 +91,50 @@ namespace Composestar.StarLight.ILWeaver
                 _instructions = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the repository access.
+        /// </summary>
+        /// <value>The repository access.</value>
+        public ILanguageModelAccessor RepositoryAccess
+        {
+            get
+            {
+                return _languageModelAccessor;
+            }
+            set
+            {
+                _languageModelAccessor = value;
+            }
+        }
         #endregion
+
+        private MethodReference CreateMethodReference(System.Reflection.MethodBase methodBase)
+        {            
+            return TargetAssemblyDefinition.MainModule.Import(methodBase);
+        }
 
         public void VisitAnd(And and)
         {
             Instructions.Add(Worker.Create(OpCodes.And)); 
         }
         public void VisitConditionLiteral(ConditionLiteral conditionLiteral)
-        {            
-            // TODO Load field?
+        {
+            // Get the condition
+            Composestar.Repository.LanguageModel.Condition con = RepositoryAccess.GetConditionByName(conditionLiteral.Name);
+            if (con == null)
+                throw new ILWeaverException(String.Format(Properties.Resources.ConditionNotFound, conditionLiteral.Name));
+
+            // Get the type
+            Composestar.Repository.LanguageModel.TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
+             
+            System.Reflection.MethodBase method = CecilUtilities.ResolveMethod(con.Reference.Selector, te.FullName, te.FromDLL);
+
+            if (method == null)
+                throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.Name, te.AFQN));
+
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(method)));
+
         }
         public void VisitFalse(False f)
         {
