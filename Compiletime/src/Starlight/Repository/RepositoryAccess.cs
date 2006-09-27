@@ -101,7 +101,7 @@ namespace Composestar.Repository
         /// </summary>
         /// <param name="typeId">The type id.</param>
         /// <returns></returns>
-        public TypeElement GetTypeElementById(int typeId)
+        public TypeElement GetTypeElementById(string typeId)
         {
              IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
