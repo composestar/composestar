@@ -14,10 +14,7 @@ public class Case extends InlineInstruction{
         this.checkConstant = checkConstant;
         this.instructions = instructions;
     }
-    
-    
-    
-    
+        
     /**
      * @return the checkConstant
      * @property
@@ -26,20 +23,14 @@ public class Case extends InlineInstruction{
         return checkConstant;
     }
 
-
-
-
-    /**
+	/**
      * @return the instructions
      * @property
      */
     public Block get_Instructions(){
         return instructions;
     }
-
-
-
-
+	
     public void Accept(IVisitor visitor)
     {
         super.Accept(visitor);

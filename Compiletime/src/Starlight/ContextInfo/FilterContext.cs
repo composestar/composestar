@@ -13,7 +13,7 @@ namespace Composestar.StarLight.ContextInfo
     /// </summary>
     public sealed class FilterContext
     {
-        private Stack<int> storedActions;
+        private Stack<int> _storedActions;
 
         private static Dictionary<int, InnerFilterContext> _innercalls = new Dictionary<int, InnerFilterContext>();
 
@@ -22,7 +22,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         private FilterContext()
         {
-            storedActions = new Stack<int>();
+            _storedActions = new Stack<int>();   
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <param name="id">The id.</param>
         public void StoreAction( int id )
         {
-            storedActions.Push( id );
+            _storedActions.Push( id );
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <returns></returns>
         public int NextStoredAction()
         {
-            return storedActions.Pop();
+            return _storedActions.Pop();
         }
 
         /// <summary>
@@ -51,17 +51,17 @@ namespace Composestar.StarLight.ContextInfo
         /// </returns>
         public bool HasMoreStoredActions()
         {
-            return storedActions.Count > 0;
+            return _storedActions.Count > 0;
         }
 
 
         /// <summary>
-        /// Determines whether [is inner call] [the specified current instance].
+        /// Determines whether the current thread is making an inner call.
         /// </summary>
         /// <param name="currentInstance">The current instance.</param>
         /// <param name="methodId">The method id.</param>
         /// <returns>
-        /// 	<c>true</c> if [is inner call] [the specified current instance]; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the current thread is making an inner call; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static bool IsInnerCall(object currentInstance, long methodId)
@@ -123,6 +123,8 @@ namespace Composestar.StarLight.ContextInfo
             return Thread.CurrentThread.ManagedThreadId;
         }
 
+        #region InnerFilterContext class
+        
         /// <summary>
         /// Internal class used to contain the FilterContext
         /// </summary>
@@ -164,5 +166,8 @@ namespace Composestar.StarLight.ContextInfo
                 set { _instance = value; }
             }
         }
+
+        #endregion
+  
     }
 }

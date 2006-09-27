@@ -19,6 +19,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 {
     public class AnalyzerTask : Task
     {
+        #region Properties for MSBuild
+
         private ITaskItem[] _assemblyFiles;
 
         /// <summary>
@@ -47,13 +49,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private IILAnalyzer analyzer;
 
+        #endregion
+
+        #region ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AnalyzerTask"/> class.
         /// </summary>
-        public AnalyzerTask() : base(Properties.Resources.ResourceManager)
+        public AnalyzerTask()
+            : base(Properties.Resources.ResourceManager)
         {
             analyzer = new CecilILAnalyzer();
         }
+
+        #endregion
         
         /// <summary>
         /// When overridden in a derived class, executes the task.
@@ -66,8 +75,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // TODO must perform a cleanup before executing the analyzer.
             // Otherelse the repository will be dirty
 
+            // TODO add text to resource file
+
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 
+            // Read registry
             RegistrySettings rs = new RegistrySettings();
             if (!rs.ReadSettings())
             {
@@ -121,7 +133,5 @@ namespace Composestar.StarLight.MSBuild.Tasks
             return !Log.HasLoggedErrors;
 
         }
-
-
     }
 }

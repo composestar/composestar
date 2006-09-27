@@ -25,12 +25,16 @@ namespace Composestar.StarLight.ILWeaver
     public class CecilInliningInstructionVisitor : IVisitor
     {
 
+        #region Constant values
+
         private const int FilterContextJumpId = 9999;
-        private int numberOfBranches = 0;
+
+        #endregion
 
         #region Private variables
         IList<Instruction> _instructions = new List<Instruction>();
-        CilWorker _worker;
+        CilWorker _worker; 
+        int numberOfBranches = 0;
         MethodDefinition _method;
         AssemblyDefinition _targetAssemblyDefinition;
         FilterTypes _filterType;
@@ -38,12 +42,28 @@ namespace Composestar.StarLight.ILWeaver
         ILanguageModelAccessor _languageModelAccessor;
         #endregion
 
+        #region FilterType Enumeration
+
+        /// <summary>
+        /// Possible filter types this visitor can generate code for.
+        /// </summary>
         public enum FilterTypes
         {
+            /// <summary>
+            /// Default none.
+            /// </summary>
             None = 0,
+            /// <summary>
+            /// Input filter.
+            /// </summary>
             InputFilter = 1,
-	        OutputFilter = 2,
+            /// <summary>
+            /// Output filter.
+            /// </summary>
+            OutputFilter = 2,
         }
+
+        #endregion
         
         #region Properties
         /// <summary>
@@ -251,6 +271,8 @@ namespace Composestar.StarLight.ILWeaver
         }
         #endregion
 
+        #region Inlining Instructions Visitor Handlers
+
         /// <summary>
         /// Visits the inline instruction.
         /// </summary>
@@ -262,13 +284,13 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="inlineInstruction">The inline instruction.</param>
         public void VisitInlineInstruction(InlineInstruction inlineInstruction)
         {
-            if (inlineInstruction.Label != -1 )
-                Instructions.Add(GetJumpLabel(inlineInstruction.Label)); 
+            if (inlineInstruction.Label != -1)
+                Instructions.Add(GetJumpLabel(inlineInstruction.Label));
         }
 
         public void VisitAfterAction(FilterAction filterAction)
         {
-           // TODO Copy beforeAction and adapt
+            // TODO Copy beforeAction and adapt
         }
 
         /// <summary>
@@ -276,16 +298,16 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="filterAction"></param>
         public void VisitBeforeAction(FilterAction filterAction)
-        {           
+        {
 
             // Create a new or use an existing local variable for the JoinPointContext
             VariableDefinition jpcVar = CreateJoinPointContextLocal();
-      
+
             //
             // Create new joinpointcontext object
             //
             Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(JoinPointContext).GetConstructors()[0])));
-            
+
             // Store the just created joinpointcontext object
             Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
 
@@ -294,7 +316,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Load the joinpointcontext object
             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-            
+
             // Load the this pointer
             if (Method.HasThis)
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
@@ -304,7 +326,7 @@ namespace Composestar.StarLight.ILWeaver
             // Assign to the Target property
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
 
-            if (FilterType == FilterTypes.OutputFilter )
+            if (FilterType == FilterTypes.OutputFilter)
             {
                 // Also set the sender
                 // Load the joinpointcontext object
@@ -336,7 +358,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Create the local vars, but only once in this method.
                 VariableDefinition objectVar = CreateObjectLocal();
                 VariableDefinition typeVar = CreateTypeLocal();
-                
+
                 for (int i = numberOfArguments; i >= 0; i--) // We start at the top, because the last element is at to top of the stack
                 {
                     // Duplicate the value
@@ -347,20 +369,20 @@ namespace Composestar.StarLight.ILWeaver
 
                     // Save the type
                     Instructions.Add(Worker.Create(OpCodes.Stloc, typeVar));
-                     
+
                     // Save the object
                     Instructions.Add(Worker.Create(OpCodes.Stloc, objectVar));
 
                     // Perpare to call AddArgument by loading the parameters onto the stack
                     // Load jpc
                     Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-                     
+
                     // Load the ordinal
                     Instructions.Add(Worker.Create(OpCodes.Ldc_I4, i));
 
                     // Load the type
                     Instructions.Add(Worker.Create(OpCodes.Ldloc, typeVar));
-                     
+
                     // Load the object
                     Instructions.Add(Worker.Create(OpCodes.Ldloc, objectVar));
 
@@ -375,10 +397,10 @@ namespace Composestar.StarLight.ILWeaver
 
             // Load joinpointcontext first
             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-             
+
             // Load the name onto the stack
             Instructions.Add(Worker.Create(OpCodes.Ldstr, filterAction.Selector));
-                       
+
             // Assign name to MethodName
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_MethodName", new Type[] { typeof(string) }))));
 
@@ -386,21 +408,20 @@ namespace Composestar.StarLight.ILWeaver
             // Call the target
             //
 
-            // TODO correct values
-            MethodBase methodBaseDef = CecilUtilities.ResolveMethod("", "", "");            
+            MethodBase methodBaseDef = CecilUtilities.ResolveMethod(filterAction.Target);
             if (methodBaseDef == null)
             {
                 throw new ILWeaverException(String.Format(Properties.Resources.CouldNotResolveMethod, filterAction.Target));
             }
-          
-            MethodReference methodToCall = CreateMethodReference(methodBaseDef);          
+
+            MethodReference methodToCall = CreateMethodReference(methodBaseDef);
 
             // Load the JoinPointObject as the parameter
             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
             // Call the Target
-            Instructions.Add(Worker.Create(OpCodes.Call, methodToCall)); 
-           
+            Instructions.Add(Worker.Create(OpCodes.Call, methodToCall));
+
             //
             // Retrieve the arguments
             //               
@@ -414,10 +435,10 @@ namespace Composestar.StarLight.ILWeaver
 
                 // Call the GetArgumentValue(int16) function
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) }))));
-            }            
+            }
 
             // Add nop to enable debugging
-            Instructions.Add(Worker.Create(OpCodes.Nop)); 
+            Instructions.Add(Worker.Create(OpCodes.Nop));
         }
 
         /// <summary>
@@ -426,25 +447,23 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="branch">The branch.</param>
         public void VisitBranch(Branch branch)
         {
-           
+
             // Add condition code
             CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
             conditionsVisitor.Method = Method;
             conditionsVisitor.Worker = Worker;
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
             conditionsVisitor.RepositoryAccess = _languageModelAccessor;
-            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);  
+            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
 
             // Add the instructions containing the conditions to the IL instruction list
             AddInstructionList(conditionsVisitor.Instructions);
-        
+
             // Add branch code
-            branch.Label =  8000+numberOfBranches;
+            branch.Label = 8000 + numberOfBranches;
             numberOfBranches++;
-            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));            
+            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }
-        
-        // TODO 8888 is not unique in the method!
 
         /// <summary>
         /// Generate the branching code for the conditions.
@@ -452,33 +471,28 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="branch">The branch.</param>
         public void VisitBranchFalse(Branch branch)
         {
-           
-            Instructions.Add(GetJumpLabel(branch.Label)); 
+            Instructions.Add(GetJumpLabel(branch.Label));
         }
 
         /// <summary>
         /// Generates the filter context is inner call check.
         /// </summary>
-        /// <param name="method">The method.</param>
-        /// <param name="methodSignature">The method signature.</param>
-        /// <param name="worker">The worker.</param>
-        /// <param name="branchToInstruction">The branch to instruction.</param>
-        /// <returns>A list of <see cref="T:Instruction"/>s to add to the current output.</returns>
+        /// <param name="contextInstruction">The context instruction.</param>
         /// <example>
         /// Generate the following code:
-        /// <code>        
-        /// if (!FilterContext.IsInnerCall(this, methodName)) 
+        /// <code>
+        /// if (!FilterContext.IsInnerCall(this, methodName))
         /// {
-        ///   <b>filtercode</b>
+        /// <b>filtercode</b>
         /// }
         /// </code>
         /// The <b>filtercode</b> are the inputfilters added to the method.
-        /// </example> 
+        /// </example>
         /// <remarks>
         /// A call to a Label instruction is needed to place the branchToInstruction at the correct place.
-        /// </remarks> 
+        /// </remarks>
         public void VisitCheckInnerCall(ContextInstruction contextInstruction)
-        { 
+        {
             // Load the this parameter
             if (!Method.HasThis)
                 Instructions.Add(Worker.Create(OpCodes.Ldnull));
@@ -487,17 +501,17 @@ namespace Composestar.StarLight.ILWeaver
 
             // Load the methodId
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
- 
+
             // Call the IsInnerCall
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
-            
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(long) }))));
+
             // Create the call instruction
             Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
 
             // Result is placed on the stack, so use it to branch to the skipFiltersInstruction
             Instructions.Add(Worker.Create(OpCodes.Brtrue, branchToInstruction));
         }
-    
+
         /// <summary>
         /// Generate the SetInnerCall code.
         /// </summary>
@@ -521,8 +535,8 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the SetInnerCall
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(long) }))) ); 
-                            
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(long) }))));
+
         }
 
         /// <summary>
@@ -542,38 +556,53 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitResetInnerCall(ContextInstruction contextInstruction)
         {
             // Call the reset inner call function
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] {  }))) ); 
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] { }))));
         }
 
+        /// <summary>
+        /// Visits the continue action. No code is generated for this action because further jumps are introduced.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
         public void VisitContinueAction(FilterAction filterAction)
         {
             // No code needed
         }
 
+        /// <summary>
+        /// Visits the dispatch action.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
         public void VisitDispatchAction(FilterAction filterAction)
         {
-             //
+            //
             // Call the same method
             //
+            switch (FilterType)
+            {
+                case FilterTypes.InputFilter:
+                    // Self call
+                    
+                    // Get the methodReference
+                    MethodReference methodReference = (MethodReference)Method;
 
-            // TODO not correct yet
+                    // Place the arguments on the stack first
+                    if (methodReference.HasThis)
+                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
-            // Get the methodReference
-            //MethodReference methodReference = (MethodReference)Method;
-            
-            //// Place the arguments on the stack first
-            //if (methodReference.HasThis)                
-            //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+                    int numberOfArguments = Method.Parameters.Count;
+                    for (int i = 1; i < numberOfArguments; i++)
+                    {
+                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence));
+                    }
 
-            //int numberOfArguments = Method.Parameters.Count;  
-            //for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
-            //{
-            //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i-1].Sequence)); 
-            //}
+                    // Call the same method
+                    Instructions.Add(Worker.Create(OpCodes.Call, methodReference));
 
-            //// Call the same method
-            //Instructions.Add(Worker.Create(OpCodes.Call, methodReference));             
+                    break;
+                case FilterTypes.OutputFilter:
 
+                    break;
+            }
         }
 
         /// <summary>
@@ -595,18 +624,23 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </example> 
         public void VisitErrorAction(FilterAction filterAction)
-        {           
+        {
             // Create an exception
-            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(Exception).GetConstructors()[0] )));
+            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(Exception).GetConstructors()[0])));
 
             // Throw the exception
             Instructions.Add(Worker.Create(OpCodes.Throw));
 
             // Add the Nop to enable debugging
-            Instructions.Add(Worker.Create(OpCodes.Nop)); 
-            
+            Instructions.Add(Worker.Create(OpCodes.Nop));
+
         }
 
+        /// <summary>
+        /// Visits the filter action. At this moment not used. 
+        /// </summary>
+        /// <remarks>Can be removed since specialized actions are visited.</remarks> 
+        /// <param name="filterAction">The filter action.</param>
         public void VisitFilterAction(FilterAction filterAction)
         {
             // Currently not used (not visited)
@@ -623,7 +657,7 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ILWeaverException(Properties.Resources.FilterJumpLabelIsNotSet);
 
             // Add an unconditional branch instruction
-            Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction)); 
+            Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction));
         }
 
         public void VisitSkipAction(FilterAction filterAction)
@@ -636,17 +670,93 @@ namespace Composestar.StarLight.ILWeaver
             // No code needed
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="switchInstr"></param>
         public void VisitSwitch(Switch switchInstr)
         {
-            
+            // Add condition code
+            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
+            conditionsVisitor.Method = Method;
+            conditionsVisitor.Worker = Worker;
+            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
+            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
+            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)switchInstr.Expression).Accept(conditionsVisitor);
+
+            // Add the instructions containing the conditions to the IL instruction list
+            AddInstructionList(conditionsVisitor.Instructions);
+
+            // The labels to jump to
+            List<Instruction> caseLabels = new List<Instruction>();
+            foreach (Case c in switchInstr.Cases)
+            {
+                caseLabels.Add(GetJumpLabel(c.Label));
+            }
+              
+            // The switch statement
+            Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="whileInstr"></param>
         public void VisitWhile(While whileInstr)
         {
-            
+            // Add condition code
+            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
+            conditionsVisitor.Method = Method;
+            conditionsVisitor.Worker = Worker;
+            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
+            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
+            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)whileInstr.Expression).Accept(conditionsVisitor);
+
+            // Add the instructions containing the conditions to the IL instruction list
+            AddInstructionList(conditionsVisitor.Instructions);
+
+            // Add branch code
+            whileInstr.Label = 8000 + numberOfBranches;
+            numberOfBranches++;
+            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(whileInstr.Label)));
         }
+
+        /// <summary>
+        /// Visits the while end.
+        /// </summary>
+        /// <remarks>
+        /// <code>
+        /// while(condition)
+        /// {
+        ///   // Block
+        /// }
+        /// </code>
+        /// In IL we need:
+        /// <code>
+        /// l1: condition
+        /// brfalse l2
+        /// block
+        /// br l1
+        /// l2: nop
+        /// </code>
+        /// </remarks> 
+        /// <param name="whileInstr">The while instruction.</param>
+        public void VisitWhileEnd(While whileInstr)
+        {
+            // TODO not yet correct. must add a branch back
+            Instructions.Add(GetJumpLabel(whileInstr.Label));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="caseInstr"></param>
         public void VisitCase(Case caseInstr)
         {
-            
+
         }
+
+        #endregion
+    
     }
 }
