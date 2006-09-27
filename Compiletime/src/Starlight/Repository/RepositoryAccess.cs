@@ -7,8 +7,11 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
 
+using com.db4o;
+
 namespace Composestar.Repository
 {
+ 
     /// <summary>
     /// A layer between the StarLight .NET code and the repository objects. 
     /// Strong typed retrieval of the elements in the repository and 
@@ -16,50 +19,47 @@ namespace Composestar.Repository
     /// </summary>
     public class RepositoryAccess : ILanguageModelAccessor
     {
-
+        private RepositoryContainerInterface container = null;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
         /// </summary>
         /// <param name="filename">The repository filename.</param>
-        public RepositoryAccess(string filename)
+        [Obsolete("Use the RepositoryAccess(RepositoryContainerInterface datastore, string fileName) constructor instead")]
+        public RepositoryAccess(string fileName)
         {
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentNullException("filename");
 
-            DataStoreContainer.Instance.RepositoryFileName = filename;
+            container = Db4oContainers.Db4oRepositoryContainer.Instance;
 
+            OpenContainer(fileName);
+        }
+
+        public RepositoryAccess(RepositoryContainerInterface datastore, string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("filename");
+
+            container = datastore;
+
+            OpenContainer(fileName);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
+        /// Opens the database container.
         /// </summary>
-        public RepositoryAccess()
+        public void OpenContainer(String fileName)
         {
-                
+            container.OpenContainer(fileName);
         }
 
         /// <summary>
-        /// Closes the database.
+        /// Closes the database container.
         /// </summary>
-        public void CloseDatabase()
+        public void CloseContainer()
         {
-            DataStoreContainer.Instance.CloseDatabase();
-        }
-
-        /// <summary>
-        /// Gets or sets the filename of the repository.
-        /// </summary>
-        /// <value>The filename.</value>
-        public string Filename
-        {
-            get
-            {
-                return DataStoreContainer.Instance.RepositoryFileName;
-            }
-            set
-            {
-                DataStoreContainer.Instance.RepositoryFileName = value;
-            }
+            container.CloseContainer();
         }
 
         /// <summary>
@@ -69,15 +69,33 @@ namespace Composestar.Repository
         /// <returns></returns>
         public TypeElement GetTypeElement(string fullName)
         {
-            IList<TypeElement> ret = DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
                 return te.FullName.Equals(fullName);
             });
 
             if (ret.Count == 1)
                 return ret[0];
-            else
-                return null;
+              
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the type info.
+        /// </summary>
+        /// <param name="fullName">The AQFN.</param>
+        /// <returns></returns>
+        public TypeElement GetTypeElementByAFQN(string AFQN)
+        {
+            IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            {
+                return te.AFQN.Equals(AFQN);
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+
+            return null;
         }
 
         /// <summary>
@@ -86,7 +104,7 @@ namespace Composestar.Repository
         /// <returns></returns>
         public IList<TypeElement> GetTypeElements()
         {
-            return DataStoreContainer.Instance.GetObjects<TypeElement>();
+            return null;// container.GetObjects<TypeElement>();
         }
 
         /// <summary>
@@ -97,23 +115,21 @@ namespace Composestar.Repository
         /// <returns></returns>
         public MethodElement GetMethodElementByName(TypeElement typeInfo, string methodName)
         {
-
             if (typeInfo == null)
                 return null;
 
             if (string.IsNullOrEmpty(methodName))
                 return null;
 
-            IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
+            IList<MethodElement> ret = container.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
                 return (me.ParentTypeId == typeInfo.Id) & (me.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase));
             });
 
             if (ret.Count == 1)
                 return ret[0];
-            else
-                return null;
 
+            return null;
         }
 
         /// <summary>
@@ -124,21 +140,20 @@ namespace Composestar.Repository
         /// <returns></returns>
         public MethodElement GetMethodElementBySignature(TypeElement typeInfo, string methodSignature)
         {
-
             if (typeInfo == null)
                 return null;
 
             if (string.IsNullOrEmpty(methodSignature))
                 return null;
 
-            IList<MethodElement> ret = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
+            IList<MethodElement> ret = container.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
                 return (me.ParentTypeId == typeInfo.Id) && (me.Signature.Equals(methodSignature, StringComparison.CurrentCultureIgnoreCase));
             });
 
             if (ret.Count == 1)
                 return ret[0];
-            else
+
                 return null;
 
         }
@@ -150,26 +165,72 @@ namespace Composestar.Repository
         /// <returns></returns>
         public IList<MethodElement> GetMethodElements(TypeElement type)
         {
-            //Query query = dbContainer.Query();
-            //query.Constrain(typeof(Composestar.Repository.LanguageModel.MethodElement));
-            //query.Descend("_parentTypeId").Constrain(type.Id);
-            //ObjectSet result = query.Execute();
-
-            // >>> this is slow, no idea why ?
-            IList<MethodElement> result = DataStoreContainer.Instance.GetObjectQuery<MethodElement>(delegate(MethodElement me)
+            IList<MethodElement> result = container.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
                 return me.ParentTypeId == type.Id;
             });
 
             return result;
+        }
 
-            //List<MethodElement> m = new List<MethodElement>();
-            //foreach (MethodElement me in result)
+        /// <summary>
+        /// Gets the parameter elements.
+        /// </summary>
+        /// <param name="type">The method.</param>
+        /// <returns></returns>
+        public IList<ParameterElement> GetParameterElements(MethodElement method)
+        {
+            IList<ParameterElement> result = container.GetObjectQuery<ParameterElement>(delegate(ParameterElement pe)
+            {
+                return pe.ParentMethodId == method.Id;
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the parameter elements.
+        /// </summary>
+        /// <param name="type">The method.</param>
+        /// <returns></returns>
+        public IList<AttributeElement> GetAttributeElements(IRepositoryElement element)
+        {
+            throw new NotImplementedException("Severe performance penalty on current implementation, disabled for the time being");
+            //com.db4o.query.Query query = container.Query();
+            //query.Constrain(typeof(Composestar.Repository.LanguageModel.AttributeElement));
+            //query.Descend("_parentId").Constrain(element.Id);
+            //ObjectSet result = query.Execute();
+
+            //List<AttributeElement> m = new List<AttributeElement>();
+            //foreach (AttributeElement me in result)
             //{
             //    m.Add(me);
             //}
 
             //return m;
+
+            //IList<AttributeElement> result = container.GetObjectQuery<AttributeElement>(delegate(AttributeElement ae)
+            //{
+            //    return ae.ParentId == element.Id;
+            //});
+
+            //return result;
+        }
+
+        /// <summary>
+        /// Gets the field elements.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public IList<FieldElement> GetFieldElements(TypeElement type)
+        {
+            IList<FieldElement> result = container.GetObjectQuery<FieldElement>(delegate(FieldElement fe)
+            {
+                return fe.ParentTypeId == type.Id;
+            });
+
+            return result;
+
         }
 
         /// <summary>
@@ -182,12 +243,13 @@ namespace Composestar.Repository
             if (type == null)
                 return null;
 
-            IList<External> result = DataStoreContainer.Instance.GetObjectQuery<External>(delegate(External external)
+            IList<External> result = container.GetObjectQuery<External>(delegate(External external)
             {
                 return external.ParentTypeId == type.Id;
             });
 
             return result;
+
         }
 
         /// <summary>
@@ -200,12 +262,13 @@ namespace Composestar.Repository
             if (type == null)
                 return null;
 
-            IList<Internal> result = DataStoreContainer.Instance.GetObjectQuery<Internal>(delegate(Internal intern)
+            IList<Internal> result = container.GetObjectQuery<Internal>(delegate(Internal intern)
             {
                 return intern.ParentTypeId == type.Id;
             });
 
             return result;
+
         }
 
         /// <summary>
@@ -218,7 +281,7 @@ namespace Composestar.Repository
             if (methodElement == null | methodElement.MethodBody == null)
                 return null;
 
-            IList<CallElement> result = DataStoreContainer.Instance.GetObjectQuery<CallElement>(delegate(CallElement ce)
+            IList<CallElement> result = container.GetObjectQuery<CallElement>(delegate(CallElement ce)
            {
                return ce.ParentMethodBodyId == methodElement.MethodBody.Id;
            });
@@ -236,13 +299,9 @@ namespace Composestar.Repository
                 throw new ArgumentNullException("typeElement");
 
             // Check if type already exists
-            if (DataStoreContainer.Instance.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            if (GetTypeElementByAFQN(typeElement.AFQN) == null)
             {
-                return te.FromDLL.Equals(typeElement.FromDLL, StringComparison.CurrentCultureIgnoreCase) &
-                       te.FullName.Equals(typeElement.FullName, StringComparison.CurrentCultureIgnoreCase);
-            }).Count == 0)
-            {
-                DataStoreContainer.Instance.StoreObject(typeElement);
+                container.StoreObject(typeElement);
             }
         }
 
@@ -258,10 +317,10 @@ namespace Composestar.Repository
 
             if (fieldElement == null)
                 throw new ArgumentNullException("fieldElement");
-
+            
+            // add the field element
             fieldElement.ParentTypeId = typeElement.Id;
-
-            DataStoreContainer.Instance.StoreObject(fieldElement);
+            container.StoreObject(fieldElement);
         }
 
         /// <summary>
@@ -277,9 +336,9 @@ namespace Composestar.Repository
             if (methodElement == null)
                 throw new ArgumentNullException("methodElement");
 
+            // Add the method element
             methodElement.ParentTypeId = typeElement.Id;
-
-            DataStoreContainer.Instance.StoreObject(methodElement);
+            container.StoreObject(methodElement);
         }
 
         /// <summary>
@@ -295,9 +354,9 @@ namespace Composestar.Repository
             if (paramElement == null)
                 throw new ArgumentNullException("paramElement");
 
+            // Store the parameter element
             paramElement.ParentMethodId = methodElement.Id;
-
-            DataStoreContainer.Instance.StoreObject(paramElement);
+            container.StoreObject(paramElement);
         }
 
         /// <summary>
@@ -315,7 +374,7 @@ namespace Composestar.Repository
 
             callElement.ParentMethodBodyId = methodElement.MethodBody.Id;
 
-            DataStoreContainer.Instance.StoreObject(callElement);
+            container.StoreObject(callElement);
         }
 
         /// <summary>
@@ -334,7 +393,7 @@ namespace Composestar.Repository
             attributeElement.ParentId = repositoryElement.Id;
             attributeElement.ParentType = repositoryElement.GetType().ToString();
 
-            DataStoreContainer.Instance.StoreObject(attributeElement);
+            container.StoreObject(attributeElement);
         }
 
         /// <summary>
@@ -347,12 +406,12 @@ namespace Composestar.Repository
                 throw new ArgumentNullException("concernInformation");
 
             // Check if concern already exists
-            if (DataStoreContainer.Instance.GetObjectQuery<ConcernInformation>(delegate(ConcernInformation ce)
+            if (container.GetObjectQuery<ConcernInformation>(delegate(ConcernInformation ce)
             {
                 return ce.Filename.Equals(concernInformation.Filename, StringComparison.CurrentCultureIgnoreCase);
             }).Count == 0)
             {
-                DataStoreContainer.Instance.StoreObject(concernInformation);
+                container.StoreObject(concernInformation);
             }
         }
 
@@ -362,8 +421,7 @@ namespace Composestar.Repository
         /// <returns></returns>
         public CommonConfiguration GetCommonConfiguration()
         {
-            CommonConfiguration cc;
-            IList<CommonConfiguration> ret = DataStoreContainer.Instance.GetObjects<CommonConfiguration>();
+            IList<CommonConfiguration> ret = container.GetObjects<CommonConfiguration>();
             if (ret.Count == 1)
                 return ret[0];
             else
@@ -379,7 +437,7 @@ namespace Composestar.Repository
             if (cc == null)
                 throw new ArgumentNullException("commonconfiguration");
 
-            DataStoreContainer.Instance.StoreObject(cc);
+            container.StoreObject(cc);
         }
 
         /// <summary>
@@ -387,7 +445,7 @@ namespace Composestar.Repository
         /// </summary>
         public void Close()
         {
-            CloseDatabase();
+            CloseContainer();
         }
     }
 }

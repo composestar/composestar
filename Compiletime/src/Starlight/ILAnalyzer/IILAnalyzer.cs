@@ -19,13 +19,17 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="config">The config settings.</param>
-        void Initialize(string fileName, NameValueCollection config );
+        void Initialize(NameValueCollection config );
+
+        List<string> UnresolvedTypes { get; }
        
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        IList<TypeElement> ExtractTypeElements();
+        IList<TypeElement> ExtractTypeElements(String fileName);
+
+        void ProcessUnresolvedTypes();
 
         /// <summary>
         /// Gets the duration of the last executed method.

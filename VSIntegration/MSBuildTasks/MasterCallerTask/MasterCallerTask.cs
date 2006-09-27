@@ -149,7 +149,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             if (!int.TryParse(DebugLevel, out debugLevelValue ))
             {
                 Log.LogErrorFromResources("CouldNotConvertDebugLevel", DebugLevel); 
-                _repositoryAccess.CloseDatabase(); 
+                _repositoryAccess.CloseContainer(); 
                 return false;
             }
             CurrentDebugMode = (DebugMode)debugLevelValue;
@@ -161,7 +161,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             if (!rs.ReadSettings())
             {
                 Log.LogErrorFromResources("CouldNotReadRegistryValues"); 
-                _repositoryAccess.CloseDatabase(); 
+                _repositoryAccess.CloseContainer(); 
                 return false;
             }
 
@@ -171,7 +171,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             _repositoryAccess.SetCommonConfiguration(cc);
         
             // Close database so MASTER can access it
-            _repositoryAccess.CloseDatabase(); 
+            _repositoryAccess.CloseContainer(); 
                                               
             // Start java                  
             System.Diagnostics.Process p = new System.Diagnostics.Process();

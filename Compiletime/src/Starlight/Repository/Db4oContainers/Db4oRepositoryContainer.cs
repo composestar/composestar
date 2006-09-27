@@ -10,9 +10,9 @@ using com.db4o.query;
 
 using Composestar.Repository.LanguageModel;
 
-namespace Composestar.Repository
+namespace Composestar.Repository.Db4oContainers
 {
-    public class DataStoreContainer
+    public class Db4oRepositoryContainer : RepositoryContainerInterface
     {
         /// <summary>
         /// Filename of the yap database.
@@ -36,58 +36,44 @@ namespace Composestar.Repository
             }
             set
             {
-                if (!_yapFileName.Equals(value, StringComparison.CurrentCultureIgnoreCase))
-                {
+                //if (!_yapFileName.Equals(value, StringComparison.CurrentCultureIgnoreCase))
+                //{
                     // Changing the name, so close and reopen.
-                    if (dbContainer != null)
-                        dbContainer.Close();
+                    //if (dbContainer != null)
+                    //    dbContainer.Close();
 
                     _yapFileName = value;
-                    OpenDatabase();
-                }
-                else
-                {
+                    //OpenContainer();
+                //}
+                //else
+                //{
                     // Name of db did not change, see if the db is open
-                    OpenDatabase();                    
-                }
+                    //OpenContainer();                    
+                //}
             }
         }
 
         private ObjectContainer dbContainer;
-
+        
         #region Singleton
-        static readonly DataStoreContainer instance = new DataStoreContainer();
+        static readonly Db4oRepositoryContainer instance = new Db4oRepositoryContainer();
 
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
-        static DataStoreContainer()
+        static Db4oRepositoryContainer()
         {
         }
 
-        DataStoreContainer()
+        Db4oRepositoryContainer()
         {
-            Db4o.Configure().CallConstructors(false);
-
-            Db4o.Configure().ObjectClass(typeof(MethodElement)).CascadeOnUpdate(true);
-            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.Block)).CascadeOnActivate(true);
-            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.FilterAction)).CascadeOnActivate(true);
-            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.LinkedList)).CascadeOnActivate(true);
-            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.LinkedListEntry)).CascadeOnActivate(true);
-            Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.MethodBody)).CascadeOnActivate(true);
-    
-            // Indexes
-            Db4o.Configure().ObjectClass(typeof(MethodElement)).ObjectField("_parentTypeId").Indexed(true);
-            Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
-
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_id").Indexed(true);
-            Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_fullName").Indexed(true);
+            Db4oConfiguration.Configure();
         }
 
         /// <summary>
         /// Gets the instance.
         /// </summary>
         /// <value>The instance.</value>
-        public static DataStoreContainer Instance
+        public static Db4oRepositoryContainer Instance
         {
             get
             {
@@ -102,27 +88,36 @@ namespace Composestar.Repository
         /// <remarks>
         /// Destructor, closes the database file
         /// </remarks> 
-        ~DataStoreContainer()
+        ~Db4oRepositoryContainer()
         {
-            CloseDatabase();
+            CloseContainer();
             dbContainer.Dispose(); 
         }
         #endregion
 
+        private bool _debugMode = false;
+
+        public bool DebugMode
+        {
+            get { return _debugMode; }
+            set { _debugMode = value; }
+        }
+        
         /// <summary>
         /// Opens the database.
         /// Setting the repository filename has the same effect.
         /// </summary>        
-        public void OpenDatabase()
+        public void OpenContainer(String fileName)
         {
-            adjustClassNames();
-            dbContainer = Db4o.OpenFile(RepositoryFileName);
+            RepositoryFileName = fileName;
+            if (File.Exists(fileName)) adjustClassNames();
+            dbContainer = Db4o.OpenFile(fileName);
         }
 
         /// <summary>
         /// Closes the database.
         /// </summary>
-        public void CloseDatabase()
+        public void CloseContainer()
         {
             if (dbContainer != null)
                 dbContainer.Close();
@@ -135,7 +130,7 @@ namespace Composestar.Repository
         {
             CheckForOpenDatabase();
 
-            CloseDatabase();
+            CloseContainer();
 
             File.Delete(_yapFileName);
         }
@@ -173,7 +168,7 @@ namespace Composestar.Repository
             }
             objectContainer.Close();
         }
-
+        
         /// <summary>
         /// Store the object.
         /// </summary>
@@ -221,5 +216,24 @@ namespace Composestar.Repository
                 throw new ArgumentException(Properties.Resources.DatabaseNotOpen, "RepositoryFilename");
 
         }
+
+        public bool TypeExists(string fullName, string fromDLL) 
+        {
+            Query query = dbContainer.Query();
+            query.Constrain(typeof(Composestar.Repository.LanguageModel.TypeElement));
+            query.Descend("_fullName").Constrain(fullName);
+            query.Descend("_fromDLL").Constrain(fromDLL);
+            ObjectSet result = query.Execute();
+
+            if (result.Count == 1) return true;
+
+            return false;
+        }
+
+        public com.db4o.query.Query Query()
+        {
+            return dbContainer.Query();
+        }
+
     }
 }

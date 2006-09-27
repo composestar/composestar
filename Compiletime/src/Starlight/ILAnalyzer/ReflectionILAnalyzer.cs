@@ -17,7 +17,7 @@ namespace Composestar.StarLight.ILAnalyzer
     /// <summary>
     /// An implementation of the IILAnalyzer working with the default dotNET reflection.
     /// </summary>
-    public class ReflectionILAnalyzer : IILAnalyzer
+    public class ReflectionILAnalyzer
     {
 
         private string _fileName;
@@ -41,6 +41,11 @@ namespace Composestar.StarLight.ILAnalyzer
 
             _isInitialized = true;
 
+        }
+
+        public int UnresolvedTypeCount
+        {
+            get { return 0; }
         }
 
         /// <summary>

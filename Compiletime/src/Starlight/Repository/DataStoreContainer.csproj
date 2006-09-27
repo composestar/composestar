@@ -33,17 +33,28 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\binaries\db4o\db4o.dll</HintPath>
     </Reference>
+    <Reference Include="Db4oTools, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\binaries\db4o\Db4oTools.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStoreContainer.cs" />
+    <Compile Include="CacheAccess.cs" />
+    <Compile Include="CacheContainerInterface.cs" />
+    <Compile Include="Db4oContainers\Db4oCacheContainer.cs" />
+    <Compile Include="RepositoryContainerInterface.cs" />
+    <Compile Include="Db4oContainers\Db4oRepositoryContainer.cs" />
+    <Compile Include="Db4oContainers\Db4oConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RepositoryAccess.cs" />
+    <Compile Include="RepositoryAccess.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\CoreServices\StarLight.CoreServices.csproj">
