@@ -365,6 +365,9 @@ namespace Composestar.StarLight.ILAnalyzer
 
         public void ProcessUnresolvedTypes()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            
             //RepositoryAccess.OpenDatabase();
             //RepositoryAccess cache = new RepositoryAccess(Repository.Db4oContainers.Db4oCacheContainer.Instance);
 
@@ -468,6 +471,9 @@ namespace Composestar.StarLight.ILAnalyzer
 
             //cache.CloseContainer();
             ////RepositoryAccess.CloseDatabase();
+
+            sw.Stop();
+            _lastDuration = sw.Elapsed; 
         }
        
         /// <summary>
