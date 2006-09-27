@@ -38,18 +38,18 @@
 	</target>
 	
 	<!-- build -->	
-	<target name="build" depends="init_local,build_vs2003,build_vs2005" unless="ignore.plugin" />
+	<target name="build" depends="init_local,build_vs2003,build_vs2005" unless="ignore.plugin" description="compile the plugins" />
 	
 	<target name="build_vs2003" depends="init_local" if="plugin.vs2003">
 		<devenv solution="${basedir}\VSAddin\ComposestarVSAddin.sln" />
 	</target>
 	
 	<target name="build_vs2005" depends="init_local" if="plugin.vs2005">
-		
+	<!-- ... -->		
 	</target>
 	
 	<!-- install -->	
-	<target name="install" depends="init_local,install_vs2003,install_vs2005" unless="ignore.plugin" />
+	<target name="install" depends="init_local,install_vs2003,install_vs2005" unless="ignore.plugin" description="install the plugins" />
 	
 	<target name="install_vs2003" depends="init_local,build_vs2003" if="plugin.vs2003">
 		<copy todir="${composestar.installdir}${file.separator}ComposestarVSAddin">
@@ -61,7 +61,7 @@
 	</target>
 	
 	<target name="install_vs2005" depends="init_local,build_vs2005" if="plugin.vs2005">
-	
+	<!-- ... -->
 	</target>
 
 </project>

@@ -17,8 +17,7 @@
 	The Compose* DotNET Compiletime
 	</description>
 
-	<target name="clean" depends="init">
-		<!--<make target="clean" />-->
+	<target name="clean" depends="init" description="clean the compilation results">
 		<delete dir="${out.build}" />
 		<delete dir="${out.dist}" />
 		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" action="clean" />
@@ -51,9 +50,7 @@
 		<mkdir dir="${out.dist}" />
 	</target>
 	
-	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet">
-		<!--<make target="build" />-->
-	</target>
+	<target name="build" depends="init_local,antlr,compile_java,jar,compile_dotnet" description="compile the .NET compiletime" />
 	
 	<target name="antlr">
 		<!--
@@ -99,7 +96,7 @@
 		<jar destfile="${out.jar.dotnet}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 	
-	<target name="install" depends="build">
+	<target name="install" depends="build" description="Install the .NET compiletime">
 		<copy todir="${composestar.installdir}${file.separator}Binaries">
 			<fileset dir="${out.dist}" />
 		</copy>

@@ -19,46 +19,34 @@
 	</description>
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
-		<delete file="${build.dotnet}${file.separator}findbugs-result.html" />
+		<delete file="${build.dotnet}${file.separator}findbugs-result.*" />
+		<delete file="${build.dotnet}${file.separator}checkstyle-result.*" />
 		<ant target="clean" dir="Compiletime" />
 		<ant target="clean" dir="Runtime" />
 		<ant target="clean" dir="Examples" />
 	</target>
 	
 	
-	<target name="build" depends="init" description="Build the .Net implementation of Compose*">
+	<target name="build" description="Build the .Net implementation of Compose*">
 		<ant target="build" dir="Compiletime" />
 		<ant target="build" dir="Runtime" />
 	</target>
 	
-	<target name="plugin" depends="init" description="Build the plugin for the IDE">
+	<target name="plugin" description="Build the plugin for the IDE">
 		<ant target="build" dir="Plugin" />
 	</target>
 	
-	<target name="test" depends="init" description="Execute system tests">
+	<target name="test" description="Execute system tests">
 		<ant target="test" dir="Testing" />
 	</target>
 	
-	<!--
-	<target name="systemtest" depends="init">
-		<condition property="systemtest.config" value="config.ini">
-			<not>
-				<isset property="systemtest.config" />
-			</not>
-		</condition>
-		<exec executable="${build.dotnet}${file.separator}testing${file.separator}SystemTest${file.separator}SystemTest.exe" dir="${build.dotnet}${file.separator}testing${file.separator}SystemTest${file.separator}" output="${build.dotnet}${file.separator}SystemTest.log">
-			<arg value="${systemtest.config}" />
-		</exec>
-	</target>
-	-->
-	
-	<target name="install" depends="build" description="Install the result">
+	<target name="install" description="Install the result">
 		<ant target="install" dir="Compiletime" />
 		<ant target="install" dir="Runtime" />
 		<ant target="install" dir="Plugin" />
 	</target>
 	
-	<target name="uninstall" depends="init" description="Clean up and installation">
+	<target name="uninstall" description="Clean up and installation">
 		<!--<ant target="uninstall" dir="Compiletime" />-->
 		<ant target="uninstall" dir="Runtime" />
 		<!--<ant target="uninstall" dir="Plugin" />-->

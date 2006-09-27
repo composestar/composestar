@@ -17,7 +17,7 @@
 	The Compose* DotNET Runtime
 	</description>
 
-	<target name="clean" depends="init">		
+	<target name="clean" depends="init" description="clean the compilation results">		
 		<delete dir="${out.dist}" />
 		<antcall target="clean_devenv" />
 	</target>	
@@ -30,7 +30,7 @@
 		<mkdir dir="${out.dist}" />
 	</target>
 	
-	<target name="build" depends="init_local">
+	<target name="build" depends="init_local" description="build the .net runtime">
 		<antcall target="build_devenv" />
 	</target>
 	
@@ -44,7 +44,7 @@
 		</copy>
 	</target>
 	
-	<target name="install" depends="build">
+	<target name="install" depends="build" description="install the .net runtime">
 		<copy todir="${composestar.installdir}${file.separator}Binaries">
 			<fileset dir="${out.dist}" />
 		</copy>
@@ -60,7 +60,7 @@
 		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/AntlrDotNet.dll" />
 	</target>
 	
-	<target name="uninstall" depends="init">
+	<target name="uninstall" depends="init" description="uninstall the .net runtime">
 		<echo message="Unregistering assemblies" />
 		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCore.dll" />
 		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCoreDotNET.dll" />

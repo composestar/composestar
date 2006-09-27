@@ -32,7 +32,7 @@ public class CstarTest extends Task
 	protected boolean failOnFirstError = false;
 
 	/**
-	 * Total tests executed 
+	 * Total tests executed
 	 */
 	protected int cntTotal;
 

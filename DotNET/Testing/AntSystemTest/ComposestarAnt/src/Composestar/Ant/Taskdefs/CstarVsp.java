@@ -43,8 +43,8 @@ public class CstarVsp extends Task
 	protected boolean failOnFirstError = false;
 
 	/**
-	 * The Xslt document to convert the VisualStudio projects
-	 * to BuildConfiguration.xml
+	 * The Xslt document to convert the VisualStudio projects to
+	 * BuildConfiguration.xml
 	 */
 	protected String conversionXslt;
 
@@ -65,12 +65,12 @@ public class CstarVsp extends Task
 	protected String antHelperPath;
 
 	/**
-	 * Classpath for compose*; required to build the project 
+	 * Classpath for compose*; required to build the project
 	 */
 	protected FileSet cstarJars;
 
 	/**
-	 * Total projects examined 
+	 * Total projects examined
 	 */
 	protected int cntTotal;
 
@@ -134,7 +134,7 @@ public class CstarVsp extends Task
 		cstarJars.setDir(new File(composestarBase + File.separator + "Binaries"));
 		NameEntry inc = cstarJars.createInclude();
 		inc.setName("*.jar");
-		
+
 		registerCstarAsms();
 
 		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
@@ -157,14 +157,14 @@ public class CstarVsp extends Task
 			throw new BuildException("Compilation of " + cntFail + " project(s) failed.");
 		}
 	}
-	
+
 	protected void registerCstarAsms()
-	{		
+	{
 		FileSet cstarAsms = new FileSet();
 		cstarAsms.setDir(new File(composestarBase + File.separator + "Binaries"));
 		NameEntry inc = cstarAsms.createInclude();
 		inc.setName("*.dll");
-		
+
 		DirectoryScanner ds = cstarAsms.getDirectoryScanner(this.getProject());
 		String[] files = ds.getIncludedFiles();
 		for (int i = 0; i < files.length; i++)
