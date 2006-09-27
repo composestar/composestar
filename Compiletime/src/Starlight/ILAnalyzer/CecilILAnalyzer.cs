@@ -187,7 +187,7 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 i = i + 1;
                 if (i%40==0 || i<40) Console.WriteLine(String.Format("Processing type ({0}/{1}): {2}", i, _targetAssemblyDefinition.MainModule.Types.Count, type.FullName));
-                TypeElement ti = new TypeElement();
+                TypeElement ti = new TypeElement(System.Guid.NewGuid().ToString());
                 
                 // Name
                 ti.Name = type.Name;
@@ -244,7 +244,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 foreach (FieldDefinition field in type.Fields)
                 {
                     // Create a new field element
-                    FieldElement fe = new FieldElement();
+                    FieldElement fe = new FieldElement(System.Guid.NewGuid().ToString(), ti.Id);
                     fe.Name = field.Name;
                     fe.Type = field.FieldType.FullName;
 
@@ -269,7 +269,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 foreach (MethodDefinition method in type.Methods)
                 {
                     // Create a new method element
-                    MethodElement mi = new MethodElement();    
+                    MethodElement mi = new MethodElement(System.Guid.NewGuid().ToString());    
                     mi.Signature = method.ToString(); 
                     mi.Name = method.Name;                    
                     mi.ReturnType = method.ReturnType.ReturnType.ToString();
@@ -343,14 +343,14 @@ namespace Composestar.StarLight.ILAnalyzer
             // Perhaps unresolved types are already in the local datastore from a previous run
             //Console.WriteLine("Resolving types from datastore...");
             IList<String> types = new List<String>(UnresolvedTypes);
-            //foreach (String type in types)
-            //{
-            //    TypeElement te = RepositoryAccess.GetTypeElementByAQFN(type);
-            //    if (te != null)
-            //    {
-            //        UnresolvedTypes.Remove(type);
-            //    }
-            //}
+            foreach (String type in types)
+            {
+                TypeElement te = RepositoryAccess.GetTypeElementByAFQN(type);
+                if (te != null)
+                {
+                    UnresolvedTypes.Remove(type);
+                }
+            }
 
             sw.Stop();
             _lastDuration = sw.Elapsed; 
