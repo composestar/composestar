@@ -6,6 +6,6 @@ package Composestar.Repository.LanguageModel;
 public interface IRepositoryElement
 {
 	/** @property */
-	public int get_Id();
+	public String get_Id();
 
 }

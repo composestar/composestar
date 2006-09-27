@@ -2,27 +2,22 @@ package Composestar.Repository.LanguageModel;
 
 public class FieldElement implements IRepositoryElement
 {
-	private int _id;
-	private int _parentTypeId;
+	private String _id;
+	private String _parentTypeId;
 	private String _name = "";
 	private String _type = "";
 	private boolean _isPrivate;  
 	private boolean _isPublic; 
 	private boolean _isStatic;
 	
-	public FieldElement()
+	public FieldElement(String id, String parentTypeId)
 	{
-		_id = this.hashCode();
-	}
-	
-	public FieldElement(int parentTypeId)
-	{
-		super();
+		_id = id;
 		_parentTypeId = parentTypeId;
 	}
 
 	/** @property */
-	public int get_Id() { return _id; }
+	public String get_Id() { return _id; }
 
 	/** @property */
 	public String get_Name()
@@ -49,13 +44,13 @@ public class FieldElement implements IRepositoryElement
 	}
 
 	/** @property */
-	public void set_ParentTypeId(int value)
+	public void set_ParentTypeId(String value)
 	{
 	    _parentTypeId = value; 
 	}
 	
 	/** @property */
-	public int get_ParentTypeId() 
+	public String get_ParentTypeId() 
 	{
 	    return _parentTypeId; 
 	}

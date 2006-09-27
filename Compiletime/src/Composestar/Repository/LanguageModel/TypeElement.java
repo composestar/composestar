@@ -6,12 +6,11 @@ package Composestar.Repository.LanguageModel;
  */
 public class TypeElement implements IRepositoryElement
 {
-	private int _id;
+	private String _id;
 	private String _name = "";
 	private String _fullName = "";
 	private String _AFQN = "";
 	private String _baseType = "";
-	//private AssemblyElement _assemblyElement;
 	private String _namespace = "";
 	private boolean _isAbstract;
 	private boolean _isInterface;
@@ -26,10 +25,9 @@ public class TypeElement implements IRepositoryElement
 	private String module; // TODO: object ???????
 	private String _fromDLL = "";
 	
-	public TypeElement() 
+	public TypeElement(String id) 
 	{
-		_id = this.hashCode();
-		//_assemblyElement = new AssemblyElement();
+		_id = id;
 	}
 
 	private String _implementedInterface;
@@ -48,7 +46,7 @@ public class TypeElement implements IRepositoryElement
 
 
 	/** @property */
-	public int get_Id() { return _id; }
+	public String get_Id() { return _id; }
 
 	/** @property */
 	public String get_Name()

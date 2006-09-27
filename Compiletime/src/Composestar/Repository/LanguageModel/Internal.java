@@ -73,16 +73,16 @@ public class Internal
 
 
 
-	private int _parentTypeId;
+	private String _parentTypeId;
 
 	/** @property */
-	public void set_ParentTypeId(int value)
+	public void set_ParentTypeId(String value)
 	{
 		_parentTypeId = value;
 	}
 
 	/** @property */
-	public int get_ParentTypeId()
+	public String get_ParentTypeId()
 	{
 		return _parentTypeId;
 	}
