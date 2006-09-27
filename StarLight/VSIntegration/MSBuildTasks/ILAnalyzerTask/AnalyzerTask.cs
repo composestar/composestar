@@ -50,7 +50,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AnalyzerTask"/> class.
         /// </summary>
-        public AnalyzerTask()
+        public AnalyzerTask() : base(Properties.Resources.ResourceManager)
         {
             analyzer = new CecilILAnalyzer();
         }
@@ -68,8 +68,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 
+            RegistrySettings rs = new RegistrySettings();
+            if (!rs.ReadSettings())
+            {
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");  
+                return false;
+            }
+
             NameValueCollection config = new NameValueCollection();
             config.Add("RepositoryFilename", RepositoryFilename);
+            config.Add("CacheFolder", rs.InstallFolder);
              
             foreach (ITaskItem item in AssemblyFiles)
             {
@@ -99,18 +107,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Accessing cache for {0} unresolved types", analyzer.UnresolvedTypes.Count);
                 int unresolvedCount = analyzer.UnresolvedTypes.Count;
                 analyzer.ProcessUnresolvedTypes();
-                Log.LogMessage("Cache lookup summary: {0} of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
+                Log.LogMessage("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
 
                 if (analyzer.UnresolvedTypes.Count > 0)
                 {
-                    Log.LogWarning("Unable to resolve {0} types.", analyzer.UnresolvedTypes.Count);
+                    Log.LogError("Unable to resolve {0} types.", analyzer.UnresolvedTypes.Count);
                 }
             }
            
             // Close the analyzer
             analyzer.Close();
  
-            return true;
+            return !Log.HasLoggedErrors;
 
         }
 
