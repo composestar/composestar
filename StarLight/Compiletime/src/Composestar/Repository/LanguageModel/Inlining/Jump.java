@@ -4,9 +4,9 @@ import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 
 public class Jump extends InlineInstruction implements IVisitable
 {
-	private Label target;
+	private int target;
 
-	public Jump(Label target)
+	public Jump(int target)
 	{
 		this.target = target;
 	}
@@ -15,7 +15,7 @@ public class Jump extends InlineInstruction implements IVisitable
      * @return the target
 	 * @property 
 	 */
-	public Label get_Target()
+	public int get_Target()
 	{
 		return target;
 	}
@@ -27,6 +27,6 @@ public class Jump extends InlineInstruction implements IVisitable
 	}
     
     public String toString(){
-        return "jump " + target.get_Id() + "\n";
+        return "jump " + target + "\n";
     }
 }

@@ -470,12 +470,8 @@ public class StarLightEmitterRunner implements CTCommonModule
          * @see Composestar.Core.INLINE.model.Visitor#visitJump(Composestar.Core.INLINE.model.Jump)
          */
         public Object visitJump(Jump jump){
-            Composestar.Repository.LanguageModel.Inlining.Label newLabel =
-                new Composestar.Repository.LanguageModel.Inlining.Label( 
-                        jump.getTarget().getId() );
-            
             Composestar.Repository.LanguageModel.Inlining.Jump newJump = 
-                new Composestar.Repository.LanguageModel.Inlining.Jump( newLabel );
+                new Composestar.Repository.LanguageModel.Inlining.Jump( jump.getTarget().getId() );
             
             setLabel( jump, newJump );
             
