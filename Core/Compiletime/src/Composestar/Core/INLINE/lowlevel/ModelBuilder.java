@@ -132,7 +132,7 @@ public class ModelBuilder implements CTCommonModule{
         for (int i=0; i<innerCallCheckTasks.size(); i++){
             ContextInstruction instruction = 
                 (ContextInstruction) innerCallCheckTasks.elementAt(i);
-            if (!inlinedMethodSet.contains( instruction.getMethod() ) ){
+            if (!inlinedMethodSet.contains( new Integer( instruction.getCode() ) ) ){
                 instruction.setType( ContextInstruction.REMOVED );
             }
         }
@@ -151,7 +151,8 @@ public class ModelBuilder implements CTCommonModule{
         Block inlineBlock = builderStrategy.getInlineBlock();
         if ( inlineBlock != null ){
             inputFilterCode.put( methodInfo, inlineBlock );
-            inlinedMethodSet.add( methodInfo );
+            inlinedMethodSet.add( 
+                    new Integer( builderStrategy.getMethodId( methodInfo ) ) );
         }
 
 
