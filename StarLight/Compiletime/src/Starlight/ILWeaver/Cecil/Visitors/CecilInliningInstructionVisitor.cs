@@ -216,6 +216,7 @@ namespace Composestar.StarLight.ILWeaver
         private VariableDefinition _objectLocal;
         private VariableDefinition _typeLocal;
         private VariableDefinition _jpcLocal;
+        private VariableDefinition _actionStoreLocal;
 
         /// <summary>
         /// Creates the object ordinal.
@@ -229,6 +230,20 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             return _objectLocal;
+        }
+
+        /// <summary>
+        /// Creates the action store local.
+        /// </summary>
+        /// <returns></returns>
+        private VariableDefinition CreateActionStoreLocal()
+        {
+            if (_actionStoreLocal == null)
+            {
+                _actionStoreLocal = CreateLocalVar(typeof(FilterContext));
+            }
+
+            return _actionStoreLocal;
         }
 
         /// <summary>
@@ -359,7 +374,7 @@ namespace Composestar.StarLight.ILWeaver
                 VariableDefinition objectVar = CreateObjectLocal();
                 VariableDefinition typeVar = CreateTypeLocal();
 
-                for (int i = numberOfArguments; i >= 0; i--) // We start at the top, because the last element is at to top of the stack
+                for (int i = 1; i < numberOfArguments; i++) 
                 {
                     // Duplicate the value
                     Instructions.Add(Worker.Create(OpCodes.Dup));
@@ -425,7 +440,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Retrieve the arguments
             //               
-            for (int i = numberOfArguments; i > 0; i--) // We start at the top, because the last element is at to top of the stack
+            for (int i = 0; i < numberOfArguments; i++) 
             {
                 // Load jpc
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -460,7 +475,7 @@ namespace Composestar.StarLight.ILWeaver
             AddInstructionList(conditionsVisitor.Instructions);
 
             // Add branch code
-            branch.Label = 8000 + numberOfBranches;
+            branch.Label = 8000 + numberOfBranches;   // TODO check to correctness of this constructions (Michiel)
             numberOfBranches++;
             Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }
@@ -660,11 +675,19 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Br, jumpToInstruction));
         }
 
+        /// <summary>
+        /// Visits the skip action. No code is needed for this action.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
         public void VisitSkipAction(FilterAction filterAction)
         {
             // No code needed
         }
 
+        /// <summary>
+        /// Visits the substitution action. No code is needed for this action.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
         public void VisitSubstitutionAction(FilterAction filterAction)
         {
             // No code needed
@@ -676,16 +699,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="switchInstr"></param>
         public void VisitSwitch(Switch switchInstr)
         {
-            // Add condition code
-            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
-            conditionsVisitor.Method = Method;
-            conditionsVisitor.Worker = Worker;
-            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
-            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
-            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)switchInstr.Expression).Accept(conditionsVisitor);
+      
+            // TODO process contextexpressions
 
-            // Add the instructions containing the conditions to the IL instruction list
-            AddInstructionList(conditionsVisitor.Instructions);
 
             // The labels to jump to
             List<Instruction> caseLabels = new List<Instruction>();
@@ -704,16 +720,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="whileInstr"></param>
         public void VisitWhile(While whileInstr)
         {
-            // Add condition code
-            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
-            conditionsVisitor.Method = Method;
-            conditionsVisitor.Worker = Worker;
-            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
-            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
-            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)whileInstr.Expression).Accept(conditionsVisitor);
 
-            // Add the instructions containing the conditions to the IL instruction list
-            AddInstructionList(conditionsVisitor.Instructions);
+            // TODO process contextexpressions
 
             // Add branch code
             whileInstr.Label = 8000 + numberOfBranches;
@@ -753,6 +761,62 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="caseInstr"></param>
         public void VisitCase(Case caseInstr)
         {
+            // TODO visit case construction
+        }
+
+        /// <summary>
+        /// This ContextInstruction indicates that an actionstore needs to be created. 
+        /// We use the FilterContext object as the actionstore, so when this contextinstruction is encountered, 
+        /// a new instance of the FilterContext object needs to be created:
+        /// <code>
+        /// FilterContext actionStore = new FilterContext();
+        /// </code> 
+        /// </summary>
+        /// <remarks>
+        /// This ContextInstruction only occurs when there might actually be an action that needs to be stored. 
+        /// When no action will ever be stored in the filtercode, this ContextInstruction is not present.
+        /// </remarks> 
+        /// <param name="contextInstruction">The context instruction.</param>
+        public void VisitCreateActionStore(ContextInstruction contextInstruction)
+        {
+            // Get an actionstore local
+            VariableDefinition asVar = CreateActionStoreLocal();
+
+            //
+            // Create new FilterContext object
+            //
+
+            // Call the constructor
+            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(FilterContext).GetConstructors()[0])));
+            
+            // Store the local
+            Instructions.Add(Worker.Create(OpCodes.Stloc, asVar));
+        }
+
+        /// <summary>
+        /// This ContextInstruction indicates that an action needs to be stored. 
+        /// The action that needs to be stored is represented by an integer id, 
+        /// so actually only this id needs to be stored. 
+        /// This id is present in the code-field of ContextInstruction. 
+        /// So the code that needs to be created for this instructions is:
+        /// <code>
+        /// actionStore.storeAction( <contextinstruction.Code> );
+        /// </code>
+        /// </summary>
+        /// <param name="contextInstruction">The context instruction.</param>
+        public void VisitStoreAction(ContextInstruction contextInstruction)
+        {
+            // Get an actionstore local
+            VariableDefinition asVar = CreateActionStoreLocal();
+
+            // Load the id onto the stack
+            Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
+
+            // Load the local
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
+
+            // Call the StoreAction method
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("StoreAction", new Type[] { typeof(int) }))));
 
         }
 

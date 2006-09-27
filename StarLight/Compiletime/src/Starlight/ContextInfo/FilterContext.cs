@@ -20,7 +20,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterContext"/> class.
         /// </summary>
-        private FilterContext()
+        public FilterContext()
         {
             _storedActions = new Stack<int>();   
         }

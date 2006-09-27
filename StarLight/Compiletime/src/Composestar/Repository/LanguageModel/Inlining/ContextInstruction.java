@@ -58,6 +58,10 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 			visitor.VisitCheckInnerCall(this);
 		else if (type == RESET_INNER_CALL)
 			visitor.VisitResetInnerCall(this);
+		else if (type == CREATE_ACTION_STORE)
+			visitor.VisitCreateActionStore(this);
+		else if (type == STORE_ACTION)
+			visitor.VisitStoreAction(this);
 
 		if (innerBlock != null)
 			innerBlock.Accept(visitor); 		

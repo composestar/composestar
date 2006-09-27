@@ -23,4 +23,7 @@ public interface IVisitor
 	void VisitWhileEnd(While whileInstr);
     void VisitSwitch(Switch switchInstr);
     void VisitCase(Case caseInstr);
+	void VisitCreateActionStore(ContextInstruction contextInstruction);
+	void VisitStoreAction(ContextInstruction contextInstruction);
+
 }
