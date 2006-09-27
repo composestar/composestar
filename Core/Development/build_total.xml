@@ -126,7 +126,9 @@
 	</target>
 	
 	<!-- do everything -->
-	<target name="all" depends="clean,build,install,test,qa" description="Recompile, install and test the whole system." />
+	<target name="all" depends="clean,build,install,test,qa" description="Recompile, install and test the whole system." />	
+	<target name="required" depends="clean,build,install,test" description="Perform the required actions before allowing a commit." />	
+	<target name="cleaninstall" depends="clean,build,install" description="Clean, compile, and then install" />
 	
 	<target name="nightlybuild" description="Execute the nightly build">
 		<tstamp />
@@ -143,40 +145,44 @@ If the build failed the cause will be listed at the end of the report.
 	</target>
 	
 	<!-- task selector -->
-	<!-- fancy selection -->
-	
+	<!-- fancy selection -->	
 	<target name="select">	
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar" />
 		<antmenu image="${basedir}/logo.gif" title="Compose* Build">
 		
 			<antMenuItem name="Advanced" >
+				<antMenuItem name="Clean" target="clean" />		
 				<antMenuItem name="Build">
+					<antMenuItem name="Build all" target="build" />
+					<antMenuItem name="Rebuild all" target="rebuild" />
+
 					<antMenuItem name="Core" target="core" />
 					<antMenuItem name="DotNET" target="dotnet" />
-					<antMenuItem name="Java" target="java" />
-					<antMenuItem name="C" target="c" />
+					<!--<antMenuItem name="Java" target="java" />
+					<antMenuItem name="C" target="c" />-->
 				</antMenuItem>
 				<antMenuItem name="Plugin">
 					<antMenuItem name="DotNET" target="plugin_dotnet" />
 				</antMenuItem>
-				<antMenuItem name="Uninstall" target="uninstall" />
+				<antMenuItem name="Installation">
+					<antMenuItem name="Install" target="install" />
+					<antMenuItem name="Uninstall" target="uninstall" />
+				</antMenuItem>
+				<antMenuItem name="Run tests" target="test" />
+				<antMenuItem name="QA">
+					<antMenuItem name="All QA targets" target="qa" />
+					<antMenuItem name="FindBugs" target="findbugs" />
+					<antMenuItem name="CheckStyle" target="checkstyle" />
+				</antMenuItem>
 			</antMenuItem>
 					
-			<link label="Clean the whole project" target="clean" />
-			<link label="Build the whole project" target="build" />
-			<link label="Clean &amp; Build" target="rebuild" />
-			<link label="Install" target="install" />
-			<link label="Clean install" target="cleaninstall" />
-			<link label="Run Findbugs" target="findbugs" />
-			<link label="Run the system test" target="test" />
+			<link label="Rebuild" target="rebuild" />
+			<link label="Clean install" target="cleaninstall" />			
+			<link label="Clean, build, install &amp; test" target="required" />
 			
 			<separator />
 			
-			<!--<link label="Advanced" target="selector_advanced" />-->
-		
 			<link label="Cancel" target="cancel" />
 		</antmenu>
 	</target>
-
-	<target name="cleaninstall" depends="init,clean,build,install" description="Clean, compile, and then install" />
 </project>
