@@ -77,8 +77,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     Log.LogMessage("Analyzing file {0}", item.ToString());
 
-                    analyzer.Initialize(item.ToString(), config);
-                    IList<TypeElement> ret = analyzer.ExtractTypeElements();
+                    analyzer.Initialize(config);
+                    IList<TypeElement> ret = analyzer.ExtractTypeElements(item.ToString());
 
                     Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);
                 }

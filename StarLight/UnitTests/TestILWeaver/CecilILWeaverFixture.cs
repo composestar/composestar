@@ -27,6 +27,7 @@ namespace TestILWeaver
     [TestClass]
     public class CecilILWeaverFixture
     {
+        private const string installationFolder = "C:\\Temp";
         private const string FilenameWoven = "TestTargetWoven.exe";
         private const string FilenameSource = "ConsoleTestTarget.exe";
 
@@ -87,13 +88,14 @@ namespace TestILWeaver
 
         [TestMethod]
         [DeploymentItem("ConsoleTestTarget.exe")]
-        public void AnalyzeAndWeave()
+        public void AnalyzeAndWeaveInternals()
         {
             NameValueCollection config = new NameValueCollection();
             config.Add("OutputImagePath", Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Woven"));
             config.Add("ShouldSignAssembly", "false");
             config.Add("OutputImageSNK", "");
             config.Add("RepositoryFilename", CreateFullPath("starlight.yap"));
+            config.Add("InstallFolder", installationFolder);
 
             Directory.CreateDirectory(config["OutputImagePath"]);
             
@@ -102,6 +104,7 @@ namespace TestILWeaver
             
             // Run the analyzer
             IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            analyzer.ProcessUnresolvedTypes();
             analyzer.Close();
  
             // Change the types
@@ -147,6 +150,49 @@ namespace TestILWeaver
             //weaver.Close(); 
         }
 
+        [TestMethod]
+        [DeploymentItem("ConsoleTestTarget.exe")]
+        public void AnalyzeAndWeaveExternals()
+        {
+            NameValueCollection config = new NameValueCollection();
+            config.Add("OutputImagePath", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Woven"));
+            config.Add("ShouldSignAssembly", "false");
+            config.Add("OutputImageSNK", "");
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap"));
+            config.Add("InstallFolder", installationFolder);
+
+            Directory.CreateDirectory(config["OutputImagePath"]);
+
+            CecilILAnalyzer analyzer = new CecilILAnalyzer();
+            analyzer.Initialize(FilenameSource, config);
+
+            // Run the analyzer
+            IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            analyzer.ProcessUnresolvedTypes();
+            analyzer.Close();
+
+            // Change the types
+            Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess(CreateFullPath("starlight.yap"));
+
+            TypeElement te = null;
+            External e;
+            #region Add external '??' (String) to ??
+                //te = repository.GetTypeElement("ConsoleTestTarget.HelloWorld");
+                //i = new Internal();
+                //i.ParentTypeId = te.Id;
+                //i.Name = "HelloWorldStringInternal";
+                //i.NameSpace = "ConsoleTestTarget.HelloWorld";
+                //i.Type = "System.String, mscorlib";
+                //Composestar.Repository.DataStoreContainer.Instance.StoreObject(i);
+            #endregion
+
+
+            // Run the weaver
+            CecilILWeaver weaver = new CecilILWeaver();
+            weaver.Initialize(FilenameSource, config);
+            weaver.DoWeave(); // Place debugger here or perform Asserts
+            weaver.Close();
+        }
 
         [TestMethod]
         [DeploymentItem("ConsoleTestTarget.exe")]
@@ -156,7 +202,8 @@ namespace TestILWeaver
             config.Add("OutputImagePath", AppDomain.CurrentDomain.BaseDirectory);
             config.Add("ShouldSignAssembly", "false");
             config.Add("OutputImageSNK", "");
-            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
+            config.Add("RepositoryFilename", CreateFullPath("starlight.yap"));
+            config.Add("InstallFolder", installationFolder);
             
             CecilILAnalyzer analyzer = new CecilILAnalyzer();
             analyzer.Initialize(FilenameSource, config); 

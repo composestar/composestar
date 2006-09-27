@@ -58,7 +58,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverBuilderConfigurator());
             svcContainer.AddService(typeof(CecilWeaverConfiguration), CecilWeaverConfiguration.CreateDefaultConfiguration("TestTarget.exe"));
-            svcContainer.AddService(typeof(ILanguageModelAccessor), new RepositoryAccess());
+            svcContainer.AddService(typeof(ILanguageModelAccessor), new RepositoryAccess(RepositoryFilename));
             
         }
 
