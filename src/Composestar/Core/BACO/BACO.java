@@ -1,9 +1,5 @@
 package Composestar.Core.BACO;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -41,7 +37,7 @@ public abstract class BACO implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG,"BACO","Adding repository: '" + repository + "'");
 		filesToCopy.add(repository);
 
-		// determine outputPath:
+		// determine output dir:
 		String outputPath = config.getProjects().getProperty("OuputPath");
 		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
 		
@@ -53,8 +49,15 @@ public abstract class BACO implements CTCommonModule
 		Iterator filesIt = filesToCopy.iterator();
 		while (filesIt.hasNext())
 		{
-			String file = (String)filesIt.next();
-			copyFile(file, outputPath);
+			String source = (String)filesIt.next();
+			String dest = outputPath + FileUtils.getFilenamePart(source);			
+			try {
+				Debug.out(Debug.MODE_DEBUG,"BACO","Copying '" + source + "' to '" + dest + "'");
+				FileUtils.copyFile(dest, source);
+			}
+			catch (IOException e) {
+				Debug.out(Debug.MODE_WARNING,"BACO","Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
+			}
 		}
 	}
 
@@ -106,13 +109,13 @@ public abstract class BACO implements CTCommonModule
 	{
 		Configuration config = Configuration.instance();
 		Iterator it = config.getProjects().getProjects().iterator();
-		while(it.hasNext())
+		while (it.hasNext())
 		{
 			Project project = (Project)it.next();
 			
 			// add deps
 			Iterator projectit = project.getDependencies().iterator();
-			while(projectit.hasNext())
+			while (projectit.hasNext())
 			{
 				Dependency dependency = (Dependency)projectit.next();
 				if (isNeededDependency(dependency))
@@ -134,15 +137,14 @@ public abstract class BACO implements CTCommonModule
 
 	protected abstract boolean isNeededDependency(Dependency dependency);
 
-	// FIXME: double with FileUtils.copyFile ?
-	public void copyFile(String file, String dest) throws ModuleException
+/*	public void copyFile(String file, String dest) throws ModuleException
 	{
 		Debug.out(Debug.MODE_DEBUG,"BACO","Copying file: '" + file + "' to '" + dest + "'");
 		try
 		{
 			File in = new File(file);
-			String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator) + 1);
-			File out = new File(dest + tmp);
+		//	String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator) + 1);
+			File out = new File(dest + FileUtils.getFilenamePart(file));
 
 			FileInputStream fis  = new FileInputStream(in);
 			FileOutputStream fos = new FileOutputStream(out);
@@ -158,15 +160,13 @@ public abstract class BACO implements CTCommonModule
 		}
 		catch (FileNotFoundException e)
 		{
-			// FIXME: shouldnt this throw a ModuleException?
 			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not found: file='" + file + "', dest='" + dest + "', msg='" + e.getMessage() + "'");
 			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
 		}
 		catch (IOException e)
 		{
-			// FIXME: shouldnt this throw a ModuleException?
 			Debug.out(Debug.MODE_CRUCIAL,"BACO","IOException:" + e.getMessage());
 			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
 		}
-	}
+	}*/
 }
