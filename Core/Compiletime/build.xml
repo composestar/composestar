@@ -15,8 +15,7 @@
 	
 	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler (YARLY).</description>
 
-	<target name="clean" depends="init">
-		<!--<make target="clean" />-->
+	<target name="clean" depends="init" description="Clean compile results">
 		<delete dir="${out.build}" />
 		<delete dir="${out.dist}" />
 		<delete>
@@ -41,9 +40,7 @@
 		<mkdir dir="${out.dist}" />
 	</target>
 	
-	<target name="build" depends="local_init,antlr,compile,jar">
-		<!--<make target="build" />-->
-	</target>
+	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file" />
 	
 	<target name="antlr">
 		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
@@ -54,7 +51,7 @@
 		</antlr>
 	</target>
 	
-	<target name="compile" depends="antlr">
+	<target name="compile" depends="local_init,antlr">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="Composestar/Core/SECRET/*"/>
@@ -64,7 +61,7 @@
 		</javac>
 	</target>
 	
-	<target name="jar">
+	<target name="jar" depends="compile">
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
@@ -73,7 +70,7 @@
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
 	</target>
 	
-	<target name="install" depends="build">
+	<target name="install" depends="build" description="Install the core files">
 		<copy todir="${composestar.installdir}${file.separator}Binaries">
 			<fileset dir="${out.dist}" />
 		</copy>

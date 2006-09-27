@@ -18,8 +18,7 @@
 	The core of the compose* compiler
 	</description>
 
-	<target name="clean" depends="init">
-		<!--<make target="clean" />-->
+	<target name="clean" depends="init" description="clean up CODER parsers">
 		<delete>
 			<fileset dir="src/CODER/breakpoint/parsers/ltl">
 				<include name="LtlLexer.java" />
@@ -38,9 +37,7 @@
 		</delete>
 	</target>	
 	
-	<target name="build" depends="init,antlr">
-		<!--<make target="build" />-->
-	</target>
+	<target name="build" depends="init,antlr" description="create CODER parsers" />
 	
 	<target name="antlr">
 		<antlr target="src/CODER/breakpoint/parsers/ltl/grammar/ltl.g" outputdirectory="src/CODER/breakpoint/parsers/ltl">

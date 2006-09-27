@@ -126,9 +126,10 @@
 	</target>
 	
 	<!-- do everything -->
-	<target name="all" depends="clean,build,install,test,qa" description="Recompile, install and test the whole system." />	
-	<target name="required" depends="clean,build,install,test" description="Perform the required actions before allowing a commit." />	
-	<target name="cleaninstall" depends="clean,build,install" description="Clean, compile, and then install" />
+	<!-- "install" (should) imply "build" -->
+	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
+	<target name="required" depends="clean,install,test" description="Perform the required actions before allowing a commit." />	
+	<target name="cleaninstall" depends="clean,install" description="Clean, compile, and then install" />
 	
 	<target name="nightlybuild" description="Execute the nightly build">
 		<tstamp />

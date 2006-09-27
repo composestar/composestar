@@ -11,18 +11,19 @@
 	</description>
 
 	<target name="clean" depends="init">
-		<delete file="${build.core}${file.separator}findbugs-result.html" />
+		<delete file="${build.core}${file.separator}findbugs-result.*" />
+		<delete file="${build.core}${file.separator}checkstyle-result.*" />
 		<ant target="clean" dir="Compiletime" />
 		<ant target="clean" dir="Runtime" />
 	</target>
 	
 	
-	<target name="build" depends="init">
+	<target name="build">
 		<ant target="build" dir="Compiletime" />
 		<ant target="build" dir="Runtime" />
 	</target>
 	
-	<target name="install" depends="build">
+	<target name="install">
 		<ant target="install" dir="Compiletime" />
 	</target>
 	
@@ -46,7 +47,7 @@
 		<xslt in="${build.core}${file.separator}checkstyle-result.xml" out="${build.core}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
 
-	<target name="test" depends="init" description="Runs tests.">
+	<target name="test" description="Runs tests.">
 		<ant target="unittest" dir="Compiletime"/>
 	</target>
 	
