@@ -14,8 +14,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import Composestar.Core.Exception.ModuleException;
-
 /**
  * Contains utility methods that have to do with file handling;
  * e.g. converting backslashes in filenames to slashes
@@ -115,24 +113,19 @@ public class FileUtils
 		return new File(filename).delete();
 	}
 
-	public static void copyFile(String dst, String src) throws ModuleException
+	public static void copyFile(String dest, String source) throws IOException
 	{
 		InputStream is = null;
 		OutputStream os = null;
 		try {
-			is = new BufferedInputStream(new FileInputStream(src));
-			os = new BufferedOutputStream(new FileOutputStream(dst));
+			is = new BufferedInputStream(new FileInputStream(source));
+			os = new BufferedOutputStream(new FileOutputStream(dest));
 
 			// transfer bytes from in to out
 			byte[] buf = new byte[65536];
 			int len;
 			while ((len = is.read(buf)) > 0)
-			{
 				os.write(buf, 0, len);
-			}
-		}
-		catch (IOException e) {
-			throw new ModuleException("Error while copying file!:\n" + e.getMessage());
 		}
 		finally {
 			close(is);
@@ -198,15 +191,17 @@ public class FileUtils
 
 	public static String getFilenamePart(String pathToFile)
 	{
-		int pathEnd = pathToFile.lastIndexOf('/');
-		if (pathEnd > 0)
-			return pathToFile.substring(pathEnd + 1);
-		else
-			return pathToFile;
+		return new File(pathToFile).getName();
+//		int pathEnd = pathToFile.lastIndexOf('/');
+//		if (pathEnd > 0)
+//			return pathToFile.substring(pathEnd + 1);
+//		else
+//			return pathToFile;
 	}
 
 	public static String getDirectoryPart(String pathToFile)
 	{
+//		return new File(pathToFile).getParent();
 		int pathEnd = pathToFile.lastIndexOf('/');
 		if (pathEnd > 0)
 			return pathToFile.substring(0, pathEnd);

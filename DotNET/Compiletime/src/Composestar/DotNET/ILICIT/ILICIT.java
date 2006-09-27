@@ -127,13 +127,16 @@ public class ILICIT implements WEAVER
 		Iterator dumIt = dummies.iterator();
 		while (dumIt.hasNext()) 
 		{
-			String dummy = (String)dumIt.next();
-			String asm = FileUtils.fixSlashes(dummy);
+			String source = (String)dumIt.next();
+			String dest = weavePath + File.separator + FileUtils.getFilenamePart(source);
 
-			Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying "+asm+" to Weaver directory");
-
-			File asmFile = new File(asm);
-			FileUtils.copyFile(weavePath + File.separator + asmFile.getName(), asm);
+			try {
+				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + source + "' to Weaver directory");
+				FileUtils.copyFile(dest, source);
+			}
+			catch (IOException e) {
+				throw new ModuleException("Unable to copy dummy: " + e.getMessage(), "ILICIT");
+			}
 		}
 	}
 
@@ -156,9 +159,13 @@ public class ILICIT implements WEAVER
 
 			if (!INCRE.instance().isProcessedByModule(asm,"ILICIT"))
 			{
-				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying " + asm + " to Weaver directory");
-				
-				FileUtils.copyFile(targetFilename, sourceFilename);
+				try {
+					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + asm + "' to Weaver directory");					
+					FileUtils.copyFile(targetFilename, sourceFilename);
+				}
+				catch (IOException e) {
+					throw new ModuleException("Unable to copy assembly: " + e.getMessage(), "ILICIT");
+				}
 				
 				String pdbFile = FileUtils.removeExtension(sourceFilename) + ".pdb";
 				if (FileUtils.fileExist(pdbFile))
@@ -168,7 +175,12 @@ public class ILICIT implements WEAVER
 					String pdbSourceFilename = new File(pdbFile).getAbsolutePath(); 
 					String pdbTargetFilename = FileUtils.removeExtension(targetFilename) + ".pdb";
 					
-					FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
+					try {
+						FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
+					}
+					catch (IOException e) {
+						throw new ModuleException("Unable to copy PDB: " + e.getMessage(), "ILICIT");
+					}
 				}
 				
 				builtAssemblies.add(targetFilename);
