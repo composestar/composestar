@@ -80,7 +80,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     analyzer.Initialize(config);
                     analyzer.ExtractTypeElements(item.ToString());
 
-                    Log.LogMessage("{0} types found in {2} seconds ({1} types not resolved).", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                    Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
                 {
@@ -91,6 +91,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogErrorFromException(ex, true); 
                 }
 
+            }
+
+            // Try to resolve types from the cache
+            if (analyzer.UnresolvedTypes.Count > 0)
+            {
+                Log.LogMessage("Accessing cache for {0} unresolved types", analyzer.UnresolvedTypes.Count);
+                int unresolvedCount = analyzer.UnresolvedTypes.Count;
+                analyzer.ProcessUnresolvedTypes();
+                Log.LogMessage("Cache lookup summary: {0} of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
+
+                if (analyzer.UnresolvedTypes.Count > 0)
+                {
+                    Log.LogWarning("Unable to resolve {0} types.", analyzer.UnresolvedTypes.Count);
+                }
             }
            
             // Close the analyzer
