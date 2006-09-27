@@ -78,9 +78,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogMessage("Analyzing file {0}", item.ToString());
 
                     analyzer.Initialize(config);
-                    IList<TypeElement> ret = analyzer.ExtractTypeElements(item.ToString());
+                    analyzer.ExtractTypeElements(item.ToString());
 
-                    Log.LogMessage("{0} types found in {1} seconds.", ret.Count, analyzer.LastDuration.TotalSeconds);
+                    Log.LogMessage("{0} types found in {2} seconds ({1} types not resolved).", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
                 {
