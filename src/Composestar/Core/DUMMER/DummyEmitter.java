@@ -1,6 +1,6 @@
 package Composestar.Core.DUMMER;
 
-import java.util.Collection;
+import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Project;
@@ -10,6 +10,6 @@ public interface DummyEmitter {
 	
 	public abstract void createDummy(Project project, Source source, String outputFilename) throws ModuleException;
 	
-	public abstract void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException;
+	public abstract void createDummies(Project project, List sources, List outputFilenames) throws ModuleException;
 	
 }
