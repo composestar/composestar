@@ -4,15 +4,12 @@
  */
 package Composestar.Core.INLINE.lowlevel;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.FIRE2.model.ExecutionState;
@@ -43,16 +40,16 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      */
     private Block currentBlock;
 
-    /**
-     * Vector containing the instructionblocks of the after filters, to be 
-     * placed after the blocks of the other filters.
-     */
-    private Vector afterFilterBlocks;
-
-    /**
-     * Indicates the last afterfilter, useful for the jump in a following skip action.
-     */
-    private Block lastAfterFilter;
+//    /**
+//     * Vector containing the instructionblocks of the after filters, to be 
+//     * placed after the blocks of the other filters.
+//     */
+//    private Vector afterFilterBlocks;
+//
+//    /**
+//     * Indicates the last afterfilter, useful for the jump in a following skip action.
+//     */
+//    private Block lastAfterFilter;
 
     /**
      * Contains all outer scope blocks of the current scope, the closest on top.
@@ -118,7 +115,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
         inlineBlock = new Block();
         blockStack = new Stack();
-        afterFilterBlocks = new Vector();
         labelTable = new Hashtable();
         currentLabelId = -1;
 
@@ -131,14 +127,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#endInline()
      */
     public void endInline(){
-        Enumeration afterFilters = afterFilterBlocks.elements();
-        while( afterFilters.hasMoreElements() ){
-            currentLabelId++;
-
-            Block afterFilter = (Block) afterFilters.nextElement();
-            afterFilter.getLabel().setId( currentLabelId );
-            currentBlock.addInstruction( afterFilter );
-        }
+        
     }
 
 
@@ -150,21 +139,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
         currentLabelId = jumpLabel;
 
-        if( filter.getFilterType().getType().equals( FilterType.META ) ){
-            Block block = new Block();
-            block.setLabel( new Label( jumpLabel ) );
-            currentBlock.addInstruction( block );
-
-            filterBlock = new Block();
-            filterBlock.setLabel( new Label() );
-            afterFilterBlocks.add( filterBlock );
-        }
-        else{
-            filterBlock = new Block();
-            filterBlock.setLabel( new Label( jumpLabel ) );
-            currentBlock.addInstruction( filterBlock );
-        }
-
+        filterBlock = new Block();
+        filterBlock.setLabel( new Label( jumpLabel ) );
+        currentBlock.addInstruction( filterBlock );
+        
         pushBlock( filterBlock );
     }
 
@@ -251,7 +229,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
             setInnerCallContext( callMessage );
 
-            filterAction = new FilterAction( "dispatch", callMessage );
+            filterAction = new FilterAction( FlowChartNames.DISPATCH_ACTION_NODE, callMessage );
 
             Target target = callMessage.getTarget();
             MessageSelector selector = callMessage.getSelector();
@@ -267,54 +245,36 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
             setInnerCallContext( callMessage );
 
-            filterAction = new FilterAction( "before", callMessage );
+            filterAction = new FilterAction( "BeforeAction", callMessage );
             empty = false;
         }
-        else if ( node.containsName( "after action" ) ){
+        else if ( node.containsName( "AfterAction" ) ){
             Message callMessage = getCallMessage( state );
 
             setInnerCallContext( callMessage );
 
-            filterAction = new FilterAction( "meta", callMessage );
+            filterAction = new FilterAction( "AfterAction", callMessage );
             empty = false;
         }
-        else if ( node.containsName( "skip action" ) ){
-            Message callMessage = getCallMessage( state );
-
-            setInnerCallContext( callMessage );
-
-            filterAction = new FilterAction( "meta", callMessage );
-            empty = false;
+        else if ( node.containsName( "SkipAction" ) ){
+            //jump to end:
+            jump( -1 );
+            return;
         }
         else if ( node.containsName( FlowChartNames.ERROR_ACTION_NODE ) ){
-            filterAction = new FilterAction( "error", state.getMessage() );
+            filterAction = new FilterAction( FlowChartNames.ERROR_ACTION_NODE, state.getMessage() );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
-            filterAction = new FilterAction( "continue", state.getMessage() );
+            filterAction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) ){
-            filterAction = new FilterAction( "substitution", getCallMessage( state ) );
+            filterAction = new FilterAction( FlowChartNames.SUBSTITUTION_ACTION_NODE, getCallMessage( state ) );
             empty = false;
         }
         else if ( node.containsName( FlowChartNames.CUSTOM_ACTION_NODE ) ){
             filterAction = new FilterAction( "custom", getCallMessage( state ) );
-        }
-        else if ( node.containsName( "##SKIP##" ) ){
-            //TODO correct flowchartname
-
-            if ( lastAfterFilter != null ){
-                Label label = lastAfterFilter.getLabel();
-                Jump jump = new Jump( label );
-                currentBlock.addInstruction( jump );
-            }
-            else{
-                //jump to end:
-                jump( -1 );
-            }
-
-            return;
         }
         else{
             throw new RuntimeException( "Unknown action" );
