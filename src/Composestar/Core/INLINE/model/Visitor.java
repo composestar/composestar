@@ -10,4 +10,7 @@ public interface Visitor{
     public Object visitContextInstruction( ContextInstruction contextInstruction );
     public Object visitFilterAction( FilterAction filterAction );
     public Object visitJump( Jump jump );
+    public Object visitSwitch( Switch switchInstruction );
+    public Object visitCase( Case caseInstruction );
+    public Object visitWhile( While whileInstruction );
 }

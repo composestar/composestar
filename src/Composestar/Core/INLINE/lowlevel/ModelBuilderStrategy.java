@@ -18,10 +18,15 @@ import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
+import Composestar.Core.INLINE.model.Case;
+import Composestar.Core.INLINE.model.ContextExpression;
 import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
+import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
+import Composestar.Core.INLINE.model.Switch;
+import Composestar.Core.INLINE.model.While;
 import Composestar.Core.LAMA.MethodInfo;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy{
@@ -40,16 +45,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      */
     private Block currentBlock;
 
-//    /**
-//     * Vector containing the instructionblocks of the after filters, to be 
-//     * placed after the blocks of the other filters.
-//     */
-//    private Vector afterFilterBlocks;
-//
-//    /**
-//     * Indicates the last afterfilter, useful for the jump in a following skip action.
-//     */
-//    private Block lastAfterFilter;
 
     /**
      * Contains all outer scope blocks of the current scope, the closest on top.
@@ -67,7 +62,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * Hashtable containing a mapping from integer labelid's to the corresponding Label object.
      */
     private Hashtable labelTable;
+    
+    
+    /**
+     * Hashtable containing a mapping from MethodInfo to integer id's
+     */
+    private Hashtable methodTable;
+    private int lastMethodId;
+    
 
+    
+    private int nextReturnActionId;
+    private Switch onReturnInstructions;
+    private ContextInstruction createActionStoreInstruction;
 
     /**
      * Indicates whether the instructionset of the current inline is empty or not.
@@ -89,6 +96,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
     public ModelBuilderStrategy( ModelBuilder builder ){
         this.builder = builder;
+        this.methodTable = new Hashtable(); 
+        lastMethodId = 0;
     }
 
 
@@ -117,21 +126,23 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         blockStack = new Stack();
         labelTable = new Hashtable();
         currentLabelId = -1;
+        
+        nextReturnActionId = 1;
+        onReturnInstructions = new Switch( new ContextExpression(ContextExpression.RETRIEVE_ACTION) );
 
         empty = true;
 
-        //create checkinnercall context instructions:
+        //create checkinnercall context instruction:
         Block block = new Block();
         
         ContextInstruction checkInnercall = new ContextInstruction( 
-                ContextInstruction.CHECK_INNER_CALL, method, block );
+                ContextInstruction.CHECK_INNER_CALL, getMethodId( method ), block );
         inlineBlock.addInstruction( checkInnercall );
         
-        //create resetInnercall context instruction:
-        ContextInstruction resetInnercall = new ContextInstruction( 
-                ContextInstruction.RESET_INNER_CALL, method );
-        resetInnercall.setLabel( getLabel( 9999 ) );
-        inlineBlock.addInstruction( resetInnercall );
+        //create CreateActionStore instruction:
+        createActionStoreInstruction = 
+            new ContextInstruction( ContextInstruction.CREATE_ACTION_STORE );
+        block.addInstruction( createActionStoreInstruction );
         
         
         //set current block to inner block of checkInnercall instruction:
@@ -142,7 +153,29 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#endInline()
      */
     public void endInline(){
+        //check whether there are on return actions:
+        if ( !onReturnInstructions.hasCases() ){
+            createActionStoreInstruction.setType( ContextInstruction.REMOVED );
+        }
+        else{
+            //add onReturnActions:
+            Block block = new Block();
+            block.addInstruction( onReturnInstructions );
+            
+            While whileInstruction = 
+                new While( new ContextExpression( ContextExpression.HAS_MORE_ACTIONS ),
+                    block );
+            
+            
+            currentBlock.addInstruction( whileInstruction );
+        }
         
+        
+        //create resetInnercall context instruction:
+        ContextInstruction resetInnercall = new ContextInstruction( 
+                ContextInstruction.RESET_INNER_CALL );
+        resetInnercall.setLabel( getLabel( 9999 ) );
+        inlineBlock.addInstruction( resetInnercall );
     }
 
 
@@ -240,40 +273,18 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#generateAction(Composestar.Core.FIRE2.model.ExecutionState)
      */
     public void generateAction(ExecutionState state){
-        FilterAction filterAction;
+        Instruction instruction;
 
         FlowNode node = state.getFlowNode();
         if ( node.containsName( FlowChartNames.DISPATCH_ACTION_NODE ) ){
-            Message callMessage = getCallMessage( state );
-
-            setInnerCallContext( callMessage );
-
-            filterAction = new FilterAction( FlowChartNames.DISPATCH_ACTION_NODE, callMessage );
-
-            Target target = callMessage.getTarget();
-            MessageSelector selector = callMessage.getSelector();
-            if ( !Message.checkEquals( Message.INNER_TARGET, target )
-                    ||  !selector.getName().equals( 
-                            currentMethod.name() ) )
-            {
-                empty = false;
-            }
+            generateDispatchAction( state );
         }
         else if ( node.containsName( FlowChartNames.META_ACTION_NODE ) ){//"before action" ) ){
-            Message callMessage = getCallMessage( state );
-
-            setInnerCallContext( callMessage );
-
-            filterAction = new FilterAction( "BeforeAction", callMessage );
-            empty = false;
+//            generateBeforeAction( state );
+            generateAfterAction( state );
         }
         else if ( node.containsName( "AfterAction" ) ){
-            Message callMessage = getCallMessage( state );
-
-            setInnerCallContext( callMessage );
-
-            filterAction = new FilterAction( "AfterAction", callMessage );
-            empty = false;
+            generateAfterAction( state );
         }
         else if ( node.containsName( "SkipAction" ) ){
             //jump to end:
@@ -281,33 +292,98 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             return;
         }
         else if ( node.containsName( FlowChartNames.ERROR_ACTION_NODE ) ){
-            filterAction = new FilterAction( FlowChartNames.ERROR_ACTION_NODE, state.getMessage() );
+            instruction = new FilterAction( FlowChartNames.ERROR_ACTION_NODE, state.getMessage() );
             empty = false;
+            currentBlock.addInstruction( instruction );
         }
         else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
-            filterAction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
+            instruction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
             empty = false;
+            currentBlock.addInstruction( instruction );
         }
         else if ( node.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) ){
-            filterAction = new FilterAction( FlowChartNames.SUBSTITUTION_ACTION_NODE, getCallMessage( state ) );
+            instruction = new FilterAction( FlowChartNames.SUBSTITUTION_ACTION_NODE, getCallMessage( state ) );
             empty = false;
+            currentBlock.addInstruction( instruction );
         }
         else if ( node.containsName( FlowChartNames.CUSTOM_ACTION_NODE ) ){
-            filterAction = new FilterAction( "custom", getCallMessage( state ) );
+            instruction = new FilterAction( "custom", getCallMessage( state ) );
+            currentBlock.addInstruction( instruction );
         }
         else{
             throw new RuntimeException( "Unknown action" );
         }
-
-        currentBlock.addInstruction( filterAction );
     }
+    
+    private void generateDispatchAction( ExecutionState state ){
+        Message callMessage = getCallMessage( state );
+
+        ContextInstruction innerCallContext = setInnerCallContext( callMessage );
+        if ( innerCallContext != null ){
+            currentBlock.addInstruction( innerCallContext );
+        }
+
+        FilterAction action  = new FilterAction( FlowChartNames.DISPATCH_ACTION_NODE, callMessage );
+        currentBlock.addInstruction( action );
+
+        Target target = callMessage.getTarget();
+        MessageSelector selector = callMessage.getSelector();
+        if ( !Message.checkEquals( Message.INNER_TARGET, target )
+                ||  !selector.getName().equals( 
+                        currentMethod.name() ) )
+        {
+            empty = false;
+        }
+    }
+    
+    
+    private void generateBeforeAction( ExecutionState state ){
+        Message callMessage = getCallMessage( state );
+
+        ContextInstruction innerCallContext = setInnerCallContext( callMessage );
+        if ( innerCallContext != null ){
+            currentBlock.addInstruction( innerCallContext );
+        }
+
+        FilterAction action = new FilterAction( "BeforeAction", callMessage );
+        currentBlock.addInstruction( action );
+        
+        empty = false;
+    }
+    
+    private void generateAfterAction( ExecutionState state ){
+        Message callMessage = getCallMessage( state );
+        
+        int actionId = nextReturnActionId++;
+        ContextInstruction storeInstruction = new ContextInstruction( ContextInstruction.STORE_ACTION,
+                actionId );
+        currentBlock.addInstruction( storeInstruction );
+
+        Block block = new Block();
+        
+        
+        
+        ContextInstruction innerCallContext = setInnerCallContext( callMessage );
+        if ( innerCallContext != null ){
+            block.addInstruction( innerCallContext );
+        }
+        
+        FilterAction action = new FilterAction( "AfterAction", callMessage );
+        block.addInstruction( action );
+        
+        Case caseInstruction = new Case( actionId, block );
+        onReturnInstructions.addCase( caseInstruction );
+        
+        empty = false;
+    }
+    
 
     /**
      * Checks whether the call is an innercall and whether the called method has inlined filters. Then
      * the innercall filtercontext needs to be set.
      * @param state
      */
-    private void setInnerCallContext( Message callMessage ){
+    private ContextInstruction setInnerCallContext( Message callMessage ){
         if ( Message.checkEquals( callMessage.getTarget(), Message.INNER_TARGET ) )
         {
             MethodInfo calledMethod;
@@ -320,10 +396,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
                         //currentMethod.parent(), currentMethod );
             }
 
-            ContextInstruction contextAction = 
-                new ContextInstruction( ContextInstruction.SET_INNER_CALL, calledMethod );
-            currentBlock.addInstruction( contextAction );
-            builder.addInnerCallCheckTask( contextAction );
+            ContextInstruction contextInstruction = 
+                new ContextInstruction( ContextInstruction.SET_INNER_CALL, getMethodId( calledMethod ) );
+            builder.addInnerCallCheckTask( contextInstruction );
+            return contextInstruction;
+        }
+        else{
+            return null;
         }
     }
 
@@ -385,4 +464,14 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         }
     }
 
+    
+    public int getMethodId( MethodInfo method ){
+        Integer id = (Integer) methodTable.get( method );
+        if ( id == null ){
+            id = new Integer( lastMethodId++ );
+            methodTable.put( method, id );
+        }
+        
+        return id.intValue();
+    }
 }
