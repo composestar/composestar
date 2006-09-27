@@ -70,7 +70,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             {
                 return source.ScopeCreator(req);
             }
-              
+         
             ComposeStarSink sink = new ComposeStarSink(req.Sink);
          
             return new ComposeStarScope(concerns.AnalyzeConcern(sink, req.FileName, req.Text), this);

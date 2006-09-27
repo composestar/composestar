@@ -65,7 +65,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine {
         }
 
         private void AddBuiltins(List<Declaration> attributes)    {
-           
+           attributes.Add(new Declaration("IsClassWithName") );
+ 
         }
 
         // Disable the "ReviewUnusedParameters" warning.
@@ -101,12 +102,16 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine {
             //    }
             //    return infos;
             //}
-
-            return null;
+            IList<Declaration> ret = new List<Declaration>();
+            ret.Add(new Declaration("", "isNamespace()", Declaration.DeclarationType.Predicate, "The name should be in the namespace") ); 
+            ret.Add(new Declaration("", "isClass()", Declaration.DeclarationType.Predicate, "The name should be in the class") );
+            ret.Add(new Declaration("", "isConcern()", Declaration.DeclarationType.Predicate, "The name should be in the namespace") );
+            ret.Add(new Declaration("", "isTypeWithName(Type, TypeName)", Declaration.DeclarationType.Predicate, "Type should have typename") );
+            return ret;
         }
 
 //        private bool Locate(Type contextType, int line, int column, out Node node, out Scope scope, out Node context) {
-//            Locator locator = new Locator(contextType, line, column);
+ //           Locator locator = new Locator(contextType, line, column);
 //            global.Walk(locator);
 //            node = locator.Candidate;
 //            scope = locator.Scope != null ? scopes[locator.Scope] : null;

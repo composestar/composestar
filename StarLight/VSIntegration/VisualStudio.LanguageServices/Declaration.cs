@@ -14,7 +14,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         {
             Snippet,
             Class,
-            Function,
+            Predicate,
             Unknown
         }
         public Declaration(string title)

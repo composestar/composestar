@@ -65,7 +65,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices {
                     case Declaration.DeclarationType.Snippet:
                         glyph = SnippetGlyph;
                         break;
-                    case Declaration.DeclarationType.Function:
+                    case Declaration.DeclarationType.Predicate:
                         glyph = FunctionGlyph;
                         break;
                     case Declaration.DeclarationType.Class:
@@ -105,11 +105,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices {
         public override char OnAutoComplete(IVsTextView textView, string committedText,
                                             char commitCharacter, int index) {
             const char defaultReturnValue = '\0';
+            if (index == -1)
+                return defaultReturnValue;
             Declaration item = declarations[index] as Declaration;
             if (item == null) {
                 return defaultReturnValue;
             }
-            // In this example, PythonDeclaration identifies types with an enum.
+            // In this example, Declaration identifies types with an enum.
             // You can choose a different approach.
             if (item.Type != Declaration.DeclarationType.Snippet) {
                 return defaultReturnValue;

@@ -32,25 +32,40 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             return null;
         }
 
-        public override Declarations GetDeclarations(IVsTextView view, int line, int col, TokenInfo info, ParseReason reason) {
-            System.Diagnostics.Debug.Print("GetDeclarations line({0}), col({1}), TokenInfo(type {2} at {3}-{4} triggers {5}), reason({6})",
-                line, col, info.Type, info.StartIndex, info.EndIndex, info.Trigger, reason);
+        public override Declarations GetDeclarations(IVsTextView view, int line, int col, TokenInfo info, ParseReason reason)
+        {
 
-            IList<Declaration> declarations = concern.GetAttributesAt(line + 1, info.StartIndex);
-            //declarations.Add(new Declaration("", "test decl", Declaration.DeclarationType.Function, "description for Declarations"));
-         //   System.Windows.Forms.MessageBox.Show("getDeclaration");
-            ComposeStarDeclarations composeStarDeclarations = new ComposeStarDeclarations(declarations, language);
-            composeStarDeclarations.AddDeclaration(new Declaration("", "test GetDeclarations2", Declaration.DeclarationType.Function, "test"));
-            ((ComposeStarLangServ)language).AddSnippets(ref composeStarDeclarations);
-            composeStarDeclarations.Sort();
-            return composeStarDeclarations;
+            switch (reason)
+            {
+                case ParseReason.CompleteWord:
+                    IList<Declaration> declarations = concern.GetAttributesAt(line + 1, info.StartIndex);
+                    ComposeStarDeclarations composeStarDeclarations = new ComposeStarDeclarations(declarations, language);
+                    composeStarDeclarations.Sort();
+                    return composeStarDeclarations;
+                    break;
+                case ParseReason.DisplayMemberList:
+                case ParseReason.MemberSelect:
+                case ParseReason.MemberSelectAndHighlightBraces:
+                    IList<Declaration> ret = new List<Declaration>();
+                    ret.Add(new Declaration("", "isNamespace()", Declaration.DeclarationType.Predicate, "The name should be in the namespace"));
+                    ret.Add(new Declaration("", "isClass()", Declaration.DeclarationType.Predicate, "The name should be in the class"));
+                    ret.Add(new Declaration("", "isConcern()", Declaration.DeclarationType.Predicate, "The name should be in the namespace"));
+                    ret.Add(new Declaration("", "isTypeWithName(Type, TypeName)", Declaration.DeclarationType.Predicate, "Type should have typename"));
+                    return new ComposeStarDeclarations(ret, language);
+
+                    break;
+                default:
+                    throw new ArgumentException("reason");
+            }
+
+            return null;
         }
 
         public override Methods GetMethods(int line, int col, string name) {
             System.Diagnostics.Debug.Print("GetMethods line({0}), col({1}), name({2})", line, col, name);
-          //  System.Windows.Forms.MessageBox.Show("getMethods");
+
             IList<Declaration> methods = concern.GetMethodsAt(line + 1, col, name);
-            methods.Add(new Declaration("test declMethods"));
+           
             return new ComposeStarMethods(methods);
         }
 
