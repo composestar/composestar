@@ -27,6 +27,6 @@ public class Jump extends InlineInstruction implements IVisitable
 	}
     
     public String toString(){
-        return "jump " + target + "\n";
+        return super.toString() + "jump " + target + "\n";
     }
 }
