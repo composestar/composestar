@@ -29,11 +29,11 @@ public class CSharpDummyEmitter implements DummyEmitter
 
 	public void createDummies(Project project, List sources, List outputFilenames) throws ModuleException
 	{
-	//	StringBuffer processOutput = new StringBuffer();
 		CSharpDummyProcess dummyGen = new CSharpDummyProcess();
 		try
 		{
-			dummyGen.openProcess(project.getProperty("basePath") + "attributes.xml");
+			String attributesFile = project.getProperty("basePath") + "attributes.xml";
+			dummyGen.openProcess(attributesFile);
             
             Iterator srcIter = sources.iterator();
             Iterator outputIter = outputFilenames.iterator();
@@ -63,19 +63,21 @@ public class CSharpDummyEmitter implements DummyEmitter
 	{
 		// Parse output from CSharpDummyGen, if a line starts with the word 'TypeLocation' the next 2 lines
 		// will contain the filename (full path) and name of a class that is defined in that file (FQN)
-		ArrayList in  = input.getResultLines();
-		Iterator i = in.iterator();
-		while (i.hasNext())
+		List lines  = input.getResultLines();
+		Iterator it = lines.iterator();
+		while (it.hasNext())
 		{
-			String s = (String)i.next();
-			if (s.startsWith("TypeLocation"))
+			String line = (String)it.next();
+			if (line.startsWith("TypeLocation"))
 			{
-				String filename = (String)i.next();
-				String classname = (String)i.next();
+				String filename = (String)it.next();
+				String classname = (String)it.next();
 				Debug.out(Debug.MODE_DEBUG, "DUMMER", "Defined mapping: " + filename + "=> " + classname);
+				
 				TypeSource srcLocation = new TypeSource();
 				srcLocation.setFileName(filename);
 				srcLocation.setName(classname);				
+				
 				project.addTypeSource(srcLocation);
 			}
 		}
@@ -95,37 +97,41 @@ class CSharpDummyProcess
 	public void openProcess(String attributesFile) throws Exception
 	{
 		Configuration config = Configuration.instance();
-		String csDummyEmitter = config.getPathSettings().getPath("Composestar") + "binaries/CSharpDummyGenerator.exe";
+		String cps = config.getPathSettings().getPath("Composestar");
+		String exe = cps + "binaries/CSharpDummyGenerator.exe";
 
         Runtime rt = Runtime.getRuntime();
 
         String[] command = new String[2];
-        command[0] = csDummyEmitter;
+        command[0] = exe;
         command[1] = attributesFile;
 
-        this.process = rt.exec(command);
+        process = rt.exec(command);
         
-        stderr = new StreamGobbler( process.getErrorStream() );
-        stdin = new StreamGobbler( process.getInputStream() );
+        stdout = new PrintStream(process.getOutputStream());
+        stderr = new StreamGobbler(process.getErrorStream());
+        stdin = new StreamGobbler(process.getInputStream());
         stderr.start();
         stdin.start();
-        this.stdout = new PrintStream(process.getOutputStream());
-        //this.stdin = new BufferedReader(new InputStreamReader(process.getInputStream()));
 	}
 
-	public PrintStream getStdout() {
+	public PrintStream getStdout()
+	{
 		return stdout;
 	}
 
-	public Process getProcess() {
+	public Process getProcess()
+	{
 		return process;
 	}
 
-	public StreamGobbler getStdin() {
+	public StreamGobbler getStdin()
+	{
 		return stdin;
 	}
-	
-	public StreamGobbler getStderr() {
+
+	public StreamGobbler getStderr()
+	{
 		return stderr;
 	}
 }

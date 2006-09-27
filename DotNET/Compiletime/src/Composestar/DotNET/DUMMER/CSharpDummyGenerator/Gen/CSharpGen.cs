@@ -13,7 +13,7 @@ namespace DDW.CSharp.Gen
 {		
 	public class CSharpGen : GraphParserBase
 	{
-		LineWriter sb;
+		private LineWriter sb;
 		private bool termStmt = true;
 		private bool addSpace = true;
 		private bool isInterface = false;
@@ -22,7 +22,6 @@ namespace DDW.CSharp.Gen
 		{
 			sb = new LineWriter(tw); 
 		}
-		
 
 		#region CompileUnit *
 		public override void ParseElement(CompileUnit gr)
@@ -1581,13 +1580,13 @@ namespace DDW.CSharp.Gen
 		}
 		#endregion
 
-
 		private void OpenBlock()
 		{
 			sb.WriteLine("");
 			sb.WriteLine("{");
 			sb.Indent++;
 		}
+
 		private void CloseBlock()
 		{
 			sb.Indent--;
@@ -1599,19 +1598,21 @@ namespace DDW.CSharp.Gen
 			gr.LinePragma.Column = sb.Column;
 			gr.LinePragma.Line = sb.Line;
 		}
+
 		protected override void EndParse(IGraph gr)
 		{
 			gr.LinePragma.EndColumn = sb.Column;
 			gr.LinePragma.EndLine = sb.Line;
 		}
+
 		public override string ToString()
 		{
 			return sb.ToString();
 		}
+
 		public void Close()
 		{
 			sb.Close();
 		}
-
 	}
 }
