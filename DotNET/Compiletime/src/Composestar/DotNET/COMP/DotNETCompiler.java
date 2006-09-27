@@ -40,7 +40,7 @@ public class DotNETCompiler implements LangCompiler
 	private String compilerOutput;
 
 	public DotNETCompiler()
-	{		
+	{
 	}
 
 	public void compileSources(Project project) throws CompilerException,ModuleException
@@ -194,11 +194,11 @@ public class DotNETCompiler implements LangCompiler
 			StringTokenizer st = new StringTokenizer(compilerOutput, "\n");
 			while (st.hasMoreTokens()) 
 			{
-				String token = st.nextToken();
-				Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: " + token);
+				String line = st.nextToken();
+				Debug.out(Debug.MODE_ERROR, "COMP", "Compilation error: " + line);
 			}
 
-			throw new CompilerException("COMP reported errors during compilation: " + compilerOutput);
+			throw new CompilerException("COMP encountered errors during compilation.");
 		}
 	}
 	
