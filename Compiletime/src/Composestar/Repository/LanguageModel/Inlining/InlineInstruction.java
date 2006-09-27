@@ -3,14 +3,14 @@ package Composestar.Repository.LanguageModel.Inlining;
 import Composestar.Repository.LanguageModel.Inlining.Visitor.*;  
 
 public abstract class InlineInstruction implements IVisitable {
-	private Label label;
+	private int label;
 
 	public InlineInstruction()
 	{
 
 	}
 
-	public InlineInstruction(Label label)
+	public InlineInstruction(int label)
 	{
 		this.label = label;
 	}
@@ -19,7 +19,7 @@ public abstract class InlineInstruction implements IVisitable {
      * @return the label
 	 * @property 
      */
-	public Label get_Label()
+	public int get_Label()
 	{
 		return label;
 	}
@@ -28,7 +28,7 @@ public abstract class InlineInstruction implements IVisitable {
      * sets the label
      * @property 
      */
-    public void set_Label( Label value )
+    public void set_Label( int value )
     {
         this.label = value;
     }
@@ -39,8 +39,8 @@ public abstract class InlineInstruction implements IVisitable {
 	}
     
     public String toString(){
-        if ( label != null ){
-            return "Label" + label.get_Id() + ":\n";
+        if ( label >= 0 ){
+            return "Label " + label + ":\n";
         }
         else{
             return "";
