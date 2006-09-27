@@ -50,4 +50,8 @@ public class Or extends ConditionExpression implements IVisitable
 		((IVisitable)_right).Accept(visitor);
 		visitor.VisitOr(this);
 	}
+    
+    public String toString(){
+        return "(" + _left.toString() + " || " + _right.toString() + ")";
+    }
 }

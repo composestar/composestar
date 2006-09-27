@@ -19,4 +19,7 @@ public interface IVisitor
 	void VisitSkipAction(FilterAction filterAction);
 	void VisitJumpInstruction(Jump jump);
 	void VisitInlineInstruction(InlineInstruction inlineInstruction);
+    void VisitWhile( While whileInstr );
+    void VisitSwitch( Switch switchInstr );
+    void VisitCase( Case caseInstr );
 }

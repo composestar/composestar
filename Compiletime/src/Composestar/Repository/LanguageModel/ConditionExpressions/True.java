@@ -18,5 +18,9 @@ public class True extends ConditionExpression implements IVisitable
 	{
 		visitor.VisitTrue(this);  
 	}
+    
+    public String toString(){
+        return "true";
+    }
 
 }

@@ -32,4 +32,8 @@ public class Not extends ConditionExpression implements IVisitable
 	{
 		visitor.VisitNot(this);
 	}
+    
+    public String toString(){
+        return "!" + _operand.toString();
+    }
 }
