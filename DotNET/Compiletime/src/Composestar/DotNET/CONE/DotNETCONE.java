@@ -7,6 +7,9 @@ import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.Debug;
 
+/**
+ * @deprecated This module has been split up into CONE-IS and CONE-XML.
+ */
 public class DotNETCONE extends CONE
 {
 	/**
