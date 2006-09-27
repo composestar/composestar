@@ -14,10 +14,7 @@ public class While extends InlineInstruction{
         this.expression = expression;
         this.instructions = instructions;
     }
-    
-    
-    
-    
+        
     /**
      * @return the expression
      * @property
@@ -25,9 +22,6 @@ public class While extends InlineInstruction{
     public ContextExpression get_Expression(){
         return expression;
     }
-
-
-
 
     /**
      * @return the instructions
@@ -37,13 +31,13 @@ public class While extends InlineInstruction{
         return instructions;
     }
 
-
-
-
     public void Accept(IVisitor visitor)
     {
-        super.Accept(visitor);
-        visitor.VisitWhile(this);
+		super.Accept(visitor);
+		visitor.VisitWhile(this);
+		if (instructions != null)
+			instructions.Accept(visitor);
+		visitor.VisitWhileEnd(this);
     }
     
     public String toString(){

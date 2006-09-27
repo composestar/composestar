@@ -74,6 +74,17 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
+        /// Resolves the method based on the selector.
+        /// </summary>
+        /// <param name="selector">The selector.</param>
+        /// <returns></returns>
+        public static MethodBase ResolveMethod(string selector)
+        {
+            return null;
+
+        }
+
+        /// <summary>
         /// Resolves the method.
         /// </summary>
         /// <param name="methodName">Name of the method.</param>

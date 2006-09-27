@@ -105,7 +105,7 @@ namespace Composestar.Repository
         {
              IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
-                return te.Id == typeId;
+                return te.Id.Equals(typeId);
             });
 
             if (ret.Count == 1)
