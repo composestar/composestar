@@ -87,7 +87,6 @@ public class RealSourceManager implements CTCommonModule {
 				comp.compileSources(project);
 			}
 			catch (CompilerException e) {
-				e.printStackTrace();
 				throw new ModuleException("Compilation error: " + e.getMessage() , "RECOMA");
 			}
 		}
