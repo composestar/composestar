@@ -134,7 +134,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			TypeElement storedType = (TypeElement)typeIterator.next();
 
-			Debug.out(Debug.MODE_DEBUG,"TYM","Processing type '"+storedType.get_FullName()+"'");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","Processing type '"+storedType.get_FullName()+"'");
 			
 			DotNETType type = new DotNETType();
 			
@@ -229,7 +229,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			MethodElement storedMethod = (MethodElement)methodIterator.next();
 
-			Debug.out(Debug.MODE_DEBUG,"TYM","   Processing method '"+storedMethod.get_Signature()+"'");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","   Processing method '"+storedMethod.get_Signature()+"'");
 			
 			DotNETMethodInfo method = new DotNETMethodInfo();
 						
@@ -276,7 +276,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			ParameterElement storedParameter = (ParameterElement)parameterIterator.next();
 			
-			Debug.out(Debug.MODE_DEBUG,"TYM","      Processing parameter '"+storedParameter.get_Name()+"' ("+storedParameter.get_ParameterType()+")");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","      Processing parameter '"+storedParameter.get_Name()+"' ("+storedParameter.get_ParameterType()+")");
 
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
 						
