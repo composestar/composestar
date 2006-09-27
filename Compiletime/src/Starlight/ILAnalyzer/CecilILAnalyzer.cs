@@ -289,6 +289,7 @@ namespace Composestar.StarLight.ILAnalyzer
                     mi.IsVirtual = method.IsVirtual;
                     
                     // Add to the repositorys
+                    if (method.Body != null && this._processMethodBody) mi.MethodBody = new Composestar.Repository.LanguageModel.MethodBody(System.Guid.NewGuid().ToString(), mi.Id);
                     RepositoryAccess.AddMethod(ti, mi);
 
                     ExtractAttributeElements(mi, method.CustomAttributes);

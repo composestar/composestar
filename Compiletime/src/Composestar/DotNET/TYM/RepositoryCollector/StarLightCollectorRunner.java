@@ -134,7 +134,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			TypeElement storedType = (TypeElement)typeIterator.next();
 
-			//Debug.out(Debug.MODE_DEBUG,"TYM","Processing type '"+storedType.get_FullName()+"'");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","Retrieving type '"+storedType.get_FullName()+"'");
 			
 			DotNETType type = new DotNETType();
 			
@@ -205,6 +205,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			FieldElement storedField = (FieldElement)fieldIterator.next();
 			
+			//Debug.out(Debug.MODE_DEBUG,"TYM","   Retrieving field '"+storedField.get_Name()+"'");
+			
 			DotNETFieldInfo field = new DotNETFieldInfo();
 			
 			field.setName(storedField.get_Name());
@@ -229,7 +231,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			MethodElement storedMethod = (MethodElement)methodIterator.next();
 
-			//Debug.out(Debug.MODE_DEBUG,"TYM","   Processing method '"+storedMethod.get_Signature()+"'");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","   Retrieving method '"+storedMethod.get_Signature()+"'");
 			
 			DotNETMethodInfo method = new DotNETMethodInfo();
 						
@@ -259,7 +261,7 @@ public class StarLightCollectorRunner implements CollectorRunner
           	
             collectParameters(storedMethod, method);
             
-            if (storedMethod.get_HasMethodBody()) collectMethodBody(storedMethod.get_MethodBody(), method);
+            if (storedMethod.get_HasMethodBody()) collectMethodBody(storedMethod.get_MethodBody(), method); 
             
 			type.addMethod(method);
 		}
@@ -276,7 +278,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			ParameterElement storedParameter = (ParameterElement)parameterIterator.next();
 			
-			//Debug.out(Debug.MODE_DEBUG,"TYM","      Processing parameter '"+storedParameter.get_Name()+"' ("+storedParameter.get_ParameterType()+")");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","      Retrieving parameter '"+storedParameter.get_Name()+"' ("+storedParameter.get_ParameterType()+")");
 
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
 						
@@ -314,7 +316,6 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			// TODO: this mapping correct ?
 			call.OperationName = storedCall.get_MethodReference();
-			
 			
 			method.getCallsToOtherMethods().add(call);
 			
