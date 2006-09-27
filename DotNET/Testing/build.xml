@@ -1,4 +1,4 @@
-<project name="Composestar/DotNET/testing" default="test" basedir="../Examples">
+<project name="Composestar/DotNET/testing" default="test">
 
 	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
 		<and>
@@ -42,7 +42,7 @@
 	
 	<target name="test_vsp" depends="init">
 		<cstarVsp antHelperPath="${build.core}${file.separator}Development" composestarBase="${composestar.installdir}" conversionXslt="${basedir}/../testing/AntSystemTest/genBuildConfig.xslt">
-			<FileSet dir="${basedir}">
+			<FileSet dir="${build.dotnet}${file.separator}Examples">
 				<include name="**/*.vjsproj" />
 				<include name="**/*.csproj" />
 				<exclude name="AOSD2006Demo/EncryptionFilter/*" />
@@ -54,9 +54,9 @@
 		</cstarVsp>
 	</target>
 
-	<target name="test_exec">
+	<target name="test_exec" depends="init">
 		<cstarTest>
-			<FileSet dir="${basedir}">
+			<FileSet dir="${build.dotnet}${file.separator}Examples">
 				<include name="Platypus/bin/PlatypusExample.Main.exe" />
 				<include name="PredicateQueries/bin/MyApp.Main.exe" />
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe" />

@@ -22,10 +22,10 @@ public class XsltUtils
 	{
 		// try absolute
 		File hintFile = new File(hint);
-		if (hintFile.exists()) return hint;
+		if (hintFile.exists()) return hintFile.getAbsolutePath();
 		// try "curdir"
 		hintFile = new File(currentDirectory + File.separator + hint);
-		if (hintFile.exists()) return hintFile.toString();
+		if (hintFile.exists()) return hintFile.getAbsolutePath();
 		// try via helper
 		return lookupAssembly(assembly);
 	}
