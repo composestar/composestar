@@ -429,7 +429,7 @@ public class StarLightEmitterRunner implements CTCommonModule
          * @see Composestar.Core.INLINE.model.Visitor#visitContextInstruction(Composestar.Core.INLINE.model.ContextInstruction)
          */
         public Object visitContextInstruction(ContextInstruction contextInstruction){
-            Block block = contextInstruction.getInnerBlock();
+            Block block = (Block) contextInstruction.getInstruction();
             Composestar.Repository.LanguageModel.Inlining.Block newBlock;
             if ( block != null ){
                 newBlock = (Composestar.Repository.LanguageModel.Inlining.Block) block.accept( this );

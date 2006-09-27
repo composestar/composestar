@@ -8,6 +8,15 @@ public class FilterAction extends InlineInstruction implements IVisitable
 	private String selector;
 	private String target;
 
+    public final static String DISPATCH_ACTION = "DispatchAction";
+    public final static String BEFORE_ACTION = "BeforeAction";
+    public final static String AFTER_ACTION = "AfterAction";
+    public final static String SKIP_ACTION = "SkipAction";
+    public final static String ERROR_ACTION = "ErrorAction";
+    public final static String SUBSTITUTION_ACTION = "SubstitutionAction";
+    public final static String CUSTOM_ACTION = "CustomAction";
+    public final static String CONTINUE_ACTION = "ContinueAction";
+    
 	public FilterAction(String type, String selector, String target)
 	{
 		this.type = type;
@@ -46,19 +55,19 @@ public class FilterAction extends InlineInstruction implements IVisitable
 	{
 		super.Accept(visitor);
 
-		if (type.equalsIgnoreCase("ContinueAction"))
+		if (type.equalsIgnoreCase(CONTINUE_ACTION))
 			visitor.VisitContinueAction(this);
-		else if (type.equalsIgnoreCase("SubstitutionAction"))
+		else if (type.equalsIgnoreCase(SUBSTITUTION_ACTION))
 			visitor.VisitSubstitutionAction(this);
-		else if (type.equalsIgnoreCase("ErrorAction"))
+		else if (type.equalsIgnoreCase(ERROR_ACTION))
 			visitor.VisitErrorAction(this);
-		else if (type.equalsIgnoreCase("DispatchAction"))
+		else if (type.equalsIgnoreCase(DISPATCH_ACTION))
 			visitor.VisitDispatchAction(this);
-		else if (type.equalsIgnoreCase("BeforeAction"))
+		else if (type.equalsIgnoreCase(BEFORE_ACTION))
 			visitor.VisitBeforeAction(this);
-		else if (type.equalsIgnoreCase("AfterAction"))
+		else if (type.equalsIgnoreCase(AFTER_ACTION))
 			visitor.VisitAfterAction(this);
-		else if (type.equalsIgnoreCase("SkipAction"))
+		else if (type.equalsIgnoreCase(SKIP_ACTION))
 			visitor.VisitSkipAction(this);
 		else
 			visitor.VisitFilterAction(this); 
