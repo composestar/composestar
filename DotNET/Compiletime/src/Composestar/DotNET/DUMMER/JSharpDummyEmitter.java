@@ -1,18 +1,23 @@
 package Composestar.DotNET.DUMMER;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import Composestar.Core.DUMMER.DefaultEmitter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.Config.TypeSource;
-import Composestar.Core.DUMMER.*;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
-import antlr.*;
-import antlr.collections.*;
+import antlr.ASTFactory;
+import antlr.CommonAST;
+import antlr.collections.AST;
 
 public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTypes 
 {	
@@ -39,18 +44,14 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	private String attributeValue = "";
 	private String attributeTarget = "";
 	private String attributeLocation= "";
-	//
 	
-	/**
-	 * @roseuid 43D4B7B30265
-	 */
 	public JSharpDummyEmitter() 
 	{
 		setupTokenNames();
 	}
 	
-	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException {	   
-		
+	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
+	{	   		
 		dummy = new StringBuffer();
 		packageName = "";
 		packages = new ArrayList();
@@ -89,14 +90,15 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		emit(outputFilename);
 	}
 	
-	public void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException {
+	public void createDummies(Project project, List sources, List outputFilenames) throws ModuleException
+	{
 		super.createDummies(project, sources, outputFilenames);
 		writeAttributes();
 	}
 	
 	//Added Attributes
-	public void addAttribute(){
-		
+	public void addAttribute()
+	{
 		String quote = "&quot;";
 		this.attributeValue = this.attributeValue.replaceAll("\"",quote);
 		attributes += "<Attribute"
@@ -107,9 +109,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			+ 	" />\n";
 	}
 	
-	public void writeAttributes() throws ModuleException {
-		
-		try {
+	public void writeAttributes() throws ModuleException
+	{
+		try
+		{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(basePath+"attributes.xml"));
 			bw.write("<?xml version=\"1.0\"?>\n");
 			String startElement = "<Attributes" +">\n"; 
@@ -126,19 +129,22 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	//End Attributes Methods
 	
 	// Add type sources
-	public void addTypeSource(String type){
-		if(this.currentSource!=null){
-				Project p = currentSource.getProject();
-				TypeSource ts = new TypeSource();
-				ts.setName(type);
-				ts.setFileName(currentSource.getFileName());
-				p.addTypeSource(ts);
+	public void addTypeSource(String type)
+	{
+		if (this.currentSource != null)
+		{
+			Project p = currentSource.getProject();
+			TypeSource ts = new TypeSource();
+			ts.setName(type);
+			ts.setFileName(currentSource.getFileName());
+			p.addTypeSource(ts);
 		}
 	}
 	
 	public void emit(String outputFilename) throws ModuleException 
 	{
-		try {
+		try
+		{
 			File f = (new File(outputFilename)).getParentFile();			
 			f.mkdirs();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilename));			
@@ -151,19 +157,23 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 	}
 	
-	private String getPackageName(){
+	private String getPackageName()
+	{
 		String name = packageName;
-		if(packages.size()>0){
+		if (packages.size() > 0)
+		{
 			//iterate over packages
 			Iterator packageIt = packages.iterator();
-			while(packageIt.hasNext()) {
+			while (packageIt.hasNext())
+			{
 				name += packageIt.next();
-				if(packageIt.hasNext())
+				if (packageIt.hasNext())
 					name += ".";
 			}
 		}
 		return name;
 	}
+	
 	private void endBlock() 
 	{
 		tabs--;
@@ -187,6 +197,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		if (ast == null) {
 			return -2;				
 		}
+		
 		switch (ast.getType()) {
 		case EXPR:
 			return getPrecedence(ast.getFirstChild());
@@ -320,7 +331,8 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 	}
 	
-	private String getDefaultReturnValue(int tokentype){
+	private String getDefaultReturnValue(int tokentype)
+	{
 		if(tokentype == LITERAL_int || tokentype == LITERAL_short || tokentype == LITERAL_byte || tokentype == LITERAL_long)
 			return "0";
 		else if(tokentype == LITERAL_float)
@@ -335,7 +347,8 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			return "null";
 	}
 	
-	private String name(AST ast) {
+	private String name(AST ast)
+	{
 		return tokenNames[ast.getType()];
 	}
 	
@@ -361,7 +374,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		printWithParens(ast, ast.getFirstChild().getNextSibling());
 	}
 	
-	private void printSemi(AST parent) 
+	private void printSemi(AST parent)
 	{
 		if (parent!= null && parent.getType() == SLIST) {
 			out(";");
@@ -380,9 +393,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 	}
 	
-	private static void setupTokenNames() {
+	private static void setupTokenNames()
+	{
 		tokenNames = new String[200];
-		for (int i=0; i<tokenNames.length; i++) {
+		for (int i = 0; i < tokenNames.length; i++) {
 			tokenNames[i] = "ERROR:" + i;
 		}
 		
@@ -484,8 +498,9 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		newline();
 	}
 	
-	protected void tab() {
-		for (int i=1; i<=tabs; i++) {
+	protected void tab()
+	{
+		for (int i = 1; i <= tabs; i++) {
 			this.dummy.append('\t');
 		}
 	}
@@ -1089,30 +1104,37 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		stack.pop();
 	}
 	
-	private boolean visitChildren(AST ast, String separator) {
+	private boolean visitChildren(AST ast, String separator)
+	{
 		return visitChildren(ast, separator, ALL);
 	}
 
 	//Added attributes
 	//We do not want the separator printed
-	private boolean visitChildren(AST ast, String separator, int type) {
+	private boolean visitChildren(AST ast, String separator, int type)
+	{
 		return visitChildren(ast, separator, type, true);
 	}
 
-	private boolean visitChildren(AST ast, String separator, int type, boolean useSeparator) {
+	private boolean visitChildren(AST ast, String separator, int type, boolean useSeparator)
+	{
 		boolean ret = false;
 		AST child = ast.getFirstChild();
-		while (child != null) {
-			if (type == ALL || child.getType() == type) {
-				if (child != ast.getFirstChild()) {
-					if(useSeparator){
-						if (separator.endsWith("\n")) {
+		while (child != null)
+		{
+			if (type == ALL || child.getType() == type)
+			{
+				if (child != ast.getFirstChild())
+				{
+					if (useSeparator)
+					{
+						if (separator.endsWith("\n"))
+						{
 							out(separator.substring(0,separator.length()-1));
 							newline();
 						}
-						else {
+						else
 							out(separator);
-						}
 					}
 				}
 				ret = true;

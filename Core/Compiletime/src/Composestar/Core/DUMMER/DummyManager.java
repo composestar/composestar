@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.COMP.CompilerException;
 import Composestar.Core.COMP.LangCompiler;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
@@ -41,7 +42,6 @@ public class DummyManager implements CTCommonModule
 
 	private void createProjectDummies(String dummyPath, Project project) throws ModuleException
 	{
-		DummyEmitter emitter = project.getLanguage().getEmitter();
 		List sources = project.getSources();
 		List outputFilenames = new ArrayList(sources.size());
 		
@@ -73,13 +73,15 @@ public class DummyManager implements CTCommonModule
 		}
 		
 		// Create all dummies in one go.
+		DummyEmitter emitter = project.getLanguage().getEmitter();
 		emitter.createDummies(project, sources, outputFilenames);
+
 		// compile dummies
-		LangCompiler comp = project.getLanguage().compilerSettings.getCompiler();
 		try {
+			LangCompiler comp = project.getLanguage().compilerSettings.getCompiler();
 			comp.compileDummies(project);
 		}
-		catch (Exception e) {
+		catch (CompilerException e) {
 			e.printStackTrace();
 			throw new ModuleException("Cannot compile dummies: "+e.getMessage(),"DUMMER");
 		}

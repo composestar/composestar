@@ -2,9 +2,8 @@ package Composestar.DotNET.DUMMER;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import Composestar.Core.DUMMER.DummyEmitter;
 import Composestar.Core.Exception.ModuleException;
@@ -15,22 +14,21 @@ import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Utils.Debug;
 import Composestar.Utils.StreamGobbler;
 
-public class CSharpDummyEmitter implements DummyEmitter {
-		
+public class CSharpDummyEmitter implements DummyEmitter
+{
 	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
 	{
-		Vector sources = new Vector(); 
+		List sources = new ArrayList(); 
 		sources.add(source);
 		
-		Vector outputFilenames = new Vector(); 
+		List outputFilenames = new ArrayList(); 
 		outputFilenames.add(outputFilename);
 		
 		createDummies(project, sources, outputFilenames);
 	}
 
-	public void createDummies(Project project, Collection sources, Collection outputFilenames) throws ModuleException
+	public void createDummies(Project project, List sources, List outputFilenames) throws ModuleException
 	{
-		int result = 0;
 	//	StringBuffer processOutput = new StringBuffer();
 		CSharpDummyProcess dummyGen = new CSharpDummyProcess();
 		try
@@ -47,17 +45,17 @@ public class CSharpDummyEmitter implements DummyEmitter {
             dummyGen.getStdout().close();
             dummyGen.getStdin().waitForResult();
             dummyGen.getStderr().waitForResult();
-            result = dummyGen.getProcess().waitFor();
+            int result = dummyGen.getProcess().waitFor();
+    		if (result != 0)
+    		{
+    			Debug.out(Debug.MODE_DEBUG, "DUMMER", "CSharpDummyGenerator failed; output from dummy generation process:\n" + dummyGen.getStdin().result());
+    			throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed", "DUMMER");
+    		}
             createTypeLocationMapping(project, dummyGen.getStdin());
 		}
 		catch (Exception e)
 		{
-			throw new ModuleException("Error while creating dummies: " + e.getCause(), "DUMMER");
-		}
-		if (result != 0)
-		{
-			Debug.out(Debug.MODE_DEBUG, "DUMMER", "CSharpDummyGenerator failed; output from dummy generation process:\n" + dummyGen.getStdin().result());
-			throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed", "DUMMER");
+			throw new ModuleException("Error while creating dummies: " + e.getMessage(), "DUMMER");
 		}
 	}
 	
