@@ -30,6 +30,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private List<String> _unresolvedTypes = new List<String>();
         private bool _processMethodBody = true;
         private bool _processAttributes = false;
+        private string _cacheFolder = String.Empty;
 
         /// <summary>
         /// Initializes the analyzer with the specified assembly name.
@@ -53,7 +54,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 //Repository.Db4oContainers.Db4oDataStoreContainer.Instance.RepositoryFileName = repositoryFilename;
                 _repositoryAccess = new RepositoryAccess(Repository.Db4oContainers.Db4oRepositoryContainer.Instance, repositoryFilename);
             }
-            Repository.Db4oContainers.Db4oCacheContainer.Instance.CacheFolder = config.Get("InstallFolder");
+            _cacheFolder = config.Get("CacheFolder");
 
             if (config.Get("ProcessMethodBody") == "false") this._processMethodBody = false;
 
@@ -209,10 +210,6 @@ namespace Composestar.StarLight.ILAnalyzer
                 ti.IsSerializable = type.Attributes == Mono.Cecil.TypeAttributes.Serializable; 
                 ti.Namespace = type.Namespace;
                 
-                // Assembly
-                //ti.AssemblyElement.Name = type.Module.Assembly.Name.FullName;
-                //ti.AssemblyElement.Version = type.Module.Assembly.Name.Version.ToString();
-
                 // Interface
                 foreach (TypeReference interfaceDef in type.Interfaces)
                 {
@@ -367,63 +364,43 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
+
+            CacheAccess cache = new CacheAccess(Repository.Db4oContainers.Db4oCacheContainer.Instance, _cacheFolder);
             
-            //RepositoryAccess.OpenDatabase();
-            //RepositoryAccess cache = new RepositoryAccess(Repository.Db4oContainers.Db4oCacheContainer.Instance);
+            // Retrieve type elements from cache
+            IList<String> types = new List<String>(UnresolvedTypes);
+            foreach (String type in types)
+            {
+                TypeElement te = cache.GetTypeElementByAFQN(type);
 
-            
-            //// Retrieve type elements from cache
-            //IList<String> types = new List<String>(UnresolvedTypes);
-            //foreach (String type in types)
-            //{
-            //    TypeElement te = cache.GetTypeElementByAFQN(type);
+                // Type was found in the caches
+                if (te != null)
+                {
+                    // Copy type from cache to local datastore
+                    Console.WriteLine("Copying: "+te.FullName);
+                    RepositoryAccess.AddType(te);
 
-            //    // Type was found in the caches
-            //    if (te != null)
-            //    {
-            //        // Copy type from cache to local datastore
-            //        Console.WriteLine("Copying: "+te.FullName);
-            //        RepositoryAccess.AddType(te);
+                    // Copy the type fields
+                    foreach (FieldElement fe in cache.GetFieldElements(te))
+                    {
+                        RepositoryAccess.AddField(te, fe);
+                    }
 
-            //        // Copy the type attributes
-            //        foreach (AttributeElement ae in cache.GetAttributeElements(te))
-            //        {
-            //            RepositoryAccess.AddAttribute(te, ae);
-            //        }
+                    /// Copy the type methods
+                    foreach (MethodElement me in cache.GetMethodElements(te))
+                    {
+                        RepositoryAccess.AddMethod(te, me);
 
-            //        // Copy the type fields
-            //        foreach (FieldElement fe in cache.GetFieldElements(te))
-            //        {
-            //            RepositoryAccess.AddField(te, fe);
+                        // Copy the method parameters
+                        foreach (ParameterElement pe in cache.GetParameterElements(te, me))
+                        {
+                            RepositoryAccess.AddParameter(me, pe);
+                        }
+                    }
 
-            //            // Copy the field attributes
-            //            foreach (AttributeElement ae in cache.GetAttributeElements(fe))
-            //            {
-            //                RepositoryAccess.AddAttribute(fe, ae);
-            //            }
-            //        }
-
-            //        /// Copy the type methods
-            //        foreach (MethodElement me in cache.GetMethodElements(te))
-            //        {
-            //            RepositoryAccess.AddMethod(te, me);
-   
-            //            // Copy the method parameters
-            //            foreach (ParameterElement pe in cache.GetParameterElements(me))
-            //            {
-            //                RepositoryAccess.AddParameter(me, pe);
-            //            }
-
-            //            // Copy the method attributes
-            //            foreach (AttributeElement ae in cache.GetAttributeElements(me))
-            //            {
-            //                RepositoryAccess.AddAttribute(me, ae);
-            //            }
-            //        }
-
-            //        UnresolvedTypes.Remove(type);
-            //    }
-            //}
+                    UnresolvedTypes.Remove(type);
+                }
+            }
 
             //// ???
             //List<String> unresolvedAssemblies = new List<string>();
@@ -469,8 +446,10 @@ namespace Composestar.StarLight.ILAnalyzer
             
 
 
-            //cache.CloseContainer();
+            cache.CloseContainer();
             ////RepositoryAccess.CloseDatabase();
+            //Console.WriteLine("WARNING: Explicitly clearing the unresolved types list, types have NOT been resolved!");
+            //UnresolvedTypes.Clear();
 
             sw.Stop();
             _lastDuration = sw.Elapsed; 

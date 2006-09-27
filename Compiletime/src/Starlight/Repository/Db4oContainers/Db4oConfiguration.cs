@@ -34,6 +34,8 @@ namespace Composestar.Repository.Db4oContainers
                 Db4o.Configure().ObjectClass(typeof(ParameterElement)).ObjectField("_parentMethodId").Indexed(true);
 
                 Db4o.Configure().ObjectClass(typeof(AttributeElement)).ObjectField("_parentId").Indexed(true);
+
+                _isInitialized = true;
             }
         }
     }
