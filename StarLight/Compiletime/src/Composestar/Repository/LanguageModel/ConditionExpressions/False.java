@@ -18,4 +18,8 @@ public class False extends ConditionExpression implements IVisitable
 	{
 		visitor.VisitFalse(this);
 	}
+    
+    public String toString(){
+        return "false";
+    }
 }

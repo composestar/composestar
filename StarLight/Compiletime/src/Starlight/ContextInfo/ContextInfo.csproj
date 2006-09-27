@@ -35,6 +35,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomFilterType.cs" />
     <Compile Include="FilterContext.cs" />
     <Compile Include="JoinPointContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

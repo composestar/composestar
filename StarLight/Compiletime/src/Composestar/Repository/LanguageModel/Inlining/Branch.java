@@ -68,7 +68,7 @@ public class Branch extends InlineInstruction implements IVisitable
     
     public String toString(){
         String s = super.toString();
-        s += "BRANCHING\nTRUE BRANCH:\n";
+        s += "BRANCHING (" + conditionExpression.toString() + ")\nTRUE BRANCH:\n";
         s += trueBlock.toString();
         s += "END TRUE BRANCH\nFALSE BRANCH:";
         s += falseBlock.toString();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -12,13 +13,30 @@ namespace Composestar.StarLight.ContextInfo
     /// </summary>
     public sealed class FilterContext
     {
+        private Stack<int> storedActions;
 
         private static Dictionary<int, InnerFilterContext> _innercalls = new Dictionary<int, InnerFilterContext>();
 
         private FilterContext()
         {
-
+            storedActions = new Stack<int>();
         }
+
+        public void storeAction( int id )
+        {
+            storedActions.Push( id );
+        }
+
+        public int nextStoredAction()
+        {
+            return storedActions.Pop();
+        }
+
+        public bool hasMoreStoredActions()
+        {
+            return storedActions.Count > 0;
+        }
+
 
         /// <summary>
         /// Determines whether [is inner call] [the specified current instance].

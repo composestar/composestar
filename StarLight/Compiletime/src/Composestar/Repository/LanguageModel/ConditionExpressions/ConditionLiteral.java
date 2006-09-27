@@ -33,4 +33,8 @@ public class ConditionLiteral extends ConditionExpression implements IVisitable
 	{
 		visitor.VisitConditionLiteral(this);
 	}
+    
+    public String toString(){
+        return _name;
+    }
 }

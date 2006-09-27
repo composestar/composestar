@@ -41,6 +41,10 @@
     <Compile Include="ConditionExpressions\True.java" />
     <Compile Include="ConditionExpressions\Visitor\IVisitable.java" />
     <Compile Include="ConditionExpressions\Visitor\IVisitor.java" />
+    <Compile Include="Inlining\Case.java" />
+    <Compile Include="Inlining\ContextExpression.java" />
+    <Compile Include="Inlining\Switch.java" />
+    <Compile Include="Inlining\While.java" />
     <Compile Include="LinkedListEntry.java" />
     <Compile Include="External.java" />
     <Compile Include="FieldElement.java" />

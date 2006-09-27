@@ -49,4 +49,9 @@ public class And extends ConditionExpression implements IVisitable
 		((IVisitable)_right).Accept(visitor);
 		visitor.VisitAnd(this);
 	}
+    
+    
+    public String toString(){
+        return "(" + _left.toString() + " && " + _right.toString() + ")";
+    }
 }

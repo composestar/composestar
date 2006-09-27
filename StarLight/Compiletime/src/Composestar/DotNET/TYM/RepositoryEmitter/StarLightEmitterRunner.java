@@ -28,12 +28,15 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
+import Composestar.Core.INLINE.model.Case;
 import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.Instruction;
 import Composestar.Core.INLINE.model.Jump;
 import Composestar.Core.INLINE.model.Label;
+import Composestar.Core.INLINE.model.Switch;
 import Composestar.Core.INLINE.model.Visitor;
+import Composestar.Core.INLINE.model.While;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.LAMA.ParameterInfo;
@@ -350,29 +353,16 @@ public class StarLightEmitterRunner implements CTCommonModule
     
     
     private static class InstructionTranslater implements Visitor{
-        private Hashtable methodTable;
-        private long lastId;
         private final static InstructionTranslater INSTANCE = new InstructionTranslater();
         
         
         private InstructionTranslater(){
-            methodTable = new Hashtable();
-            lastId = 0;
         }
         
         public static InstructionTranslater getInstance(){
             return INSTANCE;
         }
         
-        private long getMethodId( MethodInfo method ){
-            Long id = (Long) methodTable.get( method );
-            if ( id == null ){
-                id = new Long( lastId++ );
-                methodTable.put( method, id );
-            }
-            
-            return id.longValue();
-        }
         
         
         /**
@@ -438,7 +428,7 @@ public class StarLightEmitterRunner implements CTCommonModule
                 newBlock = null;
             }
             
-            long methodId = getMethodId( contextInstruction.getMethod() );
+            int methodId = contextInstruction.getCode();
             
             
             Composestar.Repository.LanguageModel.Inlining.ContextInstruction newContextInstruction = 
@@ -479,6 +469,68 @@ public class StarLightEmitterRunner implements CTCommonModule
         }
         
         
+        
+        
+        /**
+         * @see Composestar.Core.INLINE.model.Visitor#visitCase(Composestar.Core.INLINE.model.Case)
+         */
+        public Object visitCase(Case caseInstruction){
+            Composestar.Repository.LanguageModel.Inlining.Block newBlock =
+                (Composestar.Repository.LanguageModel.Inlining.Block) 
+                caseInstruction.getInstructions().accept( this );
+            
+            Composestar.Repository.LanguageModel.Inlining.Case newCase =
+                new Composestar.Repository.LanguageModel.Inlining.Case( caseInstruction.getCheckConstant(),
+                        newBlock );
+            
+            setLabel( caseInstruction, newCase );
+            
+            return newCase;
+        }
+
+        /**
+         * @see Composestar.Core.INLINE.model.Visitor#visitSwitch(Composestar.Core.INLINE.model.Switch)
+         */
+        public Object visitSwitch(Switch switchInstruction){
+            Composestar.Repository.LanguageModel.Inlining.ContextExpression newExpr =
+                new Composestar.Repository.LanguageModel.Inlining.ContextExpression( 
+                        switchInstruction.getExpression().getType() );
+            
+            Composestar.Repository.LanguageModel.Inlining.Switch newSwitch =
+                new Composestar.Repository.LanguageModel.Inlining.Switch( newExpr );
+            
+            Case[] cases = switchInstruction.getCases();
+            for (int i=0; i<cases.length; i++){
+                Composestar.Repository.LanguageModel.Inlining.Case newCase = 
+                    (Composestar.Repository.LanguageModel.Inlining.Case) cases[i].accept( this );
+                newSwitch.addCase( newCase );
+            }
+            
+            setLabel( switchInstruction, newSwitch );
+            
+            return newSwitch;
+        }
+
+        /**
+         * @see Composestar.Core.INLINE.model.Visitor#visitWhile(Composestar.Core.INLINE.model.While)
+         */
+        public Object visitWhile(While whileInstruction){
+            Composestar.Repository.LanguageModel.Inlining.ContextExpression newExpr =
+                new Composestar.Repository.LanguageModel.Inlining.ContextExpression( 
+                        whileInstruction.getExpression().getType() );
+            
+            Composestar.Repository.LanguageModel.Inlining.Block newBlock =
+                (Composestar.Repository.LanguageModel.Inlining.Block) 
+                whileInstruction.getInstructions().accept( this );
+            
+            Composestar.Repository.LanguageModel.Inlining.While newWhile =
+                new Composestar.Repository.LanguageModel.Inlining.While( newExpr, newBlock );
+            
+            setLabel( whileInstruction, newWhile );
+            
+            return newWhile;
+        }
+
         private Composestar.Repository.LanguageModel.ConditionExpressions.ConditionExpression 
         translateConditionExpression( ConditionExpression expression )
         {
