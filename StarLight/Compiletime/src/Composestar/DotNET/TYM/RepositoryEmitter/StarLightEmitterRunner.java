@@ -549,11 +549,10 @@ public class StarLightEmitterRunner implements CTCommonModule
             Label label = oldInstruction.getLabel();
             
             if ( label != null ){
-                Composestar.Repository.LanguageModel.Inlining.Label newLabel =
-                    new Composestar.Repository.LanguageModel.Inlining.Label( 
-                            oldInstruction.getLabel().getId() );
-
-                newInstruction.set_Label( newLabel );
+                newInstruction.set_Label( label.getId() );
+            }
+            else{
+                newInstruction.set_Label( -1 );
             }
         }
     }
