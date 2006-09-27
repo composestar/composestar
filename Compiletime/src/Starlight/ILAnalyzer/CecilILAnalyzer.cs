@@ -73,7 +73,7 @@ namespace Composestar.StarLight.ILAnalyzer
             get { return _unresolvedTypes; }
         }
 
-        private List<String> ResolvedTypes
+        public List<String> ResolvedTypes
         {
             get { return _resolvedTypes; }
         }
@@ -144,7 +144,7 @@ namespace Composestar.StarLight.ILAnalyzer
             return type.FullName;
         }
 
-        public IList<TypeElement> ExtractTypeElements(String fileName)
+        public void ExtractTypeElements(String fileName)
         {
             AssemblyDefinition _targetAssemblyDefinition = null;
 
@@ -165,14 +165,14 @@ namespace Composestar.StarLight.ILAnalyzer
             }
             #endregion
 
-            return this.ExtractTypeElements(String.Empty, _targetAssemblyDefinition);
+            this.ExtractTypeElements(String.Empty, _targetAssemblyDefinition);
         }
       
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        public IList<TypeElement> ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition)
+        private void ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition)
         {
             CheckForInit();
 
@@ -180,8 +180,6 @@ namespace Composestar.StarLight.ILAnalyzer
             sw.Start();
 
             int i = 0;
-            
-            Console.WriteLine(String.Format("Assembly contains {0} modules", _targetAssemblyDefinition.Modules.Count));
 
             //Gets all types of the MainModule of the assembly
             foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
@@ -363,8 +361,6 @@ namespace Composestar.StarLight.ILAnalyzer
             //IList<TypeElement> ret = RepositoryAccess.GetTypeElements();
             
             //_repositoryAccess.CloseDatabase();
-
-            return null;// ret;
         }
 
         public void ProcessUnresolvedTypes()

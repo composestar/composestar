@@ -22,12 +22,13 @@ namespace Composestar.StarLight.ILAnalyzer
         void Initialize(NameValueCollection config );
 
         List<string> UnresolvedTypes { get; }
-       
+        List<string> ResolvedTypes { get; }
+
         /// <summary>
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        IList<TypeElement> ExtractTypeElements(String fileName);
+        void ExtractTypeElements(String fileName);
 
         void ProcessUnresolvedTypes();
 
