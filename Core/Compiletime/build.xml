@@ -54,7 +54,7 @@
 		</antlr>
 	</target>
 	
-	<target name="compile">
+	<target name="compile" depends="antlr">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
 			<exclude name="**/AssemblyInfo.java" />
 			<exclude name="Composestar/Core/SECRET/*"/>
@@ -111,6 +111,7 @@
 		<junit printsummary="on" haltonfailure="on">
 			<classpath>
 				<path refid="lib.test"/>
+				<pathelement path="test"/>
 			</classpath>
 			<formatter type="plain"/>
 			<batchtest todir="test">
