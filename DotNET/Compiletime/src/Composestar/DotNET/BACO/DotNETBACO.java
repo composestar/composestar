@@ -15,8 +15,10 @@ public class DotNETBACO extends BACO
 	protected boolean isNeededDependency(Dependency dependency)
 	{
 		// FIXME: assumption about .NET installation
-		return (dependency.getFileName().indexOf("Microsoft.NET/Framework/") == -1)
-			&& (dependency.getFileName().toLowerCase().indexOf("assembly/gac/") == -1);
+		// TODO: make this reusable by other modules
+		String dep = dependency.getFileName().toLowerCase(); 
+		return (dep.indexOf("microsoft.net/framework/") == -1)
+			&& (dep.indexOf("assembly/gac/") == -1);
 	}
 
 	protected void addBuiltLibraries(Set filesToCopy)
