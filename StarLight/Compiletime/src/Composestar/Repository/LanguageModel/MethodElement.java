@@ -5,8 +5,8 @@ package Composestar.Repository.LanguageModel;
  */
 public class MethodElement implements IRepositoryElement
 {
-	private int _id;
-	private int _parentTypeId;
+	private String _id;
+	private String _parentTypeId;
 	private String _name = "";
 	private String _returnType = "";
 	private boolean _isAbstract;
@@ -18,10 +18,10 @@ public class MethodElement implements IRepositoryElement
 	private MethodBody _methodBody;
 	private String _signature;
 
-	public MethodElement()
+	public MethodElement(String id)
 	{
-		_id = this.hashCode();
-
+		_id = id;
+			
 	}
 
 	/** @property */
@@ -38,16 +38,16 @@ public class MethodElement implements IRepositoryElement
 
 
 	/** @property */
-	public int get_Id() { return _id; }
+	public String get_Id() { return _id; }
 	
 	/** @property */
-	public void set_ParentTypeId(int value)
+	public void set_ParentTypeId(String value)
 	{
 	    _parentTypeId = value; 
 	}
 	
 	/** @property */
-	public int get_ParentTypeId() 
+	public String get_ParentTypeId() 
 	{
 	    return _parentTypeId; 
 	}
@@ -151,7 +151,7 @@ public class MethodElement implements IRepositoryElement
 	/** @property */
 	public MethodBody get_MethodBody()
 	{
-		if (_methodBody == null) _methodBody = new MethodBody(_id); 
+		//if (_methodBody == null) _methodBody = new MethodBody(_id); 
 
 		return _methodBody;
 	}
@@ -160,6 +160,14 @@ public class MethodElement implements IRepositoryElement
 	public void set_MethodBody(MethodBody value)
 	{
 		_methodBody = value;
+	}
+
+	/** @property */
+	public boolean get_HasMethodBody()
+	{
+		if (_methodBody != null) return true;
+
+		return false;
 	}
 
     public String toString(){

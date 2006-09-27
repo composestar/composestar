@@ -133,6 +133,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		while (typeIterator.hasNext())
 		{
 			TypeElement storedType = (TypeElement)typeIterator.next();
+
+			Debug.out(Debug.MODE_DEBUG,"TYM","Processing type '"+storedType.get_FullName()+"'");
 			
 			DotNETType type = new DotNETType();
 			
@@ -226,6 +228,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		while (methodIterator.hasNext())
 		{
 			MethodElement storedMethod = (MethodElement)methodIterator.next();
+
+			Debug.out(Debug.MODE_DEBUG,"TYM","   Processing method '"+storedMethod.get_Signature()+"'");
 			
 			DotNETMethodInfo method = new DotNETMethodInfo();
 						
@@ -254,7 +258,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 //           - Ignored: MethodAttrributes
           	
             collectParameters(storedMethod, method);
-            collectMethodBody(storedMethod.get_MethodBody(), method);
+            
+            if (storedMethod.get_HasMethodBody()) collectMethodBody(storedMethod.get_MethodBody(), method);
             
 			type.addMethod(method);
 		}
@@ -271,6 +276,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			ParameterElement storedParameter = (ParameterElement)parameterIterator.next();
 			
+			Debug.out(Debug.MODE_DEBUG,"TYM","      Processing parameter '"+storedParameter.get_Name()+"' ("+storedParameter.get_ParameterType()+")");
+
 			DotNETParameterInfo parameter = new DotNETParameterInfo();
 						
             if( storedParameter.get_Name() != null ) {

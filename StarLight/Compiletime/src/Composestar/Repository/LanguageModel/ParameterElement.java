@@ -5,7 +5,7 @@ package Composestar.Repository.LanguageModel;
  */
 public class ParameterElement
 {
-	private int _parentMethodId;
+	private String _parentMethodId;
 	private String _name;
 	private boolean _isIn;
 	private boolean _isOptional;
@@ -13,13 +13,13 @@ public class ParameterElement
 	private boolean _isRetVal;
 	
 	/** @property */
-	public void set_ParentMethodId(int value)
+	public void set_ParentMethodId(String value)
 	{
 		_parentMethodId = value;
 	}
 
 	/** @property */
-	public int get_ParentMethodId()
+	public String get_ParentMethodId()
 	{
 		return _parentMethodId;
 	}

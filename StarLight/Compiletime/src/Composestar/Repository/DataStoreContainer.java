@@ -3,7 +3,7 @@ package Composestar.Repository;
 import java.util.List;
 
 import Composestar.DotNET.MASTER.StarLightMaster;
-import Composestar.Repository.LanguageModel.MethodElement;
+import Composestar.Repository.LanguageModel.*;
 import Composestar.Repository.LanguageModel.Inlining.Block;
 
 import com.db4o.Db4o;
@@ -33,11 +33,19 @@ public class DataStoreContainer {
 
         
 		// Indexes
-        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.FieldElement.class).objectField("_parentTypeId").indexed(true);
-		Db4o.configure().objectClass(Composestar.Repository.LanguageModel.MethodElement.class).objectField("_parentTypeId").indexed(true);
-        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.ParameterElement.class).objectField("_parentMethodId").indexed(true);
-        Db4o.configure().objectClass(Composestar.Repository.LanguageModel.CallElement.class).objectField("_parentMethodBodyId").indexed(true);
-        
+        Db4o.configure().objectClass(TypeElement.class).objectField("_id").indexed(true);
+        Db4o.configure().objectClass(TypeElement.class).objectField("_fullName").indexed(true);
+        Db4o.configure().objectClass(TypeElement.class).objectField("_AFQN").indexed(true);
+        Db4o.configure().objectClass(TypeElement.class).objectField("_fromDLL").indexed(true);
+
+        Db4o.configure().objectClass(FieldElement.class).objectField("_parentTypeId").indexed(true);
+
+        Db4o.configure().objectClass(MethodElement.class).objectField("_parentTypeId").indexed(true);
+        Db4o.configure().objectClass(MethodElement.class).objectField("_signature").indexed(true);
+
+        Db4o.configure().objectClass(ParameterElement.class).objectField("_parentMethodId").indexed(true);
+
+        Db4o.configure().objectClass(AttributeElement.class).objectField("_parentId").indexed(true);
         
         dbContainer = Db4o.openFile(yapFileName);
     }

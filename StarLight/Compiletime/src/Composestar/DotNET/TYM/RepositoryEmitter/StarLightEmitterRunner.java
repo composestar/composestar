@@ -236,9 +236,15 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //get stored method:
                 String key = createKey( method );
                 storedMethod = (MethodElement) index.get( key );
-                Debug.out( Debug.MODE_DEBUG, " emitter",  "key:" +key);
+                Debug.out( Debug.MODE_DEBUG, "Emitter",  "key:" +key);
 
+                if (storedMethod == null) {
+                	Debug.out( Debug.MODE_ERROR, "Emitter", "Method not found.");
+                	return;
+                }
+                
                 //add inputfilter code:
+                if (!storedMethod.get_HasMethodBody()) storedMethod.set_MethodBody(new MethodBody(storedMethod.get_Id()));
                 MethodBody body = storedMethod.get_MethodBody();
                 body.set_InputFilter( translateInstruction( filterInstructions ) );
                 

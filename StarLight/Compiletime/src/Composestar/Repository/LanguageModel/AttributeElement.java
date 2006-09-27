@@ -5,7 +5,7 @@ package Composestar.Repository.LanguageModel;
  */
 public class AttributeElement {
 	private String _parentType;
-	private int _parentId;
+	private String _parentId;
 	
 	private String _type; // attribute type
 	private String _value; // attribute value
@@ -14,7 +14,7 @@ public class AttributeElement {
 	{
 	}
 
-	public AttributeElement(String parentType, int parentId) 
+	public AttributeElement(String parentType, String parentId) 
 	{
 		_parentType = parentType;
 		_parentId = parentId;	
@@ -33,13 +33,13 @@ public class AttributeElement {
 	}
 	
 	/** @property */
-	public int get_ParentId() 
+	public String get_ParentId() 
 	{
 	    return _parentId; 
 	}
 
 	/** @property */
-	public void set_ParentId(int value)
+	public void set_ParentId(String value)
 	{
 		_parentId = value;
 	}
