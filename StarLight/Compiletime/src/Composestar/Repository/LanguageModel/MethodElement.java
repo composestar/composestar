@@ -151,7 +151,7 @@ public class MethodElement implements IRepositoryElement
 	/** @property */
 	public MethodBody get_MethodBody()
 	{
-		//if (_methodBody == null) _methodBody = new MethodBody(_id); 
+		if (_methodBody == null) _methodBody = new MethodBody(_id); 
 
 		return _methodBody;
 	}

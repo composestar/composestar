@@ -34,7 +34,7 @@ namespace Composestar.StarLight.CoreServices
         /// </summary>
         /// <param name="fullName">The full name.</param>
         /// <returns></returns>
-        TypeElement GetTypeElementById(int typeId);
+        TypeElement GetTypeElementById(string typeId);
 
         /// <summary>
         /// Gets the type elements.
