@@ -75,6 +75,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     private int nextReturnActionId;
     private Switch onReturnInstructions;
     private ContextInstruction createActionStoreInstruction;
+    private Label returnLabel;
 
     /**
      * Indicates whether the instructionset of the current inline is empty or not.
@@ -129,6 +130,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         
         nextReturnActionId = 1;
         onReturnInstructions = new Switch( new ContextExpression(ContextExpression.RETRIEVE_ACTION) );
+        returnLabel = new Label( 9998 );
 
         empty = true;
 
@@ -155,7 +157,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     public void endInline(){
         //check whether there are on return actions:
         if ( !onReturnInstructions.hasCases() ){
+            //remove createActionStore instruction:
             createActionStoreInstruction.setType( ContextInstruction.REMOVED );
+            
+            //set jumpLabel of onReturnJump to end:
+            returnLabel.setId( 9999 );
         }
         else{
             //add onReturnActions:
@@ -165,6 +171,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             While whileInstruction = 
                 new While( new ContextExpression( ContextExpression.HAS_MORE_ACTIONS ),
                     block );
+            whileInstruction.setLabel( returnLabel );
             
             
             currentBlock.addInstruction( whileInstruction );
@@ -255,17 +262,20 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * @see Composestar.Core.INLINE.lowlevel.LowLevelInlineStrategy#jump(int)
      */
     public void jump(int labelId){
+        Label label;
         if ( labelId == -1 ){
-            labelId = 9999;
+            label = returnLabel;
         }
-        
-        if ( labelId != currentLabelId + 1 ){
-            Label label = getLabel( labelId );
-
-            Jump jump = new Jump( label );
-
-            this.currentBlock.addInstruction( jump );
+        else if( labelId != currentLabelId + 1 ){
+            label = getLabel( labelId );
         }
+        else{
+            return;
+        }
+
+        Jump jump = new Jump( label );
+
+        this.currentBlock.addInstruction( jump );
     }
 
 
