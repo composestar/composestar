@@ -17,6 +17,7 @@ using Microsoft.Practices.ObjectBuilder;
 using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILWeaver;
+using Composestar.Repository.Db4oContainers;  
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -27,7 +28,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class ILWeaverTask : Task
     {
-        ServiceContainer svcContainer = new ServiceContainer();
 
         #region Properties for MSBuild
 
@@ -52,17 +52,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
         #endregion
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverTask"/> class.
-        /// </summary>
-        public ILWeaverTask()
-        {
-            svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverBuilderConfigurator());
-            svcContainer.AddService(typeof(CecilWeaverConfiguration), CecilWeaverConfiguration.CreateDefaultConfiguration("TestTarget.exe"));
-            svcContainer.AddService(typeof(ILanguageModelAccessor), new RepositoryAccess(RepositoryFilename));
-            
-        }
-
-        /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
         /// <returns>
@@ -74,7 +63,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             String filename;
             CecilILWeaver weaver = null;
-            ILanguageModelAccessor langModelAccessor = new RepositoryAccess(RepositoryFilename);
+            ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
             foreach (ITaskItem item in AssemblyFiles)
             {
@@ -84,6 +73,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 // Preparing config
                 CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
                 
+
                 try
                 {
                     weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(langModelAccessor, configuration));
@@ -95,7 +85,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
                 catch (ILWeaverException ex)
                 {
-                    Log.LogErrorFromException(ex, true);
+                    Log.LogErrorFromException(ex, false);
+                    if (ex.InnerException != null)
+                        Log.LogErrorFromException(ex.InnerException, true);
                 }
                 catch (ArgumentException ex)
                 {
