@@ -155,19 +155,21 @@ namespace Composestar.StarLight.ILAnalyzer
             AssemblyElement assembly = RepositoryAccess.GetAssemblyElementByFileName(System.IO.Path.GetFullPath(fileName));
             if (assembly != null)
             {
-                if (assembly.Timestamp == File.GetLastWriteTimeUtc(fileName).Ticks)
-                {
-                    // Clean up datastore
-                    RepositoryAccess.DeleteWeavingInstructions();
+                // Clean up datastore
+                RepositoryAccess.DeleteWeavingInstructions(); // have to work on assembly lvl only, now EVERYTHING gets cleared!
 
+                if (assembly.Timestamp != File.GetLastWriteTimeUtc(fileName).Ticks)
+                {
+                    // Assembly has to be re-analysed (remove all previous types from datastore)
+                    RepositoryAccess.DeleteTypeElements(assembly.Name);
+                }
+                else
+                {
                     sw.Stop();
                     _lastDuration = sw.Elapsed; 
 
                     return IlAnalyzerResults.FROM_CACHE;
                 }
-
-                // Assembly has to be re-analysed (remove all previous types from datastore)
-                // TODO
             }
 
             try

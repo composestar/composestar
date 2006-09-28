@@ -477,22 +477,73 @@ namespace Composestar.Repository
             container.DeleteObjects<LinkedList>();
             container.DeleteObjects<LinkedListEntry>();
             container.DeleteObjects<Reference>();
-           
+
+            container.DeleteObjects<And>();
             container.DeleteObjects<ConditionExpression>();
             container.DeleteObjects<ConditionLiteral>();
+            container.DeleteObjects<False>();
             container.DeleteObjects<Not>();
+            container.DeleteObjects<Or>();
+            container.DeleteObjects<True>();
 
             container.DeleteObjects<Block>();
             container.DeleteObjects<Branch>();
+            container.DeleteObjects<Case>();
+            container.DeleteObjects<ContextExpression>();
             container.DeleteObjects<ContextInstruction>();
             container.DeleteObjects<FilterAction>();
             container.DeleteObjects<InlineInstruction>();
             container.DeleteObjects<Jump>();
-
-
+            container.DeleteObjects<Label>();
+            container.DeleteObjects<Switch>();
+            container.DeleteObjects<While>();
         }
 
+        public void DeleteTypeElements(String assembly)
+        {
+            // Get all TypeElements belonging to 'assembly'
+            IList<TypeElement> types = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            {
+                return te.Assembly.Equals(assembly);
+            });
 
+            foreach (TypeElement type in types)
+            {
+                // Remove all FieldElements belonging to 'type'
+                container.DeleteObjects<FieldElement>(delegate(FieldElement fe)
+                {
+                    return fe.ParentTypeId.Equals(type.Id);
+                });
+
+                // Get all MethodElements belonging to 'type'
+                IList<MethodElement> methods = container.GetObjectQuery<MethodElement>(delegate(MethodElement me)
+                {
+                    return me.ParentTypeId.Equals(type.Id);
+                });
+
+                foreach (MethodElement method in methods)
+                {
+                    // Remove all ParameterElements belonging to 'method'
+                    container.DeleteObjects<ParameterElement>(delegate(ParameterElement pe)
+                    {
+                        return pe.ParentMethodId.Equals(method.Id);
+                    });
+                }
+
+                // Remove all MethodElements belonging to 'type'
+                container.DeleteObjects<MethodElement>(delegate(MethodElement me)
+                {
+                    return me.ParentTypeId.Equals(type.Id);
+                });
+            }
+
+            // Remove all TypeElements belonging to 'assembly'
+            container.DeleteObjects<TypeElement>(delegate(TypeElement te)
+            {
+                return te.Assembly.Equals(assembly);
+            });
+
+        }
 
         /// <summary>
         /// Gets the common configuration.
