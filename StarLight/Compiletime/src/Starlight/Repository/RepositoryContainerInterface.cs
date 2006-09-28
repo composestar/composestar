@@ -20,6 +20,7 @@ namespace Composestar.Repository
         IList<T> GetObjectQuery<T>(Predicate<T> match);
 
         void DeleteObjects<T>();
+        void DeleteObjects<T>(Predicate<T> match);
 
         // Dit moet weg, maar dan moeten alle native queries wel optimized worden
         com.db4o.query.Query Query();

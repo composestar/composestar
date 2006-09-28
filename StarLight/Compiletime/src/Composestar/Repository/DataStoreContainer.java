@@ -35,7 +35,7 @@ public class DataStoreContainer {
 		// Indexes
         Db4o.configure().objectClass(TypeElement.class).objectField("_id").indexed(true);
         Db4o.configure().objectClass(TypeElement.class).objectField("_fullName").indexed(true);
-        Db4o.configure().objectClass(TypeElement.class).objectField("_AFQN").indexed(true);
+        Db4o.configure().objectClass(TypeElement.class).objectField("_assembly").indexed(true);
         Db4o.configure().objectClass(TypeElement.class).objectField("_fromDLL").indexed(true);
 
         Db4o.configure().objectClass(FieldElement.class).objectField("_parentTypeId").indexed(true);

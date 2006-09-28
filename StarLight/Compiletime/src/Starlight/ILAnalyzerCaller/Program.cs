@@ -13,7 +13,10 @@ namespace Composestar.StarLight.ILAnalyzerCaller
         static void Main(string[] args)
         {
             if (args.Length < 1)
+            {
+                Console.WriteLine("Usage: IlAnalyzerCaller <YapFile>/<assembly> [nocache]");
                 return;
+            }
 
             string file = string.Empty;
             if (args[0].StartsWith("\"") && args[0].EndsWith("\""))
@@ -52,6 +55,8 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 sw.Stop();
 
                 Console.WriteLine("\n{0} types with in total {1} methods found in {2:0.0000} seconds.", dbtypes.Count, methodCount, sw.Elapsed.TotalSeconds);
+
+                repository.Close();
 
                 return;
             }
@@ -94,11 +99,6 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 }
                 analyzer.Close();
             }
-            else
-            {
-                Console.WriteLine("Usage: IlAnalyzerCaller <YapFile>/<assembly>");
-            }
-
             
             //Console.ReadKey(); 
         }

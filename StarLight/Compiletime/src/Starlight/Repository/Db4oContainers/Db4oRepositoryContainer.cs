@@ -244,5 +244,13 @@ namespace Composestar.Repository.Db4oContainers
             }
         }
 
+        public void DeleteObjects<T>(Predicate<T> match)
+        {
+            IList<T> result = dbContainer.Query<T>(match);
+            foreach (object item in result)
+            {
+                dbContainer.Delete(item);
+            }
+        }
     }
 }
