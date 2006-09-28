@@ -60,6 +60,19 @@ namespace Composestar.Repository
             container.CloseContainer();
         }
 
+        public AssemblyElement GetAssemblyElementByFileName(string fileName)
+        {
+            IList<AssemblyElement> ret = container.GetObjectQuery<AssemblyElement>(delegate(AssemblyElement ae)
+            {
+                return ae.FileName.Equals(fileName);
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+
+            return null;
+        }
+
         /// <summary>
         /// Gets the type info.
         /// </summary>
@@ -321,6 +334,14 @@ namespace Composestar.Repository
                 return ret[0];
 
             return null; 
+        }
+
+        public void AddAssembly(AssemblyElement assemblyElement)
+        {
+            if (assemblyElement == null)
+                throw new ArgumentNullException("assemblyElement");
+
+            container.StoreObject(assemblyElement);
         }
 
         /// <summary>

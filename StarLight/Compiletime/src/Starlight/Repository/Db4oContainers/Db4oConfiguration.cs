@@ -31,6 +31,8 @@ namespace Composestar.Repository.Db4oContainers
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.ConditionExpressions.ConditionLiteral)).CascadeOnActivate(true);               
 
                 // Indexes
+                Db4o.Configure().ObjectClass(typeof(AssemblyElement)).ObjectField("_fileName").Indexed(true);
+
                 Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_id").Indexed(true);
                 Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_fullName").Indexed(true);
                 Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_AFQN").Indexed(true);
