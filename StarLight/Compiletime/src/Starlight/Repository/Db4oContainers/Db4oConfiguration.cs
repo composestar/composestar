@@ -36,7 +36,7 @@ namespace Composestar.Repository.Db4oContainers
 
                 Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_id").Indexed(true);
                 Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_fullName").Indexed(true);
-                Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_AFQN").Indexed(true);
+                Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_assembly").Indexed(true);
                 Db4o.Configure().ObjectClass(typeof(TypeElement)).ObjectField("_fromDLL").Indexed(true);
 
                 Db4o.Configure().ObjectClass(typeof(FieldElement)).ObjectField("_parentTypeId").Indexed(true);

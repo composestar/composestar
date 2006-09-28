@@ -12,7 +12,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
     {
         static void Main(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length < 1)
                 return;
 
             string file = string.Empty;
@@ -24,8 +24,14 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             {
                 file = args[0];
             }
+            
+            bool resolveFromCache = true;
+            if (args.Length == 2)
+            {
+                if (args[1].ToLower().Equals("nocache")) resolveFromCache = false;
+            }
 
-            Console.WriteLine("> "+file);
+            Console.WriteLine("Analyzing '{0}':", file);
             if (file.EndsWith(".yap"))
             {
                 // Read from YAP file
@@ -60,12 +66,18 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 //IILAnalyzer analyzer = new ReflectionILAnalyzer();
                 IILAnalyzer analyzer = new CecilILAnalyzer();
                 analyzer.Initialize(config);
-
-                //List<MethodElement> methods = analyzer.ExtractMethods();
-                analyzer.ExtractTypeElements(file);
                 
-                //Console.WriteLine("{0} types found in {1} seconds.", types.Count, analyzer.LastDuration.TotalSeconds);
-                Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                IlAnalyzerResults result = analyzer.ExtractTypeElements(file);
+
+                if (result == IlAnalyzerResults.FROM_ASSEMBLY)
+                {
+                    Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                }
+                else
+                {
+                    Console.WriteLine("Summary: Assembly has not been modified, skipping analysis. (time {0:0.0000} seconds)", analyzer.LastDuration.TotalSeconds);
+                }
+                
                 if (analyzer.UnresolvedTypes.Count <= 20)
                 {
                     foreach (String ut in analyzer.UnresolvedTypes)
@@ -73,10 +85,12 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                         Console.WriteLine("  {0}", ut);
                     }
                 }
-                if (analyzer.UnresolvedTypes.Count > 0)
+                if (analyzer.UnresolvedTypes.Count > 0 && resolveFromCache)
                 {
+                    Console.WriteLine("Accessing cache for {0} unresolved types:", analyzer.UnresolvedTypes.Count);
+                    int unresolvedCount = analyzer.UnresolvedTypes.Count;
                     analyzer.ProcessUnresolvedTypes();
-                    Console.WriteLine("Unresolved types after cache matching: {0}", analyzer.UnresolvedTypes.Count);
+                    Console.WriteLine("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
                 }
                 analyzer.Close();
             }

@@ -235,5 +235,14 @@ namespace Composestar.Repository.Db4oContainers
             return dbContainer.Query();
         }
 
+        public void DeleteObjects<T>()
+        {
+            ObjectSet result = dbContainer.Get(typeof(T));
+            foreach (object item in result)
+            {
+                dbContainer.Delete(item);
+            }
+        }
+
     }
 }

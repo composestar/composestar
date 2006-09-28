@@ -24,12 +24,12 @@ namespace Composestar.Repository
             container.CloseContainer();
         }
 
-        public TypeElement GetTypeElementByAFQN(string AFQN)
+        public TypeElement GetTypeElementByAFQN(string typeName, string assembly)
         {
             IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
-                return te.AFQN.Equals(AFQN);
-            }, AFQN.Substring(AFQN.IndexOf(", ")+2));
+                return te.FullName.Equals(typeName) && te.Assembly.Equals(assembly);
+            }, assembly);
 
             if (ret.Count == 1)
                 return ret[0];
@@ -47,7 +47,7 @@ namespace Composestar.Repository
             IList<FieldElement> result = container.GetObjectQuery<FieldElement>(delegate(FieldElement fe)
             {
                 return fe.ParentTypeId == type.Id;
-            }, type.AFQN.Substring(type.AFQN.IndexOf(", ") + 2));
+            }, type.Assembly);
 
             return result;
         }
@@ -62,7 +62,7 @@ namespace Composestar.Repository
             IList<MethodElement> result = container.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
                 return me.ParentTypeId == type.Id;
-            }, type.AFQN.Substring(type.AFQN.IndexOf(", ") + 2));
+            }, type.Assembly);
 
             return result;
         }
@@ -77,7 +77,7 @@ namespace Composestar.Repository
             IList<ParameterElement> result = container.GetObjectQuery<ParameterElement>(delegate(ParameterElement pe)
             {
                 return pe.ParentMethodId == method.Id;
-            }, type.AFQN.Substring(type.AFQN.IndexOf(", ") + 2));
+            }, type.Assembly);
 
             return result;
         }

@@ -9,7 +9,7 @@ public class TypeElement implements IRepositoryElement
 	private String _id;
 	private String _name = "";
 	private String _fullName = "";
-	private String _AFQN = "";
+	private String _assembly = "";
 	private String _baseType = "";
 	private String _namespace = "";
 	private boolean _isAbstract;
@@ -73,15 +73,15 @@ public class TypeElement implements IRepositoryElement
 	}
 
 	/** @property */
-	public String get_AFQN()
+	public String get_Assembly()
 	{
-		return _AFQN;
+		return _assembly;
 	}
 
 	/** @property */
-	public void set_AFQN(String value)
+	public void set_Assembly(String value)
 	{
-		_AFQN = value;
+		_assembly = value;
 	}
 
 	/** @property */

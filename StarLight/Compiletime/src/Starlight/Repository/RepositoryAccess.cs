@@ -4,6 +4,7 @@ using System.Text;
 
 using Composestar.Repository.Configuration;
 using Composestar.Repository.LanguageModel;
+using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
 
@@ -96,11 +97,11 @@ namespace Composestar.Repository
         /// </summary>
         /// <param name="fullName">The AQFN.</param>
         /// <returns></returns>
-        public TypeElement GetTypeElementByAFQN(string AFQN)
+        public TypeElement GetTypeElementByAFQN(string fullName, string assembly)
         {
             IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
-                return te.AFQN.Equals(AFQN);
+                return te.FullName.Equals(fullName) && te.Assembly.Equals(assembly);
             });
 
             if (ret.Count == 1)
@@ -354,7 +355,7 @@ namespace Composestar.Repository
                 throw new ArgumentNullException("typeElement");
 
             // Check if type already exists
-            if (GetTypeElementByAFQN(typeElement.AFQN) == null)
+            if (GetTypeElementByAFQN(typeElement.FullName, typeElement.Assembly) == null)
             {
                 container.StoreObject(typeElement);
             }
@@ -469,6 +470,29 @@ namespace Composestar.Repository
                 container.StoreObject(concernInformation);
             }
         }
+
+        public void DeleteWeavingInstructions()
+        {
+            container.DeleteObjects<Condition>();
+            container.DeleteObjects<LinkedList>();
+            container.DeleteObjects<LinkedListEntry>();
+            container.DeleteObjects<Reference>();
+           
+            container.DeleteObjects<ConditionExpression>();
+            container.DeleteObjects<ConditionLiteral>();
+            container.DeleteObjects<Not>();
+
+            container.DeleteObjects<Block>();
+            container.DeleteObjects<Branch>();
+            container.DeleteObjects<ContextInstruction>();
+            container.DeleteObjects<FilterAction>();
+            container.DeleteObjects<InlineInstruction>();
+            container.DeleteObjects<Jump>();
+
+
+        }
+
+
 
         /// <summary>
         /// Gets the common configuration.
