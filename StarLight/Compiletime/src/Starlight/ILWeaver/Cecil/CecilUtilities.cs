@@ -274,6 +274,8 @@ namespace Composestar.StarLight.ILWeaver
 
             try
             {
+                fullName = fullName.Replace(", PublicKeyToken=null", ""); 
+                
                 assemblyNameReferenceParsed = AssemblyNameReference.Parse(fullName);
             }
             catch (ArgumentException)
@@ -292,8 +294,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
-            AssemblyDefinition asm = (AssemblyDefinition)m_cache[name.FullName];
-            if (asm == null)
+            AssemblyDefinition asm;
+            if (!m_cache.TryGetValue(name.FullName, out asm))
             {
                 asm = ResolveInternal(name);
                 if (asm != null) 

@@ -496,10 +496,28 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Generate the branching code for the conditions.
         /// </summary>
+        /// <example>
+        /// <code>
+        /// if (condition)
+        /// {
+        ///   // true
+        /// }
+        /// else
+        /// {
+        ///   // false
+        /// }
+        /// </code>
+        /// In IL code:
+        /// <code>
+        /// condition
+        /// brfalse l1:
+        /// trueblock
+        /// l1:
+        /// </code>
+        /// </example> 
         /// <param name="branch">The branch.</param>
         public void VisitBranch(Branch branch)
         {
-
             // Add condition code
             CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
             conditionsVisitor.Method = Method;

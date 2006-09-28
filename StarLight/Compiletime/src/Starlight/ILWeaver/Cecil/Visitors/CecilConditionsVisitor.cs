@@ -5,7 +5,7 @@ using System.Text;
 using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.ConditionExpressions.Visitor;
 using Composestar.StarLight.CoreServices;
-  
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -163,12 +163,12 @@ namespace Composestar.StarLight.ILWeaver
 
             if (method == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
-            
-           // if ((method.CallingConvention&MethodCallingConvention.ThisCall)== MethodCallingConvention.ThisCall)
+
+            // if ((method.CallingConvention&MethodCallingConvention.ThisCall)== MethodCallingConvention.ThisCall)
             if (method.HasThis)
             {
                 // Load the this pointer
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This)); 
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
             }
 
             // Create a call instruction
@@ -225,6 +225,6 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #endregion
-    
+
     }
 }
