@@ -166,6 +166,39 @@ namespace Composestar.StarLight.ILWeaver
         #region Helper functions
 
         /// <summary>
+        /// Creates the context expression.
+        /// </summary>
+        /// <remarks>
+        /// The ActionStore object has to be used before (as in created by the CreateActionStore visitor).
+        /// </remarks> 
+        /// <param name="expr">The expr.</param>
+        private void CreateContextExpression(ContextExpression expr)
+        {
+            if (expr == null)
+                return;
+
+            // Get an actionstore local
+            VariableDefinition asVar = CreateActionStoreLocal();
+       
+            // Load the local
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
+
+            switch(expr.Type)
+            {
+                case ContextExpression.HAS_MORE_ACTIONS:
+                    // Call the HasMoreStoredActions method
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }))));
+                    break;
+                case ContextExpression.RETRIEVE_ACTION:
+                    // Call the NextStoredAction method
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }))));
+                    break;
+
+            }
+            
+        }
+
+        /// <summary>
         /// Gets the jump label.
         /// </summary>
         /// <param name="labelId">The label id.</param>
@@ -330,8 +363,8 @@ namespace Composestar.StarLight.ILWeaver
             // Set the target
             //
             // Load the joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));        
+      
             // Load the this pointer
             if (Method.HasThis)
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
@@ -340,31 +373,43 @@ namespace Composestar.StarLight.ILWeaver
 
             // Assign to the Target property
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
-
-            if (FilterType == FilterTypes.OutputFilter)
+  
+            int numberOfArguments=0;
+            
+            // Get the method we have to call
+            MethodBase methodBaseDef = CecilUtilities.ResolveMethod(filterAction.Target);
+            if (methodBaseDef == null)
             {
-                // Also set the sender
-                // Load the joinpointcontext object
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotResolveMethod, filterAction.Target));
+            }
+            MethodReference methodToCall = CreateMethodReference(methodBaseDef);
 
-                // Load the this pointer
-                if (Method.HasThis)
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                else
-                    Instructions.Add(Worker.Create(OpCodes.Ldnull));
+            switch (FilterType)
+            {
+                case FilterTypes.InputFilter:
+                    numberOfArguments = Method.Parameters.Count;
+                    break;
+                case FilterTypes.OutputFilter:
+                    numberOfArguments = methodBaseDef.GetParameters().Length;
+                    // Also set the sender
+                    // Load the joinpointcontext object
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
-                // Assign to the Target property
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
+                    // Load the this pointer
+                    if (Method.HasThis)
+                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+                    else
+                        Instructions.Add(Worker.Create(OpCodes.Ldnull));
+
+                    // Assign to the Target property
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
+
+                    break;
             }
 
             //
             // Add the arguments, these are stored at the top of the stack
             //
-            int numberOfArguments;
-            if (FilterType == FilterTypes.InputFilter)
-                numberOfArguments = Method.Parameters.Count;
-            else
-                numberOfArguments = 0; // TODO aanpassen
 
             if (numberOfArguments > 0)
             {
@@ -422,14 +467,6 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Call the target
             //
-
-            MethodBase methodBaseDef = CecilUtilities.ResolveMethod(filterAction.Target);
-            if (methodBaseDef == null)
-            {
-                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotResolveMethod, filterAction.Target));
-            }
-
-            MethodReference methodToCall = CreateMethodReference(methodBaseDef);
 
             // Load the JoinPointObject as the parameter
             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -518,7 +555,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the IsInnerCall
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(long) }))));
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(int) }))));
 
             // Create the call instruction
             Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
@@ -550,7 +587,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the SetInnerCall
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(long) }))));
+            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(int) }))));
 
         }
 
@@ -699,9 +736,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="switchInstr"></param>
         public void VisitSwitch(Switch switchInstr)
         {
-      
-            // TODO process contextexpressions
-
+                  
+            // Context instruction
+            CreateContextExpression(switchInstr.Expression);
 
             // The labels to jump to
             List<Instruction> caseLabels = new List<Instruction>();
@@ -800,7 +837,7 @@ namespace Composestar.StarLight.ILWeaver
         /// This id is present in the code-field of ContextInstruction. 
         /// So the code that needs to be created for this instructions is:
         /// <code>
-        /// actionStore.storeAction( <contextinstruction.Code> );
+        /// actionStore.storeAction( contextinstruction.Code );
         /// </code>
         /// </summary>
         /// <param name="contextInstruction">The context instruction.</param>
