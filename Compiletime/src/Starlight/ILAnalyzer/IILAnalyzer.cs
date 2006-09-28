@@ -8,6 +8,13 @@ using Composestar.Repository;
 
 namespace Composestar.StarLight.ILAnalyzer
 {
+    public enum IlAnalyzerResults
+    {
+        FROM_ASSEMBLY = 0,
+        FROM_CACHE = 1
+    }
+
+
     /// <summary>
     /// Interface for the IL analyzer
     /// </summary>
@@ -28,7 +35,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        void ExtractTypeElements(String fileName);
+        IlAnalyzerResults ExtractTypeElements(String fileName);
 
         void ProcessUnresolvedTypes();
 

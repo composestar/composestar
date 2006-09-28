@@ -17,7 +17,6 @@ using Composestar.Repository.LanguageModel;
   
 namespace Composestar.StarLight.ILAnalyzer
 {
-
     /// <summary>
     /// An implementation of the IILAnalyzer working with Cecil.
     /// </summary>
@@ -95,12 +94,13 @@ namespace Composestar.StarLight.ILAnalyzer
             }
         }
 
-        private String CreateTypeAFQN(AssemblyDefinition _targetAssemblyDefinition, TypeReference type)
+        private String CreateAFQN(AssemblyDefinition _targetAssemblyDefinition, TypeReference type)
         {
-            if (type == null) return "";
-            
-            String typeName = type.FullName;
-            if (type.FullName.EndsWith("[]")) typeName = type.FullName.Substring(0, type.FullName.Length - 2);
+            if (_targetAssemblyDefinition == null)
+                throw new ArgumentNullException("_targetAssemblyDefinition");
+
+            if (type == null)
+                throw new ArgumentNullException("type");
             
             // Locally declared type
             if (type.Scope != null)
@@ -109,43 +109,33 @@ namespace Composestar.StarLight.ILAnalyzer
                 {
                     if (((ModuleDefinition)type.Scope).Assembly != null)
                     {
-                        return String.Format("{0}, {1}", typeName, ((ModuleDefinition)type.Scope).Assembly.Name.FullName);
+                        return ((ModuleDefinition)type.Scope).Assembly.Name.FullName;
                     }
                 }
             }
 
+            // Referenced type
             foreach (AssemblyNameReference assembly in _targetAssemblyDefinition.MainModule.AssemblyReferences)
             {
                 if (type.Scope.Name == assembly.Name)
                 {
-                    return String.Format("{0}, {1}", typeName, assembly.FullName);
+                    return assembly.FullName;
                 }
             }
 
-
-            
-
-            //if (type.Module != null)
-          //  {
-        //        //Console.WriteLine("Assembly: " + type.Module.Assembly.Name.FullName + " | " + _targetAssemblyDefinition.Name.FullName);
-              //  if (type.Module.Assembly.Name.FullName == _targetAssemblyDefinition.Name.FullName)
-      //          {
-                    //Console.WriteLine("Assembly: " + type.Module.Assembly.Name.FullName + " | " + _targetAssemblyDefinition.Name.FullName);
-
-  //                  return String.Format("{0}, {1}", typeName, _targetAssemblyDefinition.Name.FullName);
-    //            }
- //           }
-//            else
-//            {
-                //Console.WriteLine("Scope for " + type.FullName + "> " + ((ModuleDefinition)type.Scope).Assembly.Name.FullName);
-//            }
-
-
-
-            return type.FullName;
+            return "";
+            //throw new Exception(String.Format("Unable to resolve assembly name for type '{0}'.", type.FullName));
         }
 
-        public void ExtractTypeElements(String fileName)
+        private String CreateTypeAFQN(AssemblyDefinition _targetAssemblyDefinition, TypeReference type)
+        {
+            String typeName = type.FullName;
+            if (type.FullName.EndsWith("[]")) typeName = type.FullName.Substring(0, type.FullName.Length - 2);
+
+            return String.Format("{0}, {1}", typeName, CreateAFQN(_targetAssemblyDefinition, type));
+        }
+
+        public IlAnalyzerResults ExtractTypeElements(String fileName)
         {
             CheckForInit();
 
@@ -167,10 +157,13 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 if (assembly.Timestamp == File.GetLastWriteTimeUtc(fileName).Ticks)
                 {
+                    // Clean up datastore
+                    RepositoryAccess.DeleteWeavingInstructions();
+
                     sw.Stop();
                     _lastDuration = sw.Elapsed; 
 
-                    return;
+                    return IlAnalyzerResults.FROM_CACHE;
                 }
 
                 // Assembly has to be re-analysed (remove all previous types from datastore)
@@ -200,7 +193,9 @@ namespace Composestar.StarLight.ILAnalyzer
                       
 
             sw.Stop();
-            _lastDuration = sw.Elapsed; 
+            _lastDuration = sw.Elapsed;
+
+            return IlAnalyzerResults.FROM_ASSEMBLY;
         }
       
         /// <summary>
@@ -210,9 +205,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private void ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition)
         {
             int i = 0;
-
-
-
+            
             //Gets all types of the MainModule of the assembly
             foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
             {
@@ -224,8 +217,10 @@ namespace Composestar.StarLight.ILAnalyzer
                 ti.Name = type.Name;
                 ti.FullName = type.FullName;
 
-                String typeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type);
-                ti.AFQN = typeAFQN;
+                String assembly = CreateAFQN(_targetAssemblyDefinition, type);
+                ti.Assembly = assembly;
+
+                String typeAFQN = String.Format("{0}, {1}", type.FullName, assembly);
 
                 // Properties
                 ti.IsAbstract = type.IsAbstract;
@@ -377,7 +372,7 @@ namespace Composestar.StarLight.ILAnalyzer
             IList<String> types = new List<String>(UnresolvedTypes);
             foreach (String type in types)
             {
-                TypeElement te = RepositoryAccess.GetTypeElementByAFQN(type);
+                TypeElement te = RepositoryAccess.GetTypeElementByAFQN(type.Substring(0, type.IndexOf(", ")), type.Substring(type.IndexOf(", ")+2));
                 if (te != null)
                 {
                     UnresolvedTypes.Remove(type);
@@ -402,7 +397,7 @@ namespace Composestar.StarLight.ILAnalyzer
             IList<String> types = new List<String>(UnresolvedTypes);
             foreach (String type in types)
             {
-                TypeElement te = cache.GetTypeElementByAFQN(type);
+                TypeElement te = cache.GetTypeElementByAFQN(type.Substring(0, type.IndexOf(", ")), type.Substring(type.IndexOf(", ") + 2));
 
                 // Type was found in the caches
                 if (te != null)

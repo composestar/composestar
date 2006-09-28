@@ -162,7 +162,7 @@ namespace Composestar.StarLight.ILWeaver
             MethodReference method = CecilUtilities.ResolveMethod(con.Reference.Selector, te.FullName, te.AFQN, te.FromDLL);
 
             if (method == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.Name, te.AFQN));
+                throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
             
            // if ((method.CallingConvention&MethodCallingConvention.ThisCall)== MethodCallingConvention.ThisCall)
             if (method.HasThis)
