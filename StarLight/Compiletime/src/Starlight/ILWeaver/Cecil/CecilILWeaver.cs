@@ -46,6 +46,8 @@ namespace Composestar.StarLight.ILWeaver
             _configuration = configuration;
             _languageModelAccessor = languageModelAccessor;
 
+            CecilUtilities.BinFolder = _configuration.BinFolder; 
+
         }
 
         /// <summary>

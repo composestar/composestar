@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Globalization; 
+using System.Globalization;
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -21,9 +21,28 @@ namespace Composestar.StarLight.ILWeaver
 {
 
     public class CecilUtilities
-    {       
+    {
 
-        private static Dictionary<string, System.Reflection.MethodBase> _methodsCache = new  Dictionary<string, System.Reflection.MethodBase>();
+        private static string _binFolder;
+        private static ILWeaverAssemblyResolver _resolver;
+        private static Dictionary<string, MethodReference> _methodsCache = new Dictionary<string, MethodReference>();
+
+        /// <summary>
+        /// Gets or sets the bin folder used for lookups.
+        /// </summary>
+        /// <value>The bin folder.</value>
+        public static string BinFolder
+        {
+            get
+            {
+                return _binFolder;
+            }
+            set
+            {
+                _binFolder = value;
+                _resolver =  new ILWeaverAssemblyResolver(_binFolder);
+            }
+        }
 
         /// <summary>
         /// Returns a method signature.
@@ -36,15 +55,15 @@ namespace Composestar.StarLight.ILWeaver
         {
             StringBuilder signature = new StringBuilder();
             signature.AppendFormat("{0} {1}(", returnType, methodName);
-           
+
             for (int i = 0; i < paramTypes.Length; i++)
             {
-                if (i < paramTypes.Length-1)
-                    signature.AppendFormat("{0}, ", paramTypes[i]); 
+                if (i < paramTypes.Length - 1)
+                    signature.AppendFormat("{0}, ", paramTypes[i]);
                 else
                     signature.AppendFormat("{0}", paramTypes[i]);
             }
-            signature.Append(")"); 
+            signature.Append(")");
 
             return signature.ToString();
         }
@@ -56,9 +75,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static String MethodSignature(MethodDefinition method)
         {
-            return CecilUtilities.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), CecilUtilities.GetParameterTypesList(method));            
+            return CecilUtilities.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), CecilUtilities.GetParameterTypesList(method));
         }
-        
+
         /// <summary>
         /// Gets the parameter types list.
         /// </summary>
@@ -92,35 +111,72 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="methodName">Name of the method.</param>
         /// <param name="typeName">Name of the type.</param>
         /// <param name="assemblyName">Name of the assembly.</param>
+        /// <param name="assemblyFile">The assembly file.</param>
         /// <returns></returns>
-        public static MethodBase ResolveMethod(string methodName, string typeName, string assemblyFile)
+        public static MethodReference ResolveMethod(string methodName, string typeName, string assemblyName, string assemblyFile)
         {
             // If in cache, retrieve
-            if (_methodsCache.ContainsKey(CreateCacheKey(methodName, typeName, assemblyFile)) )
-                return _methodsCache[CreateCacheKey(methodName, typeName, assemblyFile)];
-      
+            string CacheKey = CreateCacheKey(methodName, typeName, assemblyName);
+
+            if (_methodsCache.ContainsKey(CacheKey))
+                return _methodsCache[CacheKey];
+
+            // TODO make sure we can use the assemblyName
+
             // Not in the cache, so get from the assembly and store in cache.
-            Assembly asm = Assembly.ReflectionOnlyLoadFrom(assemblyFile);
-            if (asm == null)
+            if (_resolver == null)
+            {
+                _resolver = new ILWeaverAssemblyResolver(System.IO.Path.GetDirectoryName(assemblyFile));
+            }
+            AssemblyDefinition asmDef = _resolver.Resolve(assemblyName);
+            if (asmDef == null)
+            {
+                // Try to read directly using assemblyFilename
+                if (!String.IsNullOrEmpty(assemblyFile))
+                {
+                    asmDef = AssemblyFactory.GetAssembly(assemblyFile);
+                }
+            }
+            if (asmDef == null)
                 return null;
 
-            Type t = asm.GetType(typeName, false, true);
+            TypeDefinition td = asmDef.MainModule.Types[typeName];
 
-            if (t == null)
+            if (td == null)
                 return null;
 
-            MethodInfo m;
-            m = t.GetMethod(methodName);
-
-            if (m == null)
+            MethodDefinition[] mds = td.Methods.GetMethod(methodName);
+            MethodDefinition md;
+            if (mds.Length > 0)
+                md = mds[0];
+            else
                 return null;
-            
-            MethodBase mb =  (MethodBase)m;
 
             // Add to the cache
-            _methodsCache.Add(CreateCacheKey(methodName, typeName, assemblyFile), mb);
+            _methodsCache.Add(CacheKey, md);
 
-            return mb;
+            return (MethodReference)md;
+
+            //Assembly asm = Assembly.ReflectionOnlyLoadFrom(assemblyFile);
+
+
+            //Type t = asm.GetType(typeName, false, true);
+
+            //if (t == null)
+            //    return null;
+
+            //MethodInfo m;
+            //m = t.GetMethod(methodName);
+
+            //if (m == null)
+            //    return null;
+
+            //MethodBase mb =  (MethodBase)m;
+
+            //// Add to the cache
+            //_methodsCache.Add(CreateCacheKey(methodName, typeName, assemblyFile), mb);
+
+            //return mb;
         }
 
         /// <summary>
@@ -128,14 +184,14 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="methodName">Name of the method.</param>
         /// <param name="typeName">Name of the type.</param>
-        /// <param name="assemblyFile">The assembly file.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
         /// <returns></returns>
-        private static string CreateCacheKey(string methodName, string typeName, string assemblyFile)
+        private static string CreateCacheKey(string methodName, string typeName, string assemblyName)
         {
-            return String.Format("{0}:{1}:{2}", assemblyFile, typeName, methodName);
+            return String.Format("[{0}] {1}::{2}", assemblyName, typeName, methodName);
         }
 
-         /// <summary>
+        /// <summary>
         /// Reads data from a stream until the end is reached. The
         /// data is returned as a byte array. An IOException is
         /// thrown if any of the underlying IO calls fail.
@@ -185,5 +241,99 @@ namespace Composestar.StarLight.ILWeaver
             Array.Copy(buffer, ret, read);
             return ret;
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ILWeaverAssemblyResolver : BaseAssemblyResolver
+    {
+
+        Dictionary<string, AssemblyDefinition> m_cache;
+        string _binFolder;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:ILWeaverAssemblyResolver"/> class.
+        /// </summary>
+        /// <param name="binFolder">The bin folder.</param>
+        public ILWeaverAssemblyResolver(string binFolder)
+        {
+            _binFolder = binFolder;
+            m_cache = new Dictionary<string, AssemblyDefinition>();
+        }
+
+        /// <summary>
+        /// Resolves the specified full name.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        /// <returns></returns>
+        public override AssemblyDefinition Resolve(string fullName)
+        {
+
+            AssemblyNameReference assemblyNameReferenceParsed;
+
+            try
+            {
+                assemblyNameReferenceParsed = AssemblyNameReference.Parse(fullName);
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+            
+            return Resolve(assemblyNameReferenceParsed);
+
+        }
+
+        /// <summary>
+        /// Resolves the specified name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        public override AssemblyDefinition Resolve(AssemblyNameReference name)
+        {
+            AssemblyDefinition asm = (AssemblyDefinition)m_cache[name.FullName];
+            if (asm == null)
+            {
+                asm = ResolveInternal(name);
+                if (asm != null) 
+                    m_cache[name.FullName] = asm;
+            }
+
+            return asm;
+        }
+
+        /// <summary>
+        /// Resolves the assemblyname.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        private AssemblyDefinition ResolveInternal(AssemblyNameReference name)
+        {
+            string[] exts = new string[] { ".dll", ".exe" };
+            string[] dirs = new string[] { ".", "bin", _binFolder };
+
+            foreach (string dir in dirs)
+            {
+                foreach (string ext in exts)
+                {
+                    string file = Path.Combine(dir, name.Name + ext);
+                    if (File.Exists(file))
+                    {
+                        return AssemblyFactory.GetAssembly(file);
+                    }
+                }
+            }
+
+            if (name.Name == "mscorlib")
+                return GetCorlib(name);
+            else if (IsInGac(name))
+                return AssemblyFactory.GetAssembly(GetFromGac(name));
+
+            return null;
+       
+
+        }
+
     }
 }

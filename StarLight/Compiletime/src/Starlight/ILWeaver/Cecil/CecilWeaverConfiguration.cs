@@ -17,6 +17,7 @@ namespace Composestar.StarLight.ILWeaver
         readonly bool _shouldSignOutput;
         readonly string _outputImagePath;
         readonly string _inputImagePath;
+        private string _binfolder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
@@ -35,6 +36,7 @@ namespace Composestar.StarLight.ILWeaver
             if (string.IsNullOrEmpty(inputImagePath))
                 throw new ArgumentNullException("inputImagePath");
 
+            _binfolder = System.IO.Path.GetDirectoryName(inputImagePath); 
             _outputImageSNK = outputImageSNK;
             _shouldSignOutput = shouldSignOutput;
             _outputImagePath = outputImagePath;
@@ -49,6 +51,22 @@ namespace Composestar.StarLight.ILWeaver
         public string OutputImageSNK
         {
             get { return _outputImageSNK; }
+        }
+
+        /// <summary>
+        /// Gets or sets the binfolder.
+        /// </summary>
+        /// <value>The binfolder.</value>
+        public string BinFolder
+        {
+            get
+            {
+                return _binfolder;
+            }
+            set
+            {
+                _binfolder = value;
+            }
         }
 
         /// <summary>

@@ -28,6 +28,7 @@ namespace Composestar.Repository.Db4oContainers
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.ConditionExpressions.ConditionExpression)).CascadeOnActivate(true);               
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.ConditionExpressions.And)).CascadeOnActivate(true);               
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.ConditionExpressions.Or)).CascadeOnActivate(true);               
+                Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.ConditionExpressions.Not)).CascadeOnActivate(true);         
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.ConditionExpressions.ConditionLiteral)).CascadeOnActivate(true);               
 
                 // Indexes

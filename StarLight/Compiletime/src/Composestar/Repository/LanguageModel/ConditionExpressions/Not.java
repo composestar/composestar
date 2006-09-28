@@ -3,15 +3,12 @@ package Composestar.Repository.LanguageModel.ConditionExpressions;
 import Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.*;
 
 /**
- * Summary description for Not.
+ * Not condition.
  */
 public class Not extends ConditionExpression implements IVisitable 
 {
 	public Not()
 	{
-		//
-		// TODO: Add Constructor Logic here
-		//
 	}
 
 	private ConditionExpression _operand;
@@ -30,6 +27,10 @@ public class Not extends ConditionExpression implements IVisitable
 
 	public void Accept(IVisitor visitor)
 	{
+		if (_operand != null)
+		{
+			((IVisitable)_operand).Accept(visitor);
+		}
 		visitor.VisitNot(this);
 	}
     

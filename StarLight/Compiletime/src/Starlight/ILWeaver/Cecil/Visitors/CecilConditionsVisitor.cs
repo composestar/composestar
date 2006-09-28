@@ -159,19 +159,20 @@ namespace Composestar.StarLight.ILWeaver
             Composestar.Repository.LanguageModel.TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
 
             // TODO Is the con.Reference.Selector unique enough?
-            System.Reflection.MethodBase method = CecilUtilities.ResolveMethod(con.Reference.Selector, te.FullName, te.FromDLL);
+            MethodReference method = CecilUtilities.ResolveMethod(con.Reference.Selector, te.FullName, te.AFQN, te.FromDLL);
 
             if (method == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.Name, te.AFQN));
             
-            if ((method.CallingConvention&System.Reflection.CallingConventions.HasThis)==System.Reflection.CallingConventions.HasThis)
+           // if ((method.CallingConvention&MethodCallingConvention.ThisCall)== MethodCallingConvention.ThisCall)
+            if (method.HasThis)
             {
                 // Load the this pointer
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This)); 
             }
 
             // Create a call instruction
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(method)));
+            Instructions.Add(Worker.Create(OpCodes.Call, _targetAssemblyDefinition.MainModule.Import(method)));
 
         }
 
