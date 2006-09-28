@@ -147,6 +147,11 @@ namespace Composestar.StarLight.ILAnalyzer
 
         public void ExtractTypeElements(String fileName)
         {
+            CheckForInit();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             AssemblyDefinition _targetAssemblyDefinition = null;
 
             #region Filename
@@ -156,17 +161,46 @@ namespace Composestar.StarLight.ILAnalyzer
             if (!File.Exists(fileName))
                 throw new ArgumentException(String.Format(Properties.Resources.FileNotFound, fileName), "fileName");
 
+            // Only extract types if assembly does not exist or has been updated
+            AssemblyElement assembly = RepositoryAccess.GetAssemblyElementByFileName(System.IO.Path.GetFullPath(fileName));
+            if (assembly != null)
+            {
+                if (assembly.Timestamp == File.GetLastWriteTimeUtc(fileName).Ticks)
+                {
+                    sw.Stop();
+                    _lastDuration = sw.Elapsed; 
+
+                    return;
+                }
+
+                // Assembly has to be re-analysed (remove all previous types from datastore)
+                // TODO
+            }
+
             try
             {
                 _targetAssemblyDefinition = AssemblyFactory.GetAssembly(fileName);
+
+                if (assembly == null)
+                {
+                    assembly = new AssemblyElement();
+                    assembly.Name = _targetAssemblyDefinition.Name.FullName;
+                    assembly.FileName = System.IO.Path.GetFullPath(fileName);
+                }
+                assembly.Timestamp = File.GetLastWriteTimeUtc(fileName).Ticks;
+                RepositoryAccess.AddAssembly(assembly);
+
+                this.ExtractTypeElements(fileName, _targetAssemblyDefinition);
             }
             catch (EndOfStreamException)
             {
                 throw new BadImageFormatException(String.Format(Properties.Resources.ImageIsBad, fileName));
             }
             #endregion
+                      
 
-            this.ExtractTypeElements(fileName, _targetAssemblyDefinition);
+            sw.Stop();
+            _lastDuration = sw.Elapsed; 
         }
       
         /// <summary>
@@ -175,12 +209,9 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <returns></returns>
         private void ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition)
         {
-            CheckForInit();
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             int i = 0;
+
+
 
             //Gets all types of the MainModule of the assembly
             foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
@@ -353,8 +384,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
             }
 
-            sw.Stop();
-            _lastDuration = sw.Elapsed; 
+
 
             //IList<TypeElement> ret = RepositoryAccess.GetTypeElements();
             
