@@ -70,6 +70,7 @@ public class Branch extends InlineInstruction implements IVisitable
 		visitor.VisitBranchFalse(this);
 		if (falseBlock != null)
 			falseBlock.Accept(visitor);
+		visitor.VisitBranchEnd(this);  
  		
 	}
     
