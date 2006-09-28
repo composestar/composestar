@@ -61,7 +61,7 @@ namespace Mono.Cecil {
 			throw new FileNotFoundException ("Could not resolve: " + name);
 		}
 
-		AssemblyDefinition GetCorlib (AssemblyNameReference reference)
+		protected internal AssemblyDefinition GetCorlib (AssemblyNameReference reference)
 		{
 			SR.AssemblyName corlib = typeof (object).Assembly.GetName ();
 			if (corlib.Version == reference.Version)
@@ -98,7 +98,7 @@ namespace Mono.Cecil {
 			return typeof (object).Assembly.GetType ("System.MonoType", false) != null;
 		}
 
-		static bool IsInGac (AssemblyNameReference reference)
+		protected internal static bool IsInGac (AssemblyNameReference reference)
 		{
 			if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
 				return false;
@@ -106,7 +106,7 @@ namespace Mono.Cecil {
 			return File.Exists (GetFromGac (reference));
 		}
 
-		static string GetFromGac (AssemblyNameReference reference)
+		protected internal static string GetFromGac (AssemblyNameReference reference)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (reference.Version);

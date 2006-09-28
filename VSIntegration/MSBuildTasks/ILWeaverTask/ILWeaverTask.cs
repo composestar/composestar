@@ -49,6 +49,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _repositoryFilename = value; }
         }
 
+        private string _binFolder;
+
+        /// <summary>
+        /// Gets or sets the bin folder.
+        /// </summary>
+        /// <value>The bin folder.</value>
+        public string BinFolder
+        {
+            get { return _binFolder; }
+            set { _binFolder = value; }
+        }
+
         #endregion
         
         /// <summary>
@@ -72,7 +84,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 // Preparing config
                 CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
-                
+                if (!String.IsNullOrEmpty(BinFolder))
+                {
+                    configuration.BinFolder = BinFolder;
+                }
 
                 try
                 {
