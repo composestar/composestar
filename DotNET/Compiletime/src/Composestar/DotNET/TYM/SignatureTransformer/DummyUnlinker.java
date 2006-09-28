@@ -19,6 +19,8 @@ import Composestar.Utils.FileUtils;
  * This class will modify references to the dummies dll so that 
  * the types from the 'real' dlls are used.
  * 
+ * No longer used.
+ * 
  * @author Staijen
  */
 public class DummyUnlinker implements CTCommonModule
@@ -56,7 +58,7 @@ public class DummyUnlinker implements CTCommonModule
 			catch (Exception e) {
 				throw new ModuleException("Dummy Unlinking failure in " + asmpath + ", reason: " + e.getMessage());
 			}
-		}     
+		}
 	}
 	
 	/**
