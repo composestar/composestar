@@ -512,7 +512,10 @@ namespace Composestar.StarLight.ILWeaver
         /// condition
         /// brfalse l1:
         /// trueblock
+        /// br l2
         /// l1:
+        /// falseblock
+        /// l2:
         /// </code>
         /// </example> 
         /// <param name="branch">The branch.</param>
@@ -531,7 +534,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Add branch code
             branch.Label = 8000 + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-            numberOfBranches++;
+            numberOfBranches = numberOfBranches + 2;
             Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }
 
@@ -541,7 +544,21 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="branch">The branch.</param>
         public void VisitBranchFalse(Branch branch)
         {
+            // Make sure we jump over the false block
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.Label+1)));
+
+            // Place label for the false block
             Instructions.Add(GetJumpLabel(branch.Label));
+        }
+
+        /// <summary>
+        /// Visits the branch end.
+        /// </summary>
+        /// <param name="branch">The branch.</param>
+        public void VisitBranchEnd(Branch branch)
+        {
+            // Place label for the End branch block
+            Instructions.Add(GetJumpLabel(branch.Label+1));
         }
 
         /// <summary>

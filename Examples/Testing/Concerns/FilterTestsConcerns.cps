@@ -6,7 +6,7 @@ concern FilterTestsConcern in BasicTests
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
-			makeError : Error = { doError ~> [*.makeError] }
+			makeError : Error = {  doError ~> [*.makeError], !doError => [*.*] }
 	}
 
 	superimposition
