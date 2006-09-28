@@ -98,9 +98,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogMessage("Analyzing file {0}", item.ToString());
 
                     analyzer.Initialize(config);
-                    analyzer.ExtractTypeElements(item.ToString());
+                    IlAnalyzerResults result = analyzer.ExtractTypeElements(item.ToString());
 
-                    Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                    if (result == IlAnalyzerResults.FROM_ASSEMBLY)
+                    {
+                        Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                    }
+                    else
+                    {
+                        Log.LogMessage("File has not been modified, analysis skipped. Removed weaving information from repository in {0:0.0000} seconds.", analyzer.LastDuration.TotalSeconds);
+                    }
                 }
                 catch (ILAnalyzerException ex)
                 {
