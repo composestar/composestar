@@ -159,7 +159,7 @@ namespace Composestar.StarLight.ILWeaver
             Composestar.Repository.LanguageModel.TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
 
             // TODO Is the con.Reference.Selector unique enough?
-            MethodReference method = CecilUtilities.ResolveMethod(con.Reference.Selector, te.FullName, te.AFQN, te.FromDLL);
+            MethodReference method = CecilUtilities.ResolveMethod(con.Reference.Selector, te.FullName, te.Assembly, te.FromDLL);
 
             if (method == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
