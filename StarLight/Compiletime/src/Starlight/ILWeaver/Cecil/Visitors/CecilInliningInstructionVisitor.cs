@@ -512,7 +512,7 @@ namespace Composestar.StarLight.ILWeaver
             AddInstructionList(conditionsVisitor.Instructions);
 
             // Add branch code
-            branch.Label = 8000 + numberOfBranches;   // TODO check to correctness of this constructions (Michiel)
+            branch.Label = 8000 + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
             numberOfBranches++;
             Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }

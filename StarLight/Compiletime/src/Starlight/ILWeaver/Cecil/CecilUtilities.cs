@@ -23,6 +23,8 @@ namespace Composestar.StarLight.ILWeaver
     public class CecilUtilities
     {       
 
+        private static Dictionary<string, System.Reflection.MethodBase> _methodsCache = new  Dictionary<string, System.Reflection.MethodBase>();
+
         /// <summary>
         /// Returns a method signature.
         /// </summary>
@@ -93,13 +95,16 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static MethodBase ResolveMethod(string methodName, string typeName, string assemblyFile)
         {
-            Type t;
+            // If in cache, retrieve
+            if (_methodsCache.ContainsKey(CreateCacheKey(methodName, typeName, assemblyFile)) )
+                return _methodsCache[CreateCacheKey(methodName, typeName, assemblyFile)];
       
+            // Not in the cache, so get from the assembly and store in cache.
             Assembly asm = Assembly.ReflectionOnlyLoadFrom(assemblyFile);
             if (asm == null)
                 return null;
 
-            t = asm.GetType(typeName, false, true);
+            Type t = asm.GetType(typeName, false, true);
 
             if (t == null)
                 return null;
@@ -109,11 +114,25 @@ namespace Composestar.StarLight.ILWeaver
 
             if (m == null)
                 return null;
+            
+            MethodBase mb =  (MethodBase)m;
 
-            // TODO add caching
+            // Add to the cache
+            _methodsCache.Add(CreateCacheKey(methodName, typeName, assemblyFile), mb);
 
-            return (MethodBase)m;
+            return mb;
+        }
 
+        /// <summary>
+        /// Creates the cache key.
+        /// </summary>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="assemblyFile">The assembly file.</param>
+        /// <returns></returns>
+        private static string CreateCacheKey(string methodName, string typeName, string assemblyFile)
+        {
+            return String.Format("{0}:{1}:{2}", assemblyFile, typeName, methodName);
         }
 
          /// <summary>
