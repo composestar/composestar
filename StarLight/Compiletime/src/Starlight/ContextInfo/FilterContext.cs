@@ -29,9 +29,9 @@ namespace Composestar.StarLight.ContextInfo
         /// Stores the action.
         /// </summary>
         /// <param name="id">The id.</param>
-        public void StoreAction( int id )
+        public void StoreAction(int id)
         {
-            _storedActions.Push( id );
+            _storedActions.Push(id);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Composestar.StarLight.ContextInfo
         /// 	<c>true</c> if the current thread is making an inner call; otherwise, <c>false</c>.
         /// </returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static bool IsInnerCall(object currentInstance, long methodId)
+        public static bool IsInnerCall(object currentInstance, int methodId)
         {
 
             InnerFilterContext ifc = GetInnerFilterContext();
@@ -81,7 +81,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <param name="currentInstance">The current instance.</param>
         /// <param name="methodId">The method id.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void SetInnerCall(object currentInstance, long methodId)
+        public static void SetInnerCall(object currentInstance, int methodId)
         {
             InnerFilterContext ifc = new InnerFilterContext(currentInstance, methodId);
             if (_innercalls.ContainsKey(GetThreadId()))
@@ -136,19 +136,19 @@ namespace Composestar.StarLight.ContextInfo
             /// </summary>
             /// <param name="instance">The instance.</param>
             /// <param name="methodId">The method id.</param>
-            public InnerFilterContext(object instance, long methodId)
+            public InnerFilterContext(object instance, int methodId)
             {
                 _instance = instance;
                 _methodId = methodId;
             }
 
-            private long _methodId;
+            private int _methodId;
 
             /// <summary>
             /// Gets or sets the method id.
             /// </summary>
             /// <value>The method id.</value>
-            internal long MethodId
+            internal int MethodId
             {
                 get { return _methodId; }
                 set { _methodId = value; }
