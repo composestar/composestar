@@ -200,7 +200,6 @@ namespace Composestar.StarLight.ILWeaver
             #endregion
 
             FieldDefinition internalDef;
-            Type internalType;
             TypeReference internalTypeRef;
             Mono.Cecil.FieldAttributes internalAttrs;
 
@@ -208,11 +207,13 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (Internal inter in internals)
             {
-                internalType = Type.ReflectionOnlyGetType(inter.Type, false, false);
-                if (internalType == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type));
+                String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
+                
+                TypeElement internalTypeElement = _languageModelAccessor.GetTypeElement(internalTypeString);
+                if (internalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
 
-                internalTypeRef = targetAssembly.MainModule.Import(internalType);
-                if (internalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, inter.Type));
+                internalTypeRef = CecilUtilities.ResolveType(internalTypeString, internalTypeElement.Assembly, internalTypeElement.FromDLL);
+                if (internalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
 
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
 
@@ -223,14 +224,14 @@ namespace Composestar.StarLight.ILWeaver
                 type.Fields.Add(internalDef);
 
                 // Add initialization code to type constructor(s)
-                if (internalType.IsClass && internalType.Name != "String" && internalType.Name != "Array")
+                if (internalTypeElement.IsClass && internalTypeElement.Name != "String" && internalTypeElement.Name != "Array")
                 {
                     // Get the .ctor() constructor for the internal type
-                    MethodBase constructorMethod = (MethodBase)internalType.GetConstructor(new Type[0]);
-                    if (constructorMethod == null)
-                        throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, inter.Type));
-                    MethodReference constructorReference = targetAssembly.MainModule.Import(constructorMethod);
-
+                    MethodDefinition internalConstructor = ((TypeDefinition)internalTypeRef).Constructors.GetConstructor(false, new Type[0]);
+                    if (internalConstructor == null)
+                        throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, internalTypeString));
+                    
+                    // Initialize internal in every constructor of the parent type
                     foreach (MethodDefinition constructor in type.Constructors)
                     {
                         if (constructor.HasBody)
@@ -239,15 +240,15 @@ namespace Composestar.StarLight.ILWeaver
                             {
                                 // Gets the CilWorker of the method for working with CIL instructions
                                 CilWorker worker = constructor.Body.CilWorker;
-                                
+
                                 // Create instructions
                                 IList<Instruction> instructions = new List<Instruction>();
                                 instructions.Add(worker.Create(OpCodes.Ldarg_0));
-                                instructions.Add(worker.Create(OpCodes.Newobj, constructorReference));
+                                instructions.Add(worker.Create(OpCodes.Newobj, internalConstructor));
                                 instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
                                 // Add the instructions
-                                int noi = InsertInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+                                int noi = InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
                             }
                         }
                     }
@@ -264,7 +265,6 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="typeElement">The type information.</param>
         public void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
         {
-
             #region Check for null
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
@@ -286,9 +286,56 @@ namespace Composestar.StarLight.ILWeaver
 
             #endregion
 
+            FieldDefinition externalDef;
+            TypeReference externalTypeRef;
+            Mono.Cecil.FieldAttributes externalAttrs;
+
             foreach (External external in externals)
             {
+                TypeElement externalTypeElement = _languageModelAccessor.GetTypeElement(external.Type);
+                if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
 
+                externalTypeRef = CecilUtilities.ResolveType(external.Type, externalTypeElement.Assembly, externalTypeElement.FromDLL);
+                if (externalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 2)"));
+
+                externalAttrs = Mono.Cecil.FieldAttributes.Private;
+
+                // Create the field
+                externalDef = new FieldDefinition(external.Name, externalTypeRef, externalAttrs);
+
+                // Add the field
+                type.Fields.Add(externalDef);
+
+                // Get the method referenced by the external
+                TypeElement initTypeElement = _languageModelAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
+                if (initTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target)));
+
+                MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, initTypeElement.FullName, initTypeElement.Assembly, initTypeElement.FromDLL);
+                if (initMethodDef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound, external.Reference.Selector, external.Reference.Target, externalTypeElement.Assembly));
+
+                MethodReference initMethodRef = targetAssembly.MainModule.Import(initMethodDef);
+
+                // Initialize external in every constructor of the parent type
+                foreach (MethodDefinition constructor in type.Constructors)
+                {
+                    if (constructor.HasBody)
+                    {
+                        if (constructor.Body.Instructions.Count >= 1)
+                        {
+                            // Gets the CilWorker of the method for working with CIL instructions
+                            CilWorker worker = constructor.Body.CilWorker;
+
+                            // Create instructions
+                            IList<Instruction> instructions = new List<Instruction>();
+                            instructions.Add(worker.Create(OpCodes.Ldarg_0));
+                            instructions.Add(worker.Create(OpCodes.Call, initMethodRef));
+                            instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
+
+                            // Add the instructions
+                            int noi = InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+                        }
+                    }
+                }
             }
 
         }
@@ -489,6 +536,16 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #region Helper functions
+
+        private int InsertBeforeInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+        {
+            foreach (Instruction instr in instructionsToAdd)
+            {
+                worker.InsertBefore(startInstruction, instr);
+           }
+
+            return instructionsToAdd.Count;
+        }
 
         /// <summary>
         /// Inserts the instruction list after a specified instruction.

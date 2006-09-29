@@ -156,7 +156,7 @@ namespace Composestar.StarLight.ILAnalyzer
             if (assembly != null)
             {
                 // Clean up datastore
-                RepositoryAccess.DeleteWeavingInstructions(); // have to work on assembly lvl only, now EVERYTHING gets cleared!
+                RepositoryAccess.DeleteWeavingInstructions(); // TODO: have to work on assembly lvl only, now EVERYTHING gets cleared!
 
                 if (assembly.Timestamp != File.GetLastWriteTimeUtc(fileName).Ticks)
                 {

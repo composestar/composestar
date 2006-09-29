@@ -39,7 +39,7 @@
   <ItemGroup>
     <Compile Include="WeaveInputFiltersFixture.cs" />
     <Compile Include="DIConfiguration\BuilderConfigurator.cs" />
-    <Compile Include="ILWeaverFixtureBase.cs" />
+    <Compile Include="Mocks\ILWeaverFixtureBase.cs" />
     <Compile Include="Mocks\LanguageModelAccessorMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CecilILWeaverInitializationFixture.cs" />

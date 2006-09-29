@@ -474,6 +474,8 @@ namespace Composestar.Repository
         public void DeleteWeavingInstructions()
         {
             container.DeleteObjects<Condition>();
+            container.DeleteObjects<External>();
+            container.DeleteObjects<Internal>();
             container.DeleteObjects<LinkedList>();
             container.DeleteObjects<LinkedListEntry>();
             container.DeleteObjects<Reference>();
