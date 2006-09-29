@@ -14,7 +14,7 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
     public final static int RESET_INNER_CALL = 12;
     public final static int CREATE_ACTION_STORE = 20;
     public final static int STORE_ACTION = 21;
-	public final static int RETURN_ACTION = 30;
+    public final static int RETURN_ACTION = 100;
 
 	public ContextInstruction(int type, int methodId, Block innerBlock)
 	{
@@ -63,8 +63,6 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 			visitor.VisitCreateActionStore(this);
 		else if (type == STORE_ACTION)
 			visitor.VisitStoreAction(this);
-		else if (type == RETURN_ACTION)
-			visitor.VisitReturnAction(this);
 
 		if (innerBlock != null)
 			innerBlock.Accept(visitor); 		
@@ -95,9 +93,6 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
         case STORE_ACTION:
             s += "Store action " + code;
             return s;
-		case RETURN_ACTION:
-			s += "Return action";
-			return s;
         default:
             return "UNKNOWN CONTEXT INSTRUCTION";
         }

@@ -16,6 +16,9 @@ public class FilterAction extends InlineInstruction implements IVisitable
     public final static String SUBSTITUTION_ACTION = "SubstitutionAction";
     public final static String CUSTOM_ACTION = "CustomAction";
     public final static String CONTINUE_ACTION = "ContinueAction";
+
+	public final static String INNER_TARGET = "inner";
+	public final static String SELF_TARGET = "self";
     
 	public FilterAction(String type, String selector, String target)
 	{

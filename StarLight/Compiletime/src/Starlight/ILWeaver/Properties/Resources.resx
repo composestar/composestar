@@ -169,4 +169,7 @@
   <data name="MethodNotFound" xml:space="preserve">
     <value>Could not create a method reference for method named '{0}' in type '{1}' and assembly '{2}'.</value>
   </data>
+  <data name="FieldNotFound" xml:space="preserve">
+    <value>The field {0} could not be found.</value>
+  </data>
 </root>
