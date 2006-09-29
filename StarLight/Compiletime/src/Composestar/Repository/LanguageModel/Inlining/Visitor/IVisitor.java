@@ -11,6 +11,7 @@ public interface IVisitor
 	void VisitCheckInnerCall(ContextInstruction contextInstruction);
 	void VisitSetInnerCall(ContextInstruction contextInstruction);
 	void VisitResetInnerCall(ContextInstruction contextInstruction);
+	void VisitReturnAction(ContextInstruction contextInstruction);
 
 	void VisitFilterAction(FilterAction filterAction);
 	void VisitContinueAction(FilterAction filterAction);

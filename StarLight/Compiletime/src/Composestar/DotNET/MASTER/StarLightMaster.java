@@ -31,7 +31,8 @@ import Composestar.Utils.Debug;
  * and executes them in the order they are added.
  */
 public class StarLightMaster extends Master  {
-	//public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
+	
+	private static final String MODULENAME = "MASTER";
 	
 	private static String version = "1.0 alpha";
 	private static String author = "University of Twente";
@@ -72,7 +73,7 @@ public class StarLightMaster extends Master  {
     public static void main(String[] args) {
     	
 		if(args.length == 0) {
-    		System.out.println("Usage: java Composestar.Core.Master.StarLightMaster <config file>");
+    		System.out.println("Usage: java Composestar.DotNET.MASTER.StarLightMaster <config file>");
     		System.exit(0);
     	}
 		
@@ -89,12 +90,12 @@ public class StarLightMaster extends Master  {
     	
     	try { 
     		// Initialize
-    		master.initMaster();    
+    		master.initialize();    
     	
     		//	Run the master process
         	master.run();
     	} catch(Exception e) {
-    		Debug.out(Debug.MODE_ERROR,"Master", "Could not open configuration file: " + args[0]);    		
+    		Debug.out(Debug.MODE_ERROR,MODULENAME, "Could not open configuration file: " + args[0]);    		
     		System.exit(-1);
     	}
     	  	
@@ -103,16 +104,16 @@ public class StarLightMaster extends Master  {
     /**
 	 * Initialize the StarLight master.
 	 */
-	public void initMaster() {
+	public void initialize() {
 		
-		Debug.out(Debug.MODE_INFORMATION,"Master","Master initializing.");
+		Debug.out(Debug.MODE_INFORMATION,MODULENAME,"Master initializing.");
 		
 		File f = new File(getYapFileName());
     	if (!f.exists()) {
-    		Debug.out(Debug.MODE_CRUCIAL,"Master","Configuration file '"+getYapFileName()+" not found!");
+    		Debug.out(Debug.MODE_CRUCIAL,MODULENAME,"Configuration file '"+getYapFileName()+" not found!");
     		System.exit(-1);
     	}
-    	Debug.out(Debug.MODE_DEBUG,"Master","Using configuration file '"+getYapFileName()+"'");
+    	Debug.out(Debug.MODE_DEBUG,MODULENAME,"Using configuration file '"+getYapFileName()+"'");
     	RepositoryAccess repository = new RepositoryAccess();
     	
     	// Set the debugmode
@@ -129,7 +130,7 @@ public class StarLightMaster extends Master  {
         //Set platform:
         Configuration.instance().addProperty( "Platform", "dotnet" );
         
-        Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
+        Debug.out(Debug.MODE_INFORMATION,MODULENAME,"Master initialized.");
 	}
 
 	/**
@@ -138,12 +139,12 @@ public class StarLightMaster extends Master  {
     public void run() {
     	
 		try {		
-			Debug.out(Debug.MODE_INFORMATION, "Master", StarLightMaster.title + " " + StarLightMaster.version);
+			Debug.out(Debug.MODE_INFORMATION, MODULENAME, StarLightMaster.title + " " + StarLightMaster.version);
 			
-			Debug.out(Debug.MODE_DEBUG, "Master", "Creating DataStore");
+			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Creating DataStore");
 			DataStore.instance();
 
-			Debug.out(Debug.MODE_DEBUG, "Master", "Reading configuration");
+			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Reading configuration");
 			
 			Projects projects = new Projects();
 			Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
@@ -158,11 +159,11 @@ public class StarLightMaster extends Master  {
             PathSettings path = Configuration.instance().getPathSettings();		
 			
 			// Initialize INCRE
-            Debug.out(Debug.MODE_DEBUG, "Master", "Initializing INCRE");
+            Debug.out(Debug.MODE_DEBUG, MODULENAME, "Initializing INCRE");
 			INCRE incre = INCRE.instance();
 			incre.run(resources);
 				
-			Debug.out(Debug.MODE_DEBUG, "Master", "Starting INCRE to process modules");
+			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Starting INCRE to process modules");
 			Iterator modulesIter = incre.getModules();
 			while(modulesIter.hasNext())
 			{
@@ -193,7 +194,7 @@ public class StarLightMaster extends Master  {
 			System.exit(1);
 		} 
 		catch (Exception ex) {
-			Debug.out(Debug.MODE_DEBUG, "Master", Debug.stackTrace(ex));
+			Debug.out(Debug.MODE_DEBUG, MODULENAME, Debug.stackTrace(ex));
 			System.exit(1);
 		}
 	}
