@@ -203,8 +203,6 @@ namespace Composestar.StarLight.ILWeaver
             TypeReference internalTypeRef;
             Mono.Cecil.FieldAttributes internalAttrs;
 
-            return;
-
             foreach (Internal inter in internals)
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
