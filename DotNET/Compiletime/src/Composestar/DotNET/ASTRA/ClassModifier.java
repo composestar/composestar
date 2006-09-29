@@ -13,8 +13,8 @@ import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.Utils.Debug;
 
 /**
- * This class does the transformation of an actual class, physically present in a 
- * IL asm file within .class definitions.
+ * This class does the transformation of an actual class, physically present in an
+ * IL file within .class definitions.
  */
 public class ClassModifier extends TransformerBase
 {
@@ -84,7 +84,6 @@ public class ClassModifier extends TransformerBase
 
 	/**
 	 * Parses input lines and transforms this into concrete method information.
-	 * @roseuid 406AB002001E
 	 */
 	private String fetchMethodInfo(String line) throws ModifierException
 	{
@@ -126,7 +125,6 @@ public class ClassModifier extends TransformerBase
 
 //	/**
 //	 * Matches method info agains the ???
-//	 * @roseuid 406AB00200B4
 //	 */
 //	private boolean matchMethod(MethodWrapper methodWrapper, String name, String returnType, String[] params)
 //	{
@@ -148,9 +146,6 @@ public class ClassModifier extends TransformerBase
 //		return true; // amazing.. we got through     
 //	}
 
-	/**
-	 * @roseuid 406AB002010E
-	 */
 	private void printMethod(MethodInfo mi) throws ModifierException
 	{
 		DotNETMethodInfo dnmi = (DotNETMethodInfo)mi;
