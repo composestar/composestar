@@ -335,7 +335,19 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitInlineInstruction(InlineInstruction inlineInstruction)
         {
             if (inlineInstruction.Label != -1)
+            {               
                 Instructions.Add(GetJumpLabel(inlineInstruction.Label));
+            }
+        }
+
+        /// <summary>
+        /// Visits the return action.
+        /// </summary>
+        /// <param name="contextInstruction">The context instruction.</param>
+        public void VisitReturnAction(ContextInstruction contextInstruction)
+        {
+            // Generate a return instruction
+            Instructions.Add(Worker.Create(OpCodes.Ret));     
         }
 
         public void VisitAfterAction(FilterAction filterAction)
@@ -494,9 +506,6 @@ namespace Composestar.StarLight.ILWeaver
             // Add nop to enable debugging
             Instructions.Add(Worker.Create(OpCodes.Nop));
         }
-
-
-
 
         #region Inner Call handlers
 

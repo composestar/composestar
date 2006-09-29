@@ -63,6 +63,8 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 			visitor.VisitCreateActionStore(this);
 		else if (type == STORE_ACTION)
 			visitor.VisitStoreAction(this);
+		else if (type == RETURN_ACTION)
+			visitor.VisitReturnAction(this);
 
 		if (innerBlock != null)
 			innerBlock.Accept(visitor); 		
@@ -93,6 +95,9 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
         case STORE_ACTION:
             s += "Store action " + code;
             return s;
+		case RETURN_ACTION:
+			s += "Return action";
+			return s;
         default:
             return "UNKNOWN CONTEXT INSTRUCTION";
         }
