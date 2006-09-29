@@ -37,8 +37,8 @@ public class AssemblyElement
 		_fileName = value;
 	}
 
-		/** @property
-	  */
+	/** @property
+    */
 	public long get_Timestamp()
 	{
 		return _timestamp;

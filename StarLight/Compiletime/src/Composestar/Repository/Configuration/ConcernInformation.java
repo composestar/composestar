@@ -1,5 +1,7 @@
 package Composestar.Repository.Configuration;
 
+import java.io.File;
+
 public class ConcernInformation {
 
 	public ConcernInformation(String filename, String path)
@@ -7,6 +9,21 @@ public class ConcernInformation {
 		this._filename = filename;
 		this._path = path;
 	}
+
+	private int _timeStamp;
+
+	/** @property */
+	public int get_Timestamp()
+	{
+		return _timeStamp;
+	}
+
+	/** @property */
+	public void set_Timestamp(int value)
+	{
+		_timeStamp = value;
+	} 
+
 
 	private String _path;
 
@@ -37,4 +54,19 @@ public class ConcernInformation {
 		_filename = value;
 	} 
 
+	
+	/**
+	 * @return Returns the fullpath, combining the pathname and the filename. 
+	 */
+	public String getFullFilename()
+	{		
+		if (!_path.endsWith(File.separator ))
+		{
+			return this.get_Path() + File.separator + this.get_Filename(); 
+		}
+		else
+		{			
+			return this.get_Path() + this.get_Filename();  
+		}
+	}
 }
