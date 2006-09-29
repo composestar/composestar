@@ -10,7 +10,6 @@ import groove.graph.Node;
 
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -34,7 +33,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
 import Composestar.Core.FIRE2.model.FlowChartNames;
 import Composestar.Core.FIRE2.model.Message;
 
@@ -63,7 +61,7 @@ public class GrooveASTBuilder {
         
     }
     
-    public Graph buildAST( FilterModule filterModule ){
+    public Graph buildAST( FilterModule filterModule, boolean forInputFilters ){
         selectorTable = new Hashtable();
         targetTable = new Hashtable();
 
@@ -81,13 +79,20 @@ public class GrooveASTBuilder {
         
         
         //iterate over filters:
-        Iterator inputFilters = filterModule.getInputFilterIterator();
+        Iterator filters;
+        if ( forInputFilters ){
+            filters = filterModule.getInputFilterIterator();
+        }
+        else{
+            filters = filterModule.getOutputFilterIterator();
+        }
+        
         Filter filter;
         Node filterNode;
         AnnotatedNode operatorNode = null;
         int i = 0; //vague leftover of the for loop
-        while(inputFilters.hasNext()){
-            filter = (Filter) inputFilters.next();
+        while(filters.hasNext()){
+            filter = (Filter) filters.next();
             
             //create filternode:
             filterNode = buildFilterNode( filter, graph );

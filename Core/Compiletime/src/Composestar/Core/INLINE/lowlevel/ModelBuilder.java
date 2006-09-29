@@ -36,7 +36,8 @@ public class ModelBuilder implements CTCommonModule{
     private HashSet inlinedMethodSet;
     private FilterModule[] modules;
 
-    private FireModel currentFireModel;
+    private FireModel currentFireModelIF;
+    private FireModel currentFireModelOF;
 
     private DataStore dataStore;
 
@@ -106,7 +107,8 @@ public class ModelBuilder implements CTCommonModule{
         FilterModuleOrder filterModules = 
             (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
 
-        currentFireModel = new FireModel( concern, filterModules );
+        currentFireModelIF = new FireModel( concern, filterModules, true );
+        currentFireModelOF = new FireModel( concern, filterModules, false );
         
         List order = filterModules.orderAsList();
         modules = new FilterModule[ order.size() ];
@@ -142,7 +144,7 @@ public class ModelBuilder implements CTCommonModule{
     private void processMethod( MethodInfo methodInfo ){
         //create executionmodel:
         ExecutionModel execModel = 
-            currentFireModel.getExecutionModel( methodInfo, FireModel.STRICT_SIGNATURE_CHECK );
+            currentFireModelIF.getExecutionModel( methodInfo, FireModel.STRICT_SIGNATURE_CHECK );
 
         //create inlineModel:
         inliner.inline( execModel, modules, methodInfo );
@@ -227,7 +229,7 @@ public class ModelBuilder implements CTCommonModule{
     private Block createCallBlock( Target target, MethodInfo methodInfo ){
         //create executionModel:
         ExecutionModel execModel = 
-            currentFireModel.getExecutionModel( 
+            currentFireModelOF.getExecutionModel( 
                     target, methodInfo, FireModel.STRICT_SIGNATURE_CHECK );
 
         //create inlineModel:

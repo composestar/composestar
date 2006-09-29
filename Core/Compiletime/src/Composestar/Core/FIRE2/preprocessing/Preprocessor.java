@@ -59,7 +59,7 @@ public class Preprocessor implements CTCommonModule{
     private final static String RUNTIME_GRAMMAR_PATH = 
         "groovegrammars/runtime.gps";
     
-    private final static boolean GROOVE_DEBUG = false;
+    private final static boolean GROOVE_DEBUG = true;
     
     private final static File AST_OUT = new File( "./ast.gst" );
     private final static File FLOW_OUT = new File( "./flow.gst" );
@@ -105,65 +105,36 @@ public class Preprocessor implements CTCommonModule{
                 "Preprocessing Filter Module: " + module.getName() );
         
         //build AST:
-        Graph grooveAst = buildAst( module );
-        if ( GROOVE_DEBUG ){
-            //output ast:
-            try {
-                graphLoader.marshal( grooveAst, AST_OUT );
-            } catch (XmlException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        Graph grooveAstIF = buildAst( module, true );
+        Graph grooveAstOF = buildAst( module, false );
         
         
         //generate flow model:
-        Graph grooveFlowModel = generateFlow( grooveAst );
-        if ( GROOVE_DEBUG ){
-            //output flowgraph:
-            try {
-                graphLoader.marshal( grooveFlowModel, FLOW_OUT );
-            } catch (XmlException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        Graph grooveFlowModelIF = generateFlow( grooveAstIF );
+        Graph grooveFlowModelOF = generateFlow( grooveAstOF );
+        
         
         
         //extract flowmodel:
-        FlowModel flowModel = extractFlowModel( grooveFlowModel );
-
+        FlowModel flowModelIF = extractFlowModel( grooveFlowModelIF );
+        FlowModel flowModelOF = extractFlowModel( grooveFlowModelOF );
         
         //Simulate execution:
-        GTS stateSpace = execute( grooveFlowModel );
-        if ( GROOVE_DEBUG ){
-            //output execution-statespace:
-            try {
-                graphLoader.marshal( stateSpace, EXECUTION_OUT );
-            } catch (XmlException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
+        GTS stateSpaceIF = execute( grooveFlowModelIF );
+        GTS stateSpaceOF = execute( grooveFlowModelOF );
         
         
         //extract statespace:
-        ExecutionModel executionModel = extractExecutionModel( 
-                stateSpace, flowModel );
+        ExecutionModel executionModelIF = extractExecutionModel( 
+                stateSpaceIF, flowModelIF );
+        ExecutionModel executionModelOF = extractExecutionModel( 
+                stateSpaceOF, flowModelOF );
+        
         
         
         //store result:
         FirePreprocessingResult result = 
-            new FirePreprocessingResult( flowModel, executionModel );
+            new FirePreprocessingResult( flowModelIF, executionModelIF, flowModelOF, executionModelOF );
         module.dynamicmap.put( RESULT_ID, result );
     }
     
@@ -203,8 +174,23 @@ public class Preprocessor implements CTCommonModule{
         }
     }
     
-    private Graph buildAst( FilterModule module ){
-        return astBuilder.buildAST( module );
+    private Graph buildAst( FilterModule module, boolean forInputFilters ){
+        Graph grooveAst = astBuilder.buildAST( module, forInputFilters );
+        
+        if ( GROOVE_DEBUG ){
+            //output ast:
+            try {
+                graphLoader.marshal( grooveAst, AST_OUT );
+            } catch (XmlException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        
+        return grooveAst;
     }
     
     private Graph generateFlow( Graph ast ){
@@ -226,7 +212,22 @@ public class Preprocessor implements CTCommonModule{
         }
         else{
             DefaultGraphState state = (DefaultGraphState) finalStates.next();
-            return state.getGraph();
+            
+            Graph graph = state.getGraph();
+            
+            if ( GROOVE_DEBUG ){
+                //output flowgraph:
+                try {
+                    graphLoader.marshal( graph, FLOW_OUT );
+                } catch (XmlException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            return graph;
         }
     }
     
@@ -245,6 +246,21 @@ public class Preprocessor implements CTCommonModule{
             //TODO nice exception handling
             exc.printStackTrace();
         }
+        
+        
+        if ( GROOVE_DEBUG ){
+            //output execution-statespace:
+            try {
+                graphLoader.marshal( gts, EXECUTION_OUT );
+            } catch (XmlException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        
         
         return gts;
     }
