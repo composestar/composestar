@@ -124,6 +124,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The field {0} could not be found..
+        /// </summary>
+        internal static string FieldNotFound {
+            get {
+                return ResourceManager.GetString("FieldNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The supplied filename is null or empty..
         /// </summary>
         internal static string FileNameNullOrEmpty {

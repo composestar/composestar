@@ -207,6 +207,26 @@ namespace Composestar.StarLight.ILWeaver
             //return mb;
         }
 
+
+        /// <summary>
+        /// Resolves the method
+        /// </summary>
+        /// <param name="parentType">The type containing the method</param>
+        /// <param name="methodName">The name of the method</param>
+        /// <param name="exampleMethod">Examplemethod containing the same parametertypes and returntype of the
+        /// wanted method</param>
+        /// <returns>The to be resolved method, or <code>null</code> if such method does not exist</returns>
+        public static MethodDefinition ResolveMethod( TypeDefinition parentType, string methodName, 
+            MethodDefinition exampleMethod )
+        {
+            MethodDefinition[] mds = parentType.Methods.GetMethod( methodName );
+
+            MethodDefinition md = parentType.Methods.GetMethod( methodName, exampleMethod.Parameters);
+
+            return md;
+        }
+
+
         /// <summary>
         /// Creates the cache key.
         /// </summary>

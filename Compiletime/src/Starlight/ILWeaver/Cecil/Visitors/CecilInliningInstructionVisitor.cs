@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 
@@ -607,14 +608,62 @@ namespace Composestar.StarLight.ILWeaver
             switch (FilterType)
             {
                 case FilterTypes.InputFilter:
+                    FieldDefinition target = null;
                     // Self call
 
                     // Get the methodReference
                     MethodReference methodReference = (MethodReference)Method;
 
+                    TypeDefinition parentType = (TypeDefinition) methodReference.DeclaringType;
+                    
+                    //Get the called method:
+                    if ( filterAction.Target.Equals( FilterAction.INNER_TARGET )  ||  
+                        filterAction.Target.Equals( FilterAction.SELF_TARGET ) )
+                    {
+                        if ( filterAction.Selector.Equals( Method.Name ) )
+                        {
+                            methodReference = Method;
+                        }
+                        else
+                        {
+                            methodReference = CecilUtilities.ResolveMethod( parentType, filterAction.Selector, Method );
+                        }
+                    }
+                    else
+                    {
+                        target = parentType.Fields.GetField( filterAction.Target );
+                        if ( target == null )
+                        {
+                            throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+                                Properties.Resources.FieldNotFound, filterAction.Target));
+                        }
+
+                        TypeDefinition fieldType = (TypeDefinition) target.FieldType;
+                        methodReference = CecilUtilities.ResolveMethod( fieldType, filterAction.Selector, Method );
+                    }
+
+                    if ( methodReference == null )
+                    {
+                        return;
+                    }
+
+
                     // Place the arguments on the stack first
-                    if (methodReference.HasThis)
-                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+                    //Place target on the stack:
+                    if ( methodReference.HasThis )
+                    {
+                        if ( filterAction.Target.Equals( FilterAction.INNER_TARGET ) ||
+                            filterAction.Target.Equals( FilterAction.SELF_TARGET ) )
+                        {
+                            Instructions.Add( Worker.Create( OpCodes.Ldarg, Method.This ) );
+                        }
+                        else
+                        {
+                            Instructions.Add( Worker.Create( OpCodes.Ldfld, target ) );
+                        }
+                    }
+                        
 
                     int numberOfArguments = Method.Parameters.Count;
                     for (int i = 1; i < numberOfArguments; i++)
@@ -622,7 +671,7 @@ namespace Composestar.StarLight.ILWeaver
                         Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence));
                     }
 
-                    // Call the same method
+                    // Call the method
                     Instructions.Add(Worker.Create(OpCodes.Call, methodReference));
 
                     break;
