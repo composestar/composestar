@@ -152,7 +152,17 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 */
 	public boolean hasParameters(String[] types) 
 	{
-		return true;
+		if ( Parameters.size() != types.length )
+            return false;
+        
+        for (int i=0; i<types.length; i++){
+            ParameterInfo parameter = (ParameterInfo) Parameters.get( i );
+            if ( !parameter.parameterType().fullName().equals( types[i] ) ){
+                return false;
+            }
+        }
+        
+        return true;
 	}
 	
 	/**
