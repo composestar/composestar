@@ -19,9 +19,5 @@ public abstract class Master {
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
 	    
 	public abstract void run();
-    	
-	public abstract String printStackTrace(Exception e); 
-	
-	public abstract void SaveModifiedConfigurationKeys(CommonResources resources);
-	
+ 		
 }

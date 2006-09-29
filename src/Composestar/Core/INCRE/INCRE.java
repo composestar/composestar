@@ -190,7 +190,7 @@ public class INCRE implements CTCommonModule
 	   incretotal.stop(); // stop timing INCRE's initialization 
 	   
 	   // INCRE enabled or not? 
-	   Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE enabled? "+this.enabled);
+	   Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE enabled state is "+this.enabled);
    }
 
 	/**
