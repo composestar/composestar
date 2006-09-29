@@ -209,17 +209,8 @@ public class ILCodeParser extends TransformerBase
 				}
 				else
 				{
-					// if not declared mark as declared else mark as current
-					if (!ch.isDeclared())
-					{
-						ch.setDeclared(true);
-
-						// output to }
-						write(line);
-						printLine();
-						transformSection(false); // don't eat
-					}
-					else
+					// if declared: mark as current and transform
+					if (ch.isDeclared())
 					{
 						ch.setDeclared(false);
 
@@ -231,11 +222,21 @@ public class ILCodeParser extends TransformerBase
 						ClassModifier cm = new ClassModifier(this, ch.getConcern());
 						cm.run();
 					}
+					// else: mark as declared and print unchanged
+					else
+					{
+						ch.setDeclared(true);
+
+						// output to }
+						write(line);
+						printLine();
+						transformSection(false); // don't eat
+					}
 				}
 			}
 			else // just write all other lines unchanged
 				write(line);
-		}     
+		}
 	}
 
 	private static class ConcernHolder

@@ -26,7 +26,7 @@ public class MSAssembler implements Assembler
 		cmdList.add("/output=" + FileUtils.quote(outputFile));
 		cmdList.add(FileUtils.quote(inputFile));
 
-		Debug.out(Debug.MODE_DEBUG, "TYM_ASM", "Command: " + StringUtils.join(cmdList));
+		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Command: " + StringUtils.join(cmdList));
 	
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
@@ -45,7 +45,7 @@ public class MSAssembler implements Assembler
 		cmdList.add("/out=" + FileUtils.quote(outputFile));
 		cmdList.add(FileUtils.quote(inputFile));
 
-		Debug.out(Debug.MODE_DEBUG, "TYM_ASM", "Command: " + StringUtils.join(cmdList));
+		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)

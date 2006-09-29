@@ -1,6 +1,7 @@
 package Composestar.DotNET.ASTRA;
 
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -50,7 +51,8 @@ public class ClassModifier extends TransformerBase
 				Signature sig = concern.getSignature();
 				if (sig != null)
 				{
-					Iterator it = (sig.getMethods(MethodWrapper.ADDED)).iterator();
+					List added = sig.getMethods(MethodWrapper.ADDED);
+					Iterator it = added.iterator();
 					while (it.hasNext())
 					{
 						MethodInfo m = (MethodInfo)it.next();
@@ -60,10 +62,9 @@ public class ClassModifier extends TransformerBase
 				write(line); // output final bracket
 				return;
 			}
-			else
-			{
+			else // just write all other lines unchanged
 				write(line);
-			}
+
 		} while ((line = getLine()) != null);
 	}
 
@@ -247,7 +248,7 @@ public class ClassModifier extends TransformerBase
 			write("ldloc.0");
 			write("ret");
 		}
-		else // string or object
+		else // object
 		{
 			write(".maxstack 1");
 			write(".locals init ([0] " + mi.returnType().fullName() + " CS$00000003$00000000)");
