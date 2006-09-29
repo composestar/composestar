@@ -271,6 +271,9 @@ namespace Composestar.StarLight.ILWeaver
         public override AssemblyDefinition Resolve(string fullName)
         {
 
+            if (String.IsNullOrEmpty(fullName))
+                return null;
+
             AssemblyNameReference assemblyNameReferenceParsed;
 
             try
