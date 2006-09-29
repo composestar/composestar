@@ -5,6 +5,7 @@
 package Composestar.Core.INLINE.lowlevel;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Stack;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -28,6 +29,7 @@ import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Switch;
 import Composestar.Core.INLINE.model.While;
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
 
 public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     /**
@@ -130,7 +132,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         
         nextReturnActionId = 1;
         onReturnInstructions = new Switch( new ContextExpression(ContextExpression.RETRIEVE_ACTION) );
-        returnLabel = new Label( 9998 );
+        returnLabel = new Label( 9997 );
 
         empty = true;
 
@@ -161,7 +163,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             createActionStoreInstruction.setType( ContextInstruction.REMOVED );
             
             //set jumpLabel of onReturnJump to end:
-            returnLabel.setId( 9999 );
+            returnLabel.setId( 9998 );
         }
         else{
             //add onReturnActions:
@@ -176,6 +178,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             
             currentBlock.addInstruction( whileInstruction );
         }
+        
+        ContextInstruction returnInstruction = new ContextInstruction(
+                ContextInstruction.RETURN_ACTION );
+        returnInstruction.setLabel( new Label( 9998) );
+        currentBlock.addInstruction( returnInstruction );
         
         
         //create resetInnercall context instruction:
@@ -402,8 +409,21 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
                 calledMethod = currentMethod;
             }
             else{
-                calledMethod = null;//TODO MethodInfo.getMethodInfo( callMessage.getSelector().getName(), 
-                        //currentMethod.parent(), currentMethod );
+                List parameterList = currentMethod.getParameters();
+                String[] parameters = new String[parameterList.size()];
+                for (int i=0; i<parameterList.size(); i++){
+                    ParameterInfo parameter = (ParameterInfo) parameterList.get( i );
+                    parameters[i] = parameter.parameterType().fullName();
+                }
+
+                calledMethod = currentMethod.parent().getMethod( 
+                        callMessage.getSelector().getName(), parameters );
+            }
+            
+            //it is possible that a called method could not be found, SIGN already has given a warning
+            //or error for this
+            if ( calledMethod == null ){
+                return null;
             }
 
             ContextInstruction contextInstruction = 
@@ -476,6 +496,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
     
     public int getMethodId( MethodInfo method ){
+        if ( method == null ){
+            int x = 9;
+        }
         Integer id = (Integer) methodTable.get( method );
         if ( id == null ){
             id = new Integer( lastMethodId++ );
