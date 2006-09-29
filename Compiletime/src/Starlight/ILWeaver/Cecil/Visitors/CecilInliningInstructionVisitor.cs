@@ -774,7 +774,7 @@ namespace Composestar.StarLight.ILWeaver
 
         #endregion
 
-        #region While constructions
+        #region While construction
 
         /// <summary>
         /// While loop visitor.

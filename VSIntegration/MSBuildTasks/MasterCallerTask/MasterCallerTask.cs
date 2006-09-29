@@ -98,8 +98,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private RepositoryAccess _repositoryAccess;
 
-        const int ERROR_FILE_NOT_FOUND = 2;
-        const int ERROR_ACCESS_DENIED = 5;
+        const int ErrorFileNotFound = 2;
+        const int ErrorAccessDenied = 5;
 
         public enum DebugMode
         {
@@ -212,11 +212,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
             catch (Win32Exception e)
             {
-                if (e.NativeErrorCode == ERROR_FILE_NOT_FOUND)
+                if (e.NativeErrorCode == ErrorFileNotFound)
                 {
                     Log.LogErrorFromResources("JavaExecutableNotFound", p.StartInfo.FileName);
                 }
-                else if (e.NativeErrorCode == ERROR_ACCESS_DENIED)
+                else if (e.NativeErrorCode == ErrorAccessDenied)
                 {
                     Log.LogErrorFromResources("JavaExecutableAccessDenied", p.StartInfo.FileName);
                 }
@@ -340,15 +340,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         Log.LogMessage(MessageImportance.Normal, String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module, modeDescription, message));
                         break;
                     case DebugMode.Debug:
-                        modeDescription = "DEBUG";
+                        modeDescription = "debug";
                         Log.LogMessage(MessageImportance.Normal, String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module,modeDescription, message));
                         break;
                     case DebugMode.Crucial:
-                        modeDescription = "";
+                        modeDescription = "crucial";
                         Log.LogMessage(MessageImportance.Normal, String.Format(CultureInfo.CurrentCulture, "{0} ({1}): {2}", module,modeDescription, message));
                         break;
                     case DebugMode.Error:
-                        modeDescription = "ERROR";
+                        modeDescription = "error";
                         Log.LogError(module, "", "", filename, line, 0, line + 1, 0, message);
                         break;
                 }
