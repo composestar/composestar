@@ -54,6 +54,15 @@ public class Switch extends InlineInstruction{
     {
         super.Accept(visitor);
         visitor.VisitSwitch(this);
+
+		Case[] cases = get_Cases();
+		for (int i = 0; i < cases.length; i++)
+		{
+			Case c = cases[i];
+			c.Accept(visitor);
+			visitor.VisitCaseEnd(this); 
+		}		
+		visitor.VisitSwitchEnd(this); 
     }
     
     

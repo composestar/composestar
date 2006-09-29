@@ -28,12 +28,13 @@ namespace Composestar.StarLight.ILWeaver
         #region Constant values
 
         private const int FilterContextJumpId = 9999;
+        private const int BranchLabelOffSet = 8000;
 
         #endregion
 
         #region Private variables
         IList<Instruction> _instructions = new List<Instruction>();
-        CilWorker _worker; 
+        CilWorker _worker;
         int numberOfBranches = 0;
         MethodDefinition _method;
         AssemblyDefinition _targetAssemblyDefinition;
@@ -64,7 +65,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #endregion
-        
+
         #region Properties
         /// <summary>
         /// Gets or sets the type of the filter.
@@ -179,11 +180,11 @@ namespace Composestar.StarLight.ILWeaver
 
             // Get an actionstore local
             VariableDefinition asVar = CreateActionStoreLocal();
-       
+
             // Load the local
             Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
 
-            switch(expr.Type)
+            switch (expr.Type)
             {
                 case ContextExpression.HAS_MORE_ACTIONS:
                     // Call the HasMoreStoredActions method
@@ -195,7 +196,7 @@ namespace Composestar.StarLight.ILWeaver
                     break;
 
             }
-            
+
         }
 
         /// <summary>
@@ -227,8 +228,8 @@ namespace Composestar.StarLight.ILWeaver
         {
             TypeReference typeRef = _targetAssemblyDefinition.MainModule.Import(type);
             VariableDefinition var = new VariableDefinition(typeRef);
-            var.Name = type.ToString(); 
-            
+            var.Name = type.ToString();
+
             Method.Body.Variables.Add(var);
 
             return var;
@@ -314,7 +315,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             foreach (Instruction instruction in instructions)
             {
-                Instructions.Add(instruction); 
+                Instructions.Add(instruction);
             }
         }
         #endregion
@@ -363,8 +364,8 @@ namespace Composestar.StarLight.ILWeaver
             // Set the target
             //
             // Load the joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));        
-      
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
             // Load the this pointer
             if (Method.HasThis)
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
@@ -373,9 +374,9 @@ namespace Composestar.StarLight.ILWeaver
 
             // Assign to the Target property
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
-  
-            int numberOfArguments=0;
-            
+
+            int numberOfArguments = 0;
+
             // Get the method we have to call
             MethodBase methodBaseDef = CecilUtilities.ResolveMethod(filterAction.Target);
             if (methodBaseDef == null)
@@ -419,7 +420,7 @@ namespace Composestar.StarLight.ILWeaver
                 VariableDefinition objectVar = CreateObjectLocal();
                 VariableDefinition typeVar = CreateTypeLocal();
 
-                for (int i = 1; i < numberOfArguments; i++) 
+                for (int i = 1; i < numberOfArguments; i++)
                 {
                     // Duplicate the value
                     Instructions.Add(Worker.Create(OpCodes.Dup));
@@ -477,7 +478,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Retrieve the arguments
             //               
-            for (int i = 0; i < numberOfArguments; i++) 
+            for (int i = 0; i < numberOfArguments; i++)
             {
                 // Load jpc
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -493,73 +494,10 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Nop));
         }
 
-        /// <summary>
-        /// Generate the branching code for the conditions.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// if (condition)
-        /// {
-        ///   // true
-        /// }
-        /// else
-        /// {
-        ///   // false
-        /// }
-        /// </code>
-        /// In IL code:
-        /// <code>
-        /// condition
-        /// brfalse l1:
-        /// trueblock
-        /// br l2
-        /// l1:
-        /// falseblock
-        /// l2:
-        /// </code>
-        /// </example> 
-        /// <param name="branch">The branch.</param>
-        public void VisitBranch(Branch branch)
-        {
-            // Add condition code
-            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
-            conditionsVisitor.Method = Method;
-            conditionsVisitor.Worker = Worker;
-            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
-            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
-            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
 
-            // Add the instructions containing the conditions to the IL instruction list
-            AddInstructionList(conditionsVisitor.Instructions);
 
-            // Add branch code
-            branch.Label = 8000 + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-            numberOfBranches = numberOfBranches + 2;
-            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
-        }
 
-        /// <summary>
-        /// Generate the branching code for the conditions.
-        /// </summary>
-        /// <param name="branch">The branch.</param>
-        public void VisitBranchFalse(Branch branch)
-        {
-            // Make sure we jump over the false block
-            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.Label+1)));
-
-            // Place label for the false block
-            Instructions.Add(GetJumpLabel(branch.Label));
-        }
-
-        /// <summary>
-        /// Visits the branch end.
-        /// </summary>
-        /// <param name="branch">The branch.</param>
-        public void VisitBranchEnd(Branch branch)
-        {
-            // Place label for the End branch block
-            Instructions.Add(GetJumpLabel(branch.Label+1));
-        }
+        #region Inner Call handlers
 
         /// <summary>
         /// Generates the filter context is inner call check.
@@ -646,6 +584,8 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] { }))));
         }
 
+        #endregion
+
         /// <summary>
         /// Visits the continue action. No code is generated for this action because further jumps are introduced.
         /// </summary>
@@ -668,7 +608,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 case FilterTypes.InputFilter:
                     // Self call
-                    
+
                     // Get the methodReference
                     MethodReference methodReference = (MethodReference)Method;
 
@@ -718,9 +658,6 @@ namespace Composestar.StarLight.ILWeaver
             // Throw the exception
             Instructions.Add(Worker.Create(OpCodes.Throw));
 
-            // Add the Nop to enable debugging
-            Instructions.Add(Worker.Create(OpCodes.Nop));
-
         }
 
         /// <summary>
@@ -765,40 +702,107 @@ namespace Composestar.StarLight.ILWeaver
             // No code needed
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="switchInstr"></param>
-        public void VisitSwitch(Switch switchInstr)
-        {
-                  
-            // Context instruction
-            CreateContextExpression(switchInstr.Expression);
+        #region Branching
 
-            // The labels to jump to
-            List<Instruction> caseLabels = new List<Instruction>();
-            foreach (Case c in switchInstr.Cases)
-            {
-                caseLabels.Add(GetJumpLabel(c.Label));
-            }
-              
-            // The switch statement
-            Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
+        /// <summary>
+        /// Generate the branching code for the conditions.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// if (condition)
+        /// {
+        ///   // true
+        /// }
+        /// else
+        /// {
+        ///   // false
+        /// }
+        /// </code>
+        /// In IL code:
+        /// <code>
+        /// condition
+        /// brfalse l1:
+        /// trueblock
+        /// br l2
+        /// l1:
+        /// falseblock
+        /// l2:
+        /// </code>
+        /// </example> 
+        /// <param name="branch">The branch.</param>
+        public void VisitBranch(Branch branch)
+        {
+            // Add condition code
+            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
+            conditionsVisitor.Method = Method;
+            conditionsVisitor.Worker = Worker;
+            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
+            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
+            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
+
+            // Add the instructions containing the conditions to the IL instruction list
+            AddInstructionList(conditionsVisitor.Instructions);
+
+            // Add branch code
+            branch.Label = BranchLabelOffSet + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            numberOfBranches = numberOfBranches + 2;
+            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }
 
         /// <summary>
-        /// 
+        /// Generate the branching code for the conditions.
         /// </summary>
+        /// <param name="branch">The branch.</param>
+        public void VisitBranchFalse(Branch branch)
+        {
+            // Make sure we jump over the false block
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(branch.Label + 1)));
+
+            // Place label for the false block
+            Instructions.Add(GetJumpLabel(branch.Label));
+        }
+
+        /// <summary>
+        /// Visits the branch end.
+        /// </summary>
+        /// <param name="branch">The branch.</param>
+        public void VisitBranchEnd(Branch branch)
+        {
+            // Place label for the End branch block
+            Instructions.Add(GetJumpLabel(branch.Label + 1));
+        }
+
+        #endregion
+
+        #region While constructions
+
+        /// <summary>
+        /// While loop visitor.
+        /// </summary>
+        /// <remarks>
+        /// Should generate the following code:
+        /// <code>
+        /// l2:
+        /// condition
+        /// brfalse l1:
+        /// // code
+        /// br l2:
+        /// l1:
+        /// </code>
+        /// </remarks> 
         /// <param name="whileInstr"></param>
         public void VisitWhile(While whileInstr)
         {
+            // Create a start label
+            whileInstr.Label = BranchLabelOffSet + numberOfBranches;
+            numberOfBranches = numberOfBranches + 2;
+            Instructions.Add(GetJumpLabel(whileInstr.Label));
 
-            // TODO process contextexpressions
+            // Context instruction
+            CreateContextExpression(whileInstr.Expression);
 
             // Add branch code
-            whileInstr.Label = 8000 + numberOfBranches;
-            numberOfBranches++;
-            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(whileInstr.Label)));
+            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(whileInstr.Label + 1)));
         }
 
         /// <summary>
@@ -813,18 +817,61 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// In IL we need:
         /// <code>
-        /// l1: condition
-        /// brfalse l2
+        /// l2: condition
+        /// brfalse l1
         /// block
-        /// br l1
-        /// l2: nop
+        /// br l2
+        /// l1: nop
         /// </code>
         /// </remarks> 
         /// <param name="whileInstr">The while instruction.</param>
         public void VisitWhileEnd(While whileInstr)
         {
-            // TODO not yet correct. must add a branch back
-            Instructions.Add(GetJumpLabel(whileInstr.Label));
+            // Add the branch back to condition part
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(whileInstr.Label)));
+
+            // Place the end label
+            Instructions.Add(GetJumpLabel(whileInstr.Label + 1));
+        }
+
+        #endregion
+
+        #region Switch construction
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="switchInstr"></param>
+        public void VisitSwitch(Switch switchInstr)
+        {
+
+            // Context instruction
+            CreateContextExpression(switchInstr.Expression);
+
+            // The labels to jump to
+            List<Instruction> caseLabels = new List<Instruction>();
+            foreach (Case c in switchInstr.Cases)
+            {
+                caseLabels.Add(GetJumpLabel(c.Label));
+            }
+
+            // The switch statement
+            Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
+
+            // Jump to the end
+            switchInstr.Label = BranchLabelOffSet + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            numberOfBranches = numberOfBranches + 1;
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));
+        }
+
+        /// <summary>
+        /// Visits the switch end.
+        /// </summary>
+        /// <param name="switchInstr">The switch instr.</param>
+        public void VisitSwitchEnd(Switch switchInstr)
+        {
+            // Emit a label to jump to.
+            Instructions.Add(GetJumpLabel(switchInstr.Label));
         }
 
         /// <summary>
@@ -833,8 +880,23 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="caseInstr"></param>
         public void VisitCase(Case caseInstr)
         {
-            // TODO visit case construction
+            // Add the label
+            Instructions.Add(GetJumpLabel(caseInstr.Label));
         }
+
+        /// <summary>
+        /// Visits the case end.
+        /// </summary>
+        /// <param name="switchInstr">The switch instr.</param>
+        public void VisitCaseEnd(Switch switchInstr)
+        {
+            // Add a jump to the end of the switch
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));
+        }
+
+        #endregion
+
+        #region Action store
 
         /// <summary>
         /// This ContextInstruction indicates that an actionstore needs to be created. 
@@ -860,7 +922,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Call the constructor
             Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(FilterContext).GetConstructors()[0])));
-            
+
             // Store the local
             Instructions.Add(Worker.Create(OpCodes.Stloc, asVar));
         }
@@ -893,6 +955,8 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #endregion
-    
+
+        #endregion
+
     }
 }
