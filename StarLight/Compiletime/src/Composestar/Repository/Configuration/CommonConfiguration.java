@@ -50,4 +50,17 @@ public class CommonConfiguration {
 		_intermediateOutputPath = value;
 	} 
 
+	private String _specificationFILTH;
+
+	/** @property */
+	public String get_FILTHSpecification()
+	{
+		return _specificationFILTH;
+	}
+
+	/** @property */
+	public void set_FILTHSpecification(String value)
+	{
+		_specificationFILTH = value;
+	} 
 }

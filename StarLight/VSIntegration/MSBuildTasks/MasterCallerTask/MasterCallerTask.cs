@@ -140,6 +140,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 _repositoryAccess.AddConcern(ci);
             }
 
+            RegistrySettings rs = new RegistrySettings();
+            if (!rs.ReadSettings())
+            {
+                Log.LogErrorFromResources("CouldNotReadRegistryValues"); 
+                _repositoryAccess.CloseContainer(); 
+                return false;
+            }
+
             // Place debuglevel
             Log.LogMessage("Storing debug level {0} in the repository.", DebugLevel);             
 
@@ -155,18 +163,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
             CurrentDebugMode = (DebugMode)debugLevelValue;
             cc.CompiletimeDebugLevel = debugLevelValue;  
             cc.IntermediateOutputPath = IntermediateOutputPath;     
-
-            // Prepare to run java
-            RegistrySettings rs = new RegistrySettings();
-            if (!rs.ReadSettings())
-            {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues"); 
-                _repositoryAccess.CloseContainer(); 
-                return false;
-            }
-
             cc.InstallFolder = rs.InstallFolder;
 
+            // Set FILTH Specification
+            String filthFile = "FILTH.xml";
+            if (!File.Exists(filthFile))
+            {
+                filthFile = Path.Combine(rs.InstallFolder, filthFile);
+            }
+            cc.FILTHSpecification = filthFile;
+            
             // Save common config
             _repositoryAccess.SetCommonConfiguration(cc);
         

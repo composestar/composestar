@@ -241,7 +241,7 @@ namespace Composestar.StarLight.ILWeaver
 
                                 // Create instructions
                                 IList<Instruction> instructions = new List<Instruction>();
-                                instructions.Add(worker.Create(OpCodes.Ldarg_0));
+                                instructions.Add(worker.Create(OpCodes.Ldarg, internalConstructor.This));
                                 instructions.Add(worker.Create(OpCodes.Newobj, internalConstructor));
                                 instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 

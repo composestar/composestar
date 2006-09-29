@@ -130,7 +130,13 @@ public class StarLightMaster extends Master  {
         //Set platform:
         Configuration.instance().addProperty( "Platform", "dotnet" );
         
-        Debug.out(Debug.MODE_INFORMATION,MODULENAME,"Master initialized.");
+        // Set FILTH input file
+        Composestar.Core.Master.Config.Module filthSettings = new Composestar.Core.Master.Config.Module();
+        filthSettings.setName("FILTH");
+        filthSettings.addProperty("input", repository.GetCommonConfiguration().get_FILTHSpecification());
+        Configuration.instance().getModuleSettings().addModule("FILTH", filthSettings);
+        
+        Debug.out(Debug.MODE_INFORMATION,"Master","Master initialized.");
 	}
 
 	/**
