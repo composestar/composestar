@@ -32,12 +32,13 @@ public class ASTRA implements CTCommonModule
 			while (iterator.hasNext())
 			{
 				Concern concern = (Concern)iterator.next();
-				codeParser.addConcern(concern);    
+				codeParser.addConcern(concern);
 			}
 
 			try
 			{
-				List dummies = Configuration.instance().getProjects().getCompiledDummies();
+				Configuration config = Configuration.instance();
+				List dummies = config.getProjects().getCompiledDummies();
 				Iterator dumIt = dummies.iterator();
 				while (dumIt.hasNext()) 
 				{
@@ -47,7 +48,7 @@ public class ASTRA implements CTCommonModule
 				}
 
 			/*	TODO: can this be removed?
-				String assemblies = Configuration.instance().getModuleSettings().getModule("ILICIT").getProperty("assemblies");
+				String assemblies = config.getModuleSettings().getModule("ILICIT").getProperty("assemblies");
 				String[] assemblyArray = assemblies.split(",");
 				for( int i = 0; i < assemblyArray.length; i++ )
 				{

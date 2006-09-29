@@ -39,6 +39,7 @@ import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeLocations;
+import Composestar.DotNET.BACO.DotNETBACO;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
@@ -55,16 +56,51 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	private PrintWriter out = null;
 	private int debugLevel = 0;
 
-	/**
-	 * @roseuid 40EBC2AE0112
-	 */
 	public DotNETWeaveFileGenerator() 
-	{     
+	{
 	}
 
-	/**
-	 * @roseuid 40EBC2AE0113
-	 */
+	public void run(CommonResources resources) throws ModuleException 
+	{
+		Configuration config = Configuration.instance();
+		File destination = new File(config.getPathSettings().getPath("Base") + "weavespec.xml");
+
+		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
+
+		try {
+			debugLevel = Integer.parseInt(config.getProjects().getProperty("runDebugLevel"));
+		}
+		catch (NumberFormatException e) {
+			Debug.out(Debug.MODE_WARNING, "CONE-IS", "Unable to set debug level, using default debug level of " + debugLevel + ".");
+		}
+
+		try {
+			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
+
+			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+			out.println("<weaveSpecification version=\"1.0\">");
+
+			String applicationStart = config.getProjects().getProperty("applicationStart");
+
+			writeAssemblyReferenceDefinitions(resources, applicationStart);
+			writeMethodDefinitions();
+			writeApplicationInfo(applicationStart);
+			writeClassDefinitions(resources);
+
+			out.println("</weaveSpecification>");
+		}
+		catch (IOException e) {
+			throw new ModuleException("Unable to create weave specification file '" + destination + "'.","CONE_IS");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new ModuleException("Unhandled exception: " + e.getClass().toString() + " : "+ e.getMessage(),"CONE_IS");
+		}
+		finally {
+			FileUtils.close(out);
+		}
+	}
+
 	private void writeAssemblyReferenceDefinitions(CommonResources resources, String applicationStart)
 		throws ModuleException
 	{
@@ -102,13 +138,9 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			{
 				Dependency dependency = (Dependency)depIt.next();
 				String dep = dependency.getFileName();
-
+				
 				// Do not add the dependency when it is a .NET assembly or a composestar assembly
-				// FIXME: this makes assumptions about the location of the .NET framework
-				if (dep.indexOf("Microsoft.NET/Framework/") >= 0)
-					continue;
-				// FIXME: this makes assumptions about the location of the .NET GAC
-				if (dep.toLowerCase().indexOf("assembly/gac/") >= 0)
+				if (DotNETBACO.isSystemAssembly(dep))
 					continue;
 
 				if (dep.indexOf("ComposeStarRuntimeInterpreter") >= 0)
@@ -117,10 +149,8 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				if (dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0)
 					continue;
 
-				File f = new File(dep);
-
-				String filename = f.getName();
-				String dllname  = FileUtils.removeExtension(FileUtils.getFilenamePart(filename));			
+			//	String filename = new File(dep).getName();
+				String dllname  = FileUtils.removeExtension(FileUtils.getFilenamePart(dep));			
 				writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
 			}
 		}
@@ -173,9 +203,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Assembly reference block has been written.");     
 	}
 
-	/**
-	 * @roseuid 40EBC2AE0121
-	 */
 	private void writeMethodDefinitions() 
 	{
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing method definitions block...");
@@ -371,11 +398,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		out.println("</classReplacements>");
 	}
 
-	/**
-	 * @param store
-	 * @param resources
-	 * @roseuid 40EBC2AE0316
-	 */
 	private void writeClassDefinitions(CommonResources resources)
 	{
 		// Write definitions for inputfilters and dummy unlinking
@@ -447,50 +469,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		}
 	}
 
-	public void run(CommonResources resources) throws ModuleException 
-	{
-		Configuration config = Configuration.instance();
-		File destination = new File(config.getPathSettings().getPath("Base") + "weavespec.xml");
-
-		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
-
-		try {
-			debugLevel = Integer.parseInt(config.getProjects().getProperty("runDebugLevel"));
-		}
-		catch (NumberFormatException e) {
-			Debug.out(Debug.MODE_WARNING, "CONE-IS", "Unable to set debug level, using default debug level of 0.");
-		}
-
-		try {
-			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
-
-			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			out.println("<weaveSpecification version=\"1.0\">");
-
-			String applicationStart = config.getProjects().getProperty("applicationStart");
-
-			writeAssemblyReferenceDefinitions(resources, applicationStart);
-			writeMethodDefinitions();
-			writeApplicationInfo(applicationStart);
-			writeClassDefinitions(resources);
-
-			out.println("</weaveSpecification>");
-
-			out.flush();
-			out.close();
-		}
-		catch (IOException e) {
-			throw new ModuleException("Unable to create weave specification file '" + destination + "'.","CONE_IS");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new ModuleException("Unhandled exception: " + e.getClass().toString() + " : "+ e.getMessage(),"CONE_IS");
-		}     
-	}
-
-	/**
-	 * @roseuid 40F3CE3B00DD
-	 */
 	private void writeApplicationInfo(String applicationStart) 
 	{
 		Debug.out(Debug.MODE_DEBUG, "CONE_IS", "Writing application information...");
@@ -536,9 +514,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		out.println("</callToMethod>");     
 	}
 
-	/**
-	 * @roseuid 40F3CE3B010F
-	 */
 	private void writeMethodInvocationRecord(String target) 
 	{
 		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Adding interception for all methods of class '" + target + "'.");
@@ -578,67 +553,4 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		out.println("</castTo>");   	
 
 	}
-
-//	FIXME: unused
-//	private class MethodInformation
-//	{
-//		private String mClassName;
-//		private String mMethodName;
-//
-//		/**
-//		 * @param className
-//		 * @param methodName
-//		 * @roseuid 40EBC2C9001B
-//		 */
-//		public MethodInformation(String className, String methodName) {
-//			mClassName = className;
-//			mMethodName = methodName;
-//		}
-//
-//		/**
-//		 * @return java.lang.String
-//		 * @roseuid 40EBC2C9003B
-//		 */
-//		public String getClassName() {
-//			return mClassName;
-//		}
-//
-//		/**
-//		 * @return java.lang.String
-//		 * @roseuid 40EBC2C9005A
-//		 */
-//		public String getMethodName() {
-//			return mMethodName;
-//		}
-//	}
-
-//	FIXME: unused
-//	private class ClassInformation {
-//		private ArrayList mInvocations;
-//		private String mClassName = "";
-//
-//		/**
-//		 * @return java.lang.String
-//		 * @roseuid 40EBC2C80155
-//		 */
-//		public String getClassName() {
-//			return mClassName;
-//		}
-//
-//		/**
-//		 * @param invocation
-//		 * @roseuid 40EBC2C80173
-//		 */
-//		public void AddInvocation(DotNETWeaveFileGenerator.MethodInformation invocation) {
-//			mInvocations.add(invocation);
-//		}
-//
-//		/**
-//		 * @return java.util.Iterator
-//		 * @roseuid 40EBC2C801A2
-//		 */
-//		public Iterator getInvocationsIterator() {
-//			return mInvocations.iterator();
-//		}
-//	}
 }

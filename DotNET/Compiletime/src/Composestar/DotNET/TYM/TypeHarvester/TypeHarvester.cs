@@ -21,7 +21,7 @@ public class TypeHarvester
 	private Hashtable m_processedTypes;
 	private Hashtable m_genericParameters;
 
-	private Boolean m_write = true;
+	private bool m_write = true;
 	private int m_gpc = 0;
 
 	public TypeHarvester(string outFolder)

@@ -12,13 +12,18 @@ import Composestar.Utils.FileUtils;
 
 public class DotNETBACO extends BACO
 {
+	// TODO: find a better spot for this
+	// FIXME: assumption about .NET installation
+	public static boolean isSystemAssembly(String filename)
+	{
+		String lcname = filename.toLowerCase(); 
+		return (lcname.indexOf("microsoft.net/framework/") != -1)
+			|| (lcname.indexOf("assembly/gac/") != -1);
+	}
 	protected boolean isNeededDependency(Dependency dependency)
 	{
-		// FIXME: assumption about .NET installation
 		// TODO: make this reusable by other modules
-		String dep = dependency.getFileName().toLowerCase(); 
-		return (dep.indexOf("microsoft.net/framework/") == -1)
-			&& (dep.indexOf("assembly/gac/") == -1);
+		return !isSystemAssembly(dependency.getFileName());
 	}
 
 	protected void addBuiltLibraries(Set filesToCopy)
