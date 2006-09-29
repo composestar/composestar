@@ -216,12 +216,12 @@ public class Game implements Runnable
 	 */
 	public void startGame()
 	{
-		if (_level == null) _level = new Level();
 		setEvilPacman(null);
 		for ( int i = 0; i < tickList.size(); i++ )
 		{
 			((Tickable) tickList.get(i)).reset();
 		}
+		if (_level == null) _level = new Level();
 		createPlayers();
 		createGhosts();
 	}

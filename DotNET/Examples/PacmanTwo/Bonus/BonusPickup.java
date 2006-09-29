@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Pawn.java,v 1.5 2006/09/06 11:05:39 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.Bonus;
 
@@ -24,6 +24,11 @@ public class BonusPickup extends PacmanTwo.GameElement
 	public BonusPickup(int inBonusType, int X, int Y)
 	{
 		super(X, Y);
-		bonusType = bonusType;
+		bonusType = inBonusType;
+	}
+
+	public int getBonusType()
+	{
+		return bonusType;
 	}
 }

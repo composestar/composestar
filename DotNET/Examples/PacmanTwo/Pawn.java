@@ -45,7 +45,7 @@ public abstract class Pawn extends GameElement
 
 	protected boolean bumpedWall = false;
 
-	public Pawn()
+	protected Pawn()
 	{
 		new Exception("Invalid construction of Pawn");
 	}

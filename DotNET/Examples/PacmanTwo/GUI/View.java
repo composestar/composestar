@@ -8,7 +8,7 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: View.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.GUI;
 
@@ -24,7 +24,7 @@ public abstract class View
 {
 	protected Viewport viewport;
 
-	public View()
+	protected View()
 	{
 	}
 

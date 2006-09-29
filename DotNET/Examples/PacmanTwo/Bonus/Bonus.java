@@ -8,14 +8,21 @@
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
  * @author Michiel Hendriks
- * @version $Id: Controller.java,v 1.1 2006/09/05 07:12:14 elmuerte Exp $
+ * @version $Id$
  */
 package PacmanTwo.Bonus;
+
+import java.awt.Point;
+import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
+import PacmanTwo.Game;
+import PacmanTwo.GameElement;
+import PacmanTwo.Scoring.Score;
+import PacmanTwo.GUI.Viewport;
 
 /**
  * Adds and manages bonus pickups.
  */
-public class Bonus implements PacmanTwo.Tickable
+public class Bonus
 {
 	public final static int BONUS_CHERRY		= 100;	// lvl 1
 	public final static int BONUS_STRAWBERRY	= 300;	// lvl 2
@@ -26,16 +33,32 @@ public class Bonus implements PacmanTwo.Tickable
 	public final static int BONUS_BELL			= 3000;	// lvl 11-12
 	public final static int BONUS_KEY			= 5000;	// lvl 13+
 
+	protected int bonusPickups;
 	protected float timeTillBonus;
 
 	protected int bonusType = BONUS_CHERRY;
 
-	public Bonus()
+	protected static Bonus _instance;
+
+	protected Bonus()
 	{
+		reset();
 	}
 
-	public void tick(float delta)
+	public static Bonus instance()
 	{
+		if (_instance == null) _instance = new Bonus();
+		return _instance;
+	}
+
+	/**
+	 * Perform tick
+	 */
+	public void tick(ReifiedMessage rm)
+	{
+		float delta = ((Float) rm.getArg(0)).floatValue();
+		rm.proceed();
+		if (bonusPickups >= 2) return; // max of 2 pickups per level
 		timeTillBonus -= delta;
 		if (timeTillBonus < 0)
 		{
@@ -44,17 +67,55 @@ public class Bonus implements PacmanTwo.Tickable
 		}
 	}
 
+	/**
+	 * Reset bonus manager
+	 */
+	public void startGame(ReifiedMessage rm)
+	{
+		rm.proceed();
+		bonusPickups = 0;
+		reset();
+	}
+
+	/**
+	 * Register score
+	 */
+	public void pacmanTouch(ReifiedMessage rm)
+	{
+		GameElement ge = (GameElement) rm.getArg(0);
+		rm.proceed();
+		if (ge instanceof BonusPickup)
+		{
+			BonusPickup b = (BonusPickup) ge;
+			Score score = Score.instance();
+			score.addScore(b.getBonusType());
+			System.out.println("Bonus picked up "+b.getBonusType());
+			b.died();
+			bonusPickups++;
+		}
+	}
+
+	/**
+	 * Register the bonus view
+	 */
+	public void createViews(ReifiedMessage rm)
+	{
+		Viewport vp = (Viewport) rm.getTarget();
+		rm.proceed();
+		new BonusView(vp);
+	}
+
 	public void reset()
 	{
-		timeTillBonus = 30;
+		timeTillBonus = 10;
 	}
 
 	protected void placeBonus()
 	{
 		int X, Y;
-		X = 0;
-		Y = 0;
-		// TODO: !!!
+		Point pt = Game.instance().level().getPlayerStart(0);
+		X = pt.x;
+		Y = pt.y;
 		new BonusPickup(bonusType, X, Y);
 	}
 

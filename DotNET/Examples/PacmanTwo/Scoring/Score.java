@@ -15,7 +15,7 @@ public class Score
 
 	protected int ghostEatCount = 0;
 
-	public Score()
+	protected Score()
 	{
 		reset();
 	}

@@ -32,7 +32,7 @@ public abstract class GameElement implements Tickable
 	 */
 	protected float collisionRadius = 0.3f;
 
-	public GameElement()
+	protected GameElement()
 	{
 		new Exception("Invalid construction of GameElement");
 	}
