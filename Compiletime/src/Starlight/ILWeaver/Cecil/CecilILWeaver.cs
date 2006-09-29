@@ -173,6 +173,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Weaves the internals.
         /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
         public void WeaveInternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
@@ -202,6 +203,8 @@ namespace Composestar.StarLight.ILWeaver
             Type internalType;
             TypeReference internalTypeRef;
             Mono.Cecil.FieldAttributes internalAttrs;
+
+            return;
 
             foreach (Internal inter in internals)
             {
@@ -256,6 +259,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Weaves the externals.
         /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
         public void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
@@ -292,7 +296,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Weaves the code into the method.
         /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method definition.</param>
+        /// <param name="methodElement">The method element.</param>
         public void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
 
@@ -319,12 +325,13 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Weaves the input filters.
         /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method.</param>
         /// <param name="methodElement">The method element.</param>
         /// <remarks>
-        /// InputFilters are added at the top of the methodbody. 
+        /// InputFilters are added at the top of the methodbody.
         /// We call a visitor to generate IL instructions and we add those to the top of the method.
-        /// </remarks>        
+        /// </remarks>
         public void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve inputFilter
@@ -392,12 +399,13 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Weaves the output filters.
         /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method.</param>
         /// <param name="methodElement">The method element.</param>
         /// <remarks>
         /// We look for each call and see if we have an outputfilter for it.
         /// If we do, then call the visitor to generate code to replace the call.
-        /// </remarks> 
+        /// </remarks>
         public void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve calls for this method
@@ -472,13 +480,16 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
         public void Close()
         {
             _languageModelAccessor.Close();
         }
 
         #region Helper functions
-        
+
         /// <summary>
         /// Inserts the instruction list after a specified instruction.
         /// </summary>

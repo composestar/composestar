@@ -35,6 +35,8 @@ public class Case extends InlineInstruction{
     {
         super.Accept(visitor);
         visitor.VisitCase(this);
+		if (instructions != null)
+			instructions.Accept(visitor);
     }
     
     public String toString(){

@@ -51,6 +51,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="returnType">Type of the return.</param>
         /// <param name="paramTypes">The param types.</param>
         /// <returns></returns>
+        [Obsolete("Use Method.ToString() to create a signature", true)]
         public static String MethodSignature(string methodName, string returnType, string[] paramTypes)
         {
             StringBuilder signature = new StringBuilder();
@@ -75,7 +76,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static String MethodSignature(MethodDefinition method)
         {
-            return CecilUtilities.MethodSignature(method.Name, method.ReturnType.ReturnType.ToString(), CecilUtilities.GetParameterTypesList(method));
+            return method.ToString();
         }
 
         /// <summary>
@@ -313,7 +314,7 @@ namespace Composestar.StarLight.ILWeaver
         private AssemblyDefinition ResolveInternal(AssemblyNameReference name)
         {
             string[] exts = new string[] { ".dll", ".exe" };
-            string[] dirs = new string[] { ".", "bin", _binFolder };
+            string[] dirs = new string[] { _binFolder, ".", "bin"  };
 
             foreach (string dir in dirs)
             {
