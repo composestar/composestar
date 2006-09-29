@@ -17,12 +17,12 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
- * @author Michiel van Oudheusden
+ * Extracts the semtex information from the XML file and stores it in the repository. 
  * 
- * Extracts the semtex information from the Xml file and stores it in the repository. 
+ * @author Michiel van Oudheusden
  */
-public class SemanticContainerHandler extends DefaultHandler implements ContentHandler {
-	
+public class SemanticContainerHandler extends DefaultHandler implements ContentHandler
+{	
 	private String SemanticContainerName = "";
 	private String SemanticClassName = "";
 	private String SemanticMethodName = "";
@@ -154,7 +154,7 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 			while(i.hasNext())
 			{
 				MethodInfo method = (MethodInfo) i.next();
-				if( method.Name.equals(methodName))
+				if (method.name().equals(methodName))
 					return method;
 			}
 		}
@@ -163,12 +163,10 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 	
 	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
 	{
-	
 	}
 
 	public void startDocument() 
 	{
-
 	}
 
 	public void endDocument() 
@@ -177,6 +175,4 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 		// since the StartElement is not triggered anymore after the last container.
 		AddSemTexInfo();
 	}
-	
-
 }

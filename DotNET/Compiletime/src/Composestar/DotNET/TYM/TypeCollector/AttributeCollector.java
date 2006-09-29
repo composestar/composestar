@@ -29,7 +29,8 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class AttributeCollector extends DefaultHandler implements CTCommonModule
 {        
-    public AttributeCollector() {
+    public AttributeCollector()
+    {
     }
     
     public void run(CommonResources resources) throws ModuleException {
@@ -123,7 +124,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			while(i.hasNext())
 			{
 				MethodInfo method = (MethodInfo) i.next();
-				if( method.Name.equals(methodName))
+				if (method.name().equals(methodName))
 					return method;
 			}
 		}
@@ -155,5 +156,4 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 	{
 		return null;
 	}
-
 }
