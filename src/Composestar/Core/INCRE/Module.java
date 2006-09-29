@@ -151,7 +151,7 @@ public class Module
 			// module is enabled for the phase so continue
 			
 			if (summary.length() != 0)
-				Debug.out(Debug.MODE_CRUCIAL, "Master", summary);
+				Debug.out(Debug.MODE_CRUCIAL, this.name, summary);
 
 			try {
 				Class moduleClass = Class.forName(fulltype);
