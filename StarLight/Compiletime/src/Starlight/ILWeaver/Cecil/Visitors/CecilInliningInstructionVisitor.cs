@@ -648,7 +648,9 @@ namespace Composestar.StarLight.ILWeaver
                         }
 
                         TypeDefinition fieldType = (TypeDefinition) target.FieldType;
-                        methodReference = CecilUtilities.ResolveMethod( fieldType, filterAction.Selector, Method );
+                        MethodDefinition md = CecilUtilities.ResolveMethod( fieldType, filterAction.Selector, Method );
+
+                        methodReference = TargetAssemblyDefinition.MainModule.Import( md );
                     }
 
                     if ( methodReference == null )
@@ -669,15 +671,16 @@ namespace Composestar.StarLight.ILWeaver
                         }
                         else
                         {
+                            Instructions.Add( Worker.Create( OpCodes.Ldarg, Method.This ) );
                             Instructions.Add( Worker.Create( OpCodes.Ldfld, target ) );
                         }
                     }
                         
 
                     int numberOfArguments = Method.Parameters.Count;
-                    for (int i = 1; i < numberOfArguments; i++)
+                    for (int i = 0; i < numberOfArguments; i++)
                     {
-                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i].Sequence));
+                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i]));
                     }
 
                     // Call the method
@@ -1011,6 +1014,8 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("StoreAction", new Type[] { typeof(int) }))));
 
         }
+
+        
 
         #endregion
 
