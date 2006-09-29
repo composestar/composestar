@@ -84,6 +84,9 @@
     <Compile Include="FilterTestsHelper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TestInternal.cs">
+      <SubType>Code</SubType>
+    </Compile> 
     <Compile Include="MainClass.cs">
       <SubType>Code</SubType>
     </Compile>
