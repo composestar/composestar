@@ -3,6 +3,8 @@ concern FilterTestsConcern in BasicTests
 
 	filtermodule FM2
 	{
+	  internals
+	    myInternal : BasicTests.TestInternal;
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
