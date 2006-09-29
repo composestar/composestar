@@ -106,6 +106,33 @@ namespace Composestar.StarLight.ILWeaver
 
         }
 
+        public static TypeReference ResolveType(string typeName, string assemblyName, string assemblyFile)
+        {
+            if (_resolver == null)
+            {
+                _resolver = new ILWeaverAssemblyResolver(System.IO.Path.GetDirectoryName(assemblyFile));
+            }
+
+            AssemblyDefinition asmDef = _resolver.Resolve(assemblyName);
+            if (asmDef == null)
+            {
+                // Try to read directly using assemblyFilename
+                if (!String.IsNullOrEmpty(assemblyFile))
+                {
+                    asmDef = AssemblyFactory.GetAssembly(assemblyFile);
+                }
+            }
+            if (asmDef == null)
+                return null;
+
+            TypeDefinition td = asmDef.MainModule.Types[typeName];
+
+            if (td == null)
+                return null;
+
+            return (TypeReference)td;
+        }
+
         /// <summary>
         /// Resolves the method.
         /// </summary>
@@ -270,6 +297,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public override AssemblyDefinition Resolve(string fullName)
         {
+            if (fullName == null)
+                throw new ArgumentNullException("fullName");
 
             if (String.IsNullOrEmpty(fullName))
                 return null;

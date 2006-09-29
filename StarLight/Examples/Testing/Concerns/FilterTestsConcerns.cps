@@ -5,6 +5,9 @@ concern FilterTestsConcern in BasicTests
 	{
 	  internals
 	    myInternal : BasicTests.TestInternal;
+	  externals
+	  	myExternal : BasicTests.TestExternal = BasicTests.TestExternal.getInstance();
+
 		conditions
 			doError : inner.getProduceError();
 		inputfilters

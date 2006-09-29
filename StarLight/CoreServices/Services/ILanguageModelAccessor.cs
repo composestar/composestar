@@ -7,6 +7,14 @@ namespace Composestar.StarLight.CoreServices
     public interface ILanguageModelAccessor
     {
         /// <summary>
+        /// Gets the method element by name
+        /// </summary>
+        /// <param name="typeInfo">The type info.</param>
+        /// <param name="methodSignature">The method name.</param>
+        /// <returns></returns>
+        MethodElement GetMethodElementByName(TypeElement typeInfo, string methodName);
+
+        /// <summary>
         /// Gets the method element by signature.
         /// </summary>
         /// <param name="typeInfo">The type info.</param>
