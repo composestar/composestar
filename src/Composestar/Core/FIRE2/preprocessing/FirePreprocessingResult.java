@@ -16,29 +16,54 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  * @author Arjan de Roo
  */
 public class FirePreprocessingResult extends RepositoryEntity {
-    private FlowModel flowModel;
-    private ExecutionModel executionModel;
+    private FlowModel flowModelInputFilters;
+    private ExecutionModel executionModelInputFilters;
+    private FlowModel flowModelOutputFilters;
+    private ExecutionModel executionModelOutputFilters;
     
     public FirePreprocessingResult( 
-            FlowModel flowModel, ExecutionModel executionModel )
+            FlowModel flowModelInputFilters, ExecutionModel executionModelInputFilters,
+            FlowModel flowModelOutputFilters, ExecutionModel executionModelOutputFilters)
     {
         super();
         
-        this.flowModel = flowModel;
-        this.executionModel = executionModel;
+        this.flowModelInputFilters = flowModelInputFilters;
+        this.executionModelInputFilters = executionModelInputFilters;
+        
+        this.flowModelOutputFilters = flowModelOutputFilters;
+        this.executionModelOutputFilters = executionModelOutputFilters;
+    }
+
+    /**
+     * @return the executionModelInputFilters
+     */
+    public ExecutionModel getExecutionModelInputFilters(){
+        return executionModelInputFilters;
+    }
+
+    /**
+     * @return the executionModelOutputFilters
+     */
+    public ExecutionModel getExecutionModelOutputFilters(){
+        return executionModelOutputFilters;
+    }
+
+    /**
+     * @return the flowModelInputFilters
+     */
+    public FlowModel getFlowModelInputFilters(){
+        return flowModelInputFilters;
+    }
+
+    /**
+     * @return the flowModelOutputFilters
+     */
+    public FlowModel getFlowModelOutputFilters(){
+        return flowModelOutputFilters;
     }
     
     
-    /**
-     * @return Returns the executionModel.
-     */
-    public ExecutionModel getExecutionModel() {
-        return executionModel;
-    }
-    /**
-     * @return Returns the flowModel.
-     */
-    public FlowModel getFlowModel() {
-        return flowModel;
-    }
+    
+    
+    
 }

@@ -8,11 +8,9 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -53,22 +51,13 @@ public class Core implements CTCommonModule{
                 FilterModuleOrder filterModules = 
                     (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
                 
-                Vector order = filterModules._order;
-                FilterModule[] modules = new FilterModule[ order.size() ];
-                for (int i=0; i<order.size(); i++){
-                    String ref = (String) order.elementAt( i );
-                    
-                    modules[i] = 
-                        (FilterModule) DataStore.instance().getObjectByID(ref);
-                }
-                
-                check( concern, modules );
+                check( concern, filterModules );
             }
         }
     }
     
     
-    public void check( Concern concern, FilterModule[] modules ){
+    public void check( Concern concern, FilterModuleOrder modules ){
         ExecutionState state;
         ExecutionTransition transition;
         FlowNode flowNode;
@@ -78,7 +67,7 @@ public class Core implements CTCommonModule{
         HashSet visitedTransitions = new HashSet();
         Hashtable filterContinueTable = new Hashtable();
         
-        FireModel fireModel = new FireModel( concern, modules );
+        FireModel fireModel = new FireModel( concern, modules, true );
         ExecutionModel execModel = fireModel.getExecutionModel();
         ExecutionStateIterator iterator = new ExecutionStateIterator( execModel );
         
