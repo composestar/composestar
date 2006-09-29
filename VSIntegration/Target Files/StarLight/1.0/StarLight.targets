@@ -178,7 +178,7 @@
   <Target
        Name="ILWeaverRunner">
     <Message Text="Performing IL weaving..." />
-    <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)%(DestinationSubDirectory)"  />
+    <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"  />
   </Target>
 
   <!--This is an override of targets-->
