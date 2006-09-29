@@ -77,4 +77,22 @@ public class CommonResources implements Serializable
 
 		return resources.get(key);
 	}
+	
+	/**
+	 * Returns the resource with the specified key as a boolean.
+	 * @throws RuntimeException if there is no resource with the specified name,
+	 *         or if it is not a Boolean.
+	 */
+	public boolean getBoolean(String key)
+	{
+		Object resource = getResource(key);
+
+		if (resource == null)
+			throw new RuntimeException("No resource for key '" + key + "'");
+		
+		if (! (resource instanceof Boolean))
+			throw new RuntimeException("Resource with key '" + key + "' is not a Boolean");
+
+		return ((Boolean)resource).booleanValue();
+	}
 }
