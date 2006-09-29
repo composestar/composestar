@@ -317,9 +317,6 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public override AssemblyDefinition Resolve(string fullName)
         {
-            if (fullName == null)
-                throw new ArgumentNullException("fullName");
-
             if (String.IsNullOrEmpty(fullName))
                 return null;
 
