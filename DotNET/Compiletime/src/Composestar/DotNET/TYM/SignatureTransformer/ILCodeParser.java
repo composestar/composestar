@@ -83,7 +83,7 @@ public class ILCodeParser extends TransformerBase
 	/**
 	 * Applies the transformations to the assembly.
 	 * 
-	 * FIXME: 'the transformations'?
+	 * FIXME: clarify 'the transformations'?
 	 */
 	public void run() throws ModifierException
 	{

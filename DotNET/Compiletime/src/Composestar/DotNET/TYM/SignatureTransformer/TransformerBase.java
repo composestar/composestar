@@ -1,5 +1,3 @@
-//Source file: H:\\sfcvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\AssemblyTransformer\\TransformerBase.java
-
 package Composestar.DotNET.TYM.SignatureTransformer;
 
 import java.io.BufferedReader;
@@ -11,179 +9,181 @@ import java.io.IOException;
  * Base class for assembly modifiers. It provides  the means necessary to read 
  * from and write to the asm fille.
  */
-abstract class TransformerBase {
-    private BufferedWriter Out;
-    private BufferedReader In;
-    private TransformerBase Parent;
-    
-    /**
-     * @param parent
-     * @roseuid 406AB0050380
-     */
-    protected TransformerBase(TransformerBase parent) {
-        Parent = parent;
-        Out = parent.Out;
-        In = parent.In;     
-    }
-    
-    /**
-     * @param in
-     * @param out
-     * @roseuid 406AB005034E
-     */
-    protected TransformerBase(BufferedReader in, BufferedWriter out) {
-        Parent = null;
-        Out = out;
-        In = in;     
-    }
-    
-    /**
-     * Set the buffer to use as input for transformation.
-     * @param in
-     * @roseuid 406AB005039E
-     */
-    protected void setIn(BufferedReader in) {
-        In = in;     
-    }
-    
-    /**
-     * Open an output file to write to.
-     * @param fileName
-     * @throws ModifierException
-     * @roseuid 406AB00503BC
-     */
-    protected void openOut(String fileName) throws ModifierException {
-        try {
-            Out = new BufferedWriter( new FileWriter( fileName ) );
-        }catch( IOException e ) {
-			e.printStackTrace();
-            throw new ModifierException( "IO error while modifying assembly. Make sure you have enough disk space\n" );
-        }     
-    }
-    
-    /**
-     * close the output file.
-     * @throws ModifierException
-     * @roseuid 406AB0060042
-     */
-    protected void closeOut() throws ModifierException {
-        try {
-            Out.close();
-            Out = null;
-        }catch( IOException e ) {
-            throw new ModifierException( "TransformerBase::closeOut() Can't close file.\n" );
-        }     
-    }
-    
-    /**
-     * Gets one line from the input buffer. Throws an exception if there are no more 
-     * lines.
-     * @return java.lang.String
-     * @throws ModifierException
-     * @roseuid 406AB006009C
-     */
-    public String getLine() throws ModifierException {
-        
-        if( Parent != null )
-        	return Parent.getLine();
-        
-        
-        String line = null;
-        try{
-            do{
-                if( (line = In.readLine()) == null )
-                    //throw new ModifierException( "TransformerBase::readLine() unexpected end of file." );
-                    return null;
-                if( "".equals(line) || line.matches( "^\\s*//" )) {
-                    //                    Out.write( line );
-                    line = null;
-                }
-            }  while( line == null );
-        }catch( IOException e ) {
-            throw new ModifierException( "TransformerBase::readLine() IO error" + e.getMessage() );
-        }
+abstract class TransformerBase
+{
+	private BufferedReader in;
+	private BufferedWriter out;
+	private TransformerBase parent;
 
-        return line;     
-    }
-    
-    /**
-     * Discards one line of input from the input buffer.
-     * @throws ModifierException
-     * @roseuid 406AB0060100
-     */
-    public void eatLine() throws ModifierException {
-        getLine();     
-    }
-    
-    /**
-     * outputs the next line from the intput buffer to the output file.
-     * @throws ModifierException
-     * @roseuid 406AB0060150
-     */
-    public void printLine() throws ModifierException {
-        write( getLine() );     
-    }
-    
-    /**
-     * Outputs or discards a whole section from { to } including inner levels.
-     * @param eat
-     * @throws ModifierException
-     * @roseuid 406AB00601AB
-     */
-    public void transformSection(boolean eat) throws ModifierException {
-        int level = 0;
-        String line; // = getLine();
-        
-        /*
-        if( line.matches("^\\s*\\{") == false )
-            throw new ModifierException( "TransformerBase::readLine() Section must start with {" );
-        ++level;
-        if( !eat )
-        	write( line );
-        */
-        do{
-            line = getLine();
-            if( line.matches( "^\\s*\\{" ) ) {
-            	level++;
-            } 
-            if( line.matches( "^\\s*}.*" ) )
-            {
-            	 level--;
-           	} 
-            if( !eat )
-            {
-            	write( line );
-            }
-        } while( level > 0 );     
-    }
-    
-    /**
-     * write parameter to output stream.
-     * @param out
-     * @throws ModifierException
-     * @roseuid 406AB0060205
-     */
-    public void write(String out) throws ModifierException {
-        try {
-            Out.write( out );
-            Out.newLine();
-        }catch( IOException e ) {
-            throw new ModifierException( "TransfomerBase::write Could not write to file" );
-        }     
-    }
-    
-    public void writenn(String out) throws ModifierException {
-		try {
-			Out.write( out );
-		}catch( IOException e ) {
-			throw new ModifierException( "TransfomerBase::write Could not write to file" );
-		}     
-    }
-    
-    /**
-     * Entry hook. Must be reimplemented by children.
-     * @throws ModifierException
-     * @roseuid 406AB0060269
-     */
-    abstract void run() throws ModifierException;
+	/**
+	 * @roseuid 406AB0050380
+	 */
+	protected TransformerBase(TransformerBase parent)
+	{
+		this.in = parent.in;
+		this.out = parent.out;
+		this.parent = parent;
+	}
+
+	/**
+	 * @roseuid 406AB005034E
+	 */
+	protected TransformerBase(BufferedReader in, BufferedWriter out)
+	{
+		this.in = in;
+		this.out = out;
+		this.parent = null;
+	}
+
+	/**
+	 * Sets the buffer to use as input for the transformation.
+	 * @roseuid 406AB005039E
+	 */
+	protected void setIn(BufferedReader in)
+	{
+		this.in = in;
+	}
+
+	/**
+	 * Opens a file to write to.
+	 * @roseuid 406AB00503BC
+	 */
+	protected void openOut(String fileName) throws ModifierException
+	{
+		try
+		{
+			out = new BufferedWriter(new FileWriter(fileName));
+		}
+		catch (IOException e)
+		{
+			throw new ModifierException("IO error while modifying assembly: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Closes the file reader.
+	 * @roseuid 406AB0060042
+	 */
+	protected void closeOut() throws ModifierException
+	{
+		try
+		{
+			out.close();
+			out = null;
+		}
+		catch (IOException e)
+		{
+			throw new ModifierException("Unable to close reader: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Gets one line from the input buffer. 
+	 * @throws ModifierException if there are no more lines (or not*).
+	 * @roseuid 406AB006009C
+	 */
+	public String getLine() throws ModifierException
+	{
+		if (parent != null) return parent.getLine();
+
+		try
+		{
+			String line = null;
+			do
+			{
+				if ((line = in.readLine()) == null)				
+					return null; // *throw new ModifierException( "TransformerBase::readLine() unexpected end of file." );
+				
+				if ("".equals(line.trim()))
+					line = null;
+			
+			} while (line == null);
+			
+			return line;
+		}
+		catch (IOException e)
+		{
+			throw new ModifierException("IO error while trying to access reader: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Discards one line of input from the input buffer.
+	 * @roseuid 406AB0060100
+	 */
+	public void eatLine() throws ModifierException
+	{
+		getLine();
+	}
+
+	/**
+	 * Outputs the next line from the intput buffer to the output file.
+	 * @roseuid 406AB0060150
+	 */
+	public void printLine() throws ModifierException
+	{
+		write(getLine());
+	}
+
+	/**
+	 * Outputs or discards a whole section from { to } including inner levels.
+	 * @roseuid 406AB00601AB
+	 */
+	public void transformSection(boolean eat) throws ModifierException
+	{
+	//	if (!line.matches("^\\s*\\{"))
+	//	 	throw new ModifierException( "TransformerBase::readLine() Section must start with {" );		
+
+		int level = 0;
+		do
+		{
+			String line = getLine();
+			if (line.matches("^\\s*\\{"))
+			{
+				level++;
+			}
+			else if (line.matches("^\\s*}.*"))
+			{
+				level--;
+			}
+			if (!eat) write(line);
+		} while (level > 0);
+	}
+
+	/**
+	 * Writes the specified string to the output stream and terminates the line.
+	 */
+	public void write(String str) throws ModifierException
+	{
+		try
+		{
+			out.write(str);
+			out.newLine();
+		}
+		catch (IOException e)
+		{
+			throw new ModifierException("Unable to write string: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Writes the specified string to the output stream.
+	 */
+	public void writenn(String str) throws ModifierException
+	{
+		try
+		{
+			out.write(str);
+		}
+		catch (IOException e)
+		{
+			throw new ModifierException("Unable to write string: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Entry hook. Must be implemented by concrete subclasses.
+	 * @roseuid 406AB0060269
+	 */
+	abstract void run() throws ModifierException;
 }

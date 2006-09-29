@@ -1,7 +1,6 @@
 package Composestar.DotNET.TYM.SignatureTransformer;
 
 import java.util.Iterator;
-import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
@@ -24,10 +23,10 @@ public class ClassModifier extends TransformerBase
 	/**
 	 * @roseuid 406AB00102EE
 	 */
-	public ClassModifier(TransformerBase parent, Concern con)
+	public ClassModifier(TransformerBase parent, Concern c)
 	{
 		super(parent);
-		concern = con;
+		concern = c;
 	}
 
 	/**
@@ -40,18 +39,16 @@ public class ClassModifier extends TransformerBase
 		{
 			if (line.trim().startsWith(".method"))
 			{
-				// split into string until cil "managed"
+				// split into string until "cil managed"
 				String plines = fetchMethodInfo(line);
 				String name = fetchMethodName(plines);
-				if (handleMethod(name))
+				if (keepMethod(name))
 				{
 					write(plines);
 					transformSection(false); // don't eat
 				}
 				else
-				{
 					transformSection(true); // do eat
-				}
 			}
 			else if (line.matches("\\s*\\}.*")) // end of class
 			{
@@ -81,7 +78,7 @@ public class ClassModifier extends TransformerBase
 	 * @return true keep, false remove
 	 * @roseuid 406AB001037A
 	 */
-	private boolean handleMethod(String name) throws ModifierException
+	private boolean keepMethod(String name) throws ModifierException
 	{
 		if (concern.getSignature().hasMethod(name))
 		{
@@ -134,25 +131,29 @@ public class ClassModifier extends TransformerBase
 		}
 	}
 
-	/**
-	 * Matches method info agains the ???
-	 * @roseuid 406AB00200B4
-	 */
-	boolean matchMethod(MethodWrapper methodWrapper, String name, String returnType, String[] params)
-	{
-		// fetch .NET version
-		MethodInfo minfo = methodWrapper.getMethodInfo();
-		if (!minfo.name().equals(name)) return false;
-		if (!minfo.returnType().name().equals(returnType)) return false;
-		// check params
-		List paramList = minfo.getParameters();
-		if (paramList.size() != params.length) return false;
-		for (int i = 0; i < params.length; ++i)
-		{
-			if (!params[i].equals(((ParameterInfo) paramList.get(i)).parameterType().name())) return false;
-		}
-		return true; // amazing.. we got through     
-	}
+//	/**
+//	 * Matches method info agains the ???
+//	 * @roseuid 406AB00200B4
+//	 */
+//	private boolean matchMethod(MethodWrapper methodWrapper, String name, String returnType, String[] params)
+//	{
+//		// fetch .NET version
+//		MethodInfo minfo = methodWrapper.getMethodInfo();
+//		if (!minfo.name().equals(name)) return false;
+//		if (!minfo.returnType().name().equals(returnType)) return false;
+//
+//		// check params
+//		List paramList = minfo.getParameters();
+//		if (paramList.size() != params.length) return false;
+//		
+//		for (int i = 0; i < params.length; ++i)
+//		{
+//			if (!params[i].equals(((ParameterInfo) paramList.get(i)).parameterType().name()))
+//				return false;
+//		}
+//		
+//		return true; // amazing.. we got through     
+//	}
 
 	/**
 	 * @roseuid 406AB002010E
@@ -164,8 +165,7 @@ public class ClassModifier extends TransformerBase
 		writenn("instance ");
 
 		writenn(((DotNETType)dnmi.returnType()).ilType());
-		writenn(" ");
-		writenn(mi.name() + "(");
+		writenn(" " + mi.name() + "(");
 
 		Iterator it = mi.getParameters().iterator();
 		while (it.hasNext())
@@ -175,25 +175,21 @@ public class ClassModifier extends TransformerBase
 			if (paramType != null)
 			{
 				String iltype = ((DotNETType)paramType).ilType();
-
 				writenn(iltype + " " + param.name());
 
 				if (it.hasNext()) writenn(", ");
 			}
 			else
-			{
 				Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.ParameterTypeString);
-
-			}
 		}
 
 		write(") cil managed\n"); // TODO: params
 		write("{");
-		writeMethodBody(mi);
+		printMethodBody(mi);
 		write("}");
 	}
 	
-	private void writeMethodBody(MethodInfo mi) throws ModifierException
+	private void printMethodBody(MethodInfo mi) throws ModifierException
 	{
 		/*if (mi.returnType().name().equals("Void"))
 		{
