@@ -17,6 +17,8 @@ public class Debug
 	public static final int MODE_INFORMATION = 3;
 	public static final int MODE_DEBUG = 4;
 	
+	public static final int MODE_DEFAULTMODE = MODE_INFORMATION;
+	
 	private static int currentMode = 0;
 	private static int warnings = 0;
     
