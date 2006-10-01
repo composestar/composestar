@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
-	public class CpsLexer
+	public class CpsLexerOld
 	{
 		private char[] m_source;
 		private int m_pos;
@@ -13,7 +13,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
 		private IDictionary<String,TokenKind> m_keywords;
 
-		public CpsLexer(String source, int offset)
+		public CpsLexerOld(String source, int offset)
 		{
 			int length = source.Length - offset;
 			m_source = source.ToCharArray(offset, length);

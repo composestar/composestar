@@ -6,30 +6,57 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-using Composestar.StarLight.VisualStudio.LanguageServices.Engine;   
+using Composestar.StarLight.VisualStudio.LanguageServices.Engine;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
- 
-    class ComposeStarScope : AuthoringScope {
+
+    class ComposeStarScope : AuthoringScope
+    {
 
         LanguageService language;
         Concern concern;
+        private AuthoringSink _sink;
+        private Methods _methods;
+        private string _filePath;
 
         public ComposeStarScope(Concern concern, LanguageService language)
         {
+
             this.concern = concern;
             this.language = language;
         }
-        
-        public override string GetDataTipText(int line, int col, out TextSpan span) {
+
+        public ComposeStarScope(Concern concern, LanguageService language, AuthoringSink sink)
+        {
+            this.concern = concern;
+            this.language = language;
+            this._sink = sink;
+        }
+
+        public ComposeStarScope(LanguageService language, AuthoringSink sink)
+        {
+
+            this.language = language;
+            this._sink = sink;
+        }
+
+        public override string GetDataTipText(int line, int col, out TextSpan span)
+        {
             span = new TextSpan();
-            //span.iStartLine = line;
-            //span.iEndLine = line;
-            //span.iStartIndex = col - 10;
-            //span.iEndIndex = col + 10;
-            //return "GetDataTipText";
             return null;
+            //	QuickTipInfo info = _project.GetQuickTip(_filePath, line, col, _sourceText);
+
+            //if (info == null)
+            //    return null;
+
+            //span.iStartLine  = info.LineStart;
+            //span.iEndLine    = info.LineEnd;
+            //span.iStartIndex = info.ColStart;
+            //span.iEndIndex   = info.ColEnd;
+
+
+            //return info.Text;
         }
 
         public override Declarations GetDeclarations(IVsTextView view, int line, int col, TokenInfo info, ParseReason reason)
@@ -61,16 +88,18 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             return null;
         }
 
-        public override Methods GetMethods(int line, int col, string name) {
+        public override Methods GetMethods(int line, int col, string name)
+        {
             System.Diagnostics.Debug.Print("GetMethods line({0}), col({1}), name({2})", line, col, name);
 
             IList<Declaration> methods = concern.GetMethodsAt(line + 1, col, name);
-           
+
             return new ComposeStarMethods(methods);
         }
 
-        public override string Goto(VSConstants.VSStd97CmdID cmd, IVsTextView textView, int line, int col, out TextSpan span) {
-            span = new TextSpan();            
+        public override string Goto(VSConstants.VSStd97CmdID cmd, IVsTextView textView, int line, int col, out TextSpan span)
+        {
+            span = new TextSpan();
             return null;
         }
     }
