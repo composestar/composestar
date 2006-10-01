@@ -42,11 +42,5 @@
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
-      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
-      <Name>LanguageModel</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
 </Project>

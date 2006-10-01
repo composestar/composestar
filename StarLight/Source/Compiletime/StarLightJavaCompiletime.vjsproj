@@ -1,0 +1,160 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{55E29217-7071-4FA1-8810-79614584BBBB}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>ComposestarCoreDotNET</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ComposestarCoreDotNET</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugSymbols>false</DebugSymbols>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNUnit|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\DebugNUnit\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>D:\development\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugVSIntegration|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\DebugVSIntegration\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>D:\development\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETAttribute.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETCallingConventions.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETFieldInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETMethodInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETModule.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETParameterInfo.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LAMA\DotNETType.java">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Composestar\dotnet\LOLA\DotNETLOLA.java" />
+    <Compile Include="Composestar\dotnet\LOLA\metamodel\DotNETLanguageModel.java" />
+    <Compile Include="Composestar\dotnet\MASTER\StarLightMaster.java" />
+    <Compile Include="Composestar\dotnet\TYM\RepositoryCollector\StarLightCollectorRunner.java" />
+    <Compile Include="Composestar\dotnet\TYM\RepositoryEmitter\StarLightEmitterRunner.java" />
+    <Compile Include="Composestar\Repository\Configuration\CommonConfiguration.java" />
+    <Compile Include="Composestar\Repository\Configuration\ConcernInformation.java" />
+    <Compile Include="Composestar\Repository\DataStoreContainer.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\AssemblyElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\AttributeElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\CallElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Condition.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\And.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\ConditionExpression.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\ConditionLiteral.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\False.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\Not.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\Or.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\True.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\Visitor\IVisitable.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ConditionExpressions\Visitor\IVisitor.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\External.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\FieldElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Block.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Branch.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Case.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\ContextExpression.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\ContextInstruction.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\FilterAction.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\InlineInstruction.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Instruction.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Jump.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Label.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Switch.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Visitor\IVisitable.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\Visitor\IVisitor.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Inlining\While.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Internal.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\IRepositoryElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\LinkedList.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\LinkedListEntry.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\MethodBody.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\MethodElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\ParameterElement.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\Reference.java" />
+    <Compile Include="Composestar\Repository\LanguageModel\TypeElement.java" />
+    <Compile Include="Composestar\Repository\RepositoryAccess.java" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

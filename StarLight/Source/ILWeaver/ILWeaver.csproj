@@ -54,8 +54,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\CecilILWeaver.cs" />
@@ -79,21 +77,25 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CoreServices\StarLight.CoreServices.csproj">
-      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
-      <Name>StarLight.CoreServices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
-      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
-      <Name>LanguageModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cecil-0.4.3\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\Libraries\cecil-0.4.3\Mono.Cecil.csproj">
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
+      <Name>LanguageModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\ContextInfo\ContextInfo.csproj">
       <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
       <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repository\DataStoreContainer.csproj">
+      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
+      <Name>DataStoreContainer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
