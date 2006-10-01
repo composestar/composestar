@@ -4,5 +4,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/ComposeStar"/>
 	<classpathentry kind="lib" path="C:/ComposeStar/StarLight/Libraries/db4o/db4o-5.5-java1.2.jar"/>
-	<classpathentry kind="output" path=""/>
+	<classpathentry kind="output" path="build"/>
 </classpath>
