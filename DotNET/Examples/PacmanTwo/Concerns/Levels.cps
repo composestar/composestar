@@ -7,6 +7,23 @@ concern Levels in PacmanTwo
 		inputfilters
 			newmaze : Meta = { [*.getNewMaze] levelgen.getNewMaze }
 	}
+	
+	/*
+	 * This is an alternate filter module that has the same effect.
+	 * Should work, but doesn't.
+	 */
+	/*
+	filtermodule createLevelAlt
+	{
+		internals
+			levelgen : PacmanTwo.ConcernImplementations.LevelGenerator;
+		conditions
+			useAltLevel : levelgen.useAltLevel();
+		inputfilters
+			inclvl : Prepend = { [*.getNewMaze] levelgen.increaseLevel };
+			newmaze : Dispatch = { useAltLevel => [*.getNewMaze] levelgen.getAlternateLevel }
+	}
+	*/
 
 	superimposition
 	{
@@ -32,6 +49,21 @@ public class LevelGenerator
 		currentLevel++;
 		rm.proceed();
 		if (currentLevel % 2 == 0) rm.setReturnValue((Object) getAlternateLevel());
+	}
+	
+	public int getCurrentLevel()
+	{
+		return currentLevel;
+	}
+	
+	public boolean useAltLevel()
+	{	// because increasing isn't done after the variable is checked
+		return (currentLevel % 2 != 0);
+	}
+	
+	public void increaseLevel()
+	{
+		currentLevel++;
 	}
 
 	protected short[][] getAlternateLevel()

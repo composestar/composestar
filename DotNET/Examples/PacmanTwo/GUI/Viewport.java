@@ -101,8 +101,8 @@ public class Viewport extends Panel implements Tickable
 
 		renderAll(bufferGraphics, delta);
 
-		bufferGraphics.setColor(Color.YELLOW);
-		bufferGraphics.drawString("FPS: "+realFPS, 50, 50);
+		bufferGraphics.drawString("FPS:", 492, 10);
+		bufferGraphics.drawString(""+realFPS, 492, 20);
 
 		graphics.drawImage(bufferImage, 0, 0, this);
 	}

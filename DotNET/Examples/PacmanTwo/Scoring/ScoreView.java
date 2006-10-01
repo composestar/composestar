@@ -21,7 +21,7 @@ public class ScoreView
 		msg.proceed();
 		Graphics g = (Graphics) msg.getArg(0);
 		g.setColor(Color.YELLOW);
-		g.drawString("Score:", 492, 10);
-		g.drawString(""+score.getScore(), 492, 20);
+		g.drawString("Score:", 492, 40);
+		g.drawString(""+score.getScore(), 492, 50);
 	}
 }

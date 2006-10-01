@@ -225,6 +225,7 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <Folder RelPath = "src\PacmanTwo\" />
                 <File
                     RelPath = "Strategy\RandomMovement.java"
                     SubType = "Code"

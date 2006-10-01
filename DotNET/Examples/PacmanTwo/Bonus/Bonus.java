@@ -105,6 +105,12 @@ public class Bonus
 		new BonusView(vp);
 	}
 
+	public void levelUp(ReifiedMessage rm)
+	{
+		rm.proceed();
+		// ...
+	}
+
 	public void reset()
 	{
 		timeTillBonus = 10;

@@ -29,6 +29,16 @@ concern BonusConern in PackmanTwo
 		inputfilters
 			touched : Meta = { [*.createViews] bm.createViews }
 	}
+	
+	/*
+	filtermodule LevelUp
+	{
+		externals
+			bm: PacmanTwo.Bonus.Bonus = PacmanTwo.Bonus.Bonus.instance();
+		inputfilters
+			lvlup : Meta = { [*.increaseLevelx] bm.levelUp }
+	}
+	*/
 
 	superimposition
 	{
@@ -36,10 +46,11 @@ concern BonusConern in PackmanTwo
 			game = { C | isClassWithName(C, 'PacmanTwo.Game') };
 			pacman = { C | isClassWithName(C, 'PacmanTwo.Pacman') };
 			viewport = { C | isClassWithName(C, 'PacmanTwo.GUI.Viewport') };
-			//lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
+			levelgen = { C | isClassWithName(C, 'PacmanTwo.ConcernImplementations.LevelGenerator') };
 		filtermodules
 			game <- BonusManager;
 			pacman <- TouchBonus;
 			viewport <- RegisterBonusView;
+			//levelgen <- LevelUp;
 	}
 }
