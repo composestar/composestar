@@ -45,7 +45,7 @@
     <Reference Include="Microsoft.Build.Utilities" />
     <Reference Include="Microsoft.Practices.ObjectBuilder, Version=1.0.51205.0, Culture=neutral, PublicKeyToken=375fcb186afc7c59, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\Microsoft.Practices.ObjectBuilder.dll</HintPath>
+      <HintPath>..\..\..\Libraries\Microsoft\Microsoft.Practices.ObjectBuilder.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -76,29 +76,33 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
+    <ProjectReference Include="..\..\Compiletime\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
       <Project>{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}</Project>
       <Name>ConfigurationModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+    <ProjectReference Include="..\..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
       <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
       <Name>LanguageModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Compiletime\src\Starlight\ILAnalyzer\ILAnalyzer.csproj">
-      <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
-      <Name>ILAnalyzer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Compiletime\src\Starlight\ILWeaver\ILWeaver.csproj">
-      <Project>{7A30904D-40C9-408D-813E-12E16C488EAA}</Project>
-      <Name>ILWeaver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Compiletime\src\Starlight\Repository\DataStoreContainer.csproj">
-      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
-      <Name>DataStoreContainer</Name>
+    <ProjectReference Include="..\..\ContextInfo\ContextInfo.csproj">
+      <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
+      <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ILAnalyzer\ILAnalyzer.csproj">
+      <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
+      <Name>ILAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ILWeaver\ILWeaver.csproj">
+      <Project>{7A30904D-40C9-408D-813E-12E16C488EAA}</Project>
+      <Name>ILWeaver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Repository\DataStoreContainer.csproj">
+      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
+      <Name>DataStoreContainer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

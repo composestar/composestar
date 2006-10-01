@@ -66,14 +66,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Compiletime\src\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
-      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
-      <Name>LanguageModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Compiletime\src\Starlight\ILAnalyzer\ILAnalyzer.csproj">
-      <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
-      <Name>ILAnalyzer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>

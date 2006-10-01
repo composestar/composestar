@@ -31,11 +31,11 @@
   <ItemGroup>
     <Reference Include="db4o, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\binaries\db4o\db4o.dll</HintPath>
+      <HintPath>..\..\Libraries\db4o\db4o.dll</HintPath>
     </Reference>
     <Reference Include="Db4oTools, Version=5.5.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\binaries\db4o\Db4oTools.dll</HintPath>
+      <HintPath>..\..\Libraries\db4o\Db4oTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -57,17 +57,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CoreServices\StarLight.CoreServices.csproj">
-      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
-      <Name>StarLight.CoreServices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
+    <ProjectReference Include="..\Compiletime\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
       <Project>{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}</Project>
       <Name>ConfigurationModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+    <ProjectReference Include="..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
       <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
       <Name>LanguageModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

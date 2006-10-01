@@ -51,8 +51,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ILAnalyzerException.cs" />
@@ -79,25 +77,25 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\CoreServices\StarLight.CoreServices.csproj">
-      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
-      <Name>StarLight.CoreServices</Name>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\cecil-0.4.3\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+    <ProjectReference Include="..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
       <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
       <Name>LanguageModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\cecil-0.4.3\Mono.Cecil.csproj">
-      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
-      <Name>Mono.Cecil</Name>
+    <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repository\DataStoreContainer.csproj">
       <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
       <Name>DataStoreContainer</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
