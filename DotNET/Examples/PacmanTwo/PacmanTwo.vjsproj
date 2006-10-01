@@ -90,87 +90,87 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AIController.java"
+                    RelPath = "src\PacmanTwo\AIController.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Controller.java"
+                    RelPath = "src\PacmanTwo\Controller.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Direction.java"
+                    RelPath = "src\PacmanTwo\Direction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Game.java"
+                    RelPath = "src\PacmanTwo\Game.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "GameElement.java"
+                    RelPath = "src\PacmanTwo\GameElement.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Ghost.java"
+                    RelPath = "src\PacmanTwo\Ghost.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "HumanController.java"
+                    RelPath = "src\PacmanTwo\HumanController.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "KeyboardController.java"
+                    RelPath = "src\PacmanTwo\KeyboardController.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Level.java"
+                    RelPath = "src\PacmanTwo\Level.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Main.java"
+                    RelPath = "src\PacmanTwo\Main.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MazeCell.java"
+                    RelPath = "src\PacmanTwo\MazeCell.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Pacman.java"
+                    RelPath = "src\PacmanTwo\Pacman.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Pawn.java"
+                    RelPath = "src\PacmanTwo\Pawn.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Tickable.java"
+                    RelPath = "src\PacmanTwo\Tickable.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Bonus\Bonus.java"
+                    RelPath = "src\PacmanTwo\Bonus\Bonus.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Bonus\BonusPickup.java"
+                    RelPath = "src\PacmanTwo\Bonus\BonusPickup.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Bonus\BonusView.java"
+                    RelPath = "src\PacmanTwo\Bonus\BonusView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -191,48 +191,48 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "GUI\GhostView.java"
+                    RelPath = "src\PacmanTwo\GUI\GhostView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "GUI\ImageView.java"
+                    RelPath = "src\PacmanTwo\GUI\ImageView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "GUI\PacmanView.java"
+                    RelPath = "src\PacmanTwo\GUI\PacmanView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "GUI\View.java"
+                    RelPath = "src\PacmanTwo\GUI\View.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "GUI\Viewport.java"
+                    RelPath = "src\PacmanTwo\GUI\Viewport.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Scoring\Score.java"
+                    RelPath = "src\PacmanTwo\Scoring\Score.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Scoring\ScoreView.java"
+                    RelPath = "src\PacmanTwo\Scoring\ScoreView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <Folder RelPath = "src\PacmanTwo\" />
                 <File
-                    RelPath = "Strategy\RandomMovement.java"
+                    RelPath = "src\PacmanTwo\Strategy\RandomMovement.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Strategy\Strategy.java"
+                    RelPath = "src\PacmanTwo\Strategy\Strategy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
