@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
+using System.IO;
 
 using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 using Microsoft.VisualStudio.Package;
@@ -42,7 +43,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             // The first 6 items in this list MUST be these default items.
             new ComposeStarColorableItem("Keyword", COLORINDEX.CI_BLUE, COLORINDEX.CI_USERTEXT_BK),
             new ComposeStarColorableItem("Comment", COLORINDEX.CI_DARKGREEN, COLORINDEX.CI_USERTEXT_BK),
-            new ComposeStarColorableItem("Identifier", COLORINDEX.CI_SYSPLAINTEXT_FG, COLORINDEX.CI_USERTEXT_BK),
+            new ComposeStarColorableItem("Identifier", COLORINDEX.CI_AQUAMARINE, COLORINDEX.CI_USERTEXT_BK),
             new ComposeStarColorableItem("String", COLORINDEX.CI_MAROON, COLORINDEX.CI_USERTEXT_BK),
             new ComposeStarColorableItem("Number", COLORINDEX.CI_SYSPLAINTEXT_FG, COLORINDEX.CI_USERTEXT_BK),
             new ComposeStarColorableItem("Text", COLORINDEX.CI_SYSPLAINTEXT_FG, COLORINDEX.CI_USERTEXT_BK)
@@ -58,25 +59,216 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         /// </summary>
         /// <param name="req">The <see cref="ParseRequest"/> describes how to parse the source file.</param>
         /// <returns>If successful, returns an <see cref="AuthoringScope"/> object; otherwise, returns a null value.</returns>
-        public override AuthoringScope ParseSource(ParseRequest req)
+        public override AuthoringScope ParseSource(ParseRequest request)
         {
-            if (null == req)
-            {
-                throw new ArgumentNullException("req");
-            }
-            Debug.Print("ParseSource at ({0}:{1}), reason {2}", req.Line, req.Col, req.Reason);
-            ComposeStarSource source = null;
-            if (specialSources.TryGetValue(req.View, out source) && (null != source.ScopeCreator))
-            {
-                return source.ScopeCreator(req);
-            }
-         
-            ComposeStarSink sink = new ComposeStarSink(req.Sink);
-         
-            return new ComposeStarScope(concerns.AnalyzeConcern(sink, req.FileName, req.Text), this);
+            if (request == null)
+				throw new ArgumentNullException("request");
+
+			Debug.Print(
+				"File '{0}' ParseSource at ({1}:{2}), reason {3}, timestamp {4}",
+				Path.GetFileName(request.FileName), request.Line, request.Col, request.Reason,
+				request.Timestamp);
+
+			switch (request.Reason)
+			{
+				case ParseReason.Check:        
+                    return Check(request);
+				case ParseReason.MemberSelect:
+				case ParseReason.CompleteWord: 	
+                case ParseReason.DisplayMemberList:
+                    return GetCompleteWord(request);
+				case ParseReason.Goto:
+				case ParseReason.QuickInfo:    
+                    return GetMethodScope(request);
+				case ParseReason.MethodTip:    
+                    return GetMethodTip(request);
+				case ParseReason.Autos:
+				case ParseReason.CodeSpan:			
+				case ParseReason.HighlightBraces:
+				case ParseReason.MatchBraces:
+				case ParseReason.None:
+				case ParseReason.MemberSelectAndHighlightBraces: 
+					Trace.WriteLine("Reason '" + request.Reason + "' not handled.");
+					break;
+			}
+
+			ComposeStarSource source;
+
+			if (specialSources.TryGetValue(request.View, out source) && source.ScopeCreator != null)
+				return source.ScopeCreator(request);
+
+			return GetDefaultScope(request);
+
         }
 
+        private AuthoringScope Check(ParseRequest request)
+		{
+            TextSpan ts = new TextSpan();
+            ts.iStartLine  = request.Line;
+            ts.iEndLine = request.Line;
+            ts.iStartIndex = request.Col;
+            ts.iEndIndex = ts.iStartIndex + request.Text.Length;
+  
+            request.Sink.AddError(  request.FileName,
+                            request.Reason.ToString(), ts, Severity.Hint);  
+
+            //ProjectInfo projectInfo = ProjectInfo.FindProject(request.FileName);
+
+            //if (projectInfo == null)
+            //    return null;
+
+            //try
+            //{
+            //    request.Sink.ProcessHiddenRegions = true;
+
+            //    projectInfo.Engine.ProcessMessages = true;
+            //    projectInfo.UpdateFile(request);
+
+            //    projectInfo.Project.Check(
+            //        request.FileName,
+            //        new SourceTextManager(this, request.View),
+            //        delegate(Location location, bool isExpanded)
+            //        {
+            //            NewHiddenRegion r = new NewHiddenRegion();
+
+            //            r.tsHiddenText = Convert(location);
+            //            r.iType        = (int)HIDDEN_REGION_TYPE.hrtCollapsible;
+            //            r.dwBehavior   = (int)HIDDEN_REGION_BEHAVIOR.hrbEditorControlled; //.hrbClientControlled;
+            //            r.dwState      = (uint)(isExpanded? HIDDEN_REGION_STATE.hrsExpanded: HIDDEN_REGION_STATE.hrsDefault);
+            //            r.pszBanner    = null;
+            //            r.dwClient     = 25;
+
+            //            request.Sink.AddHiddenRegion(r);
+            //        },
+            //        delegate(CompilerMessage cm)
+            //        {
+            //            TextSpan ts = Convert(cm.Location);
+
+            //            request.Sink.AddError(
+            //                request.FileName,
+            //                cm.Message,
+            //                ts,
+            //                cm.MessageKind == MessageKind.Error   ? Severity.Error :
+            //                cm.MessageKind == MessageKind.Warning ? Severity.Warning :
+            //                                                        Severity.Hint);
+            //        });
+            //}
+            //finally
+            //{
+            //    projectInfo.Engine.ProcessMessages = false;
+            //}
+
+			return GetDefaultScope(request);
+		}
+
+        private AuthoringScope GetMethodScope(ParseRequest request)
+		{
+			string text;
+
+			int res = request.View.GetTextStream(
+				request.Line, request.Col, request.Line, request.Col + 1, out text);
+
+			if (res != VSConstants.S_OK || text.Length == 0 || text[0] == ' ' || text[0] == '\t')
+				return null;
+
+            //ProjectInfo projectInfo = GetProjectInfo(request);
+
+            //if (projectInfo == null)
+            //    return null;
+            
+			return new ComposeStarScope( this, request.Sink);
+		}
+
+        private AuthoringScope GetCompleteWord(ParseRequest request)
+		{
+            //try
+            //{
+            //    ProjectInfo projectInfo = GetProjectInfo(request);
+
+            //    if (projectInfo == null)
+            //        return null;
+
+            //    CompletionElem[] overloads = projectInfo.CompleteWord(
+            //        request.FileName, request.Line, request.Col, new SourceTextManager(this, request.View));
+
+            //    if (overloads.Length > 0)
+            //        return new ComposeStarScope(projectInfo, request.Sink, overloads);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Trace.Assert(false, ex.ToString());
+            //    Trace.WriteLine(ex);
+            //}
+
+			return GetDefaultScope(request);
+		}
                
+        private AuthoringScope GetMethodTip(ParseRequest request)
+		{
+            //ProjectInfo projectInfo = GetProjectInfo(request);
+            
+            //if (projectInfo == null)
+            //    return null;
+
+            //NemerleMethods methods = projectInfo.GetMethodTip(
+            //    request.FileName, request.Line, request.Col, new SourceTextManager(this, request.View));
+
+            //if (methods != null)
+            //{
+            //    if (methods.StartName.EndLine > 0)
+            //    {
+            //        request.Sink.StartName      (Convert(methods.StartName), methods.GetName(0));
+            //        request.Sink.StartParameters(Convert(methods.StartParameters));
+
+            //        foreach (Location loc in methods.NextParameters)
+            //            request.Sink.NextParameter(Convert(loc));
+
+            //        request.Sink.EndParameters  (Convert(methods.EndParameters));
+            //    }
+            //    else
+            //    {
+            //        TextSpan ts = new TextSpan();
+
+            //        ts.iStartIndex = request.Line;
+            //        ts.iEndIndex   = request.Line;
+            //        ts.iStartIndex = request.Col - 1;
+            //        ts.iEndIndex   = request.Col + 1;
+
+            //        request.Sink.StartName(ts, methods.GetName(0));
+            //    }
+
+            //    return new NemerleAuthoringScope(
+            //        ProjectInfo.FindProject(request.FileName),
+            //        request.Sink, methods);
+            //}
+
+			return GetDefaultScope(request);
+		}
+
+        private string GetCodeRegion(ParseRequest request, int startLine, int startCol, int endLine, int endCol)
+		{
+			string region;
+
+			if (request.View.GetTextStream(
+					startLine - 1,
+					startCol  - 1,
+					endLine   - 1,
+					endCol    - 1,
+					out region
+				) == VSConstants.S_OK)
+			{
+				return region;
+			}
+
+			return "";
+		}
+
+		private AuthoringScope GetDefaultScope(ParseRequest request)
+		{
+			
+			return new ComposeStarScope(this, request.Sink);
+		}
+
         /// <summary>
         /// Language name property.
         /// </summary>        
@@ -111,14 +303,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             {
                 // Create new LanguagePreferences instance
                 preferences = new LanguagePreferences(this.Site, typeof(ComposeStarLangServ).GUID, "ComposeStar Language Service");
-                preferences.EnableQuickInfo = true;                 
-                preferences.EnableCodeSense = true;
-                preferences.EnableCommenting = true;
-                preferences.AutoListMembers = true;
-                preferences.ParameterInformation = true;
-                preferences.LineNumbers = true;
-                
-              //  preferences.Init();  
+                preferences.InsertTabs = false;
+     
+                preferences.Init();  
             }
 
             return preferences;
@@ -207,7 +394,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122")]
         private void GetSnippets()
         {
-        
+         
             if (null == this.expansionsList)
             {
                 this.expansionsList = new List<VsExpansion>();
