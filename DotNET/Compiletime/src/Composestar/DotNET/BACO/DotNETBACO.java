@@ -22,7 +22,6 @@ public class DotNETBACO extends BACO
 	}
 	protected boolean isNeededDependency(Dependency dependency)
 	{
-		// TODO: make this reusable by other modules
 		return !isSystemAssembly(dependency.getFileName());
 	}
 

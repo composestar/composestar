@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import Composestar.Utils.FileUtils;
@@ -12,153 +13,153 @@ import Composestar.Utils.FileUtils;
 public class Projects implements Serializable
 {
 	private Properties properties;
-	private ArrayList projects;
-	private ArrayList concernSources;
+	private List allProjects;
+	private List concernSources;
+	private Map projectsByLanguage;
+	
+	//private List dependencies;
+	//private List compiledDummies;
+	//private List compiledSources;
 
-	private HashMap projectsByLanguage;
-	private ArrayList dependencies;
-	private ArrayList compiledDummies;
-	private ArrayList compiledSources;
-
-	public Projects() {
+	public Projects()
+	{
 		properties = new Properties();
-		projects = new ArrayList();
+		allProjects = new ArrayList();
 		concernSources = new ArrayList();
 		projectsByLanguage = new HashMap();
-		dependencies = new ArrayList();
-		compiledDummies = new ArrayList();
-		compiledSources = new ArrayList();
+		
+		//dependencies = new ArrayList();
+		//compiledDummies = new ArrayList();
+		//compiledSources = new ArrayList();
 	}
 
-	public void addConcernSource(ConcernSource concernsource) {
+	public void addConcernSource(ConcernSource concernsource)
+	{
 		concernSources.add(concernsource);
 	}
 
-	public ArrayList getConcernSources() {
+	public List getConcernSources()
+	{
 		return concernSources;
 	}
 
-	public void addProject(Project proj) {
-		projects.add(proj);
+	public void addProject(Project proj)
+	{
+		allProjects.add(proj);
 
 		String language = proj.getProperty("language");
-		if(projectsByLanguage.containsKey(language)) {
-			ArrayList projects = (ArrayList)projectsByLanguage.get(language);
-			projects.add(proj);
-			projectsByLanguage.put(language,projects);
-		}
-		else {
-			ArrayList projects = new ArrayList();
-			projects.add(proj);
-			projectsByLanguage.put(language,projects);
-		}	
+		getProjectsByLanguage(language).add(proj);
 	}
 
-	public ArrayList getProjects() {
+	public List getProjects()
+	{
+		return allProjects;
+	}
+
+	public List getProjectsByLanguage(String language)
+	{
+		List projects = (List)projectsByLanguage.get(language);
+		if (projects == null)
+			projectsByLanguage.put(language, projects = new ArrayList());
+
 		return projects;
 	}
 
-	public ArrayList getProjectsByLanguage(String language) {
-		if(projectsByLanguage.containsKey(language))
-			return (ArrayList)projectsByLanguage.get(language);
-		return null;
-	}
-
-	public void addProperty(String key, String value) {
+	public void addProperty(String key, String value)
+	{
 		properties.setProperty(key, value);
 	}
 
-	public String getProperty(String key) {
-		if(properties.containsKey(key))
-			return properties.getProperty(key);
-		return null;
+	public String getProperty(String key)
+	{
+		return properties.getProperty(key); // returns null if not found
 	}
 
-	public ArrayList getCompiledDummies() {
-		compiledDummies = new ArrayList();
-		Iterator projIt = projects.iterator();
-		while( projIt.hasNext() ) {
+	public List getCompiledDummies()
+	{
+		List compiledDummies = new ArrayList();
+		Iterator projIt = allProjects.iterator();
+		while (projIt.hasNext())
+		{
 			Project p = (Project)projIt.next();
-			if(p.getCompiledDummies()!= null) {
+			if (p.getCompiledDummies() != null)
 				compiledDummies.add(p.getCompiledDummies());
-			}
 		}
 		return compiledDummies;
 	}
 
-	public ArrayList getCompiledSources() {
-		compiledSources = new ArrayList();
-		Iterator projIt = projects.iterator();
-		while( projIt.hasNext() ) {
-			Project p = (Project)projIt.next();
-			if(p.getCompiledSources()!= null) {
+	public List getCompiledSources()
+	{
+		List compiledSources = new ArrayList();
+		Iterator projIt = allProjects.iterator();
+		while (projIt.hasNext())
+		{
+			Project p = (Project) projIt.next();
+			if (p.getCompiledSources() != null)
 				compiledSources.addAll(p.getCompiledSources());
-			}
 		}
 		return compiledSources;
 	}
 
-	public ArrayList getDependencies() {
-		Iterator projIt = projects.iterator();
-		while( projIt.hasNext() ) {
+	public List getDependencies()
+	{
+		List dependencies = new ArrayList();
+		Iterator projIt = allProjects.iterator();
+		while (projIt.hasNext())
+		{
 			Project p = (Project)projIt.next();
-			ArrayList projectdeps = p.getDependencies();
-			Iterator deps = projectdeps.iterator();
-			while( deps.hasNext() ) {
-				Dependency dependency = (Dependency)deps.next();
-				if(!dependencies.contains(dependency)) {
+			List deps = p.getDependencies();
+			Iterator depIt = deps.iterator();
+			while (depIt.hasNext())
+			{
+				Dependency dependency = (Dependency)depIt.next();
+				if (!dependencies.contains(dependency))
 					dependencies.add(dependency);
-				}
 			}
 		}
 		return dependencies;
 	}
 
-	public ArrayList getSources()
+	public List getSources()
 	{
-		ArrayList sources = new ArrayList();
-		Iterator projIt = projects.iterator();
+		List sources = new ArrayList();
+		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project)projIt.next();
+			Project p = (Project) projIt.next();
 			sources.addAll(p.getSources());
-//			ArrayList projectsources = p.getSources();
-//			Iterator sourceItr = projectsources.iterator();
-//			while (sourceItr.hasNext())
-//			{
-//				Source s = (Source)sourceItr.next();
-//				sources.add(s);
-//			}
 		}
 		return sources;
 	}
 
 	/**
-	 * Returns the source instance for the specified filename.
-	 * TODO: this can be implemented a lot more efficiently 
-	 * by using a map from filename to source. 
+	 * Returns the source instance for the specified filename. TODO: this can be
+	 * implemented a lot more efficiently by using a map from filename to
+	 * source.
 	 */
 	public Source getSource(String fileName)
 	{
 		if (fileName == null)
 			throw new IllegalArgumentException("specified filename cannot be null");
-		
+
 		// normalize specified filename
 		String nfn = FileUtils.fixFilename(fileName);
-		
+
 		List sources = getSources();
 		Iterator sourceIt = sources.iterator();
 		while (sourceIt.hasNext())
 		{
 			Source s = (Source)sourceIt.next();
 			String sfn = s.getFileName();
-			if (sfn == null) continue; // FIXME: can this even happen? if so; how should it be handled?
+			if (sfn == null) continue; // FIXME: can this even happen? if so: how should it be handled?
+			
+			// normalize source filename
 			String nsfn = FileUtils.fixFilename(sfn);
-			if (nfn.equals(nsfn))
-				return s;
+			
+			// compare specified and source
+			if (nfn.equals(nsfn)) return s;
 		}
-		
+
 		return null;
 	}
-
 }

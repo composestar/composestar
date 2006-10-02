@@ -1,38 +1,12 @@
 package Composestar.Core.INCRE;
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
-import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
-import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.INCRE.Config.*;
-import Composestar.Core.LAMA.*;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.ConcernSource;
-import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.Module;
-import Composestar.Core.Master.Config.Source;
-import Composestar.Core.Master.CTCommonModule;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
-import Composestar.Core.CpsProgramRepository.MethodWrapper;
-import Composestar.Core.TYM.TypeLocations;
-
-import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
-import Composestar.Utils.StringConverter;
-
-import java.lang.StringBuffer;
-import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -43,6 +17,32 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
+import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.Config.ConfigManager;
+import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.Source;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Core.TYM.TypeLocations;
+import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
+import Composestar.Utils.StringConverter;
+import Composestar.Utils.StringUtils;
+
 /**
  * The INCRE class is responsible for deciding which modules are incremental 
  * and which input has already been processed by a  module in a previous compilation run. 
@@ -52,6 +52,7 @@ import java.util.List;
 public class INCRE implements CTCommonModule 
 {    
 	private static INCRE Instance = null;
+	
 	private DataStore currentRepository;
 	public DataStore history;
 	private boolean enabled = false;
@@ -98,100 +99,84 @@ public class INCRE implements CTCommonModule
 		return (Instance);
 	} 
 
-	public MyComparator getComparator(){
-		return comparator;
-	}
-	
-	/**
-    * @roseuid 41E7E74501C2
-    */
-   public void run(CommonResources resources) throws ModuleException 
-   {
-	   Configuration config = Configuration.instance();
-       this.historyfile = config.getPathSettings().getPath("Base")+"history.dat";
-	   
-   	   // ability to turn INCRE on
-   	   String incre_enabled = "";
-   	   Module m = config.getModuleSettings().getModule("INCRE");
-   	   if(m!=null){
-   		   incre_enabled = m.getProperty("enabled");
-   	   }
-       
-       if ("True".equalsIgnoreCase(incre_enabled)) {
-			this.enabled = true;
-	   }
-   	   else {
-   			// non-incremental compilation so clean history
-   			this.deleteHistory();
-   	   }
-   	
-   	   // time this initialization process	
-	   INCRETimer incretotal = this.getReporter().openProcess("INCRE","",INCRETimer.TYPE_ALL);
-	   
-	   // set configmanager to read xml configuration file */
-	   configmanager = new ConfigManager(resources);
-	   String configfile = config.getPathSettings().getPath("Base") + "INCREconfig.xml";
-	   try
-	   {
-		   File file = new File(configfile);
-		   if(!file.exists() && !file.canRead())
-			   configfile = config.getPathSettings().getPath("Composestar") + "INCREconfig.xml";
-	   }
-	   catch(Exception ioe)
-	   {
-		   ioe.printStackTrace();
-	   }
-	   
-	   /* parse the XML configuration file containing the modules 
-	    	time the parsing process */
-	   INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);			
-	   try 
-	   {
-		   	configmanager.parseXML(configfile);
-		   	
-		   	// get all sources by iterating over projects
-		   	ArrayList sources = new ArrayList();
-		   	Iterator sourceItr = Configuration.instance().getProjects().getSources().iterator();
-		   	while(sourceItr.hasNext()){
-		   		Source s = (Source)sourceItr.next();
-		   		sources.add(s.getFileName());
-		   	}
-		   	String[] sourcePaths = (String[]) sources.toArray(new String[sources.size()]);
-		   	this.projectSources = StringConverter.stringListToString(sourcePaths);
-	   }
-	   catch(Exception e)
-	   {
-		   increparse.stop();	
-		   String error = e.getMessage();
-		   e.printStackTrace();
-		   if(error == null || "null".equals(error))
-		   {
-			   error = e.toString();
-		   }
-		   // parsing of configuration failed!
-		   throw new ModuleException(error,"INCRE");
-	   }
+	public void run(CommonResources resources) throws ModuleException 
+	{
+		Configuration config = Configuration.instance();
+		this.historyfile = config.getPathSettings().getPath("Base") + "history.dat";
 
-	   increparse.stop();  	
-	   
-	   if(this.enabled){	
-	   		/* load data of previous compilation run (history)
-	   		 	time the loading process */
-	   		INCRETimer loadhistory = this.getReporter().openProcess("INCRE","Loading history",INCRETimer.TYPE_OVERHEAD);	
-	   		this.enabled = this.loadHistory(historyfile);
-	   		loadhistory.stop(); // shut down INCRE in case loading fails!	
-	   }
-	   
-	   if(this.enabled){
-	   		// preprocess configurations for fast retrieval
-	   		configurations.init();
-	   }
-	   
-	   incretotal.stop(); // stop timing INCRE's initialization 
-	   
-	   // INCRE enabled or not? 
-	   Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE enabled state is "+this.enabled);
-   }
+		// check if incremental compilation is enabled
+		Module ms = config.getModuleSettings().getModule("INCRE");
+		if (ms != null)
+		{
+			String enabled = ms.getProperty("enabled");
+			if ("true".equalsIgnoreCase(enabled))
+				this.enabled = true;
+		}
+
+		// non-incremental compilation so clean history
+		if (!this.enabled)
+			this.deleteHistory();
+
+		// time this initialization process	
+		INCRETimer increinit = this.getReporter().openProcess("INCRE","",INCRETimer.TYPE_ALL);
+
+		// set configmanager to read xml configuration file
+		configmanager = new ConfigManager(resources);
+		String configfile = config.getPathSettings().getPath("Base") + "INCREconfig.xml";
+		File file = new File(configfile);
+		if (!file.exists() || !file.canRead())
+			configfile = config.getPathSettings().getPath("Composestar") + "INCREconfig.xml";
+
+		// parse the XML configuration file containing the modules 
+		// time the parsing process
+		INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);			
+		try {
+			configmanager.parseXML(configfile);
+
+			// get the filenames of all sources
+			List sourceFilenames = new ArrayList();
+			Iterator sourceItr = config.getProjects().getSources().iterator();
+			while (sourceItr.hasNext())
+			{
+				Source s = (Source)sourceItr.next();
+				sourceFilenames.add(s.getFileName());
+			}
+			this.projectSources = StringUtils.join(sourceFilenames, ",");
+		}
+		catch (Exception e) {
+			// parsing of configuration failed!
+			e.printStackTrace();
+
+			String error = e.getMessage();
+			if (error == null || "null".equals(error))
+				error = e.toString();
+
+			throw new ModuleException(error,"INCRE");
+		}
+		finally {
+			increparse.stop();
+		}
+
+		if (this.enabled)
+		{	
+			// load data of previous compilation run (history)
+	   		// time the loading process
+			INCRETimer loadhistory = this.getReporter().openProcess("INCRE","Loading history",INCRETimer.TYPE_OVERHEAD);	
+			this.enabled = this.loadHistory(historyfile); // shut down INCRE in case loading fails
+			loadhistory.stop();
+		}
+
+		if (this.enabled)
+		{
+			// preprocess configurations for fast retrieval
+			configurations.init();
+		}
+
+		increinit.stop(); // stop timing INCRE's initialization 
+
+		// INCRE enabled or not? 
+		Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE enabled state is " + this.enabled);
+	}
 
 	/**
 	 * Returns an instance of INCREReporter
@@ -375,25 +360,23 @@ public class INCRE implements CTCommonModule
     * Searches the history repository for the specified object. 
 	* Return null if object can't be found.
     * Uses getQualifiedName to compare objects
-    * @return Object
-    * @roseuid 421094DA000F
     */
    public Object findHistoryObject(Object obj) 
    {
    		try {
-   			if(obj.getClass().equals(String.class)){
+   			if (obj.getClass().equals(String.class)) {
    				// special case, return string
    				return obj;
    			}
    			
-   			if(obj instanceof Source){
+   			if (obj instanceof Source) {
    				// special case, look in history configurations
    				Source s = (Source)obj;
-   				ArrayList historysources = configurations.historyconfig.getProjects().getSources();
+   				List historysources = configurations.historyconfig.getProjects().getSources();
    				Iterator sources = historysources.iterator();
-   				while(sources.hasNext()){
+   				while (sources.hasNext()) {
    					Source historysource = (Source)sources.next();
-   					if(s.getFileName().equals(historysource.getFileName()))
+   					if (s.getFileName().equals(historysource.getFileName()))
    						return historysource;	
    				}
    			}
@@ -477,7 +460,7 @@ public class INCRE implements CTCommonModule
 		}
 		else if(fixedFile.endsWith(".cps")){
 			//searchStr = prop.getProperty("ConcernSources");// look in concern sources
-			ArrayList conList = configurations.historyconfig.getProjects().getConcernSources();
+			List conList = configurations.historyconfig.getProjects().getConcernSources();
 			Iterator cps = conList.iterator();
 			while(cps.hasNext()){
 				ConcernSource cs = (ConcernSource)cps.next();
@@ -498,7 +481,7 @@ public class INCRE implements CTCommonModule
 			// look in configurations "Dependencies" and "Assemblies"
 			// TODO: possible naming conflict when JAVA platform is there
 			//searchStr = prop.getProperty("Dependencies");
-			ArrayList depList = configurations.historyconfig.getProjects().getDependencies();
+			List depList = configurations.historyconfig.getProjects().getDependencies();
 			Iterator dependencies = depList.iterator();
 			while(dependencies.hasNext())
 	    	{
@@ -507,7 +490,7 @@ public class INCRE implements CTCommonModule
 	    	}
 			
 			//searchStr += prop.getProperty("Assemblies");
-			ArrayList dummies = configurations.historyconfig.getProjects().getCompiledDummies();
+			List dummies = configurations.historyconfig.getProjects().getCompiledDummies();
 			String[] dummyPaths = (String[])dummies.toArray(new String[dummies.size()]);
 		   	searchBuffer.append(StringConverter.stringListToString(dummyPaths));
 			

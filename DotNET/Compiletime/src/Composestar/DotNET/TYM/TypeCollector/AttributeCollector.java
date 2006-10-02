@@ -1,6 +1,5 @@
 package Composestar.DotNET.TYM.TypeCollector;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,53 +27,55 @@ import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class AttributeCollector extends DefaultHandler implements CTCommonModule
-{        
-    public AttributeCollector()
-    {
-    }
-    
-    public void run(CommonResources resources) throws ModuleException {
-		
-    	Projects prjs = Configuration.instance().getProjects();
-    	ArrayList projectList = prjs.getProjects();
-    	Iterator prjIt = projectList.iterator();
-    	while(prjIt.hasNext()) 
-    	{
-    	    Project p = (Project)prjIt.next();
-    		String projectFolder = p.getProperty("basePath");
-    		String xmlFile = projectFolder + "attributes.xml";
-    		try {
+{
+	public AttributeCollector()
+	{
+	}
+
+	public void run(CommonResources resources) throws ModuleException
+	{	
+		Projects prjs = Configuration.instance().getProjects();
+		List projectList = prjs.getProjects();
+		Iterator prjIt = projectList.iterator();
+		while (prjIt.hasNext()) 
+		{
+			Project p = (Project)prjIt.next();
+			String projectFolder = p.getProperty("basePath");
+			String xmlFile = projectFolder + "attributes.xml";
+			try
+			{
 				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 				SAXParser saxParser = saxParserFactory.newSAXParser();
 				XMLReader parser  = saxParser.getXMLReader();
-				parser.setContentHandler( this );
-				parser.parse( new InputSource( xmlFile ));
-			} catch( Exception e ) {
-				e.printStackTrace();
-				//throw new ModuleException( e.getMessage() );
+				parser.setContentHandler(this);
+				parser.parse(new InputSource(xmlFile));
 			}
-    	}
-    }
-    
-    /**
-     * @param uri
-     * @param localName
-     * @param qName
-     * @param attr
-     * @throws org.xml.sax.SAXException
-     * @roseuid 40AB539D030D
-     */
-    public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException {
-     	if( "Attribute".equalsIgnoreCase(qName) && attr != null ) {
-     		Annotation attribute = new Annotation();
+			catch (Exception e)
+			{
+				throw new ModuleException("Unable to collect attributes: " +  e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * @param uri
+	 * @param localName
+	 * @param qName
+	 * @param attr
+	 * @throws org.xml.sax.SAXException
+	 * @roseuid 40AB539D030D
+	 */
+	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException {
+		if( "Attribute".equalsIgnoreCase(qName) && attr != null ) {
+			Annotation attribute = new Annotation();
 			Concern c = (Concern) DataStore.instance().getObjectByID(attr.getValue("type"));
 			if( c != null && c.getPlatformRepresentation() != null )
 			{
 				Type annotType = (Type) c.getPlatformRepresentation();
-				
+
 				String target = attr.getValue("target").toLowerCase();
 				String location = attr.getValue("location");
-				
+
 				if( "type".equals(target))
 				{
 					attribute.register(annotType, getTypeLocation(location));
@@ -85,21 +86,21 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 				}
 				else if ( "field".equals(target) )
 				{
-				  attribute.register(annotType, getFieldLocation(location));
+					attribute.register(annotType, getFieldLocation(location));
 				}
-				
+
 				attribute.setValue(attr.getValue("value"));
 
 				//attribute.setClassName(attr.getValue("Class"));
 				//attribute.setMethodSignature(attr.getValue("Method"));
 				//attribute.setTypeId(attr.getValue("TypeId"));
 			}
-     	}
-    }
-    
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-    }
-    
+		}
+	}
+
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+	}
+
 	public Type getTypeLocation(String location)
 	{
 		Concern c = (Concern) DataStore.instance().getObjectByID(location);
@@ -109,18 +110,18 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		}
 		return null;
 	}
-	
+
 	public MethodInfo getMethodLocation(String location)
 	{
 		String methodName = location.substring(location.lastIndexOf(".")+1);
 		String typeName   = location.substring(0,location.lastIndexOf("."));
-		
+
 		Type type = getTypeLocation(typeName);
-		
+
 		if( type != null )
 		{
 			List methods = type.getMethods();
-            Iterator i = methods.iterator();
+			Iterator i = methods.iterator();
 			while(i.hasNext())
 			{
 				MethodInfo method = (MethodInfo) i.next();
@@ -130,18 +131,18 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		}
 		return null;
 	}
-	
+
 	public FieldInfo getFieldLocation(String location)
 	{
-	  String fieldName = location.substring(location.lastIndexOf(".")+1);
-	  String typeName  = location.substring(0,location.lastIndexOf("."));
-	  
+		String fieldName = location.substring(location.lastIndexOf(".")+1);
+		String typeName  = location.substring(0,location.lastIndexOf("."));
+
 		Type type = getTypeLocation(typeName);
-		
+
 		if( type != null )
 		{
 			List fields  = type.getFields();
-            Iterator i = fields.iterator();
+			Iterator i = fields.iterator();
 			while(i.hasNext())
 			{
 				FieldInfo field = (FieldInfo) i.next();
@@ -151,7 +152,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		}
 		return null;
 	}
-	
+
 	public ParameterInfo getParameterLocation(String location)
 	{
 		return null;

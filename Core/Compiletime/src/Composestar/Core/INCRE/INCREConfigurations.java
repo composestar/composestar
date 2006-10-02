@@ -3,13 +3,14 @@
  */
 package Composestar.Core.INCRE;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Module;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
 /**
  * @author Dennis
  */
@@ -64,9 +65,9 @@ public class INCREConfigurations {
 		
 		/* Harvester input */
 		String dummyStr = "";
-		ArrayList dummies = config.getProjects().getCompiledDummies();
+		List dummies = config.getProjects().getCompiledDummies();
 		Iterator dumIt = dummies.iterator();
-		while(dumIt.hasNext()) 
+		while (dumIt.hasNext()) 
 		{
 			String name = (String)dumIt.next();
 			dummyStr += name;
