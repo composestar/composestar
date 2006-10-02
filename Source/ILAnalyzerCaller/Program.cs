@@ -14,7 +14,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
         {
             if (args.Length < 1)
             {
-                Console.WriteLine("Usage: IlAnalyzerCaller <YapFile>/<assembly> [nocache]");
+                Console.WriteLine("Usage: IlAnalyzerCaller <YapFile>/<assembly>/<folder> [nocache]");
                 return;
             }
 
@@ -35,7 +35,54 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             }
 
             Console.WriteLine("Analyzing '{0}':", file);
-            if (file.EndsWith(".yap"))
+            if (Directory.Exists(file))
+            {
+                // Analyse entire folder
+                DirectoryInfo di = new DirectoryInfo(file);
+                foreach (FileInfo fi in di.GetFiles("*.dll"))
+                {
+                    Console.WriteLine("Analyzing file '{0}'", fi.FullName);
+
+                    try
+                    {
+                        System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(fi.FullName);
+
+                        String yap = assembly.GetName().FullName.Replace(", Version=", "_");
+                        yap = yap.Replace(", Culture=", "_");
+                        yap = yap.Replace(", PublicKeyToken=", "_");
+                        yap = yap + ".yap";
+
+                        NameValueCollection config = new NameValueCollection();
+                        config.Add("RepositoryFilename", Path.Combine("c:\\temp", yap));
+                        config.Add("ProcessMethodBody", "false");
+                        config.Add("CacheFolder", "D:\\ComposestarRepository\\trunk\\StarLight\\installed");
+
+                        IILAnalyzer analyzer = new CecilILAnalyzer();
+                        analyzer.Initialize(config);
+
+                        IlAnalyzerResults result = analyzer.ExtractTypeElements(fi.FullName);
+
+                        Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                        
+                        analyzer.Close();
+                    }
+                    catch (BadImageFormatException) {
+                        Console.WriteLine("Not a valid assembly file, skipped.");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("{0}\n{1}", e.Message, e.StackTrace);
+                    }
+
+
+
+
+                }
+
+
+
+            }
+            else if (file.EndsWith(".yap"))
             {
                 // Read from YAP file
                 int methodCount = 0;
@@ -57,21 +104,18 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 Console.WriteLine("\n{0} types with in total {1} methods found in {2:0.0000} seconds.", dbtypes.Count, methodCount, sw.Elapsed.TotalSeconds);
 
                 repository.Close();
-
-                return;
             }
             else if (file.EndsWith(".dll"))
             {
-
                 NameValueCollection config = new NameValueCollection();
                 config.Add("RepositoryFilename", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
                 config.Add("ProcessMethodBody", "false");
-                config.Add("CacheFolder", "C:\\temp");
+                config.Add("CacheFolder", "D:\\ComposestarRepository\\trunk\\StarLight\\installed");
 
                 //IILAnalyzer analyzer = new ReflectionILAnalyzer();
                 IILAnalyzer analyzer = new CecilILAnalyzer();
                 analyzer.Initialize(config);
-                
+
                 IlAnalyzerResults result = analyzer.ExtractTypeElements(file);
 
                 if (result == IlAnalyzerResults.FROM_ASSEMBLY)
@@ -82,8 +126,8 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 {
                     Console.WriteLine("Summary: Assembly has not been modified, skipping analysis. (time {0:0.0000} seconds)", analyzer.LastDuration.TotalSeconds);
                 }
-                
-                if (analyzer.UnresolvedTypes.Count <= 20)
+
+                if (analyzer.UnresolvedTypes.Count > 0)
                 {
                     foreach (String ut in analyzer.UnresolvedTypes)
                     {

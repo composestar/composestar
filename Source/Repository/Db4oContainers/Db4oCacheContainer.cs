@@ -80,6 +80,22 @@ namespace Composestar.Repository.Db4oContainers
             set { _cacheFolder = value; }
         }
 
+        private String CreateCacheFileName(String AFQN)
+        {
+            String[] AFQNparts = AFQN.Split(new String[] { ", " }, StringSplitOptions.None);
+            String assemblyname = AFQNparts[0];
+            String version = AFQNparts[1].Substring(AFQNparts[1].IndexOf("=") + 1);
+            String culture = AFQNparts[2].Substring(AFQNparts[2].IndexOf("=") + 1);
+            String keytoken = AFQNparts[3].Substring(AFQNparts[3].IndexOf("=") + 1);
+
+            return Path.Combine(CacheFolder, String.Format("typescache\\{0}_{1}_{2}_{3}.yap", assemblyname, version, culture, keytoken));
+        }
+
+        public bool IsCached(String AFQN)
+        {
+            return File.Exists(CreateCacheFileName(AFQN));
+        }
+
         /// <summary>
         /// Opens the database.
         /// </summary>  
@@ -90,29 +106,22 @@ namespace Composestar.Repository.Db4oContainers
                 return (ObjectContainer)dbContainer[AFQN];
             }
          
-
-            if (!Directory.Exists(Path.Combine(CacheFolder, "TypesCache")))
+            if (!Directory.Exists(Path.Combine(CacheFolder, "typescache")))
             {
-                Directory.CreateDirectory(Path.Combine(CacheFolder, "TypesCache"));
+                Directory.CreateDirectory(Path.Combine(CacheFolder, "typescache"));
             }
 
-            String[] AFQNparts = AFQN.Split(new String[] {", "}, StringSplitOptions.None);
-            String assemblyname = AFQNparts[0];
-            String version = AFQNparts[1].Substring(AFQNparts[1].IndexOf("=")+1);
-            String culture = AFQNparts[2].Substring(AFQNparts[2].IndexOf("=") + 1);
-            String keytoken = AFQNparts[3].Substring(AFQNparts[3].IndexOf("=") + 1);
+            String yapFileName = CreateCacheFileName(AFQN);
 
-            String yapFileName = Path.Combine(CacheFolder, String.Format("TypesCache\\{0}_{1}_{2}_{3}.yap", assemblyname, version, culture, keytoken));
 
             dbContainer.Add(AFQN, Db4o.OpenFile(yapFileName));
 
             if (DebugMode)
             {
-               // ((YapStream)dbContainer).GetNativeQueryHandler().QueryExecution += new com.db4o.inside.query.QueryExecutionHandler(Program_QueryExecution);
+                // ((YapStream)dbContainer).GetNativeQueryHandler().QueryExecution += new com.db4o.inside.query.QueryExecutionHandler(Program_QueryExecution);
             }
-
+            
             return (ObjectContainer)dbContainer[AFQN];
-
         }
 
         static void Program_QueryExecution(object sender, com.db4o.inside.query.QueryExecutionEventArgs args)
@@ -142,14 +151,14 @@ namespace Composestar.Repository.Db4oContainers
         /// Store the object.
         /// </summary>
         /// <param name="o">The object to store.</param>
-        public void StoreObject(Object o)
+        public void StoreObject(Object o, String AFQN)
         {
             if (o == null)
                 throw new ArgumentNullException("object", Properties.Resources.ObjectIsNull);
 
-            CheckForOpenDatabase();
+            ObjectContainer container = OpenContainer(AFQN);
 
-            //dbContainer.Set(o);
+            container.Set(o);
         }
 
         public IList<T> GetObjectQuery<T>(Predicate<T> match, String AFQN)

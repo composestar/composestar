@@ -130,7 +130,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 if (analyzer.UnresolvedTypes.Count > 0)
                 {
-                    Log.LogError("Unable to resolve {0} types.", analyzer.UnresolvedTypes.Count);
+                    Log.LogError("Unable to resolve {0} types, detailed overview below:", analyzer.UnresolvedTypes.Count);
+                    foreach (String type in analyzer.UnresolvedTypes)
+                    {
+                        Log.LogError("  {0}", type);
+                    }
                 }
             }
            

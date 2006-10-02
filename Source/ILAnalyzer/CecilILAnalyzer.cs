@@ -23,8 +23,9 @@ namespace Composestar.StarLight.ILAnalyzer
     public class CecilILAnalyzer : IILAnalyzer
     {
         private bool _isInitialized = false;
-        private TimeSpan _lastDuration=TimeSpan.MinValue;
+        private TimeSpan _lastDuration=TimeSpan.Zero;
         private RepositoryAccess _repositoryAccess;
+        private CacheAccess _cacheAccess;
         private List<String> _resolvedTypes = new List<String>();
         private List<String> _unresolvedTypes = new List<String>();
         private bool _processMethodBody = true;
@@ -59,6 +60,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
             #endregion
 
+            _lastDuration = TimeSpan.Zero;
+
             _isInitialized = true;
 
         }
@@ -66,6 +69,11 @@ namespace Composestar.StarLight.ILAnalyzer
         public RepositoryAccess RepositoryAccess
         {
             get { return _repositoryAccess; }
+        }
+
+        public CacheAccess CacheAccess
+        {
+            get { return _cacheAccess; }
         }
 
         public List<String> UnresolvedTypes
@@ -102,9 +110,10 @@ namespace Composestar.StarLight.ILAnalyzer
             if (type == null)
                 throw new ArgumentNullException("type");
             
-            // Locally declared type
+            
             if (type.Scope != null)
             {
+                // Locally declared type
                 if (type.Scope is ModuleDefinition)
                 {
                     if (((ModuleDefinition)type.Scope).Assembly != null)
@@ -112,26 +121,31 @@ namespace Composestar.StarLight.ILAnalyzer
                         return ((ModuleDefinition)type.Scope).Assembly.Name.FullName;
                     }
                 }
-            }
 
-            // Referenced type
-            foreach (AssemblyNameReference assembly in _targetAssemblyDefinition.MainModule.AssemblyReferences)
-            {
-                if (type.Scope.Name == assembly.Name)
+                // Referenced type
+                foreach (AssemblyNameReference assembly in _targetAssemblyDefinition.MainModule.AssemblyReferences)
                 {
-                    return assembly.FullName;
+                    if (type.Scope.Name == assembly.Name)
+                    {
+                        return assembly.FullName;
+                    }
                 }
             }
-
-            return "";
-            //throw new Exception(String.Format("Unable to resolve assembly name for type '{0}'.", type.FullName));
+           
+            return "NULL";
         }
 
         private String CreateTypeAFQN(AssemblyDefinition _targetAssemblyDefinition, TypeReference type)
         {
             String typeName = type.FullName;
-            if (type.FullName.EndsWith("[]")) typeName = type.FullName.Substring(0, type.FullName.Length - 2);
-
+            if (typeName.Contains("`")) typeName = typeName.Substring(0, typeName.IndexOf("`", 0));
+            if (typeName.EndsWith("&")) typeName = typeName.Substring(0, typeName.Length - 1);
+            if (typeName.EndsWith("**")) typeName = typeName.Substring(0, typeName.Length - 2);
+            if (typeName.EndsWith("*")) typeName = typeName.Substring(0, typeName.Length - 1);
+            if (typeName.Contains("[")) typeName = typeName.Substring(0, typeName.IndexOf("[", 0));
+            if (typeName.Contains(" modreq(")) typeName = typeName.Substring(0, typeName.IndexOf(" modreq(", 0));
+            if (typeName.Contains(" modopt(")) typeName = typeName.Substring(0, typeName.IndexOf(" modopt(", 0));
+            
             return String.Format("{0}, {1}", typeName, CreateAFQN(_targetAssemblyDefinition, type));
         }
 
@@ -185,7 +199,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 assembly.Timestamp = File.GetLastWriteTimeUtc(fileName).Ticks;
                 RepositoryAccess.AddAssembly(assembly);
 
-                this.ExtractTypeElements(fileName, _targetAssemblyDefinition);
+                this.ExtractTypeElements(fileName, _targetAssemblyDefinition, false);
             }
             catch (EndOfStreamException)
             {
@@ -204,7 +218,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
-        private void ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition)
+        private void ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition, bool cache)
         {
             int i = 0;
             
@@ -212,7 +226,7 @@ namespace Composestar.StarLight.ILAnalyzer
             foreach (TypeDefinition type in _targetAssemblyDefinition.MainModule.Types)
             {
                 i = i + 1;
-                if (i%40==0 || i<40) Console.WriteLine(String.Format("Processing type ({0}/{1}): {2}", i, _targetAssemblyDefinition.MainModule.Types.Count, type.FullName));
+                if (i<40 || i%50==0) Console.WriteLine(String.Format("Processing type ({0}/{1}): {2}", i, _targetAssemblyDefinition.MainModule.Types.Count, type.FullName));
                 TypeElement ti = new TypeElement(System.Guid.NewGuid().ToString());
                 
                 // Name
@@ -222,7 +236,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 String assembly = CreateAFQN(_targetAssemblyDefinition, type);
                 ti.Assembly = assembly;
 
-                String typeAFQN = String.Format("{0}, {1}", type.FullName, assembly);
+                String typeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type);
 
                 // Properties
                 ti.IsAbstract = type.IsAbstract;
@@ -252,12 +266,14 @@ namespace Composestar.StarLight.ILAnalyzer
                     String baseTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type.BaseType); 
                     if (!UnresolvedTypes.Contains(baseTypeAFQN) && !ResolvedTypes.Contains(baseTypeAFQN))
                     {
+                        //Console.WriteLine("  basetype: {0}", type.BaseType.FullName);
                         UnresolvedTypes.Add(baseTypeAFQN);
                     }
                 }
 
                 // Add to the repository
-                RepositoryAccess.AddType(ti);
+                if (cache) { CacheAccess.AddType(ti); }
+                else { RepositoryAccess.AddType(ti); }
                 ResolvedTypes.Add(typeAFQN);
 
                 // Remove this type from the list of unresolved types
@@ -280,6 +296,7 @@ namespace Composestar.StarLight.ILAnalyzer
                     String fieldTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, field.FieldType); 
                     if (!UnresolvedTypes.Contains(fieldTypeAFQN) && !ResolvedTypes.Contains(fieldTypeAFQN))
                     {
+                        //Console.WriteLine("  fieldtype: {0}", field.FieldType.FullName);
                         UnresolvedTypes.Add(fieldTypeAFQN);
                     }
 
@@ -288,7 +305,8 @@ namespace Composestar.StarLight.ILAnalyzer
                     fe.IsStatic = field.IsStatic;
 
                     // Add to the repository
-                    RepositoryAccess.AddField(ti, fe);
+                    if (cache) { CacheAccess.AddField(ti, fe); }
+                    else { RepositoryAccess.AddField(ti, fe); }
 
                     // Add attributes for field
                     ExtractAttributeElements(fe, field.CustomAttributes);
@@ -300,12 +318,13 @@ namespace Composestar.StarLight.ILAnalyzer
                     MethodElement mi = new MethodElement(System.Guid.NewGuid().ToString());    
                     mi.Signature = method.ToString(); 
                     mi.Name = method.Name;                    
-                    mi.ReturnType = method.ReturnType.ReturnType.ToString();
+                    mi.ReturnType = method.ReturnType.ReturnType.FullName;
 
                     // If the return type has not yet been resolved, add it to the list of unresolved types
                     String returnTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, method.ReturnType.ReturnType); 
                     if (!UnresolvedTypes.Contains(returnTypeAFQN) && !ResolvedTypes.Contains(returnTypeAFQN))
                     {
+                        //Console.WriteLine("  returntype: {0}", method.ReturnType.ReturnType.FullName);
                         UnresolvedTypes.Add(returnTypeAFQN);
                     }
 
@@ -318,7 +337,8 @@ namespace Composestar.StarLight.ILAnalyzer
                     
                     // Add to the repositorys
                     if (method.Body != null && this._processMethodBody) mi.MethodBody = new Composestar.Repository.LanguageModel.MethodBody(System.Guid.NewGuid().ToString(), mi.Id);
-                    RepositoryAccess.AddMethod(ti, mi);
+                    if (cache) { CacheAccess.AddMethod(ti, mi); }
+                    else { RepositoryAccess.AddMethod(ti, mi); }
 
                     ExtractAttributeElements(mi, method.CustomAttributes);
                     
@@ -330,12 +350,13 @@ namespace Composestar.StarLight.ILAnalyzer
                         pe.ParentMethodId = mi.Id;
                         pe.Name = param.Name;
                         pe.Ordinal = (short)(param.Sequence);
-                        pe.ParameterType = param.ParameterType.ToString();
+                        pe.ParameterType = param.ParameterType.FullName;
 
                         // If the parameter type has not yet been resolved, add it to the list of unresolved types
                         String parameterTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, param.ParameterType);
                         if (!UnresolvedTypes.Contains(parameterTypeAFQN) && !ResolvedTypes.Contains(parameterTypeAFQN))
                         {
+                            //Console.WriteLine("  paramtype: {0}", param.ParameterType.FullName);
                             UnresolvedTypes.Add(parameterTypeAFQN);
                         }
 
@@ -345,7 +366,8 @@ namespace Composestar.StarLight.ILAnalyzer
                         pe.IsRetVal = !param.ParameterType.FullName.Equals("System.Void", StringComparison.CurrentCultureIgnoreCase);
 
                         // Add to the method
-                        RepositoryAccess.AddParameter(mi, pe);                         
+                        if (cache) { CacheAccess.AddParameter(ti, mi, pe); }
+                        else { RepositoryAccess.AddParameter(mi, pe); }
                     }
 
                     if (method.Body != null && this._processMethodBody)
@@ -369,11 +391,18 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
             }
 
-            // Perhaps unresolved types are already in the local datastore from a previous run
+            
             //Console.WriteLine("Resolving types from datastore...");
             IList<String> types = new List<String>(UnresolvedTypes);
             foreach (String type in types)
             {
+                if (type.EndsWith(", NULL"))
+                {
+                    UnresolvedTypes.Remove(type);
+                    continue;
+                }
+
+                // Perhaps unresolved types are already in the local datastore from a previous run
                 TypeElement te = RepositoryAccess.GetTypeElementByAFQN(type.Substring(0, type.IndexOf(", ")), type.Substring(type.IndexOf(", ")+2));
                 if (te != null)
                 {
@@ -393,15 +422,15 @@ namespace Composestar.StarLight.ILAnalyzer
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            CacheAccess cache = new CacheAccess(Repository.Db4oContainers.Db4oCacheContainer.Instance, _cacheFolder);
+            _cacheAccess = new CacheAccess(Repository.Db4oContainers.Db4oCacheContainer.Instance, _cacheFolder);
             
             // Retrieve type elements from cache
             IList<String> types = new List<String>(UnresolvedTypes);
             foreach (String type in types)
             {
-                TypeElement te = cache.GetTypeElementByAFQN(type.Substring(0, type.IndexOf(", ")), type.Substring(type.IndexOf(", ") + 2));
+                TypeElement te = CacheAccess.GetTypeElementByAFQN(type.Substring(0, type.IndexOf(", ")), type.Substring(type.IndexOf(", ") + 2));
 
-                // Type was found in the caches
+                // Type was found in the cache
                 if (te != null)
                 {
                     // Copy type from cache to local datastore
@@ -409,18 +438,18 @@ namespace Composestar.StarLight.ILAnalyzer
                     RepositoryAccess.AddType(te);
 
                     // Copy the type fields
-                    foreach (FieldElement fe in cache.GetFieldElements(te))
+                    foreach (FieldElement fe in CacheAccess.GetFieldElements(te))
                     {
                         RepositoryAccess.AddField(te, fe);
                     }
 
                     /// Copy the type methods
-                    foreach (MethodElement me in cache.GetMethodElements(te))
+                    foreach (MethodElement me in CacheAccess.GetMethodElements(te))
                     {
                         RepositoryAccess.AddMethod(te, me);
 
                         // Copy the method parameters
-                        foreach (ParameterElement pe in cache.GetParameterElements(te, me))
+                        foreach (ParameterElement pe in CacheAccess.GetParameterElements(te, me))
                         {
                             RepositoryAccess.AddParameter(me, pe);
                         }
@@ -430,30 +459,41 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
             }
 
-            //// ???
-            //List<String> unresolvedAssemblies = new List<string>();
+            // Create cache files for system assemblies (if they do not exist yet)
+            if (UnresolvedTypes.Count > 0)
+            {
+                List<String> unresolvedAssemblies = new List<string>();
 
-            //// Collect the assembly names of the unresolved types
-            //types = new List<String>(UnresolvedTypes);
-            //foreach (String type in types)
-            //{
-            //    if (type.IndexOf(",") > -1)
-            //    {
-            //        String assemblyName = type.Substring(type.IndexOf(", ") + 1);
-            //        if (!unresolvedAssemblies.Contains(assemblyName)) unresolvedAssemblies.Add(assemblyName);
-            //    }
-            //}
+                // Collect the assembly names of the unresolved types
+                types = new List<String>(UnresolvedTypes);
+                foreach (String type in types)
+                {
+                    if (type.IndexOf(",") > -1)
+                    {
+                        String assemblyName = type.Substring(type.IndexOf(", ") + 1);
+                        if (!unresolvedAssemblies.Contains(assemblyName)) unresolvedAssemblies.Add(assemblyName);
+                    }
+                }
 
-            //// 
-            //DefaultAssemblyResolver dar = new DefaultAssemblyResolver();
-            //foreach (String assemblyName in unresolvedAssemblies)
-            //{
-            //    AssemblyDefinition ad = dar.Resolve(assemblyName);
-            //    if (ad != null)
-            //    {
-            //        //Console.WriteLine(String.Format("Analyzing '{0}'...", ad.Name.FullName));
-            //    }
-            //}
+                // Use the Cecil assembly resolver to find the missing assemblies
+                DefaultAssemblyResolver dar = new DefaultAssemblyResolver();
+                foreach (String assemblyName in unresolvedAssemblies)
+                {
+                    AssemblyDefinition ad = dar.Resolve(assemblyName);
+                    if (ad != null)
+                    {
+                        Console.WriteLine(String.Format("Analyzing '{0}'...", ad.Name.FullName));
+                        _processMethodBody = false;
+                        this.ExtractTypeElements(ad.Name.Name, ad, true);
+                        _processMethodBody = true;
+                    }
+                }           
+
+
+
+
+            }
+
 
             //    //
             //    //if (type.IndexOf(",") > -1)
@@ -474,7 +514,7 @@ namespace Composestar.StarLight.ILAnalyzer
             
 
 
-            cache.CloseContainer();
+            _cacheAccess.CloseContainer();
             ////RepositoryAccess.CloseDatabase();
             //Console.WriteLine("WARNING: Explicitly clearing the unresolved types list, types have NOT been resolved!");
             //UnresolvedTypes.Clear();

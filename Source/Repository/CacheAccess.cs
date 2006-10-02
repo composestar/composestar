@@ -24,6 +24,11 @@ namespace Composestar.Repository
             container.CloseContainer();
         }
 
+        public bool IsCached(String assembly)
+        {
+            return container.IsCached(assembly);
+        }
+
         public TypeElement GetTypeElementByAFQN(string typeName, string assembly)
         {
             IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
@@ -91,6 +96,57 @@ namespace Composestar.Repository
         {
             throw new NotImplementedException("Severe performance penalty on current implementation, disabled for the time being");
 
+        }
+
+        public void AddType(TypeElement typeElement)
+        {
+            if (typeElement == null)
+                throw new ArgumentNullException("typeElement");
+
+            // Check if type already exists
+            container.StoreObject(typeElement, typeElement.Assembly);
+        }
+
+        public void AddField(TypeElement typeElement, FieldElement fieldElement)
+        {
+            if (typeElement == null)
+                throw new ArgumentNullException("typeElement");
+
+            if (fieldElement == null)
+                throw new ArgumentNullException("fieldElement");
+
+            // add the field element
+            fieldElement.ParentTypeId = typeElement.Id;
+            container.StoreObject(fieldElement, typeElement.Assembly);
+        }
+
+        public void AddMethod(TypeElement typeElement, MethodElement methodElement)
+        {
+            if (typeElement == null)
+                throw new ArgumentNullException("typeElement");
+
+            if (methodElement == null)
+                throw new ArgumentNullException("methodElement");
+
+            // Add the method element
+            methodElement.ParentTypeId = typeElement.Id;
+            container.StoreObject(methodElement, typeElement.Assembly);
+        }
+
+        public void AddParameter(TypeElement typeElement, MethodElement methodElement, ParameterElement paramElement)
+        {
+            if (typeElement == null)
+                throw new ArgumentNullException("typeElement");
+
+            if (methodElement == null)
+                throw new ArgumentNullException("methodElement");
+
+            if (paramElement == null)
+                throw new ArgumentNullException("paramElement");
+
+            // Store the parameter element
+            paramElement.ParentMethodId = methodElement.Id;
+            container.StoreObject(paramElement, typeElement.Assembly);
         }
     }
 }
