@@ -160,7 +160,7 @@ public class INCRE implements CTCommonModule
 		if (this.enabled)
 		{	
 			// load data of previous compilation run (history)
-	   		// time the loading process
+			// time the loading process
 			INCRETimer loadhistory = this.getReporter().openProcess("INCRE","Loading history",INCRETimer.TYPE_OVERHEAD);	
 			this.enabled = this.loadHistory(historyfile); // shut down INCRE in case loading fails
 			loadhistory.stop();
