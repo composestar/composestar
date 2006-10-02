@@ -28,6 +28,7 @@
 
     <!-- Properties -->
     <Property Id="ALLUSERS" Value="1" />
+    <Property Id="RUNDEVENV" Value="0" />
     <Property Id='DiskPrompt' Value="$(var.ProductShortName) $(var.ProductVersionText) Installation [1]" />
     <Property Id="VS_DIR_2005">
       <RegistrySearch Id="RegSearch_VS_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS" Name="ProductDir" Type="raw" />
@@ -46,12 +47,6 @@
     <Property Id='ARPHELPTELEPHONE'>http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome</Property>
     <Property Id='ARPREADME'>path</Property>
 
-    <CustomAction Id='AlreadyUpdated' Error='StarLight has already been updated to 1.0.0 or newer.' />
-
-    <InstallExecuteSequence>
-      <Custom Action='AlreadyUpdated' After='FindRelatedProducts'>PATCHFOUND</Custom>
-
-    </InstallExecuteSequence>
 
     <!-- Launch conditions -->
     <Condition Message='This setup requires the .NET Framework 2.0 or higher.'>
@@ -102,25 +97,30 @@
         <ComponentRef Id='Antlr'/>
         <ComponentRef Id='Registry'/>
       </Feature>
-      <Feature Id='MSBuild' Title ='MSBuild support' InstallDefault='local' Description ='MSBuild support is needed for the automatic compilation of cpsproj files.' Level ='200'>
+      <Feature Id='MSBuild' Title ='MSBuild support'  InstallDefault='local' Description ='MSBuild support is needed for the automatic compilation of cpsproj files.' Level ='1'>
         <ComponentGroupRef Id='CompGroup_MSBuild' />
       </Feature>      
-      <Feature Id='VSIntegration' Title ='Visual Studio Integration' InstallDefault='local'  Description ='Visual Studio 2005 Integration.' Level ='300'>
+      <Feature Id='VSIntegration' Title ='Visual Studio Integration' InstallDefault='local'  Description ='Visual Studio 2005 Integration.' Level ='1'>
         <ComponentGroupRef Id='CompGroup_Integration'/>
       </Feature>
-      <Feature Id='Examples' Title ='StarLight Examples' Description ='Source code examples.' Level ='400'></Feature>
+      <Feature Id='Documentation' Title ='Documentation' Description ='StarLight specific and general composition filters documentation.' Level ='1'>
 
+      </Feature>
+      <Feature Id='Examples' Title ='StarLight Examples' Description ='Source code examples.' Level ='1'>
+        
+      </Feature>
     </Feature>
 
-    <!-- Custom actions -->
-    <CustomAction Id="CA_DevenvSetup2005" Property="DEVENV_EXE_2005" ExeCommand="/setup" Execute="commit" />
-
+      
     <!-- Sequences -->
     <InstallExecuteSequence>
       <RemoveExistingProducts After="InstallValidate" />
       <!-- Runs during both install and uninstall -->
-      <Custom Action="CA_DevenvSetup2005" Before="InstallFinalize" />
+      <Custom Action='CA_DevenvSetup2005' Before='InstallFinalize'>RUNDEVENV</Custom>
     </InstallExecuteSequence>
+    
+  <!-- Custom actions -->
+    <CustomAction Id="CA_DevenvSetup2005" Property="DEVENV_EXE_2005" ExeCommand="/setup" Execute="commit" Return="asyncNoWait"></CustomAction>
 
     <InstallUISequence>
       <!-- Because we have a launch condition that uses the results of FindRelatedProducts, put it first. -->
