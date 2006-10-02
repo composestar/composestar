@@ -10,6 +10,10 @@ namespace Composestar.Repository
 
         void CloseContainer();
 
+        bool IsCached(String AFQN);
+
         IList<T> GetObjectQuery<T>(Predicate<T> match, String AFQN);
+
+        void StoreObject(Object o, String AFQN);
     }
 }
