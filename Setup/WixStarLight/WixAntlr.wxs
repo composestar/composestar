@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id="AntlrInst">    
+      <DirectoryRef Id ='Binaries'>
+        <Directory Id ='AntlrFolder' Name ='Antlr'>
+          <Component Id='Antlr' Guid ='DAB7BF41-1399-4090-8105-B1FAE72C7A7B'>
+            <File Id='antlrjar' Name='antlr.jar' LongName='antlr.jar' DiskId='1'
+                         Source='../../libraries/Antlr/antlr.jar' Vital='yes'>
+            </File>          
+          </Component>
+        </Directory>
+      </DirectoryRef >    
+  </Fragment>
+</Wix>

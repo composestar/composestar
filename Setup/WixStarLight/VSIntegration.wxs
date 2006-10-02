@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include $(var.VariablesFile)?>
+  <Fragment Id="VSIntegrationInst">
+    <ComponentGroup Id="CompGroup_Integration">  
+      <ComponentRef Id="Comp_LanguageService" />
+      <ComponentRef Id="Comp_Project" />
+      <ComponentRef Id="Comp_SnippetsIndex" />
+      <ComponentRef Id="Comp_Snippets" />    
+      <ComponentRef Id="Comp_ProjectTemplates" />
+      <ComponentRef Id="Comp_ItemTemplates" />
+    </ComponentGroup>
+    <ComponentGroup Id="CompGroup_MSBuild">     
+      <ComponentRef Id="Comp_MSBuild" />      
+    </ComponentGroup>
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="SystemFolder" Name="System32" />
+
+      <Component Id="Comp_LanguageService" DiskId="1" Guid="$(var.Comp_LanguageService_Guid)">
+        <File Id="File_StarLight.LanguageServices.dll" Name="LANGSVC.DLL" LongName="Composestar.StarLight.VisualStudio.LanguageServices.dll" Source="$(var.IntegrationBinPath)\" />
+        <?include StarLight.LanguageService.generated.wxi ?>
+      </Component>
+
+      <Component Id="Comp_Project" DiskId="1" Guid="$(var.Comp_Project_Guid)">
+        <File Id="File_StarLightProject.dll" Name="PROJECT.DLL" LongName="Composestar.StarLight.VisualStudio.Project.dll" Source="$(var.IntegrationBinPath)\" />
+        <?include StarLightProject.generated.wxi ?>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="Dir_SnippetsIndex">
+      <Component Id="Comp_SnippetsIndex" DiskId="1" Guid="$(var.Comp_SnippetsIndex_Guid)">
+        <File Id="File_SnippetsIndex" Name="SNIPIDX.XML" LongName="SnippetsIndex.xml" Source="$(var.SnippetsSources)\" />
+
+        <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Languages\CodeExpansions\StarLight" Value="{076d4c2c-78a4-486d-84fa-1311212681de}" Type="string">
+          <Registry Name="DisplayName" Value="131" Type="string" />
+          <Registry Name="IndexPath" Value="[#File_SnippetsIndex]" Type="string" />
+          <Registry Name="LangStringId" Value="starlight" Type="string" />
+          <Registry Name="Package" Value="{a58025eb-8f26-4633-acb2-b990a691f36d}" Type="string" />
+          <Registry Name="ShowRoots" Value="0" Type="integer" />
+
+          <Registry Key="ForceCreateDirs" Name="Python" Value="[Dir_Snippets];%MyDocs%\Code Snippets\StarLight\My Code Snippets\" Type="string" />
+          <Registry Key="Paths" Name="StarLight" Value="[Dir_Snippets];%MyDocs%\Code Snippets\StarLight\My Code Snippets\" Type="string" />
+        </Registry>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="Dir_Snippets" FileSource="$(var.SnippetsSources)\Snippets\">
+      <Component Id="Comp_Snippets" DiskId="1" Guid="$(var.Comp_Snippets_Guid)">
+        <File Id="File_SnippetConcern" Name="CONCERN.SNP" LongName="concern.snippet" />        
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="Dir_ProjectTemplatesRoot">
+      <Directory Id="Dir_ProjectTemplates" Name="STARLGHT" LongName="StarLight" src="$(var.ProjectTemplatesZipPath)">
+        <Component Id="Comp_ProjectTemplates" DiskId="1" Guid="$(var.Comp_ProjectTemplates_Guid)">
+          <File Id="File_ClassLibrary.zip" Name="CLASSLIB.ZIP" LongName="ClassLibrary.zip" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <DirectoryRef Id="Dir_ItemTemplatesRoot">
+      <Directory Id="Dir_ItemTemplates" Name="IRONPY" LongName="StarLight" src="$(var.ItemTemplatesZipPath)">
+        <Component Id="Comp_ItemTemplates" DiskId="1" Guid="$(var.Comp_ItemTemplates_Guid)">
+          <File Id="File_Class.zip" Name="Concern.zip" />          
+          <File Id="File_Text.zip" Name="Text.zip" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+
+    <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="Dir_MSBuild" Name="MSBuild">
+        <Directory Id="Dir_MSBuildMS" Name="MSFT" LongName="Microsoft">
+          <Directory Id="Dir_MSBuildMSIronPython" Name="STARLGHT" LongName="StarLight">
+            <Directory Id="Dir_MSBuildStarLight10" Name="1.0">
+              <Component Id="Comp_MSBuild" DiskId="1" Guid="$(var.Comp_MSBuild_Guid)">
+                <File Id="File_Targets" Name="TARGETS" LongName="StarLight.targets" src="..\..\Source\VSIntegration\Target Files\StarLight\1.0\" />
+                <File Id="File_Tasks" Name="TASKS" LongName="Composestar.StarLight.MSBuild.Tasks.dll" src="$(var.IntegrationTasksPath)\" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+</Wix>
