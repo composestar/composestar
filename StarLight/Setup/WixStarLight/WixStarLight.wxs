@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='Windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='StarLight 1.0' Id='390B533D-4CFA-4ff3-A240-CC7BA2A49CE7'
+    Language='1031' Codepage='1252' Version='1.0.0' Manufacturer='University of Twente'>
+
+    <Package Id='78441E26-4E03-4d8d-80AA-865E5B06BE57' Keywords='Installer'
+      Description="ComposeStar StarLight Installer"
+      Comments='ComposeStar StarLight is a project of the University of Twente.' Manufacturer='University of Twente'
+      InstallerVersion='100' Languages='1031' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='StarLight.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="StarLight 1.0 Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='ComposeStar' Name='CmpseStr' LongName ='ComposeStar'>
+          <Directory Id='INSTALLDIR' Name='Strlght' LongName='Starlight 1.0'>
+
+            <Component Id='CoreFiles' Guid='8BAEEC8F-694C-42d4-A5C4-FBB18F5F4C36'>
+              <File Id='INCRECONFIG' Name='INCRcnfg.xml' LongName='INCREconfig.xml' DiskId='1'
+                Source='../../installed/INCREconfig.xml' Vital='yes'>               
+              </File>
+              <File Id='INCREcss' Name='INCRE.css' LongName='INCRE.css' DiskId='1'
+                Source='../../installed/INCRE.css' Vital='yes'>
+              </File>
+              <File Id='FILTHxml' Name='FILTH.xml' LongName='FILTH.xml' DiskId='1'
+                Source='../../installed/FILTH.xml' Vital='yes'>
+              </File>
+             
+            </Component>
+            <Directory Id ='binaries' Name ='Binaries'>
+              <Directory Id ='PrologFolder' Name ='Prolog'>
+                <Component Id='prolog' Guid ='B3EC7DA6-5E6A-4284-ACA8-3F6FAA6C3E59'>
+                  <File Id='connectorpro'  Name='cnnctor.pro' LongName='connector.pro' DiskId='1'
+                               Source='../../installed/binaries/prolog/connector.pro' Vital='yes'>
+                  </File>
+                  <File Id='libpro'  Name='lib.pro' LongName='lib.pro' DiskId='1'
+                              Source='../../installed/binaries/prolog/lib.pro' Vital='yes'>
+                  </File>
+                  <File Id='prologjar'  Name='prolog.jar' LongName='prolog.jar' DiskId='1'
+                              Source='../../installed/binaries/prolog/prolog.jar' Vital='yes'>
+                  </File>
+                </Component>
+
+
+              </Directory>
+              
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
+        <Directory Id="ProgramMenuDir" Name='StrLght1.0' LongName="StarLight 1.0" />
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <Feature Id='Complete' Title='StarLight 1.0' Description='The complete package.'
+      Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+      <Feature Id='CoreComponents' Title='Core Components' Description='The core components of the StarLight system.' Level='1'>
+        <ComponentRef Id='CoreFiles' />
+        <ComponentRef Id='prolog'/>
+      </Feature>
+  
+    </Feature>
+
+    <UIRef Id="WixUI_Mondo" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+ 
+  </Product>
+</Wix>
