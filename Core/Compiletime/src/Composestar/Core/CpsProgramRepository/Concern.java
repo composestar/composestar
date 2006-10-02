@@ -17,8 +17,8 @@ import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
  */
 public class Concern extends DeclaredRepositoryEntity
 {
-	public PlatformRepresentation platformRepr; // Used by INCRE
-	public Signature theSignature;
+	public PlatformRepresentation platformRepr;
+	public Signature signature;
 
 	/**
 	 * @modelguid {D3EFC8F1-94CE-4BD0-8994-9801CF5ED163}
@@ -29,8 +29,6 @@ public class Concern extends DeclaredRepositoryEntity
 	}
 
 	/**
-	 * @return Composestar.Core.CpsProgramRepository.PlatformRepresentation
-	 *
 	 * @roseuid 40237FEC009F
 	 */
 	public PlatformRepresentation getPlatformRepresentation() {
@@ -38,31 +36,27 @@ public class Concern extends DeclaredRepositoryEntity
 	}
 
 	/**
-	 * @param plat
 	 * @roseuid 40237FFF0300
 	 */
-	public void setPlatformRepresentation(PlatformRepresentation plat) {
-		platformRepr = plat;
+	public void setPlatformRepresentation(PlatformRepresentation pr) {
+		platformRepr = pr;
 	}
 
 	/**
-	 * @param sig
 	 * @roseuid 404C49F80196
 	 */
 	public void setSignature(Signature sig) {
-		theSignature = sig;
+		signature = sig;
 	}
 
 	/**
-	 * @return java.security.Signature
-	 *
 	 * @roseuid 404C4A31012A
 	 */
 	public Signature getSignature() {
-		return theSignature;
+		return signature;
 	}
 
-	public Object clone () throws CloneNotSupportedException
+	public Object clone() throws CloneNotSupportedException
 	{
 		Concern newObject;
 		newObject = (Concern)super.clone();
@@ -71,7 +65,7 @@ public class Concern extends DeclaredRepositoryEntity
 		// running clone. If you want newObject to have its own
 		// copy of data, you must clone this data yourself.
 
-		newObject.theSignature = null;
+		newObject.signature = null;
 		return newObject;
 	}
 }
