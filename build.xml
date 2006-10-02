@@ -32,6 +32,9 @@
 			<fileset dir="src">
 				<include name="**/*.class" />
 			</fileset>
+			<fileset dir="test">
+				<include name="**/*.class" />
+			</fileset>
 		</delete>
 	</target>
 	

@@ -1,6 +1,8 @@
 package Composestar.Utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class StringUtils
@@ -11,15 +13,16 @@ public class StringUtils
 	 */
 	public StringUtils() {}
 
-	public static String join(List parts, String glue)
+	public static String join(Collection parts, String glue)
 	{
-		int count = parts.size();
-		if (count == 0) return "";
+		if (parts.size() == 0) return "";
 
 		StringBuffer sb = new StringBuffer();
-		sb.append(parts.get(0));
-		for (int i = 1; i < count; i++)
-			sb.append(glue).append(parts.get(i));
+		Iterator it = parts.iterator();
+		
+		sb.append(it.next());
+		while (it.hasNext())
+			sb.append(glue).append(it.next());
 		
 		return sb.toString();
 	}

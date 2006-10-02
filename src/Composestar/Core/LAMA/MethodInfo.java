@@ -1,6 +1,7 @@
 package Composestar.Core.LAMA;
 
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
+import Composestar.Utils.StringUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -165,27 +166,16 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
         return true;
 	}
 	
-	/**
-	 * @return Composestar.Core.LAMA.Type
-	 * @roseuid 4050689303BD
-	 */
 	public Type parent() 
 	{
 		return Parent;     
 	}
 	
-	/**
-     * @param parent
-     */
     public void setParent(Type parent) 
     {
      	Parent = parent;     
     }
 	
-	/**
-	 * @return Composestar.Core.LAMA.Type
-	 * @roseuid 401B84CF020F
-	 */
 	public Type returnType() 
 	{
         if( ReturnType == null ) {
@@ -193,50 +183,42 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 			ReturnType = map.getType( ReturnTypeString );
         }
         return ReturnType;
-	} 
+	}
 	
-	/**
-     * @param type
-     */
     public void setReturnType(String type) 
     {
        ReturnTypeString = type;     
     }
-    
-    
-	
-	/**
-     * @return the returnTypeString
-     */
+    	
     public String getReturnTypeString(){
         return ReturnTypeString;
     }
+    
+    public String toString()
+    {
+    	String atts = StringUtils.join(getUnitAttributes(), " ");
+    	String params = StringUtils.join(Parameters, ", ");
+    	return atts + " " + ReturnTypeString + " " + Name + "(" + params + ")";
+    }
 
-    /** Stuff for LOLA **/
+    // Stuff for LOLA
 	
-	/* (non-Javadoc)
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitName()
-	 */
 	public String getUnitName()
     {
       return name();
     }
 	
-	/* (non-Javadoc)
-	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
-	 */
 	public String getUnitType()
     {
       return "Method";
     }
 	
-	/* (non-Javadoc)
-	 * @see Composestar.Core.LAMA.ProgramElement#hasAttribute(java.lang.String)
-	 */
 	public boolean hasUnitAttribute(String attribute)
     {
       return getUnitAttributes().contains(attribute);
     }
+	
+	// custom (de)serialization
 
 	/**
 	 * Custom deserialization of this object
@@ -283,8 +265,7 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	        if ( !thisPar.ParameterTypeString.equals( objPar.ParameterTypeString ) )
 	            return false;
 	    }
-	    
-	    
+	    	    
 	    return true;
 	}
 }
