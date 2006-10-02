@@ -1,5 +1,8 @@
 package Composestar.Core.Master.Config.XmlHandlers;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -9,9 +12,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Language;
 import Composestar.Core.Master.Config.Project;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class PlatformHandler extends DefaultHandler implements ContentHandler
 {
@@ -40,7 +40,7 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 					parser.setContentHandler( langhandler );
 					
 					// add language to projects
-					ArrayList projects = config.getProjects().getProjectsByLanguage(languagename);
+					List projects = config.getProjects().getProjectsByLanguage(languagename);
 					Iterator prjIter = projects.iterator();
 					while(prjIter.hasNext()){
 						//System.out.println("add lang "+lang.getName());
@@ -72,11 +72,9 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 
 	public void startDocument() 
 	{
- 
 	}
 
 	public void endDocument() 
-	{
-			
+	{	
 	}
 }
