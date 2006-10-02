@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id="GrooveInst">
+    <!--<DirectoryRef Id='INSTALLDIR' >-->
+      <DirectoryRef Id ='Binaries'>
+        <Directory Id ='GrooveFolder' Name ='Groove'>
+          <Component Id='Groove' Guid ='18268733-67A5-4140-9D90-2DE39BA44ACC'>
+            <File Id='castor0_9_5_2xmljar' Name='castor.jar' LongName='castor-0_9_5_2-xml.jar' DiskId='1'
+                         Source='../../libraries/groove/castor-0_9_5_2-xml.jar' Vital='yes'>
+            </File>
+            <File Id='groove1_2_0jar' Name='groove.jar' LongName='groove-1_2_0.jar' DiskId='1'
+                         Source='../../libraries/groove/groove-1_2_0.jar' Vital='yes'>
+            </File>
+            <File Id='jgraphjar' Name='jgraph.jar' LongName='jgraph.jar' DiskId='1'
+                         Source='../../libraries/groove/jgraph.jar' Vital='yes'>
+            </File>
+            <File Id='xerces2_6_0xercesImpljar' Name='xercesIm.jar' LongName='xerces-2_6_0-xercesImpl.jar' DiskId='1'
+                        Source='../../libraries/groove/xerces-2_6_0-xercesImpl.jar' Vital='yes'>
+            </File>
+            <File Id='xerces2_6_0xmlapisjar' Name='xercesxm.jar' LongName='xerces-2_6_0-xml-apis.jar' DiskId='1'
+                        Source='../../libraries/groove/xerces-2_6_0-xml-apis.jar' Vital='yes'>
+            </File>
+          </Component>
+        </Directory>
+      </DirectoryRef >
+    <!--</DirectoryRef>-->
+  </Fragment>
+</Wix>

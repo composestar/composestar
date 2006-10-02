@@ -7,8 +7,8 @@
     <ProjectGuid>{74788B39-49AB-4708-AD96-B5558AF48C7A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComposeStar.VisualStudio.LanguageServices</RootNamespace>
-    <AssemblyName>ComposeStar.VisualStudio.LanguageServices</AssemblyName>
+    <RootNamespace>Composestar.StarLight.VisualStudio.LanguageServices</RootNamespace>
+    <AssemblyName>Composestar.StarLight.VisualStudio.LanguageServices</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

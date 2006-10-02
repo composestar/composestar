@@ -18,10 +18,19 @@
     <IntermediateOutputPath>obj\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CoreElements.wxs" />
+    <Compile Include="VSIntegration.wxs" />
+    <Compile Include="WixAntlr.wxs" />
+    <Compile Include="WixDB4O.wxs" />
+    <Compile Include="WixGroove.wxs" />
+    <Compile Include="WixProlog.wxs" />
     <Compile Include="WixStarLight.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="license.rtf" />
+    <Content Include="StarLight.LanguageService.generated.wxi" />
+    <Content Include="StarLightProject.generated.wxi" />
+    <Content Include="Variables.wxi" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WixUI_en-us.wxl" />

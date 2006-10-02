@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id="PrologInst">
+     <DirectoryRef Id ='Binaries'>
+        <Directory Id ='PrologFolder' Name ='Prolog'>
+          <Component Id='Prolog' Guid ='B3EC7DA6-5E6A-4284-ACA8-3F6FAA6C3E59'>
+            <File Id='connectorpro' Name='cnnctor.pro' LongName='connector.pro' DiskId='1'
+                         Source='../../libraries/prolog/connector.pro' Vital='yes'>
+            </File>
+            <File Id='libpro'  Name='lib.pro' LongName='lib.pro' DiskId='1'
+                        Source='../../libraries/prolog/lib.pro' Vital='yes'>
+            </File>
+            <File Id='prologjar'  Name='prolog.jar' LongName='prolog.jar' DiskId='1'
+                        Source='../../libraries/prolog/prolog.jar' Vital='yes'>
+            </File>
+          </Component>
+        </Directory>
+      </DirectoryRef>
+  </Fragment>
+</Wix>

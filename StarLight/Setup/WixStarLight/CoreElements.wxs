@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+    <DirectoryRef Id='INSTALLDIR'>
+      <Component Id='CoreFiles' Guid='8BAEEC8F-694C-42d4-A5C4-FBB18F5F4C36'>
+        <File Id='INCRECONFIG' Name='INCRcnfg.xml' LongName='INCREconfig.xml' DiskId='1'
+          Source='../../installed/INCREconfig.xml' Vital='yes'>
+        </File>
+        <File Id='INCREcss' Name='INCRE.css' LongName='INCRE.css' DiskId='1'
+          Source='../../installed/INCRE.css' Vital='yes'>
+        </File>
+        <File Id='FILTHxml' Name='FILTH.xml' LongName='FILTH.xml' DiskId='1'
+          Source='../../installed/FILTH.xml' Vital='yes'>
+        </File>
+        <File Id='ComposeStarCore' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
+      </Component>
+      <Directory Id ='Binaries' Name ='Binaries' />
+      <Component Id='Registry' Guid ='0F390058-3D07-496a-8AA3-EF1DC4C64B13'>
+        <Registry Id='RegInstallDir' Root='HKLM' Key='Software\Composestar\StarLight' Name='StarLightInstallFolder'
+  Action='write' Type='string' Value='[INSTALLDIR]' />
+        <Registry Id='RegMainClass' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaMainClass'
+   Action='write' Type='string' Value='Composestar.DotNET.MASTER.StarLightMaster' />
+        <Registry Id='RegJavaOptions' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaOptions'
+   Action='write' Type='string'  />
+        <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaFolder'
+  Action='write' Type='string' Value='[JAVALOC]' />
+        <!--<Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
+  Action='write' Type='string' Value='C:\ComposeStar\Core\Compiletime\src;C:\ComposeStar\StarLight\Source\Compiletime\build;C:\ComposeStar\Core\Compiletime\binaries\antlr\antlr.jar;C:\ComposeStar\Core\Compiletime\binaries\prolog\prolog.jar;C:\ComposeStar\StarLight\libraries\db4o\db4o-5.5-java1.2.jar;C:\ComposeStar\Core\Compiletime\binaries\groove\groove-1_2_0.jar;C:\ComposeStar\Core\Compiletime\binaries\groove\castor-0_9_5_2-xml.jar;C:\ComposeStar\Core\Compiletime\binaries\groove\xerces-2_6_0-xml-apis.jar;C:\ComposeStar\Core\Compiletime\binaries\groove\xerces-2_6_0-xercesImpl.jar;C:\ComposeStar\Core\Compiletime\binaries\groove\jgraph.jar' />-->
+        <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
+  Action='write' Type='string' Value='[INSTALLDIR]ComposestarCore.jar;[INSTALLDIR]Starlight.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[Db4OFolder]db4o-5.5-java1.2.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
+      </Component>
+    </DirectoryRef>
+    
+	</Fragment>
+</Wix>

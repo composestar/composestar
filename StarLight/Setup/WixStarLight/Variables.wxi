@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Include>
+
+  <!-- GUIDs for the components -->
+  <?define Comp_LanguageService_Guid=1BADB221-321A-4f3b-8BA2-05812C87D0DC?>
+  <?define Comp_Project_Guid=ED32407E-181E-4d16-95C8-5A188067FA03?>
+  <?define Comp_ProjectTemplates_Guid=AFE8D70C-FE5C-4e1f-B0A6-CD0EF12E98D2?>
+  <?define Comp_ItemTemplates_Guid=560FABD4-398E-4ab7-A541-2D56F33A0B48?>
+  <?define Comp_MSBuild_Guid=1F225D31-3FC2-4893-8A0D-2AF0DEEC7CD2?>
+  <?define Comp_SnippetsIndex_Guid=1EE0BB66-5303-4043-9DBE-DC572C6FA669?>
+  <?define Comp_Snippets_Guid=925EFE13-5C9E-4f8d-AB3F-71DAE0DADA73?>
+
+  <!-- Token of the public key used to sign the assemblies -->
+  <?define PublicKeyToken=null?>
+
+  <!-- Relative path of the folder with the binaries -->
+  <?define IntegrationBinPath=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release?>
+  <?define IntegrationTasksPath=..\..\Source\VSIntegration\MSBuildTasks\bin\Debug?>
+  <?define SnippetsSources=..\..\Source\VSIntegration\VisualStudio.Project\bin\Release\CodeSnippets?>
+  <?define ProjectTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>
+  <?define ItemTemplatesZipPath=..\..\Source\VSIntegration\VisualStudio.Project\obj\Release?>
+</Include>
