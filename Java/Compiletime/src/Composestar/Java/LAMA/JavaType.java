@@ -211,9 +211,9 @@ public class JavaType extends Type {
       else if (argumentName.equals("ChildClasses"))
         return new UnitResult(childTypes);
       else if (argumentName.equals("ChildMethods"))
-        return new UnitResult(filterDeclaredHere(Methods));
+        return new UnitResult(filterDeclaredHere(this.m_methods));
       else if (argumentName.equals("ChildFields"))
-        return new UnitResult(filterDeclaredHere(Fields));
+        return new UnitResult(filterDeclaredHere(this.m_fields));
       else if (argumentName.equals("ParameterClass"))
         return new UnitResult(parameterTypes);
       else if (argumentName.equals("MethodReturnClass"))
@@ -243,7 +243,7 @@ public class JavaType extends Type {
       else if (argumentName.equals("ChildInterfaces"))
         return new UnitResult(childTypes);
       else if (argumentName.equals("ChildMethods"))
-        return new UnitResult(filterDeclaredHere(Methods));
+        return new UnitResult(filterDeclaredHere(this.m_methods));
       else if (argumentName.equals("ParameterInterface"))
         return new UnitResult(parameterTypes);
       else if (argumentName.equals("MethodReturnInterface"))
