@@ -19,8 +19,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
     /// <summary>
     /// This class implements language service that supplies syntax highlighting based on the CPS format.
     /// </summary>
-
-    // This attribute indicates that this managed type is visible to COM
+    /// This attribute indicates that this managed type is visible to COM
     [ComVisible(true)]
     [Guid(ComposeStarConstants.languageServiceGuidString)]
     class ComposeStarLangServ : LanguageService, IVsLanguageTextOps
@@ -51,7 +50,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
         public ComposeStarLangServ()
         {
-            specialSources = new Dictionary<IVsTextView, ComposeStarSource>();            
+            specialSources = new Dictionary<IVsTextView, ComposeStarSource>();
         }
 
         /// <summary>
@@ -62,55 +61,56 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         public override AuthoringScope ParseSource(ParseRequest request)
         {
             if (request == null)
-				throw new ArgumentNullException("request");
+                throw new ArgumentNullException("request");
 
-			Debug.Print(
-				"File '{0}' ParseSource at ({1}:{2}), reason {3}, timestamp {4}",
-				Path.GetFileName(request.FileName), request.Line, request.Col, request.Reason,
-				request.Timestamp);
+            Debug.Print(
+                "File '{0}' ParseSource at ({1}:{2}), reason {3}, timestamp {4}",
+                Path.GetFileName(request.FileName), request.Line, request.Col, request.Reason,
+                request.Timestamp);
 
-			switch (request.Reason)
-			{
-				case ParseReason.Check:        
+            switch (request.Reason)
+            {
+                case ParseReason.Check:
                     return Check(request);
-				case ParseReason.MemberSelect:
-				case ParseReason.CompleteWord: 	
+                case ParseReason.MemberSelect:
+                case ParseReason.MemberSelectAndHighlightBraces:
+                case ParseReason.CompleteWord:
                 case ParseReason.DisplayMemberList:
                     return GetCompleteWord(request);
-				case ParseReason.Goto:
-				case ParseReason.QuickInfo:    
+                case ParseReason.Goto:
+                case ParseReason.QuickInfo:
                     return GetMethodScope(request);
-				case ParseReason.MethodTip:    
+                case ParseReason.MethodTip:
                     return GetMethodTip(request);
-				case ParseReason.Autos:
-				case ParseReason.CodeSpan:			
-				case ParseReason.HighlightBraces:
-				case ParseReason.MatchBraces:
-				case ParseReason.None:
-				case ParseReason.MemberSelectAndHighlightBraces: 
-					Trace.WriteLine("Reason '" + request.Reason + "' not handled.");
-					break;
-			}
+                case ParseReason.Autos:
+                case ParseReason.CodeSpan:
+                case ParseReason.HighlightBraces:
+                case ParseReason.MatchBraces:
+                case ParseReason.None:
 
-			ComposeStarSource source;
+                    Trace.WriteLine("Reason '" + request.Reason + "' not handled.");
+                    break;
+            }
 
-			if (specialSources.TryGetValue(request.View, out source) && source.ScopeCreator != null)
-				return source.ScopeCreator(request);
+            ComposeStarSource source;
 
-			return GetDefaultScope(request);
+            if (specialSources.TryGetValue(request.View, out source) && source.ScopeCreator != null)
+                return source.ScopeCreator(request);
+
+            return GetDefaultScope(request);
 
         }
 
         private AuthoringScope Check(ParseRequest request)
-		{
+        {
             TextSpan ts = new TextSpan();
-            ts.iStartLine  = request.Line;
+            ts.iStartLine = request.Line;
             ts.iEndLine = request.Line;
             ts.iStartIndex = request.Col;
             ts.iEndIndex = ts.iStartIndex + request.Text.Length;
-  
-            request.Sink.AddError(  request.FileName,
-                            request.Reason.ToString(), ts, Severity.Hint);  
+
+            request.Sink.AddError(request.FileName,
+                            request.Reason.ToString(), ts, Severity.Hint);
 
             //ProjectInfo projectInfo = ProjectInfo.FindProject(request.FileName);
 
@@ -158,29 +158,29 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             //    projectInfo.Engine.ProcessMessages = false;
             //}
 
-			return GetDefaultScope(request);
-		}
+            return GetDefaultScope(request);
+        }
 
         private AuthoringScope GetMethodScope(ParseRequest request)
-		{
-			string text;
+        {
+            string text;
 
-			int res = request.View.GetTextStream(
-				request.Line, request.Col, request.Line, request.Col + 1, out text);
+            int res = request.View.GetTextStream(
+                request.Line, request.Col, request.Line, request.Col + 1, out text);
 
-			if (res != VSConstants.S_OK || text.Length == 0 || text[0] == ' ' || text[0] == '\t')
-				return null;
+            if (res != VSConstants.S_OK || text.Length == 0 || text[0] == ' ' || text[0] == '\t')
+                return null;
 
             //ProjectInfo projectInfo = GetProjectInfo(request);
 
             //if (projectInfo == null)
             //    return null;
-            
-			return new ComposeStarScope( this, request.Sink);
-		}
+
+            return new ComposeStarScope(this, request.Sink);
+        }
 
         private AuthoringScope GetCompleteWord(ParseRequest request)
-		{
+        {
             //try
             //{
             //    ProjectInfo projectInfo = GetProjectInfo(request);
@@ -200,13 +200,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             //    Trace.WriteLine(ex);
             //}
 
-			return GetDefaultScope(request);
-		}
-               
+            return GetDefaultScope(request);
+        }
+
         private AuthoringScope GetMethodTip(ParseRequest request)
-		{
+        {
             //ProjectInfo projectInfo = GetProjectInfo(request);
-            
+
             //if (projectInfo == null)
             //    return null;
 
@@ -242,32 +242,32 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             //        request.Sink, methods);
             //}
 
-			return GetDefaultScope(request);
-		}
+            return GetDefaultScope(request);
+        }
 
         private string GetCodeRegion(ParseRequest request, int startLine, int startCol, int endLine, int endCol)
-		{
-			string region;
+        {
+            string region;
 
-			if (request.View.GetTextStream(
-					startLine - 1,
-					startCol  - 1,
-					endLine   - 1,
-					endCol    - 1,
-					out region
-				) == VSConstants.S_OK)
-			{
-				return region;
-			}
+            if (request.View.GetTextStream(
+                    startLine - 1,
+                    startCol - 1,
+                    endLine - 1,
+                    endCol - 1,
+                    out region
+                ) == VSConstants.S_OK)
+            {
+                return region;
+            }
 
-			return "";
-		}
+            return "";
+        }
 
-		private AuthoringScope GetDefaultScope(ParseRequest request)
-		{
-			
-			return new ComposeStarScope(this, request.Sink);
-		}
+        private AuthoringScope GetDefaultScope(ParseRequest request)
+        {
+
+            return new ComposeStarScope(this, request.Sink);
+        }
 
         /// <summary>
         /// Language name property.
@@ -304,8 +304,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                 // Create new LanguagePreferences instance
                 preferences = new LanguagePreferences(this.Site, typeof(ComposeStarLangServ).GUID, "ComposeStar Language Service");
                 preferences.InsertTabs = false;
-     
-                preferences.Init();  
+
+                preferences.Init();
             }
 
             return preferences;
@@ -332,7 +332,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             return il;
         }
 
-         public override string GetFormatFilterList()
+        public override string GetFormatFilterList()
         {
             return Resources.ComposeStarFormatFilter;
         }
@@ -394,7 +394,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2122")]
         private void GetSnippets()
         {
-         
+
             if (null == this.expansionsList)
             {
                 this.expansionsList = new List<VsExpansion>();
@@ -437,7 +437,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                 }
 
                 // Dispose the scanner.
-                if (null != scanner) {
+                if (null != scanner)
+                {
                     scanner.Dispose();
                     scanner = null;
                 }
@@ -480,23 +481,27 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        int IVsLanguageTextOps.Format(IVsTextLayer pTextLayer, TextSpan[] ptsSel) {
+        int IVsLanguageTextOps.Format(IVsTextLayer pTextLayer, TextSpan[] ptsSel)
+        {
             return VSConstants.E_NOTIMPL;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        int IVsLanguageTextOps.GetDataTip(IVsTextLayer pTextLayer, TextSpan[] ptsSel, TextSpan[] ptsTip, out string pbstrText) {
+        int IVsLanguageTextOps.GetDataTip(IVsTextLayer pTextLayer, TextSpan[] ptsSel, TextSpan[] ptsTip, out string pbstrText)
+        {
             pbstrText = string.Empty;
             return VSConstants.E_NOTIMPL;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        int IVsLanguageTextOps.GetPairExtent(IVsTextLayer pTextLayer, TextAddress ta, TextSpan[] pts) {
+        int IVsLanguageTextOps.GetPairExtent(IVsTextLayer pTextLayer, TextAddress ta, TextSpan[] pts)
+        {
             return VSConstants.E_NOTIMPL;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
-        int IVsLanguageTextOps.GetWordExtent(IVsTextLayer pTextLayer, TextAddress ta, WORDEXTFLAGS flags, TextSpan[] pts) {
+        int IVsLanguageTextOps.GetWordExtent(IVsTextLayer pTextLayer, TextAddress ta, WORDEXTFLAGS flags, TextSpan[] pts)
+        {
             return VSConstants.E_NOTIMPL;
         }
     }

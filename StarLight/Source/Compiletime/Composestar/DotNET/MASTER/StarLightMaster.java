@@ -119,6 +119,14 @@ public class StarLightMaster extends Master  {
     	// Set the debugmode
     	Debug.setMode(repository.GetCommonConfiguration().get_CompiletimeDebugLevel());  	
 	    
+		// Apache XML driver is moved to a different package in Java 5
+		if (System.getProperty("java.version").substring(0, 3).equals("1.5")) {
+			System.setProperty("org.xml.sax.driver","com.sun.org.apache.xerces.internal.parsers.SAXParser");			
+		}
+		else {
+			System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");			
+		}  
+    	
 	    // Create the repository
 	    DataStore ds = DataStore.instance();
 	    

@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices
 {
-	public class CpsLexerOld
+	public class CpsLexer
 	{
 		private char[] m_source;
 		private int m_pos;
@@ -13,7 +13,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
 		private IDictionary<String,TokenKind> m_keywords;
 
-		public CpsLexerOld(String source, int offset)
+		public CpsLexer(String source, int offset)
 		{
 			int length = source.Length - offset;
 			m_source = source.ToCharArray(offset, length);
@@ -115,6 +115,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                 result.Kind = TokenKind.RightParenthesis;
             else if (TryRead(","))
                 result.Kind = TokenKind.Comma;
+            else if (TryRead("."))
+                result.Kind = TokenKind.Dot;
             else
 				Advance();
 
@@ -127,8 +129,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			switch (ch1)
 			{
 				case '&':
-				case ':':
-				case '.':
+				case ':':				
 				case '#':
 				case '(':
 				case '[':
@@ -188,7 +189,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
 			return ReadBlockCommentEnd();
 		}
-
+        
 		private TokenKind ReadBlockCommentEnd()
 		{
 			while (!EOF())
@@ -354,6 +355,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         ConditionOperator,
         LeftParenthesis,
         RightParenthesis,
-        Comma
+        Comma,
+        Dot,
 	}
 }
