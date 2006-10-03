@@ -1,0 +1,269 @@
+<!-- INCRE configuration for .NET 2.0 -->
+<modules>
+	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
+		<dependencies>
+			<dependency type="FILE" name="cpsfile">
+			<path>
+				<node type="FIELD" nodevalue="fileName"></node>
+			</path>
+			</dependency>
+		</dependencies>
+	</module>
+	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" enabled="true" incremental="false" summary="Extracting embedded sources...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="true" incremental="false" summary="Generating dummy sources...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
+		<dependencies>
+			<dependency type="FILE" name="assembly"></dependency>
+		</dependencies>	
+		<dependency type="OBJECT" name="previousinput">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevInput"></node>
+			</path>
+		</dependency>	
+		<dependency type="FILE" name="previousassemblies">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevAssemblies"></node>
+			</path>
+		</dependency>
+		<dependency type="FILE" name="externalassemblies" isAdded="false">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.externalAssemblies"></node>
+			</path>
+		</dependency>
+	</module>
+	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
+		<dependencies></dependencies>		
+	</module>
+	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" enabled="true" incremental="false" summary="Collecting attributes...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
+		<dependencies></dependencies>
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.PrimitiveConcern">
+				<field name="platformRepr"></field>
+			</type>
+			<type fullname="Composestar.Core.LAMA.UnitResult">
+				<field name="multiRes"></field>
+				<field name="singleRes"></field>
+			</type>
+		</comparisons>		
+	</module>
+	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" enabled="true" incremental="false" summary="Checking repository...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="SANE" fulltype="Composestar.Core.SANE.SANE" enabled="true" incremental="false" summary="Resolving superimpositions...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="FILTH" fulltype="Composestar.Core.FILTH.FILTH" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Determining order of filter modules at shared join points...">
+		<dependencies>
+			<dependency type="FILE" name="specfile">
+				<path>
+					<node type="CONFIG" nodevalue="FILTH_INPUT"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="fmodules">
+				<path>
+					<node type="DYNAMIC" nodevalue="superImpInfo"></node>
+					<node type="FIELD" nodevalue="theFmSIinfo"></node>
+				</path>
+			</dependency>	
+		</dependencies>	
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="FIRE" fulltype="Composestar.Core.FIRE2.preprocessing.Preprocessor" enabled="true" incremental="false" summary="FIRE Preprocessing...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="PACMAN" fulltype="Composestar.DotNET.PACMAN.PACMAN" enabled="true" incremental="false" summary="Generating partial types...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="ASTRA" fulltype="Composestar.DotNET.ASTRA.ASTRA" enabled="true" incremental="false" summary="Transforming signatures...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="Composestar.Core.Master.Config.Source" enabled="true" incremental="true" summary="Compiling all sources...">
+		<dependencies>
+			<dependency type="FILE" name="source">
+				<path>
+					<node type="FIELD" nodevalue="fileName"></node>
+				</path>
+			</dependency>
+			<dependency type="FILE" name="xternals">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.externalSources"></node>
+				</path>
+			</dependency>
+			<dependency type="FILE" name="CompileLibsDependencies">
+				<path>
+					<node type="CONFIG" nodevalue="Dependencies"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="fullsignatures">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.fullSignatures"></node>
+				</path>
+			</dependency>
+		</dependencies>
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.Signature">
+				<field name="methodByKey"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
+				<field name="RelationType"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="CONE-IS" fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" enabled="true" incremental="false" summary="Generating weave specification file...">
+		<dependencies></dependencies>	
+	</module>	
+	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
+		<dependencies>
+			<dependencies>
+				<dependency type="FILE" name="assembly" isAdded="false"></dependency>
+			</dependencies>
+			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
+				<path>
+					<node type="CONFIG" nodevalue="ApplicationStart"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="RunDebugLevel" store="true" lookup="true">
+				<path>
+					<node type="CONFIG" nodevalue="RunDebugLevel"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="ConcernsWithFMO">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getConcernsWithFMO"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="CastingInterceptions">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.castingInterceptions"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="InstantiationClasses">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getAfterInstantiationClasses"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="ConcernsWithOutputFilters">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getConcernsWithOutputFilters"></node>
+				</path>
+			</dependency>
+		</dependencies>	
+	</module>
+	<module name="SEMTEX" fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" phase="two" enabled="true" incremental="true" summary="Collecting semantic information...">
+		<dependencies>
+			<dependency type="FILE" name="assembly"></dependency>
+		</dependencies>		
+	</module>
+	<module name="SEMTEXCollector" fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexCollector" phase="two" enabled="true" incremental="true" summary="Importing semantic information...">
+		<dependencies>
+			<dependency type="FILE" name="assembly"></dependency>
+		</dependencies>		
+	</module>
+	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+		<dependencies>
+			<dependency type="FILE" name="SECRETConfigFile" isAdded="false">
+				<path>
+					<node type="CONFIG" nodevalue="SECRETConfigFile"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
+				<path>
+					<node type="CONFIG" nodevalue="SECRETMode"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="semantics" store="true" lookup="true">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.Core.CKRET.SECRET.getSemanticAnnotations"></node>
+				</path>
+			</dependency>
+			<dependency type="OBJECT" name="filtermoduleorders">
+				<path>
+					<node type="DYNAMIC" nodevalue="FilterModuleOrders"></node>
+				</path>		
+			</dependency>
+		</dependencies>	
+		<comparisons>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference">
+				<field name="name"></field>
+				<field name="ref"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule">
+				<field name="inputFilters"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter">
+				<field name="filterElements"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement">
+				<field name="conditionPart"></field>
+				<field name="matchingPatterns"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral">
+				<path>
+					<method name="getCondition"></method>
+					<method name="getRef"></method>
+					<method name="getQualifiedName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or">
+				<field name="left"></field>
+				<field name="right"></field>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart">
+				<path>
+					<method name="getTarget"></method>
+					<method name="getName"></method>
+				</path>
+				<path>
+					<method name="getSelector"></method>
+					<method name="getName"></method>
+				</path>
+			</type>
+			<type fullname="Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector">
+				<field name="typeList"></field>
+			</type>
+			<type fullname="Composestar.DotNET.LAMA.DotNETAttribute">
+				<field name="value"></field>
+				<field name="target"></field>
+			</type>
+			<type fullname="Composestar.DotNET.LAMA.DotNETMethodInfo">
+				<field name="Name"></field>
+			</type>
+		</comparisons>
+	</module>
+	<module name="CONE-XML" fulltype="Composestar.DotNET.CONE.DotNETRepositorySerializer" enabled="true" incremental="false" summary="Serializing repository...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="BACO" fulltype="Composestar.DotNET.BACO.DotNETBACO" enabled="true" incremental="false" summary="Copying libraries...">
+		<dependencies></dependencies>	
+	</module>
+</modules>
