@@ -20,6 +20,8 @@ namespace Composestar.Repository.Db4oContainers
 
                 Db4o.Configure().ObjectClass(typeof(MethodElement)).CascadeOnUpdate(true);
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.Block)).CascadeOnActivate(true);
+                Db4o.Configure().ObjectClass( typeof( Composestar.Repository.LanguageModel.Inlining.Switch ) ).CascadeOnActivate( true );
+                Db4o.Configure().ObjectClass( typeof( Composestar.Repository.LanguageModel.Inlining.While ) ).CascadeOnActivate( true );
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.FilterAction)).CascadeOnActivate(true);
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.LinkedList)).CascadeOnActivate(true);
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.LinkedListEntry)).CascadeOnActivate(true);

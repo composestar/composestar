@@ -61,6 +61,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find method named &apos;{0}(JoinpointContext)&apos; in type &apos;{1}&apos;.
+        /// </summary>
+        internal static string AdviceMethodNotFound {
+            get {
+                return ResourceManager.GetString("AdviceMethodNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The assembly is not open..
         /// </summary>
         internal static string AssemblyNotOpen {
