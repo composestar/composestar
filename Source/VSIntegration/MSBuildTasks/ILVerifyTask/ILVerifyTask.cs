@@ -115,9 +115,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         while (!p.StandardOutput.EndOfStream)
                         {
                             ParseOutput(p.StandardOutput.ReadLine(), filename);
-                        }
-                        //Log.LogErrorFromResources("VerifyFailure", filename);
-                        return false;
+                        }                        
                     }
 
                 }
