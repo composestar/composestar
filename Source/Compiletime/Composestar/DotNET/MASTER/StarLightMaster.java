@@ -19,6 +19,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Modules;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -139,7 +140,7 @@ public class StarLightMaster extends Master  {
         Configuration.instance().addProperty( "Platform", "dotnet" );
         
         // Set FILTH input file
-        Composestar.Core.Master.Config.Module filthSettings = new Composestar.Core.Master.Config.Module();
+        Composestar.Core.Master.Config.ModuleSettings filthSettings = new Composestar.Core.Master.Config.ModuleSettings();
         filthSettings.setName("FILTH");
         filthSettings.addProperty("input", repository.GetCommonConfiguration().get_FILTHSpecification());
         Configuration.instance().getModuleSettings().addModule("FILTH", filthSettings);
@@ -159,17 +160,16 @@ public class StarLightMaster extends Master  {
 			DataStore.instance();
 
 			Debug.out(Debug.MODE_DEBUG, MODULENAME, "Reading configuration");
-			
-			Projects projects = new Projects();
+						
 			Composestar.Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess();
 			Iterator concernIterator =repository.GetConcernInformation().iterator();
 			while (concernIterator.hasNext()) {
 				Composestar.Repository.Configuration.ConcernInformation ci = (Composestar.Repository.Configuration.ConcernInformation)concernIterator.next();
 				ConcernSource concern = new ConcernSource();
 				concern.setFileName(ci.getFullFilename());
-				projects.addConcernSource(concern);
+				Configuration.instance().getProjects().addConcernSource(concern);				
 			}			
-			Configuration.instance().setProjects(projects);
+			
             PathSettings path = Configuration.instance().getPathSettings();		
 			
 			// Initialize INCRE
