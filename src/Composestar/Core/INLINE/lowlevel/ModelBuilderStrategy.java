@@ -97,6 +97,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     private int currentLabelId;
 
 
+    /**
+     * Indicates that the next jump to end should be ignored (for error action).
+     * FIXME replace this with conceptual change in FIRE
+     */
+    private boolean noJumpEnd;
+    
+    
     public ModelBuilderStrategy( ModelBuilder builder ){
         this.builder = builder;
         this.methodTable = new Hashtable(); 
@@ -130,7 +137,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         labelTable = new Hashtable();
         currentLabelId = -1;
         
-        nextReturnActionId = 1;
+        nextReturnActionId = 0;
         onReturnInstructions = new Switch( new ContextExpression(ContextExpression.RETRIEVE_ACTION) );
         returnLabel = new Label( 9997 );
 
@@ -272,6 +279,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         Label label;
         if ( labelId == -1 ){
             label = returnLabel;
+            
+            if ( noJumpEnd ){
+            	noJumpEnd = false;
+            	return;
+            }
         }
         else if( labelId != currentLabelId + 1 ){
             label = getLabel( labelId );
@@ -312,6 +324,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             instruction = new FilterAction( FlowChartNames.ERROR_ACTION_NODE, state.getMessage() );
             empty = false;
             currentBlock.addInstruction( instruction );
+            noJumpEnd = true;
         }
         else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
             instruction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
