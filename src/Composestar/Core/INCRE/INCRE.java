@@ -34,6 +34,7 @@ import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
 import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
@@ -51,11 +52,12 @@ import Composestar.Utils.StringUtils;
  */
 public class INCRE implements CTCommonModule 
 {    
-	private static INCRE Instance = null;
+	private static INCRE s_instance = null;
 	
-	private DataStore currentRepository;
-	public DataStore history;
 	private boolean enabled = false;
+	private DataStore currentRepository;
+
+	public DataStore history;
 	public boolean searchingHistory = false;
 	
 	private String historyfile = "";
@@ -64,7 +66,7 @@ public class INCRE implements CTCommonModule
 	private ConfigManager configmanager = null;
 	private INCREReporter reporter;
 	
-	/* for optimalization purposes */
+	// for optimalization purposes
 	public INCREConfigurations configurations;
 	private HashMap filesCheckedOnTimeStamp;
 	private HashMap filesCheckedOnProjectConfig;
@@ -92,17 +94,18 @@ public class INCRE implements CTCommonModule
 	
 	public static INCRE instance()
 	{
-		if (Instance == null) 
-		{
-			Instance = new INCRE();
-		}
-		return (Instance);
+		if (s_instance == null) 
+			s_instance = new INCRE();
+
+		return s_instance;
 	} 
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
 		Configuration config = Configuration.instance();
-		this.historyfile = config.getPathSettings().getPath("Base") + "history.dat";
+		PathSettings ps = config.getPathSettings();
+		
+		this.historyfile = ps.getPath("Base") + "history.dat";
 
 		// check if incremental compilation is enabled
 		Module ms = config.getModuleSettings().getModule("INCRE");
@@ -158,7 +161,7 @@ public class INCRE implements CTCommonModule
 		}
 
 		if (this.enabled)
-		{	
+		{
 			// load data of previous compilation run (history)
 			// time the loading process
 			INCRETimer loadhistory = this.getReporter().openProcess("INCRE","Loading history",INCRETimer.TYPE_OVERHEAD);	
@@ -229,7 +232,7 @@ public class INCRE implements CTCommonModule
 			Concern c = (Concern)iterConcerns.next();
 			if ( c.getDynObject("SingleOrder") != null){
 				concerns.add(c);	
-			}	
+			}
 		}
 		
 		if(searchingHistory)
@@ -822,8 +825,6 @@ public class INCRE implements CTCommonModule
 	
    /**
     * Loads the history repository specified by the filename. Uses objectinputstream.
-    * @param filename
-    * @roseuid 4209F748036B
     */
    public boolean loadHistory(String filename) throws ModuleException
    {
@@ -833,45 +834,39 @@ public class INCRE implements CTCommonModule
 		   BufferedInputStream bis = new BufferedInputStream(fis);
 		   ObjectInputStream ois = new ObjectInputStream(bis);
 		   history = new DataStore();
-		   
+
 		   // read last compilation date
 		   this.lastCompTime = (Date)ois.readObject();
 		   Debug.out(Debug.MODE_INFORMATION, "INCRE","Loading history ("+lastCompTime.toString()+") ...");	
 
 		   // read project configurations
 		   configurations.historyconfig = (Configuration)ois.readObject();
-		   
+
 		   int numberofobjects = ois.readInt();	
-		   for(int i=0;i<numberofobjects;i++)
+		   for (int i = 0; i < numberofobjects; i++)
 		   {
-			   try 
-			   {
-				    history.addObject(ois.readObject());
+			   try  {
+				   history.addObject(ois.readObject());
 			   }
-			   catch(EOFException ex){
-					Debug.out(Debug.MODE_WARNING, "INCRE",ex.toString());
-					return false;
+			   catch(EOFException ex) {
+				   Debug.out(Debug.MODE_WARNING, "INCRE",ex.toString());
+				   return false;
 			   }	
 		   }
 
 		   ois.close();
-		   return true; /* successfully loaded history */
-			
+		   return true; // successfully loaded history
 	   }
-	   catch(StackOverflowError ex)
-	   {
-		   throw new ModuleException("Need more stack size to load history: "+ex.toString(),"INCRE");
+	   catch (FileNotFoundException fne) {
+		   Debug.out(Debug.MODE_DEBUG, "INCRE","Cannot find history thus INCRE is not ");
+		   return false;
 	   }
-	   catch(FileNotFoundException fne){
-	   		Debug.out(Debug.MODE_DEBUG, "INCRE","Cannot find history thus INCRE is not ");
-	   		return false;
-	   }
-	   catch(Exception ex){
+	   catch (Exception ex) {
 		   Debug.out(Debug.MODE_WARNING, "INCRE","Failed to load history: "+ex.toString());
-		  return false;
+		   return false;
 	   }
    }
-   
+
    /**
     * Stores the current repository to a specified file. Uses objectoutputstream.
     * @roseuid 4209F75B0186
@@ -894,8 +889,7 @@ public class INCRE implements CTCommonModule
 	   		return;
 	   }
 		
-	   try
-	   {
+	   try {
 		   FileOutputStream fos = new FileOutputStream(this.historyfile);
 		   BufferedOutputStream bos = new BufferedOutputStream(fos);
 		   ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -925,12 +919,7 @@ public class INCRE implements CTCommonModule
 		   Debug.out(Debug.MODE_DEBUG, "INCRE",stored+" objects have been stored");
 		   oos.close();
        }
-	   catch(StackOverflowError ex)
-	   {
-	   		throw new ModuleException("Need more stack size to store history: "+ex.toString(),"INCRE");
-	   }
-	   catch(Exception e)
-	   {
+	   catch (Exception e) {
 	   		throw new ModuleException("Error occured while creating history: "+e.toString(),"INCRE");
 	   }
    }
