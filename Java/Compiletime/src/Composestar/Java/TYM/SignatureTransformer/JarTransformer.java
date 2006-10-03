@@ -207,17 +207,26 @@ public class JarTransformer {
 		     }
 		 }
 		 
-		 if (success) {
+		 if (success) 
+		 {
 			 File origFile = new File(jarFile);
 		     origFile.delete();
 		     success = tempJar.renameTo(origFile);
-		     if(!success) {
-		       	 //Debug.out(Debug.MODE_DEBUG,"SITRA","Renaming jar not successfull (jarfile: "+jarFile+")");
-		    	 
-		    	 //fix copy temp file and delete temp file
-		    	 FileUtils.copyFile(jarFile, tempJar.getAbsolutePath());
-		    	 tempJar.delete();
-		    }
+		     if(!success) 
+		     {
+		       	Debug.out(Debug.MODE_DEBUG,"SITRA","Renaming jar not successfull (jarfile: "+jarFile+")");
+		    	//fix copy temp file and delete temp file
+		       	try 
+		       	{
+					Debug.out(Debug.MODE_DEBUG,"SITRA","Copying '" + jarFile + "' to '" + tempJar.getAbsolutePath() + "'");
+					FileUtils.copyFile(jarFile, tempJar.getAbsolutePath());
+					tempJar.delete();
+		       	}
+		       	catch(IOException e) 
+		       	{
+		       	  	Debug.out(Debug.MODE_WARNING,"SITRA","Unable to copy '" + jarFile + "' to '" + tempJar.getAbsolutePath() + "': " + e.getMessage());
+		       	}
+		     }
 		 }
 	}
 	

@@ -20,7 +20,7 @@ public class JavaSignatureTransformer implements SignatureTransformer {
 		if( signaturesmodified ) { //process only if signatures are modified
 			
 			//Iterate over dummy jarfiles
-			ArrayList dummies = Configuration.instance().getProjects().getCompiledDummies();
+			ArrayList dummies = (ArrayList)Configuration.instance().getProjects().getCompiledDummies();
 			Iterator dumIt = dummies.iterator();
 			while(dumIt.hasNext()) 
 			{
