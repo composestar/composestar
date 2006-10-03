@@ -21,7 +21,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.ModuleSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -79,7 +79,7 @@ public class SECRET implements CTCommonModule {
 		// fetch the secret runmode
 		try
 		{
-			Module module = Configuration.instance().getModuleSettings().getModule("SECRET");
+			ModuleSettings module = Configuration.instance().getModuleSettings().getModule("SECRET");
 			int mode = Integer.parseInt(module.getProperty("mode"));
 			if( mode < 3 && mode > -1 )
 			{

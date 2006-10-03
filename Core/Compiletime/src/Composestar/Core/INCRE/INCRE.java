@@ -32,7 +32,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.ModuleSettings;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -54,6 +54,7 @@ public class INCRE implements CTCommonModule
 	private static INCRE s_instance = null;
 	
 	private boolean enabled = false;
+	private Configuration config;
 	private DataStore currentRepository;
 
 	public DataStore history;
@@ -81,6 +82,7 @@ public class INCRE implements CTCommonModule
 	
 	public INCRE()
 	{
+		config = Configuration.instance();
 		reporter = new INCREReporter();
 		reporter.open();
 		filesCheckedOnTimeStamp = new HashMap();
@@ -101,13 +103,12 @@ public class INCRE implements CTCommonModule
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
-		Configuration config = Configuration.instance();
 		PathSettings ps = config.getPathSettings();
 		
 		this.historyfile = ps.getPath("Base") + "history.dat";
 
 		// check if incremental compilation is enabled
-		Module ms = config.getModuleSettings().getModule("INCRE");
+		ModuleSettings ms = config.getModuleSettings("INCRE");
 		if (ms != null)
 		{
 			String enabled = ms.getProperty("enabled");
@@ -122,34 +123,12 @@ public class INCRE implements CTCommonModule
 		// time this initialization process	
 		INCRETimer increinit = this.getReporter().openProcess("INCRE","",INCRETimer.TYPE_ALL);
 
-		// set configmanager to read xml configuration file
-		configmanager = new ConfigManager(resources);
-		String configfile = config.getPathSettings().getPath("Base") + "INCREconfig.xml";
-		File file = new File(configfile);
-		if (!file.exists() || !file.canRead())
-			configfile = config.getPathSettings().getPath("Composestar") + "INCREconfig.xml";
-
-		// parse the XML configuration file containing the modules 
-		// time the parsing process
-		INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);
-		try {
-			configmanager.parseXML(configfile);
-		}
-		catch (Exception e) {
-			throw new ModuleException("Error parsing configuration file: " + e.getMessage(),"INCRE");
-		}
-		finally {
-			increparse.stop();
-		}
+		// parse the XML configuration file containing the modules
+		String configFile = getConfigFile();
+		loadConfiguration(configFile);
 
 		// get the filenames of all sources
-		List sourceFilenames = new ArrayList();
-		Iterator sourceItr = config.getProjects().getSources().iterator();
-		while (sourceItr.hasNext())
-		{
-			Source s = (Source)sourceItr.next();
-			sourceFilenames.add(s.getFileName());
-		}
+		List sourceFilenames = getSourceFilenames();
 		this.projectSources = StringUtils.join(sourceFilenames, ",");
 
 		if (this.enabled)
@@ -170,7 +149,61 @@ public class INCRE implements CTCommonModule
 		increinit.stop(); // stop timing INCRE's initialization 
 
 		// INCRE enabled or not? 
-		Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE enabled state is " + this.enabled);
+		Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE is " + (this.enabled ? "enabled" : "disabled"));
+	}
+	
+	private String getModuleSetting(String key, String def)
+	{
+		ModuleSettings ms = config.getModuleSettings("INCRE");
+		return (ms == null ? def : ms.getProperty(key, def));
+	}
+	
+	private String getConfigFile() throws ModuleException
+	{
+		PathSettings ps = config.getPathSettings();
+		
+		String projectBase = ps.getPath("Base");
+		String cps = ps.getPath("Composestar");
+		String filename = getModuleSetting("config", "INCREconfig.XML");
+
+		File file = new File(projectBase, filename);
+		if (file.exists())
+			return file.getAbsolutePath();
+		
+		file = new File(cps, filename);
+		if (file.exists())
+			return file.getAbsolutePath();
+		
+		throw new ModuleException("No configuration file found with name " + filename,"INCRE");
+	}
+
+	private void loadConfiguration(String configfile) throws ModuleException
+	{
+		INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);
+		try {
+			configmanager = new ConfigManager();
+			configmanager.parseXML(configfile);
+		}
+		catch (Exception e) {
+			throw new ModuleException("Error parsing configuration file: " + e.getMessage(),"INCRE");
+		}
+		finally {
+			increparse.stop();
+		}
+	}
+	
+	private List getSourceFilenames()
+	{
+		List result = new ArrayList();
+
+		Iterator sourceIt = config.getProjects().getSources().iterator();
+		while (sourceIt.hasNext())
+		{
+			Source s = (Source)sourceIt.next();
+			result.add(s.getFileName());
+		}
+		
+		return result;
 	}
 	
 	/**
@@ -518,18 +551,13 @@ public class INCRE implements CTCommonModule
 	}
    /**
     * @return true when module is incremental
-    * @roseuid 41EE335602EE
     */
 	public boolean isModuleInc(String name)
 	{
-		if(enabled){
-			if(configmanager.getModuleByID(name)!=null){
-				Composestar.Core.INCRE.Module m = configmanager.getModuleByID(name);
-				return m.isIncremental();
-			}
-		}
+		if (! enabled) return false;
 		
-		return false;
+		Module m = configmanager.getModuleByID(name);
+		return (m == null ? false : m.isIncremental());
 	}
    
 	/**
@@ -851,25 +879,22 @@ public class INCRE implements CTCommonModule
 
 	/**
 	 * Stores the current repository to a specified file. Uses objectoutputstream.
-	 * @roseuid 4209F75B0186
 	 */
 	public void storeHistory() throws ModuleException
 	{
 		Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
 
 		DataStore ds = DataStore.instance();
-
-
 		Configuration config = Configuration.instance();
-		String incre_enabled = "";
-		Module m = config.getModuleSettings().getModule("INCRE");
-		if(m!=null){
-			incre_enabled = m.getProperty("enabled");
+		
+		ModuleSettings m = config.getModuleSettings("INCRE");
+		if (m != null) {
+			//incre_enabled = m.getProperty("enabled");
 		}
 
-		if (!"True".equalsIgnoreCase(incre_enabled)) {
+		String incre_enabled = "false";
+		if (!"true".equalsIgnoreCase(incre_enabled))
 			return;
-		}
 
 		try {
 			FileOutputStream fos = new FileOutputStream(this.historyfile);

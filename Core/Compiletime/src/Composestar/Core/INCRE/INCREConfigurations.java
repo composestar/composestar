@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.ModuleSettings;
 
 /**
  * @author Dennis
@@ -35,7 +35,7 @@ public class INCREConfigurations {
 	{
 		/* SECRETMode */
 		if(config.getModuleSettings().getModule("SECRET")!=null){
-			Module m = config.getModuleSettings().getModule("SECRET");
+			ModuleSettings m = config.getModuleSettings().getModule("SECRET");
 			if(m.getProperty("mode")!=null)
 				props.put("SECRETMode",m.getProperty("mode"));
 			else
@@ -44,7 +44,7 @@ public class INCREConfigurations {
 		
 		/* FILTH_INPUT */
 		if(config.getModuleSettings().getModule("FILTH")!=null){
-			Module m = config.getModuleSettings().getModule("FILTH");
+			ModuleSettings m = config.getModuleSettings().getModule("FILTH");
 			if(m.getProperty("input")!=null)
 				props.put("FILTH_INPUT",m.getProperty("input"));
 			else

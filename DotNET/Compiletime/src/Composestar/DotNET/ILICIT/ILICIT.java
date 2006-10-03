@@ -31,7 +31,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.ModuleSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Utils.CommandLineExecutor;
@@ -80,7 +80,7 @@ public class ILICIT implements WEAVER
 			cmdList.add("/nologo");
 
 			// verify libraries?
-			Module m = config.getModuleSettings().getModule("ILICIT");
+			ModuleSettings m = config.getModuleSettings().getModule("ILICIT");
 			if (m != null) {
 				String v = m.getProperty("verifyAssemblies");
 				if ("True".equalsIgnoreCase(v))
