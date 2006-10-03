@@ -7,7 +7,9 @@ import java.io.ObjectOutputStream;
 public abstract class ParameterInfo extends ProgramElement
 {
 	public String ParameterTypeString;
+
 	private Type ParameterType;
+
 	public String Name;
 
 	public MethodInfo Parent;
@@ -21,41 +23,49 @@ public abstract class ParameterInfo extends ProgramElement
 	 * @return java.lang.String
 	 * @roseuid 401B84CF021C
 	 */
-	public String name() 
+	public String name()
 	{
-		return Name;     
+		return Name;
 	}
 
 	/**
 	 * @param name
 	 * @roseuid 402A072800EE
 	 */
-	public void setName(String name) {
-		Name = name;     
+	public void setName(String name)
+	{
+		Name = name;
 	}
-
 
 	/**
 	 * @return Composestar.Core.LAMA.Type
 	 * @roseuid 401B84CF021D
 	 */
-	public Type parameterType() 
+	public Type parameterType()
 	{
-		if( ParameterType == null ) 
+		if (ParameterType == null)
 		{
 			TypeMap map = TypeMap.instance();
-			ParameterType = map.getType( ParameterTypeString );
+			ParameterType = map.getType(ParameterTypeString);
 		}
-		return ParameterType;     
+		return ParameterType;
+	}
+
+	/**
+	 * @return the parameterTypeString
+	 */
+	public String getParameterTypeString()
+	{
+		return ParameterTypeString;
 	}
 
 	/**
 	 * @param paramType
 	 * @roseuid 402A0736033D
 	 */
-	public void setParameterType(String paramType) 
+	public void setParameterType(String paramType)
 	{
-		ParameterTypeString = paramType;     
+		ParameterTypeString = paramType;
 	}
 
 	/**
@@ -99,11 +109,11 @@ public abstract class ParameterInfo extends ProgramElement
 	/**
 	 * Custom deserialization of this object
 	 */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		Name = in.readUTF();
 		ParameterTypeString = in.readUTF();
-		Parent = (MethodInfo)in.readObject();
+		Parent = (MethodInfo) in.readObject();
 	}
 
 	/**
