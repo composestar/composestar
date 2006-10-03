@@ -1,6 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 import java.util.Dictionary;
@@ -12,13 +12,13 @@ import java.util.Dictionary;
  * [http://www.fsf.org/copyleft/lgpl.html]
  * $Id$
  */
-public class ConditionLiteralRuntime extends ConditionExpressionRuntime implements Interpretable 
+public class ConditionVariableRuntime extends ConditionExpressionRuntime implements Interpretable 
 {
     
     /**
      * @roseuid 40DD5DD7022B
      */
-    public ConditionLiteralRuntime() {
+    public ConditionVariableRuntime() {
      
     }
     
@@ -29,7 +29,7 @@ public class ConditionLiteralRuntime extends ConditionExpressionRuntime implemen
      * @roseuid 40DD968201C7
      */
     public boolean interpret(MessageList m, Dictionary context) {
-    	ConditionLiteral cl = (ConditionLiteral)this.getReference();
+    	ConditionVariable cl = (ConditionVariable)this.getReference();
     	//We don't need the full name as the filtermodule has this info already
 		String conditionname = cl.getCondition().getName();
     	ConditionResolver cr = (ConditionResolver) context.get("ConditionResolver");

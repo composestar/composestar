@@ -13,7 +13,7 @@ import java.util.Dictionary;
  * [http://www.fsf.org/copyleft/lgpl.html]
  * $Id$
  */
-public class TrueRuntime extends ConditionExpressionRuntime implements Interpretable 
+public class TrueRuntime extends CondLiteralRuntime implements Interpretable 
 {
     
     /**

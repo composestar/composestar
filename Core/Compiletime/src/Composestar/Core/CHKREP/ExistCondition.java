@@ -96,15 +96,15 @@ public class ExistCondition implements BaseChecker {
 		// standard non fatal
 		boolean nonFatal = true;
 		
-		if(ce instanceof ConditionLiteral){
-			ConditionLiteral cl = (ConditionLiteral) ce;
+		if(ce instanceof ConditionVariable){
+			ConditionVariable cl = (ConditionVariable) ce;
 			String conditionName = cl.getCondition().getName();
 			if(conditionName.equals("True")||conditionName.equals("False")||conditionName.equals("true")||conditionName.equals("false")){
 				// do nothing since it is a Compose* keyword
 			}else{
 				if(!doesConditionExists(conditionName, fm))
 				{
-					ConditionLiteral tempCe = (ConditionLiteral)ce;
+					ConditionVariable tempCe = (ConditionVariable)ce;
 					Debug.out(Debug.MODE_ERROR, "CHKREP", "Condition " + conditionName + " is not declared in Conditions", tempCe.getDescriptionFileName(), tempCe.getDescriptionLineNumber());
 					nonFatal = false;
 				}

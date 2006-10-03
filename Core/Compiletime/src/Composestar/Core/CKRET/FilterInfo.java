@@ -10,7 +10,7 @@ import java.util.Vector;
 import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
@@ -60,7 +60,7 @@ public class FilterInfo {
     	}
     	else if(cond_part.isLiteral()) // Only name so get it!
     	{
-    		ConditionLiteral cl = (ConditionLiteral)cond_part;
+    		ConditionVariable cl = (ConditionVariable)cond_part;
     		String conditionname = cl.getCondition().getRef().getQualifiedName();
     		if(increase)
     		{

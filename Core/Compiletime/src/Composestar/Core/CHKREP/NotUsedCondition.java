@@ -89,8 +89,8 @@ public class NotUsedCondition implements BaseChecker {
 		/*If it is a Literal then there is a condition name, match this 
 		* with the Condition name and voila
 		*/
-		if(ce instanceof ConditionLiteral){
-			ConditionLiteral cl = (ConditionLiteral) ce;
+		if(ce instanceof ConditionVariable){
+			ConditionVariable cl = (ConditionVariable) ce;
 			if(cl.getCondition().getName().equals(c.getName())){
 				used = true;
 			}

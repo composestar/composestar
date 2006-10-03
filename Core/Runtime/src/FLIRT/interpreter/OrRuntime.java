@@ -11,11 +11,8 @@ import java.util.Dictionary;
  * [http://www.fsf.org/copyleft/lgpl.html]
  * $Id$
  */
-public class OrRuntime extends ConditionExpressionRuntime implements Interpretable 
+public class OrRuntime extends BinaryOperatorRuntime implements Interpretable 
 {
-    public ConditionExpressionRuntime left;
-    public ConditionExpressionRuntime right;
-    
     /**
      * @roseuid 40DDD436038B
      */
@@ -29,17 +26,17 @@ public class OrRuntime extends ConditionExpressionRuntime implements Interpretab
      * @roseuid 40DD5DD7025D
      */
     public OrRuntime(ConditionExpressionRuntime left, ConditionExpressionRuntime right) {
-    	this.left = left;
-    	this.right = right;     
+    	super(left, right);
     }
-    
-    /**
-     * @param m
-     * @param context
-     * @return boolean
-     * @roseuid 40DD967D00A7
-     */
-    public boolean interpret(MessageList m, Dictionary context) {
-    	return left.interpret(m,context) || right.interpret(m,context);     
-    }
+
+	/**
+	 * @param m
+	 * @param context
+	 * @return boolean
+	 * @roseuid 40DD96770077
+	 */
+	public boolean interpret(MessageList m, Dictionary context) 
+	{
+		return left.interpret(m,context) || right.interpret(m,context);     
+	}
 }

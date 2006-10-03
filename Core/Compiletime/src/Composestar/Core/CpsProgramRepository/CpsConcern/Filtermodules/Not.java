@@ -9,69 +9,15 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-
-public class Not extends ConditionExpression {
-
-  /**
-   * Unary operator
-   */
-  public ConditionExpression operand;
-
-
-  /**
-   * @roseuid 401FAA660353
-   */
-  public Not() {
-    super();
-  }
-
-
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpr
-   *         ession
-   *
-   * @roseuid 401FAA66035B
-   */
-  public ConditionExpression getOperand() {
-    return operand;
-  }
-
-
-  /**
-   * @param operandValue
-   * @roseuid 401FAA660365
-   */
-  public void setOperand(ConditionExpression operandValue) {
-    this.operand = operandValue;
-  }
-
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40ADDA04012E
-   */
-  public boolean isBinary() {
-    return (false);
-  }
-
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40ADDA13019E
-   */
-  public boolean isUnary() {
-    return (true);
-  }
-
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40ADDA1B0018
-   */
-  public boolean isLiteral() {
-    return (false);
-  }
+/**
+ * The Not operator
+ *
+ * @author Michiel Hendriks
+ */
+public class Not extends UnaryOperator
+{
+	public Not()
+	{
+		super();
+	}
 }

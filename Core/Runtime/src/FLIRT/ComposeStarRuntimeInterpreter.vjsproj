@@ -315,17 +315,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "interpreter\BinaryOperatorRuntime.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "interpreter\ConditionExpressionRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\ConditionLiteralRuntime.java"
+                    RelPath = "interpreter\ConditionResolver.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\ConditionResolver.java"
+                    RelPath = "interpreter\ConditionVariableRuntime.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "interpreter\CondLiteralRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -446,6 +456,11 @@
                 />
                 <File
                     RelPath = "interpreter\TrueRuntime.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "interpreter\UnaryOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

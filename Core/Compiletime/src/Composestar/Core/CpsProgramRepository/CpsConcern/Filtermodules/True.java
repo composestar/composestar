@@ -1,43 +1,18 @@
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-
-public class True extends ConditionExpression {
-
-  /**
-   * @roseuid 40ADEBCD0351
-   */
-  public True() {
-    super();
-  }
-
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40ADEBCD0352
-   */
-  public boolean isBinary() {
-    return (false);
-  }
-
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40ADEBCD035B
-   */
-  public boolean isUnary() {
-    return (false);
-  }
-
-
-  /**
-   * @return boolean
-   *
-   * @roseuid 40ADEBCD035C
-   */
-  public boolean isLiteral() {
-    return (false);
-  }
+public class True extends CondLiteral
+{
+	public True()
+	{
+		super();
+	}
 }

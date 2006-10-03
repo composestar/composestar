@@ -17,7 +17,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.DisableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
@@ -666,7 +666,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     final int FALSECASE = 2;
 
     int usewhat = NONCASE;
-    ConditionLiteral cl = null;
+    ConditionVariable cl = null;
     True true_ = null;
     False false_ = null;
     //special case if "true" or "false" are specified
@@ -677,11 +677,11 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       false_ = new False();
       usewhat = FALSECASE;
     } else {
-      cl = new ConditionLiteral();
+      cl = new ConditionVariable();
       split.splitFmElemReference(condname, true);
       cl.setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
       //added for FIRE
-      cl.setName((String) condname.lastElement());
+      //cl.setName((String) condname.lastElement()); //michielh: setName was obsolete
     }
 
     if (override != null) {               //we're adding under a not

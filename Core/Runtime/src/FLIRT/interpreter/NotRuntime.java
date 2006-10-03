@@ -11,10 +11,8 @@ import java.util.Dictionary;
  * [http://www.fsf.org/copyleft/lgpl.html]
  * $Id$
  */
-public class NotRuntime extends ConditionExpressionRuntime implements Interpretable 
-{
-    public ConditionExpressionRuntime operand;
-    
+public class NotRuntime extends UnaryOperatorRuntime implements Interpretable 
+{   
     /**
      * @roseuid 40DDD436033B
      */
@@ -27,7 +25,7 @@ public class NotRuntime extends ConditionExpressionRuntime implements Interpreta
      * @roseuid 40DD5DD702B7
      */
     public NotRuntime(ConditionExpressionRuntime operand) {
-    	this.operand = operand;     
+    	super(operand);
     }
     
     /**

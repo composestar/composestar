@@ -360,9 +360,9 @@ public class RepositoryLinker
 			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
-		else if(conditionExpression instanceof ConditionLiteral)
+		else if(conditionExpression instanceof ConditionVariable)
 		{
-			conditionExpressionRuntime = new ConditionLiteralRuntime();
+			conditionExpressionRuntime = new ConditionVariableRuntime();
 		}
 		else if(conditionExpression instanceof Not)
 		{
@@ -377,16 +377,20 @@ public class RepositoryLinker
 		{
 			conditionExpressionRuntime = new FalseRuntime();
 		}
-		else
+		else if(conditionExpression instanceof Or)
 		{
 			conditionExpressionRuntime = new OrRuntime();
 			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
 			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
 		}
+		else
+		{
+			//TODO: should produce an error
+			return;
+		}
 		
 		conditionExpressionRuntime.setReference(conditionExpression);
-		filterElementRuntime.conditionpart = conditionExpressionRuntime;
-
+		filterElementRuntime.conditionpart = conditionExpressionRuntime;	
 	}
 
 	private void linkLeft(ConditionExpression conditionExpression, AndRuntime andRuntime)
@@ -401,9 +405,9 @@ public class RepositoryLinker
 			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
-		else if(conditionExpression instanceof ConditionLiteral)
+		else if(conditionExpression instanceof ConditionVariable)
 		{
-			conditionExpressionRuntime = new ConditionLiteralRuntime();
+			conditionExpressionRuntime = new ConditionVariableRuntime();
 		}
 		else if(conditionExpression instanceof Not)
 		{
@@ -437,9 +441,9 @@ public class RepositoryLinker
 			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
-		else if(conditionExpression instanceof ConditionLiteral)
+		else if(conditionExpression instanceof ConditionVariable)
 		{
-			conditionExpressionRuntime = new ConditionLiteralRuntime();
+			conditionExpressionRuntime = new ConditionVariableRuntime();
 		}
 		else if(conditionExpression instanceof Not)
 		{
@@ -473,9 +477,9 @@ public class RepositoryLinker
 			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
-		else if(conditionExpression instanceof ConditionLiteral)
+		else if(conditionExpression instanceof ConditionVariable)
 		{
-			conditionExpressionRuntime = new ConditionLiteralRuntime();
+			conditionExpressionRuntime = new ConditionVariableRuntime();
 		}
 		else if(conditionExpression instanceof Not)
 		{
@@ -513,9 +517,9 @@ public class RepositoryLinker
 			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
-		else if(conditionExpression instanceof ConditionLiteral)
+		else if(conditionExpression instanceof ConditionVariable)
 		{
-			conditionExpressionRuntime = new ConditionLiteralRuntime();
+			conditionExpressionRuntime = new ConditionVariableRuntime();
 		}
 		else if(conditionExpression instanceof Not)
 		{
@@ -549,9 +553,9 @@ public class RepositoryLinker
 			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
-		else if(conditionExpression instanceof ConditionLiteral)
+		else if(conditionExpression instanceof ConditionVariable)
 		{
-			conditionExpressionRuntime = new ConditionLiteralRuntime();
+			conditionExpressionRuntime = new ConditionVariableRuntime();
 		}
 		else if(conditionExpression instanceof Not)
 		{
