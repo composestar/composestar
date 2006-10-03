@@ -113,5 +113,50 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
                 return ResourceManager.GetString("MasterRunFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not execute the PEVerify executable &apos;{0}&apos; because of access permission errors. IL verification will be skipped..
+        /// </summary>
+        internal static string PEVerifyExecutableAccessDenied {
+            get {
+                return ResourceManager.GetString("PEVerifyExecutableAccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The PEVerify executable &apos;{0}&apos; could not be found. Make sure you have installed the .NET SDK. IL verification will be skipped..
+        /// </summary>
+        internal static string PEVerifyExecutableNotFound {
+            get {
+                return ResourceManager.GetString("PEVerifyExecutableNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occured while executing PEVerify. The message is &apos;{0}&apos;..
+        /// </summary>
+        internal static string PEVerifyExecutionException {
+            get {
+                return ResourceManager.GetString("PEVerifyExecutionException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The generated IL in file &apos;{0}&apos; could not be verified as correct IL code..
+        /// </summary>
+        internal static string VerifyFailure {
+            get {
+                return ResourceManager.GetString("VerifyFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; has correct IL code..
+        /// </summary>
+        internal static string VerifySuccess {
+            get {
+                return ResourceManager.GetString("VerifySuccess", resourceCulture);
+            }
+        }
     }
 }

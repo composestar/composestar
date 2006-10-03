@@ -29,10 +29,12 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal enum ConfigurationPropertyPageTag
         {
             DebugLevel,
+            VerifyIL,
         }
         
         #region fields
         private DebugLevel debugLevel = DebugLevel.Information;
+        private bool verifyIL = true;
         #endregion
 
         /// <summary>
@@ -76,6 +78,9 @@ namespace Composestar.StarLight.VisualStudio.Project
                 { } //Should only fail if project file is corrupt
             }
 
+            bool verifyILTemp = false;
+            if (Boolean.TryParse(this.GetConfigProperty(ConfigurationPropertyPageTag.VerifyIL.ToString()), out verifyILTemp ))
+                verifyIL = verifyILTemp;
         }
 
         /// <summary>
@@ -91,6 +96,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             }
 
             SetConfigProperty(ConfigurationPropertyPageTag.DebugLevel.ToString(), ((int)this.debugLevel).ToString() );
+            SetConfigProperty(ConfigurationPropertyPageTag.VerifyIL.ToString(), verifyIL.ToString() );
 
             this.IsDirty = false;
 
@@ -111,7 +117,14 @@ namespace Composestar.StarLight.VisualStudio.Project
             set { this.debugLevel = value; this.IsDirty = true; }
         }
             
-
+        [SRCategoryAttribute(SR.Application)]
+        [LocDisplayName(SR.VerifyIL)]
+        [SRDescriptionAttribute(SR.VerifyILDescription)]
+        public bool VerifyIL
+        {
+            get { return this.verifyIL; }
+            set { this.verifyIL = value; this.IsDirty = true; }
+        }
        #endregion
 
     }

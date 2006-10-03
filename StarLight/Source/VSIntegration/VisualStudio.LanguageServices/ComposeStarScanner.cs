@@ -219,7 +219,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
             _prevToken  = null;
             m_lexer = new CpsLexer(new StringReader(source));
             m_lexer.setTabSize(4);
-            m_lexer.setLine(offset);
+           // m_lexer.setLine(offset);
         }
         #endregion
     }

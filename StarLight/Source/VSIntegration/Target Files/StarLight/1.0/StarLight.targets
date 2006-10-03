@@ -3,10 +3,10 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
 
   <!--Reference the assembly where our tasks are defined-->
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.XMLGeneratorTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.AnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
 
   <!--
     ============================================================
@@ -61,6 +61,7 @@
       ILAnalyzerRunner;
       MasterCaller;
       ILWeaverRunner;
+      ILVerifyRunner;
       IncrementalClean;
     </CoreWeaveDependsOn>
   </PropertyGroup>
@@ -181,6 +182,11 @@
     <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"  />
   </Target>
 
+  <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True'">
+    <Message Text ="Verifying generated IL code..." />
+    <ILVerifyTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />    
+  </Target>
+  
   <!--This is an override of targets-->
   <Target
      Name="CopyFilesToOutputDirectory"

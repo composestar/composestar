@@ -135,4 +135,19 @@
   <data name="MasterRunFailed" xml:space="preserve">
     <value>Master run failure reported by process. Exit code is {0}. Messages above this line might give an indication of the problem.</value>
   </data>
+  <data name="PEVerifyExecutableAccessDenied" xml:space="preserve">
+    <value>Could not execute the PEVerify executable '{0}' because of access permission errors. IL verification will be skipped.</value>
+  </data>
+  <data name="PEVerifyExecutableNotFound" xml:space="preserve">
+    <value>The PEVerify executable '{0}' could not be found. Make sure you have installed the .NET SDK. IL verification will be skipped.</value>
+  </data>
+  <data name="PEVerifyExecutionException" xml:space="preserve">
+    <value>An exception occured while executing PEVerify. The message is '{0}'.</value>
+  </data>
+  <data name="VerifySuccess" xml:space="preserve">
+    <value>File '{0}' has correct IL code.</value>
+  </data>
+  <data name="VerifyFailure" xml:space="preserve">
+    <value>The generated IL in file '{0}' could not be verified as correct IL code.</value>
+  </data>
 </root>
