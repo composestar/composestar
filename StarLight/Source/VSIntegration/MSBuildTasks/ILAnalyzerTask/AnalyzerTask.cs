@@ -129,12 +129,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
 
                 if (analyzer.UnresolvedTypes.Count > 0)
-                {
-                    Log.LogError("Unable to resolve {0} types, detailed overview below:", analyzer.UnresolvedTypes.Count);
+                {                    
                     foreach (String type in analyzer.UnresolvedTypes)
                     {
-                        Log.LogError("  {0}", type);
+                        Log.LogError("Cannot resolve type {0}", type);
                     }
+                    Log.LogError("Unable to resolve {0} types.", analyzer.UnresolvedTypes.Count);
                 }
             }
            

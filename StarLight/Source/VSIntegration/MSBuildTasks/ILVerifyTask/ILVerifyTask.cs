@@ -164,7 +164,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <param name="filename">The filename.</param>
         private void ParseOutput(String message, string filename)
         {
-            if (!message.Contains("Errors Verifying"))
+            if (!message.Contains("Errors Verifying") & !message.Contains("Error Verifying"))
             {
                 try
                 {
