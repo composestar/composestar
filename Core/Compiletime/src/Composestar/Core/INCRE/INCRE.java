@@ -2,7 +2,6 @@ package Composestar.Core.INCRE;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -132,33 +131,26 @@ public class INCRE implements CTCommonModule
 
 		// parse the XML configuration file containing the modules 
 		// time the parsing process
-		INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);			
+		INCRETimer increparse = this.getReporter().openProcess("INCRE","Parsing configuration file",INCRETimer.TYPE_OVERHEAD);
 		try {
 			configmanager.parseXML(configfile);
-
-			// get the filenames of all sources
-			List sourceFilenames = new ArrayList();
-			Iterator sourceItr = config.getProjects().getSources().iterator();
-			while (sourceItr.hasNext())
-			{
-				Source s = (Source)sourceItr.next();
-				sourceFilenames.add(s.getFileName());
-			}
-			this.projectSources = StringUtils.join(sourceFilenames, ",");
 		}
 		catch (Exception e) {
-			// parsing of configuration failed!
-			e.printStackTrace();
-
-			String error = e.getMessage();
-			if (error == null || "null".equals(error))
-				error = e.toString();
-
-			throw new ModuleException(error,"INCRE");
+			throw new ModuleException("Error parsing configuration file: " + e.getMessage(),"INCRE");
 		}
 		finally {
 			increparse.stop();
 		}
+
+		// get the filenames of all sources
+		List sourceFilenames = new ArrayList();
+		Iterator sourceItr = config.getProjects().getSources().iterator();
+		while (sourceItr.hasNext())
+		{
+			Source s = (Source)sourceItr.next();
+			sourceFilenames.add(s.getFileName());
+		}
+		this.projectSources = StringUtils.join(sourceFilenames, ",");
 
 		if (this.enabled)
 		{
@@ -180,7 +172,7 @@ public class INCRE implements CTCommonModule
 		// INCRE enabled or not? 
 		Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE enabled state is " + this.enabled);
 	}
-
+	
 	/**
 	 * Returns an instance of INCREReporter
 	 */
@@ -215,27 +207,29 @@ public class INCRE implements CTCommonModule
 	
 	public ArrayList getConcernsWithFMO()
 	{
-		if(searchingHistory){
+		if (searchingHistory)
+		{
 			// if set before, return it
-			if(historyConcernsWithFMO!=null)
+			if (historyConcernsWithFMO != null)
 				return historyConcernsWithFMO;
 		}
-		else {
+		else
+		{
 			// if set before, return it
-			if(currentConcernsWithFMO!=null)
+			if (currentConcernsWithFMO != null)
 				return currentConcernsWithFMO;
 		}
 		
 		ArrayList concerns = new ArrayList();
-		Iterator iterConcerns = currentRepository.getAllInstancesOf(Concern.class);
-		while ( iterConcerns.hasNext() ){
-			Concern c = (Concern)iterConcerns.next();
-			if ( c.getDynObject("SingleOrder") != null){
+		Iterator concernIt = currentRepository.getAllInstancesOf(Concern.class);
+		while (concernIt.hasNext())
+		{
+			Concern c = (Concern)concernIt.next();
+			if (c.getDynObject("SingleOrder") != null)
 				concerns.add(c);	
-			}
 		}
 		
-		if(searchingHistory)
+		if (searchingHistory)
 			historyConcernsWithFMO = concerns;
 		else 
 			currentConcernsWithFMO = concerns;
@@ -250,6 +244,7 @@ public class INCRE implements CTCommonModule
 		   		return s1.compareTo(s2); 
 		   	}
 		  });
+		
 		return concerns;
 	}
 	
@@ -684,80 +679,108 @@ public class INCRE implements CTCommonModule
 	   		return false;
 	   		 
 	   	Composestar.Core.INCRE.Module mod = configmanager.getModuleByID(modulename);
-		if(mod!=null)
-		{
-			// *** Little verification of input object ***
-			try 
-			{
-				if ( mod.getInput()==null || !Class.forName ( mod.getInput() ).isInstance ( input ) )
-					throw new ModuleException("Wrong input for module "+mod.getName()+". "+input.getClass()+" is not an instance of "+mod.getInput(),"INCRE");
-				}
-			catch(ClassNotFoundException cnfe)
-			{
-				throw new ModuleException("Could not find class "+mod.getInput(),"INCRE::isProcessedByModule");
-			}
+		if (mod == null)
+			throw new ModuleException("INCRE cannot find module "+modulename+ '!');
 
-			Iterator dependencies = mod.getDeps();
-			while(dependencies.hasNext())
+		// *** Little verification of input object ***
+		try 
+		{
+			if (mod.getInput() == null || !Class.forName(mod.getInput()).isInstance(input))
+				throw new ModuleException("Wrong input for module "+mod.getName()+". "+input.getClass()+" is not an instance of "+mod.getInput(),"INCRE");
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new ModuleException("Could not find class "+mod.getInput(),"INCRE::isProcessedByModule");
+		}
+
+		Iterator dependencies = mod.getDeps();
+		while (dependencies.hasNext())
+		{
+			currentRepository = DataStore.instance();
+			searchingHistory = false;
+			Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
+			try {
+				depofinputobject = dep.getDepObject(inputobject);
+			}
+			catch (Exception e){
+				Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+inputobject);
+				Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
+				return false;
+			}
+				
+			if (dep instanceof FileDependency)
 			{
-				currentRepository = DataStore.instance();
-				searchingHistory = false;
-				Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
-				try {
-					depofinputobject = dep.getDepObject(inputobject);
+				// check if file(s) have been modified
+				// stop process when a file has been modified
+				FileDependency fdep = (FileDependency)dep;
+				List files = (List)depofinputobject;
+				if(!files.isEmpty() && files.get(0).equals("EMPTY_CONFIG")){
+					// special case, file has not been configured
+					currentRepository = history;
+					searchingHistory = true;
+					List hfiles = (List)dep.getDepObject(inputobject);
+					if(!hfiles.get(0).equals("EMPTY_CONFIG")){
+						// configuration has been removed since last compilation run
+						Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
+						return false;
+					}
 				}
-				catch(Exception e){
-					Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+inputobject);
-					Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
-					return false;
-				}
-					
-				if(dep instanceof FileDependency)
-				{
-					/* check if file(s) have been modified
-					 stop process when a file has been modified */
-					FileDependency fdep = (FileDependency)dep;
-					ArrayList files = (ArrayList)depofinputobject;
-					if(!files.isEmpty() && files.get(0).equals("EMPTY_CONFIG")){
-						// special case, file has not been configured
-						currentRepository = history;
-						searchingHistory = true;
-						ArrayList hfiles = (ArrayList)dep.getDepObject(inputobject);
-						if(!hfiles.get(0).equals("EMPTY_CONFIG")){
-							// configuration has been removed since last compilation run
+				else {
+					// iterate over all files	
+					Iterator fileItr = files.iterator();
+					while (fileItr.hasNext())
+					{
+						String currentFile = (String)fileItr.next();
+						if (fdep.isAdded() && isFileAdded(currentFile,fdep)){
+							// check files for added to project or not
+							// optimalisation: certain files do not need this check
+							// can be configured in .xml file by isAdded=false
 							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
-							return false;
+							return false; // file added to project thus modified!
+						}
+						if (isFileModified(currentFile))
+						{							
+							overhead.stop();
+							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
+							return false;	
 						}
 					}
-					else {
-						// iterate over all files	
-						Iterator fileItr = files.iterator();
-						while(fileItr.hasNext())
-						{
-							String currentFile = (String)fileItr.next();
-							if(fdep.isAdded() && isFileAdded(currentFile,fdep)){
-								// check files for added to project or not
-								// optimalisation: certain files do not need this check
-								// can be configured in .xml file by isAdded=false
-								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
-								return false; // file added to project thus modified!
-							}
-							if(isFileModified(currentFile))
-							{							
-								overhead.stop();
-								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
-								return false;	
-							}
-						}
+				}
+			}
+			else 
+			{
+				if (dep.lookup && depofinputobject != null && comparator.comparisonMade(dep.getName()+depofinputobject.hashCode()))
+				{
+					// the dependency has been checked before
+					boolean modified = !comparator.getComparison(dep.getName()+depofinputobject.hashCode());
+					if (modified) {
+						overhead.stop();
+						Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
+						return false;
 					}
 				}
 				else 
 				{
-					if(dep.lookup && depofinputobject!=null && comparator.comparisonMade(dep.getName()+depofinputobject.hashCode()))
+					// find object in history
+					if (historyobject == null)
+						historyobject = findHistoryObject(inputobject);
+											
+					if (historyobject!=null)
 					{
-						// the dependency has been checked before
-						boolean modified = !comparator.getComparison(dep.getName()+depofinputobject.hashCode());
-						if(modified){
+						// get dependent object of the 'history' object
+						currentRepository = history;
+						searchingHistory = true;
+						depofhistoryobject = dep.getDepObject(historyobject);
+							
+						// compare both dependent objects for modification
+						boolean modified = !comparator.compare(depofinputobject,depofhistoryobject);
+							
+						// add the result to comparator's map
+						if (dep.store && depofinputobject!=null)
+							comparator.addComparison(dep.getName()+depofinputobject.hashCode(),!modified);
+				
+						// stop calculation when object has been modified
+						if (modified) {
 							overhead.stop();
 							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 							return false;
@@ -765,148 +788,107 @@ public class INCRE implements CTCommonModule
 					}
 					else 
 					{
-						// find object in history
-						if(historyobject==null)
-							historyobject = findHistoryObject(inputobject);
-												
-						if(historyobject!=null)
-						{
-							// get dependent object of the 'history' object
-							currentRepository = history;
-							searchingHistory = true;
-							depofhistoryobject = dep.getDepObject(historyobject);
-								
-							// compare both dependent objects for modification
-							boolean modified = !comparator.compare(depofinputobject,depofhistoryobject);
-								
-							// add the result to comparator's map
-							if(dep.store && depofinputobject!=null)
-								comparator.addComparison(dep.getName()+depofinputobject.hashCode(),!modified);
-					
-							// stop calculation when object has been modified
-							if(modified){
-								overhead.stop();
-								Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
-								return false;
-							}
-						}
-						else 
-						{
-							/* history of input object cannot be found 
-								thus input has not been processed */
-							overhead.stop();
-							Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
-							return false;
-						}
+						// history of input object cannot be found 
+						// so input has not been processed
+						overhead.stop();
+						Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
+						return false;
 					}
 				}
-			} // next dependency plz	
-		}
-		else 
-		{
-			throw (new ModuleException("INCRE cannot find module "+modulename+ '!'));
-		}
+			}
+		} // next dependency plz	
 
-		/* all dependencies have not been modified 
-			thus input has already been processed */
+		// no dependencies have been modified 
+		// so input has already been processed
 		overhead.stop();
 		
 		return true;
    }
    
-   public void deleteHistory()
-   {
-   	    File f = new File(this.historyfile);
-   	    if(f.exists()){
-   	   		f.delete();
-   	    }
-   }
-	
-	
-   /**
-    * Loads the history repository specified by the filename. Uses objectinputstream.
-    */
-   public boolean loadHistory(String filename) throws ModuleException
-   {
-	   try 
-	   {
-		   FileInputStream fis = new FileInputStream(filename);
-		   BufferedInputStream bis = new BufferedInputStream(fis);
-		   ObjectInputStream ois = new ObjectInputStream(bis);
-		   history = new DataStore();
+	public void deleteHistory()
+	{
+		File f = new File(this.historyfile);
+		if (f.exists()) f.delete();
+	}
 
-		   // read last compilation date
-		   this.lastCompTime = (Date)ois.readObject();
-		   Debug.out(Debug.MODE_INFORMATION, "INCRE","Loading history ("+lastCompTime.toString()+") ...");	
+	/**
+	 * Loads the history repository specified by the filename. Uses objectinputstream.
+	 */
+	public boolean loadHistory(String filename) throws ModuleException
+	{
+		try 
+		{
+			FileInputStream fis = new FileInputStream(filename);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			ObjectInputStream ois = new ObjectInputStream(bis);
+			history = new DataStore();
 
-		   // read project configurations
-		   configurations.historyconfig = (Configuration)ois.readObject();
+			// read last compilation date
+			this.lastCompTime = (Date)ois.readObject();
+			Debug.out(Debug.MODE_INFORMATION,"INCRE","Loading history ("+lastCompTime.toString()+")...");	
 
-		   int numberofobjects = ois.readInt();	
-		   for (int i = 0; i < numberofobjects; i++)
-		   {
-			   try  {
-				   history.addObject(ois.readObject());
-			   }
-			   catch(EOFException ex) {
-				   Debug.out(Debug.MODE_WARNING, "INCRE",ex.toString());
-				   return false;
-			   }	
-		   }
+			// read project configurations
+			configurations.historyconfig = (Configuration)ois.readObject();
 
-		   ois.close();
-		   return true; // successfully loaded history
-	   }
-	   catch (FileNotFoundException fne) {
-		   Debug.out(Debug.MODE_DEBUG, "INCRE","Cannot find history thus INCRE is not ");
-		   return false;
-	   }
-	   catch (Exception ex) {
-		   Debug.out(Debug.MODE_WARNING, "INCRE","Failed to load history: "+ex.toString());
-		   return false;
-	   }
-   }
+			int numberofobjects = ois.readInt();	
+			for (int i = 0; i < numberofobjects; i++)
+			{
+				history.addObject(ois.readObject());
+			}
 
-   /**
-    * Stores the current repository to a specified file. Uses objectoutputstream.
-    * @roseuid 4209F75B0186
-    */
-   public void storeHistory() throws ModuleException
-   {
-	   Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
-	   
-	   DataStore ds = DataStore.instance();
-	   
-	   
-	   Configuration config = Configuration.instance();
-	   String incre_enabled = "";
-   	   Module m = config.getModuleSettings().getModule("INCRE");
-   	   if(m!=null){
-   		   incre_enabled = m.getProperty("enabled");
-   	   }
-	   
-   	   if (!"True".equalsIgnoreCase(incre_enabled)) {
-	   		return;
-	   }
-		
-	   try {
-		   FileOutputStream fos = new FileOutputStream(this.historyfile);
-		   BufferedOutputStream bos = new BufferedOutputStream(fos);
-		   ObjectOutputStream oos = new ObjectOutputStream(bos);
-		   		   
-		   // write current date = last compilation date
-		   oos.writeObject(new Date());
-		  		   
-		   // write project configurations
-		   oos.writeObject(Configuration.instance());
-		   
-		   // collect the objects
-		   Object[] objects = ds.getAllObjects();
-		   oos.writeInt(objects.length-1);
-		   Debug.out(Debug.MODE_DEBUG, "INCRE",objects.length-1+" objects to store");
-		   int stored = 0;
-		   for(int k=1;k<objects.length;k++)
-		   {
+			ois.close();
+			return true; // successfully loaded history
+		}
+		catch (FileNotFoundException e) {
+			Debug.out(Debug.MODE_DEBUG, "INCRE","Cannot find history thus INCRE is not ");
+			return false;
+		}
+		catch (Exception e) {
+			Debug.out(Debug.MODE_WARNING, "INCRE","Failed to load history: " + e.getMessage());
+			return false;
+		}
+	}
+
+	/**
+	 * Stores the current repository to a specified file. Uses objectoutputstream.
+	 * @roseuid 4209F75B0186
+	 */
+	public void storeHistory() throws ModuleException
+	{
+		Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
+
+		DataStore ds = DataStore.instance();
+
+
+		Configuration config = Configuration.instance();
+		String incre_enabled = "";
+		Module m = config.getModuleSettings().getModule("INCRE");
+		if(m!=null){
+			incre_enabled = m.getProperty("enabled");
+		}
+
+		if (!"True".equalsIgnoreCase(incre_enabled)) {
+			return;
+		}
+
+		try {
+			FileOutputStream fos = new FileOutputStream(this.historyfile);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+
+			// write current date = last compilation date
+			oos.writeObject(new Date());
+
+			// write project configurations
+			oos.writeObject(Configuration.instance());
+
+			// collect the objects
+			Object[] objects = ds.getAllObjects();
+			oos.writeInt(objects.length-1);
+			Debug.out(Debug.MODE_DEBUG, "INCRE",objects.length-1+" objects to store");
+			int stored = 0;
+			for(int k=1;k<objects.length;k++)
+			{
 				// write objects
 				if(objects[k]!=null)
 				{
@@ -914,13 +896,13 @@ public class INCRE implements CTCommonModule
 					oos.flush();
 					stored++;
 				}
-		   }
+			}
 
-		   Debug.out(Debug.MODE_DEBUG, "INCRE",stored+" objects have been stored");
-		   oos.close();
-       }
-	   catch (Exception e) {
-	   		throw new ModuleException("Error occured while creating history: "+e.toString(),"INCRE");
-	   }
-   }
+			Debug.out(Debug.MODE_DEBUG, "INCRE",stored+" objects have been stored");
+			oos.close();
+		}
+		catch (Exception e) {
+			throw new ModuleException("Error occured while creating history: "+e.toString(),"INCRE");
+		}
+	}
 }
