@@ -9,7 +9,7 @@ public class Configuration implements Serializable
 
 	private Properties properties;
 	private Projects projects;
-	private ModuleSettings moduleSettings;
+	private Modules moduleSettings;
 	private PathSettings pathSettings;
 	private Platform platform;
 	private BuiltLibraries libraries;
@@ -19,7 +19,7 @@ public class Configuration implements Serializable
 	{
 		properties = new Properties();
 		projects = new Projects();
-		moduleSettings = new ModuleSettings();
+		moduleSettings = new Modules();
 		pathSettings = new PathSettings();
 		platform = new Platform();
 		libraries = new BuiltLibraries();
@@ -50,9 +50,14 @@ public class Configuration implements Serializable
 		return projects;
 	}
 
-	public ModuleSettings getModuleSettings()
+	public Modules getModuleSettings()
 	{
 		return moduleSettings;
+	}
+	
+	public ModuleSettings getModuleSettings(String module)
+	{
+		return moduleSettings.getModule(module);
 	}
 
 	public PathSettings getPathSettings()

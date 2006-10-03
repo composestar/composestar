@@ -7,7 +7,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Module;
+import Composestar.Core.Master.Config.ModuleSettings;
 
 public class ModulesHandler extends DefaultHandler implements ContentHandler
 {
@@ -27,7 +27,7 @@ public class ModulesHandler extends DefaultHandler implements ContentHandler
 			if(amap.getValue("name")!=null)
 			{
 				String name = amap.getValue("name");
-				Module m = new Module();
+				ModuleSettings m = new ModuleSettings();
 				m.setName(name);
 				for(int i=0;i<amap.getLength();i++){
 					String key = amap.getQName(i);

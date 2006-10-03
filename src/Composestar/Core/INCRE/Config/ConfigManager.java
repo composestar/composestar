@@ -6,7 +6,6 @@ import java.util.Map;
 import org.xml.sax.XMLReader;
 
 import Composestar.Core.INCRE.Module;
-import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.Debug;
 
 /**
@@ -14,7 +13,6 @@ import Composestar.Utils.Debug;
  */
 public class ConfigManager
 {
-	private CommonResources resources;
 	private INCREXMLParser xmlparser;
 	private XMLReader xmlreader;
 
@@ -25,9 +23,8 @@ public class ConfigManager
 	 */
 	public Map modules = new LinkedHashMap();
 
-	public ConfigManager(CommonResources resources)
+	public ConfigManager()
 	{
-		this.resources = resources;
 		this.xmlparser = new INCREXMLParser(this);
 		this.xmlreader = null;
 	}
@@ -37,7 +34,7 @@ public class ConfigManager
 		xmlreader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
 		xmlreader.setContentHandler(this.xmlparser);
 		
-		Debug.out(Debug.MODE_DEBUG, "INCRE", "Parsing configuration file...");
+		Debug.out(Debug.MODE_DEBUG, "INCRE", "Parsing configuration file '" + filename + "'...");
 		xmlreader.parse(filename);
 	}
 
@@ -59,11 +56,5 @@ public class ConfigManager
 	public Map getModules()
 	{
 		return this.modules;
-	}
-
-	// not used
-	public CommonResources getResources()
-	{
-		return resources;
 	}
 }
