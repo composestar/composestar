@@ -45,6 +45,11 @@ public class CstarTest extends Task
 	 * Number of failed tests
 	 */
 	protected int cntFail;
+	
+	/**
+	 * List of failed tests. Incleased with final exception.
+	 */
+	protected String failList;
 
 	public void setFailOnError(boolean failOnError)
 	{
@@ -66,6 +71,7 @@ public class CstarTest extends Task
 		cntTotal = 0;
 		cntSuccess = 0;
 		cntFail = 0;
+		failList = "";
 
 		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
 		{
@@ -84,7 +90,7 @@ public class CstarTest extends Task
 						+ (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
 		if (failOnError && (cntFail > 0))
 		{
-			throw new BuildException("" + cntFail + " test(s) failed.");
+			throw new BuildException("" + cntFail + " test(s) failed: "+failList);
 		}
 	}
 
@@ -144,6 +150,8 @@ public class CstarTest extends Task
 			else
 			{
 				getProject().log(this, "Testing of " + exec + " failed; " + e.getMessage(), Project.MSG_ERR);
+				if (failList.length() > 0) failList += "; ";
+				failList += exec;
 			}
 		}
 	}

@@ -88,6 +88,11 @@ public class CstarVsp extends Task
 	 * Number of failed builds
 	 */
 	protected int cntFail;
+	
+	/**
+	 * List of failed tests. Incleased with final exception.
+	 */
+	protected String failList;
 
 	public void setFailOnError(boolean failOnError)
 	{
@@ -134,6 +139,7 @@ public class CstarVsp extends Task
 		cntTotal = 0;
 		cntSuccess = 0;
 		cntFail = 0;
+		failList = "";
 
 		if (!Composestar.Ant.XsltUtils.setAntHelperEXE(antHelperPath))
 		{
@@ -165,7 +171,7 @@ public class CstarVsp extends Task
 		
 		if (failOnError && (cntFail > 0))
 		{
-			throw new BuildException("Compilation of " + cntFail + " project(s) failed.");
+			throw new BuildException("Compilation of " + cntFail + " project(s) failed: "+failList);
 		}
 	}
 
@@ -258,6 +264,8 @@ public class CstarVsp extends Task
 			{
 				getProject().log(this, "Compilation of project " + project + " failed; " + e.getMessage(),
 						Project.MSG_ERR);
+				if (failList.length() > 0) failList += "; ";
+				failList += project;
 			}
 		}
 	}
