@@ -14,7 +14,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
     internal class ComposeStarScanner : IScanner, IDisposable
     {
         private CpsLexer m_lexer;
-        private antlr.IToken _prevToken;
+        private Token _prevToken;
 
         public void Dispose()
         {
@@ -51,45 +51,43 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
         #region IScanner Members
 
-        private antlr.IToken ScanToken(ref int state)
+        private Token ScanToken(ref int state)
         {
             if (state == 123)
-                return m_lexer.nextToken(); //  .ContinueBlockComment();
+                return m_lexer.ContinueBlockComment();
             else
-                return m_lexer.nextToken();
+                return m_lexer.NextToken();
         }
 
         public bool ScanTokenAndProvideInfoAboutIt(TokenInfo tokenInfo, ref int state)
         {
             //	Debug.Print("ScanToken: kind={0} start={1} end={2} state={3}", token.Kind, token.Start, token.End, state);
-            tokenInfo.Trigger = TokenTriggers.None;
             tokenInfo.Type = TokenType.Unknown;
             tokenInfo.Color = TokenColor.Text;
 
-            antlr.IToken token;
+            Token token;
             try
             {
                 token = ScanToken(ref state);
             }
             catch (Exception ex)
-            {                
-                return true;
-            }            
-			
-            switch (token.Type)
             {
-                case CpsTokenTypes.EOF:
+                return true;
+            }
+
+            switch (token.Kind)
+            {
+                case TokenKind.EndOfFile:
                     return false;
 
-                case CpsTokenTypes.WS:
+                case TokenKind.Whitespace:
                     tokenInfo.Type = TokenType.WhiteSpace;
                     tokenInfo.Color = TokenColor.Text;
 
                     if (_prevToken != null)
-                        switch (_prevToken.Type)
+                        switch (_prevToken.Kind)
                         {
-                            case CpsTokenTypes.PROLOG_EXPRESSION:
-                            case CpsTokenTypes.PROLOG_SUB_EXPRESSION:
+                            case TokenKind.PrologExpression:
                                 tokenInfo.Trigger = TokenTriggers.MemberSelect;
                                 break;
                         }
@@ -97,103 +95,76 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
                     break;
 
                 // Comment
-                case CpsTokenTypes.COMMENT:
+                case TokenKind.LineComment:
                     tokenInfo.Type = TokenType.LineComment;
                     tokenInfo.Color = TokenColor.Comment;
                     break;
 
-                case CpsTokenTypes.COMMENTITEMS:
+                case TokenKind.BlockComment:
                     tokenInfo.Type = TokenType.Comment;
                     tokenInfo.Color = TokenColor.Comment;
                     state = 0;
                     break;
 
+                case TokenKind.IncompleteComment:
+                    tokenInfo.Type = TokenType.Comment;
+                    tokenInfo.Color = TokenColor.Comment;
+                    state = 123;
+                    break;
+
                 // Operators
-                case CpsTokenTypes.AND:
-                case CpsTokenTypes.ANDEXPR_:
-                case CpsTokenTypes.ANNOT_:
-                case CpsTokenTypes.ANNOTELEM_:
-                case CpsTokenTypes.ANNOTSET_:
-                case CpsTokenTypes.OR:
-                case CpsTokenTypes.OREXPR_:
+                case TokenKind.Operator:
                     tokenInfo.Type = TokenType.Operator;
                     tokenInfo.Color = TokenColor.String;
                     break;
 
                 // Indentifiers
-                case CpsTokenTypes.NAME:
-                case CpsTokenTypes.FILENAME:
-                case CpsTokenTypes.PARAMETER_NAME:                    
+                case TokenKind.FileName:
+                case TokenKind.FilterType:
+                case TokenKind.Identifier:
                     tokenInfo.Type = TokenType.Identifier;
                     tokenInfo.Color = TokenColor.Identifier;
                     break;
 
                 // Keywords
-                case CpsTokenTypes.LITERAL_annotations:
-                case CpsTokenTypes.LITERAL_as:
-                case CpsTokenTypes.LITERAL_by:
-                case CpsTokenTypes.LITERAL_concern:
-                case CpsTokenTypes.LITERAL_conditions:
-                case CpsTokenTypes.LITERAL_constraints:
-                case CpsTokenTypes.LITERAL_externals:
-                case CpsTokenTypes.LITERAL_filtermodule:
-                case CpsTokenTypes.LITERAL_filtermodules:
-                case CpsTokenTypes.LITERAL_implementation:
-                case CpsTokenTypes.LITERAL_in:
-                case CpsTokenTypes.LITERAL_inputfilters:
-                case CpsTokenTypes.LITERAL_internals:
-                case CpsTokenTypes.LITERAL_outputfilters:
-                case CpsTokenTypes.LITERAL_pre:
-                case CpsTokenTypes.LITERAL_prehard:
-                case CpsTokenTypes.LITERAL_presoft:
-                case CpsTokenTypes.LITERAL_selectors:
-                case CpsTokenTypes.LITERAL_superimposition:
+                case TokenKind.Keyword:
                     tokenInfo.Type = TokenType.Keyword;
                     tokenInfo.Color = TokenColor.Keyword;
                     tokenInfo.Trigger = TokenTriggers.MethodTip;
                     break;
 
-                // String
-                case CpsTokenTypes.LETTER:
-                    tokenInfo.Type = TokenType.String;
-                    tokenInfo.Color = TokenColor.String;
-                    break;
-                case CpsTokenTypes.DIGIT:
+                case TokenKind.Number:
                     tokenInfo.Type = TokenType.String;
                     tokenInfo.Color = TokenColor.Number;
                     break;
 
 
-                case CpsTokenTypes.PROLOG_EXPRESSION:
-                    tokenInfo.Type = TokenType.String;
-                    tokenInfo.Color = TokenColor.String;
+                case TokenKind.PrologExpression:
+                    tokenInfo.Type = TokenType.Text;
+                    tokenInfo.Color = TokenColor.Text;
                     break;
 
-                case CpsTokenTypes.CONDITION_:
-                    tokenInfo.Type = TokenType.Operator;
-                    tokenInfo.Color = TokenColor.String;
-                    break;
 
-                case CpsTokenTypes.LCURLY:
+                case TokenKind.LeftParenthesis:
                     tokenInfo.Type = TokenType.Operator;
                     tokenInfo.Color = TokenColor.String;
                     tokenInfo.Trigger = TokenTriggers.ParameterStart | TokenTriggers.MatchBraces;
                     break;
 
-                case CpsTokenTypes.RCURLY:
+                case TokenKind.RightParenthesis:
                     tokenInfo.Type = TokenType.Operator;
                     tokenInfo.Color = TokenColor.String;
                     tokenInfo.Trigger = TokenTriggers.ParameterEnd | TokenTriggers.MatchBraces;
                     break;
 
-                case CpsTokenTypes.COMMA:
+                case TokenKind.Comma:
                     tokenInfo.Type = TokenType.Operator;
                     tokenInfo.Color = TokenColor.String;
                     tokenInfo.Trigger = TokenTriggers.ParameterNext;
                     break;
 
                 // Delimiter
-                case CpsTokenTypes.DOT:
+                case TokenKind.Dot:
                     tokenInfo.Type = TokenType.Delimiter;
                     tokenInfo.Color = TokenColor.String;
                     tokenInfo.Trigger = TokenTriggers.MemberSelect;
@@ -207,8 +178,8 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
             _prevToken = token;
 
-            tokenInfo.StartIndex = token.getColumn() - 2;
-            tokenInfo.EndIndex = tokenInfo.StartIndex + token.getText().Length;
+            tokenInfo.StartIndex = token.Start;
+            tokenInfo.EndIndex = token.End;
 
             return true;
         }
@@ -216,10 +187,9 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
         public void SetSource(String source, int offset)
         {
             //	Debug.Print("SetSource: source='{0}'", source);
-            _prevToken  = null;
-            m_lexer = new CpsLexer(new StringReader(source));
-            m_lexer.setTabSize(4);
-           // m_lexer.setLine(offset);
+            _prevToken = null;
+            m_lexer = new CpsLexer(source, offset);
+
         }
         #endregion
     }

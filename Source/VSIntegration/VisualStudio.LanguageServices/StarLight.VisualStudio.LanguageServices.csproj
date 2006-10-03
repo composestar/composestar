@@ -30,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="antlr.runtime, Version=2.7.6.2, Culture=neutral, PublicKeyToken=b6c5325c9dec2040, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\Antlr\antlr.runtime.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Package.LanguageService, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -45,13 +41,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Grammar\CpsLexer.cs" />
-    <Compile Include="Grammar\CpsParser.cs" />
-    <Compile Include="Grammar\CpsTokenTypes.cs" />
     <Compile Include="ComposeStarColorizer.cs" />
     <Compile Include="ComposeStarLangServ.cs" />
     <Compile Include="ComposeStarScanner.cs" />
-    <None Include="CpsLexer.cs" />
+    <Compile Include="CpsLexer.cs" />
     <Compile Include="Declaration.cs" />
     <Compile Include="Engine\Analyzer.cs" />
     <Compile Include="Engine\Concerns.cs" />
@@ -100,7 +93,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Grammar\cps.g" />
     <None Include="key.snk" />
   </ItemGroup>
   <ItemGroup>

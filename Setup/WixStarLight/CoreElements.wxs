@@ -21,9 +21,9 @@
         <Registry Id='RegMainClass' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaMainClass'
    Action='write' Type='string' Value='Composestar.DotNET.MASTER.StarLightMaster' />
         <Registry Id='RegJavaOptions' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaOptions'
-   Action='write' Type='string' Value='-Dorg.xml.sax.driver=org.apache.xerces.parsers.SAXParser'  />
+   Action='write' Type='string'  />
         <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaFolder'
-  Action='write' Type='string' Value='[JAVALOC]bin\' />
+  Action='write' Type='string' Value='[JAVALOC]\bin\' />
         <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
   Action='write' Type='string' Value='[INSTALLDIR]ComposestarCore.jar;[INSTALLDIR]Starlight.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[Db4OFolder]db4o-5.5-java1.2.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
       </Component>
