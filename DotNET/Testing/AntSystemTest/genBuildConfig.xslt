@@ -10,7 +10,8 @@
 	<xsl:param name="runDebugLevel" select="'1'" />
 	<xsl:param name="buildDebugLevel" select="'4'" />
 	<xsl:param name="DebuggerType" select="'CodeDebugger'" />
-	<xsl:param name="SECRETmode" select="'2'" />		
+	<xsl:param name="SECRETmode" select="'2'" />
+	<xsl:param name="INCREconfig" select="'INCREconfig.xml'" />
 
 	<xsl:template match="/VisualStudioProject">
 		<xsl:element name="BuildConfiguration">
@@ -86,6 +87,10 @@
 				<xsl:attribute name="platform">dotNET</xsl:attribute>
 				
 				<xsl:element name="Modules">
+					<xsl:element name="Module">
+						<xsl:attribute name="name">INCRE</xsl:attribute>
+						<xsl:attribute name="config"><xsl:value-of select="$INCREconfig"/></xsl:attribute>
+					</xsl:element>
 					<xsl:element name="Module">
 						<xsl:attribute name="name">FILTH</xsl:attribute>
 						<xsl:attribute name="output_pattern">.//analyses//FILTH_</xsl:attribute>

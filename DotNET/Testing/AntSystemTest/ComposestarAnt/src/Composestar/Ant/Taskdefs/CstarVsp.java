@@ -53,6 +53,11 @@ public class CstarVsp extends Task
 	 * composestarBase+"/Binaries"
 	 */
 	protected String composestarBase;
+	
+	/**
+	 * The name of the configuration file for INCRE.
+	 */
+	protected String INCREconfig = "INCREconfig.xml";
 
 	/**
 	 * The master to execute
@@ -65,7 +70,7 @@ public class CstarVsp extends Task
 	protected String antHelperPath;
 
 	/**
-	 * Classpath for compose*; required to build the project
+	 * Classpath for Compose*; required to build the project
 	 */
 	protected FileSet cstarJars;
 
@@ -113,6 +118,11 @@ public class CstarVsp extends Task
 	{
 		this.composestarBase = composestarBase;
 	}
+	
+	public void setINCREconfig(String INCREconfig)
+	{
+		this.INCREconfig = INCREconfig;
+	}
 
 	public void addFileset(FileSet set)
 	{
@@ -131,7 +141,7 @@ public class CstarVsp extends Task
 		}
 
 		cstarJars = new FileSet();
-		cstarJars.setDir(new File(composestarBase + File.separator + "Binaries"));
+		cstarJars.setDir(new File(composestarBase, "Binaries"));
 		NameEntry inc = cstarJars.createInclude();
 		inc.setName("*.jar");
 
@@ -152,6 +162,7 @@ public class CstarVsp extends Task
 				this,
 				"Compiled " + cntTotal + " project(s); success: " + cntSuccess + "; failed: " + cntFail + "; ratio: "
 						+ (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
+		
 		if (failOnError && (cntFail > 0))
 		{
 			throw new BuildException("Compilation of " + cntFail + " project(s) failed.");
@@ -161,7 +172,7 @@ public class CstarVsp extends Task
 	protected void registerCstarAsms()
 	{
 		FileSet cstarAsms = new FileSet();
-		cstarAsms.setDir(new File(composestarBase + File.separator + "Binaries"));
+		cstarAsms.setDir(new File(composestarBase, "Binaries"));
 		NameEntry inc = cstarAsms.createInclude();
 		inc.setName("*.dll");
 
@@ -169,7 +180,7 @@ public class CstarVsp extends Task
 		String[] files = ds.getIncludedFiles();
 		for (int i = 0; i < files.length; i++)
 		{
-			File asmPath = new File(ds.getBasedir().getPath() + File.separator + files[i]);
+			File asmPath = new File(ds.getBasedir().getPath(), files[i]);
 			String asm = asmPath.getName();
 			asm = asm.substring(0, asm.lastIndexOf("."));
 			Composestar.Ant.XsltUtils.registerAssembly(asm, asmPath.toString());
@@ -182,7 +193,7 @@ public class CstarVsp extends Task
 		getProject().log(this, "Building Compose* project: " + project, Project.MSG_INFO);
 
 		File projectFile = new File(project);
-		File buildXML = new File(projectFile.getParent() + File.separator + BUILD_CONFIGURATION_XML);
+		File buildXML = new File(projectFile.getParent(), BUILD_CONFIGURATION_XML);
 
 		try
 		{
@@ -196,12 +207,19 @@ public class CstarVsp extends Task
 				xslt.setIn(projectFile);
 				xslt.setOut(buildXML);
 				xslt.setStyle(conversionXslt);
+				
 				Param param = xslt.createParam();
 				param.setName("basepath");
 				param.setExpression(projectFile.getParent() + File.separator);
+				
 				param = xslt.createParam();
 				param.setName("composestarpath");
 				param.setExpression(composestarBase + "/");
+				
+				param = xslt.createParam();
+				param.setName("INCREconfig");
+				param.setExpression(INCREconfig);
+
 				xslt.execute();
 			}
 
@@ -211,12 +229,15 @@ public class CstarVsp extends Task
 			java.init();
 			java.setDir(projectFile.getParentFile());
 			java.setClassname(master);
+			
 			Argument arg = java.createArg();
 			arg.setValue(buildXML.toString());
+			
 			Path cpath = java.createClasspath();
 			cpath.addFileset(cstarJars);
+			
 			java.setFork(true);
-			java.setOutput(new File(projectFile.getParent() + File.separator + "buildlog.txt"));
+			java.setOutput(new File(projectFile.getParent(), "buildlog.txt"));
 
 			int err = java.executeJava();
 			if (err != 0)
