@@ -155,7 +155,7 @@ namespace Composestar.StarLight.VisualStudio.Project
     }
 
     [Guid("2A5A7A6D-34A5-408a-9924-4A23E581F55C")]
-    public class ComposeStarProjectNode : Microsoft.VisualStudio.Package.ProjectNode, IVsProjectSpecificEditorMap2
+    public class ComposeStarProjectNode : Microsoft.VisualStudio.Package.ProjectNode, IVsProjectSpecificEditorMap2 //, IVsFilterAddProjectItemDlg2 
     {
         #region fields
         private ComposeStarProjectPackage package;
