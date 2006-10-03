@@ -27,8 +27,8 @@ public class JavaHarvestRunner implements HarvestRunner {
 	}
 	public void run(CommonResources resources) throws ModuleException {
 				
-		ArrayList dummyList = Configuration.instance().getProjects().getCompiledDummies();
-		ArrayList dependencyList = Configuration.instance().getProjects().getDependencies();
+		ArrayList dummyList = (ArrayList)Configuration.instance().getProjects().getCompiledDummies();
+		ArrayList dependencyList = (ArrayList)Configuration.instance().getProjects().getDependencies();
 		ArrayList toBeHarvested = new ArrayList();
 		
 		Iterator dummyIt = dummyList.iterator();
