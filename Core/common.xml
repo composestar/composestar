@@ -9,13 +9,19 @@ Common routines. Always include this file in every build.xml file
 	<target name="init" unless="build.initialized">
 		<property name="build.initialized" value="false" />
 		<tstamp/>
+
+		<!-- figure out the directory where common.xml is located -->
+		<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
+
+		<!-- load build.ini (if available) -->
+		<property file="${build.core.tmp}/build.ini"/>
 		
 		<!-- various config items -->
 		<property name="out.build" value="build" />
 		<property name="out.dist" value="dist" />
 		
-		<property name="out.jar.core" value="${out.dist}${file.separator}ComposestarCORE.jar" />
-		<property name="out.jar.dotnet" value="${out.dist}${file.separator}ComposestarDotNET.jar" />
+		<property name="out.jar.core" value="${out.dist}/ComposestarCORE.jar" />
+		<property name="out.jar.dotnet" value="${out.dist}/ComposestarDotNET.jar" />
 		
 		<condition property="build.debug" value="true">
 			<not>
@@ -31,8 +37,7 @@ Common routines. Always include this file in every build.xml file
 			</not>
 		</condition>		
 	
-		<!-- some magic to figure out the core path -->
-		<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
+		<!-- set the core path -->
 		<condition property="build.core" value="${build.core.tmp}">
 			<not>
 				<isset property="build.core" />
@@ -64,9 +69,9 @@ Common routines. Always include this file in every build.xml file
 		</condition>
 		
 		<!-- check what is available -->
-		<available file="${build.dotnet}${file.separator}build.xml" property="available.dotnet" />
-		<available file="${build.java}${file.separator}build.xml" property="available.java" />
-		<available file="${build.c}${file.separator}build.xml" property="available.c" />
+		<available file="${build.dotnet}/build.xml" property="available.dotnet" />
+		<available file="${build.java}/build.xml" property="available.java" />
+		<available file="${build.c}/build.xml" property="available.c" />
 		
 		<!-- resolve system variables -->		
 		<exec executable="${build.core}\Development\AntHelper.exe" failifexecutionfails="false">

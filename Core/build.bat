@@ -10,14 +10,6 @@ if not "%1" == "" set TARGET=%1
 
 if NOT EXIST "%JAVA_HOME%\bin\javac.exe" goto nojavahome
 
-if EXIST build.ini goto withini
-if NOT EXIST build.ini goto withoutini
-
-:withini
-call Development\Ant\bin\ant.bat -buildfile %BUILD_FILE% -propertyfile build.ini %TARGET% %2 %3 %4 %5 %6 %7 %8 %9
-goto end
-
-:withoutini
 call Development\Ant\bin\ant.bat -buildfile %BUILD_FILE% %TARGET% %2 %3 %4 %5 %6 %7 %8 %9
 goto end
 
