@@ -153,11 +153,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Parses the output.
         /// </summary>
-        /// <remarks>
-        ///     [IL]: Error: [C:\ComposeStar\StarLight\Examples\Testing\Concerns\bin\Debug\B
-        /// asicTests.exe : BasicTests.FilterTests::doOutsideVisit][offset 0x0000000A] Unabl
-        /// e to resolve token.
-        /// </remarks> 
         /// <param name="message">The message.</param>
         /// <param name="filename">The filename.</param>
         private void ParseOutput(String message, string filename)
@@ -166,6 +161,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 try
                 {
+                    // Try to parse the output
                     string method = message.Substring(message.IndexOf(" : ") + 3);
                     string offset = method.Substring(method.IndexOf("][") + 2);
                     string mes = offset.Substring(offset.IndexOf("]") + 2);
