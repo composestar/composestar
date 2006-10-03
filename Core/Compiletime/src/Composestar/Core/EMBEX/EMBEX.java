@@ -14,6 +14,7 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.Master.Config.TypeSource;
@@ -25,7 +26,6 @@ import Composestar.Utils.Debug;
  */
 public class EMBEX implements CTCommonModule
 {
-	private String tempPath = "";
 	private String embeddedDir = "";
 	private String embeddedPath = "";
 
@@ -41,22 +41,21 @@ public class EMBEX implements CTCommonModule
 	{
 		DataStore ds = DataStore.instance();
 		Configuration config = Configuration.instance();
+		PathSettings ps = config.getPathSettings();
 		Projects allProjects = config.getProjects();
 
 		Iterator cpsConcernIter = ds.getAllInstancesOf(CpsConcern.class);
 
 		// fetch temppath
-		tempPath = config.getPathSettings().getPath("Base");
-		if (tempPath == null) 
-			throw new ModuleException("Error in configuration file: no such property Base", "EMBEX");
+		String projectBase = ps.getPath("Base");
+		if (projectBase == null || projectBase.length() == 0) 
+			throw new ModuleException("Error in configuration file: no path Base", "EMBEX");
 
 		// fetch embedded sources directory
-		embeddedDir = Configuration.instance().getPathSettings().getPath("EmbeddedSources");
-		if (embeddedDir == null || embeddedDir.length() == 0 )
-			throw new ModuleException( "Error in configuration file: No such property EmbeddedSources", "EMBEX");
+		embeddedDir = ps.getPath("EmbeddedSources", "embedded/");
 
 		// create directory for embedded code
-		embeddedPath = tempPath + embeddedDir;
+		embeddedPath = projectBase + "obj/" + embeddedDir;
 		File embeddedDir = new File(embeddedPath);
 		if (embeddedDir.exists())
 		{
@@ -76,7 +75,7 @@ public class EMBEX implements CTCommonModule
 			if (imp instanceof Source)
 			{
 				if (!embeddedDir.exists())
-					embeddedDir.mkdir();
+					embeddedDir.mkdirs();
 
 				// fetch embedded source and save
 				Source src = (Source)imp;
