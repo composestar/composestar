@@ -97,9 +97,11 @@
 	</target>
 	
 	<target name="install" depends="build" description="Install the .NET compiletime">
-		<copy todir="${composestar.installdir}${file.separator}Binaries">
+		<copy todir="${composestar.installdir}/Binaries">
 			<fileset dir="${out.dist}" />
 		</copy>
+		<copy file="src/Composestar/DotNET/INCRE/INCREconfig.xml"  todir="${composestar.installdir}" />
+		<copy file="src/Composestar/DotNET/INCRE/INCREconfig2.xml" todir="${composestar.installdir}" />
 	</target>
 
 </project>

@@ -15,8 +15,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +41,8 @@ import Composestar.Utils.Version;
  * Main entry point for the CompileTime. The Master class holds coreModules
  * and executes them in the order they are added.
  */
-public class DotNETMaster extends Master  {
+public class DotNETMaster extends Master
+{
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
 
 	private CommonResources resources;
@@ -134,7 +133,7 @@ public class DotNETMaster extends Master  {
 			}
 
 			incre.getReporter().close();
-			if (Debug.getMode() >= Debug.MODE_WARNING ) Debug.outWarnings();
+			if (Debug.getMode() >= Debug.MODE_WARNING) Debug.outWarnings();
 		}
 		catch (ModuleException e) { // MasterStopException
 			String error = e.getMessage();
@@ -160,23 +159,8 @@ public class DotNETMaster extends Master  {
 		}
 	}
 
-	/**
-	 * @deprecated Use Debug.stackTrace instead
-	 */
-	public String printStackTrace(Exception e) 
-	{
-		try {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			return sw.toString();
-		}
-		catch (Exception e2) {
-			return "Stack Trace Failed";
-		}
-	} 
-
-	public void SaveModifiedConfigurationKeys(CommonResources resources)
+	// not used
+	public void saveModifiedConfigurationKeys(CommonResources resources)
 	{
 		List builtAssemblies = (List)resources.getResource("BuiltAssemblies");
 		List configLines = new ArrayList();
@@ -215,7 +199,6 @@ public class DotNETMaster extends Master  {
 		catch (IOException e) {
 			Debug.out(Debug.MODE_WARNING, "Master", "Unable to update configuration file '" + configfile + "'!");
 		}
-
 	}
 	
 	/**
@@ -246,5 +229,5 @@ public class DotNETMaster extends Master  {
 			System.out.println("Could not open configuration file '" + args[0] + "': " + e.getMessage());
 			System.exit(-1); // FIXME: are these errorlevels random? 
 		}
-	}    
+	}
 }
