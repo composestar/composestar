@@ -1,34 +1,33 @@
 package Composestar.Core.INCRE.Config;
 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.INCRE.*;
-import Composestar.Core.Master.CommonResources;
+import Composestar.Core.INCRE.FileDependency;
+import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.ObjectDependency;
 
 public class DependencyHandler extends DefaultHandler 
 {
 	private ConfigManager configmanager = null;
 	private Module module = null;
 	private ModulesHandler returnhandler = null;
-	private CommonResources resources = null;
 
 	public DependencyHandler(ConfigManager cfg, Module module, ModulesHandler returnhandler) 
 	{
 		this.configmanager = cfg;
 		this.module = module;
 		this.returnhandler = returnhandler;
-		this.resources = cfg.getResources();
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
 	{
-		if(local_name.equalsIgnoreCase("dependency"))
+		if (local_name.equalsIgnoreCase("dependency"))
 		{
 			String name = amap.getValue("name");
 			String deptype = amap.getValue("type");
-			if(deptype.equals("FILE"))
+			if (deptype.equals("FILE"))
 			{
 				// create a file dependency
 				FileDependency fdep = new FileDependency(name);
@@ -42,7 +41,7 @@ public class DependencyHandler extends DefaultHandler
 				PathHandler pathhandler = new PathHandler(configmanager,fdep,this);
 				configmanager.getXMLReader().setContentHandler(pathhandler);
 			}
-			else if(deptype.equals("OBJECT"))
+			else if (deptype.equals("OBJECT"))
 			{
 				// create a object dependency and add it to module
 				ObjectDependency objdep = new ObjectDependency(name);
@@ -63,7 +62,7 @@ public class DependencyHandler extends DefaultHandler
 				// throw something
 			}
 		}
-		else if(local_name.equalsIgnoreCase("comparisons")){
+		else if (local_name.equalsIgnoreCase("comparisons")){
 			// look further in the xml file, between <comparisons> tags
 			ComparisonsHandler comphandler = new ComparisonsHandler(configmanager,this.module,this);
 			configmanager.getXMLReader().setContentHandler(comphandler);
@@ -72,7 +71,7 @@ public class DependencyHandler extends DefaultHandler
 
 	public void endElement(String uri, String local_name, String raw_name) 
 	{	
-		if(local_name.equalsIgnoreCase("module"))
+		if (local_name.equalsIgnoreCase("module"))
 		{
 			// go to next module 
 			configmanager.getXMLReader().setContentHandler(returnhandler);
@@ -81,11 +80,9 @@ public class DependencyHandler extends DefaultHandler
 
 	public void startDocument() 
 	{
-     
 	}
 
 	public void endDocument() 
 	{
-     
 	}
 }
