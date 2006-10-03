@@ -29,15 +29,13 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 			if(amap.getValue("executable")!=null){
 				String exec = amap.getValue("executable"); 
 				//System.out.println("Executable "+exec);
-				config.getProjects().addProperty("Executable",exec);
-				
+				config.getProjects().addProperty("executable",exec);
 			} 
 			
 			if(amap.getValue("outputPath")!=null){
 				String exec = amap.getValue("outputPath"); 
 				//System.out.println("Executable "+exec);
-				config.getProjects().addProperty("OuputPath",exec);
-				
+				config.getProjects().addProperty("outputPath",exec);
 			} 
 			
 			if(amap.getValue("runDebugLevel")!=null){
