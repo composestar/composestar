@@ -56,7 +56,7 @@ public class RealSourceManager implements CTCommonModule {
 			CompilerSettings compsettings = lang.compilerSettings;
 			LangCompiler comp = compsettings.getCompiler();
 
-			String exec = Configuration.instance().getProjects().getProperty("Executable");
+			String exec = Configuration.instance().getProjects().getProperty("executable");
 			String exefile = "";
 			
 			Iterator typesourcesit = project.getTypeSources().iterator();

@@ -38,7 +38,7 @@ public abstract class BACO implements CTCommonModule
 		filesToCopy.add(repository);
 
 		// determine output dir:
-		String outputPath = config.getProjects().getProperty("OuputPath");
+		String outputPath = config.getProjects().getProperty("outputPath");
 		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
 		
 		// create the output dir if needed
@@ -50,7 +50,7 @@ public abstract class BACO implements CTCommonModule
 		while (filesIt.hasNext())
 		{
 			String source = (String)filesIt.next();
-			String dest = outputPath + FileUtils.getFilenamePart(source);			
+			String dest = outputPath + FileUtils.getFilenamePart(source);
 			try {
 				Debug.out(Debug.MODE_DEBUG,"BACO","Copying '" + source + "' to '" + dest + "'");
 				FileUtils.copyFile(dest, source);
@@ -136,37 +136,4 @@ public abstract class BACO implements CTCommonModule
 	}
 
 	protected abstract boolean isNeededDependency(Dependency dependency);
-
-/*	public void copyFile(String file, String dest) throws ModuleException
-	{
-		Debug.out(Debug.MODE_DEBUG,"BACO","Copying file: '" + file + "' to '" + dest + "'");
-		try
-		{
-			File in = new File(file);
-		//	String tmp = in.getAbsolutePath().substring(in.getAbsolutePath().lastIndexOf(File.separator) + 1);
-			File out = new File(dest + FileUtils.getFilenamePart(file));
-
-			FileInputStream fis  = new FileInputStream(in);
-			FileOutputStream fos = new FileOutputStream(out);
-			
-			byte[] buf = new byte[1024];
-			for (int i; (i = fis.read(buf)) != -1;)
-			{
-				fos.write(buf, 0, i);
-			}
-			
-			fis.close();
-			fos.close();
-		}
-		catch (FileNotFoundException e)
-		{
-			Debug.out(Debug.MODE_CRUCIAL,"BACO","File not found: file='" + file + "', dest='" + dest + "', msg='" + e.getMessage() + "'");
-			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
-		}
-		catch (IOException e)
-		{
-			Debug.out(Debug.MODE_CRUCIAL,"BACO","IOException:" + e.getMessage());
-			Debug.out(Debug.MODE_DEBUG,"BACO",Debug.stackTrace(e));
-		}
-	}*/
 }
