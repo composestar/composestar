@@ -34,7 +34,7 @@ public class CSharpDummyEmitter implements DummyEmitter
 		try
 		{
 			String attributesFile = project.getProperty("basePath") + "attributes.xml";
-			CSharpDummyGenerator dg = new CSharpDummyGenerator(attributesFile);
+			ExternalCSharpDummyGenerator dg = new ExternalCSharpDummyGenerator(attributesFile);
 
 			Iterator srcIter = sources.iterator();
 			Iterator outputIter = outputFilenames.iterator();
@@ -93,13 +93,13 @@ public class CSharpDummyEmitter implements DummyEmitter
 	}
 }
 
-class CSharpDummyGenerator
+class ExternalCSharpDummyGenerator
 {
 	private PrintStream stdout;
 	private StreamGobbler stdin, stderr;
 	private Process process;
 
-	public CSharpDummyGenerator(String attributesFile) throws ProcessExecutionException
+	public ExternalCSharpDummyGenerator(String attributesFile) throws ProcessExecutionException
 	{
 		String[] command = new String[2];
 		command[0] = getExecutable();
