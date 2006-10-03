@@ -20,6 +20,12 @@
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>

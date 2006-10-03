@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{a2606d7a-857f-49c4-966d-65c6f2fb7d93}</ProjectGuid>
     <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
-    <ProjectType>StarLight</ProjectType> 
+    <ProjectType>StarLight</ProjectType>
     <RootNamespace>Concerns</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -21,6 +21,12 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>$(MSBuildExtensionsPath)\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>

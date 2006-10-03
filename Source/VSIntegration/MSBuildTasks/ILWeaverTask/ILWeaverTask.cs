@@ -77,47 +77,52 @@ namespace Composestar.StarLight.MSBuild.Tasks
             CecilILWeaver weaver = null;
             ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
-            foreach (ITaskItem item in AssemblyFiles)
+
+            try
             {
-                filename = item.ToString();
-                Log.LogMessage("Weaving file {0}", filename);
-
-                // Preparing config
-                CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
-                if (!String.IsNullOrEmpty(BinFolder))
+                foreach (ITaskItem item in AssemblyFiles)
                 {
-                    configuration.BinFolder = BinFolder;
-                }
+                    filename = item.ToString();
+                    Log.LogMessage("Weaving file {0}", filename);
 
-                try
-                {
-                    weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(langModelAccessor, configuration));
+                    // Preparing config
+                    //CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
+                    CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(filename, false, "", filename, false);
+                    if (!String.IsNullOrEmpty(BinFolder))
+                    {
+                        configuration.BinFolder = BinFolder;
+                    }
+
+                    try
+                    {
+                        weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(langModelAccessor, configuration));
+
+                        // Perform weaving
+                        weaver.DoWeave();
+
+                        Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);
+                    }
+                    catch (ILWeaverException ex)
+                    {
+                        Log.LogErrorFromException(ex, false);
+                        if (ex.InnerException != null)
+                            Log.LogErrorFromException(ex.InnerException, true);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Log.LogErrorFromException(ex, true);
+                    }
                     
-                    // Perform weaving
-                    weaver.DoWeave();
-
-                    Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);
                 }
-                catch (ILWeaverException ex)
-                {
-                    Log.LogErrorFromException(ex, false);
-                    if (ex.InnerException != null)
-                        Log.LogErrorFromException(ex.InnerException, true);
-                }
-                catch (ArgumentException ex)
-                {
-                    Log.LogErrorFromException(ex, true);
-                }
-                finally
-                {
-                    // Close the weaver, so it closes the database, performs cleanups etc
-                    if (weaver != null) 
-                        weaver.Close();
-                }
-
+            }
+            finally
+            {
+                  // Close the weaver, so it closes the database, performs cleanups etc
+                        if (weaver != null)
+                            weaver.Close();
             }
 
-            return true;
+            return !Log.HasLoggedErrors ;
         }
 
         internal IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilWeaverConfiguration configuration)

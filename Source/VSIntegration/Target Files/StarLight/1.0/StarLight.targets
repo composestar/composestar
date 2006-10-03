@@ -171,19 +171,19 @@
   <!--MasterCaller target -->
   <Target
        Name="MasterCaller">
-    <Message Text="Executing Composestar Master..." />
+    <Message Text="Executing Composestar Master." />
     <MasterCallerTask RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" ConcernFiles="@(Concern->'%(FullPath)')" DebugLevel="$(DebugLevel)" IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" />
   </Target>
 
   <!--ILWeaverRunner target -->
   <Target
        Name="ILWeaverRunner">
-    <Message Text="Performing IL weaving..." />
+    <Message Text="Performing IL weaving." />
     <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"  />
   </Target>
 
   <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True'">
-    <Message Text ="Verifying generated IL code..." />
+    <Message Text ="Verifying generated IL code." />
     <ILVerifyTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />    
   </Target>
   
@@ -197,7 +197,7 @@
             _CopyAppConfigFile;
             _CopyManifestFiles;">
     <Message Text="Copying assemblies..." />
-    <MakeDir Directories ="$(OutDir)\Woven"></MakeDir>
+    <!--<MakeDir Directories ="$(OutDir)\Woven"></MakeDir>-->
     <!-- Copy the serialization assembly if it exists. -->
     <!--<Copy
         SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"
