@@ -129,7 +129,7 @@ public class StarLightMaster extends Master  {
     	
 	    // Create the repository
 	    DataStore ds = DataStore.instance();
-	    
+	     
 	    // Set the paths
         CommonConfiguration configuration = repository.GetCommonConfiguration();
 	    Configuration.instance().getPathSettings().addPath("Base", configuration.get_IntermediateOutputPath());

@@ -112,8 +112,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     }
                     else
                     {
-                        Log.LogMessagesFromStream(p.StandardOutput, MessageImportance.High);
-                        Log.LogErrorFromResources("VerifyFailure", filename);
+                        while (!p.StandardOutput.EndOfStream)
+                        {
+                            ParseOutput(p.StandardOutput.ReadLine(), filename);
+                        }
+                        //Log.LogErrorFromResources("VerifyFailure", filename);
                         return false;
                     }
 
@@ -152,10 +155,34 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Parses the output.
         /// </summary>
+        /// <remarks>
+        ///     [IL]: Error: [C:\ComposeStar\StarLight\Examples\Testing\Concerns\bin\Debug\B
+        /// asicTests.exe : BasicTests.FilterTests::doOutsideVisit][offset 0x0000000A] Unabl
+        /// e to resolve token.
+        /// </remarks> 
         /// <param name="message">The message.</param>
-        private void ParseOutput(String message)
+        /// <param name="filename">The filename.</param>
+        private void ParseOutput(String message, string filename)
         {
-            //Log.LogError() 
+            if (!message.Contains("Errors Verifying"))
+            {
+                try
+                {
+                    string method = message.Substring(message.IndexOf(" : ") + 3);
+                    string offset = method.Substring(method.IndexOf("][") + 2);
+                    string mes = offset.Substring(offset.IndexOf("]") + 2);
+                    method = method.Substring(0, method.Length - offset.Length - 2);
+                    offset = offset.Substring(0, offset.Length - mes.Length - 2);
+
+                    Log.LogError(String.Format("Verification error in '{0}', method '{2}' at {3}: {1}", filename, mes, method, offset));
+                }
+                catch (Exception)
+                {
+                    Log.LogError(message);
+                }
+                
+            }
+
         }
 
     }
