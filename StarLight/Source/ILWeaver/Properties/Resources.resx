@@ -172,4 +172,7 @@
   <data name="FieldNotFound" xml:space="preserve">
     <value>The field {0} could not be found.</value>
   </data>
+  <data name="AdviceMethodNotFound" xml:space="preserve">
+    <value>Could not find method named '{0}(JoinpointContext)' in type '{1}'</value>
+  </data>
 </root>

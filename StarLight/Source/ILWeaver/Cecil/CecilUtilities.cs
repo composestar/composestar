@@ -133,6 +133,20 @@ namespace Composestar.StarLight.ILWeaver
             return (TypeReference)td;
         }
 
+        //public static TypeReference ResolveType( string typeName, ILanguageModelAccessor languageModelAccessor )
+        //{
+        //    TypeElement typeElement = languageModelAccessor.GetTypeElement( typeName );
+        //    if ( typeElement == null ) throw new ILWeaverException(
+        //        String.Format( CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, typeName + " (step 1)" ) );
+
+        //    TypeReference typeRef = CecilUtilities.ResolveType(
+        //        internalTypeString, internalTypeElement.Assembly, typeElement.FromDLL );
+        //    if ( typeRef == null ) throw new ILWeaverException(
+        //        String.Format( CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, typeName + " (step 2)" ) );
+
+        //    return typeRef;
+        //}
+
         /// <summary>
         /// Resolves the method.
         /// </summary>
@@ -219,9 +233,15 @@ namespace Composestar.StarLight.ILWeaver
         public static MethodDefinition ResolveMethod( TypeDefinition parentType, string methodName, 
             MethodDefinition exampleMethod )
         {
-            MethodDefinition[] mds = parentType.Methods.GetMethod( methodName );
-
             MethodDefinition md = parentType.Methods.GetMethod( methodName, exampleMethod.Parameters);
+
+            return md;
+        }
+
+        public static MethodDefinition ResolveMethod( TypeDefinition parentType, string methodName,
+            Type[] parameterTypes )
+        {
+            MethodDefinition md = parentType.Methods.GetMethod( methodName, parameterTypes );
 
             return md;
         }
