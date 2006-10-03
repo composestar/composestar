@@ -105,6 +105,31 @@ namespace Composestar.StarLight.MSBuild.Tasks
             return true;
         }
 
+        /// <summary>
+        /// Gets the NETSDK location.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetNETSDKLocation()
+        {
+
+             // Retrieve the settings from the registry
+            RegistryPermission keyPermissions = new RegistryPermission(
+               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework");
+
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
+
+            if (regKey != null)
+            {
+                return (string)regKey.GetValue("sdkInstallRootv2.0", "");
+               
+            }
+            else
+            {
+                return "";              
+            }
+
+
+        }
 
     }
 }

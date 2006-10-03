@@ -312,7 +312,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         {
             get
             {
-                return "StarLightProject";
+                return "StarLight";
             }
         }
         internal override object Object

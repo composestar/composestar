@@ -1,20 +1,23 @@
 ﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>    
     <Name>"$safeprojectname$"</Name>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>$guid1$</ProjectGuid>   
+    <ProjectGuid>$guid1$</ProjectGuid>
+    <ProjectType>StarLight</ProjectType> 
     <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugLevel>4</DebugLevel>
+    <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Release\</OutputPath>
     <DebugLevel>1</DebugLevel>
+    <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

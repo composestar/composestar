@@ -153,6 +153,12 @@
   <data name="DebugLevelDescription" xml:space="preserve">
     <value>Debug level used by the Composestar Java part.</value>
   </data>
+  <data name="VerifyIL" xml:space="preserve">
+    <value>Verify IL</value>
+  </data>
+  <data name="VerifyILDescription" xml:space="preserve">
+    <value>Verify the generated IL code.</value>
+  </data>
   <data name="ProjectFileExtensionFilter" xml:space="preserve">
     <value>ComposeStar Project File (*.cpsproj){0}*.cpsproj{1}</value>
   </data>

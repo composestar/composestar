@@ -57,6 +57,7 @@
       <Link>Target\StarLight.targets</Link>
     </None>
     <Compile Include="ILAnalyzerTask\AnalyzerTask.cs" />
+    <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
     <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
     <Compile Include="ILWeaverTask\ILWeaverTask.cs" />
     <Compile Include="MasterCallerTask\MasterCallerTask.cs" />
