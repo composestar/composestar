@@ -795,9 +795,9 @@ public class SIGN implements CTCommonModule
 			{
 				// INCRE profit => Copy signature for 'alreadyProcessed' concerns
 				Concern old = (Concern)incre.findHistoryObject(concern);
-				if(old.theSignature!=null)
+				if(old.signature!=null)
 				{
-					concern.theSignature = old.theSignature;
+					concern.signature = old.signature;
 				}
 			}
 		}
