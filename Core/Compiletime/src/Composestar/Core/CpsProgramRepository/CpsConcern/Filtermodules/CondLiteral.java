@@ -24,16 +24,6 @@ public abstract class CondLiteral extends ConditionExpression
 		super();
 	}
 
-	public boolean isBinary()
-	{
-		return false;
-	}
-
-	public boolean isUnary()
-	{
-		return false;
-	}
-
 	public boolean isLiteral()
 	{
 		return true;

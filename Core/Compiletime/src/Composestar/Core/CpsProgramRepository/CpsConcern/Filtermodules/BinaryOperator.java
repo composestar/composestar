@@ -64,20 +64,4 @@ public abstract class BinaryOperator extends ConditionExpression
 	{
 		return true;
 	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isLiteral()
-	{
-		return false;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isUnary()
-	{
-		return false;
-	}
 }

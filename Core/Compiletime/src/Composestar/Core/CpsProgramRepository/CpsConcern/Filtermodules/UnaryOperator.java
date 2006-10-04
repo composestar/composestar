@@ -46,25 +46,8 @@ public abstract class UnaryOperator extends ConditionExpression
 	/**
 	 * @return boolean
 	 */
-	public boolean isBinary()
-	{
-		return (false);
-	}
-
-	/**
-	 * @return boolean
-	 */
 	public boolean isUnary()
 	{
-		return (true);
+		return true;
 	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isLiteral()
-	{
-		return (false);
-	}
-
 }

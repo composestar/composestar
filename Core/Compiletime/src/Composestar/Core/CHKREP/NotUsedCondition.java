@@ -9,12 +9,19 @@
 */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.Exception.ModuleException;
+import java.util.Iterator;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * @author DoornenbalD
@@ -96,22 +103,15 @@ public class NotUsedCondition implements BaseChecker {
 			}
 		}
 		
-		//Checks on a Not
-		if(ce instanceof Not){
-			Not n = (Not) ce;
-			used = isUsedInConditionExpression(c, n.getOperand());
+		//Checks on a UnaryOperator
+		if(ce instanceof UnaryOperator){
+			used = isUsedInConditionExpression(c, ((UnaryOperator) ce).getOperand());
 		}
 		
-		// checks in an And
-		if(ce instanceof And){
-			And a = (And) ce;
-			used = (isUsedInConditionExpression(c, a.getLeft()) || isUsedInConditionExpression(c, a.getRight()));
-		}
-		
-		//copied from And
-		if(ce instanceof Or){
-			Or o = (Or) ce;
-			used = (isUsedInConditionExpression(c, o.getLeft()) || isUsedInConditionExpression(c, o.getRight()));
+		// checks on a BinaryOperator
+		if(ce instanceof BinaryOperator){
+			used = (isUsedInConditionExpression(c, ((BinaryOperator) ce).getLeft()) 
+					|| isUsedInConditionExpression(c, ((BinaryOperator) ce).getRight()));
 		}
 		
 		return used;

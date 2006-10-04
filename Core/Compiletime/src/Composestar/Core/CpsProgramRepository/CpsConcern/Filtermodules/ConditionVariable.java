@@ -44,28 +44,4 @@ public class ConditionVariable extends ConditionExpression
 	{
 		this.condition = conditionValue;
 	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isBinary()
-	{
-		return false;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isUnary()
-	{
-		return false;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean isLiteral()
-	{
-		return false;
-	}
 }

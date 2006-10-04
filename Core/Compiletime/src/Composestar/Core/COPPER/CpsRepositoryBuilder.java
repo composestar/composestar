@@ -655,7 +655,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
 
   /**
-   * Adds a literal (i.e. a condition name)
+   * Adds a literal or variable (i.e. a condition name)
    *
    * @param condname Name of the condition (may include package + concern + fm)
    * @param override If called from Not, this points to the Not object to attach this condition to; if null, then just add using the default algoritm
