@@ -18,6 +18,7 @@ using Microsoft.Build.Utilities;
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository.Configuration;
+using Composestar.Repository.Db4oContainers;  
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -122,9 +123,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             // Open DB
             Log.LogMessage(MessageImportance.Low, "Opening repository '{0}'.", RepositoryFilename);
-            _repositoryAccess = new RepositoryAccess(RepositoryFilename);
+            _repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
             Log.LogMessage("Preparing to start master by collecting data.");
+
+            // Remove all concerns first because the user may have removed a concern from the project
+            // after a previous run.
+            _repositoryAccess.DeleteConcernInformations(); 
 
             // Place the concern files in the datastore
             foreach (ITaskItem item in ConcernFiles)

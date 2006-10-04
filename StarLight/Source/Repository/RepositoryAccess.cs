@@ -461,16 +461,29 @@ namespace Composestar.Repository
             if (concernInformation == null)
                 throw new ArgumentNullException("concernInformation");
 
+            // We simple remove all the concerns at the start, so no need to check for existens.
+
             // Check if concern already exists
-            if (container.GetObjectQuery<ConcernInformation>(delegate(ConcernInformation ce)
-            {
-                return ce.Filename.Equals(concernInformation.Filename, StringComparison.CurrentCultureIgnoreCase);
-            }).Count == 0)
-            {
+            //if (container.GetObjectQuery<ConcernInformation>(delegate(ConcernInformation ce)
+            //{
+            //    return ce.Filename.Equals(concernInformation.Filename, StringComparison.CurrentCultureIgnoreCase);
+            //}).Count == 0)
+            //{
                 container.StoreObject(concernInformation);
-            }
+           //}
         }
 
+        /// <summary>
+        /// Deletes the concern informations.
+        /// </summary>
+        public void DeleteConcernInformations()
+        {
+            container.DeleteObjects<ConcernInformation>(); 
+        }
+
+        /// <summary>
+        /// Deletes the weaving instructions.
+        /// </summary>
         public void DeleteWeavingInstructions()
         {
             container.DeleteObjects<Condition>();

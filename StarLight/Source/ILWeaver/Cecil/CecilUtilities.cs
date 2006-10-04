@@ -20,6 +20,9 @@ using Composestar.StarLight.CoreServices;
 namespace Composestar.StarLight.ILWeaver
 {
 
+    /// <summary>
+    /// Contains functions used by the Cecil visitors and weaver.
+    /// </summary>
     public class CecilUtilities
     {
 
@@ -47,31 +50,6 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Returns a method signature.
         /// </summary>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="returnType">Type of the return.</param>
-        /// <param name="paramTypes">The param types.</param>
-        /// <returns></returns>
-        [Obsolete("Use Method.ToString() to create a signature", true)]
-        public static String MethodSignature(string methodName, string returnType, string[] paramTypes)
-        {
-            StringBuilder signature = new StringBuilder();
-            signature.AppendFormat("{0} {1}(", returnType, methodName);
-
-            for (int i = 0; i < paramTypes.Length; i++)
-            {
-                if (i < paramTypes.Length - 1)
-                    signature.AppendFormat("{0}, ", paramTypes[i]);
-                else
-                    signature.AppendFormat("{0}", paramTypes[i]);
-            }
-            signature.Append(")");
-
-            return signature.ToString();
-        }
-
-        /// <summary>
-        /// Returns a method signature.
-        /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
         public static String MethodSignature(MethodDefinition method)
@@ -80,32 +58,12 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Gets the parameter types list.
+        /// Resolves the type.
         /// </summary>
-        /// <param name="method">The method.</param>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <param name="assemblyFile">The assembly file.</param>
         /// <returns></returns>
-        public static String[] GetParameterTypesList(MethodDefinition method)
-        {
-            List<String> ret = new List<String>();
-            foreach (ParameterDefinition param in method.Parameters)
-            {
-                ret.Add(param.ParameterType.FullName);
-            }
-
-            return ret.ToArray();
-        }
-
-        /// <summary>
-        /// Resolves the method based on the selector.
-        /// </summary>
-        /// <param name="selector">The selector.</param>
-        /// <returns></returns>
-        public static MethodBase ResolveMethod(string selector)
-        {
-            return null;
-
-        }
-
         public static TypeReference ResolveType(string typeName, string assemblyName, string assemblyFile)
         {
             if (_resolver == null)
@@ -199,26 +157,6 @@ namespace Composestar.StarLight.ILWeaver
 
             return (MethodReference)md;
 
-            //Assembly asm = Assembly.ReflectionOnlyLoadFrom(assemblyFile);
-
-
-            //Type t = asm.GetType(typeName, false, true);
-
-            //if (t == null)
-            //    return null;
-
-            //MethodInfo m;
-            //m = t.GetMethod(methodName);
-
-            //if (m == null)
-            //    return null;
-
-            //MethodBase mb =  (MethodBase)m;
-
-            //// Add to the cache
-            //_methodsCache.Add(CreateCacheKey(methodName, typeName, assemblyFile), mb);
-
-            //return mb;
         }
 
 
@@ -229,25 +167,33 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="methodName">The name of the method</param>
         /// <param name="exampleMethod">Examplemethod containing the same parametertypes and returntype of the
         /// wanted method</param>
-        /// <returns>The to be resolved method, or <code>null</code> if such method does not exist</returns>
-        public static MethodDefinition ResolveMethod( TypeDefinition parentType, string methodName, 
-            MethodDefinition exampleMethod )
+        /// <returns>
+        /// The to be resolved method, or <code>null</code> if such method does not exist
+        /// </returns>
+        public static MethodDefinition ResolveMethod(TypeDefinition parentType, string methodName,
+            MethodDefinition exampleMethod)
         {
-            MethodDefinition md = parentType.Methods.GetMethod( methodName, exampleMethod.Parameters);
+            MethodDefinition md = parentType.Methods.GetMethod(methodName, exampleMethod.Parameters);
 
             return md;
         }
 
-        public static MethodDefinition ResolveMethod( TypeReference parentTypeRef, string methodName,
-            Type[] parameterTypes )
+        /// <summary>
+        /// Resolves the method.
+        /// </summary>
+        /// <param name="parentTypeRef">The parent type ref.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameterTypes">The parameter types.</param>
+        /// <returns></returns>
+        public static MethodDefinition ResolveMethod(TypeReference parentTypeRef, string methodName,
+            Type[] parameterTypes)
         {
-            TypeDefinition parentType = parentTypeRef.Module.Types[ parentTypeRef.FullName ];
-            
-            MethodDefinition md = parentType.Methods.GetMethod( methodName, parameterTypes );
+            TypeDefinition parentType = parentTypeRef.Module.Types[parentTypeRef.FullName];
+
+            MethodDefinition md = parentType.Methods.GetMethod(methodName, parameterTypes);
 
             return md;
         }
-
 
         /// <summary>
         /// Creates the cache key.
@@ -268,6 +214,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="stream">The stream to read data from</param>
         /// <param name="initialLength">The initial buffer length</param>
+        /// <returns>Byte array with the contents of the file.</returns>
         public static byte[] ReadFully(Stream stream, int initialLength)
         {
             // If we've been passed an unhelpful initial length, just
@@ -314,7 +261,7 @@ namespace Composestar.StarLight.ILWeaver
     }
 
     /// <summary>
-    /// 
+    /// Assembly resolver to resolve assemblies and store those in a cache for quick lookup.
     /// </summary>
     public class ILWeaverAssemblyResolver : BaseAssemblyResolver
     {
@@ -346,15 +293,15 @@ namespace Composestar.StarLight.ILWeaver
 
             try
             {
-                fullName = fullName.Replace(", PublicKeyToken=null", ""); 
-                
+                fullName = fullName.Replace(", PublicKeyToken=null", "");
+
                 assemblyNameReferenceParsed = AssemblyNameReference.Parse(fullName);
             }
             catch (ArgumentException)
             {
                 return null;
             }
-            
+
             return Resolve(assemblyNameReferenceParsed);
 
         }
@@ -370,7 +317,7 @@ namespace Composestar.StarLight.ILWeaver
             if (!m_cache.TryGetValue(name.FullName, out asm))
             {
                 asm = ResolveInternal(name);
-                if (asm != null) 
+                if (asm != null)
                     m_cache[name.FullName] = asm;
             }
 
@@ -385,7 +332,7 @@ namespace Composestar.StarLight.ILWeaver
         private AssemblyDefinition ResolveInternal(AssemblyNameReference name)
         {
             string[] exts = new string[] { ".dll", ".exe" };
-            string[] dirs = new string[] { _binFolder, ".", "bin"  };
+            string[] dirs = new string[] { _binFolder, ".", "bin" };
 
             foreach (string dir in dirs)
             {
@@ -405,9 +352,7 @@ namespace Composestar.StarLight.ILWeaver
                 return AssemblyFactory.GetAssembly(GetFromGac(name));
 
             return null;
-       
 
         }
-
     }
 }
