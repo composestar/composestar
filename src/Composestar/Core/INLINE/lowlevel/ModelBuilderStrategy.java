@@ -308,11 +308,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         if ( node.containsName( FlowChartNames.DISPATCH_ACTION_NODE ) ){
             generateDispatchAction( state );
         }
-        else if ( node.containsName( FlowChartNames.META_ACTION_NODE ) ){//"before action" ) ){
-//            generateBeforeAction( state );
-            generateAfterAction( state );
+        else if ( node.containsName( FlowChartNames.BEFORE_ACTION_NODE ) ){
+            generateBeforeAction( state );
         }
-        else if ( node.containsName( "AfterAction" ) ){
+        else if ( node.containsName( FlowChartNames.AFTER_ACTION_NODE ) ){
             generateAfterAction( state );
         }
         else if ( node.containsName( "SkipAction" ) ){
@@ -328,7 +327,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         }
         else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
             instruction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
-            empty = false;
             currentBlock.addInstruction( instruction );
         }
         else if ( node.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) ){

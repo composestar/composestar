@@ -513,6 +513,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
         ft.setType(FilterType.APPEND);
     } else if ("prepend".equalsIgnoreCase(type))  {
         ft.setType(FilterType.PREPEND);
+    } else if ("before".equalsIgnoreCase(type))  {
+        ft.setType(FilterType.BEFORE);
+    } else if ("after".equalsIgnoreCase(type))  {
+        ft.setType(FilterType.AFTER);
     } else {
       ft.setType(FilterType.CUSTOM);
     }

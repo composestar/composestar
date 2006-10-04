@@ -33,6 +33,8 @@ public class FilterType extends Concern {
   public final static String SEND	  = "Send";
   public final static String PREPEND = "Prepend";
   public final static String APPEND  = "Append";
+  public final static String BEFORE = "Before";
+  public final static String AFTER = "After";
 
   /**
    * @return java.lang.String

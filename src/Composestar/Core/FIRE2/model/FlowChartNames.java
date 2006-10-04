@@ -29,6 +29,8 @@ public interface FlowChartNames {
     public final static String FILTER_ACTION_NODE = "FilterAction";
     public final static String DISPATCH_ACTION_NODE = "DispatchAction";
     public final static String META_ACTION_NODE = "MetaAction";
+    public final static String BEFORE_ACTION_NODE = "BeforeAction";
+    public final static String AFTER_ACTION_NODE = "AfterAction";
     public final static String ERROR_ACTION_NODE = "ErrorAction";
     public final static String SUBSTITUTION_ACTION_NODE = "SubstitutionAction";
     public final static String CUSTOM_ACTION_NODE = "ContinueCustomAction";

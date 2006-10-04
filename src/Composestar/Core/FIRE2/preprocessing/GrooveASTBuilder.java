@@ -308,6 +308,24 @@ public class GrooveASTBuilder {
                     rejectNode );
             graph.addEdge( edge );
         }
+        else if (filterType.type.equals(FilterType.BEFORE) ){
+            //not implemented in the groove model yet;
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.BEFORE_ACTION_NODE,
+                    acceptNode );
+            graph.addEdge( edge );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
+            graph.addEdge( edge );
+        }
+        else if (filterType.type.equals(FilterType.AFTER) ){
+            //not implemented in the groove model yet;
+            edge = new AnnotatedEdge( acceptNode, FlowChartNames.AFTER_ACTION_NODE,
+                    acceptNode );
+            graph.addEdge( edge );
+            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
+                    rejectNode );
+            graph.addEdge( edge );
+        }
         else if (filterType.type.equals(FilterType.CUSTOM) ){
             edge = new AnnotatedEdge( acceptNode, 
                     FlowChartNames.CUSTOM_ACTION_NODE, acceptNode );
