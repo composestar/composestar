@@ -1,0 +1,31 @@
+package pacman.ConcernImplementations;
+
+import Composestar.StarLight.ContextInfo.*;
+import pacman.*;
+
+/**
+ * The increase method of this class will modify the amount of points gained depending the current level.
+ */
+public class ScoreIncreaser
+{
+	public ScoreIncreaser()
+	{
+	}
+
+	public void increase(JoinPointContext context)
+	{
+		//before
+		if (context.get_ArgumentCount() == 1) 
+		{
+			int points = Integer.parseInt(context.GetArgumentValue((short) 0).toString());
+			points = Game.getLevel() * points;
+			System.Int32 newPoints = (System.Int32) points;
+			context.AddArgument((short) 0, context.GetArgumentType((short) 0), newPoints);
+		}
+		else 
+		{
+			System.out.println("\n\n*** Invalid argument count! Message was for '" + context.get_MethodName() + "'. ***\n\n");
+		}
+		
+	}
+}

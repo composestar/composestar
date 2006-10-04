@@ -1,0 +1,45 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>Concerns</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{88e9649e-c26c-4746-8e5a-2e896b8b8855}</ProjectGuid>
+    <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
+    <RootNamespace>concerns</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="DynamicStrategy.cps">
+      <SubType>Code</SubType>
+    </Concern>
+    <Concern Include="Levels.cps">
+      <SubType>Code</SubType>
+    </Concern>
+    <Concern Include="Scoring.cps">
+      <SubType>Code</SubType>
+    </Concern>
+    <Concern Include="Sound.cps">
+      <SubType>Code</SubType>
+    </Concern>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Implementation\Implementation.vjsproj">
+      <Name>Implementation</Name>
+      <Project>{58905e79-1bcd-46eb-a40d-779ae0d51769}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
+</Project>

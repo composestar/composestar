@@ -1,0 +1,10 @@
+//Source file: H:\\cvs\\home\\staijen\\Pacman\\src\\pacman\\State.java
+
+//Source file: H:\\cvs\\home\\staijen\\Pacman\\src\\pacman\\util\\State.java
+
+package pacman;
+
+
+class State 
+{
+}
