@@ -725,8 +725,8 @@ namespace Composestar.StarLight.ILWeaver
                         Properties.Resources.FieldNotFound, filterAction.Target));
                 }
 
-                TypeDefinition fieldType = (TypeDefinition)target.FieldType;
-                MethodDefinition md = CecilUtilities.ResolveMethod(fieldType, filterAction.Selector, JPCTypes);
+                
+                MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, filterAction.Selector, JPCTypes);
 
                 return TargetAssemblyDefinition.MainModule.Import(md);
             }

@@ -274,6 +274,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 		// Process all parameters
 		Iterator parameterIterator = storedParameters.iterator();
+		
+		DotNETParameterInfo[] parameters = new DotNETParameterInfo[ storedParameters.size() ];
+		
+		
 		while (parameterIterator.hasNext())
 		{
 			ParameterElement storedParameter = (ParameterElement)parameterIterator.next();
@@ -297,9 +301,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 //          --ParamInfo.setIsLcid( Boolean.valueOf( LastCharData ).booleanValue() );
 //          --ParamInfo.setHashCode( Integer.parseInt( LastCharData ) );
             
-            method.addParameter(parameter);
+            parameters[ parameter.position()-1 ] = parameter;
 		}
-         
+		
+		for (int i=0; i<parameters.length; i++){
+			method.addParameter( parameters[i] );
+		}
 	}
 	
 	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)

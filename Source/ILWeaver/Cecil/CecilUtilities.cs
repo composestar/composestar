@@ -238,9 +238,11 @@ namespace Composestar.StarLight.ILWeaver
             return md;
         }
 
-        public static MethodDefinition ResolveMethod( TypeDefinition parentType, string methodName,
+        public static MethodDefinition ResolveMethod( TypeReference parentTypeRef, string methodName,
             Type[] parameterTypes )
         {
+            TypeDefinition parentType = parentTypeRef.Module.Types[ parentTypeRef.FullName ];
+            
             MethodDefinition md = parentType.Methods.GetMethod( methodName, parameterTypes );
 
             return md;
