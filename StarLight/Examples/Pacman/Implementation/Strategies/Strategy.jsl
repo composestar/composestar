@@ -1,0 +1,98 @@
+//Source file: H:\\cvs\\home\\staijen\\Pacman\\src\\pacman\\Strategy.java
+
+//Source file: H:\\cvs\\home\\staijen\\Pacman\\src\\pacman\\ghost\\Strategy.java
+
+//Source file: C:\\Documents and Settings\\StaijenT\\My Documents\\cvs\\home\\staijen\\Pacman\\src\\pacman\\Strategy.java
+
+package pacman.Strategies;
+import pacman.*;
+
+public abstract class Strategy
+{
+   
+   /**
+   @param glyph
+   @param maze
+   @return int
+   @roseuid 40432AC90029
+    */
+   public int getNextMove(Glyph glyph, World maze) 
+   {
+    return 0;
+   }
+}
+/**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Strategy.Strategy()
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ */

@@ -1,0 +1,101 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{58905E79-1BCD-46EB-A40D-779AE0D51769}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Pacman</RootNamespace>
+    <AssemblyName>Pacman</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualJSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="Beeper.jsl" />
+    <Compile Include="ConcernImplementations\ChangingLevel.jsl" />
+    <Compile Include="ConcernImplementations\ScoreIncreaser.jsl" />
+    <Compile Include="Direction.jsl" />
+    <Compile Include="Game.jsl" />
+    <Compile Include="GameInterface.jsl" />
+    <Compile Include="Ghost.jsl" />
+    <Compile Include="GhostView.jsl" />
+    <Compile Include="Glyph.jsl" />
+    <Compile Include="Keyboard.jsl" />
+    <Compile Include="Main.jsl" />
+    <Compile Include="Pacman.jsl" />
+    <Compile Include="PacmanView.jsl" />
+    <Compile Include="Score.jsl" />
+    <Compile Include="State.jsl" />
+    <Compile Include="Strategies\FleeStrategy.jsl" />
+    <Compile Include="Strategies\RandomStrategy.jsl" />
+    <Compile Include="Strategies\StalkerStrategy.jsl" />
+    <Compile Include="Strategies\Strategy.jsl" />
+    <Compile Include="View.jsl" />
+    <Compile Include="ViewInterface.jsl" />
+    <Compile Include="World.jsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ConcernImplementations\.svn\all-wcprops" />
+    <None Include="ConcernImplementations\.svn\dir-prop-base" />
+    <None Include="ConcernImplementations\.svn\entries" />
+    <None Include="ConcernImplementations\.svn\format" />
+    <None Include="ConcernImplementations\.svn\prop-base\ChangingLevel.jsl.svn-base" />
+    <None Include="ConcernImplementations\.svn\prop-base\ScoreIncreaser.jsl.svn-base" />
+    <None Include="ConcernImplementations\.svn\text-base\ChangingLevel.jsl.svn-base" />
+    <None Include="ConcernImplementations\.svn\text-base\ScoreIncreaser.jsl.svn-base" />
+    <None Include="Strategies\.svn\all-wcprops" />
+    <None Include="Strategies\.svn\dir-prop-base" />
+    <None Include="Strategies\.svn\entries" />
+    <None Include="Strategies\.svn\format" />
+    <None Include="Strategies\.svn\prop-base\FleeStrategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\prop-base\RandomStrategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\prop-base\StalkerStrategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\prop-base\Strategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\text-base\FleeStrategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\text-base\RandomStrategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\text-base\StalkerStrategy.jsl.svn-base" />
+    <None Include="Strategies\.svn\text-base\Strategy.jsl.svn-base" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\MSBuild\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ConcernImplementations\.svn\props\" />
+    <Folder Include="ConcernImplementations\.svn\tmp\prop-base\" />
+    <Folder Include="ConcernImplementations\.svn\tmp\props\" />
+    <Folder Include="ConcernImplementations\.svn\tmp\text-base\" />
+    <Folder Include="Strategies\.svn\props\" />
+    <Folder Include="Strategies\.svn\tmp\prop-base\" />
+    <Folder Include="Strategies\.svn\tmp\props\" />
+    <Folder Include="Strategies\.svn\tmp\text-base\" />
+  </ItemGroup>
+</Project>

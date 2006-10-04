@@ -1,0 +1,357 @@
+package pacman;
+
+import java.util.Vector;
+import java.util.Enumeration;
+import java.awt.Graphics;
+import java.awt.Color;
+
+public class Game extends Thread 
+{
+   public static final State INTRO = new State();
+   public static final State PLAYING = new State();
+   public static final State PAUSED = new State();
+   public static final State GAMEOVER = new State();
+   public int lives;
+   private State state;
+   private static int level = 1;
+   protected Vector ghosts;
+   protected Pacman pacman;
+   protected World world;
+   public View view;
+   public PacmanView pacmanView;
+   private GameInterface  gameInterface;
+   
+   /**
+   @param view
+   @roseuid 402A29750117
+    */
+   public Game(View view) 
+   {
+		this.view = view;
+	    this.gameInterface = new GameInterface(this);
+		this.ghosts = new Vector();
+		this.gameInit();  
+   }
+	public void setPacmanView(PacmanView view)
+	{
+		this.pacmanView = view;
+	}
+	
+	
+	/**
+	 @param round
+	 @roseuid 403C9A0601C5
+	 */
+	public void paint(Graphics g) 
+	{
+		java.awt.Font smallfont = new java.awt.Font("Helvetica", java.awt.Font.BOLD, 14);
+		g.setFont(smallfont);
+		java.awt.FontMetrics fm = g.getFontMetrics();
+
+		int size = World.MAZESIZE * View.BLOCKSIZE;
+		if( this.getState() != Game.PLAYING )
+		{
+			g.setColor(Color.black);
+			g.fillRect(size/2-150, size/2-75, 300, 150 );
+			g.setColor(new Color(32,192,255));
+			g.drawRect(size/2-150, size/2-75, 300, 150 );
+			String str = "Press space to continue...";
+			g.drawString(str, size/2-fm.stringWidth(str)/2, size/2);
+		}
+
+		g.setColor(new Color(96,128,255));
+		
+		//g.drawString("Score: " + this.getScore().intValue(),View.BLOCKSIZE*15-100,View.BLOCKSIZE*15+16);
+
+		int lives = this.getLives();
+		for (int i=0; i < lives; i++)
+		{
+			g.drawImage(pacmanView.getImage(0,0,1,0,0,0),i*28+8,View.BLOCKSIZE*15+1,view);
+		}    
+	}
+
+   /**
+   @param pacman
+   @roseuid 4034A74D0086
+    */
+   public void setPacman(Pacman pacman) 
+   {
+    	this.pacman = pacman;    
+   }
+   
+   /**
+   @param ghost
+   @roseuid 4034A768015E
+    */
+   public void addGhost(Ghost ghost) 
+   {
+    	this.ghosts.addElement(ghost);    
+   }
+   
+   /**
+   @return pacman.Pacman
+   @roseuid 4034A77303C6
+    */
+   public Pacman getPacman() 
+   {
+    	return pacman;    
+   }
+   
+   /**
+   @return java.util.Enumeration
+   @roseuid 4034A778039B
+    */
+   public Enumeration getGhosts() 
+   {
+    	return this.ghosts.elements();    
+   }
+   
+   /**
+   @return int
+   @roseuid 403C9DFE0112
+    */
+   public int getLives() 
+   {
+    	return lives;    
+   }
+   
+   /**
+   @return pacman.State
+   @roseuid 403DFF0803E2
+    */
+   public State getState() 
+   {
+    	return state;    
+   }
+   
+   /**
+   @roseuid 403E012901F9
+    */
+   public void play() 
+   {
+		if( state == GAMEOVER ) {
+			gameStart();
+			roundInit();
+			roundStart();
+		}
+		else if( state == PAUSED ) {
+			roundInit();
+			roundStart();
+		}
+		else if( state == INTRO ) {
+			gameStart();
+			roundInit();
+			roundStart();
+		}
+		else if( state == PLAYING ) {
+		}    
+   }
+   
+   /**
+   @roseuid 403E01DD00EE
+    */
+   public void reset() 
+   {
+		this.lives = 3;
+		this.level = 1;
+		
+		pacman.reset();
+		world.reset();
+		for( Enumeration e = ghosts.elements(); e.hasMoreElements(); )
+		{
+			((Ghost) e.nextElement()).reset();
+		}    
+   }
+   
+   /**
+   @roseuid 403E026000FD
+    */
+   public void doPlaying() 
+   {
+	   int x = pacman.getX();
+	   int y = pacman.getY();
+
+	  pacman.doTurn();
+	   
+	  for( Enumeration e = ghosts.elements(); e.hasMoreElements(); )
+	  {
+	  	Ghost ghost = ((Ghost) e.nextElement());
+
+		  int gx = ghost.getX();
+		  int gy = ghost.getY();
+		ghost.doTurn();
+
+		  //Nasty crossing check
+		if(ghost.getX() == x && ghost.getY() == y && pacman.getX() == gx && pacman.getY() == gy)
+		{
+			ghostBumpsPackman(ghost,pacman);
+		}
+
+		if(ghost.getX() == pacman.getX() && ghost.getY() == pacman.getY())
+		{
+		  ghostBumpsPackman(ghost,pacman);
+		}
+	  } 
+   }
+   
+	private void ghostBumpsPackman(Ghost ghost, Pacman pacman)
+	{
+		if( pacman.isEvil() )
+		{
+			world.eatGhost(ghost.x, ghost.y); 
+			ghost.setStartPosition();
+		}
+		else
+		{
+			pacmanKilled(pacman);
+		}
+	}
+
+	private void pacmanKilled(Pacman pacman)
+	{
+		if(lives == 0 )
+		{
+			// game over
+			gameOver();
+		}
+		else
+		{
+			lives--;
+			pacman.setStartPosition();
+			pacman.setSpeed(0);
+			pacman.setDirection(-1);
+		}
+	}
+
+   /**
+   @roseuid 403E0264034E
+    */
+   public void doPaused() 
+   {
+    
+   }
+   
+   /**
+   @roseuid 403E0268032F
+    */
+   public void doIntro() 
+   {
+    
+   }
+   
+   /**
+   @roseuid 403E026C02A2
+    */
+   public void doGameover() 
+   {
+		int cd = (int)pacman.getDirection();
+		if( cd == 0 ) pacman.setDirection(3);
+		else if( cd == 1) pacman.setDirection(2);
+		else if( cd == 2) pacman.setDirection(0);
+		else if( cd == 3) pacman.setDirection(1);    
+   }
+   
+   /**
+   @roseuid 4044A2A60123
+    */
+   public void proceed() 
+   {
+		if( state == INTRO ) {
+			doIntro();
+		}
+		else if( state == PLAYING ) {
+			doPlaying();
+		}
+		else if( state == PAUSED ) {
+			doPaused();
+		}
+		else if( state == GAMEOVER ) {
+			doGameover();
+	  	} 
+   }
+   
+   /**
+   @roseuid 4044A2BA0113
+    */
+   public void gameInit() 
+   {
+		world = new World();
+		
+		Keyboard keyboard = new Keyboard();
+		
+		Pacman.initInstance(world, keyboard);	
+	    pacman = Pacman.getInstance();
+		
+		world.setPacman(pacman);
+
+		Ghost g = new Ghost(world,100);
+		this.addGhost(g);
+		g.startx = 14;
+	    g.starty = 0;
+		g = new Ghost(world,200);
+		this.addGhost(g);
+		g.startx = 0;
+		g.starty = 0;
+		
+	    level = 1;
+    	lives = 3;
+    	state = INTRO;    
+
+		view.addKeyListener(keyboard);    
+   }
+   
+   /**
+   @roseuid 4044A2BF00E4
+    */
+   public void gameOver() 
+   {
+    	state = GAMEOVER;    
+   }
+   
+   /**
+   @roseuid 4044A2DD028A
+    */
+   public void gameStart() 
+   {
+   		
+   }
+   
+   /**
+   @roseuid 4044A2E50104
+    */
+   public void roundInit() 
+   {
+   		pacman.reset();
+   		for( Enumeration e = ghosts.elements(); e.hasMoreElements(); )
+   		{
+   			((Ghost)e.nextElement()).reset();
+   		}
+   		world.reset();    
+   }
+   
+   /**
+   @roseuid 4044A2EB021D
+    */
+   public void roundOver() 
+   {
+		this.state = PAUSED;
+    	level++;    
+   }
+   
+   /**
+   @roseuid 4044A2F00152
+    */
+   public void roundStart() 
+   {
+   		state = PLAYING;
+   }
+   
+   /**
+   @return int
+   @roseuid 4048A2980104
+    */
+   public static int getLevel() 
+   {
+    	return level;
+   }
+}

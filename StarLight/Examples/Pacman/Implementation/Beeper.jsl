@@ -1,0 +1,52 @@
+package pacman.ConcernImplementations;
+
+import Composestar.StarLight.ContextInfo.*;
+
+/**
+ * Summary description for Beeper.
+ */
+public class Beeper
+{
+	private boolean soundOn = true;
+
+	public Beeper()
+	{
+	}
+
+	public void eatBeep(JoinPointContext context)
+	{
+		//before
+		if(soundOn) Beep( 1000, 10 );
+	}
+
+	public void powerBeep(JoinPointContext context)
+	{
+		//before
+		if(soundOn) 
+		{
+			Beep( 1000, 10 );
+			Beep( 4000, 15 );
+			Beep( 1000, 10 );
+		}
+	}
+
+	public void eatGhostBeep(JoinPointContext context)
+	{
+		//before
+		if(soundOn) Beep( 500, 90 );
+	}
+
+
+	public void bumpGhostBeep(JoinPointContext context)
+	{		
+		//before
+		if(soundOn) 
+		{
+			Beep( 700, 110 );
+			Beep( 400, 110 );
+		}
+	}
+
+	/**@dll.import("kernel32.dll") */
+	private static native boolean Beep( int freq, int dur );
+}
