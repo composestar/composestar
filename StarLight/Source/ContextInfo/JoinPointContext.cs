@@ -104,6 +104,17 @@ namespace Composestar.StarLight.ContextInfo
                 return null;
         }
 
+        /// <summary>
+        /// Property to get the number of arguments
+        /// </summary>
+        public int ArgumentCount
+        {
+            get
+            {
+                return _arguments.Count;
+            }
+        }
+
         private ArgumentInfo _returnValue;
 
         /// <summary>

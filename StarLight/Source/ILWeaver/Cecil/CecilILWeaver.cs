@@ -232,7 +232,7 @@ namespace Composestar.StarLight.ILWeaver
                     // Initialize internal in every constructor of the parent type
                     foreach (MethodDefinition constructor in type.Constructors)
                     {
-                        if (constructor.HasBody)
+                        if (constructor.HasBody  &&  !constructor.IsStatic  &&  constructor.ExplicitThis == null)
                         {
                             if (constructor.Body.Instructions.Count >= 1)
                             {
@@ -241,7 +241,7 @@ namespace Composestar.StarLight.ILWeaver
 
                                 // Create instructions
                                 IList<Instruction> instructions = new List<Instruction>();
-                                instructions.Add(worker.Create(OpCodes.Ldarg, internalConstructor.This));
+                                instructions.Add(worker.Create(OpCodes.Ldarg_0));
                                 instructions.Add(worker.Create(OpCodes.Newobj, internalConstructor));
                                 instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
@@ -290,16 +290,27 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (External external in externals)
             {
+                Console.WriteLine( "external: " + external.Name + " type: " + external.Type );
                 TypeElement externalTypeElement = _languageModelAccessor.GetTypeElement(external.Type);
                 if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
+
+                Console.WriteLine( "externaltypeelement: " + externalTypeElement.FullName );
 
                 externalTypeRef = CecilUtilities.ResolveType(external.Type, externalTypeElement.Assembly, externalTypeElement.FromDLL);
                 if (externalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 2)"));
 
+                Console.WriteLine( "externaltypereference: " + externalTypeRef.FullName );
+
                 externalAttrs = Mono.Cecil.FieldAttributes.Private;
+
+                externalTypeRef = targetAssembly.MainModule.Import( externalTypeRef );
+
+                Console.WriteLine( "externaltypereference: " + externalTypeRef.FullName );
 
                 // Create the field
                 externalDef = new FieldDefinition(external.Name, externalTypeRef, externalAttrs);
+
+                Console.WriteLine( "fieldtype: " + externalDef.FieldType.FullName );
 
                 // Add the field
                 type.Fields.Add(externalDef);
@@ -316,7 +327,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Initialize external in every constructor of the parent type
                 foreach (MethodDefinition constructor in type.Constructors)
                 {
-                    if (constructor.HasBody)
+                    if (constructor.HasBody && !constructor.IsStatic && constructor.ExplicitThis == null)
                     {
                         if (constructor.Body.Instructions.Count >= 1)
                         {
@@ -325,7 +336,7 @@ namespace Composestar.StarLight.ILWeaver
 
                             // Create instructions
                             IList<Instruction> instructions = new List<Instruction>();
-                            instructions.Add(worker.Create(OpCodes.Ldarg_0));
+                            instructions.Add( worker.Create( OpCodes.Ldarg_0 ) );
                             instructions.Add(worker.Create(OpCodes.Call, initMethodRef));
                             instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
 

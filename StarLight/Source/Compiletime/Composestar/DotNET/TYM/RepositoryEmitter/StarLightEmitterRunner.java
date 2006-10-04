@@ -239,7 +239,7 @@ public class StarLightEmitterRunner implements CTCommonModule
                 Debug.out( Debug.MODE_DEBUG, "Emitter",  "key:" +key);
 
                 if (storedMethod == null) {
-                	Debug.out( Debug.MODE_ERROR, "Emitter", "Method not found.");
+                	Debug.out( Debug.MODE_ERROR, "Emitter", "Method not found : " + method.name() + "in type " + type.fullName() );
                 	return;
                 }
                 
