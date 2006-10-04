@@ -35,8 +35,8 @@
     </Concern>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Implementation\Implementation.vjsproj">
-      <Name>Implementation</Name>
+    <ProjectReference Include="..\Implementation\Pacman.vjsproj">
+      <Name>Pacman</Name>
       <Project>{58905e79-1bcd-46eb-a40d-779ae0d51769}</Project>
       <Private>True</Private>
     </ProjectReference>
