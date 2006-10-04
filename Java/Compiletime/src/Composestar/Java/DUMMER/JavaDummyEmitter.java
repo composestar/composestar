@@ -65,6 +65,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		//emit dummy to file
 		try 
 		{
+			File f = (new File(outputFilename)).getParentFile();			
+			f.mkdirs();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilename));			
 			bw.write(dummy.toString());
 			bw.close();
