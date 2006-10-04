@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.ConditionExpressions.Visitor;
 using Composestar.StarLight.CoreServices;
@@ -159,7 +160,21 @@ namespace Composestar.StarLight.ILWeaver
             Composestar.Repository.LanguageModel.TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
 
             // TODO Is the con.Reference.Selector unique enough?
-            MethodReference method = CecilUtilities.ResolveMethod(con.Reference.Selector, con.Reference.NameSpace + "." + con.Reference.Target, te.Assembly, te.FromDLL);
+            MethodReference method;
+            if ( con.Reference.Target.Equals( Reference.INNER_TARGET ) ||
+                con.Reference.Target.Equals( Reference.SELF_TARGET ) )
+            {
+                method = CecilUtilities.ResolveMethod(
+                    con.Reference.Selector, te.FullName,
+                    te.Assembly, te.FromDLL );
+            }
+            else
+            {
+                method = CecilUtilities.ResolveMethod(
+                    con.Reference.Selector, 
+                    (con.Reference.NameSpace.Length>0 ? con.Reference.NameSpace + "." : "") + con.Reference.Target,
+                    te.Assembly, te.FromDLL );
+            }
 
             if (method == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
