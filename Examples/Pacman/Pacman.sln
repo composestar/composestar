@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{D0A7707A-04E2-4AA9-A44E-89783E5BD8A8}") = "Concerns", "concerns\Concerns.cpsproj", "{88E9649E-C26C-4746-8E5A-2E896B8B8855}"
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "Implementation", "Implementation\Implementation.vjsproj", "{58905E79-1BCD-46EB-A40D-779AE0D51769}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "Pacman", "Implementation\Pacman.vjsproj", "{58905E79-1BCD-46EB-A40D-779AE0D51769}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
