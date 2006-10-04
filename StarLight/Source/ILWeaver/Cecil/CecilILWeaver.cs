@@ -225,7 +225,8 @@ namespace Composestar.StarLight.ILWeaver
                 if (internalTypeElement.IsClass && internalTypeElement.Name != "String" && internalTypeElement.Name != "Array")
                 {
                     // Get the .ctor() constructor for the internal type
-                    MethodDefinition internalConstructor = ((TypeDefinition)internalTypeRef).Constructors.GetConstructor(false, new Type[0]);
+                    TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition( internalTypeRef );
+                    MethodDefinition internalConstructor = internalTypeDef.Constructors.GetConstructor(false, new Type[0]);
                     if (internalConstructor == null)
                         throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, internalTypeString));
                     

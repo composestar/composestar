@@ -64,6 +64,11 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <param name="assemblyFile">The assembly file.</param>
         /// <returns></returns>
+        public static TypeDefinition ResolveTypeDefinition( TypeReference reference )
+        {
+            return reference.Module.Types[ reference.FullName ];
+        }
+
         public static TypeReference ResolveType(string typeName, string assemblyName, string assemblyFile)
         {
             if (_resolver == null)

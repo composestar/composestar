@@ -386,7 +386,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Get the methodReference
             MethodReference methodReference = (MethodReference)Method;
-            TypeDefinition parentType = (TypeDefinition)methodReference.DeclaringType;
+            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition( methodReference.DeclaringType );
 
             // Get method to call
             methodToCall = GetMethodToCall(filterAction, parentType);
@@ -421,7 +421,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Get the methodReference
             MethodReference methodReference = (MethodReference)Method;
-            TypeDefinition parentType = (TypeDefinition)methodReference.DeclaringType;
+            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition( methodReference.DeclaringType );
 
             // Get method to call
             methodToCall = GetMethodToCall(filterAction, parentType);
@@ -849,7 +849,7 @@ namespace Composestar.StarLight.ILWeaver
                     // Get the methodReference
                     MethodReference methodReference = (MethodReference)Method;
 
-                    TypeDefinition parentType = (TypeDefinition)methodReference.DeclaringType;
+                    TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition( methodReference.DeclaringType );
 
                     //Get the called method:
                     if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
@@ -873,7 +873,7 @@ namespace Composestar.StarLight.ILWeaver
                                 Properties.Resources.FieldNotFound, filterAction.Target));
                         }
 
-                        TypeDefinition fieldType = (TypeDefinition)target.FieldType;
+                        TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition( target.FieldType );
                         MethodDefinition md = CecilUtilities.ResolveMethod(fieldType, filterAction.Selector, Method);
 
                         methodReference = TargetAssemblyDefinition.MainModule.Import(md);
