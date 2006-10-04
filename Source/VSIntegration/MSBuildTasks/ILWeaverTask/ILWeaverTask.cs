@@ -17,7 +17,7 @@ using Microsoft.Practices.ObjectBuilder;
 using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILWeaver;
-using Composestar.Repository.Db4oContainers;  
+using Composestar.Repository.Db4oContainers;
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -62,7 +62,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         }
 
         #endregion
-        
+
         /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
@@ -95,6 +95,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     try
                     {
+                        // Retrieve a weaver instance from the ObjectManager
                         weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(langModelAccessor, configuration));
 
                         // Perform weaving
@@ -112,19 +113,25 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     {
                         Log.LogErrorFromException(ex, true);
                     }
-                    
+
                 }
             }
             finally
             {
-                  // Close the weaver, so it closes the database, performs cleanups etc
-                        if (weaver != null)
-                            weaver.Close();
+                // Close the weaver, so it closes the database, performs cleanups etc
+                if (weaver != null)
+                    weaver.Close();
             }
 
-            return !Log.HasLoggedErrors ;
+            return !Log.HasLoggedErrors;
         }
 
+        /// <summary>
+        /// Creates the services container.
+        /// </summary>
+        /// <param name="languageModel">The language model.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns></returns>
         internal IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilWeaverConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();

@@ -76,6 +76,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // Otherelse the repository will be dirty
 
             // TODO add text to resource file
+            // FIXME If a reference (thus an assembly) is removed from the project, it might still be in the 
+            // Yap database, so it has to be cleaned up.
 
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 

@@ -100,7 +100,8 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     if (f != null) f.Close();
                 }
-                                              
+                            
+                // We use a byte array to read the file, so we can close it after reading and can write to it again.  
                 targetAssembly = AssemblyFactory.GetAssembly(bFile);
                 //targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
             }
@@ -108,7 +109,6 @@ namespace Composestar.StarLight.ILWeaver
             {
                 throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, _configuration.InputImagePath));
             }
-
 
             // Start timing
             Stopwatch sw = new Stopwatch();
@@ -150,12 +150,12 @@ namespace Composestar.StarLight.ILWeaver
                         WeaveMethod(targetAssembly, method, methodElement);
                     }
 
-                    //Import the modifying type into the AssemblyDefinition
+                    // Import the modifying type into the AssemblyDefinition
                     module.Import(type);
                 }
             }
 
-            //Save the modified assembly
+            // Save the modified assembly
             try
             {
                 AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
