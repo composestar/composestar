@@ -5,6 +5,9 @@ package Composestar.Repository.LanguageModel;
  */
 public class Reference
 {
+	public final static String INNER_TARGET = "inner";
+	public final static String SELF_TARGET = "self";
+
 	public Reference()
 	{
 		//
