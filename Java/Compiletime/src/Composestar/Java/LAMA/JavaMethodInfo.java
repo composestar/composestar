@@ -1,6 +1,7 @@
 package Composestar.Java.LAMA;
 
 import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Utils.StringConverter;
 
@@ -20,6 +21,11 @@ public class JavaMethodInfo extends MethodInfo
 	
 	public Method theMethod;
 	
+	public JavaMethodInfo() 
+	{
+		super();
+	}
+	
 	public JavaMethodInfo(Method m) 
 	{
 		super();
@@ -32,6 +38,28 @@ public class JavaMethodInfo extends MethodInfo
 			return true;
 		return false;
 	}
+	
+	/**
+     * This method should make a clone of the MethodInfo with the name and
+     * parentType changed to the given name and actualParent. The parameters and
+     * return type should stay the same. 
+     */
+    public MethodInfo getClone( String name, Type actualParent ) 
+    {
+    	JavaMethodInfo mi = new JavaMethodInfo();
+    	mi.setName(name);
+    	
+    	//set MethodInfo variables
+    	mi.Parent = actualParent;
+    	mi.Parameters = this.Parameters;
+    	mi.ReturnType = this.ReturnType;
+    	mi.ReturnTypeString = this.ReturnTypeString;
+    	
+    	//set JavaMethodInfo variables
+    	mi.theMethod = this.theMethod;
+    	
+    	return mi;
+    }
 	
 	/** Stuff for LOLA **/
 	
