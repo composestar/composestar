@@ -130,7 +130,7 @@ public class RepositoryLinker
 		filterRuntime.theFilterTypeRuntime = filterTypeRuntime;
 	}
 
-	private void linkFilterElement(FilterElement filterElement, FilterRuntime filterRuntime)
+	private void linkFilterElement(FilterElement filterElement, FilterRuntime filterRuntime) throws Exception
 	{
 		FilterElementRuntime filterElementRuntime;
 
@@ -345,20 +345,16 @@ public class RepositoryLinker
 		filterElementRuntime.theEnableOperatorTypeRuntime = enableOperatorTypeRuntime;		
 	}
 	
-	private void linkConditionPart(ConditionExpression conditionExpression, FilterElementRuntime filterElementRuntime)
+	/**
+	 * Creates an instance of ConditionExpressionRuntime for the given ConditionExpression
+	 */
+	private ConditionExpressionRuntime conditionRuntimeFactory(ConditionExpression conditionExpression) throws Exception
 	{
-
 		ConditionExpressionRuntime conditionExpressionRuntime;
 
-		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"Repository Linker", "***** LinkOperand: "+(conditionExpression instanceof Not));
-		
-		//CONDITIONPART: create runtime condition expression, link the compiletime 
-		//condition expression to it, and add runtime condition expression to the runtime filter element
 		if(conditionExpression instanceof And)
 		{
 			conditionExpressionRuntime = new AndRuntime();
-			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
 		}
 		else if(conditionExpression instanceof ConditionVariable)
 		{
@@ -367,7 +363,6 @@ public class RepositoryLinker
 		else if(conditionExpression instanceof Not)
 		{
 			conditionExpressionRuntime = new NotRuntime();
-			linkOperand(((Not)conditionExpression).getOperand(),(NotRuntime)conditionExpressionRuntime);
 		}
 		else if(conditionExpression instanceof True)
 		{
@@ -380,200 +375,57 @@ public class RepositoryLinker
 		else if(conditionExpression instanceof Or)
 		{
 			conditionExpressionRuntime = new OrRuntime();
-			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
 		}
 		else
 		{
-			//TODO: should produce an error
-			return;
+			throw new Exception("Unknown ConditionExpression class: "+conditionExpression.getClass().toString());
 		}
+
+		if (conditionExpression instanceof BinaryOperator)
+		{
+			linkLeft(((And) conditionExpression).getLeft(),(BinaryOperatorRuntime) conditionExpressionRuntime);
+			linkRight(((And) conditionExpression).getLeft(),(BinaryOperatorRuntime) conditionExpressionRuntime);
+		}
+		else if(conditionExpression instanceof UnaryOperator)
+		{
+			linkOperand(((UnaryOperator) conditionExpression).getOperand(),(UnaryOperatorRuntime) conditionExpressionRuntime);
+		}
+
+		return conditionExpressionRuntime;
+	}
+
+	private void linkConditionPart(ConditionExpression conditionExpression, FilterElementRuntime filterElementRuntime) throws Exception
+	{
+		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
+
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"Repository Linker", "***** LinkOperand: "+(conditionExpression instanceof Not));
 		
 		conditionExpressionRuntime.setReference(conditionExpression);
 		filterElementRuntime.conditionpart = conditionExpressionRuntime;	
 	}
 
-	private void linkLeft(ConditionExpression conditionExpression, AndRuntime andRuntime)
+	private void linkLeft(ConditionExpression conditionExpression, BinaryOperatorRuntime boRuntime) throws Exception
 	{
-		ConditionExpressionRuntime conditionExpressionRuntime;
+		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
 
-		//LEFT: create runtime condition expression, link the compiletime 
-		//condition expression to it, and add runtime condition expression to the runtime and
-		if(conditionExpression instanceof And)
-		{
-			conditionExpressionRuntime = new AndRuntime();
-			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof ConditionVariable)
-		{
-			conditionExpressionRuntime = new ConditionVariableRuntime();
-		}
-		else if(conditionExpression instanceof Not)
-		{
-			conditionExpressionRuntime = new NotRuntime();
-			linkOperand(((Not)conditionExpression).getOperand(),(NotRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof True)
-		{
-			conditionExpressionRuntime = new TrueRuntime();
-		}
-		else
-		{
-			conditionExpressionRuntime = new OrRuntime();
-			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-		}
-		
 		conditionExpressionRuntime.setReference(conditionExpression);
-		andRuntime.left = conditionExpressionRuntime;
+		boRuntime.left = conditionExpressionRuntime;
 		
 	}
-	private void linkRight(ConditionExpression conditionExpression, AndRuntime andRuntime)
-	{
-		ConditionExpressionRuntime conditionExpressionRuntime;
 
-		//RIGHT: create runtime condition expression, link the compiletime 
-		//condition expression to it, and add runtime condition expression to the runtime and
-		if(conditionExpression instanceof And)
-		{
-			conditionExpressionRuntime = new AndRuntime();
-			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof ConditionVariable)
-		{
-			conditionExpressionRuntime = new ConditionVariableRuntime();
-		}
-		else if(conditionExpression instanceof Not)
-		{
-			conditionExpressionRuntime = new NotRuntime();
-			linkOperand(((Not)conditionExpression).getOperand(),(NotRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof True)
-		{
-			conditionExpressionRuntime = new TrueRuntime();
-		}
-		else
-		{
-			conditionExpressionRuntime = new OrRuntime();
-			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-		}
-		
+	private void linkRight(ConditionExpression conditionExpression, BinaryOperatorRuntime boRuntime) throws Exception
+	{
+		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
+
 		conditionExpressionRuntime.setReference(conditionExpression);
-		andRuntime.right = conditionExpressionRuntime;
+		boRuntime.right = conditionExpressionRuntime;
 	}
 	
-	private void linkOperand(ConditionExpression conditionExpression, NotRuntime notRuntime)
+	private void linkOperand(ConditionExpression conditionExpression, UnaryOperatorRuntime uoRuntime) throws Exception
 	{
-		ConditionExpressionRuntime conditionExpressionRuntime;
-		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"Repository Linker", "***** LinkOperand: "+(conditionExpression instanceof True));
-		//OPERAND: create runtime condition expression, link the compiletime 
-		//condition expression to it, and add runtime condition expression to the runtime not
-		if(conditionExpression instanceof And)
-		{
-			conditionExpressionRuntime = new AndRuntime();
-			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof ConditionVariable)
-		{
-			conditionExpressionRuntime = new ConditionVariableRuntime();
-		}
-		else if(conditionExpression instanceof Not)
-		{
-			conditionExpressionRuntime = new NotRuntime();
-			linkOperand(((Not)conditionExpression).getOperand(),(NotRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof True)
-		{
-			conditionExpressionRuntime = new TrueRuntime();
-		}
-		else if(conditionExpression instanceof False)
-		{
-			conditionExpressionRuntime = new FalseRuntime();
-		}
-		else
-		{
-			conditionExpressionRuntime = new OrRuntime();
-			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-		}
-		
-		conditionExpressionRuntime.setReference(conditionExpression);
-		notRuntime.operand = conditionExpressionRuntime;
-	}
-	
-	private void linkLeft(ConditionExpression conditionExpression, OrRuntime orRuntime)
-	{
-		ConditionExpressionRuntime conditionExpressionRuntime;
+		ConditionExpressionRuntime conditionExpressionRuntime = conditionRuntimeFactory(conditionExpression);
 
-		//LEFT: create runtime condition expression, link the compiletime 
-		//condition expression to it, and add runtime condition expression to the runtime or
-		if(conditionExpression instanceof And)
-		{
-			conditionExpressionRuntime = new AndRuntime();
-			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof ConditionVariable)
-		{
-			conditionExpressionRuntime = new ConditionVariableRuntime();
-		}
-		else if(conditionExpression instanceof Not)
-		{
-			conditionExpressionRuntime = new NotRuntime();
-			linkOperand(((Not)conditionExpression).getOperand(),(NotRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof True)
-		{
-			conditionExpressionRuntime = new TrueRuntime();
-		}
-		else
-		{
-			conditionExpressionRuntime = new OrRuntime();
-			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-		}
-		
 		conditionExpressionRuntime.setReference(conditionExpression);
-		orRuntime.left = conditionExpressionRuntime;
-		
-	}
-	private void linkRight(ConditionExpression conditionExpression, OrRuntime orRuntime)
-	{
-		ConditionExpressionRuntime conditionExpressionRuntime;
-
-		//RIGHT: create runtime condition expression, link the compiletime 
-		//condition expression to it, and add runtime condition expression to the runtime or
-		if(conditionExpression instanceof And)
-		{
-			conditionExpressionRuntime = new AndRuntime();
-			linkLeft(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-			linkRight(((And)conditionExpression).getLeft(),(AndRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof ConditionVariable)
-		{
-			conditionExpressionRuntime = new ConditionVariableRuntime();
-		}
-		else if(conditionExpression instanceof Not)
-		{
-			conditionExpressionRuntime = new NotRuntime();
-			linkOperand(((Not)conditionExpression).getOperand(),(NotRuntime)conditionExpressionRuntime);
-		}
-		else if(conditionExpression instanceof True)
-		{
-			conditionExpressionRuntime = new TrueRuntime();
-		}
-		else
-		{
-			conditionExpressionRuntime = new OrRuntime();
-			linkLeft(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-			linkRight(((Or)conditionExpression).getLeft(),(OrRuntime)conditionExpressionRuntime);
-		}
-		
-		conditionExpressionRuntime.setReference(conditionExpression);
-		orRuntime.right = conditionExpressionRuntime;
+		uoRuntime.operand = conditionExpressionRuntime;
 	}
 }
