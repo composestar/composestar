@@ -73,6 +73,7 @@
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\And.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\BinaryOperator.java" />
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\BooleanOclExpression.java">
       <SubType>Code</SubType>
     </Compile>
@@ -82,9 +83,8 @@
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionExpression.java">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionLiteral.java">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionVariable.java" />
+    <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\CondLiteral.java" />
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\CORfilterElementCompOper.java">
       <SubType>Code</SubType>
     </Compile>
@@ -205,6 +205,7 @@
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\True.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\UnaryOperator.java" />
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ValueExpression.java">
       <SubType>Code</SubType>
     </Compile>

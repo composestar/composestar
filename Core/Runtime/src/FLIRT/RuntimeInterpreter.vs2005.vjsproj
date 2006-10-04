@@ -194,15 +194,15 @@
     <Compile Include="interpreter\AndRuntime.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="interpreter\BinaryOperatorRuntime.java" />
     <Compile Include="interpreter\ConditionExpressionRuntime.java">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="interpreter\ConditionLiteralRuntime.java">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="interpreter\ConditionResolver.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="interpreter\ConditionVariableRuntime.java" />
+    <Compile Include="interpreter\CondLiteralRuntime.java" />
     <Compile Include="interpreter\CorFilterElementCompositionOperatorRuntime.java">
       <SubType>Code</SubType>
     </Compile>
@@ -275,6 +275,7 @@
     <Compile Include="interpreter\TrueRuntime.java">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="interpreter\UnaryOperatorRuntime.java" />
     <Compile Include="interpreter\VoidFilterCompositionOperatorRuntime.java">
       <SubType>Code</SubType>
     </Compile>
