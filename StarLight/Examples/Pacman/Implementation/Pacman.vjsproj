@@ -56,14 +56,6 @@
     <Compile Include="World.jsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ConcernImplementations\.svn\all-wcprops" />
-    <None Include="ConcernImplementations\.svn\dir-prop-base" />
-    <None Include="ConcernImplementations\.svn\entries" />
-    <None Include="ConcernImplementations\.svn\format" />
-    <None Include="ConcernImplementations\.svn\prop-base\ChangingLevel.jsl.svn-base" />
-    <None Include="ConcernImplementations\.svn\prop-base\ScoreIncreaser.jsl.svn-base" />
-    <None Include="ConcernImplementations\.svn\text-base\ChangingLevel.jsl.svn-base" />
-    <None Include="ConcernImplementations\.svn\text-base\ScoreIncreaser.jsl.svn-base" />
     <None Include="Strategies\.svn\all-wcprops" />
     <None Include="Strategies\.svn\dir-prop-base" />
     <None Include="Strategies\.svn\entries" />
@@ -89,10 +81,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ConcernImplementations\.svn\props\" />
-    <Folder Include="ConcernImplementations\.svn\tmp\prop-base\" />
-    <Folder Include="ConcernImplementations\.svn\tmp\props\" />
-    <Folder Include="ConcernImplementations\.svn\tmp\text-base\" />
     <Folder Include="Strategies\.svn\props\" />
     <Folder Include="Strategies\.svn\tmp\prop-base\" />
     <Folder Include="Strategies\.svn\tmp\props\" />
