@@ -45,6 +45,7 @@
     <Compile Include="FilterTypes\BuildIn\DispatchAction.cs" />
     <Compile Include="FilterTypes\BuildIn\DispatchFilter.cs" />
     <Compile Include="FilterTypes\BuildIn\SubstitutionAction.cs" />
+    <Compile Include="FilterTypes\FilterActionWeaveStrategy.cs" />
     <Compile Include="FilterTypes\FilterType.cs" />
     <Compile Include="FilterTypes\FilterAction.cs" />
     <Compile Include="FilterTypes\FilterActionAnnotation.cs" />
