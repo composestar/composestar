@@ -33,10 +33,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomFilterType.cs" />
     <Compile Include="FilterContext.cs" />
+    <Compile Include="FilterTypes\Argument.cs" />
+    <Compile Include="FilterTypes\BuildIn\AdviceAction.cs" />
+    <Compile Include="FilterTypes\BuildIn\ContinueAction.cs" />
+    <Compile Include="FilterTypes\BuildIn\DispatchAction.cs" />
+    <Compile Include="FilterTypes\BuildIn\DispatchFilter.cs" />
+    <Compile Include="FilterTypes\BuildIn\SubstitutionAction.cs" />
+    <Compile Include="FilterTypes\FilterType.cs" />
+    <Compile Include="FilterTypes\FilterAction.cs" />
+    <Compile Include="FilterTypes\FilterActionAnnotation.cs" />
+    <Compile Include="FilterTypes\Operation.cs" />
+    <Compile Include="FilterTypes\Resource.cs" />
     <Compile Include="JoinPointContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
