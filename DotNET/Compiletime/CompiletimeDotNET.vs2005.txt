@@ -1,3 +1,4 @@
 This serves as the central project in the solution. 
 It does not contain any source files, but has dependencies to all other projects.
 Therefore the target files (exe/dll's) of all projects are copied to the output folder of this one (obj/Debug or obj/Release).
+This project can be removed once the ANT build system has been updated for VS2005.

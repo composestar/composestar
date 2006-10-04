@@ -75,7 +75,7 @@
       <Name>VJSSupUILib</Name>
       <HintPath>VJSSupUILib.dll</HintPath>
     </Reference>
-    <ProjectReference Include="..\..\..\..\DotNET\Runtime\binaries\AntlrDotNet\AntlrDotNet.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\DotNET\Libraries\AntlrDotNet\AntlrDotNet.vs2005.vjsproj">
       <Project>{105127C9-CD0A-43C8-9314-D3C67A0C529A}</Project>
       <Name>AntlrDotNet.vs2005</Name>
     </ProjectReference>
