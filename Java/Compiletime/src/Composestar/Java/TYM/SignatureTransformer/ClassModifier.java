@@ -68,8 +68,8 @@ public class ClassModifier {
 			if( m.Parameters.size() > 0 ) {
 				Class[] params = m.theMethod.getParameterTypes();
 				for (int i = 0; i < params.length; i++) {
-					String name = params[i].getClass().getName();
-					CtClass clazz = findClass(name);	
+					String name = params[i].getName();
+					CtClass clazz = findClass(name);
 					parameters[i] = clazz;
 				}
 			}
