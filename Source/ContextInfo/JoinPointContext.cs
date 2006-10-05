@@ -89,6 +89,22 @@ namespace Composestar.StarLight.ContextInfo
                 return null;
         }
 
+
+        /// <summary>
+        /// Gets the argument value using a generic.
+        /// </summary>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public T GetGenericArgumentValue<T>(short ordinal)
+        {
+            ArgumentInfo ai;
+            if (_arguments.TryGetValue(ordinal, out ai))
+                return ((T)ai.Value);
+            else
+                return default(T);
+        }
+
         /// <summary>
         /// Gets the type of the argument.
         /// </summary>
