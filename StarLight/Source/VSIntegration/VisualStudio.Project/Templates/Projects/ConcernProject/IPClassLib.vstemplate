@@ -4,7 +4,7 @@
     <Description>A project for creating a new ComposeStar StarLight enabled application.</Description>
     <Icon>__TemplateIcon.ico</Icon>
     <ProjectType>StarLight</ProjectType>
-    <SortOrder>50</SortOrder>
+    <SortOrder>30</SortOrder>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <CreateNewFolder>true</CreateNewFolder>
     <DefaultName>StarLightProject</DefaultName>

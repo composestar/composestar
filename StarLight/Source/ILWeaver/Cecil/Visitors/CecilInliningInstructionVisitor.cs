@@ -665,7 +665,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             if (numberOfArguments > 0)
             {
-                for (int i = 0; i < numberOfArguments; i++)
+                 foreach (ParameterDefinition param in Method.Parameters)
                 {
                     //methodReference.Parameters[ i ].Attributes = Mono.Cecil.ParamAttributes.Out;                    
 
@@ -673,27 +673,27 @@ namespace Composestar.StarLight.ILWeaver
                     Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                     // Load the ordinal
-                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, i));
+                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
 
                     // load the argument 
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, originalCall.Parameters[i]));
+                    Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
 
                     // Check if parameter is value type, then box
-                    if (originalCall.Parameters[i].ParameterType.IsValueType)
+                    if (param.ParameterType.IsValueType)
                     {
-                        Instructions.Add(Worker.Create(OpCodes.Box, originalCall.Parameters[i].ParameterType));
+                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
                     }
 
                     // Determine type
                     Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(System.Object).GetMethod("GetType", new Type[] { }))));
 
                     // Again load the argument
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, originalCall.Parameters[i]));
+                    Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
 
                     // Check if parameter is value type, then box
-                    if (originalCall.Parameters[i].ParameterType.IsValueType)
+                    if (param.ParameterType.IsValueType)
                     {
-                        Instructions.Add(Worker.Create(OpCodes.Box, originalCall.Parameters[i].ParameterType));
+                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
                     }
 
                     // Call the AddArgument function
