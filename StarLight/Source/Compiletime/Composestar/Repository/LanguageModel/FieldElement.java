@@ -9,7 +9,12 @@ public class FieldElement implements IRepositoryElement
 	private boolean _isPrivate;  
 	private boolean _isPublic; 
 	private boolean _isStatic;
-	
+
+	public FieldElement(String id)
+	{
+		_id = id;
+	}
+
 	public FieldElement(String id, String parentTypeId)
 	{
 		_id = id;

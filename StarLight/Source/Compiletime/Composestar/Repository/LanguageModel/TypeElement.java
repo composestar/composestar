@@ -24,7 +24,13 @@ public class TypeElement implements IRepositoryElement
 	private boolean _isSerializable;
 	private String module; // TODO: object ???????
 	private String _fromDLL = "";
-	
+
+	/** @attribute com.db4o.Transient() */ 
+	private FieldElement[] _fieldElements;
+
+	/** @attribute com.db4o.Transient() */ 
+	private MethodElement[] _methodElements;
+
 	public TypeElement(String id) 
 	{
 		_id = id;
@@ -252,5 +258,32 @@ public class TypeElement implements IRepositoryElement
 		_fromDLL = value;
 	}
 
+	/** @property
+    */
+	public FieldElement[] get_FieldElements()
+	{
+		return _fieldElements;
+	}
+
+	/** @property
+	  */
+	public void set_FieldElements(FieldElement[] value)
+	{
+		_fieldElements = value;
+	}
+
+	/** @property
+    */
+	public MethodElement[] get_MethodElements()
+	{
+		return _methodElements;
+	}
+
+	/** @property
+	  */
+	public void set_MethodElements(MethodElement[] value)
+	{
+		_methodElements = value;
+	}
 
 }

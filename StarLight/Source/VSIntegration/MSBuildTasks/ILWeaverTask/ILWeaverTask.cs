@@ -83,6 +83,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 foreach (ITaskItem item in AssemblyFiles)
                 {
                     filename = item.ToString();
+
+                    // Exclude StarLight ContextInfo assembly from the weaving process
+                    if (filename.EndsWith("Composestar.StarLight.ContextInfo.dll")) continue;
+
                     Log.LogMessage("Weaving file {0}", filename);
 
                     // Preparing config

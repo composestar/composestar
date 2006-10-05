@@ -17,6 +17,8 @@ namespace Composestar.Repository.Db4oContainers
             if (!_isInitialized)
             {
                 Db4o.Configure().CallConstructors(false);
+                //Db4o.Configure().BlockSize(8);
+                Db4o.Configure().TestConstructors(false);
 
                 Db4o.Configure().ObjectClass(typeof(MethodElement)).CascadeOnUpdate(true);
                 Db4o.Configure().ObjectClass(typeof(Composestar.Repository.LanguageModel.Inlining.Block)).CascadeOnActivate(true);

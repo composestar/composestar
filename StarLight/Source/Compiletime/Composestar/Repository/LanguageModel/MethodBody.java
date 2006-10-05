@@ -10,6 +10,9 @@ public class MethodBody
 	private String _id;
 	private String _parentMethodId;
 	private InlineInstruction _inputFilter;
+
+	/** @attribute com.db4o.Transient() */
+	private CallElement[] _callElements;
 		
 	public MethodBody(String id, String parentId)
 	{
@@ -45,8 +48,20 @@ public class MethodBody
 	public void set_InputFilter(InlineInstruction value)
 	{
 		_inputFilter = value;
-	} 
+	}
 
+	/** @property
+	*/
+	public CallElement[] get_CallElements()
+	{
+		return _callElements;
+	}
 
+	/** @property
+	  */
+	public void set_CallElements(CallElement[] value)
+	{
+		_callElements = value;
+	}
 
 }

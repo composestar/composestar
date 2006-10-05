@@ -18,6 +18,9 @@ public class MethodElement implements IRepositoryElement
 	private MethodBody _methodBody;
 	private String _signature;
 
+	/** @attribute com.db4o.Transient() */ 
+	private ParameterElement[] _parameterElements;
+
 	public MethodElement(String id)
 	{
 		_id = id;
@@ -178,4 +181,19 @@ public class MethodElement implements IRepositoryElement
         if (_methodBody.get_InputFilter() != null) buffer.append( _methodBody.get_InputFilter().toString() );
         return buffer.toString();
     }
+
+	/** @property
+    */
+	public ParameterElement[] get_ParameterElements()
+	{
+		return _parameterElements;
+	}
+
+	/** @property
+	  */
+	public void set_ParameterElements(ParameterElement[] value)
+	{
+		_parameterElements = value;
+	}
+
 }

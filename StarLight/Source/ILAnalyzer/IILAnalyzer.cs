@@ -37,7 +37,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <returns></returns>
         IlAnalyzerResults ExtractTypeElements(String fileName);
 
-        void ProcessUnresolvedTypes();
+       //void ProcessUnresolvedTypes();
 
         /// <summary>
         /// Gets the duration of the last executed method.

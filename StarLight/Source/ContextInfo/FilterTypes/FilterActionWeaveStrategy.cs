@@ -16,9 +16,8 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
         }
 
 
-        public abstract String Weave()
-        {
-        }
+        public abstract String Weave();
+
 
     }
 }
