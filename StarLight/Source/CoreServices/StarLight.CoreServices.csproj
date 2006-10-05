@@ -40,6 +40,7 @@
     <Compile Include="DIHelper.cs" />
     <Compile Include="ObjectBuilderConfiguratorBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IILAnalyzer.cs" />
     <Compile Include="Services\IILWeaver.cs" />
     <Compile Include="Services\ILanguageModelAccessor.cs" />
   </ItemGroup>

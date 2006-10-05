@@ -19,9 +19,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.Modules;
 import Composestar.Core.Master.Config.PathSettings;
-import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Repository.RepositoryAccess;
 import Composestar.Repository.Configuration.CommonConfiguration;
@@ -47,7 +45,6 @@ public class StarLightMaster extends Master  {
     /**
      * Default ctor.
      * @param configurationFile
-     * @throws Composestar.core.Exception.ModuleException
      */
     public StarLightMaster(String configurationFile) {
         // Store the config filename 

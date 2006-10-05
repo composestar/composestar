@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Globalization; 
+using System.Globalization;
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -46,7 +46,7 @@ namespace Composestar.StarLight.ILWeaver
             _configuration = configuration;
             _languageModelAccessor = languageModelAccessor;
 
-            CecilUtilities.BinFolder = _configuration.BinFolder; 
+            CecilUtilities.BinFolder = _configuration.BinFolder;
 
         }
 
@@ -73,7 +73,7 @@ namespace Composestar.StarLight.ILWeaver
             return "Cecil IL Weaver";
         }
 
-       
+
 
         /// <summary>
         /// Perform the weaving actions.
@@ -100,7 +100,7 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     if (f != null) f.Close();
                 }
-                            
+
                 // We use a byte array to read the file, so we can close it after reading and can write to it again.  
                 targetAssembly = AssemblyFactory.GetAssembly(bFile);
                 //targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
@@ -162,7 +162,7 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (Exception ex)
             {
-                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly,  _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
             }
 
             // Stop timing
@@ -206,7 +206,7 @@ namespace Composestar.StarLight.ILWeaver
             foreach (Internal inter in internals)
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
-                
+
                 TypeElement internalTypeElement = _languageModelAccessor.GetTypeElement(internalTypeString);
                 if (internalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
 
@@ -214,6 +214,8 @@ namespace Composestar.StarLight.ILWeaver
                 if (internalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
 
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
+
+                internalTypeRef = targetAssembly.MainModule.Import(internalTypeRef);
 
                 // Create the field
                 internalDef = new FieldDefinition(inter.Name, internalTypeRef, internalAttrs);
@@ -225,15 +227,15 @@ namespace Composestar.StarLight.ILWeaver
                 if (internalTypeElement.IsClass && internalTypeElement.Name != "String" && internalTypeElement.Name != "Array")
                 {
                     // Get the .ctor() constructor for the internal type
-                    TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition( internalTypeRef );
+                    TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition(internalTypeRef);
                     MethodDefinition internalConstructor = internalTypeDef.Constructors.GetConstructor(false, new Type[0]);
                     if (internalConstructor == null)
                         throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConstructorNotFound, internalTypeString));
-                    
+
                     // Initialize internal in every constructor of the parent type
                     foreach (MethodDefinition constructor in type.Constructors)
                     {
-                        if (constructor.HasBody  &&  !constructor.IsStatic  &&  constructor.ExplicitThis == null)
+                        if (constructor.HasBody && !constructor.IsStatic && !constructor.ExplicitThis)
                         {
                             if (constructor.Body.Instructions.Count >= 1)
                             {
@@ -291,27 +293,20 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (External external in externals)
             {
-                Console.WriteLine( "external: " + external.Name + " type: " + external.Type );
                 TypeElement externalTypeElement = _languageModelAccessor.GetTypeElement(external.Type);
                 if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
 
-                Console.WriteLine( "externaltypeelement: " + externalTypeElement.FullName );
 
                 externalTypeRef = CecilUtilities.ResolveType(external.Type, externalTypeElement.Assembly, externalTypeElement.FromDLL);
                 if (externalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 2)"));
 
-                Console.WriteLine( "externaltypereference: " + externalTypeRef.FullName );
-
                 externalAttrs = Mono.Cecil.FieldAttributes.Private;
 
-                externalTypeRef = targetAssembly.MainModule.Import( externalTypeRef );
-
-                Console.WriteLine( "externaltypereference: " + externalTypeRef.FullName );
+                externalTypeRef = targetAssembly.MainModule.Import(externalTypeRef);
 
                 // Create the field
                 externalDef = new FieldDefinition(external.Name, externalTypeRef, externalAttrs);
 
-                Console.WriteLine( "fieldtype: " + externalDef.FieldType.FullName );
 
                 // Add the field
                 type.Fields.Add(externalDef);
@@ -328,7 +323,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Initialize external in every constructor of the parent type
                 foreach (MethodDefinition constructor in type.Constructors)
                 {
-                    if (constructor.HasBody && !constructor.IsStatic && constructor.ExplicitThis == null)
+                    if (constructor.HasBody && !constructor.IsStatic && !constructor.ExplicitThis)
                     {
                         if (constructor.Body.Instructions.Count >= 1)
                         {
@@ -337,7 +332,7 @@ namespace Composestar.StarLight.ILWeaver
 
                             // Create instructions
                             IList<Instruction> instructions = new List<Instruction>();
-                            instructions.Add( worker.Create( OpCodes.Ldarg_0 ) );
+                            instructions.Add(worker.Create(OpCodes.Ldarg_0));
                             instructions.Add(worker.Create(OpCodes.Call, initMethodRef));
                             instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
 
@@ -419,7 +414,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
-            
+
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
@@ -444,7 +439,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 // Add the instructions
                 int instructionsCount = 0;
-                instructionsCount += InsertInstructionList(ref worker, ins, visitor.Instructions);
+                instructionsCount += InsertBeforeInstructionList(ref worker, ins, visitor.Instructions);
             }
 
             //
@@ -466,10 +461,10 @@ namespace Composestar.StarLight.ILWeaver
         public void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve calls for this method
-            
+
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
-            
+
             if (methodElement.MethodBody == null)
                 return;
 
@@ -552,7 +547,7 @@ namespace Composestar.StarLight.ILWeaver
             foreach (Instruction instr in instructionsToAdd)
             {
                 worker.InsertBefore(startInstruction, instr);
-           }
+            }
 
             return instructionsToAdd.Count;
         }

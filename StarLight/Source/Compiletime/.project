@@ -3,6 +3,7 @@
 	<name>StarLight</name>
 	<comment></comment>
 	<projects>
+		<project>ComposeStar</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

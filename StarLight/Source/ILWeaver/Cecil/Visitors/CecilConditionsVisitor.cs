@@ -180,7 +180,8 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
 
             // if ((method.CallingConvention&MethodCallingConvention.ThisCall)== MethodCallingConvention.ThisCall)
-            if (method.HasThis)
+            if (con.Reference.Target.Equals( Reference.INNER_TARGET ) ||
+                con.Reference.Target.Equals( Reference.SELF_TARGET ))
             {
                 // Load the this pointer
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));

@@ -380,13 +380,17 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ret));
         }
 
+        /// <summary>
+        /// Visits the after action.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
         public void VisitAfterAction(FilterAction filterAction)
         {
             MethodReference methodToCall;
 
             // Get the methodReference
             MethodReference methodReference = (MethodReference)Method;
-            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition( methodReference.DeclaringType );
+            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
             // Get method to call
             methodToCall = GetMethodToCall(filterAction, parentType);
@@ -421,7 +425,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Get the methodReference
             MethodReference methodReference = (MethodReference)Method;
-            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition( methodReference.DeclaringType );
+            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
             // Get method to call
             methodToCall = GetMethodToCall(filterAction, parentType);
@@ -453,30 +457,40 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="jpcVar">VariableDefinition containing the JoinPointContext object</param>
         private void RestoreJoinPointContext(MethodReference originalMethod, VariableDefinition jpcVar, bool storeReturnValue)
         {
+
             int numberOfArguments = originalMethod.Parameters.Count;
 
             //
             // Retrieve the arguments
             //               
-            for (int i = 0; i < numberOfArguments; i++)
+            foreach (ParameterDefinition param in originalMethod.Parameters)
             {
                 // Load jpc
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Load the ordinal
-                Instructions.Add(Worker.Create(OpCodes.Ldc_I4, i));
+                Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
 
-                // Call the GetArgumentValue(int16) function
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) }))));
+                // Call the GetArgumentValue(int16) function    
+                MethodInfo t = typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) });
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(t)));
 
+                // TODO Call the generic GetArgumentValue function to get directly the right type.
+                // Problem is how to call the function
+                //MethodReference mr = CecilUtilities.ResolveMethod("GetGenericArgumentValue", "Composestar.StarLight.ContextInfo.JoinPointContext", "Composestar.StarLight.ContextInfo");
+               
                 // Check if parameter is value type, then unbox
-                if (originalMethod.Parameters[i].ParameterType.IsValueType)
+                if (param.ParameterType.IsValueType)
                 {
-                    Instructions.Add(Worker.Create(OpCodes.Unbox_Any, originalMethod.Parameters[i].ParameterType));
+                    Instructions.Add(Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
+                }
+                else
+                {
+                    Instructions.Add(Worker.Create(OpCodes.Castclass, param.ParameterType));
                 }
 
                 // Store argument
-                Instructions.Add(Worker.Create(OpCodes.Starg_S, originalMethod.Parameters[i]));
+                Instructions.Add(Worker.Create(OpCodes.Starg_S, param));
             }
 
             // Retrieve returnvalue
@@ -539,8 +553,9 @@ namespace Composestar.StarLight.ILWeaver
             // Load the JoinPointObject as the parameter
             Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
-            // Call the Target
-            Instructions.Add(Worker.Create(OpCodes.Call, methodToCall));
+            // We can safely emit a callvirt here. The JITter will make the right call.
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, methodToCall));
+
         }
 
         /// <summary>
@@ -598,7 +613,7 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     Instructions.Add(Worker.Create(OpCodes.Box, originalCall.ReturnType.ReturnType));
                 }
-                
+
                 // Call set_ReturnValue in JoinPointContext
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
                     typeof(JoinPointContext).GetMethod("set_ReturnValue", new Type[] { typeof(object) }))));
@@ -621,7 +636,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
 
             int numberOfArguments = 0;
-            
+
             switch (FilterType)
             {
                 case FilterTypes.InputFilter:
@@ -725,7 +740,7 @@ namespace Composestar.StarLight.ILWeaver
                         Properties.Resources.FieldNotFound, filterAction.Target));
                 }
 
-                
+
                 MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, filterAction.Selector, JPCTypes);
 
                 return TargetAssemblyDefinition.MainModule.Import(md);
@@ -849,9 +864,9 @@ namespace Composestar.StarLight.ILWeaver
                     // Get the methodReference
                     MethodReference methodReference = (MethodReference)Method;
 
-                    TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition( methodReference.DeclaringType );
+                    TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
-                    //Get the called method:
+                    // Get the called method
                     if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
                         filterAction.Target.Equals(FilterAction.SELF_TARGET))
                     {
@@ -873,7 +888,7 @@ namespace Composestar.StarLight.ILWeaver
                                 Properties.Resources.FieldNotFound, filterAction.Target));
                         }
 
-                        TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition( target.FieldType );
+                        TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition(target.FieldType);
                         MethodDefinition md = CecilUtilities.ResolveMethod(fieldType, filterAction.Selector, Method);
 
                         methodReference = TargetAssemblyDefinition.MainModule.Import(md);
@@ -887,7 +902,7 @@ namespace Composestar.StarLight.ILWeaver
 
                     // Place the arguments on the stack first
 
-                    //Place target on the stack:
+                    // Place target on the stack
                     if (methodReference.HasThis)
                     {
                         if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
@@ -909,8 +924,8 @@ namespace Composestar.StarLight.ILWeaver
                         Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i]));
                     }
 
-                    // Call the method
-                    Instructions.Add(Worker.Create(OpCodes.Call, methodReference));
+                    // Call the method                    
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt, methodReference));
 
                     //Store the return value:
                     if (!methodReference.ReturnType.ReturnType.FullName.Equals(VoidType))
