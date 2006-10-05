@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n14777"/>
+        <node id="n14776"/>
+        <node id="n14778"/>
+        <node id="n14782"/>
+        <node id="n14780"/>
+        <node id="n14775"/>
+        <node id="n14779"/>
+        <node id="n14781"/>
+        <edge from="n14776" to="n14776">
+            <attr name="label">
+                <string>new:Enable</string>
+            </attr>
+        </edge>
+        <edge from="n14777" to="n14777">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14781">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14776">
+            <attr name="label">
+                <string>orderFirst</string>
+            </attr>
+        </edge>
+        <edge from="n14780" to="n14778">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n14775" to="n14779">
+            <attr name="label">
+                <string>new:flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14779">
+            <attr name="label">
+                <string>conditionOperator</string>
+            </attr>
+        </edge>
+        <edge from="n14780" to="n14780">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14775">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n14776" to="n14777">
+            <attr name="label">
+                <string>new:flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n14775" to="n14775">
+            <attr name="label">
+                <string>ConditionExpression</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14778">
+            <attr name="label">
+                <string>FilterElement</string>
+            </attr>
+        </edge>
+        <edge from="n14775" to="n14782">
+            <attr name="label">
+                <string>new:flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n14782" to="n14782">
+            <attr name="label">
+                <string>CompOper</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14782">
+            <attr name="label">
+                <string>rightOper</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14775">
+            <attr name="label">
+                <string>conditionPart</string>
+            </attr>
+        </edge>
+        <edge from="n14782" to="n14777">
+            <attr name="label">
+                <string>new:flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n14780" to="n14778">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n14778" to="n14777">
+            <attr name="label">
+                <string>flowAccept</string>
+            </attr>
+        </edge>
+        <edge from="n14779" to="n14776">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n14779" to="n14779">
+            <attr name="label">
+                <string>EnableOperator</string>
+            </attr>
+        </edge>
+        <edge from="n14782" to="n14781">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n14776" to="n14776">
+            <attr name="label">
+                <string>MatchingPattern</string>
+            </attr>
+        </edge>
+        <edge from="n14781" to="n14781">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n14776" to="n14782">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

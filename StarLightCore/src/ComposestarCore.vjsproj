@@ -1,0 +1,600 @@
+<VisualStudioProject>
+    <VISUALJSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}"
+    >
+        <Build>
+            <Settings
+                AssemblyKeyContainerName = ""
+                AssemblyName = "ComposestarCore"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "ComposestarCore"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    BaseAddress = "285212672"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DebugSymbols = "true"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                    AdditionalOptions = ""
+                />
+                <Config
+                    Name = "Release"
+                    BaseAddress = "285212672"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DebugSymbols = "true"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                    AdditionalOptions = ""
+                />
+            </Settings>
+            <References/>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "AssemblyInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\Concern.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\MethodWrapper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\PlatformRepresentation.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\PrimitiveConcern.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\Signature.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\SignatureImplementation.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\CpsConcern.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\AbstractPattern.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\AbstractPatternAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\And.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\BooleanOclExpression.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Condition.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionExpression.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionLiteral.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\CORfilterElementCompOper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\DisableOperator.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\EnableOperator.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\EnableOperatorType.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\External.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\False.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Filter.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterCompOper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterElement.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterElementAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterElementCompOper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModule.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleParameter.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterModuleParameterAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\FilterType.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Internal.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\InternalAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingPart.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingPartAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingPattern.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingPatternAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MatchingType.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MessageSelector.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\MessageSelectorAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Method.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\NameMatchingType.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Not.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Or.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedInternal.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedInternalAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedMessageSelector.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ParameterizedMessageSelectorAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SEQfilterCompOper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SignatureMatchingType.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SubstitutionPart.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\SubstitutionPartAST.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\Target.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\True.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ValueExpression.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\VoidFilterCompOper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\VoidFilterElementCompOper.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Implementation\CompiledImplementation.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Implementation\Implementation.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Implementation\Source.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Implementation\SourceFile.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\CompiledConcernRepRef.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\ConcernElementReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\ConcernReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\ConditionReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\DeclaredObjectReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\ExternalConcernReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\FilterModuleElementReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\FilterModuleReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\FilterReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\LabeledConcernReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\MethodReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\ProgramElementReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\Reference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\References\SelectorReference.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\AnnotationBinding.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\Binding.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\ConditionBinding.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\FilterModuleBinding.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\MethodBinding.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\SelectorDefinition.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\StarCondition.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\StarMethod.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\SuperImposition.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\SimpleSelectorDef\SelClassAndSubClasses.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\SuperImposition\SimpleSelectorDef\SimpleSelExpression.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\FILTH\FilterModuleOrder.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\Annotation.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\FieldInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\LangNamespace.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\MethodInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\ParameterInfo.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\ProgramElement.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\Type.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\TypeMap.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\UnitRegister.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\LAMA\UnitResult.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\ContextRepositoryEntity.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\DataMap.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\DataStore.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\DeclaredRepositoryEntity.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\RepositoryEntity.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\SerializableRepositoryEntity.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\RepositoryImplementation\TypedDeclaration.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\CPSIterator.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\Debug.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\utils\StringUtils.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </VISUALJSHARP>
+</VisualStudioProject>
+

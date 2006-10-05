@@ -1,0 +1,9 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\ContinueAction-accept.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n4633 161 157 18 18 
+n n4630 381 61 18 18 
+n n4629 597 10 18 18 
+n n4631 599 91 18 18 
+n n4632 395 232 18 18 

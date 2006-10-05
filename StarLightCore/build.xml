@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Core/Compiletime" default="build">
+	
+	<condition property="build.core" value="${basedir}${file.separator}..">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="..${file.separator}common.xml" />
+	
+	<echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler (YARLY).</description>
+
+	<target name="clean" depends="init" description="Clean compile results">
+		<delete dir="${out.build}" />
+		<delete dir="${out.dist}" />
+		<delete>
+			<fileset dir="src/Composestar/Core/COPPER">
+				<include name="CpsLexer.java" />
+				<include name="CpsParser.java" />
+				<include name="CpsTokenTypes.*" />
+				<include name="CpsTreeWalker.java" />				
+				<include name="CpsTreeWalkerTokenTypes.*" />
+				<include name="*.smap" />
+			</fileset>
+		</delete>
+		<delete>
+			<fileset dir="src">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="test">
+				<include name="**/*.class" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="local_init" depends="init">
+		<mkdir dir="${out.build}" />
+		<mkdir dir="${out.dist}" />
+	</target>
+	
+	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file" />
+	
+	<target name="antlr">
+		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
+			<classpath refid="lib.core"/>
+		</antlr>
+		<antlr target="src/Composestar/Core/COPPER/grammar/cpsw.g" outputdirectory="src/Composestar/Core/COPPER">
+			<classpath refid="lib.core"/>
+		</antlr>
+	</target>
+	
+	<target name="compile" depends="local_init,antlr">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
+			<exclude name="**/AssemblyInfo.java" />
+			<exclude name="Composestar/Core/SECRET/*"/>
+			<exclude name="Composestar/Core/CORE/*"/>
+			<exclude name="Composestar/Core/SIGN/*"/>
+			<!--<exclude name="Composestar/Core/FIRE/*"/>-->			
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<copy todir="${out.build}"><!-- copy groove grammars -->
+			<fileset dir="src">
+				<include name="**/*.gpr"/>
+			</fileset>
+		</copy>
+		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+	</target>
+	
+	<target name="install" depends="build" description="Install the core files">
+		<copy todir="${composestar.installdir}${file.separator}Binaries">
+			<fileset dir="${out.dist}" />
+		</copy>
+		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}${file.separator}Binaries" />
+		<copy file="binaries/prolog/prolog.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
+		<copy file="binaries/prolog/lib.pro" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
+		<copy file="binaries/prolog/connector.pro" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
+		<copy file="binaries/groove/groove-1_2_0.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
+		<copy file="binaries/groove/castor-0_9_5_2-xml.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
+		<copy file="binaries/groove/jgraph.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
+		<copy file="binaries/groove/xerces-2_6_0-xercesImpl.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
+		<copy file="binaries/groove/xerces-2_6_0-xml-apis.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
+		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}" />
+		<copy file="src/Composestar/Core/CKRET/SECRET.css" todir="${composestar.installdir}" />
+		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}" />
+	</target>
+
+	<target name="compile_tests" depends="local_init,compile">
+		<path id="lib.test">
+			<path refid="lib.core"/>
+			<pathelement path="${out.build}"/>
+		</path>
+		<javac srcdir="test" destdir="test" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
+			<include name="**/*.java"/>
+			<exclude name="**/AssemblyInfo.java"/>
+		</javac>
+	</target>
+
+	<target name="unittest" depends="compile_tests" description="Runs JUnit tests">
+		<path id="lib.junit">
+			<fileset dir="${build.core}\Compiletime\binaries\junit" includes="*.jar"/>
+		</path>
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="lib.junit"/>
+		<junit printsummary="on" haltonfailure="on">
+			<classpath>
+				<path refid="lib.test"/>
+				<pathelement path="test"/>
+			</classpath>
+			<formatter type="plain"/>
+			<batchtest todir="test">
+				<fileset dir="test">
+					<include name="**/*Test.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+</project>

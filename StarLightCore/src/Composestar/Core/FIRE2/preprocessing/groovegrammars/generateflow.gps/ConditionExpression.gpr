@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1237"/>
+        <node id="n1238"/>
+        <edge from="n1238" to="n1237">
+            <attr name="label">
+                <string>del:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n1238" to="n1238">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n1238" to="n1237">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n1237" to="n1237">
+            <attr name="label">
+                <string>ConditionExpression</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

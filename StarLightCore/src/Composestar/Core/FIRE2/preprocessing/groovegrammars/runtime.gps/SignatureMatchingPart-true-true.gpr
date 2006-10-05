@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n5786"/>
+        <node id="n5781"/>
+        <node id="n5784"/>
+        <node id="n5782"/>
+        <node id="n5783"/>
+        <node id="n5785"/>
+        <edge from="n5783" to="n5784">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n5785" to="n5785">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n5783" to="n5781">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n5781" to="n5781">
+            <attr name="label">
+                <string>SignatureMatchingPart</string>
+            </attr>
+        </edge>
+        <edge from="n5781" to="n5784">
+            <attr name="label">
+                <string>flowTrue</string>
+            </attr>
+        </edge>
+        <edge from="n5783" to="n5786">
+            <attr name="label">
+                <string>del:target</string>
+            </attr>
+        </edge>
+        <edge from="n5784" to="n5784">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n5783" to="n5782">
+            <attr name="label">
+                <string>new:target</string>
+            </attr>
+        </edge>
+        <edge from="n5783" to="n5785">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n5783" to="n5783">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n5781" to="n5785">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n5781" to="n5782">
+            <attr name="label">
+                <string>target</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

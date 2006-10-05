@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry including="**/*.gpr|**/*.java|MANIFEST.MF" excluding="**/.svn/|AssemblyInfo.java|Composestar/AssemblyInfo.java|Composestar/Core/CORE/|Composestar/Core/SECRET/|Composestar/Core/SIGN/|bin/|obj/" kind="src" path="src"/>
+	<classpathentry excluding="**/.svn/|TEST-*.txt" kind="src" path="test"/>
+	<classpathentry kind="lib" path="binaries/antlr/antlr.jar"/>
+	<classpathentry kind="lib" path="binaries/junit/junit.jar"/>
+	<classpathentry kind="lib" path="binaries/prolog/prolog.jar"/>
+	<classpathentry kind="lib" path="binaries/prolog/prolog-src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="binaries/groove/castor-0_9_5_2-xml.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/groove-1_2_0.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/jgraph.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/xerces-2_6_0-xercesImpl.jar"/>
+	<classpathentry kind="lib" path="binaries/groove/xerces-2_6_0-xml-apis.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

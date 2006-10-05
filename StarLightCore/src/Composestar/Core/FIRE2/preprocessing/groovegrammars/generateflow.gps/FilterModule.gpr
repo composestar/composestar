@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1479"/>
+        <node id="n1481"/>
+        <node id="n1477"/>
+        <node id="n1478"/>
+        <node id="n1480"/>
+        <edge from="n1477" to="n1479">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n1480" to="n1481">
+            <attr name="label">
+                <string>flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n1480" to="n1477">
+            <attr name="label">
+                <string>new:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n1479" to="n1479">
+            <attr name="label">
+                <string>End</string>
+            </attr>
+        </edge>
+        <edge from="n1480" to="n1477">
+            <attr name="label">
+                <string>orderFirst</string>
+            </attr>
+        </edge>
+        <edge from="n1480" to="n1480">
+            <attr name="label">
+                <string>FilterModule</string>
+            </attr>
+        </edge>
+        <edge from="n1477" to="n1477">
+            <attr name="label">
+                <string>Filter</string>
+            </attr>
+        </edge>
+        <edge from="n1478" to="n1478">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n1481" to="n1481">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n1480" to="n1478">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

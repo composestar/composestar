@@ -1,0 +1,9 @@
+# Layout information for D:\mijn documenten folders\arjan\Mijn documenten\vakken\afstuderen\groove test\fire\runtime.gps\DispatchAction.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n3074 461 150 18 18 
+n n3073 454 32 18 18 
+n n3071 75 64 18 18 
+n n3072 99 228 18 18 
+n n3070 264 65 18 18 

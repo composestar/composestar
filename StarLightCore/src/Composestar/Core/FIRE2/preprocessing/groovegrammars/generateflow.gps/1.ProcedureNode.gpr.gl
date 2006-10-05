@@ -1,0 +1,9 @@
+# Layout information for C:\local\ComposeGraph\generateflow.gps\2.ProcedureNode.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n278 70 153 18 18 
+e n278 n278 "new:FlowElement" 500 500 218 162 191 245 251 246 218 162 12
+e n278 n278 "not:ProcedureNode" 500 500 223 167 255 93 190 93 223 167 12
+e n278 n278 "not:FlowElement" 500 500 223 167 255 93 190 93 223 167 12
+e n278 n278 "new:ProcedureNode" 500 500 218 162 191 245 251 246 218 162 12

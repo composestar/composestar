@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1499"/>
+        <node id="n1495"/>
+        <node id="n1496"/>
+        <node id="n1497"/>
+        <node id="n1498"/>
+        <edge from="n1496" to="n1496">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n1499" to="n1496">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n1499" to="n1499">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1499" to="n1497">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1495" to="n1495">
+            <attr name="label">
+                <string>not:'*'</string>
+            </attr>
+        </edge>
+        <edge from="n1498" to="n1495">
+            <attr name="label">
+                <string>selector</string>
+            </attr>
+        </edge>
+        <edge from="n1499" to="n1498">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n1498" to="n1496">
+            <attr name="label">
+                <string>flowFalse</string>
+            </attr>
+        </edge>
+        <edge from="n1497" to="n1495">
+            <attr name="label">
+                <string>not:=</string>
+            </attr>
+        </edge>
+        <edge from="n1498" to="n1498">
+            <attr name="label">
+                <string>NameMatchingPart</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

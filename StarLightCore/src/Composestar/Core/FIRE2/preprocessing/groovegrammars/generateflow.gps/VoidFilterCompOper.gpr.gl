@@ -1,0 +1,9 @@
+# Layout information for D:\composestar\composestarcore\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\VoidFilterCompOper.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n2002 240 304 18 18 
+e n2003 n2002 "del:flowIn" 580 604 131 63 278 306 11
+n n2003 91 54 18 18 
+n n2001 397 93 18 18 
+e n2003 n2001 "new:flowNext" 294 921 131 63 289 74 372 114 12

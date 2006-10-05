@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n358"/>
+        <node id="n357"/>
+        <node id="n361"/>
+        <node id="n359"/>
+        <node id="n360"/>
+        <edge from="n360" to="n357">
+            <attr name="label">
+                <string>not:flowIn</string>
+            </attr>
+        </edge>
+        <edge from="n359" to="n359">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n359" to="n361">
+            <attr name="label">
+                <string>new:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n361" to="n361">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n360" to="n360">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n358" to="n358">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n357" to="n361">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n359" to="n357">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n357" to="n358">
+            <attr name="label">
+                <string>not:orderedNext</string>
+            </attr>
+        </edge>
+        <edge from="n357" to="n357">
+            <attr name="label">
+                <string>Block</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
