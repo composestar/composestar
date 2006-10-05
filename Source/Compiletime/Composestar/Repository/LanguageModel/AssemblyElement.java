@@ -9,6 +9,9 @@ public class AssemblyElement
 	private String _fileName;
 	private long _timestamp;
 
+	/** @attribute com.db4o.Transient() */ 
+	private TypeElement[] _typeElements;
+	
 	/** @property
 	  */
 	public String get_Name()
@@ -51,4 +54,17 @@ public class AssemblyElement
 		_timestamp = value;
 	}
 
+	/** @property
+    */
+	public TypeElement[] get_TypeElements()
+	{
+		return _typeElements;
+	}
+
+	/** @property
+	  */
+	public void set_TypeElements(TypeElement[] value)
+	{
+		_typeElements = value;
+	}
 }

@@ -355,10 +355,10 @@ namespace Composestar.Repository
                 throw new ArgumentNullException("typeElement");
 
             // Check if type already exists
-            if (GetTypeElementByAFQN(typeElement.FullName, typeElement.Assembly) == null)
-            {
+            //if (GetTypeElementByAFQN(typeElement.FullName, typeElement.Assembly) == null)
+            //{
                 container.StoreObject(typeElement);
-            }
+            //}
         }
 
         /// <summary>
@@ -519,7 +519,7 @@ namespace Composestar.Repository
             // Get all TypeElements belonging to 'assembly'
             IList<TypeElement> types = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
-                return te.Assembly.Equals(assembly);
+                return te.FromDLL.Equals(assembly);
             });
 
             foreach (TypeElement type in types)
@@ -591,6 +591,51 @@ namespace Composestar.Repository
         public void Close()
         {
             CloseContainer();
+        }
+
+        public void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave)
+        {
+            foreach (AssemblyElement assembly in assemblies)
+            {
+                //Console.WriteLine("  {0}", assembly.Name);
+                AddAssembly(assembly);
+
+                foreach (TypeElement type in assembly.TypeElements)
+                {                    
+                    if (!assembliesToSave.Contains(String.Format("{0}, {1}", type.FullName, assembly.Name))) continue;
+
+                    //Console.WriteLine("    {0}", type.FullName);
+
+                    AddType(type);
+
+                    foreach (FieldElement field in type.FieldElements)
+                    {
+                        AddField(type, field);
+                    }
+
+                    foreach (MethodElement method in type.MethodElements)
+                    {
+                        AddMethod(type, method);
+
+                        if (method.ParameterElements != null)
+                        {
+                            foreach (ParameterElement param in method.ParameterElements)
+                            {
+                                AddParameter(method, param);
+                            }
+                        }
+
+                        if (method.HasMethodBody)
+                        {
+                            foreach (CallElement ce in method.MethodBody.CallElements)
+                            {
+                                AddCallToMethod(method, ce);
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
 }

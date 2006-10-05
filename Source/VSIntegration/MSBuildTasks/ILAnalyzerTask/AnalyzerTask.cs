@@ -47,7 +47,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _repositoryFilename = value; }
         }
 
-        private IILAnalyzer analyzer;
+        private CecilILAnalyzer analyzer;
 
         #endregion
 
@@ -92,24 +92,44 @@ namespace Composestar.StarLight.MSBuild.Tasks
             NameValueCollection config = new NameValueCollection();
             config.Add("RepositoryFilename", RepositoryFilename);
             config.Add("CacheFolder", rs.InstallFolder);
-             
+            
+            List<AssemblyElement> assemblies = new List<AssemblyElement>();
+
+            Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess(Composestar.Repository.Db4oContainers.Db4oRepositoryContainer.Instance, RepositoryFilename);
+            
+            analyzer.Initialize(config);
+
+            // TODO: this aint the best approach, clearing everything...
+            repository.DeleteWeavingInstructions();
+
             foreach (ITaskItem item in AssemblyFiles)
             {
                 try
                 {
-                    Log.LogMessage("Analyzing file {0}", item.ToString());
+                    AssemblyElement assembly = null;
+                    Log.LogMessage("Analyzing file '{0}'...", item.ToString());
 
-                    analyzer.Initialize(config);
-                    IlAnalyzerResults result = analyzer.ExtractTypeElements(item.ToString());
+                    // Try to get the assembly information from the database
+                    assembly = repository.GetAssemblyElementByFileName(item.ToString());
+                    if (assembly != null)
+                    {
+                        if (assembly.Timestamp == File.GetLastWriteTime(item.ToString()).Ticks)
+                        {
+                            // Assembly has not been modified, skipping analysis
+                            Log.LogMessage("File analysis summary: assembly has not been modified, skipping analysis.");
+                            continue;
+                        }
+                        else
+                        {
+                            // Assembly has been modified, removing all existing types from database
+                            repository.DeleteTypeElements(item.ToString());
+                        }
+                    }
 
-                    if (result == IlAnalyzerResults.FROM_ASSEMBLY)
-                    {
-                        Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
-                    }
-                    else
-                    {
-                        Log.LogMessage("File has not been modified, analysis skipped. Removed weaving information from repository in {0:0.0000} seconds.", analyzer.LastDuration.TotalSeconds);
-                    }
+                    assembly = analyzer.ExtractAllTypes(item.ToString());
+                    assemblies.Add(assembly);
+                    
+                    Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
                 {
@@ -122,26 +142,41 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             }
 
-            // Try to resolve types from the cache
-            if (analyzer.UnresolvedTypes.Count > 0)
+            // Storing types in database
+            if (assemblies.Count > 0)
             {
-                Log.LogMessage("Accessing cache for {0} unresolved types", analyzer.UnresolvedTypes.Count);
-                int unresolvedCount = analyzer.UnresolvedTypes.Count;
-                analyzer.ProcessUnresolvedTypes();
-                Log.LogMessage("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                Log.LogMessage("Storing type information for {0} assemblies in database...", assemblies.Count);
 
-                if (analyzer.UnresolvedTypes.Count > 0)
-                {                    
-                    foreach (String type in analyzer.UnresolvedTypes)
-                    {
-                        Log.LogError("Cannot resolve type {0}", type);
-                    }
-                    Log.LogError("Unable to resolve {0} types.", analyzer.UnresolvedTypes.Count);
-                }
+                sw.Start();
+                repository.AddAssemblies(assemblies, analyzer.ResolvedTypes);
+
+                sw.Stop();
+
+                Log.LogMessage("Storage summary: {0} assemblies with a total of {1} types stored in {2:0.0000} seconds.", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
+            
+            //// Try to resolve types from the cache
+            //if (analyzer.UnresolvedTypes.Count > 0)
+            //{
+            //    Log.LogMessage("Accessing cache for {0} unresolved types", analyzer.UnresolvedTypes.Count);
+            //    int unresolvedCount = analyzer.UnresolvedTypes.Count;
+            //    analyzer.ProcessUnresolvedTypes();
+            //    Log.LogMessage("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
+
+            //    if (analyzer.UnresolvedTypes.Count > 0)
+            //    {
+            //        Log.LogError("Unable to resolve {0} types, detailed overview below:", analyzer.UnresolvedTypes.Count);
+            //        foreach (String type in analyzer.UnresolvedTypes)
+            //        {
+            //            Log.LogError("  {0}", type);
+            //        }
+            //    }
+            //}
            
             // Close the analyzer
             analyzer.Close();
+            repository.Close();
  
             return !Log.HasLoggedErrors;
 
