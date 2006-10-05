@@ -27,7 +27,7 @@ public class TypeHarvester
 	public TypeHarvester(string outFolder)
 	{
 		string target = Path.Combine(outFolder, "types.xml");
-		Debug.Out(Debug.MODE_DEBUG, "TypeHarvester: outFolder=" + outFolder + ", target=" + target);
+		Debug.Out(Debug.MODE_DEBUG, "Writing to " + target);
 
 		m_writer = new XmlTextWriter(target, null);
 		
@@ -95,6 +95,7 @@ public class TypeHarvester
 		// process dlls
 		foreach (string dll in dlls)
 		{
+			Debug.Out(Debug.MODE_DEBUG, "Harvesting " + dll + "...");
 			Assembly asm = LoadAssembly(dll);
 			if (asm == null) continue;
 
@@ -642,9 +643,6 @@ public class TypeHarvester
 		}
 		else
 		{
-			for (int i = 0; i < args.Length; i++)
-				Debug.Out(Debug.MODE_DEBUG, "arg[" + i + "]=" + args[i]);
-
 			try
 			{
 				String outFolder = args[0];
