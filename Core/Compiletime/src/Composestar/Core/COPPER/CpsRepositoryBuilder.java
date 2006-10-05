@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
@@ -48,6 +49,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureM
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
@@ -637,11 +639,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   public void addNot(Vector condname) {
     Not not = new Not();
     if (lastTouched != null) {    //means we're the right part of the branch, don't adjust lastTouched
-      if (lastTouched instanceof And) {
-        ((And)lastTouched).setRight(not);
-        not.setParent(lastTouched);
-      } else if (lastTouched instanceof Or) {
-        ((Or) lastTouched).setRight(not);
+      if (lastTouched instanceof BinaryOperator) {
+        ((BinaryOperator)lastTouched).setRight(not);
         not.setParent(lastTouched);
       }
     } else {                     //we're the left part, so change lastTouched
@@ -661,124 +660,40 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param override If called from Not, this points to the Not object to attach this condition to; if null, then just add using the default algoritm
    */
   public void addConditionLiteral(Vector condname, ConditionExpression override) {
-    final int NONCASE = 0;
-    final int TRUECASE = 1;
-    final int FALSECASE = 2;
-
-    int usewhat = NONCASE;
-    ConditionVariable cl = null;
-    True true_ = null;
-    False false_ = null;
+	  
+    ConditionExpression ce = null;
+    
     //special case if "true" or "false" are specified
     if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("true")) {
-      true_ = new True();
-      usewhat = TRUECASE;
-    } else if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("false")) {
-      false_ = new False();
-      usewhat = FALSECASE;
-    } else {
-      cl = new ConditionVariable();
+      ce = new True();
+    } 
+    else if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("false")) {
+      ce = new False();
+    } 
+    else {
+      ce = new ConditionVariable();
       split.splitFmElemReference(condname, true);
-      cl.setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
-      //added for FIRE
-      //cl.setName((String) condname.lastElement()); //michielh: setName was obsolete
+      ((ConditionVariable) ce).setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
     }
 
     if (override != null) {               //we're adding under a not
-      switch (usewhat) {
-        case NONCASE:
-          ((Not) override).setOperand(cl);
-          cl.setParent(override);
-          break;
-        case TRUECASE:
-          ((Not) override).setOperand(true_);
-          true_.setParent(override);
-          break;
-        case FALSECASE:
-        default:
-          ((Not) override).setOperand(false_);
-          false_.setParent(override);
-          break;
+      ((Not) override).setOperand(ce);
+      ce.setParent(override);
+    } 
+    else if (lastTouched != null) {            //means we're the right part of the branch
+      if (lastTouched instanceof BinaryOperator) {
+        ((BinaryOperator) lastTouched).setRight(ce);
+        ce.setParent(lastTouched);
+      } else if (lastTouched instanceof UnaryOperator) {
+        ((UnaryOperator) lastTouched).setOperand(ce);
+        ce.setParent(lastTouched);
       }
-    } else {                                //not adding under a not
-      if (lastTouched != null) {            //means we're the right part of the branch
-        if (lastTouched instanceof And) {
-          switch (usewhat) {
-            case NONCASE:
-              ((And) lastTouched).setRight(cl);
-              cl.setParent(lastTouched);
-              break;
-            case TRUECASE:
-              ((And) lastTouched).setRight(true_);
-              true_.setParent(lastTouched);
-              break;
-            case FALSECASE:
-            default:
-              ((And) lastTouched).setRight(false_);
-              false_.setParent(lastTouched);
-              break;
-          }
-        } else if (lastTouched instanceof Or) {
-          switch (usewhat) {
-            case NONCASE:
-              ((Or) lastTouched).setRight(cl);
-              cl.setParent(lastTouched);
-              break;
-            case TRUECASE:
-              ((Or) lastTouched).setRight(true_);
-              true_.setParent(lastTouched);
-              break;
-            case FALSECASE:
-            default:
-              ((Or) lastTouched).setRight(false_);
-              false_.setParent(lastTouched);
-              break;
-          }
-        } else if (lastTouched instanceof Not) {
-          switch (usewhat) {
-            case NONCASE:
-              ((Not) lastTouched).setOperand(cl);
-              cl.setParent(lastTouched);
-              break;
-            case TRUECASE:
-              ((Not) lastTouched).setOperand(true_);
-              true_.setParent(lastTouched);
-              break;
-            case FALSECASE:
-            default:
-              ((Not) lastTouched).setOperand(false_);
-              false_.setParent(lastTouched);
-              break;
-          }
-        }
-      } else { //if this is null, the parent has nog yet been created, so we're on the left side of the branch
-        switch (usewhat) {
-          case NONCASE:
-            lastTouched = cl;
-            break;
-          case TRUECASE:
-            lastTouched = true_;
-            break;
-          case FALSECASE:
-          default:
-            lastTouched = false_;
-            break;
-        }
-      }
-    }
-
-    switch (usewhat) {
-      case NONCASE:
-        condAll.add(cl);
-        break;
-      case TRUECASE:
-        condAll.add(true_);
-        break;
-      case FALSECASE:
-      default:
-        condAll.add(false_);
-        break;
-    }
+    } 
+    else { 
+      //if this is null, the parent has nog yet been created, so we're on the left side of the branch
+      lastTouched = ce;
+    }    
+    condAll.add(ce);
 
     //    cp.setParent(fe);
     //    fe.setConditionPart(cp); ;
