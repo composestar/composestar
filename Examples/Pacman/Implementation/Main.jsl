@@ -48,6 +48,11 @@ public class Main extends Frame
 	   this.setVisible(true);
 	   v.requestFocus();
    }
+
+	public void setForeground(Color c)
+	{
+		super.setForeground(c);
+	}
    
    /**
    @param args
