@@ -162,6 +162,24 @@
   <data name="ProjectFileExtensionFilter" xml:space="preserve">
     <value>ComposeStar Project File (*.cpsproj){0}*.cpsproj{1}</value>
   </data>
+  <data name="AssemblyName">
+    <value>Assembly Name</value>
+  </data>
+  <data name="AssemblyNameDescription">
+    <value>The name of the output file that will hold assembly metadata.</value>
+  </data>
+  <data name="OutputType">
+    <value>Output Type</value>
+  </data>
+  <data name="OutputTypeDescription">
+    <value>The type of application to build.</value>
+  </data>
+  <data name="DefaultNamespace">
+    <value>Default Namespace</value>
+  </data>
+  <data name="DefaultNamespaceDescription">
+    <value>Specifies the default namespace for added items, such as classes, that are added via the Add New Item Dialog Box.</value>
+  </data>
   <data name="100" xml:space="preserve">
     <value>ComposeStar StarLight</value>
   </data>

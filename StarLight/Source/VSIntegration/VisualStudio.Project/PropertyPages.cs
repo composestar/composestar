@@ -39,6 +39,9 @@ namespace Composestar.StarLight.VisualStudio.Project
 
 	internal enum GeneralPropertyPageTag
 	{
+        AssemblyName,
+		OutputType,
+		RootNamespace,
 		RepositoryFilename,
 	}
 
@@ -49,6 +52,9 @@ namespace Composestar.StarLight.VisualStudio.Project
 	{
 		#region fields
 		private string repositoryFilename = @"obj\starlight.yap";
+        private string assemblyName;
+		private OutputType outputType;
+		private string defaultNamespace;
 		#endregion
 
 		/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.GeneralPropertyPage"]/*' />
@@ -75,7 +81,22 @@ namespace Composestar.StarLight.VisualStudio.Project
 
 			this.repositoryFilename  = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.RepositoryFilename.ToString(), true);
           
-      
+      		this.assemblyName = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.AssemblyName.ToString(), true);
+
+			string outputType = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.OutputType.ToString(), false);
+            
+            if (outputType != null && outputType.Length > 0)
+			{
+				try
+				{
+					this.outputType = (OutputType)Enum.Parse(typeof(OutputType), outputType);
+				}
+				catch
+				{ } //Should only fail if project file is corrupt
+			}
+
+			this.defaultNamespace = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.RootNamespace.ToString(), false);
+		
 
 		}
 
@@ -89,7 +110,10 @@ namespace Composestar.StarLight.VisualStudio.Project
 			}
 
 			this.ProjectMgr.SetProjectProperty(GeneralPropertyPageTag.RepositoryFilename.ToString(), this.repositoryFilename);
-	        
+	        this.ProjectMgr.SetProjectProperty(GeneralPropertyPageTag.AssemblyName.ToString(), this.assemblyName);
+			this.ProjectMgr.SetProjectProperty(GeneralPropertyPageTag.OutputType.ToString(), this.outputType.ToString());
+			this.ProjectMgr.SetProjectProperty(GeneralPropertyPageTag.RootNamespace.ToString(), this.defaultNamespace);
+		
 			this.IsDirty = false;
 
 			return VSConstants.S_OK;
@@ -127,6 +151,34 @@ namespace Composestar.StarLight.VisualStudio.Project
 			get { return Path.GetDirectoryName(this.ProjectMgr.ProjectFolder); }
 		}
 
+        [SRCategoryAttribute(SR.Application)]
+		[LocDisplayName(SR.AssemblyName)]
+		[SRDescriptionAttribute(SR.AssemblyNameDescription)]
+		public string AssemblyName
+		{
+			get { return this.assemblyName; }
+			set { this.assemblyName = value; this.IsDirty = true; }
+		}
+
+		/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.OutputType"]/*' />
+		[SRCategoryAttribute(SR.Application)]
+		[LocDisplayName(SR.OutputType)]
+		[SRDescriptionAttribute(SR.OutputTypeDescription)]
+		public OutputType OutputType
+		{
+			get { return this.outputType; }
+			set { this.outputType = value; this.IsDirty = true; }
+		}
+
+		/// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.DefaultNamespace"]/*' />
+		[SRCategoryAttribute(SR.Application)]
+		[LocDisplayName(SR.DefaultNamespace)]
+		[SRDescriptionAttribute(SR.DefaultNamespaceDescription)]
+		public string DefaultNamespace
+		{
+			get { return this.defaultNamespace; }
+			set { this.defaultNamespace = value; this.IsDirty = true; }
+		}
 		#endregion
 
 		#region IInternalExtenderProvider Members

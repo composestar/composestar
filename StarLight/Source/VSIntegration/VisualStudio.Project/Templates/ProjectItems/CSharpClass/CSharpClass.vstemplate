@@ -1,0 +1,18 @@
+<VSTemplate Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+  <TemplateData>
+    <DefaultName>Class.vb</DefaultName>
+    <Name>Class</Name>
+    <Description>An empty C# class definition</Description>
+    <Icon>__TemplateIcon.ico</Icon>
+    <ProjectType>StarLight</ProjectType>
+    <SortOrder>20</SortOrder>
+  </TemplateData>
+  <TemplateContent>
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+    </References>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$.vb" ReplaceParameters="true">Class.cs</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

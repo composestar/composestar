@@ -31,5 +31,8 @@
   <ItemGroup>
     <Concern Include="Concern.cps" />
   </ItemGroup>
+  <!--Import the standards targets-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <!--Import the StarLight targets-->
   <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
 </Project>

@@ -4,8 +4,8 @@
     <DirectoryRef Id ='Binaries'>
       <Directory Id ='Db4OFolder' Name ='Db4o'>
           <Component Id='Db4o' Guid ='E8E43C41-7E72-4722-AC02-8A44953FB178'>
-            <File Id='db4ojar' Name='db4o.jar' LongName='db4o-5.5-java1.2.jar' DiskId='1'
-                         Source='../../libraries/db4o/db4o-5.5-java1.2.jar' Vital='yes'>
+            <File Id='db4ojar' Name='db4o.jar' LongName='db4o-5.7-java1.2.jar' DiskId='1'
+                         Source='../../libraries/db4o/db4o-5.7-java1.2.jar' Vital='yes'>
             </File>
             <File Id='db4odll'  Name='db4o.dll' LongName='Db4o.dll' DiskId='1'
                         Source='../../libraries/db4o/db4o.dll' Vital='yes'>

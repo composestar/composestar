@@ -165,6 +165,26 @@ namespace Composestar.StarLight.VisualStudio.Project
         private static ImageList composeStarImageList;
         #endregion
 
+        #region IVsFilterAddProjectItemDlg2
+
+        //public int FilterListItemByCategory([InAttribute] ref Guid rguidProjectItemTemplates, [InAttribute] string pszCategoryName, out int pfFilter)
+        //{
+        //    pfFilter = false;
+        //    return VSConstants.S_OK; 
+        //}
+
+        //int FilterListItemByLocalizedName (    [InAttribute] ref Guid rguidProjectItemTemplates,    [InAttribute] string pszLocalizedName,    out int pfFilter)
+        //{
+        //        pfFilter = false;
+        //    return VSConstants.S_OK; 
+        
+        //}
+
+
+
+        #endregion
+
+
         #region enums
 
         public enum ComposeStarImageName
@@ -172,6 +192,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             cpsFile = 0,
             cpsProject = 1,
         }
+
 
         #endregion
 
@@ -183,7 +204,12 @@ namespace Composestar.StarLight.VisualStudio.Project
         {
             get
             {
-                return "";
+                string assemblyName = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.AssemblyName.ToString(), true);
+
+                string outputTypeAsString = this.ProjectMgr.GetProjectProperty(GeneralPropertyPageTag.OutputType.ToString(), false);
+                OutputType outputType = (OutputType)Enum.Parse(typeof(OutputType), outputTypeAsString);
+
+                return assemblyName + GetOuputExtension(outputType);
                 
             }
         }
@@ -394,7 +420,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             string namespce = this.FileTemplateProcessor.GetFileNamespace(target, this);
 
             this.FileTemplateProcessor.AddReplace("%className%", className);
-           // this.FileTemplateProcessor.AddReplace("%namespace%", namespce);
+            this.FileTemplateProcessor.AddReplace("%namespace%", namespce);
             try
             {
                 this.FileTemplateProcessor.UntokenFile(source, target);
@@ -608,7 +634,14 @@ namespace Composestar.StarLight.VisualStudio.Project
             // in the registry hive so that more editors can be added without changing this part of the
             // code. StarLight only makes usage of one Editor Factory and therefore we will return 
             // that guid
-            guidEditorType = EditorFactory.guidEditorFactory;
+            if (IsCodeFile(mkDocument))
+            {
+                guidEditorType = EditorFactory.guidEditorFactory;
+            }
+            else
+            {              
+                guidEditorType = Guid.Empty; 
+            }
             return VSConstants.S_OK;
         }
 
