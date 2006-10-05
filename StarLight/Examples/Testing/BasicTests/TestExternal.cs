@@ -1,4 +1,5 @@
 using System;
+using Composestar.StarLight.ContextInfo;
 
 namespace BasicTests
 {
@@ -19,8 +20,31 @@ namespace BasicTests
 
 		public void externalMe()
 		{
-			report("internalMe");
+			report("externalMe");
 		}
 
+        public void before(JoinPointContext context)
+        {
+            report("before " + context.MethodName);
+
+            if (context.MethodName.Equals("func4"))
+            {
+                Int32 arg = (Int32) context.GetArgumentValue(0);
+                arg = arg + 1;
+                context.AddArgument(0, context.GetArgumentType(0), arg);
+            }
+        }
+
+        public void after(JoinPointContext context)
+        {
+            report("after " + context.MethodName);
+
+            if (context.MethodName.Equals("func4"))
+            {
+                String ret = (String)context.ReturnValue;
+                ret = ret + " #After#";
+                context.ReturnValue = ret;
+            }
+        }
 	}
 }

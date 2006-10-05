@@ -20,6 +20,10 @@ namespace BasicTests
 
 			FilterTests filtTests = new FilterTests();
 			filtTests.func1();
+            filtTests.func2();
+            filtTests.func3();
+            Console.Out.WriteLine( filtTests.func4(3) );
+            
 			filtTests.askForHelp();
 			filtTests.doStuff();
 
