@@ -73,6 +73,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\MSBuild\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -84,12 +88,12 @@
     <Compile Include="FilterTestsHelper.cs">
       <SubType>Code</SubType>
     </Compile>
-		<Compile Include="TestExternal.cs">
+    <Compile Include="TestExternal.cs">
       <SubType>Code</SubType>
-    </Compile> 
+    </Compile>
     <Compile Include="TestInternal.cs">
       <SubType>Code</SubType>
-    </Compile> 
+    </Compile>
     <Compile Include="MainClass.cs">
       <SubType>Code</SubType>
     </Compile>
