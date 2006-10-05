@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n2617"/>
+        <node id="n2613"/>
+        <node id="n2614"/>
+        <node id="n2616"/>
+        <node id="n2615"/>
+        <edge from="n2614" to="n2614">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n2615" to="n2615">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n2614" to="n2615">
+            <attr name="label">
+                <string>substitutionTarget</string>
+            </attr>
+        </edge>
+        <edge from="n2614" to="n2616">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2614" to="n2613">
+            <attr name="label">
+                <string>substitutionSelector</string>
+            </attr>
+        </edge>
+        <edge from="n2614" to="n2617">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n2613" to="n2613">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n2616" to="n2617">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n2617" to="n2617">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n2616" to="n2616">
+            <attr name="label">
+                <string>SubstitutedMessageAction</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

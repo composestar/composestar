@@ -11,6 +11,7 @@ import java.util.Stack;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.FIRE2.model.ExecutionState;
@@ -102,6 +103,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * FIXME replace this with conceptual change in FIRE
      */
     private boolean noJumpEnd;
+    
     
     
     public ModelBuilderStrategy( ModelBuilder builder ){
@@ -305,42 +307,83 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         Instruction instruction;
 
         FlowNode node = state.getFlowNode();
-        if ( node.containsName( FlowChartNames.DISPATCH_ACTION_NODE ) ){
-            generateDispatchAction( state );
-        }
-        else if ( node.containsName( FlowChartNames.BEFORE_ACTION_NODE ) ){
-            generateBeforeAction( state );
-        }
-        else if ( node.containsName( FlowChartNames.AFTER_ACTION_NODE ) ){
-            generateAfterAction( state );
-        }
-        else if ( node.containsName( "SkipAction" ) ){
-            //jump to end:
-            jump( -1 );
-            return;
-        }
-        else if ( node.containsName( FlowChartNames.ERROR_ACTION_NODE ) ){
-            instruction = new FilterAction( FlowChartNames.ERROR_ACTION_NODE, state.getMessage() );
-            empty = false;
-            currentBlock.addInstruction( instruction );
-            noJumpEnd = true;
-        }
-        else if ( node.containsName( FlowChartNames.CONTINUE_ACTION_NODE ) ){
+        
+        Filter filter = (Filter) node.getRepositoryLink();
+        FilterType filterType = filter.getFilterType();
+        
+        if ( node.containsName( "ContinueAction" ) ){
             instruction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
             currentBlock.addInstruction( instruction );
         }
-        else if ( node.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) ){
-            instruction = new FilterAction( FlowChartNames.SUBSTITUTION_ACTION_NODE, getCallMessage( state ) );
-            empty = false;
-            currentBlock.addInstruction( instruction );
+        else if ( node.containsName( "DispatchAction" ) ){
+            generateDispatchAction( state );
         }
-        else if ( node.containsName( FlowChartNames.CUSTOM_ACTION_NODE ) ){
-            instruction = new FilterAction( "custom", getCallMessage( state ) );
-            currentBlock.addInstruction( instruction );
+        else if ( node.containsName( "SkipAction" ) ){
+        	//jump to end:
+            jump( -1 );
+            return;
         }
-        else{
-            throw new RuntimeException( "Unknown action" );
+        else if ( node.containsName( "AdviceAction" ) ){
+        	if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE )  ||
+        			node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE ) )
+        	{
+        		generateBeforeAction( state );
+        	}
+        	else{
+        		generateAfterAction( state );
+        	}
         }
+        else if ( node.containsName( FlowChartNames.ACCEPT_CALL_ACTION_NODE ) )
+        {
+        	Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = 
+        		filterType.getAcceptCallAction();
+        	generateCallAction( state, action );
+        }
+        else if ( node.containsName( FlowChartNames.REJECT_CALL_ACTION_NODE ) )
+        {
+        	Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = 
+        		filterType.getRejectCallAction();
+        	generateCallAction( state, action );
+        }
+        else if ( node.containsName( FlowChartNames.ACCEPT_RETURN_ACTION_NODE ) )
+        {
+        	Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = 
+        		filterType.getAcceptReturnAction();
+        	generateReturnAction( state, action );
+        }
+        else if ( node.containsName( FlowChartNames.REJECT_RETURN_ACTION_NODE ) )
+        {
+        	Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action = 
+        		filterType.getRejectReturnAction();
+        	generateReturnAction( state, action );
+        }
+    }
+    
+    private void generateCallAction( ExecutionState state, 
+    		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action )
+    {
+    	Instruction instruction = new FilterAction( action.getName(), state.getMessage() );
+        empty = false;
+        currentBlock.addInstruction( instruction );
+    }
+    
+    private void generateReturnAction( ExecutionState state, 
+    		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action )
+    {
+    	int actionId = nextReturnActionId++;
+        ContextInstruction storeInstruction = new ContextInstruction( ContextInstruction.STORE_ACTION,
+                actionId );
+        currentBlock.addInstruction( storeInstruction );
+
+        Block block = new Block();
+        
+        Instruction instruction = new FilterAction( action.getName(), state.getMessage() );
+        empty = false;
+        block.addInstruction( instruction );
+        
+        Case caseInstruction = new Case( actionId, block );
+        onReturnInstructions.addCase( caseInstruction );
+        
     }
     
     private void generateDispatchAction( ExecutionState state ){
@@ -351,7 +394,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             currentBlock.addInstruction( innerCallContext );
         }
 
-        FilterAction action  = new FilterAction( FlowChartNames.DISPATCH_ACTION_NODE, callMessage );
+        FilterAction action  = new FilterAction( "DispatchAction", callMessage );
         currentBlock.addInstruction( action );
 
         Target target = callMessage.getTarget();

@@ -271,7 +271,7 @@ public class RepositoryPtrList extends TreeBuilder
 		
 		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter f = (Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter) iterator.next();
 		
-		if( f.getFilterType().getType().equals(FilterType.META) )
+		if( f.getFilterType().getType().toLowerCase().equals( "meta" ) )
 		{
 			if(iterator.hasNext())
 				return parseMultipleFilters(iterator);

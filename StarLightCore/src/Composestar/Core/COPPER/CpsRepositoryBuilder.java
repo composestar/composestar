@@ -121,6 +121,8 @@ public class CpsRepositoryBuilder
   public static final int MESSAGEP = 99;
   private String filename = ""; // Filename of file currently being parsed, for reference in case of parsing errors.
 	
+  
+  
   /**
    * Constructor
    */
@@ -494,51 +496,27 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param type the type of the filter (e.g. Meta)
    */
   public void addFilterType(String type,int lineNumber) {
-    FilterType ft = new FilterType();
-	  ft.setDescriptionFileName(filename);
-	  ft.setDescriptionLineNumber(lineNumber);
-    if ("wait".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.WAIT);
-    } else if ("dispatch".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.DISPATCH);
-    } else if ("error".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.ERROR);
-    } else if ("meta".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.META);
-    } else if ("substitution".equalsIgnoreCase(type)) {
-      ft.setType(FilterType.SUBSTITUTION);
-    } else if ("send".equalsIgnoreCase(type))  {
-      ft.setType(FilterType.SEND);
-    } else if ("append".equalsIgnoreCase(type))  {
-        ft.setType(FilterType.APPEND);
-    } else if ("prepend".equalsIgnoreCase(type))  {
-        ft.setType(FilterType.PREPEND);
-    } else if ("before".equalsIgnoreCase(type))  {
-        ft.setType(FilterType.BEFORE);
-    } else if ("after".equalsIgnoreCase(type))  {
-        ft.setType(FilterType.AFTER);
-    } else {
-      ft.setType(FilterType.CUSTOM);
-    }
-    ft.setName(type); //fixme: should we do this?
-    this.addToRepository(ft);
-    if (parsingInput) {
-      inf.setFilterType(ft);
-      ft.setParent(inf);
-    }
-    else
-    {
-      of.setFilterType(ft);
-      ft.setParent(of);
-    }
+	  FilterType ft = FilterType.getFilterType( type );
+	  if (ft == null){
+		  Debug.out(Debug.MODE_ERROR, "COPPER", "Undefined FilterType", filename, lineNumber);
+	  }
+	  
+	  if (parsingInput)
+	  {
+		  inf.setFilterType(ft);
+	  }
+	  else
+	  {
+		  of.setFilterType(ft);
+	  }
   }
 
 
   /**
-   * Adds parameters to an input- or outputfilter
-   *
-   * @param namev the actual parameters
-   */
+	 * Adds parameters to an input- or outputfilter
+	 * 
+	 * @param namev the actual parameters
+	 */
   public void addFilterActualParameters(Vector namev) {
     String name;
     int j;

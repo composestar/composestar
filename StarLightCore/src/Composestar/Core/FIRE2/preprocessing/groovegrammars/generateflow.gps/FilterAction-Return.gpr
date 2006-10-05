@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n1330"/>
-        <node id="n1329"/>
-        <node id="n1331"/>
-        <edge from="n1331" to="n1331">
-            <attr name="label">
-                <string>not:Stop</string>
-            </attr>
-        </edge>
-        <edge from="n1330" to="n1330">
-            <attr name="label">
-                <string>ErrorAction|DispatchAction|HaltCustomAction</string>
-            </attr>
-        </edge>
-        <edge from="n1329" to="n1329">
-            <attr name="label">
-                <string>Stop</string>
-            </attr>
-        </edge>
-        <edge from="n1330" to="n1329">
+        <node id="n2638"/>
+        <node id="n2636"/>
+        <node id="n2637"/>
+        <edge from="n2637" to="n2638">
             <attr name="label">
                 <string>new:flowNext</string>
             </attr>
         </edge>
-        <edge from="n1331" to="n1331">
+        <edge from="n2637" to="n2637">
+            <attr name="label">
+                <string>ReturnAction</string>
+            </attr>
+        </edge>
+        <edge from="n2636" to="n2636">
+            <attr name="label">
+                <string>not:Return</string>
+            </attr>
+        </edge>
+        <edge from="n2637" to="n2636">
+            <attr name="label">
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n2636" to="n2636">
             <attr name="label">
                 <string>FlowElement</string>
             </attr>
         </edge>
-        <edge from="n1330" to="n1331">
+        <edge from="n2638" to="n2638">
             <attr name="label">
-                <string>del:flowNext</string>
+                <string>Return</string>
             </attr>
         </edge>
     </graph>

@@ -18,6 +18,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOper
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementCompOper;
@@ -48,10 +49,7 @@ public class GrooveASTBuilder {
     public final static String SELECTOR_ANNOTATION = "selector";
     public final static String TARGET_ANNOTATION = "target";
     public final static String REPOSITORY_LINK_ANNOTATION = "repositoryLink";
-    public final static String ACTION_NODE_ANNOTATION = "actionNode";
-    
-    public final static int ACCEPT_ACTION = 1;
-    public final static int REJECT_ACTION = 2;
+    public final static String ACTION_ANNOTATION = "action";
     
     public final static String STAR_REPRESENTATION = "'*'";
     
@@ -215,130 +213,48 @@ public class GrooveASTBuilder {
                 FlowChartNames.FILTER_NODE, filterNode );
         graph.addEdge( edge );
         
-        //create reject and accept nodes:
-        AnnotatedNode rejectNode = new AnnotatedNode();
-        rejectNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
-        rejectNode.addAnnotation( ACTION_NODE_ANNOTATION, new Integer( REJECT_ACTION ) );
-        graph.addNode( rejectNode );
-        edge = new AnnotatedEdge( filterNode, FlowChartNames.REJECT_EDGE, rejectNode );
-        graph.addEdge( edge );
-        edge = new AnnotatedEdge( rejectNode, FlowChartNames.FILTER_ACTION_NODE,
-                rejectNode );
-        graph.addEdge( edge );
-        
-        AnnotatedNode acceptNode = new AnnotatedNode();
-        acceptNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
-        acceptNode.addAnnotation( ACTION_NODE_ANNOTATION, new Integer( ACCEPT_ACTION ) );
-        graph.addNode( acceptNode );
-        edge = new AnnotatedEdge( filterNode, FlowChartNames.ACCEPT_EDGE, acceptNode );
-        graph.addEdge( edge );
-        edge = new AnnotatedEdge( acceptNode, FlowChartNames.FILTER_ACTION_NODE,
-                acceptNode );
-        graph.addEdge( edge );
-        
-        //add correct action to reject and accept node:
+        //create reject and accept nodes
         FilterType filterType = filter.getFilterType();
-        if (filterType.type.equals(FilterType.META) ){
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.META_ACTION_NODE, 
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.ERROR) ){
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.ERROR_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.DISPATCH) ){
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.DISPATCH_ACTION_NODE, 
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.SEND) ){
-//          edge = new AnnotatedEdge( acceptNode, "SendAction", acceptNode );
-            //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.SUBSTITUTION) ){
-            edge = new AnnotatedEdge( acceptNode, 
-                    FlowChartNames.SUBSTITUTION_ACTION_NODE, acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.WAIT) ){
-//          edge = new AnnotatedEdge( acceptNode, "WaitAction", acceptNode );
-            //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.APPEND) ){
-            //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.PREPEND) ){
-            //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.BEFORE) ){
-            //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.BEFORE_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.AFTER) ){
-            //not implemented in the groove model yet;
-            edge = new AnnotatedEdge( acceptNode, FlowChartNames.AFTER_ACTION_NODE,
-                    acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else if (filterType.type.equals(FilterType.CUSTOM) ){
-            edge = new AnnotatedEdge( acceptNode, 
-                    FlowChartNames.CUSTOM_ACTION_NODE, acceptNode );
-            graph.addEdge( edge );
-            edge = new AnnotatedEdge( rejectNode, FlowChartNames.CONTINUE_ACTION_NODE,
-                    rejectNode );
-            graph.addEdge( edge );
-        }
-        else{
-            //should never happen, because all cases should be handled by 
-            //previous if/elses
-            throw new RuntimeException( "Unknown filtertype" );
-        }
+        
+        //create acceptCallNode
+        AnnotatedNode acceptCallNode = new AnnotatedNode();
+        acceptCallNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
+        edge = new AnnotatedEdge( acceptCallNode, FlowChartNames.ACCEPT_CALL_ACTION_NODE, acceptCallNode );
+        graph.addEdge( edge );
+        graph.addNode( acceptCallNode );
+        edge = new AnnotatedEdge( filterNode, FlowChartNames.ACCEPT_CALL_EDGE, acceptCallNode );
+        graph.addEdge( edge );
+        addActionInformation( graph, acceptCallNode, filterType.getAcceptCallAction() );
+        
+        //create rejectCallNode
+        AnnotatedNode rejectCallNode = new AnnotatedNode();
+        rejectCallNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
+        edge = new AnnotatedEdge( rejectCallNode, FlowChartNames.REJECT_CALL_ACTION_NODE, rejectCallNode );
+        graph.addEdge( edge );
+        graph.addNode( rejectCallNode );
+        edge = new AnnotatedEdge( filterNode, FlowChartNames.REJECT_CALL_EDGE, rejectCallNode );
+        graph.addEdge( edge );
+        addActionInformation( graph, rejectCallNode, filterType.getRejectCallAction() );
+        
+        //create acceptReturnNode
+        AnnotatedNode acceptReturnNode = new AnnotatedNode();
+        acceptReturnNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
+        edge = new AnnotatedEdge( acceptReturnNode, FlowChartNames.ACCEPT_RETURN_ACTION_NODE, acceptReturnNode );
+        graph.addEdge( edge );
+        graph.addNode( acceptReturnNode );
+        edge = new AnnotatedEdge( filterNode, FlowChartNames.ACCEPT_RETURN_EDGE, acceptReturnNode );
+        graph.addEdge( edge );
+        addActionInformation( graph, acceptReturnNode, filterType.getAcceptReturnAction() );
+        
+        //create rejectReturnNode
+        AnnotatedNode rejectReturnNode = new AnnotatedNode();
+        rejectReturnNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filter );
+        edge = new AnnotatedEdge( rejectReturnNode, FlowChartNames.REJECT_RETURN_ACTION_NODE, rejectReturnNode );
+        graph.addEdge( edge );
+        graph.addNode( rejectReturnNode );
+        edge = new AnnotatedEdge( filterNode, FlowChartNames.REJECT_RETURN_EDGE, rejectReturnNode );
+        graph.addEdge( edge );
+        addActionInformation( graph, rejectReturnNode, filterType.getRejectReturnAction() );
         
         
         
@@ -385,6 +301,58 @@ public class GrooveASTBuilder {
         return filterNode;
     }
 
+    
+    private void addActionInformation(Graph graph, AnnotatedNode actionNode, FilterAction action){
+    	//add action as annotation
+    	actionNode.addAnnotation( ACTION_ANNOTATION, action );
+    	
+    	//add FilterActionNode label
+        AnnotatedEdge edge = new AnnotatedEdge( actionNode, FlowChartNames.FILTER_ACTION_NODE,
+        		actionNode );
+        graph.addEdge( edge );
+        
+        //add flowbehaviour label
+        switch( action.getFlowBehaviour() ){
+        	case FilterAction.FLOW_CONTINUE:
+        		edge = new AnnotatedEdge( actionNode, FlowChartNames.CONTINUE_ACTION_NODE, actionNode );
+        		graph.addEdge( edge );
+        		break;
+        	case FilterAction.FLOW_EXIT:
+        		edge = new AnnotatedEdge( actionNode, FlowChartNames.EXIT_ACTION_NODE, actionNode );
+        		graph.addEdge( edge );
+        		break;
+        	case FilterAction.FLOW_RETURN:
+        		edge = new AnnotatedEdge( actionNode, FlowChartNames.RETURN_ACTION_NODE, actionNode );
+        		graph.addEdge( edge );
+        		break;
+        	default:
+        		throw new RuntimeException( "Unknown Flowbehaviour" );
+        }
+        
+        //add message change behaviour label
+        switch( action.getMessageChangeBehaviour() ){
+        	case FilterAction.MESSAGE_ORIGINAL:
+        		edge = new AnnotatedEdge( actionNode, FlowChartNames.ORIGINAL_MESSAGE_ACTION_NODE, actionNode );
+        		graph.addEdge( edge );
+        		break;
+        	case FilterAction.MESSAGE_SUBSTITUTED:
+        		edge = new AnnotatedEdge( actionNode, FlowChartNames.EXIT_ACTION_NODE, actionNode );
+        		graph.addEdge( edge );
+        		break;
+        	case FilterAction.MESSAGE_ANY:
+        		edge = new AnnotatedEdge( actionNode, FlowChartNames.RETURN_ACTION_NODE, actionNode );
+        		graph.addEdge( edge );
+        		break;
+        	default:
+        		throw new RuntimeException( "Unknown Flowbehaviour" );
+        }
+        
+        //add filteraction name label
+        edge = new AnnotatedEdge( actionNode, action.getName(), actionNode );
+		graph.addEdge( edge );
+    }
+    
+    
     /**
      * @param operator
      * @param graph

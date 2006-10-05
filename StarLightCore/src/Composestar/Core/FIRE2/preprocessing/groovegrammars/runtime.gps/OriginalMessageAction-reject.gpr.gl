@@ -1,0 +1,9 @@
+# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\runtime.gps\OriginalMessageAction-reject.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n1305 161 157 18 18 
+n n1303 616 11 18 18 
+n n1302 381 61 18 18 
+n n1301 395 232 18 18 
+n n1304 614 103 18 18 

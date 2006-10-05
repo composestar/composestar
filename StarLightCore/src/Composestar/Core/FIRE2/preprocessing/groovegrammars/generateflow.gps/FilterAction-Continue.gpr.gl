@@ -1,0 +1,8 @@
+# Layout information for D:\composestar\Core\Compiletime\src\Composestar\Core\FIRE2\preprocessing\groovegrammars\generateflow.gps\FilterAction-Continue.gpr
+# Each line contains layout information about a node or edge
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+n n1625 219 69 18 18 
+e n1625 n1626 "new:flowNext" 500 500 257 76 266 186 364 238 12
+e n1625 n1626 "del:flowIn" -168 667 259 78 363 238 11
+n n1626 283 229 18 18 

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n2297"/>
-        <node id="n2301"/>
-        <node id="n2299"/>
-        <node id="n2300"/>
-        <node id="n2298"/>
-        <edge from="n2298" to="n2297">
+        <node id="n651"/>
+        <node id="n649"/>
+        <node id="n652"/>
+        <node id="n650"/>
+        <node id="n648"/>
+        <edge from="n648" to="n652">
             <attr name="label">
                 <string>flowNext</string>
             </attr>
         </edge>
-        <edge from="n2301" to="n2301">
+        <edge from="n652" to="n652">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n651" to="n651">
             <attr name="label">
                 <string>Frame</string>
             </attr>
         </edge>
-        <edge from="n2301" to="n2299">
-            <attr name="label">
-                <string>del:substitutionTarget</string>
-            </attr>
-        </edge>
-        <edge from="n2301" to="n2297">
+        <edge from="n651" to="n652">
             <attr name="label">
                 <string>new:pc</string>
             </attr>
         </edge>
-        <edge from="n2298" to="n2298">
+        <edge from="n648" to="n648">
             <attr name="label">
-                <string>ContinueCustomAction|HaltCustomAction</string>
+                <string>OriginalMessageAction</string>
             </attr>
         </edge>
-        <edge from="n2301" to="n2300">
+        <edge from="n651" to="n649">
+            <attr name="label">
+                <string>del:substitutionTarget</string>
+            </attr>
+        </edge>
+        <edge from="n651" to="n650">
             <attr name="label">
                 <string>del:substitutionSelector</string>
             </attr>
         </edge>
-        <edge from="n2301" to="n2298">
+        <edge from="n651" to="n648">
             <attr name="label">
                 <string>del:pc</string>
-            </attr>
-        </edge>
-        <edge from="n2297" to="n2297">
-            <attr name="label">
-                <string>FlowElement</string>
             </attr>
         </edge>
     </graph>

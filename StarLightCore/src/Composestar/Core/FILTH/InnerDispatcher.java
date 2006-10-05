@@ -65,14 +65,12 @@ public class InnerDispatcher {
 		f.setName("CpsDefaultInnerDispatchFilter");
 
 		// create the filtertype and set it in the filter (typeImplementation as well)
-		FilterType filterType = new FilterType();
-		filterType.setType("Dispatch");
-		filterType.setName("Dispatch");
+		FilterType filterType = FilterType.getFilterType( "Dispatch" );
 		ConcernReference typeImplementation = new ConcernReference();
-		typeImplementation.setName(filterType.getName()); 
-		typeImplementation.setRef(filterType);
-		typeImplementation.setResolved(true);
-		f.setTypeImplementation(typeImplementation);
+//		typeImplementation.setName(filterType.getType()); 
+//		typeImplementation.setRef(filterType);
+//		typeImplementation.setResolved(true);
+//		f.setTypeImplementation(typeImplementation);
 		f.setFilterType(filterType);
 		f.setRightOperator(new VoidFilterCompOper());
 		

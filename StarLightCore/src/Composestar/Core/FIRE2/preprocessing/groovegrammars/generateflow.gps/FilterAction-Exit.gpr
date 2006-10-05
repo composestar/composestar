@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n1631"/>
-        <node id="n1629"/>
-        <node id="n1630"/>
-        <edge from="n1631" to="n1630">
-            <attr name="label">
-                <string>new:pc</string>
-            </attr>
-        </edge>
-        <edge from="n1629" to="n1630">
-            <attr name="label">
-                <string>flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n1631" to="n1629">
-            <attr name="label">
-                <string>del:pc</string>
-            </attr>
-        </edge>
-        <edge from="n1630" to="n1630">
+        <node id="n2131"/>
+        <node id="n2130"/>
+        <node id="n2132"/>
+        <edge from="n2130" to="n2130">
             <attr name="label">
                 <string>FlowElement</string>
             </attr>
         </edge>
-        <edge from="n1629" to="n1629">
+        <edge from="n2131" to="n2132">
             <attr name="label">
-                <string>ErrorAction</string>
+                <string>new:flowNext</string>
             </attr>
         </edge>
-        <edge from="n1631" to="n1631">
+        <edge from="n2131" to="n2130">
             <attr name="label">
-                <string>Frame</string>
+                <string>del:flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n2130" to="n2130">
+            <attr name="label">
+                <string>not:Exit</string>
+            </attr>
+        </edge>
+        <edge from="n2132" to="n2132">
+            <attr name="label">
+                <string>Exit</string>
+            </attr>
+        </edge>
+        <edge from="n2131" to="n2131">
+            <attr name="label">
+                <string>ExitAction</string>
             </attr>
         </edge>
     </graph>

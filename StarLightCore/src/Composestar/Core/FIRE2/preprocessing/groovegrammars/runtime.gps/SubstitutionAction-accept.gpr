@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="graph" role="graph" edgeids="false" edgemode="directed">
+        <node id="n1957"/>
+        <node id="n1962"/>
+        <node id="n1958"/>
+        <node id="n1959"/>
+        <node id="n1960"/>
+        <node id="n1961"/>
+        <node id="n1956"/>
+        <edge from="n1957" to="n1962">
+            <attr name="label">
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1957">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n1958" to="n1958">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n1962" to="n1962">
+            <attr name="label">
+                <string>SubstitutedMessageAction</string>
+            </attr>
+        </edge>
+        <edge from="n1962" to="n1958">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1961">
+            <attr name="label">
+                <string>new:selector</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1961">
+            <attr name="label">
+                <string>del:substitutionSelector</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1958">
+            <attr name="label">
+                <string>new:pc</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1956">
+            <attr name="label">
+                <string>del:substitutionTarget</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1959">
+            <attr name="label">
+                <string>del:selector</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1960">
+            <attr name="label">
+                <string>del:target</string>
+            </attr>
+        </edge>
+        <edge from="n1957" to="n1956">
+            <attr name="label">
+                <string>new:target</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
