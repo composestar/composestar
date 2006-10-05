@@ -199,6 +199,7 @@
     <Compile Include="RegistrationAttributes\SingleFileGeneratorSupportRegistrationAttribute.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="SelectionElementValueChangedListener.cs" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\Class1.cs" />
     <Compile Include="VSMDComposeStarProvider.cs" />
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -225,6 +226,10 @@
     <None Include="Project\Diagrams\HierarchyClasses.cd" />
     <None Include="Project\Diagrams\PropertiesClasses.cd" />
     <None Include="Project\Diagrams\ReferenceClasses.cd" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\Concern.cps" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\Concern.cps" />
   </ItemGroup>
   <ItemGroup>
     <ZipItem Include="Templates\ProjectItems\Concern\Concern.cps" />
@@ -233,10 +238,10 @@
     <ZipItem Include="Templates\ProjectItems\Text\TextFile.txt" />
     <ZipItem Include="Templates\ProjectItems\Text\TextFile.vstemplate" />
     <ZipItem Include="Templates\ProjectItems\Text\Text.ico" />
-    <ZipProject Include="Templates\Projects\ClassLibrary\Concern.cps" />
-    <ZipProject Include="Templates\Projects\ClassLibrary\__TemplateIcon.ico" />
-    <ZipProject Include="Templates\Projects\ClassLibrary\IPClassLib.vstemplate" />
-    <ZipProject Include="Templates\Projects\ClassLibrary\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\ConcernProject\Concern.cps" />
+    <ZipProject Include="Templates\Projects\ConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\ConcernProject\IPClassLib.vstemplate" />
+    <ZipProject Include="Templates\Projects\ConcernProject\StarLightProject.cpsproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VisualStudio.LanguageServices\StarLight.VisualStudio.LanguageServices.csproj">
@@ -255,6 +260,10 @@
     <Content Include="Project\Resources\imagelis.bmp" />
     <Content Include="Resources\GenericPackage.bmp" />
     <Content Include="Resources\GenericPackage.ico" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\IPClassLib.vstemplate" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\IPClassLib.vstemplate" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\__TemplateIcon.ico" />
     <EmbeddedResource Include="Resources\imagelis.bmp" />
     <EmbeddedResource Include="Resources\StarLightImageList.bmp" />
   </ItemGroup>
