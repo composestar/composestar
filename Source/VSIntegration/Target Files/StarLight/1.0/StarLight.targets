@@ -1,7 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Weave">
-  <!--Import the standards targets-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-
+  
   <!--Reference the assembly where our tasks are defined-->
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.AnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
@@ -18,6 +16,7 @@
   <PropertyGroup>
     <WeaveDependsOn>
       BeforeWeave;
+      CompileCode;
       CoreWeave;
       AfterWeave
     </WeaveDependsOn>
@@ -48,6 +47,46 @@
 
   <!--
     ============================================================
+                                        CompileCode
+
+    The core build step calls each of the compile targets.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <TargetExt Condition="'$(OutputType)'=='exe'">.exe</TargetExt>
+    <TargetExt Condition="'$(OutputType)'=='winexe'">.exe</TargetExt>
+    <TargetExt Condition="'$(OutputType)'=='library'">.dll</TargetExt>
+    <TargetExt Condition="'$(OutputType)'=='module'">.netmodule</TargetExt>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <CompileCodeDependsOn>
+      BuildOnlySettings;
+      PrepareForBuild;
+      PreBuildEvent;
+      UnmanagedUnregistration;
+      ResolveReferences;
+      PrepareResources;
+      ResolveKeySource;
+      Compile;
+      GenerateSerializationAssemblies;
+      CreateSatelliteAssemblies;
+      GenerateManifests;
+      GetTargetPath;
+      PrepareForRun;
+    </CompileCodeDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="CompileCode"
+      DependsOnTargets="$(CompileCodeDependsOn)"
+      Condition ="'$(CodeLanguage)'=='CSharp' or '$(CodeLanguage)'=='VB' or '$(CodeLanguage)'=='JSharp'" >
+    <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>    
+  </Target>
+
+
+  <!--
+    ============================================================
                                         CoreWeave
 
     The core build step calls each of the weave targets.
@@ -57,7 +96,7 @@
     <CoreWeaveDependsOn>
       PrepareForBuild;
       ResolveReferences;
-      CopyFilesToOutputDirectory;
+      CopyBaseCodeToOutputDirectory;
       ILAnalyzerRunner;
       MasterCaller;
       ILWeaverRunner;
@@ -78,8 +117,8 @@
     <DebugSymbols Condition=" '$(DebugType)' == 'none' ">false</DebugSymbols>
     <DebugType    Condition=" '$(DebugType)' == 'none' "></DebugType>
 
-    <!-- Provide a facility to override UseHostCompilerIfAvailable-->
-    <UseHostCompilerIfAvailable>false</UseHostCompilerIfAvailable>
+    <_DisabledWarnings>$(NoWarn)</_DisabledWarnings>
+
   </PropertyGroup>
 
   <!-- Override the GetCopyToOutputDirectoryItems target -->
@@ -189,24 +228,15 @@
   
   <!--This is an override of targets-->
   <Target
-     Name="CopyFilesToOutputDirectory"
+     Name="CopyBaseCodeToOutputDirectory"
       DependsOnTargets="
             ComputeIntermediateSatelliteAssemblies;
             _CopyFilesMarkedCopyLocal;
             _CopySourceItemsToOutputDirectory;
             _CopyAppConfigFile;
             _CopyManifestFiles;">
-    <Message Text="Copying assemblies..." />
-    <!--<MakeDir Directories ="$(OutDir)\Woven"></MakeDir>-->
-    <!-- Copy the serialization assembly if it exists. -->
-    <!--<Copy
-        SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"
-        DestinationFiles="$(OutDir)$(_SGenDllName)"
-        SkipUnchangedFiles="true"
-        Condition="'$(_SGenDllCreated)'=='true'">
-      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-    </Copy>-->
-    <!--<Copy
+    <Message Text="Copying base code to output folder." />
+    <Copy
         SourceFiles="@(TargetOutputs)"
         DestinationFolder="$(OutDir)"
         SkipUnchangedFiles="true">
@@ -214,24 +244,15 @@
       <Output TaskParameter="DestinationFiles" ItemName="MainAssembly"/>
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 
-    </Copy>-->
-    <!-- Copy the debug information file (.pdb), if any -->
-    <!--<Copy
-        SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb"
-        DestinationFiles="$(OutDir)$(TargetName).pdb"
-        SkipUnchangedFiles="true"
-        Condition="'$(_DebugSymbolsProduced)'=='true'">
-
-      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-
-    </Copy>-->
+    </Copy>
+  
     <!-- Copy satellite assemblies. -->
-    <!--<Copy
+    <Copy
         SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)"
         DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(OutDir)%(Culture)\$(TargetName).resources.dll')"
         SkipUnchangedFiles="true">
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-    </Copy>-->
+    </Copy>
     <!-- 
         Copy COM reference wrappers, isolated COM references, COM references included by 
         native (manifest) references, native (manifest) reference files themselves. 

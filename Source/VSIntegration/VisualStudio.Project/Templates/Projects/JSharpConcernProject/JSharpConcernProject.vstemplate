@@ -1,0 +1,19 @@
+<VSTemplate Version="2.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>JSharp StarLight Project</Name>
+    <Description>A project for creating a new ComposeStar StarLight enabled application using the JSharp compiler.</Description>
+    <Icon>__TemplateIcon.ico</Icon>
+    <ProjectType>StarLight</ProjectType>
+    <SortOrder>50</SortOrder>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>JSharpStarLightProject</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>    
+  </TemplateData>
+  <TemplateContent>
+    <Project File="StarLightProject.cpsproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" OpenInEditor="true">Concern.cps</ProjectItem>
+      <ProjectItem ReplaceParameters="true" OpenInEditor="false">Class1.java</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

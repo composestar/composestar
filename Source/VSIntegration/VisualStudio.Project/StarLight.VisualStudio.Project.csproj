@@ -200,6 +200,8 @@
     <Compile Include="Resources.cs" />
     <Compile Include="SelectionElementValueChangedListener.cs" />
     <ZipProject Include="Templates\Projects\CSharpConcernProject\Class1.cs" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\Class1.java" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\Class.cs" />
     <Compile Include="VSMDComposeStarProvider.cs" />
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -226,6 +228,9 @@
     <None Include="Project\Diagrams\HierarchyClasses.cd" />
     <None Include="Project\Diagrams\PropertiesClasses.cd" />
     <None Include="Project\Diagrams\ReferenceClasses.cd" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\Class.vb" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\StarLightProject.cpsproj" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\Concern.cps" />
     <ZipProject Include="Templates\Projects\VBConcernProject\StarLightProject.cpsproj" />
     <ZipProject Include="Templates\Projects\VBConcernProject\Concern.cps" />
     <ZipProject Include="Templates\Projects\CSharpConcernProject\StarLightProject.cpsproj" />
@@ -233,14 +238,14 @@
   </ItemGroup>
   <ItemGroup>
     <ZipItem Include="Templates\ProjectItems\Concern\Concern.cps" />
-    <ZipItem Include="Templates\ProjectItems\Concern\StarLight.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\Concern\Concern.vstemplate" />
     <ZipItem Include="Templates\ProjectItems\Concern\__TemplateIcon.ico" />
     <ZipItem Include="Templates\ProjectItems\Text\TextFile.txt" />
     <ZipItem Include="Templates\ProjectItems\Text\TextFile.vstemplate" />
     <ZipItem Include="Templates\ProjectItems\Text\Text.ico" />
     <ZipProject Include="Templates\Projects\ConcernProject\Concern.cps" />
     <ZipProject Include="Templates\Projects\ConcernProject\__TemplateIcon.ico" />
-    <ZipProject Include="Templates\Projects\ConcernProject\IPClassLib.vstemplate" />
+    <ZipProject Include="Templates\Projects\ConcernProject\ConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\ConcernProject\StarLightProject.cpsproj" />
   </ItemGroup>
   <ItemGroup>
@@ -260,11 +265,24 @@
     <Content Include="Project\Resources\imagelis.bmp" />
     <Content Include="Resources\GenericPackage.bmp" />
     <Content Include="Resources\GenericPackage.ico" />
-    <ZipProject Include="Templates\Projects\VBConcernProject\IPClassLib.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\JSharpClass\Class.java" />
+    <ZipItem Include="Templates\ProjectItems\JSharpClass\JSharpClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\JSharpClass\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\CSharpClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\__TemplateIcon.ico" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\VBClass.vstemplate" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\JSharpConcernProject.vstemplate" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\Class1.vb" />
+    <ZipProject Include="Templates\Projects\VBConcernProject\VBConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\VBConcernProject\__TemplateIcon.ico" />
-    <ZipProject Include="Templates\Projects\CSharpConcernProject\IPClassLib.vstemplate" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\CSharpConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\CSharpConcernProject\__TemplateIcon.ico" />
     <EmbeddedResource Include="Resources\imagelis.bmp" />
+    <None Include="Resources\Resources.resx">
+      <SubType>Designer</SubType>
+    </None>
     <EmbeddedResource Include="Resources\StarLightImageList.bmp" />
   </ItemGroup>
   <ItemGroup>

@@ -48,5 +48,6 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
+    <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
 </Project>
