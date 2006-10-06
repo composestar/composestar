@@ -540,6 +540,13 @@ namespace Composestar.StarLight.ILWeaver
 
         #region Helper functions
 
+        /// <summary>
+        /// Inserts the instruction list before the start instruction.
+        /// </summary>
+        /// <param name="worker">The worker.</param>
+        /// <param name="startInstruction">The start instruction.</param>
+        /// <param name="instructionsToAdd">The instructions to add.</param>
+        /// <returns></returns>
         private int InsertBeforeInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
         {
             foreach (Instruction instr in instructionsToAdd)

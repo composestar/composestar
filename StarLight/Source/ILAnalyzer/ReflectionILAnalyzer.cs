@@ -47,16 +47,7 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             get { return 0; }
         }
-
-        /// <summary>
-        /// Gets access to the repository.
-        /// </summary>
-        /// <value>The repository access.</value>
-        public RepositoryAccess RepositoryAccess
-        {
-            get { throw new NotImplementedException("not yet implemented"); }
-        }
-       
+         
         /// <summary>
         /// Extracts the types.
         /// </summary>
@@ -69,8 +60,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-
-
+            
 
             sw.Stop();
             _lastDuration = sw.Elapsed;
