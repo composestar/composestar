@@ -163,7 +163,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
 
                     sw.Start();
 
-                    assemblies.AddRange(analyzer.ProcessUnresolvedTypes());
+                    //assemblies.AddRange(analyzer.ProcessUnresolvedTypes());
 
                     sw.Stop();
 
