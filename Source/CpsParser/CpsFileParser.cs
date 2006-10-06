@@ -1,20 +1,32 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 namespace Composestar.CpsParser
 {
+    /// <summary>
+    /// A CPS (Concern) file parser using Antlr.
+    /// </summary>
     public class CpsFileParser
     {
-        private System.Collections.Generic.List<String> types = new System.Collections.Generic.List<string>();
+        private List<String> types = new List<string>();
 
-        public System.Collections.Generic.List<String> ReferencedTypes
+        /// <summary>
+        /// Gets or sets the referenced types.
+        /// </summary>
+        /// <value>The referenced types.</value>
+        public List<String> ReferencedTypes
         {
             get { return types; }
             set { types = value; }
         }
-	
+
+        /// <summary>
+        /// Parses the file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
         public void ParseFile(String fileName)
         {
             FileStream inputStream = new FileStream(fileName, FileMode.Open);
@@ -27,39 +39,21 @@ namespace Composestar.CpsParser
             {
                 parser.concern();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine("{0}\n{1}", e.Message, e.StackTrace);
+                Console.WriteLine("{0}\n{1}", exception.Message, exception.StackTrace);
             }
 
             if (parser.getAST() != null)
             {
-                //Console.WriteLine(parser.getAST().ToStringTree());
-
-                //antlr.TreeParser tp = new antlr.TreeParser();
-
-
-
-                //IEnumerator enumExternals = parser.getAST().findAll(parser.getAST());
-                //while (enumExternals.MoveNext())
-                //{
-                //    antlr.collections.AST ast = (antlr.collections.AST)enumExternals.Current;
-
-                //    Console.WriteLine(ast.getText());
-                //}
-
                 antlr.collections.AST top = parser.getAST();
-
-
-                if (top != null) walk(top, false, null);
-
-                //Console.WriteLine(types.Count);
-                //Console.WriteLine(parser.getAST().f.getFirstChild().getText() + "  |  " + parser.getAST().getFirstChild().);
-                //foreach (String s in types)
-                //{
-                //    Console.WriteLine(s);
-                //}
-            }
+                
+                if (top != null) 
+                {
+                    Walk(top, false, null);
+                } // if
+                
+            } // if
             else
             {
                 Console.WriteLine("AST is null!");
@@ -69,10 +63,16 @@ namespace Composestar.CpsParser
             {
                 Console.WriteLine("Embedded source found!!");
             }
-
         }
 
-        private String walk(antlr.collections.AST tree, bool doType, String parsingType)
+        /// <summary>
+        /// Walks the specified tree.
+        /// </summary>
+        /// <param name="tree">The tree.</param>
+        /// <param name="doType">if set to <c>true</c> do type.</param>
+        /// <param name="parsingType">Type of the parsing.</param>
+        /// <returns></returns>
+        private String Walk(antlr.collections.AST tree, bool doType, String parsingType)
         {
             //Console.WriteLine(tree.getText() + "  |  " + tree.Type.ToString());
             if (parsingType != null && parsingType != String.Empty) parsingType = parsingType + ".";
@@ -101,7 +101,6 @@ namespace Composestar.CpsParser
             {
                 doType = false;
             }
-
             
             antlr.collections.AST sib = tree.getNextSibling();
             if (sib != null) parsingType = walk(sib, doType, parsingType);
