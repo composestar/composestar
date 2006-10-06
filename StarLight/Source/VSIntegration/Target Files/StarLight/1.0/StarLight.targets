@@ -2,7 +2,8 @@
   
   <!--Reference the assembly where our tasks are defined-->
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.AnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
 
@@ -97,6 +98,7 @@
       PrepareForBuild;
       ResolveReferences;
       CopyBaseCodeToOutputDirectory;
+      CpsParserRunner;
       ILAnalyzerRunner;
       MasterCaller;
       ILWeaverRunner;
@@ -200,11 +202,20 @@
 
   <Target Name="CreateManifestResourceNames"/>
 
+  <!--CpsParserRunner target -->
+  <Target
+       Name="CpsParserRunner">
+    <Message Text="Parsing concern files." />
+    <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')">
+      <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
+    </CpsParserTask>
+  </Target>
+  
   <!--ILAnalyzerRunner target -->
   <Target
        Name="ILAnalyzerRunner">
     <Message Text="Analyzing assemblies." />
-    <AnalyzerTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />
+    <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)"  />
   </Target>
 
   <!--MasterCaller target -->
