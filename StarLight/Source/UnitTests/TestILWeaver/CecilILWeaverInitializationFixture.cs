@@ -56,7 +56,7 @@ namespace TestILWeaver
             CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration("c:\\this_file_doesnt_exist");
             ILanguageModelAccessor langModelAccessor = new LanguageModelAccessorMock();
 
-            new CecilILWeaver(configuration, langModelAccessor).DoWeave();
+            ((IILWeaver) new CecilILWeaver(configuration, langModelAccessor)).DoWeave();
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace TestILWeaver
             CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("InvalidImage.exe"));
             ILanguageModelAccessor langModelAccessor = new LanguageModelAccessorMock();
 
-            new CecilILWeaver(configuration, langModelAccessor).DoWeave();
+            ((IILWeaver) new CecilILWeaver(configuration, langModelAccessor)).DoWeave();
         }
 
         /// <summary>

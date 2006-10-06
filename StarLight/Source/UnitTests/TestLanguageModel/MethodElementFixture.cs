@@ -54,8 +54,9 @@ namespace TestLanguageModel
         [Owner("Michiel van Oudheusden"), Description("Test if the MethodElement class persists the strings."), TestMethod]
         public void MethodElementPersistStringData()
         {
-            MethodElement mi = new MethodElement();
             string testValue = "test";
+            MethodElement mi = new MethodElement(testValue);
+            
             mi.Name = testValue;
             mi.ReturnType = testValue;
 
@@ -66,25 +67,25 @@ namespace TestLanguageModel
         [Description("Test if the MethodElement class persists the parameters."), Owner("Michiel van Oudheusden"), TestMethod]
         public void MethodElementPersistParameters()
         {
-            MethodElement mi = new MethodElement();
+            MethodElement mi = new MethodElement("");
             ParameterElement pi = new ParameterElement();
 
-            string v = "test";
-            pi.Name = v;
+            string value = "test";
+            pi.Name = value;
 
-            Assert.IsTrue(pi.ParentMethodId <= 0, "Parameter should not have a parent method.");
+            Assert.IsTrue(String.IsNullOrEmpty(pi.ParentMethodId), "Parameter should not have a parent method.");
             pi.ParentMethodId = mi.Id;
-            Assert.IsTrue(pi.ParentMethodId > 0, "Parameter should have a method.");
+            Assert.IsFalse(String.IsNullOrEmpty(pi.ParentMethodId), "Parameter should have a method.");
                        
         }
 
         [Description("Checks if the methodinfo class stores the methodbody object."), Owner("Michiel van Oudheusden"), TestMethod]
         public void MethodElementStoresMethodBody()
         {
-            MethodElement mi = new MethodElement();
+            MethodElement mi = new MethodElement("test");
             Assert.IsNotNull(mi.MethodBody, "MethodBody is null.");
  
-            MethodBody mb = new MethodBody();
+            MethodBody mb = new MethodBody("test", mi.Id);
             mi.MethodBody = mb;
 
             Assert.IsNotNull(mi.MethodBody, "MethodBody is null.");

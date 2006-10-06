@@ -28,7 +28,7 @@ namespace TestILWeaver
         [DeploymentItem(TestInputImage)]
         public void WeavingErrorActionAddsExceptionFilter()
         {
-            string OutputFileName = "WeavingErrorActionAddsExceptionFilter.exe";
+            string outputFileName = "WeavingErrorActionAddsExceptionFilter.exe";
 
             // set up model 
             LanguageModelAccessorMock model = new LanguageModelAccessorMock();
@@ -52,14 +52,14 @@ namespace TestILWeaver
             model.AddInputFilter("TestTarget.Program", "System.Void TestMethod(System.Int32)", block);
 
             // create configuration
-            CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(OutputFileName));
+            CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(outputFileName));
 
             // do weaving
-            CecilILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
+            IILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
             weaver.DoWeave();
 
             ILReader il = new ILReader();
-            il.OpenAssembly(CreateFullPath(OutputFileName));
+            il.OpenAssembly(CreateFullPath(outputFileName));
             List<ILInstruction> ils = il.GetILInstructions("TestTarget.Program", "TestMethod");
 
             // Expecting the following IL code
@@ -75,7 +75,7 @@ namespace TestILWeaver
         [DeploymentItem(TestInputImage)]
         public void WeavingBeforeActionAddsPointCutContextLogic()
         {
-            string OutputFileName = "WeavingBeforeActionAddsPintCutContextLogic.exe";
+            string outputFileName = "WeavingBeforeActionAddsPintCutContextLogic.exe";
 
             // set up model 
             LanguageModelAccessorMock model = new LanguageModelAccessorMock();
@@ -99,10 +99,10 @@ namespace TestILWeaver
             model.AddInputFilter("TestTarget.Program", "System.Void TestMethod(System.Int32)", block);
 
             // create configuration
-            CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(OutputFileName));
+            CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(outputFileName));
 
             // do weaving
-            CecilILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
+            IILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
             weaver.DoWeave();
 
             // Expecting the following IL code

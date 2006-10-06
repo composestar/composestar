@@ -37,9 +37,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILWeaverFixtureBase.cs" />
     <Compile Include="WeaveInputFiltersFixture.cs" />
     <Compile Include="DIConfiguration\BuilderConfigurator.cs" />
-    <Compile Include="Mocks\ILWeaverFixtureBase.cs" />
     <Compile Include="Mocks\LanguageModelAccessorMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CecilILWeaverInitializationFixture.cs" />
@@ -47,10 +47,18 @@
     <Compile Include="WeaveInternalsFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
+      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
+      <Name>LanguageModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ILWeaver\ILWeaver.csproj">
+      <Project>{7A30904D-40C9-408D-813E-12E16C488EAA}</Project>
+      <Name>ILWeaver</Name>
     </ProjectReference>
     <ProjectReference Include="..\ILReader\ILReader.csproj">
       <Project>{002AEBBE-70BA-4D3F-AE41-6E49D4E11E86}</Project>

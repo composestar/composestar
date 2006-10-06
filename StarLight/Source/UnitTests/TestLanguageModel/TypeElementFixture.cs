@@ -54,23 +54,23 @@ namespace TestLanguageModel
         [Owner("Michiel van Oudheusden"), Description("Test if the TypeElement class persists the strings."), TestMethod]
         public void TypeElementPersistStringData()
         {
-            TypeElement ti = new TypeElement();
             string testValue = "test";
+            TypeElement ti = new TypeElement(testValue);
             ti.FullName = testValue;
             ti.BaseType = testValue;
             ti.Name = testValue;
-            ti.AFQN = testValue;
+            ti.Assembly = testValue;
             
             Assert.AreEqual(testValue, ti.FullName, "Fullname does not persists data"); 
             Assert.AreEqual(testValue,ti.BaseType, "BaseType does not persists data"); 
             Assert.AreEqual(testValue, ti.Name, "Name does not persists data"); 
-            Assert.AreEqual(testValue, ti.AFQN, "AFQN does not persists data"); 
+            Assert.AreEqual(testValue, ti.Assembly, "Assembly does not persists data"); 
         }
 
         [Description("Test if the TypeElement class persists the booleans."), Owner("Michiel van Oudheusden"), TestMethod]
         public void TypeElementPersistBoolData()
         {
-            TypeElement ti = new TypeElement();
+            TypeElement ti = new TypeElement("test");
             bool testValue = true;
 
             ti.IsAbstract = testValue;
