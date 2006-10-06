@@ -4,12 +4,16 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterActionAnnotation( "DispatchAction", FilterActionAnnotation.FilterFlowBehaviour.Return,
-        FilterActionAnnotation.MessageSubstitutionBehaviour.Original )]
+    [FilterActionAnnotation( "DispatchAction", FilterFlowBehaviour.Return,
+        MessageSubstitutionBehaviour.Original )]
     public class DispatchAction : FilterAction
     {
+        /// <summary>
+        /// Implements the behaviour of the FilterAction.
+        /// </summary>
+        /// <param name="context">Context information</param>
         [FilterActionSpecificationAnnotation("target.write(inner)") ]
-        public override void execute(JoinPointContext context)
+        public override void Execute(JoinPointContext context)
         {
         }
     }

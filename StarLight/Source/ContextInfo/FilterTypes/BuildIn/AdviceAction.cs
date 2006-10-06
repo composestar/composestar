@@ -4,11 +4,17 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterActionAnnotation("AdviceAction", FilterActionAnnotation.FilterFlowBehaviour.Continue, 
-        FilterActionAnnotation.MessageSubstitutionBehaviour.Original)]
+    /// <summary>
+    /// 
+    /// </summary>
+    [FilterActionAnnotation("AdviceAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
     public class AdviceAction : FilterAction
     {
-        public override void execute( JoinPointContext context )
+        /// <summary>
+        /// Implements the behaviour of the FilterAction.
+        /// </summary>
+        /// <param name="context">Context information</param>
+        public override void Execute(JoinPointContext context)
         {
         }
     }

@@ -4,11 +4,15 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterActionAnnotation( "SubstitutionAction", FilterActionAnnotation.FilterFlowBehaviour.Continue,
-        FilterActionAnnotation.MessageSubstitutionBehaviour.Substituted )]
+    [FilterActionAnnotation( "SubstitutionAction", FilterFlowBehaviour.Continue,
+        MessageSubstitutionBehaviour.Substituted )]
     public class SubstitutionAction : FilterAction
     {
-        public override void execute( JoinPointContext context )
+        /// <summary>
+        /// Implements the behaviour of the FilterAction.
+        /// </summary>
+        /// <param name="context">Context information</param>
+        public override void Execute( JoinPointContext context )
         {
         }
     }
