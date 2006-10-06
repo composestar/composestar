@@ -14,6 +14,8 @@ using Mono.Cecil.Signatures;
 
 using Composestar.Repository;  
 using Composestar.Repository.LanguageModel;
+
+using Composestar.StarLight.ContextInfo.FilterTypes;
   
 namespace Composestar.StarLight.ILAnalyzer
 {
@@ -34,6 +36,16 @@ namespace Composestar.StarLight.ILAnalyzer
         private bool _processMethodBody = true;
         private bool _processAttributes = false;
         //private string _cacheFolder = String.Empty;
+
+        private string _filterTypeName = 
+            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterType).FullName;
+        private string _filterTypeAnnotationName =
+            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterTypeAnnotation).FullName;
+        private string _filterActionName =
+            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterAction).FullName;
+        private string _filterActionAnnotationName =
+            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAnnotation).FullName;
+        //private const string Filter
 
         /// <summary>
         /// Initializes the analyzer with the specified assembly name.
@@ -366,6 +378,19 @@ namespace Composestar.StarLight.ILAnalyzer
                 {
                     UnresolvedTypes.Add(baseTypeAFQN);
                 }
+
+
+                // Check whether type is a FilterType:
+                if(type.BaseType.FullName.Equals(_filterTypeName))
+                {
+                    ExtractFilterType(type);
+                }
+
+                // Check whether type is a FilterAction:
+                if(type.BaseType.FullName.Equals(_filterActionName))
+                {
+                    ExtractFilterAction(type);
+                }
             }
 
             te.FieldElements = ExtractFields(_targetAssemblyDefinition, type.Fields);
@@ -382,6 +407,89 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return te;
         }
+
+
+        private void ExtractFilterType(TypeDefinition type)
+        {
+            foreach(CustomAttribute attr in type.CustomAttributes)
+            {
+                if(attr.Constructor.Name.Equals("FilterTypeAnnotation"))
+                {
+                    FilterTypeElement ftEl = new FilterTypeElement();
+
+                    ftEl.Name = (String) attr.ConstructorParameters[0];
+                    ftEl.AcceptCallAction = (String) attr.ConstructorParameters[1];
+                    ftEl.RejectCallAction = (String) attr.ConstructorParameters[2];
+                    ftEl.AcceptReturnAction = (String) attr.ConstructorParameters[3];
+                    ftEl.RejectReturnAction = (String) attr.ConstructorParameters[4];
+
+                    return;
+                }
+            }
+        }
+
+
+        private void ExtractFilterAction(TypeDefinition type)
+        {
+            Console.WriteLine("Extract filterAction1");
+            foreach(CustomAttribute attr in type.CustomAttributes)
+            {
+                if(attr.Constructor.DeclaringType.FullName.Equals(_filterActionAnnotationName))
+                {
+                    Console.WriteLine("Extract filterAction2");
+                    FilterActionElement faEl = new FilterActionElement();
+
+                    faEl.FullName = type.FullName;
+
+                    Console.WriteLine(attr.ConstructorParameters.Count);
+                    System.Collections.IEnumerator enumer = attr.Properties.Values.GetEnumerator();
+                    while(enumer.MoveNext())
+                    {
+                        Console.WriteLine(enumer.Current.ToString());
+                    }
+                    if(attr.ConstructorParameters.Count < 3)
+                        continue;
+
+                    
+                    
+                    faEl.Name = (String) attr.ConstructorParameters[0];
+                    switch((FilterActionAnnotation.FilterFlowBehaviour) attr.ConstructorParameters[1])
+                    {
+                        case FilterActionAnnotation.FilterFlowBehaviour.Continue:
+                            faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
+                            break;
+                        case FilterActionAnnotation.FilterFlowBehaviour.Exit:
+                            faEl.FlowBehaviour = FilterActionElement.FLOW_EXIT;
+                            break;
+                        case FilterActionAnnotation.FilterFlowBehaviour.Return:
+                            faEl.FlowBehaviour = FilterActionElement.FLOW_RETURN;
+                            break;
+                        default:
+                            faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
+                            break;
+                    }
+
+                    switch((FilterActionAnnotation.MessageSubstitutionBehaviour) attr.ConstructorParameters[2])
+                    {
+                        case FilterActionAnnotation.MessageSubstitutionBehaviour.Original:
+                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
+                            break;
+                        case FilterActionAnnotation.MessageSubstitutionBehaviour.Substituted:
+                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_SUBSTITUTED;
+                            break;
+                        case FilterActionAnnotation.MessageSubstitutionBehaviour.Any:
+                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_ANY;
+                            break;
+                        default:
+                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
+                            break;
+                    }
+
+                    return;
+                }
+            }
+        }
+
 
         private FieldElement[] ExtractFields(AssemblyDefinition _targetAssemblyDefinition, FieldDefinitionCollection fields)
         {
@@ -618,6 +726,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 // Add attributes for type
                 ExtractAttributeElements(ti, type.CustomAttributes);
 
+
                 foreach (FieldDefinition field in type.Fields)
                 {
                     // Create a new field element
@@ -767,6 +876,8 @@ namespace Composestar.StarLight.ILAnalyzer
             
             //_repositoryAccess.CloseDatabase();
         }
+
+
 
         public List<AssemblyElement> ProcessUnresolvedTypes()
         {
