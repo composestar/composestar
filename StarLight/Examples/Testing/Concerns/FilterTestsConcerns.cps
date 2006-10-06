@@ -5,6 +5,9 @@ concern FilterTestsConcern in BasicTests
 	{
 	  internals
 	    myInternal : BasicTests.TestInternal;
+	    myInteger : System.Int32;
+	    myBigInteger : System.Int64;
+	    myString : System.String;	    
 	  externals
 	  	myExternal : BasicTests.TestExternal = BasicTests.TestExternal.getInstance();
 
