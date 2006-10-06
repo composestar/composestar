@@ -15,6 +15,6 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
         /// Implements the behaviour of the FilterAction.
         /// </summary>
         /// <param name="context">Context information</param>
-        public abstract void execute( JoinPointContext context );
+        public abstract void Execute( JoinPointContext context );
     }
 }

@@ -343,6 +343,7 @@ namespace Composestar.StarLight.ILAnalyzer
             String assembly = CreateAFQN(_targetAssemblyDefinition, type);
             te.Assembly = assembly;
 
+            // TODO Zou weg kunnen? Info komt nu uit assemblyElement
             te.FromDLL = parentAssembly.FileName;
 
             String typeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type);
@@ -409,11 +410,16 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
 
+        /// <summary>
+        /// Extracts the type of the filter.
+        /// </summary>
+        /// <param name="type">The type.</param>
         private void ExtractFilterType(TypeDefinition type)
         {
             foreach(CustomAttribute attr in type.CustomAttributes)
             {
-                if(attr.Constructor.Name.Equals("FilterTypeAnnotation"))
+                // FIXME Beter om fullname te gebruiken?
+                if(attr.Constructor.DeclaringType.Name.Equals("FilterTypeAnnotation"))
                 {
                     FilterTypeElement ftEl = new FilterTypeElement();
 
@@ -428,7 +434,10 @@ namespace Composestar.StarLight.ILAnalyzer
             }
         }
 
-
+        /// <summary>
+        /// Extracts the filter action.
+        /// </summary>
+        /// <param name="type">The type.</param>
         private void ExtractFilterAction(TypeDefinition type)
         {
             Console.WriteLine("Extract filterAction1");
@@ -436,6 +445,10 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 if(attr.Constructor.DeclaringType.FullName.Equals(_filterActionAnnotationName))
                 {
+
+                   // System.Reflection.Emit.TypeBuilder tb = CreateTypeBuilder();
+                   
+
                     Console.WriteLine("Extract filterAction2");
                     FilterActionElement faEl = new FilterActionElement();
 
@@ -453,15 +466,15 @@ namespace Composestar.StarLight.ILAnalyzer
                     
                     
                     faEl.Name = (String) attr.ConstructorParameters[0];
-                    switch((FilterActionAnnotation.FilterFlowBehaviour) attr.ConstructorParameters[1])
+                    switch((FilterFlowBehaviour) attr.ConstructorParameters[1])
                     {
-                        case FilterActionAnnotation.FilterFlowBehaviour.Continue:
+                        case FilterFlowBehaviour.Continue:
                             faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
                             break;
-                        case FilterActionAnnotation.FilterFlowBehaviour.Exit:
+                        case FilterFlowBehaviour.Exit:
                             faEl.FlowBehaviour = FilterActionElement.FLOW_EXIT;
                             break;
-                        case FilterActionAnnotation.FilterFlowBehaviour.Return:
+                        case FilterFlowBehaviour.Return:
                             faEl.FlowBehaviour = FilterActionElement.FLOW_RETURN;
                             break;
                         default:
@@ -469,15 +482,15 @@ namespace Composestar.StarLight.ILAnalyzer
                             break;
                     }
 
-                    switch((FilterActionAnnotation.MessageSubstitutionBehaviour) attr.ConstructorParameters[2])
+                    switch((MessageSubstitutionBehaviour) attr.ConstructorParameters[2])
                     {
-                        case FilterActionAnnotation.MessageSubstitutionBehaviour.Original:
+                        case MessageSubstitutionBehaviour.Original:
                             faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
                             break;
-                        case FilterActionAnnotation.MessageSubstitutionBehaviour.Substituted:
+                        case MessageSubstitutionBehaviour.Substituted:
                             faEl.FlowBehaviour = FilterActionElement.MESSAGE_SUBSTITUTED;
                             break;
-                        case FilterActionAnnotation.MessageSubstitutionBehaviour.Any:
+                        case MessageSubstitutionBehaviour.Any:
                             faEl.FlowBehaviour = FilterActionElement.MESSAGE_ANY;
                             break;
                         default:
