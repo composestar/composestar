@@ -14,6 +14,21 @@ public class Or extends ConditionExpression implements IVisitable
 		//
 	}
 
+	private int _branchId;
+
+	/** @property */
+	public int get_BranchId()
+	{
+		return _branchId;
+	}
+
+	/** @property */
+	public void set_BranchId(int value)
+	{
+		_branchId = value;
+	} 
+
+
 	private ConditionExpression _left;
 
 	/** @property */
@@ -47,8 +62,9 @@ public class Or extends ConditionExpression implements IVisitable
 	public void Accept(IVisitor visitor)
 	{		
 		((IVisitable)_left).Accept(visitor);
+		visitor.VisitOrLeft(this);
 		((IVisitable)_right).Accept(visitor);
-		visitor.VisitOr(this);
+		visitor.VisitOrRight(this);
 	}
     
     public String toString(){

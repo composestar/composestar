@@ -14,6 +14,20 @@ public class And extends ConditionExpression implements IVisitable
 		// TODO: Add Constructor Logic here
 		//
 	}
+
+	private int _branchId;
+
+	/** @property */
+	public int get_BranchId()
+	{
+		return _branchId;
+	}
+
+	/** @property */
+	public void set_BranchId(int value)
+	{
+		_branchId = value;
+	} 
 	
 	private ConditionExpression _left;
 
@@ -46,8 +60,9 @@ public class And extends ConditionExpression implements IVisitable
 	public void Accept(IVisitor visitor)
 	{		
 		((IVisitable)_left).Accept(visitor);
+		visitor.VisitAndLeft(this);
 		((IVisitable)_right).Accept(visitor);
-		visitor.VisitAnd(this);
+		visitor.VisitAndRight(this);
 	}
     
     

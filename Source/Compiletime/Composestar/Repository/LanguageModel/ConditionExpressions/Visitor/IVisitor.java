@@ -4,10 +4,13 @@ import Composestar.Repository.LanguageModel.ConditionExpressions.*;
    
 public interface IVisitor
 {
-	void VisitAnd(And and);
+	void VisitAndLeft(And and);
+	void VisitAndRight(And and);
 	void VisitConditionLiteral(ConditionLiteral conditionLiteral);
 	void VisitFalse(False f);
-	void VisitNot(Not not);
-	void VisitOr(Or or);
 	void VisitTrue(True t);
+	void VisitNot(Not not);
+	void VisitOrLeft(Or or);
+	void VisitOrRight(Or or);
+	
 }
