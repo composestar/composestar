@@ -175,6 +175,7 @@ namespace Composestar.StarLight.ILAnalyzer
             return String.Format("{0}, {1}", CreateTypeName(type), CreateAFQN(_targetAssemblyDefinition, type));
         }
 
+        [Obsolete("Use ExtractAllTypes()")]
         public IlAnalyzerResults ExtractTypeElements(String fileName)
         {
             CheckForInit();
@@ -277,7 +278,7 @@ namespace Composestar.StarLight.ILAnalyzer
             return ae;
         }
 
-        private TypeElement[] ExtractTypes(AssemblyDefinition _targetAssemblyDefinition, AssemblyElement assembly, StringCollection types)
+        private TypeElement[] ExtractTypes(AssemblyDefinition _targetAssemblyDefinition, AssemblyElement assembly, List<String> types)
         {
             TypeDefinitionCollection tdc = new TypeDefinitionCollection(_targetAssemblyDefinition.MainModule);
 
@@ -286,12 +287,8 @@ namespace Composestar.StarLight.ILAnalyzer
                 if (_targetAssemblyDefinition.MainModule.Types.Contains(type))
                 {
                     tdc.Add(_targetAssemblyDefinition.MainModule.Types[type]);
-                    //extractedTypes.Add(ExtractType(_targetAssemblyDefinition, _targetAssemblyDefinition.MainModule.Types[type]));
-                 
                 }
             }
-
-
 
             return ExtractTypes(_targetAssemblyDefinition, assembly, tdc);
         }
@@ -374,11 +371,11 @@ namespace Composestar.StarLight.ILAnalyzer
                 te.BaseType = type.BaseType.FullName;
 
                 // If the base type has not yet been resolved, add it to the list of unresolved types
-                String baseTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type.BaseType);
-                if (this._saveInnerType && !CachedTypes.Contains(baseTypeAFQN) && !UnresolvedTypes.Contains(baseTypeAFQN))
-                {
-                    UnresolvedTypes.Add(baseTypeAFQN);
-                }
+                //String baseTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type.BaseType);
+                //if (this._saveInnerType && !CachedTypes.Contains(baseTypeAFQN) && !UnresolvedTypes.Contains(baseTypeAFQN))
+                //{
+                //    UnresolvedTypes.Add(baseTypeAFQN);
+                //}
 
 
                 // Check whether type is a FilterType:
@@ -398,13 +395,11 @@ namespace Composestar.StarLight.ILAnalyzer
             te.MethodElements = ExtractMethods(_targetAssemblyDefinition, type.Methods);
 
             CachedTypes.Add(typeAFQN);
-            if (this._saveType || UnresolvedTypes.Contains(typeAFQN)) ResolvedTypes.Add(typeAFQN);
+            if (this._saveType || (UnresolvedTypes.Contains(typeAFQN) || UnresolvedTypes.Contains(type.FullName))) ResolvedTypes.Add(typeAFQN);
 
             // Remove this type from the list of unresolved types
-            if (UnresolvedTypes.Contains(typeAFQN))
-            {
-                UnresolvedTypes.Remove(typeAFQN);
-            }
+            if (UnresolvedTypes.Contains(typeAFQN)) UnresolvedTypes.Remove(typeAFQN);
+            if (UnresolvedTypes.Contains(type.FullName)) UnresolvedTypes.Remove(type.FullName); // Unresolved types from the cps files are not AFQN style
 
             return te;
         }
@@ -523,11 +518,11 @@ namespace Composestar.StarLight.ILAnalyzer
             fe.IsStatic = field.IsStatic;
 
             // If the field type has not yet been resolved, add it to the list of unresolved types
-            String fieldTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, field.FieldType);
-            if (this._saveInnerType && !CachedTypes.Contains(fieldTypeAFQN) && !UnresolvedTypes.Contains(fieldTypeAFQN))
-            {
-                UnresolvedTypes.Add(fieldTypeAFQN);
-            }
+            //String fieldTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, field.FieldType);
+            //if (this._saveInnerType && !CachedTypes.Contains(fieldTypeAFQN) && !UnresolvedTypes.Contains(fieldTypeAFQN))
+            //{
+            //    UnresolvedTypes.Add(fieldTypeAFQN);
+            //}
             
             return fe;
         }
@@ -556,10 +551,10 @@ namespace Composestar.StarLight.ILAnalyzer
 
             // If the return type has not yet been resolved, add it to the list of unresolved types
             String returnTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, method.ReturnType.ReturnType);
-            if (this._saveInnerType && !CachedTypes.Contains(returnTypeAFQN) && !UnresolvedTypes.Contains(returnTypeAFQN))
-            {
-                UnresolvedTypes.Add(returnTypeAFQN);
-            }
+            //if (this._saveInnerType && !CachedTypes.Contains(returnTypeAFQN) && !UnresolvedTypes.Contains(returnTypeAFQN))
+            //{
+            //    UnresolvedTypes.Add(returnTypeAFQN);
+            //}
 
             me.IsAbstract = method.IsAbstract;
             me.IsConstructor = method.IsConstructor;
@@ -629,11 +624,11 @@ namespace Composestar.StarLight.ILAnalyzer
             pe.ParameterType = parameter.ParameterType.FullName;
 
             // If the parameter type has not yet been resolved, add it to the list of unresolved types
-            String parameterTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, parameter.ParameterType);
-            if (this._saveInnerType && !CachedTypes.Contains(parameterTypeAFQN) && !UnresolvedTypes.Contains(parameterTypeAFQN))
-            {
-                UnresolvedTypes.Add(parameterTypeAFQN);
-            }
+            //String parameterTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, parameter.ParameterType);
+            //if (this._saveInnerType && !CachedTypes.Contains(parameterTypeAFQN) && !UnresolvedTypes.Contains(parameterTypeAFQN))
+            //{
+            //    UnresolvedTypes.Add(parameterTypeAFQN);
+            //}
 
             pe.IsIn = parameter.Attributes == ParamAttributes.In;
             pe.IsOptional = parameter.Attributes == ParamAttributes.Optional;
@@ -647,6 +642,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Extracts the types.
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Use ExtractAllTypes()")]
         private void ExtractTypeElements(String fileName, AssemblyDefinition _targetAssemblyDefinition, bool cache)
         {
             int i = 0;
@@ -873,9 +869,7 @@ namespace Composestar.StarLight.ILAnalyzer
             //_repositoryAccess.CloseDatabase();
         }
 
-
-
-        public List<AssemblyElement> ProcessUnresolvedTypes()
+        public List<AssemblyElement> ProcessUnresolvedTypes(Dictionary<String, String> assemblyNames)
         {
             this._saveType = false;
 
@@ -924,30 +918,30 @@ namespace Composestar.StarLight.ILAnalyzer
             // 
             if (UnresolvedTypes.Count > 0)
             {
-                Dictionary<string, StringCollection> unresolvedAssemblies = new Dictionary<string, StringCollection>();
+                //Dictionary<string, StringCollection> unresolvedAssemblies = new Dictionary<string, StringCollection>();
 
-                foreach (String type in UnresolvedTypes)
-                {
-                    if (type.IndexOf(",") > -1)
-                    {
-                        String assemblyName = type.Substring(type.IndexOf(", ") + 2);
+                //foreach (String type in UnresolvedTypes)
+                //{
+                //    if (type.IndexOf(",") > -1)
+                //    {
+                //        String assemblyName = type.Substring(type.IndexOf(", ") + 2);
 
-                        if (assemblyName.StartsWith("NULL")) continue;
+                //        if (assemblyName.StartsWith("NULL")) continue;
 
-                        if (unresolvedAssemblies.ContainsKey(assemblyName))
-                        {
-                            unresolvedAssemblies[assemblyName].Add(type.Substring(0, type.IndexOf(",")));
+                //        if (unresolvedAssemblies.ContainsKey(assemblyName))
+                //        {
+                //            unresolvedAssemblies[assemblyName].Add(type.Substring(0, type.IndexOf(",")));
 
-                        }
-                        else {
-                            StringCollection sc = new StringCollection();
-                            sc.Add(type.Substring(0, type.IndexOf(",")));
-                            unresolvedAssemblies.Add(assemblyName, sc);
-                        }
+                //        }
+                //        else {
+                //            StringCollection sc = new StringCollection();
+                //            sc.Add(type.Substring(0, type.IndexOf(",")));
+                //            unresolvedAssemblies.Add(assemblyName, sc);
+                //        }
                         
-                        //if (!unresolvedAssemblies.Contains(assemblyName)) unresolvedAssemblies.Add(assemblyName);
-                    }
-                }
+                //        //if (!unresolvedAssemblies.Contains(assemblyName)) unresolvedAssemblies.Add(assemblyName);
+                //    }
+                //}
 
                 //List<String> unresolvedAssemblies = new List<string>();
 
@@ -967,35 +961,39 @@ namespace Composestar.StarLight.ILAnalyzer
 
                 // Use the Cecil assembly resolver to find the missing assemblies
                 DefaultAssemblyResolver dar = new DefaultAssemblyResolver();
-                foreach (String assemblyName in unresolvedAssemblies.Keys)
+                foreach (String assemblyName in assemblyNames.Keys)
                 {
+                    //Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
                     AssemblyDefinition ad = dar.Resolve(assemblyName);
                     if (ad != null)
-                    {
-                        Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
+                    {                        
                         _processMethodBody = false;
 
-                        //AssemblyElement ae = new AssemblyElement();
+                        AssemblyElement ae = new AssemblyElement();
+                        ae.Name = ad.Name.FullName;
+                        ae.FileName = assemblyNames[assemblyName];
+                                                
+                        TypeElement[] types = ExtractTypes(ad, ae, this.UnresolvedTypes);
 
-                        //ae.Name = ad.Name.FullName;
-                        //ae.FileName = ad.Name.Name;
-                        //ae.TypeElements = ;
-                        
-                        assemblies.Add(ExtractAllTypes(ad, String.Empty));
-                        
+                        if (types.Length > 0) {
+                            ae.TypeElements = types;
+
+                            assemblies.Add(ae);
+                        }
+
                         _processMethodBody = true;
                     }
                 }
-
-                if (UnresolvedTypes.Count > 0)
-                {
+                
+                //if (UnresolvedTypes.Count > 0)
+                //{
                     //foreach (String s in UnresolvedTypes)
                     //{
                     //    Console.WriteLine("Missing type {0}.", s);
                     //}
                     
-                    ProcessUnresolvedTypes();
-                }
+                    //ProcessUnresolvedTypes();
+                //}
 
             }
 
