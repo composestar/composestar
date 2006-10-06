@@ -2,6 +2,7 @@ package Composestar.DotNET.TYM.RepositoryCollector;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -9,6 +10,8 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.SourceFile;
@@ -27,6 +30,8 @@ import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.Repository.RepositoryAccess;
 import Composestar.Repository.LanguageModel.CallElement;
 import Composestar.Repository.LanguageModel.FieldElement;
+import Composestar.Repository.LanguageModel.FilterActionElement;
+import Composestar.Repository.LanguageModel.FilterTypeElement;
 import Composestar.Repository.LanguageModel.MethodBody;
 import Composestar.Repository.LanguageModel.MethodElement;
 import Composestar.Repository.LanguageModel.ParameterElement;
@@ -41,6 +46,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 	public void run(CommonResources resources) throws ModuleException 
 	{
 		repository = new RepositoryAccess();
+		
+		
+		//Collect all filtertypes and filteractions:
+		collectFilterTypesAndActions();
+		
 		
 		// Collect all types from the persistent repository
 		collectTypes();
@@ -122,6 +132,73 @@ public class StarLightCollectorRunner implements CollectorRunner
         //resolve the MethodInfo reference in the calls within a method:
 		resolveCallsToOtherMethods();
 	}
+	
+	
+	private void collectFilterTypesAndActions() throws ModuleException{
+		//create mapping from strings to filteractions, to use later to resolve the actions in
+		//a filtertype
+		Hashtable actionMapping = new Hashtable();
+		
+		//get FilterActions
+		Iterator storedActions = repository.getFilterActionElements().iterator();
+		while( storedActions.hasNext() ){
+			FilterActionElement storedAction = (FilterActionElement) storedActions.next();
+			
+			FilterAction filterAction = new FilterAction();
+			filterAction.setName( storedAction.get_Name() );
+			filterAction.setFlowBehaviour( storedAction.get_FlowBehaviour() );
+			filterAction.setMessageChangeBehaviour( storedAction.get_MessageChangeBehaviour() );
+			
+			actionMapping.put( filterAction.getName(), filterAction );
+		}
+		
+		
+		//get FilterTypes:
+		Iterator storedTypes = repository.getFilterTypeElements().iterator();
+		while( storedTypes.hasNext() ){
+			FilterTypeElement storedType = (FilterTypeElement) storedTypes.next();
+			
+			FilterType filterType = new FilterType();
+			filterType.setType( storedType.get_Name() );
+			
+			//get acceptCallAction:
+			FilterAction acceptCallAction = (FilterAction) actionMapping.get( 
+					storedType.get_AcceptCallAction() );
+			if ( acceptCallAction == null ){
+				throw new ModuleException( "AcceptCallAction '" + storedType.get_AcceptCallAction() +
+						"' not found for FilterType '" + storedType.get_Name() + "'.", "TYM" );
+			}
+			filterType.setAcceptCallAction( acceptCallAction );
+			
+			//get rejectCallAction:
+			FilterAction rejectCallAction = (FilterAction) actionMapping.get( 
+					storedType.get_RejectCallAction() );
+			if ( rejectCallAction == null ){
+				throw new ModuleException( "RejectCallAction '" + storedType.get_RejectCallAction() +
+						"' not found for FilterType '" + storedType.get_Name() + "'.", "TYM" );
+			}
+			filterType.setRejectCallAction( rejectCallAction );
+			
+			//get acceptReturnAction:
+			FilterAction acceptReturnAction = (FilterAction) actionMapping.get( 
+					storedType.get_AcceptReturnAction() );
+			if ( acceptReturnAction == null ){
+				throw new ModuleException( "AcceptReturnAction '" + storedType.get_AcceptReturnAction() +
+						"' not found for FilterType '" + storedType.get_Name() + "'.", "TYM" );
+			}
+			filterType.setAcceptReturnAction( acceptReturnAction );
+			
+			//get rejectReturnAction:
+			FilterAction rejectReturnAction = (FilterAction) actionMapping.get( 
+					storedType.get_RejectReturnAction() );
+			if ( rejectReturnAction == null ){
+				throw new ModuleException( "RejectReturnAction '" + storedType.get_RejectReturnAction() +
+						"' not found for FilterType '" + storedType.get_Name() + "'.", "TYM" );
+			}
+			filterType.setRejectReturnAction( rejectReturnAction );
+		}
+	}
+	
 	
 	private void collectTypes() throws ModuleException
 	{

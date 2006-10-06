@@ -37,18 +37,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomFilterType.cs" />
     <Compile Include="FilterContext.cs" />
     <Compile Include="FilterTypes\Argument.cs" />
     <Compile Include="FilterTypes\BuildIn\AdviceAction.cs" />
+    <Compile Include="FilterTypes\BuildIn\AfterFilterType.cs" />
+    <Compile Include="FilterTypes\BuildIn\BeforeFilterType.cs" />
     <Compile Include="FilterTypes\BuildIn\ContinueAction.cs" />
     <Compile Include="FilterTypes\BuildIn\DispatchAction.cs" />
-    <Compile Include="FilterTypes\BuildIn\DispatchFilter.cs" />
+    <Compile Include="FilterTypes\BuildIn\DispatchFilterType.cs" />
+    <Compile Include="FilterTypes\BuildIn\ErrorAction.cs" />
+    <Compile Include="FilterTypes\BuildIn\ErrorFilterType.cs" />
     <Compile Include="FilterTypes\BuildIn\SubstitutionAction.cs" />
+    <Compile Include="FilterTypes\BuildIn\SubstitutionFilterType.cs" />
     <Compile Include="FilterTypes\FilterActionWeaveStrategy.cs" />
     <Compile Include="FilterTypes\FilterType.cs" />
     <Compile Include="FilterTypes\FilterAction.cs" />
     <Compile Include="FilterTypes\FilterActionAnnotation.cs" />
+    <Compile Include="FilterTypes\FilterTypeAnnotation.cs" />
     <Compile Include="FilterTypes\Operation.cs" />
     <Compile Include="FilterTypes\Resource.cs" />
     <Compile Include="JoinPointContext.cs" />

@@ -45,6 +45,8 @@
     <Compile Include="ConditionExpressions\True.java" />
     <Compile Include="ConditionExpressions\Visitor\IVisitable.java" />
     <Compile Include="ConditionExpressions\Visitor\IVisitor.java" />
+    <Compile Include="FilterActionElement.java" />
+    <Compile Include="FilterTypeElement.java" />
     <Compile Include="Inlining\Case.java" />
     <Compile Include="Inlining\ContextExpression.java" />
     <Compile Include="Inlining\Switch.java" />

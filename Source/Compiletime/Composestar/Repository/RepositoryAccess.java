@@ -9,6 +9,8 @@ import Composestar.Repository.LanguageModel.CallElement;
 import Composestar.Repository.LanguageModel.Condition;
 import Composestar.Repository.LanguageModel.External;
 import Composestar.Repository.LanguageModel.FieldElement;
+import Composestar.Repository.LanguageModel.FilterActionElement;
+import Composestar.Repository.LanguageModel.FilterTypeElement;
 import Composestar.Repository.LanguageModel.Internal;
 import Composestar.Repository.LanguageModel.MethodBody;
 import Composestar.Repository.LanguageModel.MethodElement;
@@ -49,6 +51,18 @@ public class RepositoryAccess {
             return (CommonConfiguration) result.get(0);
         }
     }
+    
+    
+    public List getFilterActionElements()
+    {
+        return container.getObjects( FilterActionElement.class );
+    }
+    
+    public List getFilterTypeElements()
+    {
+    	return container.getObjects( FilterTypeElement.class );
+    }
+    
     
     public List GetConcernInformation()
     {
