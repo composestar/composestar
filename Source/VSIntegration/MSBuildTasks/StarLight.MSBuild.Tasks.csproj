@@ -60,7 +60,8 @@
     <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
       <Link>Target\StarLight.targets</Link>
     </None>
-    <Compile Include="ILAnalyzerTask\AnalyzerTask.cs" />
+    <Compile Include="CpsParserTask\CpsParserTask.cs" />
+    <Compile Include="ILAnalyzerTask\IlAnalyzerTask.cs" />
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
     <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
     <Compile Include="ILWeaverTask\ILWeaverTask.cs" />
@@ -96,6 +97,10 @@
     <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CpsParser\CpsParser.csproj">
+      <Project>{4684F559-E4BA-466E-8EED-962987B34363}</Project>
+      <Name>CpsParser %28Source\CpsParser\CpsParser%29</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
