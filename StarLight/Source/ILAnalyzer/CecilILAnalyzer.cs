@@ -1,11 +1,3 @@
-// Project: ILAnalyzer, File: CecilILAnalyzer.cs
-// Namespace: Composestar.StarLight.ILAnalyzer, Class: CecilILAnalyzer
-// Path: C:\ComposeStar\StarLight\Source\ILAnalyzer, Author: Michiel
-// Code lines: 1118, Size of file: 45.10 KB
-// Creation date: 10/6/2006 1:22 PM
-// Last modified: 10/6/2006 2:53 PM
-// Generated with Commenter by abi.exDream.com
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -24,7 +16,7 @@ using Composestar.Repository;
 using Composestar.Repository.LanguageModel;
 
 using Composestar.StarLight.ContextInfo.FilterTypes;
-  
+
 namespace Composestar.StarLight.ILAnalyzer
 {
     /// <summary>
@@ -650,16 +642,6 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return pe;
         }
-
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// Extracts the types.

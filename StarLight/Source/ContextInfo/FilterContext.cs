@@ -8,14 +8,18 @@ using System.Runtime.CompilerServices;
 namespace Composestar.StarLight.ContextInfo
 {
     /// <summary>
-    /// 
-    /// 
+    /// The FilterContext class is used to store <seealso cref="T:FilterContext.InnerFilterContext"/> objects in a thread-safe way.
+    /// These objects contain information about the usage of the innercalls.    
     /// </summary>
     public sealed class FilterContext
     {
-        private Stack<int> _storedActions;
 
+        #region Private Variables
+
+        private Stack<int> _storedActions;
         private static Dictionary<int, InnerFilterContext> _innercalls = new Dictionary<int, InnerFilterContext>();
+
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterContext"/> class.
@@ -28,7 +32,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Stores the action.
         /// </summary>
-        /// <param name="id">The id.</param>
+        /// <param name="id">The id of the action to store.</param>
         public void StoreAction(int id)
         {
             _storedActions.Push(id);
@@ -37,10 +41,13 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Returns the next stored action.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the ID of the next action, or a <c>-1</c> when the stack is empty.</returns>
         public int NextStoredAction()
         {
-            return _storedActions.Pop();
+            if (_storedActions.Count > 0)
+                return _storedActions.Pop();
+            else
+                return -1;
         }
 
         /// <summary>
@@ -53,7 +60,6 @@ namespace Composestar.StarLight.ContextInfo
         {
             return _storedActions.Count > 0;
         }
-
 
         /// <summary>
         /// Determines whether the current thread is making an inner call.

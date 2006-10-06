@@ -26,7 +26,6 @@
       <HintPath>$(MSBuildExtensionsPath)\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Concern Include="Concern.cps" />
