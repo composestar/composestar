@@ -28,6 +28,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class ILWeaverTask : Task
     {
+        private const string ContextInfoFileName = "Composestar.StarLight.ContextInfo.dll";
 
         #region Properties for MSBuild
 
@@ -74,10 +75,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessage("Weaving the filter code using the Cecil IL Weaver");
 
             String filename;
-            CecilILWeaver weaver = null;
+            IILWeaver weaver = null;
             ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
-
-
+            
             try
             {
                 foreach (ITaskItem item in AssemblyFiles)
@@ -85,7 +85,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     filename = item.ToString();
 
                     // Exclude StarLight ContextInfo assembly from the weaving process
-                    if (filename.EndsWith("Composestar.StarLight.ContextInfo.dll")) continue;
+                    if (filename.EndsWith(ContextInfoFileName)) continue;
 
                     Log.LogMessage("Weaving file {0}", filename);
 

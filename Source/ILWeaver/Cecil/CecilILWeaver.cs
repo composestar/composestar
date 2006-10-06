@@ -25,9 +25,9 @@ namespace Composestar.StarLight.ILWeaver
     /// </summary>
     public class CecilILWeaver : IILWeaver
     {
-        TimeSpan _lastDuration;
-        CecilWeaverConfiguration _configuration;
-        ILanguageModelAccessor _languageModelAccessor;
+        private TimeSpan m_LastDuration;
+        private CecilWeaverConfiguration m_Configuration;
+        private ILanguageModelAccessor m_LanguageModelAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CecilILWeaver"/> class.
@@ -43,10 +43,10 @@ namespace Composestar.StarLight.ILWeaver
 
             #endregion
 
-            _configuration = configuration;
-            _languageModelAccessor = languageModelAccessor;
+            m_Configuration = configuration;
+            m_LanguageModelAccessor = languageModelAccessor;
 
-            CecilUtilities.BinFolder = _configuration.BinFolder;
+            CecilUtilities.BinFolder = m_Configuration.BinFolder;
 
         }
 
@@ -54,11 +54,11 @@ namespace Composestar.StarLight.ILWeaver
         /// Gets the duration of the last executed method.
         /// </summary>
         /// <value>The last duration.</value>
-        public TimeSpan LastDuration
+        TimeSpan IILWeaver.LastDuration
         {
             get
             {
-                return _lastDuration;
+                return m_LastDuration;
             }
         }
 
@@ -73,41 +73,39 @@ namespace Composestar.StarLight.ILWeaver
             return "Cecil IL Weaver";
         }
 
-
-
         /// <summary>
         /// Perform the weaving actions.
         /// </summary>
-        public void DoWeave()
+        void IILWeaver.DoWeave()
         {
-            if (!File.Exists(_configuration.InputImagePath))
+            if (!File.Exists(m_Configuration.InputImagePath))
             {
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.InputImageNotFound, _configuration.InputImagePath));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.InputImageNotFound, m_Configuration.InputImagePath));
             }
 
             AssemblyDefinition targetAssembly;
 
             try
             {
-                byte[] bFile;
-                FileStream f = null;
+                byte[] binaryFile;
+                FileStream fileStream = null;
                 try
                 {
-                    f = new FileStream(_configuration.InputImagePath, FileMode.Open);
-                    bFile = CecilUtilities.ReadFully(f, -1);
+                    fileStream = new FileStream(m_Configuration.InputImagePath, FileMode.Open);
+                    binaryFile = CecilUtilities.ReadFully(fileStream, -1);
                 }
                 finally
                 {
-                    if (f != null) f.Close();
+                    if (fileStream != null) fileStream.Close();
                 }
 
                 // We use a byte array to read the file, so we can close it after reading and can write to it again.  
-                targetAssembly = AssemblyFactory.GetAssembly(bFile);
-                //targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
+                targetAssembly = AssemblyFactory.GetAssembly(binaryFile);
+                //targetAssembly = AssemblyFactory.GetAssembly(m_Configuration.InputImagePath);
             }
             catch (EndOfStreamException)
             {
-                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, _configuration.InputImagePath));
+                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, m_Configuration.InputImagePath));
             }
 
             // Start timing
@@ -120,20 +118,21 @@ namespace Composestar.StarLight.ILWeaver
 
             // Check if the _targetAssemblyDefinition is still available
             if (targetAssembly == null)
-                throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
-
+                throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);             
+            
             // Lets walk over all the modules in the assembly
             foreach (ModuleDefinition module in targetAssembly.Modules)
             {
+                               
                 // Walk over each type in the module
                 foreach (TypeDefinition type in module.Types)
                 {
                     // Get the information from the repository about this type
-                    typeElement = _languageModelAccessor.GetTypeElement(type.FullName);
+                    typeElement = m_LanguageModelAccessor.GetTypeElement(type.FullName);
                     // Skip this type if we do not have information about it 
                     if (typeElement == null)
                         continue;
-
+                    
                     // Add the externals and internals
                     WeaveExternals(targetAssembly, type, typeElement);
                     WeaveInternals(targetAssembly, type, typeElement);
@@ -141,7 +140,7 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = _languageModelAccessor.GetMethodElementBySignature(typeElement, method.ToString());
+                        methodElement = m_LanguageModelAccessor.GetMethodElementBySignature(typeElement, method.ToString());
 
                         // Skip if there is no methodinfo
                         if (methodElement == null)
@@ -158,16 +157,16 @@ namespace Composestar.StarLight.ILWeaver
             // Save the modified assembly
             try
             {
-                AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
+                AssemblyFactory.SaveAssembly(targetAssembly, m_Configuration.OutputImagePath);
             }
             catch (Exception ex)
             {
-                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, m_Configuration.OutputImagePath), m_Configuration.OutputImagePath, ex);
             }
 
             // Stop timing
             sw.Stop();
-            _lastDuration = sw.Elapsed;
+            m_LastDuration = sw.Elapsed;
         }
 
         /// <summary>
@@ -192,8 +191,7 @@ namespace Composestar.StarLight.ILWeaver
 
             #region Get the internals
 
-            IList<Internal> internals = _languageModelAccessor.GetInternalsByTypeElement(typeElement);
-
+            IList<Internal> internals = m_LanguageModelAccessor.GetInternalsByTypeElement(typeElement);            
             if (internals == null | internals.Count == 0)
                 return;
 
@@ -207,7 +205,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
 
-                TypeElement internalTypeElement = _languageModelAccessor.GetTypeElement(internalTypeString);
+                TypeElement internalTypeElement = m_LanguageModelAccessor.GetTypeElement(internalTypeString);
                 if (internalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
 
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, internalTypeElement.Assembly, internalTypeElement.FromDLL);
@@ -280,7 +278,7 @@ namespace Composestar.StarLight.ILWeaver
 
             #region Get the externals
 
-            IList<External> externals = _languageModelAccessor.GetExternalsByTypeElement(typeElement);
+            IList<External> externals = m_LanguageModelAccessor.GetExternalsByTypeElement(typeElement);
 
             if (externals == null | externals.Count == 0)
                 return;
@@ -293,7 +291,7 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (External external in externals)
             {
-                TypeElement externalTypeElement = _languageModelAccessor.GetTypeElement(external.Type);
+                TypeElement externalTypeElement = m_LanguageModelAccessor.GetTypeElement(external.Type);
                 if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
 
 
@@ -312,7 +310,7 @@ namespace Composestar.StarLight.ILWeaver
                 type.Fields.Add(externalDef);
 
                 // Get the method referenced by the external
-                TypeElement initTypeElement = _languageModelAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
+                TypeElement initTypeElement = m_LanguageModelAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
                 if (initTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target)));
 
                 MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, initTypeElement.FullName, initTypeElement.Assembly, initTypeElement.FromDLL);
@@ -421,7 +419,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Worker = worker;
             visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
-            visitor.RepositoryAccess = _languageModelAccessor;
+            visitor.RepositoryAccess = m_LanguageModelAccessor;
 
             // Visit the elements in the block
             try
@@ -431,7 +429,7 @@ namespace Composestar.StarLight.ILWeaver
             catch (Exception ex)
             {
                 // Close the database and throw the error wrapped in an ILWeaverException
-                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, m_Configuration.OutputImagePath, ex);
             }
 
             // Only add instructions if we have instructions
@@ -472,7 +470,7 @@ namespace Composestar.StarLight.ILWeaver
             if (method.HasBody == false)
                 return;
 
-            IList<CallElement> calls = _languageModelAccessor.GetCallByMethodElement(methodElement);
+            IList<CallElement> calls = m_LanguageModelAccessor.GetCallByMethodElement(methodElement);
 
             if (calls == null | calls.Count == 0)
                 return;
@@ -517,7 +515,7 @@ namespace Composestar.StarLight.ILWeaver
                         }
                         catch (Exception ex)
                         {
-                            throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
+                            throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, m_Configuration.OutputImagePath, ex);
                         }
 
                         // Only add instructions if we have instructions
@@ -535,9 +533,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Closes this instance.
         /// </summary>
-        public void Close()
+        void IILWeaver.Close()
         {
-            _languageModelAccessor.Close();
+            m_LanguageModelAccessor.Close();
         }
 
         #region Helper functions

@@ -29,14 +29,13 @@ namespace Composestar.StarLight.ILWeaver
         #endregion
 
         #region Private variables
-
-        IList<Instruction> _instructions = new List<Instruction>();
-        CilWorker _worker;
-        MethodDefinition _method;
-        int numberOfBranches = 0;
-        AssemblyDefinition _targetAssemblyDefinition;
-        ILanguageModelAccessor _languageModelAccessor;  // FIXME we now pass this model through the visitors because we need the repository to get the conditions. Not a good seperation...
-        Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
+        private IList<Instruction> m_Instructions = new List<Instruction>();
+        private CilWorker m_Worker;
+        private MethodDefinition m_Method;
+        private int m_NumberOfBranches = 0;
+        private AssemblyDefinition m_TargetAssemblyDefinition;
+        private ILanguageModelAccessor m_LanguageModelAccessor;  // FIXME we now pass this model through the visitors because we need the repository to get the conditions. Not a good seperation...
+        private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
         #endregion
 
         #region Properties
@@ -49,11 +48,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _targetAssemblyDefinition;
+                return m_TargetAssemblyDefinition;
             }
             set
             {
-                _targetAssemblyDefinition = value;
+                m_TargetAssemblyDefinition = value;
             }
         }
 
@@ -65,11 +64,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _method;
+                return m_Method;
             }
             set
             {
-                _method = value;
+                m_Method = value;
             }
         }
 
@@ -81,11 +80,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _worker;
+                return m_Worker;
             }
             set
             {
-                _worker = value;
+                m_Worker = value;
             }
         }
 
@@ -97,11 +96,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _instructions;
+                return m_Instructions;
             }
             set
             {
-                _instructions = value;
+                m_Instructions = value;
             }
         }
 
@@ -113,11 +112,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _languageModelAccessor;
+                return m_LanguageModelAccessor;
             }
             set
             {
-                _languageModelAccessor = value;
+                m_LanguageModelAccessor = value;
             }
         }
         #endregion
@@ -135,10 +134,10 @@ namespace Composestar.StarLight.ILWeaver
                 return null;
 
             Instruction jumpNopInstruction;
-            if (!_jumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
+            if (!m_JumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
             {
                 jumpNopInstruction = Worker.Create(OpCodes.Nop);
-                _jumpInstructions.Add(labelId, jumpNopInstruction);
+                m_JumpInstructions.Add(labelId, jumpNopInstruction);
             }
 
             return jumpNopInstruction;
@@ -205,7 +204,7 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             // Create a call instruction
-            Instructions.Add(Worker.Create(OpCodes.Call, _targetAssemblyDefinition.MainModule.Import(method)));
+            Instructions.Add(Worker.Create(OpCodes.Call, m_TargetAssemblyDefinition.MainModule.Import(method)));
 
         }
 
@@ -220,7 +219,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Generate a 0, a false value.
         /// </remarks> 
         /// <param name="f">The f.</param>
-        public void VisitFalse(False f)
+        public void VisitFalse(False falseCondition)
         {
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4_0));
         }
@@ -232,7 +231,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Generate a 1, a true value
         /// </remarks> 
         /// <param name="t">The t.</param>
-        public void VisitTrue(True t)
+        public void VisitTrue(True trueCondition)
         {
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));
         }
@@ -280,8 +279,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="or">The or.</param>
         public void VisitOrLeft(Or or)
         {
-            or.BranchId = BranchLabelOffSet + numberOfBranches;
-            numberOfBranches = numberOfBranches + 2;
+            or.BranchId = BranchLabelOffSet + m_NumberOfBranches;
+            m_NumberOfBranches = m_NumberOfBranches + 2;
 
             Instructions.Add(Worker.Create(OpCodes.Brtrue_S, GetJumpLabel(or.BranchId)));
         }
@@ -312,7 +311,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Visits the left and condition part.
         /// </summary>
         /// <remarks>
-        /// Generate the && instruction.
+        /// Generate the &amp;&amp; instruction.
         /// <code>
         ///  L_000d: ldloc.0  // Left
         ///  L_000e: brfalse.s L_0013
@@ -325,8 +324,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="and">The and.</param>
         public void VisitAndLeft(And and)
         {
-            and.BranchId = BranchLabelOffSet + numberOfBranches;
-            numberOfBranches = numberOfBranches + 2;
+            and.BranchId = BranchLabelOffSet + m_NumberOfBranches;
+            m_NumberOfBranches = m_NumberOfBranches + 2;
             Instructions.Add(Worker.Create(OpCodes.Brfalse_S, GetJumpLabel(and.BranchId)));
         }
 
@@ -334,7 +333,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Visits the right and condition part.
         /// </summary>
         /// <remarks>
-        /// Generate the && instruction.
+        /// Generate the &amp;&amp; instruction.
         /// <code>
         ///  L_000d: ldloc.0  // Left
         ///  L_000e: brfalse.s L_0013
