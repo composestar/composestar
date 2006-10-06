@@ -52,8 +52,8 @@
     <Compile Include="FilterTypes\FilterActionWeaveStrategy.cs" />
     <Compile Include="FilterTypes\FilterType.cs" />
     <Compile Include="FilterTypes\FilterAction.cs" />
-    <Compile Include="FilterTypes\FilterActionAnnotation.cs" />
-    <Compile Include="FilterTypes\FilterTypeAnnotation.cs" />
+    <Compile Include="FilterTypes\FilterActionAttribute.cs" />
+    <Compile Include="FilterTypes\FilterTypeAttribute.cs" />
     <Compile Include="FilterTypes\Operation.cs" />
     <Compile Include="FilterTypes\Resource.cs" />
     <Compile Include="JoinPointContext.cs" />

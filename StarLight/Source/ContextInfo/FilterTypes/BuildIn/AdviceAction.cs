@@ -7,7 +7,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
     /// <summary>
     /// 
     /// </summary>
-    [FilterActionAnnotation("AdviceAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute("AdviceAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
     public class AdviceAction : FilterAction
     {
         /// <summary>

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterActionAnnotation( "ContinueAction", FilterFlowBehaviour.Continue,
+    [FilterActionAttribute( "ContinueAction", FilterFlowBehaviour.Continue,
         MessageSubstitutionBehaviour.Original )]
     public class ContinueAction : FilterAction
     {

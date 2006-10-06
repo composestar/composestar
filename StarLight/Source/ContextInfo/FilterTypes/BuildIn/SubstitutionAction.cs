@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterActionAnnotation( "SubstitutionAction", FilterFlowBehaviour.Continue,
+    [FilterActionAttribute( "SubstitutionAction", FilterFlowBehaviour.Continue,
         MessageSubstitutionBehaviour.Substituted )]
     public class SubstitutionAction : FilterAction
     {
