@@ -30,20 +30,20 @@ namespace Composestar.StarLight.ILWeaver
 
         private const int FilterContextJumpId = 9999;
         private const int BranchLabelOffSet = 8000;
-        private Type[] JPCTypes = new Type[1] { typeof(JoinPointContext) };
+        private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
         private const string VoidType = "System.Void";
 
         #endregion
 
         #region Private variables
-        IList<Instruction> _instructions = new List<Instruction>();
-        CilWorker _worker;
-        int numberOfBranches = 0;
-        MethodDefinition _method;
-        AssemblyDefinition _targetAssemblyDefinition;
-        FilterTypes _filterType;
-        Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
-        ILanguageModelAccessor _languageModelAccessor;
+        private IList<Instruction> m_Instructions = new List<Instruction>();
+        private CilWorker m_Worker;
+        private int m_NumberOfBranches = 0;
+        private MethodDefinition m_Method;
+        private AssemblyDefinition m_TargetAssemblyDefinition;
+        private FilterTypes m_FilterType;
+        private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
+        private ILanguageModelAccessor m_LanguageModelAccessor;
         #endregion
 
         #region FilterType Enumeration
@@ -78,11 +78,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _filterType;
+                return m_FilterType;
             }
             set
             {
-                _filterType = value;
+                m_FilterType = value;
             }
         }
 
@@ -94,11 +94,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _languageModelAccessor;
+                return m_LanguageModelAccessor;
             }
             set
             {
-                _languageModelAccessor = value;
+                m_LanguageModelAccessor = value;
             }
         }
 
@@ -110,11 +110,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _targetAssemblyDefinition;
+                return m_TargetAssemblyDefinition;
             }
             set
             {
-                _targetAssemblyDefinition = value;
+                m_TargetAssemblyDefinition = value;
             }
         }
 
@@ -126,11 +126,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _method;
+                return m_Method;
             }
             set
             {
-                _method = value;
+                m_Method = value;
             }
         }
 
@@ -142,11 +142,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _worker;
+                return m_Worker;
             }
             set
             {
-                _worker = value;
+                m_Worker = value;
             }
         }
 
@@ -158,11 +158,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return _instructions;
+                return m_Instructions;
             }
             set
             {
-                _instructions = value;
+                m_Instructions = value;
             }
         }
         #endregion
@@ -213,10 +213,10 @@ namespace Composestar.StarLight.ILWeaver
                 return null;
 
             Instruction jumpNopInstruction;
-            if (!_jumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
+            if (!m_JumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
             {
                 jumpNopInstruction = Worker.Create(OpCodes.Nop);
-                _jumpInstructions.Add(labelId, jumpNopInstruction);
+                m_JumpInstructions.Add(labelId, jumpNopInstruction);
             }
 
             return jumpNopInstruction;
@@ -229,7 +229,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>Returns the variable</returns>
         private VariableDefinition CreateLocalVar(Type type)
         {
-            TypeReference typeRef = _targetAssemblyDefinition.MainModule.Import(type);
+            TypeReference typeRef = m_TargetAssemblyDefinition.MainModule.Import(type);
             return CreateLocalVar(typeRef);
         }
 
@@ -260,11 +260,11 @@ namespace Composestar.StarLight.ILWeaver
 
         // Because we need local vars to store the object and type of arguments in, we have to add these local vars.
         // But only once, so these functions make sure we only have one of this variables
-        private VariableDefinition _objectLocal;
-        private VariableDefinition _typeLocal;
-        private VariableDefinition _jpcLocal;
-        private VariableDefinition _returnValueLocal;
-        private VariableDefinition _actionStoreLocal;
+        private VariableDefinition m_ObjectLocal;
+        private VariableDefinition m_TypeLocal;
+        private VariableDefinition m_JpcLocal;
+        private VariableDefinition m_ReturnValueLocal;
+        private VariableDefinition m_ActionStoreLocal;
 
         /// <summary>
         /// Creates the object ordinal.
@@ -272,12 +272,12 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         private VariableDefinition CreateObjectLocal()
         {
-            if (_objectLocal == null)
+            if (m_ObjectLocal == null)
             {
-                _objectLocal = CreateLocalVar(typeof(Object));
+                m_ObjectLocal = CreateLocalVar(typeof(Object));
             }
 
-            return _objectLocal;
+            return m_ObjectLocal;
         }
 
         /// <summary>
@@ -286,12 +286,12 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         private VariableDefinition CreateActionStoreLocal()
         {
-            if (_actionStoreLocal == null)
+            if (m_ActionStoreLocal == null)
             {
-                _actionStoreLocal = CreateLocalVar(typeof(FilterContext));
+                m_ActionStoreLocal = CreateLocalVar(typeof(FilterContext));
             }
 
-            return _actionStoreLocal;
+            return m_ActionStoreLocal;
         }
 
         /// <summary>
@@ -300,12 +300,12 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         private VariableDefinition CreateTypeLocal()
         {
-            if (_typeLocal == null)
+            if (m_TypeLocal == null)
             {
-                _typeLocal = CreateLocalVar(typeof(System.Type));
+                m_TypeLocal = CreateLocalVar(typeof(System.Type));
             }
 
-            return _typeLocal;
+            return m_TypeLocal;
         }
 
         /// <summary>
@@ -313,22 +313,22 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         private VariableDefinition CreateJoinPointContextLocal()
         {
-            if (_jpcLocal == null)
+            if (m_JpcLocal == null)
             {
-                _jpcLocal = CreateLocalVar(typeof(JoinPointContext));
+                m_JpcLocal = CreateLocalVar(typeof(JoinPointContext));
             }
 
-            return _jpcLocal;
+            return m_JpcLocal;
         }
 
         private VariableDefinition CreateReturnValueLocal(TypeReference reference)
         {
-            if (_returnValueLocal == null)
+            if (m_ReturnValueLocal == null)
             {
-                _returnValueLocal = CreateLocalVar(reference);
+                m_ReturnValueLocal = CreateLocalVar(reference);
             }
 
-            return _returnValueLocal;
+            return m_ReturnValueLocal;
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace Composestar.StarLight.ILWeaver
                 // TODO Call the generic GetArgumentValue function to get directly the right type.
                 // Problem is how to call the function
                 //MethodReference mr = CecilUtilities.ResolveMethod("GetGenericArgumentValue", "Composestar.StarLight.ContextInfo.JoinPointContext", "Composestar.StarLight.ContextInfo");
-               
+
                 // Check if parameter is value type, then unbox
                 if (param.ParameterType.IsValueType)
                 {
@@ -665,7 +665,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             if (numberOfArguments > 0)
             {
-                 foreach (ParameterDefinition param in Method.Parameters)
+                foreach (ParameterDefinition param in Method.Parameters)
                 {
                     //methodReference.Parameters[ i ].Attributes = Mono.Cecil.ParamAttributes.Out;                    
 
@@ -729,7 +729,7 @@ namespace Composestar.StarLight.ILWeaver
             if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
                 filterAction.Target.Equals(FilterAction.SELF_TARGET))
             {
-                return CecilUtilities.ResolveMethod(parentType, filterAction.Selector, JPCTypes);
+                return CecilUtilities.ResolveMethod(parentType, filterAction.Selector, m_JpcTypes);
             }
             else
             {
@@ -741,7 +741,7 @@ namespace Composestar.StarLight.ILWeaver
                 }
 
 
-                MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, filterAction.Selector, JPCTypes);
+                MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, filterAction.Selector, m_JpcTypes);
 
                 return TargetAssemblyDefinition.MainModule.Import(md);
             }
@@ -1045,15 +1045,15 @@ namespace Composestar.StarLight.ILWeaver
             conditionsVisitor.Method = Method;
             conditionsVisitor.Worker = Worker;
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
-            conditionsVisitor.RepositoryAccess = _languageModelAccessor;
+            conditionsVisitor.RepositoryAccess = m_LanguageModelAccessor;
             ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
 
             // Add the instructions containing the conditions to the IL instruction list
             AddInstructionList(conditionsVisitor.Instructions);
 
             // Add branch code
-            branch.Label = BranchLabelOffSet + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-            numberOfBranches = numberOfBranches + 2;
+            branch.Label = BranchLabelOffSet + m_NumberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            m_NumberOfBranches = m_NumberOfBranches + 2;
             Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }
 
@@ -1102,8 +1102,8 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitWhile(While whileInstr)
         {
             // Create a start label
-            whileInstr.Label = BranchLabelOffSet + numberOfBranches;
-            numberOfBranches = numberOfBranches + 2;
+            whileInstr.Label = BranchLabelOffSet + m_NumberOfBranches;
+            m_NumberOfBranches = m_NumberOfBranches + 2;
             Instructions.Add(GetJumpLabel(whileInstr.Label));
 
             // Context instruction
@@ -1158,17 +1158,17 @@ namespace Composestar.StarLight.ILWeaver
 
             // The labels to jump to
             List<Instruction> caseLabels = new List<Instruction>();
-            foreach (Case c in switchInstr.Cases)
+            foreach (Case caseElement in switchInstr.Cases)
             {
-                caseLabels.Add(GetJumpLabel(c.CheckConstant + 10000));
+                caseLabels.Add(GetJumpLabel(caseElement.CheckConstant + 10000));
             }
 
             // The switch statement
             Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
 
             // Jump to the end
-            switchInstr.Label = BranchLabelOffSet + numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-            numberOfBranches = numberOfBranches + 1;
+            switchInstr.Label = BranchLabelOffSet + m_NumberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            m_NumberOfBranches = m_NumberOfBranches + 1;
             Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));
         }
 
@@ -1261,7 +1261,6 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("StoreAction", new Type[] { typeof(int) }))));
 
         }
-
 
 
         #endregion

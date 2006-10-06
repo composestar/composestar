@@ -61,6 +61,11 @@ namespace Composestar.Repository
             container.CloseContainer();
         }
 
+        /// <summary>
+        /// Gets the name of the assembly element by file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
         public AssemblyElement GetAssemblyElementByFileName(string fileName)
         {
             IList<AssemblyElement> ret = container.GetObjectQuery<AssemblyElement>(delegate(AssemblyElement ae)
@@ -135,6 +140,21 @@ namespace Composestar.Repository
         public IList<TypeElement> GetTypeElements()
         {
             return container.GetObjects<TypeElement>();
+        }
+
+        /// <summary>
+        /// Gets the type elemenst by AFQN.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns></returns>
+        public IList<TypeElement> GetTypeElementsByAFQN(string assembly)
+        {
+            IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            {
+                return te.Assembly.Equals(assembly);
+            });
+            
+            return ret;
         }
 
         /// <summary>

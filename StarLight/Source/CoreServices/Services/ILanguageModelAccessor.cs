@@ -45,6 +45,21 @@ namespace Composestar.StarLight.CoreServices
         TypeElement GetTypeElementById(string typeId);
 
         /// <summary>
+        /// Gets the type element by AFQN.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns></returns>
+        TypeElement GetTypeElementByAFQN(string fullName, string assembly);
+
+        /// <summary>
+        /// Gets the type elemenst by AFQN.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns></returns>
+        IList<TypeElement> GetTypeElementsByAFQN(string assembly);
+
+        /// <summary>
         /// Gets the type elements.
         /// </summary>
         /// <returns></returns>
