@@ -57,10 +57,10 @@ namespace TestLanguageModel
             AssemblyElement ai = new AssemblyElement();
             string testValue = "test";
             ai.Name = testValue;
-            ai.Version = testValue;
+            ai.FileName  = testValue;
                        
             Assert.AreEqual(testValue, ai.Name, "Name does not persists data"); 
-            Assert.AreEqual(testValue, ai.Version, "Version does not persists data"); 
+            Assert.AreEqual(testValue, ai.FileName, "FileName does not persists data"); 
            
         }
 

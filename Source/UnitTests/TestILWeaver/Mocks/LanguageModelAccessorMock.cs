@@ -1,3 +1,12 @@
+// Project: , File: LanguageModelAccessorMock.cs
+// Namespace: TestILWeaver.Mocks, Class: LanguageModelAccessorMock
+// Path: C:\ComposeStar\StarLight\Source\UnitTests\TestILWeaver\Mocks, Author: Michiel
+// Code lines: 150, Size of file: 4.80 KB
+// Creation date: 10/1/2006 3:00 PM
+// Last modified: 10/6/2006 1:04 PM
+// Generated with Commenter by abi.exDream.com
+
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,6 +15,7 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
+#endregion
 
 namespace TestILWeaver.Mocks
 {
@@ -44,6 +54,43 @@ namespace TestILWeaver.Mocks
 
         #region ILanguageModelAccessor Members
 
+        /// <summary>
+        /// Get type element by AFQN
+        /// </summary>
+        /// <param name="fullName">Full name</param>
+        /// <param name="assembly">Assembly</param>
+        /// <returns>Type element</returns>
+        public TypeElement GetTypeElementByAFQN(string fullName, string assembly)
+        {
+            return null;
+        } // GetTypeElementByAFQN(fullName, assembly)
+
+        /// <summary>
+        /// Gets the type elemenst by AFQN.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns></returns>
+        public IList<TypeElement> GetTypeElementsByAFQN(string assembly)
+        {
+            return null;
+        } // GetTypeElementsByAFQN(assembly)
+
+
+        public Condition GetConditionByName(string name)
+        {
+            return null;
+        }
+
+        public MethodElement GetMethodElementByName(TypeElement typeInfo, string methodName)
+        {
+            return null;
+        }
+
+        public TypeElement GetTypeElementById(string typeId)
+        {
+            return null;
+        }
+
         public MethodElement GetMethodElementBySignature(TypeElement typeInfo, string methodSignature)
         {
             if (_methodsByTypeElement.ContainsKey(typeInfo))
@@ -64,8 +111,8 @@ namespace TestILWeaver.Mocks
         {
             if (_typeElementsByName.ContainsKey(fullName))
             {
-                return _typeElementsByName[fullName];
-            }
+                return _typeElementsByName[fullName];                
+            }            
 
             return null;
         }
@@ -104,7 +151,7 @@ namespace TestILWeaver.Mocks
 
         internal void AddInternalToType(string typeName, string internalTypeName, string internalName)
         {
-            TypeElement typeElement = new TypeElement();
+            TypeElement typeElement = new TypeElement("1");
             typeElement.FullName = typeName;
 
             AddTypeElement(typeElement);
@@ -118,14 +165,14 @@ namespace TestILWeaver.Mocks
 
         public void AddInputFilter(string typeName, string methodSignature, InlineInstruction instruction)
         {
-            TypeElement typeElement = new TypeElement();
+            TypeElement typeElement = new TypeElement("2");
             typeElement.FullName = typeName;
 
             AddTypeElement(typeElement);
 
-            MethodElement methodElement = new MethodElement();
+            MethodElement methodElement = new MethodElement("3");
             methodElement.Signature = methodSignature;
-
+             methodElement.MethodBody = new MethodBody("4", "3");
             methodElement.MethodBody.InputFilter = instruction;
 
             AddMethod(typeElement, methodElement);

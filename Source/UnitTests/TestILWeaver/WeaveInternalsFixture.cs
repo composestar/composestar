@@ -33,7 +33,7 @@ namespace TestILWeaver
             CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath("WeavingInternalStringAddsPrivateStringFieldToTargetClass.exe"));
 
             //do weaving
-            CecilILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
+            IILWeaver weaver = DIHelper.CreateObject<CecilILWeaver>(CreateTestContainer(model, configuration));
             weaver.DoWeave();
 
 
