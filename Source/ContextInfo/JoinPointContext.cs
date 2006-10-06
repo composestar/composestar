@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Composestar.StarLight.ContextInfo 
+namespace Composestar.StarLight.ContextInfo
 {
 
     /// <summary>
-    /// 
+    /// The JoinPointContext class is used to pass information about the joinpoint to methods.
     /// </summary>
     public sealed class JoinPointContext
     {
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:JoinPointContext"/> class.
-        /// </summary>
-        public JoinPointContext()
-        {
-            _arguments = new Dictionary<short, ArgumentInfo>();
-        }
+        #region Private Variables
+
+        private Dictionary<short, ArgumentInfo> _arguments;
 
         private object _sender;
+        private object _target;
+        private string _methodName;
+        private ArgumentInfo _returnValue;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the sender.
@@ -31,10 +34,6 @@ namespace Composestar.StarLight.ContextInfo
             get { return _sender; }
             set { _sender = value; }
         }
-	
-
-        private object _target;
-
         /// <summary>
         /// Gets or sets the target.
         /// </summary>
@@ -44,8 +43,6 @@ namespace Composestar.StarLight.ContextInfo
             get { return _target; }
             set { _target = value; }
         }
-
-        private string _methodName;
 
         /// <summary>
         /// Gets or sets the name of the method.
@@ -57,14 +54,26 @@ namespace Composestar.StarLight.ContextInfo
             set { _methodName = value; }
         }
 
-        private Dictionary<short, ArgumentInfo> _arguments;
+        #endregion
+
+        #region ctor
 
         /// <summary>
-        /// Adds the argument.
+        /// Initializes a new instance of the <see cref="T:JoinPointContext"/> class.
         /// </summary>
-        /// <param name="ordinal">The ordinal.</param>
+        public JoinPointContext()
+        {
+            _arguments = new Dictionary<short, ArgumentInfo>();
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Adds the argument of a method to the list of arguments.
+        /// </summary>
+        /// <param name="ordinal">The ordinal of the argument.</param>
         /// <param name="argumentType">Type of the argument.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The value of the argument.</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddArgument(short ordinal, Type argumentType, object value)
         {
@@ -75,10 +84,18 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Gets the argument value.
+        /// Gets the argument value based on the ordinal.
         /// </summary>
-        /// <param name="ordinal">The ordinal.</param>
-        /// <returns></returns>
+        /// <param name="ordinal">The ordinal of the argument.</param>
+        /// <returns>An <c>object</c> containing the value, or a <c>null</c> when the ordinal was not present in the argument list.</returns>
+        /// <example>Use the <c>GetArgumentValue</c> function to retrieve a value from the list of arguments.
+        /// <code>
+        /// JoinPointContext jpc = new JoinPointContext();
+        /// jpc.AddArgument(1, typeof(int), 1024);
+        /// Object o = jpc.GetArgumentValue(1);
+        /// int value = (int) o;
+        /// </code>
+        /// </example> 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public object GetArgumentValue(short ordinal)
         {
@@ -89,12 +106,18 @@ namespace Composestar.StarLight.ContextInfo
                 return null;
         }
 
-
         /// <summary>
-        /// Gets the argument value using a generic.
+        /// Gets the argument value using a generic type.
         /// </summary>
         /// <param name="ordinal">The ordinal.</param>
-        /// <returns></returns>
+        /// <returns>A strong typed value or the <c>default(T)</c> when the value could not be found.</returns>
+        /// <example>Use the <c>GetGenericArgumentValue</c> function to retrieve a value from the list of arguments using a generic type.
+        /// <code>
+        /// JoinPointContext jpc = new JoinPointContext();
+        /// jpc.AddArgument(1, typeof(int), 1024);
+        /// int value = jpc.GetArgumentValue&lt;int&gt;(1);        
+        /// </code>
+        /// </example> 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public T GetGenericArgumentValue<T>(short ordinal)
         {
@@ -109,7 +132,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets the type of the argument.
         /// </summary>
         /// <param name="ordinal">The ordinal.</param>
-        /// <returns></returns>
+        /// <returns>The type of the argument, or a <c>null</c> when the type could not be found.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public Type GetArgumentType(short ordinal)
         {
@@ -123,6 +146,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Property to get the number of arguments
         /// </summary>
+        /// <value>The number of arguments.</value>
         public int ArgumentCount
         {
             get
@@ -131,13 +155,11 @@ namespace Composestar.StarLight.ContextInfo
             }
         }
 
-        private ArgumentInfo _returnValue;
-
         /// <summary>
-        /// Gets a value indicating whether this instance has return value.
+        /// Gets a value indicating whether this JoinPointContext has a return value.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance has return value; otherwise, <c>false</c>.
+        /// 	<c>true</c> if this JoinPointContext has a return value; otherwise, <c>false</c>.
         /// </value>
         public bool HasReturnValue
         {
