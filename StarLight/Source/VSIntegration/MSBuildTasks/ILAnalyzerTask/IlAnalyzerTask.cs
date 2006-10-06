@@ -17,11 +17,13 @@ using Composestar.Repository.LanguageModel;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
-    public class AnalyzerTask : Task
+    public class IlAnalyzerTask : Task
     {
         #region Properties for MSBuild
 
         private ITaskItem[] _assemblyFiles;
+        private ITaskItem[] _referencedAssemblies;
+        private ITaskItem[] _referencedTypes;
 
         /// <summary>
         /// Gets or sets the assembly files to analyze.
@@ -47,6 +49,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _repositoryFilename = value; }
         }
 
+        [Required()]
+        public ITaskItem[] ReferencedAssemblies
+        {
+            get { return _referencedAssemblies; }
+            set { _referencedAssemblies = value; }
+        }
+
+        [Required()]
+        public ITaskItem[] ReferencedTypes
+        {
+            get { return _referencedTypes; }
+            set { _referencedTypes = value; }
+        }
+
         private CecilILAnalyzer analyzer;
 
         #endregion
@@ -56,7 +72,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AnalyzerTask"/> class.
         /// </summary>
-        public AnalyzerTask()
+        public IlAnalyzerTask()
             : base(Properties.Resources.ResourceManager)
         {
             analyzer = new CecilILAnalyzer();
@@ -102,18 +118,43 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // TODO: this aint the best approach, clearing everything...
             repository.DeleteWeavingInstructions();
 
+            // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
+            List<String> assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
+            {
+                assemblyFileList.Add(item.ToString());
+            }
+
+            // Create a list of all the referenced assemblies, which are not copied local for complete analysis
+            Dictionary<String, String> refAssemblies = new Dictionary<string, string>();
+            foreach (ITaskItem item in ReferencedAssemblies)
+            {
+                if (item.GetMetadata("CopyLocal") == "false")
+                {
+                    refAssemblies.Add(item.GetMetadata("FusionName"), item.GetMetadata("Identity"));
+                }
+            }
+
+            // Add all the unresolved types (used in the concern files) to the analyser
+            Log.LogMessage("Referenced types to resolve: {0}", ReferencedTypes.Length);
+            foreach (ITaskItem item in ReferencedTypes)
+            {
+                analyzer.UnresolvedTypes.Add(item.ToString());
+            }
+
+            // Analyze all assemblies
+            foreach (String item in assemblyFileList)
             {
                 try
                 {
                     AssemblyElement assembly = null;
-                    Log.LogMessage("Analyzing file '{0}'...", item.ToString());
+                    Log.LogMessage("Analyzing file '{0}'...", item);
 
                     // Try to get the assembly information from the database
-                    assembly = repository.GetAssemblyElementByFileName(item.ToString());
+                    assembly = repository.GetAssemblyElementByFileName(item);
                     if (assembly != null)
                     {
-                        if (assembly.Timestamp == File.GetLastWriteTime(item.ToString()).Ticks)
+                        if (assembly.Timestamp == File.GetLastWriteTime(item).Ticks)
                         {
                             // Assembly has not been modified, skipping analysis
                             Log.LogMessage("File analysis summary: assembly has not been modified, skipping analysis.");
@@ -122,11 +163,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         else
                         {
                             // Assembly has been modified, removing all existing types from database
-                            repository.DeleteTypeElements(item.ToString());
+                            repository.DeleteTypeElements(item);
                         }
                     }
 
-                    assembly = analyzer.ExtractAllTypes(item.ToString());
+                    assembly = analyzer.ExtractAllTypes(item);
                     assemblies.Add(assembly);
                     
                     Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
@@ -142,6 +183,54 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             }
 
+            // Analyze the non-local copied assemblies for missing types
+            if (analyzer.UnresolvedTypes.Count > 0)
+            {
+                // Step 1: Check if local database already contain the type
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                Log.LogMessage("Searching local database for {0} unresolved types...", analyzer.UnresolvedTypes.Count);
+
+                sw.Start();
+                
+                int numberOfResolvedTypes = 0;
+                List<String> unresolvedTypes = new List<string>(analyzer.UnresolvedTypes);
+                foreach (String type in unresolvedTypes)
+                {
+                    TypeElement te = repository.GetTypeElement(type);
+                    if (te != null)
+                    {
+                        analyzer.UnresolvedTypes.Remove(type);
+                        numberOfResolvedTypes++;
+                    }
+                }
+                
+                sw.Stop();
+
+                Log.LogMessage("Found {0} types in local database in {1:0.0000} seconds.", numberOfResolvedTypes, sw.Elapsed.TotalSeconds);
+            }
+            if (analyzer.UnresolvedTypes.Count > 0)
+            {
+                // Step 2: Analyze all referenced assemblies in the hope we find the unresolved types
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                Log.LogMessage("Analyzing {0} referenced assemblies for {1} unresolved types...", refAssemblies.Count, analyzer.UnresolvedTypes.Count);
+
+                sw.Start();
+
+                assemblies.AddRange(analyzer.ProcessUnresolvedTypes(refAssemblies));
+
+                sw.Stop();
+
+                Log.LogMessage("Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining.", analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+            }
+            if (analyzer.UnresolvedTypes.Count > 0)
+            {
+                // Step 3: Unable to resolve some types, throw an error
+                foreach (String type in analyzer.UnresolvedTypes)
+                {
+                    Log.LogError("Unable to resolve type '{0}', are you missing an assembly reference?", type);
+                }
+            }
+
             // Storing types in database
             if (assemblies.Count > 0)
             {
@@ -149,6 +238,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Storing type information for {0} assemblies in database...", assemblies.Count);
 
                 sw.Start();
+
+                // TODO: checken of assembly bestaat en dan 'updaten', bv. nieuwe types toevoegen aan system assembly
+
                 repository.AddAssemblies(assemblies, analyzer.ResolvedTypes);
 
                 sw.Stop();
