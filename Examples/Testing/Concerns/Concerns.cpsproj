@@ -12,7 +12,7 @@
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugLevel>4</DebugLevel>
-    <VerifyIL>Yes</VerifyIL>
+    <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -27,7 +27,7 @@
       <HintPath>$(MSBuildExtensionsPath)\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Concern Include="FilterTestsConcerns.cps">
