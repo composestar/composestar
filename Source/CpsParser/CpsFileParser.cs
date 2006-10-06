@@ -88,7 +88,7 @@ namespace Composestar.CpsParser
                 parsingType = String.Empty;
             }
 
-            if ( tree.getFirstChild() != null) parsingType = walk(tree.getFirstChild(), doType, parsingType);
+            if ( tree.getFirstChild() != null) parsingType = Walk(tree.getFirstChild(), doType, parsingType);
 
             if (doType && tree.Type == CpsTokenTypes.TYPE_)
             {
@@ -103,7 +103,7 @@ namespace Composestar.CpsParser
             }
             
             antlr.collections.AST sib = tree.getNextSibling();
-            if (sib != null) parsingType = walk(sib, doType, parsingType);
+            if (sib != null) parsingType = Walk(sib, doType, parsingType);
 
             return parsingType;
         }
