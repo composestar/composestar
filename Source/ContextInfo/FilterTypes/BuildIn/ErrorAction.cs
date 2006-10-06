@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterActionAnnotation( "ErrorAction", FilterFlowBehaviour.Exit,
+    [FilterActionAttribute( "ErrorAction", FilterFlowBehaviour.Exit,
         MessageSubstitutionBehaviour.Original )]
     public class ErrorAction : FilterAction
     {

@@ -1,3 +1,11 @@
+// Project: ILAnalyzer, File: CecilILAnalyzer.cs
+// Namespace: Composestar.StarLight.ILAnalyzer, Class: CecilILAnalyzer
+// Path: C:\ComposeStar\StarLight\Source\ILAnalyzer, Author: Michiel
+// Code lines: 1118, Size of file: 45.10 KB
+// Creation date: 10/6/2006 1:22 PM
+// Last modified: 10/6/2006 2:53 PM
+// Generated with Commenter by abi.exDream.com
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -40,11 +48,11 @@ namespace Composestar.StarLight.ILAnalyzer
         private string _filterTypeName = 
             typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterType).FullName;
         private string _filterTypeAnnotationName =
-            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterTypeAnnotation).FullName;
+            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterTypeAttribute).FullName;
         private string _filterActionName =
             typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterAction).FullName;
         private string _filterActionAnnotationName =
-            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAnnotation).FullName;
+            typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAttribute).FullName;
         //private const string Filter
 
         /// <summary>
@@ -437,66 +445,59 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <summary>
         /// Extracts the filter action.
         /// </summary>
-        /// <param name="type">The type.</param>
+        /// <param name="type">The type.</param>       
         private void ExtractFilterAction(TypeDefinition type)
         {
             Console.WriteLine("Extract filterAction1");
-            foreach(CustomAttribute attr in type.CustomAttributes)
+            foreach (CustomAttribute attr in type.CustomAttributes)
             {
-                if(attr.Constructor.DeclaringType.FullName.Equals(_filterActionAnnotationName))
+                if (attr.Constructor.DeclaringType.FullName.Equals(_filterActionAnnotationName))
                 {
+                    // We use .NET reflection here, because Cecil can not read the enumerations
+                    Assembly assembly = Assembly.LoadFrom(type.Module.Image.FileInformation.FullName);
+                    if (assembly == null) continue;
 
-                   // System.Reflection.Emit.TypeBuilder tb = CreateTypeBuilder();
-                   
+                    Type refType = assembly.GetType(type.FullName);
+                    if (refType == null) continue;
 
-                    Console.WriteLine("Extract filterAction2");
-                    FilterActionElement faEl = new FilterActionElement();
-
-                    faEl.FullName = type.FullName;
-
-                    Console.WriteLine(attr.ConstructorParameters.Count);
-                    System.Collections.IEnumerator enumer = attr.Properties.Values.GetEnumerator();
-                    while(enumer.MoveNext())
+                    foreach (FilterActionAttribute faa in refType.GetCustomAttributes(typeof(FilterActionAttribute), false))
                     {
-                        Console.WriteLine(enumer.Current.ToString());
-                    }
-                    if(attr.ConstructorParameters.Count < 3)
-                        continue;
+                        FilterActionElement faEl = new FilterActionElement();
 
-                    
-                    
-                    faEl.Name = (String) attr.ConstructorParameters[0];
-                    switch((FilterFlowBehaviour) attr.ConstructorParameters[1])
-                    {
-                        case FilterFlowBehaviour.Continue:
-                            faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
-                            break;
-                        case FilterFlowBehaviour.Exit:
-                            faEl.FlowBehaviour = FilterActionElement.FLOW_EXIT;
-                            break;
-                        case FilterFlowBehaviour.Return:
-                            faEl.FlowBehaviour = FilterActionElement.FLOW_RETURN;
-                            break;
-                        default:
-                            faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
-                            break;
-                    }
+                        faEl.FullName = type.FullName;
+                        faEl.Name = faa.ActionName;
+                        switch (faa.FlowBehaviour)
+                        {
+                            case FilterFlowBehaviour.Continue:
+                                faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
+                                break;
+                            case FilterFlowBehaviour.Exit:
+                                faEl.FlowBehaviour = FilterActionElement.FLOW_EXIT;
+                                break;
+                            case FilterFlowBehaviour.Return:
+                                faEl.FlowBehaviour = FilterActionElement.FLOW_RETURN;
+                                break;
+                            default:
+                                faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
+                                break;
+                        } // switch
 
-                    switch((MessageSubstitutionBehaviour) attr.ConstructorParameters[2])
-                    {
-                        case MessageSubstitutionBehaviour.Original:
-                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
-                            break;
-                        case MessageSubstitutionBehaviour.Substituted:
-                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_SUBSTITUTED;
-                            break;
-                        case MessageSubstitutionBehaviour.Any:
-                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_ANY;
-                            break;
-                        default:
-                            faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
-                            break;
-                    }
+                        switch (faa.SubstitutionBehaviour)
+                        {
+                            case MessageSubstitutionBehaviour.Original:
+                                faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
+                                break;
+                            case MessageSubstitutionBehaviour.Substituted:
+                                faEl.FlowBehaviour = FilterActionElement.MESSAGE_SUBSTITUTED;
+                                break;
+                            case MessageSubstitutionBehaviour.Any:
+                                faEl.FlowBehaviour = FilterActionElement.MESSAGE_ANY;
+                                break;
+                            default:
+                                faEl.FlowBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
+                                break;
+                        } // switch
+                    } // foreach  (faa)
 
                     return;
                 }
