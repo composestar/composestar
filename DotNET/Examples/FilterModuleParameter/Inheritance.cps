@@ -12,8 +12,8 @@ concern inheritance in FilterModuleParameter{
              ['FilterModuleParameter.Cat',
 							'FilterModuleParameter.Iguanidae'])};
 		filtermodules
-			selA <- logging::log( FilterModuleParameter.Logger );
 			selA <- genericInheritance( FilterModuleParameter.Animal );
+			selA <- logging::log( FilterModuleParameter.Logger, {walk, makeNoise});
 		constraints
 			pre (genericInheritance, logger::log);
 	}

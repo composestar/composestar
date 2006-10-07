@@ -1,8 +1,8 @@
-concern logging in FilterModuleParameter{  //fmp #1
-	filtermodule log(?logfunction){
+concern logging in FilterModuleParameter{
+	filtermodule log(?logger, ??walkfunction){
 		internals
-			logger : ?logfunction;
+			logger : ?logger;
 		inputfilters
-			m : Meta ={[*.*] logger.log}
+			m : Meta ={[*.??walkfunction] logger.log}
 	}
 }

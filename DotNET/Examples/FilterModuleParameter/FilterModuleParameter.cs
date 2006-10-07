@@ -20,7 +20,9 @@ namespace FilterModuleParameter
 			ziggy.feed();
 
 			karel.walk();
-			ziggy.walk();  
+			ziggy.walk();
+
+			karel.makeNoise();  
 		}
 	}
 }

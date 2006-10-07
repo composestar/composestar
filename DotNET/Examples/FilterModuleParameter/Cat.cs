@@ -15,5 +15,10 @@ namespace FilterModuleParameter
 		{
 			Console.Out.WriteLine("eating catfood");
 		}
+
+		public void makeNoise()
+		{
+			Console.Out.WriteLine("meow");
+		}
 	}
 }
