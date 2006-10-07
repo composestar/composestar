@@ -293,7 +293,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
           				     {#fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
           argument : fqn
           		   {#argument = #([ARGUMENT_, "argument"], #argument);}
-          		    | LCURLY! fqn (COMMA fqn)* RCURLY!
+          		    | LCURLY! fqn (COMMA! fqn)* RCURLY!
           		   {#argument = #([ARGUMENT_, "argument"], #argument);};
 
     /*---------------------------------------------------------------------------*/

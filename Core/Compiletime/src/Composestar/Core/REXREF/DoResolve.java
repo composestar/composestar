@@ -6,17 +6,22 @@ import java.util.Vector;
 import Composestar.Core.COPPER.Splitter;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPatternAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.NameMatchingType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedInternal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ParameterizedMessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
@@ -60,6 +65,9 @@ public class DoResolve {
     
     //  filtermodulreferences
     resolveFilterModuleReferences();
+    
+    // change ??method to {meth1, method2 ...}
+    transformParameterList();
     
     //concernreferences
     resolveConcernReferences();
@@ -542,13 +550,160 @@ public class DoResolve {
 	  Iterator i = ds.getAllInstancesOf(ParameterizedMessageSelector.class);
 	  while(i.hasNext()){
 		  ParameterizedMessageSelector pms = (ParameterizedMessageSelector) i.next();
-		  try{
-			  FilterModule mp = (FilterModule)((Filter)((FilterElement)((MatchingPattern) ((MatchingPart) pms.getParent()).getParent()).getParent()).getParent()).getParent();
-			  String paraValue = (String) ((Vector) mp.getParameter(pms.getName()).getValue()).get(0);
-			  pms.setName(paraValue);
-		  }catch(Exception e){
-			  Debug.out(Debug.MODE_ERROR, "REXREF", "Getting the value for a message slecotr parameter failed, probably the parent chain is broken.");
+		  if(!pms.isList())
+		  {
+			  try
+			  {
+				  FilterModule mp = (FilterModule)((Filter)((FilterElement)((MatchingPattern) ((MatchingPart) pms.getParent()).getParent()).getParent()).getParent()).getParent();
+				  String paraValue = (String) ((Vector) mp.getParameter(pms.getName()).getValue()).get(0);
+				  pms.setName(paraValue);
+			  }
+			  catch(Exception e)
+			  {
+				  Debug.out(Debug.MODE_ERROR, "REXREF", "Getting the value for a message selector parameter failed, probably the parent chain is broken.");
+			  }
 		  }
 	  }
+  }
+  
+  /*
+   * Transforms the parameterlists of the message selector to a nested message set
+   */
+  private void transformParameterList()throws ModuleException{
+	  Iterator i = ds.getAllInstancesOf(ParameterizedMessageSelector.class);
+	  //the FilterModuleAST where we want to perform the transformation 
+	  FilterModule fm = null;
+	  Filter f = null;
+	  
+	  while(i.hasNext()){
+		  ParameterizedMessageSelector pms = (ParameterizedMessageSelector) i.next();
+		  if(pms.isList()){
+			  // we only allow this transformation on name matching, <inner.?? methods> is qua semantics nonsens
+			  if(!(((MatchingPart) pms.getParent()).getMatchType() instanceof NameMatchingType)){
+				  throw new ModuleException("Filter Module Parameter List" + pms.getName() + "' cannot be transformed (<inner.??methods> is not allowed).", "REXREF");
+			  }
+			  /* on this part we change fromt he orignal idea, which was to convert the list to a nested
+			   * matching, however the nesting is buggy and temporary it will be trnaformed to a full filter element.
+			   */
+			  MatchingPattern mp = (MatchingPattern) ((MatchingPart) pms.getParent()).getParent();
+			  FilterElement fe = (FilterElement) mp.getParent();
+			  
+			  // get the filtermodule to get the list of methods.
+			  f = (Filter) fe.getParent();
+			  fm =  (FilterModule) f.getParent();			  
+			  Vector selectors = (Vector)fm.getParameter(pms.getName()).getValue();
+			  
+			  /* we got all we want, the filter, the filterelement
+			   * so the first one in the list gets the orignal FE
+			   */
+			  Iterator sel = selectors.iterator();
+			  String s = (String) sel.next();
+			  pms.setName(s);
+			  
+			  // the second one out of the vector and the rest
+			  while(sel.hasNext()){
+				  FilterElement copy = this.copyFilterElement(fe);
+				  
+				  //placing and and afetr the first one
+				  CORfilterElementCompOper cfeco = new CORfilterElementCompOper();
+				  cfeco.setDescriptionFileName(fe.getDescriptionFileName());
+				  cfeco.setDescriptionLineNumber(fe.getDescriptionLineNumber());
+			      cfeco.setParent(fe.getFilterElementAST());
+			      fe.setRightOperator(cfeco);
+			      ds.addObject(cfeco);
+			      
+			      f.addFilterElement(copy);
+			      ds.addObject(copy);
+			      
+			      // setting the selector
+			      Iterator mpi  = copy.getMatchingPatternIterator();
+			      while(mpi.hasNext())
+			      {
+			    	  MatchingPattern mp2 = (MatchingPattern) mpi.next();
+			    	  Iterator match = mp2.getMatchingPartsIterator();
+			    	  while(match.hasNext())
+			    	  {
+			    		  MatchingPart matchpart = (MatchingPart) match.next();
+			    		  matchpart.getSelector().setName((String)sel.next());
+			    	  }
+			      }
+			      
+			      // this for gettign , , between them
+			      fe = copy;
+			  }
+			  
+			  int fd = 0;
+			  fd++;
+		  }
+	  }
+  }
+  
+  /*
+   * Copying a filter element out of the FilterElementAST of the orginal FE
+   */
+  private FilterElement copyFilterElement(FilterElement original)
+  {
+	  //temporary check by cloning the AST strcutruee
+	  FilterElementAST oldAST = original.getFilterElementAST();
+	  FilterElementAST newAST = new FilterElementAST();
+	  newAST.setConditionPart(oldAST.getConditionPart());
+	  newAST.setDescriptionFileName(oldAST.getDescriptionFileName());
+	  newAST.setDescriptionLineNumber(oldAST.getDescriptionLineNumber());
+	  newAST.setEnableOperatorType(oldAST.getEnableOperatorType());
+	  newAST.setParent(oldAST.getParent());
+	  newAST.setRightOperator(oldAST.getRightOperator());
+	  
+	  Vector mps = new Vector();
+	  Iterator mpi = oldAST.getMatchingPatterns().iterator();
+	  while(mpi.hasNext()){
+		  MatchingPatternAST newmpa = new MatchingPatternAST();
+		  MatchingPatternAST oldmpa = (MatchingPatternAST) mpi.next();
+		  
+		  newmpa.setDescriptionFileName(oldmpa.getDescriptionFileName());
+		  newmpa.setDescriptionLineNumber(oldmpa.getDescriptionLineNumber());
+		  newmpa.setParent(oldmpa.getParent());
+		  newmpa.setSubstitutionParts(oldmpa.getSubstitutionParts());
+		  
+		  Vector ms = new Vector();
+		  Iterator mi = oldmpa.getMatchingPartsIterator();
+		  while(mi.hasNext()){
+			  MatchingPartAST newm = new MatchingPartAST();
+			  MatchingPartAST oldm = (MatchingPartAST) mi.next();
+			  
+			  newm.setDescriptionFileName(oldm.getDescriptionFileName());
+			  newm.setDescriptionLineNumber(oldm.getDescriptionLineNumber());
+			  newm.setMatchType(oldm.getMatchType());
+			  newm.setParent(newm.getParent());
+			  newm.setTarget(oldm.getTarget());
+			  
+			  MessageSelectorAST newsel = new MessageSelectorAST();
+			  newsel.setDescriptionFileName(oldm.getSelector().getDescriptionFileName());
+			  newsel.setDescriptionLineNumber(oldm.getSelector().getDescriptionLineNumber());
+			  newsel.setName("zoink");
+			  newsel.setParent(newm);
+			  ds.addObject(newsel);
+			  
+			  newm.setSelector(newsel);
+			  ms.add(newm);
+			  ds.addObject(newm);
+		  }
+		  
+		  newmpa.setMatchingParts(ms);
+		  mps.add(newmpa);
+		  ds.addObject(newmpa);
+	  }	  
+	  
+	  newAST.setMatchingPatterns(mps);
+	  ds.addObject(newAST);
+	  //end test
+	  
+	  FilterElement copy = new FilterElement(newAST);
+	  copy.setConditionPart(original.getConditionPart());
+	  copy.setDescriptionFileName(original.getDescriptionFileName());
+	  copy.setDescriptionLineNumber(original.getDescriptionLineNumber());
+	  copy.setEnableOperatorType(copy.getEnableOperatorType());
+	  copy.setParent(copy.getParent());
+	  copy.setRightOperator(copy.getRightOperator());
+	  return copy;
   }
 }

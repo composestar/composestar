@@ -152,6 +152,16 @@ public class FilterElementAST extends ContextRepositoryEntity {
   public void setRightOperator(FilterElementCompOper rightOperatorValue) {
     this.rightOperator = rightOperatorValue;
   }
+
+
+public Vector getMatchingPatterns() {
+	return matchingPatterns;
+}
+
+
+public void setMatchingPatterns(Vector matchingPatterns) {
+	this.matchingPatterns = matchingPatterns;
+}
 }
 
 
