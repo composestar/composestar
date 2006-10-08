@@ -58,7 +58,7 @@ public class Main extends Frame
 			}
 		);
 
-		Game g = new Game();
+		Game g = Game.instance();
 
 		for (int i = 0; i < args.length-1; i++)
 		{
@@ -79,7 +79,7 @@ public class Main extends Frame
 		this.add(v,BorderLayout.CENTER);
 		this.setVisible(true);
 		v.requestFocus();
-		g.startGame();
+		g.beginGame();
 	}
 
 	public static void main(String[] args) 

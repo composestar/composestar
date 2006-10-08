@@ -40,6 +40,14 @@ public abstract class Controller
 	}
 
 	/**
+	 * Get the pawn being controlled
+	 */
+	public Pawn getPawn()
+	{
+		return pawn;
+	}
+
+	/**
 	 * Return the requested direction
 	 */
 	public int getDirection()

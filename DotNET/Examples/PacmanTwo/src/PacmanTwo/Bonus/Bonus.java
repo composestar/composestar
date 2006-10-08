@@ -35,6 +35,7 @@ public class Bonus
 
 	protected int bonusPickups;
 	protected float timeTillBonus;
+	protected BonusPickup activeBonus;
 
 	protected int bonusType = BONUS_CHERRY;
 
@@ -60,9 +61,8 @@ public class Bonus
 		rm.proceed();
 		if (bonusPickups >= 2) return; // max of 2 pickups per level
 		timeTillBonus -= delta;
-		if (timeTillBonus < 0)
+		if ((activeBonus == null) && (timeTillBonus < 0))
 		{
-			reset();
 			placeBonus();
 		}
 	}
@@ -92,6 +92,8 @@ public class Bonus
 			System.out.println("Bonus picked up "+b.getBonusType());
 			b.died();
 			bonusPickups++;
+			activeBonus = null;
+			reset();
 		}
 	}
 
@@ -122,7 +124,7 @@ public class Bonus
 		Point pt = Game.instance().level().getPlayerStart(0);
 		X = pt.x;
 		Y = pt.y;
-		new BonusPickup(bonusType, X, Y);
+		activeBonus = new BonusPickup(bonusType, X, Y);
 	}
 
 	/**

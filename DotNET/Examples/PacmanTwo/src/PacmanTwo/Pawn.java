@@ -89,7 +89,7 @@ public abstract class Pawn extends GameElement
 	 */
 	public boolean isHuman()
 	{
-		return controller.isHumanControlled();
+		return (controller != null) && controller.isHumanControlled();
 	}
 
 	/**
@@ -201,6 +201,7 @@ public abstract class Pawn extends GameElement
 	 */
 	protected int continueMovement()
 	{
+		if (controller == null) return 0;
 		int newdir = controller.getDirection();
 		// if newdirection and can move in that direction move to it
 		if ((newdir != direction) && level.canMove(newdir, cellX, cellY))

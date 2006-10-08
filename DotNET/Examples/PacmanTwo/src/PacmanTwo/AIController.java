@@ -55,6 +55,14 @@ public class AIController extends Controller implements Tickable
 
 	public void getNextMove()
 	{
-		direction = RandomMovement.getNextMove(pawn, game.level());
+		if (pawn != null)
+		{
+			direction = doGetNextMove(pawn, game.level());
+		}
+	}
+
+	protected int doGetNextMove(Pawn pawn, Level level)
+	{
+		return RandomMovement.getNextMove(pawn, level);
 	}
 }

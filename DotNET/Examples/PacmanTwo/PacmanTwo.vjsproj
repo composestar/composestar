@@ -90,6 +90,26 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "Concerns\BonusConcern.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\DynamicStrategy.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\Levels.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\Scoring.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\Sounds.cps"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "src\PacmanTwo\AIController.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -175,22 +195,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Concerns\BonusConcern.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Concerns\Levels.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Concerns\Scoring.cps"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "Concerns\Sounds.cps"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\PacmanTwo\GUI\GhostView.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -225,9 +229,23 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "src\PacmanTwo\" />
+                <File
+                    RelPath = "src\PacmanTwo\Strategy\Flee.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\PacmanTwo\Strategy\PathFinder.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "src\PacmanTwo\Strategy\RandomMovement.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\PacmanTwo\Strategy\Stalker.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

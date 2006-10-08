@@ -21,7 +21,6 @@ import PacmanTwo.Direction;
  */
 public class RandomMovement extends Strategy
 {
-
 	protected static java.util.Random random;
 
 	public static int getNextMove(Pawn pawn, Level level)

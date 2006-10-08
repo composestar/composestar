@@ -62,18 +62,25 @@ public class Game implements Runnable
 
 	protected Game()
 	{
-		_instance = this;
 		tickList = new Vector();
 		gameElements = new Vector();
 		players = new Vector();
 		deadList = new Vector();
-		new Thread(this).start();
 	}
 
 	public static Game instance()
 	{
-		if (_instance == null) new Game();
+		if (_instance == null) _instance = new Game();
 		return _instance;
+	}
+
+	/**
+	 * Starts the gameloop
+	 */
+	public void beginGame()
+	{
+		new Thread(this).start();
+		startNewGame();
 	}
 
 	public Level level()
@@ -169,6 +176,23 @@ public class Game implements Runnable
 		return players.remove(c);
 	}
 
+	/**
+	 * Return a HumanController
+	 */
+	public HumanController getPlayer(int idx)
+	{
+		if ((players.size() < idx) || (idx < 0)) return null;
+		return (HumanController) players.get(idx);
+	}
+
+	/**
+	 * Return the number of players
+	 */
+	public int getPlayerCount()
+	{
+		return players.size();
+	}
+
 	public void setEvilPacman(Pacman pm)
 	{
 		evilPacman = pm;
@@ -177,6 +201,11 @@ public class Game implements Runnable
 	public Pacman getEvilPacman()
 	{
 		return evilPacman;
+	}
+
+	public boolean hasEvilPacman()
+	{
+		return evilPacman != null;
 	}
 
 	protected void tick(float delta)
@@ -199,7 +228,7 @@ public class Game implements Runnable
 		if ((_level != null) && _level.mazeCompleted())
 		{
 			//System.out.println("Maze completed, start a new game");
-			startGame();
+			startNewGame();
 		}
 	}
 
@@ -214,7 +243,7 @@ public class Game implements Runnable
 	/**
 	 * Start a new game
 	 */
-	public void startGame()
+	public void startNewGame()
 	{
 		setEvilPacman(null);
 		for ( int i = 0; i < tickList.size(); i++ )
