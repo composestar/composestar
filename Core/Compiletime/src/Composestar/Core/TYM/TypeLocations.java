@@ -130,7 +130,7 @@ public class TypeLocations
 	}
 
 	/**
-	 * Returns a list containing the names of all types that are known to the compiler (?)
+	 * Returns a set containing the names of all user-defined types.
 	 */
 	public Set typeNames()
 	{
@@ -138,7 +138,7 @@ public class TypeLocations
 	}
 	
 	/**
-	 * Returns a set of all assemblies that are known to the compiler (?)
+	 * Returns a set of all assemblies that were generated from user sources.
 	 */
 	public Set assemblies()
 	{
