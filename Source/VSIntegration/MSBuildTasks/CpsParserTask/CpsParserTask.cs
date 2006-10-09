@@ -28,6 +28,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
     public class CpsParserTask : Task
     {
         #region Constructor
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CpsParserTask"/> class.
+        /// </summary>
         public CpsParserTask() : base(Properties.Resources.ResourceManager)
         {
 
@@ -49,6 +53,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _concernFiles = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the referenced types.
+        /// </summary>
+        /// <value>The referenced types.</value>
         [Output()]
         public ITaskItem[] ReferencedTypes
         {
@@ -73,7 +81,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 String concernFile = item.ToString();
 
-                Log.LogMessage("Parsing concern file '{0}'...", concernFile);
+                Log.LogMessageFromResources("ParsingConcernFile", concernFile);
                 
                 List<string> refTypes = cfp.ParseFileForReferencedTypes(concernFile);
 
@@ -83,8 +91,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     ReferencedTypes[index] = new TaskItem(type);
                     index++;
-                    Log.LogMessage("  found referenced type '{0}'", type);
+                    Log.LogMessageFromResources("FoundReferenceType", type);
                 } // foreach  (type)
+
             } // foreach  (item)
             
             return !Log.HasLoggedErrors;
