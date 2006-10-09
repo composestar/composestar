@@ -15,6 +15,7 @@ using Mono.Cecil.Signatures;
 using Composestar.Repository;
 using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
 
 using Composestar.StarLight.ContextInfo.FilterTypes;
 

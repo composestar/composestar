@@ -37,6 +37,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DIHelper.cs" />
+    <Compile Include="Exceptions\CpsParserException.cs" />
+    <Compile Include="Exceptions\ILAnalyzerException.cs" />
+    <Compile Include="Exceptions\ILWeaverException.cs" />
+    <Compile Include="Exceptions\StarLightException.cs" />
     <Compile Include="ObjectBuilderConfiguratorBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICpsParser.cs" />

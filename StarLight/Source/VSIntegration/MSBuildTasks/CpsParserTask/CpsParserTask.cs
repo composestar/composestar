@@ -17,6 +17,7 @@ using Microsoft.Build.Utilities;
 using Composestar.StarLight.ILAnalyzer; 
 using Composestar.Repository.LanguageModel;  
 using Composestar.StarLight.CoreServices;  
+using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.CpsParser; 
 #endregion
 

@@ -17,6 +17,7 @@ using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.CoreServices.Exceptions;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
@@ -26,8 +27,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
     public class ILVerifyTask : Task
     {
 
-        const int ErrorFileNotFound = 2;
-        const int ErrorAccessDenied = 5;
+        private const int ErrorFileNotFound = 2;
+        private const int ErrorAccessDenied = 5;
 
         #region Properties for MSBuild
 
@@ -81,15 +82,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
             
             // Setup process
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
 
             // Determine filename
-            p.StartInfo.FileName = Path.Combine(PEVerifyLocation, PEVerifyExecutable);
+            process.StartInfo.FileName = Path.Combine(PEVerifyLocation, PEVerifyExecutable);
                
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardError = true;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardError = true;
 
             // Execute PEVerify for each file
             foreach (ITaskItem item in AssemblyFiles)
@@ -99,41 +100,41 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     filename = item.ToString();
                     Log.LogMessage("Verifying file {0}", filename);
 
-                    p.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", filename);
+                    process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", filename);
 
-                    p.Start();
-                    while (!p.HasExited)
+                    process.Start();
+                    while (!process.HasExited)
                     {
                         
                     }
-                    if (p.ExitCode == 0)
+                    if (process.ExitCode == 0)
                     {
                         Log.LogMessageFromResources("VerifySuccess", filename);                         
                     }
                     else
                     {
-                        while (!p.StandardOutput.EndOfStream)
+                        while (!process.StandardOutput.EndOfStream)
                         {
-                            ParseOutput(p.StandardOutput.ReadLine(), filename);
+                            ParseOutput(process.StandardOutput.ReadLine(), filename);
                         }                        
                     }
 
                 }
-                catch (Win32Exception e)
+                catch (Win32Exception exception)
                 {
-                    if (e.NativeErrorCode == ErrorFileNotFound)
+                    if (exception.NativeErrorCode == ErrorFileNotFound)
                     {
-                        Log.LogWarningFromResources("PEVerifyExecutableNotFound", p.StartInfo.FileName);                        
+                        Log.LogWarningFromResources("PEVerifyExecutableNotFound", process.StartInfo.FileName);                        
                         return true;
                     }
-                    else if (e.NativeErrorCode == ErrorAccessDenied)
+                    else if (exception.NativeErrorCode == ErrorAccessDenied)
                     {
-                        Log.LogWarningFromResources("PEVerifyExecutableAccessDenied", p.StartInfo.FileName);                        
+                        Log.LogWarningFromResources("PEVerifyExecutableAccessDenied", process.StartInfo.FileName);                        
                     return true;
                     }
                     else
                     {
-                        Log.LogErrorFromResources("PEVerifyExecutionException", e.ToString());
+                        Log.LogErrorFromResources("PEVerifyExecutionException", exception.ToString());
                         return false;
                     }
                     

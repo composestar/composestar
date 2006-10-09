@@ -1,74 +1,75 @@
 using System;
 using System.Runtime.Serialization;
- 
-namespace Composestar.StarLight.ILWeaver
+  
+namespace Composestar.StarLight.CoreServices.Exceptions
 {
 
     /// <summary>
-    /// Exception throw by the weaver.
+    /// Exception throw by the CpsParser.
     /// </summary>
     [Serializable()]
-    public class ILWeaverException : Exception, ISerializable
+    public class CpsParserException : StarLightException, ISerializable
     {
-        private readonly string _filename;
+
+        private string _filename;
 
         #region ctor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// Initializes a new instance of the <see cref="T:CpsParserException"/> class.
         /// </summary>
-        public ILWeaverException()
+        public CpsParserException()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// Initializes a new instance of the <see cref="T:CpsParserException"/> class.
         /// </summary>
         /// <param name="serInfo">The ser info.</param>
         /// <param name="streamContext">The stream context.</param>
-        protected ILWeaverException(SerializationInfo serializationInformation, StreamingContext streamContext) 
-            : base(serializationInformation, streamContext)
+        protected CpsParserException(SerializationInfo serInfo, StreamingContext streamContext)
+            : base(serInfo, streamContext)
         {
-            _filename = serializationInformation.GetString("ILWeaverException._filename");
+            _filename = serInfo.GetString("CpsParserException._filename");
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// Initializes a new instance of the <see cref="T:CpsParserException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public ILWeaverException(string message)
+        public CpsParserException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// Initializes a new instance of the <see cref="T:CpsParserException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
-        public ILWeaverException(string message, Exception inner)
+        public CpsParserException(string message, Exception inner)
             : base(message, inner)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// Initializes a new instance of the <see cref="T:CpsParserException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="filename">The filename.</param>
-        public ILWeaverException(string message, string filename)
+        public CpsParserException(string message, string filename)
             : base(message)
         {
             _filename = filename;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
+        /// Initializes a new instance of the <see cref="T:CpsParserException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="filename">The filename.</param>
         /// <param name="inner">The inner.</param>
-        public ILWeaverException(string message, string filename, Exception inner)
+        public CpsParserException(string message, string filename, Exception inner)
             : base(message, inner)
         {
             _filename = filename;
@@ -82,16 +83,18 @@ namespace Composestar.StarLight.ILWeaver
         {
             get { return _filename; }
         }
+
         #endregion
 
         #region ISerializable Members
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("ILWeaverException._filename", _filename);
+            info.AddValue("ILAnalyzerException._filename", _filename);
             base.GetObjectData(info, context);
         }
 
         #endregion
+
     }
 }

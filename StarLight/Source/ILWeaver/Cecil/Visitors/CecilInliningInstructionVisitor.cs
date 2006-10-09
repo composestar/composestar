@@ -9,6 +9,7 @@ using Composestar.Repository.LanguageModel.Inlining.Visitor;
 
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;

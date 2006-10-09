@@ -16,6 +16,7 @@ using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.ILWeaver;
 using Composestar.Repository.Db4oContainers;
 using Composestar.Repository;
