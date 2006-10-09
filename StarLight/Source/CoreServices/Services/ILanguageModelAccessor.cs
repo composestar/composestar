@@ -4,13 +4,29 @@ using System.Collections.Generic;
 
 namespace Composestar.StarLight.CoreServices
 {
-    public interface ILanguageModelAccessor
+
+    /// <summary>
+    /// Combines the interfaces for the language model.
+    /// </summary>
+    public interface ILanguageModelAccessor : ILanguageModelGetters, ILanguageModelDeletes, ILanguageModelSetters
+    {
+
+        /// <summary>
+        /// Closes this instance.
+        /// </summary>
+        void Close();
+    }
+
+    /// <summary>
+    /// Contains the interfaces for the getters of the language model.
+    /// </summary>
+    public interface ILanguageModelGetters
     {
         /// <summary>
         /// Gets the method element by name
         /// </summary>
         /// <param name="typeInfo">The type info.</param>
-        /// <param name="methodSignature">The method name.</param>
+        /// <param name="methodName">Name of the method.</param>
         /// <returns></returns>
         MethodElement GetMethodElementByName(TypeElement typeInfo, string methodName);
 
@@ -35,11 +51,11 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="fullName">The full name.</param>
         /// <returns></returns>
         TypeElement GetTypeElement(string fullName);
-        
+
         /// <summary>
         /// Gets the type element by Id.
         /// </summary>
-        /// <param name="fullName">The full name.</param>
+        /// <param name="typeId">The type id.</param>
         /// <returns></returns>
         TypeElement GetTypeElementById(string typeId);
 
@@ -92,6 +108,28 @@ namespace Composestar.StarLight.CoreServices
         /// <returns></returns>
         Condition GetConditionByName(string name);
 
+
+        /// <summary>
+        /// Gets all the assembly elements.
+        /// </summary>
+        /// <returns>List of assembly elements.</returns>
+        IList<AssemblyElement> GetAssemblyElements();
+
+        /// <summary>
+        /// Gets the name of the assembly element by file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        AssemblyElement GetAssemblyElementByFileName(string fileName);
+
+    } // ILanguageModelGetters
+
+    /// <summary>
+    /// Contains the interfaces for the language model delete functions.
+    /// </summary>
+    public interface ILanguageModelDeletes
+    {
+
         /// <summary>
         /// Deletes the concern informations.
         /// </summary>
@@ -109,17 +147,19 @@ namespace Composestar.StarLight.CoreServices
         void DeleteTypeElements(String assembly);
 
         /// <summary>
-        /// Gets all the assembly elements.
+        /// Deletes the assembly elements.
         /// </summary>
-        /// <returns>List of assembly elements.</returns>
-        IList<AssemblyElement> GetAssemblyElements();
+        /// <param name="name">The name.</param>
+        void DeleteAssembly(String name);
 
-        /// <summary>
-        /// Gets the name of the assembly element by file.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        AssemblyElement GetAssemblyElementByFileName(string fileName);
+
+    } // ILanguageModelDeletes
+
+    /// <summary>
+    /// Contains the interfaces for the language model setters.
+    /// </summary>
+    public interface ILanguageModelSetters
+    {
 
         /// <summary>
         /// Adds the assemblies.
@@ -128,15 +168,5 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="assembliesToSave">The assemblies to save.</param>
         void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave);
 
-        /// <summary>
-        /// Deletes the assembly elements.
-        /// </summary>
-        /// <param name="assembly">The assembly name.</param>
-        void DeleteAssembly(String name);
-
-        /// <summary>
-        /// Closes this instance.
-        /// </summary>
-        void Close();
-    }
+    } // ILanguageModelSetters
 }

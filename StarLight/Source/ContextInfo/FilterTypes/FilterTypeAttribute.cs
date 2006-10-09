@@ -146,6 +146,5 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
 
         #endregion
 
-
     }
 }
