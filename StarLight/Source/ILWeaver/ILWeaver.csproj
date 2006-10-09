@@ -93,10 +93,6 @@
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Repository\DataStoreContainer.csproj">
-      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
-      <Name>DataStoreContainer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />

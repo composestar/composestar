@@ -35,7 +35,6 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="fullName">The full name.</param>
         /// <returns></returns>
         TypeElement GetTypeElement(string fullName);
-
         
         /// <summary>
         /// Gets the type element by Id.
@@ -92,6 +91,36 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="name">The name of the condition.</param>
         /// <returns></returns>
         Condition GetConditionByName(string name);
+
+        /// <summary>
+        /// Deletes the concern informations.
+        /// </summary>
+        void DeleteConcernInformations();
+
+        /// <summary>
+        /// Deletes the weaving instructions.
+        /// </summary>
+        void DeleteWeavingInstructions();
+
+        /// <summary>
+        /// Deletes the type elements.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        void DeleteTypeElements(String assembly);
+
+        /// <summary>
+        /// Gets the name of the assembly element by file.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        AssemblyElement GetAssemblyElementByFileName(string fileName);
+
+        /// <summary>
+        /// Adds the assemblies.
+        /// </summary>
+        /// <param name="assemblies">The assemblies.</param>
+        /// <param name="assembliesToSave">The assemblies to save.</param>
+        void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave);
 
         /// <summary>
         /// Closes this instance.

@@ -146,6 +146,41 @@ namespace TestILWeaver.Mocks
 
         }
 
+        /// <summary>
+        /// Get assembly element by file name
+        /// </summary>
+        /// <param name="fileName">File name</param>
+        /// <returns>Assembly element</returns>
+        public AssemblyElement GetAssemblyElementByFileName(string fileName)
+        {
+            return null;
+        } // GetAssemblyElementByFileName(fileName)
+
+        /// <summary>
+        /// Add assemblies
+        /// </summary>
+        /// <param name="assemblies">Assemblies</param>
+        /// <param name="assembliesToSave">Assemblies to save</param>
+        public void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave)
+        {
+        } // AddAssemblies(assemblies, assembliesToSave)
+
+                /// <summary>
+        /// Deletes the concern informations.
+        /// </summary>
+        public void DeleteConcernInformations(){} // DeleteConcernInformations()
+         
+        /// <summary>
+        /// Deletes the weaving instructions.
+        /// </summary>
+        public void DeleteWeavingInstructions(){} // DeleteWeavingInstructions()
+
+        /// <summary>
+        /// Deletes the type elements.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        public void DeleteTypeElements(String assembly){}
+
         #endregion
                
 
