@@ -262,17 +262,6 @@ namespace Composestar.Repository.Db4oContainers
         }
 
         /// <summary>
-        /// Returns a Query object.
-        /// </summary>
-        /// <returns></returns>
-        public com.db4o.query.Query Query()
-        {
-            CheckForOpenDatabase();
-
-            return dbContainer.Query();
-        }
-
-        /// <summary>
         /// Deletes the objects.
         /// </summary>
         public void DeleteObjects<T>()
@@ -300,6 +289,11 @@ namespace Composestar.Repository.Db4oContainers
             {
                 dbContainer.Delete(item);
             }
+        }
+
+        public void Commit()
+        {
+            dbContainer.Commit();
         }
     }
 }

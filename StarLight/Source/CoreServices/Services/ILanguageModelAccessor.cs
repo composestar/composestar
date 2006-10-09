@@ -109,6 +109,12 @@ namespace Composestar.StarLight.CoreServices
         void DeleteTypeElements(String assembly);
 
         /// <summary>
+        /// Gets all the assembly elements.
+        /// </summary>
+        /// <returns>List of assembly elements.</returns>
+        IList<AssemblyElement> GetAssemblyElements();
+
+        /// <summary>
         /// Gets the name of the assembly element by file.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -121,6 +127,12 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="assemblies">The assemblies.</param>
         /// <param name="assembliesToSave">The assemblies to save.</param>
         void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave);
+
+        /// <summary>
+        /// Deletes the assembly elements.
+        /// </summary>
+        /// <param name="assembly">The assembly name.</param>
+        void DeleteAssembly(String name);
 
         /// <summary>
         /// Closes this instance.
