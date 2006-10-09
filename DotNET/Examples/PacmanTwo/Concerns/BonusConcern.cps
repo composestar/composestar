@@ -3,7 +3,7 @@ TODO:
 	- add pickup sound
 	- add levelup bonus changes
 */
-concern BonusConern in PackmanTwo
+concern BonusConern in PacmanTwo
 {
 	filtermodule BonusManager
 	{

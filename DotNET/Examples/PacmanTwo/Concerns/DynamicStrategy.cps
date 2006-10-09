@@ -12,7 +12,7 @@ concern DynamicStrategy in PacmanTwo
 	/*
 	!!
 	!! This breaks the game with various errors. Cause is unknown
-	!!
+	!!*/
 	filtermodule dynstrat
 	{
 		internals
@@ -28,16 +28,16 @@ concern DynamicStrategy in PacmanTwo
 				isEvil => [*.doGetNextMove] chicken.getNextMoveNS
 			}
 	}
-	*/
+	
 
 
 	superimposition
 	{
 		selectors
 			level = { C | isClassWithName(C, 'PacmanTwo.Level') };
-			//ai = { C | isClassWithName(C, 'PacmanTwo.AIController') };
+			ai = { C | isClassWithName(C, 'PacmanTwo.AIController') };
 		filtermodules
 			level <- PathFinder;
-			//ai <- dynstrat;
+			ai <- dynstrat;
 	}
 }

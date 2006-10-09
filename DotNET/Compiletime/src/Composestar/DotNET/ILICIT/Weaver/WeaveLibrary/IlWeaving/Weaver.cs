@@ -1119,6 +1119,18 @@ namespace Weavers.IlWeaving
 		}
 
 		/// <summary>
+		/// Relabels the current opcode and insert a nop. This will make sure the jump targets 
+		/// will not be messed up.
+		/// </summary>
+		/// <param name="code"></param>
+		/// <param name="newCodes"></param>
+		private void relabelOpcode(IlOpcode code, ArrayList newCodes)
+		{
+			newCodes.Add(new IlOpcode(code.Label, ""));
+			code.Label = code.Label+"_";
+		}
+
+		/// <summary>
 		/// Processes a CIL class block.
 		/// </summary>
 		/// <param name="ws"></param>
@@ -1235,15 +1247,18 @@ namespace Weavers.IlWeaving
 						{
 							// Detect class instantiations
 							case "newobj":
+								relabelOpcode(code, newCodes);
 								newCodes.AddRange(ProcessClassInstantiation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
 								break;
 
 							// Detect method invocation
 							case "call":
+								relabelOpcode(code, newCodes);
 								newCodes.AddRange(ProcessMethodInvocation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
 								break;
 							
 							case "callvirt":
+								relabelOpcode(code, newCodes);
 								ArrayList insert = ProcessMethodInvocation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug);
 								if (insert.Count == 1) 
 								{
@@ -1259,6 +1274,7 @@ namespace Weavers.IlWeaving
 
 							// Detect load of field of an object
 							case "ldfld":
+								relabelOpcode(code, newCodes);
 								insert = ProcessFieldAccess(ws, code, ref block, ref method, ref stackIncrease, quiet, debug);
 								if (insert.Count > 0)
 								{
@@ -1273,11 +1289,13 @@ namespace Weavers.IlWeaving
 
 							// Detect static load of field of an object
 							case "ldsfld":
+								relabelOpcode(code, newCodes);
 								newCodes.AddRange(ProcessStaticFieldAccess(ws, code, ref block, ref method, ref stackIncrease, quiet, debug));
 								break;
 
 							// Detect casting
 							case "castclass":
+								relabelOpcode(code, newCodes);
 								newCodes.AddRange(ProcessCast(ws, code, ref block, ref method, ref stackIncrease, quiet, debug));
 								break;
 

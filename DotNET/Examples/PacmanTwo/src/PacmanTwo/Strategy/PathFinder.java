@@ -55,11 +55,9 @@ public class PathFinder
 
 	protected Integer[] internalGetDirectionTo(int fromX, int fromY, int toX, int toY)
 	{
-		//TODO
+		//TODO: implement
 		ArrayList res = new ArrayList();
-
-
-		System.out.println("PathFinder "+res.toArray());
+		// ....
 		return (Integer[]) res.toArray();		
 	}
 }
