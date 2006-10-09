@@ -6,7 +6,8 @@ using System.ComponentModel.Design;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.StarLight.CoreServices;  
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.CpsParser; 
 #endregion
 
@@ -64,41 +65,52 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-
-            ICpsParser cfp = null;
-            cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer());
-
             List<string> refTypes = null;
-                     
-            // Parse all concern files
-            foreach (ITaskItem item in ConcernFiles)
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+
+            try
             {
-                String concernFile = item.ToString();
+                sw.Start();
 
-                Log.LogMessageFromResources("ParsingConcernFile", concernFile);
-                
-                refTypes = cfp.ParseFileForReferencedTypes(concernFile);
-            }
+                ICpsParser cfp = null;
+                cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer());
 
-            sw.Stop();
-
-            // Pass all the referenced types back to msbuild
-            if (refTypes != null && refTypes.Count > 0)
-            {
-                Log.LogMessage("Found {0} referenced types in {1} concerns in {2:0.0000} seconds.", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
-                int index = 0;
-                ReferencedTypes = new ITaskItem[refTypes.Count];
-                foreach (String type in refTypes)
+                // Parse all concern files
+                foreach (ITaskItem item in ConcernFiles)
                 {
-                    ReferencedTypes[index] = new TaskItem(type);
-                    index++;
-                    //Log.LogMessageFromResources("FoundReferenceType", type);
-                } // foreach  (type)
+                    String concernFile = item.ToString();
 
-            } // foreach  (item)
-            
+                    Log.LogMessageFromResources("ParsingConcernFile", concernFile);
+
+                    refTypes = cfp.ParseFileForReferencedTypes(concernFile);
+                }
+
+                sw.Stop();
+
+                // Pass all the referenced types back to msbuild
+                if (refTypes != null && refTypes.Count > 0)
+                {
+                    Log.LogMessage("Found {0} referenced types in {1} concerns in {2:0.0000} seconds.", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
+                    int index = 0;
+                    ReferencedTypes = new ITaskItem[refTypes.Count];
+                    foreach (String type in refTypes)
+                    {
+                        //Log.LogMessageFromResources("FoundReferenceType", type);
+                        ReferencedTypes[index] = new TaskItem(type);
+                        index++;
+                    } // foreach  (type)
+
+                } // foreach  (item)
+            }
+            catch (CpsParserException ex)
+            {
+                Log.LogErrorFromException(ex, false);
+            }
+            catch (System.IO.FileNotFoundException ex)
+            {
+                Log.LogErrorFromException(ex, false);
+            }
+           
             return !Log.HasLoggedErrors;
 
         } // Execute()
