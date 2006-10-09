@@ -1,22 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel.Design;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Xml;
 
-using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.Practices.ObjectBuilder;
 
-using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
+using Composestar.Repository.LanguageModel;  
+using Composestar.Repository.Configuration; 
 using Composestar.Repository.Db4oContainers;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices.Exceptions;
@@ -99,10 +93,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         public override bool Execute()
         {
 
-            // TODO add text to resource file
-            // FIXME If a reference (thus an assembly) is removed from the project, it might still be in the 
-            // Yap database, so it has to be cleaned up.
-
+        
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 
             IILAnalyzer analyzer = null;

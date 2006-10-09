@@ -1,23 +1,12 @@
 #region Using directives
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
 using System.ComponentModel.Design;  
-using System.Text;
-using System.Xml;
 
-using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.StarLight.ILAnalyzer; 
-using Composestar.Repository.LanguageModel;  
 using Composestar.StarLight.CoreServices;  
-using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.CpsParser; 
 #endregion
 

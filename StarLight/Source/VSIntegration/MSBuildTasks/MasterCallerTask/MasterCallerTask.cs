@@ -1,22 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Xml;
 using System.ComponentModel;
-using System.Security.Permissions;  
 
-using Microsoft.Win32;
-
-using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.StarLight.ILAnalyzer;
-using Composestar.Repository.LanguageModel;
+using Composestar.Repository.LanguageModel;  
 using Composestar.Repository.Configuration;
 using Composestar.Repository.Db4oContainers;  
 using Composestar.Repository;
@@ -99,8 +89,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         private RepositoryAccess _repositoryAccess;
 
-        const int ErrorFileNotFound = 2;
-        const int ErrorAccessDenied = 5;
+        private const int ErrorFileNotFound = 2;
+        private const int ErrorAccessDenied = 5;
 
         public enum DebugMode
         {
@@ -185,39 +175,39 @@ namespace Composestar.StarLight.MSBuild.Tasks
             _repositoryAccess.CloseContainer(); 
                                               
             // Start java                  
-            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
 
             // Determine filename
             if (!string.IsNullOrEmpty(rs.JavaLocation) )
             {
-                p.StartInfo.FileName = Path.Combine(rs.JavaLocation, JavaExecutable);
+                process.StartInfo.FileName = Path.Combine(rs.JavaLocation, JavaExecutable);
             }
             else
-                p.StartInfo.FileName = JavaExecutable; // In path
+                process.StartInfo.FileName = JavaExecutable; // In path
             
-            p.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
-            Log.LogMessage("Java will be called with the arguments: {0}", p.StartInfo.Arguments ) ;
+            process.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
+            Log.LogMessage("Java will be called with the arguments: {0}", process.StartInfo.Arguments ) ;
             
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardError = true; 
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardError = true; 
             
             try
             {
-                p.Start();
-                while (!p.HasExited)
+                process.Start();
+                while (!process.HasExited)
                 {            
-                    ParseMasterOutput(p.StandardOutput.ReadLine());                    
+                    ParseMasterOutput(process.StandardOutput.ReadLine());                    
                 }
-                if (p.ExitCode == 0)
+                if (process.ExitCode == 0)
                 {                 
                     return !Log.HasLoggedErrors;
                 }
                 else
                 {                  
-                    Log.LogMessagesFromStream(p.StandardError, MessageImportance.High); 
-                    Log.LogErrorFromResources("MasterRunFailed", p.ExitCode);                 
+                    Log.LogMessagesFromStream(process.StandardError, MessageImportance.High); 
+                    Log.LogErrorFromResources("MasterRunFailed", process.ExitCode);                 
                     return false;
                 }
             }
@@ -225,11 +215,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 if (e.NativeErrorCode == ErrorFileNotFound)
                 {
-                    Log.LogErrorFromResources("JavaExecutableNotFound", p.StartInfo.FileName);
+                    Log.LogErrorFromResources("JavaExecutableNotFound", process.StartInfo.FileName);
                 }
                 else if (e.NativeErrorCode == ErrorAccessDenied)
                 {
-                    Log.LogErrorFromResources("JavaExecutableAccessDenied", p.StartInfo.FileName);
+                    Log.LogErrorFromResources("JavaExecutableAccessDenied", process.StartInfo.FileName);
                 }
                 else
                 {
