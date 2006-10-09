@@ -8,7 +8,7 @@ using TestILWeaver.Mocks;
 
 namespace TestILWeaver.DIConfiguration
 {
-    class IlWeaverTestBuilderConfigurator : ObjectBuilderConfiguratorBase
+    class ILWeaverTestBuilderConfigurator : ObjectBuilderConfiguratorBase
     {
         public override void ApplyConfiguration(IBuilder<BuilderStage> builder)
         {

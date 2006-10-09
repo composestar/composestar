@@ -1,10 +1,16 @@
+#region Using directives
 using System;
 using System.Text;
 using System.Collections.Generic;
 using Composestar.StarLight.ILAnalyzer;
-using Composestar.Repository.LanguageModel;  
+using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
 using System.Collections.Specialized;
 using System.IO;
+
+using TestILAnalyzer.DIConfiguration;
+using TestILAnalyzer.Mocks;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,6 +21,7 @@ using TestInitialize = NUnit.Framework.SetUpAttribute;
 using TestCleanup = NUnit.Framework.TearDownAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 #endif
+#endregion
 
 namespace TestILAnalyzer
 {
@@ -22,13 +29,11 @@ namespace TestILAnalyzer
     /// Summary description for AnalyzerFixture
     /// </summary>
     [TestClass]
-    public class CecilILAnalyzerFixture
+    public class CecilILAnalyzerFixture : ILAnalyzerFixtureBase
     {
         public CecilILAnalyzerFixture()
         {
-            //
-            // TODO: Add constructor logic here
-            //
+
         }
 
         #region Additional test attributes
@@ -53,81 +58,51 @@ namespace TestILAnalyzer
         //
         #endregion
 
+        /// <summary>
+        /// Test target must return assembly
+        /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void InitializeThrowsArgumentExceptionIfFileIsNull()
-        {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(null, null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void InitializeThrowsArgumentExceptionIfFileDoesntExists()
-        {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(@"c:\this_file_doesnt_exist", null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
         [DeploymentItem("TestTarget.exe")]
-        public void InitializeThrowsArgumentExceptionIfRepositoryFilenameIsNotSupplied()
+        public void TestTargetMustReturnCorrectAssembly()
         {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("TestTarget.exe"), null);
-        }
+            // set up model 
+            LanguageModelAccessorMock model = new LanguageModelAccessorMock();
 
-        [TestMethod]
-        [ExpectedException(typeof(ILAnalyzerException))]
-        public void ExtractTypesThrowsExceptionIfInitializeWasNotCalled()
-        {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            IList<TypeElement> ret = analyzer.ExtractTypeElements();
-        }
+            // create configuration
+            CecilAnalyzerConfiguration configuration = CecilAnalyzerConfiguration.CreateDefaultConfiguration(string.Empty);
 
-        [TestMethod]
-        [ExpectedException(typeof(BadImageFormatException))]
-        [DeploymentItem("InvalidImage.exe")]
-        public void InitializeThrowsBadImageExceptionOnInvalidInputImage()
-        {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("InvalidImage.exe"), GetDefaultConfig());
-        }
+            // do weaving
+            IILAnalyzer analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateTestContainer(model, configuration));
+            AssemblyElement ae = analyzer.ExtractAllTypes(CreateFullPath("TestTarget.exe"));
 
-        [TestMethod]      
-        [DeploymentItem("TestTarget.exe")]
-        public void ExtractTypesMustReturnTypeElements()
-        {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("TestTarget.exe"), GetDefaultConfig());
-            IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            Assert.IsNotNull(ae, "Could not create an AssemblyElement.");
+            Assert.IsFalse(string.IsNullOrEmpty(ae.FileName), "Filename is not set.");
+            Assert.IsFalse(string.IsNullOrEmpty(ae.Name), "Assembly name is not set.");
+            Assert.IsFalse(ae.Timestamp == 0, "Timestamp is not set.");
 
-            Assert.IsNotNull(ret, "ExtractTypeElements returned null instead of a generic list of TypeElement.") ;
-        }
+            Assert.IsTrue(ae.TypeElements.Length > 0, "TypeElements were not retrieved.");
+            Assert.IsTrue(ae.TypeElements.Length == 1, "Found {0} TypeElements, expecting 1.",  ae.TypeElements.Length);
 
-        [TestMethod]      
-        [DeploymentItem("TestTarget.exe")]
-        public void ExtractTypesReturnsValues()
-        {
-            CecilILAnalyzer analyzer = new CecilILAnalyzer();
-            analyzer.Initialize(CreateFullPath("TestTarget.exe"), GetDefaultConfig());
-            IList<TypeElement> ret = analyzer.ExtractTypeElements();
+            TypeElement te = ae.TypeElements[0];
+ 
+            Assert.IsNotNull(te, "Could not set the TypeElement.");
 
-            Assert.IsTrue(ret.Count == 2, "There are more than one type in the testtarget.exe. Expected <module> and program type."); 
-        }
+            Assert.IsFalse(string.IsNullOrEmpty(te.BaseType), "BaseType has not been stored.");
+            Assert.IsFalse(string.IsNullOrEmpty(te.FullName), "FullName has not been stored.");
+            Assert.IsFalse(string.IsNullOrEmpty(te.Name), "Name has not been stored.");
+            Assert.IsFalse(string.IsNullOrEmpty(te.Namespace), "Namespace has not been stored.");
+             
+            Assert.IsTrue(te.MethodElements.Length == 1, "Methods not stored in the TypeElement. {0} methods found", te.MethodElements.Length);
+ 
+            MethodElement me = te.MethodElements[0];
+ 
+            Assert.IsNotNull(me, "Could not set the methodElement");
 
-        private NameValueCollection GetDefaultConfig()
-        {
-            NameValueCollection config = new NameValueCollection();
-            config.Add("RepositoryFilename", CreateFullPath("starlight.yap")); 
+            Assert.IsFalse(string.IsNullOrEmpty(me.Name), "Name has not been stored.");
+            Assert.IsFalse(string.IsNullOrEmpty(me.ReturnType), "Returntype has not been stored.");
+            Assert.IsFalse(string.IsNullOrEmpty(me.Signature), "Signature has not been stored.");
 
-            return config;
-        }
+        } // TestTargetMustReturnAssembly()
 
-        private string CreateFullPath(string fileName)
-        {
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-        }
     }
 }

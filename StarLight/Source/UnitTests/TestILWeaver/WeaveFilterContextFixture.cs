@@ -44,7 +44,7 @@ namespace TestILWeaver
             block.addInstruction(ci2);
             block.addInstruction(ci3);
           
-            model.AddInputFilter("TestTarget.Program", "System.Void TestMethod(System.Int32)", block);
+            model.AddInputFilter("TestTarget.Program", "System.Void TestTarget.Program::TestMethod(System.Int32)", block);
                      
             // create configuration
             CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(OutputFileName));
@@ -60,7 +60,7 @@ namespace TestILWeaver
             List<ILInstruction> shouldContainCheck = new List<ILInstruction>();
             shouldContainCheck.Add(new ILInstruction(0, "ldarg","this"));
             shouldContainCheck.Add(new ILInstruction(0, "ldc.i4","1000"));
-            shouldContainCheck.Add(new ILInstruction(0, "call","System.Boolean Composestar.StarLight.ContextInfo.FilterContext::IsInnerCall(System.Object,System.Int64)"));
+            shouldContainCheck.Add(new ILInstruction(0, "call","System.Boolean Composestar.StarLight.ContextInfo.FilterContext::IsInnerCall(System.Object,System.Int32)"));
  
             Assert.IsTrue(il.ContainsILInstructions(ils, shouldContainCheck), "Generated IL code did not contain the check for IsInnerCall"); 
 
@@ -72,7 +72,7 @@ namespace TestILWeaver
             List<ILInstruction> shouldContainSet = new List<ILInstruction>();
             shouldContainSet.Add(new ILInstruction(0, "ldarg","this"));
             shouldContainSet.Add(new ILInstruction(0, "ldc.i4","1000"));
-            shouldContainSet.Add(new ILInstruction(0, "call", "System.Void Composestar.StarLight.ContextInfo.FilterContext::SetInnerCall(System.Object,System.Int64)"));
+            shouldContainSet.Add(new ILInstruction(0, "call", "System.Void Composestar.StarLight.ContextInfo.FilterContext::SetInnerCall(System.Object,System.Int32)"));
  
             Assert.IsTrue(il.ContainsILInstructions(ils, shouldContainSet), "Generated IL code did not contain the call to the SetInnerCall"); 
 

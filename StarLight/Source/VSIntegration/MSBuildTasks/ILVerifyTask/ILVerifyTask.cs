@@ -139,7 +139,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             sw.Stop();
 
-            Log.LogMessage("Verification of {0} assemblies done in {1:0.0000} seconds.", AssemblyFiles.Length, sw.Elapsed.TotalSeconds);
+            Log.LogMessage("Verification of '{0}' assemblies executed in {1:0.0000} seconds.", AssemblyFiles.Length, sw.Elapsed.TotalSeconds);
 
             return !Log.HasLoggedErrors;
 

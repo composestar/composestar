@@ -14,8 +14,8 @@ using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.Db4oContainers;
-using Composestar.Repository; 
- 
+using Composestar.Repository;
+
 namespace Composestar.StarLight.ILAnalyzerCaller
 {
 
@@ -38,15 +38,15 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             {
                 file = args[0];
             }
-            
+
             bool resolveFromCache = true;
             if (args.Length == 2)
             {
                 if (args[1].ToLower().Equals("nocache")) resolveFromCache = false;
             }
 
-                                        IILAnalyzer analyzer = null;
-       
+            IILAnalyzer analyzer = null;
+
             if (Directory.Exists(file))
             {
                 // Analyse entire folder
@@ -64,8 +64,8 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                         yap = yap.Replace(", PublicKeyToken=", "_");
                         yap = yap + ".yap";
 
-             ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine("c:\\temp", yap));
-            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration("", Path.Combine("c:\\temp", yap)); 
+                        ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine("c:\\temp", yap));
+                        CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(Path.Combine("c:\\temp", yap));
 
                         NameValueCollection config = new NameValueCollection();
                         config.Add("RepositoryFilename", Path.Combine("c:\\temp", yap));
@@ -73,14 +73,15 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                         config.Add("CacheFolder", "D:\\ComposestarRepository\\trunk\\StarLight\\installed");
 
                         analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
-                        
+
                         AssemblyElement result = analyzer.ExtractAllTypes(fi.FullName);
 
                         Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
-                        
+
                         analyzer.Close();
                     }
-                    catch (BadImageFormatException) {
+                    catch (BadImageFormatException)
+                    {
                         Console.WriteLine("Not a valid assembly file, skipped.");
                     }
                     catch (Exception e)
@@ -127,9 +128,9 @@ namespace Composestar.StarLight.ILAnalyzerCaller
 
                 if (!resolveFromCache && File.Exists("starlight.yap")) File.Delete("starlight.yap");
 
-                       ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
-            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration("", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap")); 
-                
+                ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
+                CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
+
                 NameValueCollection config = new NameValueCollection();
                 config.Add("RepositoryFilename", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
                 config.Add("ProcessMethodBody", "true");
@@ -138,9 +139,9 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 RepositoryAccess ra = new RepositoryAccess("starlight.yap");
 
                 //IILAnalyzer analyzer = new ReflectionILAnalyzer();
-                  analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
-                    
-                
+                analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
+
+
                 ra.DeleteTypeElements(file);
 
                 //if (resolveFromCache)
@@ -150,7 +151,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 //        analyzer.CachedTypes.Add(String.Format("{0}, {1}", t.FullName, t.Assembly));
                 //    }
 
-                    
+
                 //}
 
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -159,7 +160,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 AssemblyElement assembly = analyzer.ExtractAllTypes(file);
 
                 sw.Stop();
-                
+
                 //Console.WriteLine("File summary: {0} resolved types, {1} unresolved types, {2} cached types, {3:0.0000} seconds", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.CachedTypes.Count, sw.Elapsed.TotalSeconds);
 
                 sw.Reset();
@@ -181,7 +182,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
 
                     sw.Stop();
 
-//                    Console.WriteLine("Resolving summary: {0} total types resolved, {1} unresolvable types, {2} total cached types, {3:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.CachedTypes.Count, sw.Elapsed.TotalSeconds);
+                    //                    Console.WriteLine("Resolving summary: {0} total types resolved, {1} unresolvable types, {2} total cached types, {3:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.CachedTypes.Count, sw.Elapsed.TotalSeconds);
 
                     if (analyzer.UnresolvedTypes.Count > 0)
                     {
@@ -195,11 +196,11 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 sw.Reset();
 
                 Console.WriteLine("Storing type information in database...");
-                
-                
+
+
 
                 sw.Start();
-                
+
                 ra.AddAssemblies(assemblies, analyzer.ResolvedTypes);
 
                 ra.Close();
@@ -239,7 +240,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 //}
                 //analyzer.Close();
             }
-            
+
             //Console.ReadKey(); 
         }
 
@@ -254,7 +255,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             ServiceContainer serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
             serviceContainer.AddService(typeof(CecilAnalyzerConfiguration), configuration);
-      
+
             return serviceContainer;
         }
     }

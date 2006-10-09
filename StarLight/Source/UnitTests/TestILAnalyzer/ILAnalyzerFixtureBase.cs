@@ -1,4 +1,3 @@
-#region Using directives
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -8,26 +7,32 @@ using System.Text;
 using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.StarLight.CoreServices;
-using Composestar.StarLight.ILWeaver;
-using TestILWeaver.DIConfiguration;
-using TestILWeaver.Mocks;
-#endregion
+using Composestar.StarLight.ILAnalyzer;
+using TestILAnalyzer.DIConfiguration;
+using TestILAnalyzer.Mocks;
 
-namespace TestILWeaver
+namespace TestILAnalyzer
 {
-    public abstract class ILWeaverFixtureBase
+    public abstract class ILAnalyzerFixtureBase
     {
         protected const string TestInputImage = "..\\TestTarget\\bin\\debug\\TestTarget.exe";
 
-        internal IServiceProvider CreateTestContainer(LanguageModelAccessorMock languageModel, CecilWeaverConfiguration configuration)
+        /// <summary>
+        /// Creates the test container.
+        /// </summary>
+        /// <param name="languageModel">The language model.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns></returns>
+        internal IServiceProvider CreateTestContainer(LanguageModelAccessorMock languageModel, CecilAnalyzerConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel == null ? new LanguageModelAccessorMock() : languageModel);
-            serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration == null ? CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe")) : configuration);
-            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverTestBuilderConfigurator());
+            serviceContainer.AddService(typeof(CecilAnalyzerConfiguration), configuration == null ? CecilAnalyzerConfiguration.CreateDefaultConfiguration(CreateFullPath("test.yap")) : configuration);
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILAnalyzerTestBuilderConfigurator());
 
             return serviceContainer;
         }
+
 
         /// <summary>
         /// Creates the full path.
