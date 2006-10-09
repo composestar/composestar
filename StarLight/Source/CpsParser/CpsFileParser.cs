@@ -1,16 +1,29 @@
+#region Using directives
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using Composestar.StarLight.CoreServices;  
+#endregion
+
 namespace Composestar.CpsParser
 {
     /// <summary>
     /// A CPS (Concern) file parser using Antlr.
     /// </summary>
-    public class CpsFileParser
+    public class CpsFileParser : ICpsParser
     {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CpsFileParser"/> class.
+        /// </summary>
+        public CpsFileParser()
+        {
+
+        }
+
         private List<String> types = new List<string>();
 
         /// <summary>
@@ -22,6 +35,18 @@ namespace Composestar.CpsParser
             get { return types; }
             set { types = value; }
         }
+
+        /// <summary>
+        /// Parse file for referenced types
+        /// </summary>
+        /// <param name="fileName">File name</param>
+        /// <returns>List</returns>
+        public List<String> ParseFileForReferencedTypes(String fileName)
+        {
+            ParseFile(fileName);
+
+            return types;
+        } // ParseFileForReferencedTypes(fileName)
 
         /// <summary>
         /// Parses the file.
