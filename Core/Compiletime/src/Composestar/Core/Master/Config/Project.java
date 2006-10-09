@@ -2,17 +2,18 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Project implements Serializable
 {
 	private Properties properties;
-	private ArrayList dependencies;
-	private ArrayList sources;
-	private ArrayList typeSources;
+	private List dependencies;
+	private List sources;
+	private List typeSources;
 	private Language language;
 	private String compiledDummies;
-	private ArrayList compiledSources;
+	private List compiledSources;
 	
 	public Project() {
 		properties = new Properties();
@@ -37,7 +38,7 @@ public class Project implements Serializable
 		dependencies.add(dep);
 	}
 	
-	public ArrayList getDependencies() {
+	public List getDependencies() {
 		return dependencies;
 	}
 	
@@ -46,7 +47,7 @@ public class Project implements Serializable
 		source.setProject(this);
 	}
 	
-	public ArrayList getTypeSources() {
+	public List getTypeSources() {
 		return typeSources;
 	}
 	
@@ -54,7 +55,7 @@ public class Project implements Serializable
 		typeSources.add(typesource);
 	}
 	
-	public ArrayList getSources() {
+	public List getSources() {
 		return sources;
 	}
 	
@@ -78,7 +79,7 @@ public class Project implements Serializable
 		compiledSources.add(source);
 	}
 	
-	public ArrayList getCompiledSources() {
+	public List getCompiledSources() {
 		return this.compiledSources;
 	}
 }
