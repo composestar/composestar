@@ -183,6 +183,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     Log.LogErrorFromException(ex, true);
                 }
+                catch (FileNotFoundException ex)
+                {
+                    Log.LogErrorFromException(ex, true);
+                }
 
             }
 
