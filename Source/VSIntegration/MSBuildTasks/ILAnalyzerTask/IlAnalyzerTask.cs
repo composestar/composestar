@@ -19,6 +19,7 @@ using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.Db4oContainers;
 using Composestar.Repository;
+using Composestar.StarLight.CoreServices.Exceptions;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {

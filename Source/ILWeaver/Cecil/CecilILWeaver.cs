@@ -16,6 +16,7 @@ using Mono.Cecil.Signatures;
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions; 
 
 namespace Composestar.StarLight.ILWeaver
 {

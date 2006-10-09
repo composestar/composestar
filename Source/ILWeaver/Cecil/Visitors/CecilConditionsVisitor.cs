@@ -6,6 +6,7 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.ConditionExpressions.Visitor;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;

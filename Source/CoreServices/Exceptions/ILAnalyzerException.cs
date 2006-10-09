@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
   
-namespace Composestar.StarLight.ILAnalyzer
+namespace Composestar.StarLight.CoreServices.Exceptions
 {
 
     /// <summary>
     /// Exception throw by the analyzer.
     /// </summary>
     [Serializable()]
-    public class ILAnalyzerException : Exception, ISerializable
+    public class ILAnalyzerException : StarLightException, ISerializable
     {
 
         private string _filename;
