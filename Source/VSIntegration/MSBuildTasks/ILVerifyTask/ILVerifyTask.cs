@@ -1,23 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Xml;
 using System.ComponentModel;
-using System.Security.Permissions;  
 
-using Microsoft.Win32;
-
-using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.StarLight.ILAnalyzer;
-using Composestar.Repository.LanguageModel;
-using Composestar.StarLight.CoreServices.Exceptions;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
