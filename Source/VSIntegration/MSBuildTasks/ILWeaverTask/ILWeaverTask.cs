@@ -78,7 +78,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     // Exclude StarLight ContextInfo assembly from the weaving process
                     if (filename.EndsWith(ContextInfoFileName)) continue;
 
-                    Log.LogMessage("Weaving file {0}", filename);
+                    Log.LogMessage("Weaving file '{0}'...", filename);
 
                     // Preparing config
                     //CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
@@ -96,7 +96,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         // Perform weaving
                         weaver.DoWeave();
 
-                        Log.LogMessage("Weaving completed in {0} seconds.", weaver.LastDuration.TotalSeconds);
+                        Log.LogMessage("Weaving completed in {0:0.0000} seconds.", weaver.LastDuration.TotalSeconds);
                     }
                     catch (ILWeaverException ex)
                     {
