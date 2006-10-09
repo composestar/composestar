@@ -59,6 +59,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
             string PEVerifyExecutable = "bin\\PEVerify.exe";
             string filename;
 
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
             // Get the location of PEVerify
             PEVerifyLocation = RegistrySettings.GetNETSDKLocation();
  
@@ -85,7 +88,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 try
                 {
                     filename = item.ToString();
-                    Log.LogMessage("Verifying file {0}", filename);
+                    Log.LogMessage("Verifying assembly '{0}'...", filename);
 
                     process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", filename);
 
@@ -133,6 +136,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                  
             }
+
+            sw.Stop();
+
+            Log.LogMessage("Verification of {0} assemblies done in {1:0.0000} seconds.", AssemblyFiles.Length, sw.Elapsed.TotalSeconds);
 
             return !Log.HasLoggedErrors;
 
