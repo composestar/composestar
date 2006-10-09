@@ -126,11 +126,23 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             // Create a list of all the referenced assemblies, which are not copied local for complete analysis
             Dictionary<String, String> refAssemblies = new Dictionary<string, string>();
+            
             foreach (ITaskItem item in ReferencedAssemblies)
             {
                 if (item.GetMetadata("CopyLocal") == "false")
                 {
                     refAssemblies.Add(item.GetMetadata("FusionName"), item.GetMetadata("Identity"));
+                }
+            }
+
+            // Remove all obsolete assemblies from the database
+            IList<AssemblyElement> storedAssemblies = langModelAccessor.GetAssemblyElements();
+            foreach (AssemblyElement storedAssembly in storedAssemblies)
+            {
+                if (!assemblyFileList.Contains(storedAssembly.FileName) && !refAssemblies.ContainsKey(storedAssembly.Name))
+                {
+                    Log.LogMessage("Removing {0}", storedAssembly.Name);
+                    langModelAccessor.DeleteAssembly(storedAssembly.Name);
                 }
             }
 
@@ -247,30 +259,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Storage summary: {0} assemblies with a total of {1} types stored in {2:0.0000} seconds.", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
 
-            //// Try to resolve types from the cache
-            //if (analyzer.UnresolvedTypes.Count > 0)
-            //{
-            //    Log.LogMessage("Accessing cache for {0} unresolved types", analyzer.UnresolvedTypes.Count);
-            //    int unresolvedCount = analyzer.UnresolvedTypes.Count;
-            //    analyzer.ProcessUnresolvedTypes();
-            //    Log.LogMessage("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
-
-            //    if (analyzer.UnresolvedTypes.Count > 0)
-            //    {
-            //        Log.LogError("Unable to resolve {0} types, detailed overview below:", analyzer.UnresolvedTypes.Count);
-            //        foreach (String type in analyzer.UnresolvedTypes)
-            //        {
-            //            Log.LogError("  {0}", type);
-            //        }
-            //    }
-            //}
-
+          
             // Close the analyzer
             analyzer.Close();
             langModelAccessor.Close();
 
             return !Log.HasLoggedErrors;
-
         }
 
         /// <summary>

@@ -74,24 +74,37 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
             ICpsParser cfp = null;
             cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer());
+
+            List<string> refTypes = null;
                      
+            // Parse all concern files
             foreach (ITaskItem item in ConcernFiles)
             {
                 String concernFile = item.ToString();
 
                 Log.LogMessageFromResources("ParsingConcernFile", concernFile);
                 
-                List<string> refTypes = cfp.ParseFileForReferencedTypes(concernFile);
+                refTypes = cfp.ParseFileForReferencedTypes(concernFile);
+            }
 
+            sw.Stop();
+
+            // Pass all the referenced types back to msbuild
+            if (refTypes != null && refTypes.Count > 0)
+            {
+                Log.LogMessage("Found {0} referenced types in {1} concerns in {2:0.0000} seconds.", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
                 int index = 0;
                 ReferencedTypes = new ITaskItem[refTypes.Count];
                 foreach (String type in refTypes)
                 {
                     ReferencedTypes[index] = new TaskItem(type);
                     index++;
-                    Log.LogMessageFromResources("FoundReferenceType", type);
+                    //Log.LogMessageFromResources("FoundReferenceType", type);
                 } // foreach  (type)
 
             } // foreach  (item)

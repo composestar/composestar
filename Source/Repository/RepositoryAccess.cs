@@ -80,6 +80,33 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Gets the assembly element by name.
+        /// </summary>
+        /// <param name="fileName">Name of the assembly</param>
+        /// <returns></returns>
+        public AssemblyElement GetAssemblyElementByName(string name)
+        {
+            IList<AssemblyElement> ret = container.GetObjectQuery<AssemblyElement>(delegate(AssemblyElement ae)
+            {
+                return ae.Name.Equals(name);
+            });
+
+            if (ret.Count == 1)
+                return ret[0];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the assembly elements.
+        /// </summary>
+        /// <returns></returns>
+        public IList<AssemblyElement> GetAssemblyElements()
+        {
+            return container.GetObjects<AssemblyElement>();
+        }
+
+        /// <summary>
         /// Gets the type info.
         /// </summary>
         /// <param name="fullName">The full name.</param>
@@ -535,15 +562,55 @@ namespace Composestar.Repository
         }
 
         /// <summary>
+        /// Deletes the assembly element.
+        /// </summary>
+        /// <param name="assembly">The assembly name.</param>
+        public void DeleteAssembly(String name)
+        {
+            // Get the assembly element
+            AssemblyElement assembly = GetAssemblyElementByName(name);
+
+            if (assembly != null)
+            {
+                // Delete all underlying type information for this assembly
+                DeleteTypeElements(assembly);
+
+                // Delete the assembly element
+                container.DeleteObjects<AssemblyElement>(delegate(AssemblyElement ae)
+                {
+                    return ae.FileName.Equals(assembly.FileName);
+                });
+
+                container.Commit();
+            }          
+        }
+
+        /// <summary>
+        /// Deletes the assembly element.
+        /// </summary>
+        /// <param name="assembly">The assembly filename on disk.</param>
+        public void DeleteTypeElements(string assemblyFile)
+        {
+            // Get the assembly element
+            AssemblyElement assembly = GetAssemblyElementByFileName(assemblyFile);
+
+            if (assembly != null)
+            {
+                DeleteTypeElements(assembly);
+                container.Commit();
+            }
+        }
+
+        /// <summary>
         /// Deletes the type elements.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        public void DeleteTypeElements(String assembly)
+        private void DeleteTypeElements(AssemblyElement assembly)
         {
             // Get all TypeElements belonging to 'assembly'
             IList<TypeElement> types = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
             {
-                return te.FromDLL.Equals(assembly);
+                return te.Assembly.Equals(assembly.Name);
             });
 
             foreach (TypeElement type in types)
@@ -579,7 +646,7 @@ namespace Composestar.Repository
             // Remove all TypeElements belonging to 'assembly'
             container.DeleteObjects<TypeElement>(delegate(TypeElement te)
             {
-                return te.Assembly.Equals(assembly);
+                return te.Assembly.Equals(assembly.Name);
             });
 
         }
