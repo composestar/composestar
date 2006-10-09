@@ -36,10 +36,50 @@ public class Stalker extends Strategy
 		Ghost ghost = (Ghost) pawn;
 		// Note: this makes the assumption a player and only a player controlls a pacman
 		Pacman pm = (Pacman) game.getPlayer(ghost.getId() % game.getPlayerCount()).getPawn();
-		if (pm == null) return Direction.NONE;
 
-		Integer[] dirs = PathFinder.getDirectionTo(pawn.getCellX(), pawn.getCellY(), pm.getCellX(), pm.getCellY());
-		if (dirs.length == 0) return Direction.NONE;
-		return dirs[0].intValue();
+		int gX = pawn.getCellX();
+		int gY = pawn.getCellY();
+		int pX = pm.getCellX();
+		int pY = pm.getCellY();
+		
+		if (Math.abs(gX - pX) > Math.abs(gY - pY)) // try to decrease X dist
+		{
+			if (gX > pX) // pacman is to the left
+			{
+				if (level.canMove(Direction.LEFT, gX, gY)) return Direction.LEFT;
+			}
+			else
+			{
+				if (level.canMove(Direction.RIGHT, gX, gY)) return Direction.RIGHT;
+			}
+			if (gY > pY) // pacman is to the top
+			{
+				if (level.canMove(Direction.UP, gX, gY)) return Direction.UP;
+			}
+			else 
+			{
+				if (level.canMove(Direction.DOWN, gX, gY)) return Direction.DOWN;	
+			}
+		}
+		else // try to decrease Y dist
+		{
+			if (gY > pY) // pacman is to the top
+			{
+				if (level.canMove(Direction.UP, gX, gY)) return Direction.UP;
+			}
+			else 
+			{
+				if (level.canMove(Direction.DOWN, gX, gY)) return Direction.DOWN;	
+			}
+			if (gX > pX) // pacman is to the left
+			{
+				if (level.canMove(Direction.LEFT, gX, gY)) return Direction.LEFT;
+			}
+			else
+			{
+				if (level.canMove(Direction.RIGHT, gX, gY)) return Direction.RIGHT;
+			}
+		}
+		return RandomMovement.getNextMove(pawn, level);
 	}
 }

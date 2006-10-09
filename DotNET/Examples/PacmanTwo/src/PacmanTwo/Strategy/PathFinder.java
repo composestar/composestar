@@ -19,6 +19,7 @@ import Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage;
 
 /**
  * PathFinder class
+ * (not really used).
  */
 public class PathFinder
 {
@@ -48,16 +49,14 @@ public class PathFinder
 	/**
 	 * Returns and sorted array of directions, sorted on the fastes path
 	 */
-	public static Integer[] getDirectionTo(int fromX, int fromY, int toX, int toY)
+	public static int getDirectionTo(int fromX, int fromY, int toX, int toY)
 	{
 		return instance().internalGetDirectionTo(fromX, fromY, toX, toY);
 	}
 
-	protected Integer[] internalGetDirectionTo(int fromX, int fromY, int toX, int toY)
+	protected int internalGetDirectionTo(int fromX, int fromY, int toX, int toY)
 	{
-		//TODO: implement
-		ArrayList res = new ArrayList();
-		// ....
-		return (Integer[]) res.toArray();		
+		
+		return 0;
 	}
 }

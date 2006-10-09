@@ -36,6 +36,14 @@ public class AIController extends Controller implements Tickable
 	public void tick(float delta)
 	{
 		dircnt -= delta;
+		ponder();
+	}
+
+	/**
+	 * Ponder about what to do.
+	 */
+	protected void ponder()
+	{
 		if (dircnt <= 0)
 		{
 			getNextMove();
@@ -57,12 +65,23 @@ public class AIController extends Controller implements Tickable
 	{
 		if (pawn != null)
 		{
-			direction = doGetNextMove(pawn, game.level());
+			direction = RandomMovement.getNextMove(pawn, game.level());
 		}
 	}
 
-	protected int doGetNextMove(Pawn pawn, Level level)
+	public void doGetNextMove(Pawn pawn, Level level)
 	{
-		return RandomMovement.getNextMove(pawn, level);
+		RandomMovement.getNextMove(pawn, level);
+	}
+
+	/**
+	 * Return true if the AI is smart (chases pacman)
+	 */
+	public boolean isSmart()
+	{
+		if (pawn == null) return false;
+		Ghost g = (Ghost) pawn;
+		if (g == null) return false;
+		return g.getId() == 0;
 	}
 }

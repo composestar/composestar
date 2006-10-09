@@ -8,11 +8,6 @@ concern DynamicStrategy in PacmanTwo
 			initpf : Meta = { [*.initMaze] pf.initialize }
 	}
 
-
-	/*
-	!!
-	!! This breaks the game with various errors. Cause is unknown
-	!!*/
 	filtermodule dynstrat
 	{
 		internals
@@ -22,9 +17,14 @@ concern DynamicStrategy in PacmanTwo
 			game : PacmanTwo.Game = PacmanTwo.Game.instance();
 		conditions
 			isEvil : game.hasEvilPacman();
+			isSmart : inner.isSmart();
+		/*
+		inputfilters
+			smarty : Dispatch = { isSmart => [*.ponder] inner.getNextMove }
+		*/
 		outputfilters
 			setstrat : Send = { 
-				!isEvil => [*.doGetNextMove] stalker.getNextMoveNS ,
+				!isEvil /*& isSmart*/ => [*.doGetNextMove] stalker.getNextMoveNS ,
 				isEvil => [*.doGetNextMove] chicken.getNextMoveNS
 			}
 	}

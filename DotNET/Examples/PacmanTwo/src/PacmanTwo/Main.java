@@ -84,7 +84,6 @@ public class Main extends Frame
 
 	public static void main(String[] args) 
 	{
-		System.out.println("Pacman* 2.0 Starting ...");
 		new Main(args);
 	}
 }
