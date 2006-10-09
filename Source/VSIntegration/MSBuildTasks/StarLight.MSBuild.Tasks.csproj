@@ -61,7 +61,8 @@
       <Link>Target\StarLight.targets</Link>
     </None>
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
-    <Compile Include="ILAnalyzerTask\IlAnalyzerTask.cs" />
+    <Compile Include="ILAnalyzerTask\BuilderConfigurator.cs" />
+    <Compile Include="ILAnalyzerTask\ILAnalyzerTask.cs" />
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
     <Compile Include="ILWeaverTask\BuilderConfigurator.cs" />
     <Compile Include="ILWeaverTask\ILWeaverTask.cs" />

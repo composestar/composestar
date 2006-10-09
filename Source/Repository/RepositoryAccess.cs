@@ -534,6 +534,10 @@ namespace Composestar.Repository
             container.DeleteObjects<While>();
         }
 
+        /// <summary>
+        /// Deletes the type elements.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
         public void DeleteTypeElements(String assembly)
         {
             // Get all TypeElements belonging to 'assembly'
@@ -613,6 +617,11 @@ namespace Composestar.Repository
             CloseContainer();
         }
 
+        /// <summary>
+        /// Adds the assemblies.
+        /// </summary>
+        /// <param name="assemblies">The assemblies.</param>
+        /// <param name="assembliesToSave">The assemblies to save.</param>
         public void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave)
         {
             foreach (AssemblyElement assembly in assemblies)

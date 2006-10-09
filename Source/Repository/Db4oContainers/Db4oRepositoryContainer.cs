@@ -12,6 +12,9 @@ using Composestar.Repository.LanguageModel;
 
 namespace Composestar.Repository.Db4oContainers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Db4oRepositoryContainer : RepositoryContainerInterface
     {
         /// <summary>
@@ -38,23 +41,23 @@ namespace Composestar.Repository.Db4oContainers
             {
                 //if (!_yapFileName.Equals(value, StringComparison.CurrentCultureIgnoreCase))
                 //{
-                    // Changing the name, so close and reopen.
-                    //if (dbContainer != null)
-                    //    dbContainer.Close();
+                // Changing the name, so close and reopen.
+                //if (dbContainer != null)
+                //    dbContainer.Close();
 
-                    _yapFileName = value;
-                    //OpenContainer();
+                _yapFileName = value;
+                //OpenContainer();
                 //}
                 //else
                 //{
-                    // Name of db did not change, see if the db is open
-                    //OpenContainer();                    
+                // Name of db did not change, see if the db is open
+                //OpenContainer();                    
                 //}
             }
         }
 
         private ObjectContainer dbContainer;
-        
+
         #region Singleton
         static readonly Db4oRepositoryContainer instance = new Db4oRepositoryContainer();
 
@@ -91,18 +94,22 @@ namespace Composestar.Repository.Db4oContainers
         ~Db4oRepositoryContainer()
         {
             CloseContainer();
-            dbContainer.Dispose(); 
+            dbContainer.Dispose();
         }
         #endregion
 
         private bool _debugMode = false;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [debug mode].
+        /// </summary>
+        /// <value><c>true</c> if [debug mode]; otherwise, <c>false</c>.</value>
         public bool DebugMode
         {
             get { return _debugMode; }
             set { _debugMode = value; }
         }
-        
+
         /// <summary>
         /// Opens the database.
         /// Setting the repository filename has the same effect.
@@ -110,7 +117,7 @@ namespace Composestar.Repository.Db4oContainers
         public void OpenContainer(String fileName)
         {
             RepositoryFileName = fileName;
-            if (File.Exists(fileName)) adjustClassNames();
+            if (File.Exists(fileName)) AdjustClassNames();
             dbContainer = Db4o.OpenFile(fileName);
         }
 
@@ -138,7 +145,7 @@ namespace Composestar.Repository.Db4oContainers
         /// <summary>
         /// Adjusts the class names.
         /// </summary>
-        private void adjustClassNames()
+        private void AdjustClassNames()
         {
             ObjectContainer objectContainer = Db4o.OpenFile(RepositoryFileName);
 
@@ -168,19 +175,19 @@ namespace Composestar.Repository.Db4oContainers
             }
             objectContainer.Close();
         }
-        
+
         /// <summary>
         /// Store the object.
         /// </summary>
-        /// <param name="o">The object to store.</param>
-        public void StoreObject(Object o)
+        /// <param name="obj">The object to store.</param>
+        public void StoreObject(Object obj)
         {
-            if (o == null)
+            if (obj == null)
                 throw new ArgumentNullException("object", Properties.Resources.ObjectIsNull);
 
             CheckForOpenDatabase();
 
-            dbContainer.Set(o);
+            dbContainer.Set(obj);
         }
 
         /// <summary>
@@ -191,7 +198,7 @@ namespace Composestar.Repository.Db4oContainers
         {
             CheckForOpenDatabase();
             Type t = typeof(T);
-              
+
             return dbContainer.Query<T>(t);
         }
 
@@ -208,7 +215,25 @@ namespace Composestar.Repository.Db4oContainers
         }
 
         /// <summary>
-        /// Checks for open database.
+        /// Get object
+        /// </summary>
+        /// <param name="match">Match</param>
+        /// <returns>T</returns>
+        public T GetObject<T>(Predicate<T> match)
+        {
+            CheckForOpenDatabase();
+
+            IList<T> ret = dbContainer.Query<T>(match);
+
+            if (ret.Count == 1)
+                return ret[0];
+            else
+                return default(T);
+
+        } // GetObject`1(match)
+
+        /// <summary>
+        /// Checks for an open database. Throws an <see cref="T:ArgumentException"></see> when the database is not opened or a filename is not specified.
         /// </summary>
         private void CheckForOpenDatabase()
         {
@@ -217,7 +242,13 @@ namespace Composestar.Repository.Db4oContainers
 
         }
 
-        public bool TypeExists(string fullName, string fromDLL) 
+        /// <summary>
+        /// Check if the specified type exists in the database using a SODA query.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        /// <param name="fromDLL">The assembly filename.</param>
+        /// <returns><c>True</c> when the type exists, <c>false</c> otherelse.</returns>
+        public bool TypeExists(string fullName, string fromDLL)
         {
             Query query = dbContainer.Query();
             query.Constrain(typeof(Composestar.Repository.LanguageModel.TypeElement));
@@ -230,13 +261,24 @@ namespace Composestar.Repository.Db4oContainers
             return false;
         }
 
+        /// <summary>
+        /// Returns a Query object.
+        /// </summary>
+        /// <returns></returns>
         public com.db4o.query.Query Query()
         {
+            CheckForOpenDatabase();
+
             return dbContainer.Query();
         }
 
+        /// <summary>
+        /// Deletes the objects.
+        /// </summary>
         public void DeleteObjects<T>()
         {
+            CheckForOpenDatabase();
+
             ObjectSet result = dbContainer.Get(typeof(T));
             foreach (object item in result)
             {
@@ -244,8 +286,15 @@ namespace Composestar.Repository.Db4oContainers
             }
         }
 
+        /// <summary>
+        /// Deletes the objects.
+        /// </summary>
+        /// <param name="match">The match.</param>
         public void DeleteObjects<T>(Predicate<T> match)
         {
+
+            CheckForOpenDatabase();
+
             IList<T> result = dbContainer.Query<T>(match);
             foreach (object item in result)
             {

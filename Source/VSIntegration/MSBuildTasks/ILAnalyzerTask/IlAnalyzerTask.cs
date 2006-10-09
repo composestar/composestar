@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -11,12 +12,20 @@ using System.Xml;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.Practices.ObjectBuilder;
 
-using Composestar.StarLight.ILAnalyzer; 
-using Composestar.Repository.LanguageModel;  
+using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.ILAnalyzer;
+using Composestar.Repository.Db4oContainers;
+using Composestar.Repository; 
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
+
+    /// <summary>
+    /// MSBuild tasks to start the analyzer.
+    /// </summary>
     public class IlAnalyzerTask : Task
     {
         #region Properties for MSBuild
@@ -75,7 +84,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         public IlAnalyzerTask()
             : base(Properties.Resources.ResourceManager)
         {
-            analyzer = new CecilILAnalyzer();
+            
         }
 
         #endregion
@@ -88,35 +97,27 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
-            // TODO must perform a cleanup before executing the analyzer.
-            // Otherelse the repository will be dirty
-
+            
             // TODO add text to resource file
             // FIXME If a reference (thus an assembly) is removed from the project, it might still be in the 
             // Yap database, so it has to be cleaned up.
 
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 
-            // Read registry
-            RegistrySettings rs = new RegistrySettings();
-            if (!rs.ReadSettings())
-            {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues");  
-                return false;
-            }
-
-            NameValueCollection config = new NameValueCollection();
-            config.Add("RepositoryFilename", RepositoryFilename);
-            config.Add("CacheFolder", rs.InstallFolder);
-            
+            IILAnalyzer analyzer = null;
+            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration("", RepositoryFilename); 
+            ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
+       
+            // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
 
-            Repository.RepositoryAccess repository = new Composestar.Repository.RepositoryAccess(Composestar.Repository.Db4oContainers.Db4oRepositoryContainer.Instance, RepositoryFilename);
+           // RepositoryAccess repository = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
             
-            analyzer.Initialize(config);
+            // Create the analyzer using the object builder
+            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
 
             // TODO: this aint the best approach, clearing everything...
-            repository.DeleteWeavingInstructions();
+            langModelAccessor.DeleteWeavingInstructions();
 
             // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
             List<String> assemblyFileList = new List<string>();
@@ -151,7 +152,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogMessage("Analyzing file '{0}'...", item);
 
                     // Try to get the assembly information from the database
-                    assembly = repository.GetAssemblyElementByFileName(item);
+                    assembly = langModelAccessor.GetAssemblyElementByFileName(item);
                     if (assembly != null)
                     {
                         if (assembly.Timestamp == File.GetLastWriteTime(item).Ticks)
@@ -163,7 +164,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         else
                         {
                             // Assembly has been modified, removing all existing types from database
-                            repository.DeleteTypeElements(item);
+                            langModelAccessor.DeleteTypeElements(item);
                         }
                     }
 
@@ -196,7 +197,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 List<String> unresolvedTypes = new List<string>(analyzer.UnresolvedTypes);
                 foreach (String type in unresolvedTypes)
                 {
-                    TypeElement te = repository.GetTypeElement(type);
+                    TypeElement te = langModelAccessor.GetTypeElement(type);
                     if (te != null)
                     {
                         analyzer.UnresolvedTypes.Remove(type);
@@ -241,7 +242,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 // TODO: checken of assembly bestaat en dan 'updaten', bv. nieuwe types toevoegen aan system assembly
 
-                repository.AddAssemblies(assemblies, analyzer.ResolvedTypes);
+                langModelAccessor.AddAssemblies(assemblies, analyzer.ResolvedTypes);
 
                 sw.Stop();
 
@@ -268,10 +269,28 @@ namespace Composestar.StarLight.MSBuild.Tasks
            
             // Close the analyzer
             analyzer.Close();
-            repository.Close();
+            langModelAccessor.Close();
  
             return !Log.HasLoggedErrors;
 
         }
+    
+        /// <summary>
+        /// Creates the services container.
+        /// </summary>
+        /// <param name="languageModel">The language model.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <returns></returns>
+        internal IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilAnalyzerConfiguration configuration)
+        {
+            ServiceContainer serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
+            serviceContainer.AddService(typeof(CecilAnalyzerConfiguration), configuration);
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlAnalyzerBuilderConfigurator());
+
+            return serviceContainer;
+        }
+
     }
+
 }

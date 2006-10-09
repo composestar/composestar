@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;   
+using System.Collections.Specialized;
 using System.Text;
 
 using Composestar.Repository.LanguageModel;
@@ -10,8 +10,8 @@ namespace Composestar.StarLight.CoreServices
 {
     public enum IlAnalyzerResults
     {
-        FROM_ASSEMBLY = 0,
-        FROM_CACHE = 1
+        FromAssembly = 0,
+        FromCache = 1
     }
 
 
@@ -20,13 +20,6 @@ namespace Composestar.StarLight.CoreServices
     /// </summary>
     public interface IILAnalyzer
     {
-
-        /// <summary>
-        /// Initializes the analyzer with the specified assembly name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="config">The config settings.</param>
-        void Initialize(NameValueCollection config );
 
         /// <summary>
         /// Gets the unresolved types.
@@ -41,21 +34,24 @@ namespace Composestar.StarLight.CoreServices
         List<string> ResolvedTypes { get; }
 
         /// <summary>
-        /// Extracts the types.
-        /// </summary>
-        /// <returns></returns>
-        IlAnalyzerResults ExtractTypeElements(String fileName);
-
-        /// <summary>
         /// Processes the unresolved types.
         /// </summary>
-        void ProcessUnresolvedTypes();
+        /// <param name="assemblyNames">The assembly names.</param>
+        /// <returns>List of AssemblyElements</returns>
+        List<AssemblyElement> ProcessUnresolvedTypes(Dictionary<String, String> assemblyNames);
+
+        /// <summary>
+        /// Extracts all types.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        AssemblyElement ExtractAllTypes(String fileName);
 
         /// <summary>
         /// Gets the duration of the last executed method.
         /// </summary>
         /// <value>The last duration.</value>
-        TimeSpan LastDuration{ get; }
+        TimeSpan LastDuration { get; }
 
         /// <summary>
         /// Closes this instance. Cleanup any used resources.
