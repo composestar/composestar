@@ -300,7 +300,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <param name="type">The type.</param>       
         private void ExtractFilterAction(TypeDefinition type)
         {
-            Console.WriteLine("Extract filterAction1");
+      
             foreach (CustomAttribute attr in type.CustomAttributes)
             {
                 if (attr.Constructor.DeclaringType.FullName.Equals(_filterActionAnnotationName))
@@ -365,7 +365,7 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             foreach (CustomAttribute attr in type.CustomAttributes)
             {
-                // FIXME Beter om fullname te gebruiken?
+                // TODO Beter om fullname te gebruiken?
                 if (attr.Constructor.DeclaringType.Name.Equals("FilterTypeAnnotation"))
                 {
                     FilterTypeElement ftEl = new FilterTypeElement();

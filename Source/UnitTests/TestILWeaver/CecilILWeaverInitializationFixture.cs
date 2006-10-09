@@ -35,7 +35,7 @@ namespace TestILWeaver
         [TestInitialize]
         public void TestInitialize()
         {
-            svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverTestBuilderConfigurator());
+            svcContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverTestBuilderConfigurator());
             svcContainer.AddService(typeof(CecilWeaverConfiguration), CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe")));
             svcContainer.AddService(typeof(ILanguageModelAccessor), new LanguageModelAccessorMock());
         }

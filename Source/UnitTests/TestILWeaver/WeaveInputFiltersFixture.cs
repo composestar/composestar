@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -17,13 +18,14 @@ using Composestar.StarLight.ILWeaver;
 using TestILWeaver.DIConfiguration;
 using TestILWeaver.Mocks;
 using Testing.CecilILReader;
+#endregion
 
 namespace TestILWeaver
 {
     [TestClass]
     public class WeaveInputFiltersFixture : ILWeaverFixtureBase
     {
-
+        
         [TestMethod]
         [DeploymentItem(TestInputImage)]
         public void WeavingErrorActionAddsExceptionFilter()
@@ -49,7 +51,7 @@ namespace TestILWeaver
             block.addInstruction(ci2);
             block.addInstruction(ci3);
 
-            model.AddInputFilter("TestTarget.Program", "System.Void TestMethod(System.Int32)", block);
+            model.AddInputFilter("TestTarget.Program", "System.Void TestTarget.Program::TestMethod(System.Int32)", block);
 
             // create configuration
             CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(outputFileName));
@@ -96,7 +98,7 @@ namespace TestILWeaver
             block.addInstruction(ci2);
             block.addInstruction(ci3);
 
-            model.AddInputFilter("TestTarget.Program", "System.Void TestMethod(System.Int32)", block);
+            model.AddInputFilter("TestTarget.Program", "System.Void TestTarget.Program::TestMethod(System.Int32)", block);
 
             // create configuration
             CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(CreateFullPath("TestTarget.exe"), CreateFullPath(outputFileName));

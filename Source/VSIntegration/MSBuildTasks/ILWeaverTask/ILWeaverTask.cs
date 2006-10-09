@@ -120,6 +120,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 // Close the weaver, so it closes the database, performs cleanups etc
                 if (weaver != null)
                     weaver.Close();
+                langModelAccessor.Close(); 
             }
 
             return !Log.HasLoggedErrors;

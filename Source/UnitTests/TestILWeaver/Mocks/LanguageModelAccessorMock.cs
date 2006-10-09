@@ -1,10 +1,3 @@
-// Project: , File: LanguageModelAccessorMock.cs
-// Namespace: TestILWeaver.Mocks, Class: LanguageModelAccessorMock
-// Path: C:\ComposeStar\StarLight\Source\UnitTests\TestILWeaver\Mocks, Author: Michiel
-// Code lines: 150, Size of file: 4.80 KB
-// Creation date: 10/1/2006 3:00 PM
-// Last modified: 10/6/2006 1:04 PM
-// Generated with Commenter by abi.exDream.com
 
 #region Using directives
 using System;
@@ -145,6 +138,25 @@ namespace TestILWeaver.Mocks
         {
 
         }
+
+          /// <summary>
+        /// Get assembly elements
+        /// </summary>
+        /// <returns>IList</returns>
+        public IList<AssemblyElement> GetAssemblyElements()
+        {
+            return null;
+        } // GetAssemblyElements()
+
+        /// <summary>
+        /// Deletes the assembly elements.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        public void DeleteAssembly(String name)
+        {
+            
+        }
+
 
         /// <summary>
         /// Get assembly element by file name

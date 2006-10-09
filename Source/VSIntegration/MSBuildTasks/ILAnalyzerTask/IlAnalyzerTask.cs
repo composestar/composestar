@@ -93,11 +93,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
         public override bool Execute()
         {
 
-        
+            // TODO add strings to resource file
+
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 
             IILAnalyzer analyzer = null;
-            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration("", RepositoryFilename);
+            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
             ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
             // Create a list to store the retrieved assemblies in            
