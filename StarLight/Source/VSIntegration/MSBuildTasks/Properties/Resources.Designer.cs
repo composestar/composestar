@@ -88,6 +88,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to   found referenced type &apos;{0}&apos;.
+        /// </summary>
+        internal static string FoundReferenceType {
+            get {
+                return ResourceManager.GetString("FoundReferenceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not execute the Java executable &apos;{0}&apos; because of access permission errors..
         /// </summary>
         internal static string JavaExecutableAccessDenied {
@@ -111,6 +120,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         internal static string MasterRunFailed {
             get {
                 return ResourceManager.GetString("MasterRunFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing concern file &apos;{0}&apos;....
+        /// </summary>
+        internal static string ParsingConcernFile {
+            get {
+                return ResourceManager.GetString("ParsingConcernFile", resourceCulture);
             }
         }
         

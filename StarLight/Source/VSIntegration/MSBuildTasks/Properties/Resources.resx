@@ -150,4 +150,10 @@
   <data name="VerifyFailure" xml:space="preserve">
     <value>The generated IL in file '{0}' could not be verified as correct IL code.</value>
   </data>
+  <data name="FoundReferenceType" xml:space="preserve">
+    <value>  found referenced type '{0}'</value>
+  </data>
+  <data name="ParsingConcernFile" xml:space="preserve">
+    <value>Parsing concern file '{0}'...</value>
+  </data>
 </root>
