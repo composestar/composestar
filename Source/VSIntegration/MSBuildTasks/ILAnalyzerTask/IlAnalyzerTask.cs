@@ -18,7 +18,7 @@ using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.Db4oContainers;
-using Composestar.Repository; 
+using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
@@ -84,11 +84,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
         public IlAnalyzerTask()
             : base(Properties.Resources.ResourceManager)
         {
-            
+
         }
 
         #endregion
-        
+
         /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
@@ -97,7 +97,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
-            
+
             // TODO add text to resource file
             // FIXME If a reference (thus an assembly) is removed from the project, it might still be in the 
             // Yap database, so it has to be cleaned up.
@@ -105,14 +105,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
 
             IILAnalyzer analyzer = null;
-            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration("", RepositoryFilename); 
+            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration("", RepositoryFilename);
             ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
-       
+
             // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
-
-           // RepositoryAccess repository = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
-            
+                   
             // Create the analyzer using the object builder
             analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
 
@@ -170,16 +168,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     assembly = analyzer.ExtractAllTypes(item);
                     assemblies.Add(assembly);
-                    
+
                     Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
                 {
-                    Log.LogErrorFromException(ex, true); 
+                    Log.LogErrorFromException(ex, true);
                 }
                 catch (ArgumentException ex)
                 {
-                    Log.LogErrorFromException(ex, true); 
+                    Log.LogErrorFromException(ex, true);
                 }
 
             }
@@ -192,7 +190,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessage("Searching local database for {0} unresolved types...", analyzer.UnresolvedTypes.Count);
 
                 sw.Start();
-                
+
                 int numberOfResolvedTypes = 0;
                 List<String> unresolvedTypes = new List<string>(analyzer.UnresolvedTypes);
                 foreach (String type in unresolvedTypes)
@@ -204,7 +202,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         numberOfResolvedTypes++;
                     }
                 }
-                
+
                 sw.Stop();
 
                 Log.LogMessage("Found {0} types in local database in {1:0.0000} seconds.", numberOfResolvedTypes, sw.Elapsed.TotalSeconds);
@@ -248,7 +246,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 Log.LogMessage("Storage summary: {0} assemblies with a total of {1} types stored in {2:0.0000} seconds.", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
-            
+
             //// Try to resolve types from the cache
             //if (analyzer.UnresolvedTypes.Count > 0)
             //{
@@ -266,15 +264,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
             //        }
             //    }
             //}
-           
+
             // Close the analyzer
             analyzer.Close();
             langModelAccessor.Close();
- 
+
             return !Log.HasLoggedErrors;
 
         }
-    
+
         /// <summary>
         /// Creates the services container.
         /// </summary>
