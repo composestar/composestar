@@ -6073,7 +6073,7 @@ namespace DDW.CSharp.Dom
 	/// A bit field enumeration of the modifier attributes that can be applied to type members (eg. public, static, override etc).
 	/// </summary>
 	[Flags]
-	public enum Modifiers : int
+	public enum Modifiers : uint
 	{
 		Empty		= 0,
 		New			= 1,
