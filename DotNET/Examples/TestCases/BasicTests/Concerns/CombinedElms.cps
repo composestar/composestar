@@ -3,7 +3,7 @@ concern CombinedElms in BasicTests
 	filtermodule multiPatterns
 	{
 		inputfilters
-			mpat : Dispatch = { True => { [*.foo] *.bar, [*.bar] *.quux, [*.quux] inner.success } }
+			mpat : Dispatch = { True & True => { [*.foo] *.bar, [*.bar] *.quux, [*.quux] inner.success } }
 	}
 
 	superimposition
