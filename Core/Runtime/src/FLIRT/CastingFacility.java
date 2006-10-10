@@ -22,6 +22,8 @@ public class CastingFacility
 	{
 		Object result = null;
 
+		if (from == null) return null; // because there is nothing to reason about.
+
 		if (to.indexOf(']') >= 0)
 		{
 			to = to.Remove(0, to.indexOf(']')+1);
