@@ -38,6 +38,9 @@ namespace BasicTests
 			filtTests.makeTrip();
 
 			filtTests.makeOutsideTrip();
+
+			FooBarQuux fbq = new FooBarQuux();
+			fbq.foo();
 		}
 	}
 }

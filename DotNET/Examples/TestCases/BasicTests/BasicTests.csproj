@@ -76,7 +76,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
@@ -104,6 +104,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "FooBarQuux.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MainClass.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -123,12 +128,16 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Concerns\CombinedElms.cps"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Concerns\FilterTestsConcerns.cps"
                     BuildAction = "None"
                 />
                 <File
                     RelPath = "Concerns\TypeTestsConcern.cps"
-                    BuildAction = "Content"
+                    BuildAction = "None"
                 />
             </Include>
         </Files>
