@@ -27,9 +27,9 @@ public interface FlowChartNames {
     
     public final static String ACTION_NODE = "FilterAction";
     public final static String FILTER_ACTION_NODE = "FilterAction";
-    public final static String CONTINUE_ACTION_NODE = "ContinueAction";
-    public final static String EXIT_ACTION_NODE = "ExitAction";
-    public final static String RETURN_ACTION_NODE = "ReturnAction";
+    public final static String CONTINUE_ACTION_NODE = "ContinueFlowAction";
+    public final static String EXIT_ACTION_NODE = "ExitFlowAction";
+    public final static String RETURN_ACTION_NODE = "ReturnFlowAction";
     public final static String ORIGINAL_MESSAGE_ACTION_NODE = "OriginalMessageAction";
     public final static String SUBSTITUTED_MESSAGE_ACTION_NODE = "SubstitutedMessageAction";
     public final static String ANY_MESSAGE_ACTION_NODE = "AnyMessageAction";
@@ -59,6 +59,11 @@ public interface FlowChartNames {
      * The stop node marks the exit of the filterset
      */
     public final static String STOP_NODE = "Stop";
+    
+    /**
+     * The return node marks the return through the filterset
+     */
+    public final static String RETURN_NODE = "Return";
     
     public final static String CONTEXT_NODE = "ContextNode";
     public final static String PROCEDURE_NODE = "ProcedureNode";

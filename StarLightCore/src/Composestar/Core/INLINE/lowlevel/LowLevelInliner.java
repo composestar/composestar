@@ -90,7 +90,8 @@ public class LowLevelInliner{
                 inlineFilterElements( filterElements );
             }
             else{
-                strategy.generateAction( flowTrueExitState );
+                strategy.generateAction( filterElement.flowTrueAction1 );
+                strategy.generateAction( filterElement.flowTrueAction2 );
                 generateJump( flowTrueExitState );
             }
         }
@@ -110,7 +111,8 @@ public class LowLevelInliner{
                 strategy.evalCondExpr( (ConditionExpression) condExprFlowNode.getRepositoryLink() );
                 strategy.beginTrueBranch();
 
-                strategy.generateAction( flowTrueExitState );
+                strategy.generateAction( filterElement.flowTrueAction1 );
+                strategy.generateAction( filterElement.flowTrueAction2 );
                 generateJump( flowTrueExitState );
 
                 strategy.endTrueBranch();
@@ -124,7 +126,8 @@ public class LowLevelInliner{
         }
         else{
             if ( flowTrueExitState == null ){
-                strategy.generateAction( flowFalseExitState );
+            	strategy.generateAction( filterElement.flowFalseAction1 );
+            	strategy.generateAction( filterElement.flowFalseAction2 );
                 generateJump( flowFalseExitState );
             }
             else if ( isCondExpr.isTrue( flowTrueExitState ) ){
@@ -132,7 +135,8 @@ public class LowLevelInliner{
             }
             else{
                 if ( flowFalseExitState.equals( flowTrueExitState ) ){
-                    strategy.generateAction( flowFalseExitState );
+                	strategy.generateAction( filterElement.flowFalseAction1 );
+                	strategy.generateAction( filterElement.flowFalseAction2 );
                     generateJump( flowFalseExitState );
                 }
                 else{
@@ -144,13 +148,15 @@ public class LowLevelInliner{
                     strategy.evalCondExpr( (ConditionExpression) condExprFlowNode.getRepositoryLink() );
                     strategy.beginTrueBranch();
 
-                    strategy.generateAction( flowTrueExitState );
+                    strategy.generateAction( filterElement.flowTrueAction1 );
+                	strategy.generateAction( filterElement.flowTrueAction2 );
                     generateJump( flowTrueExitState );
 
                     strategy.endTrueBranch();
                     strategy.beginFalseBranch();
 
-                    strategy.generateAction( flowFalseExitState );
+                    strategy.generateAction( filterElement.flowFalseAction1 );
+                	strategy.generateAction( filterElement.flowFalseAction2 );
                     generateJump( flowFalseExitState );
 
                     strategy.endFalseBranch();
@@ -246,9 +252,17 @@ public class LowLevelInliner{
                     ExecutionLabels.CONDITION_EXPRESSION_TRUE ) )
             {
                 block.flowTrueExitState = exitState;
+                if ( exitState.getFlowNode().containsName( FlowChartNames.ACTION_NODE ) ){
+                	block.flowTrueAction1 = exitState;
+                	block.flowTrueAction2 = getNextState( exitState );
+                }
             }
             else{
                 block.flowFalseExitState = exitState;
+                if ( exitState.getFlowNode().containsName( FlowChartNames.ACTION_NODE ) ){
+                	block.flowFalseAction1 = exitState;
+                	block.flowFalseAction2 = getNextState( exitState );
+                }
             }
         }
 
@@ -317,8 +331,12 @@ public class LowLevelInliner{
     private class FilterElementBlock{
         public ExecutionState conditionExprState;
         public ExecutionState flowTrueExitState;
+        public ExecutionState flowTrueAction1;
+        public ExecutionState flowTrueAction2;
         public ExecutionState flowFalseExitState;
-
+        public ExecutionState flowFalseAction1;
+        public ExecutionState flowFalseAction2;
+        
         public FilterElementBlock(){
         }
     }

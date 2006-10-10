@@ -481,7 +481,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     inf.setParent(fm);
 	  inf.setDescriptionFileName(filename);
     inf.setDescriptionLineNumber(lineNumber);
-    inf.setTypeImplementation(addConcernReference(type));   //fixme: we do the same thing twice here basically
+//    inf.setTypeImplementation(addConcernReference(type));   //fixme: we do the same thing twice here basically  //turned of because a filtertype is not a concern anymore  
     addFilterType((String) type.lastElement(),lineNumber);              //
     if (fm.addInputFilter(inf))
     	this.addToRepository(inf);
@@ -498,7 +498,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   public void addFilterType(String type,int lineNumber) {
 	  FilterType ft = FilterType.getFilterType( type );
 	  if (ft == null){
-		  Debug.out(Debug.MODE_ERROR, "COPPER", "Undefined FilterType", filename, lineNumber);
+		  Debug.out(Debug.MODE_ERROR, "COPPER", "Undefined FilterType '" + type + "'", filename, lineNumber);
 	  }
 	  
 	  if (parsingInput)

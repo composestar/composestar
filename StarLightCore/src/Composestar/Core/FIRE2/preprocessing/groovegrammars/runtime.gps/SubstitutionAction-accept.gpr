@@ -1,71 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n1957"/>
-        <node id="n1962"/>
-        <node id="n1958"/>
-        <node id="n1959"/>
-        <node id="n1960"/>
-        <node id="n1961"/>
-        <node id="n1956"/>
-        <edge from="n1957" to="n1962">
+        <node id="n8046"/>
+        <node id="n8043"/>
+        <node id="n8042"/>
+        <node id="n8047"/>
+        <node id="n8048"/>
+        <node id="n8045"/>
+        <node id="n8044"/>
+        <edge from="n8043" to="n8043">
             <attr name="label">
-                <string>del:pc</string>
+                <string>not:FilterAction</string>
             </attr>
         </edge>
-        <edge from="n1957" to="n1957">
+        <edge from="n8048" to="n8046">
             <attr name="label">
-                <string>Frame</string>
+                <string>new:target</string>
             </attr>
         </edge>
-        <edge from="n1958" to="n1958">
-            <attr name="label">
-                <string>FlowElement</string>
-            </attr>
-        </edge>
-        <edge from="n1962" to="n1962">
-            <attr name="label">
-                <string>SubstitutedMessageAction</string>
-            </attr>
-        </edge>
-        <edge from="n1962" to="n1958">
-            <attr name="label">
-                <string>flowNext</string>
-            </attr>
-        </edge>
-        <edge from="n1957" to="n1961">
-            <attr name="label">
-                <string>new:selector</string>
-            </attr>
-        </edge>
-        <edge from="n1957" to="n1961">
-            <attr name="label">
-                <string>del:substitutionSelector</string>
-            </attr>
-        </edge>
-        <edge from="n1957" to="n1958">
+        <edge from="n8048" to="n8043">
             <attr name="label">
                 <string>new:pc</string>
             </attr>
         </edge>
-        <edge from="n1957" to="n1956">
+        <edge from="n8048" to="n8048">
+            <attr name="label">
+                <string>Frame</string>
+            </attr>
+        </edge>
+        <edge from="n8048" to="n8046">
             <attr name="label">
                 <string>del:substitutionTarget</string>
             </attr>
         </edge>
-        <edge from="n1957" to="n1959">
+        <edge from="n8043" to="n8043">
+            <attr name="label">
+                <string>FlowElement</string>
+            </attr>
+        </edge>
+        <edge from="n8044" to="n8043">
+            <attr name="label">
+                <string>flowNext</string>
+            </attr>
+        </edge>
+        <edge from="n8048" to="n8042">
             <attr name="label">
                 <string>del:selector</string>
             </attr>
         </edge>
-        <edge from="n1957" to="n1960">
+        <edge from="n8048" to="n8045">
+            <attr name="label">
+                <string>new:selector</string>
+            </attr>
+        </edge>
+        <edge from="n8048" to="n8047">
             <attr name="label">
                 <string>del:target</string>
             </attr>
         </edge>
-        <edge from="n1957" to="n1956">
+        <edge from="n8048" to="n8044">
             <attr name="label">
-                <string>new:target</string>
+                <string>del:pc</string>
+            </attr>
+        </edge>
+        <edge from="n8048" to="n8045">
+            <attr name="label">
+                <string>del:substitutionSelector</string>
+            </attr>
+        </edge>
+        <edge from="n8044" to="n8044">
+            <attr name="label">
+                <string>SubstitutedMessageAction</string>
             </attr>
         </edge>
     </graph>

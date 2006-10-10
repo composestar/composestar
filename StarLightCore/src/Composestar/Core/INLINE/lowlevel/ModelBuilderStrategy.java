@@ -312,7 +312,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         FilterType filterType = filter.getFilterType();
         
         if ( node.containsName( "ContinueAction" ) ){
-            instruction = new FilterAction( FlowChartNames.CONTINUE_ACTION_NODE, state.getMessage() );
+            instruction = new FilterAction( "ContinueAction", state.getMessage(), 
+            		getSubstitutedMessage(state) );
             currentBlock.addInstruction( instruction );
         }
         else if ( node.containsName( "DispatchAction" ) ){
@@ -324,14 +325,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             return;
         }
         else if ( node.containsName( "AdviceAction" ) ){
-        	if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE )  ||
-        			node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE ) )
-        	{
-        		generateBeforeAction( state );
-        	}
-        	else{
-        		generateAfterAction( state );
-        	}
+        	generateAdviceAction( state );
         }
         else if ( node.containsName( FlowChartNames.ACCEPT_CALL_ACTION_NODE ) )
         {
@@ -362,7 +356,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     private void generateCallAction( ExecutionState state, 
     		Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action )
     {
-    	Instruction instruction = new FilterAction( action.getName(), state.getMessage() );
+    	Instruction instruction = new FilterAction( action.getName(), state.getMessage(), 
+    			getSubstitutedMessage(state) );
         empty = false;
         currentBlock.addInstruction( instruction );
     }
@@ -377,7 +372,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
 
         Block block = new Block();
         
-        Instruction instruction = new FilterAction( action.getName(), state.getMessage() );
+        Instruction instruction = new FilterAction( action.getName(), state.getMessage(), 
+        		getSubstitutedMessage(state) );
         empty = false;
         block.addInstruction( instruction );
         
@@ -387,14 +383,15 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     }
     
     private void generateDispatchAction( ExecutionState state ){
-        Message callMessage = getCallMessage( state );
+        Message callMessage = getSubstitutedMessage( state );
 
         ContextInstruction innerCallContext = setInnerCallContext( callMessage );
         if ( innerCallContext != null ){
             currentBlock.addInstruction( innerCallContext );
         }
 
-        FilterAction action  = new FilterAction( "DispatchAction", callMessage );
+        FilterAction action  = new FilterAction( "DispatchAction", state.getMessage(), 
+        		callMessage );
         currentBlock.addInstruction( action );
 
         Target target = callMessage.getTarget();
@@ -407,23 +404,35 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         }
     }
     
+    private void generateAdviceAction( ExecutionState state ){
+    	FlowNode flowNode = state.getFlowNode();
+    	if ( flowNode.containsName( FlowChartNames.ACCEPT_CALL_ACTION_NODE )  ||  
+    			flowNode.containsName( FlowChartNames.REJECT_CALL_ACTION_NODE ) )
+    	{
+    		generateBeforeAction( state );
+    	}
+    	else{
+    		generateAfterAction( state );
+    	}
+    }
     
     private void generateBeforeAction( ExecutionState state ){
-        Message callMessage = getCallMessage( state );
+        Message callMessage = getSubstitutedMessage( state );
 
         ContextInstruction innerCallContext = setInnerCallContext( callMessage );
         if ( innerCallContext != null ){
             currentBlock.addInstruction( innerCallContext );
         }
 
-        FilterAction action = new FilterAction( "BeforeAction", callMessage );
+        FilterAction action = new FilterAction( "AdviceAction", state.getMessage(), 
+        		callMessage );
         currentBlock.addInstruction( action );
         
         empty = false;
     }
     
     private void generateAfterAction( ExecutionState state ){
-        Message callMessage = getCallMessage( state );
+        Message callMessage = getSubstitutedMessage( state );
         
         int actionId = nextReturnActionId++;
         ContextInstruction storeInstruction = new ContextInstruction( ContextInstruction.STORE_ACTION,
@@ -439,7 +448,8 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             block.addInstruction( innerCallContext );
         }
         
-        FilterAction action = new FilterAction( "AfterAction", callMessage );
+        FilterAction action = new FilterAction( "AdviceAction", state.getMessage(), 
+        		callMessage );
         block.addInstruction( action );
         
         Case caseInstruction = new Case( actionId, block );
@@ -515,7 +525,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
      * @param state
      * @return
      */
-    private Message getCallMessage( ExecutionState state ){
+    private Message getSubstitutedMessage( ExecutionState state ){
         //get the dispatch target:
         Target dispTarget = state.getSubstitutionTarget();
         if ( Message.checkEquals( dispTarget, Message.STAR_TARGET ) )

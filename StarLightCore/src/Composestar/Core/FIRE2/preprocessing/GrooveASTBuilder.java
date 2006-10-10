@@ -148,6 +148,18 @@ public class GrooveASTBuilder {
                 stopNode );
         graph.addEdge( edge );
         
+        //stopNode:
+        AnnotatedNode exitNode = new AnnotatedNode();
+        exitNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, filterModule );
+        graph.addNode( exitNode );
+        
+        edge = new AnnotatedEdge( exitNode, FlowChartNames.RETURN_NODE, exitNode );
+        graph.addEdge( edge );
+        
+        edge = new AnnotatedEdge( exitNode, FlowChartNames.FLOW_ELEMENT_NODE,
+        		exitNode );
+        graph.addEdge( edge );
+        
         graph.setFixed();
         
         return graph;

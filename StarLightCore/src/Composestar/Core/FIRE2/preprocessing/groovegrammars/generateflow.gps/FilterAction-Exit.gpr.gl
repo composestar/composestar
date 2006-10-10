@@ -2,7 +2,7 @@
 # Each line contains layout information about a node or edge
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
-n n2131 253 261 18 18 
-n n2130 297 125 18 18 
-e n2130 n2130 "not:Exit" 500 500 337 134 367 88 344 38 337 134 12
-n n2132 233 343 18 18 
+e n2734 n2734 "not:Exit" 500 500 337 134 367 88 344 38 337 134 12
+n n2734 297 125 18 18 
+n n2733 253 261 18 18 
+n n2735 233 343 18 18 

@@ -68,7 +68,7 @@ public class Sign implements CTCommonModule {
 
     private final static String META_FORMULA = "isMeta";
 
-    private final static String MATCHPART_FORMULA = "EXEXisState";
+    private final static String MATCHPART_FORMULA = "EXEXEXisState";
 
     private final static String SIGMATCH_FORMULA = "E[!sigMatch U isState]";
 
