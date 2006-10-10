@@ -219,13 +219,23 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                 Log.LogMessageFromResources("AnalyzingUnresolved", analyzer.UnresolvedTypes.Count);
 
-                sw.Start();
+                try
+                {
+                    sw.Start();
 
-                assemblies.AddRange(analyzer.ProcessUnresolvedTypes(refAssemblies));
+                    assemblies.AddRange(analyzer.ProcessUnresolvedTypes(refAssemblies));
 
-                sw.Stop();
+                    sw.Stop();
 
-                Log.LogMessageFromResources("AnalyzingUnresolvedCompleted", analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+                    Log.LogMessageFromResources("AnalyzingUnresolvedCompleted", analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+                }
+                catch (ILAnalyzerException ex)
+                {
+                    Log.LogError(ex.Message);
+                }
+                finally {
+                    if (sw.IsRunning) sw.Stop();
+                }
             }
             if (analyzer.UnresolvedTypes.Count > 0)
             {
