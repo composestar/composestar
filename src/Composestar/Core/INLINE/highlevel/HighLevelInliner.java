@@ -553,12 +553,12 @@ public class HighLevelInliner {
         
         private void inlineState( ExecutionState state ){
             //don't inline continue and substitution actions:
-            FlowNode flowNode = state.getFlowNode();
-            if ( flowNode.containsName( FlowChartNames.CONTINUE_ACTION_NODE)  ||  
-                    flowNode.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) )
-            {
-                return;
-            }
+//            FlowNode flowNode = state.getFlowNode();
+//            if ( flowNode.containsName( FlowChartNames.CONTINUE_ACTION_NODE)  ||  
+//                    flowNode.containsName( FlowChartNames.SUBSTITUTION_ACTION_NODE ) )
+//            {
+//                return;
+//            }
             
             
             ConditionExpression expr = 

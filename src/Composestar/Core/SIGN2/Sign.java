@@ -68,7 +68,7 @@ public class Sign implements CTCommonModule {
 
     private final static String META_FORMULA = "isMeta";
 
-    private final static String MATCHPART_FORMULA = "EXEXisState";
+    private final static String MATCHPART_FORMULA = "EXEXEXisState";
 
     private final static String SIGMATCH_FORMULA = "E[!sigMatch U isState]";
 
@@ -86,10 +86,11 @@ public class Sign implements CTCommonModule {
         // creating dictionary
         dictionary = new Hashtable();
 
-        dictionary.put("isDispatch", new StateType(
-                FlowChartNames.DISPATCH_ACTION_NODE));
+        dictionary.put("isDispatch", new StateType( "DispatchAction" ));
+        //TODO Should be changed later in FlowChartNames.RETURN_ACTION_NODE, but then the checks whether
+        //the dispatchtarget exists need to be turned of for other return actions than the DispatchAction.
 
-        dictionary.put("isMeta", new StateType(FlowChartNames.META_ACTION_NODE));
+        dictionary.put("isMeta", new StateType("###disabled###"));
 
         isStatePredicate = new IsState(null);
         dictionary.put("isState", isStatePredicate);
@@ -1093,7 +1094,7 @@ public class Sign implements CTCommonModule {
 
             MethodInfo m = type.getMethod(dispSelector.getName(), META_PARAMS);
             if (m == null) {
-                Debug.out(Debug.MODE_ERROR, MODULE_NAME,
+                Debug.out(Debug.MODE_WARNING, MODULE_NAME,
                         "The methodcall to method '" + methodInfoString(method)
                                 + "' in concern '" + concern.name
                                 + "' might lead to a meta-call to an"
@@ -1114,7 +1115,7 @@ public class Sign implements CTCommonModule {
                     .getName(), META_PARAMS);
 
             if (wrapper == null) {
-                Debug.out(Debug.MODE_ERROR, MODULE_NAME,
+                Debug.out(Debug.MODE_WARNING, MODULE_NAME,
                         "The methodcall to method '" + methodInfoString(method)
                                 + "' in concern '" + concern.name
                                 + "' might lead to a meta-call to an"

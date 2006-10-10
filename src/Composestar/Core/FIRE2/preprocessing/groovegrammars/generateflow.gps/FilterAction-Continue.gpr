@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
     <graph id="graph" role="graph" edgeids="false" edgemode="directed">
-        <node id="n490"/>
-        <node id="n491"/>
-        <edge from="n490" to="n491">
+        <node id="n2221"/>
+        <node id="n2220"/>
+        <edge from="n2220" to="n2220">
+            <attr name="label">
+                <string>ContinueFlowAction</string>
+            </attr>
+        </edge>
+        <edge from="n2221" to="n2220">
             <attr name="label">
                 <string>new:flowNext</string>
             </attr>
         </edge>
-        <edge from="n490" to="n490">
+        <edge from="n2221" to="n2221">
             <attr name="label">
                 <string>FlowElement</string>
             </attr>
         </edge>
-        <edge from="n491" to="n491">
-            <attr name="label">
-                <string>MetaAction|ContinueAction|SubstitutionAction|ContinueCustomAction|BeforeAction|AfterAction</string>
-            </attr>
-        </edge>
-        <edge from="n490" to="n491">
+        <edge from="n2221" to="n2220">
             <attr name="label">
                 <string>del:flowIn</string>
             </attr>

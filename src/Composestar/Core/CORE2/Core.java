@@ -23,6 +23,7 @@ import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.FIRE2.model.FlowNode;
 import Composestar.Core.FIRE2.model.FlowTransition;
 import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
+import Composestar.Core.FIRE2.util.viewer.Viewer;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -79,7 +80,7 @@ public class Core implements CTCommonModule{
                     concern.getName()+ " ...");
         }
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Checking concern:  / \\ ");
-        
+		
         while( iterator.hasNext() ){
             state = (ExecutionState) iterator.next();
             flowNode = state.getFlowNode();

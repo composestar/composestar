@@ -52,7 +52,7 @@ public class MetaFilterAction extends FilterAction {
 		for( Iterator it = datastore.getAllInstancesOf(Filter.class); it.hasNext(); )
 		{
 			Filter filter = (Filter) it.next();
-			if( !filter.getFilterType().getType().equals(FilterType.META) )
+			if( !filter.getFilterType().getType().equalsIgnoreCase("meta") )
 				continue;
 			
 			Concern target = null;

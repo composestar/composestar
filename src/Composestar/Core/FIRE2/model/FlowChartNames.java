@@ -27,14 +27,16 @@ public interface FlowChartNames {
     
     public final static String ACTION_NODE = "FilterAction";
     public final static String FILTER_ACTION_NODE = "FilterAction";
-    public final static String DISPATCH_ACTION_NODE = "DispatchAction";
-    public final static String META_ACTION_NODE = "MetaAction";
-    public final static String BEFORE_ACTION_NODE = "BeforeAction";
-    public final static String AFTER_ACTION_NODE = "AfterAction";
-    public final static String ERROR_ACTION_NODE = "ErrorAction";
-    public final static String SUBSTITUTION_ACTION_NODE = "SubstitutionAction";
-    public final static String CUSTOM_ACTION_NODE = "ContinueCustomAction";
-    public final static String CONTINUE_ACTION_NODE = "ContinueAction";
+    public final static String CONTINUE_ACTION_NODE = "ContinueFlowAction";
+    public final static String EXIT_ACTION_NODE = "ExitFlowAction";
+    public final static String RETURN_ACTION_NODE = "ReturnFlowAction";
+    public final static String ORIGINAL_MESSAGE_ACTION_NODE = "OriginalMessageAction";
+    public final static String SUBSTITUTED_MESSAGE_ACTION_NODE = "SubstitutedMessageAction";
+    public final static String ANY_MESSAGE_ACTION_NODE = "AnyMessageAction";
+    public final static String REJECT_CALL_ACTION_NODE = "RejectCallAction";
+    public final static String ACCEPT_CALL_ACTION_NODE = "AcceptCallAction";
+    public final static String REJECT_RETURN_ACTION_NODE = "RejectReturnAction";
+    public final static String ACCEPT_RETURN_ACTION_NODE = "AcceptReturnAction";
     
     public final static String SIGNATURE_MATCHING_NODE = "SignatureMatchingPart";
     public final static String NAME_MATCHING_NODE = "NameMatchingPart";
@@ -58,6 +60,11 @@ public interface FlowChartNames {
      */
     public final static String STOP_NODE = "Stop";
     
+    /**
+     * The return node marks the return through the filterset
+     */
+    public final static String RETURN_NODE = "Return";
+    
     public final static String CONTEXT_NODE = "ContextNode";
     public final static String PROCEDURE_NODE = "ProcedureNode";
     public final static String PREDICATE_NODE = "PredicateNode";
@@ -71,8 +78,10 @@ public interface FlowChartNames {
     public final static String RIGHT_OPERATOR_EDGE = "rightOper";
     public final static String RIGHT_ARGUMENT_EDGE = "rightArg";
     
-    public final static String REJECT_EDGE = "reject";
-    public final static String ACCEPT_EDGE = "accept";
+    public final static String REJECT_CALL_EDGE = "rejectCall";
+    public final static String ACCEPT_CALL_EDGE = "acceptCall";
+    public final static String REJECT_RETURN_EDGE = "rejectReturn";
+    public final static String ACCEPT_RETURN_EDGE = "acceptReturn";
     
     public final static String FILTER_ELEMENT_EDGE = "filterElement";
     

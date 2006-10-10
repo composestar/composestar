@@ -121,7 +121,7 @@ public class Repository {
 	{
 		String type = filter.getFilterType().getType();
 		if(type.equalsIgnoreCase("Custom"))
-			type = filter.getFilterType().getName();
+			type = filter.getFilterType().getType();
 		Repository repository = Repository.instance;
 		return repository.getAction(repository.getDescription(type).getAction(accept));
 	}

@@ -9,48 +9,146 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.CpsProgramRepository.*;
+import java.util.Hashtable;
+import java.util.Iterator;
+
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
- * @modelguid {FAFD0EAB-6BB2-4634-835C-74619506D1A1}
- * This is a wrapper for the implementation of a filter; here, specific properties
- * of a filter type (such as required by FIRE and SECRET) can be added. The
- * implementations of the predefined filters will be PrimitiveConcerns; this may
- * also be user-defined filter types that are implemented as a ComposeStarConcern.
- * In the future, add specific attributes
- * here that apply to all filter types, create subclasses on demand.
- * we might or might not be able to reason about the implementation here
- * (depending on whether it is a CpsConcern or PrimitiveConcern).
+ * A FilterType represents a type a filter can have. It is not bound to a specific filter (i.e. a member 
+ * of the filter), but a property a filter can have. Therefore it is not a concern anymore but a normal
+ * RepositoryEntity.
  */
-public class FilterType extends Concern {
-  public String type;
-  public final static String WAIT = "Wait";
-  public final static String DISPATCH = "Dispatch";
-  public final static String ERROR = "Error";
-  public final static String META = "Meta";
-  public final static String SUBSTITUTION = "Substitution";
-  public final static String CUSTOM = "Custom";
-  public final static String SEND	  = "Send";
-  public final static String PREPEND = "Prepend";
-  public final static String APPEND  = "Append";
-  public final static String BEFORE = "Before";
-  public final static String AFTER = "After";
+public class FilterType extends RepositoryEntity
+{
+	public String type;
 
-  /**
-   * @return java.lang.String
-   *
-   * @roseuid 401FAA650206
-   */
-  public String getType() {
-    return type;
-  }
+	private FilterAction acceptCallAction;
 
+	private FilterAction rejectCallAction;
 
-  /**
-   * @param typeValue
-   * @roseuid 401FAA65020F
-   */
-  public void setType(String typeValue) {
-    this.type = typeValue;
-  }
+	private FilterAction acceptReturnAction;
+
+	private FilterAction rejectReturnAction;
+
+	// public final static String WAIT = "Wait";
+	// public final static String DISPATCH = "Dispatch";
+	// public final static String ERROR = "Error";
+	// public final static String META = "Meta";
+	// public final static String SUBSTITUTION = "Substitution";
+	// public final static String CUSTOM = "Custom";
+	// public final static String SEND = "Send";
+	// public final static String PREPEND = "Prepend";
+	// public final static String APPEND = "Append";
+	// public final static String BEFORE = "Before";
+	// public final static String AFTER = "After";
+
+	/**
+	 * Contains a mapping from strings representing filtertypes to FilterType objects
+	 */
+	private static Hashtable filterTypeMapping;
+	
+	
+	
+	/**
+	 * @return java.lang.String
+	 * @roseuid 401FAA650206
+	 */
+	public String getType()
+	{
+		return type;
+	}
+
+	/**
+	 * @param typeValue
+	 * @roseuid 401FAA65020F
+	 */
+	public void setType(String typeValue)
+	{
+		this.type = typeValue;
+	}
+
+	/**
+	 * @return the acceptCallAction
+	 */
+	public FilterAction getAcceptCallAction()
+	{
+		return acceptCallAction;
+	}
+
+	/**
+	 * @param acceptCallAction the acceptCallAction to set
+	 */
+	public void setAcceptCallAction(FilterAction acceptCallAction)
+	{
+		this.acceptCallAction = acceptCallAction;
+	}
+
+	/**
+	 * @return the acceptReturnAction
+	 */
+	public FilterAction getAcceptReturnAction()
+	{
+		return acceptReturnAction;
+	}
+
+	/**
+	 * @param acceptReturnAction the acceptReturnAction to set
+	 */
+	public void setAcceptReturnAction(FilterAction acceptReturnAction)
+	{
+		this.acceptReturnAction = acceptReturnAction;
+	}
+
+	/**
+	 * @return the rejectCallAction
+	 */
+	public FilterAction getRejectCallAction()
+	{
+		return rejectCallAction;
+	}
+
+	/**
+	 * @param rejectCallAction the rejectCallAction to set
+	 */
+	public void setRejectCallAction(FilterAction rejectCallAction)
+	{
+		this.rejectCallAction = rejectCallAction;
+	}
+
+	/**
+	 * @return the rejectReturnAction
+	 */
+	public FilterAction getRejectReturnAction()
+	{
+		return rejectReturnAction;
+	}
+
+	/**
+	 * @param rejectReturnAction the rejectReturnAction to set
+	 */
+	public void setRejectReturnAction(FilterAction rejectReturnAction)
+	{
+		this.rejectReturnAction = rejectReturnAction;
+	}
+
+	
+	public static FilterType getFilterType( String name ){
+		if ( filterTypeMapping == null ){
+			createFilterTypeMapping();
+		}
+		
+		return (FilterType) filterTypeMapping.get( name.toLowerCase() );
+	}
+	
+	private static void createFilterTypeMapping(){
+		DataStore ds = DataStore.instance();
+	    filterTypeMapping = new Hashtable();
+	    Iterator filterTypeIter = ds.getAllInstancesOf(FilterType.class);
+	    while( filterTypeIter.hasNext() ){
+	    	FilterType filterType = (FilterType) filterTypeIter.next();
+	    	filterTypeMapping.put( filterType.getType().toLowerCase(), filterType );
+	    } 
+	}
 }
