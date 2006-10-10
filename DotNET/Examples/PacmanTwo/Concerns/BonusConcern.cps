@@ -40,6 +40,14 @@ concern BonusConern in PacmanTwo
 	}
 	*/
 
+	filtermodule BonusPickupSound
+	{
+		internals
+			beeper : PacmanTwo.ConcernImplementations.Beeper;
+		inputfilters
+			redirBeep : Dispatch = { [*.beep] beeper.beep }
+	}
+
 	superimposition
 	{
 		selectors
@@ -47,10 +55,12 @@ concern BonusConern in PacmanTwo
 			pacman = { C | isClassWithName(C, 'PacmanTwo.Pacman') };
 			viewport = { C | isClassWithName(C, 'PacmanTwo.GUI.Viewport') };
 			levelgen = { C | isClassWithName(C, 'PacmanTwo.ConcernImplementations.LevelGenerator') };
+			bonus = { C | isClassWithName(C, 'PacmanTwo.Bonus.Bonus') };
 		filtermodules
 			game <- BonusManager;
 			pacman <- TouchBonus;
 			viewport <- RegisterBonusView;
 			//levelgen <- LevelUp;
+			bonus <- BonusPickupSound;
 	}
 }

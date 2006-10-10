@@ -81,6 +81,7 @@ public class Flee extends Strategy
 				if (level.canMove(Direction.LEFT, gX, gY)) return Direction.LEFT;
 			}
 		}
-		return RandomMovement.getNextMove(pawn, level); // scared shitless
+		return Direction.NONE;
+		//return RandomMovement.getNextMove(pawn, level); // scared shitless
 	}
 }

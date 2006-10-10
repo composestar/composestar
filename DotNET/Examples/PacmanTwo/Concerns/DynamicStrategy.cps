@@ -24,7 +24,7 @@ concern DynamicStrategy in PacmanTwo
 		*/
 		outputfilters
 			setstrat : Send = { 
-				!isEvil /*& isSmart*/ => [*.doGetNextMove] stalker.getNextMoveNS ,
+				!isEvil & isSmart => [*.doGetNextMove] stalker.getNextMoveNS ,
 				isEvil => [*.doGetNextMove] chicken.getNextMoveNS
 			}
 	}

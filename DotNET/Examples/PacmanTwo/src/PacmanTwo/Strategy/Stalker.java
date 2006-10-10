@@ -80,6 +80,7 @@ public class Stalker extends Strategy
 				if (level.canMove(Direction.RIGHT, gX, gY)) return Direction.RIGHT;
 			}
 		}
-		return RandomMovement.getNextMove(pawn, level);
+		return Direction.NONE;
+		//return RandomMovement.getNextMove(pawn, level);
 	}
 }

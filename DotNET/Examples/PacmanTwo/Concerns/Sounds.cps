@@ -1,16 +1,11 @@
 concern Sounds in PacmanTwo
 {
-	filtermodule beepSound
+	filtermodule beepSoundPawns
 	{
 		internals
 			beeper : PacmanTwo.ConcernImplementations.Beeper;
 		inputfilters
-			beep_filter : Meta = 
-				{ 
-					[*.eatPill] beeper.eatPill,
-					[*.eatPowerPill] beeper.eatPowerPill, 
-					[*.died] beeper.pawnDied
-				}
+			beep_filter : Meta = { [*.died] beeper.pawnDied	}
 		/*
 		// these may not be used because Pacman uses super.method()
 		outputfilters
@@ -22,14 +17,26 @@ concern Sounds in PacmanTwo
 		*/
 	}
 
+	filtermodule beepSoundLevel
+	{
+		internals
+			beeper : PacmanTwo.ConcernImplementations.Beeper;
+		inputfilters
+			beep_filter : Meta = 
+				{ 
+					[*.eatPill] beeper.eatPill,
+					[*.eatPowerPill] beeper.eatPowerPill
+				}
+	}
+
 	superimposition
 	{
 		selectors
 			lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
 			pawns = { C | isClassWithNameInList(C, ['PacmanTwo.Pacman', 'PacmanTwo.Ghost']) };
 		filtermodules
-			lvl <- beepSound;
-			pawns <- beepSound;
+			lvl <- beepSoundLevel;
+			pawns <- beepSoundPawns;
 	}
 
 	implementation in JSharp by Beeper as "Beeper.java"
@@ -53,7 +60,7 @@ public class Beeper
 	public void eatPill(ReifiedMessage rm)
 	{
 		rm.proceed();
-		if(soundOn) Beep( 1000, 10 );
+		if(soundOn) beep( 1000, 10 );
 	}
 
 	public void eatPowerPill(ReifiedMessage rm)
@@ -61,9 +68,9 @@ public class Beeper
 		rm.proceed();
 		if(soundOn) 
 		{
-			Beep( 1000, 10 );
-			Beep( 4000, 15 );
-			Beep( 1000, 10 );
+			beep( 1000, 10 );
+			beep( 4000, 15 );
+			beep( 1000, 10 );
 		}
 	}
 
@@ -74,14 +81,19 @@ public class Beeper
 		{
 			if (rm.getTarget() instanceof Pacman)
 			{
-				Beep( 700, 110 );
-				Beep( 400, 110 );
+				beep( 700, 110 );
+				beep( 400, 110 );
 			}
 			else 
 			{
-				Beep( 500, 90 );
+				beep( 500, 90 );
 			}
 		}
+	}
+
+	protected boolean beep(int freq, int dur)
+	{
+		return Beep(freq, dur);
 	}
 
 	/**@dll.import("kernel32.dll") */

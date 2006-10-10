@@ -1,6 +1,14 @@
 concern Scoring in PacmanTwo
 {
-	filtermodule registerScore
+	filtermodule registerScorePawns
+	{
+		externals
+			score : PacmanTwo.Scoring.Score = PacmanTwo.Scoring.Score.instance();
+		inputfilters
+			scored : Meta = { [*.died] score.pawnDied }
+	}
+
+	filtermodule registerScoreLevel
 	{
 		externals
 			score : PacmanTwo.Scoring.Score = PacmanTwo.Scoring.Score.instance();
@@ -8,8 +16,7 @@ concern Scoring in PacmanTwo
 			scored : Meta = 
 				{ 
 					[*.eatPill] score.eatPill,
-					[*.eatPowerPill] score.eatPowerPill, 
-					[*.died] score.pawnDied
+					[*.eatPowerPill] score.eatPowerPill
 				}
 	}
 
@@ -28,8 +35,8 @@ concern Scoring in PacmanTwo
 			pawns = { C | isClassWithNameInList(C, ['PacmanTwo.Ghost']) };
 			viewport = { C | isClassWithName(C, 'PacmanTwo.GUI.Viewport' ) };
 		filtermodules
-			lvl <- registerScore;
-			pawns <- registerScore;
+			lvl <- registerScoreLevel;
+			pawns <- registerScorePawns;
 			viewport <- renderScore;
 	}
 }

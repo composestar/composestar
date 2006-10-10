@@ -65,13 +65,13 @@ public class AIController extends Controller implements Tickable
 	{
 		if (pawn != null)
 		{
-			direction = RandomMovement.getNextMove(pawn, game.level());
+			direction = doGetNextMove(pawn, game.level());
 		}
 	}
 
-	public void doGetNextMove(Pawn pawn, Level level)
+	protected int doGetNextMove(Pawn pawn, Level level)
 	{
-		RandomMovement.getNextMove(pawn, level);
+		return RandomMovement.getNextMove(pawn, level);
 	}
 
 	/**
@@ -79,9 +79,8 @@ public class AIController extends Controller implements Tickable
 	 */
 	public boolean isSmart()
 	{
-		if (pawn == null) return false;
 		Ghost g = (Ghost) pawn;
 		if (g == null) return false;
-		return g.getId() == 0;
+		return g.getId() == 0; // only Blinky is smart
 	}
 }

@@ -91,10 +91,23 @@ public class Bonus
 			score.addScore(b.getBonusType());
 			System.out.println("Bonus picked up "+b.getBonusType());
 			b.died();
+			beep( 4000, 50 );
+			beep( 1000, 75 );
+			beep( 4000, 50 );
+
 			bonusPickups++;
 			activeBonus = null;
 			reset();
 		}
+	}
+
+	/**
+	 * Play a sound
+	 */
+	public boolean beep(int freq, int dur)
+	{
+		// will be handled by the Sounds implementation
+		return false;
 	}
 
 	/**

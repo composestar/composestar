@@ -17,7 +17,7 @@ package PacmanTwo;
  */
 public class Ghost extends Pawn
 {
-	final static String[] names = {"Blink", "Pinky", "Inky", "Clyde"};
+	final static String[] names = {"Blinky", "Pinky", "Inky", "Clyde"};
 
 	protected String name;
 	protected int id;
@@ -39,6 +39,8 @@ public class Ghost extends Pawn
 	public void restart()
 	{
 		super.restart();
+		// inky is as fast as Pacman (just for fun)
+		if (id != 3) speed = 1.9f;
 		direction = id % 4;
 	}
 
