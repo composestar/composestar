@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace Composestar.StarLight.ContextInfo
 {
@@ -11,6 +12,7 @@ namespace Composestar.StarLight.ContextInfo
     /// The FilterContext class is used to store <seealso cref="T:FilterContext.InnerFilterContext"/> objects in a thread-safe way.
     /// These objects contain information about the usage of the innercalls.    
     /// </summary>
+    [DebuggerNonUserCode()]
     public sealed class FilterContext
     {
 
