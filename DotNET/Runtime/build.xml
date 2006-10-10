@@ -3,74 +3,74 @@
 
 	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
 		<and>
-			<not>
-				<isset property="build.core" />
-			</not>
-			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+			<not><isset property="build.core"/></not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
 		</and>
 	</condition>
-	<import file="${build.core}${file.separator}common.xml" />
+	<import file="${build.core}${file.separator}common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
-	<description>
-	The Compose* DotNET Runtime
-	</description>
+	<description>The Compose* DotNET Runtime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">		
-		<delete dir="${out.dist}" />
-		<antcall target="clean_devenv" />
+		<delete dir="${out.dist}"/>
+		<antcall target="clean_devenv"/>
 	</target>	
 	
 	<target name="clean_devenv" if="available.devenv">
-		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="clean" />
+		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="clean"/>
 	</target>
 	
 	<target name="init_local" depends="init">
-		<mkdir dir="${out.dist}" />
+		<mkdir dir="${out.dist}"/>
 	</target>
 	
 	<target name="build" depends="init_local" description="build the .net runtime">
-		<antcall target="build_devenv" />
+		<antcall target="build_devenv"/>
+		<antcall target="build_msbuild"/>
 	</target>
 	
 	<target name="build_devenv" if="available.devenv">
-		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="build" />
-		<copy todir="${out.dist}">
-			<fileset dir="src${file.separator}FLIRT${file.separator}bin${file.separator}Release${file.separator}">
-				<include name="*.dll" />
-				<include name="*.pdb" />
-			</fileset>
-		</copy>
+		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="build"/>
+	</target>
+
+	<target name="build_msbuild" if="available.msbuild">
+		<msbuild solution="${basedir}\RuntimeDotNET.vs2005.sln"/>
 	</target>
 	
 	<target name="install" depends="build" description="install the .net runtime">
-		<copy todir="${composestar.installdir}${file.separator}Binaries">
-			<fileset dir="${out.dist}" />
+		<copy todir="${composestar.installdir}/Binaries">
+			<fileset dir="${out.dist}"/>
 		</copy>
-		<echo message="Registering assemblies" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCore.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCoreDotNET.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETRuntimeInterpreter.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETUtilities.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarFilterDebugger.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarRuntimeInterpreter.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarUtilities.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/DotNETPlatformInterface.dll" />
-		<registerAssembly dll="${composestar.installdir}${file.separator}Binaries/AntlrDotNet.dll" />
+		<copy todir="${composestar.installdir}/Binaries">
+			<fileset dir="src/FLIRT/bin/Release/">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>
+		<echo message="Registering assemblies"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCore.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCoreDotNET.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETRuntimeInterpreter.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETUtilities.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarFilterDebugger.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarRuntimeInterpreter.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarUtilities.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/DotNETPlatformInterface.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/AntlrDotNet.dll"/>
 	</target>
 	
 	<target name="uninstall" depends="init" description="uninstall the .net runtime">
-		<echo message="Unregistering assemblies" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCore.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposestarCoreDotNET.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETRuntimeInterpreter.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarDotNETUtilities.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarFilterDebugger.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarRuntimeInterpreter.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/ComposeStarUtilities.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/DotNETPlatformInterface.dll" />
-		<unregisterAssembly dll="${composestar.installdir}${file.separator}Binaries/AntlrDotNet.dll" />
+		<echo message="Unregistering assemblies"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposestarCore.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposestarCoreDotNET.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETRuntimeInterpreter.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETUtilities.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposeStarFilterDebugger.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposeStarRuntimeInterpreter.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposeStarUtilities.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/DotNETPlatformInterface.dll"/>
+		<unregisterAssembly dll="${composestar.installdir}/Binaries/AntlrDotNet.dll"/>
 	</target>
 
 </project>

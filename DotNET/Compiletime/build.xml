@@ -85,34 +85,21 @@
 	<target name="compile_dotnet">
 		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\ACTING\" destfile="${out.dist}\AttributeHarvester.exe"/>
 		<csc targettype="exe" debug="false" srcdir="src\Composestar\DotNET\TYM\TypeHarvester\" destfile="${out.dist}\TypeHarvester.exe"/>
-		<antcall target="compile_dotnet_vs2003"/>
-		<antcall target="compile_dotnet_vs2005"/>
+		<antcall target="compile_dotnet_devenv"/>
+		<antcall target="compile_dotnet_msbuild"/>
 	</target>
 	
-	<target name="compile_dotnet_vs2003" if="available.vs2003">
+	<target name="compile_dotnet_devenv" if="available.devenv">
 
 		<!-- C# DummyGen -->
 		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" action="build"/>
-		<copy todir="${out.dist}">
-			<fileset dir="src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\bin">
-				<include name="CSharpDummyGenerator.exe"/>
-				<include name="antlr.runtime.dll"/>
-			</fileset>
-		</copy>
 
 		<!-- Weavers -->
 		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" action="build"/>
-		<copy todir="${out.dist}">
-			<fileset dir="src\Composestar\DotNET\ILICIT\Weaver\bin\Release">
-				<include name="IlWeaver.exe"/>
-				<include name="PeWeaver.exe"/>
-				<include name="WeaveLibrary.dll"/>
-			</fileset>
-		</copy>
 		
 	</target>
 
-	<target name="compile_dotnet_vs2005" if="available.vs2005">
+	<target name="compile_dotnet_msbuild" if="available.msbuild">
 
 		<!-- C# DummyGen -->
 		<msbuild solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.vs2005.sln"/>
@@ -127,9 +114,26 @@
 	</target>
 	
 	<target name="install" depends="build" description="Install the .NET compiletime">
+		<!-- jar files -->
 		<copy todir="${composestar.installdir}/Binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
+		<!-- C# DummyGen -->
+		<copy todir="${composestar.installdir}/Binaries">
+			<fileset dir="src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\bin">
+				<include name="CSharpDummyGenerator.exe"/>
+				<include name="antlr.runtime.dll"/>
+			</fileset>
+		</copy>
+		<!-- ILICIT Weavers -->
+		<copy todir="${composestar.installdir}/Binaries">
+			<fileset dir="src\Composestar\DotNET\ILICIT\Weaver\bin\Release">
+				<include name="IlWeaver.exe"/>
+				<include name="PeWeaver.exe"/>
+				<include name="WeaveLibrary.dll"/>
+			</fileset>
+		</copy>
+		<!-- INCRE configurations -->
 		<copy todir="${composestar.installdir}">
 			<fileset dir="src/Composestar/DotNET/INCRE/">
 				<include name="*.xml"/>
