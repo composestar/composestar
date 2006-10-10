@@ -175,4 +175,7 @@
   <data name="AdviceMethodNotFound" xml:space="preserve">
     <value>Could not find method named '{0}(JoinpointContext)' in type '{1}'</value>
   </data>
+  <data name="AssemblyElementNotFound" xml:space="preserve">
+    <value>Could not find the assembly named '{0}' in the database. The file is not analyzed and cannot be processed bij the weaver.</value>
+  </data>
 </root>

@@ -52,7 +52,7 @@ namespace Composestar.Repository
         IList<T> GetObjectQuery<T>(Predicate<T> match);
 
         /// <summary>
-        /// Gets the object.
+        /// Gets the object based on a predicate.
         /// </summary>
         /// <param name="match">The match.</param>
         /// <returns></returns>

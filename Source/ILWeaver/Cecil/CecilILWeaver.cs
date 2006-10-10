@@ -79,11 +79,17 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         void IILWeaver.DoWeave()
         {
+            // Check for the existens of the file
             if (!File.Exists(m_Configuration.InputImagePath))
             {
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.InputImageNotFound, m_Configuration.InputImagePath));
+                throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.InputImageNotFound, m_Configuration.InputImagePath));
             }
 
+            // Start timing
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            // Load the file
             AssemblyDefinition targetAssembly;
 
             try
@@ -109,18 +115,36 @@ namespace Composestar.StarLight.ILWeaver
                 throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, m_Configuration.InputImagePath));
             }
 
-            // Start timing
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            // Declare typeinfo and methodinfo
-            TypeElement typeElement;
-            MethodElement methodElement;
-
             // Check if the _targetAssemblyDefinition is still available
             if (targetAssembly == null)
                 throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);             
             
+            // Prepare the data for this assembly (precaching)
+            AssemblyElement assemblyElement;
+            assemblyElement = m_LanguageModelAccessor.GetAssemblyElementByName(targetAssembly.Name.FullName);
+            if (assemblyElement == null)
+                throw new ILWeaverException(Properties.Resources.AssemblyElementNotFound, targetAssembly.Name.FullName);
+
+            // Get all the typeElements for this Assembly
+            Dictionary<String, TypeElement> typeElements = m_LanguageModelAccessor.GetTypeElementsByAssembly(assemblyElement);
+
+            // If empty, we can quit
+            if (typeElements.Count == 0)
+                return;
+
+            // Get all the externals
+            Dictionary<String, List<External>> externals = m_LanguageModelAccessor.GetExternals();
+
+            // Get all the internals
+            Dictionary<String, List<Internal>> internals = m_LanguageModelAccessor.GetInternals();
+            
+            // Get all the methodElements
+            Dictionary<String, List<MethodElement>> methodElements = m_LanguageModelAccessor.GetMethodElements(); 
+            
+            // Declare typeinfo and methodinfo
+            TypeElement typeElement;
+            MethodElement methodElement;
+                        
             // Lets walk over all the modules in the assembly
             foreach (ModuleDefinition module in targetAssembly.Modules)
             {
@@ -129,19 +153,25 @@ namespace Composestar.StarLight.ILWeaver
                 foreach (TypeDefinition type in module.Types)
                 {
                     // Get the information from the repository about this type
-                    typeElement = m_LanguageModelAccessor.GetTypeElement(type.FullName);
+                    typeElement = typeElements[type.FullName];
                     // Skip this type if we do not have information about it 
                     if (typeElement == null)
                         continue;
                     
-                    // Add the externals and internals
-                    WeaveExternals(targetAssembly, type, typeElement);
-                    WeaveInternals(targetAssembly, type, typeElement);
+                    // Get the externals and internals for this type
+                    List<External> externalsList = externals[typeElement.Id];
+                    List<Internal> internalsList = internals[typeElement.Id];
+
+                    // Add the externals and internals (the subfunctions will check if they need to perform an action)
+                    WeaveExternals(targetAssembly, type, typeElement, externalsList);
+                    WeaveInternals(targetAssembly, type, typeElement, internalsList);
+
+                    List<MethodElement> methodsInType = methodElements[typeElement.Id];
 
                     foreach (MethodDefinition method in type.Methods)
                     {
                         // Get the methodinfo
-                        methodElement = m_LanguageModelAccessor.GetMethodElementBySignature(typeElement, method.ToString());
+                        methodElement = GetMethodFromList(methodsInType, method.ToString());
 
                         // Skip if there is no methodinfo
                         if (methodElement == null)
@@ -176,8 +206,16 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
-        public void WeaveInternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
+        /// <param name="internals">The internals.</param>
+        public void WeaveInternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement, List<Internal> internals)
         {
+            #region Check the internals
+
+            if (internals == null | internals.Count == 0)
+                return;
+
+            #endregion
+
             #region Check for null
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
@@ -189,15 +227,7 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("typeElement");
 
             #endregion
-
-            #region Get the internals
-
-            IList<Internal> internals = m_LanguageModelAccessor.GetInternalsByTypeElement(typeElement);            
-            if (internals == null | internals.Count == 0)
-                return;
-
-            #endregion
-
+                     
             FieldDefinition internalDef;
             TypeReference internalTypeRef;
             Mono.Cecil.FieldAttributes internalAttrs;
@@ -263,8 +293,16 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
-        public void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement)
+        /// <param name="externals">The externals.</param>
+        public void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement, List<External> externals)
         {
+            #region Check the externals
+
+            if (externals == null | externals.Count == 0)
+                return;
+
+            #endregion
+
             #region Check for null
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
@@ -276,16 +314,7 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("typeElement");
 
             #endregion
-
-            #region Get the externals
-
-            IList<External> externals = m_LanguageModelAccessor.GetExternalsByTypeElement(typeElement);
-
-            if (externals == null | externals.Count == 0)
-                return;
-
-            #endregion
-
+          
             FieldDefinition externalDef;
             TypeReference externalTypeRef;
             Mono.Cecil.FieldAttributes externalAttrs;
@@ -615,6 +644,22 @@ namespace Composestar.StarLight.ILWeaver
             {
                 if (call.MethodReference.Equals(callTo, StringComparison.CurrentCultureIgnoreCase))
                     return call;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the method from list.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <param name="signature">The signature.</param>
+        /// <returns></returns>
+        public MethodElement GetMethodFromList(List<MethodElement> list, String signature)
+        {
+            foreach (MethodElement method in list)
+            {
+                if (method.Signature.Equals(signature))
+                    return method;
             }
             return null;
         }

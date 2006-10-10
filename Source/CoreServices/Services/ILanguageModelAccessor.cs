@@ -46,6 +46,12 @@ namespace Composestar.StarLight.CoreServices
         IList<MethodElement> GetMethodElements(TypeElement type);
 
         /// <summary>
+        /// Gets the method elements in a dictionary with the type as key.
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<String, List<MethodElement>> GetMethodElements();
+
+        /// <summary>
         /// Gets the type element.
         /// </summary>
         /// <param name="fullName">The full name.</param>
@@ -95,6 +101,18 @@ namespace Composestar.StarLight.CoreServices
         IList<External> GetExternalsByTypeElement(TypeElement typeElement);
 
         /// <summary>
+        /// Gets the externals in a dictionary with the type ID as key.
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<String, List<External>> GetExternals();
+
+        /// <summary>
+        /// Gets the internals in a dictionary with the type ID as key.
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<String, List<Internal>> GetInternals();
+
+        /// <summary>
         /// Gets the call by method element.
         /// </summary>
         /// <param name="methodElement">The method element.</param>
@@ -121,6 +139,20 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
         AssemblyElement GetAssemblyElementByFileName(string fileName);
+
+        /// <summary>
+        /// Gets the name of the assembly element by.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        AssemblyElement GetAssemblyElementByName(string name);
+
+        /// <summary>
+        /// Gets the type elements by assembly.
+        /// </summary>
+        /// <param name="assemblyElement">The assembly element.</param>
+        /// <returns></returns>
+        Dictionary<String, TypeElement> GetTypeElementsByAssembly(AssemblyElement assemblyElement);
 
     } // ILanguageModelGetters
 
