@@ -5,8 +5,11 @@ import Composestar.Repository.LanguageModel.Inlining.Visitor.*;
 public class FilterAction extends InlineInstruction implements IVisitable
 {
 	private String type;
+	private String fullName;
 	private String selector;
 	private String target;
+	private String substitutionSelector;
+	private String substitutionTarget;
 
     public final static String DISPATCH_ACTION = "DispatchAction";
     public final static String BEFORE_ACTION = "BeforeAction";
@@ -20,11 +23,15 @@ public class FilterAction extends InlineInstruction implements IVisitable
 	public final static String INNER_TARGET = "inner";
 	public final static String SELF_TARGET = "self";
     
-	public FilterAction(String type, String selector, String target)
+	public FilterAction(String type, String fullName, String selector, String target, 
+		String substitutionSelector, String substitutionTarget)
 	{
 		this.type = type;
+		this.fullName = fullName;
 		this.selector = selector;
 		this.target = target;
+		this.substitutionSelector = substitutionSelector;
+		this.substitutionTarget = substitutionTarget;
 	}
 
 	/**
@@ -46,6 +53,24 @@ public class FilterAction extends InlineInstruction implements IVisitable
 	}
 
 	/**
+     * @return the substitutionselector
+	 * @property 
+	 */
+	public String get_SubstitutionSelector()
+	{
+		return substitutionSelector;
+	}
+
+	/**
+	 * @return the substitutionTarget
+	 * @property 
+	 */
+	public String get_SubstitutionTarget()
+	{
+		return substitutionTarget;
+	}
+
+	/**
      * @return the type
 	 * @property 
      */
@@ -53,32 +78,31 @@ public class FilterAction extends InlineInstruction implements IVisitable
 	{
 		return type;
 	}
+	
+	
 
+	/**
+	 * @return the fullName
+	 * @property
+	 */
+	public String get_FullName()
+	{
+		return fullName;
+	}
+
+	
+	
 	public void Accept(IVisitor visitor)
 	{
 		super.Accept(visitor);
 
-		if (type.equalsIgnoreCase(CONTINUE_ACTION))
-			visitor.VisitContinueAction(this);
-		else if (type.equalsIgnoreCase(SUBSTITUTION_ACTION))
-			visitor.VisitSubstitutionAction(this);
-		else if (type.equalsIgnoreCase(ERROR_ACTION))
-			visitor.VisitErrorAction(this);
-		else if (type.equalsIgnoreCase(DISPATCH_ACTION))
-			visitor.VisitDispatchAction(this);
-		else if (type.equalsIgnoreCase(BEFORE_ACTION))
-			visitor.VisitBeforeAction(this);
-		else if (type.equalsIgnoreCase(AFTER_ACTION))
-			visitor.VisitAfterAction(this);
-		else if (type.equalsIgnoreCase(SKIP_ACTION))
-			visitor.VisitSkipAction(this);
-		else
-			visitor.VisitFilterAction(this); 
+		visitor.VisitFilterAction(this);
 	}
     
     public String toString(){
         String s = super.toString();
-        s += "FILTERACTION: " + type + ", " + selector + ", " + target + "\n";
+        s += "FILTERACTION: " + type + ", " + target + '.' + selector + ", " + substitutionTarget + 
+        '.' + substitutionSelector + "\n";
         return s;
     }
 }

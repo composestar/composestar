@@ -14,13 +14,6 @@ public interface IVisitor
 	void VisitReturnAction(ContextInstruction contextInstruction);
 
 	void VisitFilterAction(FilterAction filterAction);
-	void VisitContinueAction(FilterAction filterAction);
-	void VisitSubstitutionAction(FilterAction filterAction);
-	void VisitErrorAction(FilterAction filterAction);
-	void VisitDispatchAction(FilterAction filterAction);
-	void VisitBeforeAction(FilterAction filterAction);
-	void VisitAfterAction(FilterAction filterAction);
-	void VisitSkipAction(FilterAction filterAction);
 	void VisitJumpInstruction(Jump jump);
 
 	void VisitInlineInstruction(InlineInstruction inlineInstruction);

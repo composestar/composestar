@@ -847,5 +847,32 @@ namespace Composestar.Repository
 
             }
         }
+
+
+        /// <summary>
+        /// Adds the filtertypes to the repository
+        /// </summary>
+        /// <param name="filterTypes">A list containing all filtertypes that need to be added</param>
+        public void AddFilterTypes(List<FilterTypeElement> filterTypes)
+        {
+            foreach(FilterTypeElement filterType in filterTypes)
+            {
+                Console.WriteLine("Store filterType:" + filterType.Name);
+                container.StoreObject(filterType);
+            }
+        }
+
+
+        /// <summary>
+        /// Adds filteractions to the repository
+        /// </summary>
+        /// <param name="filterActions">A list containing all filteractions that need to be added</param>
+        public void AddFilterActions(List<FilterActionElement> filterActions)
+        {
+            foreach(FilterActionElement filterAction in filterActions)
+            {
+                container.StoreObject(filterAction);
+            }
+        }
     }
 }

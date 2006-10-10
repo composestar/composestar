@@ -1,4 +1,7 @@
 <modules>
+  <module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" enabled="true" incremental="false" summary="Harvesting type information...">
+		<dependencies></dependencies>	
+	</module>
 	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
 		<dependencies>
 			<dependency type="FILE" name="cpsfile">
@@ -8,10 +11,7 @@
 			</dependency>
 		</dependencies>
 	</module>
-	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.RepositoryCollector.StarLightCollectorRunner" enabled="true" incremental="false" summary="Harvesting type information...">
-		<dependencies></dependencies>	
-	</module>
-		<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
+	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="LOLA" fulltype="Composestar.DotNET.LOLA.DotNETLOLA" enabled="true" incremental="false" summary="Evaluating predicate selectors...">
