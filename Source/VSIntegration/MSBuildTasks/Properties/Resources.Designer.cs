@@ -331,7 +331,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Verification of &apos;{0}&apos; assemblies executed in {1:0.0000} seconds..
+        ///   Looks up a localized string similar to Verification of {0} assemblies executed in {1:0.0000} seconds..
         /// </summary>
         internal static string VerificationCompleted {
             get {

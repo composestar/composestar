@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -17,6 +18,7 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions; 
+#endregion
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -137,54 +139,53 @@ namespace Composestar.StarLight.ILWeaver
 
             // Get all the internals
             Dictionary<String, List<Internal>> internals = m_LanguageModelAccessor.GetInternals();
-            
-            // Get all the methodElements
-            Dictionary<String, List<MethodElement>> methodElements = m_LanguageModelAccessor.GetMethodElements(); 
-            
-            // Declare typeinfo and methodinfo
-            TypeElement typeElement;
-            MethodElement methodElement;
-                        
-            // Lets walk over all the modules in the assembly
-            foreach (ModuleDefinition module in targetAssembly.Modules)
-            {
-                               
-                // Walk over each type in the module
-                foreach (TypeDefinition type in module.Types)
-                {
-                    // Get the information from the repository about this type
-                    typeElement = typeElements[type.FullName];
-                    // Skip this type if we do not have information about it 
-                    if (typeElement == null)
-                        continue;
-                    
-                    // Get the externals and internals for this type
-                    List<External> externalsList = externals[typeElement.Id];
-                    List<Internal> internalsList = internals[typeElement.Id];
 
-                    // Add the externals and internals (the subfunctions will check if they need to perform an action)
+            // Get all the methodElements
+            Dictionary<String, List<MethodElement>> methodElements = m_LanguageModelAccessor.GetMethodElements();
+
+            // Run the optimizer
+            typeElements = OptimizeTypeElements(ref typeElements, ref externals, ref internals, ref methodElements, assemblyElement);
+            
+            // Get only the types we have info for
+            foreach (TypeElement typeElement in typeElements.Values)
+            {
+                TypeDefinition type = targetAssembly.MainModule.Types[typeElement.FullName];
+                if (type == null)
+                    continue;
+
+                // Get and add the externals for this type
+                List<External> externalsList = null;
+                if (externals.TryGetValue(typeElement.Id, out externalsList) && externalsList.Count > 0)
                     WeaveExternals(targetAssembly, type, typeElement, externalsList);
+
+                // Get and add the internals for this type
+                List<Internal> internalsList = null;
+                if (internals.TryGetValue(typeElement.Id, out internalsList) && internalsList.Count > 0)
                     WeaveInternals(targetAssembly, type, typeElement, internalsList);
 
-                    List<MethodElement> methodsInType = methodElements[typeElement.Id];
-
+                List<MethodElement> methodsInType = null;
+                if (methodElements.TryGetValue(typeElement.Id, out methodsInType))
+                {
                     foreach (MethodDefinition method in type.Methods)
                     {
+
                         // Get the methodinfo
-                        methodElement = GetMethodFromList(methodsInType, method.ToString());
+                        MethodElement methodElement = GetMethodFromList(methodsInType, method.ToString());
 
                         // Skip if there is no methodinfo
-                        if (methodElement == null)
+                        if (methodElement == null || !methodElement.HasFiltersAvailable)
                             continue;
 
                         WeaveMethod(targetAssembly, method, methodElement);
-                    }
 
-                    // Import the modifying type into the AssemblyDefinition
-                    module.Import(type);
-                }
-            }
+                    } // foreach  (method)
+                } // if
 
+                // Import the modifying type into the AssemblyDefinition
+                targetAssembly.MainModule.Import(type);
+
+            } // foreach  (typeElement)
+  
             // Save the modified assembly
             try
             {
@@ -569,6 +570,61 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #region Helper functions
+
+        /// <summary>
+        /// Optimizes the type elements. 
+        /// Only types in the specified assembly with input or output filters or externals or internals are stored. 
+        /// </summary>
+        /// <param name="typeElements">The type elements.</param>
+        /// <param name="externals">The externals.</param>
+        /// <param name="internals">The internals.</param>
+        /// <param name="methodElements">The method elements.</param>
+        /// <param name="assemblyElement">The assembly element.</param>
+        private Dictionary<String, TypeElement> OptimizeTypeElements(ref Dictionary<String, TypeElement>  typeElements, 
+                    ref Dictionary<String, List<External>> externals, 
+                    ref Dictionary<String, List<Internal>> internals, 
+                    ref Dictionary<String, List<MethodElement>> methodElements, 
+                    AssemblyElement assemblyElement)
+        {
+            // Create return value
+            Dictionary<String, TypeElement> ret = new Dictionary<String, TypeElement>();
+
+            // Only add typeElements in the specified assembly
+            foreach (TypeElement te in typeElements.Values)
+            {
+                if (te.Assembly.Equals(assemblyElement.Name) )
+                {
+                    if (internals.ContainsKey(te.Id) || externals.ContainsKey(te.Id) || MethodHasFilter(methodElements, te.Id))
+                    {
+                        ret.Add(te.Id, te); 
+                    } // if
+                } // if
+            } // foreach 
+
+            
+            return ret;
+        }
+
+        /// <summary>
+        /// Methods has filter.
+        /// </summary>
+        /// <param name="methodElements">The method elements.</param>
+        /// <param name="typeId">The type id.</param>
+        /// <returns>Bool</returns>
+        private bool MethodHasFilter(Dictionary<String, List<MethodElement>> methodElements, string typeId)
+        {
+            List<MethodElement> methods;
+            if (methodElements.TryGetValue(typeId, out methods))
+            {
+                foreach (MethodElement method in methods)
+                {
+                    if (method.HasFiltersAvailable)
+                        return true;
+                } // foreach  (method)
+            } // if
+
+            return false;
+        } // MethodHasFilter(methodElements, typeId)
 
         /// <summary>
         /// Inserts the instruction list before the start instruction.
