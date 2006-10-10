@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Composestar.StarLight.MSBuild.Tasks")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("MSBuild tasks for the StarLight project files.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("University of Twente")]
 [assembly: AssemblyProduct("Composestar.StarLight.MSBuild.Tasks")]
 [assembly: AssemblyCopyright("Copyright ©  2006")]
 [assembly: AssemblyTrademark("")]

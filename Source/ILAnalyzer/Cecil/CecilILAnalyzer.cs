@@ -742,8 +742,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         public void Close()
         {
-            //if (_repositoryAccess != null)
-            //    _repositoryAccess.CloseContainer();
+            
         }
 
 

@@ -43,7 +43,6 @@
     <Compile Include="CacheAccess.cs" />
     <Compile Include="CacheContainerInterface.cs" />
     <Compile Include="Db4oContainers\Db4oCacheContainer.cs" />
-    <Compile Include="RepositoryContainerInterface.cs" />
     <Compile Include="Db4oContainers\Db4oRepositoryContainer.cs" />
     <Compile Include="Db4oContainers\Db4oConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
