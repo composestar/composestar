@@ -10,7 +10,7 @@ using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
 #endregion
 
-namespace TestILWeaver.Mocks
+namespace TestILAnalyzer.Mocks
 {
     class LanguageModelAccessorMock : ILanguageModelAccessor
     {
@@ -18,33 +18,7 @@ namespace TestILWeaver.Mocks
         private Dictionary<TypeElement, List<Internal>> _internalsByTypeElement = new Dictionary<TypeElement, List<Internal>>();
         private Dictionary<TypeElement, List<MethodElement>> _methodsByTypeElement = new Dictionary<TypeElement, List<MethodElement>>();
 
-        private void AddTypeElement(TypeElement element)
-        {
-            if (!_typeElementsByName.ContainsKey(element.FullName))
-                _typeElementsByName.Add(element.FullName, element);
-            else
-                _typeElementsByName[element.FullName] = element;
-        }
-
-        private void AddInternal(TypeElement type, Internal @internal)
-        {
-            if (!_internalsByTypeElement.ContainsKey(type))
-            {
-                _internalsByTypeElement.Add(type, new List<Internal>());
-            }
-            _internalsByTypeElement[type].Add(@internal);
-        }
-
-
-        private void AddMethod(TypeElement type, MethodElement method)
-        {
-            if (!_methodsByTypeElement.ContainsKey(type))
-            {
-                _methodsByTypeElement.Add(type, new List<MethodElement>());
-            }
-            _methodsByTypeElement[type].Add(method);
-        }
-
+    
         #region ILanguageModelAccessor Members
 
         /// <summary>
@@ -193,38 +167,27 @@ namespace TestILWeaver.Mocks
         /// <param name="assembly">The assembly.</param>
         public void DeleteTypeElements(String assembly){}
 
+
+        /// <summary>
+        /// Get assembly elements
+        /// </summary>
+        /// <returns>IList</returns>
+        public IList<AssemblyElement> GetAssemblyElements()
+        {
+            return null;
+        } // GetAssemblyElements()
+
+        /// <summary>
+        /// Deletes the assembly elements.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        public void DeleteAssembly(String name)
+        {
+            
+        }
+
+
         #endregion
-               
-
-        internal void AddInternalToType(string typeName, string internalTypeName, string internalName)
-        {
-            TypeElement typeElement = new TypeElement("1");
-            typeElement.FullName = typeName;
-
-            AddTypeElement(typeElement);
-
-            Internal intrnal = new Internal();
-            intrnal.Type = internalTypeName;
-            intrnal.Name = internalName;
-
-            AddInternal(typeElement, intrnal);
-        }
-
-        public void AddInputFilter(string typeName, string methodSignature, InlineInstruction instruction)
-        {
-            TypeElement typeElement = new TypeElement("2");
-            typeElement.FullName = typeName;
-
-            AddTypeElement(typeElement);
-
-            MethodElement methodElement = new MethodElement("3");
-            methodElement.Signature = methodSignature;
-             methodElement.MethodBody = new MethodBody("4", "3");
-            methodElement.MethodBody.InputFilter = instruction;
-
-            AddMethod(typeElement, methodElement);
-             
-        }
-        
+                              
     }
 }
