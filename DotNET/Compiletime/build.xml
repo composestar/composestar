@@ -113,6 +113,13 @@
 	</target>
 
 	<target name="compile_dotnet_vs2005" if="available.vs2005">
+
+		<!-- C# DummyGen -->
+		<msbuild solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.vs2005.sln"/>
+
+		<!-- Weavers -->
+		<msbuild solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.vs2005.sln"/>
+	
 	</target>
 
 	<target name="jar">

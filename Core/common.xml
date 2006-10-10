@@ -89,7 +89,7 @@ Common routines. Always include this file in every build.xml file
 			</not>
 		</condition>
 		
-		<!-- calling of "make" -->
+		<!-- make macro -->
 		<macrodef name="make">
 			<attribute name="target" default="" />
 			<sequential>
@@ -103,6 +103,23 @@ Common routines. Always include this file in every build.xml file
 			</sequential>
 		</macrodef>
 		
+		<!-- msbuild macro -->
+		<macrodef name="msbuild">
+			
+			<attribute name="solution"/>
+			<attribute name="config" default="Release"/>
+			
+			<sequential>
+				<exec executable="msbuild">
+					<arg value="@{solution}"/>
+					<arg value="/nologo"/>
+					<arg value="/v:quiet"/>
+					<arg value="/p:Configuration=@{config}"/>
+				</exec>
+			</sequential>
+
+		</macrodef>
+
 		<!-- calling of devenv.exe -->
 		<available file="devenv.com" filepath="${env.PATH}${path.separator}C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\" property="available.devenv" />
 		<available file="devenv.com" filepath="${env.PATH}" property="available.devenv.path" />				
