@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Reflection; 
 using Composestar.StarLight.ILAnalyzer;
 using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
@@ -103,6 +104,5 @@ namespace TestILAnalyzer
             Assert.IsFalse(string.IsNullOrEmpty(me.Signature), "Signature has not been stored.");
 
         } // TestTargetMustReturnAssembly()
-
     }
 }

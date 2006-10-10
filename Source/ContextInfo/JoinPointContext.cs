@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace Composestar.StarLight.ContextInfo
 {
@@ -9,6 +11,7 @@ namespace Composestar.StarLight.ContextInfo
     /// <summary>
     /// The JoinPointContext class is used to pass information about the joinpoint to methods.
     /// </summary>
+    [DebuggerNonUserCode()]
     public sealed class JoinPointContext
     {
 
