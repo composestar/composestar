@@ -9,6 +9,9 @@ using Composestar.Repository.LanguageModel.Inlining;
 
 namespace Composestar.StarLight.ILWeaver
 {
+    /// <summary>
+    /// TODO generate comment
+    /// </summary>
     class ContinueActionWeaveStrategy : FilterActionWeaveStrategy
     {
         /// <summary>
@@ -24,6 +27,12 @@ namespace Composestar.StarLight.ILWeaver
         }
 
 
+        /// <summary>
+        /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
+        /// </summary>
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="filterAction">The filter action.</param>
+        /// <param name="originalCall">The original call.</param>
         public override void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall)
         {

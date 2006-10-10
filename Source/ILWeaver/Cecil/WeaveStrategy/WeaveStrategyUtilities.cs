@@ -11,6 +11,9 @@ using Composestar.StarLight.ContextInfo;
 
 namespace Composestar.StarLight.ILWeaver
 {
+    /// <summary>
+    /// TODO generate comment
+    /// </summary>
     class WeaveStrategyUtilities
     {
         /// <summary>

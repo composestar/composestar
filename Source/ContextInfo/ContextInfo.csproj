@@ -47,7 +47,6 @@
     <Compile Include="FilterTypes\BuildIn\ErrorFilterType.cs" />
     <Compile Include="FilterTypes\BuildIn\SubstitutionAction.cs" />
     <Compile Include="FilterTypes\BuildIn\SubstitutionFilterType.cs" />
-    <Compile Include="FilterTypes\FilterActionWeaveStrategy.cs" />
     <Compile Include="FilterTypes\FilterType.cs" />
     <Compile Include="FilterTypes\FilterAction.cs" />
     <Compile Include="FilterTypes\FilterActionAttribute.cs" />

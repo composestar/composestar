@@ -32,8 +32,6 @@ namespace Composestar.StarLight.ILWeaver
         private const int FilterContextJumpId = 9999;
         private const int BranchLabelOffSet = 8000;
         
-        
-
         #endregion
 
         #region Private variables
