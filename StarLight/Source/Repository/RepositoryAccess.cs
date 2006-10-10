@@ -12,7 +12,7 @@ using Composestar.StarLight.CoreServices;
 
 namespace Composestar.Repository
 {
- 
+
     /// <summary>
     /// A layer between the StarLight .NET code and the repository objects. 
     /// Strong typed retrieval of the elements in the repository and 
@@ -21,7 +21,7 @@ namespace Composestar.Repository
     public class RepositoryAccess : ILanguageModelAccessor
     {
         private IRepositoryContainer container = null;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
         /// </summary>
@@ -127,7 +127,7 @@ namespace Composestar.Repository
 
             if (ret.Count == 1)
                 return ret[0];
-              
+
             return null;
         }
 
@@ -156,10 +156,10 @@ namespace Composestar.Repository
         /// <returns></returns>
         public TypeElement GetTypeElementById(string typeId)
         {
-             IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
-            {
-                return te.Id.Equals(typeId);
-            });
+            IList<TypeElement> ret = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+           {
+               return te.Id.Equals(typeId);
+           });
 
             if (ret.Count == 1)
                 return ret[0];
@@ -187,7 +187,7 @@ namespace Composestar.Repository
             {
                 return te.Assembly.Equals(assembly);
             });
-            
+
             return ret;
         }
 
@@ -198,7 +198,7 @@ namespace Composestar.Repository
         /// </summary>
         /// <param name="assemblyElement">The assembly element.</param>
         /// <returns></returns>
-        public Dictionary<String, TypeElement>  GetTypeElementsByAssembly(AssemblyElement assemblyElement)
+        public Dictionary<String, TypeElement> GetTypeElementsByAssembly(AssemblyElement assemblyElement)
         {
             string name = assemblyElement.Name;
 
@@ -206,12 +206,12 @@ namespace Composestar.Repository
             {
                 return te.Assembly.Equals(name);
             });
-            
+
             Dictionary<String, TypeElement> ret = new Dictionary<String, TypeElement>();
 
             foreach (TypeElement typeElement in typeElements)
             {
-                ret.Add(typeElement.FullName, typeElement ); 
+                ret.Add(typeElement.FullName, typeElement);
             }
 
             return ret;
@@ -416,18 +416,18 @@ namespace Composestar.Repository
         {
 
             IList<External> externals = container.GetObjects<External>();
- 
+
             Dictionary<String, List<External>> ret = new Dictionary<String, List<External>>();
 
             foreach (External ext in externals)
             {
-                if (ret.ContainsKey(ext.ParentTypeId) )
+                if (ret.ContainsKey(ext.ParentTypeId))
                     ret[ext.ParentTypeId].Add(ext);
                 else
                 {
                     List<External> externalList = new List<External>();
-                    externalList.Add(ext); 
-                    ret.Add(ext.ParentTypeId, externalList); 
+                    externalList.Add(ext);
+                    ret.Add(ext.ParentTypeId, externalList);
                 } // else
             }
 
@@ -442,19 +442,19 @@ namespace Composestar.Repository
         /// <returns></returns>
         public Dictionary<String, List<Internal>> GetInternals()
         {
-             IList<Internal> intern = container.GetObjects<Internal>();
- 
+            IList<Internal> intern = container.GetObjects<Internal>();
+
             Dictionary<String, List<Internal>> ret = new Dictionary<String, List<Internal>>();
 
             foreach (Internal inter in intern)
             {
-                if (ret.ContainsKey(inter.ParentTypeId) )
+                if (ret.ContainsKey(inter.ParentTypeId))
                     ret[inter.ParentTypeId].Add(inter);
                 else
                 {
                     List<Internal> internalList = new List<Internal>();
-                    internalList.Add(inter); 
-                    ret.Add(inter.ParentTypeId, internalList); 
+                    internalList.Add(inter);
+                    ret.Add(inter.ParentTypeId, internalList);
                 } // else
             }
 
@@ -487,15 +487,15 @@ namespace Composestar.Repository
         /// <returns></returns>
         public Condition GetConditionByName(string name)
         {
-             IList<Condition> ret = container.GetObjectQuery<Condition>(delegate(Condition cd)
-            {
-                return cd.Name.Equals(name) ;
-            });
+            IList<Condition> ret = container.GetObjectQuery<Condition>(delegate(Condition cd)
+           {
+               return cd.Name.Equals(name);
+           });
 
             if (ret.Count == 1)
                 return ret[0];
 
-            return null; 
+            return null;
         }
 
         public void AddAssembly(AssemblyElement assemblyElement)
@@ -518,7 +518,7 @@ namespace Composestar.Repository
             // Check if type already exists
             //if (GetTypeElementByAFQN(typeElement.FullName, typeElement.Assembly) == null)
             //{
-                container.StoreObject(typeElement);
+            container.StoreObject(typeElement);
             //}
         }
 
@@ -534,7 +534,7 @@ namespace Composestar.Repository
 
             if (fieldElement == null)
                 throw new ArgumentNullException("fieldElement");
-            
+
             // add the field element
             fieldElement.ParentTypeId = typeElement.Id;
             container.StoreObject(fieldElement);
@@ -630,8 +630,8 @@ namespace Composestar.Repository
             //    return ce.Filename.Equals(concernInformation.Filename, StringComparison.CurrentCultureIgnoreCase);
             //}).Count == 0)
             //{
-                container.StoreObject(concernInformation);
-           //}
+            container.StoreObject(concernInformation);
+            //}
         }
 
         /// <summary>
@@ -639,7 +639,7 @@ namespace Composestar.Repository
         /// </summary>
         public void DeleteConcernInformations()
         {
-            container.DeleteObjects<ConcernInformation>(); 
+            container.DeleteObjects<ConcernInformation>();
         }
 
         /// <summary>
@@ -696,7 +696,7 @@ namespace Composestar.Repository
                 });
 
                 container.Commit();
-            }          
+            }
         }
 
         /// <summary>
@@ -811,7 +811,7 @@ namespace Composestar.Repository
                 AddAssembly(assembly);
 
                 foreach (TypeElement type in assembly.TypeElements)
-                {                    
+                {
                     if (!assembliesToSave.Contains(String.Format("{0}, {1}", type.FullName, assembly.Name))) continue;
 
                     //Console.WriteLine("    {0}", type.FullName);
