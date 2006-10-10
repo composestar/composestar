@@ -18,13 +18,13 @@ namespace Composestar.Repository
     /// </summary>
     public class RepositoryAccess : ILanguageModelAccessor
     {
-        private RepositoryContainerInterface container = null;
+        private IRepositoryContainer container = null;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
         /// </summary>
         /// <param name="filename">The repository filename.</param>
-        [Obsolete("Use the RepositoryAccess(RepositoryContainerInterface datastore, string fileName) constructor instead")]
+        [Obsolete("Use the RepositoryAccess(RepositoryContainerInterface datastore, string fileName) constructor instead", true)]
         public RepositoryAccess(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -35,7 +35,12 @@ namespace Composestar.Repository
             OpenContainer(fileName);
         }
 
-        public RepositoryAccess(RepositoryContainerInterface datastore, string fileName)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
+        /// </summary>
+        /// <param name="datastore">The datastore.</param>
+        /// <param name="fileName">Name of the file.</param>
+        public RepositoryAccess(IRepositoryContainer datastore, string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentNullException("filename");

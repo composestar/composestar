@@ -9,13 +9,14 @@ using com.db4o.ext;
 using com.db4o.query;
 
 using Composestar.Repository.LanguageModel;
-
+using Composestar.StarLight.CoreServices;
+  
 namespace Composestar.Repository.Db4oContainers
 {
     /// <summary>
     /// 
     /// </summary>
-    public class Db4oRepositoryContainer : RepositoryContainerInterface
+    public class Db4oRepositoryContainer : IRepositoryContainer 
     {
         /// <summary>
         /// Filename of the yap database.
@@ -133,7 +134,7 @@ namespace Composestar.Repository.Db4oContainers
         /// <summary>
         /// Deletes the database.
         /// </summary>
-        public void DeleteDatabase()
+        public void DeleteContainer()
         {
             CheckForOpenDatabase();
 

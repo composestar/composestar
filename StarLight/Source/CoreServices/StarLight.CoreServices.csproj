@@ -47,6 +47,7 @@
     <Compile Include="Services\IILAnalyzer.cs" />
     <Compile Include="Services\IILWeaver.cs" />
     <Compile Include="Services\ILanguageModelAccessor.cs" />
+    <Compile Include="Services\IRepositoryContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
