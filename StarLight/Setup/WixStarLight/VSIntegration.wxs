@@ -67,11 +67,11 @@
     <DirectoryRef Id="Dir_ItemTemplatesRoot">
       <Directory Id="Dir_ItemTemplates" Name="IRONPY" LongName="StarLight" src="$(var.ItemTemplatesZipPath)">
         <Component Id="Comp_ItemTemplates" DiskId="1" Guid="$(var.Comp_ItemTemplates_Guid)">
-          <File Id="File_Concern.zip" Name="Concern.zip" />
-          <File Id="File_Text.zip" Name="Text.zip" />
-          <File Id="File_CSharp.zip" Name="CSharpClass.zip" />
-          <File Id="File_JSharp.zip" Name="JSharpClass.zip" />
-          <File Id="File_VB.zip" Name="VBClass.zip" />
+          <File Id="File_Concern.zip"  Name="Concern.zip" LongName="Concern.zip" />
+          <File Id="File_Text.zip" Name="Text.zip" LongName="Text.zip" />
+          <File Id="File_CSharp.zip" Name="CSClass.zip" LongName="CSharpClass.zip" />
+          <File Id="File_JSharp.zip" Name="JSClass.zip" LongName="JSharpClass.zip" />
+          <File Id="File_VB.zip" Name="VBClass.zip" LongName="VBClass.zip" />
         </Component>
       </Directory>
     </DirectoryRef>
@@ -94,6 +94,8 @@
               <File Id="File_Tasks9" Name="TASKS9" LongName="Mono.Cecil.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks10" Name="TASKS10" LongName="db4o.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks11" Name="TASKS11" LongName="db4otools.dll" src="..\..\libraries\db4o\" />
+              <File Id="File_Tasks12" Name="TASKS12" LongName="antlr.runtime.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks13" Name="TASKS13" LongName="Composestar.CpsParser.dll" src="$(var.IntegrationTasksPath)\" />
             </Component>
           </Directory>
         </Directory>
