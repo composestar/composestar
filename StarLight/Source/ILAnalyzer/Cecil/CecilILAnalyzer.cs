@@ -553,11 +553,11 @@ namespace Composestar.StarLight.ILAnalyzer
                 te.BaseType = type.BaseType.FullName;
 
                 // If the base type has not yet been resolved, add it to the list of unresolved types
-                //String baseTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, type.BaseType);
-                //if (this._saveInnerType && !CachedTypes.Contains(baseTypeAFQN) && !UnresolvedTypes.Contains(baseTypeAFQN))
-                //{
-                //    UnresolvedTypes.Add(baseTypeAFQN);
-                //}
+                String baseTypeAFQN = CreateTypeAFQN(targetAssemblyDefinition, type.BaseType);
+                if (!CachedTypes.Contains(baseTypeAFQN) && !UnresolvedTypes.Contains(baseTypeAFQN) && !ResolvedTypes.Contains(baseTypeAFQN))
+                {
+                    UnresolvedTypes.Add(baseTypeAFQN);
+                }
 
 
                 // Check whether type is a FilterType:
@@ -598,9 +598,18 @@ namespace Composestar.StarLight.ILAnalyzer
 
             foreach (String type in types)
             {
-                if (targetAssemblyDefinition.MainModule.Types.Contains(type))
+                string typename = type;
+
+                if (type.Contains(", "))
                 {
-                    tdc.Add(targetAssemblyDefinition.MainModule.Types[type]);
+                    typename = type.Substring(0, type.IndexOf(", "));
+                    String assemblyPart = type.Substring(type.IndexOf(", ") + 2);
+                    if (assembly.Name != assemblyPart) continue;
+                }
+
+                if (targetAssemblyDefinition.MainModule.Types.Contains(typename))
+                {
+                    tdc.Add(targetAssemblyDefinition.MainModule.Types[typename]);
                 }
             }
 
@@ -716,12 +725,10 @@ namespace Composestar.StarLight.ILAnalyzer
                         ae.Name = ad.Name.FullName;
                         ae.FileName = assemblyNames[assemblyName];
 
-                        TypeElement[] types = ExtractTypes(ad, ae, this.UnresolvedTypes);
+                        ae = ExtractAllTypes(ad, ae.FileName);
 
-                        if (types.Length > 0)
+                        if (ae.TypeElements.Length > 0)
                         {
-                            ae.TypeElements = types;
-
                             assemblies.Add(ae);
                         }
 

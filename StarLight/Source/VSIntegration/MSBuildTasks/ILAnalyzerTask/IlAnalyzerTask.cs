@@ -240,7 +240,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Storing types in database
-            if (assemblies.Count > 0)
+            if (assemblies.Count > 0 && !Log.HasLoggedErrors)
             {
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                 Log.LogMessage("Storing type information for {0} assemblies in database...", assemblies.Count);

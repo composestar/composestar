@@ -111,6 +111,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
             // Open DB
             Log.LogMessage(MessageImportance.Low, "Opening repository '{0}'.", RepositoryFilename);
             _repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
@@ -201,7 +204,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     ParseMasterOutput(process.StandardOutput.ReadLine());                    
                 }
                 if (process.ExitCode == 0)
-                {                 
+                {
+                    sw.Stop();
+                    Log.LogMessage("Master run completed successfully in {0:0.0000} seconds.", sw.Elapsed.TotalSeconds);
                     return !Log.HasLoggedErrors;
                 }
                 else
@@ -226,7 +231,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogErrorFromResources("ExecutionException", e.ToString());
                 }             
                 return false;
-            }                                              
+            }
+            finally
+            {
+                if (sw.IsRunning) sw.Stop();
+            }
+
         }
 
         #region Parse Master Output and Logger helper functions
