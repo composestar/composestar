@@ -728,23 +728,32 @@ namespace Composestar.StarLight.ILAnalyzer
                 foreach (String assemblyName in assemblyNames.Keys)
                 {
                     Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
-                    AssemblyDefinition ad = dar.Resolve(assemblyName);
-                    if (ad != null)
+
+                    try
                     {
-                        _processMethodBody = false;
+                        AssemblyDefinition ad = dar.Resolve(assemblyName);
 
-                        AssemblyElement ae = new AssemblyElement();
-                        ae.Name = ad.Name.FullName;
-                        ae.FileName = assemblyNames[assemblyName];
-
-                        ae = ExtractAllTypes(ad, ae.FileName);
-
-                        if (ae.TypeElements.Length > 0)
+                        if (ad != null)
                         {
-                            assemblies.Add(ae);
-                        }
+                            _processMethodBody = false;
 
-                        _processMethodBody = true;
+                            AssemblyElement ae = new AssemblyElement();
+                            ae.Name = ad.Name.FullName;
+                            ae.FileName = assemblyNames[assemblyName];
+
+                            ae = ExtractAllTypes(ad, ae.FileName);
+
+                            if (ae.TypeElements.Length > 0)
+                            {
+                                assemblies.Add(ae);
+                            }
+
+                            _processMethodBody = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ILAnalyzerException(String.Format("Unable to resolve assembly '{0}'.", assemblyName), assemblyName, ex);
                     }
                 }
 
