@@ -198,7 +198,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                   notExpr : (NOT)? ( NAME )
                           { #notExpr = #([NOTEXPR_, "notExpression"], #notExpr);};
 
-              messagePatternSet : (LCURLY! messagePattern (COMMA messagePattern)* RCURLY!
+              messagePatternSet : (LCURLY! messagePattern (COMMA! messagePattern)* RCURLY!
                                 | messagePattern)
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
