@@ -28,7 +28,9 @@ Common routines. Always include this file in every build.xml file
 				<isset property="build.debug" />
 			</not>
 		</condition>
-		
+
+		<property name="build.deprecation" value="false"/>
+
 		<!-- register environment variables -->
 		<property environment="env" />
 		<condition property="env.PATH" value="${env.Path}">
