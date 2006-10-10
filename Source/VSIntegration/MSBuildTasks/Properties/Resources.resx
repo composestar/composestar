@@ -166,7 +166,7 @@
     <value>Analyzing file '{0}'.</value>
   </data>
   <data name="AnalyzingUnresolved" xml:space="preserve">
-    <value>Analyzing referenced assemblies for {1} unresolved types.</value>
+    <value>Analyzing referenced assemblies for {0} unresolved types.</value>
   </data>
   <data name="AnalyzingUnresolvedCompleted" xml:space="preserve">
     <value>Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining.</value>

@@ -88,7 +88,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Analyzing referenced assemblies for {1} unresolved types..
+        ///   Looks up a localized string similar to Analyzing referenced assemblies for {0} unresolved types..
         /// </summary>
         internal static string AnalyzingUnresolved {
             get {
