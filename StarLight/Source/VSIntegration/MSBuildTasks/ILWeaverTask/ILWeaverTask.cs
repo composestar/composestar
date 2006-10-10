@@ -55,6 +55,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         #endregion
 
+        #region ctor
+
+        public ILWeaverTask()
+            : base(Properties.Resources.ResourceManager)
+        {
+
+        }
+
+        #endregion
+
         /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
@@ -63,7 +73,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
-            Log.LogMessage("Weaving the filter code using the Cecil IL Weaver");
+            Log.LogMessageFromResources("WeavingStartText");
 
             String filename;
             IILWeaver weaver = null;
@@ -78,7 +88,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     // Exclude StarLight ContextInfo assembly from the weaving process
                     if (filename.EndsWith(ContextInfoFileName)) continue;
 
-                    Log.LogMessage("Weaving file '{0}'...", filename);
+                    Log.LogMessageFromResources("WeavingFile", filename);
 
                     // Preparing config
                     //CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
@@ -96,7 +106,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         // Perform weaving
                         weaver.DoWeave();
 
-                        Log.LogMessage("Weaving completed in {0:0.0000} seconds.", weaver.LastDuration.TotalSeconds);
+                        Log.LogMessageFromResources("WeavingCompleted", weaver.LastDuration.TotalSeconds);
                     }
                     catch (ILWeaverException ex)
                     {

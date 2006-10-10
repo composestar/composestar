@@ -61,6 +61,69 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adding concern file &apos;{0}&apos; to the repository..
+        /// </summary>
+        internal static string AddingConcernFile {
+            get {
+                return ResourceManager.GetString("AddingConcernFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analyzing the IL files using the Cecil IL Analyzer..
+        /// </summary>
+        internal static string AnalyzerStartText {
+            get {
+                return ResourceManager.GetString("AnalyzerStartText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analyzing file &apos;{0}&apos;..
+        /// </summary>
+        internal static string AnalyzingFile {
+            get {
+                return ResourceManager.GetString("AnalyzingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analyzing {0} referenced assemblies for {1} unresolved types..
+        /// </summary>
+        internal static string AnalyzingUnresolved {
+            get {
+                return ResourceManager.GetString("AnalyzingUnresolved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining..
+        /// </summary>
+        internal static string AnalyzingUnresolvedCompleted {
+            get {
+                return ResourceManager.GetString("AnalyzingUnresolvedCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} types not resolved)..
+        /// </summary>
+        internal static string AssemblyAnalyzed {
+            get {
+                return ResourceManager.GetString("AssemblyAnalyzed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly has not been modified, analysis of this file is skipped..
+        /// </summary>
+        internal static string AssemblyNotModified {
+            get {
+                return ResourceManager.GetString("AssemblyNotModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to convert the debuglevel &apos;{0}&apos; to an integer value..
         /// </summary>
         internal static string CouldNotConvertDebugLevel {
@@ -88,7 +151,16 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to   found referenced type &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Retrieved {0} types from the local database in {1:0.0000} seconds..
+        /// </summary>
+        internal static string FoundInDatabase {
+            get {
+                return ResourceManager.GetString("FoundInDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {0} referenced types in {1} concern(s) in {2:0.0000} seconds..
         /// </summary>
         internal static string FoundReferenceType {
             get {
@@ -115,6 +187,24 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Java will be executed with the following arguments: {0}.
+        /// </summary>
+        internal static string JavaStartMessage {
+            get {
+                return ResourceManager.GetString("JavaStartMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StarLight Master run completed successfully in {0:0.0000} seconds..
+        /// </summary>
+        internal static string MasterCompleted {
+            get {
+                return ResourceManager.GetString("MasterCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Master run failure reported by process. Exit code is {0}. Messages above this line might give an indication of the problem..
         /// </summary>
         internal static string MasterRunFailed {
@@ -124,7 +214,34 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parsing concern file &apos;{0}&apos;....
+        ///   Looks up a localized string similar to Preparing to start StarLight Java Master by collecting data..
+        /// </summary>
+        internal static string MasterStartText {
+            get {
+                return ResourceManager.GetString("MasterStartText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Referenced types to resolve: {0}..
+        /// </summary>
+        internal static string NumberOfReferencesToResolve {
+            get {
+                return ResourceManager.GetString("NumberOfReferencesToResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opening repository file &apos;{0}&apos;..
+        /// </summary>
+        internal static string OpenDatabase {
+            get {
+                return ResourceManager.GetString("OpenDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing concern file &apos;{0}&apos;..
         /// </summary>
         internal static string ParsingConcernFile {
             get {
@@ -160,6 +277,78 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Removing &apos;{0}&apos; from the database..
+        /// </summary>
+        internal static string RemovingFileFromDatabase {
+            get {
+                return ResourceManager.GetString("RemovingFileFromDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching in local database for {0} unresolved types..
+        /// </summary>
+        internal static string SearchingInDatabase {
+            get {
+                return ResourceManager.GetString("SearchingInDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storing debug level {0} in the repository..
+        /// </summary>
+        internal static string StoreDebugLevel {
+            get {
+                return ResourceManager.GetString("StoreDebugLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storing type information for {0} assemblies in database..
+        /// </summary>
+        internal static string StoreInDatabase {
+            get {
+                return ResourceManager.GetString("StoreInDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} assemblies with a total of {1} types stored in the database in {2:0.0000} seconds..
+        /// </summary>
+        internal static string StoreInDatabaseCompleted {
+            get {
+                return ResourceManager.GetString("StoreInDatabaseCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve type &apos;{0}&apos;, are you missing an assembly reference?.
+        /// </summary>
+        internal static string UnableToResolve {
+            get {
+                return ResourceManager.GetString("UnableToResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification of &apos;{0}&apos; assemblies executed in {1:0.0000} seconds..
+        /// </summary>
+        internal static string VerificationCompleted {
+            get {
+                return ResourceManager.GetString("VerificationCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification error in &apos;{0}&apos;, method &apos;{2}&apos; at {3}: {1}.
+        /// </summary>
+        internal static string VerificationError {
+            get {
+                return ResourceManager.GetString("VerificationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The generated IL in file &apos;{0}&apos; could not be verified as correct IL code..
         /// </summary>
         internal static string VerifyFailure {
@@ -169,11 +358,47 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verifying assembly &apos;{0}&apos; using PEVerify..
+        /// </summary>
+        internal static string VerifyingAssembly {
+            get {
+                return ResourceManager.GetString("VerifyingAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File &apos;{0}&apos; has correct IL code..
         /// </summary>
         internal static string VerifySuccess {
             get {
                 return ResourceManager.GetString("VerifySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weaving completed in {0:0.0000} seconds..
+        /// </summary>
+        internal static string WeavingCompleted {
+            get {
+                return ResourceManager.GetString("WeavingCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weaving file &apos;{0}&apos;..
+        /// </summary>
+        internal static string WeavingFile {
+            get {
+                return ResourceManager.GetString("WeavingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weaving the filter code using the Cecil IL Weaver..
+        /// </summary>
+        internal static string WeavingStartText {
+            get {
+                return ResourceManager.GetString("WeavingStartText", resourceCulture);
             }
         }
     }
