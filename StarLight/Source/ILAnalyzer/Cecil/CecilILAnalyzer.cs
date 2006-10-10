@@ -221,9 +221,6 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Extract type information
 
-
-
-
         /// <summary>
         /// Extracts all types.
         /// </summary>
@@ -242,10 +239,6 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return ae;
         }
-
-
-
-
 
         /// <summary>
         /// Extracts the field.
@@ -274,9 +267,6 @@ namespace Composestar.StarLight.ILAnalyzer
             return fe;
         }
 
-
-
-
         /// <summary>
         /// Extracts the fields.
         /// </summary>
@@ -294,6 +284,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return result.ToArray();
         }
+
         /// <summary>
         /// Extracts the filter action.
         /// </summary>
@@ -355,8 +346,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
             }
         }
-
-
+        
         /// <summary>
         /// Extracts the type of the filter.
         /// </summary>
@@ -380,6 +370,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
             }
         }
+
         /// <summary>
         /// Extracts the method.
         /// </summary>
@@ -461,6 +452,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return result.ToArray();
         }
+
         /// <summary>
         /// Extracts the parameter.
         /// </summary>
@@ -507,6 +499,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return result.ToArray();
         }
+
         /// <summary>
         /// Extracts the type.
         /// </summary>
@@ -585,6 +578,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return te;
         }
+
         /// <summary>
         /// Extracts the types.
         /// </summary>
