@@ -100,6 +100,11 @@ public class RepositoryAccess {
         container.StoreObject( type );
     }
     
+    public List getFieldElements()
+    {
+        return container.getObjects( FieldElement.class );
+    }  
+    
     public List getFieldElements(final TypeElement type)
     {
         return container.getObjectQuery( new Predicate(){
@@ -108,6 +113,11 @@ public class RepositoryAccess {
             }
         });
     }   
+    
+    public List getMethodElements()
+    {
+        return container.getObjects( MethodElement.class );
+    } 
 
     public List getMethodElements(final TypeElement type)
     {
@@ -127,6 +137,11 @@ public class RepositoryAccess {
         return null;
     }
     
+    public List getParameterElements()
+    {
+        return container.getObjects( ParameterElement.class );
+    } 
+    
     public List getParameterElements(final MethodElement method)
     {
         return container.getObjectQuery( new Predicate(){
@@ -135,6 +150,11 @@ public class RepositoryAccess {
             }
         });
     }
+    
+    public List getCallElements()
+    {
+        return container.getObjects( CallElement.class );
+    } 
     
     public List getCallElements(final MethodBody methodBody)
     {
