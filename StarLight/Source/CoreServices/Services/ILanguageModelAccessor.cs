@@ -200,5 +200,18 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="assembliesToSave">The assemblies to save.</param>
         void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave);
 
+        /// <summary>
+        /// Adds the filtertypes
+        /// </summary>
+        /// <param name="filterTypes">A list containing all filtertypes that need to be added</param>
+        void AddFilterTypes(List<FilterTypeElement> filterTypes);
+
+
+        /// <summary>
+        /// Adds filteractions
+        /// </summary>
+        /// <param name="filterActions">A list containing all filteractions that need to be added</param>
+        void AddFilterActions(List<FilterActionElement> filterActions);
+
     } // ILanguageModelSetters
 }

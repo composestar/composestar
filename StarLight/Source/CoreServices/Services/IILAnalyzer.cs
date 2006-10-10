@@ -50,6 +50,17 @@ namespace Composestar.StarLight.CoreServices
         AssemblyElement ExtractAllTypes(String fileName);
 
         /// <summary>
+        /// Gets all encountered FilterTypes
+        /// </summary>
+        List<FilterTypeElement> FilterTypes { get; }
+        
+        /// <summary>
+        /// Gets all encountered FilterActions
+        /// </summary>
+        List<FilterActionElement> FilterActions { get; }
+        
+
+        /// <summary>
         /// Gets the duration of the last executed method.
         /// </summary>
         /// <value>The last duration.</value>

@@ -31,8 +31,8 @@ namespace Composestar.StarLight.ILWeaver
 
         private const int FilterContextJumpId = 9999;
         private const int BranchLabelOffSet = 8000;
-        private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
-        private const string VoidType = "System.Void";
+        
+        
 
         #endregion
 
@@ -254,7 +254,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="methodBase">The method info.</param>
         /// <returns></returns>
-        private MethodReference CreateMethodReference(MethodBase methodBase)
+        internal MethodReference CreateMethodReference(MethodBase methodBase)
         {
             return TargetAssemblyDefinition.MainModule.Import(methodBase);
         }
@@ -312,7 +312,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Creates the join point context variable.
         /// </summary>
-        private VariableDefinition CreateJoinPointContextLocal()
+        internal VariableDefinition CreateJoinPointContextLocal()
         {
             if (m_JpcLocal == null)
             {
@@ -322,7 +322,7 @@ namespace Composestar.StarLight.ILWeaver
             return m_JpcLocal;
         }
 
-        private VariableDefinition CreateReturnValueLocal(TypeReference reference)
+        internal VariableDefinition CreateReturnValueLocal(TypeReference reference)
         {
             if (m_ReturnValueLocal == null)
             {
@@ -371,7 +371,7 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitReturnAction(ContextInstruction contextInstruction)
         {
             // Load returnvalue on the stack
-            if (!Method.ReturnType.ReturnType.FullName.Equals(VoidType))
+            if (!Method.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
                 VariableDefinition returnValueVar = CreateReturnValueLocal(Method.ReturnType.ReturnType);
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, returnValueVar));
@@ -381,373 +381,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ret));
         }
 
-        /// <summary>
-        /// Visits the after action.
-        /// </summary>
-        /// <param name="filterAction">The filter action.</param>
-        public void VisitAfterAction(FilterAction filterAction)
-        {
-            MethodReference methodToCall;
-
-            // Get the methodReference
-            MethodReference methodReference = (MethodReference)Method;
-            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
-
-            // Get method to call
-            methodToCall = GetMethodToCall(filterAction, parentType);
-            if (methodToCall == null)
-            {
-                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                        Properties.Resources.AdviceMethodNotFound, filterAction.Selector, filterAction.Target));
-            }
-
-
-            // Create JoinPointContext
-            VariableDefinition jpcVar = CreateJoinPointContext(methodReference, true);
-
-            // Do the advice-call
-            CallAdvice(filterAction, parentType, methodToCall, jpcVar);
-
-            // Restore the JoinPointContext:
-            RestoreJoinPointContext(methodReference, jpcVar, true);
-
-
-            // Add nop to enable debugging
-            Instructions.Add(Worker.Create(OpCodes.Nop));
-        }
-
-        /// <summary>
-        /// BeforeFilter implementation
-        /// </summary>
-        /// <param name="filterAction"></param>
-        public void VisitBeforeAction(FilterAction filterAction)
-        {
-            MethodReference methodToCall;
-
-            // Get the methodReference
-            MethodReference methodReference = (MethodReference)Method;
-            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
-
-            // Get method to call
-            methodToCall = GetMethodToCall(filterAction, parentType);
-            if (methodToCall == null)
-            {
-                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                        Properties.Resources.AdviceMethodNotFound, filterAction.Selector, filterAction.Target));
-            }
-
-
-            // Create JoinPointContext
-            VariableDefinition jpcVar = CreateJoinPointContext(methodReference, false);
-
-            // Do the advice-call
-            CallAdvice(filterAction, parentType, methodToCall, jpcVar);
-
-            // Restore the JoinPointContext
-            RestoreJoinPointContext(methodReference, jpcVar, true);
-
-            // Add nop to enable debugging
-            Instructions.Add(Worker.Create(OpCodes.Nop));
-        }
-
-
-        /// <summary>
-        /// Sets back the arguments and the returnvalue (for filteractions on return).
-        /// </summary>
-        /// <param name="originalMethod">MethodReference to the original method</param>
-        /// <param name="jpcVar">VariableDefinition containing the JoinPointContext object</param>
-        private void RestoreJoinPointContext(MethodReference originalMethod, VariableDefinition jpcVar, bool storeReturnValue)
-        {
-
-            int numberOfArguments = originalMethod.Parameters.Count;
-
-            //
-            // Retrieve the arguments
-            //               
-            foreach (ParameterDefinition param in originalMethod.Parameters)
-            {
-                // Load jpc
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                // Load the ordinal
-                Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
-
-                // Call the GetArgumentValue(int16) function    
-                MethodInfo t = typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) });
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(t)));
-
-                // TODO Call the generic GetArgumentValue function to get directly the right type.
-                // Problem is how to call the function
-                //MethodReference mr = CecilUtilities.ResolveMethod("GetGenericArgumentValue", "Composestar.StarLight.ContextInfo.JoinPointContext", "Composestar.StarLight.ContextInfo");
-
-                // Check if parameter is value type, then unbox
-                if (param.ParameterType.IsValueType)
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
-                }
-                else
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Castclass, param.ParameterType));
-                }
-
-                // Store argument
-                Instructions.Add(Worker.Create(OpCodes.Starg_S, param));
-            }
-
-            // Retrieve returnvalue
-            if (storeReturnValue && !Method.ReturnType.ReturnType.FullName.Equals(VoidType))
-            {
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("get_ReturnValue", new Type[] { }))));
-
-                // Check if returnvalue is value type, then unbox, else cast
-                if (originalMethod.ReturnType.ReturnType.IsValueType)
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Unbox_Any, originalMethod.ReturnType.ReturnType));
-                }
-                else
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Castclass, Method.ReturnType.ReturnType));
-                }
-
-                // Store the returnvalue
-                VariableDefinition returnValueVar = CreateReturnValueLocal(originalMethod.ReturnType.ReturnType);
-                Instructions.Add(Worker.Create(OpCodes.Stloc, returnValueVar));
-            }
-        }
-
-
-        /// <summary>
-        /// Weaves the call to the advice
-        /// </summary>
-        /// <param name="filterAction">The filteraction</param>
-        /// <param name="parentType">The type containing the original method</param>
-        /// <param name="methodToCall">The advice method</param>
-        /// <param name="jpcVar">The local variable containing the JoinPointContext</param>
-        private void CallAdvice(FilterAction filterAction, TypeDefinition parentType, MethodReference methodToCall,
-            VariableDefinition jpcVar)
-        {
-            // Place target on the stack:
-            if (methodToCall.HasThis)
-            {
-                if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
-                    filterAction.Target.Equals(FilterAction.SELF_TARGET))
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                }
-                else
-                {
-                    FieldDefinition target = parentType.Fields.GetField(filterAction.Target);
-                    if (target == null)
-                    {
-                        throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                            Properties.Resources.FieldNotFound, filterAction.Target));
-                    }
-
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                    Instructions.Add(Worker.Create(OpCodes.Ldfld, target));
-                }
-            }
-
-            // Load the JoinPointObject as the parameter
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-            // We can safely emit a callvirt here. The JITter will make the right call.
-            Instructions.Add(Worker.Create(OpCodes.Callvirt, methodToCall));
-
-        }
-
-        /// <summary>
-        /// Weaves the creation and initialization of the JoinPointContext object.
-        /// </summary>
-        /// <param name="originalCall">The originaly called method</param>
-        /// <returns>The VariableDefinition of the JoinPointContext object</returns>
-        private VariableDefinition CreateJoinPointContext(MethodReference originalCall, bool storeReturnValue)
-        {
-            // Create a new or use an existing local variable for the JoinPointContext
-            VariableDefinition jpcVar = CreateJoinPointContextLocal();
-            Method.Body.InitLocals = true;
-
-            //
-            // Create new joinpointcontext object
-            //
-            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(JoinPointContext).GetConstructors()[0])));
-
-            // Store the just created joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
-
-            // Store returnvalue
-            if (storeReturnValue && !originalCall.ReturnType.ReturnType.FullName.Equals(VoidType))
-            {
-                // Get returnvalue field
-                VariableDefinition returnValueVar = CreateReturnValueLocal(originalCall.ReturnType.ReturnType);
-
-                // Load joinpointcontext object
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                // Load returnvalue
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, returnValueVar));
-
-                // Check if returnvalue is value type, then box
-                if (originalCall.ReturnType.ReturnType.IsValueType)
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Box, originalCall.ReturnType.ReturnType));
-                }
-
-                // Determine type
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(System.Object).GetMethod("GetType", new Type[] { }))));
-
-                // Call set_ReturnType in JoinPointContext
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("set_ReturnType", new Type[] { typeof(System.Type) }))));
-
-                // Load joinpointcontext object
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                // Again load the returnvalue
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, returnValueVar));
-
-                // Check if returnvalue is value type, then box
-                if (originalCall.ReturnType.ReturnType.IsValueType)
-                {
-                    Instructions.Add(Worker.Create(OpCodes.Box, originalCall.ReturnType.ReturnType));
-                }
-
-                // Call set_ReturnValue in JoinPointContext
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("set_ReturnValue", new Type[] { typeof(object) }))));
-            }
-
-
-            //
-            // Set the target
-            //
-            // Load the joinpointcontext object
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-            // Load the this pointer
-            if (Method.HasThis)
-                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-            else
-                Instructions.Add(Worker.Create(OpCodes.Ldnull));
-
-            // Assign to the Target property
-            Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
-
-            int numberOfArguments = 0;
-
-            switch (FilterType)
-            {
-                case FilterTypes.InputFilter:
-                    numberOfArguments = Method.Parameters.Count;
-                    break;
-                case FilterTypes.OutputFilter:
-                    //numberOfArguments = methodBaseDef.GetParameters().Length;
-                    //// Also set the sender
-                    //// Load the joinpointcontext object
-                    //Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                    //// Load the this pointer
-                    //if (Method.HasThis)
-                    //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                    //else
-                    //    Instructions.Add(Worker.Create(OpCodes.Ldnull));
-
-                    //// Assign to the Target property
-                    //Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
-
-                    break;
-            }
-
-            //
-            // Add the arguments, these are stored at the top of the stack
-            //
-            if (numberOfArguments > 0)
-            {
-                foreach (ParameterDefinition param in Method.Parameters)
-                {
-                    //methodReference.Parameters[ i ].Attributes = Mono.Cecil.ParamAttributes.Out;                    
-
-                    // Load jpc
-                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                    // Load the ordinal
-                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
-
-                    // load the argument 
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
-
-                    // Check if parameter is value type, then box
-                    if (param.ParameterType.IsValueType)
-                    {
-                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
-                    }
-
-                    // Determine type
-                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(System.Object).GetMethod("GetType", new Type[] { }))));
-
-                    // Again load the argument
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
-
-                    // Check if parameter is value type, then box
-                    if (param.ParameterType.IsValueType)
-                    {
-                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
-                    }
-
-                    // Call the AddArgument function
-                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("AddArgument", new Type[] { typeof(Int16), typeof(System.Type), typeof(object) }))));
-                }
-            }
-
-
-            //
-            // Set the selector
-            //
-
-            // Load joinpointcontext first
-            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-            // Load the name onto the stack
-            Instructions.Add(Worker.Create(OpCodes.Ldstr, originalCall.Name));
-
-            // Assign name to MethodName
-            Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_MethodName", new Type[] { typeof(string) }))));
-
-            return jpcVar;
-        }
-
-        /// <summary>
-        /// Returns the MethodReference to the advice method
-        /// </summary>
-        /// <param name="filterAction">The filteraction</param>
-        /// <param name="parentType">The type containing the original method</param>
-        /// <returns>The MethodReference to the advice method</returns>
-        private MethodReference GetMethodToCall(FilterAction filterAction, TypeDefinition parentType)
-        {
-            if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
-                filterAction.Target.Equals(FilterAction.SELF_TARGET))
-            {
-                return CecilUtilities.ResolveMethod(parentType, filterAction.Selector, m_JpcTypes);
-            }
-            else
-            {
-                FieldDefinition target = parentType.Fields.GetField(filterAction.Target);
-                if (target == null)
-                {
-                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                        Properties.Resources.FieldNotFound, filterAction.Target));
-                }
-
-
-                MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, filterAction.Selector, m_JpcTypes);
-
-                return TargetAssemblyDefinition.MainModule.Import(md);
-            }
-        }
-
+        
 
         #region Inner Call handlers
 
@@ -838,145 +472,18 @@ namespace Composestar.StarLight.ILWeaver
 
         #endregion
 
-        /// <summary>
-        /// Visits the continue action. No code is generated for this action because further jumps are introduced.
-        /// </summary>
-        /// <param name="filterAction">The filter action.</param>
-        public void VisitContinueAction(FilterAction filterAction)
-        {
-            // No code needed
-        }
+        
 
         /// <summary>
-        /// Visits the dispatch action.
+        /// Visits the filter action. Uses Strategypattern to weave a specific instruction.
         /// </summary>
-        /// <param name="filterAction">The filter action.</param>
-        public void VisitDispatchAction(FilterAction filterAction)
-        {
-            //
-            // Call the same method
-            //
-            switch (FilterType)
-            {
-                case FilterTypes.InputFilter:
-                    FieldDefinition target = null;
-                    // Self call
-
-                    // Get the methodReference
-                    MethodReference methodReference = (MethodReference)Method;
-
-                    TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
-
-                    // Get the called method
-                    if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
-                        filterAction.Target.Equals(FilterAction.SELF_TARGET))
-                    {
-                        if (filterAction.Selector.Equals(Method.Name))
-                        {
-                            methodReference = Method;
-                        }
-                        else
-                        {
-                            methodReference = CecilUtilities.ResolveMethod(parentType, filterAction.Selector, Method);
-                        }
-                    }
-                    else
-                    {
-                        target = parentType.Fields.GetField(filterAction.Target);
-                        if (target == null)
-                        {
-                            throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                                Properties.Resources.FieldNotFound, filterAction.Target));
-                        }
-
-                        TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition(target.FieldType);
-                        MethodDefinition md = CecilUtilities.ResolveMethod(fieldType, filterAction.Selector, Method);
-
-                        methodReference = TargetAssemblyDefinition.MainModule.Import(md);
-                    }
-
-                    if (methodReference == null)
-                    {
-                        return;
-                    }
-
-
-                    // Place the arguments on the stack first
-
-                    // Place target on the stack
-                    if (methodReference.HasThis)
-                    {
-                        if (filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
-                            filterAction.Target.Equals(FilterAction.SELF_TARGET))
-                        {
-                            Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                        }
-                        else
-                        {
-                            Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                            Instructions.Add(Worker.Create(OpCodes.Ldfld, target));
-                        }
-                    }
-
-
-                    int numberOfArguments = Method.Parameters.Count;
-                    for (int i = 0; i < numberOfArguments; i++)
-                    {
-                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.Parameters[i]));
-                    }
-
-                    // Call the method                    
-                    Instructions.Add(Worker.Create(OpCodes.Callvirt, methodReference));
-
-                    //Store the return value:
-                    if (!methodReference.ReturnType.ReturnType.FullName.Equals(VoidType))
-                    {
-                        VariableDefinition returnValueVar = CreateReturnValueLocal(Method.ReturnType.ReturnType);
-                        Instructions.Add(Worker.Create(OpCodes.Stloc, returnValueVar));
-                    }
-
-                    break;
-                case FilterTypes.OutputFilter:
-
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Visits the error action.
-        /// </summary>
-        /// <param name="filterAction">The filter action.</param>
-        /// <remarks>
-        /// Generate exception throw
-        /// </remarks> 
-        /// <example>
-        /// The following construction should be created:
-        /// <code>
-        /// throw new Exception();
-        /// </code>
-        /// or in IL code:
-        /// <code>
-        ///   newobj instance void [mscorlib]System.Exception::.ctor()
-        ///   throw 
-        /// </code>
-        /// </example> 
-        public void VisitErrorAction(FilterAction filterAction)
-        {
-            // Create an exception
-            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(Exception).GetConstructors()[0])));
-
-            // Throw the exception
-            Instructions.Add(Worker.Create(OpCodes.Throw));
-        }
-
-        /// <summary>
-        /// Visits the filter action. At this moment not used. 
-        /// </summary>
-        /// <remarks>Can be removed since specialized actions are visited.</remarks> 
         /// <param name="filterAction">The filter action.</param>
         public void VisitFilterAction(FilterAction filterAction)
         {
-            // Currently not used (not visited)
+            FilterActionWeaveStrategy strategy = FilterActionWeaveStrategy.GetFilterActionWeaveStrategy(
+                filterAction.Type);
+
+            strategy.Weave(this, filterAction, Method);
         }
 
         /// <summary>

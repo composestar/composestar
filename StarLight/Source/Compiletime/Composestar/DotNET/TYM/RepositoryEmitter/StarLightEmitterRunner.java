@@ -236,6 +236,7 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //get stored method:
                 String key = createKey( method );
                 storedMethod = (MethodElement) index.get( key );
+                storedMethod.set_HasFiltersAvailable( true );
                 Debug.out( Debug.MODE_DEBUG, "Emitter",  "key:" +key);
 
                 if (storedMethod == null) {
@@ -321,12 +322,18 @@ public class StarLightEmitterRunner implements CTCommonModule
             CallElement storedCall = (CallElement) index.get( key );
             
             //add outputfilter code:
-            InlineInstruction instruction =
-                translateInstruction( ModelBuilder.getOutputFilterCode( call ) );
-            storedCall.set_OutputFilter( instruction );
-            
-            //write call back:
-            repository.storeCallElement( storedCall );
+            Block code = ModelBuilder.getOutputFilterCode( call );
+            if ( code != null ){
+            	InlineInstruction instruction = translateInstruction( code );
+            	storedCall.set_OutputFilter( instruction );
+
+            	//write call back:
+            	repository.storeCallElement( storedCall );
+            	
+            	//tag MethodElement:
+            	storedMethod.set_HasFiltersAvailable( true );
+            	repository.storeMethodElement( storedMethod );
+            }
         }
     }
     
@@ -362,8 +369,19 @@ public class StarLightEmitterRunner implements CTCommonModule
     private static class InstructionTranslater implements Visitor{
         private final static InstructionTranslater INSTANCE = new InstructionTranslater();
         
+        private Hashtable fullNameMap = new Hashtable();
         
         private InstructionTranslater(){
+        	Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
+        	
+        	DataStore dataStore = DataStore.instance();
+        	Iterator iter = dataStore.getAllInstancesOf( 
+        			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class );
+        	while( iter.hasNext() ){
+        		filterAction = 
+        			(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction) iter.next();
+        		fullNameMap.put( filterAction.getName(), filterAction.getFullName() );
+        	}
         }
         
         public static InstructionTranslater getInstance(){
@@ -453,10 +471,15 @@ public class StarLightEmitterRunner implements CTCommonModule
         public Object visitFilterAction(FilterAction filterAction){
             String selector = filterAction.getMessage().getSelector().getName();
             String target = filterAction.getMessage().getTarget().getName();
+            String substitutionSelector = filterAction.getSubstitutedMessage().getSelector().getName();
+            String substitutionTarget = filterAction.getSubstitutedMessage().getTarget().getName();
+            
+            String fullName = (String) fullNameMap.get( filterAction.getType() );
             
             Composestar.Repository.LanguageModel.Inlining.FilterAction newFilterAction = 
                 new Composestar.Repository.LanguageModel.Inlining.FilterAction( 
-                        filterAction.getType(), selector, target );
+                        filterAction.getType(), fullName, selector, target, 
+                        substitutionSelector, substitutionTarget );
             
             setLabel( filterAction, newFilterAction );
             

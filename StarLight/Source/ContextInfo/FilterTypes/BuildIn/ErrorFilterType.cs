@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
-    [FilterTypeAttribute( "Error", "ErrorAction", "ContinueAction",
-        "ContinueAction", "ContinueAction" )]
+    [FilterTypeAttribute("Error", "ContinueAction", "ErrorAction",
+      "ContinueAction", "ContinueAction")]
     public class ErrorFilterType : FilterType
     {
     }

@@ -100,6 +100,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
+
+            // Create a list to store the FilterTypes in
+            List<FilterTypeElement> filterTypes = new List<FilterTypeElement>();
+
+            // Create a list to store the FilterActions in
+            List<FilterActionElement> filterActions = new List<FilterActionElement>();
                    
             // Create the analyzer using the object builder
             analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
@@ -171,6 +177,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     assembly = analyzer.ExtractAllTypes(item);
                     assemblies.Add(assembly);
 
+                    // add FilterTypes
+                    filterTypes.AddRange(analyzer.FilterTypes);
+
+                    // add FilterActions
+                    filterActions.AddRange(analyzer.FilterActions);
+                    
                     Log.LogMessageFromResources("AssemblyAnalyzed", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
@@ -257,6 +269,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 // TODO: checken of assembly bestaat en dan 'updaten', bv. nieuwe types toevoegen aan system assembly
 
                 langModelAccessor.AddAssemblies(assemblies, analyzer.ResolvedTypes);
+                langModelAccessor.AddFilterTypes(filterTypes);
+                langModelAccessor.AddFilterActions(filterActions);
 
                 sw.Stop();
 

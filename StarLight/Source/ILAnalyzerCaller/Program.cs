@@ -201,6 +201,8 @@ namespace Composestar.StarLight.ILAnalyzerCaller
 
                 sw.Start();
 
+                ra.AddFilterTypes(analyzer.FilterTypes);
+                ra.AddFilterActions(analyzer.FilterActions);
                 ra.AddAssemblies(assemblies, analyzer.ResolvedTypes);
 
                 ra.Close();

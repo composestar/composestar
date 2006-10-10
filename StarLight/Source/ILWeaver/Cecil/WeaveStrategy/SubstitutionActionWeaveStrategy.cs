@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
+using Composestar.Repository.LanguageModel.Inlining;
+
+namespace Composestar.StarLight.ILWeaver
+{
+    class SubstitutionActionWeaveStrategy : FilterActionWeaveStrategy
+    {
+        /// <summary>
+        /// Returns the name of the FilterAction for which this is the 
+        /// weaving strategy.
+        /// </summary>
+        public override String FilterActionName
+        {
+            get
+            {
+                return "SubstitutionAction";
+            }
+        }
+
+
+        public override void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
+            MethodDefinition originalCall)
+        {
+            //do nothing
+        }
+    }
+}

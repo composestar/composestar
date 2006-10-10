@@ -54,13 +54,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\CecilILWeaver.cs" />
     <Compile Include="Cecil\CecilUtilities.cs" />
     <Compile Include="Cecil\CecilWeaverConfiguration.cs" />
+    <Compile Include="Cecil\WeaveStrategy\AdviceActionWeaveStrategy.cs" />
+    <Compile Include="Cecil\WeaveStrategy\ContinueActionWeaveStrategy.cs" />
+    <Compile Include="Cecil\WeaveStrategy\DefaultWeaveStrategy.cs" />
+    <Compile Include="Cecil\WeaveStrategy\DispatchActionWeaveStrategy.cs" />
+    <Compile Include="Cecil\WeaveStrategy\ErrorActionWeaveStrategy.cs" />
+    <Compile Include="Cecil\WeaveStrategy\FilterActionWeaveStrategy.cs" />
     <Compile Include="Cecil\Visitors\CecilConditionsVisitor.cs" />
     <Compile Include="Cecil\Visitors\CecilInliningInstructionVisitor.cs" />
+    <Compile Include="Cecil\WeaveStrategy\SubstitutionActionWeaveStrategy.cs" />
+    <Compile Include="Cecil\WeaveStrategy\WeaveStrategyUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>

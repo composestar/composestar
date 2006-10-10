@@ -146,6 +146,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			FilterAction filterAction = new FilterAction();
 			filterAction.setName( storedAction.get_Name() );
+			filterAction.setFullName( storedAction.get_FullName() );
 			filterAction.setFlowBehaviour( storedAction.get_FlowBehaviour() );
 			filterAction.setMessageChangeBehaviour( storedAction.get_MessageChangeBehaviour() );
 			

@@ -25,6 +25,7 @@ namespace Composestar.StarLight.ILWeaver
     /// </summary>
     public class CecilUtilities
     {
+        public const string VoidType = "System.Void";
 
         private static string _binFolder;
         private static ILWeaverAssemblyResolver _resolver;
@@ -95,6 +96,8 @@ namespace Composestar.StarLight.ILWeaver
 
             return (TypeReference)td;
         }
+
+        
 
         //public static TypeReference ResolveType( string typeName, ILanguageModelAccessor languageModelAccessor )
         //{
