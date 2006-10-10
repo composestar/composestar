@@ -69,9 +69,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestTarget.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
@@ -85,6 +82,10 @@
     <ProjectReference Include="..\..\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestTarget\TestTarget.csproj">
+      <Project>{2A0211B9-5EA6-439F-A5E7-9C16F35BDD5E}</Project>
+      <Name>TestTarget</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

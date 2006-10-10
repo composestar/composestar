@@ -53,7 +53,7 @@ namespace TestILAnalyzer
         }
 
         [TestMethod]
-        [ExpectedException(typeof(StarLightException))]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void AnalyzerThrowsExceptionIfFileDoesntExists()
         {
             CecilAnalyzerConfiguration configuration = CecilAnalyzerConfiguration.CreateDefaultConfiguration(string.Empty);
@@ -64,7 +64,7 @@ namespace TestILAnalyzer
 
        
         [TestMethod]
-        [ExpectedException(typeof(StarLightException))]
+        [ExpectedException(typeof(BadImageFormatException))]
         [DeploymentItem("InvalidImage.exe")]
         public void InitializeThrowsBadImageExceptionOnInvalidInputImage()
         {

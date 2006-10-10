@@ -63,7 +63,7 @@ namespace TestILAnalyzer
         /// Test target must return assembly
         /// </summary>
         [TestMethod]
-        [DeploymentItem("TestTarget.exe")]
+        [DeploymentItem(TestInputImage)]
         public void TestTargetMustReturnCorrectAssembly()
         {
             // set up model 
@@ -93,7 +93,7 @@ namespace TestILAnalyzer
             Assert.IsFalse(string.IsNullOrEmpty(te.Name), "Name has not been stored.");
             Assert.IsFalse(string.IsNullOrEmpty(te.Namespace), "Namespace has not been stored.");
              
-            Assert.IsTrue(te.MethodElements.Length == 1, "Methods not stored in the TypeElement. {0} methods found", te.MethodElements.Length);
+            Assert.IsTrue(te.MethodElements.Length == 2, "Methods not stored in the TypeElement. {0} methods found", te.MethodElements.Length);
  
             MethodElement me = te.MethodElements[0];
  
