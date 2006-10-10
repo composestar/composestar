@@ -1,0 +1,1278 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8831BBBE-2944-4854-8C11-988CCED3D938}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>PurpleSharp</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Purple</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE;PROFILE</DefineConstants>
+    <DocumentationFile>docu.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Design">
+      <Name>System.Design</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Web">
+      <Name>System.Web</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\Action.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions\ActionBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions\ActionChain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions\ActionGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions\ActionManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Actions\ActionScheduler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\FSM\State.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\FSM\StateMachine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\FSM\States.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\FSM\Transition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\FSM\Transitions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\Gesture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\GestureBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\Gestures.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AI\Pathfinding\AStar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\Aspect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\AspectDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\AspectException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\IAspect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\IAspectComponent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\IAspectDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Aspect\Weaver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Code\CodeBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Code\MethodHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Code\TypeCodeBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\Collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\CollectionBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\CollectionConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\FixedBag.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\FixedRoundBuffer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\Heap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\IPriorityQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\SortedMultiList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Database.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Debug\ConsoleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Debug\ExceptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Debug\IContainsTraceListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Debug\ScriptingHostTemplateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Debug\TextBoxListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Debug\WatchList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EventHandlers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\PurpleException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Exceptions\StreamException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\IApplication.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Framework\PurpleControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Framework\PurpleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Graphics\Alignment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\AnimationPlayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\BufferManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Camera.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\CameraController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Capabilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Color.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IGraphicsEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IPhysicalGraphicsBuffer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IPixelShader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IRenderStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\ISampler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IShaderCompiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IShaderConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\ISurface.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\ITexture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\ITextureLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IVertexDeclaration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Core\IVertexShader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Definitions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Device.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\DisplayMode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\DisplayModes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Edge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\EffectCompiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\Effects.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\IEffect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\IEffectCompiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\Pass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\Passes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\PreProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\ShaderEffect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\Technique.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Effect\Techniques.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\AnimationClip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\BlendMesh.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\BoneArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\BoneArrays.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Channel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\IAnimatedMesh.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\IAnimationImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\IMeshImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\IModelImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\BinaryAnimationImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\BinaryModelImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\MD2Loader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\MD3Loader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\MD5Loader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\Quake3LevelLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\XmlAnimationImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Importer\XmlModelImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\ISkeletonImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Joint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Mesh.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Model.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Skeleton.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\SkinnedMesh.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\Skinning.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\SubSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Geometry\SubSets.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\GraphicsEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\GraphicsException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\GraphicsSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Anchor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Anchors.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\AnchorsList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\AnimatedGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\AnimatedImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\AnimatedImageSave.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Button.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Converters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\DebugHelp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\DebugInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\DebugOverlay.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\DebugProfiling.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiComboBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiElements.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiGauge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiListBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiPages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiParentElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiProgressBar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiScrollBar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiScrollList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiSlider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiSwitch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\GuiTextBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Image.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Images.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\Overlay.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gui\StandardBehavior.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\HLSL\ICompiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\HLSL\IProgram.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\HLSL\Parameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\HLSL\Parameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\HLSL\ParameterType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\HLSL\Profile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IGraphicsStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IImporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IRecoverAble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IRenderAble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IRenderState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IShader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IShaderConstant.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IShaderConstantHolder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\IText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\DirectionalLight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\IShadowCaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\IShadowImplementation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\Light.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\Material.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\PointLight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\ShadowMapping.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\ShadowVolume.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\SpotLight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Lighting\StencilShadow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\AnimationAffector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\FadeAffector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\IParticle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\IParticleAffector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\IParticleEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\IParticleSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\LineEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\LineParticle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\LineParticleSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\Particle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\Particle2d.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\ParticleBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\ParticleManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\ParticleSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\ParticleSystem2d.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\ParticleSystemBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\SimpleEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Particles\SpotEmitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Semantic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\ShaderConstant.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\ShaderConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\ShaderConstantWrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\AlphaState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\CCWStencilState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\ClearState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\CullModeState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\RenderStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\StencilState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\TextureAddressState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\TextureFilterState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\TextureState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\States\ZBufferState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\StreamFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\SubTexture.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Terrain\HeightMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Text.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TextureDescription.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TextureManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Textures.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TexturesStages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Transformations.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Triangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\IMeshQuad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\IMeshQuadFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\IQuad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\IQuadFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\MeshQuad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\Quad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\QuadFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\QuadManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\TwoD\QuadUtil.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Util.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\BinormalStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\BoneIndicesStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\BoneWeightsStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\ColorStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\CompressedNormalStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\FloatStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\GraphicsStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\IndexStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\IndexStream16.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\IndexStream32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\Interfaces.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\IntStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\NormalStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\PositionStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\PositionStream2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\PositionStream4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\SoftwareBoneIndicesStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\SoftwareBoneWeightsStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\SoftwareStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\TangentStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexStreams\TextureStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\VertexUnit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Graphics\Viewport.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IApply.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\Capabilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\ForceFeedback\IEffect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\IGamePad.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\IInputDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\IInputEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\IKeyboard.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\IMouse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\InputEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Input\Keys.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\FileSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\Folder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\IFileSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\IFileSystemContainer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\Path.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\RefFileSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IO\ResourceFileSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IRender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Log.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\DebugWindowListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\FileListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\ILogListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\Logger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\LogListeners.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\TreeViewListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\AABB.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Basic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Box.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\BSplines.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\CRSpline.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Frustum.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Line.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Matrix.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Plane.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Quaternion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Sphere.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\TestCases\MatrixTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Trigonometry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Vector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\VectorConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\ConnectionArguments.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Connections\SocketConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Connections\SocketListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Connections\TcpConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Connections\TcpListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Connections\UdpConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Connections\UdpListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\IConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\IListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\ListenerArguments.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Packets\Packet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Packets\Packetizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Net\Queues\ObjectQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Player\Clip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Player\ClipPlayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Player\IClipPlayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Player\IPlayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Player\Player.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlugIn\Factory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlugIn\PlugIn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlugIn\PlugInException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PlugIn\RemoteLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Profiling\Profiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Profiling\ProfilingData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Profiling\ProfilingLogger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Profiling\ProfilingSample.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\CompilerErrorException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Exceptions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\IScript.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\IScriptingEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\IScriptingHost.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Parser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Resource\ResourceParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Resource\ResourceScanner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Resource\ResourceScope.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Resource\ResourceSemantics.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Resource\ShortCutAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Resource\XmlResourceParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Scanner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\ScriptingHostBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Scriptlet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripting\Variables.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\BinarySerializeCodec.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\CannotSerializeAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\ISerializeCodec.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\ISerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\ReferenceManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\SerializeAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\Serializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\Serializers\Array.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\Serializers\AttributeSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\Serializers\Primitive.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\Serializers\Reference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\Serializers\String.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\SerializeStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Serialization\XmlSerializeCodec.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\Channel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\ICDObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\ISampleObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\ISoundEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\ISoundObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\IStreamObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\SoundEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\SoundException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\StreamProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sound\VolumeFade.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\PerformanceTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\PerformanceTester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\PerformanceTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Testing\TestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\TestCaseBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\TestCases\ExamplePerformanceTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\TestCases\ExampleTestCase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\Tester.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\TesterBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\TestException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\Counter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\Dll.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\Garbage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\ICommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\IdProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\KeepAlive.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\Memory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\PropertySet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\PURL.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\RawSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\Registry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\StreamHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\StringHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\SubArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\TypeComparer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tools\TypeRegistry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Debug\ConsoleForm.resx">
+      <DependentUpon>ConsoleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Debug\ExceptionForm.resx">
+      <DependentUpon>ExceptionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Debug\ScriptingHostTemplateForm.resx">
+      <DependentUpon>ScriptingHostTemplateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Framework\PurpleControl.resx">
+      <DependentUpon>PurpleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Graphics\Effect\Library\ffshaders.fx" />
+    <EmbeddedResource Include="Graphics\Effect\Library\quake.fx">
+      <SubType>Code</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Graphics\Effect\Library\renderDepth.fx" />
+    <EmbeddedResource Include="Graphics\Effect\Library\shaders.fx" />
+    <EmbeddedResource Include="Graphics\Effect\Library\structs.fx" />
+    <EmbeddedResource Include="Graphics\Effect\Library\tex.fx">
+      <SubType>Code</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Graphics\Lighting\StencilShadow.fx" />
+    <EmbeddedResource Include="Graphics\Particles\LineParticle.fx" />
+    <EmbeddedResource Include="Graphics\Particles\Particle.fx" />
+    <EmbeddedResource Include="Graphics\Particles\Particle2d.fx" />
+    <EmbeddedResource Include="Graphics\TwoD\2d.fx" />
+    <EmbeddedResource Include="Input\Cursor.png" />
+    <EmbeddedResource Include="Testing\PerformanceTestForm.resx">
+      <DependentUpon>PerformanceTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Testing\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
