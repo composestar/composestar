@@ -120,6 +120,9 @@ namespace Composestar.Repository.Db4oContainers
             RepositoryFileName = fileName;
             if (File.Exists(fileName)) AdjustClassNames();
             dbContainer = Db4o.OpenFile(fileName);
+
+            //((YapStream)dbContainer).GetNativeQueryHandler().QueryExecution += new com.db4o.inside.query.QueryExecutionHandler(Program_QueryExecution);
+ 
         }
 
         /// <summary>
@@ -141,6 +144,14 @@ namespace Composestar.Repository.Db4oContainers
             CloseContainer();
 
             File.Delete(_yapFileName);
+        }
+
+        static void Program_QueryExecution(object sender, com.db4o.inside.query.QueryExecutionEventArgs args)
+        {
+            //using (StreamWriter writer = File.AppendText(GetPersonalFilePath("CFNativeQueriesEnabler.Example.txt")))
+            //{/
+            Console.WriteLine("{0} - {1}: {2}", DateTime.Now, args.ExecutionKind, args.Predicate);
+            //}
         }
 
         /// <summary>

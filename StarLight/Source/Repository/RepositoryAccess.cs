@@ -230,7 +230,7 @@ namespace Composestar.Repository
 
             IList<MethodElement> ret = container.GetObjectQuery<MethodElement>(delegate(MethodElement me)
             {
-                return (me.ParentTypeId == typeInfo.Id) && (me.Signature.Equals(methodSignature, StringComparison.CurrentCultureIgnoreCase));
+                return (me.ParentTypeId == typeInfo.Id) && (me.Signature.Equals(methodSignature));
             });
 
             if (ret.Count == 1)

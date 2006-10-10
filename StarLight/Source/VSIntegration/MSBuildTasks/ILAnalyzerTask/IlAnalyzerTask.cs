@@ -125,16 +125,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
             }
 
-            // Remove all obsolete assemblies from the database
-            IList<AssemblyElement> storedAssemblies = langModelAccessor.GetAssemblyElements();
-            foreach (AssemblyElement storedAssembly in storedAssemblies)
-            {
-                if (!assemblyFileList.Contains(storedAssembly.FileName) && !refAssemblies.ContainsKey(storedAssembly.Name))
-                {
-                    Log.LogMessageFromResources("RemovingFileFromDatabase", storedAssembly.Name);
-                    langModelAccessor.DeleteAssembly(storedAssembly.Name);
-                }
-            }
+            //// Remove all obsolete assemblies from the database
+            //IList<AssemblyElement> storedAssemblies = langModelAccessor.GetAssemblyElements();
+            //foreach (AssemblyElement storedAssembly in storedAssemblies)
+            //{
+            //    if (!assemblyFileList.Contains(storedAssembly.FileName) && !refAssemblies.ContainsKey(storedAssembly.Name))
+            //    {
+            //        Log.LogMessage("Removing {0}", storedAssembly.Name);
+            //        langModelAccessor.DeleteAssembly(storedAssembly.Name);
+            //    }
+            //}
 
             // Add all the unresolved types (used in the concern files) to the analyser
             Log.LogMessageFromResources("NumberOfReferencesToResolve", ReferencedTypes.Length);
@@ -217,7 +217,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 // Step 2: Analyze all referenced assemblies in the hope we find the unresolved types
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                Log.LogMessageFromResources("AnalyzingUnresolved", refAssemblies.Count, analyzer.UnresolvedTypes.Count);
+                Log.LogMessageFromResources("AnalyzingUnresolved", analyzer.UnresolvedTypes.Count);
 
                 sw.Start();
 

@@ -233,7 +233,15 @@ namespace Composestar.StarLight.ILAnalyzer
 
             ae.Name = targetAssemblyDefinition.Name.FullName;
             ae.FileName = fileName;
-            ae.Timestamp = File.GetLastWriteTime(fileName).Ticks;
+
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                ae.Timestamp = File.GetLastWriteTime(fileName).Ticks;
+            }
+            else
+            {
+                ae.Timestamp = TimeSpan.Zero.Ticks;
+            }
 
             ae.TypeElements = ExtractTypes(targetAssemblyDefinition, ae, targetAssemblyDefinition.MainModule.Types);
 
@@ -700,16 +708,26 @@ namespace Composestar.StarLight.ILAnalyzer
 
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            
             if (UnresolvedTypes.Count > 0)
             {
+                // Add all assemblies we can resolve from the AFQN type names
+                foreach (String type in UnresolvedTypes)
+                {
+                    String assemblyName = null;
+                    if (type.Contains(", ")) assemblyName = type.Substring(type.IndexOf(", ") + 2);
+                    if (assemblyName != null && !assemblyNames.ContainsKey(assemblyName)) assemblyNames.Add(assemblyName, String.Empty);
+                }
+
+                if (assemblyNames.Count == 0) return new List<AssemblyElement>();
+                
                 // Use the Cecil assembly resolver to find the missing assemblies
                 DefaultAssemblyResolver dar = new DefaultAssemblyResolver();
                 foreach (String assemblyName in assemblyNames.Keys)
                 {
-                    //Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
+                    Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
                     AssemblyDefinition ad = dar.Resolve(assemblyName);
                     if (ad != null)
                     {
@@ -729,10 +747,15 @@ namespace Composestar.StarLight.ILAnalyzer
                         _processMethodBody = true;
                     }
                 }
+
+                if (UnresolvedTypes.Count > 0)
+                {
+                    ProcessUnresolvedTypes(new Dictionary<string, string>());
+                }
             }
 
-            sw.Stop();
-            _lastDuration = sw.Elapsed;
+            //sw.Stop();
+            //_lastDuration = sw.Elapsed;
 
             return assemblies;
         }

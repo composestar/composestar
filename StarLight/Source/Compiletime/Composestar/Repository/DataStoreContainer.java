@@ -33,6 +33,8 @@ public class DataStoreContainer {
 
         
 		// Indexes
+        Db4o.configure().objectClass(AssemblyElement.class).objectField("_fileName").indexed(true);
+        
         Db4o.configure().objectClass(TypeElement.class).objectField("_id").indexed(true);
         Db4o.configure().objectClass(TypeElement.class).objectField("_fullName").indexed(true);
         Db4o.configure().objectClass(TypeElement.class).objectField("_assembly").indexed(true);
@@ -47,7 +49,12 @@ public class DataStoreContainer {
 
         Db4o.configure().objectClass(AttributeElement.class).objectField("_parentId").indexed(true);
         
+        Db4o.configure().objectClass(CallElement.class).objectField("_parentMethodBodyId").indexed(true);
+        
         dbContainer = Db4o.openFile(yapFileName);
+        
+        // Debug native query optimization
+        //((com.db4o.YapStream)dbContainer).getNativeQueryHandler().addListener(new com.db4o.inside.query.Db4oQueryExecutionListener() {  public void notifyQueryExecuted(com.db4o.inside.query.NQOptimizationInfo info) { System.out.println(info.message() + " - " + info.predicate().toString());  }});
     }
     
     protected void finalize () {
