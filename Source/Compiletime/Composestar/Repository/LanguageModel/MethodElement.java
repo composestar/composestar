@@ -27,6 +27,23 @@ public class MethodElement implements IRepositoryElement
 			
 	}
 
+	private boolean _filtersAvailable;
+
+	/* Indicates if this method has filters. */
+	/** @property */
+	public boolean get_HasFiltersAvailable()
+	{
+		return _filtersAvailable;
+	}
+
+	/* Indicates if this method has filters. */
+	/** @property */
+	public void set_HasFiltersAvailable(boolean value)
+	{
+		_filtersAvailable = value;
+	} 
+
+
 	/** @property */
 	public String get_Signature()
 	{
