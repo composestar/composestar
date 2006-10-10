@@ -181,18 +181,6 @@ namespace Composestar.Repository.Db4oContainers
         }
 
         /// <summary>
-        /// Gets the object query.
-        /// </summary>
-        /// <param name="match">The match.</param>
-        /// <returns></returns>
-        public IList<T> GetObjectQuery11<T>(Predicate<T> match)
-        {
-            CheckForOpenDatabase();
-
-            return null;// dbContainer.Query<T>(match);
-        }
-
-        /// <summary>
         /// Checks for open database.
         /// </summary>
         private void CheckForOpenDatabase()

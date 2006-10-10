@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,7 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository.LanguageModel.ConditionExpressions;
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.CoreServices;
+#endregion
 
 namespace Composestar.Repository
 {
@@ -189,6 +191,32 @@ namespace Composestar.Repository
             return ret;
         }
 
+
+
+        /// <summary>
+        /// Gets the type elements by assembly in a dictionary with the fullname as key.
+        /// </summary>
+        /// <param name="assemblyElement">The assembly element.</param>
+        /// <returns></returns>
+        public Dictionary<String, TypeElement>  GetTypeElementsByAssembly(AssemblyElement assemblyElement)
+        {
+            string name = assemblyElement.Name;
+
+            IList<TypeElement> typeElements = container.GetObjectQuery<TypeElement>(delegate(TypeElement te)
+            {
+                return te.Assembly.Equals(name);
+            });
+            
+            Dictionary<String, TypeElement> ret = new Dictionary<String, TypeElement>();
+
+            foreach (TypeElement typeElement in typeElements)
+            {
+                ret.Add(typeElement.FullName, typeElement ); 
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// Gets the method info.
         /// </summary>
@@ -254,6 +282,33 @@ namespace Composestar.Repository
 
             return result;
         }
+
+        /// <summary>
+        /// Gets the method elements in a dictionary with the type as key.
+        /// </summary>
+        /// <returns>Dictionary</returns>
+        public Dictionary<String, List<MethodElement>> GetMethodElements()
+        {
+
+            IList<MethodElement> methods = container.GetObjects<MethodElement>();
+
+            Dictionary<String, List<MethodElement>> ret = new Dictionary<String, List<MethodElement>>();
+
+            foreach (MethodElement met in methods)
+            {
+                if (ret.ContainsKey(met.ParentTypeId))
+                    ret[met.ParentTypeId].Add(met);
+                else
+                {
+                    List<MethodElement> methodsList = new List<MethodElement>();
+                    methodsList.Add(met);
+                    ret.Add(met.ParentTypeId, methodsList);
+                } // else
+            }
+
+            return ret;
+
+        } // GetMethodElements()
 
         /// <summary>
         /// Gets the parameter elements.
@@ -352,6 +407,60 @@ namespace Composestar.Repository
             return result;
 
         }
+
+        /// <summary>
+        /// Gets the externals in a dictionary with the type ID as key.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<String, List<External>> GetExternals()
+        {
+
+            IList<External> externals = container.GetObjects<External>();
+ 
+            Dictionary<String, List<External>> ret = new Dictionary<String, List<External>>();
+
+            foreach (External ext in externals)
+            {
+                if (ret.ContainsKey(ext.ParentTypeId) )
+                    ret[ext.ParentTypeId].Add(ext);
+                else
+                {
+                    List<External> externalList = new List<External>();
+                    externalList.Add(ext); 
+                    ret.Add(ext.ParentTypeId, externalList); 
+                } // else
+            }
+
+            return ret;
+
+        } // GetExternals()
+
+
+        /// <summary>
+        /// Gets the internals in a dictionary with the type ID as key.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<String, List<Internal>> GetInternals()
+        {
+             IList<Internal> intern = container.GetObjects<Internal>();
+ 
+            Dictionary<String, List<Internal>> ret = new Dictionary<String, List<Internal>>();
+
+            foreach (Internal inter in intern)
+            {
+                if (ret.ContainsKey(inter.ParentTypeId) )
+                    ret[inter.ParentTypeId].Add(inter);
+                else
+                {
+                    List<Internal> internalList = new List<Internal>();
+                    internalList.Add(inter); 
+                    ret.Add(inter.ParentTypeId, internalList); 
+                } // else
+            }
+
+            return ret;
+
+        } // GetInternals()
 
         /// <summary>
         /// Gets the call by method element.

@@ -70,6 +70,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find the assembly named &apos;{0}&apos; in the database. The file is not analyzed and cannot be processed bij the weaver..
+        /// </summary>
+        internal static string AssemblyElementNotFound {
+            get {
+                return ResourceManager.GetString("AssemblyElementNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The assembly is not open..
         /// </summary>
         internal static string AssemblyNotOpen {
