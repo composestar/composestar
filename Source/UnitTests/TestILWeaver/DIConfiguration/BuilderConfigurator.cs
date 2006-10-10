@@ -4,11 +4,11 @@ using System.Text;
 using Composestar.StarLight.CoreServices;
 using Microsoft.Practices.ObjectBuilder;
 using Composestar.Repository;
-using TestILWeaver.Mocks;
+using TestILAnalyzer.Mocks;
 
-namespace TestILWeaver.DIConfiguration
+namespace TestILAnalyzer.DIConfiguration
 {
-    class ILWeaverTestBuilderConfigurator : ObjectBuilderConfiguratorBase
+    class ILAnalyzerTestBuilderConfigurator : ObjectBuilderConfiguratorBase
     {
         public override void ApplyConfiguration(IBuilder<BuilderStage> builder)
         {
