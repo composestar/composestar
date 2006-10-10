@@ -9,9 +9,14 @@ using Composestar.Repository.LanguageModel.Inlining;
 
 namespace Composestar.StarLight.ILWeaver
 {
+
+    /// <summary>
+    /// TODO generate comment
+    /// </summary>
     public abstract class FilterActionWeaveStrategy
     {
         private static Dictionary<string, FilterActionWeaveStrategy> strategyMapping;
+        private static object lockObject = new Object();
 
         /// <summary>
         /// Returns the name of the FilterAction for which this is the 
@@ -23,19 +28,36 @@ namespace Composestar.StarLight.ILWeaver
         }
 
 
+        /// <summary>
+        /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
+        /// </summary>
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="filterAction">The filter action.</param>
+        /// <param name="originalCall">The original call.</param>
         public abstract void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall);
 
+        /// <summary>
+        /// Gets the filter action weave strategy.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
+        /// <returns></returns>
         public static FilterActionWeaveStrategy GetFilterActionWeaveStrategy(string filterAction)
         {
-            if(strategyMapping == null)
+            if (strategyMapping == null)
             {
-                CreateStrategyMapping();
+                lock (lockObject)
+                {
+                    if (strategyMapping == null) CreateStrategyMapping();
+                } // lock
             }
 
             return strategyMapping[filterAction];
         }
 
+        /// <summary>
+        /// Creates the strategy mapping.
+        /// </summary>
         private static void CreateStrategyMapping()
         {
             strategyMapping = new Dictionary<string, FilterActionWeaveStrategy>();

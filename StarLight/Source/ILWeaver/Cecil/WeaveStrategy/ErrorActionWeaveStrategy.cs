@@ -9,6 +9,9 @@ using Composestar.Repository.LanguageModel.Inlining;
 
 namespace Composestar.StarLight.ILWeaver
 {
+    /// <summary>
+    /// TODO generate comment
+    /// </summary>
     class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
     {
         /// <summary>

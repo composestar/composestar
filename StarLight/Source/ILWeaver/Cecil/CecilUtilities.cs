@@ -124,10 +124,10 @@ namespace Composestar.StarLight.ILWeaver
         public static MethodReference ResolveMethod(string methodName, string typeName, string assemblyName, string assemblyFile)
         {
             // If in cache, retrieve
-            string CacheKey = CreateCacheKey(methodName, typeName, assemblyName);
+            string cacheKey = CreateCacheKey(methodName, typeName, assemblyName);
 
-            if (_methodsCache.ContainsKey(CacheKey))
-                return _methodsCache[CacheKey];
+            if (_methodsCache.ContainsKey(cacheKey))
+                return _methodsCache[cacheKey];
 
             // TODO make sure we can use the assemblyName
 
@@ -161,7 +161,7 @@ namespace Composestar.StarLight.ILWeaver
                 return null;
 
             // Add to the cache
-            _methodsCache.Add(CacheKey, md);
+            _methodsCache.Add(cacheKey, md);
 
             return (MethodReference)md;
 
@@ -274,8 +274,8 @@ namespace Composestar.StarLight.ILWeaver
     public class ILWeaverAssemblyResolver : BaseAssemblyResolver
     {
 
-        Dictionary<string, AssemblyDefinition> m_cache;
-        string _binFolder;
+        private Dictionary<string, AssemblyDefinition> m_cache;
+        private string _binFolder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverAssemblyResolver"/> class.
