@@ -90,12 +90,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 // Pass all the referenced types back to msbuild
                 if (refTypes != null && refTypes.Count > 0)
                 {
-                    Log.LogMessage("Found {0} referenced types in {1} concerns in {2:0.0000} seconds.", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
+                    Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
                     int index = 0;
                     ReferencedTypes = new ITaskItem[refTypes.Count];
                     foreach (String type in refTypes)
-                    {
-                        //Log.LogMessageFromResources("FoundReferenceType", type);
+                    {                        
                         ReferencedTypes[index] = new TaskItem(type);
                         index++;
                     } // foreach  (type)

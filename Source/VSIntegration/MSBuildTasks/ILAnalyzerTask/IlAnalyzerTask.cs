@@ -91,11 +91,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// true if the task successfully executed; otherwise, false.
         /// </returns>
         public override bool Execute()
-        {
-
-            // TODO add strings to resource file
-
-            Log.LogMessage("Analyzing the IL files using the Cecil IL Analyzer");
+        {                   
+            Log.LogMessageFromResources("AnalyzerStartText");
 
             IILAnalyzer analyzer = null;
             CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
@@ -134,13 +131,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 if (!assemblyFileList.Contains(storedAssembly.FileName) && !refAssemblies.ContainsKey(storedAssembly.Name))
                 {
-                    Log.LogMessage("Removing {0}", storedAssembly.Name);
+                    Log.LogMessageFromResources("RemovingFileFromDatabase", storedAssembly.Name);
                     langModelAccessor.DeleteAssembly(storedAssembly.Name);
                 }
             }
 
             // Add all the unresolved types (used in the concern files) to the analyser
-            Log.LogMessage("Referenced types to resolve: {0}", ReferencedTypes.Length);
+            Log.LogMessageFromResources("NumberOfReferencesToResolve", ReferencedTypes.Length);
             foreach (ITaskItem item in ReferencedTypes)
             {
                 analyzer.UnresolvedTypes.Add(item.ToString());
@@ -152,7 +149,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 try
                 {
                     AssemblyElement assembly = null;
-                    Log.LogMessage("Analyzing file '{0}'...", item);
+                    Log.LogMessageFromResources("AnalyzingFile", item);
 
                     // Try to get the assembly information from the database
                     assembly = langModelAccessor.GetAssemblyElementByFileName(item);
@@ -161,7 +158,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         if (assembly.Timestamp == File.GetLastWriteTime(item).Ticks)
                         {
                             // Assembly has not been modified, skipping analysis
-                            Log.LogMessage("File analysis summary: assembly has not been modified, skipping analysis.");
+                            Log.LogMessageFromResources("AssemblyNotModified");
                             continue;
                         }
                         else
@@ -174,7 +171,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     assembly = analyzer.ExtractAllTypes(item);
                     assemblies.Add(assembly);
 
-                    Log.LogMessage("File analysis summary: {0} types found in {2:0.0000} seconds. ({1} types not resolved)", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                    Log.LogMessageFromResources("AssemblyAnalyzed", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
                 {
@@ -196,7 +193,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 // Step 1: Check if local database already contain the type
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                Log.LogMessage("Searching local database for {0} unresolved types...", analyzer.UnresolvedTypes.Count);
+                Log.LogMessageFromResources("SearchingInDatabase", analyzer.UnresolvedTypes.Count);
 
                 sw.Start();
 
@@ -214,13 +211,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 sw.Stop();
 
-                Log.LogMessage("Found {0} types in local database in {1:0.0000} seconds.", numberOfResolvedTypes, sw.Elapsed.TotalSeconds);
+                Log.LogMessageFromResources("FoundInDatabase", numberOfResolvedTypes, sw.Elapsed.TotalSeconds);
             }
             if (analyzer.UnresolvedTypes.Count > 0)
             {
                 // Step 2: Analyze all referenced assemblies in the hope we find the unresolved types
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                Log.LogMessage("Analyzing {0} referenced assemblies for {1} unresolved types...", refAssemblies.Count, analyzer.UnresolvedTypes.Count);
+                Log.LogMessageFromResources("AnalyzingUnresolved", refAssemblies.Count, analyzer.UnresolvedTypes.Count);
 
                 sw.Start();
 
@@ -228,14 +225,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 sw.Stop();
 
-                Log.LogMessage("Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining.", analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+                Log.LogMessageFromResources("AnalyzingUnresolvedCompleted", analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
             if (analyzer.UnresolvedTypes.Count > 0)
             {
                 // Step 3: Unable to resolve some types, throw an error
                 foreach (String type in analyzer.UnresolvedTypes)
                 {
-                    Log.LogError("Unable to resolve type '{0}', are you missing an assembly reference?", type);
+                    Log.LogErrorFromResources("UnableToResolve", type);
                 }
             }
 
@@ -243,7 +240,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             if (assemblies.Count > 0 && !Log.HasLoggedErrors)
             {
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                Log.LogMessage("Storing type information for {0} assemblies in database...", assemblies.Count);
+                Log.LogMessageFromResources("StoreInDatabase", assemblies.Count);
 
                 sw.Start();
 
@@ -253,7 +250,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 sw.Stop();
 
-                Log.LogMessage("Storage summary: {0} assemblies with a total of {1} types stored in {2:0.0000} seconds.", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
+                Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
 
           

@@ -151,9 +151,84 @@
     <value>The generated IL in file '{0}' could not be verified as correct IL code.</value>
   </data>
   <data name="FoundReferenceType" xml:space="preserve">
-    <value>  found referenced type '{0}'</value>
+    <value>Found {0} referenced types in {1} concern(s) in {2:0.0000} seconds.</value>
   </data>
   <data name="ParsingConcernFile" xml:space="preserve">
-    <value>Parsing concern file '{0}'...</value>
+    <value>Parsing concern file '{0}'.</value>
+  </data>
+  <data name="AddingConcernFile" xml:space="preserve">
+    <value>Adding concern file '{0}' to the repository.</value>
+  </data>
+  <data name="AnalyzerStartText" xml:space="preserve">
+    <value>Analyzing the IL files using the Cecil IL Analyzer.</value>
+  </data>
+  <data name="AnalyzingFile" xml:space="preserve">
+    <value>Analyzing file '{0}'.</value>
+  </data>
+  <data name="AnalyzingUnresolved" xml:space="preserve">
+    <value>Analyzing {0} referenced assemblies for {1} unresolved types.</value>
+  </data>
+  <data name="AnalyzingUnresolvedCompleted" xml:space="preserve">
+    <value>Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining.</value>
+  </data>
+  <data name="AssemblyAnalyzed" xml:space="preserve">
+    <value>Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} types not resolved).</value>
+  </data>
+  <data name="AssemblyNotModified" xml:space="preserve">
+    <value>Assembly has not been modified, analysis of this file is skipped.</value>
+  </data>
+  <data name="FoundInDatabase" xml:space="preserve">
+    <value>Retrieved {0} types from the local database in {1:0.0000} seconds.</value>
+  </data>
+  <data name="JavaStartMessage" xml:space="preserve">
+    <value>Java will be executed with the following arguments: {0}</value>
+  </data>
+  <data name="MasterCompleted" xml:space="preserve">
+    <value>StarLight Master run completed successfully in {0:0.0000} seconds.</value>
+  </data>
+  <data name="MasterStartText" xml:space="preserve">
+    <value>Preparing to start StarLight Java Master by collecting data.</value>
+  </data>
+  <data name="NumberOfReferencesToResolve" xml:space="preserve">
+    <value>Referenced types to resolve: {0}.</value>
+  </data>
+  <data name="OpenDatabase" xml:space="preserve">
+    <value>Opening repository file '{0}'.</value>
+  </data>
+  <data name="RemovingFileFromDatabase" xml:space="preserve">
+    <value>Removing '{0}' from the database.</value>
+  </data>
+  <data name="SearchingInDatabase" xml:space="preserve">
+    <value>Searching in local database for {0} unresolved types.</value>
+  </data>
+  <data name="StoreDebugLevel" xml:space="preserve">
+    <value>Storing debug level {0} in the repository.</value>
+  </data>
+  <data name="StoreInDatabase" xml:space="preserve">
+    <value>Storing type information for {0} assemblies in database.</value>
+  </data>
+  <data name="StoreInDatabaseCompleted" xml:space="preserve">
+    <value>{0} assemblies with a total of {1} types stored in the database in {2:0.0000} seconds.</value>
+  </data>
+  <data name="UnableToResolve" xml:space="preserve">
+    <value>Unable to resolve type '{0}', are you missing an assembly reference?</value>
+  </data>
+  <data name="VerificationCompleted" xml:space="preserve">
+    <value>Verification of '{0}' assemblies executed in {1:0.0000} seconds.</value>
+  </data>
+  <data name="VerificationError" xml:space="preserve">
+    <value>Verification error in '{0}', method '{2}' at {3}: {1}</value>
+  </data>
+  <data name="VerifyingAssembly" xml:space="preserve">
+    <value>Verifying assembly '{0}' using PEVerify.</value>
+  </data>
+  <data name="WeavingCompleted" xml:space="preserve">
+    <value>Weaving completed in {0:0.0000} seconds.</value>
+  </data>
+  <data name="WeavingFile" xml:space="preserve">
+    <value>Weaving file '{0}'.</value>
+  </data>
+  <data name="WeavingStartText" xml:space="preserve">
+    <value>Weaving the filter code using the Cecil IL Weaver.</value>
   </data>
 </root>

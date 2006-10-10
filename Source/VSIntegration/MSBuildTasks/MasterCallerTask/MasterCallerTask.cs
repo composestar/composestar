@@ -115,10 +115,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             sw.Start();
 
             // Open DB
-            Log.LogMessage(MessageImportance.Low, "Opening repository '{0}'.", RepositoryFilename);
+            Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
             _repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
-            Log.LogMessage("Preparing to start master by collecting data.");
+            Log.LogMessageFromResources("MasterStartText");
 
             // Remove all concerns first because the user may have removed a concern from the project
             // after a previous run.
@@ -134,7 +134,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
  
                 ConcernInformation ci = new ConcernInformation(filename, path);
 
-                Log.LogMessage("Adding concern '{0}' to the repository.", filename);
+                Log.LogMessageFromResources("AddingConcernFile", filename);
                 _repositoryAccess.AddConcern(ci);
             }
 
@@ -147,7 +147,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Place debuglevel
-            Log.LogMessage("Storing debug level {0} in the repository.", DebugLevel);             
+            Log.LogMessageFromResources("StoreDebugLevel", DebugLevel);             
 
             // Set the Common Configuration
             CommonConfiguration cc = _repositoryAccess.GetCommonConfiguration();                
@@ -189,7 +189,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 process.StartInfo.FileName = JavaExecutable; // In path
             
             process.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
-            Log.LogMessage("Java will be called with the arguments: {0}", process.StartInfo.Arguments ) ;
+            Log.LogMessageFromResources("JavaStartMessage", process.StartInfo.Arguments ) ;
             
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
@@ -206,7 +206,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 if (process.ExitCode == 0)
                 {
                     sw.Stop();
-                    Log.LogMessage("Master run completed successfully in {0:0.0000} seconds.", sw.Elapsed.TotalSeconds);
+                    Log.LogMessageFromResources("MasterCompleted", sw.Elapsed.TotalSeconds);
                     return !Log.HasLoggedErrors;
                 }
                 else

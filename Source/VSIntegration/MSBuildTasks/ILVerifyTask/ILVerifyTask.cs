@@ -88,7 +88,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 try
                 {
                     filename = item.ToString();
-                    Log.LogMessage("Verifying assembly '{0}'...", filename);
+                    Log.LogMessageFromResources("VerifyingAssembly", filename);
 
                     process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", filename);
 
@@ -133,13 +133,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     Log.LogErrorFromException(ex, true);
                 }
-
                  
             }
 
             sw.Stop();
 
-            Log.LogMessage("Verification of '{0}' assemblies executed in {1:0.0000} seconds.", AssemblyFiles.Length, sw.Elapsed.TotalSeconds);
+            Log.LogMessageFromResources("VerificationCompleted", AssemblyFiles.Length, sw.Elapsed.TotalSeconds);
 
             return !Log.HasLoggedErrors;
 
@@ -163,7 +162,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     method = method.Substring(0, method.Length - offset.Length - 2);
                     offset = offset.Substring(0, offset.Length - mes.Length - 2);
 
-                    Log.LogError(String.Format("Verification error in '{0}', method '{2}' at {3}: {1}", filename, mes, method, offset));
+                    Log.LogErrorFromResources("VerificationError", filename, mes, method, offset);
                 }
                 catch (Exception)
                 {
