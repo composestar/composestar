@@ -62,7 +62,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		
 		try {
 			// Attributes.xml is written to this directory
-			this.basePath = project.getProperty("basePath");
+			this.basePath = project.getBasePath();
 			
 			FileInputStream fis = new FileInputStream(source.getFileName());
 			// Create a scanner that reads from the input stream passed to us

@@ -45,19 +45,9 @@
 							</xsl:when>
 						</xsl:choose>
 					</xsl:attribute>
-					<xsl:attribute name="buildPath">
-						<xsl:call-template name="convertBackSlashes">
-							<xsl:with-param name="str" select="concat($basepath, 'obj/')" />
-						</xsl:call-template>
-					</xsl:attribute>
 					<xsl:attribute name="basePath">
 						<xsl:call-template name="convertBackSlashes">
 							<xsl:with-param name="str" select="$basepath" />
-						</xsl:call-template>
-					</xsl:attribute>
-					<xsl:attribute name="outputPath">
-						<xsl:call-template name="convertBackSlashes">
-							<xsl:with-param name="str" select="concat($basepath, 'bin/')" />
 						</xsl:call-template>
 					</xsl:attribute>
 					

@@ -208,7 +208,7 @@ public class DotNETCompiler implements LangCompiler
 	 */
 	private String getDummiesFilePath(Project p)
 	{
-		String dummiesFile = p.getProperty("name") + ".dummies.dll";		
+		String dummiesFile = p.getName() + ".dummies.dll";
 		String basePath = Configuration.instance().getPathSettings().getPath("Base");
 		
 		File base = new File(basePath);

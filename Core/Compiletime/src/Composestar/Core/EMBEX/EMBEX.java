@@ -95,7 +95,7 @@ public class EMBEX implements CTCommonModule
 				else
 				{
 					Project prj = (Project)lpIter.next();
-					Debug.out(Debug.MODE_DEBUG,"EMBEX","Adding embedded code to project: "+prj.getProperty("name"));
+					Debug.out(Debug.MODE_DEBUG,"EMBEX","Adding embedded code to project: " + prj.getName());
 
 					Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
 					source.setFileName(embeddedPath+src.getSourceFile());
@@ -127,4 +127,5 @@ public class EMBEX implements CTCommonModule
 		}
 	}
 }
+
 

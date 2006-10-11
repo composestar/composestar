@@ -47,7 +47,7 @@ public class Projects implements Serializable
 	{
 		allProjects.add(proj);
 
-		String language = proj.getProperty("language");
+		String language = proj.getLanguageName();
 		getProjectsByLanguage(language).add(proj);
 	}
 

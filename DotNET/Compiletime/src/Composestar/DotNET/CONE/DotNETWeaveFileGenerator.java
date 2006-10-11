@@ -117,7 +117,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		while (prjIt.hasNext()) 
 		{
 			Project p = (Project)prjIt.next();
-			String dummies = p.getProperty("name") + ".dummies";
+			String dummies = p.getName() + ".dummies";
 			writeAssemblyDefinitionRecord(dummies, "0.0.0.0", true);
 		}
 
@@ -392,7 +392,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			if (source == null)
 				throw new RuntimeException("Source for " + typeName + " is null");
 			
-			String projectName = source.getProject().getProperty("name");
+			String projectName = source.getProject().getName();
 			String dummies = projectName + ".dummies";
 
 			writeClassReplacementRecord(dummies, typeName, assembly, typeName);

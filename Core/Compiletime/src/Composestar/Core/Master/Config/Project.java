@@ -8,78 +8,130 @@ import java.util.Properties;
 public class Project implements Serializable
 {
 	private Properties properties;
-	private List dependencies;
-	private List sources;
-	private List typeSources;
+	//private String name;
+	//private String language;
+	//private String basePath;
 	private Language language;
+	private List sources;
+	private List dependencies;
+	private List typeSources;
 	private String compiledDummies;
 	private List compiledSources;
-	
-	public Project() {
+
+	public Project()
+	{
 		properties = new Properties();
-		dependencies = new ArrayList();
-		sources = new ArrayList();
-		typeSources = new ArrayList();
 		language = new Language();
+		sources = new ArrayList();
+		dependencies = new ArrayList();
+		typeSources = new ArrayList();
 		compiledSources = new ArrayList();
 	}
 	
-	public void addProperty(String key, String value) {
+	public void setName(String name)
+	{
+		properties.setProperty("name", name);
+	}
+	
+	public String getName()
+	{
+		return properties.getProperty("name");
+	}
+	
+	public void setLanguageName(String language)
+	{
+		properties.setProperty("language", language);
+	}
+	
+	public String getLanguageName()
+	{
+		return properties.getProperty("language");
+	}
+	
+	public void setBasePath(String basePath)
+	{
+		properties.setProperty("basePath", basePath);
+	}
+	
+	public String getBasePath()
+	{
+		return properties.getProperty("basePath");
+	}
+
+	/**
+	 * @deprecated Use setName/setLanguageName/setBasePath.
+	 */ 
+	public void addProperty(String key, String value)
+	{
 		properties.setProperty(key, value);
 	}
-	
-	public String getProperty(String key) {
-		if(properties.containsKey(key))
-			return properties.getProperty(key);
-		return null;
+
+	/**
+	 * @deprecated Use getName/getLanguageName/getBasePath.
+	 */ 
+	public String getProperty(String key)
+	{
+		return properties.getProperty(key);
 	}
-	
-	public void addDependency(Dependency dep) {
+
+	public void addDependency(Dependency dep)
+	{
 		dependencies.add(dep);
 	}
-	
-	public List getDependencies() {
+
+	public List getDependencies()
+	{
 		return dependencies;
 	}
-	
-	public void addSource(Source source) {
+
+	public void addSource(Source source)
+	{
 		sources.add(source);
 		source.setProject(this);
 	}
-	
-	public List getTypeSources() {
+
+	public List getTypeSources()
+	{
 		return typeSources;
 	}
-	
-	public void addTypeSource(TypeSource typesource) {
+
+	public void addTypeSource(TypeSource typesource)
+	{
 		typeSources.add(typesource);
 	}
-	
-	public List getSources() {
+
+	public List getSources()
+	{
 		return sources;
 	}
-	
-	public void setLanguage(Language lang) {
+
+	public void setLanguage(Language lang)
+	{
 		this.language = lang;
 	}
-	
-	public Language getLanguage() {
+
+	public Language getLanguage()
+	{
 		return this.language;
 	}
-	
-	public void setCompiledDummies(String fileName) {
+
+	public void setCompiledDummies(String fileName)
+	{
 		this.compiledDummies = fileName;
 	}
-	
-	public String getCompiledDummies() {
+
+	public String getCompiledDummies()
+	{
 		return compiledDummies;
 	}
-	
-	public void addCompiledSource(String source) {
+
+	public void addCompiledSource(String source)
+	{
 		compiledSources.add(source);
 	}
-	
-	public List getCompiledSources() {
+
+	public List getCompiledSources()
+	{
 		return this.compiledSources;
 	}
 }

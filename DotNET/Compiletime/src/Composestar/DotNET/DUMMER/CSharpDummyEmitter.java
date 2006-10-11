@@ -33,7 +33,7 @@ public class CSharpDummyEmitter implements DummyEmitter
 	{
 		try
 		{
-			String attributesFile = project.getProperty("basePath") + "attributes.xml";
+			String attributesFile = project.getBasePath() + "attributes.xml";
 			ExternalCSharpDummyGenerator dg = new ExternalCSharpDummyGenerator(attributesFile);
 
 			Iterator srcIter = sources.iterator();

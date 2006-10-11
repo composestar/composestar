@@ -40,7 +40,7 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		while (prjIt.hasNext()) 
 		{
 			Project p = (Project)prjIt.next();
-			String projectFolder = p.getProperty("basePath");
+			String projectFolder = p.getBasePath();
 			String xmlFile = projectFolder + "attributes.xml";
 			try
 			{

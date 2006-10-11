@@ -45,8 +45,7 @@ public class DummyManager implements CTCommonModule
 		List sources = project.getSources();
 		List outputFilenames = new ArrayList(sources.size());
 		
-		String basePath = project.getProperty("basePath");
-		File base = new File(basePath);
+		File base = new File(project.getBasePath());
 		File dummyDir = new File(base, "obj/" + dummyPath);
 
 		// Make sure the directory exists
