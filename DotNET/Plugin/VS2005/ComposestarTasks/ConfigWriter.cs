@@ -76,9 +76,6 @@ namespace Trese.ComposestarTasks
 			xw.WriteAttributeString("name", p.name);
 			xw.WriteAttributeString("language", p.language);
 			xw.WriteAttributeString("basePath", p.basePath);
-			xw.WriteAttributeString("buildPath", p.buildPath);
-			xw.WriteAttributeString("outputPath", p.outputPath);
-			xw.WriteAttributeString("assemblyName", p.assemblyName);
 
 			// sources
 			xw.WriteStartElement("Sources");

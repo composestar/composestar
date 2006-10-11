@@ -46,9 +46,6 @@ namespace Trese.ComposestarTasks
 		public string name;
 		public string language;
 		public string basePath;
-		public string buildPath;
-		public string outputPath;
-		public string assemblyName;
 
 		public IList<string> sources = new List<string>();
 		public IList<string> deps = new List<string>();

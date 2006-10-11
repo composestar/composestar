@@ -153,9 +153,6 @@ namespace Trese.ComposestarTasks
 			project.name = m_projectName;
 			project.language = "JSharp";
 			project.basePath = m_projectPath;
-			project.buildPath = m_buildPath;
-			project.outputPath = m_outputPath;
-			project.assemblyName = m_outputAssembly;
 
 			// sources
 			foreach (string s in m_sourceFiles)
