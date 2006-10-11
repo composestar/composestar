@@ -69,8 +69,8 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
         }
 
         #endregion
-        
-               
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterActionAnnotation"/> class.
         /// </summary>
@@ -87,67 +87,71 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
     }
 
     /// <summary>
-        /// Enumeration to indicate how a certain FilterAction influences the flow through the 
-        /// filterset.
-        /// <para>There are three options possible:
-        /// <list type="Bullet">
-        /// <item><description>Continue: To indicate that flow continues to the next filter</description></item>
-        /// <item><description>Exit: To indicate that flow exits the filterset without a return,
-        /// for example with an Error action</description></item>
-        /// <item><description>Return: To indicate that flow changes from call to return, 
-        /// for example with a Dispatch action</description></item>
-        /// </list>
-        /// </para>
-        /// </summary>
-        public enum FilterFlowBehaviour
-        {
-            /// <summary>
-            /// To indicate that flow continues to the next filter.
-            /// </summary>
-            Continue,
-            /// <summary>
-            /// To indicate that flow exits the filterset without a return,
-            /// for example with an Error action.
-            /// </summary>
-            Exit,
-            /// <summary>
-            /// To indicate that flow changes from call to return, 
-            /// for example with a Dispatch action.
-            /// </summary>
-            Return
-        }
-
+    /// Enumeration to indicate how a certain FilterAction influences the flow through the 
+    /// filterset.
+    /// </summary>
+    /// <remarks>
+    /// <para>There are three options possible:
+    /// <list type="bullet">
+    /// <item><term>Continue:</term><description>To indicate that flow continues to the next filter</description></item>
+    /// <item><term>Exit:</term><description>To indicate that flow exits the filterset without a return,
+    /// for example with an Error action</description></item>
+    /// <item><term>Return:</term><description>To indicate that flow changes from call to return, 
+    /// for example with a Dispatch action</description></item>
+    /// </list>
+    /// </para>
+    /// </remarks>         
+    public enum FilterFlowBehaviour
+    {
         /// <summary>
-        /// Enumeration to indicate how the action changes the message
-        /// <para>There are three options possible:
-        /// <list type="Bullet">
-        /// <item><description>Original: The message is not changed</description></item>
-        /// <item><description>Substituted: The message is changed according to the substitutionpart</description></item>
-        /// <item><description>Any: The message can change into any other message. 
-        /// Be carefull when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
-        /// Use only this option when you cannot use a following substitution filter</description></item>
-        /// </list>
-        /// </para>
+        /// To indicate that flow continues to the next filter.
         /// </summary>
-        public enum MessageSubstitutionBehaviour
-        {
-            /// <summary>
-            /// The message is not changed.
-            /// </summary>
-            Original,
-            /// <summary>
-            /// The message is changed according to the substitutionpart.
-            /// </summary>
-            Substituted,
-            /// <summary>
-            /// The message can change into any other message. 
-            /// </summary>
-            /// <remarks>
-            /// Be carefull when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
-            /// Only use this option when you cannot use a following substitution filter.
-            /// </remarks> 
-            Any
-        }
+        Continue,
+        /// <summary>
+        /// To indicate that flow exits the filterset without a return,
+        /// for example with an Error action.
+        /// </summary>
+        Exit,
+        /// <summary>
+        /// To indicate that flow changes from call to return, 
+        /// for example with a Dispatch action.
+        /// </summary>
+        Return
+    }
+
+    /// <summary>
+    /// Enumeration to indicate how the action changes the message.        
+    /// </summary>
+    /// <remarks>
+    /// <para>There are three options possible:
+    /// <list type="bullet">
+    /// <item><term>Original</term><description>The message is not changed</description></item>
+    /// <item><term>Substituted</term><description>The message is changed according to the substitutionpart</description></item>
+    /// <item><term>Any</term><description>The message can change into any other message. 
+    /// Be carefull when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
+    /// Use only this option when you cannot use a following substitution filter</description></item>
+    /// </list>
+    /// </para>  
+    /// </remarks> 
+    public enum MessageSubstitutionBehaviour
+    {
+        /// <summary>
+        /// The message is not changed.
+        /// </summary>
+        Original,
+        /// <summary>
+        /// The message is changed according to the substitutionpart.
+        /// </summary>
+        Substituted,
+        /// <summary>
+        /// The message can change into any other message. 
+        /// </summary>
+        /// <remarks>
+        /// Be carefull when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
+        /// Only use this option when you cannot use a following substitution filter.
+        /// </remarks> 
+        Any
+    }
 
     /// <summary>
     /// 
@@ -161,9 +165,9 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
 
         #region Properties
         /// <summary>
-        /// Gets or sets the spec.
+        /// Gets or sets the specification.
         /// </summary>
-        /// <value>The spec.</value>
+        /// <value>The specification.</value>
         public string Spec
         {
             get
