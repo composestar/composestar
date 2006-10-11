@@ -152,6 +152,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
                 ContextInstruction.CHECK_INNER_CALL, getMethodId( method ), block );
         inlineBlock.addInstruction( checkInnercall );
         
+        //create CreateJoinPointContext instruction:
+        block.addInstruction( new ContextInstruction( ContextInstruction.CREATE_JOIN_POINT_CONTEXT ) );
+        
         //create CreateActionStore instruction:
         createActionStoreInstruction = 
             new ContextInstruction( ContextInstruction.CREATE_ACTION_STORE );
@@ -188,9 +191,15 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
             currentBlock.addInstruction( whileInstruction );
         }
         
+        //create RestoreJoinPointContext instruction:
+        ContextInstruction restoreInstruction = 
+        	new ContextInstruction( ContextInstruction.RESTORE_JOIN_POINT_CONTEXT );
+        restoreInstruction.setLabel( new Label( 9998 ) );
+        currentBlock.addInstruction( restoreInstruction );
+        
+        //create Return action:
         ContextInstruction returnInstruction = new ContextInstruction(
                 ContextInstruction.RETURN_ACTION );
-        returnInstruction.setLabel( new Label( 9998) );
         currentBlock.addInstruction( returnInstruction );
         
         

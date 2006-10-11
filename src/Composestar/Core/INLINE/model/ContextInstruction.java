@@ -16,6 +16,8 @@ public class ContextInstruction extends Instruction{
     public final static int RESET_INNER_CALL = 12;
     public final static int CREATE_ACTION_STORE = 20;
     public final static int STORE_ACTION = 21;
+    public final static int CREATE_JOIN_POINT_CONTEXT = 30;
+    public final static int RESTORE_JOIN_POINT_CONTEXT = 31;
     public final static int RETURN_ACTION = 100;
 
 
