@@ -61,6 +61,24 @@ namespace Composestar.StarLight.ILAnalyzer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to find the assembly {0}. Make sure all the assemblies are referenced..
+        /// </summary>
+        internal static string CouldNotFindAssembly {
+            get {
+                return ResourceManager.GetString("CouldNotFindAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find the type {0}. Make sure all the types are referenced..
+        /// </summary>
+        internal static string CouldNotFindType {
+            get {
+                return ResourceManager.GetString("CouldNotFindType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The supplied filename is null or empty..
         /// </summary>
         internal static string FileNameNullOrEmpty {
