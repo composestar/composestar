@@ -46,6 +46,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private bool _saveInnerType = false;
         private bool _processMethodBody = true;
         private bool _processAttributes = false;
+        private string _binFolder = "";
 
         private CecilAnalyzerConfiguration _configuration;
         private ILanguageModelAccessor _languageModelAccessor;
@@ -128,6 +129,12 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
         #endregion
+
+        public String BinFolder
+        {
+            get { return _binFolder; }
+            set { _binFolder = value; }
+        }
 
         #region Helper Functions
 
@@ -430,6 +437,8 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 me.MethodBody = new Composestar.Repository.LanguageModel.MethodBody(System.Guid.NewGuid().ToString(), me.Id);
 
+                List<String> callList = new List<string>();
+
                 List<CallElement> callElements = new List<CallElement>();
                 foreach (Instruction instr in method.Body.Instructions)
                 {
@@ -442,7 +451,14 @@ namespace Composestar.StarLight.ILAnalyzer
                         MethodReference mr = (MethodReference)(instr.Operand);
                         ce.MethodReference = mr.ToString();
 
-                        callElements.Add(ce);
+                        if (!callList.Contains(mr.ToString()))
+                        {
+                            callElements.Add(ce);
+                            callList.Add(mr.ToString());
+                        }
+
+
+                        
                     }
                 }
 
@@ -742,9 +758,10 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
 
                 if (assemblyNames.Count == 0) return new List<AssemblyElement>();
-                
+                Console.WriteLine("BinFolder voor assembly resolver: "+_binFolder);
                 // Use the Cecil assembly resolver to find the missing assemblies
-                DefaultAssemblyResolver dar = new DefaultAssemblyResolver();
+                Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver dar = new Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver(_binFolder);//new DefaultAssemblyResolver();
+                
                 foreach (String assemblyName in assemblyNames.Keys)
                 {
                     Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
@@ -769,6 +786,10 @@ namespace Composestar.StarLight.ILAnalyzer
                             }
 
                             _processMethodBody = true;
+                        }
+                        else
+                        {
+                            throw new ILAnalyzerException(String.Format("Unable to resolve assembly '{0}'.", assemblyName), assemblyName);
                         }
                     }
                     catch (Exception ex)

@@ -67,6 +67,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _referencedTypes = value; }
         }
 
+        private string _binFolder;
+
+        /// <summary>
+        /// Gets or sets the bin folder.
+        /// </summary>
+        /// <value>The bin folder.</value>
+        public string BinFolder
+        {
+            get { return _binFolder; }
+            set { _binFolder = value; }
+        }
+
         private CecilILAnalyzer analyzer;
 
         #endregion
@@ -109,6 +121,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                    
             // Create the analyzer using the object builder
             analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
+            ((CecilILAnalyzer)analyzer).BinFolder = BinFolder;
 
             // TODO: this aint the best approach, clearing everything...
             langModelAccessor.DeleteWeavingInstructions();
