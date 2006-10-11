@@ -226,6 +226,19 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
+        /// Resolves a MethodDefinition corresponding with a certain MethodReference.
+        /// </summary>
+        /// <param name="reference">The MethodReference of which the MethodDefinition needs to be resolved</param>
+        /// <returns>The resolved MethodDefinition</returns>
+        public static MethodDefinition ResolveMethodDefinition(MethodReference reference)
+        {
+            TypeDefinition declaringType = ResolveTypeDefinition(reference.DeclaringType);
+
+            return declaringType.Methods.GetMethod(reference.Name, reference.Parameters);
+        }
+
+
+        /// <summary>
         /// Creates the cache key.
         /// </summary>
         /// <param name="methodName">Name of the method.</param>

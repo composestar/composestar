@@ -44,12 +44,15 @@ namespace Composestar.StarLight.ILWeaver
         {
             MethodReference methodToCall;
 
+            // Get JoinPointContext
+            VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
+
             // Get the methodReference
             MethodReference methodReference = (MethodReference) originalCall;
             TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
-            // Create JoinPointContext
-            VariableDefinition jpcVar = WeaveStrategyUtilities.CreateJoinPointContext(visitor, methodReference, true);
+            // Set JoinPointContext
+            WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
             // Create FilterAction object:
             TypeElement typeElement = visitor.RepositoryAccess.GetTypeElement(filterAction.FullName);
@@ -71,9 +74,6 @@ namespace Composestar.StarLight.ILWeaver
             // Do the call
             // We can safely emit a callvirt here. The JITter will make the right call.
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodToCall));
-
-            // Restore the JoinPointContext:
-            WeaveStrategyUtilities.RestoreJoinPointContext(visitor, methodReference, jpcVar, true);
 
 
             // Add nop to enable debugging

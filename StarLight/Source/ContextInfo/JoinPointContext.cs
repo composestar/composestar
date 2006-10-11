@@ -50,6 +50,21 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
+        /// Sets the target in the given JoinPointContext to obj. This static method is usefull
+        /// to store a target that is on the stack, because we cannot directly place the JoinPointContext 
+        /// object before it on the stack.
+        /// </summary>
+        /// <param name="obj">The target object to store</param>
+        /// <param name="context">The JoinPointContext to store it in</param>
+        public static void SetTarget(object obj, JoinPointContext context)
+        {
+            if(context != null)
+            {
+                context.Target = obj;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the name of the method.
         /// </summary>
         /// <value>The name of the method.</value>
@@ -87,6 +102,23 @@ namespace Composestar.StarLight.ContextInfo
                 _arguments[ordinal] = new ArgumentInfo(argumentType, value);
             else
                 _arguments.Add(ordinal, new ArgumentInfo(argumentType, value));
+        }
+
+        /// <summary>
+        /// Adds the argument of a method to the list of arguments in the given JoinPointContext.
+        /// This static method is usefull to add an argument that is on the stack, because we cannot 
+        /// directly place the JoinPointContext object before it on the stack.
+        /// </summary>
+        /// <param name="value">The value of the argument.</param>
+        /// <param name="ordinal">The ordinal of the argument.</param>
+        /// <param name="argumentType">Type of the argument.</param>
+        /// <param name="context">The JoinPointContext to which the argument needs to be added</param>
+        public static void AddArgument(object value, short ordinal, Type argumentType, JoinPointContext context)
+        {
+            if(context != null)
+            {
+                context.AddArgument(ordinal, argumentType, value);
+            }
         }
 
         /// <summary>
@@ -216,6 +248,20 @@ namespace Composestar.StarLight.ContextInfo
                     throw new ArgumentNullException("returnType");
                 else
                     _returnValue.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Sets the returnvalue in the given JoinPointContext to obj. This static method is usefull
+        /// to store a returnvalue that is on the stack, because we cannot directly place the JoinPointContext 
+        /// object before it on the stack.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="context"></param>
+        public static void SetReturnValue(Object obj, JoinPointContext context){
+            if(context != null)
+            {
+                context.ReturnValue = obj;
             }
         }
 

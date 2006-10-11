@@ -39,6 +39,7 @@ namespace Composestar.StarLight.ILWeaver
         private CilWorker m_Worker;
         private int m_NumberOfBranches = 0;
         private MethodDefinition m_Method;
+        private MethodDefinition called_Method;
         private AssemblyDefinition m_TargetAssemblyDefinition;
         private FilterTypes m_FilterType;
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
@@ -118,7 +119,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Gets or sets the method.
+        /// Gets or sets the containing method.
         /// </summary>
         /// <value>The method.</value>
         public MethodDefinition Method
@@ -130,6 +131,23 @@ namespace Composestar.StarLight.ILWeaver
             set
             {
                 m_Method = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the called method. For inputfilters this is the containing method.
+        /// For outputfilters this is the method to which the outgoing call is targeted
+        /// </summary>
+        /// <value>The method.</value>
+        public MethodDefinition CalledMethod
+        {
+            get
+            {
+                return called_Method;
+            }
+            set
+            {
+                called_Method = value;
             }
         }
 
@@ -321,15 +339,7 @@ namespace Composestar.StarLight.ILWeaver
             return m_JpcLocal;
         }
 
-        internal VariableDefinition CreateReturnValueLocal(TypeReference reference)
-        {
-            if (m_ReturnValueLocal == null)
-            {
-                m_ReturnValueLocal = CreateLocalVar(reference);
-            }
-
-            return m_ReturnValueLocal;
-        }
+        
 
         /// <summary>
         /// Adds an instruction list to the Instructions list.
@@ -369,13 +379,6 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="contextInstruction">The context instruction.</param>
         public void VisitReturnAction(ContextInstruction contextInstruction)
         {
-            // Load returnvalue on the stack
-            if (!Method.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
-            {
-                VariableDefinition returnValueVar = CreateReturnValueLocal(Method.ReturnType.ReturnType);
-                Instructions.Add(Worker.Create(OpCodes.Ldloc, returnValueVar));
-            }
-
             // Generate a return instruction
             Instructions.Add(Worker.Create(OpCodes.Ret));
         }
@@ -769,6 +772,240 @@ namespace Composestar.StarLight.ILWeaver
 
         }
 
+
+        #endregion
+
+        #region JoinPointContext
+
+        /// <summary>
+        /// This method creates and initializes the JoinPointContext. This always happens at the beginning
+        /// of the filtercode. All FilterActions should use the JoinPointContext to access parameter values and
+        /// return-value, and not use for example the LdParam opcode, because this value might not be up to date
+        /// or might be entirely wrong, because the action is in an outputfilter.
+        /// </summary>
+        /// <param name="contextInstruction"></param>
+        public void VisitCreateJoinPointContext(ContextInstruction contextInstruction)
+        {
+            // Create a new or use an existing local variable for the JoinPointContext
+            VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+            //
+            // Create new joinpointcontext object
+            //
+            Instructions.Add(Worker.Create(OpCodes.Newobj,
+                CreateMethodReference(typeof(JoinPointContext).GetConstructors()[0])));
+
+            // Store the just created joinpointcontext object
+            Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
+
+
+            //
+            // Store returnType                
+            //
+
+            // Load joinpointcontext object
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+            // Determine type
+            Instructions.Add(Worker.Create(OpCodes.Ldtoken, CalledMethod.ReturnType.ReturnType));
+            Instructions.Add(Worker.Create(
+                OpCodes.Call,
+                CreateMethodReference(
+                    typeof(System.Type).GetMethod(
+                        "GetTypeFromHandle",
+                        new Type[] { typeof(System.RuntimeTypeHandle) }
+                    )
+                )
+            ));
+
+            // Call set_ReturnType in JoinPointContext
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
+                typeof(JoinPointContext).GetMethod("set_ReturnType", new Type[] { typeof(System.Type) }))));
+
+
+            int numberOfArguments = 0;
+
+            switch(FilterType)
+            {
+                case CecilInliningInstructionVisitor.FilterTypes.InputFilter:
+                    numberOfArguments = Method.Parameters.Count;
+                    break;
+                case CecilInliningInstructionVisitor.FilterTypes.OutputFilter:
+                    //numberOfArguments = methodBaseDef.GetParameters().Length;
+                    //// Also set the sender
+                    //// Load the joinpointcontext object
+                    //Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                    //// Load the this pointer
+                    //if (Method.HasThis)
+                    //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+                    //else
+                    //    Instructions.Add(Worker.Create(OpCodes.Ldnull));
+
+                    //// Assign to the Target property
+                    //Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
+
+                    break;
+            }
+
+            //
+            // Add the arguments, these are stored at the top of the stack
+            //
+            if(FilterType == FilterTypes.InputFilter)
+            {
+                foreach(ParameterDefinition param in CalledMethod.Parameters)
+                {
+                    //methodReference.Parameters[ i ].Attributes = Mono.Cecil.ParamAttributes.Out;                    
+
+                    // Load jpc
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                    // Load the ordinal
+                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                    // Determine type
+                    Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
+                    Instructions.Add(Worker.Create(
+                        OpCodes.Call,
+                        CreateMethodReference(
+                            typeof(System.Type).GetMethod(
+                                "GetTypeFromHandle",
+                                new Type[] { typeof(System.RuntimeTypeHandle) }
+                            )
+                        )
+                    ));
+
+                    // Load the argument
+                    Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
+
+                    // Check if parameter is value type, then box
+                    if(param.ParameterType.IsValueType)
+                    {
+                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                    }
+
+                    // Call the AddArgument function
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt,
+                        CreateMethodReference(typeof(JoinPointContext).GetMethod("AddArgument", new Type[] { typeof(Int16), typeof(System.Type), typeof(object) }))));
+                }
+            }
+            else
+            {
+                ParameterDefinitionCollection parameters = CalledMethod.Parameters;
+                int count = parameters.Count;
+
+                // iterate backward over parameters, because last parameter is on top of the stack
+                for(int i = count - 1; i >= 0; i--)
+                {
+                    ParameterDefinition param = parameters[i];
+
+                    // Check if parameter is value type, then box
+                    if(param.ParameterType.IsValueType)
+                    {
+                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                    }
+
+                    // Load the ordinal
+                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                    // Determine type
+                    Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
+                    Instructions.Add(Worker.Create(
+                        OpCodes.Call,
+                        CreateMethodReference(
+                            typeof(System.Type).GetMethod(
+                                "GetTypeFromHandle",
+                                new Type[] { typeof(System.RuntimeTypeHandle) }
+                            )
+                        )
+                    ));
+
+                    // Load jpc
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                    // Call the AddArgument function statically
+                    Instructions.Add(Worker.Create(OpCodes.Call,
+                        CreateMethodReference(typeof(JoinPointContext).GetMethod("AddArgument",
+                        new Type[] { typeof(object), typeof(Int16), typeof(System.Type), typeof(JoinPointContext) }))));
+                }
+            }
+
+            //
+            // Set the target
+            //
+
+            if(FilterType == FilterTypes.InputFilter)
+            {
+                // Load the joinpointcontext object
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                // Load the this pointer
+                if(Method.HasThis)
+                    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+                else
+                    Instructions.Add(Worker.Create(OpCodes.Ldnull));
+
+                // Assign to the Target property
+                Instructions.Add(Worker.Create(OpCodes.Callvirt,
+                    CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
+            }
+            else
+            {
+                // Load the joinpointcontext object
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                // Assign to the Target property through static method
+                Instructions.Add(Worker.Create(OpCodes.Call,
+                    CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", 
+                    new Type[] { typeof(object), typeof(JoinPointContext) }))));
+            }
+
+            //
+            // Set the selector
+            //
+
+            // Load joinpointcontext first
+            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+            // Load the name onto the stack
+            Instructions.Add(Worker.Create(OpCodes.Ldstr, CalledMethod.Name));
+
+            // Assign name to MethodName
+            Instructions.Add(Worker.Create(OpCodes.Callvirt,
+                CreateMethodReference(typeof(JoinPointContext).GetMethod("set_MethodName", new Type[] { typeof(string) }))));
+        }
+
+        /// <summary>
+        /// Restores the JoinPointContext at the end of the filtercode. It puts for example the returnvalue on the
+        /// stack.
+        /// </summary>
+        /// <param name="contextInstruction"></param>
+        public void VisitRestoreJoinPointContext(ContextInstruction contextInstruction)
+        {
+            // Retrieve returnvalue
+            if(!Method.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
+            {
+                // Get JoinPointContext
+                VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+                // Load JoinPointContext
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                // Get returnvalue
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
+                    typeof(JoinPointContext).GetMethod("get_ReturnValue", new Type[] { }))));
+
+                // Check if returnvalue is value type, then unbox, else cast
+                if(CalledMethod.ReturnType.ReturnType.IsValueType)
+                {
+                    Instructions.Add(Worker.Create(OpCodes.Unbox_Any, CalledMethod.ReturnType.ReturnType));
+                }
+                else
+                {
+                    Instructions.Add(Worker.Create(OpCodes.Castclass, Method.ReturnType.ReturnType));
+                }
+            }
+        }
 
         #endregion
 

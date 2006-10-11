@@ -42,6 +42,9 @@ namespace Composestar.StarLight.ILWeaver
         {
             MethodReference methodToCall;
 
+            // Get JoinPointContext
+            VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
+
             // Get the methodReference
             MethodReference methodReference = (MethodReference) originalCall;
             TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(visitor.Method.DeclaringType);
@@ -55,15 +58,11 @@ namespace Composestar.StarLight.ILWeaver
             }
 
 
-            // Create JoinPointContext
-            VariableDefinition jpcVar = WeaveStrategyUtilities.CreateJoinPointContext(visitor, methodReference, true);
+            // Set JoinPointContext
+            WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
             // Do the advice-call
             CallAdvice(visitor, filterAction, parentType, methodToCall, jpcVar);
-
-            // Restore the JoinPointContext:
-            WeaveStrategyUtilities.RestoreJoinPointContext(visitor, methodReference, jpcVar, true);
-
 
             // Add nop to enable debugging
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Nop));
