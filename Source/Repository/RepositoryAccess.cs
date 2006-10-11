@@ -856,8 +856,7 @@ namespace Composestar.Repository
         public void AddFilterTypes(List<FilterTypeElement> filterTypes)
         {
             foreach(FilterTypeElement filterType in filterTypes)
-            {
-                Console.WriteLine("Store filterType:" + filterType.Name);
+            {                
                 container.StoreObject(filterType);
             }
         }

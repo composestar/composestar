@@ -24,7 +24,7 @@ namespace Composestar.StarLight.ILWeaver
 {
 
     /// <summary>
-    /// Cecil implementation of the IL Weaver
+    /// Cecil implementation of the IL Weaver.
     /// </summary>
     public class CecilILWeaver : IILWeaver
     {
@@ -125,7 +125,7 @@ namespace Composestar.StarLight.ILWeaver
             AssemblyElement assemblyElement;
             assemblyElement = m_LanguageModelAccessor.GetAssemblyElementByName(targetAssembly.Name.FullName);
             if (assemblyElement == null)
-                throw new ILWeaverException(Properties.Resources.AssemblyElementNotFound, targetAssembly.Name.FullName);
+                throw new ILWeaverException(String.Format(Properties.Resources.AssemblyElementNotFound, targetAssembly.Name.FullName));
 
             // Get all the typeElements for this Assembly
             Dictionary<String, TypeElement> typeElements = m_LanguageModelAccessor.GetTypeElementsByAssembly(assemblyElement);
@@ -208,7 +208,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
         /// <param name="internals">The internals.</param>
-        public void WeaveInternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement, List<Internal> internals)
+        private void WeaveInternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement, List<Internal> internals)
         {
             #region Check the internals
 
@@ -295,7 +295,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="type">The type.</param>
         /// <param name="typeElement">The type information.</param>
         /// <param name="externals">The externals.</param>
-        public void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement, List<External> externals)
+        private void WeaveExternals(AssemblyDefinition targetAssembly, TypeDefinition type, TypeElement typeElement, List<External> externals)
         {
             #region Check the externals
 
@@ -380,7 +380,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method definition.</param>
         /// <param name="methodElement">The method element.</param>
-        public void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
+        private void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
 
             #region Check for null
@@ -413,7 +413,7 @@ namespace Composestar.StarLight.ILWeaver
         /// InputFilters are added at the top of the methodbody.
         /// We call a visitor to generate IL instructions and we add those to the top of the method.
         /// </remarks>
-        public void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
+        private void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve inputFilter
 
@@ -487,7 +487,7 @@ namespace Composestar.StarLight.ILWeaver
         /// We look for each call and see if we have an outputfilter for it.
         /// If we do, then call the visitor to generate code to replace the call.
         /// </remarks>
-        public void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
+        private void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
             #region Check for null and retrieve calls for this method
 
@@ -600,7 +600,6 @@ namespace Composestar.StarLight.ILWeaver
                     } // if
                 } // if
             } // foreach 
-
             
             return ret;
         }
