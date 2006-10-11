@@ -1,13 +1,22 @@
 package Composestar.Ant.Taskdefs;
 
-import java.util.Vector;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.StringReader;
 import java.util.Iterator;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
-import java.io.*;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * Runs a test
@@ -18,6 +27,8 @@ public class CstarTest extends Task
 {
 
 	protected String CORRECT_OUTPUT = "correct.txt";
+
+	protected long TEST_TIMEOUT = 300000; // 5 minutes
 
 	protected Vector fileSets = new Vector();
 
@@ -45,7 +56,7 @@ public class CstarTest extends Task
 	 * Number of failed tests
 	 */
 	protected int cntFail;
-	
+
 	/**
 	 * List of failed tests. Incleased with final exception.
 	 */
@@ -59,6 +70,11 @@ public class CstarTest extends Task
 	public void setFailOnFirstError(boolean failOnFirstError)
 	{
 		this.failOnFirstError = failOnFirstError;
+	}
+
+	public void setTimeout(long timeout)
+	{
+		this.TEST_TIMEOUT = timeout;
 	}
 
 	public void addFileset(FileSet set)
@@ -90,7 +106,7 @@ public class CstarTest extends Task
 						+ (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
 		if (failOnError && (cntFail > 0))
 		{
-			throw new BuildException("" + cntFail + " test(s) failed: "+failList);
+			throw new BuildException("" + cntFail + " test(s) failed: " + failList);
 		}
 	}
 
@@ -105,20 +121,24 @@ public class CstarTest extends Task
 		// exec command on system runtime
 		try
 		{
-			Process proc = Runtime.getRuntime().exec(exec, null, execPath.getParentFile());
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
+			ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
+			ExecuteWatchdog watchdog = new ExecuteWatchdog(TEST_TIMEOUT);
+			Execute execute = new Execute(streamHandler, watchdog);
+			execute.setAntRun(getProject());
+			execute.setSpawn(false);
+			execute.setWorkingDirectory(execPath.getParentFile());
+			String[] cmd = { exec };
+			execute.setCommandline(cmd);
 
-			StreamPumper inputPumper = new StreamPumper(proc.getInputStream());
-			StreamPumper errorPumper = new StreamPumper(proc.getErrorStream());
+			int err = execute.execute();
 
-			inputPumper.start();
-			errorPumper.start();
+			if (execute.killedProcess())
+			{
+				throw new Exception("Process killed; Time-out reached.");
+			}
 
-			proc.waitFor();
-			inputPumper.join();
-			errorPumper.join();
-			proc.destroy();
-
-			int err = proc.exitValue();
 			if (err != 0)
 			{
 				throw new Exception("Exit code is not zero");
@@ -126,7 +146,7 @@ public class CstarTest extends Task
 
 			BufferedReader correctFile = new BufferedReader(new FileReader(execPath.getParent() + File.separator
 					+ CORRECT_OUTPUT));
-			BufferedReader actualOutput = new BufferedReader(new StringReader(inputPumper.stdOut.toString()));
+			BufferedReader actualOutput = new BufferedReader(new StringReader(outputStream.toString()));
 			String cline = correctFile.readLine();
 			String aline = actualOutput.readLine();
 
@@ -152,64 +172,6 @@ public class CstarTest extends Task
 				getProject().log(this, "Testing of " + exec + " failed; " + e.getMessage(), Project.MSG_ERR);
 				if (failList.length() > 0) failList += "; ";
 				failList += exec;
-			}
-		}
-	}
-
-	class StreamPumper extends Thread
-	{
-		private BufferedReader din;
-
-		private boolean endOfStream = false;
-
-		private static final int SLEEP_TIME = 5;
-
-		public StringBuffer stdOut;
-
-		public StreamPumper(InputStream is)
-		{
-			stdOut = new StringBuffer();
-			this.din = new BufferedReader(new InputStreamReader(is));
-		}
-
-		public void pumpStream() throws IOException
-		{
-			if (!endOfStream)
-			{
-				String line = din.readLine();
-
-				if (line != null)
-				{
-					stdOut.append(line + "\n");
-				}
-				else
-				{
-					endOfStream = true;
-				}
-			}
-		}
-
-		public void run()
-		{
-			try
-			{
-				try
-				{
-					while (!endOfStream)
-					{
-						pumpStream();
-						sleep(SLEEP_TIME);
-					}
-				}
-				catch (InterruptedException ie)
-				{
-					// ignore
-				}
-				din.close();
-			}
-			catch (IOException ioe)
-			{
-				// ignore
 			}
 		}
 	}
