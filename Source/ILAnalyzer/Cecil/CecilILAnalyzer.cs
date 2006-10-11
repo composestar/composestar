@@ -827,6 +827,7 @@ namespace Composestar.StarLight.ILAnalyzer
                             AssemblyElement ae = new AssemblyElement();
                             ae.Name = ad.Name.FullName;
                             ae.FileName = assemblyNames[assemblyName];
+                            ae.Timestamp = File.GetLastWriteTime(ae.FileName).Ticks;
 
                             ae = ExtractAllTypes(ad, ae.FileName);
 

@@ -235,7 +235,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 List<String> unresolvedTypes = new List<string>(analyzer.UnresolvedTypes);
                 foreach (String type in unresolvedTypes)
                 {
-                    TypeElement te = langModelAccessor.GetTypeElement(type);
+                    String typeName = type;
+                    if (type.Contains(", ")) typeName = type.Substring(0, type.IndexOf(", "));
+                    TypeElement te = langModelAccessor.GetTypeElement(typeName);
                     if (te != null)
                     {
                         analyzer.UnresolvedTypes.Remove(type);
@@ -288,11 +290,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 sw.Start();
 
-                // TODO: checken of assembly bestaat en dan 'updaten', bv. nieuwe types toevoegen aan system assembly
-
                 langModelAccessor.AddAssemblies(assemblies, analyzer.ResolvedTypes);
                 langModelAccessor.AddFilterTypes(filterTypes);
                 langModelAccessor.AddFilterActions(filterActions);
+
+                langModelAccessor.Commit();
 
                 sw.Stop();
 

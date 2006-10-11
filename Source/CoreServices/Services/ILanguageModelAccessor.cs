@@ -15,6 +15,11 @@ namespace Composestar.StarLight.CoreServices
         /// Closes this instance.
         /// </summary>
         void Close();
+
+        /// <summary>
+        /// Commits all pending transactions to the database.
+        /// </summary>
+        void Commit();
     }
 
     /// <summary>
