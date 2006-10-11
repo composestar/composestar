@@ -762,7 +762,6 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     }
   }
 
-
   /**
    * Adds a FilterCompOper (the character separating each Filter)
    *
@@ -1624,19 +1623,19 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   private void completeFilterElements() {
     int i;
-    Filter temp;
-    FilterElement current;
-    FilterElement next;
+    FilterAST temp;
+    FilterElementAST current;
+    FilterElementAST next;
 
-    for (Iterator it = ds.getAllInstancesOf(Filter.class); it.hasNext();) {
-    	temp=(Filter)it.next();
+    for (Iterator it = ds.getAllInstancesOf(FilterAST.class); it.hasNext();) {
+    	temp=(FilterAST)it.next();
     	Iterator it1 = temp.getFilterElementIterator();
         Iterator it2 = temp.getFilterElementIterator();
         if (it2.hasNext()) it2.next(); //increase by 1, so it is one ahead of it
         while (it1.hasNext()) {
-          current = (FilterElement) it1.next();
+          current = (FilterElementAST) it1.next();
           if (it2.hasNext()) {
-            next = (FilterElement) it2.next(); //check for next filter
+            next = (FilterElementAST) it2.next(); //check for next filter
           } else {
             next = null;
           }
@@ -1649,7 +1648,6 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
         }
       }
   }
-
 
   //used by splitter
   public String getFm() {
