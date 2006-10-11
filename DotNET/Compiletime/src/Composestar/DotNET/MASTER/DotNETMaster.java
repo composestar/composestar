@@ -86,12 +86,7 @@ public class DotNETMaster extends Master
 		ds.addObject(Master.RESOURCES_KEY,resources);
 
 		// Set debug level
-		try {
-			Debug.setMode(Integer.parseInt(Configuration.instance().getProperty("buildDebugLevel")));
-		}
-		catch (NumberFormatException e) {
-			Debug.setMode(1);
-		}
+		Debug.setMode(Configuration.instance().getBuildDebugLevel());
 
 		//just added this for testing
 		//fixme:we need to iterate over all the cps files specified in the configuration

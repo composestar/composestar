@@ -79,12 +79,9 @@
 			</xsl:element><!-- /Projects -->
 			
 			<xsl:element name="Settings">
-				<!--<xsl:attribute name="composestarIni"></xsl:attribute>-->
 				<xsl:attribute name="buildDebugLevel">
 					<xsl:value-of select="$buildDebugLevel" />
 				</xsl:attribute>
-				<xsl:attribute name="compilePhase">one</xsl:attribute>
-				<xsl:attribute name="platform">dotNET</xsl:attribute>
 				
 				<xsl:element name="Modules">
 					<xsl:element name="Module">

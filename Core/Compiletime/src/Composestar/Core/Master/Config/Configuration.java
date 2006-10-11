@@ -34,17 +34,35 @@ public class Configuration implements Serializable
 		return s_instance;
 	}
 
-	public void addProperty(String key, String value)
+	public void setBuildDebugLevel(int level)
 	{
-		properties.setProperty(key, value);
+		properties.setProperty("buildDebugLevel", "" + level);
+	}
+	
+	public int getBuildDebugLevel()
+	{
+		String level = properties.getProperty("buildDebugLevel");
+		return Integer.parseInt(level);
+	}
+	
+	public void setPlatformName(String name)
+	{
+		properties.setProperty("Platform", name);
+	}
+	
+	public String getPlatformName()
+	{
+		return properties.getProperty("Platform");
 	}
 
+	/**
+	 * @deprecated Use getPlatformName() and getBuildDebugLevel().
+	 */
 	public String getProperty(String key)
 	{
-		if (properties.containsKey(key)) return properties.getProperty(key);
-		return null;
+		return properties.getProperty(key);
 	}
-
+	
 	public Projects getProjects()
 	{
 		return projects;

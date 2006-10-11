@@ -11,6 +11,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Utils.Debug;
 
 public class BuildXMLHandler extends DefaultHandler implements ContentHandler
 {
@@ -35,13 +36,14 @@ public class BuildXMLHandler extends DefaultHandler implements ContentHandler
 			String buildDebugLevel = amap.getValue("buildDebugLevel");			
 			if (buildDebugLevel != null)
 			{
-				config.addProperty("buildDebugLevel", buildDebugLevel);
-			}
-			
-			String compilePhase = amap.getValue("compilePhase");
-			if (compilePhase != null)
-			{
-				config.addProperty("compilePhase", amap.getValue("compilePhase"));
+				try {
+					int level = Integer.parseInt(buildDebugLevel);
+					config.setBuildDebugLevel(level);
+				}
+				catch (NumberFormatException e) {
+					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + buildDebugLevel + "'. Expecting a number between 0 and 4. Reverting to default level 1.");
+					config.setBuildDebugLevel(1);					
+				}
 			}
 
 			// look further
@@ -53,7 +55,8 @@ public class BuildXMLHandler extends DefaultHandler implements ContentHandler
 			parser.setContentHandler(new PlatformHandler(parser, this));
 			if (amap.getValue("name") != null)
 			{
-				config.addProperty("Platform", amap.getValue("name"));
+				String name = amap.getValue("name");
+				config.setPlatformName(name);
 			}
 		}
 	}
