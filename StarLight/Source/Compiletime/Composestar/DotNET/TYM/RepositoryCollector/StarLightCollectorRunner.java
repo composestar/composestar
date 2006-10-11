@@ -1,10 +1,12 @@
 package Composestar.DotNET.TYM.RepositoryCollector;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -42,10 +44,94 @@ public class StarLightCollectorRunner implements CollectorRunner
 {
 	private RepositoryAccess repository;
 	private Vector callsToOtherMethods = new Vector();
+	private HashMap fieldMap = new HashMap();
+	private HashMap methodMap = new HashMap();
+	private HashMap parameterMap = new HashMap();
+	private HashMap callsMap = new HashMap();
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
 		repository = new RepositoryAccess();
+		
+		// Construct field hashmap
+		List allfields = repository.getFieldElements();
+		ListIterator fieldIterator = allfields.listIterator();
+		while (fieldIterator.hasNext())
+		{
+			FieldElement fe = (FieldElement)fieldIterator.next();
+			
+			List fieldElements = null;
+			if (fieldMap.containsKey(fe.get_ParentTypeId()))
+			{
+				fieldElements = (List)fieldMap.get(fe.get_ParentTypeId());
+			}
+			else {
+				fieldElements = new ArrayList();
+			}
+			fieldElements.add(fe);
+			
+			fieldMap.put(fe.get_ParentTypeId(), fieldElements);
+		}
+		
+		// Construct method hashmap
+		List allmethods = repository.getMethodElements();
+		ListIterator methodIterator = allmethods.listIterator();
+		while (methodIterator.hasNext())
+		{
+			MethodElement me = (MethodElement)methodIterator.next();
+			
+			List methodElements = null;
+			if (methodMap.containsKey(me.get_ParentTypeId()))
+			{
+				methodElements = (List)methodMap.get(me.get_ParentTypeId());
+			}
+			else {
+				methodElements = new ArrayList();
+			}
+			methodElements.add(me);
+			
+			methodMap.put(me.get_ParentTypeId(), methodElements);
+		}		
+		
+		// Construct parameter hashmap
+		List allparameters = repository.getParameterElements();
+		ListIterator parameterIterator = allparameters.listIterator();
+		while (parameterIterator.hasNext())
+		{
+			ParameterElement pe = (ParameterElement)parameterIterator.next();
+			
+			List parameterElements = null;
+			if (parameterMap.containsKey(pe.get_ParentMethodId()))
+			{
+				parameterElements = (List)parameterMap.get(pe.get_ParentMethodId());
+			}
+			else {
+				parameterElements = new ArrayList();
+			}
+			parameterElements.add(pe);
+			
+			parameterMap.put(pe.get_ParentMethodId(), parameterElements);
+		}
+		
+		// Construct call hashmap
+		List allcalls = repository.getCallElements();
+		ListIterator callIterator = allcalls.listIterator();
+		while (callIterator.hasNext())
+		{
+			CallElement ce = (CallElement)callIterator.next();
+			
+			List callElements = null;
+			if (callsMap.containsKey(ce.get_ParentMethodBodyId()))
+			{
+				callElements = (List)callsMap.get(ce.get_ParentMethodBodyId());
+			}
+			else {
+				callElements = new ArrayList();
+			}
+			callElements.add(ce);
+			
+			parameterMap.put(ce.get_ParentMethodBodyId(), callElements);
+		}
 		
 		
 		//Collect all filtertypes and filteractions:
@@ -126,7 +212,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			pc.setPlatformRepresentation( type );
 			type.setParentConcern(pc);
 			dataStore.addObject( type.fullName(), pc );
-			Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
+			//Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
 		}
         
         //resolve the MethodInfo reference in the calls within a method:
@@ -274,9 +360,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 	
 	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException
 	{
+		if ( !fieldMap.containsKey(storedType.get_Id())) return;
+		
 		// Get all fields for the type 'storedType'
-		List storedFields = repository.getFieldElements(storedType);
-	
+		//List storedFields = repository.getFieldElements(storedType);
+		List storedFields = (ArrayList)fieldMap.get(storedType.get_Id());
+		
 		// Process all fields
 		Iterator fieldIterator = storedFields.iterator();
 		while (fieldIterator.hasNext())
@@ -299,10 +388,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 	
 	private void collectMethods(TypeElement storedType, DotNETType type) throws ModuleException
 	{
+		if ( !methodMap.containsKey(storedType.get_Id())) return;
+		
 		// Get all methods for the type 'storedType'
-		List storedMethods = repository.getMethodElements(storedType);
-			//DataStoreContainer.getInstance().getMethodElements(storedType);		
-
+		//List storedMethods = repository.getMethodElements(storedType);
+		List storedMethods = (ArrayList)methodMap.get(storedType.get_Id());
+		
 		// Process all methods
 		Iterator methodIterator = storedMethods.iterator();
 		while (methodIterator.hasNext())
@@ -347,9 +438,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 	
 	private void collectParameters(MethodElement storedMethod, DotNETMethodInfo method) throws ModuleException
 	{
+		if ( !parameterMap.containsKey(storedMethod.get_Id())) return;
+		
 		// Get all parameters for the method 'storedmethod'
-		List storedParameters = repository.getParameterElements(storedMethod);		
-
+		//List storedParameters = repository.getParameterElements(storedMethod);		
+		List storedParameters = (ArrayList)parameterMap.get(storedMethod.get_Id());
+		
 		// Process all parameters
 		Iterator parameterIterator = storedParameters.iterator();
 		
@@ -389,9 +483,12 @@ public class StarLightCollectorRunner implements CollectorRunner
 	
 	private void collectMethodBody(MethodBody storedMethodBody, DotNETMethodInfo method)
 	{
+		if ( !callsMap.containsKey(storedMethodBody.get_Id())) return;
+		
 		// Get the call elements for this method body
-		List storedCalls = repository.getCallElements(storedMethodBody);		
-
+		//List storedCalls = repository.getCallElements(storedMethodBody);		
+		List storedCalls = (ArrayList)callsMap.get(storedMethodBody.get_Id());
+		
 		Iterator callIterator = storedCalls.iterator();
 		while (callIterator.hasNext())
 		{

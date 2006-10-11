@@ -271,6 +271,7 @@ namespace Composestar.StarLight.ILWeaver
     /// <summary>
     /// Assembly resolver to resolve assemblies and store those in a cache for quick lookup.
     /// </summary>
+    [Obsolete("Use the Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver")]
     public class ILWeaverAssemblyResolver : BaseAssemblyResolver
     {
 
