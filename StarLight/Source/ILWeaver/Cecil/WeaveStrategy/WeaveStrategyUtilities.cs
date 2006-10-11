@@ -27,7 +27,14 @@ namespace Composestar.StarLight.ILWeaver
         {
             // Create a new or use an existing local variable for the JoinPointContext
             VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
-            visitor.Method.Body.InitLocals = true;
+
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ceq));
+            Instruction labelInstruction = visitor.Worker.Create(OpCodes.Nop);
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Brfalse_S, labelInstruction));
+
+            //if jpcVar is null:
 
             //
             // Create new joinpointcontext object
@@ -38,6 +45,9 @@ namespace Composestar.StarLight.ILWeaver
             // Store the just created joinpointcontext object
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Stloc, jpcVar));
 
+            //else false branch:
+            visitor.Instructions.Add(labelInstruction);
+
             // Store returnvalue
             if(storeReturnValue && !originalCall.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
@@ -47,8 +57,8 @@ namespace Composestar.StarLight.ILWeaver
                 // Load joinpointcontext object
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
 
-                // Load returnvalue
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, returnValueVar));
+                //// Load returnvalue
+                //visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, returnValueVar));
 
                 // Check if returnvalue is value type, then box
                 if(originalCall.ReturnType.ReturnType.IsValueType)
@@ -56,9 +66,21 @@ namespace Composestar.StarLight.ILWeaver
                     visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Box, originalCall.ReturnType.ReturnType));
                 }
 
+
                 // Determine type
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, 
-                    visitor.CreateMethodReference(typeof(System.Object).GetMethod("GetType", new Type[] { }))));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldtoken, originalCall.ReturnType.ReturnType));
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Call, 
+                    visitor.CreateMethodReference(
+                        typeof(System.Type).GetMethod(
+                            "GetTypeFromHandle", 
+                            new Type[]{typeof(System.RuntimeTypeHandle)}
+                        )
+                    )
+                ));
+
+                //visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, 
+                //    visitor.CreateMethodReference(typeof(System.Object).GetMethod("GetType", new Type[] { }))));
 
                 // Call set_ReturnType in JoinPointContext
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, visitor.CreateMethodReference(

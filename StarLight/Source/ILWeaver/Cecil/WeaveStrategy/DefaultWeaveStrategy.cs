@@ -57,11 +57,13 @@ namespace Composestar.StarLight.ILWeaver
                 CecilUtilities.ResolveType(filterAction.FullName, typeElement.Assembly, null);
             TypeDefinition typeDef =
                 CecilUtilities.ResolveTypeDefinition(typeRef);
-            MethodDefinition constructor = typeDef.Constructors.GetConstructor(false, new Type[0]);
+            MethodReference constructor = typeDef.Constructors.GetConstructor(false, new Type[0]);
+            constructor = visitor.TargetAssemblyDefinition.MainModule.Import(constructor);
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj, constructor));
 
             // Get method to call
-            methodToCall = typeDef.Methods.GetMethod("Execute")[0];
+            methodToCall = CecilUtilities.ResolveMethod(typeDef, "Execute", new Type[] { typeof(JoinPointContext) });
+            methodToCall = visitor.TargetAssemblyDefinition.MainModule.Import(methodToCall);
 
             // Load the JoinPointObject as the parameter
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
