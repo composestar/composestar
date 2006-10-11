@@ -315,6 +315,7 @@ namespace Composestar.StarLight.ILWeaver
             if (m_JpcLocal == null)
             {
                 m_JpcLocal = CreateLocalVar(typeof(JoinPointContext));
+                Method.Body.InitLocals = true;
             }
 
             return m_JpcLocal;

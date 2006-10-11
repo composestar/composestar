@@ -19,6 +19,8 @@ namespace Composestar.StarLight.ContextInfo
 
         private Dictionary<short, ArgumentInfo> _arguments;
 
+        private Dictionary<string, object> _properties;
+
         private object _sender;
         private object _target;
         private string _methodName;
@@ -67,6 +69,7 @@ namespace Composestar.StarLight.ContextInfo
         public JoinPointContext()
         {
             _arguments = new Dictionary<short, ArgumentInfo>();
+            _properties = new Dictionary<string, object>();
         }
 
         #endregion
@@ -212,6 +215,34 @@ namespace Composestar.StarLight.ContextInfo
                     _returnValue.Value = value;
             }
         }
+
+        /// <summary>
+        /// Adds a property to the JoinPointContext, for example to use in a following FilterAction
+        /// </summary>
+        /// <param name="key">The key of the property</param>
+        /// <param name="property">The value of the property</param>
+        public void AddProperty(string key, object property)
+        {
+            _properties[key] = property;
+        }
+
+        /// <summary>
+        /// Returns a property, or <code>null</code> if the property does not exist.
+        /// </summary>
+        /// <param name="key">The key of the property</param>
+        /// <returns>The property, or <code>null</code> if the property does not exist.</returns>
+        public object GetProperty(string key)
+        {
+            if(_properties.ContainsKey(key))
+            {
+                return _properties[key];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// Internal class for storing the arguments.
