@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/DotNET/Runtime" default="build">
 
-	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+	<condition property="build.core" value="../../Core">
 		<and>
 			<not><isset property="build.core"/></not>
-			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
+			<available file="../../Core/common.xml"/>
 		</and>
 	</condition>
-	<import file="${build.core}${file.separator}common.xml"/>
+	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
@@ -16,14 +16,21 @@
 	<target name="clean" depends="init" description="clean the compilation results">		
 		<delete dir="${out.dist}"/>
 		<antcall target="clean_devenv"/>
+		<antcall target="clean_msbuild"/>
 	</target>	
 	
 	<target name="clean_devenv" if="available.devenv">
 		<devenv solution="${basedir}\composestarruntimedotnet.sln" action="clean"/>
 	</target>
 	
+	<target name="clean_msbuild" if="available.msbuild">
+		<msbuild solution="${basedir}\RuntimeDotNET.vs2005.sln" target="clean"/>
+	</target>
+	
 	<target name="init_local" depends="init">
+		<!--
 		<mkdir dir="${out.dist}"/>
+		-->
 	</target>
 	
 	<target name="build" depends="init_local" description="build the .net runtime">
@@ -40,10 +47,11 @@
 	</target>
 	
 	<target name="install" depends="build" description="install the .net runtime">
-		
+		<!--
 		<copy todir="${composestar.installdir}/Binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
+		-->
 		<copy todir="${composestar.installdir}/Binaries">
 			<fileset dir="src/FLIRT/bin/Release/">
 				<include name="*.dll"/>
