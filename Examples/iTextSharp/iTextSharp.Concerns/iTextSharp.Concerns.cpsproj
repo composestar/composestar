@@ -30,9 +30,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\iTextSharp\itextsharp.csproj">
+    <ProjectReference Include="..\iTextSharp\iTextSharp.csproj">
       <Name>iTextSharp</Name>
       <Project>{84C4FDD9-3ED7-453B-B9DA-B3ED52CB071C}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\iTextSharp.Tutorial\iTextSharp.Tutorial.csproj">
+      <Name>iTextSharp.Tutorial</Name>
+      <Project>{13E8BC6B-54E6-46CE-94D2-342F7CCCBFA2}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
