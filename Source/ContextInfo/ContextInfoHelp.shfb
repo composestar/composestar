@@ -1,0 +1,34 @@
+﻿<project schemaVersion="1.3">
+    <assemblies>
+        <assembly assemblyPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.xml" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="Composestar.StarLight.ContextInfo" isDocumented="True" />
+        <namespaceSummaryItem name="Composestar.StarLight.ContextInfo.FilterTypes" isDocumented="True" />
+        <namespaceSummaryItem name="Composestar.StarLight.ContextInfo.FilterTypes.BuildIn" isDocumented="True">Build in filtertypes.</namespaceSummaryItem>
+    </namespaceSummaries>
+    <contentPlacement>AboveNamespaces</contentPlacement>
+    <projectSummary>Composestar StarLight ContextInfo assembly to be used in ....</projectSummary>
+    <sandcastlePath />
+    <hhcPath />
+    <hxcompPath>D:\Development\Visual Studio 2005 SDK\2006.09\VisualStudioIntegration\Archive\HelpIntegration\</hxcompPath>
+    <outputPath>.\Help\</outputPath>
+    <helpFileFormat>HtmlHelp1x</helpFileFormat>
+    <cleanIntermediates>True</cleanIntermediates>
+    <purgeDuplicateTopics>True</purgeDuplicateTopics>
+    <binaryTOC>True</binaryTOC>
+    <includeFavorites>True</includeFavorites>
+    <preliminary>True</preliminary>
+    <rootNSContainer>False</rootNSContainer>
+    <helpTitle>StarLight ContextInfo Class Library</helpTitle>
+    <htmlHelpName>Documentation</htmlHelpName>
+    <language>en-US</language>
+    <copyrightHref>http://composestar.sf.net</copyrightHref>
+    <copyrightText>Copyright 2006 Composestar StarLight University of Twente</copyrightText>
+    <feedbackEMailAddress />
+    <headerText />
+    <projectLinks>Local</projectLinks>
+    <sdkLinks>Msdn</sdkLinks>
+    <documentAttributes>True</documentAttributes>
+    <documentInternals>False</documentInternals>
+</project>

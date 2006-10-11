@@ -148,14 +148,17 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets the argument value using a generic type.
         /// </summary>
         /// <param name="ordinal">The ordinal.</param>
-        /// <returns>A strong typed value or the <c>default(T)</c> when the value could not be found.</returns>
+        /// <typeparam name="T">The type to return.</typeparam> 
+        /// <returns>
+        /// A strong typed value or the <c>default(T)</c> when the value could not be found.
+        /// </returns>
         /// <example>Use the <c>GetGenericArgumentValue</c> function to retrieve a value from the list of arguments using a generic type.
         /// <code>
         /// JoinPointContext jpc = new JoinPointContext();
         /// jpc.AddArgument(1, typeof(int), 1024);
-        /// int value = jpc.GetArgumentValue&lt;int&gt;(1);        
+        /// int value = jpc.GetArgumentValue&lt;int&gt;(1);
         /// </code>
-        /// </example> 
+        /// </example>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public T GetGenericArgumentValue<T>(short ordinal)
         {
@@ -336,6 +339,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Returns a strong typed property, or the default value of <see cref="T"/> if the property does not exist.
         /// </summary>
         /// <param name="key">The key of the property</param>
+        /// <typeparam name="T">The type to return.</typeparam> 
         /// <returns>
         /// The property based on the type of T, or default if the property does not exist.
         /// </returns>
