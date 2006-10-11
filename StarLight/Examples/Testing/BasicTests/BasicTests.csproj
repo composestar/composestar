@@ -80,6 +80,8 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilterTests.cs">
@@ -88,6 +90,8 @@
     <Compile Include="FilterTestsHelper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LoggingAction.cs" />
+    <Compile Include="LoggingFilterType.cs" />
     <Compile Include="TestExternal.cs">
       <SubType>Code</SubType>
     </Compile>
