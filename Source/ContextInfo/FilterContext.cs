@@ -56,7 +56,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Determines whether there are more stored actions.
         /// </summary>
         /// <returns>
-        /// 	<c>true</c> if there are more stored actions; otherwise, <c>false</c>.
+        /// 	<see langword="true"/> if there are more stored actions; otherwise, <see langword="false"/>.
         /// </returns>
         public bool HasMoreStoredActions()
         {
@@ -69,7 +69,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <param name="currentInstance">The current instance.</param>
         /// <param name="methodId">The method id.</param>
         /// <returns>
-        /// 	<c>true</c> if the current thread is making an inner call; otherwise, <c>false</c>.
+        /// 	<see langword="true"/> if the current thread is making an inner call; otherwise, <see langword="false"/>.
         /// </returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static bool IsInnerCall(object currentInstance, int methodId)

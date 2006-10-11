@@ -93,7 +93,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets the argument value based on the ordinal.
         /// </summary>
         /// <param name="ordinal">The ordinal of the argument.</param>
-        /// <returns>An <c>object</c> containing the value, or a <c>null</c> when the ordinal was not present in the argument list.</returns>
+        /// <returns>An <c>object</c> containing the value, or a <see langword="null"/> when the ordinal was not present in the argument list.</returns>
         /// <example>Use the <c>GetArgumentValue</c> function to retrieve a value from the list of arguments.
         /// <code>
         /// JoinPointContext jpc = new JoinPointContext();
@@ -138,7 +138,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets the type of the argument.
         /// </summary>
         /// <param name="ordinal">The ordinal.</param>
-        /// <returns>The type of the argument, or a <c>null</c> when the type could not be found.</returns>
+        /// <returns>The type of the argument, or a <see langword="null"/> when the type could not be found.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public Type GetArgumentType(short ordinal)
         {
@@ -165,7 +165,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets a value indicating whether this JoinPointContext has a return value.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this JoinPointContext has a return value; otherwise, <c>false</c>.
+        /// 	<see langword="true"/> if this JoinPointContext has a return value; otherwise, <see langword="false"/>.
         /// </value>
         public bool HasReturnValue
         {
@@ -198,6 +198,9 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets or sets the return value.
         /// </summary>
         /// <value>The return value.</value>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when the <see cref="ReturnType"></see> property is <see langword="null" />.
+        /// </exception>
         public Object ReturnValue
         {
             get
@@ -217,22 +220,62 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Adds a property to the JoinPointContext, for example to use in a following FilterAction
+        /// Adds a property to the JoinPointContext, so you can use it in a following FilterAction.
         /// </summary>
         /// <param name="key">The key of the property</param>
         /// <param name="property">The value of the property</param>
+        /// <example>
+        /// See the following example:
+        /// <code>
+        /// public override void Execute(JoinPointContext context)
+        /// {
+        ///     long starttime = DateTime.Now.Ticks;
+        ///     context.AddProperty("starttime", starttime);
+        /// }
+        /// </code>
+        /// </example> 
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when the <see cref="key"/> is empty or <see langword="null" />.
+        /// </exception>
         public void AddProperty(string key, object property)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key"); 
+            } // if
+
             _properties[key] = property;
         }
 
         /// <summary>
-        /// Returns a property, or <code>null</code> if the property does not exist.
+        /// Returns a property, or <see langword="null" /> if the property does not exist.
         /// </summary>
         /// <param name="key">The key of the property</param>
-        /// <returns>The property, or <code>null</code> if the property does not exist.</returns>
+        /// <returns>The property, or <see langword="null" /> if the property does not exist.</returns>
+        /// <example>
+        /// The following example shows a StopTimerAction.
+        /// <code>
+        /// public override void Execute(JoinPointContext context)
+        /// {
+        ///     long stoptime = DateTime.Now.Ticks;
+        ///     long starttime = (long)context.GetProperty("starttime");
+        ///     TimeSpan buildtime = new TimeSpan(stoptime - starttime);
+        ///     double timervalue = Convert.ToDouble(buildtime.Milliseconds);
+        ///     Console.WriteLine("The execution of message: " + context.GetProperty("target") + "." + 
+        ///     context.GetProperty("selector") + " took: " + timervalue + " msecs");
+        /// }
+        /// </code>
+        /// </example>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when the <see cref="key"/> is empty or <see langword="null" />.
+        /// </exception>
         public object GetProperty(string key)
         {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key");
+            } // if
+
             if(_properties.ContainsKey(key))
             {
                 return _properties[key];
@@ -243,6 +286,46 @@ namespace Composestar.StarLight.ContextInfo
             }
         }
 
+        /// <summary>
+        /// Returns a strong typed property, or the default value of <see cref="T"/> if the property does not exist.
+        /// </summary>
+        /// <param name="key">The key of the property</param>
+        /// <returns>
+        /// The property based on the type of T, or default if the property does not exist.
+        /// </returns>
+        /// <example>
+        /// The following example shows a StopTimerAction using the <see cref="M:GetGenericProperty(string)"/> method.
+        /// <code>
+        /// public override void Execute(JoinPointContext context)
+        /// {
+        /// long stoptime = DateTime.Now.Ticks;
+        /// long starttime = context.GetGenericProperty&lt;long&gt;("starttime");
+        /// TimeSpan buildtime = new TimeSpan(stoptime - starttime);
+        /// double timervalue = Convert.ToDouble(buildtime.Milliseconds);
+        /// Console.WriteLine("The execution of message: " + context.GetProperty("target") + "." +
+        /// context.GetProperty("selector") + " took: " + timervalue + " msecs");
+        /// }
+        /// </code>
+        /// </example>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when the <see cref="key"/> is empty or <see langword="null"/>.
+        /// </exception>
+        public T GetGenericProperty<T>(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key");
+            } // if
+
+            if (_properties.ContainsKey(key))
+            {
+                return ((T)_properties[key]);
+            }
+            else
+            {
+                return default(T);
+            }
+        }
 
         /// <summary>
         /// Internal class for storing the arguments.
