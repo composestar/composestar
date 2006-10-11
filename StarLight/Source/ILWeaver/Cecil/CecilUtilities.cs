@@ -196,9 +196,31 @@ namespace Composestar.StarLight.ILWeaver
         public static MethodDefinition ResolveMethod(TypeReference parentTypeRef, string methodName,
             Type[] parameterTypes)
         {
+            // Localy declared type
             TypeDefinition parentType = parentTypeRef.Module.Types[parentTypeRef.FullName];
 
+            if (parentType == null && parentTypeRef.Scope != null)
+            {
+                foreach (AssemblyNameReference assembly in parentTypeRef.Module.AssemblyReferences)
+                {
+                    if (parentTypeRef.Scope.Name == assembly.Name)
+                    {
+                        //ResolveMethod(methodName, parentTypeRef.FullName, assembly.FullName, 
+                        Utilities.Cecil.StarLightAssemblyResolver sar = new Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver(BinFolder);
+                        AssemblyDefinition ad = sar.Resolve(assembly);
+                        parentType = ad.MainModule.Types[parentTypeRef.FullName];
+                        
+                        break;
+                    }
+                }
+
+
+            }
+
+            //TypeDefinition parentType = parentTypeRef.Module.Types[parentTypeRef.FullName];
+
             MethodDefinition md = parentType.Methods.GetMethod(methodName, parameterTypes);
+
 
             return md;
         }

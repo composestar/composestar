@@ -798,6 +798,11 @@ namespace Composestar.Repository
             CloseContainer();
         }
 
+        public void Commit()
+        {
+            container.Commit();
+        }
+
         /// <summary>
         /// Adds the assemblies.
         /// </summary>
@@ -805,16 +810,44 @@ namespace Composestar.Repository
         /// <param name="assembliesToSave">The assemblies to save.</param>
         public void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave)
         {
+            Dictionary<String, AssemblyElement> storedAssemblies = new Dictionary<string, AssemblyElement>();
+            Dictionary<String, List<String>> storedTypes = new Dictionary<string, List<String>>();
+
+            // Create index list of all assembly elements
+            foreach (AssemblyElement storedAssembly in GetAssemblyElements())
+            {
+                storedAssemblies.Add(storedAssembly.Name, storedAssembly);
+            }
+
+            // Create assembly indexed list of all type names
+            foreach (TypeElement storedType in GetTypeElements())
+            {
+                if (!storedTypes.ContainsKey(storedType.Assembly))
+                {
+                    storedTypes.Add(storedType.Assembly, new List<String>());
+                }
+                storedTypes[storedType.Assembly].Add(storedType.FullName);
+            }
+            
+
             foreach (AssemblyElement assembly in assemblies)
             {
-                //Console.WriteLine("  {0}", assembly.Name);
-                AddAssembly(assembly);
+                // Only add the assembly element if it is not yet in the database
+                if (!storedAssemblies.ContainsKey(assembly.Name))
+                {
+                    AddAssembly(assembly);
+                }
 
                 foreach (TypeElement type in assembly.TypeElements)
                 {
                     if (!assembliesToSave.Contains(String.Format("{0}, {1}", type.FullName, assembly.Name))) continue;
 
-                    //Console.WriteLine("    {0}", type.FullName);
+                    if (storedAssemblies.ContainsKey(assembly.Name) && storedTypes.ContainsKey(assembly.Name))
+                    {
+                        if (storedTypes[assembly.Name].Contains(type.FullName)) continue;
+
+                        
+                    }
 
                     AddType(type);
 
@@ -844,7 +877,6 @@ namespace Composestar.Repository
                         }
                     }
                 }
-
             }
         }
 
