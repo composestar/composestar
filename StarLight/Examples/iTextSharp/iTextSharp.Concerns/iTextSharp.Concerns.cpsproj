@@ -12,15 +12,17 @@
     <CodeLanguage>CSharp</CodeLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <IncludeDebugInformation>false</IncludeDebugInformation>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugLevel>4</DebugLevel>
+    <DebugType>none</DebugType>
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <IncludeDebugInformation>false</IncludeDebugInformation>
     <OutputPath>bin\Release\</OutputPath>
     <DebugLevel>1</DebugLevel>
+    <DebugType>none</DebugType>
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
@@ -31,6 +33,7 @@
       <HintPath>$(MSBuildExtensionsPath)\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="iTextSharp.Concerns" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\iTextSharp\iTextSharp.csproj">
@@ -54,7 +57,7 @@
     </Compile>
   </ItemGroup>
   <!-- Import the CSharp targets --> 
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!--Import the StarLight targets-->
   <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />  
 </Project>
