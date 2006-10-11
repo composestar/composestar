@@ -1,0 +1,9 @@
+- Replace all hashCode and equals method overrides with GetHashCode and Equals
+- Convert appropriate methods into properties
+- Rename DERObject to ASN1Object?
+- Be careful about Substrings(2 params) -> search again at end
+- Add the last two tests in EqualsAndHashCodeTest and resolve the date formatting stuff (including cms/Time)
+- More date formatting stuff in x509/Time class
+- Simplify string comparisons from Equals() to ==
+- Consider returning IEnumeration's instead of IEnumerator to allow use of foreach by caller
+- Systematically examine access specifiers -> Java's "no specifier" default should be 'internal' in C#

@@ -1,0 +1,2430 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{84C4FDD9-3ED7-453B-B9DA-B3ED52CB071C}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>itextsharp</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>iTextSharp.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1572;1587;1570;1591;1573;1596</NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1572;1587;1570;1591;1573;1596</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Anchor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Annotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\BadElementException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Cell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Chapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ChapterAutoNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Chunk.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Color.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Document.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\DocumentException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\DocWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Element.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ElementTags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Entities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Font.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\FontFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\FontFactoryImp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Graphic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\GreekList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Header.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\HeaderFooter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\HtmlEncoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\HtmlParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\HtmlPeer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\HtmlTagMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\HtmlTags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\HtmlWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\ITextmyHtmlHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\ChainedProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\FactoryProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\HTMLWorker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\IALink.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\IImg.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\IncCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\IncTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\html\simpleparser\StyleSheet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\IDocListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\IElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\IElementListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Image.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\IMarkupAttributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ImgCCITT.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ImgRaw.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ImgTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ImgWMF.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ISplitCharacter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ITextElementArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Jpeg.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\List.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ListItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\markup\MarkupParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\markup\MarkupTags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\markup\WebColors.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Meta.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\PageSize.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Paragraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\AcroFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ArabicLigaturizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BadPdfFormatException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Barcode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Barcode128.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Barcode39.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BarcodeCodabar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BarcodeEAN.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BarcodeEANSUPP.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BarcodeInter25.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BarcodePDF417.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BarcodePostnet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BaseField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BaseFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BidiLine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\BidiOrder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ByteBuffer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\CFFFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\CFFFontSubset.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\CJKFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\CMYKColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\BmpImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\CCITTG4Encoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\GifImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\PngImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\TIFFConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\TIFFDirectory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\TIFFFaxDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\TIFFField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\TiffImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\TIFFLZWDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\InputMeta.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\MetaBrush.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\MetaDo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\MetaFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\MetaObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\MetaPen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\codec\wmf\MetaState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\CodeFile1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ColorDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ColumnText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\DocumentFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\EnumerateTTC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\events\FieldPositioningEvents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\events\IndexEvents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\events\PdfPageEventForwarder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\events\PdfPCellEventForwarder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\events\PdfPTableEventForwarder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ExtendedColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\FdfReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\FdfWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\FontDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\FontSelector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\GlyphList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\GrayColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\HyphenationAuto.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\ByteVector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\CharVector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\Hyphen.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\Hyphenation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\HyphenationException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\HyphenationTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\Hyphenator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\IPatternConsumer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\SimplePatternParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\hyphenation\TernaryTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ICC_Profile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IExtraEncoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IHyphenationEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IntHashtable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IPdfOCG.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IPdfPageEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IPdfPCellEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\IPdfPTableEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ISimpleXMLDocHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ISimpleXMLDocHandlerComment.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\LZWDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\MultiColumnText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\OutputStreamCounter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PageResources.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PatternColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfAcroForm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfAction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfAnnotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfAppearance.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfBoolean.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfBorderArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfBorderDictionary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfChunk.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfContentByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfContentParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfContents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfCopy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfCopyFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfCopyFieldsImp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfDashPattern.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfDate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfDestination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfDictionary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfDocument.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfEncodings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfEncryption.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfEncryptionStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfEncryptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfFileSpecification.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfFormField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfFormXObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfFunction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfGState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfICCBased.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfImportedPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfIndirectObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfIndirectReference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfLayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfLayerMembership.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfLine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfLiteral.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfMediaClipData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfNameTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfNull.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfNumberTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfOCProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfOutline.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPageEventHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPageLabels.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPattern.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPatternPainter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPKCS7.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPRow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPSXObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfPTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfReaderInstance.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfRectangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfRendition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfResources.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfShading.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfShadingPattern.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfSigGenericPKCS.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfSignature.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfSignatureAppearance.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfSpotColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfStamper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfStamperImp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfStructureElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfStructureTreeRoot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfTextArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfTransition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfTransparencyGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PdfXConformanceException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Pfm2afm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PRAcroForm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PRIndirectReference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PRStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PRTokeniser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\PushbuttonField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\RadioCheckField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\RandomAccessFileOrArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\SequenceList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\ShadingColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\SimpleBookmark.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\SimpleXMLParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\SpotColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\StampContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\TextField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\TrueTypeFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\TrueTypeFontSubSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\TrueTypeFontUnicode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Type1Font.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Type3Font.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\Type3Glyph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\VerticalText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\XfaForm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\pdf\XfdfReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Phrase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Rectangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\RomanList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Row.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\AbstractRtfField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfColorTableParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfDirectContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfFontTableParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfImportHeader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfImportMappings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\direct\RtfTokeniser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\output\IRtfDataCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\output\RtfDiskCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\output\RtfMemoryCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfCodePage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfDocument.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfDocumentHeader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfDocumentSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfInfoElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfInfoGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\document\RtfPageSetting.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\field\RtfAnchor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\field\RtfField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\field\RtfPageNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\field\RtfTableOfContents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\field\RtfTOCEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\field\RtfTotalPageNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\GenericRtfField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\graphic\RtfImage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\graphic\RtfShape.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\graphic\RtfShapePosition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\graphic\RtfShapeProperty.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\headerfooter\RtfHeaderFooter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\headerfooter\RtfHeaderFooterGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\IRtfBasicElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\IRtfExtendedElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\IRtfField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\list\RtfList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\list\RtfListItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\list\RtfListTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfAddableElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfHeaderFooter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfHeaderFooters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfMapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfPageNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfRow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfTableCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfTOC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfTOCEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\RtfWriter2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\style\RtfColor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\style\RtfColorList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\style\RtfFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\style\RtfFontList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\style\RtfParagraphStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\style\RtfStylesheetList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\table\RtfBorder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\table\RtfBorderGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\table\RtfCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\table\RtfRow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\table\RtfTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfAnnotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfChapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfChunk.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfNewPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfParagraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfPhrase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfSection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfTab.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\rtf\text\RtfTabGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Section.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\SimpleCell.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\SimpleTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\SpecialSymbol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Table.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\Watermark.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\ITextHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\ITextmyHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\ParserBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\TagMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\XmlParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\XmlPeer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\XmlWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\DublinCoreSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\PdfSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\XmpArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\XmpBasicSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\XmpMMSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\XmpSchema.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\xml\xmp\XmpWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ZapfDingbatsList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iTextSharp\text\ZapfDingbatsNumberList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1Encodable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1EncodableVector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1InputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1Null.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1Object.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1OctetString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1OutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1Sequence.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1Set.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1TaggedObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ASN1Tags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\BERNull.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\BEROctetString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\BEROutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\BERSequence.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\BERSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\BERTaggedObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\CMSAttributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\CMSObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\CompressedData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\ContentInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\EncryptedContentInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\EnvelopedData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\IssuerAndSerialNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\KEKIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\KEKRecipientInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\KeyAgreeRecipientInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\KeyTransRecipientInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\OriginatorIdentifierOrKey.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\OriginatorInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\OriginatorPublicKey.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\OtherKeyAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\OtherRecipientInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\PasswordRecipientInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\RecipientIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\RecipientInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\RecipientKeyIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\SignedData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\SignerIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\SignerInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\cms\Time.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERApplicationSpecific.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERBitString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERBMPString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERBoolean.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DEREnumerated.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERGeneralizedTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERGeneralString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERIA5String.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERInteger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERNull.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERNumericString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERObjectIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DEROctetString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DEROutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERPrintableString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERSequence.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERT61String.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERTaggedObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERUniversalString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERUnknownTag.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERUTCTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERUTF8String.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\DERVisibleString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\misc\CAST5CBCParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\misc\IDEACBCPar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\misc\MiscObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\misc\NetscapeCertType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\misc\NetscapeRevocationURL.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\misc\VerisignCzagExtension.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\nist\NISTObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\BasicOCSPResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\CertID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\CertStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\CrlID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\OCSPObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\OCSPRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\OCSPResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\OCSPResponseStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\Request.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\ResponderID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\ResponseBytes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\ResponseData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\RevokedInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\ServiceLocator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\Signature.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\SingleResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\ocsp\TBSRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\OIDTokenizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\oiw\ElGamalParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\oiw\OIWObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\Attribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\AuthenticatedSafe.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\CertBag.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\CertificationRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\CertificationRequestInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\ContentInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\DHParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\EncryptedData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\EncryptedPrivateKeyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\EncryptionScheme.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\IssuerAndSerialNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\KeyDerivationFunc.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\MacData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\PBEParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\PBES2Parameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\PBKDF2Params.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\Pfx.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\PKCS12PBEParams.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\PKCSObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\PrivateKeyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\RC2CBCParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\RSAPrivateKeyStructure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\SafeBag.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\SignedData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\pkcs\SignerInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\sec\ECPrivateKeyStructure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\smime\SMIMEAttributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\smime\SMIMECapabilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\smime\SMIMECapabilitiesAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\smime\SMIMECapability.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\smime\SMIMECapabilityVector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\smime\SMIMEEncryptionKeyPreferenceAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\teletrust\TeleTrusTObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\util\ASN1Dump.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\util\Dump.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\util\FilterStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AlgorithmIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AttCertIssuer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AttCertValidityPeriod.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\Attribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AttributeCertificate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AttributeCertificateInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AttributeTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AuthorityInformationAccess.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\AuthorityKeyIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\BasicConstraints.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\CertificateList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\CertPolicyId.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\CRLDistPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\CRLNumber.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\CRLReason.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\DigestInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\DisplayText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\DistributionPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\DistributionPointName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\DSAParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\ExtendedKeyUsage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\GeneralName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\GeneralNames.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\GeneralSubtree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\Holder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\IetfAttrSyntax.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\IssuerSerial.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\IssuingDistributionPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\KeyPurposeId.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\KeyUsage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\NameConstraints.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\NoticeReference.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\ObjectDigestInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\PolicyInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\PolicyMappings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\PolicyQualifierId.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\PolicyQualifierInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\ReasonFlags.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\RSAPublicKeyStructure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\SubjectKeyIdentifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\SubjectPublicKeyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\TBSCertificateStructure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\TBSCertList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\Time.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\UserNotice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\V1TBSCertificateGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\V2AttributeCertificateInfoGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\V2Form.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\V2TBSCertListGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\V3TBSCertificateGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509CertificateStructure.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509DefaultEntryConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509Extension.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509Extensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509Name.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509NameEntryConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509NameTokenizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x509\X509ObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\KeySpecificInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\OtherInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X962NamedCurves.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X962Parameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X9Curve.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X9ECParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X9ECPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X9FieldElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X9FieldID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\asn1\x9\X9ObjectIdentifiers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\agreement\DHAgreement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\agreement\DHBasicAgreement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\agreement\ECDHBasicAgreement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\agreement\ECDHCBasicAgreement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\AsymmetricBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\AsymmetricCipherKeyPair.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\AsymmetricCipherKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\AsymmetricKeyParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\BasicAgreement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\BlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\BufferedAsymmetricBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\BufferedBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\CipherKeyGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\CipherParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\CryptoException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\DataLengthException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\DerivationFunction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\DerivationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\GeneralDigest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\LongDigest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\MD2Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\MD4Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\MD5Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\RIPEMD128Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\RIPEMD160Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\RIPEMD256Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\RIPEMD320Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\SHA1Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\SHA224Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\SHA256Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\SHA384Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\SHA512Digest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\digests\TigerDigest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\DSA.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\encodings\ISO9796d1Encoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\encodings\OAEPEncoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\encodings\PKCS1Encoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\AESEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\AESFastEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\AESLightEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\AESWrapEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\BlowfishEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\CAST5Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\CAST6Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\DESedeEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\DESedeWrapEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\DESEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\ElGamalEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\IDEAEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\IESEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RC2Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RC2WrapEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RC4Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RC532Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RC564Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RC6Engine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RijndaeEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\RSAEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\SerpentEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\SkipjackEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\engines\TwofishEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DESedeKeyGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DESKeyGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DHBasicKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DHKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DHParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DSAKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\DSAParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\ECKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\ElGamalKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\ElGamalParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\KDF2BytesGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\MGF1BytesGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\PKCS12ParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\PKCS5S1ParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\PKCS5S2ParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\generators\RSAKeyPairGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\InvalidCipherTextException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\io\DigestStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\io\MacStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\KeyGenerationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\Mac.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\macs\CBCBlockCipherMac.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\macs\CFBBlockCipherMac.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\macs\HMac.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\modes\CBCBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\modes\CFBBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\modes\CTSBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\modes\OFBBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\modes\SICBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\BlockCipherPadding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\ISO10126d2Padding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\PaddedBufferedBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\PKCS7Padding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\TBCPadding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\X923Padding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\paddings\ZeroBytePadding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DESedeParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DESParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DHKeyGenerationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DHKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DHParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DHPrivateKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DHPublicKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DHValidationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DSAKeyGenerationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DSAKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DSAParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DSAPrivateKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DSAPublicKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\DSAValidationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ECDomainParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ECKeyGenerationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ECKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ECPrivateKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ECPublicKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ElGamalKeyGenerationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ElGamalKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ElGamalParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ElGamalPrivateKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ElGamalPublicKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\IESParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\IESWithCipherParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\KDFParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\KeyParameter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\MGFParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ParametersWithIV.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ParametersWithRandom.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\ParametersWithSalt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\RC2Parameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\RC5Parameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\RSAKeyGenerationParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\RSAKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\parameters\RSAPrivateCrtKeyParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\PBEParametersGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\RuntimeCryptoException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\Signer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\DSADigestSigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\DSASigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\ECDSASigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\ISO9796d2PSSSigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\ISO9796d2Signer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\PSSSigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\signers\RSADigestSigner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\SignerWithRecovery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\StreamBlockCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\StreamCipher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\crypto\Wrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\LICENSE.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\math\BigInteger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\math\ec\ECConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\math\ec\ECCurve.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\math\ec\ECFieldElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\math\ec\ECPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\BasicOCSPResp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\BasicOCSPRespGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\CertificateID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\CertificateStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\OCSPException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\OCSPReq.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\OCSPReqGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\OCSPResp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\OCSPRespGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\OCSPRespStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\Req.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\RespData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\RespID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\RevokedStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\SingleResp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\ocsp\UnknownStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\AsymmetricKeyEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\EncryptedPrivateKeyInfoFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\PKCS10CertificationRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\PKCS12Entry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\PKCS12Store.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\PrivateKeyInfoFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\pkcs\X509CertificateEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\DotNetUtils.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\PBEUtil.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\PrivateKeyFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\PublicKeyFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\SecureRandom.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\SignerUtil.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\security\TransformationByName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\Arrays.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\encoders\Base64.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\encoders\BufferedDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\encoders\BufferedEncoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\encoders\Hex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\encoders\HexTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\util\encoders\Translator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\x509\SubjectPublicKeyInfoFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\x509\X509Certificate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\x509\X509CertificateParser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\x509\X509V1CertificateGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="srcbc\x509\X509V3CertificateGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\Drawing\Dimension.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\Drawing\Dimension2D.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Algorithm.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Container.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Deque.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\HashTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Iterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\List.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Queue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\SkipList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Stack.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Tree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\collections\Vector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\ListIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\Properties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\StringTokenizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\Util.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\Adler32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\Deflate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\InfBlocks.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\InfCodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\Inflate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\InfTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\JZlib.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\StaticTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\Tree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\ZDeflaterOutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\ZInflaterInputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="System\util\zlib\ZStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="itextsharp.snk" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Courier-Bold.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Courier-BoldOblique.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Courier-Oblique.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Courier.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\glyphlist.txt" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Helvetica-Bold.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Helvetica-BoldOblique.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Helvetica-Oblique.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Helvetica.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Symbol.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Times-Bold.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Times-BoldItalic.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Times-Italic.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\Times-Roman.afm" />
+    <EmbeddedResource Include="iTextSharp\text\pdf\fonts\ZapfDingbats.afm" />
+    <Content Include="srcbc\asn1\oiw\package.html" />
+    <Content Include="srcbc\asn1\pkcs\package.html" />
+    <Content Include="srcbc\asn1\sec\package.html" />
+    <Content Include="srcbc\asn1\smime\package.html" />
+    <Content Include="srcbc\asn1\TODO.txt" />
+    <Content Include="srcbc\asn1\util\package.html" />
+    <Content Include="srcbc\asn1\x9\package.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
