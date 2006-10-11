@@ -235,7 +235,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </code>
         /// </example> 
         /// <exception cref="ArgumentNullException">
-        /// Thrown when the <see cref="key"/> is empty or <see langword="null" />.
+        /// Thrown when the <paramref name="key"/> is empty or <see langword="null" />.
         /// </exception>
         public void AddProperty(string key, object property)
         {
@@ -267,7 +267,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </code>
         /// </example>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when the <see cref="key"/> is empty or <see langword="null" />.
+        /// Thrown when the <paramref name="key"/> is empty or <see langword="null" />.
         /// </exception>
         public object GetProperty(string key)
         {
@@ -308,7 +308,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </code>
         /// </example>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when the <see cref="key"/> is empty or <see langword="null"/>.
+        /// Thrown when the <paramref name="key"/> is empty or <see langword="null"/>.
         /// </exception>
         public T GetGenericProperty<T>(string key)
         {
