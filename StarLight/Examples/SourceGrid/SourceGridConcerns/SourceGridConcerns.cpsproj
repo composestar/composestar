@@ -33,12 +33,10 @@
     <ProjectReference Include="..\SourceGrid\SourceGrid.csproj">
       <Name>SourceGrid</Name>
       <Project>{DA47B108-21C8-4293-8D4E-56FFF1ED45A5}</Project>
-      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\SourceGrid.Extensions\SourceGrid.Extensions.csproj">
       <Name>SourceGrid.Extensions</Name>
       <Project>{81925514-5708-4649-9538-36CAD48CF2D5}</Project>
-      <Private>True</Private>
     </ProjectReference>   
   </ItemGroup>
     <!--Import the standards targets-->

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.ComponentModel.Design;
 
 using Microsoft.Build.Framework;
@@ -24,6 +25,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
         #region Properties for MSBuild
 
         private ITaskItem[] _assemblyFiles;
+
+        // TODO Weaver should only work on the assemblies in the database. Thus supplied by the analyzer.
 
         [Required()]
         public ITaskItem[] AssemblyFiles
@@ -76,6 +79,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessageFromResources("WeavingStartText");
 
             String filename;
+            String extension;
             IILWeaver weaver = null;
             ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
             
@@ -84,6 +88,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 foreach (ITaskItem item in AssemblyFiles)
                 {
                     filename = item.ToString();
+                    extension = Path.GetExtension(filename).ToLower(); 
+                    if (!extension.Equals(".dll") && !extension.Equals(".exe"))
+                    {
+                        continue;
+                    } // foreach  (item)
+                
 
                     // Exclude StarLight ContextInfo assembly from the weaving process
                     if (filename.EndsWith(ContextInfoFileName)) continue;

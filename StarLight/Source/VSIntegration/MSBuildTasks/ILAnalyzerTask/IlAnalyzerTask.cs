@@ -130,7 +130,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
             List<String> assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
             {
-                assemblyFileList.Add(item.ToString());
+                // We are only interested in assembly files.
+                string extension = Path.GetExtension(item.ToString()).ToLower();
+                if (extension.Equals(".dll") || extension.Equals(".exe"))
+                {
+                    assemblyFileList.Add(item.ToString());
+                } // if
             }
 
             // Create a list of all the referenced assemblies, which are not copied local for complete analysis
@@ -169,12 +174,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     AssemblyElement assembly = null;
                     Log.LogMessageFromResources("AnalyzingFile", item);
-
-                    if (!(item.EndsWith(".dll") || item.EndsWith(".exe"))) {
-                        Log.LogWarning("FIXME: this is not a supported assembly extension, shouldnt get this file from the build task!s");
-                        continue;
-                    }
-
+                             
                     // Try to get the assembly information from the database
                     assembly = langModelAccessor.GetAssemblyElementByFileName(item);
                     if (assembly != null)

@@ -20,7 +20,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         #region Properties for MSBuild
 
         private ITaskItem[] _assemblyFiles;
-
+        // TODO Verifier should work on the assemblies it just weaved. So the assemblies from the database
         /// <summary>
         /// Gets or sets the assembly files to analyze.
         /// </summary>
@@ -58,6 +58,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             string PEVerifyLocation;
             string PEVerifyExecutable = "bin\\PEVerify.exe";
             string filename;
+            string extension;
 
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -88,6 +89,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 try
                 {
                     filename = item.ToString();
+                    extension = Path.GetExtension(filename).ToLower(); 
+                    if (!extension.Equals(".dll") && !extension.Equals(".exe"))
+                    {
+                        continue;
+                    } // foreach  (item)
+
                     Log.LogMessageFromResources("VerifyingAssembly", filename);
 
                     process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", filename);

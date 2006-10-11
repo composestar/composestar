@@ -95,10 +95,12 @@
     -->
   <PropertyGroup>
     <CoreWeaveDependsOn>
+      BuildOnlySettings;
       PrepareForBuild;
-      CpsParserRunner;
       ResolveReferences;
-      CopyBaseCodeToOutputDirectory;
+      CpsParserRunner;
+      GetTargetPath;
+      CopyFilesToOutputDirectory;
       ILAnalyzerRunner;
       MasterCaller;
       ILWeaverRunner;
@@ -122,86 +124,103 @@
     <_DisabledWarnings>$(NoWarn)</_DisabledWarnings>
 
   </PropertyGroup>
-
-  <!-- Override the GetCopyToOutputDirectoryItems target -->
-  <Target
-        Name="GetCopyToOutputDirectoryItems"
-        Outputs="@(AllItemsFullPathWithTargetPath)" 
-        DependsOnTargets="AssignTargetPaths;_SplitProjectReferencesByFileExistence">
-
-    <!-- Get items from child projects first. -->
-    <Message Text ="Retrieving reference files" />
-    <MSBuild
-        Projects="@(_MSBuildProjectReferenceExistent)"
-        Targets="GetCopyToOutputDirectoryItems"
-        Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform)"
-        Condition="'@(_MSBuildProjectReferenceExistent)'!=''">
-      <Output TaskParameter="TargetOutputs" ItemName="_AllChildProjectItemsWithTargetPath"/>
-    </MSBuild>
-
-    <!-- Target outputs must be full paths because they will be consumed by a different project. -->
-    <CreateItem 
-        Include="@(_AllChildProjectItemsWithTargetPath->'%(FullPath)')"
-        Condition="'%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"
-                >
-      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
-              Condition="'%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
-              Condition="'%(_AllChildProjectItemsWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
-    </CreateItem>
-
-    <!-- Get items from this project last so that they will be copied last. -->
-    <CreateItem
-        Include="@(ContentWithTargetPath->'%(FullPath)')"
-        Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
-              Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
-              Condition="'%(ContentWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
-    </CreateItem>
-
-    <CreateItem
-        Include="@(_EmbeddedResourceWithTargetPath->'%(FullPath)')"
-        Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
-              Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
-              Condition="'%(_EmbeddedResourceWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
-    </CreateItem>
-
-    <CreateItem
-        Include="@(Compile->'%(FullPath)')"
-        Condition="'%(Compile.CopyToOutputDirectory)'=='Always' or '%(Compile.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="_CompileItemsToCopy"/>
-    </CreateItem>
-    <AssignTargetPath Files="@(_CompileItemsToCopy)" RootFolder="$(MSBuildProjectDirectory)">
-      <Output TaskParameter="AssignedFiles" ItemName="_CompileItemsToCopyWithTargetPath" />
-    </AssignTargetPath>
-    <CreateItem Include="@(_CompileItemsToCopyWithTargetPath)">
-      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
-              Condition="'%(_CompileItemsToCopyWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
-              Condition="'%(_CompileItemsToCopyWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
-    </CreateItem>
-
-    <CreateItem
-        Include="@(_NoneWithTargetPath->'%(FullPath)')"
-        Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always' or '%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'">
-      <Output TaskParameter="Include" ItemName="AllItemsFullPathWithTargetPath"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectoryAlways"
-              Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='Always'"/>
-      <Output TaskParameter="Include" ItemName="_SourceItemsToCopyToOutputDirectory"
-              Condition="'%(_NoneWithTargetPath.CopyToOutputDirectory)'=='PreserveNewest'"/>
-    </CreateItem>
-
-  </Target>
-
+ 
   <Target Name="CreateManifestResourceNames"/>
 
+  <!--This is an override of targets-->
+  <Target
+        Name="CopyFilesToOutputDirectory"
+        DependsOnTargets="
+            ComputeIntermediateSatelliteAssemblies;
+            _CopyFilesMarkedCopyLocal;
+            _CopySourceItemsToOutputDirectory;
+            _CopyAppConfigFile;
+            _CopyManifestFiles;
+            _CheckForCompileOutputs;
+            _SGenCheckForOutputs">
+   
+    <Message Importance="High" Text="$(MSBuildProjectName) -&gt; @(MainAssembly->'%(FullPath)')" />
+    <!-- Copy the build product (.dll or .exe). But only when we have a CodeLanguage -->
+    <Copy
+        SourceFiles="@(IntermediateAssembly)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true"
+        Condition="'$(CodeLanguage)'=='CSharp' or '$(CodeLanguage)'=='VB' or '$(CodeLanguage)'=='JSharp'"
+        >
+
+      <Output TaskParameter="DestinationFiles" ItemName="MainAssembly"/>
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+    
+    <!-- Copy the additional modules. -->
+    <Copy
+        SourceFiles="@(AddModules)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the serialization assembly if it exists. -->
+    <Copy
+        SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)"
+        DestinationFiles="$(OutDir)$(_SGenDllName)"
+        SkipUnchangedFiles="true"
+        Condition="'$(_SGenDllCreated)'=='true'">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the debug information file (.pdb), if any -->
+    <Copy
+        SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb"
+        DestinationFiles="$(OutDir)$(TargetName).pdb"
+        SkipUnchangedFiles="true"
+        Condition="'$(_DebugSymbolsProduced)'=='true'">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy the resulting XML documentation file, if any. -->
+    <Copy
+        SourceFiles="@(DocFileItem)"
+        DestinationFiles="@(FinalDocFile)"
+        SkipUnchangedFiles="true"
+        Condition="'$(_DocumentationFileProduced)'=='true'">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- Copy satellite assemblies. -->
+    <Copy
+        SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)"
+        DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(OutDir)%(Culture)\$(TargetName).resources.dll')"
+        SkipUnchangedFiles="true">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+    </Copy>
+
+    <!-- 
+        Copy COM reference wrappers, isolated COM references, COM references included by 
+        native (manifest) references, native (manifest) reference files themselves. 
+        -->
+    <Copy
+        SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
+        DestinationFolder="$(OutDir)"
+        SkipUnchangedFiles="true">
+
+      <Output TaskParameter="DestinationFiles" ItemName="FileWritesShareable"/>
+
+    </Copy>
+
+  </Target>
+  
   <!--CpsParserRunner target -->
   <Target
        Name="CpsParserRunner">
@@ -215,7 +234,10 @@
   <Target
        Name="ILAnalyzerRunner">
     <Message Text="Analyzing assemblies." />
-    <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" />
+ 
+    <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" 
+        AssemblyFiles="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" 
+        RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" />
   </Target>
 
   <!--MasterCaller target -->
@@ -236,43 +258,6 @@
     <Message Text ="Verifying generated IL code." />
     <ILVerifyTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />    
   </Target>
-  
-  <!--This is an override of targets-->
-  <Target
-     Name="CopyBaseCodeToOutputDirectory"
-      DependsOnTargets="
-            ComputeIntermediateSatelliteAssemblies;
-            _CopyFilesMarkedCopyLocal;
-            _CopySourceItemsToOutputDirectory;
-            _CopyAppConfigFile;
-            _CopyManifestFiles;">
-    <Message Text="Copying base code to output folder." />
-    <Copy
-        SourceFiles="@(TargetOutputs)"
-        DestinationFolder="$(OutDir)"
-        SkipUnchangedFiles="true">
 
-      <Output TaskParameter="DestinationFiles" ItemName="MainAssembly"/>
-      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-
-    </Copy>
-  
-    <!-- Copy satellite assemblies. -->
-    <Copy
-        SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)"
-        DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(OutDir)%(Culture)\$(TargetName).resources.dll')"
-        SkipUnchangedFiles="true">
-      <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-    </Copy>
-    <!-- 
-        Copy COM reference wrappers, isolated COM references, COM references included by 
-        native (manifest) references, native (manifest) reference files themselves. 
-        -->
-    <Copy
-        SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
-        DestinationFolder="$(OutDir)"
-        SkipUnchangedFiles="true">
-      <Output TaskParameter="DestinationFiles" ItemName="FileWritesShareable"/>
-    </Copy>
-  </Target>
+ 
 </Project>

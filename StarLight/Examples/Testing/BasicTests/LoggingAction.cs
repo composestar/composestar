@@ -7,7 +7,7 @@ using Composestar.StarLight.ContextInfo.FilterTypes;
 namespace BasicTests
 {
     [FilterActionAttribute("LoggingAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
-    class LoggingAction : FilterAction
+    public class LoggingAction : FilterAction
     {
         public override void Execute(Composestar.StarLight.ContextInfo.JoinPointContext context)
         {
