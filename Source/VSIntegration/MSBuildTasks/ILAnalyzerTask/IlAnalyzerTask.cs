@@ -170,6 +170,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     AssemblyElement assembly = null;
                     Log.LogMessageFromResources("AnalyzingFile", item);
 
+                    if (!(item.EndsWith(".dll") || item.EndsWith(".exe"))) {
+                        Log.LogWarning("FIXME: this is not a supported assembly extension, shouldnt get this file from the build task!s");
+                        continue;
+                    }
+
                     // Try to get the assembly information from the database
                     assembly = langModelAccessor.GetAssemblyElementByFileName(item);
                     if (assembly != null)
