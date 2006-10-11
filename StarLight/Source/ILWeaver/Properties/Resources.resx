@@ -178,4 +178,7 @@
   <data name="AssemblyElementNotFound" xml:space="preserve">
     <value>Could not find the assembly named '{0}' in the database. The file is not analyzed and cannot be processed bij the weaver.</value>
   </data>
+  <data name="CouldNotLoadAssembly" xml:space="preserve">
+    <value>Unable to open assembly '{0}' due to the following error: {1}</value>
+  </data>
 </root>

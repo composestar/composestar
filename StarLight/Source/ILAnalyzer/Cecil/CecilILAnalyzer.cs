@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Security.Policy;  //for evidence object
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -328,20 +329,45 @@ namespace Composestar.StarLight.ILAnalyzer
         private void ExtractFilterAction(TypeDefinition type)
         {
             // We use .NET reflection here, because Cecil can not read the enumerations
-            Assembly assembly = Assembly.LoadFrom(type.Module.Image.FileInformation.FullName);
-            if(assembly == null) return;
+          
+            // TODO Loading an assembly locks the assembly for the duration of the appdomain.
+            // The weaver can no loner access the file to weave in it.
+            // We now use ShadowCopy to overcome this. It is an obsolute method
+            // Switch to a seperate appdomain.
 
-            Type refType = assembly.GetType(type.FullName);
-            if(refType == null) return;
+            AppDomain.CurrentDomain.SetShadowCopyFiles();
+            AppDomain.CurrentDomain.AppendPrivatePath(type.Module.Image.FileInformation.Directory.FullName);
+            m_rootAssembly = type.Module.Image.FileInformation.Directory.FullName;
+            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += new ResolveEventHandler(MyReflectionOnlyResolveEventHandler);
+          
+            Assembly assembly = Assembly.ReflectionOnlyLoadFrom(type.Module.Image.FileInformation.FullName);
+            // We have to inject the ContextInfo into the domain, or we cannot find the specific type.
+            Assembly assmContext = 
+                Assembly.ReflectionOnlyLoadFrom(Path.Combine(type.Module.Image.FileInformation.Directory.FullName, 
+                "Composestar.StarLight.ContextInfo.dll"));
 
-            foreach(FilterActionAttribute faa in refType.GetCustomAttributes(typeof(FilterActionAttribute), false))
+            if (assembly == null)
             {
+                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
+            } // if
+                       
+            Type refType = assembly.GetType(type.FullName);
+            
+            if(refType == null) {
+                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
+            } // if
+
+            IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
+            foreach (CustomAttributeData cad in attributes)
+            {
+                if (!cad.ToString().Contains("Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAttribute")) continue;
+                
                 FilterActionElement faEl = new FilterActionElement();
-                _filterActions.Add(faEl);
 
                 faEl.FullName = type.FullName;
-                faEl.Name = faa.ActionName;
-                switch(faa.FlowBehaviour)
+                faEl.Name = ((string)cad.ConstructorArguments[0].Value);
+
+                switch ((FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
                 {
                     case FilterFlowBehaviour.Continue:
                         faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
@@ -357,7 +383,7 @@ namespace Composestar.StarLight.ILAnalyzer
                         break;
                 } // switch
 
-                switch(faa.SubstitutionBehaviour)
+                switch ((MessageSubstitutionBehaviour)cad.ConstructorArguments[1].Value)
                 {
                     case MessageSubstitutionBehaviour.Original:
                         faEl.MessageChangeBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
@@ -372,11 +398,41 @@ namespace Composestar.StarLight.ILAnalyzer
                         faEl.MessageChangeBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
                         break;
                 } // switch
-            } // foreach  (faa)
 
+                _filterActions.Add(faEl);
+            }
+
+        
+
+            type = null;
+            assembly = null;
+            
             return;
         }
-        
+
+        private String m_rootAssembly;
+
+        /// <summary>
+        /// Mies the reflection only resolve event handler.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="T:System.ResolveEventArgs"/> instance containing the event data.</param>
+        /// <returns></returns>
+        private Assembly MyReflectionOnlyResolveEventHandler(object sender, ResolveEventArgs args)
+        {
+
+            AssemblyName name = new AssemblyName(args.Name);
+
+            String asmToCheck = Path.GetDirectoryName(m_rootAssembly) + "\\" + name.Name + ".dll";
+
+            if (File.Exists(asmToCheck))
+            {
+                return Assembly.ReflectionOnlyLoadFrom(asmToCheck);
+            }
+
+            return Assembly.ReflectionOnlyLoad(args.Name);
+        }
+
         /// <summary>
         /// Extracts the type of the filter.
         /// </summary>
@@ -461,14 +517,8 @@ namespace Composestar.StarLight.ILAnalyzer
                         
                     }
                 }
-
-                List<CallElement> callElementsArray = new List<CallElement>(callElements.Count);
-                foreach (CallElement ce in callElements)
-                {
-                    callElementsArray.Add(ce);
-                }
-
-                me.MethodBody.CallElements = callElementsArray.ToArray();
+           
+                me.MethodBody.CallElements = callElements.ToArray();
             }
 
             return me;
@@ -712,9 +762,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             // Error checks
             try
-            {
-                sw.Start();
-
+            {                
                 targetAssemblyDefinition = AssemblyFactory.GetAssembly(fileName);
 
                 result = ExtractAllTypes(targetAssemblyDefinition, fileName);
@@ -725,6 +773,7 @@ namespace Composestar.StarLight.ILAnalyzer
             }
             finally
             {
+                targetAssemblyDefinition = null;
                 sw.Stop();
             }
 
@@ -732,7 +781,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
             return result;
         }
-              
+
+          
         /// <summary>
         /// Processes the unresolved types.
         /// </summary>
@@ -769,7 +819,7 @@ namespace Composestar.StarLight.ILAnalyzer
                     try
                     {
                         AssemblyDefinition ad = dar.Resolve(assemblyName);
-
+                        
                         if (ad != null)
                         {
                             _processMethodBody = false;
@@ -783,7 +833,9 @@ namespace Composestar.StarLight.ILAnalyzer
                             if (ae.TypeElements.Length > 0)
                             {
                                 assemblies.Add(ae);
+                            
                             }
+                            ad = null;
 
                             _processMethodBody = true;
                         }
@@ -797,6 +849,7 @@ namespace Composestar.StarLight.ILAnalyzer
                         throw new ILAnalyzerException(String.Format("Unable to resolve assembly '{0}'.", assemblyName), assemblyName, ex);
                     }
                 }
+                dar = null;
 
                 if (UnresolvedTypes.Count > 0)
                 {

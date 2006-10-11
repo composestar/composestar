@@ -124,6 +124,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to open assembly &apos;{0}&apos; due to the following error: {1}.
+        /// </summary>
+        internal static string CouldNotLoadAssembly {
+            get {
+                return ResourceManager.GetString("CouldNotLoadAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to resolve the method &apos;{0}&apos; from &apos;{1}&apos; to a Type used by the weaver. Make sure all the references are in place and the method has bee specified correctly..
         /// </summary>
         internal static string CouldNotResolveMethod {

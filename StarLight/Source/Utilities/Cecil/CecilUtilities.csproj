@@ -7,8 +7,8 @@
     <ProjectGuid>{125370E1-A7FB-4458-A2AC-CA7C044FC944}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CecilUtilities</RootNamespace>
-    <AssemblyName>CecilUtilities</AssemblyName>
+    <RootNamespace>Composestar.StarLight.Utilities.Cecil</RootNamespace>
+    <AssemblyName>Composestar.StarLight.Utilities.Cecil</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
