@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Runtime" default="build">
 
-	<condition property="build.core" value="${basedir}${file.separator}..">
+	<condition property="build.core" value="..">
 		<and>
-			<not>
-				<isset property="build.core" />
-			</not>
-			<available file="${basedir}${file.separator}..${file.separator}common.xml" />
+			<not><isset property="build.core"/></not>
+			<available file="../common.xml"/>
 		</and>
 	</condition>
-	<import file="..${file.separator}common.xml" />
+	<import file="../common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
-	<description>
-	The Compose* Core Compiletime
-	The core of the compose* compiler
-	</description>
+	<description>The core of the Compose* runtime</description>
 
 	<target name="clean" depends="init" description="clean up CODER parsers">
 		<delete>
 			<fileset dir="src/CODER/breakpoint/parsers/ltl">
-				<include name="LtlLexer.java" />
-				<include name="LtlParser.java" />
-				<include name="LtlTokenTypes.*" />
-				<include name="*.smap" />
+				<include name="LtlLexer.java"/>
+				<include name="LtlParser.java"/>
+				<include name="LtlTokenTypes.*"/>
+				<include name="*.smap"/>
 			</fileset>
 		</delete>
 		<delete>
 			<fileset dir="src/CODER/breakpoint/parsers/reg">
-				<include name="RegLexer.java" />
-				<include name="RegParser.java" />
-				<include name="RegTokenTypes.*" />
-				<include name="*.smap" />
+				<include name="RegLexer.java"/>
+				<include name="RegParser.java"/>
+				<include name="RegTokenTypes.*"/>
+				<include name="*.smap"/>
 			</fileset>
 		</delete>
 	</target>	
 	
-	<target name="build" depends="init,antlr" description="create CODER parsers" />
+	<target name="build" depends="init,antlr" description="create CODER parsers"/>
 	
 	<target name="antlr">
 		<antlr target="src/CODER/breakpoint/parsers/ltl/grammar/ltl.g" outputdirectory="src/CODER/breakpoint/parsers/ltl">

@@ -40,6 +40,7 @@
 	</target>
 	
 	<target name="install" depends="build" description="install the .net runtime">
+		
 		<copy todir="${composestar.installdir}/Binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
@@ -48,16 +49,17 @@
 				<include name="*.dll"/>
 			</fileset>
 		</copy>
+		
 		<echo message="Registering assemblies"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCore.dll"/>
-		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCoreDotNET.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCoreDotNET.dll"/> <!-- MISSING -->
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETRuntimeInterpreter.dll"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETUtilities.dll"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarFilterDebugger.dll"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarRuntimeInterpreter.dll"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarUtilities.dll"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/DotNETPlatformInterface.dll"/>
-		<registerAssembly dll="${composestar.installdir}/Binaries/AntlrDotNet.dll"/>
+		<registerAssembly dll="${composestar.installdir}/Binaries/AntlrDotNet.dll"/> <!-- MISSING -->
 	</target>
 	
 	<target name="uninstall" depends="init" description="uninstall the .net runtime">

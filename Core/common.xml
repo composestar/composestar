@@ -108,12 +108,14 @@ Common routines. Always include this file in every build.xml file
 			
 			<attribute name="solution"/>
 			<attribute name="config" default="Release"/>
+			<attribute name="target" default="rebuild"/>
 			
 			<sequential>
 				<exec executable="msbuild">
 					<arg value="@{solution}"/>
 					<arg value="/nologo"/>
 					<arg value="/v:quiet"/>
+					<arg value="/t:@{target}"/>
 					<arg value="/p:Configuration=@{config}"/>
 				</exec>
 			</sequential>
@@ -180,7 +182,7 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
 		</path>
 		
-		<!-- register findbugs tags -->
+		<!-- register findbugs task -->
 		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs" />
 		<condition property="bin.findbugs" value="${build.core}${file.separator}Development${file.separator}findbugs">
 			<not>
@@ -207,7 +209,7 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr" includes="*.jar"/>
 		</path>
 		
-		<!-- register checkstyle tags -->
+		<!-- register checkstyle task -->
 		<taskdef resource="checkstyletask.properties" classpathref="lib.checkstyle" />
 		<condition property="bin.checkstyle" value="${build.core}${file.separator}Development${file.separator}checkstyle">
 			<not>

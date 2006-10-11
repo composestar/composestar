@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/DotNET/Compiletime" default="build">
 
-	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+	<condition property="build.core" value="../../Core">
 		<and>
 			<not><isset property="build.core"/></not>
-			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
+			<available file="../../Core/common.xml"/>
 		</and>
 	</condition>
 	
-	<import file="${build.core}\common.xml"/>
+	<import file="${build.core}/common.xml"/>
 	
-	<echo>Processing: ${ant.project.name} ...</echo>
+	<property name="Weaver.dir" location="src\Composestar\DotNET\ILICIT\Weaver"/>
+	<property name="Dummer.dir" location="src\Composestar\DotNET\DUMMER"/>
+	<property name="CSharpDummyGenerator.dir" location="${Dummer.dir}\CSharpDummyGenerator"/>
+	<property name="antlr-2.7.2.exe" location="${CSharpDummyGenerator.dir}\Parse\antlr-2.7.2.exe"/>
 	
+	<echo>Processing: ${ant.project.name} ...</echo>	
 	<description>The Compose* DotNET Compiletime</description>
 
 	<target name="clean" depends="init" description="clean the compilation results">
@@ -26,10 +30,8 @@
 		</delete>
 		
 		<!-- C# DummyGen -->
-		<delete dir="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\bin"/>
-		<delete dir="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\obj"/>
 		<delete>
-			<fileset dir="src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\Parse">
+			<fileset dir="${CSharpDummyGenerator.dir}\Parse">
 				<include name="CSharpLexer.cs"/>
 				<include name="CSharpParser.cs"/>
 				<include name="CSharpTokenTypes.*"/>
@@ -39,7 +41,7 @@
 		
 		<!-- J# DummyGen -->
 		<delete>
-			<fileset dir="src/Composestar/DotNET/DUMMER">
+			<fileset dir="${Dummer.dir}">
 				<include name="JSharpLexer.java"/>
 				<include name="JSharpRecognizer.java"/>
 				<include name="JSharpTokenTypes.*"/>
@@ -47,12 +49,19 @@
 			</fileset>
 		</delete>
 		
-		<!-- Weavers -->
-		<delete dir="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\bin"/>
-		<delete dir="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\IlWeaver\obj"/>
-		<delete dir="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\PeWeaver\obj"/>
-		<delete dir="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\WeaveLibrary\obj"/>
+		<antcall target="clean_devenv"/>
+		<antcall target="clean_msbuild"/>
+		
+	</target>
 
+	<target name="clean_devenv" if="available.devenv">
+		<devenv solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.sln" action="clean"/>
+		<devenv solution="${Weaver.dir}\Weavers.sln" action="clean"/>		
+	</target>
+
+	<target name="clean_msbuild" if="available.msbuild">
+		<msbuild solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.vs2005.sln" target="clean"/>
+		<msbuild solution="${Weaver.dir}\Weavers.vs2005.sln" target="clean"/>		
 	</target>
 	
 	<target name="init_local" depends="init">
@@ -64,14 +73,14 @@
 	
 	<target name="antlr">
 		<!--
-		<antlr target="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/csharp.g" outputdirectory="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
+		<antlr target="${CSharpDummyGenerator}/Parse/csharp.g" outputdirectory="${CSharpDummyGenerator}/Parse">
 			<classpath refid="lib.dotnet"/>
 		</antlr>
 		-->
-		<exec executable="${basedir}/src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse/antlr-2.7.2.exe" dir="src/Composestar/DotNET/DUMMER/CSharpDummyGenerator/Parse">
+		<exec executable="${antlr-2.7.2.exe}" dir="${CSharpDummyGenerator.dir}/Parse">
 			<arg value="csharp.g"/>
 		</exec>
-		<antlr target="src/Composestar/DotNET/DUMMER/grammars/jsharp.g" outputdirectory="src/Composestar/DotNET/DUMMER">
+		<antlr target="${Dummer.dir}/grammars/jsharp.g" outputdirectory="${Dummer.dir}">
 			<classpath refid="lib.dotnet"/>
 		</antlr>
 	</target>
@@ -92,20 +101,20 @@
 	<target name="compile_dotnet_devenv" if="available.devenv">
 
 		<!-- C# DummyGen -->
-		<devenv solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.sln" action="build"/>
+		<devenv solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.sln" action="build"/>
 
 		<!-- Weavers -->
-		<devenv solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.sln" action="build"/>
+		<devenv solution="${Weaver.dir}\Weavers.sln" action="build"/>
 		
 	</target>
 
 	<target name="compile_dotnet_msbuild" if="available.msbuild">
 
 		<!-- C# DummyGen -->
-		<msbuild solution="${basedir}\src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\CSharpDummyGenerator.vs2005.sln"/>
+		<msbuild solution="${CSharpDummyGenerator.dir}\CSharpDummyGenerator.vs2005.sln"/>
 
 		<!-- Weavers -->
-		<msbuild solution="${basedir}\src\Composestar\DotNET\ILICIT\Weaver\Weavers.vs2005.sln"/>
+		<msbuild solution="${Weaver.dir}\Weavers.vs2005.sln"/>
 	
 	</target>
 
@@ -115,19 +124,19 @@
 	
 	<target name="install" depends="build" description="Install the .NET compiletime">
 		<!-- jar files -->
-		<copy todir="${composestar.installdir}/Binaries">
+		<copy todir="${composestar.installdir}\Binaries">
 			<fileset dir="${out.dist}"/>
 		</copy>
 		<!-- C# DummyGen -->
-		<copy todir="${composestar.installdir}/Binaries">
-			<fileset dir="src\Composestar\DotNET\DUMMER\CSharpDummyGenerator\bin">
+		<copy todir="${composestar.installdir}\Binaries">
+			<fileset dir="${CSharpDummyGenerator.dir}\bin">
 				<include name="CSharpDummyGenerator.exe"/>
 				<include name="antlr.runtime.dll"/>
 			</fileset>
 		</copy>
 		<!-- ILICIT Weavers -->
-		<copy todir="${composestar.installdir}/Binaries">
-			<fileset dir="src\Composestar\DotNET\ILICIT\Weaver\bin\Release">
+		<copy todir="${composestar.installdir}\Binaries">
+			<fileset dir="${Weaver.dir}\bin\Release">
 				<include name="IlWeaver.exe"/>
 				<include name="PeWeaver.exe"/>
 				<include name="WeaveLibrary.dll"/>

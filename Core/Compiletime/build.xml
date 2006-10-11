@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Compiletime" default="build">
 	
-	<condition property="build.core" value="${basedir}${file.separator}..">
+	<condition property="build.core" value="..">
 		<and>
 			<not><isset property="build.core"/></not>
-			<available file="${basedir}${file.separator}..${file.separator}common.xml"/>
+			<available file="../common.xml"/>
 		</and>
 	</condition>
-	<import file="..${file.separator}common.xml"/>
+	<import file="../common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
