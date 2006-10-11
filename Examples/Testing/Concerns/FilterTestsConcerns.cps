@@ -15,6 +15,7 @@ concern FilterTestsConcern in BasicTests
 			doError : inner.getProduceError();
 		inputfilters
 		    produceerrordisp : Dispatch = { True => [*.getProduceError] };
+		    logging : Logging = { True => [*.*] };
 			makeError : Error = {  doError ~> [*.makeError], !doError => [*.*] };
 			beforetest : After = { True => [*.func4] myExternal.after };
 			test : Dispatch = { True => [*.func1] myExternal.externalMe };

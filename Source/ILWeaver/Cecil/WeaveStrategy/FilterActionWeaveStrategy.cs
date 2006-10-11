@@ -16,6 +16,7 @@ namespace Composestar.StarLight.ILWeaver
     public abstract class FilterActionWeaveStrategy
     {
         private static Dictionary<string, FilterActionWeaveStrategy> strategyMapping;
+        private static FilterActionWeaveStrategy defaultStrategy = new DefaultWeaveStrategy();
         private static object lockObject = new Object();
 
         /// <summary>
@@ -52,7 +53,16 @@ namespace Composestar.StarLight.ILWeaver
                 } // lock
             }
 
-            return strategyMapping[filterAction];
+            if(strategyMapping.ContainsKey(filterAction))
+            {
+                return strategyMapping[filterAction];
+            }
+            else
+            {
+                return defaultStrategy;
+            }
+
+            
         }
 
         /// <summary>
