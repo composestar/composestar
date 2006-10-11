@@ -67,12 +67,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
 
-		try {
-			debugLevel = Integer.parseInt(config.getProjects().getProperty("runDebugLevel"));
-		}
-		catch (NumberFormatException e) {
-			Debug.out(Debug.MODE_WARNING, "CONE-IS", "Unable to set debug level, using default debug level of " + debugLevel + ".");
-		}
+		debugLevel = config.getProjects().getRunDebugLevel();
 
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
@@ -80,7 +75,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			out.println("<weaveSpecification version=\"1.0\">");
 
-			String applicationStart = config.getProjects().getProperty("applicationStart");
+			String applicationStart = config.getProjects().getApplicationStart();
 
 			writeAssemblyReferenceDefinitions(resources, applicationStart);
 			writeMethodDefinitions();

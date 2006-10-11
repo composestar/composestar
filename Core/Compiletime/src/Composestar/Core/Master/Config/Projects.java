@@ -32,6 +32,63 @@ public class Projects implements Serializable
 		//compiledDummies = new ArrayList();
 		//compiledSources = new ArrayList();
 	}
+	
+	public void setRunDebugLevel(int value)
+	{
+		properties.setProperty("runDebugLevel", "" + value);		
+	}
+
+	public int getRunDebugLevel()
+	{
+		String level = properties.getProperty("runDebugLevel");
+		return Integer.parseInt(level);
+	}
+	
+	public void setOutputPath(String value)
+	{
+		properties.setProperty("outputPath", value);		
+	}
+
+	public String getOutputPath()
+	{
+		return properties.getProperty("outputPath");
+	}
+	
+	public void setApplicationStart(String value)
+	{
+		properties.setProperty("applicationStart", value);		
+	}
+	
+	public String getApplicationStart()
+	{
+		return properties.getProperty("applicationStart");
+	}
+	
+	public void setExecutable(String value)
+	{
+		properties.setProperty("executable", value);
+	}
+	
+	public String getExecutable()
+	{
+		return properties.getProperty("executable");
+	}
+	
+	/**
+	 * @deprecated Use setRunDebugLevel/setOutputPath/setApplicationStart/setExecutable.
+	 */
+	public void addProperty(String key, String value)
+	{
+		properties.setProperty(key, value);
+	}
+
+	/**
+	 * @deprecated Use getRunDebugLevel/getOutputPath/getApplicationStart/getExecutable.
+	 */
+	public String getProperty(String key)
+	{
+		return properties.getProperty(key);
+	}
 
 	public void addConcernSource(ConcernSource concernsource)
 	{
@@ -63,16 +120,6 @@ public class Projects implements Serializable
 			projectsByLanguage.put(language, projects = new ArrayList());
 
 		return projects;
-	}
-
-	public void addProperty(String key, String value)
-	{
-		properties.setProperty(key, value);
-	}
-
-	public String getProperty(String key)
-	{
-		return properties.getProperty(key); // returns null if not found
 	}
 
 	public List getCompiledDummies()

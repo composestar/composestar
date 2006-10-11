@@ -71,19 +71,18 @@ public class INCREConfigurations {
 		{
 			String name = (String)dumIt.next();
 			dummyStr += name;
-			if(dumIt.hasNext()) dummyStr += ",";
+			if (dumIt.hasNext()) dummyStr += ",";
         }
-		props.put("HarvesterInput",depstr+ ',' +dummyStr);
+		props.put("HarvesterInput", depstr + "," + dummyStr);
 				
 		/* ApplicationStart */
-		String as = config.getProjects().getProperty("applicationStart");
-		if(null!=as && as.length() != 0){
-			props.put("ApplicationStart",as);
-		}
+		String as = config.getProjects().getApplicationStart();
+		if (as != null && as.length() != 0)
+			props.put("ApplicationStart", as);
 						
 		/* RunDebugLevel */
-		String rdl = config.getProjects().getProperty("runDebugLevel");
-		props.put("RunDebugLevel",rdl);
+		int rdl = config.getProjects().getRunDebugLevel();
+		props.put("RunDebugLevel", "" + rdl);
 	}
 	
 	public void addConfiguration(String key, String val)

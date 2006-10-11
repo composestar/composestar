@@ -38,7 +38,7 @@ public abstract class BACO implements CTCommonModule
 		filesToCopy.add(repository);
 
 		// determine output dir:
-		String outputPath = config.getProjects().getProperty("outputPath");
+		String outputPath = config.getProjects().getOutputPath();
 		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
 		
 		// create the output dir if needed

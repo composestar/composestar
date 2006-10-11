@@ -34,8 +34,8 @@ import Composestar.Utils.FileUtils;
  * Takes care of compiling the real user sources. Links with the dummies and takes 
  * care not to destroy them during compilation.
  */
-public class RealSourceManager implements CTCommonModule {
-
+public class RealSourceManager implements CTCommonModule
+{
 	public RealSourceManager()
 	{
 	}
@@ -44,7 +44,7 @@ public class RealSourceManager implements CTCommonModule {
 	{
 		List compiledSources = new ArrayList();
 
-		//compile sources of project
+		//compile sources of projects
 		Configuration config = Configuration.instance();
 		List projects = config.getProjects().getProjects();
 		
@@ -56,26 +56,16 @@ public class RealSourceManager implements CTCommonModule {
 			CompilerSettings compsettings = lang.compilerSettings;
 			LangCompiler comp = compsettings.getCompiler();
 
-			String exec = Configuration.instance().getProjects().getProperty("executable");
-			String exefile = "";
-			
-			Iterator typesourcesit = project.getTypeSources().iterator();
-			while (typesourcesit.hasNext())
-			{
-				TypeSource source = (TypeSource)typesourcesit.next();
-				if (source.getName().equals(exec))
-					exefile = source.getFileName();
-			}
+			String exetype = config.getProjects().getExecutable();
+			String exefile = getExeFile(project, exetype);
 
 			//set target of sources
 			Iterator sourceIt = project.getSources().iterator();
 			while (sourceIt.hasNext())
 			{
 				Source source = (Source)sourceIt.next();
-				if (source.getFileName().equals(exefile))
-					source.setIsExecutable(true);
-				else
-					source.setIsExecutable(false);
+				String filename = source.getFileName();
+				source.setIsExecutable(filename.equals(exefile));
 				
 				String target = getTargetFile(source.getFileName(), source.isExecutable());
 				Debug.out(Debug.MODE_DEBUG, "RECOMA", "Source '" + source.getFileName() + "' will be compiled to assembly '" + target + "'");				
@@ -92,6 +82,22 @@ public class RealSourceManager implements CTCommonModule {
 		}
 
 		resources.addResource("CompiledSources", compiledSources);
+	}
+
+	/**
+	 * Returns the name of the sourcefile in which the specified executable type is defined.
+	 */
+	private String getExeFile(Project project, String exec) throws ModuleException
+	{
+		Iterator tsIt = project.getTypeSources().iterator();
+		while (tsIt.hasNext())
+		{
+			TypeSource ts = (TypeSource)tsIt.next();
+			if (ts.getName().equals(exec))
+				return ts.getFileName();
+		}
+		
+		throw new ModuleException("Source file for executable type '" + exec + "' unknown", "RECOMA");
 	}
 
 	/**
