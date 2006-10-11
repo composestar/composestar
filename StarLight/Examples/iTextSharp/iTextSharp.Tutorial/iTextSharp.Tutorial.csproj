@@ -1,0 +1,475 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{13E8BC6B-54E6-46CE-94D2-342F7CCCBFA2}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>iTextSharp.Tutorial</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>iTextSharp.tutorial</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\iTextSharp\iTextSharp.csproj">
+      <Name>iTextSharp</Name>
+      <Project>{84C4FDD9-3ED7-453B-B9DA-B3ED52CB071C}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup> 
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0101.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0102.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0103.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0104.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0106.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0107.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0108.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0109.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0110.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0111.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Chap0112.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Concat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Encrypt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Handout.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap01\Split.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0201.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0201a.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0202.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0203.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0204.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0205.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0206.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0207.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0208.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap0209.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap02\Chap02_hyphenation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap03\Chap0301.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap03\Chap0302.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap03\Chap0303.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap03\Chap0304.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap04\Chap0401.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap04\Chap0402.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap04\Chap0403.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap04\Chap0404.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap04\Chap0405.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0501.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0502.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0503.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0504.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0505.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0506.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0507.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0508.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0509.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0510.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0511.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0512.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0513.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0514.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0515.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0516.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0517.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap05\Chap0518.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0601.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0602.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0603.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0604.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0605.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0606.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0607.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0608.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0609.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0610.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0611.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0613.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0614.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0615.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap06\Chap0616.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0701.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0702.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0703.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0704.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0705.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0707.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Chap0708.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap07\Cv.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap08\Chap0801.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap08\Chap0802.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap08\Chap0803.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap08\Chap0804.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0901.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0902.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0903.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0904.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0905.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0906.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap0907.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap09\Chap09_fontfactory_styles.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1001.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1002.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1003.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1004.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1005.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1006.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1007.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1008.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1009.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1010.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1011.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1012.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1013.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1014.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap10\Chap1015.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1101.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1102.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1103.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1104.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1105.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1106.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1107.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1108.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1109.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1110.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap11\Chap1111.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap12\Chap1201.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap12\Chap1202.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap12\Chap1203.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap13\Chap13_form.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap13\Chap13_gis.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Chap13\Chap13_pdfreader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
