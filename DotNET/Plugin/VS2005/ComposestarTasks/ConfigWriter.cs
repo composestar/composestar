@@ -99,7 +99,7 @@ namespace Trese.ComposestarTasks
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
-
+		/*
 			// TypeSources
 			xw.WriteStartElement("TypeSources");
 			foreach (TypeSource ts in p.typeSources)
@@ -110,7 +110,7 @@ namespace Trese.ComposestarTasks
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
-
+		*/
 			// /Project
 			xw.WriteEndElement();
 		}
@@ -143,9 +143,7 @@ namespace Trese.ComposestarTasks
 		private void WriteSettings(XmlWriter xw)
 		{
 			xw.WriteStartElement("Settings");
-			xw.WriteAttributeString("composestarIni", m_config.settingsIni);
 			xw.WriteAttributeString("buildDebugLevel", m_config.buildDebugLevel);
-			xw.WriteAttributeString("platform", "dotNET");
 
 			// modules
 			WriteModuleSettings(xw);
@@ -197,7 +195,7 @@ namespace Trese.ComposestarTasks
 
 			// TODO: write something like this instead:
 			// <Platforms file="C:\Program Files\ComposeStar\PlatformConfigurations.xml"/>
-			// or better yet: include it in Settings.
+			// or better yet: include the path in Settings.
 		}
 	}
 }

@@ -148,7 +148,6 @@ namespace Trese.ComposestarTasks
 			config.runDebugLevel = "1";
 			config.buildDebugLevel = "3";
 			config.outputPath = m_outputPath;
-			config.settingsIni = @"C:\Program Files\ComposeStar\Composestar.ini";
 
 			Project project = config.AddProject();
 			project.name = m_projectName;
@@ -172,19 +171,16 @@ namespace Trese.ComposestarTasks
 			foreach (string s in m_assemblies)
 				project.deps.Add(s);
 
-			// typesources
-			// sigh...
-
 			// module settings
 			ModuleSettings filth = config.AddModule("FILTH");
 			ModuleSettings coder = config.AddModule("CODER");
 			ModuleSettings secret = config.AddModule("SECRET");
 			ModuleSettings ilicit = config.AddModule("ILICIT");
 
-			filth.props["output_pattern"] = "./analyses/FILTH_";
-			coder.props["DebuggerType"] = "CodeDebugger";
-			secret.props["mode"] = "2";
-			ilicit.props["verifyAssemblies"] = "False";
+			filth["output_pattern"] = "./analyses/FILTH_";
+			coder["DebuggerType"] = "CodeDebugger";
+			secret["mode"] = "2";
+			ilicit["verifyAssemblies"] = "False";
 		//	ilicit.props["assemblies"] = "NotSet";
 
 			// paths
