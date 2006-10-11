@@ -6,7 +6,10 @@
     <ProjectGuid>{a2606d7a-857f-49c4-966d-65c6f2fb7d93}</ProjectGuid>
     <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
     <ProjectType>StarLight</ProjectType>
-    <RootNamespace>Concerns</RootNamespace>
+    <RootNamespace>iTextSharp.Concerns</RootNamespace>
+    <AssemblyName>iTextSharp.Concerns</AssemblyName> 
+    <OutputType>Library</OutputType>
+    <CodeLanguage>CSharp</CodeLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
@@ -41,7 +44,17 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-    <!--Import the standards targets-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
+  <ItemGroup>
+    <Concern Include="TraceDocument.cps">
+    </Concern>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Logger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <!-- Import the CSharp targets --> 
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /> 
+  <!--Import the StarLight targets-->
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />  
 </Project>
