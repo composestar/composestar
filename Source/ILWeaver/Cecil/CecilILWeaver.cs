@@ -455,6 +455,7 @@ namespace Composestar.StarLight.ILWeaver
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;
+            visitor.CalledMethod = method;
             visitor.Worker = worker;
             visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
@@ -499,6 +500,10 @@ namespace Composestar.StarLight.ILWeaver
         {
             #region Check for null and retrieve calls for this method
 
+            //TODO remove
+            if(true)
+                return;
+
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
 
@@ -511,7 +516,7 @@ namespace Composestar.StarLight.ILWeaver
 
             IList<CallElement> calls = _languageModelAccessor.GetCallByMethodElement(methodElement);
 
-            if (calls == null | calls.Count == 0)
+            if (calls == null || calls.Count == 0)
                 return;
 
             #endregion
@@ -527,6 +532,7 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     // Find the corresponding call in the list of calls
                     MethodReference mr = (MethodReference)(instruction.Operand);
+                    MethodDefinition md = CecilUtilities.ResolveMethodDefinition(mr);
                     CallElement call = FindCallInList(calls, mr.ToString());
 
                     // If we found a CallElement in the repository, then see if we have to perform weaving
@@ -543,6 +549,7 @@ namespace Composestar.StarLight.ILWeaver
                         // Add filters using the visitor
                         CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
                         visitor.Method = method;
+                        visitor.CalledMethod = md;
                         visitor.Worker = worker;
                         visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
                         visitor.TargetAssemblyDefinition = targetAssembly;

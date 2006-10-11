@@ -14,6 +14,8 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
     public final static int RESET_INNER_CALL = 12;
     public final static int CREATE_ACTION_STORE = 20;
     public final static int STORE_ACTION = 21;
+	public final static int CREATE_JOIN_POINT_CONTEXT = 30;
+	public final static int RESTORE_JOIN_POINT_CONTEXT = 31;
     public final static int RETURN_ACTION = 100;
 
 	public ContextInstruction(int type, int methodId, Block innerBlock)
@@ -53,21 +55,37 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 	public void Accept(IVisitor visitor)
 	{
 		super.Accept(visitor);
-		if (type == SET_INNER_CALL)
-			visitor.VisitSetInnerCall(this);
-		else if (type == CHECK_INNER_CALL)
-			visitor.VisitCheckInnerCall(this);
-		else if (type == RESET_INNER_CALL)
-			visitor.VisitResetInnerCall(this);
-		else if (type == CREATE_ACTION_STORE)
-			visitor.VisitCreateActionStore(this);
-		else if (type == STORE_ACTION)
-			visitor.VisitStoreAction(this);
-		else if (type == RETURN_ACTION)
-			visitor.VisitReturnAction(this);
+		switch (type){
+			case SET_INNER_CALL:
+				visitor.VisitSetInnerCall(this);
+				break;
+			case CHECK_INNER_CALL:
+				visitor.VisitCheckInnerCall(this);
+				break;
+			case RESET_INNER_CALL:
+				visitor.VisitResetInnerCall(this);
+				break;
+			case CREATE_ACTION_STORE:
+				visitor.VisitCreateActionStore(this);
+				break;
+			case STORE_ACTION:
+				visitor.VisitStoreAction(this);
+				break;
+			case CREATE_JOIN_POINT_CONTEXT:
+				visitor.VisitCreateJoinPointContext(this);
+				break;
+			case RESTORE_JOIN_POINT_CONTEXT:
+				visitor.VisitRestoreJoinPointContext(this);
+				break;
+			case RETURN_ACTION:
+				visitor.VisitReturnAction(this);
+				break;
+			case REMOVED:
+				return;
+		}
 
 		if (innerBlock != null)
-			innerBlock.Accept(visitor); 		
+			innerBlock.Accept(visitor);
 	}
     
     public String toString(){
@@ -95,6 +113,12 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
         case STORE_ACTION:
             s += "Store action " + code;
             return s;
+		case CREATE_JOIN_POINT_CONTEXT:
+			s += "Create JoinPointContext";
+			return s;
+		case RESTORE_JOIN_POINT_CONTEXT:
+			s += "Restore JoinPointContext";
+			return s;
 		case RETURN_ACTION:
 			s += "Return action";
 			return s;

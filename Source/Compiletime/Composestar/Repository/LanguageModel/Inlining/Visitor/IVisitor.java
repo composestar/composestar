@@ -29,4 +29,6 @@ public interface IVisitor
 	void VisitCreateActionStore(ContextInstruction contextInstruction);
 	void VisitStoreAction(ContextInstruction contextInstruction);
 
+	void VisitCreateJoinPointContext(ContextInstruction contextInstruction);
+	void VisitRestoreJoinPointContext(ContextInstruction contextInstruction);
 }
