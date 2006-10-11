@@ -195,7 +195,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     // add FilterActions
                     filterActions.AddRange(analyzer.FilterActions);
-                    
+
                     Log.LogMessageFromResources("AssemblyAnalyzed", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
                 }
                 catch (ILAnalyzerException ex)
@@ -209,6 +209,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 catch (FileNotFoundException ex)
                 {
                     Log.LogErrorFromException(ex, true);
+                }
+                catch (BadImageFormatException ex)
+                {
+                    Log.LogErrorFromException(ex, false);
                 }
 
             }
