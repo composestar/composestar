@@ -1,4 +1,4 @@
-package $safeprojectname$;
+package $rootnamespace$;
 
 import System;
 import System.Collections.Generic;

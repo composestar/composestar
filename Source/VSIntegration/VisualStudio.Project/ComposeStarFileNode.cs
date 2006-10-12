@@ -143,21 +143,26 @@ namespace Composestar.StarLight.VisualStudio.Project
                     // Set the MainFile project property to the Filename of this Node
                     ((ComposeStarProjectNode)this.ProjectMgr).SetProjectProperty(ComposeStarProjectFileConstants.MainFile, this.GetRelativePath());
                     return VSConstants.S_OK;
-                }               
-            }       
+                }
+            }
             else if (guidCmdGroup == Microsoft.VisualStudio.Package.VsMenus.guidStandardCommandSet2K)
             {
                 switch ((VsCommands2K)cmd)
                 {
                     case VsCommands2K.EXCLUDEFROMPROJECT:
                         return this.ExcludeFromProject();
-                    case VsCommands2K.DELETE:
-                        this.ProjectMgr.DeleteItem(1, nCmdexecopt); 
-                        break;
                 }
             }
+            else if (guidCmdGroup == Microsoft.VisualStudio.Shell.VsMenus.guidStandardCommandSet97)
+            {
+                switch ((VsCommands)cmd)
+                {
+                    case VsCommands.Delete:
+                        this.ProjectMgr.DeleteItem(0, this.ID);
+                        return VSConstants.S_OK;  
+                } // switch
+            } // if
 
-            
             return base.ExecCommandOnNode(guidCmdGroup, cmd, nCmdexecopt, pvaIn, pvaOut);
         }
 

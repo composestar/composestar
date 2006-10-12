@@ -13,6 +13,6 @@
         <Assembly>System</Assembly>
       </Reference>
     </References>
-    <ProjectItem SubType="Code" ReplaceParameters="true">Class.vb</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$.vb" ReplaceParameters="true">Class.vb</ProjectItem>
   </TemplateContent>
 </VSTemplate>

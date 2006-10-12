@@ -382,6 +382,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             {
                 newItem = this.CreateMsBuildFileItem(itemPath, ProjectFileConstants.Compile);
                 newItem.SetMetadata(ProjectFileConstants.SubType, ProjectFileAttributeValue.Code);
+
             } // if
             else if (this.IsEmbeddedResource(itemPath))
             {
@@ -413,6 +414,12 @@ namespace Composestar.StarLight.VisualStudio.Project
 
             return base.Close();
         }
+
+        public override object GetAutomationObject()
+        {
+            return new OAComposeStarProject(this);
+        }
+
         public override void Load(string filename, string location, string name, uint flags, ref Guid iidProject, out int canceled)
         {
             base.Load(filename, location, name, flags, ref iidProject, out canceled);
@@ -642,6 +649,19 @@ namespace Composestar.StarLight.VisualStudio.Project
         #endregion
 
         #region Methods
+        protected override NodeProperties CreatePropertiesObject()
+        {
+            return new ComposeStarProjectNodeProperties(this);
+        }
+
+        public override int SetSite(Microsoft.VisualStudio.OLE.Interop.IServiceProvider site)
+        {
+            base.SetSite(site);
+
+            return VSConstants.S_OK;
+        }
+
+        
         /// <summary>
         /// Creates the services exposed by this project.
         /// </summary>
@@ -704,14 +724,8 @@ namespace Composestar.StarLight.VisualStudio.Project
             // in the registry hive so that more editors can be added without changing this part of the
             // code. StarLight only makes usage of one Editor Factory and therefore we will return 
             // that guid
-            if (IsCodeFile(mkDocument))
-            {
-                guidEditorType = EditorFactory.guidEditorFactory;
-            }
-            else
-            {              
-                guidEditorType = Guid.Empty; 
-            }
+
+            guidEditorType = EditorFactory.guidEditorFactory;
             return VSConstants.S_OK;
         }
 
