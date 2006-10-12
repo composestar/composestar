@@ -125,17 +125,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "breakpoint\AlwaysBreakBreakPoint.java"
+                    RelPath = "BreakPoint\AlwaysBreakBreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "breakpoint\BreakPoint.java"
+                    RelPath = "BreakPoint\BreakPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "breakpoint\parsers\BreakPointParseException.java"
+                    RelPath = "BreakPoint\parsers\BreakPointParseException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
