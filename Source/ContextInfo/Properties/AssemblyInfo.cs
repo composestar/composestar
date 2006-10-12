@@ -8,7 +8,7 @@ using System;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ContextInfo")]
-[assembly: AssemblyDescription("Contains context classes which will be used in the StaLight code.")]
+[assembly: AssemblyDescription("Contains context classes which will be used in the StarLight code.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("University of Twente")]
 [assembly: AssemblyProduct("ContextInfo")]
@@ -33,8 +33,8 @@ using System;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
 
 [assembly: CLSCompliant(true)]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]

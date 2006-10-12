@@ -149,6 +149,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
             }
 
+            // TODO Remove all obsolete assemblies from the database?
             //// Remove all obsolete assemblies from the database
             //IList<AssemblyElement> storedAssemblies = langModelAccessor.GetAssemblyElements();
             //foreach (AssemblyElement storedAssembly in storedAssemblies)

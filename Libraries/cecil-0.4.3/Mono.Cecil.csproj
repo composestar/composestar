@@ -58,7 +58,6 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="CecilFormatter.cs" />
     <Compile Include="Mono.Cecil.Binary\BaseImageVisitor.cs" />
     <Compile Include="Mono.Cecil.Binary\CLIHeader.cs" />
     <Compile Include="Mono.Cecil.Binary\DataDirectory.cs" />

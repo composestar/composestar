@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='Windows-1252'?>
 <!-- 
 
-  Setup script for ComposeStar StarLight version 1.0.0
+  Setup script for ComposeStar StarLight version 0.1.0
 
 -->
 
 <?define ProductShortName = "StarLight" ?>
-<?define ProductVersion = "1.0.0" ?>
-<?define ProductVersionText = "1.0" ?>
+<?define ProductVersion = "0.1.0" ?>
+<?define ProductVersionText = "0.1" ?>
 <?define Manufacturer = "University of Twente" ?>
 <?define UpgradeCode = "697DC119-E7E0-4b83-930D-706366AC1382" ?>
 
@@ -39,13 +39,12 @@
     <Property Id="DEVENV_EXE_2005">
       <RegistrySearch Id="RegSearch_DevenvExe_2005" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\8.0\Setup\VS" Name="EnvironmentPath" Type="raw" />
     </Property>
-    <Property Id='ARPCOMMENTS'>Alpha product, use at your own risk.</Property>
+    <Property Id='ARPCOMMENTS'>Beta product, use at your own risk.</Property>
     <Property Id='ARPCONTACT'>University of Twente</Property>
     <Property Id='ARPHELPLINK'>http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome</Property>
     <Property Id='ARPURLINFOABOUT'>ComposeStar StarLight offers AOP for .NET applications using the composition filters model.</Property>
     <Property Id='ARPURLUPDATEINFO'>http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome</Property>
     <Property Id='ARPHELPTELEPHONE'>http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome</Property>
-    <Property Id='ARPREADME'>path</Property>
 
 
     <!-- Launch conditions -->

@@ -26,8 +26,8 @@
       Name="Weave"
       Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
     Outputs="$(TargetPath)"  
-    DependsOnTargets="$(WeaveDependsOn)"
-      />
+    DependsOnTargets="$(WeaveDependsOn)">
+  </Target>
   <!--
     ============================================================
                                         BeforeWeave
@@ -45,6 +45,92 @@
     ============================================================
     -->
   <Target Name="AfterWeave"/>
+
+  <!--
+    ============================================================
+                                        Clean section
+
+    Redefine this target in your project in order to run tasks just after clean 
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanStarLight;
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <!--
+Target that will remove the StarLight generated files if they still exist on disk.
+This target will be called whenever the Clean target is invoked.
+-->
+  <Target Name="CleanStarLight">
+    <CreateItem Include="$(RepositoryFilename)">
+      <Output TaskParameter="Include" ItemName="TempRepository"/>
+    </CreateItem>
+    <Delete Files="@(TempRepository)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)INCRE.html">
+      <Output TaskParameter="Include" ItemName="TempIncre"/>
+    </CreateItem>
+    <Delete Files="@(TempIncre)"/>
+  </Target>
+
+  
+  
+  <!--
+    ============================================================
+                                        Reweave
+
+    Delete all intermediate and final build outputs, and then weave the project from scratch.
+    ============================================================
+    -->
+
+  <!-- Override of rebuild to start reweave -->
+  <Target
+        Name="Rebuild"
+        Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
+        DependsOnTargets="$(ReweaveDependsOn)"
+        Outputs="$(TargetPath)"/>
+    
+  <PropertyGroup>
+    <ReweaveDependsOn>
+      BeforeReweave;
+      Clean;
+      $(MSBuildProjectDefaultTargets);
+      AfterReweave;
+    </ReweaveDependsOn>
+
+    <ReweaveDependsOn Condition=" '$(MSBuildProjectDefaultTargets)' == 'Rebuild' " >
+      BeforeRebuild;
+      Clean;
+      Build;
+      AfterRebuild;
+    </ReweaveDependsOn>
+  </PropertyGroup>
+
+  <Target
+      Name="Reweave"
+      Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
+      DependsOnTargets="$(ReweaveDependsOn)"
+      Outputs="$(TargetPath)"/>
+
+  <!--
+    ============================================================
+                                        BeforeReweave
+
+    Redefine this target in your project in order to run tasks just before Reweave 
+    ============================================================
+    -->
+  <Target Name="BeforeReweave"/>
+
+  <!--
+    ============================================================
+                                        AfterReweave
+
+    Redefine this target in your project in order to run tasks just after Reweave 
+    ============================================================
+    -->
+  <Target Name="AfterReweave"/>
 
   <!--
     ============================================================
@@ -82,7 +168,7 @@
       DependsOnTargets="$(CompileCodeDependsOn)"
       Condition ="'$(CodeLanguage)'=='CSharp' or '$(CodeLanguage)'=='VB' or '$(CodeLanguage)'=='JSharp'" >
     <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
-    <OnError ExecuteTargets="_CleanRecordFileWrites"/>    
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>        
   </Target>
 
 
@@ -225,7 +311,7 @@
   <Target
        Name="CpsParserRunner">
     <Message Text="Parsing concern files." />
-    <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')">
+    <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
       <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
     </CpsParserTask>
   </Target>
