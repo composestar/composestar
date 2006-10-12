@@ -77,6 +77,16 @@ public class Configuration implements Serializable
 	{
 		return moduleSettings.getModule(module);
 	}
+	
+	public String getModuleProperty(String module, String key, String def)
+	{
+		ModuleSettings ms = getModuleSettings(module);
+		if (ms == null) 
+		{
+			return def;
+		}
+		return ms.getProperty(key, def);
+	}
 
 	public PathSettings getPathSettings()
 	{
