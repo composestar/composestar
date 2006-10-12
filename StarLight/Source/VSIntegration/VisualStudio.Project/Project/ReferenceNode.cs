@@ -33,7 +33,6 @@ namespace Microsoft.VisualStudio.Package
 	public abstract class ReferenceNode : HierarchyNode
 	{
 		protected delegate void CannotAddReferenceErrorMessage();
-
 		#region ctor
 
 		/// <summary>
@@ -41,7 +40,6 @@ namespace Microsoft.VisualStudio.Package
 		/// </summary>
 		protected ReferenceNode(ProjectNode root, ProjectElement e):base(root,e)
 		{
-			this.NodeProperties = new ReferenceNodeProperties(this);
 			this.ExcludeNodeFromScc = true;
 		}
 		
@@ -50,7 +48,6 @@ namespace Microsoft.VisualStudio.Package
 		/// </summary>
 		protected ReferenceNode(ProjectNode root):base(root)
 		{
-			this.NodeProperties = new ReferenceNodeProperties(this);
 			this.ExcludeNodeFromScc = true;
 		}
 		
@@ -85,11 +82,29 @@ namespace Microsoft.VisualStudio.Package
 		#endregion
 
 		#region overridden methods
+		protected override NodeProperties CreatePropertiesObject()
+		{
+			return new ReferenceNodeProperties(this);
+		}
+
+		/// <summary>
+		/// Get an instance of the automation object for ReferenceNode
+		/// </summary>
+		/// <returns>An instance of Automation.OAReferenceItem type if succeeded</returns>
 		public override object GetAutomationObject()
 		{
+			if (this.ProjectMgr == null || this.ProjectMgr.IsClosed)
+			{
+				return null;
+			}
+
 			return new Automation.OAReferenceItem(this.ProjectMgr.GetAutomationObject() as Automation.OAProject, this);
 		}
 
+		/// <summary>
+		/// Disable inline editing of Caption of a ReferendeNode
+		/// </summary>
+		/// <returns>null</returns>
 		public override string GetEditLabel()
 		{
 			return null;

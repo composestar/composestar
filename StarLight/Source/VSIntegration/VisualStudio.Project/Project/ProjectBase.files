@@ -35,9 +35,7 @@
       <HintPath>Microsoft.VisualStudio.VSHelp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Design" />
-    <Reference Include="System.Web" />
     <Reference Include="Microsoft.VisualStudio.ProjectAggregator" />
-    <Reference Include="Microsoft.VisualStudio.Web.Application" />
     <Reference Include="VsLangProj" />
     <Reference Include="System.Design">
       <HintPath>System.Design.dll</HintPath>
@@ -48,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
 
-  <!-- Provide a default value for $(ProjectBasePath) -->
+	<!-- Provide a default value for $(ProjectBasePath) -->
   <PropertyGroup>
     <ProjectBasePath Condition="'$(ProjectBasePath)'==''">.</ProjectBasePath>
   </PropertyGroup>
@@ -338,6 +336,10 @@
       <Link>ProjectBase\ProjectNode.cs</Link>
       <Visible>true</Visible>
     </Compile>
+    <Compile Include="$(ProjectBasePath)\ProjectNode.CopyPaste.cs">
+      <Link>ProjectBase\ProjectNode.CopyPaste.cs</Link>
+      <Visible>true</Visible>
+    </Compile>
     <Compile Include="$(ProjectBasePath)\ProjectOptions.cs">
       <Link>ProjectBase\ProjectOptions.cs</Link>
       <Visible>true</Visible>
@@ -442,31 +444,12 @@
       <Link>ProjectBase\SelectionListener.cs</Link>
       <Visible>true</Visible>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="$(ProjectBasePath)\Web\CodeBehindCodeGenerator.cs">
-      <Link>ProjectBase\Web\CodeBehindCodeGenerator.cs</Link>
-      <Visible>true</Visible>
-    </Compile>
-    <Compile Include="$(ProjectBasePath)\Web\FieldData.cs">
-      <Link>ProjectBase\Web\FieldData.cs</Link>
-      <Visible>true</Visible>
-    </Compile>
-    <Compile Include="$(ProjectBasePath)\Web\LockedDocData.cs">
-      <Link>ProjectBase\Web\LockedDocData.cs</Link>
-      <Visible>true</Visible>
-    </Compile>
-    <Compile Include="$(ProjectBasePath)\Web\VsHierarchyItem.cs">
-      <Link>ProjectBase\Web\VsHierarchyItem.cs</Link>
-      <Visible>true</Visible>
-    </Compile>
-    <Compile Include="$(ProjectBasePath)\Web\WAUtilities.cs">
-      <Link>ProjectBase\Web\WAUtilities.cs</Link>
+    <Compile Include="$(ProjectBasePath)\ProjectDocumentsListener.cs">
+      <Link>ProjectBase\ProjectDocumentsListener.cs</Link>
       <Visible>true</Visible>
     </Compile>
   </ItemGroup>
-
+ 
   <ItemGroup>
     <EmbeddedResource Include="$(ProjectBasePath)\Microsoft.VisualStudio.Package.Project.resx">
       <Link>Microsoft.VisualStudio.Package.Project.resx</Link>

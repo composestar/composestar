@@ -159,9 +159,11 @@
     <Compile Include="Project\ProjectConfig.cs" />
     <Compile Include="Project\ProjectContainerNode.cs" />
     <Compile Include="Project\ProjectDesignerDocumentManager.cs" />
+    <Compile Include="Project\ProjectDocumentsListener.cs" />
     <Compile Include="Project\ProjectElement.cs" />
     <Compile Include="Project\ProjectFactory.cs" />
     <Compile Include="Project\ProjectFileConstants.cs" />
+    <Compile Include="Project\ProjectNode.CopyPaste.cs" />
     <Compile Include="Project\ProjectNode.cs" />
     <Compile Include="Project\ProjectOptions.cs" />
     <Compile Include="Project\ProjectPackage.cs" />
@@ -259,6 +261,7 @@
       <Visible>true</Visible>
       <LogicalName>Microsoft.VisualStudio.Package.Project.resources</LogicalName>
       <SubType>Designer</SubType>
+      <DependentUpon>Microsoft.VisualStudio.Package.Project.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +283,7 @@
     <ZipProject Include="Templates\Projects\CSharpConcernProject\CSharpConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\CSharpConcernProject\__TemplateIcon.ico" />
     <EmbeddedResource Include="Resources\imagelis.bmp" />
+    <None Include="Project\ProjectBase.files" />
     <None Include="Resources\Resources.resx">
       <SubType>Designer</SubType>
     </None>

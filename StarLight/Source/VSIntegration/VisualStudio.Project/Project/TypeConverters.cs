@@ -162,11 +162,11 @@ namespace Microsoft.VisualStudio.Package
 
                 if (str == SR.GetString(SR.Content, culture)) return BuildAction.Content;
 
+                if (str == SR.GetString(SR.Concern, culture)) return BuildAction.Concern;
+
                 if (str == SR.GetString(SR.EmbeddedResource, culture)) return BuildAction.EmbeddedResource;
 
                 if (str == SR.GetString(SR.None, culture)) return BuildAction.None;
-
-                if (str == SR.GetString(SR.Concern, culture)) return BuildAction.Concern;
             }
 
             return base.ConvertFrom(context, culture, value);
@@ -200,7 +200,7 @@ namespace Microsoft.VisualStudio.Package
         }
         
         public override System.ComponentModel.TypeConverter.StandardValuesCollection GetStandardValues(System.ComponentModel.ITypeDescriptorContext context) {
-            return new StandardValuesCollection(new BuildAction[] { BuildAction.Compile, BuildAction.Concern, BuildAction.Content, BuildAction.EmbeddedResource, BuildAction.None });
+            return new StandardValuesCollection(new BuildAction[] { BuildAction.Concern, BuildAction.Compile, BuildAction.Content, BuildAction.EmbeddedResource, BuildAction.None });
         }
     }
 

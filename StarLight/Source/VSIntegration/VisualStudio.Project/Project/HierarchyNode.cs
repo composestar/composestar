@@ -51,7 +51,14 @@ namespace Microsoft.VisualStudio.Package
     //, IVsBuildStatusCallback 
     {
         #region nested types
-        internal enum DropEffect { None, Copy = 1, Move = 2, Link = 4 }; // oleidl.h
+		/// <summary>
+		/// DropEffect as defined in oleidl.h
+		/// </summary>
+        internal enum DropEffect { 
+			None, 
+			Copy = 1, 
+			Move = 2, 
+			Link = 4 };
         #endregion
 
         #region Events
@@ -90,16 +97,14 @@ namespace Microsoft.VisualStudio.Package
         private string virtualNodeName = String.Empty;	// Only used by virtual nodes
         private IVsHierarchy parentHierarchy;
         private int parentHierarchyItemId;
-        private bool sourceDraggedOrCutOrCopied;
-        private List<IVsHierarchy> itemsDraggedOrCutOrCopied;
-        private DropDataType dropDataType;
         private NodeProperties nodeProperties;
         private OleServiceProvider oleServiceProvider = new OleServiceProvider();
         private bool excludeNodeFromScc;
         private EventHandler<HierarchyNodeEventArgs> onChildAdded;
         private EventHandler<HierarchyNodeEventArgs> onChildRemoved;
         private bool hasParentNodeNameRelation = false;
-
+        private List<IVsHierarchy> itemsDraggedOrCutOrCopied;
+        private bool sourceDraggedOrCutOrCopied;
 
         #endregion
 
@@ -220,11 +225,11 @@ namespace Microsoft.VisualStudio.Package
         {
             get
             {
+                if (null == nodeProperties)
+                {
+                    nodeProperties = CreatePropertiesObject();
+                }
                 return this.nodeProperties;
-            }
-            set
-            {
-                this.nodeProperties = value;
             }
 
         }
@@ -440,7 +445,6 @@ namespace Microsoft.VisualStudio.Package
             }
         }
 
-
         protected bool SourceDraggedOrCutOrCopied
         {
             get
@@ -513,6 +517,16 @@ namespace Microsoft.VisualStudio.Package
         #endregion
 
         #region virtual methods
+        /// <summary>
+        /// Creates an object derived from NodeProperties that will be used to expose properties
+        /// spacific for this object to the property browser.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual NodeProperties CreatePropertiesObject()
+        {
+            return null;
+        }
+
         /// <summary>
         /// Return an iconhandle
         /// </summary>
@@ -1048,14 +1062,13 @@ namespace Microsoft.VisualStudio.Package
         }
 
         /// <summary>
-        /// Called by the drag&drop implementation to ask the node
+        /// Called by the drag and drop implementation to ask the node
         /// which is being dragged/droped over which nodes should
         /// process the operation.
         /// This allows for dragging to a node that cannot contain
-        /// items to let its parent accept the drop, while a reference
-        /// node delegate to the project and a folder/project node to itself.
+        /// items to let its parent accept the drop
         /// </summary>
-        /// <returns></returns>
+        /// <returns>HierarchyNode that accept the drop handling</returns>
         protected internal virtual HierarchyNode GetDragTargetHandlerNode()
         {
             return this;
@@ -1176,15 +1189,17 @@ namespace Microsoft.VisualStudio.Package
         }
 
         /// <summary>
-        /// Prepares a selected node for clipboard. It takes the the project reference string of this item and adds it to a stringbuilder. 
+        /// Prepares a selected node for clipboard. 
+		/// It takes the the project reference string of this item and adds it to a stringbuilder. 
         /// </summary>
         /// <returns>A stringbuilder.</returns>
-        /// <devremark>This method has to be public since selceted nodes will call it.</devremark>
+        /// <devremark>This method has to be public since seleceted nodes will call it.</devremark>
         protected internal virtual StringBuilder PrepareSelectedNodesForClipBoard()
         {
             Debug.Assert(this.ProjectMgr != null, " No project mananager available for this node " + ToString());
             Debug.Assert(this.ProjectMgr.ItemsDraggedOrCutOrCopied != null, " The itemsdragged list should have been initialized prior calling this method");
             StringBuilder sb = new StringBuilder();
+
             if (this.hierarchyId == VSConstants.VSITEMID_ROOT)
             {
                 if (this.ProjectMgr.ItemsDraggedOrCutOrCopied != null)
@@ -1214,8 +1229,9 @@ namespace Microsoft.VisualStudio.Package
                 }
             }
 
+			// Append the projectref and a null terminator to the string builder
             sb.Append(projref);
-            sb.Append('\0'); // separated by nulls.
+            sb.Append('\0'); 
 
             return sb;
         }
@@ -1354,7 +1370,7 @@ namespace Microsoft.VisualStudio.Package
                         return nodeToAddTo.AddNewFolder();
 
                     case VsCommands.Paste:
-                        return this.projectMgr.PasteFromClipboard(this);
+                        return this.ProjectMgr.PasteFromClipboard(this);
                 }
 
             }
@@ -1459,11 +1475,11 @@ namespace Microsoft.VisualStudio.Package
                 {
                     case VsCommands.Copy:
                         handled = true;
-                        return this.projectMgr.CopyToClipboard();
+                        return this.ProjectMgr.CopyToClipboard();
 
                     case VsCommands.Cut:
                         handled = true;
-                        return this.projectMgr.CutToClipboard();
+                        return this.ProjectMgr.CutToClipboard();
 
                     case VsCommands.SolutionCfg:
                         handled = true;
@@ -2118,6 +2134,52 @@ namespace Microsoft.VisualStudio.Package
 
         }
 
+		/// <summary>
+		/// Handle the Copy operation to the clipboard
+		/// This method is typically overriden on the project node
+		/// </summary>
+		protected internal virtual int CopyToClipboard()
+		{
+			return VSConstants.E_NOTIMPL;
+		}
+
+		/// <summary>
+		/// Handle the Cut operation to the clipboard
+		/// This method is typically overriden on the project node
+		/// </summary>
+		protected internal virtual int CutToClipboard()
+		{
+			return VSConstants.E_NOTIMPL;
+		}
+
+		/// <summary>
+		/// Handle the paste from Clipboard command.
+		/// This method is typically overriden on the project node
+		/// </summary>
+		protected internal virtual int PasteFromClipboard(HierarchyNode targetNode)
+		{
+			return VSConstants.E_NOTIMPL;
+		}
+
+		/// <summary>
+		/// Determines if the paste command should be allowed.
+		/// This method is typically overriden on the project node
+		/// </summary>
+		protected internal virtual bool AllowPasteCommand()
+		{
+			return false; ;
+		}
+
+		/// <summary>
+		/// Register/Unregister for Clipboard events for the UiHierarchyWindow (solution explorer)
+		/// This method is typically overriden on the project node
+		/// </summary>
+		/// <param name="register">true for register, false for unregister</param>
+		protected internal virtual void RegisterClipboardNotifications(bool register)
+		{
+			return;
+		}
+
         #endregion
 
         #region public methods
@@ -2333,41 +2395,7 @@ namespace Microsoft.VisualStudio.Package
             return this.projectMgr.Site.GetService(type);
         }
 
-        /// <summary>
-        /// Moves files from one part of our project to another.
-        /// </summary>
-        public bool AddFilesFromProjectReferences(string[] projectReferences)
-        {
-            if (projectReferences == null)
-            {
-                throw new ArgumentException(SR.GetString(SR.InvalidParameter), "projectReferences");
-            }
-
-            HierarchyNode node = this.GetDragTargetHandlerNode();
-
-            if (node == null)
-            {
-                throw new InvalidOperationException();
-            }
-
-            foreach (string projectReference in projectReferences)
-            {
-                if (projectReference == null)
-                {
-                    return false;
-                }
-                if (projectReference.EndsWith("/") || projectReference.EndsWith("\\"))
-                {
-                    this.ProjectMgr.AddFolderFromOtherProject(projectReference, node);
-                }
-                else if (!this.AddFileToNodeFromProjectReference(projectReference, node))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        
         #endregion
 
         #region IVsHierarchy methods
@@ -2920,91 +2948,22 @@ namespace Microsoft.VisualStudio.Package
 
         public virtual int GetDropInfo(out uint pdwOKEffects, out Microsoft.VisualStudio.OLE.Interop.IDataObject ppDataObject, out IDropSource ppDropSource)
         {
-            Debug.Assert(this.ProjectMgr != null, "ProjectManager has not been initialialized for node");
-            pdwOKEffects = (uint)DropEffect.None;
-            ppDataObject = null;
-            ppDropSource = null;
-            this.sourceDraggedOrCutOrCopied = true;
-
-            // todo - ask project if given type of object is acceptable.
-            pdwOKEffects = (uint)(DropEffect.Move | DropEffect.Copy);
-            ppDataObject = this.ProjectMgr.PackageSelectionDataObject(false);
-            if (ppDataObject == null)
-            {
-                return VSConstants.E_NOTIMPL;
-            }
-            return VSConstants.S_OK;
+			pdwOKEffects = (uint)DropEffect.None;
+			ppDataObject = null;
+			ppDropSource = null;
+            return VSConstants.E_NOTIMPL;
         }
-
 
         public virtual int OnDropNotify(int fDropped, uint dwEffects)
         {
-            Debug.Assert(this.ProjectMgr != null, "ProjectManager has not been initialialized for node");
-
-            this.ProjectMgr.CleanupSelectionDataObject(fDropped != 0, false, dwEffects == (uint)DropEffect.Move);
-            this.sourceDraggedOrCutOrCopied = false;
-            return VSConstants.S_OK;
+			return VSConstants.E_NOTIMPL;
         }
 
-
-        public virtual int OnBeforeDropNotify(Microsoft.VisualStudio.OLE.Interop.IDataObject o, uint dwEffect, out int fCancelDrop)
+		public virtual int OnBeforeDropNotify(Microsoft.VisualStudio.OLE.Interop.IDataObject pDataObject, uint dwEffect, out int fCancelDrop)
         {
-            fCancelDrop = 0;
-            bool dirty = false;
-            foreach (HierarchyNode node in this.ProjectMgr.ItemsDraggedOrCutOrCopied)
-            {
-                bool isDirty, isOpen, isOpenedByUs;
-                uint docCookie;
-                IVsPersistDocData ppIVsPersistDocData;
-                DocumentManager manager = node.GetDocumentManager();
-                if (manager != null)
-                {
-                    manager.GetDocInfo(out isOpen, out isDirty, out isOpenedByUs, out docCookie, out ppIVsPersistDocData);
-                    if (isDirty && isOpenedByUs)
-                    {
-                        dirty = true;
-                        break;
-                    }
-                }
-            }
-            // if there are no dirty docs we are ok to proceed
-            if (!dirty)
-            {
-                return VSConstants.S_OK;
-            }
-            // prompt to save if there are dirty docs
-            // prompt to save if there are dirty docs
-            string message = SR.GetString(SR.SaveModifiedDocuments);
-            string title = string.Empty;
-            OLEMSGICON icon = OLEMSGICON.OLEMSGICON_WARNING;
-            OLEMSGBUTTON buttons = OLEMSGBUTTON.OLEMSGBUTTON_YESNOCANCEL;
-            OLEMSGDEFBUTTON defaultButton = OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
-            int result = VsShellUtilities.ShowMessageBox(this.ProjectMgr.Site, title, message, icon, buttons, defaultButton);
-            switch (result)
-            {
-                case NativeMethods.IDYES:
-                    break;
-
-                case NativeMethods.IDNO:
-                    return VSConstants.S_OK;
-
-                case NativeMethods.IDCANCEL: goto default;
-
-                default:
-                    fCancelDrop = 1;
-                    return VSConstants.S_OK;
-            }
-
-            foreach (HierarchyNode node in this.ProjectMgr.ItemsDraggedOrCutOrCopied)
-            {
-                DocumentManager manager = node.GetDocumentManager();
-                if (manager != null)
-                {
-                    manager.Save(true);
-                }
-            }
-
-            return VSConstants.S_OK;
+			pDataObject = null;
+			fCancelDrop = 0;
+			return VSConstants.E_NOTIMPL;
         }
         #endregion
 
@@ -3012,78 +2971,26 @@ namespace Microsoft.VisualStudio.Package
 
         public virtual int DragEnter(Microsoft.VisualStudio.OLE.Interop.IDataObject pDataObject, uint grfKeyState, uint itemid, ref uint pdwEffect)
         {
-            Debug.Assert(this.ProjectMgr != null, "ProjectManager has not been initialialized for node");
-
-            pdwEffect = (uint)DropEffect.None;
-
-            if (this.sourceDraggedOrCutOrCopied)
-                return VSConstants.S_OK;
-
-            this.dropDataType = this.ProjectMgr.QueryDropDataType(pDataObject);
-            if (dropDataType != DropDataType.None)
-            {
-                pdwEffect = (uint)this.ProjectMgr.QueryDropEffect(dropDataType, grfKeyState);
-            }
-            return VSConstants.S_OK;
+			return VSConstants.E_NOTIMPL;            
         }
-
 
         public virtual int DragLeave()
         {
-            this.dropDataType = DropDataType.None;
-            return VSConstants.S_OK;
+			return VSConstants.E_NOTIMPL;
         }
-
 
         public virtual int DragOver(uint grfKeyState, uint itemid, ref uint pdwEffect)
         {
-            Debug.Assert(this.ProjectMgr != null, "ProjectManager has not been initialialized for node");
-
-            pdwEffect = (uint)this.ProjectMgr.QueryDropEffect((DropDataType)dropDataType, grfKeyState);
-            return VSConstants.S_OK;
+			return VSConstants.E_NOTIMPL;
         }
-
 
         public virtual int Drop(Microsoft.VisualStudio.OLE.Interop.IDataObject pDataObject, uint grfKeyState, uint itemid, ref uint pdwEffect)
         {
-            Debug.Assert(this.ProjectMgr != null, "ProjectManager has not been initialialized for node");
-
-            if (pDataObject == null)
-                return VSConstants.E_INVALIDARG;
-
-            if (this.sourceDraggedOrCutOrCopied)
-            {
-                return VSConstants.S_OK;
-            }
-
-            pdwEffect = (uint)DropEffect.None;
-
-            // Get the node that is being dragged over and ask it which node should handle this call
-            HierarchyNode targetNode = this.ProjectMgr.NodeFromItemId(itemid);
-            if (targetNode != null)
-            {
-                targetNode = targetNode.GetDragTargetHandlerNode();
-            }
-
-            // If there is not target node then it means that the drop should not be successfull.
-            if (targetNode == null)
-            {
-                return VSConstants.S_FALSE;
-            }
-
-
-            DropDataType ddt = DropDataType.None;
-            ddt = this.ProjectMgr.ProcessSelectionDataObject(pDataObject, targetNode);
-            pdwEffect = (uint)this.ProjectMgr.QueryDropEffect(ddt, grfKeyState);
-
-            // If it is a drop from windows and we get any kind of error we return S_FALSE and dropeffect none. This
-            // prevents bogus messages from the shell from being displayed
-            return (ddt != DropDataType.Shell) ? VSConstants.E_FAIL : VSConstants.S_OK;
+			return VSConstants.E_NOTIMPL;
         }
         #endregion
 
         #region helper methods
-        //TODO: this needs to work recursively and traverse the whole tree
         internal HierarchyNode FindChild(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -3112,6 +3019,26 @@ namespace Microsoft.VisualStudio.Package
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Recursively find all nodes of type T
+        /// </summary>
+        /// <typeparam name="T">The type of hierachy node being serched for</typeparam>
+        /// <param name="nodes">A list of nodes of type T</param>
+        internal void FindNodesOfType<T>(List<T> nodes)
+            where T : HierarchyNode
+        {
+            for (HierarchyNode n = this.FirstChild; n != null; n = n.NextSibling)
+            {
+                if (n is T)
+                {
+                    T nodeAsT = (T)n;
+                    nodes.Add(nodeAsT);
+                }
+
+                n.FindNodesOfType<T>(nodes);
+            }
         }
 
         /// <summary>
@@ -3169,5 +3096,5 @@ namespace Microsoft.VisualStudio.Package
             this.itemsDraggedOrCutOrCopied = new List<IVsHierarchy>();
         }
         #endregion
-    } // end of class
-} // end of namespace
+    }
+}

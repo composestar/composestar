@@ -18,7 +18,7 @@ using VSLangProj;
 
 namespace Microsoft.VisualStudio.Package.Automation
 {
-    internal class OABuildManager : ConnectionPointContainer,
+    public class OABuildManager : ConnectionPointContainer,
                                     IEventSource<_dispBuildManagerEvents>,
                                     BuildManager, 
                                     BuildManagerEvents

@@ -34,7 +34,11 @@ namespace Microsoft.VisualStudio.Package.Automation
 		public OANestedProjectItem(OAProject proj, NestedProjectNode node)
 			: base(proj, node)
 		{
-			this.nestedProject = node.GetAutomationObject() as EnvDTE.Project;
+			object project = null;
+			if (ErrorHandler.Succeeded(node.NestedHierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_ExtObject, out project)))
+			{
+				this.nestedProject = project as EnvDTE.Project;
+			}
 		}
 
 		#endregion

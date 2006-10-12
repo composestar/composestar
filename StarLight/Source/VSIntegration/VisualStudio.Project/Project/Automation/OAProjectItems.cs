@@ -21,6 +21,7 @@ using System.Reflection;
 using IServiceProvider = System.IServiceProvider;
 using Microsoft.VisualStudio.OLE.Interop;
 using EnvDTE;
+using System.IO;
 
 
 namespace Microsoft.VisualStudio.Package.Automation
@@ -32,7 +33,7 @@ namespace Microsoft.VisualStudio.Package.Automation
 	public class OAProjectItems : OANavigableProjectItems
 	{
 		#region ctor
-		public OAProjectItems(OAProject proj, HierarchyNode nodeWithItems) 
+		public OAProjectItems(OAProject proj, HierarchyNode nodeWithItems)
 			: base(proj, nodeWithItems)
 		{
 		}
@@ -85,6 +86,60 @@ namespace Microsoft.VisualStudio.Package.Automation
 			}
 
 			return itemAdded;
+		}
+
+		/// <summary>
+		/// Adds a folder to the collection of ProjectItems with the given name.
+		/// 
+		/// The kind must be null, empty string, or the string value of vsProjectItemKindPhysicalFolder.
+		/// Virtual folders are not supported by this implementation.
+		/// </summary>
+		/// <param name="name">The name of the new folder to add</param>
+		/// <param name="kind">A string representing a Guid of the folder kind.</param>
+		/// <returns>A ProjectItem representing the newly added folder.</returns>
+		public override ProjectItem AddFolder(string name, string kind)
+		{
+			if (this.Project == null || this.Project.Project == null || this.Project.Project.Site == null || this.Project.Project.IsClosed)
+			{
+				throw new InvalidOperationException();
+			}
+			//Verify name is not null or empty
+			Utilities.ValidateFileName(this.Project.Project.Site, name);
+			//Verify that kind is null, empty, or a physical folder
+			if (!(string.IsNullOrEmpty(kind) || kind.Equals(EnvDTE.Constants.vsProjectItemKindPhysicalFolder))) throw new ArgumentException();
+
+			for (HierarchyNode child = this.NodeWithItems.FirstChild; child != null; child = child.NextSibling)
+			{
+				if(child.Caption.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+					throw new ArgumentException();
+			}
+
+			ProjectNode proj = this.Project.Project;
+
+			IVsExtensibility3 extensibility = this.Project.Project.Site.GetService(typeof(IVsExtensibility)) as IVsExtensibility3;
+
+			if (extensibility == null)
+			{
+				throw new InvalidOperationException();
+			}
+
+			HierarchyNode newFolder = null;
+			extensibility.EnterAutomationFunction();
+
+			//In the case that we are adding a folder to a folder, we need to build up
+			//the path to the project node.
+			name = Path.Combine(this.NodeWithItems.VirtualNodeName, name);
+
+			try
+			{
+				newFolder = proj.CreateFolderNodes(name);
+			}
+			finally
+			{
+				extensibility.ExitAutomationFunction();
+			}
+
+			return newFolder.GetAutomationObject() as ProjectItem;
 		}
 
 		/// <summary>

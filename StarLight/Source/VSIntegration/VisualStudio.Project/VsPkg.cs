@@ -277,12 +277,11 @@ namespace Composestar.StarLight.VisualStudio.Project
         public ComposeStarProjectNode(ComposeStarProjectPackage pkg)
         {
             this.package = pkg;
-            this.NodeProperties = new ComposeStarProjectNodeProperties(this);
             this.CanFileNodesHaveChilds = true;
             this.OleServiceProvider.AddService(typeof(VSLangProj.VSProject), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
             this.SupportsProjectDesigner = true;
 
-            InitializeCATIDs();
+            InitializeCATIDs();            
         }
 
         public override object GetIconHandle(bool open)
@@ -348,6 +347,56 @@ namespace Composestar.StarLight.VisualStudio.Project
                 return this.VSProject;
             }
         }
+
+        /// <summary>
+        /// Called by the project to know if the item is a file (that is part of the project)
+        /// or an intermediate file used by the MSBuild tasks/targets
+        /// Override this method if your project has more types or different ones
+        /// </summary>
+        /// <param name="type">Type name</param>
+        /// <returns>
+        /// True = items of this type should be included in the project
+        /// </returns>
+        protected override bool IsItemTypeFileType(string type)
+        {
+            return String.Compare(type, BuildAction.Concern.ToString(), StringComparison.OrdinalIgnoreCase) == 0 || base.IsItemTypeFileType(type);
+        }
+
+        /// <summary>
+        /// Adds the file to ms build. Overriden so we can add the concern file.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <returns></returns>
+        protected override ProjectElement AddFileToMsBuild(string file)
+        {
+            ProjectElement newItem;
+
+            string itemPath = PackageUtilities.MakeRelativeIfRooted(file, this.BaseURI);
+            Debug.Assert(!Path.IsPathRooted(itemPath), "Cannot add item with full path.");
+
+            if (this.IsCodeFile(itemPath))
+            {
+                newItem = this.CreateMsBuildFileItem(itemPath, "Concern");                
+            }
+            else if (this.IsVSCodeFile(itemPath))
+            {
+                newItem = this.CreateMsBuildFileItem(itemPath, ProjectFileConstants.Compile);
+                newItem.SetMetadata(ProjectFileConstants.SubType, ProjectFileAttributeValue.Code);
+            } // if
+            else if (this.IsEmbeddedResource(itemPath))
+            {
+                newItem = this.CreateMsBuildFileItem(itemPath, ProjectFileConstants.EmbeddedResource);
+            }
+            else
+            {
+                newItem = this.CreateMsBuildFileItem(itemPath, ProjectFileConstants.Content);
+                newItem.SetMetadata(ProjectFileConstants.SubType, ProjectFileConstants.Content);
+            }
+
+            return newItem;
+
+        }
+
         #endregion
 
         #region overridden methods
@@ -443,6 +492,27 @@ namespace Composestar.StarLight.VisualStudio.Project
                 return false;
             }
             return (String.Compare(Path.GetExtension(strFileName), ".cps", StringComparison.OrdinalIgnoreCase) == 0);
+
+        }
+
+        /// <summary>
+        /// Determines whether [is VS code file] [the specified STR file name].
+        /// </summary>
+        /// <param name="strFileName">Name of the STR file.</param>
+        /// <returns>
+        /// 	<c>true</c> if [is VS code file] [the specified STR file name]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsVSCodeFile(string strFileName)
+        {
+            // We do not want to assert here, just return silently.
+            if (String.IsNullOrEmpty(strFileName))
+            {
+                return false;
+            }
+            return (String.Compare(Path.GetExtension(strFileName), ".cs", StringComparison.OrdinalIgnoreCase) == 0) |
+               (String.Compare(Path.GetExtension(strFileName), ".vb", StringComparison.OrdinalIgnoreCase) == 0) |
+               (String.Compare(Path.GetExtension(strFileName), ".java", StringComparison.OrdinalIgnoreCase) == 0) |
+               (String.Compare(Path.GetExtension(strFileName), ".jsl", StringComparison.OrdinalIgnoreCase) == 0);
 
         }
 

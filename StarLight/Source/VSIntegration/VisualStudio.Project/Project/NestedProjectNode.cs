@@ -156,19 +156,19 @@ namespace Microsoft.VisualStudio.Package
 
 		#region overridden methods
 
+		/// <summary>
+		/// Get the automation object for the NestedProjectNode
+		/// </summary>
+		/// <returns>An instance of the Automation.OANestedProjectItem type if succeded</returns>
 		public override object GetAutomationObject()
 		{
+			//Validate that we are not disposed or the project is closing
 			if (this.isDisposed || this.ProjectMgr == null || this.ProjectMgr.IsClosed)
 			{
 				return null;
 			}
 
-			Debug.Assert(this.nestedHierarchy != null, "The nested hierarchy object must be created before calling this method");
-
-			object extensibility = null;
-			ErrorHandler.ThrowOnFailure(this.nestedHierarchy.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_ExtObject, out extensibility));
-
-			return extensibility;
+			return new Automation.OANestedProjectItem(this.ProjectMgr.GetAutomationObject() as Automation.OAProject, this);
 		}
 
 		/// <summary>

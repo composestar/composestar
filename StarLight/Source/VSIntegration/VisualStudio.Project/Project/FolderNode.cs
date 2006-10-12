@@ -42,12 +42,11 @@ namespace Microsoft.VisualStudio.Package
 			: base(root, e)
 		{
 			this.VirtualNodeName = strDirectoryPath.TrimEnd('\\'); //complete path from root project i.e.: "NewFolder1\\NewFolder2\\NewFolder3
-			this.NodeProperties = new FolderNodeProperties(this);
 		}
 		#endregion
 
 		#region overridden properties
-		public override int SortPriority
+        public override int SortPriority
 		{
 			get { return DefaultSortOrderNode.FolderNode; }
 		}
@@ -66,14 +65,28 @@ namespace Microsoft.VisualStudio.Package
 		#endregion
 
 		#region overridden methods
+		protected override NodeProperties CreatePropertiesObject()
+		{
+			return new FolderNodeProperties(this);
+		}
+
 		protected internal override void DeleteFromStorage(string path)
 		{
 			this.DeleteFolder(path);
 		}
 
+		/// <summary>
+		/// Get the automation object for the FolderNode
+		/// </summary>
+		/// <returns>An instance of the Automation.OAFolderNode type if succeeded</returns>
 		public override object GetAutomationObject()
 		{
-            return new Automation.OAFolderItem(this.ProjectMgr.GetAutomationObject() as Automation.OAProject, this);
+			if (this.ProjectMgr == null || this.ProjectMgr.IsClosed)
+			{
+				return null;
+			}
+
+			return new Automation.OAFolderItem(this.ProjectMgr.GetAutomationObject() as Automation.OAProject, this);
 		}
 
 		public override object GetIconHandle(bool open)

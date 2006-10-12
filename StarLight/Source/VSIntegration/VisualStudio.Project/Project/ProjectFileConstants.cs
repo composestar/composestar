@@ -60,7 +60,6 @@ namespace Microsoft.VisualStudio.Package
 		public const string SubType = "SubType";
 		public const string DependentUpon = "DependentUpon";
 		public const string Compile = "Compile";
-        public const string Concern = "Concern";
 		public const string ReferencePath = "ReferencePath";
 		public const string ResolvedProjectReferencePaths = "ResolvedProjectReferencePaths";
 		public const string Configuration = "Configuration";

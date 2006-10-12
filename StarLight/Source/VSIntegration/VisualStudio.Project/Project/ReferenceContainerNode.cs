@@ -108,21 +108,34 @@ namespace Microsoft.VisualStudio.Package
 		#endregion
 
 		#region overridden methods
+		/// <summary>
+		/// Returns an instance of the automation object for ReferenceContainerNode
+		/// </summary>
+		/// <returns>An intance of the Automation.OAReferenceFolderItem type if succeeeded</returns>
 		public override object GetAutomationObject()
 		{
+			if (this.ProjectMgr == null || this.ProjectMgr.IsClosed)
+			{
+				return null;
+			}
+
 			return new Automation.OAReferenceFolderItem(this.ProjectMgr.GetAutomationObject() as Automation.OAProject, this);
 		}
 
+		/// <summary>
+		/// Disable inline editing of Caption of a ReferendeContainerNode
+		/// </summary>
+		/// <returns>null</returns>
 		public override string GetEditLabel()
 		{
 			return null;
 		}
 
 
-        public override object GetIconHandle(bool open)
-        {
-            return PackageUtilities.GetIntPointerFromImage(open ? this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.OpenReferenceFolder] : this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.ReferenceFolder]);
-        }
+		public override object GetIconHandle(bool open)
+		{
+			return PackageUtilities.GetIntPointerFromImage(open ? this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.OpenReferenceFolder] : this.ProjectMgr.ImageList.Images[(int)ProjectNode.ImageName.ReferenceFolder]);
+		}
 
 		
 		/// <summary>

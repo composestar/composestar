@@ -1,15 +1,4 @@
 
-/***************************************************************************
-
-Copyright (c) Microsoft Corporation. All rights reserved.
-This code is licensed under the Visual Studio SDK license terms.
-THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-
-***************************************************************************/
-
 using System;
 using System.ComponentModel;
 using System.Text;
@@ -28,7 +17,8 @@ using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace Composestar.StarLight.VisualStudio.Project
 {
-    [ComVisible(true), CLSCompliant(false)]
+    [ComVisible(true), CLSCompliant(false), System.Runtime.InteropServices.ClassInterface(ClassInterfaceType.AutoDual)]
+    [Guid("7107C71C-5F04-4a67-9CDF-6EB39CE13D93")]
     public class ComposeStarProjectNodeProperties : ProjectNodeProperties
     {
         #region ctors
@@ -38,7 +28,7 @@ namespace Composestar.StarLight.VisualStudio.Project
         }
         #endregion
 
-           #region properties
+        #region properties
         [Browsable(false)]
         public string OutputFileName
         {
@@ -47,23 +37,7 @@ namespace Composestar.StarLight.VisualStudio.Project
                 return ((ComposeStarProjectNode)(this.Node.ProjectMgr)).OutputFileName;
             }
         }
-        /// <summary>
-        /// Returns/Sets the MainFile project property
-        /// </summary>
-        [Browsable(false)]
-        public string MainFile
-        {
-            get
-            {
-                return this.Node.ProjectMgr.GetProjectProperty(ComposeStarProjectFileConstants.MainFile, true);
-            }
-            //set
-            //{
-            //    // Set relative path to file as mainfile property                
-            //    this.Node.ProjectMgr.SetProjectProperty(ComposeStarProjectFileConstants.MainFile, value);
-            //}
-        }
-
+      
         [Browsable(false)]
         public string AssemblyName
         {
