@@ -1,20 +1,16 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
-import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.BreakPointParseException;
-
-import java.util.*;
 
 /**
  * Summary description for AlwaysBreakBreakPoint.
  */
-public abstract class ObjectBreakPoint extends BreakPoint {
+public abstract class ObjectBreakPoint implements BreakPoint {
 
 	private Class[] classes; 
 	private boolean[] accepting;
 
-    public ObjectBreakPointString selector) throws BreakPointParseException{
+    public ObjectBreakPoint(String selector) throws BreakPointParseException{
 		super();
 		setSelector(selector);
     }
@@ -51,13 +47,10 @@ public abstract class ObjectBreakPoint extends BreakPoint {
         return false;
     }
 
-	public void setSelector(String selector) throws BreakPointParseException
+    public void setSelector(String selector) throws BreakPointParseException
 	{
 		if(selector == null || selector.length() == 0) selector = "*";
-		
-		final char[] seperator = {','};
-
-		String[] classnames = selector.Split(seperator);
+		String[] classnames = selector.split(",");
 		classes = new Class[classnames.length];
 		accepting = new boolean[classnames.length];
 

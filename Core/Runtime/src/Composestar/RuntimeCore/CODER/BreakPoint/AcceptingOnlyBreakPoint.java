@@ -4,6 +4,7 @@ import Composestar.RuntimeCore.CODER.*;
 import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
 import Composestar.RuntimeCore.FLIRT.Interpreter.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -11,13 +12,13 @@ import java.util.Dictionary;
 /**
  * Summary description for AlwaysBreakBreakPoint.
  */
-public class AcceptingOnlyBreakPoint extends BreakPoint {
+public class AcceptingOnlyBreakPoint implements BreakPoint{
 
     public AcceptingOnlyBreakPoint() {
         super();
     }
 
-    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList MessageList, JoinPoint point){
         return eventType == DebuggerProvider.FILTER_ACCEPTED;
     }
 

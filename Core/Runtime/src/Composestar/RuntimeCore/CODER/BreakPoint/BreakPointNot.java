@@ -3,6 +3,10 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.FLIRT.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+
 import java.util.*;
 
 /**
@@ -15,7 +19,7 @@ public abstract class BreakPointNot extends BreakPointMono
 		super(halt, right);
 	}
 
-	public boolean matchEvent(int eventType, DebuggableFilter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
-			return !right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
+			return !right.matchEvent(eventType, currentFilter, messageList, point);
     }
 }

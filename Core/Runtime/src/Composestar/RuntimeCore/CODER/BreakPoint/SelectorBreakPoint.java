@@ -2,6 +2,9 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.FLIRT.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.BreakPointParseException;
 
 import java.util.*;
@@ -13,12 +16,11 @@ public class SelectorBreakPoint extends BreakPoint{
 
 	String sList = "";
 
-    public SelectorBreakPoint(Halter halt,String targetList) throws BreakPointParseException {
-        super(halt);
+    public SelectorBreakPoint(String targetList) throws BreakPointParseException {
 		this.sList = targetList;
     }
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
 		LinkedList list = afterMessage.getMessages();
 		for(int i = 0; i < list.size();i++)
 		{

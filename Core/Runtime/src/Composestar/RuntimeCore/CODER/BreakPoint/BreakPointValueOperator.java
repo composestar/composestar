@@ -4,6 +4,8 @@ import Composestar.RuntimeCore.CODER.BreakPointListener;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
 import Composestar.RuntimeCore.CODER.Value.Value;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -11,7 +13,7 @@ import java.util.Dictionary;
 /**
  * Summary description for BreakPointBiLTL.
  */
-public class BreakPointValueOperator extends BreakPoint implements Value
+public class BreakPointValueOperator implements BreakPoint, Value
 {
 	protected Value left;
 	protected Value right;
@@ -100,9 +102,8 @@ public class BreakPointValueOperator extends BreakPoint implements Value
 		throw new RuntimeException("Wrong operator Type:" + operator);
 	}
 
-	public BreakPointValueOperator(Halter halt, Value left, int operator, Value right)
+	public BreakPointValueOperator(Value left, int operator, Value right)
 	{
-		super(halt);
 		this.left = left;
 		this.right = right;
 		this.operator = operator;
@@ -113,7 +114,7 @@ public class BreakPointValueOperator extends BreakPoint implements Value
 		return false;
 	}
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
 		//Just check the last one.
 		return getValue().equals(oTrue);
 	}

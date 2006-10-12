@@ -12,5 +12,5 @@ import java.util.Dictionary;
  * Summary description for BreakPoint.
  */
 public interface BreakPoint {
-    public abstract boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList MessageList, JoinPoint point);
+    public abstract boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point);
 }

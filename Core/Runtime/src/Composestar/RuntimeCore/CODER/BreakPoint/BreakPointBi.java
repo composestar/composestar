@@ -3,6 +3,8 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.FLIRT.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 import Composestar.RuntimeCore.FLIRT.Message.*;
 import java.util.*;
 
@@ -34,15 +36,10 @@ public abstract class BreakPointBi extends BreakPointMono
 		this.left = left;
 	}
 
-	public boolean threadSpecific() 
-	{
-		return left.threadSpecific() || right.threadSpecific();
-	}
-
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
 		//Calculate everything, things can change
-		boolean isLeft = left.matchEvent(eventType, currentFilter, beforeMessage, afterMessage,filters, context);
-		boolean isRight = left.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
+		boolean isLeft = left.matchEvent(eventType, currentFilter, messageList,point);
+		boolean isRight = left.matchEvent(eventType, currentFilter, messageList, point);
 		return check(isLeft,isRight);
 	}
 

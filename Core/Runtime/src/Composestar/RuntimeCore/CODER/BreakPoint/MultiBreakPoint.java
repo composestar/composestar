@@ -3,6 +3,9 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.FLIRT.*;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -11,7 +14,7 @@ import java.util.Iterator;
 /**
  * Summary description for MultiBreakPoint.
  */
-public class MultiBreakPoint extends BreakPoint {
+public class MultiBreakPoint implements BreakPoint{
     private boolean threadSpecifics = false;
     private ArrayList breakpoints;
 
@@ -25,10 +28,10 @@ public class MultiBreakPoint extends BreakPoint {
         addBreakpoint(breakpoint);
     }
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){
         Iterator i = breakpoints.iterator();
         while (i.hasNext()) {
-            if (((BreakPoint) i.next()).matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context)) return true;
+            if (((BreakPoint) i.next()).matchEvent(eventType, currentFilter, messageList, point)) return true;
         }
         return false;
     }

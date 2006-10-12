@@ -2,6 +2,7 @@ package Composestar.RuntimeCore.CODER.VisualDebugger;
 
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl.BreakPointLTLParser;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg.*;
 
@@ -127,7 +128,8 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 		breakpoint = createBreakPoint();
 		if(breakpoint != null)
 		{
-			debugger.setBreakPoint(breakpoint);
+            debugger.
+            debugger.setBreakPoint(breakpoint);
 			popup.dispose();
 			dispose();
 			debugger.setBreakPoint(breakpoint);
@@ -140,15 +142,15 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 		String wasBussyWith;
 		try
 		{
-			ObjectBreakPoint selector = new SenderBreakPoint(debugger.getHalter(),selectors.getText());
+			ObjectBreakPoint selector = new SenderBreakPoint(selectors.getText());
 			Debug.out(Debug.MODE_DEBUG,"CODER","Sender list:" + selector.toString());
 
 			wasBussyWith = "Target Expression";
 
-			ObjectBreakPoint target = new TargetBreakPoint(debugger.getHalter(),targets.getText());
+			ObjectBreakPoint target = new TargetBreakPoint(targets.getText());
 			Debug.out(Debug.MODE_DEBUG,"CODER","Target list:" + target.toString());
 
-			breakpoint = new BreakPointAnd(debugger.getHalter(),selector,target);
+			breakpoint = new BreakPointAnd(selector,target);
 
 			wasBussyWith = "LTL Expression";
 
@@ -156,7 +158,7 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 			BreakPoint ltlBreakPoint = ltlParser.parse(ltlValueExpression.getText(),debugger.getHalter());
 			if(ltlBreakPoint != null)
 			{
-				breakpoint = new BreakPointAnd(debugger.getHalter(),breakpoint,ltlBreakPoint);
+				breakpoint = new BreakPointAnd(breakpoint,ltlBreakPoint);
 			}
 			
 			wasBussyWith = "Regular Expression";
@@ -166,12 +168,12 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 			
 			if(regBreakPoint != null)
 			{
-				breakpoint = new BreakPointAnd(debugger.getHalter(),breakpoint,regBreakPoint);
+				breakpoint = new BreakPointAnd(breakpoint,regBreakPoint);
 			}
 
 			if(onlyAccepting.isSelected())
 			{
-				breakpoint = new BreakPointAnd(debugger.getHalter(),breakpoint,new AcceptingOnlyBreakPoint(debugger.getHalter()));
+				breakpoint = new BreakPointAnd(breakpoint,new AcceptingOnlyBreakPoint(debugger.getHalter()));
 			}
 		}
 		catch(BreakPointParseException e)
