@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
-import Composestar.RuntimeCore.CODER.Model.*;
+import Composestar.RuntimeCore.FLIRT.*;
 /**
  * Summary description for BreakPointBiLTL.
  */

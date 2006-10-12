@@ -14,8 +14,8 @@ public abstract class ObjectBreakPoint extends BreakPoint {
 	private Class[] classes; 
 	private boolean[] accepting;
 
-    public ObjectBreakPoint(Halter halt, String selector) throws BreakPointParseException{
-		super(halt);
+    public ObjectBreakPointString selector) throws BreakPointParseException{
+		super();
 		setSelector(selector);
     }
    

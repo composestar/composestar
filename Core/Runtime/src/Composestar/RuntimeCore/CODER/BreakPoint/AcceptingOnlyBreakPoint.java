@@ -13,11 +13,11 @@ import java.util.Dictionary;
  */
 public class AcceptingOnlyBreakPoint extends BreakPoint {
 
-    public AcceptingOnlyBreakPoint(Halter halt) {
-        super(halt);
+    public AcceptingOnlyBreakPoint() {
+        super();
     }
 
-    public boolean matchEvent(int eventType, FilterElementRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
         return eventType == DebuggerProvider.FILTER_ACCEPTED;
     }
 

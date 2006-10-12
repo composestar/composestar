@@ -1,8 +1,9 @@
 package Composestar.RuntimeCore.CODER.BreakPoint;
 
 import Composestar.RuntimeCore.CODER.Halter;
-import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.BreakPointParseException;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.Core.FIRE.*;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public class TargetBreakPoint extends ObjectBreakPoint {
         super(halt,targetList);
     }
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, Filter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
 		LinkedList list = afterMessage.getMessages();
 		for(int i = 0; i < list.size();i++)
 		{

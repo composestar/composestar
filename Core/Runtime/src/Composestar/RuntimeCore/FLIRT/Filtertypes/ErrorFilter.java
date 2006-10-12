@@ -5,7 +5,6 @@ import Composestar.RuntimeCore.FLIRT.Actions.ErrorAction;
 import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
 import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-import Composestar.RuntimeCore.CODER.Model.*;
 
 import java.util.Dictionary;
 
@@ -25,7 +24,6 @@ public class ErrorFilter extends FilterTypeRuntime
 {
     
     /**
-     * @param m
      * @param context
      * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
      * @roseuid 40DFE39F01E2
@@ -35,7 +33,6 @@ public class ErrorFilter extends FilterTypeRuntime
     }
     
     /**
-     * @param m
      * @param context
      * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
      * @roseuid 40DFE39F0214

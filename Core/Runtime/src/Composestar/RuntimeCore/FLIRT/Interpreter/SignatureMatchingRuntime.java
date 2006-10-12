@@ -55,7 +55,7 @@ public class SignatureMatchingRuntime extends MatchingTypeRuntime
 		// If needed we do an inner replacement.
 		if(ct_target.equals("inner"))
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolving target '"+m.getInner().GetType().ToString()+"'...");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tResolving target '"+m.getInner().getClass()+"'...");
 			// checking if {ct_target | inner} has the method message_selector.
 			return Invoker.getInstance().objectHasMethod (m.getInner(),message_selector,context);
 		}
@@ -77,7 +77,7 @@ public class SignatureMatchingRuntime extends MatchingTypeRuntime
 			Object internal = fmr.getInternal(ct_target);
 			if(internal != null)
 			{
-				c = (Concern) ds.getObjectByID(internal.GetType().ToString());
+				c = (Concern) ds.getObjectByID(internal.getClass().getName());
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tFound internal to resolve signature for: " + c.getName());
 			}
 			else
@@ -85,7 +85,7 @@ public class SignatureMatchingRuntime extends MatchingTypeRuntime
 				Object external = fmr.getExternal(ct_target);
 				if(external != null)
 				{
-					c = (Concern) ds.getObjectByID(external.GetType().ToString());
+					c = (Concern) ds.getObjectByID(external.getClass().getName());
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tFound external to resolve signature for: " + c.getName());
 				}
 			}

@@ -35,10 +35,10 @@
 	<target name="build" depends="init,antlr" description="create CODER parsers"/>
 	
 	<target name="antlr">
-		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl/grammar/ltl.g" outputdirectory="src/CODER/breakpoint/parsers/ltl">
+		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl/grammar/ltl.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl">
 			<classpath refid="lib.core"/>
 		</antlr>
-		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Reg/grammar/reg.g" outputdirectory="src/CODER/breakpoint/parsers/reg">
+		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Reg/grammar/reg.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Reg">
 			<classpath refid="lib.core"/>
 		</antlr>
 	</target>

@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
-import Composestar.RuntimeCore.CODER.Model.*;
+import Composestar.RuntimeCore.FLIRT.*;
 import java.util.*;
 
 /**
@@ -17,7 +17,7 @@ public class BreakPointGlobal extends BreakPointMono
 		super(halt, right);
 	}
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, Filter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
 		stillOn &= right.matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context);
 		return stillOn;
 	}

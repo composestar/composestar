@@ -292,7 +292,6 @@ public class MessageList
 	/**
 	 * Replaces all the externals.
 	 * @param externals new set of externals.
-	 * @param extenals
 	 * @roseuid 3F3653270356
 	 */
 	public void setExternals(Dictionary externals) 
@@ -398,7 +397,7 @@ public class MessageList
 		for( int i = 0; i<messages.size(); i++ ) 
 		{
 			buffer.append(separator);
-			buffer.append(((Message)messages.get(i)).getTarget().GetType().ToString());
+			buffer.append(((Message)messages.get(i)).getTarget().getClass());
 			buffer.append('.');
 			buffer.append(((Message)messages.get(i)).getSelector());
 			separator = ", ";

@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.CODER.BreakPoint;
 
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
-import Composestar.RuntimeCore.CODER.Model.*;
+import Composestar.RuntimeCore.FLIRT.*;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -25,7 +25,7 @@ public class MultiBreakPoint extends BreakPoint {
         addBreakpoint(breakpoint);
     }
 
-    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, DebuggableMessageList beforeMessage, DebuggableMessageList afterMessage, ArrayList filters, Dictionary context){
+    public boolean matchEvent(int eventType, DebuggableFilter currentFilter, MessageList beforeMessage, MessageList afterMessage, ArrayList filters, Dictionary context){
         Iterator i = breakpoints.iterator();
         while (i.hasNext()) {
             if (((BreakPoint) i.next()).matchEvent(eventType, currentFilter, beforeMessage, afterMessage, filters, context)) return true;

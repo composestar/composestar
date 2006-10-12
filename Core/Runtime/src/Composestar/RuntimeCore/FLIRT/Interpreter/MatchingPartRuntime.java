@@ -101,9 +101,9 @@ public class MatchingPartRuntime extends AbstractPatternRuntime
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tFound 'inner'.");
 			context.put("target", m.getInner());
 		}
-		else if (target.equals(m.getTarget().GetType().ToString()))
+		else if (target.equals(m.getTarget().getClass().getName()))
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tFound target '"+m.getTarget().GetType().ToString()+"'.");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\t\tFound target '"+m.getTarget().getClass()+"'.");
 			context.put("target", m.getTarget());
 		}     
     }
