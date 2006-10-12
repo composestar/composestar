@@ -39,7 +39,8 @@ public class TargetNotFoundException extends InvalidPatternExpressionException
 
 	/**
 	 * Constructor with underlying cause.
-	 */
+     * @param cause
+     */
 	public TargetNotFoundException(TargetNotFoundException cause)
 	{
 		super(cause.getMessage(),cause);

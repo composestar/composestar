@@ -51,7 +51,8 @@ public class ConditionReference extends FilterModuleElementReference
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		this.ref = (Condition)in.readObject();
@@ -59,7 +60,8 @@ public class ConditionReference extends FilterModuleElementReference
 	
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(this.ref);

@@ -44,6 +44,7 @@ public class DispatchToInnerAction extends ComposeStarAction
 	 * @param args arguments of the message
 	 * @param accepted
 	 * @roseuid 3F3652C9038D
+     * @param m
 	 */
 	public DispatchToInnerAction(MessageList m, boolean accepted, Object target, String selector, Object[] args) 
 	{

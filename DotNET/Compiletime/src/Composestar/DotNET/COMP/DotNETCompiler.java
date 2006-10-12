@@ -204,7 +204,8 @@ public class DotNETCompiler implements LangCompiler
 	/**
 	 * Returns the filename of the dummy-assembly to generate for the specified project.
 	 * "{basepath}/obj/dummies/{projectname}.dummies.dll"
-	 */
+     * @param p
+     */
 	private String getDummiesFilePath(Project p)
 	{
 		String dummiesFile = p.getName() + ".dummies.dll";
@@ -218,7 +219,8 @@ public class DotNETCompiler implements LangCompiler
 	
 	/**
 	 * Returns a space-separated list of sourcefiles in the specified project.
-	 */
+     * @param p
+     */
 	private String getSourceFiles(Project p)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -263,7 +265,8 @@ public class DotNETCompiler implements LangCompiler
 	
 	/**
 	 * returns a list containing the filenames of all externally linked sources
-	 */
+     * @param src
+     */
 	public ArrayList externalSources(Source src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();
@@ -325,7 +328,8 @@ public class DotNETCompiler implements LangCompiler
 	 * of concerns extracted from external linked source files
 	 * 
 	 * Used by INCRE
-	 */
+     * @param src
+     */
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();

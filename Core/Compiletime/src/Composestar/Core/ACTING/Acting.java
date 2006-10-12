@@ -69,6 +69,7 @@ public class Acting implements CTCommonModule {
     
 	/**
 	 * @pre Assumes there is an SIinfo otherwise no singleorder is required
+     * @param concern
 	 */
     public FilterModuleOrder getSingleOrder(Concern concern)
     {

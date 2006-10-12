@@ -42,7 +42,8 @@ public class ILCodeParser extends TransformerBase
 
 	/**
 	 * Sets the name of the assembly to transform.
-	 */
+     * @param an
+     */
 	public void setAssemblyName(String an)
 	{
 		assemblyName = an;
@@ -50,7 +51,8 @@ public class ILCodeParser extends TransformerBase
 
 	/**
 	 * Adds a concern to superimpose.
-	 */
+     * @param concern
+     */
 	public void addConcern(Concern concern)
 	{
 		if (concern.getPlatformRepresentation() != null)

@@ -29,7 +29,8 @@ public class ErrorFilterException extends FilterException
 
 	/**
 	 * Constructor with underlying cause.
-	 */
+     * @param cause
+     */
 	public ErrorFilterException(ErrorFilterException cause)
 	{
 		super(cause.getMessage(),cause);

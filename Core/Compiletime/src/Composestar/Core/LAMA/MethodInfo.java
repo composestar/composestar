@@ -51,7 +51,9 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 	 * This method should make a clone of the MethodInfo with the name and
 	 * parentType changed to the given name and actualParent. The parameters and
 	 * return type should stay the same.
-	 */
+     * @param name
+     * @param actualParent
+     */
 	public abstract MethodInfo getClone(String name, Type actualParent);
 
 	/**
@@ -238,7 +240,8 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		Name = in.readUTF();
@@ -252,7 +255,8 @@ public abstract class MethodInfo extends ProgramElement implements SerializableR
 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(Name);

@@ -21,6 +21,7 @@ public class ContinueToNextFilterAction extends ComposeStarAction {
      * Constructs a new Continue to Next Filter Action.
      * @param accepted says if the message was accepted by this filter or not.
      * @roseuid 3F3652C80038
+     * @param m
      */
     public ContinueToNextFilterAction(MessageList m, boolean accepted) {
 		super(m,accepted);

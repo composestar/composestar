@@ -54,7 +54,8 @@ public class DoResolve {
 
   /**
    * Does the actual resolving
- * @throws ModuleException 
+ * @throws ModuleException
+   * @param d
    */
   public void go(DataStore d) throws ModuleException {
     if (d == null) {

@@ -270,6 +270,8 @@ public class AnnotationSuperImposition
   /**
    * Compares against the selectorResults in all existing states, returns true if the one
    * supplied in the argument does not occur.
+   * @param allStates
+   * @param selectorResults
    */
   public boolean isNewState(Vector allStates, Vector selectorResults) throws ModuleException
   {

@@ -225,6 +225,8 @@ public class FlowModelExtractor {
         /**
          * Default constructor
          *
+         * @param names
+         * @param repositoryLink
          */
         public BasicFlowNode( HashSet names, RepositoryEntity repositoryLink ){
             super();
@@ -311,6 +313,9 @@ public class FlowModelExtractor {
         /**
          * The constructor
          *
+         * @param startNode
+         * @param type
+         * @param endNode
          */
         public BasicFlowTransition( int type, BasicFlowNode startNode, 
                 BasicFlowNode endNode )

@@ -113,7 +113,9 @@ public class EMBEX implements CTCommonModule
 
 	/**
 	 * Stores the embedded source in a new file
-	 */
+     * @param src
+     * @param resources
+     */
 	private void saveToFile(Source src,CommonResources resources) throws ModuleException
 	{
 		try {

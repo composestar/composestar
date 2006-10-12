@@ -38,6 +38,7 @@ public abstract class ComposeStarAction {
      * Only classes that extend ComposeStarAction can access it.
      * @param accepted if the filter accepted the message
      * @roseuid 3F3652C703DA
+     * @param message
      */
     protected ComposeStarAction(MessageList message, boolean accepted) {
 		this.returnableMessage = message;

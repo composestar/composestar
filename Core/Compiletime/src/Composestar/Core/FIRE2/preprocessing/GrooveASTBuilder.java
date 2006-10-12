@@ -159,6 +159,7 @@ public class GrooveASTBuilder {
      * @param rightOperator
      * @param graph
      * @return
+     * @param operator
      */
     private AnnotatedNode buildFilterOperatorNode(
             FilterCompOper operator, Graph graph)
@@ -205,6 +206,7 @@ public class GrooveASTBuilder {
     /**
      * @param filter
      * @return
+     * @param graph
      */
     private Node buildFilterNode(Filter filter, Graph graph) {
         AnnotatedNode filterNode = new AnnotatedNode();

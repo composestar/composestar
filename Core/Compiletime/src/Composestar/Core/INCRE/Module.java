@@ -143,6 +143,7 @@ public class Module
 	/**
 	 * Creates an instance of a coreModule of type 'fulltype' and calls it run method
 	 * @param String phase of execution
+     * @param resources
 	 */
 	public void execute(CommonResources resources) throws ModuleException
 	{

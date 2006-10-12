@@ -40,7 +40,8 @@ public class InvalidConditionException extends FilterSpecificationException
 
 	/**
 	 * Constructor with underlying cause.
-	 */
+     * @param cause
+     */
 	public InvalidConditionException(InvalidConditionException cause)
 	{
 		super(cause.getMessage(),cause);

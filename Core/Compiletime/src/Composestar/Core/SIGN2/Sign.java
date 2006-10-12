@@ -676,6 +676,8 @@ public class Sign implements CTCommonModule {
      * an not existing dispatch.
      * 
      * @param selector
+     * @param concern
+     * @param fireModel
      */
     private void checkNonDispatchable(Concern concern, FireModel fireModel,
             String selector) {

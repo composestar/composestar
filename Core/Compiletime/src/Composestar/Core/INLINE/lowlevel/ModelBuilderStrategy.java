@@ -410,6 +410,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     /**
      * Checks whether the call is an innercall and whether the called method has inlined filters. Then
      * the innercall filtercontext needs to be set.
+     * @param callMessage
      */
     private ContextInstruction setInnerCallContext( Message callMessage ){
         if ( Message.checkEquals( callMessage.getTarget(), Message.INNER_TARGET ) )

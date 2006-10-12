@@ -38,13 +38,4 @@ public class Debug
 
         //Debug.out (modeUsed, currentAction + " start");
 	}
-
-	public void finalize() throws Throwable
-	{
-		//Debug.out (modeUsed, currentAction + " stop");
-        super.finalize();
-	}
-	
-
-
 }

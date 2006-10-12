@@ -44,6 +44,8 @@ public class DispatchAction extends ComposeStarAction
 	 * @param args arguments of the message
 	 * @param accepted
 	 * @roseuid 3F3652C9038D
+     * @param m
+     * @param modifiedMessage
 	 */
 	public DispatchAction(MessageList m, boolean accepted, MessageList modifiedMessage, Object[] args) 
 	{

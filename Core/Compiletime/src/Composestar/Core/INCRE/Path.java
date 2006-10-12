@@ -12,8 +12,9 @@ public class Path
 	public Path(){}
 
 	/**
-	 * Adds a node to the vector containing nodes 
-	 */
+	 * Adds a node to the vector containing nodes
+     * @param n
+     */
 	public void addNode(Node n)
 	{
 		this.nodes.add(n);	

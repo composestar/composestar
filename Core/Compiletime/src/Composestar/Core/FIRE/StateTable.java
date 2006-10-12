@@ -59,7 +59,9 @@ public class StateTable
 		statesList.add(root);
 	}
 
-	/** Add also pointers to the new table. */
+	/** Add also pointers to the new table.
+     * @param size
+     * @param status*/
 	public void addElements(int size, StatusColumn status)
 	{
 		addElements(size);

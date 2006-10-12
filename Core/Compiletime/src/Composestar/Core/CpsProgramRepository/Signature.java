@@ -58,6 +58,8 @@ public class Signature implements SerializableRepositoryEntity
   /**
    * @param method
    * @roseuid 404C458900F3
+   * @param type
+   * @param methodInfo
    */
     public boolean add(MethodInfo methodInfo, int type) 
     {

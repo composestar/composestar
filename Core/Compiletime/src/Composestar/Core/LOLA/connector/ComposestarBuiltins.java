@@ -72,7 +72,8 @@ public class ComposestarBuiltins extends HashDict
   
   /**
   registers a symbol as name of a builtin
-  */
+   * @param proto
+   */
   public void register(Const proto)
   {
 	String key=proto.name()+ '/' +proto.getArity();

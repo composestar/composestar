@@ -29,6 +29,7 @@ public class ErrorAction extends ComposeStarAction {
      * @param accepted says if the filter accepted the message or not
      * @param exception the exception to throw when the action is executed
      * @roseuid 3F3652CA0027
+     * @param m
      */
     public ErrorAction(MessageList m, boolean accepted, ErrorFilterException exception) {
 		super(m, accepted);

@@ -208,7 +208,8 @@ public class DotNETFieldInfo extends FieldInfo
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		HashCode = in.readInt();
@@ -226,7 +227,8 @@ public class DotNETFieldInfo extends FieldInfo
 	 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);

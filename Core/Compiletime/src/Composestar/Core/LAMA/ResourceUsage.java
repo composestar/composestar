@@ -41,7 +41,8 @@ public class ResourceUsage implements SerializableRepositoryEntity {
 		
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		ResourceName = in.readUTF();
@@ -52,7 +53,8 @@ public class ResourceUsage implements SerializableRepositoryEntity {
 	
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(ResourceName);

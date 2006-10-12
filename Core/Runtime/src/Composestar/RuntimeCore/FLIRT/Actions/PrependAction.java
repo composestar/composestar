@@ -38,6 +38,8 @@ public class PrependAction extends ComposeStarAction
      * @param args arguments of the message
      * @param accepted
      * @roseuid 3F3652C9038D
+     * @param originalMessage
+     * @param modifiedMessage
      */
     public PrependAction( MessageList originalMessage, MessageList modifiedMessage, Object[] args)
     {

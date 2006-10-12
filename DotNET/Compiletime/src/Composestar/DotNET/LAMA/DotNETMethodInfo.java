@@ -326,7 +326,8 @@ public class DotNETMethodInfo extends MethodInfo {
      	Parent = parent;     
     }
     
-    /** Stuff for LOLA**/
+    /** Stuff for LOLA
+     * @param c**/
     
     private HashSet toHashSet(Collection c)
     {
@@ -397,7 +398,8 @@ public class DotNETMethodInfo extends MethodInfo {
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		CallingConvention = in.readInt();
@@ -419,7 +421,8 @@ public class DotNETMethodInfo extends MethodInfo {
 	 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(CallingConvention);

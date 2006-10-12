@@ -62,6 +62,7 @@ public class MessageInfo
 	 * within the interpreter
 	 * 
 	 * @param Composestar.Runtime.FLIRT.message.Message
+     * @param msg
 	 */
 
 	static void updateMessage(Message msg)

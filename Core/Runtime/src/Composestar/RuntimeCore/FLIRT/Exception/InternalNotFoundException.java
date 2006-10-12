@@ -31,7 +31,8 @@ public class InternalNotFoundException extends ComposestarRuntimeException
 
 	/**
 	 * Constructor with underlying cause.
-	 */
+     * @param cause
+     */
 	public InternalNotFoundException(InternalNotFoundException cause)
 	{
 		super(cause.getMessage(),cause);

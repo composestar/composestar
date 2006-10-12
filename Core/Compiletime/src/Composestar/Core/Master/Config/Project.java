@@ -60,6 +60,8 @@ public class Project implements Serializable
 
 	/**
 	 * @deprecated Use setName/setLanguageName/setBasePath.
+     * @param key
+     * @param value
 	 */ 
 	public void addProperty(String key, String value)
 	{
@@ -68,6 +70,7 @@ public class Project implements Serializable
 
 	/**
 	 * @deprecated Use getName/getLanguageName/getBasePath.
+     * @param key
 	 */ 
 	public String getProperty(String key)
 	{

@@ -146,7 +146,11 @@ public class Column implements Cloneable
 	 * multPadding: Multiplication of the true bits that starts the pattern. 
 	 *              Example trueBits 2, multFalse 1, multPadding 2: [ 0 0 0 0 1 1 0 0 1 1 0 0]
 	 *
-	 */
+     * @param multFalse
+     * @param offset
+     * @param multPadding
+     * @param trueBits
+     */
 		
 	public void setPattern (int trueBits, int multFalse, int multPadding, int offset) 
 	{
@@ -186,8 +190,7 @@ public class Column implements Cloneable
 		return str;
 	}
 
-	public Object clone ()
-	{
+	public Object clone () throws CloneNotSupportedException {
 		try
 		{
 			Column column = (Column) super.clone();

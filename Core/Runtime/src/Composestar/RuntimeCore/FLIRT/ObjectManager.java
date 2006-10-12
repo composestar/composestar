@@ -96,6 +96,7 @@ public class ObjectManager implements ChildRunnable
      * purposes.
      * @param o
      * @roseuid 3F36584D0116
+     * @param store
      */
 	public ObjectManager(Object o, DataStore store) 
 	{
@@ -319,6 +320,7 @@ public class ObjectManager implements ChildRunnable
      * @param o The object whose manager is needed.
      * @return the manager of the object o
      * @roseuid 3F36584D0117
+     * @param store
      */
     public static ObjectManager getObjectManagerFor(Object o, DataStore store) 
 	{
@@ -425,6 +427,7 @@ public class ObjectManager implements ChildRunnable
      * @return the return value of the message, if the method's return type is void
      * return null
      * @roseuid 3F36584D012B
+     * @param aSingleMessage
      */
     public Object receiveMessage(Message aSingleMessage) {
 		// Set used vars

@@ -384,7 +384,10 @@ public abstract class LOLA implements CTCommonModule
 		return toBeProcessed;
 	  }
 	  
-	  /*** helper method: moving selectors between lists */
+	  /*** helper method: moving selectors between lists
+       * @param from
+       * @param list
+       * @param to*/
 	  public void moveSelectors(ArrayList list,ArrayList from, ArrayList to){
 	  	if(!list.isEmpty()){
 	  		Iterator predItr = list.iterator();
@@ -396,7 +399,10 @@ public abstract class LOLA implements CTCommonModule
 	  	}
 	  }
 	  
-	  /*** helper method: move selector between lists */
+	  /*** helper method: move selector between lists
+       * @param from
+       * @param to
+       * @param predSel*/
 	  public void moveSelector(PredicateSelector predSel,ArrayList from, ArrayList to){
 	  	
 	  	if(!to.contains(predSel))

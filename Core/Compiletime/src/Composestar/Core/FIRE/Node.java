@@ -26,8 +26,7 @@ public abstract class Node implements Comparable, Cloneable
 	FilterReasoningEngine fireInfo = null;
 	protected int filterNumber = -2;
 	
-	public Object clone()
-	{
+	public Object clone() throws CloneNotSupportedException {
 		try 
 		{
 			Node n = (Node) super.clone();

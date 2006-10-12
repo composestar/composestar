@@ -89,6 +89,8 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
      * @param context
      * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
      * @roseuid 40F2962E0142
+     * @param modifiedMessage
+     * @param originalMessage
      */
     public ComposeStarAction getAcceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) {
 		return this.theFilterTypeRuntime.acceptAction(originalMessage, modifiedMessage, context);
@@ -99,6 +101,8 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
      * @param context
      * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
      * @roseuid 40F2963C03C3
+     * @param originalMessage
+     * @param modifiedMessage
      */
     public ComposeStarAction getRejectAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context) {
 		return this.theFilterTypeRuntime.rejectAction(originalMessage, modifiedMessage, context);

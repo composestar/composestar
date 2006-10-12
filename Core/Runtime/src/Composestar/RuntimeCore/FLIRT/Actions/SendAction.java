@@ -27,6 +27,7 @@ public class SendAction extends ComposeStarAction
 	 * @param args arguments of the message
 	 * @param accepted
 	 * @roseuid 3F3652C9038D
+     * @param m
 	 */
 	public SendAction(MessageList m, boolean accepted)
 	{

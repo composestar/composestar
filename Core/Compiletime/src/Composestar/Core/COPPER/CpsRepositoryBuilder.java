@@ -138,6 +138,7 @@ public class CpsRepositoryBuilder
    * Use this instead of ds.addObject for incremental runs of COPPER
    * 
    * @param Object
+   * @param obj
    */
    public void addToRepository(RepositoryEntity obj)
    {
@@ -149,6 +150,7 @@ public class CpsRepositoryBuilder
    * Adds a Concern object to the repository
    *
    * @param name Name for the concern
+   * @param line
    */
   public void addConcern(String name,int line) {
     cpsc = new CpsConcern();
@@ -209,6 +211,7 @@ public class CpsRepositoryBuilder
    * Adds a FilterModule object to the repository
    *
    * @param name Name for the filtermodule
+   * @param lineNumber
    */
   public void addFilterModule(String name,int lineNumber) {
     fm = new FilterModuleAST();
@@ -241,7 +244,10 @@ public class CpsRepositoryBuilder
    *
    * @param namev the names of the internals
    * @param typev the type shared by the internals (can contain a package e.g. x.y.z.int)
-   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
+   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+   * @param lineNumber
+   * @param idv
+   * @param parameterized
    */
   public void addInternals(Vector namev, Vector idv,int lineNumber, boolean parameterized) throws SemanticException {
     for (int j = 0; j < namev.size(); j++) {
@@ -279,7 +285,9 @@ public class CpsRepositoryBuilder
 * @param namev The names of the internals
 * @param typev The type shared by the internals (can contain a package e.g. x.y.z.int)
 * @param init  Common initialization expression (can be an internal / external)
-* @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
+* @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+ * @param type
+ * @param lineNumber
 */
 public void addExternals(Vector namev, Vector typev, Vector init, int type,int lineNumber) throws SemanticException
 {
@@ -366,6 +374,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param name
    * @param init Name of the condition
    @param type
+    * @param lineNumber
    */
   public void addCondition(String name, Vector init, int type, int lineNumber) {
     Condition c = new Condition();
@@ -414,6 +423,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param name Name of the method
    * @deprecated
    * obselete now? DD
+   * @param lineNumber
    */
   public void addMethod(String name,int lineNumber) {
     m = new Method();
@@ -470,7 +480,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name name of the inputfilter
    * @param type the type of the filter (e.g. a.b.c.Meta)
-   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers  
+   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+   * @param lineNumber
    */
   public void addInputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = true;
@@ -492,6 +503,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterType to an input- or outputfilter
    *
    * @param type the type of the filter (e.g. Meta)
+   * @param lineNumber
    */
   public void addFilterType(String type,int lineNumber) {
     FilterType ft = new FilterType();
@@ -554,6 +566,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterElement to an input- or outputfilter (e.g. C => { [t.s]t.s] })
    *
    * @param filterop2 inclusion of exclusion (can be '=>' or '~>'
+   * @param lineNumber
    */
   public void addFilterElement(String filterop2,int lineNumber) {
     int i;
@@ -713,6 +726,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterOperatorType (i.e. an inclusion or exclusion)
    *
    * @param filterop Inclusion or Exclusion (can be '=>' or '~>'
+   * @param lineNumber
    */
   public void addFilterOperatorType(String filterop,int lineNumber) {
     EnableOperatorType eot;
@@ -738,6 +752,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterElementCompOper (the character separating each FilterElement)
    *
    * @param sep The separator: can be ',' (i.e. an OR) or null (if the last FilterElement)
+   * @param line
    */
   public void addFilterElementCompOper(String sep,int line) { //throws ModuleException {
     if (sep == null) { //null, so we're at the last element
@@ -764,6 +779,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterCompOper (the character separating each Filter)
    *
    * @param sep The separator: can be ';' (i.e. continue to next)
+   * @param line
    */
   public void addFilterCompOper(String sep,int line) {
     if (sep.equals(";")) { //currently only semicolon, no way to 'see' last element
@@ -852,6 +868,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param argTypes All the types of the selector (i.e. method(int, String))
    *                 Consists of multiple vectors within this vector (each parameter a separate vector)
    * @param matching Whether the matching is name or signature (0=name, 1=signature)
+   * @param lineNumber
+   * @param paratype
    */
   public void addMatchingPart(String target, String selector, Vector argTypes, int matching, int paratype, int lineNumber) {
     workingOnMatching = true; //busy with matching
@@ -910,6 +928,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param selector The selector
    * @param argTypes All the types of the selector (i.e. method(int, String))
    *                 Consists of multiple vectors within this vector (each parameter a separate vector)
+   * @param lineNumber
    */
   public void addSubstitutionPart(String target, String selector, Vector argTypes,int lineNumber) {
     workingOnMatching = false; //busy with substitution
@@ -966,6 +985,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param typev The types of parameters of the method
    *              Consists of Vectors within a Vector (each parameter has a separate Vector,
    *              so it can contain a package in front of the type)
+   * @param lineNumber
    */
   public void addSelector(String name, Vector typev,int lineNumber) {
     int j;
@@ -995,6 +1015,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param typev The types of parameters of the method
    *              Consists of Vectors within a Vector (each parameter has a separate Vector,
    *              so it can contain a package in front of the type)
+   * @param lineNumber
    */
   public void addParameterizedSelector(String name, Vector typev,int lineNumber) {
     int j;
@@ -1023,7 +1044,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name name of the inputfilter
    * @param type the type of the filter (e.g. Meta)
-   * @throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers  
+   * @throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+   * @param lineNumber
    */
   public void addOutputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = false;
@@ -1082,6 +1104,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a SelectorDefinition
    *
    * @param name name of the selector
+   * @param lineNumber
    */
   public void addSelectorDefinition(String name,int lineNumber) {
     sd = new SelectorDefinition();
@@ -1125,6 +1148,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param variable - the variable to be used as 'output' of the predicate
    * @param predicate - a prolog predicate resulting in a set of concerns
+   * @param line
    */
   public void addPredicateSelectorExpression(String variable, String predicate,int line)
   {
@@ -1141,6 +1165,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new ConditionBinding (i.e. sel <- {a, b})
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addConditionBinding(Vector name, int line) {
     cb = new ConditionBinding();
@@ -1179,6 +1204,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new MethodBinding (i.e. sel <- {a, b})
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addMethodBinding(Vector name, int line) {
     mb = new MethodBinding();
@@ -1218,6 +1244,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new FilterModuleBinding
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addFilterModuleBinding(Vector name, int line) {
     fmb = new FilterModuleBinding();
@@ -1237,6 +1264,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a filtermodule to the current binding
    *
    * @param name Name of the fm (may include package + concern)
+   * @param args
+   * @param line
    */
   public void addFilterModuleName(Vector name, Vector args, int line) {
       FilterModuleReference fmref = new FilterModuleReference();
@@ -1263,6 +1292,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new AnnotationBinding
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addAnnotationBinding(Vector name, int line)
   {
@@ -1330,6 +1360,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param lang     Language of the embedded source (i.e. to call the correct compiler)
    * @param filename Name of the file to which the source needs to be saved
+   * @param line
+   * @param className
    */
   public void addEmbeddedSource(String lang, Vector className, String filename,int line) {
     Source src = new Source();
@@ -1434,6 +1466,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param cname Name of the concern containing the selector
    * @param sname Name of the selector
    * @return the created reference
+   * @param line
    */
   public SelectorReference addSelectorRef(Vector pack, String cname, String sname, int line) {
     if ("self".equals(sname)) {    //fixme: should not happen here, but in the syntactic sugar part

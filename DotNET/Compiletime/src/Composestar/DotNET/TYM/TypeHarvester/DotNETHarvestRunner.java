@@ -101,7 +101,8 @@ public class DotNETHarvestRunner implements HarvestRunner
 	/**
 	 * FIXME: describe what this method really does, and rename it appropriately. 
 	 *        side-effect is currently unclear.
-	 */
+     * @param dllName
+     */
 	private String checkDLL(String dllName) throws ModuleException
 	{
 		if (!dllName.equals(""))
@@ -122,7 +123,8 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 * it indirectly harvest types from other assemblies e.g ComposestarFilterDebugger.dll
 	 * 
 	 * Used by INCRE
-	 */
+     * @param asm
+     */
 	public List externalAssemblies(String asm)
 	{
 		List externals = new ArrayList();
@@ -151,7 +153,8 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 * 		for input C.dll => [A.dll,B.dll] 
 	 * 
 	 * Used by INCRE
-	 */
+     * @param asm
+     */
 	public List prevAssemblies(String asm)
 	{
 		List assemblies = new ArrayList();
@@ -192,7 +195,8 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 * 		input C.dll => "A.dll B.dll" 
 	 * 
 	 * Used by INCRE
-	 */
+     * @param asm
+     */
 	public String prevInput(String asm)
 	{
 		String input = incre.getConfiguration("HarvesterInput");

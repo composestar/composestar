@@ -35,7 +35,8 @@ public class CommandLineExecutor
 	 * WARNING: If the program hangs this function will never return.
 	 * Please note that return values indicating error differ between programs and 
 	 * operating systems.
-	 */
+     * @param command
+     */
 	public int exec(String command)
 	{
 		return exec(command, null);
@@ -142,7 +143,8 @@ public class CommandLineExecutor
 
 	/**
 	 * For testing purposes
-	 */
+     * @param args
+     */
 	public static void main(String args[])
 	{
 		CommandLineExecutor e = new CommandLineExecutor();

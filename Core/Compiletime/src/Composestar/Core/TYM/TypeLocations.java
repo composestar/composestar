@@ -92,7 +92,8 @@ public class TypeLocations
 	/**
 	 * Returns the source path for the type with the specified name,
 	 * or null if there is no mapping.
-	 */
+     * @param type
+     */
 	public String getSourceByType(String type)
 	{
 		return (String)typeToSource.get(type);
@@ -121,7 +122,8 @@ public class TypeLocations
 	/**
 	 * Returns the name of the assembly that the class 
 	 * with the specified name will compiled to (or is in?)
-	 */
+     * @param typeName
+     */
 	public String getAssemblyByType(String typeName)
 	{
 		String result = (String)typeToAssembly.get(typeName);

@@ -24,6 +24,7 @@ public class FilterElementNode extends Node
 
 	/**
 	 * @param inGraph
+     * @param inElement
 	 */
 	public FilterElementNode(Graph inGraph, FilterElement inElement)
 	{

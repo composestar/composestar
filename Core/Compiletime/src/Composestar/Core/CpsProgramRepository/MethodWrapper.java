@@ -30,6 +30,8 @@ public class MethodWrapper implements SerializableRepositoryEntity
     
     /**
      * @roseuid 404C4B670107
+     * @param methodInfo
+     * @param relationType
      */
     public MethodWrapper(int relationType, MethodInfo methodInfo) 
     {

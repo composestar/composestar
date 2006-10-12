@@ -71,6 +71,7 @@ public class ClassModifier extends TransformerBase
 	/**
 	 * Checks if a method should be kept or if it should be removed.
 	 * @return true keep, false remove
+     * @param name
 	 */
 	private boolean keepMethod(String name) throws ModifierException
 	{
@@ -85,7 +86,8 @@ public class ClassModifier extends TransformerBase
 
 	/**
 	 * Parses input lines and transforms this into concrete method information.
-	 */
+     * @param line
+     */
 	private String fetchMethodInfo(String line) throws ModifierException
 	{
 		String plines = line.trim();

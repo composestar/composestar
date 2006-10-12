@@ -90,7 +90,8 @@ public class CallToOtherMethod implements SerializableRepositoryEntity {
 
     /**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		OperationName = in.readUTF();
@@ -100,7 +101,8 @@ public class CallToOtherMethod implements SerializableRepositoryEntity {
 	
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(OperationName);

@@ -191,6 +191,7 @@ public class ReifiedMessage implements ChildRunnable
 	/**
 	 * @param s
 	 * @roseuid 40EA9F8100C0
+     * @param obj
 	 */
 	public void setTarget(Object obj) 
 	{

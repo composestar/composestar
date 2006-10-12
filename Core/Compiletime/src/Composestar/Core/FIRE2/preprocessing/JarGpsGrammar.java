@@ -152,7 +152,8 @@ public class JarGpsGrammar extends GpsGrammar {
     
     
     private class InnerLoader extends UntypedGxl{
-        /** This implementation returns a <tt>{@link groove.gui.layout.LayedOutGraph}</tt> */
+        /** This implementation returns a <tt>{@link groove.gui.layout.LayedOutGraph}</tt>
+         * @param filename*/
         public Graph unmarshal( String filename )throws XmlException, FileNotFoundException{
             groove.gxl.Graph gxlGraph = unmarshalGxlGraph(filename);
             Graph attrGraph = gxlToAttrGraph(gxlGraph, null);

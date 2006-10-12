@@ -609,7 +609,10 @@ public class DotNETLanguageModel extends LanguageModel
    * is created and added to 'dict' (e.g. 'com.myproject.gui' is created and added as child of 'com.myproject').
    * Then the next part is added as a child of that one, etc.
    * 
-   * Be careful you really understand what's happening before you change this thing (which should not be needed anyway ;)  
+   * Be careful you really understand what's happening before you change this thing (which should not be needed anyway ;)
+   * @param rootNS
+   * @param dict
+   * @param namespace
    */
   public LangNamespace findOrAddNamespace(UnitDictionary dict, LangNamespace rootNS, String namespace)
   {

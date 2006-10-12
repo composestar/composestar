@@ -233,8 +233,7 @@ public class CpsConcern extends Concern
 		}
 	}
 
-	public Object clone ()
-	{
+	public Object clone () throws CloneNotSupportedException {
 		CpsConcern newObject;
 		try
 		{

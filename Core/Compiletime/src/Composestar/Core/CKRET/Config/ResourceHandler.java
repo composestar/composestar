@@ -24,6 +24,7 @@ public class ResourceHandler extends DefaultHandler {
      * @param parser
      * @param sr
      * @roseuid 405026C5011E
+     * @param repository
      */
     public ResourceHandler(ConfigParser handler, XMLReader parser, Repository repository) {
 		this.returnhandler = handler;

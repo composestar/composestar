@@ -20,6 +20,7 @@ public class ConfigParser extends DefaultHandler {
      * @param filename
      * @param sr
      * @roseuid 405026C60063
+     * @param repository
      */
     public void parse(String filename, Repository repository) {
     	try

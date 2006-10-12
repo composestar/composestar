@@ -86,7 +86,9 @@ public class RealSourceManager implements CTCommonModule
 
 	/**
 	 * Returns the name of the sourcefile in which the specified executable type is defined.
-	 */
+     * @param project
+     * @param exec
+     */
 	private String getExeFile(Project project, String exec) throws ModuleException
 	{
 		Iterator tsIt = project.getTypeSources().iterator();

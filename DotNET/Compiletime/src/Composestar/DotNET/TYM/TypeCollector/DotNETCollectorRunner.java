@@ -152,6 +152,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
      * Find all concerns harvested from unmodified assemblies
      * Add those concerns to the DataStore and TypeMap,
      * and register all program elements
+     * @param resources
      */
     public void copyOperation(CommonResources resources)
     {

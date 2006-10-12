@@ -24,8 +24,7 @@ public class PrimitiveConcern extends Concern
 		super();
 	}
 
-	public Object clone ()
-	{
+	public Object clone () throws CloneNotSupportedException {
 		PrimitiveConcern newObject;
 		try
 		{

@@ -30,7 +30,8 @@ public class ExternalNotFoundException extends ComposestarRuntimeException
 
 	/**
 	 * Constructor with underlying cause.
-	 */
+     * @param cause
+     */
 	public ExternalNotFoundException(ExternalNotFoundException cause)
 	{
 		super(cause.getMessage(),cause);

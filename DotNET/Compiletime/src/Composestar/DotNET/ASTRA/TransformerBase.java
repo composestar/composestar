@@ -31,7 +31,8 @@ abstract class TransformerBase
 
 	/**
 	 * Sets the buffer to use as input for the transformation.
-	 */
+     * @param in
+     */
 	protected void setIn(BufferedReader in)
 	{
 		this.in = in;
@@ -39,7 +40,8 @@ abstract class TransformerBase
 
 	/**
 	 * Opens a file to write to.
-	 */
+     * @param fileName
+     */
 	protected void openOut(String fileName) throws ModifierException
 	{
 		try
@@ -115,7 +117,8 @@ abstract class TransformerBase
 
 	/**
 	 * Outputs or discards a whole section from { to } including inner levels.
-	 */
+     * @param eat
+     */
 	public void transformSection(boolean eat) throws ModifierException
 	{
 	//	if (!line.matches("^\\s*\\{"))
@@ -139,7 +142,8 @@ abstract class TransformerBase
 
 	/**
 	 * Writes the specified string to the output stream and terminates the line.
-	 */
+     * @param str
+     */
 	public void write(String str) throws ModifierException
 	{
 		try
@@ -155,7 +159,8 @@ abstract class TransformerBase
 
 	/**
 	 * Writes the specified string to the output stream.
-	 */
+     * @param str
+     */
 	public void writenn(String str) throws ModifierException
 	{
 		try

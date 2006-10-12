@@ -108,7 +108,8 @@ public abstract class ParameterInfo extends ProgramElement
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		Name = in.readUTF();
@@ -118,7 +119,8 @@ public abstract class ParameterInfo extends ProgramElement
 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(Name);

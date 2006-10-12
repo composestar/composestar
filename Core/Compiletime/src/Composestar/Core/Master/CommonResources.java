@@ -82,6 +82,7 @@ public class CommonResources implements Serializable
 	 * Returns the resource with the specified key as a boolean.
 	 * @throws RuntimeException if there is no resource with the specified name,
 	 *         or if it is not a Boolean.
+     * @param key
 	 */
 	public boolean getBoolean(String key)
 	{

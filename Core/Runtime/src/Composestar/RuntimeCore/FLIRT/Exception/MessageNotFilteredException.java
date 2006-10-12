@@ -35,6 +35,7 @@ public class MessageNotFilteredException extends FilterModuleException
 	 * @inheritDoc
 	 * @param caption
 	 * @roseuid 3F3652A1026D
+     * @param message
 	 */
 	public MessageNotFilteredException(String message)
 	{
@@ -43,7 +44,8 @@ public class MessageNotFilteredException extends FilterModuleException
 
 	/**
 	 * Constructor with underlying cause.
-	 */
+     * @param cause
+     */
 	public MessageNotFilteredException(MessageNotFilteredException cause)
 	{
 		super(cause.getMessage(),cause);

@@ -38,6 +38,8 @@ public abstract class FilterTypeRuntime
      * @param context
      * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
      * @roseuid 40DFE5A50309
+     * @param originalMessage
+     * @param modifiedMessage
      */
     public abstract ComposeStarAction acceptAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context);
     
@@ -46,6 +48,8 @@ public abstract class FilterTypeRuntime
      * @param context
      * @return Composestar.Runtime.FLIRT.actions.ComposeStarAction
      * @roseuid 40DFE5A80399
+     * @param modifiedMessage
+     * @param originalMessage
      */
     public abstract ComposeStarAction rejectAction(MessageList originalMessage, MessageList modifiedMessage, Dictionary context);
     

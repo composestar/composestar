@@ -169,7 +169,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		 return map;
 	*/
 		 // the code above is wrong, so throw an exception instead
-		 throw new UnsupportedOperationException();
+		 throw new CloneNotSupportedException();
 	 }
 
 	 /**

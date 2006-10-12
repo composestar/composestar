@@ -57,6 +57,7 @@ public class Configuration implements Serializable
 
 	/**
 	 * @deprecated Use getPlatformName() and getBuildDebugLevel().
+     * @param key
 	 */
 	public String getProperty(String key)
 	{

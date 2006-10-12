@@ -24,7 +24,8 @@ public class FileUtils
 
 	/**
 	 * Adds double quotes around the specified filename.
-	 */
+     * @param filename
+     */
 	public static String quote(String filename)
 	{
 		if (filename == null)
@@ -35,7 +36,8 @@ public class FileUtils
 	
 	/**
 	 * Removes double quotes around the specified filename.
-	 */
+     * @param filename
+     */
 	public static String unquote(String filename)
 	{
 		if (filename == null)
@@ -78,7 +80,8 @@ public class FileUtils
 
 	/**
 	 * Returns true if the specified filename refers to an existing file.
-	 */
+     * @param filename
+     */
 	public static boolean fileExist(String filename)
 	{
 		return new File(filename).exists();
@@ -86,7 +89,8 @@ public class FileUtils
 	
 	/**
 	 * Returns true if the file specified by the filename was succesfully deleted.
-	 */
+     * @param filename
+     */
 	public static boolean delete(String filename)
 	{
 		return new File(filename).delete();
@@ -183,9 +187,10 @@ public class FileUtils
 	 * Get a file stream for the SAX parser whitout the Root element could not
 	 * be found exception. This is caused by a BOM character which is skipped by
 	 * this file reader.
-	 */
+     * @param xmlFile
+     */
 	public static FileInputStream getCleanInputStream(File xmlFile)
-		throws FileNotFoundException, IOException
+		throws  IOException
 	{
 		FileInputStream in = new FileInputStream(xmlFile);
 		int bomKount = getBOMCount(xmlFile);
@@ -200,9 +205,10 @@ public class FileUtils
 	/**
 	 * Get count of leading characters that denote the byte order mark, part of
 	 * the unicode standard. These make SaxParser barf
-	 */
+     * @param xmlFile
+     */
 	private static int getBOMCount(File xmlFile) 
-		throws FileNotFoundException, IOException
+		throws  IOException
 	{
 		DataInputStream din = new DataInputStream(new FileInputStream(xmlFile));
 		int bomKount = 0;
@@ -219,7 +225,8 @@ public class FileUtils
 
 	/**
 	 * Closes the specified Reader instance, provided it is not null.
-	 */
+     * @param reader
+     */
 	public static void close(Reader reader)
 	{
 		try {
@@ -234,7 +241,8 @@ public class FileUtils
 
 	/**
 	 * Closes the specified Writer instance, provided it is not null.
-	 */
+     * @param writer
+     */
 	public static void close(Writer writer)
 	{
 		try {
@@ -249,7 +257,8 @@ public class FileUtils
 	
 	/**
 	 * Closes the specified InputStream instance, provided it is not null.
-	 */
+     * @param is
+     */
 	public static void close(InputStream is)
 	{
 		try {
@@ -264,7 +273,8 @@ public class FileUtils
 
 	/**
 	 * Closes the specified OutputStream instance, provided it is not null.
-	 */
+     * @param os
+     */
 	public static void close(OutputStream os)
 	{
 		try {

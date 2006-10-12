@@ -22,6 +22,7 @@ public class MatchingPatternNode extends Node
 
 	/**
 	 * @param inGraph
+     * @param inPattern
 	 */
 	public MatchingPatternNode(Graph inGraph, MatchingPattern inPattern)
 	{

@@ -710,7 +710,8 @@ public class DotNETType extends Type {
 			return "class [" + this.assemblyName() + "]"+ fullName + arrayPart; 
     }
     
-    /** Stuff for LOLA **/
+    /** Stuff for LOLA
+     * @param c**/
     
     private HashSet toHashSet(Collection c)
     {
@@ -860,37 +861,43 @@ public class DotNETType extends Type {
       return null; // Should never happen!
     }
     
-    /*** Extra method for storing the parent namespace; called by DotNETLanguageModel::completeModel() **/
+    /*** Extra method for storing the parent namespace; called by DotNETLanguageModel::completeModel()
+     * @param parentNS**/
     public void setParentNamespace(ProgramElement parentNS)
     {
       this.parentNS = parentNS;
     }
     
-    /*** Extra method for adding links to child types of this type */
+    /*** Extra method for adding links to child types of this type
+     * @param childType*/
     public void addChildType(ProgramElement childType)
     {
 	    this.childTypes.add(childType);
 	}
 
-    /*** Extra method for adding links to parameters of this type */
+    /*** Extra method for adding links to parameters of this type
+     * @param paramType*/
     public void addParameterType(ProgramElement paramType)
     {
       this.parameterTypes.add(paramType);
     }
 
-    /*** Extra method for adding links to methods that return this type */
+    /*** Extra method for adding links to methods that return this type
+     * @param returnType*/
     public void addMethodReturnType(ProgramElement returnType)
     {
       this.methodReturnTypes.add(returnType);
     }
 
-    /*** Extra method for adding links to methods that return this type */
+    /*** Extra method for adding links to methods that return this type
+     * @param fieldType*/
     public void addFieldType(ProgramElement fieldType)
     {
       this.fieldTypes.add(fieldType);
     }
 
-    /*** Extra method for adding links to classes that implement this interface */
+    /*** Extra method for adding links to classes that implement this interface
+     * @param aClass*/
     public void addImplementedBy(ProgramElement aClass)
     {
       implementedBy.add(aClass);
@@ -976,7 +983,8 @@ public class DotNETType extends Type {
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		HashCode = in.readInt();
@@ -1019,7 +1027,8 @@ public class DotNETType extends Type {
 	 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);

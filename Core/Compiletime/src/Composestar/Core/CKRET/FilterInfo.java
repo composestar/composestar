@@ -31,6 +31,7 @@ public class FilterInfo {
     
     /**
      * @roseuid 40D8440101EB
+     * @param filter
      */
     public FilterInfo(Filter filter) {
      	this.run(filter);
@@ -89,6 +90,7 @@ public class FilterInfo {
     /**
      * @param matchingpart
      * @roseuid 40D841C001A5
+     * @param matchingparts
      */
     public void collectMacthingSpecification(Vector matchingparts) {
     	Iterator mpi = new CPSIterator( matchingparts );
@@ -110,6 +112,7 @@ public class FilterInfo {
     /**
      * @param subspart
      * @roseuid 40D843320234
+     * @param subsparts
      */
     public void collectSubstitutionSpecification(Vector subsparts) {
     	if(subsparts.isEmpty() )

@@ -26,7 +26,7 @@ public class DebuggerFactory {
 		return debugger;
     }
 
-	private final static void instantiateDebugger()
+	private static void instantiateDebugger()
 	{
 		synchronized(DEBUGGER_CONFIG_FILE)
 		{

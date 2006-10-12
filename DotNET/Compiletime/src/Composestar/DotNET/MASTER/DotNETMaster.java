@@ -50,7 +50,8 @@ public class DotNETMaster extends Master
 
 	/**
 	 * Default ctor.
-	 */
+     * @param configurationFile
+     */
 	public DotNETMaster(String configurationFile) throws ModuleException
 	{
 		configfile = configurationFile;
@@ -200,7 +201,8 @@ public class DotNETMaster extends Master
 	 * Compose* main function.
 	 * Creates the Master object. Adds the desired modules and then calls run on each
 	 * of them in the order that they where added.
-	 */
+     * @param args
+     */
 	public static void main(String[] args) 
 	{
 		if (args.length == 0) {

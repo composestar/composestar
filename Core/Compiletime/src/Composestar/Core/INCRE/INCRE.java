@@ -391,6 +391,7 @@ public class INCRE implements CTCommonModule
     * Searches the history repository for the specified object. 
 	* Return null if object can't be found.
     * Uses getQualifiedName to compare objects
+    * @param obj
     */
    public Object findHistoryObject(Object obj) 
    {
@@ -452,6 +453,7 @@ public class INCRE implements CTCommonModule
     * Compares timestamp of file with last compilation time
     * @return boolean
     * @roseuid 42109419032C
+    * @param file
     */
 	public boolean isFileModified(File file) 
 	{
@@ -471,6 +473,8 @@ public class INCRE implements CTCommonModule
 	  * Checks whether a file has been added to the project since last compilation
 	  * returns false when file has been found in previous project configurations
 	  * @return boolean
+     * @param fdep
+     * @param filename
 	  */
 	public boolean isFileAdded(String filename,FileDependency fdep) throws ModuleException
 	{
@@ -551,6 +555,7 @@ public class INCRE implements CTCommonModule
 	}
    /**
     * @return true when module is incremental
+    * @param name
     */
 	public boolean isModuleInc(String name)
 	{
@@ -626,6 +631,7 @@ public class INCRE implements CTCommonModule
 	 * Returns true if concern is possible declared in a sourcefile
 	 * @param c - The concern possible declared in sourcefile
 	 * @param src - Fullpath of sourcefile
+     * @param source
 	 */
 	public boolean declaredInSource(Concern c,String source){
 		
@@ -690,6 +696,8 @@ public class INCRE implements CTCommonModule
 	 * 7. stop if modification found
 	 * 
 	 * @roseuid 41F4E50900CB
+     * @param modulename
+     * @param input
 	 */
 	public boolean isProcessedByModule(Object input, String modulename) throws ModuleException  
 	{
@@ -839,7 +847,8 @@ public class INCRE implements CTCommonModule
 
 	/**
 	 * Loads the history repository specified by the filename. Uses objectinputstream.
-	 */
+     * @param filename
+     */
 	public boolean loadHistory(String filename) throws ModuleException
 	{
 		try 

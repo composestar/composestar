@@ -21,6 +21,7 @@ public class SubstitutionEdge extends Edge
 
 	/**
 	 * @param inDestination
+     * @param inSubstitutionPart
 	 */
 	public SubstitutionEdge(Node inDestination, SubstitutionPart inSubstitutionPart)
 	{

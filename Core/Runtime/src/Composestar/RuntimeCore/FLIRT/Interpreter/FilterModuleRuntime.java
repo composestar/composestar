@@ -176,6 +176,7 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
     /**
      * @param condition
      * @roseuid 4116A59D00C7
+     * @param reference
      */
     public void addCondition(String condition, String reference) {
 		this.conditions.put(condition,reference); 
@@ -362,8 +363,7 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 		return (String)this.conditions.get(name);     
 	}
 
-	public Object clone()
-	{
+	public Object clone() throws CloneNotSupportedException {
 		return new FilterModuleRuntime(this);
 	}
 

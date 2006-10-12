@@ -23,6 +23,7 @@ public class ConditionalEdge extends Edge
 
 	/**
 	 * @param inDestination
+     * @param inExpression
 	 */
 	public ConditionalEdge(Node inDestination, ConditionExpression inExpression)
 	{

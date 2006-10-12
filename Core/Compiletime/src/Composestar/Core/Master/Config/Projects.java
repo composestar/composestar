@@ -66,6 +66,8 @@ public class Projects implements Serializable
 	
 	/**
 	 * @deprecated Use setRunDebugLevel/setOutputPath/setApplicationStart/setExecutable.
+     * @param key
+     * @param value
 	 */
 	public void addProperty(String key, String value)
 	{
@@ -74,6 +76,7 @@ public class Projects implements Serializable
 
 	/**
 	 * @deprecated Use getRunDebugLevel/getOutputPath/getApplicationStart/getExecutable.
+     * @param key
 	 */
 	public String getProperty(String key)
 	{
@@ -173,7 +176,8 @@ public class Projects implements Serializable
 	 * Returns the source instance for the specified filename. TODO: this can be
 	 * implemented a lot more efficiently by using a map from filename to
 	 * source.
-	 */
+     * @param fileName
+     */
 	public Source getSource(String fileName)
 	{
 		if (fileName == null)

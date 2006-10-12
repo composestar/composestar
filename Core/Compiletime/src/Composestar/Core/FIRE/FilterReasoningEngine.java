@@ -35,7 +35,8 @@ public class FilterReasoningEngine
 
 	/** 
 	 * ctor, read the filtersets from the format specified by the ANTLR syntax.
-	 */
+     * @param input
+     */
 	public FilterReasoningEngine(java.io.InputStream input)
 	{
 		treeBuilder = new AntlrStdIn(input);
@@ -43,7 +44,8 @@ public class FilterReasoningEngine
 
 	/**
 	 * ctor, read the filtersets from the repository.
-	 */
+     * @param list
+     */
 	public FilterReasoningEngine(LinkedList list)
 	{	
 		treeBuilder = new RepositoryPtrList(list);
@@ -86,7 +88,8 @@ public class FilterReasoningEngine
 	
 	/**
 	 * Return all paths to a specific node
-	 */
+     * @param toNode
+     */
 	public LinkedList getPaths (Node toNode)
 	{
 		Node tree = getTree();

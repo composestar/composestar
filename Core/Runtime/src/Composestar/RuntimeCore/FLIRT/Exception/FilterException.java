@@ -31,6 +31,7 @@ public class FilterException extends FilterModuleException
 	 * Constructs a Filter Exception with an accompanying message
 	 * @param caption the message that goes with the exception
 	 * @roseuid 3F36529F026A
+     * @param message
 	 */
 	public FilterException(String message)
 	{

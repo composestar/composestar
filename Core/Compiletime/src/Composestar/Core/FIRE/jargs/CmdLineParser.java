@@ -111,6 +111,8 @@ public class CmdLineParser {
         /**
          * Override to extract and convert an option value passed on the
          * command-line
+         * @param locale
+         * @param arg
          */
         protected Object parseValue( String arg, Locale locale )
             throws IllegalOptionValueException {
@@ -180,6 +182,7 @@ public class CmdLineParser {
 
     /**
      * Add the specified Option to the list of accepted options
+     * @param opt
      */
     public final Option addOption( Option opt ) {
         this.options.put('-' + opt.shortForm(), opt);
@@ -190,6 +193,8 @@ public class CmdLineParser {
     /**
      * Convenience method for adding a string option.
      * @return the new Option
+     * @param shortForm
+     * @param longForm
      */
     public final Option addStringOption( char shortForm, String longForm ) {
         Option opt = new Option.StringOption(shortForm, longForm);
@@ -200,6 +205,8 @@ public class CmdLineParser {
     /**
      * Convenience method for adding an integer option.
      * @return the new Option
+     * @param shortForm
+     * @param longForm
      */
     public final Option addIntegerOption( char shortForm, String longForm ) {
         Option opt = new Option.IntegerOption(shortForm, longForm);
@@ -210,6 +217,8 @@ public class CmdLineParser {
     /**
      * Convenience method for adding a double option.
      * @return the new Option
+     * @param shortForm
+     * @param longForm
      */
     public final Option addDoubleOption( char shortForm, String longForm ) {
         Option opt = new Option.DoubleOption(shortForm, longForm);
@@ -220,6 +229,8 @@ public class CmdLineParser {
     /**
      * Convenience method for adding a boolean option.
      * @return the new Option
+     * @param shortForm
+     * @param longForm
      */
     public final Option addBooleanOption( char shortForm, String longForm ) {
         Option opt = new Option.BooleanOption(shortForm, longForm);
@@ -230,6 +241,7 @@ public class CmdLineParser {
     /**
      * @return the parsed value of the given Option, or null if the
      * option was not set
+     * @param o
      */
     public final Object getOptionValue( Option o ) {
         return values.get(o.longForm());
@@ -246,6 +258,7 @@ public class CmdLineParser {
      * Extract the options and non-option arguments from the given
      * list of command-line arguments. The default locale is used for
      * parsing options whose values might be locale-specific.
+     * @param argv
      */
     public final void parse( String[] argv )
         throws IllegalOptionValueException, UnknownOptionException {
@@ -256,6 +269,8 @@ public class CmdLineParser {
      * Extract the options and non-option arguments from the given
      * list of command-line arguments. The specified locale is used for
      * parsing options whose values might be locale-specific.
+     * @param argv
+     * @param locale
      */
     public final void parse( String[] argv, Locale locale )
         throws IllegalOptionValueException, UnknownOptionException {

@@ -43,6 +43,7 @@ public class MetaAction extends ComposeStarAction {
      * message
      * @param  accepted     says if the message was accepted or not.
      * @roseuid 40EAA5BD0265
+     * @param m
      */
     public MetaAction(MessageList m, ReifiedMessage rm, Object act, String actSelector, boolean accepted) 
 	{

@@ -22,6 +22,7 @@ public class FilterActionDescription {
     
     
     /**
+     * @param filtertype
      */
     public FilterActionDescription(String filtertype) {
      	this.filtertype = filtertype;
@@ -30,6 +31,7 @@ public class FilterActionDescription {
     /**
      * Gets the name of the action.
      * @return String The name of the action
+     * @param accept
      */
     public String getAction(boolean accept) {
      	return (accept? this.acceptAction: this.rejectAction);     
@@ -39,6 +41,7 @@ public class FilterActionDescription {
      * Sets the name of this action.
      * @param name String The name to be set
      * @param action
+     * @param accept
      */
     public void setAction(String action, boolean accept) {
     	if( accept )

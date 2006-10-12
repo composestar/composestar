@@ -183,7 +183,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
     /**
      * @ return boolean
      * Checks whether a parameter does already exists.
-     * Fixme: no difference yet between ?foo and ??foo 
+     * Fixme: no difference yet between ?foo and ??foo
+     * @param fmp
      */
     public boolean doesParameterExists(FilterModuleParameter fmp){
   	  boolean exist = false;
@@ -200,6 +201,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
      * Adds a parameter to a filtermodule.
      * pre requirment is to call boolean doesParameterExists(FilterModuleParameter fmp)
      * please note that this construction is different to the other boolean addWhatever
+     * @param fmp
      */
     public void addParameter(FilterModuleParameter fmp){
   	  parameters.add(fmp);
@@ -534,7 +536,8 @@ public class FilterModule extends DeclaredRepositoryEntity {
   /**
    * @ return boolean
    * Checks whether a parameter does already exists.
-   * Fixme: no difference yet between ?foo and ??foo 
+   * Fixme: no difference yet between ?foo and ??foo
+   * @param fmp
    */
   public boolean doesParameterASTExists(FilterModuleParameterAST fmp){
 	  return fm_ast.doesParameterExists(fmp);
@@ -544,6 +547,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    * Adds a parameter to a filtermodule.
    * pre requirment is to call boolean doesParameterExists(FilterModuleParameter fmp)
    * please note that this construction is different to the other boolean addWhatever
+   * @param fmp
    */
   public void addParameterAST(FilterModuleParameterAST fmp){
 	  fm_ast.addParameter(fmp);

@@ -37,6 +37,7 @@ public class Concern extends DeclaredRepositoryEntity
 
 	/**
 	 * @roseuid 40237FFF0300
+     * @param pr
 	 */
 	public void setPlatformRepresentation(PlatformRepresentation pr) {
 		platformRepr = pr;
@@ -44,6 +45,7 @@ public class Concern extends DeclaredRepositoryEntity
 
 	/**
 	 * @roseuid 404C49F80196
+     * @param sig
 	 */
 	public void setSignature(Signature sig) {
 		signature = sig;

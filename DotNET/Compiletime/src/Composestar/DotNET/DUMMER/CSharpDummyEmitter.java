@@ -70,7 +70,9 @@ public class CSharpDummyEmitter implements DummyEmitter
 	 * 
 	 * Parse output from CSharpDummyGen, if a line starts with the word 'TypeLocation' the next 2 lines
 	 * will contain the filename (full path) and fully qualified name of a class that is defined in that file.
-	 */
+     * @param lines
+     * @param project
+     */
 	private void createTypeLocationMapping(Project project, List lines)
 	{
 		Iterator it = lines.iterator();

@@ -42,7 +42,10 @@ public abstract class MessageHandlingFacility
 
 	/**
 	 * Instance creation from a nonstatic context
-	 */
+     * @param createdObject
+     * @param args
+     * @param creator
+     */
 	public synchronized static void handleInstanceCreation(Object creator, Object createdObject, Object[] args) 
 	{
 		Message msg = new Message(createdObject.getClass().getName(),args);
@@ -54,7 +57,10 @@ public abstract class MessageHandlingFacility
 	/**
 	 * Instance creation from a static context
 	 *  WARNING THIS METHOD IS NONENDING RECURSIVE
-	 */
+     * @param args
+     * @param createdObject
+     * @param staticcontext
+     */
 	public synchronized static void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args) 
 	{
 		handleInstanceCreation(createdObject.getClass(), createdObject, args);
@@ -216,6 +222,7 @@ public abstract class MessageHandlingFacility
 	 * @param target The object to which the call is made
 	 * @param selector The call
 	 * @param args The arguments of the call
+     * @param caller
 	 */
 	public static Object handleReturnMethodCall(Object caller, Object target, String selector, Object[] args) 
 	{
@@ -277,6 +284,7 @@ public abstract class MessageHandlingFacility
 	 * @param target The object to which the call is made
 	 * @param selector The call
 	 * @param args The arguments of the call
+     * @param caller
 	 */
 	public static void handleVoidMethodCall(Object caller, Object target, String selector, Object[] args) 
 	{
@@ -431,6 +439,7 @@ public abstract class MessageHandlingFacility
 	 * @param target The object to which the call is made
 	 * @param selector The call
 	 * @param args The arguments of the call
+     * @param caller
 	 */
 	public static Object handleReturnMethodCall(Object caller, String target, String selector, Object[] args) 
 	{
@@ -450,6 +459,7 @@ public abstract class MessageHandlingFacility
 	 * @param target The object to which the call is made
 	 * @param selector The call
 	 * @param args The arguments of the call
+     * @param caller
 	 */
 	public static void handleVoidMethodCall(Object caller, String target, String selector, Object[] args) 
 	{
@@ -528,6 +538,7 @@ public abstract class MessageHandlingFacility
 	 * @param filename String The location of the xml file
 	 * @param debug int The debug level
 	 * $param debugInterface boolean Turn on the debugger interface
+     * @param provider
 	 */
 	public synchronized static void handleApplicationStart(String filename, int debug, PlatformProvider provider)
 	{
