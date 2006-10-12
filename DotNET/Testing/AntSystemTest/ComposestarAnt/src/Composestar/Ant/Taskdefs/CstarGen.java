@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.XSLTProcess;
-import org.apache.tools.ant.taskdefs.XSLTProcess.Param;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -57,16 +63,26 @@ public class CstarGen extends Task
 
 	public void execute() throws BuildException
 	{
-		getProject().log("Generating Compose* buildfiles", Project.MSG_INFO);
+		log("Generating Compose* buildfiles", Project.MSG_INFO);
 		
-		List inputs = collectInputs();		
-		Iterator it = inputs.iterator();		
-		while (it.hasNext())
+		Transformer t = createTransformer();
+		List inputs = collectInputs();
+		
+		transform(t, inputs);
+	}
+	
+	private Transformer createTransformer()
+	{
+		try
 		{
-			File input = (File)it.next();
-			File output = new File(input.getParentFile(), BUILD_CONFIGURATION_XML);
-			
-			transform(input, output);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer t = tf.newTransformer(new StreamSource(m_xslt));
+			t.setParameter("composestarpath", m_composestarBase);
+			return t;
+		}
+		catch (TransformerException e)
+		{
+			throw new BuildException(e.toString(), e);
 		}
 	}
 	
@@ -91,28 +107,33 @@ public class CstarGen extends Task
 		return result;
 	}
 	
-	private void transform(File in, File out)
+	private void transform(Transformer t, List inputs)
+	{
+		Iterator it = inputs.iterator();		
+		while (it.hasNext())
+		{
+			File input = (File)it.next();
+			File output = new File(input.getParentFile(), BUILD_CONFIGURATION_XML);
+			
+			transform(t, input, output);
+		}
+	}
+	
+	private void transform(Transformer t, File in, File out)
 	{
 		Composestar.Ant.XsltUtils.setCurrentDirectory(in.getParent());
-		
-		XSLTProcess xslt = (XSLTProcess)getProject().createTask("xslt");
-		xslt.init();
-		xslt.setIn(in);
-		xslt.setOut(out);
-		xslt.setStyle(m_xslt);
-		
-		Param param = xslt.createParam();
-		param.setName("basepath");
-		param.setExpression(in.getParent() + File.separator);
-		
-		param = xslt.createParam();
-		param.setName("composestarpath");
-		param.setExpression(m_composestarBase);
-	/*
-		param = xslt.createParam();
-		param.setName("INCREconfig");
-		param.setExpression("INCREconfig2.xml");
-	*/
-		xslt.execute();
+		t.setParameter("basepath", in.getParent() + "/");
+				
+		try
+		{
+			Source xmlSource = new StreamSource(in);
+			Result result = new StreamResult(out);
+			
+			t.transform(xmlSource, result);
+		}
+		catch (TransformerException e)
+		{
+			throw new BuildException(e.toString(), e);
+		}
 	}
 }

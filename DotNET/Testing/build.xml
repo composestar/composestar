@@ -47,7 +47,7 @@
 	<target name="test_gbc" depends="init">
 		<cstarGen composestarBase="${composestar.installdir}"
 		          antHelperPath="${build.core}/Development"		          
-		          xslt="AntSystemTest/genBuildConfig.xslt">
+		          xslt="${basedir}/AntSystemTest/genBuildConfig.xslt">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.vjsproj" />
 				<include name="**/*.csproj" />
@@ -57,6 +57,11 @@
 				<exclude name="Jukebox/jukeboxframe/*" />
 				<exclude name="Rot13/Rot13Filter/*" />
 			</FileSet>
+			<!--
+			<Module name="INCRE">
+				<Setting key="config" value="INCREconfig.xml"/>
+			</Module>
+			-->
 		</cstarGen>
 	</target>
 	

@@ -130,7 +130,7 @@ public class CstarVsp extends Task
 			"; failed: " + cntFail + 
 			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%";
 		
-		getProject().log(msg, Project.MSG_INFO);
+		log(msg, Project.MSG_INFO);
 		
 		if (failOnError && (cntFail > 0))
 		{
@@ -161,7 +161,7 @@ public class CstarVsp extends Task
 		cntTotal++;
 		
 		File projectDir = buildXML.getParentFile();
-		getProject().log("Building Compose* project in " + projectDir, Project.MSG_INFO);
+		log("Building Compose* project in " + projectDir, Project.MSG_INFO);
 
 		try
 		{
@@ -198,7 +198,7 @@ public class CstarVsp extends Task
 			}
 			else
 			{
-				getProject().log("Compilation of project in " + projectDir + " failed; " + e.getMessage(), Project.MSG_ERR);
+				log("Compilation of project in " + projectDir + " failed; " + e.getMessage(), Project.MSG_ERR);
 				failList.add(projectDir);
 			}
 		}
