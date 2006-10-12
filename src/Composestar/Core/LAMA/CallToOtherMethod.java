@@ -18,7 +18,15 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public class CallToOtherMethod implements SerializableRepositoryEntity {
 
+	/**
+	 * The fully qualified name
+	 */
 	public String OperationName;
+	
+	/**
+	 * The name of the method
+	 */
+	public String methodName;
     public MethodInfo calledMethod;
 	public String ClassName;       
 	public Type Parent;
@@ -87,8 +95,26 @@ public class CallToOtherMethod implements SerializableRepositoryEntity {
     {
         Parent = parent;
     }
+    
+    
 
     /**
+	 * @return the methodName
+	 */
+	public String getMethodName()
+	{
+		return methodName;
+	}
+
+	/**
+	 * @param methodName the methodName to set
+	 */
+	public void setMethodName(String methodName)
+	{
+		this.methodName = methodName;
+	}
+
+	/**
 	 * Custom deserialization of this object
 	 */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException

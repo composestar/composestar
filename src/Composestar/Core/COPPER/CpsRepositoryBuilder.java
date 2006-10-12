@@ -1102,7 +1102,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     of.setDescriptionLineNumber(lineNumber);
 	  of.setDescriptionFileName(filename);
     of.setParent(fm);
-    of.setTypeImplementation(addConcernReference(type));
+//    of.setTypeImplementation(addConcernReference(type)); //turned of because a filtertype is not a concern anymore
     addFilterType((String) type.lastElement(),lineNumber);
     if (fm.addOutputFilter(of))
     	this.addToRepository(of);
