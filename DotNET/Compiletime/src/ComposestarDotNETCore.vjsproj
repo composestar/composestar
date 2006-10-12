@@ -60,7 +60,7 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.java"
+                    RelPath = "../../Runtime/src/AssemblyInfos/COREDOTNET/AssemblyInfo.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
