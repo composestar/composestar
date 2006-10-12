@@ -383,7 +383,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			if (sourceFile == null)
 				throw new RuntimeException("sourceFile for " + typeName + " is null");
 			
-			Source source = (Source)projects.getSource(sourceFile);
+			Source source = projects.getSource(sourceFile);
 			if (source == null)
 				throw new RuntimeException("Source for " + typeName + " is null");
 			

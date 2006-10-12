@@ -69,8 +69,7 @@ public class INCREConfigurations {
 		Iterator dumIt = dummies.iterator();
 		while (dumIt.hasNext()) 
 		{
-			String name = (String)dumIt.next();
-			dummyStr += name;
+			dummyStr += dumIt.next();
 			if (dumIt.hasNext()) dummyStr += ",";
         }
 		props.put("HarvesterInput", depstr + "," + dummyStr);

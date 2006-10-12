@@ -42,7 +42,7 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 	{
 		if("SemanticContainer".equals(raw_name))
 		{
-			if (amap.getValue("name").equals(SemanticContainerName) == false)
+			if (!amap.getValue("name").equals(SemanticContainerName))
 			{
 				// New semantic container, save the previous one
 				AddSemTexInfo();
@@ -51,7 +51,7 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 		}
 		else if("SemanticClass".equals(raw_name))
 		{
-			if (amap.getValue("name").equals(SemanticClassName) == false)
+			if (!amap.getValue("name").equals(SemanticClassName))
 			{
 				// New semantic class, save the previous one
 				AddSemTexInfo();
@@ -60,7 +60,7 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 		}
 		else if("SemanticMethod".equals(raw_name))
 		{
-			if (amap.getValue("name").equals(SemanticMethodName) == false)
+			if (!amap.getValue("name").equals(SemanticMethodName))
 			{
 				// New semantic method, save the previous one
 				AddSemTexInfo();

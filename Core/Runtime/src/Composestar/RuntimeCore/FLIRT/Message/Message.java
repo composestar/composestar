@@ -267,7 +267,7 @@ public class Message
      */
     public String getFilterParameter(String messageElement) {
 		if( messageList != null )
-			return (String) messageList.getFilterParameter( messageElement );
+			return messageList.getFilterParameter( messageElement );
 		else
 			return (String) filterParams.get(messageElement);     
     }

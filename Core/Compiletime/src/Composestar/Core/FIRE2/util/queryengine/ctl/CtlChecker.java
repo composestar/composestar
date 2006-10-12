@@ -213,13 +213,10 @@ public class CtlChecker {
                     (ExecutionState) enumer.nextElement();
 
                 //check whether current state doesn't satisfy the subformula
-                if ( !isSatisfied( state, formula.subFormula, (Boolean) arg ) )
+                if (isSatisfied( state, formula.subFormula, (Boolean) arg ))
                 {
-                    continue;
-                }
-                //else check whether at least one next state satisfies the formula
+                //check whether at least one next state satisfies the formula
                 //(due to backward traversal this state is already checked):
-                else{
                     Enumeration nextStates = getNextStates( state, (Boolean) arg );
                     
                     //if it hasn't any next states, this is an end state, so this

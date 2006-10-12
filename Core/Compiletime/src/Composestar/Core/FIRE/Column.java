@@ -78,7 +78,7 @@ public class Column implements Cloneable
 		length += array.length - 1;
 
 		boolean [] col = new boolean[array.length - 1];
-		for (int i = 1; i < array.length; i++) col[i - 1] = array[i];
+        System.arraycopy(array, 1, col, 0, array.length);
 		colList.add(col);
 
 		setValue(overrideRow, array[0]);

@@ -384,7 +384,7 @@ public class MessageList
 		String ret = "MessageList containing "+messages.size()+" Messages:";
 		for( int i = 0; i<messages.size(); i++ ) 
 		{
-			ret += "\n" + ((Message)messages.get(i)).toString();
+			ret += "\n" + messages.get(i).toString();
 		}
 		return ret;
 	}

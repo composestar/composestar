@@ -1,4 +1,4 @@
-package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL;
+package Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl;
 
 import Composestar.RuntimeCore.CODER.Halter;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;

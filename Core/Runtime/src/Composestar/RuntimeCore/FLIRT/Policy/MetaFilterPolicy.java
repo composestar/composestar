@@ -63,7 +63,7 @@ class MetaFilterPolicy extends FilterPolicy
 			Debugger.getInstance().event(Debugger.MESSAGE_PROCESSING_START,null,aMessage, jp);
 			if (Debug.SHOULD_DEBUG) 
 			{
-				Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tEvaluating filter '"+((Filter)f.getReference()).getName()+"' of type '"+((Filter)f.getReference()).getFilterType().getType()+"'...");
+				Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tEvaluating filter '"+((Filter)f.getReference()).getName()+"' of type '"+((Filter)f.getReference()).getFilterType().getClass()+"'...");
 			}
 			// Update the message!
             MessageInfoProxy.updateMessage(originalMessage);

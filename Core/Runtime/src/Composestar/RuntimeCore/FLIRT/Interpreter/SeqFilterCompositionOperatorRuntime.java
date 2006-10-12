@@ -37,8 +37,8 @@ public class SeqFilterCompositionOperatorRuntime extends FilterCompositionOperat
      * @roseuid 40DD96A801D6
      */
     public boolean interpret(MessageList m, Dictionary context) {
-    	FilterRuntime right = super.getRightArgument();
-    	FilterRuntime left = this.previous;
+    	//FilterRuntime right = super.getRightArgument();
+    	//FilterRuntime left = this.previous;
 		
 		// TODO: FIX this how do we determine if we should continue after interpretation of the
     	// first filter! This is dependant on the filtertype but do we want this information here!

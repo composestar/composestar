@@ -97,7 +97,7 @@ public class HTMLReporter implements Reporter
 				for( Iterator conflictIterator = conflicts.iterator(); conflictIterator.hasNext(); )
 				{
 					Conflict conflict = (Conflict)conflictIterator.next();
-					buffer.append("<tr><td>" + conflict.getResource() + "</td><td>" + conflict.getSequence() + "</td><td>" + conflict.getExpr() + "</td><td>" + conflict.getMsg()).append("</td></tr>");
+                    buffer.append("<tr><td>").append(conflict.getResource()).append("</td><td>").append(conflict.getSequence()).append("</td><td>").append(conflict.getExpr()).append("</td><td>").append(conflict.getMsg()).append("</td></tr>");
 				}
 				buffer.append("</table>");
 				buffer.append("</td></tr>");
@@ -116,7 +116,7 @@ public class HTMLReporter implements Reporter
 		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://" + Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/CKRET</i></b></font></div>\n");
+        buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://").append(Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/CKRET</i></b></font></div>\n");
 
 		buffer.append("<h3>").append((new Date()).toString());
 		buffer.append("<BR>");

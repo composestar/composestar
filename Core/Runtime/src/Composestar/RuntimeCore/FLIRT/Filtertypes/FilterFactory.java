@@ -31,21 +31,21 @@ public abstract class FilterFactory
 	 */
 	public FilterTypeRuntime getFilterTypeFor(FilterType filterType)
 	{
-		if(filterType.getType().equals(FilterType.DISPATCH))
+		if(filterType.getClass().equals(FilterType.DISPATCH))
 			return(new Dispatch());
-		else if(filterType.getType().equals(FilterType.WAIT))
+		else if(filterType.getClass().equals(FilterType.WAIT))
 			return(new Wait());
-		else if(filterType.getType().equals(FilterType.ERROR))
+		else if(filterType.getClass().equals(FilterType.ERROR))
 			return(new ErrorFilter());
-		else if(filterType.getType().equals(FilterType.META))
+		else if(filterType.getClass().equals(FilterType.META))
 			return(new Meta());
-		else if(filterType.getType().equals(FilterType.SEND))
+		else if(filterType.getClass().equals(FilterType.SEND))
 			return(new Send());
-		else if(filterType.getType().equals(FilterType.PREPEND))
+		else if(filterType.getClass().equals(FilterType.PREPEND))
 			return(new Prepend());
-		else if(filterType.getType().equals(FilterType.APPEND))
+		else if(filterType.getClass().equals(FilterType.APPEND))
 			return(new Append());
-		else if(filterType.getType().equals(FilterType.CUSTOM)) 
+		else if(filterType.getClass().equals(FilterType.CUSTOM))
 			return getCustomFilterTypeFor(filterType);
 		else 
 			return null;

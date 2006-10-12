@@ -16,10 +16,10 @@ public class GlobalObjectManager
 	 */
 	public static Object getObjectManagerFor(Object key) 
 	{
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object with key '" + key.GetHashCode()+"'.");
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object with key '" + key.hashCode()+"'.");
 		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently " + objectmanagers.size() + " objectmanager(s) allocated.");
-		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Getting objectmanager with key " + key.GetHashCode() + " (" + key.GetType() + " | " + key.GetType().get_Namespace().startsWith("java.") + ").");
-		return objectmanagers.get(new Integer(key.GetHashCode()));
+		//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Getting objectmanager with key " + key.GetHashCode() + " (" + key.getClass() + " | " + key.getClass().get_Namespace().startsWith("java.") + ").");
+		return objectmanagers.get(new Integer(key.hashCode()));
 	}
 
 	public static Enumeration getEnumerator() 
@@ -35,12 +35,12 @@ public class GlobalObjectManager
 	public static void setObjectManagerFor(Object key, Object obj) 
 	{
 		// Do not store the object managers for framework classes
-		if ((key.GetType().get_Namespace() == null) || // Fixed crash: namespace can be null (when class is in default namespace)!
-			 (!(key.GetType().get_Namespace().startsWith("java.") || key.GetType().get_Namespace().startsWith("System."))) )
+		if ((key.getClass() == null) || // Fixed crash: namespace can be null (when class is in default namespace)!
+			 (!(key.getClass().toString().startsWith("java.") || key.getClass().toString().startsWith("System."))) )
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Storing '" + obj + "' with key '" + key.GetHashCode() + "'.");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Storing '" + obj + "' with key '" + key.hashCode() + "'.");
 			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Storing objectmanager for object '" + ((ObjectManager)obj).theObject + "' with key '" + key.GetHashCode() + " (" + key + ")'.");
-			objectmanagers.put(new Integer(key.GetHashCode()),obj);
+			objectmanagers.put(new Integer(key.hashCode()),obj);
 			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently " + objectmanagers.size() + " objectmanager(s) have been allocated.");
 		}
 	}

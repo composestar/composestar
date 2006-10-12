@@ -42,7 +42,7 @@ public class Debug
 	{
 		if (currentMode >= mode) 
 		{
-			String modeDescription = "";
+			String modeDescription;
     	
 			switch (mode)
 			{

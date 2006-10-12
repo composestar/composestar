@@ -36,13 +36,14 @@ public class WaitAction extends ComposeStarAction
      * @roseuid 3F3652D10098
      */
     public Object execute() {
-		synchronized (currentFilter) {
+		/*synchronized (currentFilter) {
 			//while (!currentFilter.canAccept(message, new Dictionary())) {
 				//wait();
 			//}
 
 			return null;
-		}     
+		}     */
+        return null;
     }
 
 	public MessageList getMessageToContinueWith()

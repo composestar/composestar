@@ -306,8 +306,8 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is static call: "+ctarget+ '.' +cselector);
 					returnvalue = Invoker.getInstance().invoke(ctarget,cselector,args);
 				}
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","\t\tCondition returned '"+returnvalue.ToString()+"'.");
-				if(returnvalue.ToString().equalsIgnoreCase("true"))
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","\t\tCondition returned '"+returnvalue.toString()+"'.");
+				if(returnvalue.toString().equalsIgnoreCase("true"))
 				{
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tCondition is true.");
 					return true;

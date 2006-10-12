@@ -58,10 +58,7 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	
 	public boolean equals(Object other)
 	{
-		if( other instanceof FilterModuleOrder )
-			return this.orderAsList().equals(((FilterModuleOrder)other).orderAsList());
-		else
-			return false;
+        return other instanceof FilterModuleOrder && this.orderAsList().equals(((FilterModuleOrder) other).orderAsList());
 	}
 	
 	public String toString()

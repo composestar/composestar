@@ -117,8 +117,7 @@ public String name;
   	}
   	catch(NullPointerException npe)
   	{
-  		String s = super.getUniqueID();
-  		return s;
+  		return super.getUniqueID();
   	}
   }
 

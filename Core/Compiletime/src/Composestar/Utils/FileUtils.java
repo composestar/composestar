@@ -177,11 +177,8 @@ public class FileUtils
 	{		
 		try {
 			File f = new File(path);
-			
-			if (f.exists())
-				return true;
-			else
-				return f.mkdirs(); // Returns false if the string is not a valid pathname
+
+            return f.exists() || f.mkdirs();
 		}
 		catch (SecurityException e) { 
 			// We don't really care about the reason; the important thing is the path could not be created

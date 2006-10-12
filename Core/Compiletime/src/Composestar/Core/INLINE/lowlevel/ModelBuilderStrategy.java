@@ -318,7 +318,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
         else if ( node.containsName( "SkipAction" ) ){
             //jump to end:
             jump( -1 );
-            return;
         }
         else if ( node.containsName( FlowChartNames.ERROR_ACTION_NODE ) ){
             instruction = new FilterAction( FlowChartNames.ERROR_ACTION_NODE, state.getMessage() );
@@ -411,7 +410,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy{
     /**
      * Checks whether the call is an innercall and whether the called method has inlined filters. Then
      * the innercall filtercontext needs to be set.
-     * @param state
      */
     private ContextInstruction setInnerCallContext( Message callMessage ){
         if ( Message.checkEquals( callMessage.getTarget(), Message.INNER_TARGET ) )

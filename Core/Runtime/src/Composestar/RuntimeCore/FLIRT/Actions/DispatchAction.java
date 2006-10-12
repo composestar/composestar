@@ -100,18 +100,18 @@ public class DispatchAction extends ComposeStarAction
 				if(Debug.SHOULD_DEBUG) 
 				{
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Processing item in message list");
-					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().ToString());
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().toString());
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Selector: "+m.getSelector());
 				}
 
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+m.getTarget().GetType().ToString()+"."+m.getSelector()+" ==> "+m.getTarget().GetType().ToString());
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+m.getTarget().getClass().toString()+"."+m.getSelector()+" ==> "+m.getTarget().getClass().toString());
 				for(int i=0; i<args.length; i++)
 				{
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tWith argument["+i+"] = "+args[i]);
 				}
 				if(m.STATE == Message.MESSAGE_CONSTRUCTOR) // Found a constructor call!
 				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+m.getTarget().GetType().ToString()+"()");
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+m.getTarget().getClass().toString()+"()");
 					return null;
 				}
 
@@ -122,7 +122,7 @@ public class DispatchAction extends ComposeStarAction
 				if(Debug.SHOULD_DEBUG) 
 				{
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Processing item in message list");
-					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().ToString());
+					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Target:   "+m.getTarget().toString());
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Selector: "+m.getSelector());
 				}
 

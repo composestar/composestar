@@ -12,7 +12,7 @@ import java.io.*;
  * Summary description for DebuggerFactory.
  */
 public class DebuggerFactory {
-	private static String DEBUGGER_CONFIG_FILE = "debugger.xml";
+	private final static String DEBUGGER_CONFIG_FILE = "debugger.xml";
 	/**
 	 * Returns the debugger that is specified
 	 */
@@ -59,8 +59,8 @@ public class DebuggerFactory {
 		{
 			FileInputStream fstream = new FileInputStream(DEBUGGER_CONFIG_FILE);
 			DataInputStream in = new DataInputStream(fstream);
+			in.readLine();
 			String line = in.readLine();
-			line = in.readLine();
 			int index = line.toUpperCase().indexOf("<DEBUGGER>");
 			if(index < 0)
 			{

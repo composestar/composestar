@@ -20,10 +20,7 @@ public class StateType extends Predicate {
     }
     
     public boolean isTrue(ExecutionState state) {
-        if ( state == null )
-            return false;
-        else
-            return state.getFlowNode().containsName( type );
+        return state != null && state.getFlowNode().containsName(type);
     }
     
     public String toString(){

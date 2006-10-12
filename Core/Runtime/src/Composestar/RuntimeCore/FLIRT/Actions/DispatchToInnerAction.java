@@ -58,13 +58,12 @@ public class DispatchToInnerAction extends ComposeStarAction
 	/**
 	 * Dispatches the message and returns what comes from the invocation.
 	 * This is actually delegated to the Invoker in the util package
-	 * @see dotNetComposeStar.util.Invoker#invoke
 	 * @return what ever the message dispatched returned.
 	 * @roseuid 3F3652C90392
 	 */
 	public Object execute() 
 	{
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+target.GetType().ToString()+"."+selector+" ==> "+target.GetType().ToString());
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+target.getClass()+"."+selector+" ==> "+target.getClass());
 		for(int i=0; i<args.length; i++)
 		{
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tWith argument["+i+"] = "+args[i]);
@@ -73,7 +72,7 @@ public class DispatchToInnerAction extends ComposeStarAction
 		// TODO do something sensible here
 		if(this.continueMessage.getOrgMessage().STATE == Message.MESSAGE_CONSTRUCTOR) // Found a constructor call!
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+target.GetType().ToString()+"()");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+target.getClass()+"()");
 			return null;
 		}
 

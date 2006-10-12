@@ -4,7 +4,7 @@ import java.util.*;
 import java.io.*;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
-public class PropertyManager extends Object implements Cloneable, Serializable {
+public class PropertyManager  implements Cloneable, Serializable {
     static final long serialVersionUID = 4343139487235166396L;
     private Properties props = null;
     private String filename;

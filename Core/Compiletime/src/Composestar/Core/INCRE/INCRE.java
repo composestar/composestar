@@ -557,7 +557,7 @@ public class INCRE implements CTCommonModule
 		if (! enabled) return false;
 		
 		Module m = configmanager.getModuleByID(name);
-		return (m == null ? false : m.isIncremental());
+		return (m != null && m.isIncremental());
 	}
    
 	/**
@@ -627,10 +627,9 @@ public class INCRE implements CTCommonModule
 	 * @param c - The concern possible declared in sourcefile
 	 * @param src - Fullpath of sourcefile
 	 */
-	public boolean declaredInSource(Concern c,String src){
+	public boolean declaredInSource(Concern c,String source){
 		
 		/* Sourcefile format: C:/Program Files/ComposeStar/... */
-		String source = src;
 		TypeLocations locations = TypeLocations.instance();
 		PlatformRepresentation repr = c.getPlatformRepresentation();
 		
@@ -658,7 +657,7 @@ public class INCRE implements CTCommonModule
 	/**
 	 * Returns true if concern is possible declared in one of the source files
 	 * @param c - The concern possible declared in sourcefile
-	 * @param src - Fullpath of sourcefile
+	 * @param sources - Fullpath of sourcefile
 	 */
 	public boolean declaredInSources(Concern c,ArrayList sources){
 		
@@ -697,7 +696,6 @@ public class INCRE implements CTCommonModule
 		comparator = new MyComparator(modulename);
 	   	currentRepository = DataStore.instance();
 	   	searchingHistory = false;
-	   	Object inputobject = input;
 		Object historyobject = null;
 		Object depofinputobject;
 		Object depofhistoryobject;
@@ -728,10 +726,10 @@ public class INCRE implements CTCommonModule
 			searchingHistory = false;
 			Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
 			try {
-				depofinputobject = dep.getDepObject(inputobject);
+				depofinputobject = dep.getDepObject(input);
 			}
 			catch (Exception e){
-				Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+inputobject);
+				Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+input);
 				Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 				return false;
 			}
@@ -746,7 +744,7 @@ public class INCRE implements CTCommonModule
 					// special case, file has not been configured
 					currentRepository = history;
 					searchingHistory = true;
-					List hfiles = (List)dep.getDepObject(inputobject);
+					List hfiles = (List)dep.getDepObject(input);
 					if(!hfiles.get(0).equals("EMPTY_CONFIG")){
 						// configuration has been removed since last compilation run
 						Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
@@ -791,7 +789,7 @@ public class INCRE implements CTCommonModule
 				{
 					// find object in history
 					if (historyobject == null)
-						historyobject = findHistoryObject(inputobject);
+						historyobject = findHistoryObject(input);
 											
 					if (historyobject!=null)
 					{

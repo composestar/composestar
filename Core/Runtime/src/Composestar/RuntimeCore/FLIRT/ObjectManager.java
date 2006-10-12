@@ -108,8 +108,8 @@ public class ObjectManager implements ChildRunnable
         
 		//find the concern
 		theObject = o;
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","ObjectManager created for object of type '"+o.GetType().ToString()+"'.");
-		Concern concern = (Concern)store.getObjectByID(o.GetType().ToString());
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","ObjectManager created for object of type '"+o.getClass().toString()+"'.");
+		Concern concern = (Concern)store.getObjectByID(o.getClass().toString());
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking concern '"+concern+"'...");
 
 		if(concern != null)
@@ -195,7 +195,7 @@ public class ObjectManager implements ChildRunnable
 		{
 			Internal internal = (Internal)internalIterator.next();
 			String internalname = internal.getName();
-			String internaltype = internal.getType().getQualifiedName();
+			String internaltype = internal.getClass().toString();
 			Object internalobject;
 			//try
 			{
@@ -219,7 +219,7 @@ public class ObjectManager implements ChildRunnable
 		{
 			External external = (External)externalIterator.next();
 			String externalname = external.getName();
-			String externaltype = external.getType().getQualifiedName();
+			String externaltype = external.getClass().toString();
 			Object externalobject;
 
 			if(external.shortinit != null)
@@ -243,7 +243,7 @@ public class ObjectManager implements ChildRunnable
 				}
 				if(externalobject != null)
 				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tLocated external '"+externalobject.GetType().ToString()+"'.");
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tLocated external '"+externalobject.getClass().toString()+"'.");
 					fmruntime.addExternal(externalname, externalobject);
 				}
 				
@@ -323,7 +323,7 @@ public class ObjectManager implements ChildRunnable
      */
     public static ObjectManager getObjectManagerFor(Object o, DataStore store) 
 	{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object manager for object of type '"+o.GetType().ToString()+"'.");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object manager for object of type '"+o.getClass().toString()+"'.");
 
 			ObjectManager obj = (ObjectManager) GlobalObjectManager.getObjectManagerFor(o);
 			if (obj == null) 
@@ -337,7 +337,7 @@ public class ObjectManager implements ChildRunnable
     
 	public static boolean hasFilterModules(Object o, DataStore store)
 	{
-		Concern concern = (Concern)store.getObjectByID(o.GetType().ToString());
+		Concern concern = (Concern)store.getObjectByID(o.getClass().toString());
 		return (concern != null && concern.getDynObject("SingleOrder") != null );
 	}
 
@@ -346,8 +346,7 @@ public class ObjectManager implements ChildRunnable
      * This is the point of contact with the Message Interception Layer.
      * The message is filtered and a return value is given.
      * @param receiver of the message
-     * @param selector name of the method
-     * @param args array containing the arguments of the message
+     * @param msg the message
      * @param sender
      * @return the return value of the message, if the method's return type is void
      * return null.
@@ -357,24 +356,23 @@ public class ObjectManager implements ChildRunnable
 		if(Debug.SHOULD_DEBUG)
 		{
 			if (sender != null)
-				Debug.out (Debug.MODE_INFORMATION,"FLIRT","INCOMING message '"+msg.getSelector()+"' from caller '"+sender.GetType()+"' for target '"+receiver.GetType()+"'.");
+				Debug.out (Debug.MODE_INFORMATION,"FLIRT","INCOMING message '"+msg.getSelector()+"' from caller '"+sender.getClass()+"' for target '"+receiver.getClass()+"'.");
 			else
-				Debug.out (Debug.MODE_INFORMATION,"FLIRT","INCOMING message '"+msg.getSelector()+"' for target '"+receiver.GetType()+"'.");
+				Debug.out (Debug.MODE_INFORMATION,"FLIRT","INCOMING message '"+msg.getSelector()+"' for target '"+receiver.getClass()+"'.");
 		}
 
 		//Message m = new Message(msg);
-		Message m = msg;
-		m.setInner(receiver);
-		m.setTarget(receiver);
+		msg.setInner(receiver);
+		msg.setTarget(receiver);
 		
 		// add the message to the message queue
-		this.messageQueue.produce(m);
+		this.messageQueue.produce(msg);
 
 		// notify objectmanager that messagequeue is not empty
 		this.notifyMessageConsumer();
 
 		// read the returnvalue from the message's response buffer
-		return m.getResponse();
+		return msg.getResponse();
     }
 
 	/**
@@ -382,8 +380,7 @@ public class ObjectManager implements ChildRunnable
 	 * This is the point of contact with the Message Interception Layer.
 	 * The message is filtered and a return value is given.
 	 * @param receiver of the message
-	 * @param selector name of the method
-	 * @param args array containing the arguments of the message
+	 * @param msg the message
 	 * @param sender
 	 * @return the return value of the message, if the method's return type is void
 	 * return null.
@@ -394,9 +391,9 @@ public class ObjectManager implements ChildRunnable
 		if(Debug.SHOULD_DEBUG)
 		{
 			if (sender != null)
-				Debug.out (Debug.MODE_INFORMATION,"FLIRT","OUTGOING message '"+msg.getSelector()+"' from caller '"+sender.GetType()+"' for target '"+receiver.GetType()+"'.");
+				Debug.out (Debug.MODE_INFORMATION,"FLIRT","OUTGOING message '"+msg.getSelector()+"' from caller '"+sender.getClass()+"' for target '"+receiver.getClass()+"'.");
 			else
-				Debug.out (Debug.MODE_INFORMATION,"FLIRT","OUTGOING message '"+msg.getSelector()+"' for target '"+receiver.GetType()+"'.");
+				Debug.out (Debug.MODE_INFORMATION,"FLIRT","OUTGOING message '"+msg.getSelector()+"' for target '"+receiver.getClass()+"'.");
 		}
 		
 		Message m = new Message(msg);
@@ -426,10 +423,8 @@ public class ObjectManager implements ChildRunnable
      * This method passes the received message through each of the filter modules
      * attached to the managed object.
      * The way the message is treated by each filter module is given by a policy
-     * @param aMessage the message received
      * @return the return value of the message, if the method's return type is void
      * return null
-     * @see dotNetComposeStar.runtime.policy.FilterPolicy
      * @roseuid 3F36584D012B
      */
     public Object receiveMessage(Message aSingleMessage) {
@@ -487,7 +482,7 @@ public class ObjectManager implements ChildRunnable
 				//return Invoker.getInstance().invoke(aMessage.getTarget(), aMessage.getSelector(), aMessage.getArguments());
 				return new DispatchToInnerAction( aMessage, true, aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector(), aMessage.getArguments());
 			}
-			//throw new MessageNotFilteredException("The message: "+aMessage.getSelector()+ " for target: "+aMessage.getInner().GetType().ToString()+" was not filtered!");
+			//throw new MessageNotFilteredException("The message: "+aMessage.getSelector()+ " for target: "+aMessage.getInner().getClass().toString()+" was not filtered!");
 		//}
 		/*catch (Exception e) 
 		{

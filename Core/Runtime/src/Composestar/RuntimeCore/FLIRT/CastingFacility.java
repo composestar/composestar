@@ -33,7 +33,7 @@ public class CastingFacility
 		
 		if (om != null) 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found an object manager for '" + from.GetType().ToString() + "'.");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found an object manager for '" + from.getClass().toString() + "'.");
 
 			java.util.ArrayList filterModules = om.getFilterModules();
 			for (int i = 0; i < filterModules.size(); i++) 
@@ -47,9 +47,9 @@ public class CastingFacility
 				while( internalObjects.hasMoreElements())
 				{
 					Object internal = internalObjects.nextElement();
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking internal: "+internal.GetType().ToString());
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking internal: "+internal.getClass().toString());
 
-					if ( internal.GetType().ToString().equals(to) )
+					if ( internal.getClass().toString().equals(to) )
 					{
 						// This should be the match and return the correct internal object
 						result = internal;
@@ -95,7 +95,7 @@ public class CastingFacility
 						{
 							// This should be the match and return the correct parent concern object
 							result = fmr.getObjectManager().theObject;
-							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.GetType().ToString() + ", key " + result.GetHashCode());
+							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.getClass().toString() + ", key " + result.GetHashCode());
 							break;
 						}
 					}
@@ -116,7 +116,7 @@ public class CastingFacility
 
 		if (result == null) 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No internal object found for casting: "+from.GetType().ToString() + " -> " + to);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No internal object found for casting: "+from.getClass().toString() + " -> " + to);
 
 			result = from;
 		}
@@ -126,10 +126,10 @@ public class CastingFacility
 
 	public synchronized static Object handleInheritedCall(Object target) 
 	{
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Object under investigation: " + target + " (type: " + target.GetType().ToString() + ").");
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Object under investigation: " + target + " (type: " + target.getClass().toString() + ").");
 
 		Object args[] = {};
-		if (target.GetType().ToString().Equals("VenusFlyTrap.VenusFlyTrap"))
+		if (target.getClass().toString().Equals("VenusFlyTrap.VenusFlyTrap"))
 		{
 			// target matches type of intercepted classes
 			MessageHandlingFacility.handleVoidMethodCall("VenusFlyTrap.LivingBeing", target, "buildBodyParts", args);

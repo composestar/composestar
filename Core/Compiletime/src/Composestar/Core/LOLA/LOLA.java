@@ -327,7 +327,6 @@ public abstract class LOLA implements CTCommonModule
 									Type annotation = (Type)annotRef.getRef().getPlatformRepresentation();
 									if(annotation.getUnitName().equals(annotToFind)){
 										depSelectorsList.add(annotBind.getSelector().getRef());
-										continue;
 									}
 								}
 							}
