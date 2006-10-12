@@ -25,13 +25,13 @@ public class XsltUtils
 			throw new Exception("currentDirectory not assigned.");
 		}
 
-		// try absolute
+		// try absolute hint path
 		File hintFile = new File(hint);
-		if (hintFile.exists()) return hintFile.getAbsolutePath();
+		if (hintFile.exists()) return hintFile.getCanonicalPath();
 		
-		// try "curdir"
+		// try hint path relative to current directory
 		hintFile = new File(currentDirectory, hint);
-		if (hintFile.exists()) return hintFile.getAbsolutePath();
+		if (hintFile.exists()) return hintFile.getCanonicalPath();
 		
 		// try via helper
 		return lookupAssembly(assembly);
