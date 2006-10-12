@@ -15,7 +15,7 @@
 
 	<target name="clean" depends="init" description="clean up CODER parsers">
 		<delete>
-			<fileset dir="src/CODER/breakpoint/parsers/ltl">
+			<fileset dir="src/Composestar/RuntimeCore/CODER/breakpoint/parsers/ltl">
 				<include name="LtlLexer.java"/>
 				<include name="LtlParser.java"/>
 				<include name="LtlTokenTypes.*"/>
@@ -23,7 +23,7 @@
 			</fileset>
 		</delete>
 		<delete>
-			<fileset dir="src/CODER/breakpoint/parsers/reg">
+			<fileset dir="src/Composestar/RuntimeCore/CODER/breakpoint/parsers/reg">
 				<include name="RegLexer.java"/>
 				<include name="RegParser.java"/>
 				<include name="RegTokenTypes.*"/>
@@ -35,10 +35,10 @@
 	<target name="build" depends="init,antlr" description="create CODER parsers"/>
 	
 	<target name="antlr">
-		<antlr target="src/CODER/breakpoint/parsers/ltl/grammar/ltl.g" outputdirectory="src/CODER/breakpoint/parsers/ltl">
+		<antlr target="src/Composestar/RuntimeCore/CODER/breakpoint/parsers/ltl/grammar/ltl.g" outputdirectory="src/CODER/breakpoint/parsers/ltl">
 			<classpath refid="lib.core"/>
 		</antlr>
-		<antlr target="src/CODER/breakpoint/parsers/reg/grammar/reg.g" outputdirectory="src/CODER/breakpoint/parsers/reg">
+		<antlr target="src/Composestar/RuntimeCore/CODER/breakpoint/parsers/reg/grammar/reg.g" outputdirectory="src/CODER/breakpoint/parsers/reg">
 			<classpath refid="lib.core"/>
 		</antlr>
 	</target>

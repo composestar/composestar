@@ -7,11 +7,11 @@ Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposestarDotNETCore", "..
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarUtilities", "..\..\core\runtime\src\util\ComposeStarUtilities.vjsproj", "{21F8C6D6-B067-4E11-B414-B66EB60BEC26}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarUtilities", "..\..\core\runtime\src\Composestar\RuntimeCore\util\ComposeStarUtilities.vjsproj", "{21F8C6D6-B067-4E11-B414-B66EB60BEC26}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarRuntimeInterpreter", "..\..\core\runtime\src\FLIRT\ComposeStarRuntimeInterpreter.vjsproj", "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarRuntimeInterpreter", "..\..\core\runtime\src\Composestar\RuntimeCore\FLIRT\ComposeStarRuntimeInterpreter.vjsproj", "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -28,7 +28,7 @@ Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarDotNETRuntimeInt
 		{55E29217-7071-4FA1-8810-79614584BBBB} = {55E29217-7071-4FA1-8810-79614584BBBB}
 	EndProjectSection
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarFilterDebugger", "..\..\core\runtime\src\CODER\ComposeStarFilterDebugger.vjsproj", "{227D8FE5-F6DA-4D40-BADB-C19320F6BD01}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarFilterDebugger", "..\..\core\runtime\src\Composestar\RuntimeCore\CODER\ComposeStarFilterDebugger.vjsproj", "{227D8FE5-F6DA-4D40-BADB-C19320F6BD01}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
