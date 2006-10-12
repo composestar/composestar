@@ -46,4 +46,14 @@ namespace Composestar.StarLight.VisualStudio.Project
         #endregion
     }
 
+
+    [ComVisible(true)]
+    public class OAComposeStarProject : OAProject
+    {
+        public OAComposeStarProject(ComposeStarProjectNode cpsProject)
+            : base(cpsProject)
+        {
+        }
+
+    }
 }

@@ -1,6 +1,6 @@
 <VSTemplate Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
   <TemplateData>
-    <DefaultName>Class.vb</DefaultName>
+    <DefaultName>Class.cs</DefaultName>
     <Name>C# Class</Name>
     <Description>An empty C# class definition</Description>
     <Icon>__TemplateIcon.ico</Icon>
@@ -13,6 +13,6 @@
         <Assembly>System</Assembly>
       </Reference>
     </References>
-    <ProjectItem SubType="Code" TargetFileName="$fileinputname$.vb" ReplaceParameters="true">Class.cs</ProjectItem>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$.cs" ReplaceParameters="true">Class.cs</ProjectItem>
   </TemplateContent>
 </VSTemplate>

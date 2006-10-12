@@ -4,7 +4,7 @@ Imports System.Text
 
 Imports Composestar.StarLight.ContextInfo
 
-namespace $safeprojectname$
+namespace $rootnamespace$
 
 	Public class $safeitemname$
 
