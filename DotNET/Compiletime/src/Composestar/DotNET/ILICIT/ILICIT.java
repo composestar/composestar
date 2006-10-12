@@ -160,20 +160,20 @@ public class ILICIT implements WEAVER
 			if (!INCRE.instance().isProcessedByModule(asm,"ILICIT"))
 			{
 				try {
-					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + asm + "' to Weaver directory");					
+					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + sourceFilename + "' to Weaver directory");					
 					FileUtils.copyFile(targetFilename, sourceFilename);
 				}
 				catch (IOException e) {
 					throw new ModuleException("Unable to copy assembly: " + e.getMessage(), "ILICIT");
 				}
 				
-				String pdbFile = FileUtils.removeExtension(sourceFilename) + ".pdb";
+				String pdbFile = FileUtils.replaceExtension(sourceFilename, "pdb");
 				if (FileUtils.fileExist(pdbFile))
 				{
-					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying " + pdbFile + " to Weaver directory");
+					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + pdbFile + "' to Weaver directory");
 					
 					String pdbSourceFilename = new File(pdbFile).getAbsolutePath(); 
-					String pdbTargetFilename = FileUtils.removeExtension(targetFilename) + ".pdb";
+					String pdbTargetFilename = FileUtils.replaceExtension(targetFilename, "pdb");
 					
 					try {
 						FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
