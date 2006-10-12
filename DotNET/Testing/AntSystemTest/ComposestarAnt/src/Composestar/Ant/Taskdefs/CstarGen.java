@@ -121,11 +121,14 @@ public class CstarGen extends Task
 	
 	private void transform(Transformer t, File in, File out)
 	{
-		Composestar.Ant.XsltUtils.setCurrentDirectory(in.getParent());
-		t.setParameter("basepath", in.getParent() + "/");
-				
+		String baseDir = in.getParent();
+		log("-" + baseDir, Project.MSG_INFO);
+
 		try
 		{
+			Composestar.Ant.XsltUtils.setCurrentDirectory(baseDir);
+			t.setParameter("basepath", baseDir + "/");
+			
 			Source xmlSource = new StreamSource(in);
 			Result result = new StreamResult(out);
 			

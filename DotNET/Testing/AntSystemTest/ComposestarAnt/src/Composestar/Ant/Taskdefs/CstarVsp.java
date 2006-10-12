@@ -104,6 +104,8 @@ public class CstarVsp extends Task
 		cntSuccess = 0;
 		cntFail = 0;
 		failList.clear();
+		
+		log("Compiling Compose* projects", Project.MSG_INFO);
 
 		cstarJars = new FileSet();
 		cstarJars.setDir(new File(composestarBase, "Binaries"));
@@ -161,7 +163,7 @@ public class CstarVsp extends Task
 		cntTotal++;
 		
 		File projectDir = buildXML.getParentFile();
-		log("Building Compose* project in " + projectDir, Project.MSG_INFO);
+		log("-" + projectDir, Project.MSG_INFO);
 
 		try
 		{
