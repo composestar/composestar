@@ -130,412 +130,412 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\AppendAction.java"
+                    RelPath = "Actions\AppendAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\ComposeStarAction.java"
+                    RelPath = "Actions\ComposeStarAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\ContinueToNextFilterAction.java"
+                    RelPath = "Actions\ContinueToNextFilterAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\DispatchAction.java"
+                    RelPath = "Actions\DispatchAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\DispatchToInnerAction.java"
+                    RelPath = "Actions\DispatchToInnerAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\ErrorAction.java"
+                    RelPath = "Actions\ErrorAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\MetaAction.java"
+                    RelPath = "Actions\MetaAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\PrependAction.java"
+                    RelPath = "Actions\PrependAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\SendAction.java"
+                    RelPath = "Actions\SendAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "actions\WaitAction.java"
+                    RelPath = "Actions\WaitAction.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "debugger\Debugger.java"
+                    RelPath = "Debugger\Debugger.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "debugger\Ignore.java"
+                    RelPath = "Debugger\Ignore.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\ComposestarRuntimeException.java"
+                    RelPath = "Exception\ComposestarRuntimeException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\ErrorFilterException.java"
+                    RelPath = "Exception\ErrorFilterException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\ExternalNotFoundException.java"
+                    RelPath = "Exception\ExternalNotFoundException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\FilterException.java"
+                    RelPath = "Exception\FilterException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\FilterModuleException.java"
+                    RelPath = "Exception\FilterModuleException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\FilterSpecificationException.java"
+                    RelPath = "Exception\FilterSpecificationException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\InternalNotFoundException.java"
+                    RelPath = "Exception\InternalNotFoundException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\InvalidConditionException.java"
+                    RelPath = "Exception\InvalidConditionException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\InvalidPatternExpressionException.java"
+                    RelPath = "Exception\InvalidPatternExpressionException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\MessageNotFilteredException.java"
+                    RelPath = "Exception\MessageNotFilteredException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\SelectorNotFoundException.java"
+                    RelPath = "Exception\SelectorNotFoundException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "exception\TargetNotFoundException.java"
+                    RelPath = "Exception\TargetNotFoundException.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Append.java"
+                    RelPath = "Filtertypes\Append.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\CustomFilter.java"
+                    RelPath = "Filtertypes\CustomFilter.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Dispatch.java"
+                    RelPath = "Filtertypes\Dispatch.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\ErrorFilter.java"
+                    RelPath = "Filtertypes\ErrorFilter.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\FilterFactory.java"
+                    RelPath = "Filtertypes\FilterFactory.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\FilterTypeRuntime.java"
+                    RelPath = "Filtertypes\FilterTypeRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Meta.java"
+                    RelPath = "Filtertypes\Meta.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Prepend.java"
+                    RelPath = "Filtertypes\Prepend.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Send.java"
+                    RelPath = "Filtertypes\Send.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Substitution.java"
+                    RelPath = "Filtertypes\Substitution.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "filtertypes\Wait.java"
+                    RelPath = "Filtertypes\Wait.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\AbstractPatternRuntime.java"
+                    RelPath = "Interpreter\AbstractPatternRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\AndRuntime.java"
+                    RelPath = "Interpreter\AndRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\BinaryOperatorRuntime.java"
+                    RelPath = "Interpreter\BinaryOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\ConditionExpressionRuntime.java"
+                    RelPath = "Interpreter\ConditionExpressionRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\ConditionResolver.java"
+                    RelPath = "Interpreter\ConditionResolver.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\ConditionVariableRuntime.java"
+                    RelPath = "Interpreter\ConditionVariableRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\CondLiteralRuntime.java"
+                    RelPath = "Interpreter\CondLiteralRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\CorFilterElementCompositionOperatorRuntime.java"
+                    RelPath = "Interpreter\CorFilterElementCompositionOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\DisableOperatorRuntime.java"
+                    RelPath = "Interpreter\DisableOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\EnableOperatorRuntime.java"
+                    RelPath = "Interpreter\EnableOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\EnableOperatorTypeRuntime.java"
+                    RelPath = "Interpreter\EnableOperatorTypeRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\FalseRuntime.java"
+                    RelPath = "Interpreter\FalseRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\FilterCompositionOperatorRuntime.java"
+                    RelPath = "Interpreter\FilterCompositionOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\FilterElementCompositionOperatorRuntime.java"
+                    RelPath = "Interpreter\FilterElementCompositionOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\FilterElementRuntime.java"
+                    RelPath = "Interpreter\FilterElementRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\FilterModuleRuntime.java"
+                    RelPath = "Interpreter\FilterModuleRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\FilterRuntime.java"
+                    RelPath = "Interpreter\FilterRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\Interpretable.java"
+                    RelPath = "Interpreter\Interpretable.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\MatchingPartRuntime.java"
+                    RelPath = "Interpreter\MatchingPartRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\MatchingPatternRuntime.java"
+                    RelPath = "Interpreter\MatchingPatternRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\MatchingTypeRuntime.java"
+                    RelPath = "Interpreter\MatchingTypeRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\NameMatchingRuntime.java"
+                    RelPath = "Interpreter\NameMatchingRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\NotRuntime.java"
+                    RelPath = "Interpreter\NotRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\OrRuntime.java"
+                    RelPath = "Interpreter\OrRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\ReferenceEntityRuntime.java"
+                    RelPath = "Interpreter\ReferenceEntityRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\SelectorRuntime.java"
+                    RelPath = "Interpreter\SelectorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\SeqFilterCompositionOperatorRuntime.java"
+                    RelPath = "Interpreter\SeqFilterCompositionOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\SignatureMatchingRuntime.java"
+                    RelPath = "Interpreter\SignatureMatchingRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\SubstitutionPartRuntime.java"
+                    RelPath = "Interpreter\SubstitutionPartRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\TargetRuntime.java"
+                    RelPath = "Interpreter\TargetRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\TrueRuntime.java"
+                    RelPath = "Interpreter\TrueRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\UnaryOperatorRuntime.java"
+                    RelPath = "Interpreter\UnaryOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\VoidFilterCompositionOperatorRuntime.java"
+                    RelPath = "Interpreter\VoidFilterCompositionOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "interpreter\VoidFilterElementCompositionOperatorRuntime.java"
+                    RelPath = "Interpreter\VoidFilterElementCompositionOperatorRuntime.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "message\Message.java"
+                    RelPath = "Message\Message.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "message\MessageList.java"
+                    RelPath = "Message\MessageList.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "message\ReifiedMessage.java"
+                    RelPath = "Message\ReifiedMessage.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "message\ReplyMessage.java"
+                    RelPath = "Message\ReplyMessage.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "policy\DefaultFilterPolicy.java"
+                    RelPath = "Policy\DefaultFilterPolicy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "policy\FilterPolicy.java"
+                    RelPath = "Policy\FilterPolicy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "policy\MetaFilterPolicy.java"
+                    RelPath = "Policy\MetaFilterPolicy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "policy\PolicyExecutionResult.java"
+                    RelPath = "Policy\PolicyExecutionResult.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "reflection\JoinPoint.java"
+                    RelPath = "Reflection\JoinPoint.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "reflection\JoinPointInfo.java"
+                    RelPath = "Reflection\JoinPointInfo.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "reflection\JoinPointInfoProxy.java"
+                    RelPath = "Reflection\JoinPointInfoProxy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "reflection\MessageInfo.java"
+                    RelPath = "Reflection\MessageInfo.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "reflection\MessageInfoProxy.java"
+                    RelPath = "Reflection\MessageInfoProxy.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
