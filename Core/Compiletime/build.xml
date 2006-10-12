@@ -68,6 +68,7 @@
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
+				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>
 			</fileset>
 		</copy>
 		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
