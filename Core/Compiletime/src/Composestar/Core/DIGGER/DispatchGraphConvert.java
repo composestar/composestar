@@ -203,8 +203,7 @@ public class DispatchGraphConvert
 		catch (Exception e)
 		{
 			System.err.println("Error during transformation [" + e.getClass().toString() + "]: " + e.getMessage());
-			return;
 		}
-		}
+	}
 
 }
