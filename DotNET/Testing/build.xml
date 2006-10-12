@@ -18,13 +18,14 @@
 	</condition>
 
 	<!--<taskdef name="cstarDevenv" classname="Composestar.Ant.taskdefs.cstarDevenv" />-->
+	<taskdef name="cstarGen" classname="Composestar.Ant.Taskdefs.CstarGen" />
 	<taskdef name="cstarTest" classname="Composestar.Ant.Taskdefs.CstarTest" />
 	<taskdef name="cstarVsp" classname="Composestar.Ant.Taskdefs.CstarVsp" />
 	
 	<target name="clean" />
 	<target name="build" />
 	
-	<target name="test" depends="test_vsp,test_exec" description="Execute the DotNET system test." />
+	<target name="test" depends="test_gbc,test_vsp,test_exec" description="Execute the DotNET system test." />
 
 	<!--
 	@deprecated
@@ -43,15 +44,26 @@
 	</target>
 	-->
 	
-	<target name="test_vsp" depends="init">
-		<cstarVsp antHelperPath="${build.core}/Development"
-		          composestarBase="${composestar.installdir}"
-		          conversionXslt="${basedir}/../testing/AntSystemTest/genBuildConfig.xslt"
-		          INCREconfig="${INCRE.config}"
-		>
+	<target name="test_gbc" depends="init">
+		<cstarGen composestarBase="${composestar.installdir}"
+		          antHelperPath="${build.core}/Development"		          
+		          xslt="AntSystemTest/genBuildConfig.xslt">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.vjsproj" />
 				<include name="**/*.csproj" />
+				<exclude name="AOSD2006Demo/EncryptionFilter/*" />
+				<exclude name="AOSD2006Demo/ProtocolLib/*" />
+				<exclude name="DesignPatterns/Annotations/*" />
+				<exclude name="Jukebox/jukeboxframe/*" />
+				<exclude name="Rot13/Rot13Filter/*" />
+			</FileSet>
+		</cstarGen>
+	</target>
+	
+	<target name="test_vsp" depends="init">
+		<cstarVsp composestarBase="${composestar.installdir}">
+			<FileSet dir="${build.dotnet}/Examples">
+				<include name="**/BuildConfiguration.xml" />
 				<exclude name="AOSD2006Demo/EncryptionFilter/*" />
 				<exclude name="AOSD2006Demo/ProtocolLib/*" />
 				<exclude name="DesignPatterns/Annotations/*" />

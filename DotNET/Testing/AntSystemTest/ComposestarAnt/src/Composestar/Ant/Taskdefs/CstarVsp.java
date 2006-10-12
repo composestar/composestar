@@ -1,36 +1,31 @@
 package Composestar.Ant.Taskdefs;
 
-import java.util.Vector;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.taskdefs.XSLTProcess;
-import org.apache.tools.ant.taskdefs.XSLTProcess.Param;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.Commandline.Argument;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PatternSet.NameEntry;
-import java.io.*;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline.Argument;
+import org.apache.tools.ant.types.PatternSet.NameEntry;
 
 /**
- * Compiles a devenv solution with Compose*
+ * Compiles a devenv solution with Compose*.
  * 
  * @author Michiel Hendriks
  */
 public class CstarVsp extends Task
 {
 	/**
-	 * The name of the BuildConfiguration.XML to produce
-	 */
-	protected String BUILD_CONFIGURATION_XML = "BuildConfiguration.xml";
-
-	/**
 	 * List containg visual studio projects
 	 */
-	protected Vector fileSets = new Vector();
+	protected List fileSets = new ArrayList();
 
 	/**
 	 * If true fail the build if a single project failed to compile
@@ -43,31 +38,15 @@ public class CstarVsp extends Task
 	protected boolean failOnFirstError = false;
 
 	/**
-	 * The Xslt document to convert the VisualStudio projects to
-	 * BuildConfiguration.xml
-	 */
-	protected String conversionXslt;
-
-	/**
 	 * The location of ComposeStar; assumes the jar files are in
 	 * composestarBase+"/Binaries"
 	 */
 	protected String composestarBase;
 	
 	/**
-	 * The name of the configuration file for INCRE.
-	 */
-	protected String INCREconfig = "INCREconfig.xml";
-
-	/**
 	 * The master to execute
 	 */
 	protected String master = "Composestar.DotNET.MASTER.DotNETMaster";
-
-	/**
-	 * Path to AntHelper.exe; which is used to resolve assembly locations
-	 */
-	protected String antHelperPath;
 
 	/**
 	 * Classpath for Compose*; required to build the project
@@ -90,9 +69,9 @@ public class CstarVsp extends Task
 	protected int cntFail;
 	
 	/**
-	 * List of failed tests. Incleased with final exception.
+	 * List of failed tests. Inceased with final exception.
 	 */
-	protected String failList;
+	protected List failList = new ArrayList();
 
 	public void setFailOnError(boolean failOnError)
 	{
@@ -104,19 +83,9 @@ public class CstarVsp extends Task
 		this.failOnFirstError = failOnFirstError;
 	}
 
-	public void setConversionXslt(String conversionXslt)
-	{
-		this.conversionXslt = conversionXslt;
-	}
-
 	public void setMaster(String master)
 	{
 		this.master = master;
-	}
-
-	public void setAntHelperPath(String antHelperPath)
-	{
-		this.antHelperPath = antHelperPath;
 	}
 
 	public void setComposestarBase(String composestarBase)
@@ -124,11 +93,6 @@ public class CstarVsp extends Task
 		this.composestarBase = composestarBase;
 	}
 	
-	public void setINCREconfig(String INCREconfig)
-	{
-		this.INCREconfig = INCREconfig;
-	}
-
 	public void addFileset(FileSet set)
 	{
 		fileSets.add(set);
@@ -139,12 +103,7 @@ public class CstarVsp extends Task
 		cntTotal = 0;
 		cntSuccess = 0;
 		cntFail = 0;
-		failList = "";
-
-		if (!Composestar.Ant.XsltUtils.setAntHelperEXE(antHelperPath))
-		{
-			throw new BuildException("Invalid antHelperPath value: " + antHelperPath);
-		}
+		failList.clear();
 
 		cstarJars = new FileSet();
 		cstarJars.setDir(new File(composestarBase, "Binaries"));
@@ -155,23 +114,27 @@ public class CstarVsp extends Task
 
 		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
 		{
-			FileSet fileSet = (FileSet) it.next();
+			FileSet fileSet = (FileSet)it.next();
 			DirectoryScanner ds = fileSet.getDirectoryScanner(this.getProject());
 			String[] files = ds.getIncludedFiles();
 			for (int i = 0; i < files.length; i++)
 			{
-				compileProject(ds.getBasedir().getPath() + File.separator + files[i]);
+				File projectFile = new File(ds.getBasedir(), files[i]);
+				compileProject(projectFile);
 			}
 		}
 
-		getProject().log(
-				this,
-				"Compiled " + cntTotal + " project(s); success: " + cntSuccess + "; failed: " + cntFail + "; ratio: "
-						+ (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
+		String msg = 
+			"Compiled " + cntTotal + " project(s)" +
+			"; success: " + cntSuccess + 
+			"; failed: " + cntFail + 
+			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%";
+		
+		getProject().log(msg, Project.MSG_INFO);
 		
 		if (failOnError && (cntFail > 0))
 		{
-			throw new BuildException("Compilation of " + cntFail + " project(s) failed: "+failList);
+			throw new BuildException("Compilation of " + cntFail + " project(s) failed: " + failList);
 		}
 	}
 
@@ -193,47 +156,20 @@ public class CstarVsp extends Task
 		}
 	}
 
-	protected void compileProject(String project) throws BuildException
+	protected void compileProject(File buildXML) throws BuildException
 	{
 		cntTotal++;
-		getProject().log(this, "Building Compose* project: " + project, Project.MSG_INFO);
-
-		File projectFile = new File(project);
-		File buildXML = new File(projectFile.getParent(), BUILD_CONFIGURATION_XML);
+		
+		File projectDir = buildXML.getParentFile();
+		getProject().log("Building Compose* project in " + projectDir, Project.MSG_INFO);
 
 		try
 		{
-			if (conversionXslt != "")
-			{
-				Composestar.Ant.XsltUtils.setCurrentDirectory(projectFile.getParent());
-
-				XSLTProcess xslt = (XSLTProcess) getProject().createTask("xslt");
-				xslt.init();
-				// xslt.setForce(true);
-				xslt.setIn(projectFile);
-				xslt.setOut(buildXML);
-				xslt.setStyle(conversionXslt);
-				
-				Param param = xslt.createParam();
-				param.setName("basepath");
-				param.setExpression(projectFile.getParent() + File.separator);
-				
-				param = xslt.createParam();
-				param.setName("composestarpath");
-				param.setExpression(composestarBase + "/");
-				
-				param = xslt.createParam();
-				param.setName("INCREconfig");
-				param.setExpression(INCREconfig);
-
-				xslt.execute();
-			}
-
 			if (!buildXML.exists()) throw new Exception(buildXML.getName() + " does not exist.");
 
 			Java java = (Java) getProject().createTask("java");
 			java.init();
-			java.setDir(projectFile.getParentFile());
+			java.setDir(projectDir);
 			java.setClassname(master);
 			
 			Argument arg = java.createArg();
@@ -243,7 +179,7 @@ public class CstarVsp extends Task
 			cpath.addFileset(cstarJars);
 			
 			java.setFork(true);
-			java.setOutput(new File(projectFile.getParent(), "buildlog.txt"));
+			java.setOutput(new File(projectDir, "buildlog.txt"));
 
 			int err = java.executeJava();
 			if (err != 0)
@@ -258,14 +194,12 @@ public class CstarVsp extends Task
 			cntFail++;
 			if (failOnFirstError)
 			{
-				throw new BuildException("Compilation of project " + project + " failed; " + e.getMessage());
+				throw new BuildException("Compilation of project in " + projectDir + " failed; " + e.getMessage());
 			}
 			else
 			{
-				getProject().log(this, "Compilation of project " + project + " failed; " + e.getMessage(),
-						Project.MSG_ERR);
-				if (failList.length() > 0) failList += "; ";
-				failList += project;
+				getProject().log("Compilation of project in " + projectDir + " failed; " + e.getMessage(), Project.MSG_ERR);
+				failList.add(projectDir);
 			}
 		}
 	}

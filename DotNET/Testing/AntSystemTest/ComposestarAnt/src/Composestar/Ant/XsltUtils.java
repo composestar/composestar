@@ -20,12 +20,19 @@ public class XsltUtils
 
 	public static String resolveAssembly(String assembly, String hint) throws Exception
 	{
+		if (currentDirectory == null)
+		{
+			throw new Exception("currentDirectory not assigned.");
+		}
+
 		// try absolute
 		File hintFile = new File(hint);
 		if (hintFile.exists()) return hintFile.getAbsolutePath();
+		
 		// try "curdir"
-		hintFile = new File(currentDirectory + File.separator + hint);
+		hintFile = new File(currentDirectory, hint);
 		if (hintFile.exists()) return hintFile.getAbsolutePath();
+		
 		// try via helper
 		return lookupAssembly(assembly);
 	}
@@ -53,10 +60,16 @@ public class XsltUtils
 		{
 			return (String) resolvedAsms.get(assembly);
 		}
-		if (AntHelperEXE == "")
+		
+		if (AntHelperEXE == null)
 		{
 			throw new Exception("AntHelperEXE not assigned.");
 		}
+		if (currentDirectory == null)
+		{
+			throw new Exception("currentDirectory not assigned.");
+		}
+		
 		String[] cmd = new String[3];
 		cmd[0] = AntHelperEXE;
 		cmd[1] = "lookupAssembly";
@@ -90,9 +103,9 @@ public class XsltUtils
 	 * @param path
 	 * @return
 	 */
-	public static boolean setAntHelperEXE(String path)
+	public static boolean setAntHelperPath(String path)
 	{
-		File an = new File(path + File.separator + "AntHelper.exe");
+		File an = new File(path, "AntHelper.exe");
 		if (an.exists())
 		{
 			AntHelperEXE = an.toString();

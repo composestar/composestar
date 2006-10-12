@@ -18,9 +18,6 @@
 			<xsl:attribute name="version">1.00</xsl:attribute>
 			
 			<xsl:element name="Projects">
-				<xsl:attribute name="executable">
-					<xsl:value-of select="*/Build/Settings/@StartupObject" />
-				</xsl:attribute>
 				<xsl:attribute name="applicationStart">
 					<xsl:value-of select="*/Build/Settings/@StartupObject" />
 				</xsl:attribute>
