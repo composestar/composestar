@@ -8,12 +8,6 @@ using Composestar.Repository;
 
 namespace Composestar.StarLight.CoreServices
 {
-    public enum IlAnalyzerResults
-    {
-        FromAssembly = 0,
-        FromCache = 1
-    }
-
 
     /// <summary>
     /// Interface for the IL analyzer
@@ -45,8 +39,6 @@ namespace Composestar.StarLight.CoreServices
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="FileNotFoundException"></exception>
         AssemblyElement ExtractAllTypes(String fileName);
 
         /// <summary>

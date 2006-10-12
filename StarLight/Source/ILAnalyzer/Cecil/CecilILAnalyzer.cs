@@ -37,8 +37,7 @@ namespace Composestar.StarLight.ILAnalyzer
         #endregion
 
         #region Private Variables
-
-        private bool _isInitialized = false;
+      
         private TimeSpan _lastDuration = TimeSpan.Zero;
         private List<String> _resolvedTypes = new List<String>();
         private List<String> _unresolvedTypes = new List<String>();
@@ -737,6 +736,8 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException">If the filename is not specified this exception is thrown.</exception>
+        /// <exception cref="FileNotFoundException">If the source file cannot be found, this exception will be thrown.</exception>
         public AssemblyElement ExtractAllTypes(String fileName)
         {
             if (String.IsNullOrEmpty(fileName))

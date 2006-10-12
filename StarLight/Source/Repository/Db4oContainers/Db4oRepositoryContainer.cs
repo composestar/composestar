@@ -303,6 +303,9 @@ namespace Composestar.Repository.Db4oContainers
             }
         }
 
+        /// <summary>
+        /// Commits the data.
+        /// </summary>
         public void Commit()
         {
             dbContainer.Commit();

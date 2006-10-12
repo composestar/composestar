@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
+    /// <summary>
+    ///  TODO Generate comments
+    /// </summary>
     [FilterActionAttribute( "SubstitutionAction", FilterFlowBehaviour.Continue,
         MessageSubstitutionBehaviour.Substituted )]
     public class SubstitutionAction : FilterAction

@@ -1,3 +1,18 @@
+<!--
+***********************************************************************************************
+Composestar StarLight weave targets version 0.1 (beta)
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or weave your projects from the command-line or the IDE.
+
+This file defines the steps in the weave process for .NET projects in combination with
+the Composestar StarLight software.
+
+Copyright (C) University of Twente, 2006
+***********************************************************************************************
+-->
+
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Weave">
   
   <!--Reference the assembly where our tasks are defined-->

@@ -24,7 +24,7 @@ namespace Composestar.StarLight.CoreServices.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
         /// </summary>
-        /// <param name="serInfo">The ser info.</param>
+        /// <param name="serializationInformation">The serialization information.</param>
         /// <param name="streamContext">The stream context.</param>
         protected ILWeaverException(SerializationInfo serializationInformation, StreamingContext streamContext) 
             : base(serializationInformation, streamContext)
