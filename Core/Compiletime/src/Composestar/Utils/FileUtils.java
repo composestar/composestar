@@ -77,27 +77,6 @@ public class FileUtils
 	}
 
 	/**
-	 * FIXME: wtf!? It makes no sense I tell you!
-	 * The places where this method is used should be checked out, 
-	 * to see what functionality is really needed. 
-	 */
-	public static String fixSlashes(String command)
-	{
-		char[] cmd = command.toCharArray();
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < cmd.length; i++)
-		{
-			if (cmd[i] == '/')
-				buffer.append(File.separator).append(File.separator);
-			else if (cmd[i] == '\\')
-				buffer.append(File.separator).append(File.separator);
-			else
-				buffer.append(cmd[i]);
-		}
-		return buffer.toString();
-	}
-
-	/**
 	 * Returns true if the specified filename refers to an existing file.
 	 */
 	public static boolean fileExist(String filename)
@@ -189,16 +168,10 @@ public class FileUtils
 	public static String getFilenamePart(String pathToFile)
 	{
 		return new File(pathToFile).getName();
-//		int pathEnd = pathToFile.lastIndexOf('/');
-//		if (pathEnd > 0)
-//			return pathToFile.substring(pathEnd + 1);
-//		else
-//			return pathToFile;
 	}
 
 	public static String getDirectoryPart(String pathToFile)
 	{
-//		return new File(pathToFile).getParent();
 		int pathEnd = pathToFile.lastIndexOf('/');
 		if (pathEnd > 0)
 			return pathToFile.substring(0, pathEnd);
