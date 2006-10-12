@@ -54,7 +54,7 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.java"
+                    RelPath = "../../../DotNET/Runtime/src/AssemblyInfos/CORE/AssemblyInfo.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

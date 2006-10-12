@@ -90,7 +90,7 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.java"
+                    RelPath = "../../../../../../DotNET/Runtime/src/AssemblyInfos/FLIRT/AssemblyInfo.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
