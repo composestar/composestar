@@ -253,11 +253,13 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //store methodElement:
                 Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" + storedMethod.toString() );
                 repository.storeMethodElement( storedMethod );
+                
+                // emit calls:
+                emitCalls( method, storedMethod );
             }
             
             
-            //emit calls:
-//            emitCalls( method, storedMethod );
+            
             
             
         }
@@ -327,6 +329,8 @@ public class StarLightEmitterRunner implements CTCommonModule
             	InlineInstruction instruction = translateInstruction( code );
             	storedCall.set_OutputFilter( instruction );
 
+            	Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing call" + storedCall.toString() );
+            	
             	//write call back:
             	repository.storeCallElement( storedCall );
             	

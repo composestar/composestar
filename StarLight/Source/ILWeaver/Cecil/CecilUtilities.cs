@@ -66,9 +66,28 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <param name="assemblyFile">The assembly file.</param>
         /// <returns></returns>
-        public static TypeDefinition ResolveTypeDefinition( TypeReference reference )
+        public static TypeDefinition ResolveTypeDefinition( TypeReference typeRef )
         {
-            return reference.Module.Types[ reference.FullName ];
+            TypeDefinition typeDef = typeRef.Module.Types[typeRef.FullName];
+
+            if(typeDef == null && typeRef.Scope != null)
+            {
+                foreach(AssemblyNameReference assembly in typeRef.Module.AssemblyReferences)
+                {
+                    if(typeRef.Scope.Name == assembly.Name)
+                    {
+                        //ResolveMethod(methodName, parentTypeRef.FullName, assembly.FullName, 
+                        Utilities.Cecil.StarLightAssemblyResolver sar = 
+                            new Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver(BinFolder);
+                        AssemblyDefinition ad = sar.Resolve(assembly);
+                        typeDef = ad.MainModule.Types[typeRef.FullName];
+
+                        break;
+                    }
+                }
+            }
+
+            return typeDef;
         }
 
         public static TypeReference ResolveType(string typeName, string assemblyName, string assemblyFile)

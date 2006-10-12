@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 
@@ -8,6 +9,7 @@ using Mono.Cecil.Cil;
 
 using Composestar.Repository.LanguageModel.Inlining;
 using Composestar.StarLight.ContextInfo;
+using Composestar.StarLight.CoreServices.Exceptions;
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -29,7 +31,101 @@ namespace Composestar.StarLight.ILWeaver
             CecilInliningInstructionVisitor visitor,
             MethodReference originalCall, FilterAction filterAction)
         {
-            // TODO
+            MethodInfo methodInfo;
+            VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
+            
+            // Store current target
+            if(filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
+                filterAction.Target.Equals(FilterAction.SELF_TARGET))
+            {
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                methodInfo = typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]);
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+            }
+            else if(visitor.Method.HasThis)
+            {
+                TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(visitor.Method.DeclaringType);
+                FieldDefinition field = parentType.Fields.GetField(filterAction.Target);
+                if(field == null)
+                {
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                        Properties.Resources.FieldNotFound, filterAction.Target));
+                }
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));
+                methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+            }
+            else
+            {
+                // set to null for static methods
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
+                methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+            }
+
+            // store current selector
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.Selector));
+            methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentSelector", new Type[] { typeof(string) });
+            visitor.Instructions.Add(visitor.Worker.Create(
+                OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+
+
+            // Store substitution target
+            if(filterAction.SubstitutionTarget.Equals(FilterAction.INNER_TARGET) ||
+                filterAction.SubstitutionTarget.Equals(FilterAction.SELF_TARGET))
+            {
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                methodInfo = typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]);
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+            }
+            else if(visitor.Method.HasThis)
+            {
+                TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(visitor.Method.DeclaringType);
+                FieldDefinition field = parentType.Fields.GetField(filterAction.SubstitutionTarget);
+                if(field == null)
+                {
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                        Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
+                }
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));
+                methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+            }
+            else
+            {
+                // set to null for static methods
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
+                methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+            }
+
+            // store substitution selector
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.SubstitutionSelector));
+            methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionSelector", new Type[] { typeof(string) });
+            visitor.Instructions.Add(visitor.Worker.Create(
+                OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
         }
 
         /// <summary>

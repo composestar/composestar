@@ -51,4 +51,11 @@ public class CallElement
 		_outputFilter = value;
 	}
 
+	public String toString(){
+		String s = _methodReference;
+		if ( _outputFilter != null ){
+			s += "\n" + _outputFilter.toString();
+		}
+		return s;
+	}
 }

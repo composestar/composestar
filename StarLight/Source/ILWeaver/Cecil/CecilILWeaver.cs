@@ -500,10 +500,6 @@ namespace Composestar.StarLight.ILWeaver
         {
             #region Check for null and retrieve calls for this method
 
-            // TODO remove
-            if(true)
-                return;
-            
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
 
@@ -525,54 +521,61 @@ namespace Composestar.StarLight.ILWeaver
             CilWorker worker = method.Body.CilWorker;
 
             // Loop through all the instructions
+            List<Instruction> callInstructions = new List<Instruction>();
             foreach (Instruction instruction in method.Body.Instructions)
             {
                 // Check for a call instruction
                 if (IsCallInstruction(instruction))
                 {
-                    // Find the corresponding call in the list of calls
-                    MethodReference mr = (MethodReference)(instruction.Operand);
-                    MethodDefinition md = CecilUtilities.ResolveMethodDefinition(mr);
-                    CallElement call = FindCallInList(calls, mr.ToString());
+                    callInstructions.Add(instruction);
+                }
+            }
 
-                    // If we found a CallElement in the repository, then see if we have to perform weaving
-                    if (call != null)
+            foreach(Instruction instruction in callInstructions)
+            {
+                // Find the corresponding call in the list of calls
+                MethodReference mr = (MethodReference) (instruction.Operand);
+                MethodDefinition md = CecilUtilities.ResolveMethodDefinition(mr);
+                CallElement call = FindCallInList(calls, mr.ToString());
+
+                // If we found a CallElement in the repository, then see if we have to perform weaving
+                if(call != null)
+                {
+                    // Get the outputFilter for this call
+                    Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter =
+                        call.OutputFilter;
+
+                    // Check for null, an output filter is not required
+                    if(outputFilter == null)
+                        continue;
+
+                    // Add filters using the visitor
+                    CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
+                    visitor.Method = method;
+                    visitor.CalledMethod = md;
+                    visitor.Worker = worker;
+                    visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
+                    visitor.TargetAssemblyDefinition = targetAssembly;
+
+                    // Visit the elements in the block
+                    try
                     {
-                        // Get the outputFilter for this call
-                        Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter =
-                            call.OutputFilter;
+                        outputFilter.Accept(visitor);
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
+                    }
 
-                        // Check for null, an output filter is not required
-                        if (outputFilter == null)
-                            continue;
-
-                        // Add filters using the visitor
-                        CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
-                        visitor.Method = method;
-                        visitor.CalledMethod = md;
-                        visitor.Worker = worker;
-                        visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
-                        visitor.TargetAssemblyDefinition = targetAssembly;
-
-                        // Visit the elements in the block
-                        try
-                        {
-                            outputFilter.Accept(visitor);
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
-                        }
-
-                        // Only add instructions if we have instructions
-                        if (visitor.Instructions.Count > 0)
-                        {
-                            int instructionsCount = 0;
-                            // Add the instructions
-                            instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
-                        }
+                    // Only add instructions if we have instructions
+                    if(visitor.Instructions.Count > 0)
+                    {
+                        int instructionsCount = 0;
+                        // Add the instructions
+                        instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
                     }
                 }
+
             }
         }
 
