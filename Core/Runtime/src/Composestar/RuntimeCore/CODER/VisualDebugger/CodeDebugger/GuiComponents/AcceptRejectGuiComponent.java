@@ -1,6 +1,5 @@
 package Composestar.RuntimeCore.CODER.VisualDebugger.CodeDebugger.GuiComponents;
 
-import Composestar.RuntimeCore.CODER.Model.*;
 
 import java.util.*;
 import java.awt.*;

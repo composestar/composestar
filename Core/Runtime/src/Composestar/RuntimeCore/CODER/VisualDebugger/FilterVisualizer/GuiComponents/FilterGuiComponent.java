@@ -3,7 +3,6 @@ package Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiCompone
 import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
 import Composestar.RuntimeCore.FLIRT.Interpreter.*;
-import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.VisualDebugger.Inspectors.FilterInspector;
 
 import java.awt.*;

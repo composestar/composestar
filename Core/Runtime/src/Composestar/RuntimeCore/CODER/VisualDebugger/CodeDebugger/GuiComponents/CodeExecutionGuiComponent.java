@@ -4,7 +4,6 @@ import Composestar.RuntimeCore.FLIRT.Message.*;
 import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
 import Composestar.RuntimeCore.FLIRT.Interpreter.*;
 
-import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.*;
 import Composestar.RuntimeCore.Utils.*;
 

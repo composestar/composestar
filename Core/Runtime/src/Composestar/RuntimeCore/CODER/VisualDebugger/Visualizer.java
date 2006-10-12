@@ -6,7 +6,6 @@ import Composestar.RuntimeCore.FLIRT.Interpreter.*;
 
 import Composestar.RuntimeCore.CODER.VisualDebugger.*;
 import Composestar.RuntimeCore.CODER.VisualDebugger.FilterVisualizer.GuiComponents.*;
-import Composestar.RuntimeCore.CODER.Model.*;
 import Composestar.RuntimeCore.CODER.StateHandler;
 import Composestar.RuntimeCore.CODER.DebuggerProvider;
 import javax.swing.*;
