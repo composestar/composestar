@@ -28,6 +28,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 #endregion
 
         #region Properties
+
         private string _repositoryFilename;
 
         /// <summary>
@@ -118,26 +119,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
             _repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
-            Log.LogMessageFromResources("MasterStartText");
-
-            // Remove all concerns first because the user may have removed a concern from the project
-            // after a previous run.
-            _repositoryAccess.DeleteConcernInformations(); 
-
-            // Place the concern files in the datastore
-            foreach (ITaskItem item in ConcernFiles)
-            {
-                string fullname = item.ToString();
-
-                string path = Path.GetDirectoryName(fullname);
-                string filename = Path.GetFileName(fullname);
- 
-                ConcernInformation ci = new ConcernInformation(filename, path);
-
-                Log.LogMessageFromResources("AddingConcernFile", filename);
-                _repositoryAccess.AddConcern(ci);
-            }
-
+            Log.LogMessageFromResources("MasterStartText");           
+           
             RegistrySettings rs = new RegistrySettings();
             if (!rs.ReadSettings())
             {

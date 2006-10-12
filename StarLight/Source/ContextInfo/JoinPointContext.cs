@@ -25,6 +25,7 @@ namespace Composestar.StarLight.ContextInfo
         private object _target;
         private string _methodName;
         private ArgumentInfo _returnValue;
+        private bool _hasReturnValueSet;
 
         #endregion
 
@@ -204,7 +205,10 @@ namespace Composestar.StarLight.ContextInfo
         /// </value>
         public bool HasReturnValue
         {
-            get { return (_returnValue != null); }
+            get 
+            { 
+                return _hasReturnValueSet; 
+            }
         }
 
         /// <summary>
@@ -250,7 +254,10 @@ namespace Composestar.StarLight.ContextInfo
                 if (_returnValue == null)
                     throw new ArgumentNullException("returnType");
                 else
+                {
                     _returnValue.Value = value;
+                    _hasReturnValueSet = true;
+                } // else
             }
         }
 

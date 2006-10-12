@@ -1,5 +1,6 @@
 #region Using directives
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel.Design;  
 
@@ -8,7 +9,12 @@ using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.CpsParser; 
+using Composestar.CpsParser;
+using Composestar.Repository.LanguageModel;
+using Composestar.Repository.Configuration;
+using Composestar.Repository.Db4oContainers;
+using Composestar.Repository;
+
 #endregion
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -30,6 +36,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
         #endregion
 
         #region Properties
+
+        private string _repositoryFilename;
+
+        /// <summary>
+        /// Gets or sets the repository filename.
+        /// </summary>
+        /// <value>The repository filename.</value>
+        [Required()]
+        public string RepositoryFilename
+        {
+            get { return _repositoryFilename; }
+            set { _repositoryFilename = value; }
+        }
+
         private ITaskItem[] _concernFiles;
         private ITaskItem[] _referencedTypes;
 
@@ -67,6 +87,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             List<string> refTypes = null;
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                        
+            RepositoryAccess repositoryAccess = null;
 
             try
             {
@@ -75,7 +97,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 ICpsParser cfp = null;
                 cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer());
 
-                // Parse all concern files
+                // Open DB
+                Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
+                repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
+
+                // TODO this can be optimized. Save data in the database so we also know if concerns are not changes
+                // Do not start master when assemblies and concerns are not changed.
+
+                // Remove all concerns first because the user may have removed a concern from the project
+                // after a previous run.
+                repositoryAccess.DeleteConcernInformations();
+
+                // Parse all concern files and add to the database
                 foreach (ITaskItem item in ConcernFiles)
                 {
                     String concernFile = item.ToString();
@@ -83,6 +116,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogMessageFromResources("ParsingConcernFile", concernFile);
 
                     refTypes = cfp.ParseFileForReferencedTypes(concernFile);
+
+                    string path = Path.GetDirectoryName(concernFile);
+                    string filename = Path.GetFileName(concernFile);
+
+                    ConcernInformation ci = new ConcernInformation(filename, path);
+                  
+                    Log.LogMessageFromResources("AddingConcernFile", filename);
+                    repositoryAccess.AddConcern(ci);
                 }
 
                 sw.Stop();
@@ -94,7 +135,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     int index = 0;
                     ReferencedTypes = new ITaskItem[refTypes.Count];
                     foreach (String type in refTypes)
-                    {                        
+                    {
                         ReferencedTypes[index] = new TaskItem(type);
                         index++;
                     } // foreach  (type)
@@ -109,6 +150,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 Log.LogErrorFromException(ex, false);
             }
+            finally
+            {
+                if (repositoryAccess != null)   repositoryAccess.Close(); 
+            } // finally
            
             return !Log.HasLoggedErrors;
 

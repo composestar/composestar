@@ -90,7 +90,7 @@ namespace Composestar.CpsParser
             }
             catch (antlr.ANTLRException ex)
             {
-                throw new CpsParserException(String.Format("Unable to parse concern, {0}", ex.Message), fileName, ex);
+                throw new CpsParserException(String.Format(Properties.Resources.UnableToParseConcern, ex.Message), fileName, ex);
             }
             finally 
             {
