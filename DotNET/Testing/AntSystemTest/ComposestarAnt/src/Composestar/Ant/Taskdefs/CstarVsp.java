@@ -42,7 +42,7 @@ public class CstarVsp extends Task
 	 * composestarBase+"/Binaries"
 	 */
 	protected String composestarBase;
-	
+
 	/**
 	 * The master to execute
 	 */
@@ -59,6 +59,11 @@ public class CstarVsp extends Task
 	protected int cntTotal;
 
 	/**
+	 * Current number of projects examined
+	 */
+	protected int cntCurrent;
+
+	/**
 	 * Number of succesful builds
 	 */
 	protected int cntSuccess;
@@ -67,7 +72,7 @@ public class CstarVsp extends Task
 	 * Number of failed builds
 	 */
 	protected int cntFail;
-	
+
 	/**
 	 * List of failed tests. Inceased with final exception.
 	 */
@@ -92,7 +97,7 @@ public class CstarVsp extends Task
 	{
 		this.composestarBase = composestarBase;
 	}
-	
+
 	public void addFileset(FileSet set)
 	{
 		fileSets.add(set);
@@ -103,67 +108,52 @@ public class CstarVsp extends Task
 		cntTotal = 0;
 		cntSuccess = 0;
 		cntFail = 0;
+		cntCurrent = 0;
 		failList.clear();
-		
-		log("Compiling Compose* projects", Project.MSG_INFO);
 
 		cstarJars = new FileSet();
 		cstarJars.setDir(new File(composestarBase, "Binaries"));
 		NameEntry inc = cstarJars.createInclude();
 		inc.setName("*.jar");
 
-		registerCstarAsms();
+		List projects = new ArrayList();
 
 		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
 		{
-			FileSet fileSet = (FileSet)it.next();
+			FileSet fileSet = (FileSet) it.next();
 			DirectoryScanner ds = fileSet.getDirectoryScanner(this.getProject());
 			String[] files = ds.getIncludedFiles();
 			for (int i = 0; i < files.length; i++)
 			{
 				File projectFile = new File(ds.getBasedir(), files[i]);
-				compileProject(projectFile);
+				projects.add(projectFile);
 			}
 		}
+		cntTotal = projects.size();
+		log("Compiling " + cntTotal + " Compose* projects", Project.MSG_INFO);
 
-		String msg = 
-			"Compiled " + cntTotal + " project(s)" +
-			"; success: " + cntSuccess + 
-			"; failed: " + cntFail + 
-			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%";
-		
+		Iterator it = projects.iterator();
+		while (it.hasNext())
+		{
+			compileProject((File) it.next());
+		}
+
+		String msg = "Compiled " + cntTotal + " project(s)" + "; success: " + cntSuccess + "; failed: " + cntFail
+				+ "; ratio: " + (cntSuccess * 100 / cntTotal) + "%";
+
 		log(msg, Project.MSG_INFO);
-		
+
 		if (failOnError && (cntFail > 0))
 		{
 			throw new BuildException("Compilation of " + cntFail + " project(s) failed: " + failList);
 		}
 	}
 
-	protected void registerCstarAsms()
-	{
-		FileSet cstarAsms = new FileSet();
-		cstarAsms.setDir(new File(composestarBase, "Binaries"));
-		NameEntry inc = cstarAsms.createInclude();
-		inc.setName("*.dll");
-
-		DirectoryScanner ds = cstarAsms.getDirectoryScanner(this.getProject());
-		String[] files = ds.getIncludedFiles();
-		for (int i = 0; i < files.length; i++)
-		{
-			File asmPath = new File(ds.getBasedir().getPath(), files[i]);
-			String asm = asmPath.getName();
-			asm = asm.substring(0, asm.lastIndexOf("."));
-			Composestar.Ant.XsltUtils.registerAssembly(asm, asmPath.toString());
-		}
-	}
-
 	protected void compileProject(File buildXML) throws BuildException
 	{
-		cntTotal++;
-		
 		File projectDir = buildXML.getParentFile();
-		log("-" + projectDir, Project.MSG_INFO);
+		log("" + (cntCurrent * 100 / cntTotal) + "% - " + projectDir, Project.MSG_INFO);
+		cntCurrent++;
 
 		try
 		{
@@ -173,13 +163,13 @@ public class CstarVsp extends Task
 			java.init();
 			java.setDir(projectDir);
 			java.setClassname(master);
-			
+
 			Argument arg = java.createArg();
 			arg.setValue(buildXML.toString());
-			
+
 			Path cpath = java.createClasspath();
 			cpath.addFileset(cstarJars);
-			
+
 			java.setFork(true);
 			java.setOutput(new File(projectDir, "buildlog.txt"));
 

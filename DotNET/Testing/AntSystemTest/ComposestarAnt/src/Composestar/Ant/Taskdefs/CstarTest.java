@@ -5,7 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -58,6 +60,11 @@ public class CstarTest extends Task
 	protected int cntFail;
 
 	/**
+	 * Current number of projects examined
+	 */
+	protected int cntCurrent;
+
+	/**
 	 * List of failed tests. Incleased with final exception.
 	 */
 	protected String failList;
@@ -88,7 +95,9 @@ public class CstarTest extends Task
 		cntSuccess = 0;
 		cntFail = 0;
 		failList = "";
+		cntCurrent = 0;
 
+		List tests = new ArrayList();
 		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
 		{
 			FileSet fileSet = (FileSet) it.next();
@@ -96,8 +105,17 @@ public class CstarTest extends Task
 			String[] files = ds.getIncludedFiles();
 			for (int i = 0; i < files.length; i++)
 			{
-				runTest(ds.getBasedir().getPath() + File.separator + files[i]);
+				tests.add(ds.getBasedir().getPath() + File.separator + files[i]);
 			}
+		}
+
+		cntTotal = tests.size();
+		log("Testing " + cntTotal + " Compose* programs", Project.MSG_INFO);
+
+		Iterator it = tests.iterator();
+		while (it.hasNext())
+		{
+			runTest((String) it.next());
 		}
 
 		getProject().log(
@@ -112,8 +130,8 @@ public class CstarTest extends Task
 
 	protected void runTest(String exec) throws BuildException
 	{
-		cntTotal++;
-		getProject().log(this, "Testing: " + exec, Project.MSG_INFO);
+		getProject().log(this, "" + (cntCurrent * 100 / cntTotal) + "% - " + exec, Project.MSG_INFO);
+		cntCurrent++;
 
 		File execPath = new File(exec);
 		log(exec, Project.MSG_VERBOSE);

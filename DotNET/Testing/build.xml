@@ -17,7 +17,6 @@
 		<not><isset property="INCRE.config"/></not>
 	</condition>
 
-	<!--<taskdef name="cstarDevenv" classname="Composestar.Ant.taskdefs.cstarDevenv" />-->
 	<taskdef name="cstarGen" classname="Composestar.Ant.Taskdefs.CstarGen" />
 	<taskdef name="cstarTest" classname="Composestar.Ant.Taskdefs.CstarTest" />
 	<taskdef name="cstarVsp" classname="Composestar.Ant.Taskdefs.CstarVsp" />
@@ -27,23 +26,6 @@
 	
 	<target name="test" depends="test_gbc,test_vsp,test_exec" description="Execute the DotNET system test." />
 
-	<!--
-	@deprecated
-	<target name="test_build">
-		<copy file="${basedir}/../testing/AntSystemTest/Composestar.vsmacros" todir="${user.home}/My Documents/Visual Studio Projects/VSMacros71/Composestar" />
-		<cstarDevenv>
-			<FileSet dir="${basedir}">
-				<include name="**/*.sln" />
-				<exclude name="AOSD2006Demo/EncryptionFilter/*.sln" />
-				<exclude name="AOSD2006Demo/ProtocolLib/*.sln" />
-				<exclude name="DesignPatterns/Annotations/*.sln" />
-				<exclude name="Jukebox/jukeboxframe/*.sln" />
-				<exclude name="Rot13/Rot13Filter/*.sln" />
-			</FileSet>
-		</cstarDevenv>
-	</target>
-	-->
-	
 	<target name="test_gbc" depends="init">
 		<cstarGen composestarBase="${composestar.installdir}"
 		          antHelperPath="${build.core}/Development"		          
