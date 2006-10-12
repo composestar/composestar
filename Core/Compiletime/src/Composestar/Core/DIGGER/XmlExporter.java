@@ -65,8 +65,8 @@ public class XmlExporter
 	public XmlExporter(Graph inGraph, File filename) throws ModuleException
 	{
 		Debug.out(Debug.MODE_INFORMATION, DIGGER.MODULE_NAME, "Exporting dispatch graph to " + filename.toString());
-		addComments = (new Boolean(Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "xmlComments",
-				"false"))).booleanValue();
+		addComments = Boolean.getBoolean(Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "xmlComments",
+				"false"));
 		graph = inGraph;
 
 		// create parent directory if it doesn't exist

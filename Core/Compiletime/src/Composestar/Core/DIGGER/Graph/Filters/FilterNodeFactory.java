@@ -64,10 +64,10 @@ public final class FilterNodeFactory
 		 * (FilterType.PREPEND.equals(filterType)) { return new
 		 * PrependFilterNode(inGraph, forFilter, inDirection); }
 		 */
-
-		Boolean useUnknown = new Boolean(Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME,
+		
+		boolean useUnknown = Boolean.getBoolean(Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME,
 				"acceptUnknownFilter", "true"));
-		if (useUnknown.booleanValue())
+		if (useUnknown)
 		{
 			return new UnknownFilterNode(inGraph, forFilter, inDirection);
 		}

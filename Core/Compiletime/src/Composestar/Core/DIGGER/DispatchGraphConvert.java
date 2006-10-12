@@ -110,7 +110,7 @@ public class DispatchGraphConvert
 		switch (inFormat)
 		{
 			case FORMAT_DOT:
-				return this.getClass().getResource("") + XSLT_PATH + "GraphVizDot.xslt";
+				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphVizDot.xslt";
 			case FORMAT_CUSTOM:
 				if ((customXslt != null) && (customXslt.exists()))
 				{
