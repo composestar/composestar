@@ -70,12 +70,8 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal ComposeStarFileNode(ProjectNode root, ProjectElement e)
             : base(root, e)
         {
-            this.NodeProperties = new ComposeStarFileNodeProperties(this);
             selectionChangedListener = new SelectionElementValueChangedListener(new ServiceProvider((IOleServiceProvider)root.GetService(typeof(IOleServiceProvider))), root);
             selectionChangedListener.Init();
-            ((FileNodeProperties)this.NodeProperties).OnCustomToolChanged += new EventHandler<HierarchyNodeEventArgs>(OnCustomToolChanged);
-            ((FileNodeProperties)this.NodeProperties).OnCustomToolNameSpaceChanged += new EventHandler<HierarchyNodeEventArgs>(OnCustomToolNameSpaceChanged);
-
         }
         #endregion
 
@@ -147,8 +143,21 @@ namespace Composestar.StarLight.VisualStudio.Project
                     // Set the MainFile project property to the Filename of this Node
                     ((ComposeStarProjectNode)this.ProjectMgr).SetProjectProperty(ComposeStarProjectFileConstants.MainFile, this.GetRelativePath());
                     return VSConstants.S_OK;
+                }               
+            }       
+            else if (guidCmdGroup == Microsoft.VisualStudio.Package.VsMenus.guidStandardCommandSet2K)
+            {
+                switch ((VsCommands2K)cmd)
+                {
+                    case VsCommands2K.EXCLUDEFROMPROJECT:
+                        return this.ExcludeFromProject();
+                    case VsCommands2K.DELETE:
+                        this.ProjectMgr.DeleteItem(1, nCmdexecopt); 
+                        break;
                 }
             }
+
+            
             return base.ExecCommandOnNode(guidCmdGroup, cmd, nCmdexecopt, pvaIn, pvaOut);
         }
 
@@ -161,6 +170,10 @@ namespace Composestar.StarLight.VisualStudio.Project
             {
                 switch ((VsCommands)cmd)
                 {
+                    case VsCommands.OpenWith:
+                    case VsCommands.Open: 
+                    case VsCommands.OpenProjectItem:
+                    case VsCommands.Rename: 
                     case VsCommands.Delete: 
                     case VsCommands.AddNewItem:
                     case VsCommands.AddExistingItem:

@@ -122,6 +122,15 @@ namespace Microsoft.VisualStudio.Package
             return base.QueryStatusOnNode(guidCmdGroup, cmd, pCmdText, ref result);
         }
 
+		/// <summary>
+		/// DependentFileNodes node cannot be dragged.
+		/// </summary>
+		/// <returns>null</returns>
+		protected internal override StringBuilder PrepareSelectedNodesForClipBoard()
+		{
+			return null;
+		}
+
         #endregion
 
     }

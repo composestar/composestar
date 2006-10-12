@@ -64,7 +64,6 @@ namespace Microsoft.VisualStudio.Package
 			get { return VSConstants.GUID_ItemType_PhysicalFile; }
 		}
 
-
 		public override int MenuCommandId
 		{
 			get { return VsMenus.IDM_VS_CTXT_ITEMNODE; }
@@ -110,12 +109,14 @@ namespace Microsoft.VisualStudio.Package
 			{
 				this.HasDesigner = true;
 			}
-			this.NodeProperties = new FileNodeProperties(this);
-
 		}
 		#endregion
 
 		#region overridden methods
+		protected override NodeProperties CreatePropertiesObject()
+		{
+			return new FileNodeProperties(this);
+		}
 
 		public override object GetIconHandle(bool open)
 		{
@@ -181,8 +182,17 @@ namespace Microsoft.VisualStudio.Package
 			return base.GetIconHandle(open);
 		}
 
+		/// <summary>
+		/// Get an instance of the automation object for a FileNode
+		/// </summary>
+		/// <returns>An instance of the Automation.OAFileNode if succeeded</returns>
 		public override object GetAutomationObject()
 		{
+			if (this.ProjectMgr == null || this.ProjectMgr.IsClosed)
+			{
+				return null;
+			}
+
 			return new Automation.OAFileItem(this.ProjectMgr.GetAutomationObject() as Automation.OAProject, this);
 		}
 
@@ -347,7 +357,11 @@ namespace Microsoft.VisualStudio.Package
 					this.ItemNode.Rename(oldrelPath);
 					this.ItemNode.RefreshProperties();
 				}
-				OnInvalidateItems(this.Parent);
+
+				if (this is DependentFileNode)
+				{
+					OnInvalidateItems(this.Parent);
+				}
 
 			}
 			catch (Exception e)
@@ -1208,8 +1222,11 @@ namespace Microsoft.VisualStudio.Package
 					// Run the generator on the indicated document
 					FileNode node = (FileNode)this.ProjectMgr.NodeFromItemId(itemid);
 					string customTool = ((FileNodeProperties)(node.NodeProperties)).CustomTool;
-					string customToolNamespace = ((FileNodeProperties)(node.NodeProperties)).CustomToolNamespace;
-					node.InvokeGenerator(customTool, customToolNamespace);
+					if (!string.IsNullOrEmpty(customTool))
+					{
+						string customToolNamespace = ((FileNodeProperties)(node.NodeProperties)).CustomToolNamespace;
+						node.InvokeGenerator(customTool, customToolNamespace);
+					}
 				}
 			}
 		}

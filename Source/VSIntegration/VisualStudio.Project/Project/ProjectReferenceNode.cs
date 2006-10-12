@@ -31,6 +31,26 @@ namespace Microsoft.VisualStudio.Package
 	[CLSCompliant(false), ComVisible(true)]
 	public class ProjectReferenceNode : ReferenceNode
 	{
+		#region Nested Types
+		[ComVisible(true)]
+		private class ProjectReferencesProperties : ReferenceNodeProperties
+		{
+			public ProjectReferencesProperties(ProjectReferenceNode node)
+				: base(node)
+			{
+			}
+
+			public override string FullPath
+			{
+				get
+				{
+					return ((ProjectReferenceNode)Node).ReferencedProjectOutputPath;
+				}
+			}
+
+		}
+		#endregion
+
 		#region fieds
 		/// <summary>
 		/// The name of the assembly this refernce represents
@@ -354,6 +374,11 @@ namespace Microsoft.VisualStudio.Package
 		#endregion
 
 		#region methods
+		protected override NodeProperties CreatePropertiesObject()
+		{
+			return new ProjectReferencesProperties(this);
+		}
+
 		/// <summary>
 		/// The node is added to the hierarchy and then updates the build dependency list.
 		/// </summary>

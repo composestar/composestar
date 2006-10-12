@@ -1,7 +1,7 @@
 <VSTemplate Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
   <TemplateData>
     <DefaultName>Class.vb</DefaultName>
-    <Name>Class</Name>
+    <Name>VB Class</Name>
     <Description>An empty VB.NET class definition</Description>
     <Icon>__TemplateIcon.ico</Icon>
     <ProjectType>StarLight</ProjectType>

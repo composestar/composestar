@@ -73,7 +73,7 @@ namespace Microsoft.VisualStudio.Package
 
 		[Browsable(false)]
 		[AutomationBrowsable(false)]
-		internal protected HierarchyNode Node
+		public HierarchyNode Node
 		{
 			get { return this.node; }
 			set { this.node = value; }
@@ -701,6 +701,17 @@ namespace Microsoft.VisualStudio.Package
 			set
 			{
 				this.SetProperty(ProjectFileConstants.Private, value.ToString());
+			}
+		}
+
+		[SRCategoryAttribute(SR.Misc)]
+		[LocDisplayName(SR.FullPath)]
+		[SRDescriptionAttribute(SR.FullPathDescription)]
+		public virtual string FullPath
+		{
+			get
+			{
+				return this.Node.Url;
 			}
 		}
 		#endregion

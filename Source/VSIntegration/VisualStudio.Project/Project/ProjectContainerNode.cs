@@ -763,7 +763,7 @@ namespace Microsoft.VisualStudio.Package
 				OLEMSGICON icon = OLEMSGICON.OLEMSGICON_INFO;
 				OLEMSGBUTTON buttons = OLEMSGBUTTON.OLEMSGBUTTON_YESNO;
 				OLEMSGDEFBUTTON defaultButton = OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
-				reload = (VsShellUtilities.ShowMessageBox(this.Site, title, message, icon, buttons, defaultButton) == NativeMethods.IDYES);
+				reload = (VsShellUtilities.ShowMessageBox(this.Site, message, title, icon, buttons, defaultButton) == NativeMethods.IDYES);
 			}
 
 			if (reload)

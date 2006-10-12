@@ -39,16 +39,14 @@ using VsCommands2K = Microsoft.VisualStudio.VSConstants.VSStd2KCmdID;
 using EnvDTE;
 using Microsoft.Win32;
 
-
 namespace Microsoft.VisualStudio.Package
 {
-
 	/// <summary>
 	/// Manages the persistent state of the project (References, options, files, etc.) and deals with user interaction via a GUI in the form a hierarchy.
 	/// </summary>
 	[CLSCompliant(false)]
 	[ComVisible(true)]
-	public abstract class ProjectNode : HierarchyNode,
+	public abstract partial class ProjectNode : HierarchyNode,
 		IVsGetCfgProvider,
 		IVsProject3,
 		IVsAggregatableProject,
@@ -57,7 +55,6 @@ namespace Microsoft.VisualStudio.Package
 		IVsProjectBuildSystem,
 		IVsBuildPropertyStorage,
 		IVsComponentUser,
-		IVsUIHierWinClipboardHelperEvents,
 		IVsDependencyProvider,
 		IVsSccProject2,
 		IBuildDependencyUpdate,
@@ -235,7 +232,6 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-
 		#region fields
 		/// <summary>
 		/// List of output groups names and their associated target
@@ -257,7 +253,6 @@ namespace Microsoft.VisualStudio.Package
 		/// <summary>Maps integer ids to project item instances</summary>
 		private EventSinkCollection itemIdMap = new EventSinkCollection();
 
-
 		/// <summary>A service provider call back object provided by the IDE hosting the project manager</summary>
 		private IServiceProvider site;
 
@@ -271,13 +266,14 @@ namespace Microsoft.VisualStudio.Package
 		/// </summary>
 		private DateTime lastModifiedTime;
 
-		// MSBuild engine we are going to be using
+		/// <summary>
+		/// MSBuild engine we are going to use 
+		/// </summary>
 		private MSBuild.Engine buildEngine;
 
 		private Microsoft.Build.Utilities.Logger buildLogger;
 
 		private bool useProvidedLogger;
-
 
 		private MSBuild.Project buildProject;
 
@@ -309,7 +305,6 @@ namespace Microsoft.VisualStudio.Package
 
 		private ProjectOptions options;
 
-		private uint copyPasteCookie;
 
 		private bool isClosed;
 
@@ -323,12 +318,21 @@ namespace Microsoft.VisualStudio.Package
 
 		private bool isProjectEventsListener = true;
 
-		// The build dependency list passed to IVsDependencyProvider::EnumDependencies
+
+
+
+		/// <summary>
+		/// The build dependency list passed to IVsDependencyProvider::EnumDependencies 
+		/// </summary>
 		private List<IVsBuildDependency> buildDependencyList = new List<IVsBuildDependency>();
 
-		// TODO: Change this to true if the project system should support project designer by default.
+		/// <summary>
+		/// Defines if Project System supports Project Designer
+		/// </summary>
 		private bool supportsProjectDesigner;
+
 		private bool showProjectInSolutionPage = true;
+
 		private bool buildInProcess;
 
 		/// <summary>
@@ -401,20 +405,21 @@ namespace Microsoft.VisualStudio.Package
 		/// Caches all the generators registered for the project type.
 		/// </summary>
 		private Dictionary<string, GeneratorMetaData> generatorsMap = new Dictionary<string, GeneratorMetaData>();
-		#endregion
 
 		/// <summary>
 		/// Used for flavoring to hold the XML fragments
 		/// </summary>
 		private XmlDocument xmlFragments = null;
 
-                /// <summary>
-                /// Used to map types to CATID. This provide a generic way for us to do this
-                /// and make it simpler for a project to provide it's CATIDs for the different type of objects
-                /// for which it wants to support extensibility. This also enables us to have multiple
-                /// type mapping to the same CATID if we choose to.
-                /// </summary>
-                private Dictionary<Type, Guid> catidMapping = new Dictionary<Type, Guid>();
+		/// <summary>
+		/// Used to map types to CATID. This provide a generic way for us to do this
+		/// and make it simpler for a project to provide it's CATIDs for the different type of objects
+		/// for which it wants to support extensibility. This also enables us to have multiple
+		/// type mapping to the same CATID if we choose to.
+		/// </summary>
+		private Dictionary<Type, Guid> catidMapping = new Dictionary<Type, Guid>();
+
+		#endregion
 
 		#region abstract properties
 		/// <summary>
@@ -435,6 +440,28 @@ namespace Microsoft.VisualStudio.Package
 		public abstract string ProjectType
 		{
 			get;
+		}
+		#endregion
+
+		#region virtual properties
+		/// <summary>
+		/// This is the project instance guid that is peristed in the project file
+		/// </summary>
+		[System.ComponentModel.BrowsableAttribute(false)]
+		public virtual Guid ProjectIDGuid
+		{
+			get
+			{
+				return this.projectIdGuid;
+			}
+			set
+			{
+				this.projectIdGuid = value;
+				if (this.buildProject != null)
+				{
+					this.SetProjectProperty("ProjectGuid", this.projectIdGuid.ToString("B"));
+				}
+			}
 		}
 		#endregion
 
@@ -721,7 +748,6 @@ namespace Microsoft.VisualStudio.Package
 			}
 		}
 
-
 		public Microsoft.VisualStudio.Shell.Url BaseURI
 		{
 			get
@@ -775,7 +801,6 @@ namespace Microsoft.VisualStudio.Package
 				this.outputBaseRelativePath = value;
 			}
 		}
-
 
 		/// <summary>
 		/// Flag for controling query edit should communicate with the scc manager.
@@ -916,7 +941,7 @@ namespace Microsoft.VisualStudio.Package
 		/// <summary>
 		/// Defines the build project that has loaded the project file.
 		/// </summary>
-		internal protected Microsoft.Build.BuildEngine.Project BuildProject
+		protected internal Microsoft.Build.BuildEngine.Project BuildProject
 		{
 			get
 			{
@@ -944,7 +969,6 @@ namespace Microsoft.VisualStudio.Package
 				this.buildEngine = value;
 			}
 		}
-
 		#endregion
 
 		#region ctor
@@ -956,6 +980,11 @@ namespace Microsoft.VisualStudio.Package
 		#endregion
 
 		#region overridden methods
+		protected override NodeProperties CreatePropertiesObject()
+		{
+			return new ProjectNodeProperties(this);
+		}
+
 		/// <summary>
 		/// Sets the properties for the project node.
 		/// </summary>
@@ -1259,179 +1288,6 @@ namespace Microsoft.VisualStudio.Package
 			return Path.Combine(this.BaseURI.AbsoluteUrl, this.filename);
 		}
 
-		#region CopyAndPaste
-		/// <summary>
-		/// Handle the Cut operation on a project node
-		/// </summary>
-		protected internal virtual int CutToClipboard()
-		{
-			int returnValue = (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
-			try
-			{
-				this.RegisterClipboardNotifications(true);
-
-				// Create our data object and change the selection to show item(s) being cut
-				IOleDataObject dataObject = this.PackageSelectionDataObject(true);
-				if (dataObject != null)
-				{
-					this.SourceDraggedOrCutOrCopied = true;
-
-					// Add our cut item(s) to the clipboard
-					ErrorHandler.ThrowOnFailure(UnsafeNativeMethods.OleSetClipboard(dataObject));
-					// Inform VS (UiHierarchyWindow) of the cut
-					IVsUIHierWinClipboardHelper clipboardHelper = (IVsUIHierWinClipboardHelper)GetService(typeof(SVsUIHierWinClipboardHelper));
-					if (clipboardHelper != null)
-					{
-						returnValue = ErrorHandler.ThrowOnFailure(clipboardHelper.Cut(dataObject));
-					}
-				}
-			}
-			catch (COMException e)
-			{
-				Trace.WriteLine("Exception : " + e.Message);
-				returnValue = e.ErrorCode;
-			}
-
-			return returnValue;
-		}
-
-		/// <summary>
-		/// Handle the Copy operation on a project node
-		/// </summary>
-		protected internal virtual int CopyToClipboard()
-		{
-			int returnValue = (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
-			try
-			{
-				this.RegisterClipboardNotifications(true);
-
-				// Create our data object and change the selection to show item(s) being copy
-				IOleDataObject dataObject = this.PackageSelectionDataObject(false);
-				if (dataObject != null)
-				{
-					this.SourceDraggedOrCutOrCopied = true;
-
-					// Add our copy item(s) to the clipboard
-					ErrorHandler.ThrowOnFailure(UnsafeNativeMethods.OleSetClipboard(dataObject));
-					// Inform VS (UiHierarchyWindow) of the copy
-					IVsUIHierWinClipboardHelper clipboardHelper = (IVsUIHierWinClipboardHelper)GetService(typeof(SVsUIHierWinClipboardHelper));
-					if (clipboardHelper != null)
-					{
-						returnValue = ErrorHandler.ThrowOnFailure(clipboardHelper.Copy(dataObject));
-					}
-				}
-			}
-			catch (COMException e)
-			{
-				Trace.WriteLine("Exception : " + e.Message);
-				returnValue = e.ErrorCode;
-			}
-			catch (ArgumentException e)
-			{
-				Trace.WriteLine("Exception : " + e.Message);
-				returnValue = Marshal.GetHRForException(e);
-			}
-
-			return returnValue;
-		}
-		/// <summary>
-		/// Handle the Paste operation of a project node
-		/// </summary>
-		protected internal virtual int PasteFromClipboard(HierarchyNode targetNode)
-		{
-			int returnValue = (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
-
-			try
-			{
-
-				IOleDataObject dataObject = null;
-				ErrorHandler.ThrowOnFailure(UnsafeNativeMethods.OleGetClipboard(out dataObject));
-				if (dataObject == null)
-				{
-					return VSConstants.E_UNEXPECTED;
-				}
-
-				IVsUIHierWinClipboardHelper clipboardHelper = (IVsUIHierWinClipboardHelper)GetService(typeof(SVsUIHierWinClipboardHelper));
-				if (clipboardHelper == null)
-				{
-					return VSConstants.E_FAIL;
-				}
-
-				uint effects = 0;
-				DropDataType ddt = DropDataType.None;
-				try
-				{
-					// In theory, nodes that don't accept paste themselve should not enable the command, but
-					// just in case, we delegate to the DragTarget handler for the current node.
-					ddt = this.ProcessSelectionDataObject(dataObject, targetNode.GetDragTargetHandlerNode());
-					effects = (uint)QueryDropEffect(ddt, 0);
-				}
-				//TODO (beta2): Currently if an the item to be pasted is deleted the shell throws a memory exception. Check behaviour in beta2.
-				catch (OutOfMemoryException)
-				{
-					string message = SR.GetString(SR.PasteFailed);
-					string title = string.Empty;
-					OLEMSGICON icon = OLEMSGICON.OLEMSGICON_CRITICAL;
-					OLEMSGBUTTON buttons = OLEMSGBUTTON.OLEMSGBUTTON_OK;
-					OLEMSGDEFBUTTON defaultButton = OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
-					VsShellUtilities.ShowMessageBox(this.site, title, message, icon, buttons, defaultButton);
-				}
-				catch (ExternalException e)
-				{
-					Trace.WriteLine("Exception : " + e.Message);
-
-					// If it is a drop from windows and we get any kind of error ignore it. This
-					// prevents bogus messages from the shell from being displayed
-					if (ddt != DropDataType.Shell)
-					{
-						throw e;
-					}
-
-					effects = (uint)DropEffect.None;
-				}
-				finally
-				{
-
-					// Inform VS (UiHierarchyWindow) of the paste
-					returnValue = ErrorHandler.ThrowOnFailure(clipboardHelper.Paste(dataObject, effects));
-				}
-			}
-			catch (COMException e)
-			{
-				Trace.WriteLine("Exception : " + e.Message);
-
-				returnValue = e.ErrorCode;
-			}
-
-			return returnValue;
-		}
-		/// <summary>
-		/// Register/Unregister for Clipboard events for the UiHierarchyWindow (solution explorer)
-		/// </summary>
-		/// <param name="register"></param>
-		protected void RegisterClipboardNotifications(bool register)
-		{
-			// Get the UiHierarchy window clipboard helper service
-			IVsUIHierWinClipboardHelper clipboardHelper = (IVsUIHierWinClipboardHelper)GetService(typeof(SVsUIHierWinClipboardHelper));
-			if (clipboardHelper == null)
-			{
-				return;
-			}
-
-			if (register && this.copyPasteCookie == 0)
-			{
-				// Register
-				ErrorHandler.ThrowOnFailure(clipboardHelper.AdviseClipboardHelperEvents(this, out this.copyPasteCookie));
-				Debug.Assert(this.copyPasteCookie != 0, "AdviseClipboardHelperEvents returned an invalid cookie");
-			}
-			else if (!register && this.copyPasteCookie != 0)
-			{
-				// Unregister
-				ErrorHandler.ThrowOnFailure(clipboardHelper.UnadviseClipboardHelperEvents(this.copyPasteCookie));
-				this.copyPasteCookie = 0;
-			}
-		}
-		#endregion
 		/// <summary>
 		/// Handles command status on the project node. If a command cannot be handled then the base should be called.
 		/// </summary>
@@ -1545,6 +1401,11 @@ namespace Microsoft.VisualStudio.Package
 			return base.ExecCommandOnNode(guidCmdGroup, cmd, nCmdexecopt, pvaIn, pvaOut);
 		}
 
+		/// <summary>
+		/// Get the boolean value for the deletion of a project item
+		/// </summary>
+		/// <param name="deleteOperation">A flag that specifies the type of delete operation (delete from storage or remove from project)</param>
+		/// <returns>true if item can be deleted from project</returns>
 		protected override bool CanDeleteItem(__VSDELETEITEMOPERATION deleteOperation)
 		{
 			if (deleteOperation == __VSDELETEITEMOPERATION.DELITEMOP_RemoveFromProject)
@@ -1567,35 +1428,10 @@ namespace Microsoft.VisualStudio.Package
 			return null;
 		}
 
+
 		#endregion
 
-		#region virtual method
-		/// <summary>
-		/// List of Guids of the config independent property pages. It is called by the GetProperty for VSHPROPID_PropertyPagesCLSIDList property.
-		/// </summary>
-		/// <returns></returns>
-		protected virtual Guid[] GetConfigurationIndependentPropertyPages()
-		{
-			return new Guid[] { Guid.Empty };
-		}
-
-		/// <summary>
-		/// Returns a list of Guids of the configuration dependent property pages. It is called by the GetProperty for VSHPROPID_CfgPropertyPagesCLSIDList property.
-		/// </summary>
-		/// <returns></returns>
-		protected virtual Guid[] GetConfigurationDependentPropertyPages()
-		{
-			return new Guid[] { Guid.Empty };
-		}
-
-		/// <summary>
-		/// An ordered list of guids of the prefered property pages. See <see cref="__VSHPROPID.VSHPROPID_PriorityPropertyPagesCLSIDList"/>
-		/// </summary>
-		/// <returns>An array of guids.</returns>
-		protected virtual Guid[] GetPriorityProjectDesignerPages()
-		{
-			return new Guid[] { Guid.Empty };
-		}
+		#region virtual methods
 
 		/// <summary>
 		/// Executes a wizard.
@@ -1993,24 +1829,6 @@ namespace Microsoft.VisualStudio.Package
             return newNode;
         }
 
-
-		[System.ComponentModel.BrowsableAttribute(false)]
-		public virtual Guid ProjectIDGuid
-		{
-			get
-			{
-				return this.projectIdGuid;
-			}
-			set
-			{
-				this.projectIdGuid = value;
-				if (this.buildProject != null)
-				{
-					this.SetProjectProperty("ProjectGuid", this.projectIdGuid.ToString("B"));
-				}
-			}
-		}
-
 		/// <summary>
 		/// This is called from the main thread before the background build starts.
 		///  fCleanBuild is not part of the vsopts, but passed down as the callpath is differently
@@ -2039,7 +1857,6 @@ namespace Microsoft.VisualStudio.Package
 			this.buildIsPrepared = true;
 		}
 
-
 		/// <summary>
 		/// Do the build by invoking msbuild
 		/// </summary>
@@ -2047,6 +1864,14 @@ namespace Microsoft.VisualStudio.Package
 		{
 			lock (ProjectNode.BuildLock)
 			{
+                bool engineLogOnlyCritical = false;
+                // If there is some output, then we can ask the build engine to log more than
+                // just the critical events.
+                if (null != output)
+                {
+                    engineLogOnlyCritical = BuildEngine.OnlyLogCriticalEvents;
+                    BuildEngine.OnlyLogCriticalEvents = false;
+                }
 				this.SetOutputLogger(output);
 				MSBuildResult result = MSBuildResult.Failed;
 
@@ -2058,7 +1883,11 @@ namespace Microsoft.VisualStudio.Package
 				finally
 				{
 					// Unless someone specifically request to use an output window pane, we should not output to it
-					this.SetOutputLogger(null);
+					if (null != output)
+					{
+						this.SetOutputLogger(null);
+						BuildEngine.OnlyLogCriticalEvents = engineLogOnlyCritical;
+					}
 				}
 
 				return result;
@@ -2080,7 +1909,11 @@ namespace Microsoft.VisualStudio.Package
 			return property.FinalValue;
 		}
 
-
+		/// <summary>
+		/// Set value of project property
+		/// </summary>
+		/// <param name="propertyName">Name of property</param>
+		/// <param name="propertyValue">Value of property</param>
 		public virtual void SetProjectProperty(string propertyName, string propertyValue)
 		{
 			if (propertyName == null)
@@ -2113,7 +1946,6 @@ namespace Microsoft.VisualStudio.Package
 			}
 			return;
 		}
-
 
 		public virtual ProjectOptions GetProjectOptions(string config)
 		{
@@ -2326,8 +2158,6 @@ namespace Microsoft.VisualStudio.Package
 			return this.GetBoolAttr(properties, name);
 		}
 
-
-
 		public virtual string GetAssemblyName(string config)
 		{
 			this.SetConfiguration(config);
@@ -2335,7 +2165,6 @@ namespace Microsoft.VisualStudio.Package
 
 			return GetAssemblyName(properties);
 		}
-
 
 		public virtual bool IsCodeFile(string strFileName)
 		{
@@ -2429,19 +2258,94 @@ namespace Microsoft.VisualStudio.Package
 			return curParent;
 		}
 
-		internal protected FolderNode CreateFolderNode(string path)
+		/// <summary>
+		/// Defines if Node has Designer. By default we do not support designers for nodes
+		/// </summary>
+		/// <param name="itemPath">Path to item to query for designer support</param>
+		/// <returns>true if node has designer</returns>
+		public virtual bool NodeHasDesigner(string itemPath)
 		{
-			ProjectElement item = this.AddFolderToMsBuild(path);
-			FolderNode folderNode = CreateFolderNode(path, item);
+			return false;
+		}
+
+
+		/// <summary>
+		/// List of Guids of the config independent property pages. It is called by the GetProperty for VSHPROPID_PropertyPagesCLSIDList property.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual Guid[] GetConfigurationIndependentPropertyPages()
+		{
+			return new Guid[] { Guid.Empty };
+		}
+
+		/// <summary>
+		/// Returns a list of Guids of the configuration dependent property pages. It is called by the GetProperty for VSHPROPID_CfgPropertyPagesCLSIDList property.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual Guid[] GetConfigurationDependentPropertyPages()
+		{
+			return new Guid[] { Guid.Empty };
+		}
+
+		/// <summary>
+		/// An ordered list of guids of the prefered property pages. See <see cref="__VSHPROPID.VSHPROPID_PriorityPropertyPagesCLSIDList"/>
+		/// </summary>
+		/// <returns>An array of guids.</returns>
+		protected virtual Guid[] GetPriorityProjectDesignerPages()
+		{
+			return new Guid[] { Guid.Empty };
+		}
+
+		/// <summary>
+		/// Takes a path and verifies that we have a node with that name.
+		/// It is meant to be a helper method for CreateFolderNodes().
+		/// For some scenario it may be useful to override.
+		/// </summary>
+		protected virtual FolderNode VerifySubFolderExists(string strPath, HierarchyNode parent)
+		{
+			FolderNode folderNode = null;
+			uint uiItemId;
+			Url url = new Url(this.BaseURI, strPath);
+			string strFullPath = url.AbsoluteUrl;
+			// Folders end in our storage with a backslash, so add one...
+			ErrorHandler.ThrowOnFailure(this.ParseCanonicalName(strFullPath, out uiItemId));
+			if (uiItemId != 0)
+			{
+				Debug.Assert(this.NodeFromItemId(uiItemId) is FolderNode, "Not a FolderNode");
+				folderNode = (FolderNode)this.NodeFromItemId(uiItemId);
+			}
+
+			if (folderNode == null)
+			{
+				// folder does not exist yet...
+				// We could be in the process of loading so see if msbuild knows about it
+				MSBuild.BuildItemGroup folders = buildProject.GetEvaluatedItemsByName(ProjectFileConstants.Folder);
+				ProjectElement item = null;
+				foreach (MSBuild.BuildItem folder in folders)
+				{
+					if (String.Compare(folder.FinalItemSpec.TrimEnd('\\'), strPath.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase) == 0)
+					{
+						item = new ProjectElement(this, folder, false);
+						break;
+					}
+				}
+				// If MSBuild did not know about it, create a new one
+				if (item == null)
+					item = this.AddFolderToMsBuild(strPath);
+				folderNode = this.CreateFolderNode(strPath, item);
+				parent.AddChild(folderNode);
+			}
+
 			return folderNode;
 		}
+		
 		/// <summary>
 		/// To support virtual folders, override this method to return your own folder nodes
 		/// </summary>
 		/// <param name="path">Path to store for this folder</param>
 		/// <param name="item">Item corresponding to the folder</param>
 		/// <returns>A FolderNode that can then be added to the hierarchy</returns>
-		internal protected virtual FolderNode CreateFolderNode(string path, ProjectElement item)
+		protected internal virtual FolderNode CreateFolderNode(string path, ProjectElement item)
 		{
 			FolderNode folderNode = new FolderNode(this, path, item);
 			return folderNode;
@@ -2451,7 +2355,7 @@ namespace Microsoft.VisualStudio.Package
 		/// Gets the list of selected HierarchyNode objects
 		/// </summary>
 		/// <returns>A list of HierarchyNode objects</returns>
-		internal protected virtual IList<HierarchyNode> GetSelectedNodes()
+		protected internal virtual IList<HierarchyNode> GetSelectedNodes()
 		{
 			// Retrieve shell interface in order to get current selection
 			IVsMonitorSelection monitorSelection = this.GetService(typeof(IVsMonitorSelection)) as IVsMonitorSelection;
@@ -2544,12 +2448,6 @@ namespace Microsoft.VisualStudio.Package
 			return selectedNodes;
 		}
 
-		public virtual bool NodeHasDesigner(string itemPath)
-		{
-			return false;
-		}
-
-
 		/// <summary>
 		/// Recursevily walks the hierarchy nodes and redraws the state icons
 		/// </summary>
@@ -2570,7 +2468,7 @@ namespace Microsoft.VisualStudio.Package
 		/// Handles the shows all objects command.
 		/// </summary>
 		/// <returns></returns>
-		internal protected virtual int ShowAllFiles()
+		protected internal virtual int ShowAllFiles()
 		{
 			return (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
 		}
@@ -2579,7 +2477,7 @@ namespace Microsoft.VisualStudio.Package
 		/// Handles the Add web reference command.
 		/// </summary>
 		/// <returns></returns>
-		internal protected virtual int AddWebReference()
+		protected internal virtual int AddWebReference()
 		{
 			return (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
 		}
@@ -2588,7 +2486,7 @@ namespace Microsoft.VisualStudio.Package
 		/// Unloads the project.
 		/// </summary>
 		/// <returns></returns>
-		internal protected virtual int UnloadProject()
+		protected internal virtual int UnloadProject()
 		{
 			return (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
 		}
@@ -2602,6 +2500,9 @@ namespace Microsoft.VisualStudio.Package
 			return (int)OleConstants.OLECMDERR_E_NOTSUPPORTED;
 		}
 
+		/// <summary>
+		/// Reload project from project file
+		/// </summary>
 		protected virtual void Reload()
 		{
 			Debug.Assert(this.buildEngine != null, "There is no build engine defined for this project");
@@ -2740,7 +2641,6 @@ namespace Microsoft.VisualStudio.Package
 			}
 		}
 
-
 		/// <summary>
 		/// Called by the project to know if the item is a file (that is part of the project)
 		/// or an intermediate file used by the MSBuild tasks/targets
@@ -2753,7 +2653,6 @@ namespace Microsoft.VisualStudio.Package
 			if (String.Compare(type, BuildAction.Compile.ToString(), StringComparison.OrdinalIgnoreCase) == 0
 				|| String.Compare(type, BuildAction.Content.ToString(), StringComparison.OrdinalIgnoreCase) == 0
 				|| String.Compare(type, BuildAction.EmbeddedResource.ToString(), StringComparison.OrdinalIgnoreCase) == 0
-                || String.Compare(type, BuildAction.Concern.ToString(), StringComparison.OrdinalIgnoreCase) == 0
 				|| String.Compare(type, BuildAction.None.ToString(), StringComparison.OrdinalIgnoreCase) == 0)
 				return true;
 
@@ -2774,6 +2673,10 @@ namespace Microsoft.VisualStudio.Package
 					|| String.Compare(itemType, ProjectFileConstants.WebReferenceFolder, StringComparison.OrdinalIgnoreCase) == 0);
 		}
 
+		/// <summary>
+		/// Associate window output pane to the build logger
+		/// </summary>
+		/// <param name="output"></param>
 		protected virtual void SetOutputLogger(IVsOutputWindowPane output)
 		{
 			// Create our logger, if it was not specified
@@ -2802,9 +2705,9 @@ namespace Microsoft.VisualStudio.Package
 				{
 					string registryRoot;
 					registry.GetLocalRegistryRoot(out registryRoot);
-					if (!String.IsNullOrEmpty(registryRoot) && this.BuildLogger is IDEBuildLogger)
+					IDEBuildLogger logger = this.BuildLogger as IDEBuildLogger;
+					if (!String.IsNullOrEmpty(registryRoot) && (null != logger))
 					{
-						IDEBuildLogger logger = (IDEBuildLogger)this.BuildLogger;
 						logger.BuildVerbosityRegistryRoot = registryRoot;
 						logger.ErrorString = this.ErrorString;
 						logger.WarningString = this.WarningString;
@@ -2823,6 +2726,10 @@ namespace Microsoft.VisualStudio.Package
 			}
 		}
 
+		/// <summary>
+		/// Set configuration properties for a specific configuration
+		/// </summary>
+		/// <param name="config">configuration name</param>
 		protected virtual void SetBuildConfigurationProperties(string config)
 		{
 			ProjectOptions options = null;
@@ -2912,12 +2819,20 @@ namespace Microsoft.VisualStudio.Package
 			}
 		}
 
+		/// <summary>
+		/// Factory method for configuration provider
+		/// </summary>
+		/// <returns>Configuration provider created</returns>
 		protected virtual ConfigProvider CreateConfigProvider()
 		{
 			return new ConfigProvider(this);
 		}
 
-		protected virtual ReferenceContainerNode CreateReferenceContanerNode()
+		/// <summary>
+		/// Factory method for reference container node
+		/// </summary>
+		/// <returns>ReferenceContainerNode created</returns>
+		protected virtual ReferenceContainerNode CreateReferenceContainerNode()
 		{
 			return new ReferenceContainerNode(this);
 		}
@@ -2934,7 +2849,6 @@ namespace Microsoft.VisualStudio.Package
 			newFileName.Trim();
 
 			string errorMessage = String.Empty;
-			string fileName = Path.GetFileNameWithoutExtension(newFileName);
 
 			if (newFileName.Length > NativeMethods.MAX_PATH)
 			{
@@ -2942,6 +2856,8 @@ namespace Microsoft.VisualStudio.Package
 			}
 			else
 			{
+				string fileName = String.Empty;
+
 				try
 				{
 					fileName = Path.GetFileNameWithoutExtension(newFileName);
@@ -3042,7 +2958,6 @@ namespace Microsoft.VisualStudio.Package
 			return VSConstants.S_OK;
 		}
 
-
 		/// <summary>
 		/// Saves project file related information to the new file name. It also calls msbuild API to save the project file.
 		/// It is called by the SaveAs method and the SetEditLabel before the project file rename related events are triggered. 
@@ -3113,7 +3028,6 @@ namespace Microsoft.VisualStudio.Package
 
 			return newItem;
 		}
-
 
 		/// <summary>
 		/// Determines whether an item can be owerwritten in the hierarchy.
@@ -3226,40 +3140,6 @@ namespace Microsoft.VisualStudio.Package
 
 		}
 
-		/// <summary>
-		/// Determines if the paste command should be allowed.
-		/// </summary>
-		/// <returns></returns>
-		protected internal virtual bool AllowPasteCommand()
-		{
-			IOleDataObject dataObject = null;
-			try
-			{
-				ErrorHandler.ThrowOnFailure(UnsafeNativeMethods.OleGetClipboard(out dataObject));
-				if (dataObject == null)
-				{
-					return false;
-				}
-
-				// First see if this is a set of storage based items
-				FORMATETC format = DragDropHelper.CreateFormatEtc((ushort)DragDropHelper.CF_VSSTGPROJECTITEMS);
-				if (dataObject.QueryGetData(new FORMATETC[] { format }) == VSConstants.S_OK)
-					return true;
-				// Try reference based items
-				format = DragDropHelper.CreateFormatEtc((ushort)DragDropHelper.CF_VSREFPROJECTITEMS);
-				if (dataObject.QueryGetData(new FORMATETC[] { format }) == VSConstants.S_OK)
-					return true;
-				// Try windows explorer files format
-				format = DragDropHelper.CreateFormatEtc((ushort)NativeMethods.CF_HDROP);
-				return (dataObject.QueryGetData(new FORMATETC[] { format }) == VSConstants.S_OK);
-			}
-			// We catch External exceptions since it might be that it is not our data on the clipboard.
-			catch (ExternalException e)
-			{
-				Trace.WriteLine("Exception :" + e.Message);
-				return false;
-			}
-		}
 
 		/// <summary>
 		/// This is the list of output groups that the configuration object should
@@ -3326,6 +3206,7 @@ namespace Microsoft.VisualStudio.Package
 
 			this.SetConfiguration(Utilities.GetActiveConfigurationName(automationObject));
 		}
+		
 		/// <summary>
 		/// Set the configuration property in MSBuild.
 		/// This does not get persisted and is used to evaluate msbuild conditions
@@ -3361,17 +3242,17 @@ namespace Microsoft.VisualStudio.Package
 			this.buildProject.GlobalProperties.SetProperty(ProjectFileConstants.Configuration, config);
 			this.currentConfig = this.buildProject.EvaluatedProperties;
 		}
-
+		
 		/// <summary>
 		/// Loads reference items from the project file into the hierarchy.
 		/// </summary>
-		protected internal void ProcessReferences()
+		protected internal virtual void ProcessReferences()
 		{
 			IReferenceContainer container = GetReferenceContainer();
 			if (null == container)
 			{
 				// Process References
-				ReferenceContainerNode referencesFolder = CreateReferenceContanerNode();
+				ReferenceContainerNode referencesFolder = CreateReferenceContainerNode();
 				if (null == referencesFolder)
 				{
 					// This project type does not support references or there is a problem
@@ -3388,9 +3269,23 @@ namespace Microsoft.VisualStudio.Package
 		}
 
 		/// <summary>
+		/// Loads folders from the project file into the hierarchy.
+		/// </summary>
+		protected internal virtual void ProcessFolders()
+		{
+			// Process Folders (useful to persist empty folder)
+			MSBuild.BuildItemGroup folders = this.buildProject.GetEvaluatedItemsByName(ProjectFileConstants.Folder);
+			foreach (MSBuild.BuildItem folder in folders)
+			{
+				string strPath = folder.FinalItemSpec;
+				this.CreateFolderNodes(strPath);
+			}
+		}
+
+		/// <summary>
 		/// Loads file items from the project file into the hierarchy.
 		/// </summary>
-		protected internal void ProcessFiles()
+		protected internal virtual void ProcessFiles()
 		{
 			List<String> subitemsKeys = new List<String>();
 			Dictionary<String, MSBuild.BuildItem> subitems = new Dictionary<String, MSBuild.BuildItem>();
@@ -3438,7 +3333,7 @@ namespace Microsoft.VisualStudio.Package
         /// </summary>
         /// <param name="subitemsKeys">List of sub item keys </param>
         /// <param name="subitems"></param>
-        protected internal void ProcessDependentFileNodes(List<String> subitemsKeys, Dictionary<String, MSBuild.BuildItem> subitems)
+        protected internal virtual void ProcessDependentFileNodes(List<String> subitemsKeys, Dictionary<String, MSBuild.BuildItem> subitems)
         {
             foreach (string key in subitemsKeys)
             {
@@ -3450,74 +3345,15 @@ namespace Microsoft.VisualStudio.Package
             }
         }
 
-
 		/// <summary>
-		/// Add an item to the hierarchy based on the item path
+		/// For flavored projects which implement IPersistXMLFragment, load the information now
 		/// </summary>
-		/// <param name="item">Item to add</param>
-		/// <returns>Added node</returns>
-		private HierarchyNode AddIndependentFileNode(MSBuild.BuildItem item)
+		protected internal virtual void LoadNonBuildInformation()
 		{
-			HierarchyNode currentParent = GetItemParentNode(item);
-			return AddFileNodeToNode(item, currentParent);
-		}
-
-        /// <summary>
-        /// Add a dependent file node to the hierarchy
-        /// </summary>
-        /// <param name="item">msbuild item to add</param>
-        /// <param name="parentNode">Parent Node</param>
-        /// <returns>Added node</returns>
-        private HierarchyNode AddDependentFileNodeToNode(MSBuild.BuildItem item, HierarchyNode parentNode)
-        {
-            FileNode node = this.CreateDependentFileNode(new ProjectElement(this, item, false));
-            parentNode.AddChild(node);
-            return node;
-        }
-
-        /// <summary>
-        /// Add a file node to the hierarchy
-        /// </summary>
-        /// <param name="item">msbuild item to add</param>
-        /// <param name="parentNode">Parent Node</param>
-        /// <returns>Added node</returns>
-        private HierarchyNode AddFileNodeToNode(MSBuild.BuildItem item, HierarchyNode parentNode)
-		{
-			FileNode node = this.CreateFileNode(new ProjectElement(this, item, false));
-			parentNode.AddChild(node);
-			return node;
-		}
-
-        /// <summary>
-        /// Get the parent node of an msbuild item
-        /// </summary>
-        /// <param name="item">msbuild item</param>
-        /// <returns>parent node</returns>
-		private HierarchyNode GetItemParentNode(MSBuild.BuildItem item)
-		{
-			HierarchyNode currentParent = this;
-			string strPath = item.FinalItemSpec;
-
-			strPath = Path.GetDirectoryName(strPath);
-			if (strPath.Length > 0)
+			IVsHierarchy outerHierarchy = HierarchyNode.GetOuterHierarchy(this);
+			if (outerHierarchy is IPersistXMLFragment)
 			{
-				// Use the relative to verify the folders...
-				currentParent = this.CreateFolderNodes(strPath);
-			}
-			return currentParent;
-		}
-
-		/// <summary>
-		/// Loads folders from the project file into the hierarchy.
-		/// </summary>
-		protected internal void ProcessFolders()
-		{
-			// Process Folders (useful to persist empty folder)
-			MSBuild.BuildItemGroup folders = this.buildProject.GetEvaluatedItemsByName(ProjectFileConstants.Folder);
-			foreach (MSBuild.BuildItem folder in folders)
-			{
-				string strPath = folder.FinalItemSpec;
-				this.CreateFolderNodes(strPath);
+				this.LoadXmlFragment((IPersistXMLFragment)outerHierarchy, null);
 			}
 		}
 
@@ -3537,38 +3373,10 @@ namespace Microsoft.VisualStudio.Package
 				return node2.SortPriority - node1.SortPriority;
 			}
 		}
-
-		/// <summary>
-		/// Get the CATID corresponding to the specified type.
-		/// </summary>
-		/// <param name="type">Type of the object for which you want the CATID</param>
-		/// <returns>CATID</returns>
-		internal Guid GetCATIDForType(Type type)
-		{
-			if (type == null)
-				throw new ArgumentNullException("type");
-
-			if (catidMapping.ContainsKey(type))
-				return catidMapping[type];
-			// If you get here and you want your object to be extensible, then add a call to AddCATIDMapping() in your project constructor
-			return Guid.Empty;
-		}
-
-		/// <summary>
-		/// This is used to specify a CATID corresponding to a BrowseObject or an ExtObject.
-		/// The CATID can be any GUID you choose. For types which are your owns, you could use
-		/// their type GUID, while for other types (such as those provided in the MPF) you should
-		/// provide a different GUID.
-		/// </summary>
-		/// <param name="type">Type of the extensible object</param>
-		/// <param name="catid">GUID that extender can use to uniquely identify your object type</param>
-		protected void AddCATIDMapping(Type type, Guid catid)
-		{
-			catidMapping.Add(type, catid);
-		}
+		
 		#endregion
 
-		#region Non virtual public methods
+		#region non-virtual methods
 
 		/// <summary>
 		/// Suspends MSBuild
@@ -3663,7 +3471,6 @@ namespace Microsoft.VisualStudio.Package
 			return this.Build(0, config, output, target);
 		}
 
-
 		/// <summary>
 		/// Overloaded method to invoke MSBuild. Does not log build results to the output window pane.
 		/// </summary>
@@ -3688,7 +3495,11 @@ namespace Microsoft.VisualStudio.Package
 			return this.Build(0, String.Empty, output, target);
 		}
 
-
+		/// <summary>
+		/// Get the output path for a specific configuration name
+		/// </summary>
+		/// <param name="config">name of configuration</param>
+		/// <returns>Output path</returns>
 		public string GetOutputPath(string config)
 		{
 			this.SetConfiguration(config);
@@ -3697,12 +3508,20 @@ namespace Microsoft.VisualStudio.Package
 			return this.GetOutputPath(properties);
 		}
 
+		/// <summary>
+		/// Get value of Project property
+		/// </summary>
+		/// <param name="propertyName">Name of Property to retrieve</param>
+		/// <returns>Value of property</returns>
 		public string GetProjectProperty(string propertyName)
 		{
 			return this.GetProjectProperty(propertyName, true);
 		}
 
-
+		/// <summary>
+		/// Set dirty state of project
+		/// </summary>
+		/// <param name="value">boolean value indicating dirty state</param>
 		public void SetProjectFileDirty(bool value)
 		{
 			this.options = null;
@@ -3714,7 +3533,11 @@ namespace Microsoft.VisualStudio.Package
 			}
 		}
 
-
+		/// <summary>
+		/// Get output assembly for a specific configuration name
+		/// </summary>
+		/// <param name="config">Name of configuration</param>
+		/// <returns>Name of output assembly</returns>
 		public string GetOutputAssembly(string config)
 		{
 			ProjectOptions options = this.GetProjectOptions(config);
@@ -3722,7 +3545,11 @@ namespace Microsoft.VisualStudio.Package
 			return options.OutputAssembly;
 		}
 
-
+		/// <summary>
+		/// Get Node from ItemID.
+		/// </summary>
+		/// <param name="itemId">ItemID for the requested node</param>
+		/// <returns>Node if found</returns>
 		public HierarchyNode NodeFromItemId(uint itemId)
 		{
 			if (VSConstants.VSITEMID_ROOT == itemId)
@@ -3762,9 +3589,387 @@ namespace Microsoft.VisualStudio.Package
 			return new ProjectElement(this, item, false);
 		}
 
+		/// <summary>
+		/// Create FolderNode from Path
+		/// </summary>
+		/// <param name="path">Path to folder</param>
+		/// <returns>FolderNode created that can be added to the hierarchy</returns>
+		protected internal FolderNode CreateFolderNode(string path)
+		{
+			ProjectElement item = this.AddFolderToMsBuild(path);
+			FolderNode folderNode = CreateFolderNode(path, item);
+			return folderNode;
+		}
+
+		/// <summary>
+		/// Verify if the file can be written to.
+		/// Return false if the file is read only and/or not checked out
+		/// and the user did not give permission to change it.
+		/// Note that exact behavior can also be affected based on the SCC
+		/// settings under Tools->Options.
+		/// </summary>
+		internal bool QueryEditProjectFile(bool suppressUI)
+		{
+			bool result = true;
+			if (this.site == null)
+			{
+				// We're already zombied. Better return FALSE.
+				result = false;
+			}
+			else if (this.disableQueryEdit)
+			{
+				return true;
+			}
+			else
+			{
+				IVsQueryEditQuerySave2 queryEditQuerySave = this.GetService(typeof(SVsQueryEditQuerySave)) as IVsQueryEditQuerySave2;
+				if (queryEditQuerySave != null)
+				{   // Project path dependends on server/client project
+					string path = this.filename;
+
+					tagVSQueryEditFlags qef = tagVSQueryEditFlags.QEF_AllowInMemoryEdits;
+					if (suppressUI)
+						qef |= tagVSQueryEditFlags.QEF_SilentMode;
+
+					// If we are debugging, we want to prevent our project from being reloaded. To 
+					// do this, we pass the QEF_NoReload flag
+					if (!Utilities.IsVisualStudioInDesignMode(this.Site))
+						qef |= tagVSQueryEditFlags.QEF_NoReload;
+
+					uint verdict;
+					uint moreInfo;
+					string[] files = new string[1];
+					files[0] = path;
+					uint[] flags = new uint[1];
+					VSQEQS_FILE_ATTRIBUTE_DATA[] attributes = new VSQEQS_FILE_ATTRIBUTE_DATA[1];
+					int hr = queryEditQuerySave.QueryEditFiles(
+								(uint)qef,
+								1, // 1 file
+								files, // array of files
+								flags, // no per file flags
+								attributes, // no per file file attributes
+								out verdict,
+								out moreInfo /* ignore additional results */);
+
+					tagVSQueryEditResult qer = (tagVSQueryEditResult)verdict;
+					if (ErrorHandler.Failed(hr) || (qer != tagVSQueryEditResult.QER_EditOK))
+					{
+						if (!suppressUI && !Utilities.IsInAutomationFunction(this.Site))
+						{
+							string message = SR.GetString(SR.CancelQueryEdit, path);
+							string title = string.Empty;
+							OLEMSGICON icon = OLEMSGICON.OLEMSGICON_CRITICAL;
+							OLEMSGBUTTON buttons = OLEMSGBUTTON.OLEMSGBUTTON_OK;
+							OLEMSGDEFBUTTON defaultButton = OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
+							VsShellUtilities.ShowMessageBox(this.Site, title, message, icon, buttons, defaultButton);
+						}
+						result = false;
+					}
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// Checks whether a hierarchy is a nested project.
+		/// </summary>
+		/// <param name="hierarchy"></param>
+		/// <returns></returns>
+		internal NestedProjectNode GetNestedProjectForHierarchy(IVsHierarchy hierarchy)
+		{
+			if (hierarchy != null && (hierarchy is IVsProject3))
+			{
+				IVsProject3 project = hierarchy as IVsProject3;
+
+				string mkDocument = String.Empty;
+				project.GetMkDocument(VSConstants.VSITEMID_ROOT, out mkDocument);
+
+				if (!String.IsNullOrEmpty(mkDocument))
+				{
+					HierarchyNode node = this.FindChild(mkDocument);
+
+					if (node != null && (node is NestedProjectNode))
+					{
+						return node as NestedProjectNode;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Given a node determines what is the directory that can accept files.
+		/// If the node is a FoldeNode than it is the Url of the Folder.
+		/// If the node is a ProjectNode it is the project folder.
+		/// Otherwise (such as FileNode subitem) it delegate the resolution to the parent node.
+		/// </summary>
+		internal string GetBaseDirectoryForAddingFiles(HierarchyNode nodeToAddFile)
+		{
+			string baseDir = String.Empty;
+
+			if (nodeToAddFile is FolderNode)
+			{
+				baseDir = nodeToAddFile.Url;
+			}
+			else if (nodeToAddFile is ProjectNode)
+			{
+				baseDir = this.ProjectFolder;
+			}
+			else if (nodeToAddFile != null)
+			{
+				baseDir = GetBaseDirectoryForAddingFiles(nodeToAddFile.Parent);
+			}
+
+
+			return baseDir;
+		}
+
+		/// <summary>
+		/// For internal use only.
+		/// This creates a copy of an existing configuration and add it to the project.
+		/// Caller should change the condition on the PropertyGroup.
+		/// If derived class want to accomplish this, they should call ConfigProvider.AddCfgsOfCfgName()
+		/// It is expected that in the future MSBuild will have support for this so we don't have to
+		/// do it manually.
+		/// </summary>
+		/// <param name="group">PropertyGroup to clone</param>
+		/// <returns></returns>
+		internal MSBuild.BuildPropertyGroup ClonePropertyGroup(MSBuild.BuildPropertyGroup group)
+		{
+			// Create a new (empty) PropertyGroup
+			MSBuild.BuildPropertyGroup newPropertyGroup = this.buildProject.AddNewPropertyGroup(false);
+
+			// Now copy everything from the group we are trying to clone to the group we are creating
+			if (!String.IsNullOrEmpty(group.Condition))
+				newPropertyGroup.Condition = group.Condition;
+			foreach (MSBuild.BuildProperty prop in group)
+			{
+				MSBuild.BuildProperty newProperty = newPropertyGroup.AddNewProperty(prop.Name, prop.Value);
+				if (!String.IsNullOrEmpty(prop.Condition))
+					newProperty.Condition = prop.Condition;
+			}
+
+			return newPropertyGroup;
+		}
+
+		/// <summary>
+		/// Registers a project with the Scc manager.
+		/// </summary>
+		protected void RegisterSccProject()
+		{
+
+			if (this.IsSccDisabled || this.isRegisteredWithScc || String.IsNullOrEmpty(this.sccProjectName))
+			{
+				return;
+			}
+
+			IVsSccManager2 sccManager = this.Site.GetService(typeof(SVsSccManager)) as IVsSccManager2;
+
+			if (sccManager != null)
+			{
+				NativeMethods.ThrowOnFailure(sccManager.RegisterSccProject(this, this.sccProjectName, this.sccAuxPath, this.sccLocalPath, this.sccProvider));
+
+				this.isRegisteredWithScc = true;
+			}
+		}
+
+		/// <summary>
+		///  Unregisters us from the SCC manager
+		/// </summary>
+		protected void UnRegisterProject()
+		{
+			if (this.IsSccDisabled || !this.isRegisteredWithScc)
+			{
+				return;
+			}
+
+			IVsSccManager2 sccManager = this.Site.GetService(typeof(SVsSccManager)) as IVsSccManager2;
+
+			if (sccManager != null)
+			{
+				NativeMethods.ThrowOnFailure(sccManager.UnregisterSccProject(this));
+				this.isRegisteredWithScc = false;
+			}
+		}
+
+		/// <summary>
+		/// Get the CATID corresponding to the specified type.
+		/// </summary>
+		/// <param name="type">Type of the object for which you want the CATID</param>
+		/// <returns>CATID</returns>
+		protected internal Guid GetCATIDForType(Type type)
+		{
+			if (type == null)
+				throw new ArgumentNullException("type");
+
+			if (catidMapping.ContainsKey(type))
+				return catidMapping[type];
+			// If you get here and you want your object to be extensible, then add a call to AddCATIDMapping() in your project constructor
+			return Guid.Empty;
+		}
+
+		/// <summary>
+		/// This is used to specify a CATID corresponding to a BrowseObject or an ExtObject.
+		/// The CATID can be any GUID you choose. For types which are your owns, you could use
+		/// their type GUID, while for other types (such as those provided in the MPF) you should
+		/// provide a different GUID.
+		/// </summary>
+		/// <param name="type">Type of the extensible object</param>
+		/// <param name="catid">GUID that extender can use to uniquely identify your object type</param>
+		protected void AddCATIDMapping(Type type, Guid catid)
+		{
+			catidMapping.Add(type, catid);
+		}
+
+		/// <summary>
+		/// Initialize an object with an XML fragment.
+		/// </summary>
+		/// <param name="iPersistXMLFragment">Object that support being initialized with an XML fragment</param>
+		/// <param name="configName">Name of the configuration being initialized, null if it is the project</param>
+		protected internal void LoadXmlFragment(IPersistXMLFragment persistXMLFragment, string configName)
+		{
+			if (xmlFragments == null)
+			{
+				// Retrieve the xml fragments from MSBuild
+				xmlFragments = new XmlDocument();
+				string fragments = this.BuildProject.GetProjectExtensions(ProjectFileConstants.VisualStudio);
+				fragments = String.Format("<root>{0}</root>", fragments);
+				xmlFragments.LoadXml(fragments);
+			}
+
+			// We need to loop through all the flavors
+			string flavorsGuid;
+			ErrorHandler.ThrowOnFailure(((IVsAggregatableProject)this).GetAggregateProjectTypeGuids(out flavorsGuid));
+			foreach (Guid flavor in Utilities.GuidsArrayFromSemicolonDelimitedStringOfGuids(flavorsGuid))
+			{
+				// Look for a matching fragment
+				string flavorGuidString = flavor.ToString("B");
+				string fragment = null;
+				XmlNode node = null;
+				foreach (XmlNode child in xmlFragments.FirstChild.ChildNodes)
+				{
+					if (child.Attributes.Count > 0)
+					{
+						string guid = String.Empty;
+						string configuration = String.Empty;
+						if (child.Attributes[ProjectFileConstants.Guid] != null)
+							guid = child.Attributes[ProjectFileConstants.Guid].Value;
+						if (child.Attributes[ProjectFileConstants.Configuration] != null)
+							configuration = child.Attributes[ProjectFileConstants.Configuration].Value;
+
+						if (String.Compare(child.Name, ProjectFileConstants.FlavorProperties, StringComparison.OrdinalIgnoreCase) == 0
+							&& String.Compare(guid, flavorGuidString, StringComparison.OrdinalIgnoreCase) == 0
+							&& ((String.IsNullOrEmpty(configName) && String.IsNullOrEmpty(configuration))
+								|| (String.Compare(configuration, configName, StringComparison.OrdinalIgnoreCase) == 0)))
+						{
+							// we found the matching fragment
+							fragment = child.InnerXml;
+							node = child;
+							break;
+						}
+					}
+				}
+
+				Guid flavorGuid = flavor;
+				if (String.IsNullOrEmpty(fragment))
+				{
+					// the fragment was not found so init with default values
+					ErrorHandler.ThrowOnFailure(persistXMLFragment.InitNew(ref flavorGuid, (uint)_PersistStorageType.PST_PROJECT_FILE));
+					// While we don't yet support user files, our flavors might, so we will store that in the project file until then
+					// TODO: Refactor this code when we support user files
+					ErrorHandler.ThrowOnFailure(persistXMLFragment.InitNew(ref flavorGuid, (uint)_PersistStorageType.PST_USER_FILE));
+				}
+				else
+				{
+					ErrorHandler.ThrowOnFailure(persistXMLFragment.Load(ref flavorGuid, (uint)_PersistStorageType.PST_PROJECT_FILE, fragment));
+					// While we don't yet support user files, our flavors might, so we will store that in the project file until then
+					// TODO: Refactor this code when we support user files
+					if (node.NextSibling != null && node.NextSibling.Attributes[ProjectFileConstants.User] != null)
+						ErrorHandler.ThrowOnFailure(persistXMLFragment.Load(ref flavorGuid, (uint)_PersistStorageType.PST_USER_FILE, node.NextSibling.InnerXml));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Retrieve all XML fragments that need to be saved from the flavors and store the information in msbuild.
+		/// </summary>
+		protected void PersistXMLFragments()
+		{
+			if (this.IsFlavorDirty() != 0)
+			{
+				XmlDocument doc = new XmlDocument();
+				XmlElement root = doc.CreateElement("ROOT");
+
+				// We will need the list of configuration inside the loop, so get it before entering the loop
+				uint[] count = new uint[1];
+				IVsCfg[] configs = null;
+				int hr = this.ConfigProvider.GetCfgs(0, null, count, null);
+				if (ErrorHandler.Succeeded(hr) && count[0] > 0)
+				{
+					configs = new IVsCfg[count[0]];
+					hr = this.ConfigProvider.GetCfgs((uint)configs.Length, configs, count, null);
+					if (ErrorHandler.Failed(hr))
+						count[0] = 0;
+				}
+				if (count[0] == 0)
+					configs = new IVsCfg[0];
+
+				// We need to loop through all the flavors
+				string flavorsGuid;
+				ErrorHandler.ThrowOnFailure(((IVsAggregatableProject)this).GetAggregateProjectTypeGuids(out flavorsGuid));
+				foreach (Guid flavor in Utilities.GuidsArrayFromSemicolonDelimitedStringOfGuids(flavorsGuid))
+				{
+					IVsHierarchy outerHierarchy = HierarchyNode.GetOuterHierarchy(this);
+					// First check the project
+					if (outerHierarchy is IPersistXMLFragment)
+					{
+						// Retrieve the XML fragment
+						string fragment = string.Empty;
+						Guid flavorGuid = flavor;
+						ErrorHandler.ThrowOnFailure(((IPersistXMLFragment)outerHierarchy).Save(ref flavorGuid, (uint)_PersistStorageType.PST_PROJECT_FILE, out fragment, 1));
+						if (!String.IsNullOrEmpty(fragment))
+						{
+							// Add the fragment to our XML
+							WrapXmlFragment(doc, root, flavor, null, fragment);
+						}
+						// While we don't yet support user files, our flavors might, so we will store that in the project file until then
+						// TODO: Refactor this code when we support user files
+						fragment = String.Empty;
+						ErrorHandler.ThrowOnFailure(((IPersistXMLFragment)outerHierarchy).Save(ref flavorGuid, (uint)_PersistStorageType.PST_USER_FILE, out fragment, 1));
+						if (!String.IsNullOrEmpty(fragment))
+						{
+							// Add the fragment to our XML
+							XmlElement node = WrapXmlFragment(doc, root, flavor, null, fragment);
+							node.Attributes.Append(doc.CreateAttribute(ProjectFileConstants.User));
+						}
+					}
+
+					// Then look at the configurations
+					foreach (IVsCfg config in configs)
+					{
+						// Get the fragment for this flavor/config pair
+						string fragment;
+						ErrorHandler.ThrowOnFailure(((ProjectConfig)config).GetXmlFragment(flavor, _PersistStorageType.PST_PROJECT_FILE, out fragment));
+						if (!String.IsNullOrEmpty(fragment))
+						{
+							string configName;
+							config.get_DisplayName(out configName);
+							WrapXmlFragment(doc, root, flavor, configName, fragment);
+						}
+					}
+				}
+				if (root.ChildNodes != null && root.ChildNodes.Count > 0)
+				{
+					// Save our XML (this is only the non-build information for each flavor) in msbuild
+					this.BuildProject.SetProjectExtensions(ProjectFileConstants.VisualStudio, root.InnerXml.ToString());
+				}
+			}
+		}
+
 		#endregion
 
-		#region IVsGetCfgProvider methods
+		#region IVsGetCfgProvider Members
 		//=================================================================================
 
 		public virtual int GetCfgProvider(out IVsCfgProvider p)
@@ -3776,7 +3981,7 @@ namespace Microsoft.VisualStudio.Package
 		}
 		#endregion
 
-		#region IPersist
+		#region IPersist Members
 
 		public int GetClassID(out Guid clsid)
 		{
@@ -3785,14 +3990,13 @@ namespace Microsoft.VisualStudio.Package
 		}
 		#endregion
 
-		#region IPersistFileFormat methods
+		#region IPersistFileFormat Members
 
 		int IPersistFileFormat.GetClassID(out Guid clsid)
 		{
 			clsid = this.ProjectGuid;
 			return VSConstants.S_OK;
 		}
-
 
 		public virtual int GetCurFile(out string name, out uint formatIndex)
 		{
@@ -3801,19 +4005,16 @@ namespace Microsoft.VisualStudio.Package
 			return VSConstants.S_OK;
 		}
 
-
 		public virtual int GetFormatList(out string formatlist)
 		{
 			formatlist = String.Empty;
 			return VSConstants.S_OK;
 		}
 
-
 		public virtual int InitNew(uint formatIndex)
 		{
 			return VSConstants.S_OK;
 		}
-
 
 		public virtual int IsDirty(out int isDirty)
 		{
@@ -3865,14 +4066,12 @@ namespace Microsoft.VisualStudio.Package
 			return isDirty;
 		}
 
-
 		public virtual int Load(string filename, uint mode, int readOnly)
 		{
 			this.filename = filename;
 			this.Reload();
 			return VSConstants.S_OK;
 		}
-
 
 		public virtual int Save(string fileToBeSaved, int remember, uint formatIndex)
 		{
@@ -3943,7 +4142,7 @@ namespace Microsoft.VisualStudio.Package
 		}
 		#endregion
 
-		#region IVsProject3 methods
+		#region IVsProject3 Members
 
 		/// <summary>
 		/// Callback from the additem dialog. Deals with adding new and existing items
@@ -4502,7 +4701,7 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-		#region IVsProjectBuidSystem
+		#region IVsProjectBuidSystem Members
 		public virtual int SetHostObject(string targetName, string taskName, object hostObject)
 		{
 			Debug.Assert(targetName != null && taskName != null && this.buildProject != null && this.buildProject.Targets != null);
@@ -4581,7 +4780,7 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-		#region IVsComponentUser methods
+		#region IVsComponentUser Members
 
 		/// <summary>
 		/// Add Component of the IVsComponentUser interface
@@ -4627,40 +4826,7 @@ namespace Microsoft.VisualStudio.Package
 		}
 		#endregion
 
-		#region IVsUIHierWinClipboardHelperEvents
-		/// <summary>
-		/// Called when your cut/copied item get pasted
-		/// </summary>
-		/// <returns>HResult</returns>
-		public virtual int OnPaste(int wasCut, uint dropEffect)
-		{
-			if (this.SourceDraggedOrCutOrCopied == false)
-				return VSConstants.S_FALSE;
-
-			if (dropEffect == (uint)DropEffect.None)
-				return OnClear(wasCut);
-
-			CleanupSelectionDataObject(false, wasCut != 0, (uint)DropEffect.Move == (dropEffect & (uint)DropEffect.Move));
-			this.SourceDraggedOrCutOrCopied = false;
-			return VSConstants.S_OK;
-		}
-
-		/// <summary>
-		/// Called when your cut/copied operation is canceled
-		/// </summary>
-		/// <returns>HResult</returns>
-		public virtual int OnClear(int wasCut)
-		{
-			if (this.SourceDraggedOrCutOrCopied == false)
-				return VSConstants.S_FALSE;
-
-			CleanupSelectionDataObject(false, wasCut != 0, false, true);
-			this.SourceDraggedOrCutOrCopied = false;
-			return VSConstants.S_OK;
-		}
-		#endregion
-
-		#region IVsDependencyProvider methods
+		#region IVsDependencyProvider Members
 		public int EnumDependencies(out IVsEnumDependencies enumDependencies)
 		{
 			enumDependencies = new EnumDependencies(this.buildDependencyList);
@@ -4675,7 +4841,7 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-		#region IVsSccProject2
+		#region IVsSccProject2 Members
 		/// <summary>
 		/// This method is called to determine which files should be placed under source control for a given VSITEMID within this hierarchy.
 		/// </summary>
@@ -4845,7 +5011,7 @@ namespace Microsoft.VisualStudio.Package
 		}
 		#endregion
 
-		#region IVsProjectSpecialFiles
+		#region IVsProjectSpecialFiles Members
 		/// <summary>
 		/// Allows you to query the project for special files and optionally create them. 
 		/// </summary>
@@ -4877,7 +5043,7 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-		#region IBuildDependencyUpdate
+		#region IBuildDependencyUpdate Members
 
 		public virtual IVsBuildDependency[] BuildDependencies
 		{
@@ -4915,7 +5081,7 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-		#region IReferenceDataProvider
+		#region IReferenceDataProvider Members
 		/// <summary>
 		/// Returns the reference container node.
 		/// </summary>
@@ -4927,7 +5093,7 @@ namespace Microsoft.VisualStudio.Package
 
 		#endregion
 
-		#region IProjectEventsListener
+		#region IProjectEventsListener Members
 		public bool IsProjectEventsListener
 		{
 			get { return this.isProjectEventsListener; }
@@ -4964,1013 +5130,7 @@ namespace Microsoft.VisualStudio.Package
 		}
 
 		#endregion
-
-		#region helpers
-		/// <summary>
-		/// Verify if the file can be written to.
-		/// Return false if the file is read only and/or not checked out
-		/// and the user did not give permission to change it.
-		/// Note that exact behavior can also be affected based on the SCC
-		/// settings under Tools->Options.
-		/// </summary>
-		internal bool QueryEditProjectFile(bool suppressUI)
-		{
-			bool result = true;
-			if (this.site == null)
-			{
-				// We're already zombied. Better return FALSE.
-				result = false;
-			}
-			else if (this.disableQueryEdit)
-			{
-				return true;
-			}
-			else
-			{
-				IVsQueryEditQuerySave2 queryEditQuerySave = this.GetService(typeof(SVsQueryEditQuerySave)) as IVsQueryEditQuerySave2;
-				if (queryEditQuerySave != null)
-				{   // Project path dependends on server/client project
-					string path = this.filename;
-
-					tagVSQueryEditFlags qef = tagVSQueryEditFlags.QEF_AllowInMemoryEdits;
-					if (suppressUI)
-						qef |= tagVSQueryEditFlags.QEF_SilentMode;
-
-					// If we are debugging, we want to prevent our project from being reloaded. To 
-					// do this, we pass the QEF_NoReload flag
-					if (!Utilities.IsVisualStudioInDesignMode(this.Site))
-						qef |= tagVSQueryEditFlags.QEF_NoReload;
-
-					uint verdict;
-					uint moreInfo;
-					string[] files = new string[1];
-					files[0] = path;
-					uint[] flags = new uint[1];
-					VSQEQS_FILE_ATTRIBUTE_DATA[] attributes = new VSQEQS_FILE_ATTRIBUTE_DATA[1];
-					int hr = queryEditQuerySave.QueryEditFiles(
-								(uint)qef,
-								1, // 1 file
-								files, // array of files
-								flags, // no per file flags
-								attributes, // no per file file attributes
-								out verdict,
-								out moreInfo /* ignore additional results */);
-
-					tagVSQueryEditResult qer = (tagVSQueryEditResult)verdict;
-					if (ErrorHandler.Failed(hr) || (qer != tagVSQueryEditResult.QER_EditOK))
-					{
-						if (!suppressUI && !Utilities.IsInAutomationFunction(this.Site))
-						{
-							string message = SR.GetString(SR.CancelQueryEdit, path);
-							string title = string.Empty;
-							OLEMSGICON icon = OLEMSGICON.OLEMSGICON_CRITICAL;
-							OLEMSGBUTTON buttons = OLEMSGBUTTON.OLEMSGBUTTON_OK;
-							OLEMSGDEFBUTTON defaultButton = OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST;
-							VsShellUtilities.ShowMessageBox(this.Site, title, message, icon, buttons, defaultButton);
-						}
-						result = false;
-					}
-				}
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// Checks whether a hierarchy is a nested project.
-		/// </summary>
-		/// <param name="hierarchy"></param>
-		/// <returns></returns>
-		internal NestedProjectNode GetNestedProjectForHierarchy(IVsHierarchy hierarchy)
-		{
-			if (hierarchy != null && (hierarchy is IVsProject3))
-			{
-				IVsProject3 project = hierarchy as IVsProject3;
-
-				string mkDocument = String.Empty;
-				project.GetMkDocument(VSConstants.VSITEMID_ROOT, out mkDocument);
-
-				if (!String.IsNullOrEmpty(mkDocument))
-				{
-					HierarchyNode node = this.FindChild(mkDocument);
-
-					if (node != null && (node is NestedProjectNode))
-					{
-						return node as NestedProjectNode;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Given a node determines what is the directory that can accept files.
-		/// If the node is a FoldeNode than it is the Url of the Folder.
-		/// If the node is a ProjectNode it is the project folder.
-		/// Otherwise (such as FileNode subitem) it delegate the resolution to the parent node.
-		/// </summary>
-		internal string GetBaseDirectoryForAddingFiles(HierarchyNode nodeToAddFile)
-		{
-			string baseDir = String.Empty;
-
-			if (nodeToAddFile is FolderNode)
-			{
-				baseDir = nodeToAddFile.Url;
-			}
-			else if (nodeToAddFile is ProjectNode)
-			{
-				baseDir = this.ProjectFolder;
-			}
-			else if (nodeToAddFile != null)
-			{
-				baseDir = GetBaseDirectoryForAddingFiles(nodeToAddFile.Parent);
-			}
-
-
-			return baseDir;
-		}
-		/// <summary>
-		/// For internal use only.
-		/// This creates a copy of an existing configuration and add it to the project.
-		/// Caller should change the condition on the PropertyGroup.
-		/// If derived class want to accomplish this, they should call ConfigProvider.AddCfgsOfCfgName()
-		/// It is expected that in the future MSBuild will have support for this so we don't have to
-		/// do it manually.
-		/// </summary>
-		/// <param name="group">PropertyGroup to clone</param>
-		/// <returns></returns>
-		internal MSBuild.BuildPropertyGroup ClonePropertyGroup(MSBuild.BuildPropertyGroup group)
-		{
-			// Create a new (empty) PropertyGroup
-			MSBuild.BuildPropertyGroup newPropertyGroup = this.buildProject.AddNewPropertyGroup(false);
-
-			// Now copy everything from the group we are trying to clone to the group we are creating
-			if (!String.IsNullOrEmpty(group.Condition))
-				newPropertyGroup.Condition = group.Condition;
-			foreach (MSBuild.BuildProperty prop in group)
-			{
-				MSBuild.BuildProperty newProperty = newPropertyGroup.AddNewProperty(prop.Name, prop.Value);
-				if (!String.IsNullOrEmpty(prop.Condition))
-					newProperty.Condition = prop.Condition;
-			}
-
-			return newPropertyGroup;
-		}
-
-		#region drag drop helpers
-
-		/// <summary>
-		/// Drag/Drop/Cut/Copy/Paste
-		/// </summary>
-		/// <remarks>The targetNode is set if the method is called from a drop operation, otherwise it is null</remarks>
-		internal DropDataType ProcessSelectionDataObject(Microsoft.VisualStudio.OLE.Interop.IDataObject dataObject, HierarchyNode targetNode)
-		{
-			DropDataType ddt = DropDataType.None;
-			bool windowsFormat = false;
-
-			// Try to get it as a directory based project.
-			List<string> filesDropped = DragDropHelper.GetDroppedFiles(DragDropHelper.CF_VSSTGPROJECTITEMS, dataObject, out ddt);
-			if (filesDropped.Count == 0)
-				filesDropped = DragDropHelper.GetDroppedFiles(DragDropHelper.CF_VSREFPROJECTITEMS, dataObject, out ddt);
-			if (filesDropped.Count == 0)
-			{
-				filesDropped = DragDropHelper.GetDroppedFiles(NativeMethods.CF_HDROP, dataObject, out ddt);
-				windowsFormat = (filesDropped.Count > 0);
-			}
-
-			if (ddt != DropDataType.None && filesDropped.Count > 0)
-			{
-				string[] filesDroppedAsArray = filesDropped.ToArray();
-
-				string sourceProjectPath = DragDropHelper.GetSourceProjectPath(dataObject);
-				if (String.IsNullOrEmpty(sourceProjectPath) || !NativeMethods.IsSamePath(sourceProjectPath, this.GetMkDocument()))
-				{
-					HierarchyNode node = (targetNode == null) ? this : targetNode;
-					// For directory based projects the content of the clipboard is a double-NULL terminated list of Projref strings.
-					if (windowsFormat)
-					{
-						// This is the code path when source is windows explorer
-						VSADDRESULT[] vsaddresults = new VSADDRESULT[1];
-						vsaddresults[0] = VSADDRESULT.ADDRESULT_Failure;
-						int addResult = node.ProjectMgr.AddItem(node.ID, VSADDITEMOPERATION.VSADDITEMOP_OPENFILE, null, (uint)filesDropped.Count, filesDropped.ToArray(), IntPtr.Zero, vsaddresults);
-						if (addResult != VSConstants.S_OK && addResult != VSConstants.S_FALSE && addResult != (int)OleConstants.OLECMDERR_E_CANCELED
-							&& vsaddresults[0] != VSADDRESULT.ADDRESULT_Success)
-						{
-							ErrorHandler.ThrowOnFailure(addResult);
-						}
-						return ddt;
-					}
-					else
-					{
-						if (node.AddFilesFromProjectReferences(filesDroppedAsArray))
-						{
-							return ddt;
-						}
-					}
-				}
-			}
-
-			// If we reached this point then the drop data must be set to None.
-			// Otherwise the OnPaste will be called with a valid DropData and that would actually delete the item.
-			return DropDataType.None;
-		}
-
-		internal DropDataType QueryDropDataType(Microsoft.VisualStudio.OLE.Interop.IDataObject pDataObject)
-		{
-			// known formats include File Drops (as from WindowsExplorer),
-			// VSProject Reference Items and VSProject Storage Items.
-			FORMATETC fmt = DragDropHelper.CreateFormatEtc(NativeMethods.CF_HDROP);
-
-			if (DragDropHelper.QueryGetData(pDataObject, ref fmt) == VSConstants.S_OK)
-			{
-				return DropDataType.Shell;
-			}
-
-			fmt.cfFormat = DragDropHelper.CF_VSREFPROJECTITEMS;
-			if (DragDropHelper.QueryGetData(pDataObject, ref fmt) == VSConstants.S_OK)
-			{
-				// Data is from a Ref-based project.
-				return DropDataType.VsRef;
-			}
-
-			fmt.cfFormat = DragDropHelper.CF_VSSTGPROJECTITEMS;
-			if (DragDropHelper.QueryGetData(pDataObject, ref fmt) == VSConstants.S_OK)
-			{
-				return DropDataType.VsStg;
-			}
-
-			return DropDataType.None;
-		}
-
-		internal DropEffect QueryDropEffect(DropDataType ddt, uint grfKeyState)
-		{
-			// We are file-based project so we should perform as follow:
-			//  NO MODIFIER - COPY
-			//  SHIFT DRAG - MOVE
-			//  CTRL DRAG - COPY
-			//  CTRL-SHIFT DRAG - NO DROP
-			if ((ddt != DropDataType.Shell) && (ddt != DropDataType.VsRef) && (ddt != DropDataType.VsStg))
-				return DropEffect.None;
-
-			// CTRL-SHIFT
-			if ((grfKeyState & NativeMethods.MK_CONTROL) != 0 && (grfKeyState & NativeMethods.MK_SHIFT) != 0)
-			{
-				// Because we are not referenced base, we don't support link
-				return DropEffect.None;
-			}
-			// CTRL
-			if ((grfKeyState & NativeMethods.MK_CONTROL) != 0)
-				return DropEffect.Copy;
-			// SHIFT
-			if ((grfKeyState & NativeMethods.MK_SHIFT) != 0)
-				return DropEffect.Move;
-			// no modifier
-			return DropEffect.Copy;
-		}
-
-
-		internal DataObject PackageSelectionDataObject(bool cutHighlightItems)
-		{
-			this.CleanupSelectionDataObject(false, false, false);
-			StringBuilder sb = new StringBuilder();
-
-			DataObject dataObject = null;
-
-			try
-			{
-				IList<HierarchyNode> selectedNodes = this.GetSelectedNodes();
-				if (selectedNodes != null)
-				{
-					this.InstantiateItemsDraggedOrCutOrCopiedList();
-
-					StringBuilder selectionContent = null;
-
-					// If there is a selection package the data
-					if (selectedNodes.Count > 1)
-					{
-						foreach (HierarchyNode node in selectedNodes)
-						{
-							selectionContent = node.PrepareSelectedNodesForClipBoard();
-							if (selectionContent != null)
-							{
-								sb.Append(selectionContent);
-							}
-						}
-					}
-					else if (selectedNodes.Count == 1)
-					{
-						HierarchyNode selectedNode = selectedNodes[0];
-						selectionContent = selectedNode.PrepareSelectedNodesForClipBoard();
-						if (selectionContent != null)
-						{
-							sb.Append(selectionContent);
-						}
-					}
-				}
-
-				// Add the project items first.
-				IntPtr ptrToItems = this.PackageSelectionData(sb, false);
-				if (ptrToItems == IntPtr.Zero)
-				{
-					return null;
-				}
-
-				FORMATETC fmt = DragDropHelper.CreateFormatEtc(DragDropHelper.CF_VSSTGPROJECTITEMS);
-				dataObject = new DataObject();
-				dataObject.SetData(fmt, ptrToItems);
-
-				// Now add the project path that sourced data. We just write the project file path.
-				IntPtr ptrToProjectPath = this.PackageSelectionData(new StringBuilder(this.GetMkDocument()), true);
-
-				if (ptrToProjectPath != IntPtr.Zero)
-				{
-					dataObject.SetData(DragDropHelper.CreateFormatEtc(DragDropHelper.CF_VSPROJECTCLIPDESCRIPTOR), ptrToProjectPath);
-				}
-
-				if (cutHighlightItems)
-				{
-					bool first = true;
-					IVsUIHierarchyWindow w = UIHierarchyUtilities.GetUIHierarchyWindow(this.site, HierarchyNode.SolutionExplorer);
-
-					foreach (HierarchyNode node in this.ItemsDraggedOrCutOrCopied)
-					{
-						ErrorHandler.ThrowOnFailure(w.ExpandItem((IVsUIHierarchy)this, node.ID, first ? EXPANDFLAGS.EXPF_CutHighlightItem : EXPANDFLAGS.EXPF_AddCutHighlightItem));
-						first = false;
-					}
-				}
-			}
-			catch (COMException e)
-			{
-				Trace.WriteLine("Exception : " + e.Message);
-
-				dataObject = null;
-			}
-
-			return dataObject;
-		}
-
-
-		internal void CleanupSelectionDataObject(bool dropped, bool cut, bool moved)
-		{
-			this.CleanupSelectionDataObject(dropped, cut, moved, false);
-		}
-
-		/// <summary>
-		///  After a drop or paste, will use the dwEffects 
-		///  to determine whether we need to clean up the source nodes or not. If
-		///  justCleanup is set, it only does the cleanup work.
-		/// </summary>
-		internal void CleanupSelectionDataObject(bool dropped, bool cut, bool moved, bool justCleanup)
-		{
-			if (this.ItemsDraggedOrCutOrCopied == null || this.ItemsDraggedOrCutOrCopied.Count == 0)
-			{
-				return;
-			}
-
-			try
-			{
-				IVsUIHierarchyWindow w = UIHierarchyUtilities.GetUIHierarchyWindow(this.site, HierarchyNode.SolutionExplorer);
-				foreach (HierarchyNode node in this.ItemsDraggedOrCutOrCopied)
-				{
-					if (((moved && dropped) || cut) && !justCleanup)
-					{
-						// do not close it if the doc is dirty or we do not own it
-						bool isDirty, isOpen, isOpenedByUs;
-						uint docCookie;
-						IVsPersistDocData ppIVsPersistDocData;
-						DocumentManager manager = node.GetDocumentManager();
-
-						if (manager != null)
-						{
-							manager.GetDocInfo(out isOpen, out isDirty, out isOpenedByUs, out docCookie, out ppIVsPersistDocData);
-							if (isDirty || (isOpen && !isOpenedByUs))
-							{
-								continue;
-							}
-
-							// close it if opened
-							if (isOpen)
-							{
-								manager.Close(__FRAMECLOSE.FRAMECLOSE_NoSave);
-							}
-						}
-
-						node.Remove(true);
-					}
-					else if (w != null)
-					{
-						ErrorHandler.ThrowOnFailure(w.ExpandItem((IVsUIHierarchy)this, node.ID, EXPANDFLAGS.EXPF_UnCutHighlightItem));
-					}
-				}
-			}
-			finally
-			{
-
-				// Now delete the memory allocated by the packaging of datasources.
-				// If we just did a cut, or we are told to cleanup, then we need to free the data object. Otherwise, we leave it
-				// alone so that you can continue to paste the data in new locations.
-				if (moved || cut || justCleanup)
-				{
-					this.ItemsDraggedOrCutOrCopied.Clear();
-					this.CleanAndFlushClipboard();
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Empties all the data structures added to the clipboard and flushes the clipboard.
-		/// </summary>
-		private void CleanAndFlushClipboard()
-		{
-			IOleDataObject oleDataObject = null;
-			ErrorHandler.ThrowOnFailure(UnsafeNativeMethods.OleGetClipboard(out oleDataObject));
-			if (oleDataObject == null)
-			{
-				return;
-			}
-
-
-			string sourceProjectPath = DragDropHelper.GetSourceProjectPath(oleDataObject);
-
-			if (!String.IsNullOrEmpty(sourceProjectPath) && NativeMethods.IsSamePath(sourceProjectPath, this.GetMkDocument()))
-			{
-				UnsafeNativeMethods.OleFlushClipboard();
-				int clipboardOpened = 0;
-				try
-				{
-					clipboardOpened = UnsafeNativeMethods.OpenClipboard(IntPtr.Zero);
-					UnsafeNativeMethods.EmptyClipboard();
-				}
-				finally
-				{
-					if (clipboardOpened == 1)
-					{
-						UnsafeNativeMethods.CloseClipboard();
-					}
-				}
-			}
-		}
-
-
-		private IntPtr PackageSelectionData(StringBuilder sb, bool addEndFormatDelimiter)
-		{
-			if (sb == null || sb.ToString().Length == 0 || this.ItemsDraggedOrCutOrCopied.Count == 0)
-			{
-				return IntPtr.Zero;
-			}
-
-			// Double null at end.
-			if (addEndFormatDelimiter)
-			{
-				if (sb.ToString()[sb.Length - 1] != '\0')
-				{
-					sb.Append('\0');
-				}
-			}
-
-			_DROPFILES df = new _DROPFILES();
-			int dwSize = Marshal.SizeOf(df);
-			Int16 wideChar = 0;
-			int dwChar = Marshal.SizeOf(wideChar);
-			int structSize = dwSize + ((sb.Length + 1) * dwChar);
-			IntPtr ptr = Marshal.AllocHGlobal(structSize);
-			df.pFiles = dwSize;
-			df.fWide = 1;
-			IntPtr data = IntPtr.Zero;
-			try
-			{
-				data = UnsafeNativeMethods.GlobalLock(ptr);
-				Marshal.StructureToPtr(df, data, false);
-				IntPtr strData = new IntPtr((long)data + dwSize);
-				DragDropHelper.CopyStringToHGlobal(sb.ToString(), strData, structSize);
-			}
-			finally
-			{
-				if (data != IntPtr.Zero)
-					UnsafeNativeMethods.GlobalUnLock(data);
-			}
-
-			return ptr;
-		}
-
-		/// <summary>
-		/// This is used to recursively add a folder from an other project.
-		/// Note that while we copy the folder content completely, we only
-		/// add to the project items which are part of the source project.
-		/// </summary>
-		/// <param name="folderToAdd">Project reference (from data object) using the format: {Guid}|project|folderPath</param>
-		/// <param name="targetNode">Node to add the new folder to</param>
-		protected internal virtual void AddFolderFromOtherProject(string folderToAdd, HierarchyNode targetNode)
-		{
-			if (String.IsNullOrEmpty(folderToAdd))
-				throw new ArgumentNullException("folderToAdd");
-			if (targetNode == null)
-				throw new ArgumentNullException("targetNode");
-
-			// Split the reference in its 3 parts
-			int index1 = Guid.Empty.ToString("B").Length;
-			if (index1 + 1 >= folderToAdd.Length)
-				throw new ArgumentException("folderToAdd");
-			// Get the Guid
-			string guidString = folderToAdd.Substring(1, index1 - 2);
-			Guid projectInstanceGuid = new Guid(guidString);
-			// Get the project path
-			int index2 = folderToAdd.IndexOf('|', index1 + 1);
-			if (index2 < 0 || index2 + 1 >= folderToAdd.Length)
-				throw new ArgumentException("folderToAdd");
-			string sourceProjectPath = folderToAdd.Substring(index1 + 1, index2 - index1 - 1);
-			// Finally get the source path
-			string folder = folderToAdd.Substring(index2 + 1);
-			// Get the target path
-			string folderName = Path.GetFileName(Path.GetDirectoryName(folder));
-			string targetPath = Path.Combine(GetBaseDirectoryForAddingFiles(targetNode), folderName);
-			// Recursively copy the directory to the new location
-			Utilities.RecursivelyCopyDirectory(folder, targetPath);
-
-			// Retrieve the project from which the items are being copied
-			IVsHierarchy sourceHierarchy;
-			IVsSolution solution = (IVsSolution)GetService(typeof(SVsSolution));
-			ErrorHandler.ThrowOnFailure(solution.GetProjectOfGuid(ref projectInstanceGuid, out sourceHierarchy));
-			// Then retrieve the item ID of the item to copy
-			uint itemID = VSConstants.VSITEMID_ROOT;
-			ErrorHandler.ThrowOnFailure(sourceHierarchy.ParseCanonicalName(folder, out itemID));
-
-			// Ensure we don't end up in an endless recursion
-			if (Utilities.IsSameComObject(this, sourceHierarchy))
-			{
-				HierarchyNode cursorNode = targetNode;
-				while (cursorNode != null)
-				{
-					if (String.Compare(folder, cursorNode.GetMkDocument(), StringComparison.OrdinalIgnoreCase) == 0)
-						throw new ApplicationException();
-					cursorNode = cursorNode.Parent;
-				}
-			}
-
-			// Now walk the source project hierarchy to see which node needs to be added.
-			WalkSourceProjectAndAdd(sourceHierarchy, itemID, targetNode, false);
-		}
-
-		/// <summary>
-		/// Recursive method that walk a hierarchy and add items it find to our project.
-		/// Note that this is meant as an helper to the Copy&Paste/Drag&Drop functionality.
-		/// </summary>
-		/// <param name="sourceHierarchy">Hierarchy to walk</param>
-		/// <param name="itemID">Item ID where to start walking the hierarchy</param>
-		/// <param name="targetNode">Node to start adding to</param>
-		/// <param name="addSibblings">Typically false on first call and true after that</param>
-		protected virtual void WalkSourceProjectAndAdd(IVsHierarchy sourceHierarchy, uint itemID, HierarchyNode targetNode, bool addSibblings)
-		{
-			// Before we start the walk, add the current node
-			object variant = null;
-			HierarchyNode newNode = targetNode;
-			if (itemID != VSConstants.VSITEMID_NIL)
-			{
-				// Calculate the corresponding path in our project
-				string source;
-				ErrorHandler.ThrowOnFailure(((IVsProject)sourceHierarchy).GetMkDocument(itemID, out source));
-				string name = Path.GetFileName(source.TrimEnd(new char[] { '/', '\\' }));
-				string targetPath = Path.Combine(GetBaseDirectoryForAddingFiles(targetNode), name);
-
-				// See if this is a linked item (file can be linked, not folders)
-				ErrorHandler.ThrowOnFailure(sourceHierarchy.GetProperty(itemID, (int)__VSHPROPID.VSHPROPID_BrowseObject, out variant), new int[] { VSConstants.E_NOTIMPL });
-				VSLangProj.FileProperties fileProperties = variant as VSLangProj.FileProperties;
-				if (fileProperties != null && fileProperties.IsLink)
-				{
-					// Since we don't support linked item, we make a copy of the file into our storage where it would have been linked
-					File.Copy(source, targetPath, true);
-				}
-
-				newNode = AddNodeIfTargetExistInStorage(targetNode, name, targetPath);
-
-
-				// Start with child nodes (depth first)
-				variant = null;
-				ErrorHandler.ThrowOnFailure(sourceHierarchy.GetProperty(itemID, (int)__VSHPROPID.VSHPROPID_FirstVisibleChild, out variant));
-				uint currentItemID = (uint)(int)variant;
-				WalkSourceProjectAndAdd(sourceHierarchy, currentItemID, newNode, true);
-
-				if (addSibblings)
-				{
-					// Then look at siblings
-					currentItemID = itemID;
-					while (currentItemID != VSConstants.VSITEMID_NIL)
-					{
-						variant = null;
-						ErrorHandler.ThrowOnFailure(sourceHierarchy.GetProperty(itemID, (int)__VSHPROPID.VSHPROPID_NextVisibleSibling, out variant));
-						currentItemID = (uint)(int)variant;
-						WalkSourceProjectAndAdd(sourceHierarchy, currentItemID, targetNode, true);
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Add an existing item (file/folder) to the project if it already exist in our storage.
-		/// </summary>
-		/// <param name="parentNode">Node to that this item to</param>
-		/// <param name="name">Name of the item being added</param>
-		/// <param name="targetPath">Path of the item being added</param>
-		/// <returns>Node that was added</returns>
-		protected virtual HierarchyNode AddNodeIfTargetExistInStorage(HierarchyNode parentNode, string name, string targetPath)
-		{
-			HierarchyNode newNode = parentNode;
-			// If the file/directory exist, add a node for it
-			if (File.Exists(targetPath))
-			{
-				VSADDRESULT[] result = new VSADDRESULT[1];
-				ErrorHandler.ThrowOnFailure(this.AddItem(parentNode.ID, VSADDITEMOPERATION.VSADDITEMOP_OPENFILE, name, 1, new string[] { targetPath }, IntPtr.Zero, result));
-				if (result[0] != VSADDRESULT.ADDRESULT_Success)
-					throw new ApplicationException();
-				newNode = this.FindChild(targetPath);
-				if (newNode == null)
-					throw new ApplicationException();
-			}
-			else if (Directory.Exists(targetPath))
-			{
-				newNode = this.CreateFolderNodes(targetPath);
-			}
-			return newNode;
-		}
-
-		#endregion
-		/// <summary>
-		/// Takes a path and verifies that we have a node with that name.
-		/// It is meant to be a helper method for CreateFolderNodes().
-		/// For some scenario it may be useful to override.
-		/// </summary>
-		protected virtual FolderNode VerifySubFolderExists(string strPath, HierarchyNode parent)
-		{
-			FolderNode folderNode = null;
-			uint uiItemId;
-			Url url = new Url(this.BaseURI, strPath);
-			string strFullPath = url.AbsoluteUrl;
-			// Folders end in our storage with a backslash, so add one...
-			ErrorHandler.ThrowOnFailure(this.ParseCanonicalName(strFullPath, out uiItemId));
-			if (uiItemId != 0)
-			{
-				Debug.Assert(this.NodeFromItemId(uiItemId) is FolderNode, "Not a FolderNode");
-				folderNode = (FolderNode)this.NodeFromItemId(uiItemId);
-			}
-
-			if (folderNode == null)
-			{
-				// folder does not exist yet...
-				// We could be in the process of loading so see if msbuild knows about it
-				MSBuild.BuildItemGroup folders = buildProject.GetEvaluatedItemsByName(ProjectFileConstants.Folder);
-				ProjectElement item = null;
-				foreach (MSBuild.BuildItem folder in folders)
-				{
-					if (String.Compare(folder.FinalItemSpec.TrimEnd('\\'), strPath.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase) == 0)
-					{
-						item = new ProjectElement(this, folder, false);
-						break;
-					}
-				}
-				// If MSBuild did not know about it, create a new one
-				if (item == null)
-					item = this.AddFolderToMsBuild(strPath);
-				folderNode = this.CreateFolderNode(strPath, item);
-				parent.AddChild(folderNode);
-			}
-
-			return folderNode;
-		}
-
-		/// <summary>
-		/// Registers a project with the Scc manager.
-		/// </summary>
-		protected void RegisterSccProject()
-		{
-
-			if (this.IsSccDisabled || this.isRegisteredWithScc || String.IsNullOrEmpty(this.sccProjectName))
-			{
-				return;
-			}
-
-			IVsSccManager2 sccManager = this.Site.GetService(typeof(SVsSccManager)) as IVsSccManager2;
-
-			if (sccManager != null)
-			{
-				NativeMethods.ThrowOnFailure(sccManager.RegisterSccProject(this, this.sccProjectName, this.sccAuxPath, this.sccLocalPath, this.sccProvider));
-
-				this.isRegisteredWithScc = true;
-			}
-		}
-
-		/// <summary>
-		///  Unregisters us from the SCC manager
-		/// </summary>
-		protected void UnRegisterProject()
-		{
-			if (this.IsSccDisabled || !this.isRegisteredWithScc)
-			{
-				return;
-			}
-
-			IVsSccManager2 sccManager = this.Site.GetService(typeof(SVsSccManager)) as IVsSccManager2;
-
-			if (sccManager != null)
-			{
-				NativeMethods.ThrowOnFailure(sccManager.UnregisterSccProject(this));
-				this.isRegisteredWithScc = false;
-			}
-		}
-
-		private MSBuild.BuildProperty GetMsBuildProperty(string propertyName, bool resetCache)
-		{
-			if (resetCache || this.currentConfig == null)
-			{
-				// Get properties from project file and cache it
-				this.SetCurrentConfiguration();
-				this.currentConfig = this.buildProject.EvaluatedProperties;
-			}
-
-			if (this.currentConfig == null)
-				throw new ApplicationException(String.Format(CultureInfo.CurrentCulture, SR.GetString(SR.FailedToRetrieveProperties), propertyName));
-
-			// return property asked for
-			return this.currentConfig[propertyName];
-		}
-
-		private string GetOutputPath(MSBuild.BuildPropertyGroup properties)
-		{
-			this.currentConfig = properties;
-			string outputPath = GetProjectProperty("OutputPath");
-
-			if (!String.IsNullOrEmpty(outputPath))
-			{
-				outputPath = outputPath.Replace('/', Path.DirectorySeparatorChar);
-				if (outputPath[outputPath.Length - 1] != Path.DirectorySeparatorChar)
-					outputPath += Path.DirectorySeparatorChar;
-			}
-
-			return outputPath;
-		}
-
-
-		private bool GetBoolAttr(MSBuild.BuildPropertyGroup properties, string name)
-		{
-			this.currentConfig = properties;
-			string s = GetProjectProperty(name);
-
-			return (s != null && s.ToLower(CultureInfo.InvariantCulture).Trim() == "true");
-		}
-
-
-		private string GetAssemblyName(MSBuild.BuildPropertyGroup properties)
-		{
-			this.currentConfig = properties;
-			string name = null;
-
-			name = GetProjectProperty(ProjectFileConstants.AssemblyName);
-			if (name == null)
-				name = this.Caption;
-
-			string outputtype = GetProjectProperty(ProjectFileConstants.OutputType, false);
-
-			if (outputtype == "library")
-			{
-				outputtype = outputtype.ToLower(CultureInfo.InvariantCulture);
-				name += ".dll";
-			}
-			else
-			{
-				name += ".exe";
-			}
-
-			return name;
-		}
-
-		private void Initialize()
-		{
-			this.ID = VSConstants.VSITEMID_ROOT;
-			this.tracker = new TrackDocumentsHelper(this);
-			this.imageList = Utilities.GetImageList(typeof(ProjectNode).Assembly.GetManifestResourceStream("Composestar.StarLight.VisualStudio.Project.Resources.imagelis.bmp"));
-			this.NodeProperties = new ProjectNodeProperties(this);
-		}
-
-
-		/// <summary>
-		/// Updates our scc project settings. 
-		/// </summary>
-		/// <param name="sccProjectName">String, opaque to the project, that identifies the project location on the server. Persist this string in the project file. </param>
-		/// <param name="sccLocalPath">String, opaque to the project, that identifies the path to the server. Persist this string in the project file.</param>
-		/// <param name="sccAuxPath">String, opaque to the project, that identifies the local path to the project. Persist this string in the project file.</param>
-		/// <param name="sccProvider">String, opaque to the project, that identifies the source control package. Persist this string in the project file.</param>
-		/// <returns>Returns true if something changed.</returns>
-		private bool SetSccSettings(string sccProjectName, string sccLocalPath, string sccAuxPath, string sccProvider)
-		{
-			bool changed = false;
-			Debug.Assert(sccProjectName != null && sccLocalPath != null && sccAuxPath != null && sccProvider != null);
-			if (String.Compare(sccProjectName, this.sccProjectName, StringComparison.OrdinalIgnoreCase) != 0 ||
-				String.Compare(sccLocalPath, this.sccLocalPath, StringComparison.OrdinalIgnoreCase) != 0 ||
-				String.Compare(sccAuxPath, this.sccAuxPath, StringComparison.OrdinalIgnoreCase) != 0 ||
-				String.Compare(sccProvider, this.sccProvider, StringComparison.OrdinalIgnoreCase) != 0)
-			{
-				changed = true;
-				this.sccProjectName = sccProjectName;
-				this.sccLocalPath = sccLocalPath;
-				this.sccAuxPath = sccAuxPath;
-				this.sccProvider = sccProvider;
-			}
-
-
-			return changed;
-		}
-
-		/// <summary>
-		/// Sets the scc info from the project file.
-		/// </summary>
-		private void InitSccInfo()
-		{
-			this.sccProjectName = this.GetProjectProperty(ProjectFileConstants.SccProjectName);
-			this.sccLocalPath = this.GetProjectProperty(ProjectFileConstants.SccLocalPath);
-			this.sccProvider = this.GetProjectProperty(ProjectFileConstants.SccProvider);
-			this.sccAuxPath = this.GetProjectProperty(ProjectFileConstants.SccAuxPath);
-		}
-
-		private void OnAfterProjectOpen(object sender, AfterProjectFileOpenedEventArgs e)
-		{
-			this.projectOpened = true;
-		}
-
-		private static XmlElement WrapXmlFragment(XmlDocument document, XmlElement root, Guid flavor, string configuration, string fragment)
-		{
-			XmlElement node = document.CreateElement(ProjectFileConstants.FlavorProperties);
-			XmlAttribute attribute = document.CreateAttribute(ProjectFileConstants.Guid);
-			attribute.Value = flavor.ToString("B");
-			node.Attributes.Append(attribute);
-			if (!String.IsNullOrEmpty(configuration))
-			{
-				attribute = document.CreateAttribute(ProjectFileConstants.Configuration);
-				attribute.Value = configuration;
-				node.Attributes.Append(attribute);
-			}
-			node.InnerXml = fragment;
-			root.AppendChild(node);
-			return node;
-		}
-
-		/// <summary>
-		/// Initialize an object with an XML fragment.
-		/// </summary>
-		/// <param name="iPersistXMLFragment">Object that support being initialized with an XML fragment</param>
-		/// <param name="configName">Name of the configuration being initialized, null if it is the project</param>
-		internal void LoadXmlFragment(IPersistXMLFragment persistXMLFragment, string configName)
-		{
-			if (xmlFragments == null)
-			{
-				// Retrieve the xml fragments from MSBuild
-				xmlFragments = new XmlDocument();
-				string fragments = this.BuildProject.GetProjectExtensions(ProjectFileConstants.VisualStudio);
-				fragments = String.Format("<root>{0}</root>", fragments);
-				xmlFragments.LoadXml(fragments);
-			}
-
-			// We need to loop through all the flavors
-			string flavorsGuid;
-			ErrorHandler.ThrowOnFailure(((IVsAggregatableProject)this).GetAggregateProjectTypeGuids(out flavorsGuid));
-			foreach (Guid flavor in Utilities.GuidsArrayFromSemicolonDelimitedStringOfGuids(flavorsGuid))
-			{
-				// Look for a matching fragment
-				string flavorGuidString = flavor.ToString("B");
-				string fragment = null;
-				XmlNode node = null;
-				foreach (XmlNode child in xmlFragments.FirstChild.ChildNodes)
-				{
-					if (child.Attributes.Count > 0)
-					{
-						string guid = String.Empty;
-						string configuration = String.Empty;
-						if (child.Attributes[ProjectFileConstants.Guid] != null)
-							guid = child.Attributes[ProjectFileConstants.Guid].Value;
-						if (child.Attributes[ProjectFileConstants.Configuration] != null)
-							configuration = child.Attributes[ProjectFileConstants.Configuration].Value;
-
-						if (String.Compare(child.Name, ProjectFileConstants.FlavorProperties, StringComparison.OrdinalIgnoreCase) == 0
-							&& String.Compare(guid, flavorGuidString, StringComparison.OrdinalIgnoreCase) == 0
-							&& ((String.IsNullOrEmpty(configName) && String.IsNullOrEmpty(configuration))
-								|| (String.Compare(configuration, configName, StringComparison.OrdinalIgnoreCase) == 0)))
-						{
-							// we found the matching fragment
-							fragment = child.InnerXml;
-							node = child;
-							break;
-						}
-					}
-				}
-
-				Guid flavorGuid = flavor;
-				if (String.IsNullOrEmpty(fragment))
-				{
-					// the fragment was not found so init with default values
-					ErrorHandler.ThrowOnFailure(persistXMLFragment.InitNew(ref flavorGuid, (uint)_PersistStorageType.PST_PROJECT_FILE));
-					// While we don't yet support user files, our flavors might, so we will store that in the project file until then
-					// TODO: Refactor this code when we support user files
-					ErrorHandler.ThrowOnFailure(persistXMLFragment.InitNew(ref flavorGuid, (uint)_PersistStorageType.PST_USER_FILE));
-				}
-				else
-				{
-					ErrorHandler.ThrowOnFailure(persistXMLFragment.Load(ref flavorGuid, (uint)_PersistStorageType.PST_PROJECT_FILE, fragment));
-					// While we don't yet support user files, our flavors might, so we will store that in the project file until then
-					// TODO: Refactor this code when we support user files
-					if (node.NextSibling != null && node.NextSibling.Attributes[ProjectFileConstants.User] != null)
-						ErrorHandler.ThrowOnFailure(persistXMLFragment.Load(ref flavorGuid, (uint)_PersistStorageType.PST_USER_FILE, node.NextSibling.InnerXml));
-				}
-			}
-		}
-
-		/// <summary>
-		/// For flavors which implement IPersistXMLFragment on the project, load the information now
-		/// </summary>
-		private void LoadNonBuildInformation()
-		{
-			IVsHierarchy outerHierarchy = HierarchyNode.GetOuterHierarchy(this);
-			if (outerHierarchy is IPersistXMLFragment)
-			{
-				this.LoadXmlFragment((IPersistXMLFragment)outerHierarchy, null);
-			}
-		}
-
-		/// <summary>
-		/// Retrieve all XML fragments that need to be saved from the flavors and store the information in msbuild.
-		/// </summary>
-		protected void PersistXMLFragments()
-		{
-			if (this.IsFlavorDirty() != 0)
-			{
-				XmlDocument doc = new XmlDocument();
-				XmlElement root = doc.CreateElement("ROOT");
-
-				// We will need the list of configuration inside the loop, so get it before entering the loop
-				uint[] count = new uint[1];
-				IVsCfg[] configs = null;
-				int hr = this.ConfigProvider.GetCfgs(0, null, count, null);
-				if (ErrorHandler.Succeeded(hr) && count[0] > 0)
-				{
-					configs = new IVsCfg[count[0]];
-					hr = this.ConfigProvider.GetCfgs((uint)configs.Length, configs, count, null);
-					if (ErrorHandler.Failed(hr))
-						count[0] = 0;
-				}
-				if (count[0] == 0)
-					configs = new IVsCfg[0];
-
-				// We need to loop through all the flavors
-				string flavorsGuid;
-				ErrorHandler.ThrowOnFailure(((IVsAggregatableProject)this).GetAggregateProjectTypeGuids(out flavorsGuid));
-				foreach (Guid flavor in Utilities.GuidsArrayFromSemicolonDelimitedStringOfGuids(flavorsGuid))
-				{
-					IVsHierarchy outerHierarchy = HierarchyNode.GetOuterHierarchy(this);
-					// First check the project
-					if (outerHierarchy is IPersistXMLFragment)
-					{
-						// Retrieve the XML fragment
-						string fragment = string.Empty;
-						Guid flavorGuid = flavor;
-						ErrorHandler.ThrowOnFailure(((IPersistXMLFragment)outerHierarchy).Save(ref flavorGuid, (uint)_PersistStorageType.PST_PROJECT_FILE, out fragment, 1));
-						if (!String.IsNullOrEmpty(fragment))
-						{
-							// Add the fragment to our XML
-							WrapXmlFragment(doc, root, flavor, null, fragment);
-						}
-						// While we don't yet support user files, our flavors might, so we will store that in the project file until then
-						// TODO: Refactor this code when we support user files
-						fragment = String.Empty;
-						ErrorHandler.ThrowOnFailure(((IPersistXMLFragment)outerHierarchy).Save(ref flavorGuid, (uint)_PersistStorageType.PST_USER_FILE, out fragment, 1));
-						if (!String.IsNullOrEmpty(fragment))
-						{
-							// Add the fragment to our XML
-							XmlElement node = WrapXmlFragment(doc, root, flavor, null, fragment);
-							node.Attributes.Append(doc.CreateAttribute(ProjectFileConstants.User));
-						}
-					}
-
-					// Then look at the configurations
-					foreach (IVsCfg config in configs)
-					{
-						// Get the fragment for this flavor/config pair
-						string fragment;
-						ErrorHandler.ThrowOnFailure(((ProjectConfig)config).GetXmlFragment(flavor, _PersistStorageType.PST_PROJECT_FILE, out fragment));
-						if (!String.IsNullOrEmpty(fragment))
-						{
-							string configName;
-							config.get_DisplayName(out configName);
-							WrapXmlFragment(doc, root, flavor, configName, fragment);
-						}
-					}
-				}
-				if (root.ChildNodes != null && root.ChildNodes.Count > 0)
-				{
-					// Save our XML (this is only the non-build information for each flavor) in msbuild
-					this.BuildProject.SetProjectExtensions(ProjectFileConstants.VisualStudio, root.InnerXml.ToString());
-				}
-			}
-		}
-		#endregion
-
+		
 		#region IVsAggregatableProject Members
 
 		/// <summary>
@@ -6149,38 +5309,6 @@ namespace Microsoft.VisualStudio.Package
 		}
 		#endregion
 
-		#region IVsSingleFileGeneratorFactory Helpers
-		/// <summary>
-		/// Returns the project generator key under HKLM\SOFTWARE\Microsoft\VisualStudio\[version]\Generators
-		/// </summary>
-		private RegistryKey BaseGeneratorsKey
-		{
-			get
-			{
-				if (baseGeneratorRegistryKey == null)
-				{
-					string regRoot;
-					ILocalRegistry2 pLocReg = LocalRegistry as ILocalRegistry2;
-					ErrorHandler.ThrowOnFailure(pLocReg.GetLocalRegistryRoot(out regRoot));
-					string regPath = Path.Combine(Path.Combine(regRoot, "Generators"), this.ProjectGuid.ToString("B"));
-					baseGeneratorRegistryKey = Registry.LocalMachine.OpenSubKey(regPath);
-				}
-				return baseGeneratorRegistryKey;
-			}
-		}
-
-		/// <summary>
-		/// Returns the local registry instance
-		/// </summary>
-		private ILocalRegistry LocalRegistry
-		{
-			get
-			{
-				return this.ProjectMgr.GetService(typeof(SLocalRegistry)) as ILocalRegistry;
-			}
-		}
-		#endregion
-
 		#region IVsProjectFlavorCfgProvider Members
 
 		int IVsProjectFlavorCfgProvider.CreateProjectFlavorCfg(IVsCfg pBaseProjectCfg, out IVsProjectFlavorCfg ppFlavorCfg)
@@ -6297,5 +5425,230 @@ namespace Microsoft.VisualStudio.Package
 		}
 
 		#endregion	
+
+		#region private helper methods
+		#region IVsSingleFileGeneratorFactory Helpers
+		/// <summary>
+		/// Returns the project generator key under HKLM\SOFTWARE\Microsoft\VisualStudio\[version]\Generators
+		/// </summary>
+		private RegistryKey BaseGeneratorsKey
+		{
+			get
+			{
+				if (baseGeneratorRegistryKey == null)
+				{
+					string regRoot;
+					ILocalRegistry2 pLocReg = LocalRegistry as ILocalRegistry2;
+					ErrorHandler.ThrowOnFailure(pLocReg.GetLocalRegistryRoot(out regRoot));
+					string regPath = Path.Combine(Path.Combine(regRoot, "Generators"), this.ProjectGuid.ToString("B"));
+					baseGeneratorRegistryKey = Registry.LocalMachine.OpenSubKey(regPath);
+				}
+				return baseGeneratorRegistryKey;
+			}
+		}
+
+		/// <summary>
+		/// Returns the local registry instance
+		/// </summary>
+		private ILocalRegistry LocalRegistry
+		{
+			get
+			{
+				return this.ProjectMgr.GetService(typeof(SLocalRegistry)) as ILocalRegistry;
+			}
+		}
+		#endregion
+
+		/// <summary>
+		/// Initialize projectNode
+		/// </summary>
+		private void Initialize()
+		{
+			this.ID = VSConstants.VSITEMID_ROOT;
+			this.tracker = new TrackDocumentsHelper(this);
+            this.imageList = Utilities.GetImageList(typeof(ProjectNode).Assembly.GetManifestResourceStream("Composestar.StarLight.VisualStudio.Project.Resources.imagelis.bmp"));
+		}
+
+		/// <summary>
+		/// Add an item to the hierarchy based on the item path
+		/// </summary>
+		/// <param name="item">Item to add</param>
+		/// <returns>Added node</returns>
+		private HierarchyNode AddIndependentFileNode(MSBuild.BuildItem item)
+		{
+			HierarchyNode currentParent = GetItemParentNode(item);
+			return AddFileNodeToNode(item, currentParent);
+		}
+
+		/// <summary>
+		/// Add a dependent file node to the hierarchy
+		/// </summary>
+		/// <param name="item">msbuild item to add</param>
+		/// <param name="parentNode">Parent Node</param>
+		/// <returns>Added node</returns>
+		private HierarchyNode AddDependentFileNodeToNode(MSBuild.BuildItem item, HierarchyNode parentNode)
+		{
+			FileNode node = this.CreateDependentFileNode(new ProjectElement(this, item, false));
+			parentNode.AddChild(node);
+			return node;
+		}
+
+		/// <summary>
+		/// Add a file node to the hierarchy
+		/// </summary>
+		/// <param name="item">msbuild item to add</param>
+		/// <param name="parentNode">Parent Node</param>
+		/// <returns>Added node</returns>
+		private HierarchyNode AddFileNodeToNode(MSBuild.BuildItem item, HierarchyNode parentNode)
+		{
+			FileNode node = this.CreateFileNode(new ProjectElement(this, item, false));
+			parentNode.AddChild(node);
+			return node;
+		}
+
+		/// <summary>
+		/// Get the parent node of an msbuild item
+		/// </summary>
+		/// <param name="item">msbuild item</param>
+		/// <returns>parent node</returns>
+		private HierarchyNode GetItemParentNode(MSBuild.BuildItem item)
+		{
+			HierarchyNode currentParent = this;
+			string strPath = item.FinalItemSpec;
+
+			strPath = Path.GetDirectoryName(strPath);
+			if (strPath.Length > 0)
+			{
+				// Use the relative to verify the folders...
+				currentParent = this.CreateFolderNodes(strPath);
+			}
+			return currentParent;
+		}
+		
+		private MSBuild.BuildProperty GetMsBuildProperty(string propertyName, bool resetCache)
+		{
+			if (resetCache || this.currentConfig == null)
+			{
+				// Get properties from project file and cache it
+				this.SetCurrentConfiguration();
+				this.currentConfig = this.buildProject.EvaluatedProperties;
+			}
+
+			if (this.currentConfig == null)
+				throw new ApplicationException(String.Format(CultureInfo.CurrentCulture, SR.GetString(SR.FailedToRetrieveProperties), propertyName));
+
+			// return property asked for
+			return this.currentConfig[propertyName];
+		}
+
+		private string GetOutputPath(MSBuild.BuildPropertyGroup properties)
+		{
+			this.currentConfig = properties;
+			string outputPath = GetProjectProperty("OutputPath");
+
+			if (!String.IsNullOrEmpty(outputPath))
+			{
+				outputPath = outputPath.Replace('/', Path.DirectorySeparatorChar);
+				if (outputPath[outputPath.Length - 1] != Path.DirectorySeparatorChar)
+					outputPath += Path.DirectorySeparatorChar;
+			}
+
+			return outputPath;
+		}
+
+		private bool GetBoolAttr(MSBuild.BuildPropertyGroup properties, string name)
+		{
+			this.currentConfig = properties;
+			string s = GetProjectProperty(name);
+
+			return (s != null && s.ToLower(CultureInfo.InvariantCulture).Trim() == "true");
+		}
+
+		private string GetAssemblyName(MSBuild.BuildPropertyGroup properties)
+		{
+			this.currentConfig = properties;
+			string name = null;
+
+			name = GetProjectProperty(ProjectFileConstants.AssemblyName);
+			if (name == null)
+				name = this.Caption;
+
+			string outputtype = GetProjectProperty(ProjectFileConstants.OutputType, false);
+
+			if (outputtype == "library")
+			{
+				outputtype = outputtype.ToLower(CultureInfo.InvariantCulture);
+				name += ".dll";
+			}
+			else
+			{
+				name += ".exe";
+			}
+
+			return name;
+		}
+		
+		/// <summary>
+		/// Updates our scc project settings. 
+		/// </summary>
+		/// <param name="sccProjectName">String, opaque to the project, that identifies the project location on the server. Persist this string in the project file. </param>
+		/// <param name="sccLocalPath">String, opaque to the project, that identifies the path to the server. Persist this string in the project file.</param>
+		/// <param name="sccAuxPath">String, opaque to the project, that identifies the local path to the project. Persist this string in the project file.</param>
+		/// <param name="sccProvider">String, opaque to the project, that identifies the source control package. Persist this string in the project file.</param>
+		/// <returns>Returns true if something changed.</returns>
+		private bool SetSccSettings(string sccProjectName, string sccLocalPath, string sccAuxPath, string sccProvider)
+		{
+			bool changed = false;
+			Debug.Assert(sccProjectName != null && sccLocalPath != null && sccAuxPath != null && sccProvider != null);
+			if (String.Compare(sccProjectName, this.sccProjectName, StringComparison.OrdinalIgnoreCase) != 0 ||
+				String.Compare(sccLocalPath, this.sccLocalPath, StringComparison.OrdinalIgnoreCase) != 0 ||
+				String.Compare(sccAuxPath, this.sccAuxPath, StringComparison.OrdinalIgnoreCase) != 0 ||
+				String.Compare(sccProvider, this.sccProvider, StringComparison.OrdinalIgnoreCase) != 0)
+			{
+				changed = true;
+				this.sccProjectName = sccProjectName;
+				this.sccLocalPath = sccLocalPath;
+				this.sccAuxPath = sccAuxPath;
+				this.sccProvider = sccProvider;
+			}
+
+
+			return changed;
+		}
+
+		/// <summary>
+		/// Sets the scc info from the project file.
+		/// </summary>
+		private void InitSccInfo()
+		{
+			this.sccProjectName = this.GetProjectProperty(ProjectFileConstants.SccProjectName);
+			this.sccLocalPath = this.GetProjectProperty(ProjectFileConstants.SccLocalPath);
+			this.sccProvider = this.GetProjectProperty(ProjectFileConstants.SccProvider);
+			this.sccAuxPath = this.GetProjectProperty(ProjectFileConstants.SccAuxPath);
+		}
+
+		private void OnAfterProjectOpen(object sender, AfterProjectFileOpenedEventArgs e)
+		{
+			this.projectOpened = true;
+		}
+
+		private static XmlElement WrapXmlFragment(XmlDocument document, XmlElement root, Guid flavor, string configuration, string fragment)
+		{
+			XmlElement node = document.CreateElement(ProjectFileConstants.FlavorProperties);
+			XmlAttribute attribute = document.CreateAttribute(ProjectFileConstants.Guid);
+			attribute.Value = flavor.ToString("B");
+			node.Attributes.Append(attribute);
+			if (!String.IsNullOrEmpty(configuration))
+			{
+				attribute = document.CreateAttribute(ProjectFileConstants.Configuration);
+				attribute.Value = configuration;
+				node.Attributes.Append(attribute);
+			}
+			node.InnerXml = fragment;
+			root.AppendChild(node);
+			return node;
+		}
+
+		#endregion
 	}		
 }

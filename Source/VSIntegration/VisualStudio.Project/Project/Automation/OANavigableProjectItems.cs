@@ -267,21 +267,10 @@ namespace Microsoft.VisualStudio.Package.Automation
 			List<EnvDTE.ProjectItem> list = new List<EnvDTE.ProjectItem>();
 			for (HierarchyNode child = this.NodeWithItems.FirstChild; child != null; child = child.NextSibling)
 			{
-				if (child is FileNode)
+				EnvDTE.ProjectItem item = child.GetAutomationObject() as EnvDTE.ProjectItem;
+				if (null != item)
 				{
-					list.Add(new OAFileItem(this.Project, child as FileNode));
-				}
-				else if (child is NestedProjectNode)
-				{
-					list.Add(new OANestedProjectItem(this.Project, child as NestedProjectNode));
-				}
-				else if (child is FolderNode)
-				{
-					list.Add(new OAFolderItem(this.Project, child as FolderNode));
-				}
-				else if (child is ReferenceContainerNode)
-				{
-					list.Add(new OAReferenceFolderItem(this.Project, child as ReferenceContainerNode));
+					list.Add(item);
 				}
 			}
 
