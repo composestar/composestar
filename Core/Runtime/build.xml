@@ -19,6 +19,7 @@
 				<include name="LtlLexer.java"/>
 				<include name="LtlParser.java"/>
 				<include name="LtlTokenTypes.*"/>
+				<include name="LtlParserTokenTypes.*"/>
 				<include name="*.smap"/>
 			</fileset>
 		</delete>
@@ -27,6 +28,7 @@
 				<include name="RegLexer.java"/>
 				<include name="RegParser.java"/>
 				<include name="RegTokenTypes.*"/>
+				<include name="RegParserTokenTypes.*"/>
 				<include name="*.smap"/>
 			</fileset>
 		</delete>
