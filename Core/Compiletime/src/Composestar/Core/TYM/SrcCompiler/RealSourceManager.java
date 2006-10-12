@@ -56,7 +56,7 @@ public class RealSourceManager implements CTCommonModule
 			CompilerSettings compsettings = lang.compilerSettings;
 			LangCompiler comp = compsettings.getCompiler();
 
-			String exetype = config.getProjects().getExecutable();
+			String exetype = config.getProjects().getApplicationStart();
 			String exefile = getExeFile(project, exetype);
 
 			//set target of sources

@@ -64,16 +64,6 @@ public class Projects implements Serializable
 		return properties.getProperty("applicationStart");
 	}
 	
-	public void setExecutable(String value)
-	{
-		properties.setProperty("executable", value);
-	}
-	
-	public String getExecutable()
-	{
-		return properties.getProperty("executable");
-	}
-	
 	/**
 	 * @deprecated Use setRunDebugLevel/setOutputPath/setApplicationStart/setExecutable.
 	 */

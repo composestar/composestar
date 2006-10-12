@@ -52,12 +52,6 @@ public class ProjectConfigurationHandler extends DefaultHandler implements Conte
 				projects.setApplicationStart(applicationStart);
 			}
 			
-			if (amap.getValue("executable") != null)
-			{
-				String executable = amap.getValue("executable"); 
-				projects.setExecutable(executable);
-			} 
-			
 			// done here so look further
 			parser.setContentHandler(new ProjectHandler(parser, this));
 		}
