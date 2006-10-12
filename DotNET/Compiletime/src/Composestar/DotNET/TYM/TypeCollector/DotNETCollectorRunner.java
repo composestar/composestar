@@ -44,7 +44,6 @@ public class DotNETCollectorRunner implements CollectorRunner {
      * where added to the Master.
      * @param resources The resources objects contains the common resources available 
      * e.g the Repository.
-     * @throws Composestar.core.Exception.ModuleException If a ModuleException is 
      * thrown the Master will stop its activity immediately.
      */
     public void run(CommonResources resources) throws ModuleException {
@@ -172,11 +171,16 @@ public class DotNETCollectorRunner implements CollectorRunner {
     			if(type.fromDLL.equals(asm))
     			{
     				// make a clone and add to datastore
-    				PrimitiveConcern pcclone = (PrimitiveConcern)pc.clone();
-    				type.setParentConcern(pcclone);
+                    PrimitiveConcern pcclone;
+                    try{
+                        pcclone = (PrimitiveConcern)pc.clone();
+                    }catch(CloneNotSupportedException e){
+                        pcclone = pc;
+                    }
+                    type.setParentConcern(pcclone);
     				DataStore.instance().addObject( type.fullName(), pcclone );
-    					
-    				// also add the type to the type map
+
+                    // also add the type to the type map
     				type.reset(); // reset hashsets of type and register
     				map.addType( type.fullName() , type );
     			}

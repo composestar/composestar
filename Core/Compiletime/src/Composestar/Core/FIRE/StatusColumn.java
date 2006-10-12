@@ -63,8 +63,7 @@ public class StatusColumn extends Column implements Cloneable
 		finished.addElements(size, false);
 	}
 
-	//TODO
-	public Object clone () 
+	public Object clone () throws CloneNotSupportedException
 	{
 		StatusColumn statusColumn = (StatusColumn) super.clone();
 		statusColumn.finished = (Column)finished.clone();

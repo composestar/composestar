@@ -28,11 +28,26 @@ public class Tor extends FilterComposite
 		// a / / b    (a & ~b)\ \ c
 
 		// a
-		StatusColumn a = (StatusColumn) status.clone();
+        StatusColumn a;
+        try{
+        a = (StatusColumn) status.clone();
+        }
+        catch(CloneNotSupportedException e){
+            e.printStackTrace();
+            a = status;
+        }
 
-		// b
+        // b
 		fc1.calculateStatus(status, stateTable);
-		StatusColumn b = (StatusColumn) status.clone();
+
+        StatusColumn b;
+        try{
+        b = (StatusColumn) status.clone();
+        }
+        catch(CloneNotSupportedException e){
+            e.printStackTrace();
+            b = status;
+        }
 
 		// (a & ~b)
 		Logic.not(status);

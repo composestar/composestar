@@ -85,9 +85,4 @@ public class ChildIterator extends Iterator
 	{
 		return stack.size();
 	}
-
-	public Object clone()
-	{
-		return super.clone();
-	}
 }

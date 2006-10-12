@@ -41,8 +41,9 @@ public class FLIRT {
      * @param args
      * @roseuid 40F27B3C02B6
      */
+   /*
     public static void main(String[] args) {
-    	/*
+
 		Debug.setMode(Debug.MODE_INFORMATION);
 		Debug.out(Debug.MODE_INFORMATION,"FLIRT","Starting...");
 		CommonResources cr = new CommonResources();
@@ -51,6 +52,7 @@ public class FLIRT {
 		Object[] arguments = {new String("Hello World")};
 		flirt.run(cr);
 		MessageHandlingFacility.handleVoidMethodCall(flirt,cr,"addResource",arguments);
-		*/
-    }    
+
+    }
+        */
 }

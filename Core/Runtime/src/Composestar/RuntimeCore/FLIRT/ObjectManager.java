@@ -142,7 +142,16 @@ public class ObjectManager implements ChildRunnable
 						rootfmruntime.parentname = concern.getName();
 						
 						// Create a copy of the filtermodule!
-						FilterModuleRuntime fmruntime = (FilterModuleRuntime)rootfmruntime.clone();
+						FilterModuleRuntime fmruntime;
+						try
+						{
+							fmruntime = (FilterModuleRuntime)rootfmruntime.clone();
+						}
+						catch (CloneNotSupportedException e)
+						{
+							e.printStackTrace();
+							fmruntime = rootfmruntime;
+						}
 						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Comparing sizes of externals after cloning: "+rootfmruntime.getExternals().size() +" = "+fmruntime.getExternals().size());
 						
 						fmruntime.setObjectManager(this);

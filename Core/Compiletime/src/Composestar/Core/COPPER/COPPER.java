@@ -136,9 +136,14 @@ public class COPPER implements CTCommonModule
   	  				if(obj instanceof CpsConcern)
   	  				{
   	  					CpsConcern cps = (CpsConcern)obj;
-  	  					CpsConcern cpsclone = (CpsConcern)cps.clone();
-  	  					DataStore.instance().addObject(cpsclone.getQualifiedName(),cpsclone);
-  	  				}
+                            try{
+                            CpsConcern cpsclone = (CpsConcern)cps.clone();
+
+                            DataStore.instance().addObject(cpsclone.getQualifiedName(),cpsclone);
+                            }catch(CloneNotSupportedException e){
+                                e.printStackTrace();
+                            }
+                        }
   	  				else if(obj!=null)
   	  				{
   	  					DataStore.instance().addObject(obj);
