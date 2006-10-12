@@ -34,10 +34,12 @@ public class While extends InlineInstruction{
     public void Accept(IVisitor visitor)
     {
 		super.Accept(visitor);
+		int label = get_Label();//FIXME nice way to restore label after visitor has changed it
 		visitor.VisitWhile(this);
 		if (instructions != null)
 			instructions.Accept(visitor);
 		visitor.VisitWhileEnd(this);
+		set_Label(label);//FIXME
     }
     
     public String toString(){

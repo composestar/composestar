@@ -30,7 +30,7 @@ namespace Composestar.StarLight.ILWeaver
         #region Constant values
 
         private const int FilterContextJumpId = 9999;
-        private const int BranchLabelOffSet = 8000;
+        private const int BranchLabelOffSet = 100000;
         
         #endregion
 
@@ -485,7 +485,7 @@ namespace Composestar.StarLight.ILWeaver
             FilterActionWeaveStrategy strategy = FilterActionWeaveStrategy.GetFilterActionWeaveStrategy(
                 filterAction.Type);
 
-            strategy.Weave(this, filterAction, Method);
+            strategy.Weave(this, filterAction, CalledMethod);
         }
 
         /// <summary>
@@ -588,6 +588,9 @@ namespace Composestar.StarLight.ILWeaver
         {
             // Place label for the End branch block
             Instructions.Add(GetJumpLabel(branch.Label + 1));
+
+            // Reset branch label:
+            branch.Label = -1;
         }
 
         #endregion
@@ -650,6 +653,9 @@ namespace Composestar.StarLight.ILWeaver
 
             // Place the end label
             Instructions.Add(GetJumpLabel(whileInstr.Label + 1));
+
+            // Reset label
+            whileInstr.Label = -1;
         }
 
         #endregion
@@ -690,6 +696,9 @@ namespace Composestar.StarLight.ILWeaver
         {
             // Emit a label to jump to.
             Instructions.Add(GetJumpLabel(switchInstr.Label));
+
+            // Reset label
+            switchInstr.Label = -1;
         }
 
         /// <summary>
@@ -800,6 +809,22 @@ namespace Composestar.StarLight.ILWeaver
 
 
             //
+            // Store sender (only for outputfilters)
+            //
+            if(FilterType == FilterTypes.OutputFilter  &&  Method.HasThis)
+            {
+                // Load joinpointcontext object
+                Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                // Load this
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+                // Call set_Sender
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
+                    typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
+            }
+
+            //
             // Store returnType                
             //
 
@@ -824,29 +849,6 @@ namespace Composestar.StarLight.ILWeaver
 
 
             int numberOfArguments = 0;
-
-            switch(FilterType)
-            {
-                case CecilInliningInstructionVisitor.FilterTypes.InputFilter:
-                    numberOfArguments = Method.Parameters.Count;
-                    break;
-                case CecilInliningInstructionVisitor.FilterTypes.OutputFilter:
-                    //numberOfArguments = methodBaseDef.GetParameters().Length;
-                    //// Also set the sender
-                    //// Load the joinpointcontext object
-                    //Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                    //// Load the this pointer
-                    //if (Method.HasThis)
-                    //    Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
-                    //else
-                    //    Instructions.Add(Worker.Create(OpCodes.Ldnull));
-
-                    //// Assign to the Target property
-                    //Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
-
-                    break;
-            }
 
             //
             // Add the arguments, these are stored at the top of the stack
@@ -947,7 +949,7 @@ namespace Composestar.StarLight.ILWeaver
 
                 // Assign to the Target property
                 Instructions.Add(Worker.Create(OpCodes.Callvirt,
-                    CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", new Type[] { typeof(object) }))));
+                    CreateMethodReference(typeof(JoinPointContext).GetMethod("set_StartTarget", new Type[] { typeof(object) }))));
             }
             else
             {
@@ -956,7 +958,7 @@ namespace Composestar.StarLight.ILWeaver
 
                 // Assign to the Target property through static method
                 Instructions.Add(Worker.Create(OpCodes.Call,
-                    CreateMethodReference(typeof(JoinPointContext).GetMethod("set_Target", 
+                    CreateMethodReference(typeof(JoinPointContext).GetMethod("SetTarget", 
                     new Type[] { typeof(object), typeof(JoinPointContext) }))));
             }
 
@@ -972,7 +974,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Assign name to MethodName
             Instructions.Add(Worker.Create(OpCodes.Callvirt,
-                CreateMethodReference(typeof(JoinPointContext).GetMethod("set_MethodName", new Type[] { typeof(string) }))));
+                CreateMethodReference(typeof(JoinPointContext).GetMethod("set_StartSelector", new Type[] { typeof(string) }))));
         }
 
         /// <summary>
@@ -983,7 +985,7 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitRestoreJoinPointContext(ContextInstruction contextInstruction)
         {
             // Retrieve returnvalue
-            if(!Method.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
+            if(!CalledMethod.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
                 // Get JoinPointContext
                 VariableDefinition jpcVar = CreateJoinPointContextLocal();
@@ -1002,7 +1004,7 @@ namespace Composestar.StarLight.ILWeaver
                 }
                 else
                 {
-                    Instructions.Add(Worker.Create(OpCodes.Castclass, Method.ReturnType.ReturnType));
+                    Instructions.Add(Worker.Create(OpCodes.Castclass, CalledMethod.ReturnType.ReturnType));
                 }
             }
         }

@@ -22,8 +22,12 @@ namespace Composestar.StarLight.ContextInfo
         private Dictionary<string, object> _properties;
 
         private object _sender;
-        private object _target;
-        private string _methodName;
+        private object _startTarget;
+        private string _startSelector;
+        private object _currentTarget;
+        private string _currentSelector;
+        private object _substitutionTarget;
+        private string _substitutionSelector;
         private ArgumentInfo _returnValue;
         private bool _hasReturnValueSet;
 
@@ -41,13 +45,13 @@ namespace Composestar.StarLight.ContextInfo
             set { _sender = value; }
         }
         /// <summary>
-        /// Gets or sets the target.
+        /// Gets or sets the start-target.
         /// </summary>
-        /// <value>The target.</value>
-        public object Target
+        /// <value>The start-target.</value>
+        public object StartTarget
         {
-            get { return _target; }
-            set { _target = value; }
+            get { return _startTarget; }
+            set { _startTarget = value; }
         }
 
         /// <summary>
@@ -61,18 +65,58 @@ namespace Composestar.StarLight.ContextInfo
         {
             if(context != null)
             {
-                context.Target = obj;
+                context.StartTarget = obj;
             }
         }
 
         /// <summary>
-        /// Gets or sets the name of the method.
+        /// Gets or sets the start-selector.
         /// </summary>
-        /// <value>The name of the method.</value>
-        public string MethodName
+        /// <value>The start-selector.</value>
+        public string StartSelector
         {
-            get { return _methodName; }
-            set { _methodName = value; }
+            get { return _startSelector; }
+            set { _startSelector = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the current-target.
+        /// </summary>
+        /// <value>The current-target.</value>
+        public object CurrentTarget
+        {
+            get { return _currentTarget; }
+            set { _currentTarget = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the current-selector.
+        /// </summary>
+        /// <value>The current-selector.</value>
+        public string CurrentSelector
+        {
+            get { return _currentSelector; }
+            set { _currentSelector = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the substitution-target.
+        /// </summary>
+        /// <value>The substitution-target.</value>
+        public object SubstitutionTarget
+        {
+            get { return _substitutionTarget; }
+            set { _substitutionTarget = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the substitution-selector.
+        /// </summary>
+        /// <value>The substitution-selector.</value>
+        public string SubstitutionSelector
+        {
+            get { return _substitutionSelector; }
+            set { _substitutionSelector = value; }
         }
 
         #endregion

@@ -130,7 +130,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			}
 			callElements.add(ce);
 			
-			parameterMap.put(ce.get_ParentMethodBodyId(), callElements);
+			callsMap.put(ce.get_ParentMethodBodyId(), callElements);
 		}
 		
 		
@@ -526,6 +526,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	    //separate returntype part:
 	    int pos1 = operation.indexOf( ' ' );
+	    String returnType = operation.substring( 0, pos1 );
 
 	    //separate type:
 	    int pos2 = operation.indexOf( ':' );
@@ -554,6 +555,8 @@ public class StarLightCollectorRunner implements CollectorRunner
             methodInfo = type.getMethod( methodName, argTypes );
         }
 
+        call.setMethodName( methodName );
+        
 	    return methodInfo;
 	}
 	
