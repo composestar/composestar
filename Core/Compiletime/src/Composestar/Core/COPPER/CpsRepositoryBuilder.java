@@ -94,8 +94,7 @@ public class CpsRepositoryBuilder
   private FilterElementAST fe;
   private FilterModuleAST fm;
   private FilterModuleBinding fmb;
-  private FilterModuleReference fmref;
-  private MatchingPartAST mp;
+    private MatchingPartAST mp;
   private MatchingPatternAST mpat;
   private MatchingType mt;
   private MessageSelectorAST s;
@@ -114,8 +113,7 @@ public class CpsRepositoryBuilder
   private Vector condAll;                    //temporary vector used to store conditionparts
   private boolean parsingInput = true;       //whether we're parsing an input- or outputfilter (needed because of generalfilter)
   private boolean workingOnMatching = true;  //whether we're busy creating the matching or substitution part in a messagepatternset
-  private SelectorDefinition concernSelf;    //special hard coded selector definition so we can resolve 'self'
-  // equal to 'self <- { * = ConcernName }'
+    // equal to 'self <- { * = ConcernName }'
 
   private Splitter split;
   
@@ -128,8 +126,8 @@ public class CpsRepositoryBuilder
    */
   public CpsRepositoryBuilder() {
     condAll = new Vector();
-    concernSelf = null;
-    namespace = null;
+      SelectorDefinition concernSelf = null;
+      namespace = null;
     split = new Splitter();
     split.setBuilder(this);
     ds = DataStore.instance();
@@ -661,7 +659,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addConditionLiteral(Vector condname, ConditionExpression override) {
 	  
-    ConditionExpression ce = null;
+    ConditionExpression ce;
     
     //special case if "true" or "false" are specified
     if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("true")) {
@@ -717,7 +715,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param filterop Inclusion or Exclusion (can be '=>' or '~>'
    */
   public void addFilterOperatorType(String filterop,int lineNumber) {
-    EnableOperatorType eot = null;
+    EnableOperatorType eot;
     if (filterop.equals("=>")) {
       eot = new EnableOperator();
     }
@@ -1241,8 +1239,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param name Name of the fm (may include package + concern)
    */
   public void addFilterModuleName(Vector name, Vector args, int line) {
-    fmref = new FilterModuleReference();
-    fmref.setDescriptionFileName(filename);
+      FilterModuleReference fmref = new FilterModuleReference();
+      fmref.setDescriptionFileName(filename);
     fmref.setDescriptionLineNumber(line);
     split.splitConcernElemReference(name, true);
     fmref.setPackage(split.getPack());

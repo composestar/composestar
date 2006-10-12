@@ -20,17 +20,16 @@ import Composestar.Core.CpsProgramRepository.Concern;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class MessageAnalysis {
-	
-	private String selector;
-	private Concern concern;
+
+    private Concern concern;
 	
 	private List states;
 	
 	
 	public MessageAnalysis(Concern concern, String selector)
 	{
-		this.selector = selector;
-		this.concern = concern;
+        String selector1 = selector;
+        this.concern = concern;
 		this.states = new ArrayList();
 	}
 	

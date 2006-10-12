@@ -52,7 +52,9 @@ public class StringConverter  implements Cloneable, Serializable {
             {
                 list.add(Integer.valueOf(tmp));
             }
-            catch(Exception e) {}
+            catch(Exception e) {
+                e.printStackTrace();
+            }
         }
         return(list.iterator());     
     }

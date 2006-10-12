@@ -76,7 +76,7 @@ public class DebuggerFactory {
 		}
 		catch(Exception e)
 		{
-
+           e.printStackTrace();
 		}
 		return "";
 	}

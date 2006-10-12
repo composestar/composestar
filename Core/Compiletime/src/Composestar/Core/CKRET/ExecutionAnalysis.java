@@ -21,17 +21,16 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class ExecutionAnalysis implements Serializable{
-	
-	private Concern concern;
-	private List filters;
+
+    private List filters;
 	private int execution;
 	
 	List actions = new ArrayList();
 	
 	public ExecutionAnalysis(Concern concern, List filters, int execution)
 	{
-		this.concern = concern;
-		this.filters = filters;
+        Concern concern1 = concern;
+        this.filters = filters;
 		this.execution = execution;
 	}
 	

@@ -88,7 +88,7 @@ public class DotNETCollectorRunner implements CollectorRunner {
         		CpsConcern concern = (CpsConcern)next;
         		// fetch implementation name
         		Object impl = concern.getImplementation();
-        		String className = "";
+        		String className;
 				if( impl == null ) { 
 					continue; 
 				}

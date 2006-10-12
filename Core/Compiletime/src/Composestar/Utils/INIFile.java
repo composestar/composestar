@@ -54,9 +54,6 @@ public final class INIFile
     /** Variable to represent the timestamp format */
     private String mstrTimeStampFmt = "yyyy-MM-dd HH:mm:ss";
 
-    /** Variable to denote the successfull load operation. */
-    private boolean mblnLoaded = false;
-
     /** Variable to hold the ini file name and full path */
     private String mstrFile;
 
@@ -563,7 +560,7 @@ public final class INIFile
             if (!this.mhmapSections.isEmpty())
             {
                 arrRet = new String[this.mhmapSections.size()];
-                for (iter = this.mhmapSections.keySet().iterator();;iter.hasNext())
+                for (iter = this.mhmapSections.keySet().iterator();iter.hasNext();)
                 {
                     arrRet[iCntr] = (String) iter.next();
                     iCntr++;
@@ -833,7 +830,7 @@ public final class INIFile
                     }
                     if (objSec != null)
                         this.mhmapSections.put(strSection.trim(), objSec);
-                    this.mblnLoaded = true;
+                    boolean mblnLoaded = true;
                 }
             }
         }

@@ -22,10 +22,9 @@ import java.util.Dictionary;
  * Summary description for VisualDebugger.
  */
 public class VisualDebugger extends DebuggerProvider{
-	private Visualizer filterscreen;
 
     public VisualDebugger(Visualizer visualizer) {
-		this.filterscreen = visualizer;
+        Visualizer filterscreen = visualizer;
     }
 
 	public void executeEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point) 

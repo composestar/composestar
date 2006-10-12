@@ -13,8 +13,7 @@ import java.util.Dictionary;
  */
 public class SeqFilterCompositionOperatorRuntime extends FilterCompositionOperatorRuntime implements Interpretable 
 {
-    private FilterRuntime previous;
-    
+
     /**
      * @roseuid 40DDDE520094
      */
@@ -27,7 +26,7 @@ public class SeqFilterCompositionOperatorRuntime extends FilterCompositionOperat
      * @roseuid 40DD59C50060
      */
     public SeqFilterCompositionOperatorRuntime(FilterRuntime previous) {
-    	this.previous = previous;     
+        FilterRuntime previous1 = previous;
     }
     
     /**

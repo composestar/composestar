@@ -2,8 +2,7 @@ package Composestar.RuntimeCore.CODER.VisualDebugger;
 
 import Composestar.RuntimeCore.CODER.BreakPoint.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.*;
-import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl.BreakPointLTLParser;
-import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.LTL.*;
+import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Ltl.*;
 import Composestar.RuntimeCore.CODER.BreakPoint.Parsers.Reg.*;
 
 import Composestar.RuntimeCore.Utils.Debug;
@@ -21,8 +20,7 @@ import java.awt.event.WindowAdapter;
 public class VisualBreakPointMaker extends JFrame implements ActionListener
 {
 	private PopUp popup = new PopUp();
-	private VisualDebugger debugger;
-	private BreakPoint breakpoint = null;
+    private BreakPoint breakpoint = null;
 
 	private TextArea senders = new TextArea("*");
 	private TextArea selectors = new TextArea("*");
@@ -54,9 +52,9 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 			}
 		});
 
-		this.debugger = debugger;
+        VisualDebugger debugger1 = debugger;
 
-		JPanel senderPane = new JPanel();
+        JPanel senderPane = new JPanel();
 		senderPane.setLayout(new BorderLayout());
 		senderPane.add(new Label("Senders"),BorderLayout.NORTH);
 		senderPane.add(senders,BorderLayout.SOUTH);
@@ -128,18 +126,21 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 		breakpoint = createBreakPoint();
 		if(breakpoint != null)
 		{
+            /*
             debugger.
             debugger.setBreakPoint(breakpoint);
 			popup.dispose();
 			dispose();
 			debugger.setBreakPoint(breakpoint);
 			debugger.startVisualizer();
+			*/
 		}
 	}
 
 	public BreakPoint createBreakPoint()
 	{
-		String wasBussyWith;
+        /*
+        String wasBussyWith;
 		try
 		{
 			ObjectBreakPoint selector = new SenderBreakPoint(selectors.getText());
@@ -181,6 +182,7 @@ public class VisualBreakPointMaker extends JFrame implements ActionListener
 			parseException(wasBussyWith, e);
 			return null;
 		}
+		*/
 		return breakpoint;
 	}
 

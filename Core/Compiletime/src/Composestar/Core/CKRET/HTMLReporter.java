@@ -137,7 +137,8 @@ public class HTMLReporter implements Reporter
 		}
 		catch (Exception e)
 		{
-		}
+            e.printStackTrace();
+        }
 	}
 
 }

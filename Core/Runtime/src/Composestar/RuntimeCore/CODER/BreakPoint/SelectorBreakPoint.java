@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Summary description for AlwaysBreakBreakPoint.
  */
-public class SelectorBreakPoint extends BreakPoint{
+public class SelectorBreakPoint implements BreakPoint{
 
 	String sList = "";
 

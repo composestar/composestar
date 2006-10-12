@@ -27,14 +27,7 @@ options {
 	k = 2;
 	defaultErrorHandler = false;
 }
-{
-	private Halter halt;
 
-	public void setHalter(Halter halt)
-	{
-		this.halt = halt;
-	}
-}
 formula returns [BreakPoint result = null]
 	{BreakPoint right = null;}
 	: GLOBAL result = formula { result = new BreakPointGlobal(halt,result);}
@@ -52,7 +45,7 @@ rightpart returns [BreakPoint result = null]
 subformula returns [BreakPoint result = null]
 	{Value left = null; Value right = null;int operatorType = 0;}
 	: LPARENTHESIS result = formula RPARENTHESIS
-	| left = expression (operatorType = operator right = expression { result = new BreakPointValueOperator(halt,left,operatorType,right);})+
+	| left = expression (operatorType = operator right = expression { result = new BreakPointValueOperator(left,operatorType,right);})+
 	;
 
 operator returns [int result = 0]

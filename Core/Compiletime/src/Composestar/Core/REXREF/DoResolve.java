@@ -572,8 +572,8 @@ public class DoResolve {
   private void transformParameterList()throws ModuleException{
 	  Iterator i = ds.getAllInstancesOf(ParameterizedMessageSelector.class);
 	  //the FilterModuleAST where we want to perform the transformation 
-	  FilterModule fm = null;
-	  Filter f = null;
+	  FilterModule fm;
+	  Filter f;
 	  
 	  while(i.hasNext()){
 		  ParameterizedMessageSelector pms = (ParameterizedMessageSelector) i.next();

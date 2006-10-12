@@ -21,7 +21,9 @@ public class FieldNode extends Node
 			Field publicfield = obj.getClass().getField(reference);
 			return publicfield.get(obj);
 		}
-		catch(Exception excep){}
+		catch(Exception excep){
+            excep.printStackTrace();
+        }
 	
 		try { 
 			// try to get private field

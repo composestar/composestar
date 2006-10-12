@@ -49,8 +49,6 @@ import Composestar.Utils.Debug;
 public class Sign implements CTCommonModule {
     private HashSet unsolvedConcerns;
 
-    private HashSet solvedConcerns;
-
     private Hashtable analysisModels;
 
     private final static int IN_SIGNATURE = 1;
@@ -136,7 +134,7 @@ public class Sign implements CTCommonModule {
 
     private void phase0() {
         unsolvedConcerns = new HashSet();
-        solvedConcerns = new HashSet();
+        HashSet solvedConcerns = new HashSet();
         analysisModels = new Hashtable();
         FilterModuleOrder filterModules;
         FireModel model;

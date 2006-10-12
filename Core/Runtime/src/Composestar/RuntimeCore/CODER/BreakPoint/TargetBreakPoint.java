@@ -15,7 +15,7 @@ import java.util.*;
 public class TargetBreakPoint extends ObjectBreakPoint {
 
     public TargetBreakPoint(Halter halt,String targetList) throws BreakPointParseException{
-        super(halt,targetList);
+        super(targetList);
     }
 
     public boolean matchEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point){

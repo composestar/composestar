@@ -47,12 +47,10 @@ public class FilterActionNode extends ActionNode
 
 	protected boolean subsetOfSingle (Node rhs)
 	{
-		if (!super.subsetOfSingle(rhs)) return false;
+        return super.subsetOfSingle(rhs) && (!(rhs instanceof FilterActionNode) || ("".equals(((FilterActionNode) rhs).getFilterName()) ||
+                ((FilterActionNode) rhs).getFilterName().equals(getFilterName())));
 
-        return !(rhs instanceof FilterActionNode) || ("".equals(((FilterActionNode) rhs).getFilterName()) ||
-                ((FilterActionNode) rhs).getFilterName().equals(getFilterName()));
-
-		}
+        }
 
 /*
 	public String toString()

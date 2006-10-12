@@ -205,7 +205,6 @@ public class DispatchGraphConvert
 			System.err.println("Error during transformation [" + e.getClass().toString() + "]: " + e.getMessage());
 			return;
 		}
-		return;
-	}
+		}
 
 }

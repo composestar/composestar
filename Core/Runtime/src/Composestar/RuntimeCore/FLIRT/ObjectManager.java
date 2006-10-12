@@ -46,9 +46,8 @@ public class ObjectManager implements ChildRunnable
     private ArrayList filterModules;
     private ArrayList methods;
     private ArrayList conditions;
-	private DataStore store = null;
-    
-	private SyncBuffer messageQueue;
+
+    private SyncBuffer messageQueue;
 	private boolean working = false;
     private static final Object[] EmptyObjectArray = {};
 
@@ -101,8 +100,8 @@ public class ObjectManager implements ChildRunnable
 	public ObjectManager(Object o, DataStore store) 
 	{
 		this.messageQueue = new SyncBuffer();
-		this.store = store;
-		filterModules = new ArrayList();
+        DataStore store1 = store;
+        filterModules = new ArrayList();
 		methods = new ArrayList();       //list with methodBinding objects
 		conditions = new ArrayList();    //list with conditionBinding objects
         

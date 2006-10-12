@@ -43,13 +43,10 @@ public class CKRET implements CTCommonModule {
 
 	public static String[] MODES = {"NORMAL","REDUNDANT","PROGRESSIVE"};
 
-	private CommonResources resources;
-
-	private static Reporter reporter;
+    private static Reporter reporter;
 	
 	private String reportFile = "";
 
-	private ArrayList conflictingConcerns;
     protected static final int PROGRESSIVE = 2;
     protected static final int REDUNDANT = 1;
     protected static final int NORMAL = 0;
@@ -58,12 +55,12 @@ public class CKRET implements CTCommonModule {
 	 * @see Composestar.Core.Master.coreModule#run(Composestar.Core.Master.CommonResources)
 	 */
 	public void run(CommonResources resources) throws ModuleException {
-		
-		conflictingConcerns = new ArrayList();
-		INCRE incre = INCRE.instance();
-		this.resources = resources;
-		
-		// make sure it has been initialized at least once...
+
+        ArrayList conflictingConcerns = new ArrayList();
+        INCRE incre = INCRE.instance();
+        CommonResources resources1 = resources;
+
+        // make sure it has been initialized at least once...
 		try
 		{
 			INCRETimer initckret = incre.getReporter().openProcess("CKRET","Initializing CKRET repository",INCRETimer.TYPE_NORMAL);

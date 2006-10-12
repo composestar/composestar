@@ -1,5 +1,4 @@
-
-import Composestar.RuntimeCore.Utils.*;
+package Composestar.RuntimeCore.Utils;
 /*
  * Summary description for ExecutionStackReader.
  */

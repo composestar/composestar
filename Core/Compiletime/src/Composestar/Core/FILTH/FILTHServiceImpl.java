@@ -45,14 +45,13 @@ import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.SIinfo;
 
 public class FILTHServiceImpl extends FILTHService{
-	private DataStore _ds;
-	private String _specfile;
+    private String _specfile;
 	private CommonResources _cr;
 		
 	protected FILTHServiceImpl(CommonResources cr){
 		//Configuration.instance().getModuleSettings().getModule("FILTH").getProperty("FILTH_INPUT");
-		_ds = DataStore.instance();
-	}
+        DataStore _ds = DataStore.instance();
+    }
 	
 	public List getOrder(Concern c){
 		FilterModuleOrder fo = (FilterModuleOrder)c.getDynObject("SingleOrder");

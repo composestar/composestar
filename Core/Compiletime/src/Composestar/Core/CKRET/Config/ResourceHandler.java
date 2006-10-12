@@ -13,10 +13,8 @@ import Composestar.Utils.StringConverter;
 public class ResourceHandler extends DefaultHandler {
     //String filter = "";
     //boolean accept = false;
-    
-    private Repository repository;
-    
-    
+
+
     public ConfigParser theCkretFilterXMLParser;
     ConfigParser returnhandler;
     XMLReader parser;
@@ -30,7 +28,7 @@ public class ResourceHandler extends DefaultHandler {
     public ResourceHandler(ConfigParser handler, XMLReader parser, Repository repository) {
 		this.returnhandler = handler;
 		this.parser = parser;
-		this.repository = repository;
+        Repository repository1 = repository;
 
     }
     

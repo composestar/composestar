@@ -30,15 +30,13 @@ public class Debug
 	 * is a small chance that the finalize() method is called too late. 
 	 * In my test cases no problems appeared.
 	 */
-	
-	private String currentAction = "";
-	private int modeUsed = 0;
-	public Debug (int mode, String action)
-	{
-		modeUsed = mode;
-		currentAction = action;
 
-		//Debug.out (modeUsed, currentAction + " start");
+    public Debug (int mode, String action)
+	{
+        int modeUsed = mode;
+        String currentAction = action;
+
+        //Debug.out (modeUsed, currentAction + " start");
 	}
 
 	public void finalize() throws Throwable

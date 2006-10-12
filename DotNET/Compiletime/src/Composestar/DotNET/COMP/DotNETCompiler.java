@@ -145,7 +145,6 @@ public class DotNETCompiler implements LangCompiler
 	
 	/**
 	 * Compiles the dummy files for the specified project into an assembly.
-	 * @see getDummiesFilePath
 	 */
 	public void compileDummies(Project project) throws CompilerException
 	{
@@ -270,7 +269,7 @@ public class DotNETCompiler implements LangCompiler
 		INCRE incre = INCRE.instance();
 		ArrayList extSources = new ArrayList();
 		ArrayList asmReferences = new ArrayList();
-		String line = "";
+		String line;
 
 		//	step 1: open il code of source
 		PathSettings ps = Configuration.instance().getPathSettings();
@@ -330,9 +329,9 @@ public class DotNETCompiler implements LangCompiler
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();
-		ArrayList extSources = new ArrayList();
+		ArrayList extSources;
 		ArrayList signatures = new ArrayList();
-		ArrayList concernsToCheck = new ArrayList();
+		ArrayList concernsToCheck;
 		HashSet concernsCheckedByKey = new HashSet();
 
 		String buildPath = Configuration.instance().getPathSettings().getPath("Base")+"obj/";

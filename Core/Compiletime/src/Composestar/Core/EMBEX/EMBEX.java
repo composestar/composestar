@@ -26,8 +26,7 @@ import Composestar.Utils.Debug;
  */
 public class EMBEX implements CTCommonModule
 {
-	private String embeddedDir = "";
-	private String embeddedPath = "";
+    private String embeddedPath = "";
 
 	public EMBEX() 
 	{     	
@@ -52,10 +51,10 @@ public class EMBEX implements CTCommonModule
 			throw new ModuleException("Error in configuration file: no path Base", "EMBEX");
 
 		// fetch embedded sources directory
-		embeddedDir = ps.getPath("EmbeddedSources", "embedded/");
+        String embeddedDir1 = ps.getPath("EmbeddedSources", "embedded/");
 
-		// create directory for embedded code
-		embeddedPath = projectBase + "obj/" + embeddedDir;
+        // create directory for embedded code
+		embeddedPath = projectBase + "obj/" + embeddedDir1;
 		File embeddedDir = new File(embeddedPath);
 		if (embeddedDir.exists())
 		{

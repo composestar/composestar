@@ -545,7 +545,7 @@ public class DotNETType extends Type {
      * @roseuid 401B84CF01F6
      */
     public DotNETMethodInfo getConstructor(String[] types) {
-        DotNETMethodInfo method = null;
+        DotNETMethodInfo method;
         for( ListIterator iter = m_methods.listIterator(); iter.hasNext(); /* nop */ ) 
 		{
 			method = (DotNETMethodInfo)iter.next();
@@ -562,7 +562,7 @@ public class DotNETType extends Type {
      * @roseuid 401B84CF01F7
      */
     public List getConstructors() {
-        DotNETMethodInfo method = null;
+        DotNETMethodInfo method;
         List constructors = new ArrayList();
         for( ListIterator iter = m_methods.listIterator(); iter.hasNext(); /* nop */ ) 
 		{
@@ -592,7 +592,7 @@ public class DotNETType extends Type {
     }
     
     public DotNETFieldInfo getField(String name) {
-		DotNETFieldInfo field = null;
+		DotNETFieldInfo field;
 		for (ListIterator iter = m_fields.listIterator(); iter.hasNext(); /* nop */ ) 
 		{
 			field = (DotNETFieldInfo)iter.next();

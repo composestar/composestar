@@ -16,7 +16,6 @@ import java.util.Dictionary;
  */
 public class WaitAction extends ComposeStarAction 
 {
-    private FilterRuntime currentFilter;
     MessageList message;
     
     /**
@@ -26,8 +25,8 @@ public class WaitAction extends ComposeStarAction
      */
     public WaitAction(FilterRuntime currentFilter, MessageList m) {
 		super(m, true);
-		this.currentFilter = currentFilter;
-		this.message = m;   
+        FilterRuntime currentFilter1 = currentFilter;
+        this.message = m;
 		this.continueMessage = m;
     }
     

@@ -61,7 +61,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		File destination = null;
+		File destination;
 		DataStore ds = DataStore.instance();
 
 		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.xml";

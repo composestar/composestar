@@ -78,7 +78,7 @@ abstract class TransformerBase
 
 		try
 		{
-			String line = null;
+			String line;
 			do
 			{
 				if ((line = in.readLine()) == null)				
