@@ -82,6 +82,8 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 				break;
 			case REMOVED:
 				return;
+			default:
+				break;
 		}
 
 		if (innerBlock != null)

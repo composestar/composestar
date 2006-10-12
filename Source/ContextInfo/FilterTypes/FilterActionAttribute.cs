@@ -157,7 +157,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
     /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    class FilterActionSpecificationAnnotation : Attribute
+    class FilterActionSpecificationAttribute : Attribute
     {
         #region Private variables
         private string _spec;
@@ -187,7 +187,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
         /// Initializes a new instance of the <see cref="T:FilterActionSpecificationAnnotation"/> class.
         /// </summary>
         /// <param name="spec">The spec.</param>
-        public FilterActionSpecificationAnnotation(string spec)
+        public FilterActionSpecificationAttribute(string spec)
         {
             _spec = spec;
         }

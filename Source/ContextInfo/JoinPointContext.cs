@@ -343,7 +343,7 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Returns a strong typed property, or the default value of <see cref="T"/> if the property does not exist.
+        /// Returns a strong typed property, or the default value of <typeparamref name="T"/> if the property does not exist.
         /// </summary>
         /// <param name="key">The key of the property</param>
         /// <typeparam name="T">The type to return.</typeparam> 

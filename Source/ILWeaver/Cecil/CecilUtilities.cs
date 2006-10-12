@@ -16,7 +16,8 @@ using Mono.Cecil.Signatures;
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
-
+using Composestar.StarLight.Utilities.Cecil;
+   
 namespace Composestar.StarLight.ILWeaver
 {
 
@@ -28,7 +29,7 @@ namespace Composestar.StarLight.ILWeaver
         public const string VoidType = "System.Void";
 
         private static string _binFolder;
-        private static ILWeaverAssemblyResolver _resolver;
+        private static StarLightAssemblyResolver _resolver;
         private static Dictionary<string, MethodReference> _methodsCache = new Dictionary<string, MethodReference>();
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace Composestar.StarLight.ILWeaver
             set
             {
                 _binFolder = value;
-                _resolver =  new ILWeaverAssemblyResolver(_binFolder);
+                _resolver = new StarLightAssemblyResolver(_binFolder);
             }
         }
 
@@ -74,7 +75,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             if (_resolver == null)
             {
-                _resolver = new ILWeaverAssemblyResolver(System.IO.Path.GetDirectoryName(assemblyFile));
+                _resolver = new StarLightAssemblyResolver(System.IO.Path.GetDirectoryName(assemblyFile));
             }
 
             AssemblyDefinition asmDef = _resolver.Resolve(assemblyName);
@@ -134,7 +135,7 @@ namespace Composestar.StarLight.ILWeaver
             // Not in the cache, so get from the assembly and store in cache.
             if (_resolver == null)
             {
-                _resolver = new ILWeaverAssemblyResolver(System.IO.Path.GetDirectoryName(assemblyFile));
+                _resolver = new StarLightAssemblyResolver(System.IO.Path.GetDirectoryName(assemblyFile));
             }
             AssemblyDefinition asmDef = _resolver.Resolve(assemblyName);
             if (asmDef == null)

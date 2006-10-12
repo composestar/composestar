@@ -25,7 +25,7 @@ namespace Composestar.Repository
         /// <summary>
         /// Initializes a new instance of the <see cref="T:RepositoryAccess"/> class.
         /// </summary>
-        /// <param name="filename">The repository filename.</param>
+        /// <param name="fileName">Name of the file.</param>
         [Obsolete("Use the RepositoryAccess(RepositoryContainerInterface datastore, string fileName) constructor instead", true)]
         public RepositoryAccess(string fileName)
         {
@@ -89,7 +89,7 @@ namespace Composestar.Repository
         /// <summary>
         /// Gets the assembly element by name.
         /// </summary>
-        /// <param name="fileName">Name of the assembly</param>
+        /// <param name="name">The name of the assembly.</param>
         /// <returns></returns>
         public AssemblyElement GetAssemblyElementByName(string name)
         {
@@ -135,6 +135,7 @@ namespace Composestar.Repository
         /// Gets the type info.
         /// </summary>
         /// <param name="fullName">The AQFN.</param>
+        /// <param name="assembly">The assembly.</param>
         /// <returns></returns>
         public TypeElement GetTypeElementByAFQN(string fullName, string assembly)
         {
@@ -313,7 +314,7 @@ namespace Composestar.Repository
         /// <summary>
         /// Gets the parameter elements.
         /// </summary>
-        /// <param name="type">The method.</param>
+        /// <param name="method">The method.</param>
         /// <returns></returns>
         public IList<ParameterElement> GetParameterElements(MethodElement method)
         {
@@ -328,7 +329,7 @@ namespace Composestar.Repository
         /// <summary>
         /// Gets the parameter elements.
         /// </summary>
-        /// <param name="type">The method.</param>
+        /// <param name="element">The element.</param>
         /// <returns></returns>
         public IList<AttributeElement> GetAttributeElements(IRepositoryElement element)
         {
@@ -498,6 +499,10 @@ namespace Composestar.Repository
             return null;
         }
 
+        /// <summary>
+        /// Adds the assembly.
+        /// </summary>
+        /// <param name="assemblyElement">The assembly element.</param>
         public void AddAssembly(AssemblyElement assemblyElement)
         {
             if (assemblyElement == null)
@@ -678,7 +683,7 @@ namespace Composestar.Repository
         /// <summary>
         /// Deletes the assembly element.
         /// </summary>
-        /// <param name="assembly">The assembly name.</param>
+        /// <param name="name">The name.</param>
         public void DeleteAssembly(String name)
         {
             // Get the assembly element
@@ -702,7 +707,7 @@ namespace Composestar.Repository
         /// <summary>
         /// Deletes the assembly element.
         /// </summary>
-        /// <param name="assembly">The assembly filename on disk.</param>
+        /// <param name="assemblyFile">The assembly file.</param>
         public void DeleteTypeElements(string assemblyFile)
         {
             // Get the assembly element
@@ -798,6 +803,9 @@ namespace Composestar.Repository
             CloseContainer();
         }
 
+        /// <summary>
+        /// Commits all pending transactions to the database.
+        /// </summary>
         public void Commit()
         {
             container.Commit();

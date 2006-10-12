@@ -79,8 +79,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _binFolder = value; }
         }
 
-        private CecilILAnalyzer analyzer;
-
         #endregion
 
         #region ctor

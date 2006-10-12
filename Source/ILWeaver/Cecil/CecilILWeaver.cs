@@ -500,10 +500,10 @@ namespace Composestar.StarLight.ILWeaver
         {
             #region Check for null and retrieve calls for this method
 
-            //TODO remove
+            // TODO remove
             if(true)
                 return;
-
+            
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
 

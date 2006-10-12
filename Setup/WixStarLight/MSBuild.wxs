@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include $(var.VariablesFile)?>
+  <Fragment Id="MSBuildInst">
+   
+    <ComponentGroup Id="CompGroup_MSBuild">
+      <ComponentRef Id="Comp_MSBuild" />
+    </ComponentGroup>
+
+       <DirectoryRef Id="ProgramFilesFolder">
+      <Directory Id="Dir_MSBuild" Name="MSBuild">
+        <Directory Id="Dir_MSBuildMSStarLight" Name="STARLGHT" LongName="StarLight">
+          <Directory Id="Dir_MSBuildStarLight10" Name="$(var.ProductVersionText)">
+            <Component Id="Comp_MSBuild" DiskId="1" Guid="$(var.Comp_MSBuild_Guid)">
+              <File Id="File_Targets" Name="TARGETS" LongName="StarLight.targets" src="..\..\Source\VSIntegration\Target Files\StarLight\1.0\" />
+              <File Id="File_Tasks" Name="TASKS" LongName="Composestar.StarLight.MSBuild.Tasks.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks1" Name="TASKS1" LongName="Composestar.Repository.ConfigurationModel.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks2" Name="TASKS2" LongName="Composestar.Repository.LanguageModel.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks3" Name="TASKS3" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks4" Name="TASKS4" LongName="Composestar.StarLight.CoreServices.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks5" Name="TASKS5" LongName="Composestar.StarLight.DataStore.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks6" Name="TASKS6" LongName="Composestar.StarLight.ILAnalyzer.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks7" Name="TASKS7" LongName="Composestar.StarLight.ILWeaver.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks8" Name="TASKS8" LongName="Microsoft.Practices.ObjectBuilder.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks9" Name="TASKS9" LongName="Mono.Cecil.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks10" Name="TASKS10" LongName="db4o.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks11" Name="TASKS11" LongName="db4otools.dll" src="..\..\libraries\db4o\" />
+              <File Id="File_Tasks12" Name="TASKS12" LongName="antlr.runtime.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks13" Name="TASKS13" LongName="Composestar.CpsParser.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks14" Name="TASKS14" LongName="Composestar.StarLight.Utilities.Cecil.dll" src="$(var.IntegrationTasksPath)\" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+</Wix>

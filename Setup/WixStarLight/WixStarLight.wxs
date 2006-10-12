@@ -4,21 +4,15 @@
   Setup script for ComposeStar StarLight version 0.1.0
 
 -->
-
-<?define ProductShortName = "StarLight" ?>
-<?define ProductVersion = "0.1.0" ?>
-<?define ProductVersionText = "0.1" ?>
-<?define Manufacturer = "University of Twente" ?>
-<?define UpgradeCode = "697DC119-E7E0-4b83-930D-706366AC1382" ?>
-
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <?include $(var.VariablesFile)?>
   <Product Id='390B533D-4CFA-4ff3-A240-CC7BA2A49CE7' UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductShortName) $(var.ProductVersionText)" Version="$(var.ProductVersion)" Language="1033" Manufacturer="$(var.Manufacturer)">
 
     <Package Id='78441E26-4E03-4d8d-80AA-865E5B06BE57' Keywords='Installer'
              Compressed="yes" Description="$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))" InstallerVersion="200" ShortNames="no" Manufacturer="$(var.Manufacturer)" 
       Comments='ComposeStar StarLight is a project of the University of Twente.' Languages='1033' />
 
-    <Media Id='1' Cabinet='StarLight.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Media Id='1' Cabinet='StarLight$(var.ProductVersionText).cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
 
     <!-- Major upgrade -->
     <Upgrade Id="$(var.UpgradeCode)">
@@ -80,13 +74,13 @@
         <Directory Id="Dir_ItemTemplatesRoot" Name="ITEMTMPL" LongName="ItemTemplates" />
       </Directory>
       <Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
-        <Directory Id="ProgramMenuDir" Name='StrLght1.0' LongName="StarLight 1.0" />
+        <Directory Id="ProgramMenuDir" Name='StrLght1.0' LongName="$(var.ProductShortName) $(var.ProductVersionText)" />
       </Directory>
 
       <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
 
-    <Feature Id='Complete' Title='StarLight 1.0' Description='The complete package.'
+    <Feature Id='Complete' Title='$(var.ProductShortName) $(var.ProductVersionText)' Description='The complete package.'
       Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
       <Feature Id='CoreComponents' Title='Core Components' Description='The core components of the StarLight system.' Level='1'>
         <ComponentRef Id='CoreFiles' Primary ='yes' />
