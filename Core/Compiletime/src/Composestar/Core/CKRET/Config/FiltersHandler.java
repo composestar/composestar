@@ -1,4 +1,4 @@
-//Source file: H:\\composestar\\src\\Composestar\\core\\SECRET\\filterxmlparser\\SecretFiltersXMLHandler.java
+//Source file: H:\\composestar\\src\\Composestar\\core\\CKRET\\filterxmlparser\\CkretFiltersXMLHandler.java
 
 package Composestar.Core.CKRET.Config;
 
@@ -18,7 +18,7 @@ public class FiltersHandler extends DefaultHandler {
     
     private FilterActionDescription fad;
     
-    public ConfigParser theSecretFilterXMLParser;
+    public ConfigParser theCkretFilterXMLParser;
     ConfigParser returnhandler;
     XMLReader parser;
     

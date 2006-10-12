@@ -38,10 +38,10 @@ public class HTMLReporter implements Reporter
 
 	public void reportOrder(FilterModuleOrder order, FilterSetAnalysis analysis, boolean selected, boolean incremental) {
 
-		// create instance of SECRETReport
+		// create instance of CKRETReport
 		if(!incremental)
 		{
-			new SECRETReport(order,analysis,selected);
+			new CKRETReport(order,analysis,selected);
 		}
 
 		boolean hasConflicts = (analysis.numConflictingExecutions() != 0);
@@ -109,20 +109,20 @@ public class HTMLReporter implements Reporter
 
 	public void open()
 	{
-		//buffer.append("<html><head><title>SECRET Report</title><link rel=\"stylesheet\" href=\"").append(cssFile).append("\" type=\"text/css\"></head><body><H1>SECRET Report</h1><h3>");
+		//buffer.append("<html><head><title>CKRET Report</title><link rel=\"stylesheet\" href=\"").append(cssFile).append("\" type=\"text/css\"></head><body><H1>CKRET Report</h1><h3>");
 		buffer.append("<html>\n");
 		buffer.append("\t<head>\n");
 		buffer.append("\t\t<title>SEmantiC Reasoning Tool</title>\n");
 		buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://" + Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/SECRET</i></b></font></div>\n");
+		buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://" + Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/CKRET</i></b></font></div>\n");
 
 		buffer.append("<h3>").append((new Date()).toString());
 		buffer.append("<BR>");
 		buffer.append("Platform: ").append(Configuration.instance().getPlatformName());
 		buffer.append("<BR>");
-		buffer.append("Runmode: ").append(SECRET.MODES[SECRET.MODE]);
+		buffer.append("Runmode: ").append(CKRET.MODES[CKRET.MODE]);
 		buffer.append("</h3>");
 	}
 

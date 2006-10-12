@@ -44,20 +44,20 @@ public class ConcernAnalysis {
 
 		this.orders.put( order, oa );
 		
-		switch(SECRET.MODE)
+		switch(CKRET.MODE)
 		{
 			case 0:
-				SECRET.getReporter().reportOrder(order, oa, isSelected, false);
+				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				break;
 			case 1:
-				SECRET.getReporter().reportOrder(order, oa, isSelected, false);
+				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				break;
 				
 			case 2:
 				if( oa.numConflictingExecutions() == 0 )
-					SECRET.getReporter().reportOrder(order, oa, isSelected, false);
+					CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				else
-					SECRET.getReporter().reportOrder(order, oa, false, false);
+					CKRET.getReporter().reportOrder(order, oa, false, false);
 				break;
 		}
 		

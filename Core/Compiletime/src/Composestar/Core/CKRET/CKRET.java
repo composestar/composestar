@@ -35,9 +35,9 @@ import Composestar.Core.Exception.ModuleException;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class SECRET implements CTCommonModule {
+public class CKRET implements CTCommonModule {
 
-	public static final String REPOSITORY_KEY = "Composestar.Core.SECRET.Repostitory";
+	public static final String REPOSITORY_KEY = "Composestar.Core.CKRET.Repostitory";
 
 	public static int MODE = 0;
 
@@ -66,34 +66,34 @@ public class SECRET implements CTCommonModule {
 		// make sure it has been initialized at least once...
 		try
 		{
-			INCRETimer initsecret = incre.getReporter().openProcess("SECRET","Initializing SECRET repository",INCRETimer.TYPE_NORMAL);
+			INCRETimer initckret = incre.getReporter().openProcess("CKRET","Initializing CKRET repository",INCRETimer.TYPE_NORMAL);
 			Repository.instance().init();
-			initsecret.stop();
+			initckret.stop();
 		}
 		catch(ModuleException me)
 		{
-			Debug.out(Debug.MODE_WARNING,"SECRET",me.getMessage());
+			Debug.out(Debug.MODE_WARNING,"CKRET",me.getMessage());
 			return;
 		}
 
-		// fetch the secret runmode
+		// fetch the ckret runmode
 		try
 		{
-			ModuleSettings module = Configuration.instance().getModuleSettings().getModule("SECRET");
+			ModuleSettings module = Configuration.instance().getModuleSettings().getModule("CKRET");
 			int mode = Integer.parseInt(module.getProperty("mode"));
 			if( mode < 3 && mode > -1 )
 			{
-				Debug.out(Debug.MODE_INFORMATION,"SECRET","SECRET mode set to " + MODES[mode]);
+				Debug.out(Debug.MODE_INFORMATION,"CKRET","CKRET mode set to " + MODES[mode]);
 				MODE = mode;
 			}
 			else
 			{
-				Debug.out(Debug.MODE_WARNING,"SECRET","Unknown SECRET mode: " + mode + ", SECRET will run in " + MODES[MODE] + " mode");
+				Debug.out(Debug.MODE_WARNING,"CKRET","Unknown CKRET mode: " + mode + ", CKRET will run in " + MODES[MODE] + " mode");
 			}
 		}
 		catch(Exception e)
 		{
-			Debug.out(Debug.MODE_WARNING,"SECRET","Failed to fetch SECRET mode, SECRET will run in " + MODES[MODE] + " mode");
+			Debug.out(Debug.MODE_WARNING,"CKRET","Failed to fetch CKRET mode, CKRET will run in " + MODES[MODE] + " mode");
 		}
 		
 		try
@@ -106,22 +106,22 @@ public class SECRET implements CTCommonModule {
 			}
 			if(file.isDirectory())
 			{
-				reportFile = file.getAbsolutePath() + "\\SECRET.html";
+				reportFile = file.getAbsolutePath() + "\\CKRET.html";
 
-				String cssFile = "file://"+Configuration.instance().getPathSettings().getPath("Base") + "SECRET.css";
+				String cssFile = "file://"+Configuration.instance().getPathSettings().getPath("Base") + "CKRET.css";
 				if( !(new File(cssFile).exists()))
 				{
-					cssFile = "file://"+Configuration.instance().getPathSettings().getPath("Composestar") + "SECRET.css";
+					cssFile = "file://"+Configuration.instance().getPathSettings().getPath("Composestar") + "CKRET.css";
 				}
 
 				reporter = new HTMLReporter(reportFile, cssFile, resources);
 				reporter.open();
-				Debug.out(Debug.MODE_DEBUG,"SECRET","SECRET report file (" + reportFile + ") created...");
+				Debug.out(Debug.MODE_DEBUG,"CKRET","CKRET report file (" + reportFile + ") created...");
 			}
 		}
 		catch(Exception e){
 			e.getMessage();
-			throw new ModuleException("SECRET","SECRET report file creation failed (" + reportFile + "), with reason: " + e.getMessage());
+			throw new ModuleException("CKRET","CKRET report file creation failed (" + reportFile + "), with reason: " + e.getMessage());
 		}
 		
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
@@ -130,15 +130,15 @@ public class SECRET implements CTCommonModule {
 			Concern concern = (Concern) conIter.next();
 
 			if (concern.getDynObject("superImpInfo") != null) {
-				if(incre.isProcessedByModule(concern,"SECRET"))
+				if(incre.isProcessedByModule(concern,"CKRET"))
 				{
 					this.copyOperation(concern);
 				}
 				else 
 				{
-					INCRETimer secretrun = incre.getReporter().openProcess("SECRET",concern.getUniqueID(),INCRETimer.TYPE_NORMAL);
+					INCRETimer ckretrun = incre.getReporter().openProcess("CKRET",concern.getUniqueID(),INCRETimer.TYPE_NORMAL);
 					this.run(concern);
-					secretrun.stop();
+					ckretrun.stop();
 				}
 			}
 		}
@@ -157,19 +157,19 @@ public class SECRET implements CTCommonModule {
 			ConcernAnalysis oa = new ConcernAnalysis(concern);
 			List fmolist = (List) concern.getDynObject("FilterModuleOrders");
 			
-			switch(SECRET.MODE)
+			switch(CKRET.MODE)
 			{
 				case NORMAL: // NORMAL
 					if( !oa.checkOrder(singleOrder, true) )
 					{
-						Debug.out(Debug.MODE_WARNING,"SECRET","Semantic conflict(s) detected on concern " + concern.getQualifiedName(),reportFile);
+						Debug.out(Debug.MODE_WARNING,"CKRET","Semantic conflict(s) detected on concern " + concern.getQualifiedName(),reportFile);
 					}
 					break;
 				
 				case REDUNDANT: // REDUNDANT
 					if( !oa.checkOrder(singleOrder, true) )
 					{
-						Debug.out(Debug.MODE_WARNING,"SECRET","Semantic conflict(s) detected on concern " + concern.getQualifiedName(),reportFile);
+						Debug.out(Debug.MODE_WARNING,"CKRET","Semantic conflict(s) detected on concern " + concern.getQualifiedName(),reportFile);
 					}
 					for( Iterator fmoit = fmolist.iterator(); fmoit.hasNext(); )
 					{
@@ -199,21 +199,21 @@ public class SECRET implements CTCommonModule {
 									// so this is the first good order found...
 									foundGoodOrder = true;
 									concern.addDynObject("SingleOrder",fmo);
-									Debug.out(Debug.MODE_INFORMATION,"SECRET","Selected filtermodule order for concern " + concern.getQualifiedName() + ':');
-									Debug.out(Debug.MODE_INFORMATION,"SECRET", '\t' + fmo.toString());
+									Debug.out(Debug.MODE_INFORMATION,"CKRET","Selected filtermodule order for concern " + concern.getQualifiedName() + ':');
+									Debug.out(Debug.MODE_INFORMATION,"CKRET", '\t' + fmo.toString());
 								} 
 							}
 						}
 					}
 					if( !foundGoodOrder )
 					{
-						Debug.out(Debug.MODE_WARNING,"SECRET","Unable to find a filtermodule order without conflicts for concern:");
-						Debug.out(Debug.MODE_WARNING,"SECRET", '\t' + concern.getQualifiedName());
+						Debug.out(Debug.MODE_WARNING,"CKRET","Unable to find a filtermodule order without conflicts for concern:");
+						Debug.out(Debug.MODE_WARNING,"CKRET", '\t' + concern.getQualifiedName());
 					}
 					
 					break;
                default: //OOPS
-                    Debug.out(Debug.MODE_WARNING,"SECRET","Unknown mode used");
+                    Debug.out(Debug.MODE_WARNING,"CKRET","Unknown mode used");
                     break;
 			}
 		}
@@ -224,31 +224,31 @@ public class SECRET implements CTCommonModule {
 	private void copyOperation(Concern concern) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
-		INCRETimer secretcopy = incre.getReporter().openProcess("SECRET",concern.getUniqueID(),INCRETimer.TYPE_INCREMENTAL);
+		INCRETimer ckretcopy = incre.getReporter().openProcess("CKRET",concern.getUniqueID(),INCRETimer.TYPE_INCREMENTAL);
 
-		// set singleorder from previous SECRET run
+		// set singleorder from previous CKRET run
 		Concern oldconcern = (Concern)incre.findHistoryObject(concern);
 		concern.addDynObject("SingleOrder",oldconcern.getDynObject("SingleOrder"));
 				
-		//get SECRET reports and let HTMLReporter print them
+		//get CKRET reports and let HTMLReporter print them
 		ArrayList reports;
-		reports = (ArrayList)oldconcern.getDynObject("SECRETReports");
+		reports = (ArrayList)oldconcern.getDynObject("CKRETReports");
 					
 		if(reports!=null)
 		{
-			Debug.out(Debug.MODE_INFORMATION,"INCRE","Skipping SECRET run for "+oldconcern.getQualifiedName());
+			Debug.out(Debug.MODE_INFORMATION,"INCRE","Skipping CKRET run for "+oldconcern.getQualifiedName());
 			getReporter().openConcern(oldconcern);
 			Iterator repItr = reports.iterator();
 			while(repItr.hasNext())
 			{
-				SECRETReport report = (SECRETReport)repItr.next();
+				CKRETReport report = (CKRETReport)repItr.next();
 				getReporter().reportOrder(report.getOrder(),report.getAnalysis(),report.getSelected(),true);
 			}
 			getReporter().closeConcern();
-			concern.addDynObject("SECRETReports", reports);				
+			concern.addDynObject("CKRETReports", reports);
 		}
 					
-		secretcopy.stop();
+		ckretcopy.stop();
 	}
 
 	public ArrayList getSemanticAnnotations(PrimitiveConcern pc)

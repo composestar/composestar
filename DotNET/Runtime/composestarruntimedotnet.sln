@@ -7,7 +7,7 @@ Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposestarDotNETCore", "..
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarUtilities", "..\..\core\runtime\src\Composestar\RuntimeCore\util\ComposeStarUtilities.vjsproj", "{21F8C6D6-B067-4E11-B414-B66EB60BEC26}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "ComposeStarUtilities", "..\..\core\runtime\src\Composestar\RuntimeCore\Utils\ComposeStarUtilities.vjsproj", "{21F8C6D6-B067-4E11-B414-B66EB60BEC26}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

@@ -1,4 +1,4 @@
-//Source file: F:\\composestar\\src\\Composestar\\core\\SECRET\\SecretFilterInformationHarvestor.java
+//Source file: F:\\composestar\\src\\Composestar\\core\\CKRET\\CkretFilterInformationHarvestor.java
 
 package Composestar.Core.CKRET;
 

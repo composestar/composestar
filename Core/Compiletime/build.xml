@@ -60,9 +60,6 @@
 	<target name="compile" depends="local_init,antlr">
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
-			<exclude name="Composestar/Core/SECRET/*"/>
-			<exclude name="Composestar/Core/CORE/*"/>
-			<exclude name="Composestar/Core/SIGN/*"/>
 			<!--<exclude name="Composestar/Core/FIRE/*"/>-->			
 		</javac>
 	</target>
@@ -79,7 +76,7 @@
 	<target name="install" depends="build" description="Install the core files">
 
 		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}"/>
-		<copy file="src/Composestar/Core/CKRET/SECRET.css" todir="${composestar.installdir}"/>
+		<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${composestar.installdir}"/>
 		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}"/>
 
 		<copy todir="${composestar.installdir}/Binaries">

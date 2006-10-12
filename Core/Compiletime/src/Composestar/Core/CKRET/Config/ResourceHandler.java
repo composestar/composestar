@@ -17,7 +17,7 @@ public class ResourceHandler extends DefaultHandler {
     private Repository repository;
     
     
-    public ConfigParser theSecretFilterXMLParser;
+    public ConfigParser theCkretFilterXMLParser;
     ConfigParser returnhandler;
     XMLReader parser;
     

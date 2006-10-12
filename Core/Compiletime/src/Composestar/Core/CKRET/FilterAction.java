@@ -66,7 +66,7 @@ public class FilterAction implements Serializable{
 	{
 		List operations = new ArrayList(getMatchingOperations(filter));
 		/*
-		SecretRepository repository = SecretRepository.instance();
+		CkretRepository repository = CkretRepository.instance();
 		List operations = repository.getAllResourcesForAction(this.name);
 		
 		ArrayList v =  new ArrayList();

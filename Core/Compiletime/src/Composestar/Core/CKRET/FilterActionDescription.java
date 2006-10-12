@@ -1,4 +1,4 @@
-//Source file: H:\\composestar\\src\\Composestar\\core\\SECRET\\FilterActionDescription.java
+//Source file: H:\\composestar\\src\\Composestar\\core\\CKRET\\FilterActionDescription.java
 
 package Composestar.Core.CKRET;
 
@@ -8,7 +8,7 @@ package Composestar.Core.CKRET;
  * Copyright (C) 2003 University of Twente.
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id: Composestar.Core.SECRET.cat,v 1.14 2004/03/11 12:25:52 pascal_durr 
+ * $Id: Composestar.Core.CKRET.cat,v 1.14 2004/03/11 12:25:52 pascal_durr 
  * Exp $
  * This class represents a an action that a filter can do. It contains the action 
  * and if that action is done with an accept or reject action.

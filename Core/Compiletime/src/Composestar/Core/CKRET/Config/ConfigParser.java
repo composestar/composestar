@@ -1,4 +1,4 @@
-//Source file: H:\\composestar\\src\\Composestar\\core\\SECRET\\filterxmlparser\\SecretFilterXMLParser.java
+//Source file: H:\\composestar\\src\\Composestar\\core\\CKRET\\filterxmlparser\\CkretFilterXMLParser.java
 
 package Composestar.Core.CKRET.Config;
 
@@ -13,7 +13,7 @@ import Composestar.Core.CKRET.Repository;
 public class ConfigParser extends DefaultHandler {
     boolean inDocument = false;
     private Repository repository = null;
-    public FiltersHandler theSecretFiltersXMLHandler;
+    public FiltersHandler theCkretFiltersXMLHandler;
     XMLReader parser = null;
 
     /**
@@ -35,7 +35,7 @@ public class ConfigParser extends DefaultHandler {
 		}
 		catch(SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING,"SECRET","Error parsing " + filename + ": " + se.getMessage());
+			Debug.out(Debug.MODE_WARNING,"CKRET","Error parsing " + filename + ": " + se.getMessage());
 		}
 		catch(Exception e)
 		{

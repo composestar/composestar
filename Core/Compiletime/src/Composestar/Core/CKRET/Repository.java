@@ -32,7 +32,7 @@ public class Repository {
 
 	private static Repository instance;
 
-	public static final String SECRET_CONFIG = "filterdesc.xml";
+	public static final String CKRET_CONFIG = "filterdesc.xml";
 
 	private Map actions;
 	private Map filters;
@@ -71,21 +71,21 @@ public class Repository {
 				
 		CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
 		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
-		String secretconfigfile = tempFolder + SECRET_CONFIG;
-		if( !(new File(secretconfigfile).exists()))
+		String ckretconfigfile = tempFolder + CKRET_CONFIG;
+		if( !(new File(ckretconfigfile).exists()))
 		{
-			secretconfigfile = Configuration.instance().getPathSettings().getPath("Composestar") + SECRET_CONFIG;
-			if( !(new File(secretconfigfile).exists()))
+			ckretconfigfile = Configuration.instance().getPathSettings().getPath("Composestar") + CKRET_CONFIG;
+			if( !(new File(ckretconfigfile).exists()))
 			{
-				throw new ModuleException("Filter specification (" + SECRET_CONFIG + ") not found.","SECRET");
+				throw new ModuleException("Filter specification (" + CKRET_CONFIG + ") not found.","CKRET");
 			}
 		}	
-		INCRE.instance().addConfiguration("SECRETConfigFile",secretconfigfile);
+		INCRE.instance().addConfiguration("CKRETConfigFile",ckretconfigfile);
 														
-		Debug.out(Debug.MODE_INFORMATION,"SECRET","Using filter specification in " + secretconfigfile);
+		Debug.out(Debug.MODE_INFORMATION,"CKRET","Using filter specification in " + ckretconfigfile);
 		
 		ConfigParser parser = new ConfigParser();
-		parser.parse(secretconfigfile, this);
+		parser.parse(ckretconfigfile, this);
 		     
 	}
 	

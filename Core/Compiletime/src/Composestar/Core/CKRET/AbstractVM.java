@@ -52,7 +52,7 @@ public class AbstractVM {
 		for( Iterator ri = getResources().iterator(); ri.hasNext(); )
 		{
 			Resource res = (Resource) ri.next();
-			Debug.out(Debug.MODE_DEBUG,"SECRET","Resource-op["+res.getName()+"]: "+res.fancySequence());
+			Debug.out(Debug.MODE_DEBUG,"CKRET","Resource-op["+res.getName()+"]: "+res.fancySequence());
 			//System.err.println(res);
 			//msg+=res.toString()+"\n";
 		}
@@ -159,7 +159,7 @@ public class AbstractVM {
 		
 		if( returnOp == null )
 		{
-			Debug.out(Debug.MODE_WARNING,"SECRET","Filterset doesn't dispatch!");
+			Debug.out(Debug.MODE_WARNING,"CKRET","Filterset doesn't dispatch!");
 		}
 		else
 		{

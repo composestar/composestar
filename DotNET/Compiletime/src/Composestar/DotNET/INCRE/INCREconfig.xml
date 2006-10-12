@@ -176,21 +176,21 @@
 			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>		
 	</module>
-	<module name="SECRET" fulltype="Composestar.Core.CKRET.SECRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
+	<module name="CKRET" fulltype="Composestar.Core.CKRET.CKRET" input="Composestar.Core.CpsProgramRepository.Concern" enabled="true" incremental="true" summary="Checking for semantic conflicts among aspects...">
 		<dependencies>
-			<dependency type="FILE" name="SECRETConfigFile" isAdded="false">
+			<dependency type="FILE" name="CKRETConfigFile" isAdded="false">
 				<path>
-					<node type="CONFIG" nodevalue="SECRETConfigFile"></node>
+					<node type="CONFIG" nodevalue="CKRETConfigFile"></node>
 				</path>
 			</dependency>
-			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
+			<dependency type="OBJECT" name="CKRETMode" store="true" lookup="true">
 				<path>
-					<node type="CONFIG" nodevalue="SECRETMode"></node>
+					<node type="CONFIG" nodevalue="CKRETMode"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="semantics" store="true" lookup="true">
 				<path>
-					<node type="METHOD" nodevalue="Composestar.Core.CKRET.SECRET.getSemanticAnnotations"></node>
+					<node type="METHOD" nodevalue="Composestar.Core.CKRET.CKRET.getSemanticAnnotations"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="filtermoduleorders">

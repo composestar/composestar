@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?> 
-<secret>
+<ckret>
 	
 	<filters>
 		<filter type="Error">
@@ -69,4 +69,4 @@
 		<resource name="selector" alphabet="read,write"/>
 		<resource name="sender" alphabet="read,write"/>
 	</resources>
-</secret>
+</ckret>

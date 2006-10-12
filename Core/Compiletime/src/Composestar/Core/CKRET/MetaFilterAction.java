@@ -93,7 +93,7 @@ public class MetaFilterAction extends FilterAction {
 								{
 									MethodInfo dnmi = ((MethodInfo)dna.getTarget());
 									String fullMethodName = dnmi.parent().m_fullName+ '.' + dnmi.name();
-									throw new ModuleException("Error in annotation semantics of method " + fullMethodName + " for filter " + filter.getQualifiedName(),"SECRET");
+									throw new ModuleException("Error in annotation semantics of method " + fullMethodName + " for filter " + filter.getQualifiedName(),"CKRET");
 								}
 								StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"",""),",");
 								List metaOperations = new ArrayList();
@@ -114,7 +114,7 @@ public class MetaFilterAction extends FilterAction {
 									//}
 									//catch(Exception e)
 									//{
-									//	throw new ModuleException("SECRET","Error in annotation semantics of filter " + filter.getQualifiedName());
+									//	throw new ModuleException("CKRET","Error in annotation semantics of filter " + filter.getQualifiedName());
 									//}
 								}
 								
@@ -148,7 +148,7 @@ public class MetaFilterAction extends FilterAction {
 								//}
 								//catch(Exception e)
 								//{
-								//	throw new ModuleException("SECRET","Error in annotation semantics of filter " + filter.getQualifiedName());
+								//	throw new ModuleException("CKRET","Error in annotation semantics of filter " + filter.getQualifiedName());
 								//}
 							}
 							

@@ -1,4 +1,4 @@
-//Source file: H:\\composestar\\src\\Composestar\\core\\SECRET\\filterxmlparser\\SecretNonConflictStringsXMLHandler.java
+//Source file: H:\\composestar\\src\\Composestar\\core\\CKRET\\filterxmlparser\\CkretNonConflictStringsXMLHandler.java
 
 package Composestar.Core.CKRET.Config;
 
