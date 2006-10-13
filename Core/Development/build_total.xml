@@ -12,12 +12,17 @@
 	<target name="clean" depends="init" description="Cleanup compilation results">
 		<ant target="clean" dir="${build.core}" />
 		<antcall target="clean_dotnet" />
+		<antcall target="clean_starlight" />
 		<antcall target="clean_java" />
 		<antcall target="clean_c" />
 	</target>
 	
 	<target name="clean_dotnet" if="available.dotnet">
 		<ant target="clean" dir="${build.dotnet}" />
+	</target>
+	
+		<target name="clean_starlight" if="available.starlight">
+		<ant target="clean" dir="${build.starlight}" />
 	</target>
 	
 	<target name="clean_java" if="available.java">
@@ -38,6 +43,10 @@
 		<ant target="build" dir="${build.dotnet}" />
 	</target>
 	
+	<target name="starlight" depends="core" if="available.starlight" description="Compile the StarLight port">
+		<ant target="build" dir="${build.starlight}" />
+	</target>
+	
 	<target name="java" depends="core" if="available.java">
 		<ant target="build" dir="${build.java}" />
 	</target>
@@ -46,7 +55,7 @@
 		<ant target="build" dir="${build.c}" />
 	</target>
 	
-	<target name="build" depends="init,core,dotnet,java,c" description="Compile the whole Compose* project" />
+	<target name="build" depends="init,core,dotnet,starlight,java,c" description="Compile the whole Compose* project" />
 	
 	<!-- install tasks -->
 	
@@ -159,6 +168,7 @@ If the build failed the cause will be listed at the end of the report.
 
 					<antMenuItem name="Core" target="core" />
 					<antMenuItem name="DotNET" target="dotnet" />
+					<antMenuItem name="StarLight" target="starlight" />
 					<!--<antMenuItem name="Java" target="java" />
 					<antMenuItem name="C" target="c" />-->
 				</antMenuItem>

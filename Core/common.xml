@@ -22,6 +22,7 @@ Common routines. Always include this file in every build.xml file
 		
 		<property name="out.jar.core" value="${out.dist}/ComposestarCORE.jar" />
 		<property name="out.jar.dotnet" value="${out.dist}/ComposestarDotNET.jar" />
+		<property name="out.jar.starlight" value="${out.dist}/StarLight.jar" />
 		
 		<condition property="build.debug" value="true">
 			<not>
@@ -56,6 +57,13 @@ Common routines. Always include this file in every build.xml file
 			</not>
 		</condition>
 		
+				<!-- set the starlight path -->
+		<condition property="build.starlight" value="${build.root}${file.separator}StarLight">
+			<not>
+				<isset property="build.starlight" />
+			</not>
+		</condition>
+		
 		<!-- set the java path -->
 		<condition property="build.java" value="${build.root}${file.separator}Java">
 			<not>
@@ -72,6 +80,7 @@ Common routines. Always include this file in every build.xml file
 		
 		<!-- check what is available -->
 		<available file="${build.dotnet}/build.xml" property="available.dotnet" />
+		<available file="${build.starlight}/build.xml" property="available.starlight" />
 		<available file="${build.java}/build.xml" property="available.java" />
 		<available file="${build.c}/build.xml" property="available.c" />
 		
@@ -177,6 +186,12 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
 		</path>
 		
+		<path id="lib.starlight">
+			<path refid="lib.core" />
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
+			<fileset dir="${build.starlight}${file.separator}Libraries" includes="*${file.separator}*.jar"/>
+		</path>
+			
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">	  
 			<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
