@@ -27,20 +27,32 @@ public class MethodElement implements IRepositoryElement
 			
 	}
 
-	private boolean _filtersAvailable;
+	private boolean _hasInputFilters;
 
-	/* Indicates if this method has filters. */
 	/** @property */
-	public boolean get_HasFiltersAvailable()
+	public boolean get_HasInputfilters()
 	{
-		return _filtersAvailable;
+		return _hasInputFilters;
 	}
 
-	/* Indicates if this method has filters. */
 	/** @property */
-	public void set_HasFiltersAvailable(boolean value)
+	public void set_HasInputfilters(boolean value)
 	{
-		_filtersAvailable = value;
+		_hasInputFilters = value;
+	}
+
+	private boolean _hasOutputFilters;
+
+	/** @property */
+	public boolean get_HasOutputFilters()
+	{
+		return _hasOutputFilters;
+	}
+
+	/** @property */
+	public void set_HasOutputFilters(boolean value)
+	{
+		_hasOutputFilters = value;
 	} 
 
 

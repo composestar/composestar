@@ -845,10 +845,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Call set_ReturnType in JoinPointContext
             Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                typeof(JoinPointContext).GetMethod("set_ReturnType", new Type[] { typeof(System.Type) }))));
-
-
-            int numberOfArguments = 0;
+                typeof(JoinPointContext).GetMethod("set_ReturnType", new Type[] { typeof(System.Type) }))));             
 
             //
             // Add the arguments, these are stored at the top of the stack

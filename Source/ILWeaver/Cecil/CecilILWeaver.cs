@@ -181,7 +181,7 @@ namespace Composestar.StarLight.ILWeaver
                         MethodElement methodElement = GetMethodFromList(methodsInType, method.ToString());
 
                         // Skip if there is no methodinfo
-                        if (methodElement == null || !methodElement.HasFiltersAvailable)
+                        if (methodElement == null || (!methodElement.HasInputfilters & !methodElement.HasOutputFilters))
                             continue;
 
                         WeaveMethod(targetAssembly, method, methodElement);
@@ -404,11 +404,16 @@ namespace Composestar.StarLight.ILWeaver
             #endregion
 
             // Add the inputfilters
-            WeaveInputFilters(targetAssembly, method, methodElement);
+            if (methodElement.HasInputfilters)
+            {
+                WeaveInputFilters(targetAssembly, method, methodElement);
+            } // if
 
             // Add the outputfilters
-            WeaveOutputFilters(targetAssembly, method, methodElement);
-
+            if (methodElement.HasOutputFilters)
+            {
+                WeaveOutputFilters(targetAssembly, method, methodElement);
+            } // if
         }
 
         /// <summary>
@@ -612,7 +617,9 @@ namespace Composestar.StarLight.ILWeaver
             {
                 if (te.Assembly.Equals(assemblyElement.Name) )
                 {
-                    if (internals.ContainsKey(te.Id) || externals.ContainsKey(te.Id) || MethodHasFilter(methodElements, te.Id))
+                    if (internals.ContainsKey(te.Id) || 
+                        externals.ContainsKey(te.Id) || 
+                        MethodHasFilter(methodElements, te.Id))
                     {
                         ret.Add(te.Id, te); 
                     } // if
@@ -623,7 +630,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Methods has filter.
+        /// Checks if the type has methods with input or output filters.
         /// </summary>
         /// <param name="methodElements">The method elements.</param>
         /// <param name="typeId">The type id.</param>
@@ -635,12 +642,13 @@ namespace Composestar.StarLight.ILWeaver
             {
                 foreach (MethodElement method in methods)
                 {
-                    if (method.HasFiltersAvailable)
+                    if (method.HasInputfilters || method.HasOutputFilters)
                         return true;
                 } // foreach  (method)
             } // if
 
             return false;
+
         } // MethodHasFilter(methodElements, typeId)
 
         /// <summary>
