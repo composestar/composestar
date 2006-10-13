@@ -8,6 +8,8 @@ using Composestar.Repository.LanguageModel.ConditionExpressions.Visitor;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 
+using Composestar.StarLight.ContextInfo;
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -200,9 +202,29 @@ namespace Composestar.StarLight.ILWeaver
             if (con.Reference.Target.Equals(Reference.INNER_TARGET) ||
                 con.Reference.Target.Equals(Reference.SELF_TARGET))
             {
+                // Set innercall context
+                if(con.Reference.InnerCallContext >= 0)
+                {
+                    // Load the this parameter
+                    if(!Method.HasThis)
+                        Instructions.Add(Worker.Create(OpCodes.Ldnull));
+                    else
+                        Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+                    // Load the methodId
+                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, con.Reference.InnerCallContext));
+
+                    // Call the SetInnerCall
+                    Instructions.Add(Worker.Create(OpCodes.Call, 
+                        CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", 
+                        new Type[] { typeof(object), typeof(int) }))));
+                }
+
+
                 // Load the this pointer
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
             }
+            //else do nothing, because of static call
 
             // Create a call instruction
             Instructions.Add(Worker.Create(OpCodes.Call, m_TargetAssemblyDefinition.MainModule.Import(method)));

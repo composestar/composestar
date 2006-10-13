@@ -135,8 +135,8 @@ public class StarLightEmitterRunner implements CTCommonModule
                         
                         //reference:
                         ExternalConcernReference reference = external.getShortinit();
-                        Reference storedReference = createReference( reference.getPackage(), reference.getName(),
-                                reference.getInitSelector() );
+                        Reference storedReference = createReference( type, reference.getPackage(), 
+                        		reference.getName(), reference.getInitSelector() );
                         storedExternal.set_Reference( storedReference );
                         
                         //type:
@@ -168,7 +168,8 @@ public class StarLightEmitterRunner implements CTCommonModule
                         storedCondition.set_Name( condition.getName() );
                         
                         //reference:
-                        Reference reference = createReference( condition.getShortref().getPackage(), 
+                        Reference reference = createReference( type, 
+                        		condition.getShortref().getPackage(), 
                                 condition.getShortref().getName(), 
                                 (String) condition.getDynObject( "selector" ) );
                         
@@ -190,7 +191,7 @@ public class StarLightEmitterRunner implements CTCommonModule
         }
     }
     
-    private Reference createReference( Vector pack, String target,
+    private Reference createReference( Type type, Vector pack, String target,
             String selector )
     {
         Reference storedRef = new Reference();
@@ -211,6 +212,20 @@ public class StarLightEmitterRunner implements CTCommonModule
         
         //target:
         storedRef.set_Target( target );
+        
+        //innercall context:
+        if ( target.equals( "inner" ) ){
+        	MethodInfo methodInfo = type.getMethod( selector, new String[0] );
+        	if ( methodInfo != null ){
+        		storedRef.set_InnerCallContext( ModelBuilder.getInnerCallContext( methodInfo ) );
+        	}
+        	else{
+        		storedRef.set_InnerCallContext( -1 );
+        	}
+        }
+        else{
+        	storedRef.set_InnerCallContext( -1 );
+        }
         
         return storedRef;
     }
