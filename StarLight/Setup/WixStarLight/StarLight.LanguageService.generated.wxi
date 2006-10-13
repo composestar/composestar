@@ -39,7 +39,7 @@
     <Registry Name="EnableCommenting" Value="1" Type="integer" />
   </Registry>
 
-  <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Packages\{a58025eb-8f26-4633-acb2-b990a691f36d}" Value="Composestar.StarLight.VisualStudio.LanguageServices.ComposeStarPackage, Composestar.StarLight.VisualStudio.LanguageServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14740a037b3db72a" Type="string">
+  <Registry Root="HKLM" Key="Software\Microsoft\VisualStudio\8.0\Packages\{a58025eb-8f26-4633-acb2-b990a691f36d}" Value="Composestar.StarLight.VisualStudio.LanguageServices.ComposeStarPackage, Composestar.StarLight.VisualStudio.LanguageServices, Version=0.1.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3" Type="string">
     <Registry Name="InprocServer32" Value="[SystemFolder]mscoree.dll" Type="string" />
     <Registry Name="Class" Value="Composestar.StarLight.VisualStudio.LanguageServices.ComposeStarPackage" Type="string" />
     <Registry Name="CodeBase" Value="[#File_Composestar.StarLight.VisualStudio.LanguageServices.dll]" Type="string" />

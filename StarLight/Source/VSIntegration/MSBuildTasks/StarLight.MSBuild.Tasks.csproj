@@ -9,6 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Composestar.StarLight.MSBuild.Tasks</RootNamespace>
     <AssemblyName>Composestar.StarLight.MSBuild.Tasks</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,6 +59,7 @@
     <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
       <Link>Target\StarLight.targets</Link>
     </None>
+    <None Include="starlight.snk" />
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
     <Compile Include="ILAnalyzerTask\BuilderConfigurator.cs" />
     <Compile Include="ILAnalyzerTask\ILAnalyzerTask.cs" />
