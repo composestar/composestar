@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry including="**/*.java" excluding="**/.svn/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/ant/lib/ant.jar"/>
+	<classpathentry sourcepath="C:/Ant/src" kind="lib" path="C:/Ant/lib/ant.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
