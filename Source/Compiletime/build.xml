@@ -9,9 +9,7 @@
 	</condition>
 	
 	<import file="${build.core}/common.xml"/>
-	
-	<property name="antlr-2.7.2.exe" location="${CSharpDummyGenerator.dir}\Parse\antlr-2.7.2.exe"/>
-	
+		
 	<echo>Processing: ${ant.project.name} ...</echo>	
 	<description>The Compose* StarLight Compiletime</description>
 
@@ -35,7 +33,7 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init_local,antlr,compile_java,jar,compile_starlight" description="compile the StarLight compiletime"/>
+	<target name="build" depends="init_local,compile_java,jar,compile_starlight" description="compile the StarLight compiletime"/>
 	
 	<target name="antlr">
 		<!--
