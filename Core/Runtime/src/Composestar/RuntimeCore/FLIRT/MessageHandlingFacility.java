@@ -48,7 +48,9 @@ public abstract class MessageHandlingFacility
      */
 	public synchronized static void handleInstanceCreation(Object creator, Object createdObject, Object[] args) 
 	{
-		Message msg = new Message(createdObject.getClass().getName(),args);
+		String shortname = createdObject.getClass().getName();
+		shortname = shortname.substring(shortname.lastIndexOf(".")+1); // get the class name only
+		Message msg = new Message(shortname /*createdObject.GetType().get_Name()*/,args);
 		msg.setSender(creator);
 		msg.setTarget(createdObject);
 		handleInstanceCreation(msg,creator,createdObject,args);
@@ -63,6 +65,7 @@ public abstract class MessageHandlingFacility
      */
 	public synchronized static void handleInstanceCreation(String staticcontext, Object createdObject, Object[] args) 
 	{
+		// this used to be GetType()
 		handleInstanceCreation(createdObject.getClass(), createdObject, args);
 	}
 
