@@ -66,9 +66,9 @@
 	</target>
 	
 	<target name="checkstyle" depends="init" description="Run CheckStyle code proof reading">
-		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false">
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.dotnet">
 			<formatter type="xml" toFile="${build.dotnet}${file.separator}checkstyle-result.xml" />
-			<property key="checkstyle.basedir" value="${build.dotnet}${file.separator}Compiletime${file.separator}src" />
+			<property key="config_loc" value="${bin.checkstyle}" />
 			<FileSet dir="${build.dotnet}${file.separator}Compiletime${file.separator}src">
 				<include name="**/*.java" />
 			</FileSet>
