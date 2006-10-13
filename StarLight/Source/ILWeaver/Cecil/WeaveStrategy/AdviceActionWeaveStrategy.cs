@@ -85,7 +85,7 @@ namespace Composestar.StarLight.ILWeaver
                 if(filterAction.SubstitutionTarget.Equals(FilterAction.INNER_TARGET) ||
                     filterAction.SubstitutionTarget.Equals(FilterAction.SELF_TARGET))
                 {
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+                    WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
                 }
                 else
                 {
