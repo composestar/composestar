@@ -20,11 +20,14 @@
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<ant target="clean" dir="Source/Compiletime" />
+    <ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
+    <ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
-	
 	
 	<target name="build" description="Build the StarLight implementation of Compose*">
 		<ant target="build" dir="Source/Compiletime" />
+		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" />
+		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
 
 </project>
