@@ -20,11 +20,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>DotNETPlatformInterface</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject></StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -95,7 +92,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Core\Runtime\src\util\CoreUtilities.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\Core\Runtime\src\Composestar\RuntimeCore\util\CoreUtilities.vs2005.vjsproj">
       <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
       <Name>CoreUtilities.vs2005</Name>
     </ProjectReference>

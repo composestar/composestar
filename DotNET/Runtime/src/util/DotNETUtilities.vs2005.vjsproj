@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -17,7 +17,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>ComposeStarDotNETUtilities</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject></StartupObject>
+    <StartupObject>
+    </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -70,7 +71,7 @@
       <Project>{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}</Project>
       <Name>Core.vs2005</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Core\Runtime\src\util\CoreUtilities.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\Core\Runtime\src\Composestar\RuntimeCore\util\CoreUtilities.vs2005.vjsproj">
       <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
       <Name>CoreUtilities.vs2005</Name>
     </ProjectReference>

@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -19,10 +19,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -59,15 +55,15 @@
       <Project>{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}</Project>
       <Name>Core.vs2005</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Core\Runtime\src\CODER\FilterDebugger.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\Core\Runtime\src\Composestar\RuntimeCore\CODER\FilterDebugger.vs2005.vjsproj">
       <Project>{227D8FE5-F6DA-4D40-BADB-C19320F6BD01}</Project>
       <Name>FilterDebugger.vs2005</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Core\Runtime\src\FLIRT\RuntimeInterpreter.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\Core\Runtime\src\Composestar\RuntimeCore\FLIRT\RuntimeInterpreter.vs2005.vjsproj">
       <Project>{44C00A21-5832-4331-BEBB-0669F4CA299A}</Project>
       <Name>RuntimeInterpreter.vs2005</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Core\Runtime\src\util\CoreUtilities.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\Core\Runtime\src\Composestar\RuntimeCore\util\CoreUtilities.vs2005.vjsproj">
       <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
       <Name>CoreUtilities.vs2005</Name>
     </ProjectReference>

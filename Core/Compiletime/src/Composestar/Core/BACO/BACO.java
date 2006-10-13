@@ -65,7 +65,7 @@ public abstract class BACO implements CTCommonModule
 	{
 		Configuration config = Configuration.instance();
 		String cpsPath = config.getPathSettings().getPath("Composestar");
-		Debug.out(Debug.MODE_DEBUG,"BACO","cpsPath='" + cpsPath + "'");
+		Debug.out(Debug.MODE_DEBUG,"BACO","ComposestarHome: '" + cpsPath + "'");
 
 		Iterator it = config.getPlatform().getRequiredFiles().iterator();
 		while (it.hasNext())

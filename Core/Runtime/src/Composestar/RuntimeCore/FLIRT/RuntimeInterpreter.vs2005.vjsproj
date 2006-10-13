@@ -19,10 +19,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -335,7 +331,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Compiletime\src\Core.vs2005.vjsproj">
+    <ProjectReference Include="..\..\..\..\..\Compiletime\src\Core.vs2005.vjsproj">
       <Project>{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}</Project>
       <Name>Core.vs2005</Name>
     </ProjectReference>
