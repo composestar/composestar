@@ -236,7 +236,7 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //get stored method:
                 String key = createKey( method );
                 storedMethod = (MethodElement) index.get( key );
-                storedMethod.set_HasFiltersAvailable( true );
+                storedMethod.set_HasInputfilters( true );
                 Debug.out( Debug.MODE_DEBUG, "Emitter",  "key:" +key);
 
                 if (storedMethod == null) {
@@ -335,7 +335,7 @@ public class StarLightEmitterRunner implements CTCommonModule
             	repository.storeCallElement( storedCall );
             	
             	//tag MethodElement:
-            	storedMethod.set_HasFiltersAvailable( true );
+            	storedMethod.set_HasOutputFilters( true );
             	repository.storeMethodElement( storedMethod );
             }
         }
