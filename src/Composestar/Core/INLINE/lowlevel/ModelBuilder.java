@@ -84,6 +84,10 @@ public class ModelBuilder implements CTCommonModule
 	{
 		return (Block) outputFilterCode.get(call);
 	}
+	
+	public static int getInnerCallContext(MethodInfo method){
+		return ModelBuilderStrategy.getMethodId(method);
+	}
 
 	private void startInliner()
 	{
@@ -174,7 +178,7 @@ public class ModelBuilder implements CTCommonModule
 		if (inlineBlock != null)
 		{
 			inputFilterCode.put(methodInfo, inlineBlock);
-			inlinedMethodSet.add(new Integer(inputFilterBuilderStrategy.getMethodId(methodInfo)));
+			inlinedMethodSet.add(new Integer(ModelBuilderStrategy.getMethodId(methodInfo)));
 		}
 
 		// process calls:

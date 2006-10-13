@@ -77,9 +77,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	/**
 	 * Hashtable containing a mapping from MethodInfo to integer id's
 	 */
-	private Hashtable methodTable;
+	private static Hashtable methodTable;
 
-	private int lastMethodId;
+	private static int lastMethodId;
 
 	private int nextReturnActionId;
 
@@ -125,7 +125,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		this.builder = builder;
 		this.filterSetType = filterSetType;
-		this.methodTable = new Hashtable();
+		methodTable = new Hashtable();
 		lastMethodId = 0;
 
 	}
@@ -703,12 +703,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
-	public int getMethodId(MethodInfo method)
+	public static int getMethodId(MethodInfo method)
 	{
 		if (method == null)
 		{
-			int x = 9;
+			return -1;
 		}
+		
 		Integer id = (Integer) methodTable.get(method);
 		if (id == null)
 		{
