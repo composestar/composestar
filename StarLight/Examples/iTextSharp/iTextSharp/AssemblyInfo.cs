@@ -54,5 +54,6 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("..\\..\\itextsharp.snk")]
+//Signing not yet supported by the weaver [assembly: AssemblyKeyFile("..\\..\\itextsharp.snk")]
+[assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]

@@ -34,12 +34,12 @@ namespace iTextSharp.tutorial.Chap01
 				// step 3: we open the document
 				try 
 				{
-					Watermark watermark = new Watermark(Image.GetInstance("watermark.jpg"), 200, 320);
+					Watermark watermark = new Watermark(Image.GetInstance("watermark.png"), 200, 320);
 					document.Add(watermark);
 				}
 				catch(Exception e) 
 				{
-					Console.Error.WriteLine("Are you sure you have the file 'watermark.jpg' in the right path?");
+					Console.Error.WriteLine("Are you sure you have the file 'watermark.png' in the right path?");
 				}
 				document.Open();
 				// step 4: we add content
