@@ -36,9 +36,12 @@
 	</target>
 	
 	<target name="findbugs" depends="init">
+		<!--<ant target="qa_build" dir="Runtime" />-->
 		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${build.core}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
 			<class location="${build.core}${file.separator}Compiletime${file.separator}${out.build}" />
+			<!--<class location="${build.core}${file.separator}Runtime${file.separator}${out.build}" />-->
 			<sourcePath path="${build.core}${file.separator}Compiletime${file.separator}src" />
+			<!--<sourcePath path="${build.core}${file.separator}Runtime${file.separator}src" />-->
 			<auxClasspath refid="lib.core" />
 		</findbugs>
 		<xslt in="${build.core}${file.separator}findbugs-result.xml" out="${build.core}${file.separator}findbugs-result.html" style="${findbugs.style}" />
@@ -49,6 +52,9 @@
 			<formatter type="xml" toFile="${build.core}${file.separator}checkstyle-result.xml" />
 			<property key="checkstyle.basedir" value="${build.core}${file.separator}Compiletime${file.separator}src" />
 			<FileSet dir="${build.core}${file.separator}Compiletime${file.separator}src">
+				<include name="**/*.java" />
+			</FileSet>
+			<FileSet dir="${build.core}${file.separator}Runtime${file.separator}src">
 				<include name="**/*.java" />
 			</FileSet>
 		</checkstyle>
