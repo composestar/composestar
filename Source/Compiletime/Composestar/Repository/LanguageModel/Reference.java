@@ -51,8 +51,6 @@ public class Reference
 	}
 
 
-
-
 	private String _selector;
 
 	/** @property */
@@ -66,5 +64,19 @@ public class Reference
 	{
 		_selector = value;
 	}
+	
+	
+	private int _innerCallContext;
 
+	/** @property */
+	public int get_InnerCallContext()
+	{
+		return _innerCallContext;
+	}
+
+	/** @property */
+	public void set_InnerCallContext(int value)
+	{
+		_innerCallContext = value;
+	}
 }
