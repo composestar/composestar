@@ -21,15 +21,15 @@
 		<ant target="clean" dir="${build.dotnet}" />
 	</target>
 	
-		<target name="clean_starlight" if="available.starlight">
+		<target name="clean_starlight" if="available.starlight" unless="ignore.starlight">
 		<ant target="clean" dir="${build.starlight}" />
 	</target>
 	
-	<target name="clean_java" if="available.java">
+	<target name="clean_java" if="available.java" unless="ignore.java">
 		<ant target="clean" dir="${build.java}" />
 	</target>
 	
-	<target name="clean_c" if="available.c">
+	<target name="clean_c" if="available.c" unless="ignore.c">
 		<ant target="clean" dir="${build.c}" />
 	</target>
 	
@@ -43,15 +43,15 @@
 		<ant target="build" dir="${build.dotnet}" />
 	</target>
 	
-	<target name="starlight" depends="core" if="available.starlight" description="Compile the StarLight port">
+	<target name="starlight" depends="core" if="available.starlight" unless="ignore.starlight" description="Compile the StarLight port">
 		<ant target="build" dir="${build.starlight}" />
 	</target>
 	
-	<target name="java" depends="core" if="available.java">
+	<target name="java" depends="core" if="available.java" unless="ignore.java">
 		<ant target="build" dir="${build.java}" />
 	</target>
 	
-	<target name="c" depends="core" if="available.c">
+	<target name="c" depends="core" if="available.c" unless="ignore.c">
 		<ant target="build" dir="${build.c}" />
 	</target>
 	
