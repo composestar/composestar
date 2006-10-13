@@ -81,6 +81,9 @@ public final class CstarBuildGen extends TransformTask
 		Transformer t = createTransformer();
 		List inputs = collectInputs();
 		
+		t.setParameter("composestarpath", m_composestarBase);
+		t.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
+		
 		log("Generating " + inputs.size() + " Compose* buildfiles", Project.MSG_INFO);
 		transform(t, inputs);
 	}
@@ -93,12 +96,10 @@ public final class CstarBuildGen extends TransformTask
 
 	private void transform(Transformer t, List inputs)
 	{
-		t.setParameter("composestarpath", m_composestarBase);
-
 		Iterator it = inputs.iterator();
 		while (it.hasNext())
 		{
-			File input = (File) it.next();
+			File input = (File)it.next();
 			File output = getOutputFile(input);
 
 			transform(t, input, output);

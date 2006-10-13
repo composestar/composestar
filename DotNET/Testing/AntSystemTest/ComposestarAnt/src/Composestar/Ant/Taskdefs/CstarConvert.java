@@ -41,7 +41,9 @@ public final class CstarConvert extends TransformTask
 	{
 		Transformer t = createTransformer();
 		List inputs = collectInputs();
-		
+
+		t.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
+
 		log("Generating " + inputs.size() + " VS2005 project files", Project.MSG_INFO);
 		transform(t, inputs);
 	}

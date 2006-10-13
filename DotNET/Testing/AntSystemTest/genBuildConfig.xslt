@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                              xmlns:xalan="http://xml.apache.org/xalan"
-                              xmlns:cstar="xalan://Composestar.Ant.XsltUtils" 
-                              exclude-result-prefixes="cstar">
+<xsl:stylesheet version="1.0"
+                exclude-result-prefixes="cstar"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:cstar="xalan://Composestar.Ant.XsltUtils">
 	
-	<xsl:output method="xml" 
-	            indent="yes"
-	            xalan:indent-amount="2"/>
+	<xsl:output method="xml" indent="yes"/>
 	
 	<xsl:param name="basepath" />
 	<xsl:param name="composestarpath" select="'C:/Program Files/ComposeStar/'" />

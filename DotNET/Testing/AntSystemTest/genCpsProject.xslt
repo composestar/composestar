@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
-                              xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                              xmlns:xalan="http://xml.apache.org/xalan">
+<xsl:stylesheet version="1.0" 
+                xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-	<xsl:output method="xml" 
-	            indent="yes"
-	            xalan:indent-amount="2"/>
-	            	
+	<xsl:output method="xml" indent="yes"/>
+	
 	<xsl:template match="/VisualStudioProject">
 		
 		<xsl:variable name="ProjectGuid"   select="*/@ProjectGuid"/>
