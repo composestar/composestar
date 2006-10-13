@@ -106,8 +106,15 @@ namespace Composestar.StarLight.ILWeaver
             // Place arguments on the stack
             WeaveStrategyUtilities.LoadArguments(visitor, originalCall, jpcVar);
 
-            // Call the method                    
-            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
+            // Call the method         
+            if(visitor.CalledMethod.HasThis)
+            {
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
+            }
+            else
+            {
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
+            }
 
             //Store the return value:
             WeaveStrategyUtilities.StoreReturnValue(visitor, originalCall, jpcVar);
