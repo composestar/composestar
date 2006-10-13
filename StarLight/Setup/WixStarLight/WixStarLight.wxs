@@ -113,7 +113,7 @@
     </InstallExecuteSequence>
     
   <!-- Custom actions -->
-    <CustomAction Id="CA_DevenvSetup2005" Property="DEVENV_EXE_2005" ExeCommand="/setup" Execute="commit" Return="asyncNoWait"></CustomAction>
+    <CustomAction Id="CA_DevenvSetup2005" Property="DEVENV_EXE_2005" ExeCommand="/setup" Execute="commit" Return="asyncWait"></CustomAction>
 
     <InstallUISequence>
       <!-- Because we have a launch condition that uses the results of FindRelatedProducts, put it first. -->
