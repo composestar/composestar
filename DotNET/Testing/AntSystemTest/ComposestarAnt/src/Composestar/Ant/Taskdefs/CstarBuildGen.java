@@ -1,7 +1,6 @@
 package Composestar.Ant.Taskdefs;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,14 +8,12 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
 
@@ -25,31 +22,29 @@ import org.apache.tools.ant.types.PatternSet.NameEntry;
  * 
  * @author Marcus
  */
-public class CstarBuildGen extends Task
+public final class CstarBuildGen extends TransformTask
 {
 	private final static String BUILD_CONFIGURATION_XML = "BuildConfiguration.xml";
 
-	/**
-	 * The location of ComposeStar; assumes the jar files are in
-	 * composestarBase+"/Binaries"
-	 */
-	private String m_composestarBase;
-
-	private String m_xslt;
-
-	private List m_filesets;
-
+	String m_composestarBase;
+	
 	public CstarBuildGen()
 	{
-		m_xslt = null;
-		m_filesets = new ArrayList();
+		super();
 	}
 
+	/**
+	 * Sets the base directory of ComposeStar.
+	 * Assumes the jar files are in "{composestarBase}/Binaries".
+	 */
 	public void setComposestarBase(String path)
 	{
 		m_composestarBase = path + "/";
 	}
 
+	/**
+	 * Sets the directory that contains the AntHelper executable.
+	 */
 	public void setAntHelperPath(String path)
 	{
 		if (!Composestar.Ant.XsltUtils.setAntHelperPath(path))
@@ -58,76 +53,61 @@ public class CstarBuildGen extends Task
 		}
 	}
 
+	/**
+	 * Set the location of the xslt file that is used to transform
+	 * the Visual Studio 2003 project files to Compose* buildfiles.
+	 */
 	public void setXslt(String xslt)
 	{
 		m_xslt = xslt;
 	}
 
+	/**
+	 * Adds a fileset of project files to process.
+	 */
 	public void addFileset(FileSet fs)
 	{
 		m_filesets.add(fs);
 	}
 
+	/**
+	 * Performs the transformations on the project files 
+	 * to generate Compose* buildfiles.
+	 */
 	public void execute() throws BuildException
 	{
 		registerCstarAsms();
+		
 		Transformer t = createTransformer();
 		List inputs = collectInputs();
+		
 		log("Generating " + inputs.size() + " Compose* buildfiles", Project.MSG_INFO);
 		transform(t, inputs);
 	}
 
-	private Transformer createTransformer()
+	private File getOutputFile(File input)
 	{
-		try
-		{
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer t = tf.newTransformer(new StreamSource(m_xslt));
-			t.setParameter("composestarpath", m_composestarBase);
-			return t;
-		}
-		catch (TransformerException e)
-		{
-			throw new BuildException(e.toString(), e);
-		}
-	}
-
-	private List collectInputs()
-	{
-		List result = new ArrayList();
-
-		Iterator it = m_filesets.iterator();
-		while (it.hasNext())
-		{
-			FileSet fs = (FileSet) it.next();
-			DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-			File basedir = ds.getBasedir();
-
-			String[] files = ds.getIncludedFiles();
-			for (int i = 0; i < files.length; i++)
-			{
-				File input = new File(basedir, files[i]);
-				result.add(input);
-			}
-		}
-		return result;
+		File baseDir = input.getParentFile();
+		return new File(baseDir, BUILD_CONFIGURATION_XML);
 	}
 
 	private void transform(Transformer t, List inputs)
 	{
+		t.setParameter("composestarpath", m_composestarBase);
+
 		Iterator it = inputs.iterator();
 		while (it.hasNext())
 		{
 			File input = (File) it.next();
-			File output = new File(input.getParentFile(), BUILD_CONFIGURATION_XML);
+			File output = getOutputFile(input);
 
 			transform(t, input, output);
 		}
 	}
 
-	private void transform(Transformer t, File in, File out)
+	private void transform(Transformer t, File input, File output)
 	{
-		String baseDir = in.getParent();
+		String baseDir = input.getParent();
 		log(baseDir, Project.MSG_INFO);
 
 		try
@@ -135,8 +115,8 @@ public class CstarBuildGen extends Task
 			Composestar.Ant.XsltUtils.setCurrentDirectory(baseDir);
 			t.setParameter("basepath", baseDir + "/");
 
-			Source xmlSource = new StreamSource(in);
-			Result result = new StreamResult(out);
+			Source xmlSource = new StreamSource(input);
+			Result result = new StreamResult(output);
 
 			t.transform(xmlSource, result);
 		}
@@ -146,7 +126,7 @@ public class CstarBuildGen extends Task
 		}
 	}
 
-	protected void registerCstarAsms()
+	private void registerCstarAsms()
 	{
 		FileSet cstarAsms = new FileSet();
 		cstarAsms.setDir(new File(m_composestarBase, "Binaries"));

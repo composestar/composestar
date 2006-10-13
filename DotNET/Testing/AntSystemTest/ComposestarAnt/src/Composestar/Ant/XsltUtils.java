@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An Xslt extention. Used to resolve assemblies
@@ -12,11 +13,45 @@ import java.util.HashMap;
  */
 public class XsltUtils
 {
-	protected static HashMap resolvedAsms = new HashMap();
+	protected static Map resolvedAsms = new HashMap();
 
 	protected static String AntHelperEXE;
 
 	protected static String currentDirectory;
+	
+	private XsltUtils() {}
+
+	/**
+	 * Sets the location of AntHelper.
+	 */
+	public static boolean setAntHelperPath(String path)
+	{
+		File an = new File(path, "AntHelper.exe");
+		if (an.exists())
+		{
+			AntHelperEXE = an.toString();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public static void setCurrentDirectory(String path)
+	{
+		currentDirectory = path;
+	}
+
+	public static void registerAssembly(String assembly, String path)
+	{
+		resolvedAsms.put(assembly, path);
+	}
+
+	public static void clearAssemblyCache()
+	{
+		resolvedAsms.clear();
+	}
 
 	public static String resolveAssembly(String assembly, String hint) throws Exception
 	{
@@ -37,22 +72,8 @@ public class XsltUtils
 		return lookupAssembly(assembly);
 	}
 
-	public static void registerAssembly(String assembly, String path)
-	{
-		resolvedAsms.put(assembly, path);
-	}
-
-	public static void clearAssemblyCache()
-	{
-		resolvedAsms.clear();
-	}
-
 	/**
-	 * Call AntHelper to resolve the aaembly
-	 * 
-	 * @param assembly
-	 * @return
-	 * @throws Exception
+	 * Calls AntHelper to resolve the assembly.
 	 */
 	protected static String lookupAssembly(String assembly) throws Exception
 	{
@@ -95,30 +116,5 @@ public class XsltUtils
 
 		resolvedAsms.put(assembly, resolvedAsm);
 		return resolvedAsm;
-	}
-
-	/**
-	 * Set the location of AntHelper
-	 * 
-	 * @param path
-	 * @return
-	 */
-	public static boolean setAntHelperPath(String path)
-	{
-		File an = new File(path, "AntHelper.exe");
-		if (an.exists())
-		{
-			AntHelperEXE = an.toString();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public static void setCurrentDirectory(String path)
-	{
-		currentDirectory = path;
 	}
 }
