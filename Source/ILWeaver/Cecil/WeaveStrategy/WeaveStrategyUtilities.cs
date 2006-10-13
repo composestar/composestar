@@ -158,7 +158,12 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
-
+        /// <summary>
+        /// Stores the returnvalue from the stack into the JoinPointContext object.
+        /// </summary>
+        /// <param name="visitor"></param>
+        /// <param name="originalCall"></param>
+        /// <param name="jpcVar"></param>
         internal static void StoreReturnValue(CecilInliningInstructionVisitor visitor,
             MethodReference originalCall, VariableDefinition jpcVar)
         {
@@ -178,6 +183,35 @@ namespace Composestar.StarLight.ILWeaver
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, visitor.CreateMethodReference(
                     typeof(JoinPointContext).GetMethod("SetReturnValue", 
                     new Type[] { typeof(object), typeof(JoinPointContext) }))));
+            }
+        }
+
+
+        /// <summary>
+        /// Loads the self object (the original target) onto the stack. For inputfilters this is obtained by
+        /// loading the 'this' object. For outputfilters this is obtained by loading the original target from the
+        /// JoinPointContext object.
+        /// </summary>
+        /// <param name="visitor">The visitor</param>
+        /// <param name="jpcVar">The JoinPointContext VariableDefinition</param>
+        internal static void LoadSelfObject(CecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
+        {
+            if(visitor.FilterType == CecilInliningInstructionVisitor.FilterTypes.InputFilter)
+            {
+                // Load this
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
+            }
+            else
+            {
+                // Load JoinPointContext
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                // Call get_StartTarget in JoinPointContext
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, visitor.CreateMethodReference(
+                    typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]))));
+
+                // Do a cast
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Castclass, visitor.CalledMethod.DeclaringType));
             }
         }
     }
