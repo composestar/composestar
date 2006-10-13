@@ -39,12 +39,12 @@ namespace iTextSharp.tutorial.Chap01
 				// we Add a Watermark that will show up on PAGE 1
 				try 
 				{
-					Watermark watermark = new Watermark(Image.GetInstance("watermark.jpg"), 200, 420);
+					Watermark watermark = new Watermark(Image.GetInstance("watermark.png"), 200, 420);
 					document.Add(watermark);
 				}
 				catch 
 				{
-					Console.Error.WriteLine("Are you sure you have the file 'watermark.jpg' in the right path?");
+					Console.Error.WriteLine("Are you sure you have the file 'watermark.png' in the right path?");
 				}
             
 				// we Add a Header that will show up on PAGE 1
@@ -60,12 +60,12 @@ namespace iTextSharp.tutorial.Chap01
 				// we need to change the position of the Watermark
 				try 
 				{
-					Watermark watermark = new Watermark(Image.GetInstance("watermark.jpg"), 320, 200);
+					Watermark watermark = new Watermark(Image.GetInstance("watermark.png"), 320, 200);
 					document.Add(watermark);
 				}
 				catch 
 				{
-					Console.Error.WriteLine("Are you sure you have the file 'watermark.jpg' in the right path?");
+					Console.Error.WriteLine("Are you sure you have the file 'watermark.png' in the right path?");
 				}
             
 				// we Add a Footer that will show up on PAGE 2
