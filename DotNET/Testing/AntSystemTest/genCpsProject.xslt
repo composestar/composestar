@@ -62,24 +62,34 @@
 	<xsl:template match="Reference">
 		<Reference Include="{@Name}">
 			<Name><xsl:value-of select="@AssemblyName"/></Name>
+			<xsl:if test="not(contains(@HintPath,'Microsoft.NET'))">
+				<HintPath><xsl:value-of select="@HintPath"/></HintPath>
+			</xsl:if>
 		</Reference>
 	</xsl:template>
 	
 	<xsl:template match="Files/Include">
 		<ItemGroup>
-			<xsl:apply-templates select="File[contains(@RelPath,'.cps')]" mode="concern"/>
+			<xsl:apply-templates select="File[@BuildAction='Compile']" mode="code"/>
 		</ItemGroup>
 		<ItemGroup>
-			<xsl:apply-templates select="File[not(contains(@RelPath,'.cps'))]" mode="code"/>
+			<xsl:apply-templates select="File[not(@BuildAction='Compile')][contains(@RelPath,'.cps')]" mode="concern"/>
 		</ItemGroup>
-	</xsl:template>
-
-	<xsl:template match="File" mode="concern">
-	    <Concern Include="{@RelPath}"/>
+		<ItemGroup>
+			<xsl:apply-templates select="File[not(@BuildAction='Compile')][not(contains(@RelPath,'.cps'))]" mode="none"/>
+		</ItemGroup>
 	</xsl:template>
 
 	<xsl:template match="File" mode="code">
 		<Compile Include="{@RelPath}"/>
+	</xsl:template>
+
+	<xsl:template match="File" mode="concern">
+		<Concern Include="{@RelPath}"/>
+	</xsl:template>
+	
+	<xsl:template match="File" mode="none">
+		<None Include="{@RelPath}"/>
 	</xsl:template>
 
 </xsl:stylesheet>
