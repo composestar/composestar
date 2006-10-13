@@ -55,7 +55,7 @@
 		<ant target="build" dir="${build.c}" />
 	</target>
 	
-	<target name="build" depends="init,core,dotnet,starlight,java,c" description="Compile the whole Compose* project" />
+	<target name="build" depends="init,core,dotnet,java,c" description="Compile the whole Compose* project" />
 	
 	<!-- install tasks -->
 	
