@@ -4,87 +4,89 @@
 	Run the Compose* SystemTest for DotNET
 	</description>
 
-	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+	<condition property="build.core" value="${basedir}/../../Core">
 		<and>
 			<not><isset property="build.core"/></not>
-			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+			<available file="${basedir}/../../Core/common.xml"/>
 		</and>
 	</condition>
 	
-	<import file="${build.core}/common.xml" />
+	<import file="${build.core}/common.xml"/>
 
 	<condition property="INCRE.config" value="INCREconfig.xml">
 		<not><isset property="INCRE.config"/></not>
 	</condition>
-
-	<taskdef name="cstarGen" classname="Composestar.Ant.Taskdefs.CstarGen" />
-	<taskdef name="cstarTest" classname="Composestar.Ant.Taskdefs.CstarTest" />
-	<taskdef name="cstarVsp" classname="Composestar.Ant.Taskdefs.CstarVsp" />
 	
-	<target name="clean" />
-	<target name="build" />
+	<target name="clean"/>
+	<target name="build"/>
 	
-	<target name="test" depends="test_gbc,test_vsp,test_exec" description="Execute the DotNET system test." />
+	<target name="test" depends="test_bgen,test_exec" description="Execute the DotNET system test."/>
+	
+	<target name="init_tasks">
+		<taskdef name="cstarBuildGen" classname="Composestar.Ant.Taskdefs.CstarBuildGen"/>
+		<taskdef name="cstarComp" classname="Composestar.Ant.Taskdefs.CstarComp"/>
+		<taskdef name="cstarTest" classname="Composestar.Ant.Taskdefs.CstarTest"/>
+	</target>
 
-	<target name="test_gbc" depends="init">
-		<cstarGen composestarBase="${composestar.installdir}"
-		          antHelperPath="${build.core}/Development"		          
-		          xslt="${basedir}/AntSystemTest/genBuildConfig.xslt">
+	<target name="test_bgen" depends="init,init_tasks">
+		<cstarBuildGen composestarBase="${composestar.installdir}"
+		               antHelperPath="${build.core}/Development"		          
+		               xslt="${basedir}/AntSystemTest/genBuildConfig.xslt">
 			<FileSet dir="${build.dotnet}/Examples">
-				<include name="**/*.vjsproj" />
-				<include name="**/*.csproj" />
-				<exclude name="AOSD2006Demo/EncryptionFilter/*" />
-				<exclude name="AOSD2006Demo/ProtocolLib/*" />
-				<exclude name="DesignPatterns/Annotations/*" />
-				<exclude name="Jukebox/jukeboxframe/*" />
-				<exclude name="Rot13/Rot13Filter/*" />
+				<include name="**/*.vjsproj"/>
+				<include name="**/*.csproj"/>
+				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
+				<exclude name="AOSD2006Demo/ProtocolLib/*"/>
+				<exclude name="DesignPatterns/Annotations/*"/>
+				<exclude name="Jukebox/jukeboxframe/*"/>
+				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
 			<!--
 			<Module name="INCRE">
 				<Setting key="config" value="INCREconfig.xml"/>
 			</Module>
 			-->
-		</cstarGen>
+		</cstarBuildGen>
 	</target>
 	
-	<target name="test_vsp" depends="init">
-		<cstarVsp composestarBase="${composestar.installdir}">
+	<target name="test_comp" depends="init,init_tasks">
+		<cstarComp composestarBase="${composestar.installdir}">
 			<FileSet dir="${build.dotnet}/Examples">
-				<include name="**/BuildConfiguration.xml" />
-				<exclude name="AOSD2006Demo/EncryptionFilter/*" />
-				<exclude name="AOSD2006Demo/ProtocolLib/*" />
-				<exclude name="DesignPatterns/Annotations/*" />
-				<exclude name="Jukebox/jukeboxframe/*" />
-				<exclude name="Rot13/Rot13Filter/*" />
+				<include name="**/BuildConfiguration.xml"/>
+				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
+				<exclude name="AOSD2006Demo/ProtocolLib/*"/>
+				<exclude name="DesignPatterns/Annotations/*"/>
+				<exclude name="Jukebox/jukeboxframe/*"/>
+				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
-		</cstarVsp>
+		</cstarComp>
 	</target>
 
-	<target name="test_exec" depends="init">
+	<target name="test_exec" depends="init,init_tasks,test_comp">
 		<cstarTest>
 			<FileSet dir="${build.dotnet}/Examples">
-				<include name="Platypus/bin/PlatypusExample.Main.exe" />
-				<include name="PredicateQueries/bin/MyApp.Main.exe" />
-				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe" />
-				<include name="SECRETTesting/bin/SECRETTesting.MainRunner.exe" />
-				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe" />
-				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe" />
-				<include name="Wedding/bin/wedding.Wedding.exe" />
-				<include name="Inventory/bin/ExampleAOP.Example.exe" />
-				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe" />
-				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe" />
-				<include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe" />
-				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe" />
-				<include name="DesignPatterns/Implementations/Facade/bin/Composestar.Patterns.Facade.Main.exe" />
-				<include name="DesignPatterns/Implementations/Interpreter/bin/Composestar.Patterns.Interpreter.Main.exe" />
-				<include name="DesignPatterns/Implementations/Iterator/bin/Composestar.Patterns.Iterator.Main.exe" />
-				<include name="DesignPatterns/Implementations/Memento/bin/Composestar.Patterns.Memento.Main.exe" />
-				<include name="DesignPatterns/Implementations/Prototype/bin/Composestar.Patterns.Prototype.Main.exe" />
-				<include name="DesignPatterns/Implementations/Proxy/bin/Composestar.Patterns.Proxy.Main.exe" />
-				<include name="DesignPatterns/Implementations/TemplateMethod/bin/Composestar.Patterns.TemplateMethod.Main.exe" />
-				<include name="DesignPatterns/Implementations/Visitor/bin/Composestar.Patterns.Visitor.Main.exe" />
-				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe" />
-				<include name="TestCases/BasicTests/bin/BasicTests.MainClass.exe" />
+				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
+				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
+				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
+				<include name="SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>
+				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
+				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
+				<include name="Wedding/bin/wedding.Wedding.exe"/>
+				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
+				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Facade/bin/Composestar.Patterns.Facade.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Interpreter/bin/Composestar.Patterns.Interpreter.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Iterator/bin/Composestar.Patterns.Iterator.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Memento/bin/Composestar.Patterns.Memento.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Prototype/bin/Composestar.Patterns.Prototype.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Proxy/bin/Composestar.Patterns.Proxy.Main.exe"/>
+				<include name="DesignPatterns/Implementations/TemplateMethod/bin/Composestar.Patterns.TemplateMethod.Main.exe"/>
+				<include name="DesignPatterns/Implementations/Visitor/bin/Composestar.Patterns.Visitor.Main.exe"/>
+				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
+				<include name="TestCases/BasicTests/bin/BasicTests.MainClass.exe"/>
 			</FileSet>
 		</cstarTest>
 	</target>

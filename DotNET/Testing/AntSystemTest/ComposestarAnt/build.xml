@@ -1,0 +1,40 @@
+<project name="ComposestarAnt" default="install">
+
+	<description>Builds the tasks used by AntSystemTest.</description>
+
+	<condition property="build.core" value="${basedir}/../../../../Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="${basedir}/../../../../Core/common.xml"/>
+		</and>
+	</condition>
+	
+	<import file="${build.core}/common.xml"/>
+	
+	<target name="init_local" depends="init">
+		<property name="ant.base"    location="${build.core}/Development/Ant"/>
+		<property name="ant.lib"     location="${ant.base}/lib"/>
+		<property name="tasks.base"  location="${basedir}"/>
+		<property name="tasks.src"   location="${tasks.base}/src"/>
+		<property name="tasks.build" location="${tasks.base}/build"/>
+		<property name="tasks.dist"  location="${tasks.base}/dist"/>
+		
+		<property name="ant.jar"     location="${ant.lib}/ant.jar"/>
+		<property name="tasks.jar"   location="${tasks.dist}/ComposestarAnt.jar"/>
+	</target>
+	
+	<target name="clean" depends="init_local">
+		<delete dir="${tasks.dist}"/>
+	</target>
+
+	<target name="build" depends="init_local">
+		<mkdir dir="${tasks.dist}"/>
+		<javac srcdir="${tasks.src}" destdir="${tasks.build}" classpath="${ant.jar}" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}"/>
+		<jar destfile="${tasks.jar}" basedir="${tasks.build}"/> 
+	</target>
+	
+	<target name="install" depends="init_local,build">
+		<copy todir="${ant.lib}" file="${tasks.jar}"/>
+	</target>
+	
+</project>
