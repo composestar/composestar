@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/StarLight" default="build">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+
+	<echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>
+	The Compose* StarLight
+	The StarLight implementation of Compose*
+	</description>
+
+	<target name="clean" depends="init" description="Cleanup the result of compilations">
+		<ant target="clean" dir="Source/Compiletime" />
+	</target>
+	
+	
+	<target name="build" description="Build the StarLight implementation of Compose*">
+		<ant target="build" dir="Source/Compiletime" />
+	</target>
+
+</project>
