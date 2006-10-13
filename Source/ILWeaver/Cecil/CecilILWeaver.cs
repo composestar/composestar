@@ -153,7 +153,16 @@ namespace Composestar.StarLight.ILWeaver
 
             // Run the optimizer
             typeElements = OptimizeTypeElements(ref typeElements, ref externals, ref internals, ref methodElements, assemblyElement);
-            
+
+            // If empty, we can quit
+            if (typeElements.Count == 0)
+            {
+                // Stop timing
+                sw.Stop();
+                m_LastDuration = sw.Elapsed;
+                return;
+            } // if
+
             // Get only the types we have info for
             foreach (TypeElement typeElement in typeElements.Values)
             {
