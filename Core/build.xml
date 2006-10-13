@@ -48,9 +48,9 @@
 	</target>
 	
 	<target name="checkstyle" depends="init">
-		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false">
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.dotnet">
 			<formatter type="xml" toFile="${build.core}${file.separator}checkstyle-result.xml" />
-			<property key="checkstyle.basedir" value="${build.core}${file.separator}Compiletime${file.separator}src" />
+			<property key="config_loc" value="${bin.checkstyle}" />
 			<FileSet dir="${build.core}${file.separator}Compiletime${file.separator}src">
 				<include name="**/*.java" />
 			</FileSet>
