@@ -10,7 +10,7 @@
     <RootNamespace>Composestar.StarLight.VisualStudio.Project</RootNamespace>
     <AssemblyName>Composestar.StarLight.VisualStudio.Project</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
     <GacOutput>true</GacOutput>
     <GacDeploy>true</GacDeploy>
   </PropertyGroup>
@@ -201,9 +201,6 @@
     <Compile Include="RegistrationAttributes\SingleFileGeneratorSupportRegistrationAttribute.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="SelectionElementValueChangedListener.cs" />
-    <ZipProject Include="Templates\Projects\CSharpConcernProject\Class1.cs" />
-    <ZipProject Include="Templates\Projects\JSharpConcernProject\Class1.java" />
-    <ZipItem Include="Templates\ProjectItems\CSharpClass\Class.cs" />
     <Compile Include="VSMDComposeStarProvider.cs" />
     <Compile Include="VsPkg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -230,7 +227,6 @@
     <None Include="Project\Diagrams\HierarchyClasses.cd" />
     <None Include="Project\Diagrams\PropertiesClasses.cd" />
     <None Include="Project\Diagrams\ReferenceClasses.cd" />
-    <ZipItem Include="Templates\ProjectItems\VBClass\Class.vb" />
     <ZipProject Include="Templates\Projects\JSharpConcernProject\StarLightProject.cpsproj" />
     <ZipProject Include="Templates\Projects\JSharpConcernProject\Concern.cps" />
     <ZipProject Include="Templates\Projects\VBConcernProject\StarLightProject.cpsproj" />
@@ -273,20 +269,25 @@
     <ZipItem Include="Templates\ProjectItems\JSharpClass\__TemplateIcon.ico" />
     <ZipItem Include="Templates\ProjectItems\CSharpClass\__TemplateIcon.ico" />
     <ZipItem Include="Templates\ProjectItems\CSharpClass\CSharpClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\CSharpClass\Class.cs" />
     <ZipItem Include="Templates\ProjectItems\VBClass\__TemplateIcon.ico" />
     <ZipItem Include="Templates\ProjectItems\VBClass\VBClass.vstemplate" />
+    <ZipItem Include="Templates\ProjectItems\VBClass\Class.vb" />
     <ZipProject Include="Templates\Projects\JSharpConcernProject\JSharpConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\JSharpConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\JSharpConcernProject\Class1.java" />
     <ZipProject Include="Templates\Projects\VBConcernProject\Class1.vb" />
     <ZipProject Include="Templates\Projects\VBConcernProject\VBConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\VBConcernProject\__TemplateIcon.ico" />
     <ZipProject Include="Templates\Projects\CSharpConcernProject\CSharpConcernProject.vstemplate" />
     <ZipProject Include="Templates\Projects\CSharpConcernProject\__TemplateIcon.ico" />
+    <ZipProject Include="Templates\Projects\CSharpConcernProject\Class1.cs" />
     <EmbeddedResource Include="Resources\imagelis.bmp" />
     <None Include="Project\ProjectBase.files" />
     <None Include="Resources\Resources.resx">
       <SubType>Designer</SubType>
     </None>
+    <None Include="starlight.snk" />
     <EmbeddedResource Include="Resources\StarLightImageList.bmp" />
   </ItemGroup>
   <ItemGroup>
