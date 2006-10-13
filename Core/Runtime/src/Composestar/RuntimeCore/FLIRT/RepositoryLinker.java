@@ -379,7 +379,7 @@ public class RepositoryLinker
 		}
 		else
 		{
-			throw new Exception("Unknown ConditionExpression class: "+conditionExpression.getClass().toString());
+			throw new Exception("Unknown ConditionExpression class: "+conditionExpression.getClass().getName());
 		}
 
 		if (conditionExpression instanceof BinaryOperator)

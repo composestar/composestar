@@ -108,8 +108,8 @@ public class ObjectManager implements ChildRunnable
         
 		//find the concern
 		theObject = o;
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","ObjectManager created for object of type '"+o.getClass().toString()+"'.");
-		Concern concern = (Concern)store.getObjectByID(o.getClass().toString());
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","ObjectManager created for object of type '"+o.getClass().getName()+"'.");
+		Concern concern = (Concern)store.getObjectByID(o.getClass().getName());
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking concern '"+concern+"'...");
 
 		if(concern != null)
@@ -204,7 +204,7 @@ public class ObjectManager implements ChildRunnable
 		{
 			Internal internal = (Internal)internalIterator.next();
 			String internalname = internal.getName();
-			String internaltype = internal.getClass().toString();
+			String internaltype = internal.getType().getQualifiedName();
 			Object internalobject;
 			//try
 			{
@@ -228,7 +228,7 @@ public class ObjectManager implements ChildRunnable
 		{
 			External external = (External)externalIterator.next();
 			String externalname = external.getName();
-			String externaltype = external.getClass().toString();
+			String externaltype = external.getType().getQualifiedName();
 			Object externalobject;
 
 			if(external.shortinit != null)
@@ -252,7 +252,7 @@ public class ObjectManager implements ChildRunnable
 				}
 				if(externalobject != null)
 				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tLocated external '"+externalobject.getClass().toString()+"'.");
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tLocated external '"+externalobject.getClass().getName()+"'.");
 					fmruntime.addExternal(externalname, externalobject);
 				}
 				
@@ -333,7 +333,7 @@ public class ObjectManager implements ChildRunnable
      */
     public static ObjectManager getObjectManagerFor(Object o, DataStore store) 
 	{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object manager for object of type '"+o.getClass().toString()+"'.");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting object manager for object of type '"+o.getClass().getName()+"'.");
 
 			ObjectManager obj = (ObjectManager) GlobalObjectManager.getObjectManagerFor(o);
 			if (obj == null) 
@@ -347,7 +347,7 @@ public class ObjectManager implements ChildRunnable
     
 	public static boolean hasFilterModules(Object o, DataStore store)
 	{
-		Concern concern = (Concern)store.getObjectByID(o.getClass().toString());
+		Concern concern = (Concern)store.getObjectByID(o.getClass().getName());
 		return (concern != null && concern.getDynObject("SingleOrder") != null );
 	}
 
@@ -493,7 +493,7 @@ public class ObjectManager implements ChildRunnable
 				//return Invoker.getInstance().invoke(aMessage.getTarget(), aMessage.getSelector(), aMessage.getArguments());
 				return new DispatchToInnerAction( aMessage, true, aMessage.getFirstMessage().getTarget(), aMessage.getFirstMessage().getSelector(), aMessage.getArguments());
 			}
-			//throw new MessageNotFilteredException("The message: "+aMessage.getSelector()+ " for target: "+aMessage.getInner().getClass().toString()+" was not filtered!");
+			//throw new MessageNotFilteredException("The message: "+aMessage.getSelector()+ " for target: "+aMessage.getInner().getClass().getName()+" was not filtered!");
 		//}
 		/*catch (Exception e) 
 		{

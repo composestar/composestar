@@ -36,7 +36,7 @@ public class GlobalObjectManager
 	{
 		// Do not store the object managers for framework classes
 		if ((key.getClass() == null) || // Fixed crash: namespace can be null (when class is in default namespace)!
-			 (!(key.getClass().toString().startsWith("java.") || key.getClass().toString().startsWith("System."))) )
+			 (!(key.getClass().getName().startsWith("java.") || key.getClass().getName().startsWith("System."))) )
 		{
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Storing '" + obj + "' with key '" + key.hashCode() + "'.");
 			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Storing objectmanager for object '" + ((ObjectManager)obj).theObject + "' with key '" + key.GetHashCode() + " (" + key + ")'.");

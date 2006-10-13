@@ -61,6 +61,16 @@
 		<xslt in="${build.core}${file.separator}checkstyle-result.xml" out="${build.core}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
 
+	<!--
+	<target name="qalab" depends="findbugs, checkstyle">
+		<tstamp>
+			<format property="TIME" pattern="yyyy-MM-dd HH:mm:ss"/>
+		</tstamp>
+		<mergestat inputFile="${build.core}${file.separator}findbugs-result.xml" outputFile="${build.core}${file.separator}qalab.xml" srcDir="${build.core}" handler="net.objectlab.qalab.parser.FindBugsStatMerge" mergerTimeStamp="${TIME}" quiet="true" /> 
+		<mergestat inputFile="${build.core}${file.separator}checkstyle-result.xml" outputFile="${build.core}${file.separator}qalab.xml" srcDir="${build.core}" handler="net.objectlab.qalab.parser.CheckstyleStatMerge" mergerTimeStamp="${TIME}" quiet="true" /> 
+	</target>
+	-->
+
 	<target name="test" description="Runs tests.">
 		<ant target="unittest" dir="Compiletime"/>
 	</target>

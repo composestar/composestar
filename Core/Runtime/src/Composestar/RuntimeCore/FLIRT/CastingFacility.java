@@ -26,14 +26,14 @@ public class CastingFacility
 
 		if (to.indexOf(']') >= 0)
 		{
-			to = to.Remove(0, to.indexOf(']')+1);
+			to = to.substring(to.indexOf(']')+1);
 		}
 		
 		ObjectManager om = (ObjectManager)GlobalObjectManager.getObjectManagerFor(from);
 		
 		if (om != null) 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found an object manager for '" + from.getClass().toString() + "'.");
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found an object manager for '" + from.getClass().getName() + "'.");
 
 			java.util.ArrayList filterModules = om.getFilterModules();
 			for (int i = 0; i < filterModules.size(); i++) 
@@ -47,9 +47,9 @@ public class CastingFacility
 				while( internalObjects.hasMoreElements())
 				{
 					Object internal = internalObjects.nextElement();
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking internal: "+internal.getClass().toString());
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking internal: "+internal.getClass().getName());
 
-					if ( internal.getClass().toString().equals(to) )
+					if ( internal.getClass().getName().equals(to) )
 					{
 						// This should be the match and return the correct internal object
 						result = internal;
@@ -91,11 +91,11 @@ public class CastingFacility
 					
 						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Inspecting internal '" + internal + "' of '" + fmr  + "'.");
 						
-						if ( internal.GetHashCode() == from.GetHashCode() )
+						if ( internal.hashCode() == from.hashCode() )
 						{
 							// This should be the match and return the correct parent concern object
 							result = fmr.getObjectManager().theObject;
-							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.getClass().toString() + ", key " + result.GetHashCode());
+							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.getClass().getName() + ", key " + result.GetHashCode());
 							break;
 						}
 					}
@@ -116,7 +116,7 @@ public class CastingFacility
 
 		if (result == null) 
 		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No internal object found for casting: "+from.getClass().toString() + " -> " + to);
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No internal object found for casting: "+from.getClass().getName() + " -> " + to);
 
 			result = from;
 		}
@@ -126,10 +126,10 @@ public class CastingFacility
 
 	public synchronized static Object handleInheritedCall(Object target) 
 	{
-		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Object under investigation: " + target + " (type: " + target.getClass().toString() + ").");
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Object under investigation: " + target + " (type: " + target.getClass().getName() + ").");
 
 		Object args[] = {};
-		if (target.getClass().toString().Equals("VenusFlyTrap.VenusFlyTrap"))
+		if (target.getClass().getName().Equals("VenusFlyTrap.VenusFlyTrap"))
 		{
 			// target matches type of intercepted classes
 			MessageHandlingFacility.handleVoidMethodCall("VenusFlyTrap.LivingBeing", target, "buildBodyParts", args);

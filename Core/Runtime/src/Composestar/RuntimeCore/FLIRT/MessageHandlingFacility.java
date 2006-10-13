@@ -68,7 +68,7 @@ public abstract class MessageHandlingFacility
 
 	private static void handleInstanceCreation(Message message, Object creator, Object createdObject, Object[] args)
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("instance creation",creator.toString(),createdObject.getClass().toString(),message.getSelector(),args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("instance creation",creator.toString(),createdObject.getClass().getName(),message.getSelector(),args);
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","\tMap: "+RepositoryLinker.filterModuleReferenceMap);
 		
 		HashMap mapping = new HashMap();
@@ -76,16 +76,16 @@ public abstract class MessageHandlingFacility
 		CpsConcern cpsConcern = null;
 		
 		// First get the object args and get the formal parameters from the concern
-		if(datastore.getObjectByID(createdObject.getClass().toString()) instanceof CpsConcern)
+		if(datastore.getObjectByID(createdObject.getClass().getName()) instanceof CpsConcern)
 		{
-			cpsConcern = (CpsConcern)datastore.getObjectByID(createdObject.getClass().toString());
+			cpsConcern = (CpsConcern)datastore.getObjectByID(createdObject.getClass().getName());
 		}
 			// HACK: we need to see of it is a cpsconcern, however full namespaces for concerns are not supported :(
 			//			warning this will not work with the same names for concerns in multiple packages!
-		else if(createdObject.getClass().toString().indexOf(".") > 0)
+		else if(createdObject.getClass().getName().indexOf(".") > 0)
 		{
-			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Found full namespace '"+createdObject.getClass().toString()+"'.");
-			String tmp = createdObject.getClass().toString().substring(createdObject.getClass().toString().lastIndexOf(".")+1);
+			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Found full namespace '"+createdObject.getClass().getName()+"'.");
+			String tmp = createdObject.getClass().getName().substring(createdObject.getClass().getName().lastIndexOf(".")+1);
 			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","step(1): "+tmp);
 			//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","step(2): "+datastore.getObjectByID(tmp));
 			if(datastore.getObjectByID(tmp) != null && datastore.getObjectByID(tmp) instanceof CpsConcern)
@@ -96,7 +96,7 @@ public abstract class MessageHandlingFacility
 				{
 					Source tmp_src = (Source)cc.getImplementation();
 					//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","step(4a): "+tmp_src.getClassName());
-					if(createdObject.getClass().toString().equals(tmp_src.getClassName()))
+					if(createdObject.getClass().getName().equals(tmp_src.getClassName()))
 					{
 						// Now we are sure!
 						//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","step(5a): Found correct concern!");
@@ -107,7 +107,7 @@ public abstract class MessageHandlingFacility
 				{
 					CompiledImplementation tmp_ci = (CompiledImplementation)cc.getImplementation();
 					//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","step(4b): "+tmp_ci.getClassName());
-					if(createdObject.getClass().toString().equals(tmp_ci.getClassName()))
+					if(createdObject.getClass().getName().equals(tmp_ci.getClassName()))
 					{
 						// Now we are sure!
 						//if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","step(5b): Found correct concern!");
@@ -129,8 +129,8 @@ public abstract class MessageHandlingFacility
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tProcessing argument "+i+" of "+args.length+"...");
 				if( i < args.length )
 				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tChecking argument["+args[i].getClass().toString().equals(lcr.getQualifiedName())+"]: "+args[i].getClass().toString()+" == "+lcr.getQualifiedName());
-					if( args[i].getClass().toString().equals(lcr.getQualifiedName()) )
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tChecking argument["+args[i].getClass().getName().equals(lcr.getQualifiedName())+"]: "+args[i].getClass().getName()+" == "+lcr.getQualifiedName());
+					if( args[i].getClass().getName().equals(lcr.getQualifiedName()) )
 					{
 						if(Debug.SHOULD_DEBUG)
 						{
@@ -173,7 +173,7 @@ public abstract class MessageHandlingFacility
 		}
 		/*else
 		 {
-		 throw new ComposestarRuntimeException("The called constructor of the concern: "+createdObject.getClass().toString()+" does not match the specified one.");
+		 throw new ComposestarRuntimeException("The called constructor of the concern: "+createdObject.getClass().getName()+" does not match the specified one.");
 		 }*/
 		
 		ObjectManager.getObjectManagerFor(createdObject, datastore);
@@ -188,7 +188,7 @@ public abstract class MessageHandlingFacility
 
 	private static void handleConstructorCall(Object creator, Object createdObject, Message msg)
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming constructor message",creator.getClass().toString(),msg.getTarget().getClass().toString(),msg.getSelector(),EmptyObjectArray);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming constructor message",creator.getClass().getName(),msg.getTarget().getClass().toString(),msg.getSelector(),EmptyObjectArray);
 		
 		// First check do the output filters
 		//ObjectManager om = ObjectManager.getObjectManagerFor(creator, datastore);
@@ -226,7 +226,7 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(Object caller, Object target, String selector, Object[] args) 
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> non static return message",caller.getClass().toString(),target.getClass().toString(),selector,args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> non static return message",caller.getClass().getName(),target.getClass().toString(),selector,args);
 		Message msg = new Message(selector, args);
 		msg.setSender(caller);
 		msg.setServer(target);
@@ -288,7 +288,7 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(Object caller, Object target, String selector, Object[] args) 
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> non static void message",caller.getClass().toString(),target.getClass().toString(),selector,args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> non static void message",caller.getClass().getName(),target.getClass().toString(),selector,args);
 		
 		Message msg = new Message(selector, args);
 		msg.setSender(caller);
@@ -350,7 +350,7 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(String staticcaller, Object target, String selector, Object[] args) 
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static return message",staticcaller,target.getClass().toString(),selector,args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static return message",staticcaller,target.getClass().getName(),selector,args);
 		Message msg = new Message(selector, args);
 		msg.setSender(staticcaller);
 		msg.setServer(target);
@@ -364,7 +364,7 @@ public abstract class MessageHandlingFacility
 			{
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Filtermodule(s) present at target, delivering message...");
 				ObjectManager om = ObjectManager.getObjectManagerFor(target, datastore);
-				returnvalue = om.deliverIncomingMessage(staticcaller.getClass().toString(),target,msg);
+				returnvalue = om.deliverIncomingMessage(staticcaller.getClass().getName(),target,msg);
 			}
 			else
 			{
@@ -398,7 +398,7 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(String staticcaller, Object target, String selector, Object[] args) 
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static void message",staticcaller,target.getClass().toString(),selector,args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static void message",staticcaller,target.getClass().getName(),selector,args);
 
 		try 
 		{
@@ -443,7 +443,7 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(Object caller, String target, String selector, Object[] args) 
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static return message",caller.getClass().toString(),target,selector,args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static return message",caller.getClass().getName(),target,selector,args);
 		Object returnvalue;
 
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Invoking message...");
@@ -463,7 +463,7 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(Object caller, String target, String selector, Object[] args) 
 	{
-		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static void message",caller.getClass().toString(),target,selector,args);
+		if(Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static void message",caller.getClass().getName(),target,selector,args);
 
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Invoking message...");
 		Invoker.getInstance().invoke(target,selector,args);

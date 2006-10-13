@@ -106,14 +106,14 @@ public class DispatchAction extends ComposeStarAction
 					Debug.out(Debug.MODE_INFORMATION,"FLIRT","Selector: "+m.getSelector());
 				}
 
-				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+m.getTarget().getClass().toString()+"."+m.getSelector()+" ==> "+m.getTarget().getClass().toString());
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Dispatching to inner: "+m.getTarget().getClass().getName()+"."+m.getSelector()+" ==> "+m.getTarget().getClass().toString());
 				for(int i=0; i<args.length; i++)
 				{
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\tWith argument["+i+"] = "+args[i]);
 				}
 				if(m.STATE == Message.MESSAGE_CONSTRUCTOR) // Found a constructor call!
 				{
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+m.getTarget().getClass().toString()+"()");
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Encountered a constructor call, returning null: "+m.getTarget().getClass().getName()+"()");
 					return null;
 				}
 

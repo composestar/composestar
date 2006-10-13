@@ -235,6 +235,14 @@ Common routines. Always include this file in every build.xml file
 		<condition property="checkstyle.style" value="${bin.checkstyle}/checkstyle.xsl">
 			<not><isset property="checkstyle.style" /></not>
 		</condition>
+
+		<!-- register QAlab; just to make you depressive over time -->
+		<!--
+		<path id="lib.qalab">	  
+			<fileset dir="${build.core}${file.separator}Development${file.separator}qalab${file.separator}lib${file.separator}" includes="*.jar"/>
+		</path>
+		<taskdef name="mergestat" classname="net.objectlab.qalab.ant.BuildStatMergeTask" classpathref="lib.qalab" />
+		-->
 		
 	</target>
 	
