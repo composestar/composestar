@@ -95,7 +95,7 @@ public class CastingFacility
 						{
 							// This should be the match and return the correct parent concern object
 							result = fmr.getObjectManager().theObject;
-							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.getClass().getName() + ", key " + result.GetHashCode());
+							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.getClass().getName() + ", key " + result.hashCode());
 							break;
 						}
 					}
@@ -129,7 +129,7 @@ public class CastingFacility
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Object under investigation: " + target + " (type: " + target.getClass().getName() + ").");
 
 		Object args[] = {};
-		if (target.getClass().getName().Equals("VenusFlyTrap.VenusFlyTrap"))
+		if (target.getClass().getName().equals("VenusFlyTrap.VenusFlyTrap"))
 		{
 			// target matches type of intercepted classes
 			MessageHandlingFacility.handleVoidMethodCall("VenusFlyTrap.LivingBeing", target, "buildBodyParts", args);
