@@ -1,11 +1,11 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.RuntimeCore.FLIRT.Message.Message;
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
-import Composestar.RuntimeCore.Utils.Debug;
-
 import java.util.Dictionary;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.Utils.Debug;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].

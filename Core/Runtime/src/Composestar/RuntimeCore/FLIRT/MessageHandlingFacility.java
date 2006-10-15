@@ -1,22 +1,23 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Core.CpsProgramRepository.*;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.RuntimeCore.CODER.*;
-import Composestar.RuntimeCore.FLIRT.Exception.*;
-import Composestar.RuntimeCore.FLIRT.Interpreter.*;
-import Composestar.RuntimeCore.FLIRT.Message.*;
-import Composestar.RuntimeCore.FLIRT.Reflection.*;
-import Composestar.RuntimeCore.FLIRT.Debugger.*;
-import Composestar.RuntimeCore.Utils.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException;
+import Composestar.RuntimeCore.FLIRT.Exception.ErrorFilterException;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.FLIRT.Reflection.MessageInfoProxy;
+import Composestar.RuntimeCore.Utils.Debug;
+import Composestar.RuntimeCore.Utils.Invoker;
+import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -164,12 +165,21 @@ public abstract class MessageHandlingFacility
 				if(exfmr != null)
 				{
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tFound FilterModuleRuntime '"+exfmr+"'.");
+					/*
 					Iterator keys = mapping.keySet().iterator();
 					while(keys.hasNext())
 					{
 						String key = (String)keys.next();
 						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tAdding external '"+key+"'.");
 						exfmr.addExternal(key,mapping.get(key));
+					}
+					*/					
+					Iterator entries = mapping.entrySet().iterator();
+					while (entries.hasNext())
+					{
+						Entry entry = (Entry) entries.next(); 
+						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\tAdding external '"+entry.getKey()+"'.");
+						exfmr.addExternal((String) entry.getKey(), entry.getValue());
 					}
 				}
 			}

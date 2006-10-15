@@ -4,6 +4,8 @@ package Composestar.RuntimeCore.Utils;
  */
 public abstract class ExecutionStackReader
 {
+	protected static ExecutionStackReader instance = null;
+	
 	public static ExecutionStackReader getInstance()
 	{
 		if(instance == null)
@@ -12,7 +14,6 @@ public abstract class ExecutionStackReader
 		}
 		return instance;
 	}
-
-	protected static ExecutionStackReader instance = null;
-	public abstract EntryPoint parseStack(String stack);
+	
+	public abstract EntryPoint parseStack(String stack);	
 }

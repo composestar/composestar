@@ -39,7 +39,8 @@ public class ThreadPool
 			if(protoType == null)
 			{
 				Debug.out(Debug.MODE_ERROR,"ThreadPool","Prototype Thread not set for ThreadPool at platform instanciation");
-				System.exit(-1);
+				//System.exit(-1);
+				throw new RuntimeException("Prototype Thread not set for ThreadPool at platform instanciation");
 			}
 			return protoType.createNew();
 		}

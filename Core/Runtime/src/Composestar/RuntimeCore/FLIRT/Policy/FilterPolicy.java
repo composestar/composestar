@@ -1,10 +1,9 @@
 package Composestar.RuntimeCore.FLIRT.Policy;
 
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
-import Composestar.RuntimeCore.FLIRT.Message.Message;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-
 import java.util.ArrayList;
+
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].

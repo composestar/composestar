@@ -2,8 +2,6 @@ package Composestar.RuntimeCore.FLIRT.Interpreter;
 
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
-import java.util.Dictionary;
-
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.

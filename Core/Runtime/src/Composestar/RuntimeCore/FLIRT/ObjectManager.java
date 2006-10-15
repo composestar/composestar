@@ -1,22 +1,31 @@
 package Composestar.RuntimeCore.FLIRT;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Vector;
+
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.RepositoryImplementation.*;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.SANE.*;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
-import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
+import Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException;
+import Composestar.RuntimeCore.FLIRT.Exception.ExternalNotFoundException;
 import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
-import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.FLIRT.Policy.FilterPolicy;
 import Composestar.RuntimeCore.FLIRT.Policy.PolicyExecutionResult;
-import Composestar.RuntimeCore.FLIRT.Exception.*;
-import Composestar.RuntimeCore.Utils.*;
-
-import java.util.*;
+import Composestar.RuntimeCore.Utils.ChildRunnable;
+import Composestar.RuntimeCore.Utils.ChildThread;
+import Composestar.RuntimeCore.Utils.Debug;
+import Composestar.RuntimeCore.Utils.Invoker;
+import Composestar.RuntimeCore.Utils.SyncBuffer;
+import Composestar.RuntimeCore.Utils.ThreadPool;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -101,7 +110,7 @@ public class ObjectManager implements ChildRunnable
 	public ObjectManager(Object o, DataStore store) 
 	{
 		this.messageQueue = new SyncBuffer();
-        DataStore store1 = store;
+        //DataStore store1 = store;
         filterModules = new ArrayList();
 		methods = new ArrayList();       //list with methodBinding objects
 		conditions = new ArrayList();    //list with conditionBinding objects

@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-
 import java.util.Dictionary;
+
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -26,7 +26,7 @@ public class SeqFilterCompositionOperatorRuntime extends FilterCompositionOperat
      * @roseuid 40DD59C50060
      */
     public SeqFilterCompositionOperatorRuntime(FilterRuntime previous) {
-        FilterRuntime previous1 = previous;
+        //FilterRuntime previous1 = previous;
     }
     
     /**

@@ -1,14 +1,14 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.RuntimeCore.FLIRT.Interpreter.*;
-import Composestar.RuntimeCore.Utils.Debug;
+import java.util.ArrayList;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
 
 public class FLIRT {
-    private DataStore datastore;
+    //private DataStore datastore;
     
     /**
      * @roseuid 41173DE30394

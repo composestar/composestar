@@ -2,7 +2,6 @@ package Composestar.RuntimeCore.FLIRT.Actions;
 
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 
 /**

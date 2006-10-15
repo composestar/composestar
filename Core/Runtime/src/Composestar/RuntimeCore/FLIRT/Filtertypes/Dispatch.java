@@ -1,12 +1,11 @@
 package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
-import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
-import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
-import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-
 import java.util.Dictionary;
+
+import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
+import Composestar.RuntimeCore.FLIRT.Actions.ContinueToNextFilterAction;
+import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 
 /**

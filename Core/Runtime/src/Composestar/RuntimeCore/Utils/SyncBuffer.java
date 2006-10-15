@@ -38,7 +38,7 @@ public class SyncBuffer
 		return o;
 	}
 
-	private int getSize()
+	public int getSize()
 	{
 		return this.queue.size();
 	}

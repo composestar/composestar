@@ -22,7 +22,7 @@ public class RepositoryLinker
 {
 	public DataStore dataStore;
 	public static HashMap filterModuleReferenceMap = new HashMap();
-	private FilterElementRuntime previous_fer = null;
+	//private FilterElementRuntime previous_fer = null;
 	private FilterRuntime previous_fr = null;
 	private FilterElementCompositionOperatorRuntime previous_operator = null;
     
@@ -284,8 +284,8 @@ public class RepositoryLinker
 			SubstitutionPart substitutionPart = (SubstitutionPart) substitutionParts.next();
 			if( substitutionPart.getTarget() != null 
 				&& substitutionPart.getSelector() != null
-				&& !substitutionPart.getTarget().equals("")
-				&& !substitutionPart.getTarget().equals("") ) 
+				&& !substitutionPart.getTarget().toString().equals("")
+				&& !substitutionPart.getTarget().toString().equals("") ) 
 			{
 				linkSubstitutionPart( substitutionPart, matchingPatternRuntime );
 			}

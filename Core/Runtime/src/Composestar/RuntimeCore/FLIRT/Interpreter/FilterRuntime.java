@@ -1,16 +1,12 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-import Composestar.RuntimeCore.FLIRT.Actions.WaitAction;
-import Composestar.RuntimeCore.FLIRT.Exception.FilterException;
-import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime;
-import Composestar.RuntimeCore.FLIRT.Message.Message;
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
-import Composestar.RuntimeCore.Utils.Debug;
-
 import java.util.ArrayList;
 import java.util.Dictionary;
+
+import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.Utils.Debug;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -21,8 +17,8 @@ import java.util.Dictionary;
  */
 public class FilterRuntime extends ReferenceEntityRuntime implements Interpretable
 {
-    private ComposeStarAction acceptAction;
-    private ComposeStarAction rejectAction;
+    //private ComposeStarAction acceptAction;
+    //private ComposeStarAction rejectAction;
     public FilterCompositionOperatorRuntime rightArgument;
     private ArrayList filterElements = null;
     public FilterTypeRuntime theFilterTypeRuntime;

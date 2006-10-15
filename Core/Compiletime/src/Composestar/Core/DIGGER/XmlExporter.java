@@ -56,7 +56,7 @@ public class XmlExporter
 	/**
 	 * If true add comments
 	 */
-	protected boolean addComments = false;
+	protected boolean addComments;
 
 	protected Graph graph;
 
@@ -137,14 +137,20 @@ public class XmlExporter
 
 	protected void addComment(Element toElement, Node forNode)
 	{
-		if (!addComments) return;
+		if (!addComments)
+		{
+			return;
+		}
 		Comment cmt = xmlDoc.createComment("Node: " + forNode.toString() + " " + forNode.getLabel());
 		toElement.appendChild(cmt);
 	}
 
 	protected void addComment(Element toElement, Edge forEdge)
 	{
-		if (!addComments) return;
+		if (!addComments)
+		{
+			return;
+		}
 		Comment cmt = xmlDoc.createComment("Destination node: " + forEdge.getDestination().toString() + " "
 				+ forEdge.getDestination().getLabel());
 		toElement.appendChild(cmt);

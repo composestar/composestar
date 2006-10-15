@@ -14,7 +14,7 @@ import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime;
  */
 public abstract class FilterFactory
 {
-	protected static FilterFactory instance = null;
+	protected static FilterFactory instance;
 
 	public static FilterFactory getInstance()
 	{

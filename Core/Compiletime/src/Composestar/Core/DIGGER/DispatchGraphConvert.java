@@ -117,8 +117,10 @@ public class DispatchGraphConvert
 					return customXslt.toString();
 				}
 				throw new Exception("Error using custom format: " + customXslt);
-		}
-		throw new Exception("Unsupported format: " + inFormat);
+				
+			default:
+				throw new Exception("Unsupported format: " + inFormat);
+		}		
 	}
 
 	/**

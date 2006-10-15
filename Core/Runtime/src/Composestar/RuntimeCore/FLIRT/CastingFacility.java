@@ -1,12 +1,11 @@
 // .NET specific
 package Composestar.RuntimeCore.FLIRT;
 
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
-import Composestar.RuntimeCore.Utils.Debug;
-
 import java.util.Enumeration;
 import java.util.Iterator;
+
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
+import Composestar.RuntimeCore.Utils.Debug;
 
 /**
  * Summary description for CastingFacility.
@@ -128,7 +127,9 @@ public class CastingFacility
 	{
 		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Object under investigation: " + target + " (type: " + target.getClass().getName() + ").");
 
-		Object args[] = {};
+		// TODO: wtf is this all about? The code isn't even relevant for the noted example
+		/*
+		Object args[] = {};		
 		if (target.getClass().getName().equals("VenusFlyTrap.VenusFlyTrap"))
 		{
 			// target matches type of intercepted classes
@@ -138,6 +139,7 @@ public class CastingFacility
 		{
 			MessageHandlingFacility.handleVoidMethodCall("VenusFlyTrap.LivingBeing", target, "buildBodyParts", args);
 		}
+		*/
 
 		return target;
 	}

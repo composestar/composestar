@@ -1,12 +1,9 @@
 package Composestar.RuntimeCore.FLIRT.Message;
 
-import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
-import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
-import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
-import Composestar.RuntimeCore.Utils.ResponseBuffer;
-import Composestar.RuntimeCore.Utils.Debug;
-
-import java.util.*;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -26,9 +23,11 @@ public class MessageList
     
 	/**
 	 *  Some stuff to indicate the direction of the message
-	 **/
-	public static int OUTGOING = 0;
-	public static int INCOMING = 1;
+	 */
+	/* NOTE: use Message.OUTGOING and Message.INCOMING
+	public static final int OUTGOING = 0;
+	public static final int INCOMING = 1;
+	*/
 	
 
 	private int orgMessagePointer;

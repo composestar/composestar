@@ -1,9 +1,8 @@
 package Composestar.RuntimeCore.FLIRT.Debugger;
 
-import Composestar.RuntimeCore.FLIRT.Message.*;
-import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
-import Composestar.RuntimeCore.FLIRT.Interpreter.*;
-import Composestar.RuntimeCore.FLIRT.Reflection.*;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.FLIRT.Reflection.JoinPoint;
 /**
  * Summary description for Ignore.
  */

@@ -1,6 +1,5 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import Composestar.RuntimeCore.FLIRT.Exception.InvalidConditionException;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].

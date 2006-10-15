@@ -1,16 +1,16 @@
 package Composestar.RuntimeCore.FLIRT.Policy;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.RuntimeCore.CODER.*;
-import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-import Composestar.RuntimeCore.FLIRT.Interpreter.*;
-import Composestar.RuntimeCore.FLIRT.Message.*;
-import Composestar.RuntimeCore.FLIRT.Reflection.*;
-import Composestar.RuntimeCore.FLIRT.Debugger.*;
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
-import Composestar.RuntimeCore.Utils.Debug;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
+import Composestar.RuntimeCore.FLIRT.Debugger.Debugger;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
+import Composestar.RuntimeCore.Utils.Debug;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
