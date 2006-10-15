@@ -28,6 +28,5 @@ pause
 color 07
 
 :success
-pause
 
 @endlocal
