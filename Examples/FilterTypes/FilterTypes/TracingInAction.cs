@@ -22,12 +22,12 @@ namespace FilterTypes
             }
 
             String sender = "unknown";
-            if (context.Sender != null) sender = context.Sender.ToString();
+            if (context.Sender != null) sender = context.Sender.GetType().FullName;
 
             String target = "unknown";
-            if (context.StartTarget != null) target = context.StartTarget.ToString();
+            if (context.StartTarget != null) target = context.StartTarget.GetType().FullName;
 
-            TraceFile.WriteLine("IN Tracing: Sender={0}, Target={1}, MethodName={2} ", sender, target, context.StartSelector);
+            TraceFile.WriteLine("IN Tracing: Sender={0}, Target={1}, Selector={2} ", sender, target, context.StartSelector);
 
             if (context.ArgumentCount > 0)
             {
@@ -38,7 +38,16 @@ namespace FilterTypes
                         TraceFile.WriteLine("  argument {0} = null", i);
                         continue;
                     }
-                    TraceFile.WriteLine("  argument {0} = {1}", i, context.GetArgumentValue(i).ToString());
+
+                    if (context.GetArgumentType(i).IsPrimitive || context.GetArgumentType(i).FullName == "System.String")
+                    {
+                        String argvalue = context.GetArgumentValue(i).ToString();
+                        TraceFile.WriteLine("  argument {0} -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue);
+                    }
+                    else
+                    {
+                        TraceFile.WriteLine("  argument {0} -> {1}", i, context.GetArgumentType(i).FullName);
+                    }
                 }
             }
 

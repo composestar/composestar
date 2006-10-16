@@ -22,10 +22,10 @@ namespace FilterTypes
             }
 
             String sender = "unknown";
-            if (context.Sender != null) sender = context.Sender.ToString();
+            if (context.Sender != null) sender = context.Sender.GetType().FullName;
 
             String target = "unknown";
-            if (context.StartTarget != null) target = context.StartTarget.ToString();
+            if (context.StartTarget != null) target = context.StartTarget.GetType().FullName;
 
             TraceFile.WriteLine("OUT Tracing: Sender={0}, Target={1}, MethodName={2} ", sender, target, context.StartSelector);
 
@@ -37,11 +37,15 @@ namespace FilterTypes
                 }
                 else if (context.ReturnValue == null)
                 {
-                    TraceFile.WriteLine("  return type = {0}, return value = null", context.ReturnType.ToString());
+                    TraceFile.WriteLine("  return type = {0}, return value = null", context.ReturnType.FullName);
+                }
+                else if (context.StartSelector != "ToString")
+                {
+                    TraceFile.WriteLine("  return type = {0}, return value = {1}", context.ReturnType.FullName, context.ReturnValue.ToString());
                 }
                 else
                 {
-                    TraceFile.WriteLine("  return type = {0}, return value = {1}", context.ReturnType.ToString(), context.ReturnValue.ToString());
+                    TraceFile.WriteLine("  return type = {0}, return value = [...]", context.ReturnType.FullName);
                 }
             }
 
