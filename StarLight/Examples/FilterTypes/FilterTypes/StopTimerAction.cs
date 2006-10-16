@@ -57,10 +57,10 @@ namespace FilterTypes
             }
 
             String sender = "unknown";
-            if (context.Sender != null) sender = context.Sender.ToString();
+            if (context.Sender != null) sender = context.Sender.GetType().FullName;
 
             String target = "unknown";
-            if (context.StartTarget != null) target = context.StartTarget.ToString();
+            if (context.StartTarget != null) target = context.StartTarget.GetType().FullName;
              
             String args = "";
             if (context.ArgumentCount > 0)
@@ -70,7 +70,7 @@ namespace FilterTypes
                     if (context.GetArgumentType(i) != null)
                     {
                         if (args != "") args = args + ",";
-                        args = args + context.GetArgumentType(i).ToString();
+                        args = args + context.GetArgumentType(i).GetType().FullName;
                     }
                 }
             }
