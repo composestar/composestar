@@ -3,8 +3,8 @@ concern ParagraphTracing in iTextSharp.Concerns
 	filtermodule FM1
 	{
 		inputfilters
-			trace_add: Tracing = { True ~> [*.ToString] };
-			time_add: Profiling = { True ~> [*.ToString] }
+			trace_add: Tracing = { True => [*.*] };
+			time_add: Profiling = { True => [*.*] }
 	}
 
 	superimposition

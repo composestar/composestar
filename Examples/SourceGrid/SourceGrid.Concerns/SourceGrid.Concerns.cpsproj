@@ -21,7 +21,7 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-		<Reference Include="mscorlib" />
+    <Reference Include="mscorlib" />
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
@@ -30,16 +30,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceGrid\SourceGrid.csproj">
-      <Name>SourceGrid</Name>
-      <Project>{DA47B108-21C8-4293-8D4E-56FFF1ED45A5}</Project>
+    <ProjectReference Include="..\..\FilterTypes\FilterTypes\FilterTypes.csproj">
+      <Name>FilterTypes</Name>
+      <Project>{015c33a1-b6a8-4dfa-9baf-29744096e160}</Project>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\SourceGrid.Extensions\SourceGrid.Extensions.csproj">
       <Name>SourceGrid.Extensions</Name>
       <Project>{81925514-5708-4649-9538-36CAD48CF2D5}</Project>
-    </ProjectReference>   
+    </ProjectReference>
+    <ProjectReference Include="..\SourceGrid\SourceGrid.csproj">
+      <Name>SourceGrid</Name>
+      <Project>{da47b108-21c8-4293-8d4e-56fff1ed45a5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsFormsSample\WindowsFormsSample.csproj">
+      <Name>WindowsFormsSample</Name>
+      <Project>{6a077a72-7cef-4198-96cb-1de418f575f2}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
-    <!--Import the standards targets-->
+  <ItemGroup>
+    <Concern Include="GridConcern.cps" />
+    <Concern Include="RowConcern.cps" />
+  </ItemGroup>
+  <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
 </Project>
