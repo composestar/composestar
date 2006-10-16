@@ -38,6 +38,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="CompilerTask.cs" />
     <Compile Include="ConfigWriter.cs" />
+    <Compile Include="GenConfigTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

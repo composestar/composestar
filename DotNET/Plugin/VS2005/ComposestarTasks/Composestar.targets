@@ -1,34 +1,40 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!--Import the standards targets-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets"/>
 
   <!--Reference the assembly where our tasks are defined-->
-  <UsingTask TaskName="Trese.ComposestarTasks.ComposestarCompilerTask" AssemblyFile="ComposestarTasks.dll" />
-  <UsingTask TaskName="CreateCSharpManifestResourceName" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+  <UsingTask TaskName="Trese.ComposestarTasks.GenConfigTask" AssemblyFile="ComposestarTasks.dll"/>
+  <UsingTask TaskName="Trese.ComposestarTasks.ComposestarCompilerTask" AssemblyFile="ComposestarTasks.dll"/>
 
-  <!--Compile target (this is the target that calls the compiler task)-->
-  <Target Name="ComposeStarCompilerTarget">
-    <Message Text="Building: @(IntermediateAssembly)"/>
+	<Target
+		  Name="ComposeStarGen"
+		  DependsOnTargets="ResolveReferences">
+		<Message Text="Generating BuildConfiguration.xml"	/>
     <GetFrameworkPath>
       <Output TaskParameter="Path" PropertyName="FrameworkPath"/>
     </GetFrameworkPath>
     <GetFrameworkSdkPath>
       <Output TaskParameter="Path" PropertyName="FrameworkSdkPath"/>
     </GetFrameworkSdkPath>
-    <ComposestarCompilerTask
-      ProjectName="$(MSBuildProjectName)" 
-      ProjectPath="$(MSBuildProjectDirectory)"
-      BuildPath="$(MSBuildProjectDirectory)\$(OutputPath)" 
-      SourceFiles="@(Compile)"
-      ReferencedAssemblies="@(ReferencePath)"
-      OutputPath="$(MSBuildProjectDirectory)\$(OutputPath)"
-      OutputAssembly="@(IntermediateAssembly)"
-      FrameworkPath="$(FrameworkPath)" 
-      FrameworkSdkPath="$(FrameworkSdkPath)"
-    />
+		<GenConfigTask
+        ProjectName="$(Name)" 
+        ProjectPath="$(MSBuildProjectDirectory)"
+        SourceFiles="@(Compile)"
+        Dependencies="@(ReferencePath)"
+        OutputPath="$(MSBuildProjectDirectory)\$(OutputPath)"
+			  StartupObject="$(StartupObject)" 
+        FrameworkPath="$(FrameworkPath)" 
+        FrameworkSdkPath="$(FrameworkSdkPath)"/>
+	</Target>
+  
+	<!--Compile target (this is the target that calls the compiler task)-->
+  <Target Name="ComposeStarCompilerTarget">
+    <Message Text="Building: @(IntermediateAssembly)"/>
+		<ComposestarCompilerTask/>
 <!--
-      ResourceFiles="@(ManifestResourceWithNoCulture);@(ManifestNonResxWithNoCultureOnDisk);@(CompiledLicenseFile)"
+			BuildPath="$(MSBuildProjectDirectory)\$(OutputPath)" 
+      OutputAssembly="@(IntermediateAssembly)"
       MainFile="$(MainFile)"
       TargetKind="$(OutputType)"
       IncludeDebugInformation="$(IncludeDebugInformation)"
@@ -41,22 +47,22 @@
     Inputs="@(Compile);@(ReferencePath)"
     Outputs="@(IntermediateAssembly)" 
     DependsOnTargets="ComposeStarCompilerTarget"
-  />
+ />
 <!--
     DependsOnTargets="$(CoreCompileDependsOn);ComposeStarCompilerTarget"
 -->
-  <PropertyGroup>
-    <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
-  </PropertyGroup>
-
+<!--
+  <UsingTask
+	    TaskName="CreateCSharpManifestResourceName" 
+			AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+			
   <Target
       Name="CreateManifestResourceNames"
       Condition="'@(ResxWithNoCulture)@(ResxWithCulture)@(NonResxWithNoCulture)@(NonResxWithCulture)'!=''"
-      DependsOnTargets="$(CreateManifestResourceNamesDependsOn)"
-  >
+      DependsOnTargets="$(CreateManifestResourceNamesDependsOn)">
 
-    <!-- Create the target resource names for non-culture resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(ResxWithNoCulture)'!=''"
+		<CreateCSharpManifestResourceName
+			    Condition="'@(ResxWithNoCulture)'!=''"
           ResourceFiles="@(ResxWithNoCulture)"
           RootNamespace="$(RootNamespace)">
 
@@ -64,8 +70,8 @@
 
     </CreateCSharpManifestResourceName>
 
-    <!-- Create the target resource names for culture resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(ResxWithCulture)'!=''"
+    <CreateCSharpManifestResourceName
+			    Condition="'@(ResxWithCulture)'!=''"
           ResourceFiles="@(ResxWithCulture)"
           RootNamespace="$(RootNamespace)">
 
@@ -73,8 +79,8 @@
 
     </CreateCSharpManifestResourceName>
 
-    <!-- Create the target resource names for non-culture non-resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(NonResxWithNoCulture)'!=''"
+    <CreateCSharpManifestResourceName
+			    Condition="'@(NonResxWithNoCulture)'!=''"
           ResourceFiles="@(NonResxWithNoCulture)"
           RootNamespace="$(RootNamespace)">
 
@@ -82,8 +88,8 @@
 
     </CreateCSharpManifestResourceName>
 
-    <!-- Create the target resource names for culture non-resx files. -->
-    <CreateCSharpManifestResourceName Condition="'@(NonResxWithCulture)'!=''"
+    <CreateCSharpManifestResourceName
+			    Condition="'@(NonResxWithCulture)'!=''"
           ResourceFiles="@(NonResxWithCulture)"
           RootNamespace="$(RootNamespace)">
 
@@ -91,5 +97,5 @@
 
     </CreateCSharpManifestResourceName>
   </Target>
-
+-->
 </Project>

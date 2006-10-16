@@ -21,13 +21,14 @@ namespace Trese.ComposestarTasks
 			XmlWriterSettings settings = new XmlWriterSettings();
 			settings.Indent = true;
 			settings.IndentChars = "  ";
+			
 			using (XmlWriter xw = XmlWriter.Create(c_filename, settings))
 			{
 				// xml declaration
 				xw.WriteStartDocument();
 
 				// generation info
-				string info = String.Format("This file was automaticly generated on {0} by the Composestar task", DateTime.Now.ToString());
+				string info = String.Format("This file was automaticly generated on {0} by Compose* GenConfigTask", DateTime.Now.ToString());
 				xw.WriteComment(info);
 
 				// document root
@@ -52,10 +53,10 @@ namespace Trese.ComposestarTasks
 		private void WriteProjects(XmlWriter xw)
 		{
 			xw.WriteStartElement("Projects");
-			xw.WriteAttributeString("executable", m_config.executable);
-			xw.WriteAttributeString("applicationStart", m_config.applicationStart);
+			xw.WriteAttributeString("buildDebugLevel", m_config.buildDebugLevel);
 			xw.WriteAttributeString("runDebugLevel", m_config.runDebugLevel);
 			xw.WriteAttributeString("outputPath", m_config.outputPath);
+			xw.WriteAttributeString("applicationStart", m_config.applicationStart);
 
 			// individual project items
 			foreach (Project p in m_config.projects)
@@ -96,18 +97,7 @@ namespace Trese.ComposestarTasks
 				xw.WriteEndElement();
 			}
 			xw.WriteEndElement();
-		/*
-			// TypeSources
-			xw.WriteStartElement("TypeSources");
-			foreach (TypeSource ts in p.typeSources)
-			{
-				xw.WriteStartElement("TypeSource");
-				xw.WriteAttributeString("name", ts.name);
-				xw.WriteAttributeString("fileName", ts.file);
-				xw.WriteEndElement();
-			}
-			xw.WriteEndElement();
-		*/
+
 			// /Project
 			xw.WriteEndElement();
 		}
@@ -140,7 +130,6 @@ namespace Trese.ComposestarTasks
 		private void WriteSettings(XmlWriter xw)
 		{
 			xw.WriteStartElement("Settings");
-			xw.WriteAttributeString("buildDebugLevel", m_config.buildDebugLevel);
 
 			// modules
 			WriteModuleSettings(xw);

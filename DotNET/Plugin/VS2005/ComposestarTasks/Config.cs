@@ -6,7 +6,6 @@ namespace Trese.ComposestarTasks
 {
 	class Config
 	{
-		public string executable;
 		public string applicationStart;
 		public string runDebugLevel;
 		public string buildDebugLevel;
