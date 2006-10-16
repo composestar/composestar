@@ -193,12 +193,12 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //store type:
                 repository.storeTypeElement( storedType );
                 
-                //commit on every ten stored typeelements:
-//                count++;
-//                if ( count == 10 ){
-//                	repository.commit();
-//                	count = 0;
-//                }
+                //commit on every onehundred stored typeelements:
+                count++;
+                if ( count == 100 ){
+                	repository.commit();
+                	count = 0;
+                }
             }
         }
     }
