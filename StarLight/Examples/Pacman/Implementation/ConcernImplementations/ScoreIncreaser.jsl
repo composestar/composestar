@@ -24,7 +24,7 @@ public class ScoreIncreaser
 		}
 		else 
 		{
-			System.out.println("\n\n*** Invalid argument count! Message was for '" + context.get_MethodName() + "'. ***\n\n");
+			System.out.println("\n\n*** Invalid argument count! Message was for '" + context.get_StartTarget() + "'. ***\n\n");
 		}
 		
 	}

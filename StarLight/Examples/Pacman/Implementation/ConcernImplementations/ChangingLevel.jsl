@@ -83,7 +83,7 @@ public class ChangingLevel
 	{
 		//after
 
-		Pacman target = (Pacman) context.get_Target();
+		Pacman target = (Pacman) context.get_CurrentTarget();
 
 		if (pacman.Game.getLevel() % 2 == 1) 
 		{
