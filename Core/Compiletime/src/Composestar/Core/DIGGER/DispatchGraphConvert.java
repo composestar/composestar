@@ -23,8 +23,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import Composestar.Utils.FileUtils;
-
 /**
  * Converts the generated DispatchGraph.xml to an other form through xslt
  * 
@@ -43,6 +41,12 @@ public class DispatchGraphConvert
 	 * Output to GraphViz DOT format
 	 */
 	public static final int FORMAT_DOT = 1;
+	
+	/**
+	 * Produces a GraphML file
+	 * http://graphml.graphdrawing.org
+	 */
+	public static final int FORMAT_GRAPHML = 2;
 
 	protected InputStream is;
 
@@ -91,6 +95,10 @@ public class DispatchGraphConvert
 		{
 			format = FORMAT_DOT;
 		}
+		else if (inFormat.equals("graphml"))
+		{
+			format = FORMAT_GRAPHML;
+		}
 		else
 		{
 			format = FORMAT_CUSTOM;
@@ -111,6 +119,8 @@ public class DispatchGraphConvert
 		{
 			case FORMAT_DOT:
 				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphVizDot.xslt";
+			case FORMAT_GRAPHML:
+				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphML.xslt";
 			case FORMAT_CUSTOM:
 				if ((customXslt != null) && (customXslt.exists()))
 				{
@@ -198,7 +208,7 @@ public class DispatchGraphConvert
 			}
 			else
 			{
-				xtd.setOutput(new FileOutputStream(FileUtils.replaceExtension(args[i], "dot")));
+				xtd.setOutput(System.out);
 			}
 			xtd.transform();
 		}
