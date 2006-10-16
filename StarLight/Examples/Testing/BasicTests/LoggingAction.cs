@@ -11,7 +11,7 @@ namespace BasicTests
     {
         public override void Execute(Composestar.StarLight.ContextInfo.JoinPointContext context)
         {
-            Console.WriteLine("Log : " + context.MethodName);
+            Console.WriteLine("Log : " + context.StartSelector);
         }
     }
 }

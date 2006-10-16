@@ -21,10 +21,16 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>..\BasicTests\bin\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>C:\Program Files\MSBuild\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FilterTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>FilterTypes</Name>
+      <AssemblyName>FilterTypes.dll</AssemblyName>
+      <HintPath>..\..\FilterTypes\FilterTypes\bin\Debug\FilterTypes.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
