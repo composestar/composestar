@@ -11,6 +11,7 @@
 package Composestar.DotNET.LAMA;
 
 import Composestar.Core.LAMA.*;
+import Composestar.Repository.LanguageModel.MethodElement;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,7 +47,9 @@ public class DotNETMethodInfo extends MethodInfo {
     public boolean IsStatic;
     public boolean IsVirtual;
     public boolean IsDeclaredHere;
-        
+    
+    public MethodElement methodElement;
+    
     /**
      * @roseuid 401B84CF0212
      */
@@ -394,6 +397,24 @@ public class DotNETMethodInfo extends MethodInfo {
         result.add("final");
       return result;
     }
+
+    
+    
+	/**
+	 * @return the methodElement
+	 */
+	public MethodElement getMethodElement()
+	{
+		return methodElement;
+	}
+
+	/**
+	 * @param methodElement the methodElement to set
+	 */
+	public void setMethodElement(MethodElement methodElement)
+	{
+		this.methodElement = methodElement;
+	}
 
 	/**
 	 * Custom deserialization of this object

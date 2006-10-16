@@ -44,6 +44,9 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
+import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.Repository.RepositoryAccess;
 import Composestar.Repository.LanguageModel.CallElement;
 import Composestar.Repository.LanguageModel.MethodBody;
@@ -62,18 +65,19 @@ public class StarLightEmitterRunner implements CTCommonModule
     {
         repository = new RepositoryAccess();
         
-        // Collect all types from the persistent repository
+        // Emit all types to persistent repository
         emitTypes();
     }
     
     private void emitTypes() throws ModuleException
     {
+    	int count = 0;
         DataStore dataStore = DataStore.instance();
         
         Iterator concernIterator = dataStore.getAllInstancesOf( Concern.class );
         while( concernIterator.hasNext() ){
             Concern concern = (Concern) concernIterator.next();
-            Type type = (Type) concern.getPlatformRepresentation();
+            DotNETType type = (DotNETType) concern.getPlatformRepresentation();
             
             if ( type == null )
                 continue;
@@ -83,7 +87,8 @@ public class StarLightEmitterRunner implements CTCommonModule
                 FilterModuleOrder order = 
                     (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
 
-                TypeElement storedType = repository.GetTypeElement( type.fullName() );
+//                TypeElement storedType = repository.GetTypeElement( type.fullName() );
+                TypeElement storedType = type.getTypeElement();
 
                 Iterator filterModules = order.orderAsList().iterator();
                 while( filterModules.hasNext() ){
@@ -187,6 +192,13 @@ public class StarLightEmitterRunner implements CTCommonModule
 
                 //store type:
                 repository.storeTypeElement( storedType );
+                
+                //commit on every ten stored typeelements:
+//                count++;
+//                if ( count == 10 ){
+//                	repository.commit();
+//                	count = 0;
+//                }
             }
         }
     }
@@ -233,14 +245,13 @@ public class StarLightEmitterRunner implements CTCommonModule
     
     private void emitMethods(Type type, TypeElement storedType) throws ModuleException
     {
-        //Iterator methods = type.getMethods().iterator();
-        List storedMethods = repository.getMethodElements( storedType );
-        Hashtable index = createMethodIndex( storedMethods );
-        
+    	Debug.out( Debug.MODE_DEBUG, "Emitter",  "Emit type: " + type.fullName());
+    	
         Iterator methods = type.getMethods().iterator();
         
         while( methods.hasNext() ){
-            MethodInfo method = (MethodInfo) methods.next();
+        	DotNETMethodInfo method = (DotNETMethodInfo) methods.next();
+            Debug.out( Debug.MODE_DEBUG, "Emitter",  "  Emit method: " + method.name());
             MethodElement storedMethod;
             
             //get the block containing the filterinstructions:
@@ -250,7 +261,8 @@ public class StarLightEmitterRunner implements CTCommonModule
             
                 //get stored method:
                 String key = createKey( method );
-                storedMethod = (MethodElement) index.get( key );
+                
+                storedMethod = method.getMethodElement();
                 storedMethod.set_HasInputfilters( true );
                 Debug.out( Debug.MODE_DEBUG, "Emitter",  "key:" +key);
 
@@ -272,11 +284,6 @@ public class StarLightEmitterRunner implements CTCommonModule
                 // emit calls:
                 emitCalls( method, storedMethod );
             }
-            
-            
-            
-            
-            
         }
     }
     
@@ -325,18 +332,15 @@ public class StarLightEmitterRunner implements CTCommonModule
     
     private void emitCalls( MethodInfo method, MethodElement storedMethod ){
         MethodBody body = storedMethod.get_MethodBody();
-        
-        List storedCalls = repository.getCallElements( storedMethod.get_MethodBody() );
-        Hashtable index = createCallIndex( storedCalls );
-        
+                
         Iterator calls = method.getCallsToOtherMethods().iterator();
         
         while( calls.hasNext() ){
-            CallToOtherMethod call = (CallToOtherMethod) calls.next();
+            DotNETCallToOtherMethod call = (DotNETCallToOtherMethod) calls.next();
             
             //get stored call:
             String key = createKey( call );
-            CallElement storedCall = (CallElement) index.get( key );
+            CallElement storedCall = call.getCallElement();
             
             //add outputfilter code:
             Block code = ModelBuilder.getOutputFilterCode( call );

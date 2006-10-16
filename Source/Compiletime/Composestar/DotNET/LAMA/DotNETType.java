@@ -29,6 +29,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Repository.LanguageModel.TypeElement;
 
 /**
  * Corresponds to the Type class in the .NET framework. For more information on 
@@ -88,6 +89,8 @@ public class DotNETType extends Type {
     
 	public String fromDLL; // Added by TypeHarvester and TypeCollector for incremental type collecting
 
+	public TypeElement typeElement;
+	
     /**
      * @roseuid 4028E9FF026C
      */
@@ -972,6 +975,25 @@ public class DotNETType extends Type {
 					UnitRegister.instance().registerLanguageUnit(param);
 			}
 		}
+	}
+	
+	
+	
+
+	/**
+	 * @return the typeElement
+	 */
+	public TypeElement getTypeElement()
+	{
+		return typeElement;
+	}
+
+	/**
+	 * @param typeElement the typeElement to set
+	 */
+	public void setTypeElement(TypeElement typeElement)
+	{
+		this.typeElement = typeElement;
 	}
 
 	/**

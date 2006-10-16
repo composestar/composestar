@@ -180,4 +180,28 @@ public class RepositoryAccess {
     public void storeCondition( Condition condition ){
         container.StoreObject( condition );
     }
+
+
+
+	/**
+	 * 
+	 * @see Composestar.Repository.DataStoreContainer#commit()
+	 */
+	public void commit()
+	{
+		container.commit();
+	}
+
+
+
+	/**
+	 * 
+	 * @see Composestar.Repository.DataStoreContainer#rollback()
+	 */
+	public void rollback()
+	{
+		container.rollback();
+	}
+    
+    
 }

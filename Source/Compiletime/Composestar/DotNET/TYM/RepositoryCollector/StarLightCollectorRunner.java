@@ -25,6 +25,7 @@ import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.TYM.TypeCollector.CollectorRunner;
+import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETFieldInfo;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETParameterInfo;
@@ -301,7 +302,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			//Debug.out(Debug.MODE_DEBUG,"TYM","Retrieving type '"+storedType.get_FullName()+"'");
 			
 			DotNETType type = new DotNETType();
-			
+			type.setTypeElement(storedType);
 			type.setName(storedType.get_Name());
 			
 			if (storedType.get_FullName() != null) {
@@ -403,6 +404,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			//Debug.out(Debug.MODE_DEBUG,"TYM","   Retrieving method '"+storedMethod.get_Signature()+"'");
 			
 			DotNETMethodInfo method = new DotNETMethodInfo();
+			method.setMethodElement( storedMethod );
 						
             if( storedMethod.get_Name() != null ) {
                 method.setName( storedMethod.get_Name() );
@@ -494,7 +496,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		{
 			CallElement storedCall = (CallElement)callIterator.next();
 			
-			CallToOtherMethod call = new CallToOtherMethod();
+			DotNETCallToOtherMethod call = new DotNETCallToOtherMethod();
+			call.setCallElement( storedCall );
 			
 			// TODO: this mapping correct ?
 			call.OperationName = storedCall.get_MethodReference();
