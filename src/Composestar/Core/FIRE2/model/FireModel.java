@@ -39,7 +39,11 @@ public class FireModel {
     private FlowModel[] flowModels;
     private ExecutionModel[] executionModels;
     private FilterModule[] filterModules;
-    
+    /**
+     * Cache of messages to prevent the creation of equal messagesSelectors
+     * when a getExecutionModel method is called.
+     */
+    private static Hashtable messageSelectorCache = new Hashtable();
     
     public final static int NO_SIGNATURE_CHECK = 0;
     public final static int LOOSE_SIGNATURE_CHECK = 1;
@@ -379,14 +383,22 @@ public class FireModel {
     }
     
     
-    public static Message getEntranceMessage( String selector ){
-        Target t = new Target();
-        t.name = "inner";
-        MessageSelector s = new MessageSelector(new MessageSelectorAST());
-        s.setName(selector);
-        
-        return new Message( t, s );
-    }
+    public static Message getEntranceMessage(String selector)
+	{
+		Target t = Message.INNER_TARGET;
+		MessageSelector s;
+		if (messageSelectorCache.containsKey(selector))
+		{
+			s = (MessageSelector) messageSelectorCache.get(selector);
+		}
+		else{
+			s = new MessageSelector(new MessageSelectorAST());
+			s.setName(selector);
+			messageSelectorCache.put( selector, s );
+		}
+
+		return new Message(t, s);
+	}
     
     public ExecutionModel getExecutionModel(){
         return new ExtendedExecutionModel();
