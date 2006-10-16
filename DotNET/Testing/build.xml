@@ -27,20 +27,7 @@
 		<taskdef name="cstarBuildGen" classname="Composestar.Ant.Taskdefs.CstarBuildGen"/>
 		<taskdef name="cstarComp" classname="Composestar.Ant.Taskdefs.CstarComp"/>
 		<taskdef name="cstarTest" classname="Composestar.Ant.Taskdefs.CstarTest"/>
-	</target>
-	
-	<target name="test_convert" depends="init,init_tasks" description="Converts project files from VS2003 to VS2005">
-		<cstarConvert xslt="${basedir}/AntSystemTest/genCpsProject.xslt">
-			<FileSet dir="${build.dotnet}/Examples">
-				<include name="**/*.vjsproj"/>
-				<include name="**/*.csproj"/>
-				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
-				<exclude name="AOSD2006Demo/ProtocolLib/*"/>
-				<exclude name="DesignPatterns/Annotations/*"/>
-				<exclude name="Jukebox/jukeboxframe/*"/>
-				<exclude name="Rot13/Rot13Filter/*"/>
-			</FileSet>
-		</cstarConvert>
+		<taskdef name="msbatchbuild" classname="Composestar.Ant.Taskdefs.MSBatchBuild"/>
 	</target>
 
 	<target name="test_bgen" depends="init,init_tasks">
@@ -105,4 +92,34 @@
 			</FileSet>
 		</cstarTest>
 	</target>
+
+	<!-- for MSBuild -->
+	
+	<target name="test_convert" depends="init,init_tasks" description="Converts project files from VS2003 to VS2005">
+		<cstarConvert xslt="${basedir}/AntSystemTest/genCpsProject.xslt">
+			<FileSet dir="${build.dotnet}/Examples">
+				<include name="**/*.vjsproj"/>
+				<include name="**/*.csproj"/>
+				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
+				<exclude name="AOSD2006Demo/ProtocolLib/*"/>
+				<exclude name="DesignPatterns/Annotations/*"/>
+				<exclude name="Jukebox/jukeboxframe/*"/>
+				<exclude name="Rot13/Rot13Filter/*"/>
+			</FileSet>
+		</cstarConvert>
+	</target>
+
+	<target name="test_msbuild" depends="init,test_convert">
+		<msbatchbuild>
+			<FileSet dir="${build.dotnet}/Examples">
+				<include name="**/*.cpsproj"/>
+				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
+				<exclude name="AOSD2006Demo/ProtocolLib/*"/>
+				<exclude name="DesignPatterns/Annotations/*"/>
+				<exclude name="Jukebox/jukeboxframe/*"/>
+				<exclude name="Rot13/Rot13Filter/*"/>
+			</FileSet>
+		</msbatchbuild>
+	</target>
+
 </project>

@@ -59,7 +59,7 @@ public final class CstarBuildGen extends TransformTask
 	 */
 	public void setXslt(String xslt)
 	{
-		m_xslt = xslt;
+		super.setXslt(xslt);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public final class CstarBuildGen extends TransformTask
 	 */
 	public void addFileset(FileSet fs)
 	{
-		m_filesets.add(fs);
+		super.addFileset(fs);
 	}
 
 	/**

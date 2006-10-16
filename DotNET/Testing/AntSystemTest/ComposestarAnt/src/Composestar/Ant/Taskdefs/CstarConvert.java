@@ -29,12 +29,12 @@ public final class CstarConvert extends TransformTask
 	
 	public void setXslt(String xslt)
 	{
-		m_xslt = xslt;
+		super.setXslt(xslt);
 	}
 	
 	public void addFileset(FileSet fs)
 	{
-		m_filesets.add(fs);
+		super.addFileset(fs);
 	}
 
 	public void execute() throws BuildException
