@@ -24,7 +24,7 @@
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>C:\Program Files\MSBuild\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FilterTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -49,5 +49,5 @@
   </ItemGroup>
   <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\1.0\StarLight.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />
 </Project>

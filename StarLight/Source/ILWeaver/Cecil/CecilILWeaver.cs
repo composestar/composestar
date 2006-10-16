@@ -31,6 +31,11 @@ namespace Composestar.StarLight.ILWeaver
         private TimeSpan m_LastDuration;
         private CecilWeaverConfiguration _configuration;
         private ILanguageModelAccessor _languageModelAccessor;
+        private int _internalsAdded;
+        private int _externalsAdded;
+        private int _outputFiltersAdded;
+        private int _inputFiltersAdded;
+        private bool _typeChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CecilILWeaver"/> class.
@@ -86,6 +91,12 @@ namespace Composestar.StarLight.ILWeaver
             {
                 throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.InputImageNotFound, _configuration.InputImagePath));
             }
+
+            // Reset counters
+            _internalsAdded = 0;
+            _externalsAdded = 0;
+            _outputFiltersAdded = 0;
+            _inputFiltersAdded = 0;
 
             // Start timing
             Stopwatch sw = new Stopwatch();
@@ -160,6 +171,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Stop timing
                 sw.Stop();
                 m_LastDuration = sw.Elapsed;
+                // Return
                 return;
             } // if
 
@@ -169,6 +181,8 @@ namespace Composestar.StarLight.ILWeaver
                 TypeDefinition type = targetAssembly.MainModule.Types[typeElement.FullName];
                 if (type == null)
                     continue;
+
+                _typeChanged = false;
 
                 // Get and add the externals for this type
                 List<External> externalsList = null;
@@ -186,7 +200,7 @@ namespace Composestar.StarLight.ILWeaver
                     foreach (MethodDefinition method in type.Methods)
                     {
 
-                        // Get the methodinfo
+                        // Get the methodinfo based on the signature
                         MethodElement methodElement = GetMethodFromList(methodsInType, method.ToString());
 
                         // Skip if there is no methodinfo
@@ -198,20 +212,26 @@ namespace Composestar.StarLight.ILWeaver
                     } // foreach  (method)
                 } // if
 
-                // Import the modifying type into the AssemblyDefinition
-                targetAssembly.MainModule.Import(type);
+                // Import the changed type into the AssemblyDefinition
+                if (_typeChanged) targetAssembly.MainModule.Import(type);
 
             } // foreach  (typeElement)
   
-            // Save the modified assembly
-            try
+            // Save the modified assembly only if it is changed.
+            if (_inputFiltersAdded > 0 || _outputFiltersAdded > 0 || _internalsAdded > 0 || _externalsAdded > 0)
             {
-                AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
-            }
-            catch (Exception ex)
-            {
-                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
-            }
+                try
+                {
+                    AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
+                } // try
+                catch (Exception ex)
+                {
+                    throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
+                } // catch
+
+                // TODO remove debugging info, maybe convert to some sort of diagnostic system?
+                Console.WriteLine("Added: {0} internals, {1} externals, {2} inputfilters, {3} outputfilters", _internalsAdded, _externalsAdded, _inputFiltersAdded, _outputFiltersAdded);
+            } // if
 
             // Stop timing
             sw.Stop();
@@ -269,6 +289,9 @@ namespace Composestar.StarLight.ILWeaver
 
                 // Add the field
                 type.Fields.Add(internalDef);
+
+                // Increase the number of internals
+                _internalsAdded++;
 
                 // Add initialization code to type constructor(s)
                 if (internalTypeElement.IsClass && internalTypeElement.Name != "String" && internalTypeElement.Name != "Array")
@@ -352,10 +375,12 @@ namespace Composestar.StarLight.ILWeaver
 
                 // Create the field
                 externalDef = new FieldDefinition(external.Name, externalTypeRef, externalAttrs);
-
-
+                
                 // Add the field
                 type.Fields.Add(externalDef);
+
+                // Increase the number of externals
+                _externalsAdded++;
 
                 // Get the method referenced by the external
                 TypeElement initTypeElement = _languageModelAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
@@ -429,14 +454,15 @@ namespace Composestar.StarLight.ILWeaver
         /// Weaves the input filters.
         /// </summary>
         /// <param name="targetAssembly">The target assembly.</param>
-        /// <param name="method">The method.</param>
-        /// <param name="methodElement">The method element.</param>
+        /// <param name="method">The method we are weaving in.</param>
+        /// <param name="methodElement">The method element containing the weaving instructions.</param>
         /// <remarks>
         /// InputFilters are added at the top of the methodbody.
         /// We call a visitor to generate IL instructions and we add those to the top of the method.
         /// </remarks>
         private void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, MethodElement methodElement)
         {
+
             #region Check for null and retrieve inputFilter
 
             if (targetAssembly == null)
@@ -482,7 +508,7 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (Exception ex)
             {
-                // Close the database and throw the error wrapped in an ILWeaverException
+                // Close the database and throw the error wrapped in an ILWeaverException                 
                 throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
             }
 
@@ -492,6 +518,9 @@ namespace Composestar.StarLight.ILWeaver
                 // Add the instructions
                 int instructionsCount = 0;
                 instructionsCount += InsertBeforeInstructionList(ref worker, ins, visitor.Instructions);
+
+                // Increase the number of inputfilters added
+                _inputFiltersAdded++;
             }
 
             //
@@ -587,6 +616,9 @@ namespace Composestar.StarLight.ILWeaver
                         int instructionsCount = 0;
                         // Add the instructions
                         instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
+
+                        // Increase the number of outputfilters added
+                        _outputFiltersAdded++;
                     }
                 }
 

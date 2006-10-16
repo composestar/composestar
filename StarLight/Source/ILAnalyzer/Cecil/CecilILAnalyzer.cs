@@ -811,7 +811,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 if (assemblyNames.Count == 0) return new List<AssemblyElement>();
 
                 // TODO remove console.writeline
-                Console.WriteLine("BinFolder voor assembly resolver: "+_binFolder);
+                //Console.WriteLine("BinFolder voor assembly resolver: "+_binFolder);
                 // Use the Cecil assembly resolver to find the missing assemblies
                 Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver dar = new Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver(_binFolder);//new DefaultAssemblyResolver();
                 

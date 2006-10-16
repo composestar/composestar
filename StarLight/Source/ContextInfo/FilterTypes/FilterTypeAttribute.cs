@@ -8,7 +8,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
     /// Generate documentation here...
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public class FilterTypeAttribute : Attribute
+    public sealed class FilterTypeAttribute : Attribute
     {
 
         #region Private Variables
