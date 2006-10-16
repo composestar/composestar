@@ -56,7 +56,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PdfDocumentConcern.cps" />
+    <Concern Include="PdfDocumentConcern.cps" />
   </ItemGroup>
   <ItemGroup>
     <Concern Include="PhraseConcern.cps">
