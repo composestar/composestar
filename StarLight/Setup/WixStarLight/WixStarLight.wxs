@@ -6,10 +6,12 @@
 -->
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <?include $(var.VariablesFile)?>
-  <Product Id='390B533D-4CFA-4ff3-A240-CC7BA2A49CE7' UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductShortName) $(var.ProductVersionText)" Version="$(var.ProductVersion)" Language="1033" Manufacturer="$(var.Manufacturer)">
+  <Product Id='390B533D-4CFA-4ff3-A240-CC7BA2A49CE7' UpgradeCode="$(var.UpgradeCode)" 
+  Name="$(var.ProductShortName) $(var.ProductVersionText)" Version="$(var.ProductVersion)" Language="1033" Manufacturer="$(var.Manufacturer)">
 
     <Package Id='78441E26-4E03-4d8d-80AA-865E5B06BE57' Keywords='Installer'
-             Compressed="yes" Description="$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))" InstallerVersion="200" ShortNames="no" Manufacturer="$(var.Manufacturer)" 
+             Compressed="yes" Description="$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))" 
+             InstallerVersion="200" ShortNames="no" Manufacturer="$(var.Manufacturer)" Platforms="Intel"
       Comments='ComposeStar StarLight is a project of the University of Twente.' Languages='1033' />
 
     <Media Id='1' Cabinet='StarLight$(var.ProductVersionText).cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
@@ -39,7 +41,9 @@
     <Property Id='ARPURLINFOABOUT'>ComposeStar StarLight offers AOP for .NET applications using the composition filters model.</Property>
     <Property Id='ARPURLUPDATEINFO'>http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome</Property>
     <Property Id='ARPHELPTELEPHONE'>http://janus.cs.utwente.nl:8000/twiki/bin/view/StarLight/WebHome</Property>
-
+    <Property Id="CustomSetupIcon"><![CDATA[SetupTypeCust]]></Property>
+    <Property Id="CompleteSetupIcon"><![CDATA[SetupTypeComp]]></Property>
+    <Property Id="TypicalSetupIcon"><![CDATA[SetupTypeTyp]]></Property>
 
     <!-- Launch conditions -->
     <Condition Message='This setup requires the .NET Framework 2.0 or higher.'>
@@ -48,6 +52,7 @@
     <Condition Message="An administrator must approve or install [ProductName]."> Privileged </Condition>
     <Condition Message="A later version of [ProductName] is already installed."> NOT NEWERVERSIONDETECTED </Condition>
     <Condition Message="[ProductName] requires Visual Studio 2005."> DEVENV_DIR_2005 </Condition>
+    <CustomAction Id="NewerVersionInstalled" Error="A newer version of this product is already installed." />
 
     <Property Id="JAVALOC">
       <RegistrySearch Id='RegExistingJavaFolder' Type='raw'
@@ -92,7 +97,7 @@
       </Feature>
       <Feature Id='MSBuild' Title ='MSBuild support'  InstallDefault='local' Description ='MSBuild support is needed for the automatic compilation of cpsproj files.' Level ='1'>
         <ComponentGroupRef Id='CompGroup_MSBuild' />
-      </Feature>      
+      </Feature>
       <Feature Id='VSIntegration' Title ='Visual Studio Integration' InstallDefault='local'  Description ='Visual Studio 2005 Integration.' Level ='1'>
         <ComponentGroupRef Id='CompGroup_Integration'/>
       </Feature>
@@ -100,29 +105,100 @@
 
       </Feature>
       <Feature Id='Examples' Title ='StarLight Examples' Description ='Source code examples.' Level ='1'>
-        
+
       </Feature>
     </Feature>
 
-      
-    <!-- Sequences -->
+
+    <!-- Custom actions -->
+    <CustomAction Id="CA_DevenvSetup2005" Property="DEVENV_EXE_2005" ExeCommand="/setup" Execute="commit" Return="asyncWait"></CustomAction>
+
+    <!--
+ *****************************************************************************************
+      Include UI
+    
+-->
+    <?include common_ui.xml ?>
+
+    <!--
+ *****************************************************************************************
+      Properties
+    -->
+    <Property Id="_IsMaintenance">Change</Property>
+    <Property Id="AgreeToLicense">No</Property>
+    <Property Id="ApplicationUsers">AllUsers</Property>
+    <!--per-machine installation -->
+    <Property Id="INSTALLLEVEL">1</Property>
+    <Property Id="ProgressType3">installs</Property>
+    <Property Id="ProgressType2">installed</Property>
+    <Property Id="ProgressType1">Installing</Property>
+    <Property Id="ProgressType0">install</Property>
+    <Property Id="QualifiedProductName">$(var.ProductShortName) $(var.ProductVersionText) ($(var.ProductVersion))</Property>
+    <Property Id="InstallationDirectory">$(var.ProductShortName) $(var.ProductVersionText)</Property>
+    <Property Id="ReinstallFileVersion">o</Property>
+    <Property Id="RebootYesNo">No</Property>
+    <Property Id="ReinstallModeText">omus</Property>
+    <Property Id="ReinstallRepair">r</Property>
+    <Property Id="SetupType">Typical</Property>
+    <Property Id="ConfigureServer">0</Property>
+    <!--
+ *****************************************************************************************
+      Admin UI Sequence
+    
+-->
+
+    <AdminUISequence>
+      <Show Dialog="SetupCompleteErrorDialog" OnExit="error"/>
+      <Show Dialog="SetupInterruptedDialog" OnExit="cancel"/>
+      <Show Dialog="SetupCompleteSuccessDialog" OnExit="success"/>
+      <Show Dialog="SetupInitializationDialog" Before="CostInitialize"/>
+      <Show Dialog="AdminWelcomeDialog" After="CostFinalize"/>
+      <Show Dialog="SetupProgressDialog" After="AdminWelcomeDialog"/>
+    </AdminUISequence>
+
+    <!--
+ *****************************************************************************************
+      Install Execute Sequence
+    
+-->
     <InstallExecuteSequence>
-      <RemoveExistingProducts After="InstallValidate" />
+      <Custom Action="NewerVersionInstalled" After="FindRelatedProducts">NEWERPRODUCTFOUND</Custom>
+      <RemoveExistingProducts After="InstallInitialize"/>
       <!-- Runs during both install and uninstall -->
       <Custom Action='CA_DevenvSetup2005' Before='InstallFinalize'>RUNDEVENV</Custom>
     </InstallExecuteSequence>
-    
-  <!-- Custom actions -->
-    <CustomAction Id="CA_DevenvSetup2005" Property="DEVENV_EXE_2005" ExeCommand="/setup" Execute="commit" Return="asyncWait"></CustomAction>
+
+    <!--
+ *****************************************************************************************
+      Install UI Sequence  
+  -->
 
     <InstallUISequence>
-      <!-- Because we have a launch condition that uses the results of FindRelatedProducts, put it first. -->
-      <LaunchConditions After="FindRelatedProducts" />
+      <Show Dialog="SetupCompleteErrorDialog" OnExit="error"/>
+      <Show Dialog="SetupInterruptedDialog" OnExit="cancel"/>
+      <Show Dialog="SetupCompleteSuccessDialog" OnExit="success"/>
+      <Custom Action="NewerVersionInstalled" After="FindRelatedProducts">NEWERPRODUCTFOUND</Custom>
+      <Show Dialog="InstallWelcomeDialog" After="MigrateFeatureStates">Not Installed And (Not PATCH Or IS_MAJOR_UPGRADE)</Show>
+      <Show Dialog="SetupResumeDialog" After="InstallWelcomeDialog">
+        Installed And (RESUME Or Preselected) And Not PATCH
+      </Show>
+      <Show Dialog="MaintenanceWelcomeDialog" After="SetupResumeDialog">
+        Installed And Not RESUME And Not Preselected And Not PATCH
+      </Show>
+      <Show Dialog="SetupProgressDialog" After="MaintenanceWelcomeDialog"/>
     </InstallUISequence>
-
-    <!-- User interface -->
-    <UIRef Id="WixUI_Mondo" />
-    <UIRef Id="WixUI_ErrorProgressText" />
+    -
+    <!--
+ *****************************************************************************************
+      Binary files
+    
+-->
+    <Binary Id="AdminBackground" src="Resources/dlgbmp.bmp"/>
+    <Binary Id="AdminHeader" src="Resources/bannrbmp.bmp"/>
+    <Binary Id="SetupTypeComp" src="Resources/setup_type_complete.ico"/>
+    <Binary Id="SetupTypeCust" src="Resources/setup_type_custom.ico"/>
+    <Binary Id="SetupTypeTyp" src="Resources/setup_type_typical.ico"/>
+    <Binary Id="DestDirFolder" src="Resources/dest_dir_folder.ico"/>
 
   </Product>
 </Wix>
