@@ -7,6 +7,7 @@
   <?define ProductVersionText = "0.1" ?>
   <?define Manufacturer = "University of Twente" ?>
   <?define UpgradeCode = "697DC119-E7E0-4b83-930D-706366AC1382" ?>
+  <?define LICENSE_TYPE = "commercial" ?>
   
   <!-- GUIDs for the components -->
   <?define Comp_LanguageService_Guid=1BADB221-321A-4f3b-8BA2-05812C87D0DC?>
