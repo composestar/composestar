@@ -8,8 +8,9 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
     /// Generate documentation here
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    public class FilterActionAttribute : Attribute
+    public sealed class FilterActionAttribute : Attribute
     {
+
         #region Private Variables
 
         private string _actionName;
@@ -29,11 +30,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             get
             {
                 return _flowBehaviour;
-            }
-            set
-            {
-                _flowBehaviour = value;
-            }
+            }          
         }
 
         /// <summary>
@@ -45,11 +42,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             get
             {
                 return _substitutionBehaviour;
-            }
-            set
-            {
-                _substitutionBehaviour = value;
-            }
+            }          
         }
 
         /// <summary>
@@ -61,11 +54,7 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             get
             {
                 return _actionName;
-            }
-            set
-            {
-                _actionName = value;
-            }
+            }         
         }
 
         #endregion
@@ -157,8 +146,9 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
     /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    class FilterActionSpecificationAttribute : Attribute
+    public sealed class FilterActionSpecificationAttribute : Attribute
     {
+
         #region Private variables
         private string _spec;
         #endregion

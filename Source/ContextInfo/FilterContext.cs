@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace Composestar.StarLight.ContextInfo
 {
     /// <summary>
-    /// The FilterContext class is used to store <seealso cref="T:FilterContext.InnerFilterContext"/> objects in a thread-safe way.
+    /// The FilterContext class is used to store <see cref="T:FilterContext.InnerFilterContext"/> objects in a thread-safe way.
     /// These objects contain information about the usage of the innercalls.    
     /// </summary>
     [DebuggerNonUserCode()]
@@ -28,7 +28,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         public FilterContext()
         {
-            _storedActions = new Stack<int>();   
+            _storedActions = new Stack<int>();               
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Gets the thread id.
+        /// Gets the current thread identifier as an <see cref="T:System.Int32" />.
         /// </summary>
         /// <returns></returns>
         private static int GetThreadId()
