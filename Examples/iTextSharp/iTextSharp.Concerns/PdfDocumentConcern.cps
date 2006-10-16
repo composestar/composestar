@@ -7,6 +7,12 @@ concern TraceDocument in iTextSharp.Concerns
 			trace: Tracing = { True => [*.*] };
 			time: Profiling = { True => [*.*] }
 	}
+	
+	filtermodule FM2
+	{
+		inputfilters
+			empty: Empty = { True => [*.*] }
+	}
 
 	superimposition
 	{
