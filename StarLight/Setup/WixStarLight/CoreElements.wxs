@@ -22,7 +22,7 @@
         <Registry Id='RegMainClass' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaMainClass'
    Action='write' Type='string' Value='Composestar.DotNET.MASTER.StarLightMaster' />
         <Registry Id='RegJavaOptions' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaOptions'
-   Action='write' Type='string' Value='-Xmx 512M' />
+   Action='write' Type='string' Value='-Xmx512M' />
         <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaFolder'
   Action='write' Type='string' Value='[JAVALOC]\bin\' />
         <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
