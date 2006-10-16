@@ -639,6 +639,11 @@ namespace Composestar.Repository
             //}
         }
 
+        public IList<ConcernInformation> GetConcerns()
+        {
+            return container.GetObjects<ConcernInformation>();
+        }
+
         /// <summary>
         /// Deletes the concern informations.
         /// </summary>

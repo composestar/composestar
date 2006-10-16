@@ -223,6 +223,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipping StarLight Java Master, no concerns found..
+        /// </summary>
+        internal static string MasterSkipNoConcerns {
+            get {
+                return ResourceManager.GetString("MasterSkipNoConcerns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preparing to start StarLight Java Master by collecting data..
         /// </summary>
         internal static string MasterStartText {

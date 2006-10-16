@@ -119,6 +119,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
             _repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
 
+            if (_repositoryAccess.GetConcerns().Count == 0)
+            {
+                Log.LogMessageFromResources("MasterSkipNoConcerns");
+                _repositoryAccess.CloseContainer(); 
+                return !Log.HasLoggedErrors;
+            }
+
             Log.LogMessageFromResources("MasterStartText");           
            
             RegistrySettings rs = new RegistrySettings();
