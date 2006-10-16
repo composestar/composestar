@@ -28,12 +28,18 @@ public class ModuleSettings implements Serializable
 		properties.setProperty(key, value);
 	}
 
+	/**
+	 * @deprecated Do not access this directly; use Configuration.getModuleProperty.
+	 */
 	public String getProperty(String key)
 	{
 		return properties.getProperty(key);
 	}
 
-	public String getProperty(String key, String def)
+	/**
+	 * Do not access this directly; use Configuration.getModuleProperty.
+	 */
+	protected String getProperty(String key, String def)
 	{
 		return properties.getProperty(key, def);
 	}

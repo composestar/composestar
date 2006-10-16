@@ -9,9 +9,9 @@ import org.xml.sax.helpers.DefaultHandler;
 public class SettingsHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
-	BuildXMLHandler returnHandler;
+	BuildConfigHandler returnHandler;
 	
-	public SettingsHandler(XMLReader parser, BuildXMLHandler documentHandler)
+	public SettingsHandler(XMLReader parser, BuildConfigHandler documentHandler)
 	{
 		this.parser = parser;
 		this.returnHandler = documentHandler;
@@ -44,11 +44,9 @@ public class SettingsHandler extends DefaultHandler implements ContentHandler
 
 	public void startDocument() 
 	{
- 
 	}
 
 	public void endDocument() 
 	{
- 
 	}
 }

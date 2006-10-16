@@ -4,84 +4,70 @@
 package Composestar.Core.INCRE;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.ModuleSettings;
 
 /**
  * @author Dennis
  */
-public class INCREConfigurations {
-	
+public class INCREConfigurations
+{	
 	private Properties current;
 	private Properties history;
 	public Configuration historyconfig;
 	
-	public INCREConfigurations(){
+	public INCREConfigurations()
+	{
 		current = new Properties();
 		history = new Properties();
 	}
 	
-	public void init(){
+	public void init()
+	{
 		//TODO: store in history
-		initConfig(historyconfig,history);
-		initConfig(Configuration.instance(),current);
+		initConfig(historyconfig, history);
+		initConfig(Configuration.instance(), current);
 	}
 	
-	public void initConfig(Configuration config,Properties props)
+	public void initConfig(Configuration config, Properties props)
 	{
 		/* SECRETMode */
-		if(config.getModuleSettings().getModule("SECRET")!=null){
-			ModuleSettings m = config.getModuleSettings().getModule("SECRET");
-			if(m.getProperty("mode")!=null)
-				props.put("SECRETMode",m.getProperty("mode"));
-			else
-				props.put("SECRETMode","EMPTY_CONFIG");
-		}
-		
+		props.setProperty("SECRETMode", config.getModuleProperty("SECRET", "mode", "EMPTY_CONFIG"));
+
 		/* FILTH_INPUT */
-		if(config.getModuleSettings().getModule("FILTH")!=null){
-			ModuleSettings m = config.getModuleSettings().getModule("FILTH");
-			if(m.getProperty("input")!=null)
-				props.put("FILTH_INPUT",m.getProperty("input"));
-			else
-				props.put("FILTH_INPUT","EMPTY_CONFIG");	
-		}
+		props.setProperty("FILTH_INPUT", config.getModuleProperty("FILTH", "input", "EMPTY_CONFIG"));
 		
 		/* Dependencies */
-		Iterator dependencies = config.getProjects().getDependencies().iterator();
-    	String depstr = "";
-		while(dependencies.hasNext())
+    	StringBuffer deps = new StringBuffer();
+		Iterator depIt = config.getProjects().getDependencies().iterator();
+		while (depIt.hasNext())
     	{
-        	Dependency d = (Dependency)dependencies.next();
-        	depstr += d.getFileName();
-        	if(dependencies.hasNext())
-        		depstr += ",";
+        	Dependency d = (Dependency)depIt.next();
+        	deps.append(d.getFileName());
+        	if (depIt.hasNext()) deps.append(",");
     	}
-		props.put("Dependencies",depstr);
+		props.setProperty("Dependencies", deps.toString());
 		
 		/* Harvester input */
-		String dummyStr = "";
-		List dummies = config.getProjects().getCompiledDummies();
-		Iterator dumIt = dummies.iterator();
+		StringBuffer dummies = new StringBuffer();
+		Iterator dumIt = config.getProjects().getCompiledDummies().iterator();
 		while (dumIt.hasNext()) 
 		{
-			dummyStr += dumIt.next();
-			if (dumIt.hasNext()) dummyStr += ",";
+			dummies.append(dumIt.next());
+			if (dumIt.hasNext()) dummies.append(",");
         }
-		props.put("HarvesterInput", depstr + "," + dummyStr);
+		props.setProperty("HarvesterInput", deps + "," + dummies);
 				
 		/* ApplicationStart */
 		String as = config.getProjects().getApplicationStart();
 		if (as != null && as.length() != 0)
-			props.put("ApplicationStart", as);
+			props.setProperty("ApplicationStart", as);
 						
 		/* RunDebugLevel */
 		int rdl = config.getProjects().getRunDebugLevel();
-		props.put("RunDebugLevel", "" + rdl);
+		props.setProperty("RunDebugLevel", "" + rdl);
 	}
 	
 	public void addConfiguration(String key, String val)
@@ -92,12 +78,8 @@ public class INCREConfigurations {
 	public String getConfiguration(String key)
 	{
 		INCRE incre = INCRE.instance();
-		if(incre.searchingHistory){
-			return history.getProperty(key);
-		}
-		else {
-			return current.getProperty(key);
-		}
+		Properties props = (incre.searchingHistory ? history : current);
+		return props.getProperty(key);
 	}
 
 	public Properties getHistory()

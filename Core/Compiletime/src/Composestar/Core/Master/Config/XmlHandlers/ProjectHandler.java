@@ -13,10 +13,10 @@ import Composestar.Utils.Debug;
 public class ProjectHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
-	ProjectConfigurationHandler returnHandler;
+	ProjectsHandler returnHandler;
 	Project project;
 	
-	public ProjectHandler(XMLReader parser, ProjectConfigurationHandler documentHandler)
+	public ProjectHandler(XMLReader parser, ProjectsHandler documentHandler)
 	{
 		this.parser = parser;
 		this.returnHandler = documentHandler;

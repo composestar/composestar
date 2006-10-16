@@ -108,13 +108,8 @@ public class INCRE implements CTCommonModule
 		this.historyfile = ps.getPath("Base") + "history.dat";
 
 		// check if incremental compilation is enabled
-		ModuleSettings ms = config.getModuleSettings("INCRE");
-		if (ms != null)
-		{
-			String enabled = ms.getProperty("enabled");
-			if ("true".equalsIgnoreCase(enabled))
-				this.enabled = true;
-		}
+		String enabled = config.getModuleProperty("INCRE", "enabled", "false");
+		this.enabled = "true".equalsIgnoreCase(enabled);
 
 		// non-incremental compilation so clean history
 		if (!this.enabled)
@@ -152,19 +147,13 @@ public class INCRE implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE is " + (this.enabled ? "enabled" : "disabled"));
 	}
 	
-	private String getModuleSetting(String key, String def)
-	{
-		ModuleSettings ms = config.getModuleSettings("INCRE");
-		return (ms == null ? def : ms.getProperty(key, def));
-	}
-	
 	private String getConfigFile() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
 		
 		String projectBase = ps.getPath("Base");
 		String cps = ps.getPath("Composestar");
-		String filename = getModuleSetting("config", "INCREconfig.XML");
+		String filename = config.getModuleProperty("INCRE", "config", "INCREconfig.XML");
 
 		File file = new File(projectBase, filename);
 		if (file.exists())

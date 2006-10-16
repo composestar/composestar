@@ -80,12 +80,9 @@ public class ILICIT implements WEAVER
 			cmdList.add("/nologo");
 
 			// verify libraries?
-			ModuleSettings m = config.getModuleSettings().getModule("ILICIT");
-			if (m != null) {
-				String v = m.getProperty("verifyAssemblies");
-				if ("True".equalsIgnoreCase(v))
-					cmdList.add("/verify");
-			}
+			String va = config.getModuleProperty("ILICIT", "verifyAssemblies", "false");
+			if ("true".equalsIgnoreCase(va))
+				cmdList.add("/verify");
 
 			// if debugging supply the /debug switch
 			if (Debug.getMode() == Debug.MODE_DEBUG)

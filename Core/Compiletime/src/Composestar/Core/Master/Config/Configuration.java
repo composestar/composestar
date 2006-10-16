@@ -57,7 +57,6 @@ public class Configuration implements Serializable
 
 	/**
 	 * @deprecated Use getPlatformName() and getBuildDebugLevel().
-     * @param key
 	 */
 	public String getProperty(String key)
 	{
@@ -82,11 +81,7 @@ public class Configuration implements Serializable
 	public String getModuleProperty(String module, String key, String def)
 	{
 		ModuleSettings ms = getModuleSettings(module);
-		if (ms == null) 
-		{
-			return def;
-		}
-		return ms.getProperty(key, def);
+		return (ms == null ? def : ms.getProperty(key, def));
 	}
 
 	public PathSettings getPathSettings()
