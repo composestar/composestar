@@ -23,7 +23,8 @@ namespace BasicTests
             filtTests.func2();
             filtTests.func3();
             Console.Out.WriteLine( filtTests.func4(3) );
-            
+            filtTests.func6();
+
 			filtTests.askForHelp();
 			filtTests.doStuff();
 

@@ -25,9 +25,9 @@ namespace BasicTests
 
         public void before(JoinPointContext context)
         {
-            report("before " + context.MethodName);
+            report("before " + context.StartSelector);
 
-            if (context.MethodName.Equals("func4"))
+            if (context.StartSelector.Equals("func4"))
             {
                 Int32 arg = (Int32) context.GetArgumentValue(0);
                 arg = arg + 1;
@@ -37,12 +37,24 @@ namespace BasicTests
 
         public void after(JoinPointContext context)
         {
-            report("after " + context.MethodName);
+            report("after " + context.StartSelector);
 
-            if (context.MethodName.Equals("func4"))
+            if (context.StartSelector.Equals("func4"))
             {
                 String ret = (String)context.ReturnValue;
                 ret = ret + " #After#";
+                context.ReturnValue = ret;
+            }
+        }
+
+        public void after2(JoinPointContext context)
+        {
+            report("after2 " + context.StartSelector);
+
+            if (context.StartSelector.Equals("func4"))
+            {
+                String ret = (String)context.ReturnValue;
+                ret = ret + " #After2#";
                 context.ReturnValue = ret;
             }
         }

@@ -31,6 +31,13 @@ namespace BasicTests
             report("func4: " + number);
             String s = "" + number;
 
+            if (s == null)
+            {
+                s = "";
+            }
+
+            Type type = typeof(System.Buffer);
+
             return s;
         }
 
@@ -56,6 +63,14 @@ namespace BasicTests
 
                 number--;
             }
+        }
+
+        public void func6()
+        {
+            Console.WriteLine("func4 returns: " + func4(1));
+            Console.WriteLine("second call to func4 returns: " + func4(2));
+            Console.WriteLine("third call to func4 returns: " + func4(3));
+            Console.WriteLine("fourth call to func4 returns: " + func4(4));
         }
 
 		public void askForHelp()
