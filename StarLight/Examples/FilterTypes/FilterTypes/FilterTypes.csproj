@@ -37,6 +37,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StopEmptyAction.cs" />
+    <Compile Include="StartEmptyAction.cs" />
+    <Compile Include="EmptyFilterType.cs" />
     <Compile Include="ProfilingFilterType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartTimerAction.cs" />
