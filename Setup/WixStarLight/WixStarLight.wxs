@@ -54,12 +54,21 @@
     <Condition Message="[ProductName] requires Visual Studio 2005."> DEVENV_DIR_2005 </Condition>
     <CustomAction Id="NewerVersionInstalled" Error="A newer version of this product is already installed." />
 
+    <Property Id="JAVAVERSION">
+     <RegistrySearch Id='RegJavaVersion' Type='raw'
+        Root='HKLM' Key='Software\JavaSoft\Java Runtime Environment' Name='CurrentVersion' />
+    </Property>
+    
+    <Condition Message='Setup could not find an installed Java version.'>
+      <![CDATA[JAVAVERSION == ""]]>
+    </Condition>
+    
     <Property Id="JAVALOC">
       <RegistrySearch Id='RegExistingJavaFolder' Type='raw'
-        Root='HKLM' Key='Software\JavaSoft\Java Runtime Environment\1.4' Name='JavaHome' />
+        Root='HKLM' Key='Software\JavaSoft\Java Runtime Environment\[JAVAVERSION]' Name='JavaHome' />
     </Property>
 
-    <Condition Message='Setup could not find Java 1.4.'>
+    <Condition Message='Setup could not find Java 1.4 or higher.'>
       <![CDATA[JAVALOC == ""]]>
     </Condition>
 
