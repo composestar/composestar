@@ -78,9 +78,10 @@ namespace Composestar.StarLight.ContextInfo
             InnerFilterContext ifc = GetInnerFilterContext();
             if (ifc == null)
                 return false;
+            else if (ifc.Instance == null)
+                return ifc.MethodId == methodId;
             else
-                return (ifc.Instance.Equals(currentInstance) & ifc.MethodId == methodId);
-
+                return (ifc.Instance == currentInstance & ifc.MethodId == methodId);
         }
 
         /// <summary>
