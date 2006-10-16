@@ -172,8 +172,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 try
                 {
                     AssemblyElement assembly = null;
+                    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                    
                     Log.LogMessageFromResources("AnalyzingFile", item);
-                             
+                    
+                    sw.Start();
+    
                     // Try to get the assembly information from the database
                     assembly = langModelAccessor.GetAssemblyElementByFileName(item);
                     if (assembly != null)
@@ -194,13 +198,26 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     assembly = analyzer.ExtractAllTypes(item);
                     assemblies.Add(assembly);
 
+                    sw.Stop();
+
+                    Log.LogMessageFromResources("AssemblyAnalyzed", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+
+                    sw.Reset();
+
+                    sw.Start();
+
                     // add FilterTypes
                     filterTypes.AddRange(analyzer.FilterTypes);
 
                     // add FilterActions
                     filterActions.AddRange(analyzer.FilterActions);
 
-                    Log.LogMessageFromResources("AssemblyAnalyzed", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
+                    sw.Stop();
+
+                    if (analyzer.FilterTypes.Count > 0 && analyzer.FilterActions.Count > 0)
+                    {
+                        Log.LogMessageFromResources("FiltersAnalyzed", analyzer.FilterTypes.Count, analyzer.FilterActions.Count, sw.Elapsed.TotalSeconds);
+                    }
                 }
                 catch (ILAnalyzerException ex)
                 {

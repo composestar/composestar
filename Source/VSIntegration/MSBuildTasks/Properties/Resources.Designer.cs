@@ -151,6 +151,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assembly analyzer: {0} filter types and {1} filter actions found in {2:0.0000} seconds..
+        /// </summary>
+        internal static string FiltersAnalyzed {
+            get {
+                return ResourceManager.GetString("FiltersAnalyzed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retrieved {0} types from the local database in {1:0.0000} seconds..
         /// </summary>
         internal static string FoundInDatabase {
