@@ -70,15 +70,13 @@
     <None Include="Strategies\.svn\text-base\Strategy.jsl.svn-base" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\MSBuild\StarLight\1.0\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>..\..\..\Source\ContextInfo\bin\Release\Composestar.StarLight.ContextInfo.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Strategies\.svn\props\" />
