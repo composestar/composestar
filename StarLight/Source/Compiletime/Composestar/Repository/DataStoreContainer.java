@@ -138,6 +138,24 @@ public class DataStoreContainer {
         return dbContainer.query( match );
     }
 
+	/**
+	 * 
+	 * @see com.db4o.ObjectContainer#commit()
+	 */
+	public void commit()
+	{
+		dbContainer.commit();
+	}
+
+	/**
+	 * 
+	 * @see com.db4o.ObjectContainer#rollback()
+	 */
+	public void rollback()
+	{
+		dbContainer.rollback();
+	}
+
     
     
 }
