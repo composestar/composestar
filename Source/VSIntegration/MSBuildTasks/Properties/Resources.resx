@@ -234,4 +234,7 @@
   <data name="FiltersAnalyzed" xml:space="preserve">
     <value>Assembly analyzer: {0} filter types and {1} filter actions found in {2:0.0000} seconds.</value>
   </data>
+  <data name="MasterSkipNoConcerns" xml:space="preserve">
+    <value>Skipping StarLight Java Master, no concerns found.</value>
+  </data>
 </root>

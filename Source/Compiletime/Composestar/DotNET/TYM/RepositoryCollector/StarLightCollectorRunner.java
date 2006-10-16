@@ -52,9 +52,15 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
+		long starttime = 0;
+		
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 		repository = new RepositoryAccess();
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Repository initialized in " + (System.currentTimeMillis() - starttime) + " ms.");
+		
 		
 		// Construct field hashmap
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 		List allfields = repository.getFieldElements();
 		ListIterator fieldIterator = allfields.listIterator();
 		while (fieldIterator.hasNext())
@@ -73,8 +79,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			fieldMap.put(fe.get_ParentTypeId(), fieldElements);
 		}
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allfields.size() + " fields read from database and cached in " + (System.currentTimeMillis() - starttime) + " ms.");
 		
 		// Construct method hashmap
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 		List allmethods = repository.getMethodElements();
 		ListIterator methodIterator = allmethods.listIterator();
 		while (methodIterator.hasNext())
@@ -93,8 +101,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			methodMap.put(me.get_ParentTypeId(), methodElements);
 		}		
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allmethods.size() + " methods read from database and cached in " + (System.currentTimeMillis() - starttime) + " ms.");
 		
 		// Construct parameter hashmap
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 		List allparameters = repository.getParameterElements();
 		ListIterator parameterIterator = allparameters.listIterator();
 		while (parameterIterator.hasNext())
@@ -113,8 +123,10 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			parameterMap.put(pe.get_ParentMethodId(), parameterElements);
 		}
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allparameters.size() + " parameters read from database and cached in " + (System.currentTimeMillis() - starttime) + " ms.");
 		
 		// Construct call hashmap
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 		List allcalls = repository.getCallElements();
 		ListIterator callIterator = allcalls.listIterator();
 		while (callIterator.hasNext())
@@ -133,6 +145,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			
 			callsMap.put(ce.get_ParentMethodBodyId(), callElements);
 		}
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", allcalls.size() + " calls read from database and cached in " + (System.currentTimeMillis() - starttime) + " ms.");
 		
 		
 		//Collect all filtertypes and filteractions:
@@ -143,9 +156,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		collectTypes();
 		
 		
-		
-		
-		
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing cps concerns...");	
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
         int count = 0;
 		DataStore dataStore = DataStore.instance();
         HashMap typeMap = TypeMap.instance().map();
@@ -203,8 +215,11 @@ public class StarLightCollectorRunner implements CollectorRunner
 				count++;
         	}
         }
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", count + " cps concerns added in " + (System.currentTimeMillis() - starttime) + " ms.");
         
         // loop through rest of the concerns and add to the repository in the form of primitive concerns
+        Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Processing primitive concerns...");
+        if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
         Iterator it = typeMap.values().iterator();
         while( it.hasNext() ) {
 			DotNETType type = (DotNETType)it.next();
@@ -215,13 +230,20 @@ public class StarLightCollectorRunner implements CollectorRunner
 			dataStore.addObject( type.fullName(), pc );
 			//Debug.out(Debug.MODE_DEBUG,"TYM","Adding primitive concern '"+type.fullName()+"'");
 		}
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", typeMap.size() + " primitive concerns added in " + (System.currentTimeMillis() - starttime) + " ms.");
         
         //resolve the MethodInfo reference in the calls within a method:
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Resolving method references for calls withing a method...");
+		if (Debug.getMode() == Debug.MODE_DEBUG) starttime = System.currentTimeMillis();
 		resolveCallsToOtherMethods();
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Method references resolved in " + (System.currentTimeMillis() - starttime) + " ms.");
+		 
 	}
 	
 	
 	private void collectFilterTypesAndActions() throws ModuleException{
+		long starttime = System.currentTimeMillis();
+		
 		//create mapping from strings to filteractions, to use later to resolve the actions in
 		//a filtertype
 		Hashtable actionMapping = new Hashtable();
@@ -242,7 +264,8 @@ public class StarLightCollectorRunner implements CollectorRunner
 		
 		
 		//get FilterTypes:
-		Iterator storedTypes = repository.getFilterTypeElements().iterator();
+		List storedFilters = repository.getFilterTypeElements();
+		Iterator storedTypes = storedFilters.iterator();
 		while( storedTypes.hasNext() ){
 			FilterTypeElement storedType = (FilterTypeElement) storedTypes.next();
 			
@@ -285,15 +308,22 @@ public class StarLightCollectorRunner implements CollectorRunner
 			}
 			filterType.setRejectReturnAction( rejectReturnAction );
 		}
+		
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", storedFilters.size() + " filters with " + actionMapping.size() + " filter actions read from database in " + (System.currentTimeMillis() - starttime) + " ms.");
 	}
 	
 	
 	private void collectTypes() throws ModuleException
 	{
+		long starttime = System.currentTimeMillis();
+		
 		// Get all types from repository
 		List storedTypes = repository.getTypeElements();
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", storedTypes.size() + " types read from database in " + (System.currentTimeMillis() - starttime) + " ms.");
 		
 		// Process all types, i.e. map them to LAMA
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Generating language model with " + storedTypes.size() + " types...");
+		starttime = System.currentTimeMillis();
 		Iterator typeIterator = storedTypes.iterator();
 		while (typeIterator.hasNext())
 		{
@@ -357,6 +387,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// Add the DotNETType to the TypeMap
 			TypeMap.instance().addType(storedType.get_FullName(), type);
 		}
+		Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Language model generated in " + (System.currentTimeMillis() - starttime) + " ms.");
 	}
 	
 	private void collectFields(TypeElement storedType, DotNETType type) throws ModuleException

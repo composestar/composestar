@@ -206,12 +206,11 @@ public class MethodElement implements IRepositoryElement
         StringBuffer buffer = new StringBuffer();
         buffer.append( "Method:" );
         buffer.append( _signature );
-        buffer.append( "\nInputfilters:\n" );
-        if (_methodBody != null && _methodBody.get_InputFilter() != null)
-		{
-			buffer.append(_methodBody.get_InputFilter().toString());
-		}
-		return buffer.toString();
+        if (_methodBody != null) {
+        	buffer.append( "\nInputfilters:\n" );
+        	if (_methodBody.get_InputFilter() != null) buffer.append( _methodBody.get_InputFilter().toString() );
+        }
+        return buffer.toString();
     }
 
 	/** @property
