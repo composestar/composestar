@@ -1,8 +1,11 @@
 /*
- * Created on Dec 6, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
@@ -12,15 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
 import Composestar.Core.CKRET.Config.ConfigParser;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Utils.Debug;
 
 /**
  * @author Administrator
@@ -69,7 +69,7 @@ public class Repository {
 	{
 		actions.put("meta", new MetaFilterAction());
 				
-		CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
+		//CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
 		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		String ckretconfigfile = tempFolder + CKRET_CONFIG;
 		if( !(new File(ckretconfigfile).exists()))

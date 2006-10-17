@@ -1,23 +1,22 @@
 /*
- * Created on Dec 9, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-import Composestar.Core.LAMA.*;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
@@ -27,6 +26,10 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
  * @author Administrator

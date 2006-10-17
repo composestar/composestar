@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET;
 
 import java.io.BufferedWriter;
@@ -7,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -75,13 +85,14 @@ public class HTMLReporter implements Reporter
 			buffer.append("<table border=0 cellpadding=5 cellspacing=5 width=800>");
 
 			Map executionConflicts = analysis.executionConflicts();
-			Set keySet = executionConflicts.keySet();
+			Set entrySet = executionConflicts.entrySet();
 
-			for( Iterator it = keySet.iterator(); it.hasNext(); )
+			for( Iterator it = entrySet.iterator(); it.hasNext(); )
 			{
 				buffer.append("<tr><td align=left valign=top><b>Actions:</b><BR>");
-				ExecutionAnalysis ea = (ExecutionAnalysis) it.next();
-				List conflicts = (List) executionConflicts.get(ea);
+				Entry entry = (Entry) it.next();
+				ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
+				List conflicts = (List) entry.getValue();
 
 				i = 0;
 				for( Iterator actionIterator = ea.getActions().iterator(); actionIterator.hasNext(); )
@@ -122,7 +133,7 @@ public class HTMLReporter implements Reporter
 		buffer.append("<BR>");
 		buffer.append("Platform: ").append(Configuration.instance().getPlatformName());
 		buffer.append("<BR>");
-		buffer.append("Runmode: ").append(CKRET.MODES[CKRET.MODE]);
+		buffer.append("Runmode: ").append(CKRET.MODES[CKRET.getMode()]);
 		buffer.append("</h3>");
 	}
 

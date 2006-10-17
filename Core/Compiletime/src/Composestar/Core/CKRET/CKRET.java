@@ -1,3 +1,12 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET;
 
 import java.io.File;
@@ -24,19 +33,27 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
+/**
+ * SECRET
+ */
 public class CKRET implements CTCommonModule
 {
-    private static final int PROGRESSIVE = 2;
-    private static final int REDUNDANT = 1;
-    private static final int NORMAL = 0;
+    public static final int PROGRESSIVE = 2;
+    public static final int REDUNDANT = 1;
+    public static final int NORMAL = 0;
 
-	public static int MODE = 0;
+	protected static int MODE = 0;
 
-	public static String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
+	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
 
     private static Reporter reporter;
 	
 	private String reportFile = "";
+	
+	public static int getMode()
+	{
+		return MODE;
+	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{

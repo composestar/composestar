@@ -1,8 +1,11 @@
 /*
- * Created on Dec 2, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
@@ -44,16 +47,16 @@ public class ConcernAnalysis {
 
 		this.orders.put( order, oa );
 		
-		switch(CKRET.MODE)
+		switch(CKRET.getMode())
 		{
-			case 0:
+			case CKRET.NORMAL:
 				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				break;
-			case 1:
+			case CKRET.REDUNDANT:
 				CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				break;
 				
-			case 2:
+			case CKRET.PROGRESSIVE:
 				if( oa.numConflictingExecutions() == 0 )
 					CKRET.getReporter().reportOrder(order, oa, isSelected, false);
 				else

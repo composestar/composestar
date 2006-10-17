@@ -1,5 +1,12 @@
-//Source file: H:\\composestar\\src\\Composestar\\core\\CKRET\\filterxmlparser\\CkretFilterXMLParser.java
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET.Config;
 
 import org.xml.sax.Attributes;
@@ -11,7 +18,7 @@ import Composestar.Utils.*;
 import Composestar.Core.CKRET.Repository;
 
 public class ConfigParser extends DefaultHandler {
-    boolean inDocument = false;
+    //boolean inDocument = false;
     private Repository repository = null;
     public FiltersHandler theCkretFiltersXMLHandler;
     XMLReader parser = null;

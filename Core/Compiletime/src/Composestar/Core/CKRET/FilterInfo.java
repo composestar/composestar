@@ -1,5 +1,12 @@
-//Source file: F:\\composestar\\src\\Composestar\\core\\CKRET\\CkretFilterInformationHarvestor.java
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
@@ -7,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
@@ -16,12 +21,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Utils.CPSIterator;
 
 public class FilterInfo {
     private ArrayList conditions = new ArrayList();
