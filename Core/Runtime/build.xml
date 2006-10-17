@@ -54,5 +54,7 @@
 			<exclude name="Composestar/RuntimeCore/CODER/**"/> <!-- doesn't compile yet -->
 		</javac>
 	</target>
+	
+	<target name="install" depends="build" description=""/>
 
 </project>

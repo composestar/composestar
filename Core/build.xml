@@ -33,6 +33,7 @@
 	
 	<target name="install">
 		<ant target="install" dir="Compiletime" />
+		<ant target="install" dir="Runtime" />
 	</target>
 	
 	<target name="findbugs" depends="init">
