@@ -2,38 +2,71 @@ package Composestar.Java.TYM.TypeHarvester;
 
 import java.util.HashMap;
 
-public class ClassMap {
-	
+/**
+ * Utility class containing the harvested classes in a <code>HashMap</code>.
+ */
+public class ClassMap
+{
 	private HashMap harvestedClasses = new HashMap();
+
 	private static ClassMap Instance;
-	
-	public ClassMap() {
-		
+
+	/**
+	 * Default constructor.
+	 */
+	public ClassMap()
+	{
+
 	}
-	
-	public void addClass(Class c) {
+
+	/**
+	 * Adds a <code>class</code> instance to the map.
+	 * 
+	 * @param c - the class.
+	 */
+	public void addClass(Class c)
+	{
 		String name = c.getName();
-		if(!harvestedClasses.containsKey(name)) {
-			harvestedClasses.put(name,c);
+		if (!harvestedClasses.containsKey(name))
+		{
+			harvestedClasses.put(name, c);
 		}
 		else
+		{
+			// duplicate
 			return;
-			//duplicate
+		}
+
 	}
-	
-	public Class getClass(String name) {
-		Class c = (Class)harvestedClasses.get(name);
+
+	/**
+	 * Retrieves a <code>Class</code> from the map.
+	 * 
+	 * @param name - the fully qualified name.
+	 */
+	public Class getClass(String name)
+	{
+		Class c = (Class) harvestedClasses.get(name);
 		return c;
 	}
-	
-	public static ClassMap instance() {
-        if( Instance == null ) {
-            Instance = new ClassMap();
-        }
-        return Instance;     
-    }
-	
-	public HashMap map() {
-	   return harvestedClasses;
+
+	/**
+	 * Creates a <code>ClassMap</code> instance.
+	 */
+	public static ClassMap instance()
+	{
+		if (Instance == null)
+		{
+			Instance = new ClassMap();
+		}
+		return Instance;
+	}
+
+	/**
+	 * Returns the map.
+	 */
+	public HashMap map()
+	{
+		return harvestedClasses;
 	}
 }

@@ -8,26 +8,41 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.TYM.SignatureTransformer.SignatureTransformer;
 
-public class JavaSignatureTransformer implements SignatureTransformer {
+/**
+ * Starting point for the signature transformer module. This module transforms
+ * the signatures of the compiled dummies.
+ */
+public class JavaSignatureTransformer implements SignatureTransformer
+{
 
-	public JavaSignatureTransformer(){
-		
+	/**
+	 * Constructor.
+	 */
+	public JavaSignatureTransformer()
+	{
+
 	}
-	
-	public void run(CommonResources resources) throws ModuleException {
-		
-		boolean signaturesmodified = ((Boolean)(resources.getResource("signaturesmodified"))).booleanValue();
-		if( signaturesmodified ) { //process only if signatures are modified
-			
-			//Iterate over dummy jarfiles
-			ArrayList dummies = (ArrayList)Configuration.instance().getProjects().getCompiledDummies();
+
+	/**
+	 * Module run method.
+	 * <p>
+	 * The dummies are replaced in a jarfile after they have been compiled.
+	 * Therefore a <code>JarTransformer</code> is called.
+	 */
+	public void run(CommonResources resources) throws ModuleException
+	{
+		boolean signaturesmodified = ((Boolean) (resources.getResource("signaturesmodified"))).booleanValue();
+		if (signaturesmodified) // process only if signatures are modified
+		{
+			// Iterate over dummy jarfiles
+			ArrayList dummies = (ArrayList) Configuration.instance().getProjects().getCompiledDummies();
 			Iterator dumIt = dummies.iterator();
-			while(dumIt.hasNext()) 
+			while (dumIt.hasNext())
 			{
-				String name = (String)dumIt.next();
+				String name = (String) dumIt.next();
 				JarTransformer transformer = new JarTransformer(name);
 				transformer.run();
 			}
-		}//end signaturesmodified
+		}
 	}
 }

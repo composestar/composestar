@@ -12,104 +12,162 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Debug;
 
-public class ClassModifier {
+/**
+ * Class that modifies a class. It uses javassist to perform the changes.
+ * 
+ * @see javassist.
+ */
+public class ClassModifier
+{
 
 	private static ClassModifier Instance = null;
+
 	private ClassPool classpool;
+
 	private ArrayList pathList;
-	
-	public ClassModifier(){
+
+	/**
+	 * Constructor.
+	 */
+	public ClassModifier()
+	{
 		classpool = ClassPool.getDefault();
 		pathList = new ArrayList();
 	}
-	
+
+	/**
+	 * Returns an <code>ClassModifier</code> instance.
+	 */
 	public static ClassModifier instance()
 	{
-		if (Instance == null) 
+		if (Instance == null)
 		{
 			Instance = new ClassModifier();
 		}
 		return (Instance);
-	} 
-	
-	public void addMethods(List methods, CtClass ct) throws Exception{
-		
+	}
+
+	/**
+	 * Adds a list of methods to a class.
+	 * 
+	 * @param methods - the methods to be added
+	 * @param ct - the class
+	 * @throws Exception - when an error occurs while trying to add the methods
+	 *             to the class.
+	 */
+	public void addMethods(List methods, CtClass ct) throws Exception
+	{
 		Iterator it = methods.iterator();
-		while(it.hasNext()) {
-			JavaMethodInfo m = (JavaMethodInfo)it.next();
+		while (it.hasNext())
+		{
+			JavaMethodInfo m = (JavaMethodInfo) it.next();
 			int modifiers = m.theMethod.getModifiers();
 			CtClass returnClass = null;
-			if(m.ReturnTypeString!=""){
+			if (m.ReturnTypeString != "")
+			{
 				returnClass = findClass(m.ReturnTypeString);
 			}
 			String methodName = m.theMethod.getName();
 			CtClass[] parameters = new CtClass[m.Parameters.size()];
-			if( m.Parameters.size() > 0 ) {
+			if (m.Parameters.size() > 0)
+			{
 				Class[] params = m.theMethod.getParameterTypes();
-				for (int i = 0; i < params.length; i++) {
-					String name = params[i].getName();
-					CtClass clazz = findClass(name);	
-					parameters[i] = clazz;
-				}
-			}
-			CtClass[] exceptions = new CtClass[0];
-			CtMethod newMethod = CtNewMethod.make(modifiers,returnClass,methodName,parameters,exceptions,null,ct);
-			Debug.out(Debug.MODE_INFORMATION,"SITRA","method "+newMethod.getName()+ " added to dummy class "+ct.getName());
-			ct.addMethod(newMethod);
-		}
-		
-	}
-	
-	public void deleteMethods(List methods, CtClass ct) throws Exception {
-		Iterator it = methods.iterator();
-		while(it.hasNext()) {
-			JavaMethodInfo m = (JavaMethodInfo)it.next();
-			CtClass[] parameters = new CtClass[m.Parameters.size()];
-			if( m.Parameters.size() > 0 ) {
-				Class[] params = m.theMethod.getParameterTypes();
-				for (int i = 0; i < params.length; i++) {
+				for (int i = 0; i < params.length; i++)
+				{
 					String name = params[i].getName();
 					CtClass clazz = findClass(name);
 					parameters[i] = clazz;
 				}
 			}
-			CtMethod method = ct.getDeclaredMethod(m.name(),parameters);
+			CtClass[] exceptions = new CtClass[0];
+			CtMethod newMethod = CtNewMethod.make(modifiers, returnClass, methodName, parameters, exceptions, null, ct);
+			Debug.out(Debug.MODE_INFORMATION, "SITRA", "method " + newMethod.getName() + " added to dummy class "
+					+ ct.getName());
+			ct.addMethod(newMethod);
+		}
+
+	}
+
+	/**
+	 * Deletes a list of methods from a class.
+	 * 
+	 * @param methods - the methods to be deleted.
+	 * @param ct - the class.
+	 * @throws Exception - e.g. when method doesn't exist.
+	 */
+	public void deleteMethods(List methods, CtClass ct) throws Exception
+	{
+		Iterator it = methods.iterator();
+		while (it.hasNext())
+		{
+			JavaMethodInfo m = (JavaMethodInfo) it.next();
+			CtClass[] parameters = new CtClass[m.Parameters.size()];
+			if (m.Parameters.size() > 0)
+			{
+				Class[] params = m.theMethod.getParameterTypes();
+				for (int i = 0; i < params.length; i++)
+				{
+					String name = params[i].getName();
+					CtClass clazz = findClass(name);
+					parameters[i] = clazz;
+				}
+			}
+			CtMethod method = ct.getDeclaredMethod(m.name(), parameters);
 			ct.removeMethod(method);
 		}
 	}
 
-	public CtClass findClass(String classname) throws Exception {
+	/**
+	 * Returns a CtClass instance if the class is found.
+	 * 
+	 * @param classname - the fully qualified name of the class.
+	 * @throws Exception - when class cannot be found.
+	 */
+	public CtClass findClass(String classname) throws Exception
+	{
 		CtClass ct = classpool.get(classname);
 		return ct;
 	}
-	
-	public void modifyClass(ClassWrapper c, String classpath) throws Exception {
-		
-		if(!pathList.contains(classpath)) {
-			//insert classpath
+
+	/**
+	 * Modifies a class. A classpath needs to be given in order to find the
+	 * class.
+	 * 
+	 * @param c - class wrapped inside a <code>ClassWrapper</code>.
+	 * @param classpath - classpath.
+	 * @throws Exception - e.g. when class cannot be found.
+	 */
+	public void modifyClass(ClassWrapper c, String classpath) throws Exception
+	{
+
+		if (!pathList.contains(classpath))
+		{
+			// insert classpath
 			classpool.insertClassPath(classpath);
 		}
-		
-		//load class
+
+		// load class
 		CtClass ct = classpool.get(c.getClazz().getName());
-			
-		//make adjustments
+
+		// make adjustments
 		Concern concern = c.getConcern();
 		Signature signature = concern.getSignature();
-	    if( signature != null )
-	    {
-	       	List methods = signature.getMethods(MethodWrapper.ADDED);
-	       	if(methods.size() > 0) {
-	       		addMethods(methods,ct);
-	       	}
-	        	
-	       	methods = signature.getMethods(MethodWrapper.REMOVED);
-	       	if(methods.size() > 0) {
-	       		deleteMethods(methods,ct);
-	       	}
-	    }
-	    
-	   byte[] bytecode = ct.toBytecode();
-	   c.setByteCode(bytecode);
+		if (signature != null)
+		{
+			List methods = signature.getMethods(MethodWrapper.ADDED);
+			if (methods.size() > 0)
+			{
+				addMethods(methods, ct);
+			}
+
+			methods = signature.getMethods(MethodWrapper.REMOVED);
+			if (methods.size() > 0)
+			{
+				deleteMethods(methods, ct);
+			}
+		}
+
+		byte[] bytecode = ct.toBytecode();
+		c.setByteCode(bytecode);
 	}
 }
