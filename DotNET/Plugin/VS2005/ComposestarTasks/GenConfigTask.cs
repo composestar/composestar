@@ -11,7 +11,9 @@ namespace Trese.ComposestarTasks
 	{
 		private string m_projectName;
 		private string m_projectPath;
-		private string[] m_sourceFiles;
+		private string m_clientLanguage;
+		private string[] m_sources;
+		private string[] m_concerns;
 		private ITaskItem[] m_dependencies;
 		private string m_outputPath;
 		private string m_startupObject;
@@ -35,9 +37,21 @@ namespace Trese.ComposestarTasks
 		}
 
 		[Required]
-		public string[] SourceFiles
+		public string ClientLanguage
 		{
-			set { m_sourceFiles = value; }
+			set { m_clientLanguage = value; }
+		}
+
+		[Required]
+		public string[] Sources
+		{
+			set { m_sources = value; }
+		}
+
+		[Required]
+		public string[] Concerns
+		{
+			set { m_concerns = value; }
 		}
 
 		[Required]
@@ -86,17 +100,21 @@ namespace Trese.ComposestarTasks
 
 			Project project = config.AddProject();
 			project.name = m_projectName;
-			project.language = "JSharp";
+			project.language = m_clientLanguage;
 			project.basePath = m_projectPath;
 
-			// sources
-			foreach (string s in m_sourceFiles)
+			// concerns
+			foreach (string s in m_concerns)
 			{
 				string absolutePath = m_projectPath + s;
-				if (IsConcernSource(s))
-					config.concernSources.Add(absolutePath);
-				else
-					project.sources.Add(absolutePath);
+				config.concernSources.Add(absolutePath);
+			}
+
+			// sources
+			foreach (string s in m_sources)
+			{
+				string absolutePath = m_projectPath + s;
+				project.sources.Add(absolutePath);
 			}
 
 			// dependencies
@@ -104,13 +122,8 @@ namespace Trese.ComposestarTasks
 				project.deps.Add(dep.GetMetadata("FullPath"));
 
 			// module settings
-			ModuleSettings filth = config.AddModule("FILTH");
-			ModuleSettings coder = config.AddModule("CODER");
-			ModuleSettings secret = config.AddModule("SECRET");
-			ModuleSettings ilicit = config.AddModule("ILICIT");
-
-			secret["mode"] = "2";
-			ilicit["verifyAssemblies"] = "False";
+			config.AddModuleSetting("SECRET", "mode", "2");
+			config.AddModuleSetting("ILICIT", "verifyAssemblies", "false");
 
 			// paths
 			config.AddPath("Base", m_projectPath);

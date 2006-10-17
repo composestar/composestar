@@ -184,7 +184,7 @@ public class Projects implements Serializable
 			throw new IllegalArgumentException("specified filename cannot be null");
 
 		// normalize specified filename
-		String nfn = FileUtils.fixFilename(fileName);
+		String nfn = FileUtils.normalizeFilename(fileName);
 
 		List sources = getSources();
 		Iterator sourceIt = sources.iterator();
@@ -195,7 +195,7 @@ public class Projects implements Serializable
 			if (sfn == null) continue; // FIXME: can this even happen? if so: how should it be handled?
 			
 			// normalize source filename
-			String nsfn = FileUtils.fixFilename(sfn);
+			String nsfn = FileUtils.normalizeFilename(sfn);
 			
 			// compare specified and source
 			if (nfn.equals(nsfn)) return s;

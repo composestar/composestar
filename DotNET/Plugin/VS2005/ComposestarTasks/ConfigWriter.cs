@@ -143,13 +143,13 @@ namespace Trese.ComposestarTasks
 		private void WriteModuleSettings(XmlWriter xw)
 		{
 			xw.WriteStartElement("Modules");
-			foreach (ModuleSettings m in m_config.modules)
+			foreach (ModuleSettings ms in m_config.modules.Values)
 			{
 				xw.WriteStartElement("Module");
-				xw.WriteAttributeString("name", m.name);
+				xw.WriteAttributeString("name", ms.name);
 
 				// add all properties
-				foreach (KeyValuePair<String,String> p in m.props)
+				foreach (KeyValuePair<String,String> p in ms.props)
 					xw.WriteAttributeString(p.Key, p.Value);
 
 				xw.WriteEndElement();

@@ -65,7 +65,9 @@
 						<xsl:apply-templates select="*/Build/References/Reference" />
 					</xsl:element>
 					
-					<xsl:element name="TypeSources" /><!-- dummy -->
+					<!-- (not used)
+					<xsl:element name="TypeSources" />
+					-->
 					
 				</xsl:element><!-- /Project -->
 				

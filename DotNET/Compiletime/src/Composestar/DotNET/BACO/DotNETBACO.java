@@ -16,10 +16,11 @@ public class DotNETBACO extends BACO
 	// FIXME: assumption about .NET installation
 	public static boolean isSystemAssembly(String filename)
 	{
-		String lcname = filename.toLowerCase(); 
-		return (lcname.indexOf("microsoft.net/framework/") != -1)
-			|| (lcname.indexOf("assembly/gac/") != -1);
+		String nfn = FileUtils.normalizeFilename(filename).toLowerCase();
+		return (nfn.indexOf("microsoft.net/framework/") != -1)
+			|| (nfn.indexOf("assembly/gac/") != -1);
 	}
+	
 	protected boolean isNeededDependency(Dependency dependency)
 	{
 		return !isSystemAssembly(dependency.getFileName());

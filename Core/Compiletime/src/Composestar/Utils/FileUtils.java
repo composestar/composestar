@@ -6,7 +6,6 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +23,6 @@ public class FileUtils
 
 	/**
 	 * Adds double quotes around the specified filename.
-     * @param filename
      */
 	public static String quote(String filename)
 	{
@@ -36,7 +34,6 @@ public class FileUtils
 	
 	/**
 	 * Removes double quotes around the specified filename.
-     * @param filename
      */
 	public static String unquote(String filename)
 	{
@@ -69,18 +66,23 @@ public class FileUtils
 	 * only work in Windows.
 	 * 
 	 * @param name A filename, possibly containing backslashes.
-	 * @return The filename, with backslashes converted to slashes.
-	 * 
-	 * TODO: perhaps rename to 'normalizeFilename'?
+	 * @return The filename, with all backslashes converted to slashes.
 	 */
-	public static String fixFilename(String name)
+	public static String normalizeFilename(String name)
 	{
 		return name.replace('\\', '/');
 	}
 
 	/**
+	 * @deprecated use normalizeFilename
+	 */
+	public static String fixFilename(String name)
+	{
+		return normalizeFilename(name);
+	}
+	
+	/**
 	 * Returns true if the specified filename refers to an existing file.
-     * @param filename
      */
 	public static boolean fileExist(String filename)
 	{
@@ -89,7 +91,6 @@ public class FileUtils
 	
 	/**
 	 * Returns true if the file specified by the filename was succesfully deleted.
-     * @param filename
      */
 	public static boolean delete(String filename)
 	{
@@ -187,7 +188,6 @@ public class FileUtils
 	 * Get a file stream for the SAX parser whitout the Root element could not
 	 * be found exception. This is caused by a BOM character which is skipped by
 	 * this file reader.
-     * @param xmlFile
      */
 	public static FileInputStream getCleanInputStream(File xmlFile)
 		throws  IOException
@@ -205,7 +205,6 @@ public class FileUtils
 	/**
 	 * Get count of leading characters that denote the byte order mark, part of
 	 * the unicode standard. These make SaxParser barf
-     * @param xmlFile
      */
 	private static int getBOMCount(File xmlFile) 
 		throws  IOException
@@ -225,7 +224,6 @@ public class FileUtils
 
 	/**
 	 * Closes the specified Reader instance, provided it is not null.
-     * @param reader
      */
 	public static void close(Reader reader)
 	{
@@ -241,7 +239,6 @@ public class FileUtils
 
 	/**
 	 * Closes the specified Writer instance, provided it is not null.
-     * @param writer
      */
 	public static void close(Writer writer)
 	{
@@ -257,7 +254,6 @@ public class FileUtils
 	
 	/**
 	 * Closes the specified InputStream instance, provided it is not null.
-     * @param is
      */
 	public static void close(InputStream is)
 	{
@@ -268,12 +264,11 @@ public class FileUtils
 		catch (IOException e) {
 			// this shouldnt happen
 			throw new RuntimeException("Unable to close stream: " + e.getMessage());
-		}		
+		}
 	}
 
 	/**
 	 * Closes the specified OutputStream instance, provided it is not null.
-     * @param os
      */
 	public static void close(OutputStream os)
 	{
@@ -284,6 +279,6 @@ public class FileUtils
 		catch (IOException e) {
 			// this shouldnt happen
 			throw new RuntimeException("Unable to close stream: " + e.getMessage());
-		}		
+		}
 	}
 }

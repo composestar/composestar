@@ -22,8 +22,11 @@ public final class MSBatchBuild extends BaseTask
 	
 	public void execute() throws BuildException
 	{		
-		String cmd[] = new String[2];
+		String cmd[] = new String[5];
 		cmd[0] = EXECUTABLE;
+		cmd[2] = "/t:ComposeStarGen";
+		cmd[3] = "/v:q";
+		cmd[4] = "/nologo";
 		
 		ExecuteStreamHandler sh = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);		
 		Execute exec = new Execute(sh);
@@ -41,12 +44,13 @@ public final class MSBatchBuild extends BaseTask
 				
 				log("Building " + buildFile, Project.MSG_INFO);
 	
-//				int result = exec.execute();			
-//				if (Execute.isFailure(result))
-//					throw new BuildException(EXECUTABLE + " failed with code " + result);
+				int result = exec.execute();			
+				if (Execute.isFailure(result))
+					log(EXECUTABLE + " failed with code " + result, Project.MSG_INFO);
+					//throw new BuildException(EXECUTABLE + " failed with code " + result);
 			}
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
 			throw new BuildException("Unable to execute command: " + e.getMessage());
 		}

@@ -7,91 +7,93 @@
   <UsingTask TaskName="Trese.ComposestarTasks.GenConfigTask" AssemblyFile="ComposestarTasks.dll"/>
   <UsingTask TaskName="Trese.ComposestarTasks.ComposestarCompilerTask" AssemblyFile="ComposestarTasks.dll"/>
 
-	<Target
-		  Name="ComposeStarGen"
-		  DependsOnTargets="ResolveReferences">
-		<Message Text="Generating BuildConfiguration.xml"	/>
-    <GetFrameworkPath>
-      <Output TaskParameter="Path" PropertyName="FrameworkPath"/>
-    </GetFrameworkPath>
-    <GetFrameworkSdkPath>
-      <Output TaskParameter="Path" PropertyName="FrameworkSdkPath"/>
-    </GetFrameworkSdkPath>
-		<GenConfigTask
-        ProjectName="$(Name)" 
-        ProjectPath="$(MSBuildProjectDirectory)"
-        SourceFiles="@(Compile)"
-        Dependencies="@(ReferencePath)"
-        OutputPath="$(MSBuildProjectDirectory)\$(OutputPath)"
-			  StartupObject="$(StartupObject)" 
-        FrameworkPath="$(FrameworkPath)" 
-        FrameworkSdkPath="$(FrameworkSdkPath)"/>
-	</Target>
+    <Target
+        Name="ComposeStarGen"
+        DependsOnTargets="ResolveReferences">
+      <Message Text="Generating BuildConfiguration.xml"/>
+      <GetFrameworkPath>
+        <Output TaskParameter="Path" PropertyName="FrameworkPath"/>
+      </GetFrameworkPath>
+      <GetFrameworkSdkPath>
+        <Output TaskParameter="Path" PropertyName="FrameworkSdkPath"/>
+      </GetFrameworkSdkPath>
+      <GenConfigTask
+          ProjectName="$(Name)" 
+          ProjectPath="$(MSBuildProjectDirectory)"
+          ClientLanguage="$(ClientLanguage)" 
+          Sources="@(Compile)"
+          Concerns="@(Concern)" 
+          Dependencies="@(ReferencePath)"
+          OutputPath="$(MSBuildProjectDirectory)\$(OutputPath)"
+          StartupObject="$(StartupObject)" 
+          FrameworkPath="$(FrameworkPath)" 
+          FrameworkSdkPath="$(FrameworkSdkPath)"/>
+    </Target>
   
-	<!--Compile target (this is the target that calls the compiler task)-->
-  <Target Name="ComposeStarCompilerTarget">
-    <Message Text="Building: @(IntermediateAssembly)"/>
-		<ComposestarCompilerTask/>
+    <!--Compile target (this is the target that calls the compiler task)-->
+    <Target Name="ComposeStarCompilerTarget">
+      <Message Text="Building: @(IntermediateAssembly)"/>
+      <ComposestarCompilerTask/>
 <!--
-			BuildPath="$(MSBuildProjectDirectory)\$(OutputPath)" 
-      OutputAssembly="@(IntermediateAssembly)"
-      MainFile="$(MainFile)"
-      TargetKind="$(OutputType)"
-      IncludeDebugInformation="$(IncludeDebugInformation)"
+          BuildPath="$(MSBuildProjectDirectory)\$(OutputPath)" 
+          OutputAssembly="@(IntermediateAssembly)"
+          MainFile="$(MainFile)"
+          TargetKind="$(OutputType)"
+          IncludeDebugInformation="$(IncludeDebugInformation)"
 -->
   </Target>
 
   <!--This is an override of CoreCompile to have our IronPythonCompilerTarget be called at compile time-->
   <Target
-    Name="CoreCompile"
-    Inputs="@(Compile);@(ReferencePath)"
-    Outputs="@(IntermediateAssembly)" 
-    DependsOnTargets="ComposeStarCompilerTarget"
+      Name="CoreCompile"
+      Inputs="@(Compile);@(ReferencePath)"
+      Outputs="@(IntermediateAssembly)" 
+      DependsOnTargets="ComposeStarCompilerTarget"
  />
 <!--
-    DependsOnTargets="$(CoreCompileDependsOn);ComposeStarCompilerTarget"
+      DependsOnTargets="$(CoreCompileDependsOn);ComposeStarCompilerTarget"
 -->
 <!--
   <UsingTask
-	    TaskName="CreateCSharpManifestResourceName" 
-			AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
-			
+      TaskName="CreateCSharpManifestResourceName" 
+      AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+            
   <Target
       Name="CreateManifestResourceNames"
       Condition="'@(ResxWithNoCulture)@(ResxWithCulture)@(NonResxWithNoCulture)@(NonResxWithCulture)'!=''"
       DependsOnTargets="$(CreateManifestResourceNamesDependsOn)">
 
-		<CreateCSharpManifestResourceName
-			    Condition="'@(ResxWithNoCulture)'!=''"
-          ResourceFiles="@(ResxWithNoCulture)"
-          RootNamespace="$(RootNamespace)">
+    <CreateCSharpManifestResourceName
+        Condition="'@(ResxWithNoCulture)'!=''"
+        ResourceFiles="@(ResxWithNoCulture)"
+        RootNamespace="$(RootNamespace)">
 
       <Output TaskParameter="ManifestResourceNames" ItemName="ManifestResourceWithNoCultureName"/>
 
     </CreateCSharpManifestResourceName>
 
     <CreateCSharpManifestResourceName
-			    Condition="'@(ResxWithCulture)'!=''"
-          ResourceFiles="@(ResxWithCulture)"
-          RootNamespace="$(RootNamespace)">
+        Condition="'@(ResxWithCulture)'!=''"
+        ResourceFiles="@(ResxWithCulture)"
+        RootNamespace="$(RootNamespace)">
 
       <Output TaskParameter="ManifestResourceNames" ItemName="ManifestResourceWithCultureName"/>
 
     </CreateCSharpManifestResourceName>
 
     <CreateCSharpManifestResourceName
-			    Condition="'@(NonResxWithNoCulture)'!=''"
-          ResourceFiles="@(NonResxWithNoCulture)"
-          RootNamespace="$(RootNamespace)">
+        Condition="'@(NonResxWithNoCulture)'!=''"
+        ResourceFiles="@(NonResxWithNoCulture)"
+        RootNamespace="$(RootNamespace)">
 
       <Output TaskParameter="ManifestResourceNames" ItemName="ManifestNonResxWithNoCulture"/>
 
     </CreateCSharpManifestResourceName>
 
     <CreateCSharpManifestResourceName
-			    Condition="'@(NonResxWithCulture)'!=''"
-          ResourceFiles="@(NonResxWithCulture)"
-          RootNamespace="$(RootNamespace)">
+        Condition="'@(NonResxWithCulture)'!=''"
+        ResourceFiles="@(NonResxWithCulture)"
+        RootNamespace="$(RootNamespace)">
 
       <Output TaskParameter="ManifestResourceNames" ItemName="ManifestNonResxWithCulture"/>
 

@@ -471,8 +471,7 @@ public class INCRE implements CTCommonModule
   			return ((Boolean)filesCheckedOnProjectConfig.get(filename)).booleanValue();	
 		
 		boolean isAdded = true;
-		String fixedFile = FileUtils.fixFilename(filename).toLowerCase();
-		String searchStr;
+		String fixedFile = FileUtils.normalizeFilename(filename).toLowerCase();
 		StringBuffer searchBuffer = new StringBuffer("");	
 		
 		// As an optimalization: 
@@ -531,20 +530,18 @@ public class INCRE implements CTCommonModule
 		}
 		
 		// file in old project configurations?
-		searchStr = FileUtils.fixFilename(searchBuffer.toString()).toLowerCase();
-		if(searchStr.indexOf(fixedFile)>=0)
+		String searchStr = FileUtils.normalizeFilename(searchBuffer.toString()).toLowerCase();
+		if (searchStr.indexOf(fixedFile) != -1)
 			isAdded = false; // file not added to project
 		
-		if(isAdded){
+		if (isAdded)
 			Debug.out(Debug.MODE_DEBUG,"INCRE","File "+fixedFile+" added to project since last compilation run");
-		}
 				
 		this.filesCheckedOnProjectConfig.put(filename, Boolean.valueOf(isAdded));
 		return isAdded;
 	}
    /**
-    * @return true when module is incremental
-    * @param name
+    * @return true when module with the specified name is incremental
     */
 	public boolean isModuleInc(String name)
 	{

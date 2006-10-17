@@ -14,7 +14,7 @@ namespace Trese.ComposestarTasks
 		public IList<Project> projects = new List<Project>();
 		public IList<string> concernSources = new List<string>();
 		public IList<Filter> customFilters = new List<Filter>();
-		public IList<ModuleSettings> modules = new List<ModuleSettings>();
+		public IDictionary<string, ModuleSettings> modules = new Dictionary<string,ModuleSettings>();
 		public IList<Path> paths = new List<Path>();
 
 		public Project AddProject()
@@ -24,11 +24,15 @@ namespace Trese.ComposestarTasks
 			return p;
 		}
 
-		public ModuleSettings AddModule(string name)
+		private ModuleSettings getModuleSettings(string name)
 		{
-			ModuleSettings ms = new ModuleSettings();
-			ms.name = name;
-			return ms;
+			return (modules.ContainsKey(name) ? modules[name] : modules[name] = new ModuleSettings(name));
+		}
+
+		public void AddModuleSetting(string module, string key, string value)
+		{
+			ModuleSettings ms = getModuleSettings(module);
+			ms[key] = value;
 		}
 
 		public void AddPath(string name, string pathName)
@@ -54,6 +58,11 @@ namespace Trese.ComposestarTasks
 	{
 		public string name;
 		public IDictionary<string, string> props = new Dictionary<string,string>();
+
+		public ModuleSettings(string name)
+		{
+			this.name = name;
+		}
 
 		public string this[string key]
 		{

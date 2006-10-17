@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -43,55 +42,40 @@ import Composestar.Utils.Version;
  */
 public class DotNETMaster extends Master
 {
-	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-
 	private CommonResources resources;
 	private String configfile;
 
 	/**
 	 * Default ctor.
-     * @param configurationFile
      */
 	public DotNETMaster(String configurationFile) throws ModuleException
 	{
 		configfile = configurationFile;
-		Debug.setMode(3);
-		resources = new CommonResources();
 
 		//  create the repository
 		DataStore ds = DataStore.instance();
 
+		resources = new CommonResources();
 		ds.addObject(RESOURCES_KEY, resources);
 
-		// init the project configuration file
-		resources.CustomFilters = new Properties();
-
+		// load the project configuration file
 		try {
-			Debug.out(Debug.MODE_DEBUG,"Master","Reading build configuration from: "+configurationFile);
-			SAXParserFactory saxParserFactory =
-				SAXParserFactory.newInstance();
+			Debug.out(Debug.MODE_DEBUG,"Master","Reading build configuration from: " + configurationFile);
+			
+			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
-			XMLReader  parser  = saxParser.getXMLReader();
-			//BuildXMLHandler handler = new BuildXMLHandler( parser );
-			BuildConfigHandler handler = new BuildConfigHandler(parser);
-			parser.setContentHandler( handler );
-			parser.parse( new InputSource( configurationFile ));
+			XMLReader parser = saxParser.getXMLReader();
 
-			//System.out.println("Done... "+config.pathSettings.getPath("Base"));
-			//System.exit(-1);
+			BuildConfigHandler handler = new BuildConfigHandler(parser);
+			parser.setContentHandler(handler);
+			parser.parse(new InputSource(configurationFile));
 		}
-		catch (Exception e) { 
+		catch (Exception e) {
 			throw new ModuleException("An error occured while reading the build configuration file: "+configurationFile+", reason: "+e.getMessage(),"Master");
 		}
 
-		ds.addObject(Master.RESOURCES_KEY,resources);
-
 		// Set debug level
 		Debug.setMode(Configuration.instance().getBuildDebugLevel());
-
-		//just added this for testing
-		//fixme:we need to iterate over all the cps files specified in the configuration
-		//resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
 	}
 
 	/**
@@ -111,7 +95,7 @@ public class DotNETMaster extends Master
 			else {
 				System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");
 				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting XMLReaderImpl XML SAX Driver");
-			}    		 
+			}
 
 			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
 			DataStore.instance();

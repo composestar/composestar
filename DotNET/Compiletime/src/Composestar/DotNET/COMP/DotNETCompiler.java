@@ -67,11 +67,12 @@ public class DotNETCompiler implements LangCompiler
 		{
 			// set the libraries
 			Dependency dependency = (Dependency)depIt.next();
-			libs += clstring.replaceAll(TOKEN_LIB, FileUtils.quote(dependency.getFileName())) + " ";
+			String lib = FileUtils.normalizeFilename(dependency.getFileName());
+			libs += clstring.replaceAll(TOKEN_LIB, FileUtils.quote(lib)) + " ";
 		}
 
-		String dummiesdll = project.getCompiledDummies();
-		libs += clstring.replaceAll(TOKEN_LIB, FileUtils.quote(dummiesdll)) + " ";
+		String dumlib = FileUtils.normalizeFilename(project.getCompiledDummies());
+		libs += clstring.replaceAll(TOKEN_LIB, FileUtils.quote(dumlib)) + " ";
 
 		// compile each source
 		String objPath = config.getPathSettings().getPath("Base") + "obj/";
@@ -214,7 +215,7 @@ public class DotNETCompiler implements LangCompiler
 		File base = new File(basePath);
 		File target = new File(base, "obj/dummies/" + dummiesFile);
 		
-		return FileUtils.fixFilename(target.getAbsolutePath());
+		return FileUtils.normalizeFilename(target.getAbsolutePath());
 	}
 	
 	/**
@@ -264,8 +265,7 @@ public class DotNETCompiler implements LangCompiler
 	}
 	
 	/**
-	 * returns a list containing the filenames of all externally linked sources
-     * @param src
+	 * @return a list containing the filenames of all externally linked sources
      */
 	public ArrayList externalSources(Source src) throws ModuleException
 	{ 
@@ -328,7 +328,6 @@ public class DotNETCompiler implements LangCompiler
 	 * of concerns extracted from external linked source files
 	 * 
 	 * Used by INCRE
-     * @param src
      */
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{ 

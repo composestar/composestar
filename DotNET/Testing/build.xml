@@ -21,6 +21,7 @@
 	<target name="build"/>
 	
 	<target name="test" depends="test_bgen,test_exec" description="Execute the DotNET system test."/>
+	<target name="test_new" depends="test_msbuild,test_exec" description="Execute the DotNET system test."/>
 	
 	<target name="init_tasks">
 		<taskdef name="cstarConvert"  classname="Composestar.Ant.Taskdefs.CstarConvert"/>
@@ -109,7 +110,7 @@
 		</cstarConvert>
 	</target>
 
-	<target name="test_msbuild" depends="init,test_convert">
+	<target name="test_msbuild" depends="init,test_convert" description="Generates BuildConfiguration.xml files with MSBuild">
 		<msbatchbuild>
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.cpsproj"/>

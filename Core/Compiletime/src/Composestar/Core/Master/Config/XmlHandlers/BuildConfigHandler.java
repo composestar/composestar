@@ -43,8 +43,8 @@ public class BuildConfigHandler extends DefaultHandler implements ContentHandler
 					config.setBuildDebugLevel(level);
 				}
 				catch (NumberFormatException e) {
-					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + buildDebugLevel + "'. Expecting a number between 0 and 4. Reverting to default level 1.");
-					config.setBuildDebugLevel(1);					
+					Debug.out(Debug.MODE_WARNING, "MASTER", "Invalid build debug level '" + buildDebugLevel + "'. Expecting a number between 0 and 4. Reverting to default level 2.");
+					config.setBuildDebugLevel(2);
 				}
 			}
 
