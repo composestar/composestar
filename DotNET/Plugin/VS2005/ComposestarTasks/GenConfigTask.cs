@@ -104,16 +104,16 @@ namespace Trese.ComposestarTasks
 			project.basePath = m_projectPath;
 
 			// concerns
-			foreach (string s in m_concerns)
+			foreach (string concernPath in m_concerns)
 			{
-				string absolutePath = m_projectPath + s;
+				string absolutePath = m_projectPath + concernPath;
 				config.concernSources.Add(absolutePath);
 			}
 
 			// sources
-			foreach (string s in m_sources)
+			foreach (string sourcePath in m_sources)
 			{
-				string absolutePath = m_projectPath + s;
+				string absolutePath = m_projectPath + sourcePath;
 				project.sources.Add(absolutePath);
 			}
 
@@ -122,6 +122,7 @@ namespace Trese.ComposestarTasks
 				project.deps.Add(dep.GetMetadata("FullPath"));
 
 			// module settings
+			config.AddModuleSetting("INCRE", "config", "INCRE-DotNET2.xml");
 			config.AddModuleSetting("SECRET", "mode", "2");
 			config.AddModuleSetting("ILICIT", "verifyAssemblies", "false");
 

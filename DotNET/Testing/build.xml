@@ -44,11 +44,9 @@
 				<exclude name="Jukebox/jukeboxframe/*"/>
 				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
-			<!--
-			<Module name="INCRE">
-				<Setting key="config" value="INCREconfig.xml"/>
-			</Module>
-			-->
+			<Modules>
+				<INCRE config="${INCRE.config}"/>
+			</Modules>
 		</cstarBuildGen>
 	</target>
 	
