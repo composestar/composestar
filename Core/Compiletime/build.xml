@@ -7,7 +7,7 @@
 			<available file="../common.xml"/>
 		</and>
 	</condition>
-	<import file="../common.xml"/>
+	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
