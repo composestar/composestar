@@ -2,7 +2,7 @@
 
 
 
-namespace Composestar.CpsParser
+namespace Composestar.StarLight.CpsParser
 {
 	// Generate the header common to all output files.
 	using System;

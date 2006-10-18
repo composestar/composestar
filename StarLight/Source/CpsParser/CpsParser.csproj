@@ -7,8 +7,8 @@
     <ProjectGuid>{4684F559-E4BA-466E-8EED-962987B34363}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Composestar.CpsParser</RootNamespace>
-    <AssemblyName>Composestar.CpsParser</AssemblyName>
+    <RootNamespace>Composestar.StarLight.CpsParser</RootNamespace>
+    <AssemblyName>Composestar.StarLight.CpsParser</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -2,7 +2,7 @@
 
 
 
-namespace Composestar.CpsParser
+namespace Composestar.StarLight.CpsParser
 {
 	public class CpsTokenTypes
 	{
