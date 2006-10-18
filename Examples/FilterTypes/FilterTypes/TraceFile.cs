@@ -3,11 +3,12 @@ using System.IO;
 
 namespace FilterTypes
 {
-    public class TraceFile
+    public class TraceFile : IDisposable 
     {
         
         private static FileStream _tracefile = null;
         private static StreamWriter _tracefileWriter = null;
+        private bool disposed = false;
 
         private static void Open()
         {
@@ -33,6 +34,36 @@ namespace FilterTypes
             _tracefileWriter.Flush();
         }
 
+        public void Dispose()
+        {          
+            // dispose of the managed and unmanaged resources
+            Dispose(true);
+
+            // tell the GC that the Finalize process no longer needs
+            // to be run for this object.
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposeManagedResources)
+        {
+            // process only if mananged and unmanaged resources have
+            // not been disposed of.
+            if (!this.disposed)
+            {
+                if (disposeManagedResources)
+                {
+                  
+                    // dispose managed resources
+                    if (_tracefileWriter != null)
+                    {
+                        _tracefileWriter.Dispose();
+                        _tracefileWriter = null;
+                    }
+                }
+                
+                disposed = true;
+            }       
+        }
     }
 
 

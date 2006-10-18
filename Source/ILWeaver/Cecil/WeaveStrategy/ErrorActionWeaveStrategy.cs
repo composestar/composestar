@@ -49,7 +49,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             // Create an exception
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj, 
-                visitor.CreateMethodReference(typeof(Exception).GetConstructors()[0])));
+                CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.ExceptionConstructor)));
 
             // Throw the exception
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Throw));

@@ -39,13 +39,11 @@ namespace Composestar.StarLight.ILWeaver
                 filterAction.Target.Equals(FilterAction.SELF_TARGET))
             {
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                methodInfo = typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]);
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));               
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
-                methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) });
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetStartTarget)));         
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
             }
             else if(visitor.Method.HasThis)
             {
@@ -58,27 +56,24 @@ namespace Composestar.StarLight.ILWeaver
                 }
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));
-                methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));              
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
             }
             else
             {
                 // set to null for static methods
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
-                methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) });
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
             }
 
             // store current selector
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.Selector));
-            methodInfo = typeof(JoinPointContext).GetMethod("set_CurrentSelector", new Type[] { typeof(string) });
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.Selector));           
             visitor.Instructions.Add(visitor.Worker.Create(
-                OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
 
 
             // Store substitution target
@@ -86,13 +81,11 @@ namespace Composestar.StarLight.ILWeaver
                 filterAction.SubstitutionTarget.Equals(FilterAction.SELF_TARGET))
             {
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                methodInfo = typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]);
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));                
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
-                methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) });
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetStartTarget)));                
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetSubstitutionTarget)));
             }
             else if(visitor.Method.HasThis)
             {
@@ -105,27 +98,24 @@ namespace Composestar.StarLight.ILWeaver
                 }
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));
-                methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldfld, field));                
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetSubstitutionTarget)));                
             }
             else
             {
                 // set to null for static methods
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
-                methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) });
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));                
                 visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetSubstitutionTarget)));                
             }
 
             // store substitution selector
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.SubstitutionSelector));
-            methodInfo = typeof(JoinPointContext).GetMethod("set_SubstitutionSelector", new Type[] { typeof(string) });
+            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldstr, filterAction.SubstitutionSelector));            
             visitor.Instructions.Add(visitor.Worker.Create(
-                OpCodes.Callvirt, visitor.CreateMethodReference(methodInfo)));
+                OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetSubstitutionSelector)));                
         }
 
         /// <summary>
@@ -142,9 +132,9 @@ namespace Composestar.StarLight.ILWeaver
                 // Load the ordinal
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
 
-                // Call the GetArgumentValue(int16) function    
-                MethodInfo t = typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) });
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, visitor.CreateMethodReference(t)));
+                // Call the GetArgumentValue(int16) function                    
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Callvirt, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetArgumentValue)));
 
                 // Check if parameter is value type, then unbox
                 if(param.ParameterType.IsValueType)
@@ -180,9 +170,9 @@ namespace Composestar.StarLight.ILWeaver
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Call set_ReturnValue in JoinPointContext
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, visitor.CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("SetReturnValue", 
-                    new Type[] { typeof(object), typeof(JoinPointContext) }))));
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Call, CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetReturnValue))); 
+                    
             }
         }
 
@@ -207,9 +197,9 @@ namespace Composestar.StarLight.ILWeaver
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Call get_StartTarget in JoinPointContext
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, visitor.CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]))));
-
+                visitor.Instructions.Add(visitor.Worker.Create(
+                    OpCodes.Call,  CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetStartTarget))); 
+                    
                 // Do a cast
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Castclass, visitor.CalledMethod.DeclaringType));
             }

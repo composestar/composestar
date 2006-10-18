@@ -1,9 +1,11 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Diagnostics;
 using System.ComponentModel;
+#endregion
 
 namespace Composestar.StarLight.ContextInfo
 {
@@ -134,6 +136,10 @@ namespace Composestar.StarLight.ContextInfo
 
         #endregion
 
+        #region Arguments Handling 
+
+        #region Add Arguments
+
         /// <summary>
         /// Adds the argument of a method to the list of arguments.
         /// </summary>
@@ -147,6 +153,22 @@ namespace Composestar.StarLight.ContextInfo
                 _arguments[ordinal] = new ArgumentInfo(argumentType, value);
             else
                 _arguments.Add(ordinal, new ArgumentInfo(argumentType, value));
+        }
+
+        /// <summary>
+        /// Adds the argument of a method to the list of arguments.
+        /// </summary>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <param name="argumentType">Type of the argument.</param>
+        /// <param name="argumentAttributes">The argument attributes.</param>
+        /// <param name="value">The value.</param>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void AddArgument(short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, object value )
+        {
+            if (_arguments.ContainsKey(ordinal))
+                _arguments[ordinal] = new ArgumentInfo(argumentType, value, argumentAttributes);
+            else
+                _arguments.Add(ordinal, new ArgumentInfo(argumentType, value, argumentAttributes));
         }
 
         /// <summary>
@@ -165,6 +187,28 @@ namespace Composestar.StarLight.ContextInfo
                 context.AddArgument(ordinal, argumentType, value);
             }
         }
+
+        /// <summary>
+        /// Adds the argument of a method to the list of arguments in the given JoinPointContext.
+        /// This static method is usefull to add an argument that is on the stack, because we cannot 
+        /// directly place the JoinPointContext object before it on the stack.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <param name="argumentType">Type of the argument.</param>
+        /// <param name="argumentAttributes">The argument attributes.</param>
+        /// <param name="context">The context.</param>
+        public static void AddArgument(object value, short ordinal, Type argumentType, ArgumentAttributes argumentAttributes, JoinPointContext context)
+        {
+            if (context != null)
+            {
+                context.AddArgument(ordinal, argumentType, argumentAttributes, value);
+            }
+        }
+
+        #endregion
+
+        #region Retrieve Arguments
 
         /// <summary>
         /// Gets the argument value based on the ordinal.
@@ -188,6 +232,38 @@ namespace Composestar.StarLight.ContextInfo
             else
                 return null;
         }
+
+        /// <summary>
+        /// Gets the argument attributes.
+        /// </summary>
+        /// <param name="ordinal">The ordinal.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">
+        /// This exception will be raised when the ordinal could not be found in the list of arguments.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public ArgumentAttributes GetArgumentAttributes(short ordinal)
+        {
+            ArgumentInfo ai;
+            if (_arguments.TryGetValue(ordinal, out ai))
+                return ai.Attributes;
+            else
+                throw new ArgumentNullException("ordinal");
+        }
+
+        /// <summary>
+        /// Get the <see cref="T:ArgumentInfo"></see> object or <see langword="null"></see> when the <paramref name="ordinal"/> is not found.
+        /// </summary>
+        /// <param name="ordinal">The ordinal of the argument.</param>
+        /// <returns>Argument info object or <see langword="null"></see> when the <paramref name="ordinal"/> is not found.</returns>
+        public ArgumentInfo GetArgumentInfo(short ordinal)
+        {
+            ArgumentInfo ai;
+            _arguments.TryGetValue(ordinal, out ai);
+            
+            return ai;
+            
+        } // GetArgumentInfo(ordinal)
 
         /// <summary>
         /// Gets the argument value using a generic type.
@@ -240,6 +316,25 @@ namespace Composestar.StarLight.ContextInfo
                 return _arguments.Count;
             }
         }
+
+        /// <summary>
+        /// Get an ordered list of arguments.
+        /// </summary>
+        /// <value>The arguments.</value>
+        /// <returns>List</returns>
+        public Dictionary<short, ArgumentInfo> GetArguments
+        {
+            get
+            {
+                return _arguments;
+            } // get
+        } // GetArguments()
+
+        #endregion
+
+        #endregion
+
+        #region Return Values
 
         /// <summary>
         /// Gets a value indicating whether this JoinPointContext has a return value.
@@ -318,6 +413,10 @@ namespace Composestar.StarLight.ContextInfo
                 context.ReturnValue = obj;
             }
         }
+
+        #endregion
+
+        #region Context Properties
 
         /// <summary>
         /// Adds a property to the JoinPointContext, so you can use it in a following FilterAction.
@@ -428,55 +527,118 @@ namespace Composestar.StarLight.ContextInfo
             }
         }
 
+        #endregion
+      
+    }
+
+    #region ArgumentInfo class
+
+    /// <summary>
+    /// Internal class for storing the arguments.
+    /// </summary>
+    public sealed class ArgumentInfo
+    {
+
         /// <summary>
-        /// Internal class for storing the arguments.
+        /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
         /// </summary>
-        private sealed class ArgumentInfo
+        public ArgumentInfo()
         {
+        }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
-            /// </summary>
-            public ArgumentInfo()
-            {
-            }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="value">The value.</param>
+        public ArgumentInfo(Type type, Object value)
+        {
+            _type = type;
+            _value = value;
+        }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
-            /// </summary>
-            /// <param name="type">The type.</param>
-            /// <param name="value">The value.</param>
-            public ArgumentInfo(Type type, Object value)
-            {
-                _type = type;
-                _value = value;
-            }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="argumentAttributes">The argument attributes.</param>
+        public ArgumentInfo(Type type, Object value, ArgumentAttributes argumentAttributes)
+        {
+            _type = type;
+            _value = value;
+            _argumentAttributes = argumentAttributes;
+        }
 
-            private Type _type;
+        private Type _type;
 
-            /// <summary>
-            /// Gets or sets the type.
-            /// </summary>
-            /// <value>The type.</value>
-            public Type Type
-            {
-                get { return _type; }
-                set { _type = value; }
-            }
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        public Type Type
+        {
+            get { return _type; }
+            set { _type = value; }
+        }
 
-            private object _value;
+        private object _value;
 
-            /// <summary>
-            /// Gets or sets the value.
-            /// </summary>
-            /// <value>The value.</value>
-            public object Value
-            {
-                get { return _value; }
-                set { _value = value; }
-            }
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>The value.</value>
+        public object Value
+        {
+            get { return _value; }
+            set { _value = value; }
+        }
 
+        private ArgumentAttributes _argumentAttributes;
+
+        /// <summary>
+        /// Gets or sets the argument attributes.
+        /// </summary>
+        /// <value>The argument attributes.</value>
+        public ArgumentAttributes Attributes
+        {
+            get { return _argumentAttributes; }
+            set { _argumentAttributes = value; }
         }
 
     }
+
+    #endregion
+
+    #region Argument Attributes
+
+    /// <summary>
+    /// Argument attributes. This is a <see cref="T:System.FlagsAttribute" /> enumeration so multiple options are possible.
+    /// </summary>
+    [Flags]
+    public enum ArgumentAttributes : short
+    {
+        /// <summary>
+        /// Argument is an input argument.
+        /// </summary>
+        In = 0x0001,
+        /// <summary>
+        /// Argument is an output argument.
+        /// </summary>
+        Out = 0x0002,
+        /// <summary>
+        /// Argument is optional.
+        /// </summary>
+        Optional = 0x0010,
+        /// <summary>
+        /// Argument has a default value.
+        /// </summary>
+        HasDefault = 0x1000,
+        /// <summary>
+        /// Argument has a field marshal.
+        /// </summary>
+        HasFieldMarshal = 0x2000
+    }
+
+    #endregion
 }

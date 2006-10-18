@@ -215,6 +215,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find method with signature &apos;{0}&apos; in the cache..
+        /// </summary>
+        internal static string MethodSignatureNotFound {
+            get {
+                return ResourceManager.GetString("MethodSignatureNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid configuration. No Strong Name Key file specified..
         /// </summary>
         internal static string NoSNKSpecified {

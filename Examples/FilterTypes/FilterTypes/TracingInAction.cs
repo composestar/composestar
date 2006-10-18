@@ -29,28 +29,36 @@ namespace FilterTypes
 
             TraceFile.WriteLine("IN Tracing: Sender={0}, Target={1}, Selector={2} ", sender, target, context.StartSelector);
 
-            if (context.ArgumentCount > 0)
+            foreach (short argOrdinal in context.GetArguments.Keys)
             {
-                for (short i=1; i <= context.ArgumentCount; i++)
+                ArgumentInfo arg = context.GetArguments[argOrdinal];
+
+                if (arg.Value == null)
                 {
-                    if (context.GetArgumentValue(i) == null)
-                    {
-                        TraceFile.WriteLine("  argument {0} = null", i);
-                        continue;
-                    }
-
-                    if (context.GetArgumentType(i).IsPrimitive || context.GetArgumentType(i).FullName == "System.String")
-                    {
-                        String argvalue = context.GetArgumentValue(i).ToString();
-                        TraceFile.WriteLine("  argument {0} -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue);
-                    }
-                    else
-                    {
-                        TraceFile.WriteLine("  argument {0} -> {1}", i, context.GetArgumentType(i).FullName);
-                    }
+                    TraceFile.WriteLine("  argument {0} = null", argOrdinal);
+                    continue;
                 }
-            }
 
+                if (arg.Type.IsPrimitive || arg.Type.FullName == "System.String")
+                {
+                    String argvalue = arg.Value.ToString();
+                    TraceFile.WriteLine("  argument {0} -> {1} = {2}", argOrdinal, arg.Type.FullName, argvalue);
+                }
+                else
+                {
+                    TraceFile.WriteLine("  argument {0} -> {1}", argOrdinal, arg.Type.FullName);
+                }
+               
+                //(value & flag) == flag
+                if ((arg.Attributes & ArgumentAttributes.In) == ArgumentAttributes.In)
+                    TraceFile.WriteLine("  input");
+                if ((arg.Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out)
+                    TraceFile.WriteLine("  output");
+                if ((arg.Attributes & ArgumentAttributes.Optional) == ArgumentAttributes.Optional)
+                    TraceFile.WriteLine("  optional");
+                
+            }
+           
 
             //Type t = context.GetProperty("target").GetType();
             ////Console.WriteLine("Tracing IN method: "+t.get_Name() + "." + rm.getSelector());
