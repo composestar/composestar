@@ -15,6 +15,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPa
  * A node for a matching pattern.
  * 
  * @author Michiel Hendriks
+ * @deprecated
  */
 public class MatchingPatternNode extends Node
 {

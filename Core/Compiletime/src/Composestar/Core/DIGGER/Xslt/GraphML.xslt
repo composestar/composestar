@@ -45,11 +45,15 @@ $Id: GraphVizDot.xslt,v 1.1 2006/10/12 11:59:54 elmuerte Exp $
 			<xsl:attribute name="target"><xsl:value-of select="@destination" /></xsl:attribute>			
 			
 			<xsl:element name="desc">
-				<xsl:choose>
-					<xsl:when test="@condition"><xsl:value-of select="@condition" /></xsl:when>
-					<xsl:when test="@matching"><xsl:value-of select="@matching" /></xsl:when>
-					<xsl:when test="@substitution"><xsl:value-of select="@substitution" /></xsl:when>
-				</xsl:choose>
+				<xsl:if test="@condition"><xsl:value-of select="@condition" /></xsl:if>
+				<xsl:if test="@enabler">
+					<xsl:choose>
+						<xsl:when test="@enabler = 'true'"><xsl:text> =&gt; </xsl:text></xsl:when>
+						<xsl:when test="@enabler = 'false'"><xsl:text> ~&gt; </xsl:text></xsl:when>
+					</xsl:choose>
+				</xsl:if>
+				<xsl:if test="@matching"><xsl:value-of select="@matching" /></xsl:if>		
+				<xsl:if test="@substitution"><xsl:value-of select="@substitution" /></xsl:if>	
 			</xsl:element>
 			
 			<!--

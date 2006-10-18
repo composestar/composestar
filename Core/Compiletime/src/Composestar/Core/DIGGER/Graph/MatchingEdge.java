@@ -20,6 +20,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureM
  * An edge containing matching parts
  * 
  * @author Michiel Hendriks
+ * @deprecated
  */
 public class MatchingEdge extends Edge
 {

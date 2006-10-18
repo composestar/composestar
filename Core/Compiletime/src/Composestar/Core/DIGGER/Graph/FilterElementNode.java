@@ -20,6 +20,9 @@ public class FilterElementNode extends Node
 {
 	protected FilterElement element;
 
+	/**
+	 * @deprecated
+	 */
 	protected MatchingPatternNode lastPattern;
 
 	/**
@@ -32,6 +35,12 @@ public class FilterElementNode extends Node
 		element = inElement;
 	}
 
+	/**
+	 * 
+	 * @param inPattern
+	 * @param inMatchingParts
+	 * @deprecated
+	 */
 	public void appendPattern(MatchingPatternNode inPattern, List inMatchingParts)
 	{
 		inPattern.setOwner(this);

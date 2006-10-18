@@ -31,6 +31,7 @@ import org.w3c.dom.Element;
 
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
+import Composestar.Core.DIGGER.Graph.CondMatchEdge;
 import Composestar.Core.DIGGER.Graph.ConditionalEdge;
 import Composestar.Core.DIGGER.Graph.Edge;
 import Composestar.Core.DIGGER.Graph.FilterChainNode;
@@ -187,7 +188,14 @@ public class XmlExporter
 		parentNode.appendChild(xmlEdge);
 		addComment(xmlEdge, edge);
 		xmlEdge.setAttribute("destination", getIdForNode(edge.getDestination()));
-		if (edge instanceof ConditionalEdge)
+		
+		if (edge instanceof CondMatchEdge)
+		{
+			xmlEdge.setAttribute("condition", ((CondMatchEdge) edge).getConditionAsString());
+			xmlEdge.setAttribute("enabler", Boolean.toString(((CondMatchEdge) edge).getEnabler()));
+			xmlEdge.setAttribute("matching", ((CondMatchEdge) edge).getMatchingPartsAsString());
+		}
+		else if (edge instanceof ConditionalEdge)
 		{
 			xmlEdge.setAttribute("condition", ((ConditionalEdge) edge).getExpressionAsString());
 		}

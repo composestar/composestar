@@ -16,6 +16,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
  * An edge with an condition expression
  * 
  * @author Michiel Hendriks
+ * @deprecated
  */
 public class ConditionalEdge extends Edge
 {

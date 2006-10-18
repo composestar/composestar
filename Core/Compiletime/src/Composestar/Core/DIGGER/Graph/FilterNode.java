@@ -86,12 +86,27 @@ public abstract class FilterNode extends Node
 	 * 
 	 * @param inElement
 	 * @param inCondition
+	 * @deprecated
 	 */
 	public void appendFilterElement(FilterElementNode inElement, ConditionExpression inCondition)
 	{
 		inElement.setOwner(this);
 		// TODO: link previous FE to this one
 		addOutgoingEdge(new ConditionalEdge(inElement, inCondition));
+		lastElement = inElement;
+	}
+	
+	/**
+	 * Add a filter element node to this filter node
+	 * 
+	 * @param inElement
+	 * @param inCondition
+	 */
+	public void appendFilterElement(FilterElementNode inElement, FilterElement fe)
+	{
+		inElement.setOwner(this);
+		// TODO: link previous FE to this one
+		addOutgoingEdge(new CondMatchEdge(inElement, fe));
 		lastElement = inElement;
 	}
 
@@ -109,8 +124,11 @@ public abstract class FilterNode extends Node
 		{
 			FilterElement elm = (FilterElement) filterElements.next();
 			FilterElementNode elmNode = new FilterElementNode(graph, elm);
-			appendFilterElement(elmNode, elm.getConditionPart());
-			processMatchingPatterns(elm, elmNode);
+			//appendFilterElement(elmNode, elm.getConditionPart());
+			//processMatchingPatterns(elm, elmNode);
+			
+			appendFilterElement(elmNode, elm);
+			processSubstitutionParts(elm.getMatchingPattern(), elmNode);
 		}
 	}
 
@@ -120,13 +138,13 @@ public abstract class FilterNode extends Node
 	 * @param elm
 	 * @param elmNode
 	 * @throws ModuleException
+	 * @deprecated
 	 */
 	protected void processMatchingPatterns(FilterElement elm, FilterElementNode elmNode) throws ModuleException
 	{
 		// go through all patterns.
 		// a pattern can have multiple outgoing edges in case of a
 		// messagelist
-		/*
 		Iterator matchingPatterns = elm.getMatchingPatternIterator();
 		while (matchingPatterns.hasNext())
 		{
@@ -135,11 +153,7 @@ public abstract class FilterNode extends Node
 			elmNode.appendPattern(mpNode, mp.getMatchingParts());
 			processSubstitutionParts(mp, mpNode);
 		}
-		*/
-		MatchingPattern mp = elm.getMatchingPattern();
-		MatchingPatternNode mpNode = new MatchingPatternNode(graph, mp);
-		elmNode.appendPattern(mpNode, mp.getMatchingParts());
-		processSubstitutionParts(mp, mpNode);
+		
 	}
 
 	/**
@@ -148,8 +162,32 @@ public abstract class FilterNode extends Node
 	 * @param mp
 	 * @param mpNode
 	 * @throws ModuleException
+	 * @deprecated
 	 */
 	protected void processSubstitutionParts(MatchingPattern mp, MatchingPatternNode mpNode) throws ModuleException
+	{
+		// resolve all substitution targets and add an edge to the
+		// target concern
+		Iterator substParts = mp.getSubstitutionPartsIterator();
+		while (substParts.hasNext())
+		{
+			SubstitutionPart subst = (SubstitutionPart) substParts.next();
+			Node targetNode = resolveTarget(subst.getTarget());
+			if (targetNode != null)
+			{
+				mpNode.addOutgoingEdge(new SubstitutionEdge(targetNode, subst));
+			}
+		}
+	}
+	
+	/**
+	 * Dig through the substituion parts
+	 * 
+	 * @param mp
+	 * @param mpNode
+	 * @throws ModuleException
+	 */
+	protected void processSubstitutionParts(MatchingPattern mp, FilterElementNode mpNode) throws ModuleException
 	{
 		// resolve all substitution targets and add an edge to the
 		// target concern
