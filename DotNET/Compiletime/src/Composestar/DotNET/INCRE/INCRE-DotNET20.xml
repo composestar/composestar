@@ -38,9 +38,11 @@
 	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
 		<dependencies></dependencies>		
 	</module>
+	<!--
 	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" enabled="true" incremental="false" summary="Collecting attributes...">
 		<dependencies></dependencies>	
 	</module>
+	-->
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
@@ -90,38 +92,6 @@
 	</module>
 	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
 		<dependencies></dependencies>	
-	</module>
-	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="Composestar.Core.Master.Config.Source" enabled="true" incremental="true" summary="Compiling all sources...">
-		<dependencies>
-			<dependency type="FILE" name="source">
-				<path>
-					<node type="FIELD" nodevalue="fileName"></node>
-				</path>
-			</dependency>
-			<dependency type="FILE" name="xternals">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.externalSources"></node>
-				</path>
-			</dependency>
-			<dependency type="FILE" name="CompileLibsDependencies">
-				<path>
-					<node type="CONFIG" nodevalue="Dependencies"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="fullsignatures">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.COMP.DotNETCompiler.fullSignatures"></node>
-				</path>
-			</dependency>
-		</dependencies>
-		<comparisons>
-			<type fullname="Composestar.Core.CpsProgramRepository.Signature">
-				<field name="methodByKey"></field>
-			</type>
-			<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
-				<field name="RelationType"></field>
-			</type>
-		</comparisons>
 	</module>
 	<module name="CONE-IS" fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" enabled="true" incremental="false" summary="Generating weave specification file...">
 		<dependencies></dependencies>	

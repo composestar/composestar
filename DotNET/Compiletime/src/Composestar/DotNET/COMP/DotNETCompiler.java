@@ -37,16 +37,12 @@ public class DotNETCompiler implements LangCompiler
 {
 	private final static String TOKEN_LIB = "\\{LIB\\}";
 
-	private String compilerOutput;
-
 	public DotNETCompiler()
 	{
 	}
 
 	public void compileSources(Project project) throws CompilerException,ModuleException
 	{
-		this.compilerOutput = "";
-
 		Configuration config = Configuration.instance();
 		Language lang = project.getLanguage();
 
@@ -138,9 +134,9 @@ public class DotNETCompiler implements LangCompiler
 		// execute command
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec(command);
-		compilerOutput = cmdExec.outputNormal();
+		String output = cmdExec.outputNormal();
 
-		processOutput(result, compilerOutput);
+		processOutput(result, output);
 		timer.stop();
 	}
 	
@@ -149,8 +145,6 @@ public class DotNETCompiler implements LangCompiler
 	 */
 	public void compileDummies(Project project) throws CompilerException
 	{
-		this.compilerOutput = "";
-		
 		Language lang = project.getLanguage();
 		if (lang == null)
 			throw new CompilerException("Project has no language object");
@@ -179,9 +173,9 @@ public class DotNETCompiler implements LangCompiler
 		// execute command
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec(command);
-		compilerOutput = cmdExec.outputNormal();
+		String output = cmdExec.outputNormal();
 
-		processOutput(result, compilerOutput); 
+		processOutput(result, output); 
 	}
 
 	private void processOutput(int result, String output) throws CompilerException
@@ -191,7 +185,7 @@ public class DotNETCompiler implements LangCompiler
 			if (output.length() == 0)
 				output = "Could not execute compiler. Make sure the .NET Framework folder is set in the path and restart Visual Studio.";
 
-			StringTokenizer st = new StringTokenizer(compilerOutput, "\n");
+			StringTokenizer st = new StringTokenizer(output, "\n");
 			while (st.hasMoreTokens()) 
 			{
 				String line = st.nextToken();
@@ -387,10 +381,5 @@ public class DotNETCompiler implements LangCompiler
 		}
 
 		return signatures;
-	}
-
-	public String getOutput()
-	{
-		return this.compilerOutput; 
 	}
 }

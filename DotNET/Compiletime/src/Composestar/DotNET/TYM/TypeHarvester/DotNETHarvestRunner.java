@@ -23,6 +23,8 @@ import Composestar.Utils.StringUtils;
  */
 public class DotNETHarvestRunner implements HarvestRunner
 {
+	public static final String MODULE_NAME = "TYM";
+	
 	private INCRE incre;
 	private Configuration config;
 	private List skippedAssemblies;
@@ -41,12 +43,13 @@ public class DotNETHarvestRunner implements HarvestRunner
 		List dummies = config.getProjects().getCompiledDummies();
 		List dependencies = config.getProjects().getDependencies();  
 
-		if (dummies == null)
-			throw new ModuleException("TYM TypeHarvester needs compiled dummies which is missing.");
+		if (dummies.size() == 0)
+			throw new ModuleException("TYM TypeHarvester needs compiled dummies.", MODULE_NAME);
 
-		if (dependencies == null)
-			throw new ModuleException("TYM TypeHarvester needs 'ProjectConfiguration.Dependencies' which is missing.");
-
+	//	(cannot happen: getDependencies always returns a list, which can and may be empty)
+	//	if (dependencies == null)
+	//		throw new ModuleException("TYM TypeHarvester needs 'ProjectConfiguration.Dependencies' which is missing.", MODULE_NAME);
+	
 		List cmdItems = new ArrayList();
 		cmdItems.add(getExecutable());
 		cmdItems.add(config.getPathSettings().getPath("Base"));
@@ -101,7 +104,6 @@ public class DotNETHarvestRunner implements HarvestRunner
 	/**
 	 * FIXME: describe what this method really does, and rename it appropriately. 
 	 *        side-effect is currently unclear.
-     * @param dllName
      */
 	private String checkDLL(String dllName) throws ModuleException
 	{
@@ -123,7 +125,6 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 * it indirectly harvest types from other assemblies e.g ComposestarFilterDebugger.dll
 	 * 
 	 * Used by INCRE
-     * @param asm
      */
 	public List externalAssemblies(String asm)
 	{
@@ -153,7 +154,6 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 * 		for input C.dll => [A.dll,B.dll] 
 	 * 
 	 * Used by INCRE
-     * @param asm
      */
 	public List prevAssemblies(String asm)
 	{
@@ -168,7 +168,6 @@ public class DotNETHarvestRunner implements HarvestRunner
 			if (name.equalsIgnoreCase(asm))
 				return assemblies;
 
-			// FIXME: assumption about the environment
 			if (! DotNETBACO.isSystemAssembly(name))
 			{
 				assemblies.add(name);
@@ -195,7 +194,6 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 * 		input C.dll => "A.dll B.dll" 
 	 * 
 	 * Used by INCRE
-     * @param asm
      */
 	public String prevInput(String asm)
 	{

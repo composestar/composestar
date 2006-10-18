@@ -89,7 +89,6 @@ public class DoResolve {
 
   /**
    * Tries to resolve all ConcernReferences
- * @throws ModuleException 
    */
   private void resolveConcernReferences() throws ModuleException {
     // iterate over all instances of ConcernReference
@@ -97,23 +96,18 @@ public class DoResolve {
       ConcernReference ref = (ConcernReference) it.next();
 
       // fetch the Concern with the same name as the reference references to
-      //System.out.println("Concernrefs: "+ref.getQualifiedName()+" == "+ref.getName());
       Concern concern = (Concern)ds.getObjectByID(ref.getQualifiedName());
-      if (concern != null) {
-        ref.setRef(concern);
-        ref.setResolved(true);
-      } else {
-    	  ref.getClass();
-    	  ref.getClass();
+      if (concern == null) {
         throw new ModuleException("ConcernReference '" + ref.getQualifiedName() + "' cannot be resolved (are you referencing a non-existent concern or is the startup object incorrect?)", "REXREF", ref);
       }
+
+      ref.setRef(concern);
+      ref.setResolved(true);
     }
   }
 
-
   /**
    * Tries to resolve all LabeledConcernReferences
- * @throws ModuleException 
    */
   private void resolveLabeledConcernReferences() throws ModuleException {
     for (Iterator it = ds.getAllInstancesOf(LabeledConcernReference.class); it.hasNext();) {
@@ -134,7 +128,6 @@ public class DoResolve {
 
   /**
    * Tries to resolve all FilterModuleReferences
- * @throws ModuleException 
    */
   private void resolveFilterModuleReferences() throws ModuleException {
     /* The names of DeclaredRepositoryEntities do need to be unique, so the

@@ -66,34 +66,31 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 
 	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException
 	{
-		if( "Attribute".equalsIgnoreCase(qName) && attr != null ) {
-			Annotation attribute = new Annotation();
-			Concern c = (Concern) DataStore.instance().getObjectByID(attr.getValue("type"));
-			if( c != null && c.getPlatformRepresentation() != null )
+		if ("Attribute".equalsIgnoreCase(qName) && attr != null)
+		{
+			Annotation anno = new Annotation();
+			Concern c = (Concern)DataStore.instance().getObjectByID(attr.getValue("type"));
+			if (c != null && c.getPlatformRepresentation() != null)
 			{
-				Type annotType = (Type) c.getPlatformRepresentation();
+				Type annoType = (Type)c.getPlatformRepresentation();
 
 				String target = attr.getValue("target").toLowerCase();
 				String location = attr.getValue("location");
 
-				if( "type".equals(target))
+				if ("type".equals(target))
 				{
-					attribute.register(annotType, getTypeLocation(location));
+					anno.register(annoType, getTypeLocation(location));
 				}
-				else if( "method".equals(target) )
+				else if ("method".equals(target))
 				{
-					attribute.register(annotType, getMethodLocation(location));
+					anno.register(annoType, getMethodLocation(location));
 				}
-				else if ( "field".equals(target) )
+				else if ("field".equals(target))
 				{
-					attribute.register(annotType, getFieldLocation(location));
+					anno.register(annoType, getFieldLocation(location));
 				}
 
-				attribute.setValue(attr.getValue("value"));
-
-				//attribute.setClassName(attr.getValue("Class"));
-				//attribute.setMethodSignature(attr.getValue("Method"));
-				//attribute.setTypeId(attr.getValue("TypeId"));
+				anno.setValue(attr.getValue("value"));
 			}
 		}
 	}
@@ -104,28 +101,28 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 
 	public Type getTypeLocation(String location)
 	{
-		Concern c = (Concern) DataStore.instance().getObjectByID(location);
-		if( c != null && c.getPlatformRepresentation() instanceof Type )
+		Concern c = (Concern)DataStore.instance().getObjectByID(location);
+		if (c != null && c.getPlatformRepresentation() instanceof Type)
 		{
-			return (Type) c.getPlatformRepresentation();
+			return (Type)c.getPlatformRepresentation();
 		}
 		return null;
 	}
 
 	public MethodInfo getMethodLocation(String location)
 	{
-		String methodName = location.substring(location.lastIndexOf(".")+1);
-		String typeName   = location.substring(0,location.lastIndexOf("."));
+		int dot = location.lastIndexOf(".");
+		String methodName = location.substring(dot + 1);
+		String typeName   = location.substring(0, dot);
 
 		Type type = getTypeLocation(typeName);
-
-		if( type != null )
+		if (type != null)
 		{
 			List methods = type.getMethods();
-			Iterator i = methods.iterator();
-			while(i.hasNext())
+			Iterator it = methods.iterator();
+			while(it.hasNext())
 			{
-				MethodInfo method = (MethodInfo) i.next();
+				MethodInfo method = (MethodInfo)it.next();
 				if (method.name().equals(methodName))
 					return method;
 			}
@@ -135,19 +132,19 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 
 	public FieldInfo getFieldLocation(String location)
 	{
-		String fieldName = location.substring(location.lastIndexOf(".")+1);
-		String typeName  = location.substring(0,location.lastIndexOf("."));
+		int dot = location.lastIndexOf(".");
+		String fieldName = location.substring(dot + 1);
+		String typeName  = location.substring(0, dot);
 
 		Type type = getTypeLocation(typeName);
-
-		if( type != null )
+		if (type != null)
 		{
-			List fields  = type.getFields();
-			Iterator i = fields.iterator();
-			while(i.hasNext())
+			List fields = type.getFields();
+			Iterator it = fields.iterator();
+			while (it.hasNext())
 			{
-				FieldInfo field = (FieldInfo) i.next();
-				if( field.Name.equals(fieldName))
+				FieldInfo field = (FieldInfo)it.next();
+				if (field.name().equals(fieldName))
 					return field;
 			}
 		}

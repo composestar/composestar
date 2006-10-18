@@ -18,7 +18,7 @@ import Composestar.Utils.FileUtils;
 public class DummyManager implements CTCommonModule
 {
 	public DummyManager() 
-	{		
+	{
 	}
 	
 	public void run(CommonResources resources) throws ModuleException
@@ -53,7 +53,7 @@ public class DummyManager implements CTCommonModule
 
 		Iterator sourceIt = sources.iterator();
 		while (sourceIt.hasNext())
-		{				
+		{
 			Source source = (Source)sourceIt.next();			
 			try {
 				File sourceFile = new File(source.getFileName());				
