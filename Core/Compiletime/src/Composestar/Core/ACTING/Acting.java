@@ -180,7 +180,7 @@ public class Acting implements CTCommonModule {
     public static String getActingFilterType(Filter meta) {
 		String retval = "";
 		FilterModule fm = (FilterModule) meta.getParent();
-		SubstitutionPart sp = (SubstitutionPart) meta.getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().firstElement();
+		SubstitutionPart sp = (SubstitutionPart) meta.getFilterElement(0).getMatchingPattern().getSubstitutionParts().firstElement();
 		FilterModuleElementReference fmer = sp.getTarget().getRef();
 		Target t = sp.getTarget();
 		retval += sp.getSelector().getName();

@@ -59,7 +59,7 @@ public class MetaFilterAction extends FilterAction {
 				continue;
 			
 			Concern target = null;
-			SubstitutionPart sp = (SubstitutionPart) filter.getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().firstElement();
+			SubstitutionPart sp = (SubstitutionPart) filter.getFilterElement(0).getMatchingPattern().getSubstitutionParts().firstElement();
 			DeclaredObjectReference dor = (DeclaredObjectReference) sp.getTarget().getRef();
 			Object o = dor.getRef();
 			if( o instanceof Internal )

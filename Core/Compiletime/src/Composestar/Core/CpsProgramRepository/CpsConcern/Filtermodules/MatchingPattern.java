@@ -55,7 +55,14 @@ public class MatchingPattern extends ContextRepositoryEntity {
 		  DataStore.instance().addObject(sp);
 	  }
   }
-
+  
+  public boolean getIsMessageList() {
+	  return mpa.getIsMessageList();
+  }
+  
+  public void setIsMessageList(boolean isML) {
+	  mpa.setIsMessageList(isML);
+  }
 
   /**
    * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart

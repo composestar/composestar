@@ -1,5 +1,6 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Dictionary;
 
@@ -17,7 +18,9 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
 {
     public FilterElementCompositionOperatorRuntime rightOperator;
     public ConditionExpressionRuntime conditionpart;
-    public ArrayList matchingPatterns = null;
+    /** @deprecated has only 1 matching pattern */
+    public List matchingPatterns = null;
+    public MatchingPatternRuntime matchingPattern;
     public EnableOperatorTypeRuntime theEnableOperatorTypeRuntime;
 	public FilterRuntime theFilter = null;
     
@@ -36,12 +39,24 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
      * @param conditionexpr
      * @param matchingPatterns
      * @roseuid 40DD59C5029B
+     * @deprecated
      */
-    public FilterElementRuntime(FilterElementCompositionOperatorRuntime compositionOperator, EnableOperatorTypeRuntime operatorType, ConditionExpressionRuntime conditionexpr, ArrayList matchingPatterns) {
+    public FilterElementRuntime(FilterElementCompositionOperatorRuntime compositionOperator, EnableOperatorTypeRuntime operatorType, ConditionExpressionRuntime conditionexpr, List matchingPatterns) {
     	this.rightOperator = compositionOperator;
     	this.conditionpart = conditionexpr;
     	this.matchingPatterns = matchingPatterns;
+    	this.matchingPattern = (MatchingPatternRuntime) matchingPatterns.get(0);
     	this.theEnableOperatorTypeRuntime = operatorType;     
+    }
+    
+    public FilterElementRuntime(FilterElementCompositionOperatorRuntime compositionOperator, EnableOperatorTypeRuntime operatorType, ConditionExpressionRuntime conditionexpr, MatchingPatternRuntime matchingPattern) {
+    	this.rightOperator = compositionOperator;
+    	this.conditionpart = conditionexpr;
+    	this.matchingPattern = matchingPattern;
+    	this.theEnableOperatorTypeRuntime = operatorType;
+    	
+    	this.matchingPatterns = new ArrayList();
+    	this.matchingPatterns.add(matchingPattern);
     }
     
     /**
@@ -56,12 +71,17 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     	if(this.conditionpart.interpret(m,context))
     	{
     		boolean matches = false;
+    		/*
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tCondition OK, checking "+this.matchingPatterns.size() + " pattern(s)...");
 			for(int i=0; i<this.matchingPatterns.size(); i++)
 			{
 				MatchingPatternRuntime mpr = (MatchingPatternRuntime)this.matchingPatterns.get(i);
 				matches = matches || mpr.interpret(m, context);
 			}
+			*/
+    		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tCondition OK, checking pattern...");
+			matches = matchingPattern.interpret(m, context);
+
     		if(this.theEnableOperatorTypeRuntime instanceof EnableOperatorRuntime) // =>
     		{
     			returnvalue = matches;

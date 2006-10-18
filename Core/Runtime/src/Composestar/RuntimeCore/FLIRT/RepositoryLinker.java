@@ -149,10 +149,11 @@ public class RepositoryLinker
 		//link right operator
 		linkRightOperator(filterElement.getRightOperator(), filterElementRuntime);
 		
-		//link matching patterns
-		Iterator matchingPatternIter = filterElement.getMatchingPatternIterator();
-		while(matchingPatternIter.hasNext())
-			linkMatchingPattern((MatchingPattern)matchingPatternIter.next(),filterElementRuntime);
+		//link matching pattern(s)
+		//Iterator matchingPatternIter = filterElement.getMatchingPatternIterator();
+		//while(matchingPatternIter.hasNext())
+		//	linkMatchingPattern((MatchingPattern)matchingPatternIter.next(),filterElementRuntime);
+		linkMatchingPattern(filterElement.getMatchingPattern(), filterElementRuntime);
 
 		//link the enable operator type 
 		linkEnableOperatorType(filterElement.getEnableOperatorType(), filterElementRuntime);
@@ -186,7 +187,9 @@ public class RepositoryLinker
 		//matching pattern to it, and add the runtime matching pattern to the runtime filter element
 		matchingPatternRuntime = new MatchingPatternRuntime();
 		matchingPatternRuntime.setReference(matchingPattern);
-		filterElementRuntime.matchingPatterns.add(matchingPatternRuntime);
+		matchingPatternRuntime.isMessageList = matchingPattern.getIsMessageList();
+		//filterElementRuntime.matchingPatterns.add(matchingPatternRuntime);
+		filterElementRuntime.matchingPattern = matchingPatternRuntime;
 		matchingPatternRuntime.theFilterElement = filterElementRuntime;
 
 		//link the matching part 

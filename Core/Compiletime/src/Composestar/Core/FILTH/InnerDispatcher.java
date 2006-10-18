@@ -114,7 +114,8 @@ public class InnerDispatcher {
 		spart.setSelector(selector);
 		mpattern.addSubstitutionPart(spart);
 		
-		fe.addMatchingPattern(mpattern);
+		//fe.addMatchingPattern(mpattern);
+		fe.setMatchingPattern(mpattern);
 		
 		// add the filter to the filtermodule
 		fm.addInputFilter(f);

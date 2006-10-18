@@ -126,6 +126,7 @@ public abstract class FilterNode extends Node
 		// go through all patterns.
 		// a pattern can have multiple outgoing edges in case of a
 		// messagelist
+		/*
 		Iterator matchingPatterns = elm.getMatchingPatternIterator();
 		while (matchingPatterns.hasNext())
 		{
@@ -134,6 +135,11 @@ public abstract class FilterNode extends Node
 			elmNode.appendPattern(mpNode, mp.getMatchingParts());
 			processSubstitutionParts(mp, mpNode);
 		}
+		*/
+		MatchingPattern mp = elm.getMatchingPattern();
+		MatchingPatternNode mpNode = new MatchingPatternNode(graph, mp);
+		elmNode.appendPattern(mpNode, mp.getMatchingParts());
+		processSubstitutionParts(mp, mpNode);
 	}
 
 	/**

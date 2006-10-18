@@ -22,6 +22,7 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
     //public SubstitutionPartRuntime theSubstitutionPartRuntime;
 	public ArrayList matchingParts, substitutionParts;
 	public FilterElementRuntime theFilterElement;
+	public boolean isMessageList;
     
     /**
      * @roseuid 40DD68840299

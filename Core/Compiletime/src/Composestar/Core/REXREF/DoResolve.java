@@ -654,11 +654,12 @@ public class DoResolve {
 	  newAST.setParent(oldAST.getParent());
 	  newAST.setRightOperator(oldAST.getRightOperator());
 	  
-	  Vector mps = new Vector();
-	  Iterator mpi = oldAST.getMatchingPatterns().iterator();
-	  while(mpi.hasNext()){
+	  // TODO: cleanup MatchingPatterns leftovers
+	  //Vector mps = new Vector();
+	  //Iterator mpi = oldAST.getMatchingPatterns().iterator();
+	  //while(mpi.hasNext()){
 		  MatchingPatternAST newmpa = new MatchingPatternAST();
-		  MatchingPatternAST oldmpa = (MatchingPatternAST) mpi.next();
+		  MatchingPatternAST oldmpa = oldAST.getMatchingPattern();
 		  
 		  newmpa.setDescriptionFileName(oldmpa.getDescriptionFileName());
 		  newmpa.setDescriptionLineNumber(oldmpa.getDescriptionLineNumber());
@@ -690,11 +691,12 @@ public class DoResolve {
 		  }
 		  
 		  newmpa.setMatchingParts(ms);
-		  mps.add(newmpa);
+	  //  mps.add(newmpa);
 		  ds.addObject(newmpa);
-	  }	  
+	  //}	  
 	  
-	  newAST.setMatchingPatterns(mps);
+	  //newAST.setMatchingPatterns(mps);
+	  newAST.setMatchingPattern(newmpa);
 	  ds.addObject(newAST);
 	  //end test
 	  

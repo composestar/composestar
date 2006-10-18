@@ -29,7 +29,11 @@ public class FilterElementAST extends ContextRepositoryEntity {
    */
   public EnableOperatorType enableOperatorType;
   public FilterElementCompOper rightOperator;
-  public Vector matchingPatterns;
+  
+  /** @deprecated */
+  public Vector matchingPatterns = new Vector();
+  
+  public MatchingPatternAST matchingPattern;
 
   /**
    * @modelguid {51317331-0B65-4CD1-AE8A-20C987FD14D0}
@@ -37,7 +41,6 @@ public class FilterElementAST extends ContextRepositoryEntity {
    */
   public FilterElementAST() {
     super();
-    matchingPatterns = new Vector();
   }
 
 
@@ -89,6 +92,7 @@ public class FilterElementAST extends ContextRepositoryEntity {
    *
    * @modelguid {B83FCFDA-49F8-4E83-9519-1A110C32EE86}
    * @roseuid 401FAA6302CA
+   * @deprecated
    */
   public boolean addMatchingPattern(MatchingPatternAST filterObject) {
     matchingPatterns.addElement(filterObject);
@@ -103,6 +107,7 @@ public class FilterElementAST extends ContextRepositoryEntity {
    *
    * @modelguid {03C4435A-96E5-49B1-A4E2-6961355E6DFD}
    * @roseuid 401FAA6302E9
+   * @deprecated
    */
   public MatchingPatternAST removeMatchingPattern(int index) {
     Object o = matchingPatterns.elementAt(index);
@@ -116,6 +121,7 @@ public class FilterElementAST extends ContextRepositoryEntity {
    *
    * @modelguid {A8E915D5-89DB-477F-9CED-C27F0FA8AE1A}
    * @roseuid 401FAA630312
+   * @deprecated
    */
   public Iterator getMatchingPatternIterator() {
     return (new CPSIterator(matchingPatterns));
@@ -128,10 +134,20 @@ public class FilterElementAST extends ContextRepositoryEntity {
    *         rn
    *
    * @roseuid 402AB4E5039D
+   * @deprecated
    */
   public MatchingPatternAST getMatchingPattern(int index) {
     return ((MatchingPatternAST) matchingPatterns.elementAt(index));
   }
+  
+  
+	public MatchingPatternAST getMatchingPattern() {
+	    return matchingPattern;
+	}
+  
+ 	public void setMatchingPattern(MatchingPatternAST mpat) {
+	    matchingPattern = mpat;
+	}
 
 
   /**
@@ -154,11 +170,12 @@ public class FilterElementAST extends ContextRepositoryEntity {
   }
 
 
+/** @deprecated */
 public Vector getMatchingPatterns() {
 	return matchingPatterns;
 }
 
-
+/** @deprecated */
 public void setMatchingPatterns(Vector matchingPatterns) {
 	this.matchingPatterns = matchingPatterns;
 }

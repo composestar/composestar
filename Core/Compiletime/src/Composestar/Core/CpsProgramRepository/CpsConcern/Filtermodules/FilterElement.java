@@ -24,7 +24,11 @@ public class FilterElement extends ContextRepositoryEntity {
   //public ConditionExpression conditionPart; -> delegate to FilterElementAST
   //public EnableOperatorType enableOperatorType; -> delegate to FilterElementAST
   //public FilterElementCompOper rightOperator; -> delegate to FilterElementAST
-  public Vector matchingPatterns;
+  
+  /** @deprecated */
+  public Vector matchingPatterns = new Vector();
+  
+  public MatchingPattern matchingPattern;
 
   /**
    * @modelguid {51317331-0B65-4CD1-AE8A-20C987FD14D0}
@@ -33,11 +37,12 @@ public class FilterElement extends ContextRepositoryEntity {
    */
   public FilterElement() {
     super();
-    matchingPatterns = new Vector();
+    //matchingPatterns = new Vector();
   }
   
   public FilterElement(FilterElementAST ast){
 	  filterElementAST = ast;
+	  /*
 	  matchingPatterns = new Vector();
 	  
 	  Iterator it = filterElementAST.getMatchingPatternIterator();
@@ -46,6 +51,14 @@ public class FilterElement extends ContextRepositoryEntity {
 		  mp.setParent(this);
 		  matchingPatterns.add(mp);
 		  DataStore.instance().addObject(mp);
+	  }
+	  */	  
+	  
+	  if (filterElementAST.getMatchingPattern() != null) {
+		  matchingPattern = new MatchingPattern(filterElementAST.getMatchingPattern());
+		  matchingPattern.setParent(this);		  
+		  DataStore.instance().addObject(matchingPattern);
+		  matchingPatterns.add(matchingPattern);
 	  }
   }
 
@@ -98,6 +111,7 @@ public class FilterElement extends ContextRepositoryEntity {
    *
    * @modelguid {B83FCFDA-49F8-4E83-9519-1A110C32EE86}
    * @roseuid 401FAA6302CA
+   * @deprecated
    */
   public boolean addMatchingPattern(MatchingPattern filterObject) {
 	  matchingPatterns.addElement(filterObject);
@@ -112,6 +126,7 @@ public class FilterElement extends ContextRepositoryEntity {
    *
    * @modelguid {03C4435A-96E5-49B1-A4E2-6961355E6DFD}
    * @roseuid 401FAA6302E9
+   * @deprecated
    */
   public MatchingPattern removeMatchingPattern(int index) {
     Object o = matchingPatterns.elementAt(index);
@@ -125,6 +140,7 @@ public class FilterElement extends ContextRepositoryEntity {
    *
    * @modelguid {A8E915D5-89DB-477F-9CED-C27F0FA8AE1A}
    * @roseuid 401FAA630312
+   * @deprecated
    */
   public Iterator getMatchingPatternIterator() {
 	  return (new CPSIterator(matchingPatterns));
@@ -137,9 +153,14 @@ public class FilterElement extends ContextRepositoryEntity {
    *         rn
    *
    * @roseuid 402AB4E5039D
+   * @deprecated
    */
   public MatchingPattern getMatchingPattern(int index) {
 	  return ((MatchingPattern) matchingPatterns.elementAt(index));
+  }
+  
+  public MatchingPattern getMatchingPattern() {
+	  return matchingPattern;
   }
 
 

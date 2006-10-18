@@ -26,7 +26,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
@@ -126,7 +125,7 @@ public class CpsRepositoryBuilder
    */
   public CpsRepositoryBuilder() {
     condAll = new Vector();
-      SelectorDefinition concernSelf = null;
+      //SelectorDefinition concernSelf = null;
       namespace = null;
     split = new Splitter();
     split.setBuilder(this);
@@ -810,12 +809,13 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *                    Contains Vectors with the complete packages of the parameters
    * @param orgmatching Whether the matching is name or signature (0=name, 1=signature)
    */
-  public void addMessagePattern( /*Vector objv, Vector typev, Vector typev2, int orgmatching */ ) {
+  public void addMessagePattern( /*Vector objv, Vector typev, Vector typev2, int orgmatching, */ ) {
     //int matching;
 
     mpat = new MatchingPatternAST();
     mpat.setParent(fe);
-    fe.addMatchingPattern(mpat);
+    //fe.addMatchingPattern(mpat);    
+    fe.setMatchingPattern(mpat);
     this.addToRepository(mpat);
 
     /*
@@ -857,6 +857,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       Debug.out(Debug.MODE_WARNING, "COPPER", "Error: no matching, only substitution");
     }
     */
+  }
+  
+  public void setMessagePatternList(boolean isMessageList) {
+	  mpat.setIsMessageList(isMessageList);
   }
 
 
@@ -1575,7 +1579,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Makes sure the rightOperator fields in all inputfilters point to the correct objects
    */
   private void completeInputFilters() {
-    int i;
+    //int i;
     FilterModule temp;
     Filter current;
     Filter next;
@@ -1614,7 +1618,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Makes sure the rightOperator fields in all outputfilters point to the correct objects
    */
   private void completeOutputFilters() {
-    int i;
+    //int i;
     FilterModule temp;
     Filter current;
     Filter next;
@@ -1653,7 +1657,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Makes sure the rightOperator fields in all FilterElements point to the correct objects
    */
   private void completeFilterElements() {
-    int i;
+    //int i;
     FilterAST temp;
     FilterElementAST current;
     FilterElementAST next;
