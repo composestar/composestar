@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
@@ -76,10 +77,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _referencedTypes = value; }
         }
 
-        private ITaskItem _hasOutputFilters = new TaskItem(false.ToString());
+        private bool _hasOutputFilters;
 
         [Output()]
-        public ITaskItem HasOutputFilters
+        public bool HasOutputFilters
         {
             get { return _hasOutputFilters; }
             set { _hasOutputFilters = value; }
@@ -95,7 +96,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
-            List<string> refTypes = null;
+            List<string> refTypes = new List<string>();
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                         
             RepositoryAccess repositoryAccess = null;
@@ -124,12 +125,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     Log.LogMessageFromResources("ParsingConcernFile", concernFile);
 
-                    cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer(concernFile));
+                    CpsParserConfiguration config = CpsParserConfiguration.CreateDefaultConfiguration(concernFile);
+
+                    cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer(config));
+
                     cfp.Parse();
 
                     refTypes.AddRange(cfp.ReferencedTypes);
 
-                    if (cfp.HasOutputFilters) HasOutputFilters = new TaskItem(true.ToString());
+                    // If this concern has output filters, then enable (do not override a previously set true value)
+                    HasOutputFilters = HasOutputFilters | cfp.HasOutputFilters;
 
                     string path = Path.GetDirectoryName(concernFile);
                     string filename = Path.GetFileName(concernFile);
@@ -181,10 +186,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// Creates the services container.
         /// </summary>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer(String concernfile)
+        internal IServiceProvider CreateContainer(CpsParserConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(string), ConcernFiles);
+            serviceContainer.AddService(typeof(CpsParserConfiguration), configuration);
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new CpsParserBuilderConfigurator());
 
             return serviceContainer;
         }

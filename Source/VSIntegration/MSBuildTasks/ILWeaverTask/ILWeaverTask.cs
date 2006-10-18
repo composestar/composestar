@@ -157,7 +157,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             ServiceContainer serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
             serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration);
-            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlWeaverBuilderConfigurator());
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverBuilderConfigurator());
 
             return serviceContainer;
         }

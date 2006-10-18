@@ -16,19 +16,23 @@ namespace Composestar.StarLight.CpsParser
     /// </summary>
     public class CpsFileParser : ICpsParser
     {
-        private String _filename = String.Empty;
+        private CpsParserConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CpsFileParser"/> class.
         /// </summary>
-        public CpsFileParser(String filename)
+        /// <param name="configuration">The configuration.</param>
+        public CpsFileParser(CpsParserConfiguration configuration)
         {
-            _filename = filename;
+            if (configuration == null)
+                throw new ArgumentNullException("configuration"); 
+
+            _configuration = configuration;
         }
 
         private String FileName
         {
-            get { return _filename; }
+            get { return _configuration.Filename; }
         }
 
         private List<String> types = new List<string>();

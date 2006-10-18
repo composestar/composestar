@@ -477,8 +477,9 @@ namespace Composestar.StarLight.ILWeaver
                 return;
 
             // Get the input filter
-            Composestar.Repository.LanguageModel.Inlining.InlineInstruction inputFilter =
-                methodElement.MethodBody.InputFilter;
+            Composestar.Repository.LanguageModel.Inlining.InlineInstruction inputFilter = null;
+           Console.WriteLine(methodElement.MethodBody.InputFilter);
+             
 
             // Only proceed when we have an inputfilter
             if (inputFilter == null)
@@ -585,8 +586,9 @@ namespace Composestar.StarLight.ILWeaver
                 if(call != null)
                 {
                     // Get the outputFilter for this call
-                    Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter =
-                        call.OutputFilter;
+                    Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter = null;
+                    Console.WriteLine(call.OutputFilter);
+                    
 
                     // Check for null, an output filter is not required
                     if(outputFilter == null)

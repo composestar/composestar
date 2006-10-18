@@ -438,6 +438,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 		
 		public void start(){
 			buffer = new StringBuffer();
+			buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		}
+		
+		public void stop(){
+			
 		}
 		
 		public String getXml(){
@@ -449,9 +454,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitBlock(Block block)
 		{
-			buffer.append("<Block>");
+			buffer.append("<Block");
 			setLabel(block);
-
+			buffer.append(">");
+			
 			Enumeration instructions = block.getInstructions();
 			while (instructions.hasMoreElements())
 			{
@@ -472,8 +478,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitBranch(Branch branch)
 		{
-			buffer.append("<Branch>");
+			buffer.append("<Branch");
 			setLabel(branch);
+			buffer.append(">");
 
 			buffer.append("<ConditionExpression>");
 			translateConditionExpression(branch.getConditionExpression());
@@ -497,16 +504,16 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitContextInstruction(ContextInstruction contextInstruction)
 		{
-			buffer.append("<ContextInstruction>");
+			buffer.append("<ContextInstruction");
 			setLabel(contextInstruction);
 
-			buffer.append("<Type>");
+			buffer.append(" type=\"");
 			buffer.append(contextInstruction.getType());
-			buffer.append("</Type>");
+			buffer.append("\"");
 
-			buffer.append("<Code>");
+			buffer.append(" code=\"");
 			buffer.append(contextInstruction.getCode());
-			buffer.append("</Code>");
+			buffer.append("\">");
 
 			if (contextInstruction.getInstruction() != null)
 			{
@@ -525,16 +532,16 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitFilterAction(FilterAction filterAction)
 		{
-			buffer.append("<FilterAction>");
+			buffer.append("<FilterAction");
 			setLabel(filterAction);
 
-			buffer.append("<Type>");
+			buffer.append(" type=\"");
 			buffer.append(filterAction.getType());
-			buffer.append("</Type>");
+			buffer.append("\">");
 
 			buffer.append("<OriginalMessage>");
 			createMessage(filterAction.getMessage());
-			buffer.append("</OriginalMessage>");
+			buffer.append("</OriginalMessage");
 
 			buffer.append("<SubstitutedMessage>");
 			createMessage(filterAction.getSubstitutedMessage());
@@ -550,14 +557,14 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitJump(Jump jump)
 		{
-			buffer.append("<Jump>");
+			buffer.append("<Jump");
 			setLabel(jump);
 
-			buffer.append("<Target>");
+			buffer.append(" target=\"");
 			buffer.append(jump.getTarget().getId());
-			buffer.append("</Target>");
+			buffer.append("\"/>");
 
-			buffer.append("</Jump>");
+			//buffer.append("</Jump>");
 
 			return null;
 		}
@@ -697,28 +704,28 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		private void createMessage(Message message)
 		{
-			buffer.append("<Message>");
+			buffer.append("<Message");
 
-			buffer.append("<Target>");
+			buffer.append(" target=\"");
 			buffer.append(message.getTarget().getName());
-			buffer.append("</Target>");
+			buffer.append("\"");
 
-			buffer.append("<Selector>");
+			buffer.append(" selector=\"");
 			buffer.append(message.getSelector());
-			buffer.append("</Selector>");
+			buffer.append("\"/>");
 
-			buffer.append("</Message>");
+			//buffer.append("</Message>");
 		}
 
 		private void setExpression(ContextExpression expression)
 		{
-			buffer.append("<ContextExpression>");
+			buffer.append("<ContextExpression");
 
-			buffer.append("<Type>");
+			buffer.append(" type=\"");
 			buffer.append(expression.getType());
-			buffer.append("</Type>");
+			buffer.append("\"/>");
 
-			buffer.append("</ContextExpression>");
+			//buffer.append("</ContextExpression>");
 		}
 
 		private void setLabel(Instruction instruction)
@@ -730,9 +737,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 				return;
 			}
 
-			buffer.append("<Label>");
+			buffer.append(" label=\"");
 			buffer.append(label.getId());
-			buffer.append("</Label>");
+			buffer.append("\"");
 		}
 	}
 
