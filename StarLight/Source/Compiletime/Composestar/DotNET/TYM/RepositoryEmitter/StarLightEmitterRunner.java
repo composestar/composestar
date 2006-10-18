@@ -25,10 +25,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
+import Composestar.Core.FIRE2.model.Message;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.Case;
+import Composestar.Core.INLINE.model.ContextExpression;
 import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.INLINE.model.FilterAction;
 import Composestar.Core.INLINE.model.Instruction;
@@ -53,13 +57,17 @@ import Composestar.Repository.LanguageModel.MethodBody;
 import Composestar.Repository.LanguageModel.MethodElement;
 import Composestar.Repository.LanguageModel.Reference;
 import Composestar.Repository.LanguageModel.TypeElement;
-import Composestar.Repository.LanguageModel.Inlining.InlineInstruction;
 import Composestar.Utils.Debug;
 
 public class StarLightEmitterRunner implements CTCommonModule 
 {
     private Vector callsToOtherMethods = new Vector();
     private RepositoryAccess repository;
+    
+    private INCRETimer emitTimer = INCRE.instance().getReporter().openProcess( 
+    		"EMITTER", "storing to database", INCRETimer.TYPE_NORMAL );
+    private INCRETimer commitTimer = INCRE.instance().getReporter().openProcess( 
+    		"EMITTER", "comitting to database", INCRETimer.TYPE_NORMAL );
 
     public void run(CommonResources resources) throws ModuleException 
     {
@@ -196,11 +204,17 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //commit on every onehundred stored typeelements:
                 count++;
                 if ( count == 100 ){
+                	commitTimer.start();
                 	repository.commit();
+                	commitTimer.stop();
                 	count = 0;
                 }
             }
         }
+        
+        commitTimer.start();
+    	repository.commit();
+    	commitTimer.stop();
     }
     
     private Reference createReference( Type type, Vector pack, String target,
@@ -251,7 +265,7 @@ public class StarLightEmitterRunner implements CTCommonModule
         
         while( methods.hasNext() ){
         	DotNETMethodInfo method = (DotNETMethodInfo) methods.next();
-            Debug.out( Debug.MODE_DEBUG, "Emitter",  "  Emit method: " + method.name());
+//            Debug.out( Debug.MODE_DEBUG, "Emitter",  "  Emit method: " + method.name());
             MethodElement storedMethod;
             
             //get the block containing the filterinstructions:
@@ -274,12 +288,15 @@ public class StarLightEmitterRunner implements CTCommonModule
                 //add inputfilter code:
                 if (storedMethod.get_HasMethodBody()) {
                 	MethodBody body = storedMethod.get_MethodBody();
-                	body.set_InputFilter( translateInstruction( filterInstructions ) );
+//                	body.set_InputFilter( translateInstruction( filterInstructions ) );
+                	body.set_InputFilter(translateInstruction(filterInstructions));
                 }
                            
                 //store methodElement:
-                Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" + storedMethod.toString() );
+//                Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" + storedMethod.toString() );
+                emitTimer.start();
                 repository.storeMethodElement( storedMethod );
+                emitTimer.stop();
                 
                 // emit calls:
                 emitCalls( method, storedMethod );
@@ -345,8 +362,8 @@ public class StarLightEmitterRunner implements CTCommonModule
             //add outputfilter code:
             Block code = ModelBuilder.getOutputFilterCode( call );
             if ( code != null ){
-            	InlineInstruction instruction = translateInstruction( code );
-            	storedCall.set_OutputFilter( instruction );
+            	String instructionXml = translateInstruction( code );
+            	storedCall.set_OutputFilter( instructionXml );
 
             	Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing call" + storedCall.toString() );
             	
@@ -382,282 +399,341 @@ public class StarLightEmitterRunner implements CTCommonModule
         return call.get_MethodReference();
     }
     
-    private InlineInstruction translateInstruction( Block block ){
-        return (InlineInstruction) block.accept( InstructionTranslater.getInstance() );
+    private String translateInstruction( Block block ){
+    	InstructionTranslater translater = InstructionTranslater.getInstance();
+    	translater.start();
+    	block.accept( translater );
+    	return translater.getXml();
     }
     
     
     
-    
-    private static class InstructionTranslater implements Visitor{
-        private final static InstructionTranslater INSTANCE = new InstructionTranslater();
-        
-        private Hashtable fullNameMap = new Hashtable();
-        
-        private InstructionTranslater(){
-        	Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
-        	
-        	DataStore dataStore = DataStore.instance();
-        	Iterator iter = dataStore.getAllInstancesOf( 
-        			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class );
-        	while( iter.hasNext() ){
-        		filterAction = 
-        			(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction) iter.next();
-        		fullNameMap.put( filterAction.getName(), filterAction.getFullName() );
-        	}
-        }
-        
-        public static InstructionTranslater getInstance(){
-            return INSTANCE;
-        }
-        
-        
-        
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitBlock(Composestar.Core.INLINE.model.Block)
-         */
-        public Object visitBlock(Block block){
-            Composestar.Repository.LanguageModel.Inlining.Block newBlock = 
-                new Composestar.Repository.LanguageModel.Inlining.Block();
-            
-            setLabel( block, newBlock );
-            
-            
-            Vector v = new Vector();
-            
-            Enumeration instructions = block.getInstructions();
-            while( instructions.hasMoreElements() ){
-                Instruction instruction = (Instruction) instructions.nextElement();
-                v.add( instruction.accept( this ) );
-            }
-            
-            InlineInstruction[] newInstructions = 
-                (InlineInstruction[]) v.toArray( new InlineInstruction[v.size()] );
-            
-            newBlock.set_Instructions( newInstructions );
-            
-            return newBlock;
-        }
+    private static class InstructionTranslater implements Visitor
+	{
+		private final static InstructionTranslater INSTANCE = new InstructionTranslater();
 
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitBranch(Composestar.Core.INLINE.model.Branch)
-         */
-        public Object visitBranch(Branch branch){
-            Composestar.Repository.LanguageModel.ConditionExpressions.ConditionExpression newCondExpr =
-                translateConditionExpression( branch.getConditionExpression() );
-            
-            Composestar.Repository.LanguageModel.Inlining.Branch newBranch =
-                new Composestar.Repository.LanguageModel.Inlining.Branch( newCondExpr );
-            
-            setLabel( branch, newBranch );
-            
-            Composestar.Repository.LanguageModel.Inlining.Block trueBlock =
-                (Composestar.Repository.LanguageModel.Inlining.Block) branch.getTrueBlock().accept( this );
-            
-            Composestar.Repository.LanguageModel.Inlining.Block falseBlock =
-                (Composestar.Repository.LanguageModel.Inlining.Block) branch.getFalseBlock().accept( this );
-            
-            newBranch.set_TrueBlock( trueBlock );
-            newBranch.set_FalseBlock( falseBlock );
-            
-            return newBranch;
-        }
+		private Hashtable fullNameMap = new Hashtable();
 
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitContextInstruction(Composestar.Core.INLINE.model.ContextInstruction)
-         */
-        public Object visitContextInstruction(ContextInstruction contextInstruction){
-            Block block = (Block) contextInstruction.getInstruction();
-            Composestar.Repository.LanguageModel.Inlining.Block newBlock;
-            if ( block != null ){
-                newBlock = (Composestar.Repository.LanguageModel.Inlining.Block) block.accept( this );
-            }
-            else{
-                newBlock = null;
-            }
-            
-            int methodId = contextInstruction.getCode();
-            
-            
-            Composestar.Repository.LanguageModel.Inlining.ContextInstruction newContextInstruction = 
-                new Composestar.Repository.LanguageModel.Inlining.ContextInstruction( 
-                        contextInstruction.getType(), methodId, newBlock );
-            
-            setLabel( contextInstruction, newContextInstruction );
-            
-            return newContextInstruction;
-        }
+		private StringBuffer buffer = new StringBuffer();
 
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
-         */
-        public Object visitFilterAction(FilterAction filterAction){
-            String selector = filterAction.getMessage().getSelector().getName();
-            String target = filterAction.getMessage().getTarget().getName();
-            String substitutionSelector = filterAction.getSubstitutedMessage().getSelector().getName();
-            String substitutionTarget = filterAction.getSubstitutedMessage().getTarget().getName();
-            
-            String fullName = (String) fullNameMap.get( filterAction.getType() );
-            
-            Composestar.Repository.LanguageModel.Inlining.FilterAction newFilterAction = 
-                new Composestar.Repository.LanguageModel.Inlining.FilterAction( 
-                        filterAction.getType(), fullName, selector, target, 
-                        substitutionSelector, substitutionTarget );
-            
-            setLabel( filterAction, newFilterAction );
-            
-            return newFilterAction;
-        }
+		private InstructionTranslater()
+		{
+			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction filterAction;
 
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitJump(Composestar.Core.INLINE.model.Jump)
-         */
-        public Object visitJump(Jump jump){
-            Composestar.Repository.LanguageModel.Inlining.Jump newJump = 
-                new Composestar.Repository.LanguageModel.Inlining.Jump( jump.getTarget().getId() );
-            
-            setLabel( jump, newJump );
-            
-            return newJump;
-        }
-        
-        
-        
-        
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitCase(Composestar.Core.INLINE.model.Case)
-         */
-        public Object visitCase(Case caseInstruction){
-            Composestar.Repository.LanguageModel.Inlining.Block newBlock =
-                (Composestar.Repository.LanguageModel.Inlining.Block) 
-                caseInstruction.getInstructions().accept( this );
-            
-            Composestar.Repository.LanguageModel.Inlining.Case newCase =
-                new Composestar.Repository.LanguageModel.Inlining.Case( caseInstruction.getCheckConstant(),
-                        newBlock );
-            
-            setLabel( caseInstruction, newCase );
-            
-            return newCase;
-        }
+			DataStore dataStore = DataStore.instance();
+			Iterator iter = dataStore
+					.getAllInstancesOf(Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction.class);
+			while (iter.hasNext())
+			{
+				filterAction = (Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction) iter
+						.next();
+				fullNameMap.put(filterAction.getName(), filterAction.getFullName());
+			}
+		}
 
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitSwitch(Composestar.Core.INLINE.model.Switch)
-         */
-        public Object visitSwitch(Switch switchInstruction){
-            Composestar.Repository.LanguageModel.Inlining.ContextExpression newExpr =
-                new Composestar.Repository.LanguageModel.Inlining.ContextExpression( 
-                        switchInstruction.getExpression().getType() );
-            
-            Composestar.Repository.LanguageModel.Inlining.Switch newSwitch =
-                new Composestar.Repository.LanguageModel.Inlining.Switch( newExpr );
-            
-            Case[] cases = switchInstruction.getCases();
-            for (int i=0; i<cases.length; i++){
-                Composestar.Repository.LanguageModel.Inlining.Case newCase = 
-                    (Composestar.Repository.LanguageModel.Inlining.Case) cases[i].accept( this );
-                newSwitch.addCase( newCase );
-            }
-            
-            setLabel( switchInstruction, newSwitch );
-            
-            return newSwitch;
-        }
+		public static InstructionTranslater getInstance()
+		{
+			return INSTANCE;
+		}
+		
+		public void start(){
+			buffer = new StringBuffer();
+		}
+		
+		public String getXml(){
+			return buffer.toString();
+		}
 
-        /**
-         * @see Composestar.Core.INLINE.model.Visitor#visitWhile(Composestar.Core.INLINE.model.While)
-         */
-        public Object visitWhile(While whileInstruction){
-            Composestar.Repository.LanguageModel.Inlining.ContextExpression newExpr =
-                new Composestar.Repository.LanguageModel.Inlining.ContextExpression( 
-                        whileInstruction.getExpression().getType() );
-            
-            Composestar.Repository.LanguageModel.Inlining.Block newBlock =
-                (Composestar.Repository.LanguageModel.Inlining.Block) 
-                whileInstruction.getInstructions().accept( this );
-            
-            Composestar.Repository.LanguageModel.Inlining.While newWhile =
-                new Composestar.Repository.LanguageModel.Inlining.While( newExpr, newBlock );
-            
-            setLabel( whileInstruction, newWhile );
-            
-            return newWhile;
-        }
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitBlock(Composestar.Core.INLINE.model.Block)
+		 */
+		public Object visitBlock(Block block)
+		{
+			buffer.append("<Block>");
+			setLabel(block);
 
-        private Composestar.Repository.LanguageModel.ConditionExpressions.ConditionExpression 
-        translateConditionExpression( ConditionExpression expression )
-        {
-            if ( expression instanceof And ){
-                And and = (And) expression;
-                
-                Composestar.Repository.LanguageModel.ConditionExpressions.And newAnd = 
-                    new Composestar.Repository.LanguageModel.ConditionExpressions.And();
-                
-                newAnd.set_Left( translateConditionExpression( and.getLeft() ) );
-                newAnd.set_Right( translateConditionExpression( and.getRight() ) );
-                
-                return newAnd;
-            }
-            else if ( expression instanceof Or ){
-                Or or = (Or) expression;
+			Enumeration instructions = block.getInstructions();
+			while (instructions.hasMoreElements())
+			{
+				Instruction instruction = (Instruction) instructions.nextElement();
 
-                Composestar.Repository.LanguageModel.ConditionExpressions.Or newOr = 
-                    new Composestar.Repository.LanguageModel.ConditionExpressions.Or();
+				buffer.append("<BlockItem>");
+				instruction.accept(this);
+				buffer.append("</BlockItem>");
+			}
 
-                newOr.set_Left( translateConditionExpression( or.getLeft() ) );
-                newOr.set_Right( translateConditionExpression( or.getRight() ) );
+			buffer.append("</Block>");
 
-                return newOr;
-            }
-            else if ( expression instanceof Not ){
-                Not not = (Not) expression;
+			return null;
+		}
 
-                Composestar.Repository.LanguageModel.ConditionExpressions.Not newNot = 
-                    new Composestar.Repository.LanguageModel.ConditionExpressions.Not();
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitBranch(Composestar.Core.INLINE.model.Branch)
+		 */
+		public Object visitBranch(Branch branch)
+		{
+			buffer.append("<Branch>");
+			setLabel(branch);
 
-                newNot.set_Operand( translateConditionExpression( not.getOperand() ) );
+			buffer.append("<ConditionExpression>");
+			translateConditionExpression(branch.getConditionExpression());
+			buffer.append("</ConditionExpression>");
 
-                return newNot;
-            }
-            else if ( expression instanceof ConditionLiteral ){
-                ConditionLiteral literal = (ConditionLiteral) expression;
-                
-                Composestar.Repository.LanguageModel.ConditionExpressions.ConditionLiteral newLiteral = 
-                    new Composestar.Repository.LanguageModel.ConditionExpressions.ConditionLiteral();
-                newLiteral.set_Name( literal.getCondition().getRef().getName() );
+			buffer.append("<TrueBlock>");
+			branch.getTrueBlock().accept(this);
+			buffer.append("</TrueBlock>");
 
-                return newLiteral;
-            }
-            else if ( expression instanceof True ){
-                Composestar.Repository.LanguageModel.ConditionExpressions.True newTrue =
-                    new Composestar.Repository.LanguageModel.ConditionExpressions.True();
-                
-                return newTrue;
-            }
-            else if ( expression instanceof False ){
-                Composestar.Repository.LanguageModel.ConditionExpressions.False newFalse =
-                    new Composestar.Repository.LanguageModel.ConditionExpressions.False();
-                
-                return newFalse;
-            }
-            else{
-                return null;
-            }
-        }
-        
-        
-        private void setLabel( Instruction oldInstruction, InlineInstruction newInstruction ){
-            Label label = oldInstruction.getLabel();
-            
-            if ( label != null ){
-                newInstruction.set_Label( label.getId() );
-            }
-            else{
-                newInstruction.set_Label( -1 );
-            }
-        }
-    }
-    
-    
-     
+			buffer.append("<FalseBlock>");
+			branch.getFalseBlock().accept(this);
+			buffer.append("</FalseBlock>");
+
+			buffer.append("</Branch>");
+
+			return null;
+		}
+
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitContextInstruction(Composestar.Core.INLINE.model.ContextInstruction)
+		 */
+		public Object visitContextInstruction(ContextInstruction contextInstruction)
+		{
+			buffer.append("<ContextInstruction>");
+			setLabel(contextInstruction);
+
+			buffer.append("<Type>");
+			buffer.append(contextInstruction.getType());
+			buffer.append("</Type>");
+
+			buffer.append("<Code>");
+			buffer.append(contextInstruction.getCode());
+			buffer.append("</Code>");
+
+			if (contextInstruction.getInstruction() != null)
+			{
+				buffer.append("<Instruction>");
+				contextInstruction.getInstruction().accept(this);
+				buffer.append("</Instruction>");
+			}
+
+			buffer.append("</ContextInstruction>");
+
+			return null;
+		}
+
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitFilterAction(Composestar.Core.INLINE.model.FilterAction)
+		 */
+		public Object visitFilterAction(FilterAction filterAction)
+		{
+			buffer.append("<FilterAction>");
+			setLabel(filterAction);
+
+			buffer.append("<Type>");
+			buffer.append(filterAction.getType());
+			buffer.append("</Type>");
+
+			buffer.append("<OriginalMessage>");
+			createMessage(filterAction.getMessage());
+			buffer.append("</OriginalMessage>");
+
+			buffer.append("<SubstitutedMessage>");
+			createMessage(filterAction.getSubstitutedMessage());
+			buffer.append("</SubstitutedMessage>");
+
+			buffer.append("</FilterAction>");
+
+			return null;
+		}
+
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitJump(Composestar.Core.INLINE.model.Jump)
+		 */
+		public Object visitJump(Jump jump)
+		{
+			buffer.append("<Jump>");
+			setLabel(jump);
+
+			buffer.append("<Target>");
+			buffer.append(jump.getTarget().getId());
+			buffer.append("</Target>");
+
+			buffer.append("</Jump>");
+
+			return null;
+		}
+
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitCase(Composestar.Core.INLINE.model.Case)
+		 */
+		public Object visitCase(Case caseInstruction)
+		{
+			buffer.append("<Case>");
+			setLabel(caseInstruction);
+
+			buffer.append("<CheckConstant>");
+			buffer.append(caseInstruction.getCheckConstant());
+			buffer.append("</CheckConstant>");
+
+			buffer.append("<Instructions>");
+			caseInstruction.getInstructions().accept(this);
+			buffer.append("</Instructions>");
+
+			buffer.append("</Case>");
+
+			return null;
+		}
+
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitSwitch(Composestar.Core.INLINE.model.Switch)
+		 */
+		public Object visitSwitch(Switch switchInstruction)
+		{
+			buffer.append("<Switch>");
+
+			buffer.append("<Expression>");
+			setExpression(switchInstruction.getExpression());
+			buffer.append("</Expression>");
+
+			Case[] cases = switchInstruction.getCases();
+			for (int i = 0; i < cases.length; i++)
+			{
+				buffer.append("<CaseItem>");
+				cases[i].accept(this);
+				buffer.append("</CaseItem>");
+			}
+
+			buffer.append("</Switch>");
+
+			return null;
+		}
+
+		/**
+		 * @see Composestar.Core.INLINE.model.Visitor#visitWhile(Composestar.Core.INLINE.model.While)
+		 */
+		public Object visitWhile(While whileInstruction)
+		{
+			buffer.append("<While>");
+
+			buffer.append("<Expression>");
+			setExpression(whileInstruction.getExpression());
+			buffer.append("</Expression>");
+
+			buffer.append("<Instructions>");
+			whileInstruction.getInstructions().accept(this);
+			buffer.append("</Instructions>");
+
+			buffer.append("</While>");
+
+			return null;
+		}
+
+		private void translateConditionExpression(ConditionExpression expression)
+		{
+			if (expression instanceof And)
+			{
+				And and = (And) expression;
+
+				buffer.append("<And>");
+
+				buffer.append("<Left>");
+				translateConditionExpression(and.getLeft());
+				buffer.append("</Left>");
+
+				buffer.append("<Right>");
+				translateConditionExpression(and.getRight());
+				buffer.append("</Right>");
+
+				buffer.append("</And>");
+			}
+			else if (expression instanceof Or)
+			{
+				Or or = (Or) expression;
+
+				buffer.append("<Or>");
+
+				buffer.append("<Left>");
+				translateConditionExpression(or.getLeft());
+				buffer.append("</Left>");
+
+				buffer.append("<Right>");
+				translateConditionExpression(or.getRight());
+				buffer.append("</Right>");
+
+				buffer.append("</Or>");
+			}
+			else if (expression instanceof Not)
+			{
+				Not not = (Not) expression;
+
+				buffer.append("<Not>");
+
+				buffer.append("<Operand>");
+				translateConditionExpression(not.getOperand());
+				buffer.append("</Operand>");
+
+				buffer.append("</Not>");
+			}
+			else if (expression instanceof ConditionLiteral)
+			{
+				ConditionLiteral literal = (ConditionLiteral) expression;
+
+				buffer.append("<Literal>");
+
+				buffer.append("<Operand>");
+				buffer.append(literal.getCondition().getRef().getName());
+				buffer.append("</Operand>");
+
+				buffer.append("</Literal>");
+			}
+			else if (expression instanceof True)
+			{
+				buffer.append("<True />");
+			}
+			else if (expression instanceof False)
+			{
+				buffer.append("<False />");
+			}
+		}
+
+		private void createMessage(Message message)
+		{
+			buffer.append("<Message>");
+
+			buffer.append("<Target>");
+			buffer.append(message.getTarget().getName());
+			buffer.append("</Target>");
+
+			buffer.append("<Selector>");
+			buffer.append(message.getSelector());
+			buffer.append("</Selector>");
+
+			buffer.append("</Message>");
+		}
+
+		private void setExpression(ContextExpression expression)
+		{
+			buffer.append("<ContextExpression>");
+
+			buffer.append("<Type>");
+			buffer.append(expression.getType());
+			buffer.append("</Type>");
+
+			buffer.append("</ContextExpression>");
+		}
+
+		private void setLabel(Instruction instruction)
+		{
+			Label label = instruction.getLabel();
+
+			if (label == null)
+			{
+				return;
+			}
+
+			buffer.append("<Label>");
+			buffer.append(label.getId());
+			buffer.append("</Label>");
+		}
+	}
+
 }

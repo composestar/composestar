@@ -1,6 +1,5 @@
 package Composestar.Repository.LanguageModel;
 
-import Composestar.Repository.LanguageModel.Inlining.*;    
 
 /**
  * Summary description for CallElement.
@@ -37,16 +36,16 @@ public class CallElement
 	}
 
 
-	private InlineInstruction _outputFilter;
+	private String _outputFilter;
 
 	/** @property */
-	public InlineInstruction get_OutputFilter()
+	public String get_OutputFilter()
 	{
 		return _outputFilter;
 	}
 
 	/** @property */
-	public void set_OutputFilter(InlineInstruction value)
+	public void set_OutputFilter(String value)
 	{
 		_outputFilter = value;
 	}
