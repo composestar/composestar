@@ -181,4 +181,7 @@
   <data name="CouldNotLoadAssembly" xml:space="preserve">
     <value>Unable to open assembly '{0}' due to the following error: {1}</value>
   </data>
+  <data name="MethodSignatureNotFound" xml:space="preserve">
+    <value>Could not find method with signature '{0}' in the cache.</value>
+  </data>
 </root>

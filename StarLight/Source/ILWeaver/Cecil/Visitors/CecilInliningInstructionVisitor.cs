@@ -208,15 +208,36 @@ namespace Composestar.StarLight.ILWeaver
             {
                 case ContextExpression.HAS_MORE_ACTIONS:
                     // Call the HasMoreStoredActions method
-                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }))));
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.HasMoreStoredActions)));
                     break;
                 case ContextExpression.RETRIEVE_ACTION:
                     // Call the NextStoredAction method
-                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }))));
+                    Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.NextStoredAction)));
                     break;
 
             }
 
+        }
+
+        /// <summary>
+        /// Converts the mono attributes to JPC attributes.
+        /// </summary>
+        /// <param name="attrMono">The attr mono.</param>
+        /// <returns></returns>
+        public ArgumentAttributes ConvertAttributes(Mono.Cecil.ParamAttributes attrMono)
+        {
+            ArgumentAttributes attr = ArgumentAttributes.In;
+
+            if ((attrMono & ParamAttributes.In) == ParamAttributes.In) 
+                attr = attr | ArgumentAttributes.In;
+            else
+                attr &= ~ArgumentAttributes.In;
+            if ((attrMono & ParamAttributes.Out) == ParamAttributes.Out) attr = attr | ArgumentAttributes.Out;
+            if ((attrMono & ParamAttributes.Optional) == ParamAttributes.Optional) attr = attr | ArgumentAttributes.Optional;
+            if ((attrMono & ParamAttributes.HasDefault) == ParamAttributes.HasDefault) attr = attr | ArgumentAttributes.HasDefault;
+            if ((attrMono & ParamAttributes.HasFieldMarshal) == ParamAttributes.HasFieldMarshal) attr = attr | ArgumentAttributes.HasFieldMarshal;
+ 
+            return attr;
         }
 
         /// <summary>
@@ -246,7 +267,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>Returns the variable</returns>
         private VariableDefinition CreateLocalVar(Type type)
         {
-            TypeReference typeRef = m_TargetAssemblyDefinition.MainModule.Import(type);
+            TypeReference typeRef = CecilUtilities.CreateTypeReference(TargetAssemblyDefinition, type);
             return CreateLocalVar(typeRef);
         }
 
@@ -265,22 +286,13 @@ namespace Composestar.StarLight.ILWeaver
             return var;
         }
 
-        /// <summary>
-        /// Creates the method reference.
-        /// </summary>
-        /// <param name="methodBase">The method info.</param>
-        /// <returns></returns>
-        internal MethodReference CreateMethodReference(MethodBase methodBase)
-        {
-            return TargetAssemblyDefinition.MainModule.Import(methodBase);
-        }
+       
 
         // Because we need local vars to store the object and type of arguments in, we have to add these local vars.
         // But only once, so these functions make sure we only have one of this variables
         private VariableDefinition m_ObjectLocal;
         private VariableDefinition m_TypeLocal;
-        private VariableDefinition m_JpcLocal;
-        private VariableDefinition m_ReturnValueLocal;
+        private VariableDefinition m_JpcLocal;  
         private VariableDefinition m_ActionStoreLocal;
 
         /// <summary>
@@ -416,7 +428,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the IsInnerCall
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(int) }))));
+            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.IsInnerCall)));
 
             // Create the call instruction
             Instruction branchToInstruction = GetJumpLabel(FilterContextJumpId);
@@ -448,7 +460,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the SetInnerCall
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(int) }))));
+            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.SetInnerCall)));
 
         }
 
@@ -469,7 +481,7 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitResetInnerCall(ContextInstruction contextInstruction)
         {
             // Call the reset inner call function
-            Instructions.Add(Worker.Create(OpCodes.Call, CreateMethodReference(typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] { }))));
+            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.ResetInnerCall)));
         }
 
         #endregion
@@ -748,7 +760,7 @@ namespace Composestar.StarLight.ILWeaver
             //
 
             // Call the constructor
-            Instructions.Add(Worker.Create(OpCodes.Newobj, CreateMethodReference(typeof(FilterContext).GetConstructors()[0])));
+            Instructions.Add(Worker.Create(OpCodes.Newobj, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.FilterContextConstructor)));
 
             // Store the local
             Instructions.Add(Worker.Create(OpCodes.Stloc, asVar));
@@ -777,7 +789,7 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4, contextInstruction.Code));
 
             // Call the StoreAction method
-            Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(typeof(FilterContext).GetMethod("StoreAction", new Type[] { typeof(int) }))));
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.StoreAction)));
 
         }
 
@@ -801,8 +813,8 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Create new joinpointcontext object
             //
-            Instructions.Add(Worker.Create(OpCodes.Newobj,
-                CreateMethodReference(typeof(JoinPointContext).GetConstructors()[0])));
+            Instructions.Add(Worker.Create(OpCodes.Newobj, 
+                CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextConstructor )));
 
             // Store the just created joinpointcontext object
             Instructions.Add(Worker.Create(OpCodes.Stloc, jpcVar));
@@ -820,8 +832,7 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
 
                 // Call set_Sender
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) }))));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetSender)));
             }
 
             //
@@ -833,102 +844,88 @@ namespace Composestar.StarLight.ILWeaver
 
             // Determine type
             Instructions.Add(Worker.Create(OpCodes.Ldtoken, CalledMethod.ReturnType.ReturnType));
-            Instructions.Add(Worker.Create(
-                OpCodes.Call,
-                CreateMethodReference(
-                    typeof(System.Type).GetMethod(
-                        "GetTypeFromHandle",
-                        new Type[] { typeof(System.RuntimeTypeHandle) }
-                    )
-                )
-            ));
+            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle))); 
 
             // Call set_ReturnType in JoinPointContext
-            Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                typeof(JoinPointContext).GetMethod("set_ReturnType", new Type[] { typeof(System.Type) }))));             
-
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetReturnType)));
+                        
             //
             // Add the arguments, these are stored at the top of the stack
             //
-            if(FilterType == FilterTypes.InputFilter)
+            switch (FilterType)
             {
-                foreach(ParameterDefinition param in CalledMethod.Parameters)
-                {
-                    //methodReference.Parameters[ i ].Attributes = Mono.Cecil.ParamAttributes.Out;                    
-
-                    // Load jpc
-                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                    // Load the ordinal
-                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
-
-                    // Determine type
-                    Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
-                    Instructions.Add(Worker.Create(
-                        OpCodes.Call,
-                        CreateMethodReference(
-                            typeof(System.Type).GetMethod(
-                                "GetTypeFromHandle",
-                                new Type[] { typeof(System.RuntimeTypeHandle) }
-                            )
-                        )
-                    ));
-
-                    // Load the argument
-                    Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
-
-                    // Check if parameter is value type, then box
-                    if(param.ParameterType.IsValueType)
+                case FilterTypes.None:
+                    break;
+                case FilterTypes.InputFilter:
+                    foreach (ParameterDefinition param in CalledMethod.Parameters)
                     {
-                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                        // Load the argument
+                        Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
+
+                        // Check if parameter is value type, then box
+                        if (param.ParameterType.IsValueType)
+                        {
+                            Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                        }
+                       
+                        // Load the ordinal
+                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                        // Determine type
+                        Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
+                        Instructions.Add(Worker.Create(OpCodes.Call,CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle )));                       
+
+                        // Determine the parameter direction
+                        ArgumentAttributes attr = ConvertAttributes(param.Attributes);
+                    
+                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
+               
+                        // Load jpc
+                        Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                        // Call the AddArgument function statically
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextAddArgument)));                            
+
                     }
+                    break;
+                case FilterTypes.OutputFilter:
+                    ParameterDefinitionCollection parameters = CalledMethod.Parameters;
+                    int count = parameters.Count;
 
-                    // Call the AddArgument function
-                    Instructions.Add(Worker.Create(OpCodes.Callvirt,
-                        CreateMethodReference(typeof(JoinPointContext).GetMethod("AddArgument", new Type[] { typeof(Int16), typeof(System.Type), typeof(object) }))));
-                }
-            }
-            else
-            {
-                ParameterDefinitionCollection parameters = CalledMethod.Parameters;
-                int count = parameters.Count;
-
-                // iterate backward over parameters, because last parameter is on top of the stack
-                for(int i = count - 1; i >= 0; i--)
-                {
-                    ParameterDefinition param = parameters[i];
-
-                    // Check if parameter is value type, then box
-                    if(param.ParameterType.IsValueType)
+                    // iterate backward over parameters, because last parameter is on top of the stack
+                    for (int i = count - 1; i >= 0; i--)
                     {
-                        Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                        ParameterDefinition param = parameters[i];
+
+                        // Check if parameter is value type, then box
+                        if (param.ParameterType.IsValueType)
+                        {
+                            Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                        }
+
+                        // Load the ordinal
+                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                        // Determine type
+                        Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
+                        Instructions.Add(Worker.Create(OpCodes.Call,CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle )));
+
+                        // Determine the parameter direction
+                        ArgumentAttributes attr = ConvertAttributes(param.Attributes); 
+
+                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
+             
+                        // Load jpc
+                        Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                        // Call the AddArgument function statically
+                        Instructions.Add(Worker.Create(OpCodes.Call,CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextAddArgument)));
                     }
-
-                    // Load the ordinal
-                    Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
-
-                    // Determine type
-                    Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
-                    Instructions.Add(Worker.Create(
-                        OpCodes.Call,
-                        CreateMethodReference(
-                            typeof(System.Type).GetMethod(
-                                "GetTypeFromHandle",
-                                new Type[] { typeof(System.RuntimeTypeHandle) }
-                            )
-                        )
-                    ));
-
-                    // Load jpc
-                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                    // Call the AddArgument function statically
-                    Instructions.Add(Worker.Create(OpCodes.Call,
-                        CreateMethodReference(typeof(JoinPointContext).GetMethod("AddArgument",
-                        new Type[] { typeof(object), typeof(Int16), typeof(System.Type), typeof(JoinPointContext) }))));
-                }
+                    break;
+                default:
+                    break;
             }
-
+           
             //
             // Set the target
             //
@@ -945,8 +942,8 @@ namespace Composestar.StarLight.ILWeaver
                     Instructions.Add(Worker.Create(OpCodes.Ldnull));
 
                 // Assign to the Target property
-                Instructions.Add(Worker.Create(OpCodes.Callvirt,
-                    CreateMethodReference(typeof(JoinPointContext).GetMethod("set_StartTarget", new Type[] { typeof(object) }))));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartTarget)));
+                    
             }
             else
             {
@@ -954,9 +951,7 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Assign to the Target property through static method
-                Instructions.Add(Worker.Create(OpCodes.Call,
-                    CreateMethodReference(typeof(JoinPointContext).GetMethod("SetTarget", 
-                    new Type[] { typeof(object), typeof(JoinPointContext) }))));
+                Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetTarget)));
             }
 
             //
@@ -970,8 +965,8 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Ldstr, CalledMethod.Name));
 
             // Assign name to MethodName
-            Instructions.Add(Worker.Create(OpCodes.Callvirt,
-                CreateMethodReference(typeof(JoinPointContext).GetMethod("set_StartSelector", new Type[] { typeof(string) }))));
+            Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextSetStartSelector)));
+                
         }
 
         /// <summary>
@@ -991,8 +986,8 @@ namespace Composestar.StarLight.ILWeaver
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Get returnvalue
-                Instructions.Add(Worker.Create(OpCodes.Callvirt, CreateMethodReference(
-                    typeof(JoinPointContext).GetMethod("get_ReturnValue", new Type[] { }))));
+                Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetReturnValue)));
+                           
 
                 // Check if returnvalue is value type, then unbox, else cast
                 if(CalledMethod.ReturnType.ReturnType.IsValueType)

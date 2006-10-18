@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -16,7 +17,11 @@ using Mono.Cecil.Signatures;
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions; 
 using Composestar.StarLight.Utilities.Cecil;
+using Composestar.StarLight.ContextInfo;
+  
+#endregion
    
 namespace Composestar.StarLight.ILWeaver
 {
@@ -26,11 +31,36 @@ namespace Composestar.StarLight.ILWeaver
     /// </summary>
     public class CecilUtilities
     {
+        #region Constants
+
         public const string VoidType = "System.Void";
+
+        #endregion
+
+        #region Variables
 
         private static string _binFolder;
         private static StarLightAssemblyResolver _resolver;
         private static Dictionary<string, MethodReference> _methodsCache = new Dictionary<string, MethodReference>();
+        private static Dictionary<CachedMethodDefinition, MethodBase> _methodSignaturesCache = new Dictionary<CachedMethodDefinition, MethodBase>();
+        private static Dictionary<CachedTypeDefinition, Type> _typesSignaturesCache = new Dictionary<CachedTypeDefinition, Type>();
+        
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes the <see cref="T:CecilUtilities"/> class.
+        /// </summary>
+        static CecilUtilities()
+        {
+            AddDefaultMethodsToCache();
+            AddDefaultTypesToCache(); 
+        }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the bin folder used for lookups.
@@ -49,6 +79,141 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
+        #endregion
+
+        #region MethodReference and caching
+
+        /// <summary>
+        /// Creates the method reference.
+        /// </summary>
+        /// <param name="assemblyDefinition">The assembly definition.</param>
+        /// <param name="methodBase">The method info.</param>
+        /// <returns></returns>
+        public static MethodReference CreateMethodReference(AssemblyDefinition assemblyDefinition, MethodBase methodBase)
+        {
+            return assemblyDefinition.MainModule.Import(methodBase);
+        }
+
+        /// <summary>
+        /// Creates the method reference using a cached version.
+        /// </summary>
+        /// <param name="assemblyDefinition">The assembly definition.</param>
+        /// <param name="methodSignature">The method signature.</param>
+        /// <returns></returns>
+        public static MethodReference CreateMethodReference(AssemblyDefinition assemblyDefinition, CachedMethodDefinition methodDefinitionType)
+        {
+            MethodBase mb = null;
+            if (_methodSignaturesCache.TryGetValue(methodDefinitionType, out mb))
+                return CreateMethodReference(assemblyDefinition, mb);
+            else
+                throw new ILWeaverException(String.Format(Properties.Resources.MethodSignatureNotFound, methodDefinitionType));
+        }
+
+        /// <summary>
+        /// Add method to cache
+        /// </summary>
+        /// <param name="methodSignature">Method signature</param>
+        /// <param name="methodBase">Method base</param>
+        private static void AddMethodToCache(CachedMethodDefinition methodDefinitionType, MethodBase methodBase)
+        {
+            _methodSignaturesCache[methodDefinitionType] = methodBase;
+ 
+        } // AddMethodsToCache(methodSignature, methodBase)
+
+        /// <summary>
+        /// Add default methods to _methodSignaturesCache for quick lookup.
+        /// </summary>
+        public static void AddDefaultMethodsToCache()
+        {
+            AddMethodToCache(CachedMethodDefinition.IsInnerCall, typeof(FilterContext).GetMethod("IsInnerCall", new Type[] { typeof(object), typeof(int) })); 
+            AddMethodToCache(CachedMethodDefinition.SetInnerCall, typeof(FilterContext).GetMethod("SetInnerCall", new Type[] { typeof(object), typeof(int) })) ;
+            AddMethodToCache(CachedMethodDefinition.ResetInnerCall, typeof(FilterContext).GetMethod("ResetInnerCall", new Type[] { }));
+            AddMethodToCache(CachedMethodDefinition.FilterContextConstructor, typeof(FilterContext).GetConstructors()[0]);
+            AddMethodToCache(CachedMethodDefinition.StoreAction, typeof(FilterContext).GetMethod("StoreAction", new Type[] { typeof(int) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextConstructor, typeof(JoinPointContext).GetConstructors()[0]); 
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSender, typeof(JoinPointContext).GetMethod("set_Sender", new Type[] { typeof(object) })); 
+            AddMethodToCache(CachedMethodDefinition.GetTypeFromHandle,  typeof(System.Type).GetMethod("GetTypeFromHandle", new Type[] { typeof(System.RuntimeTypeHandle)})); 
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetReturnType, typeof(JoinPointContext).GetMethod("set_ReturnType", new Type[] { typeof(System.Type) })); 
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextAddArgument, typeof(JoinPointContext).GetMethod("AddArgument",
+                            new Type[] { 
+                            typeof(object), 
+                            typeof(Int16), 
+                            typeof(System.Type), 
+                            typeof(ArgumentAttributes),
+                            typeof(JoinPointContext) 
+                        }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetStartTarget, typeof(JoinPointContext).GetMethod("set_StartTarget", new Type[] { typeof(object) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetTarget, typeof(JoinPointContext).GetMethod("SetTarget",  new Type[] { typeof(object), typeof(JoinPointContext) }));   
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetStartSelector, typeof(JoinPointContext).GetMethod("set_StartSelector", new Type[] { typeof(string) }));   
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextGetReturnValue, typeof(JoinPointContext).GetMethod("get_ReturnValue", new Type[] { }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextGetStartTarget, typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetCurrentTarget, typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextGetSubstitutionTarget, typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionTarget, typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextGetArgumentValue, typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) })); 
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionSelector, typeof(JoinPointContext).GetMethod("set_SubstitutionSelector", new Type[] { typeof(string) })); 
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetReturnValue, typeof(JoinPointContext).GetMethod("SetReturnValue", new Type[] { typeof(object), typeof(JoinPointContext) }));
+            AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { })); 
+            AddMethodToCache(CachedMethodDefinition.NextStoredAction, typeof(FilterContext).GetMethod("NextStoredAction", new Type[] { }));
+            AddMethodToCache(CachedMethodDefinition.ExceptionConstructor, typeof(Exception).GetConstructors()[0]); 
+
+        
+        } // AddDefaultMethodsToCache()
+        
+        #endregion
+
+        #region TypeReference and caching
+
+        /// <summary>
+        /// Creates the type reference.
+        /// </summary>
+        /// <param name="assemblyDefinition">The assembly definition.</param>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public static TypeReference CreateTypeReference(AssemblyDefinition assemblyDefinition, Type type)
+        {
+            return assemblyDefinition.MainModule.Import(type);
+        }
+
+        /// <summary>
+        /// Creates the type reference.
+        /// </summary>
+        /// <param name="assemblyDefinition">The assembly definition.</param>
+        /// <param name="typeName">Name of the type.</param>
+        /// <returns></returns>
+        public static TypeReference CreateTypeReference(AssemblyDefinition assemblyDefinition, CachedTypeDefinition typeName)
+        {
+            Type type = null;
+            if (_typesSignaturesCache.TryGetValue(typeName, out type))
+                return CreateTypeReference(assemblyDefinition, type);
+            else
+                throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, typeName));
+        }
+
+
+        /// <summary>
+        /// Adds the types to cache.
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="type">The type.</param>
+        private static void AddTypeToCache(CachedTypeDefinition typeName, Type type)
+        {
+            _typesSignaturesCache[typeName] = type;
+
+        }
+
+
+        /// <summary>
+        /// Adds the default types to cache.
+        /// </summary>
+        public static void AddDefaultTypesToCache()
+        {
+            AddTypeToCache(CachedTypeDefinition.Int32 , typeof(Int32));
+            AddTypeToCache(CachedTypeDefinition.Int16, typeof(Int16)); 
+        } 
+
+        #endregion
+
         /// <summary>
         /// Returns a method signature.
         /// </summary>
@@ -58,6 +223,8 @@ namespace Composestar.StarLight.ILWeaver
         {
             return method.ToString();
         }
+
+        #region Resolve Types
 
         /// <summary>
         /// Resolves the type.
@@ -117,21 +284,9 @@ namespace Composestar.StarLight.ILWeaver
             return (TypeReference)td;
         }
 
-        
+        #endregion
 
-        //public static TypeReference ResolveType( string typeName, ILanguageModelAccessor languageModelAccessor )
-        //{
-        //    TypeElement typeElement = languageModelAccessor.GetTypeElement( typeName );
-        //    if ( typeElement == null ) throw new ILWeaverException(
-        //        String.Format( CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, typeName + " (step 1)" ) );
-
-        //    TypeReference typeRef = CecilUtilities.ResolveType(
-        //        internalTypeString, internalTypeElement.Assembly, typeElement.FromDLL );
-        //    if ( typeRef == null ) throw new ILWeaverException(
-        //        String.Format( CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, typeName + " (step 2)" ) );
-
-        //    return typeRef;
-        //}
+        #region Resolve Methods
 
         /// <summary>
         /// Resolves the method.
@@ -257,6 +412,9 @@ namespace Composestar.StarLight.ILWeaver
             return declaringType.Methods.GetMethod(reference.Name, reference.Parameters);
         }
 
+#endregion
+
+        #region Utilties
 
         /// <summary>
         /// Creates the cache key.
@@ -321,102 +479,47 @@ namespace Composestar.StarLight.ILWeaver
             Array.Copy(buffer, ret, read);
             return ret;
         }
+
+        #endregion
     }
 
     /// <summary>
-    /// Assembly resolver to resolve assemblies and store those in a cache for quick lookup.
+    /// Cached method definitions for quick lookup.
     /// </summary>
-    [Obsolete("Use the Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver")]
-    public class ILWeaverAssemblyResolver : BaseAssemblyResolver
+    public enum CachedMethodDefinition
     {
+        IsInnerCall,
+        SetInnerCall,
+        ResetInnerCall,
+        FilterContextConstructor,
+        StoreAction,
+        JoinPointContextConstructor,
+        JoinPointContextAddArgument,
+        JoinPointContextGetArgumentValue,
+        JoinPointContextSetSender,
+        JoinPointContextSetReturnType,
+        JoinPointContextSetStartTarget,
+        JoinPointContextSetTarget,
+        JoinPointContextSetStartSelector,
+        JoinPointContextGetReturnValue,
+        JoinPointContextGetStartTarget,
+        JoinPointContextSetCurrentTarget,  
+        JoinPointContextGetSubstitutionTarget,
+        JoinPointContextSetSubstitutionTarget,
+        JoinPointContextSetSubstitutionSelector,
+        JoinPointContextSetReturnValue,
+        GetTypeFromHandle,
+        HasMoreStoredActions,
+        NextStoredAction,
+        ExceptionConstructor
+    } // enum CachedMethodDefinition
 
-        private Dictionary<string, AssemblyDefinition> m_cache;
-        private string _binFolder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:ILWeaverAssemblyResolver"/> class.
-        /// </summary>
-        /// <param name="binFolder">The bin folder.</param>
-        public ILWeaverAssemblyResolver(string binFolder)
-        {
-            _binFolder = binFolder;
-            m_cache = new Dictionary<string, AssemblyDefinition>();
-        }
-
-        /// <summary>
-        /// Resolves the specified full name.
-        /// </summary>
-        /// <param name="fullName">The full name.</param>
-        /// <returns></returns>
-        public override AssemblyDefinition Resolve(string fullName)
-        {
-            if (String.IsNullOrEmpty(fullName))
-                return null;
-
-            AssemblyNameReference assemblyNameReferenceParsed;
-
-            try
-            {
-                fullName = fullName.Replace(", PublicKeyToken=null", "");
-
-                assemblyNameReferenceParsed = AssemblyNameReference.Parse(fullName);
-            }
-            catch (ArgumentException)
-            {
-                return null;
-            }
-
-            return Resolve(assemblyNameReferenceParsed);
-
-        }
-
-        /// <summary>
-        /// Resolves the specified name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public override AssemblyDefinition Resolve(AssemblyNameReference name)
-        {
-            AssemblyDefinition asm;
-            if (!m_cache.TryGetValue(name.FullName, out asm))
-            {
-                asm = ResolveInternal(name);
-                if (asm != null)
-                    m_cache[name.FullName] = asm;
-            }
-
-            return asm;
-        }
-
-        /// <summary>
-        /// Resolves the assemblyname.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        private AssemblyDefinition ResolveInternal(AssemblyNameReference name)
-        {
-            string[] exts = new string[] { ".dll", ".exe" };
-            string[] dirs = new string[] { _binFolder, ".", "bin" };
-
-            foreach (string dir in dirs)
-            {
-                foreach (string ext in exts)
-                {
-                    string file = Path.Combine(dir, name.Name + ext);
-                    if (File.Exists(file))
-                    {
-                        return AssemblyFactory.GetAssembly(file);
-                    }
-                }
-            }
-
-            if (name.Name == "mscorlib")
-                return GetCorlib(name);
-            else if (IsInGac(name))
-                return AssemblyFactory.GetAssembly(GetFromGac(name));
-
-            return null;
-
-        }
-    }
+    /// <summary>
+    /// Contains the cached types.
+    /// </summary>
+    public enum CachedTypeDefinition
+    {
+        Int32,
+        Int16,
+    } // enum CachedTypeDefinition
 }

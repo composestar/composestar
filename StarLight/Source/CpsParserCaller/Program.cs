@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 
 using Composestar.CpsParser;
-
+using Composestar.StarLight.CoreServices;
+  
 namespace Composestar.CpsParserCaller
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length < 1)
             {
