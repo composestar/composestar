@@ -9,7 +9,7 @@ using Composestar.StarLight.CoreServices;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
-    class ILWeaverBuilderConfigurator : ObjectBuilderConfiguratorBase
+    class CpsParserBuilderConfigurator : ObjectBuilderConfiguratorBase
     {
         public override void ApplyConfiguration(IBuilder<BuilderStage> builder)
         {
