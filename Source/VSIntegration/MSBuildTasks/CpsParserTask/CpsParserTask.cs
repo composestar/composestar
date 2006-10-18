@@ -9,7 +9,7 @@ using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.CpsParser;
+using Composestar.StarLight.CpsParser;
 using Composestar.Repository.LanguageModel;
 using Composestar.Repository.Configuration;
 using Composestar.Repository.Db4oContainers;
@@ -51,7 +51,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
         }
 
         private ITaskItem[] _concernFiles;
-        private ITaskItem[] _referencedTypes;
 
         /// <summary>
         /// Gets or sets the concern files.
@@ -64,6 +63,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _concernFiles = value; }
         }
 
+        private ITaskItem[] _referencedTypes;
+
         /// <summary>
         /// Gets or sets the referenced types.
         /// </summary>
@@ -73,6 +74,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             get { return _referencedTypes; }
             set { _referencedTypes = value; }
+        }
+
+        private ITaskItem _hasOutputFilters = false;
+
+        [Output()]
+        public ITaskItem[] HasOutputFilters
+        {
+            get { return _hasOutputFilters; }
+            set { _hasOutputFilters = value; }
         }
 
         #endregion
@@ -95,8 +105,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 sw.Start();
 
                 ICpsParser cfp = null;
-                cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer());
-
+                
                 // Open DB
                 Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
                 repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
@@ -115,7 +124,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     Log.LogMessageFromResources("ParsingConcernFile", concernFile);
 
-                    refTypes = cfp.ParseFileForReferencedTypes(concernFile);
+                    cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer(concernFile));
+                    cfp.Parse();
+
+                    refTypes.AddRange(cfp.ReferencedTypes);
+
+                    if (cfp.HasOutputFilters) HasOutputFilters = true;
 
                     string path = Path.GetDirectoryName(concernFile);
                     string filename = Path.GetFileName(concernFile);
@@ -128,10 +142,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 sw.Stop();
 
+                Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
+
                 // Pass all the referenced types back to msbuild
                 if (refTypes != null && refTypes.Count > 0)
                 {
-                    Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
                     int index = 0;
                     ReferencedTypes = new ITaskItem[refTypes.Count];
                     foreach (String type in refTypes)
@@ -141,6 +156,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     } // foreach  (type)
 
                 } // foreach  (item)
+
+                //
+                
             }
             catch (CpsParserException ex)
             {

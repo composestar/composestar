@@ -79,6 +79,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             _configuration = configuration;
             _languageModelAccessor = languageModelAccessor;
+            _processMethodBody = configuration.DoMethodCallAnalysis;
         }
 
         #endregion
@@ -311,11 +312,20 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <returns></returns>
         private FieldElement[] ExtractFields(AssemblyDefinition targetAssemblyDefinition, FieldDefinitionCollection fields)
         {
-            List<FieldElement> result = new List<FieldElement>(fields.Count);
+            List<FieldElement> result = null;
 
-            foreach (FieldDefinition field in fields)
+            if (_configuration.DoFieldAnalysis)
             {
-                result.Add(ExtractField(targetAssemblyDefinition, field));
+                result = new List<FieldElement>(fields.Count);
+
+                foreach (FieldDefinition field in fields)
+                {
+                    result.Add(ExtractField(targetAssemblyDefinition, field));
+                }
+            }
+            else
+            {
+                result = new List<FieldElement>(0);
             }
 
             return result.ToArray();
