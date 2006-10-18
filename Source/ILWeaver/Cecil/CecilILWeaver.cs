@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Globalization;
+using System.Xml;
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -18,6 +19,7 @@ using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions; 
+using Composestar.Repository.LanguageModel.Inlining;
 #endregion
 
 namespace Composestar.StarLight.ILWeaver
@@ -475,12 +477,10 @@ namespace Composestar.StarLight.ILWeaver
             // If the methodbody is null, then return
             if (methodElement.MethodBody == null)
                 return;
-
+            
             // Get the input filter
-            Composestar.Repository.LanguageModel.Inlining.InlineInstruction inputFilter = null;
-           Console.WriteLine(methodElement.MethodBody.InputFilter);
-             
-
+            InlineInstruction inputFilter = ParseInlineInstructions(methodElement.MethodBody.InputFilter);
+                      
             // Only proceed when we have an inputfilter
             if (inputFilter == null)
                 return;
@@ -586,10 +586,8 @@ namespace Composestar.StarLight.ILWeaver
                 if(call != null)
                 {
                     // Get the outputFilter for this call
-                    Composestar.Repository.LanguageModel.Inlining.InlineInstruction outputFilter = null;
-                    Console.WriteLine(call.OutputFilter);
+                    InlineInstruction outputFilter = ParseInlineInstructions(call.OutputFilter);
                     
-
                     // Check for null, an output filter is not required
                     if(outputFilter == null)
                         continue;
@@ -636,6 +634,61 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #region Helper functions
+
+        /// <summary>
+        /// Parse inline instructions
+        /// </summary>
+        /// <param name="xmlText">Xml text</param>
+        /// <returns>Inline instruction</returns>
+        private InlineInstruction ParseInlineInstructions(string xmlText)
+        {
+            if (string.IsNullOrEmpty(xmlText))
+                return null;
+
+            XmlTextReader reader = null;
+            Block block = null;
+
+            try
+            {
+                reader = new XmlTextReader(new StringReader(xmlText));
+
+                reader.ReadStartElement("Block");
+                block = new Block();
+
+                while (reader.Read())
+                {
+                    ParseInstruction(block, reader);
+                } // while
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                } // if
+            } // finally
+
+            return block;
+
+        } // ParseInlineInstructions(xmlText)
+
+        /// <summary>
+        /// Parse instruction
+        /// </summary>
+        /// <param name="block">Block</param>
+        /// <param name="reader">Reader</param>
+        private void ParseInstruction(Block block, XmlTextReader reader)
+        {
+            string name = reader.Name;
+            Console.WriteLine("name is {0}", name);
+                        
+
+        } // ParseInstruction(block, reader)
 
         /// <summary>
         /// Optimizes the type elements. 

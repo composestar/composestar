@@ -463,9 +463,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 			{
 				Instruction instruction = (Instruction) instructions.nextElement();
 
-				buffer.append("<BlockItem>");
+				//buffer.append("<BlockItem>");
 				instruction.accept(this);
-				buffer.append("</BlockItem>");
+				//buffer.append("</BlockItem>");
 			}
 
 			buffer.append("</Block>");
@@ -513,16 +513,20 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 			buffer.append(" code=\"");
 			buffer.append(contextInstruction.getCode());
-			buffer.append("\">");
+			buffer.append("\"");
 
 			if (contextInstruction.getInstruction() != null)
 			{
-				buffer.append("<Instruction>");
+				buffer.append(">");
 				contextInstruction.getInstruction().accept(this);
-				buffer.append("</Instruction>");
+				//buffer.append("");
+				buffer.append("</ContextInstruction>");
 			}
-
-			buffer.append("</ContextInstruction>");
+			else
+			{
+				buffer.append("/>");
+			}
+				
 
 			return null;
 		}
@@ -539,13 +543,13 @@ public class StarLightEmitterRunner implements CTCommonModule
 			buffer.append(filterAction.getType());
 			buffer.append("\">");
 
-			buffer.append("<OriginalMessage>");
+			buffer.append("<OriginalMessage");
 			createMessage(filterAction.getMessage());
-			buffer.append("</OriginalMessage");
+			buffer.append("/>");
 
-			buffer.append("<SubstitutedMessage>");
+			buffer.append("<SubstitutedMessage");
 			createMessage(filterAction.getSubstitutedMessage());
-			buffer.append("</SubstitutedMessage>");
+			buffer.append("/>");
 
 			buffer.append("</FilterAction>");
 
@@ -574,12 +578,12 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitCase(Case caseInstruction)
 		{
-			buffer.append("<Case>");
+			buffer.append("<Case");
 			setLabel(caseInstruction);
 
-			buffer.append("<CheckConstant>");
+			buffer.append(" checkConstant=\"");
 			buffer.append(caseInstruction.getCheckConstant());
-			buffer.append("</CheckConstant>");
+			buffer.append("\">");
 
 			buffer.append("<Instructions>");
 			caseInstruction.getInstructions().accept(this);
@@ -604,9 +608,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 			Case[] cases = switchInstruction.getCases();
 			for (int i = 0; i < cases.length; i++)
 			{
-				buffer.append("<CaseItem>");
+				buffer.append("<CaseItems>");
 				cases[i].accept(this);
-				buffer.append("</CaseItem>");
+				buffer.append("</CaseItems>");
 			}
 
 			buffer.append("</Switch>");
@@ -704,7 +708,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		private void createMessage(Message message)
 		{
-			buffer.append("<Message");
+			//buffer.append("<Message");
 
 			buffer.append(" target=\"");
 			buffer.append(message.getTarget().getName());
@@ -712,7 +716,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 			buffer.append(" selector=\"");
 			buffer.append(message.getSelector());
-			buffer.append("\"/>");
+			buffer.append("\"");
 
 			//buffer.append("</Message>");
 		}
