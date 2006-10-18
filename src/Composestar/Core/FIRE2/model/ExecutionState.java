@@ -8,9 +8,6 @@ package Composestar.Core.FIRE2.model;
 
 import java.util.Enumeration;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
-
 /**
  * 
  *
@@ -18,9 +15,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
  */
 public abstract class ExecutionState{
     private FlowNode flowNode;
-    private Target substitutionTarget;
-    private MessageSelector substitutionSelector;
     private Message message;
+    private Message substitutionMessage;
     private int stateType;
     
     
@@ -29,16 +25,14 @@ public abstract class ExecutionState{
     public final static int NORMAL_STATE = 3;
     
     
-    public ExecutionState( FlowNode flowNode, Message message, 
-            MessageSelector substitutionSelector, Target substitutionTarget,
+    public ExecutionState( FlowNode flowNode, Message message, Message substitutionMessage,
             int stateType )
     {
         super();
         
         this.flowNode = flowNode;
         this.message = message;
-        this.substitutionSelector = substitutionSelector;
-        this.substitutionTarget = substitutionTarget;
+        this.substitutionMessage = substitutionMessage;
         this.stateType = stateType;
     }
     
@@ -47,34 +41,6 @@ public abstract class ExecutionState{
      */
     public FlowNode getFlowNode() {
         return flowNode;
-    }
-    
-    /**
-     * @return Returns the selector.
-     */
-    public MessageSelector getSelector() {
-        return message.getSelector();
-    }
-    
-    /**
-     * @return Returns the substitutionSelector.
-     */
-    public MessageSelector getSubstitutionSelector() {
-        return substitutionSelector;
-    }
-    
-    /**
-     * @return Returns the substitutionTarget.
-     */
-    public Target getSubstitutionTarget() {
-        return substitutionTarget;
-    }
-    
-    /**
-     * @return Returns the target.
-     */
-    public Target getTarget() {
-        return message.getTarget();
     }
     
     
@@ -87,6 +53,15 @@ public abstract class ExecutionState{
     
     
     /**
+	 * @return the substitutionMessage
+	 */
+	public Message getSubstitutionMessage()
+	{
+		return substitutionMessage;
+	}
+	
+
+	/**
      * @return Returns the stateType.
      */
     public int getStateType() {
@@ -112,17 +87,12 @@ public abstract class ExecutionState{
         if ( this.flowNode != state.flowNode )
             return false;
         
-        if ( !Message.checkEquals( this.substitutionTarget, state.substitutionTarget) )
-            return false;
-        
-        if ( !Message.checkEquals( this.substitutionSelector, 
-                state.substitutionSelector ) )
-        {
-            return false;
-        }
-         
         if ( !this.message.equals( state.message ) )
             return false;
+        
+        if ( !this.substitutionMessage.equals( state.substitutionMessage ) )
+        	return false;
+        
         
         //other fields not important for comparison
         

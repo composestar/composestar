@@ -43,8 +43,7 @@ import Composestar.Core.FIRE2.model.Message;
  * @author Arjan de Roo
  */
 public class GrooveASTBuilder {
-    private Hashtable selectorTable;
-    private Hashtable targetTable;
+    
     
     public final static String SELECTOR_ANNOTATION = "selector";
     public final static String TARGET_ANNOTATION = "target";
@@ -53,10 +52,26 @@ public class GrooveASTBuilder {
     
     public final static String STAR_REPRESENTATION = "'*'";
     
+    /**
+     * Hashtable containing a mapping from the String representation of the MessageSelector 
+     * to the corresponding selector-node, to make sure that each distinct selector has only one node
+     */
+    private Hashtable selectorTable;
     
+    /**
+     * Hashtable containing a mapping from the String representation of the Target 
+     * to the corresponding target-node, to make sure that each distinct target has only one node
+     */
+    private Hashtable targetTable;
+    
+    /**
+     * Cache for the star-selector
+     */
+    private MessageSelector starSelector; 
     
     public GrooveASTBuilder(){
-        
+    	this.starSelector = new MessageSelector();
+    	this.starSelector.setName( Message.STAR_SELECTOR );
     }
     
     public Graph buildAST( FilterModule filterModule, boolean forInputFilters ){
@@ -518,45 +533,6 @@ public class GrooveASTBuilder {
         return patternNode;
     }
 
-    /**
-     * @param substitutionPart
-     * @param graph
-     * @return
-     */
-    private Node buildSubstitutionPartNode(MatchingPart substitutionPart, Graph graph) {
-        AnnotatedNode substitutionPartNode = new AnnotatedNode();
-        substitutionPartNode.addAnnotation( REPOSITORY_LINK_ANNOTATION, substitutionPart );
-        graph.addNode( substitutionPartNode );
-        
-        AnnotatedEdge edge = new AnnotatedEdge( 
-                substitutionPartNode, FlowChartNames.SUBSTITUTION_PART_NODE,
-                substitutionPartNode );
-        graph.addEdge( edge );
-        
-        //selector:
-        MessageSelector selector = substitutionPart.selector;
-        Node selectorNode = (Node) selectorTable.get( selector.getName() );
-        if ( selectorNode == null ){
-            selectorNode = buildSelectorNode( selector, graph );
-        }
-        
-        edge = new AnnotatedEdge( substitutionPartNode, FlowChartNames.SELECTOR_EDGE,
-                selectorNode );
-        graph.addEdge( edge );
-        
-        //target:
-        Target target = substitutionPart.getTarget();
-        Node targetNode = (Node) targetTable.get( target.name );
-        if ( targetNode == null ){
-            targetNode = buildTargetNode( target, graph );
-        }
-        
-        edge = new AnnotatedEdge( substitutionPartNode, FlowChartNames.TARGET_EDGE,
-                targetNode );
-        graph.addEdge( edge );
-        
-        return substitutionPartNode;
-    }
     
     /**
      * @param substitutionPart
@@ -575,10 +551,14 @@ public class GrooveASTBuilder {
         
         //selector:
         MessageSelector selector;
-        if ( substitutionPart == null )
-            selector = Message.STAR_SELECTOR;
-        else
-            selector = substitutionPart.selector;
+        if (substitutionPart == null)
+		{
+        	selector = this.starSelector;
+		}
+		else
+		{
+			selector = substitutionPart.selector;
+		}
         Node selectorNode = (Node) selectorTable.get( selector.getName() );
         if ( selectorNode == null ){
             selectorNode = buildSelectorNode( selector, graph );

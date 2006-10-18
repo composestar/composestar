@@ -18,8 +18,6 @@ import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelectorAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.FILTH.FilterModuleOrder;
@@ -246,9 +244,10 @@ public class FireModel {
                 matchTarget = state.getMessage().getTarget();
             
             //get the matching selector:
-            MessageSelector matchSelector = matchingPart.getSelector();
-            if ( Message.checkEquals( matchSelector, Message.STAR_SELECTOR ) )
+            String matchSelector = matchingPart.getSelector().getName();
+            if ( Message.checkEquals( matchSelector, Message.STAR_SELECTOR ) ){
                 matchSelector = state.getMessage().getSelector();
+            }
             
             if ( matchTarget.name.equals( "inner" ) ){
                 List methods;
@@ -259,7 +258,7 @@ public class FireModel {
                     methods = matchType.getMethods();
                 
                 MethodInfo matchMethodInfo = methodInfo.getClone(
-                        matchSelector.getName(), matchType );
+                        matchSelector, matchType );
                 
                 if ( containsMethod( methods, matchMethodInfo ) )
                     return SIGNATURE_MATCH_TRUE;
@@ -275,7 +274,7 @@ public class FireModel {
                     signature = new Signature();
                 Type matchType = (Type) matchConcern.getPlatformRepresentation();
                 MethodInfo matchMethodInfo = methodInfo.getClone(
-                        matchSelector.getName(), matchType );
+                        matchSelector, matchType );
                 
                 if ( !signature.hasMethod( matchMethodInfo ) )
                     return SIGNATURE_MATCH_FALSE;
@@ -332,7 +331,7 @@ public class FireModel {
                         Message.STAR_TARGET ) ?
                                 message.getTarget() : newStateMessage.getTarget() );
 
-            MessageSelector derivedSelector = 
+            String derivedSelector = 
                 ( Message.checkEquals( newStateMessage.getSelector(), 
                         Message.STAR_SELECTOR ) ?
                                 message.getSelector() : newStateMessage.getSelector() );
@@ -385,19 +384,8 @@ public class FireModel {
     
     public static Message getEntranceMessage(String selector)
 	{
-		Target t = Message.INNER_TARGET;
-		MessageSelector s;
-		if (messageSelectorCache.containsKey(selector))
-		{
-			s = (MessageSelector) messageSelectorCache.get(selector);
-		}
-		else{
-			s = new MessageSelector(new MessageSelectorAST());
-			s.setName(selector);
-			messageSelectorCache.put( selector, s );
-		}
-
-		return new Message(t, s);
+    	//start with inner target:
+		return new Message(Message.INNER_TARGET, selector);
 	}
     
     public ExecutionModel getExecutionModel(){
@@ -416,7 +404,7 @@ public class FireModel {
                 if ( !Message.checkEquals( 
                         message.getSelector(), Message.STAR_SELECTOR) )
                 {
-                    distinguishable.add( message.getSelector().getName() );
+                    distinguishable.add( message.getSelector() );
                 }
             }
         }
@@ -460,7 +448,7 @@ public class FireModel {
             
             
             //undistinguishable selector:
-            message = getEntranceMessage( Message.UNDISTINGUISHABLE_SELECTOR.getName() );
+            message = getEntranceMessage( Message.UNDISTINGUISHABLE_SELECTOR );
             
             state = executionModels[0].getEntranceState( message );
             
@@ -509,10 +497,7 @@ public class FireModel {
         public ExtendedExecutionModel( Target target, MethodInfo methodInfo,
                 int signatureCheck )
         {
-            //Message message = getEntranceMessage( )
-            MessageSelector selector = new MessageSelector();
-            selector.setName( methodInfo.name() );
-            Message message = new Message( target, selector );
+            Message message = new Message( target, methodInfo );
             
             ExecutionState state = executionModels[0].getEntranceState( message );
             
@@ -568,8 +553,7 @@ public class FireModel {
                 int signatureCheck, MethodInfo signatureCheckInfo, int layer )
         {
             super( baseState.getFlowNode(), message, 
-                    baseState.getSubstitutionSelector(), 
-                    baseState.getSubstitutionTarget(), baseState.getStateType() );
+                    baseState.getSubstitutionMessage(), baseState.getStateType() );
                         
             this.model = model;
             this.baseState = baseState;

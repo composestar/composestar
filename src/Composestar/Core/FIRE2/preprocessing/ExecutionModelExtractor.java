@@ -125,7 +125,7 @@ public class ExecutionModelExtractor{
         Node substitutionSelectorNode = null;
         Node substitutionTargetNode = null;
         
-        MessageSelector selector, substitutionSelector;
+        String selector, substitutionSelector;
         Target target, substitutionTarget;
         
         
@@ -177,8 +177,9 @@ public class ExecutionModelExtractor{
         
         
         if ( selectorNode instanceof AnnotatedNode ){
-            selector = (MessageSelector) ((AnnotatedNode) selectorNode).getAnnotation( 
+        	MessageSelector msgSelector = (MessageSelector) ((AnnotatedNode) selectorNode).getAnnotation(
                     GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION );
+        	selector = msgSelector.getName();
         }
         else{
             selector = Message.STAR_SELECTOR;
@@ -197,10 +198,10 @@ public class ExecutionModelExtractor{
         if ( substitutionSelectorNode != null  &&
                 substitutionSelectorNode instanceof AnnotatedNode )
         {
-            substitutionSelector = 
-                (MessageSelector) 
-                ((AnnotatedNode) substitutionSelectorNode).getAnnotation( 
+        	AnnotatedNode node = (AnnotatedNode) substitutionSelectorNode;
+        	MessageSelector msgSelector = (MessageSelector) node.getAnnotation( 
                     GrooveASTBuilder.REPOSITORY_LINK_ANNOTATION );
+        	substitutionSelector = msgSelector.getName();
         }
         else{
             substitutionSelector = Message.STAR_SELECTOR;
@@ -217,27 +218,25 @@ public class ExecutionModelExtractor{
             substitutionTarget = Message.STAR_TARGET;
         }
         
+        Message substitutionMessage = new Message(substitutionTarget, substitutionSelector);
         
         BasicExecutionState executionState;
         
         //check for start- or endnode:
         if (flowNode.equals(flowModel.getStartNode()) ){
             executionState = new BasicExecutionState( flowNode, message,
-                    substitutionSelector, substitutionTarget,
-                    ExecutionState.ENTRANCE_STATE );
+                    substitutionMessage, ExecutionState.ENTRANCE_STATE );
             executionModel.addState( executionState );
             executionModel.addEntranceState( executionState );
         }
         else if (flowNode.equals(flowModel.getEndNode()) ){
             executionState = new BasicExecutionState( flowNode, message,
-                    substitutionSelector, substitutionTarget,
-                    ExecutionState.EXIT_STATE );
+            		substitutionMessage, ExecutionState.EXIT_STATE );
             executionModel.addState( executionState );
         }
         else{
             executionState = new BasicExecutionState( flowNode, message,
-                    substitutionSelector, substitutionTarget,
-                    ExecutionState.NORMAL_STATE );
+            		substitutionMessage, ExecutionState.NORMAL_STATE );
             executionModel.addState( executionState );
         }
         
@@ -349,11 +348,9 @@ public class ExecutionModelExtractor{
         private Vector inTransitions;
         
         public BasicExecutionState( FlowNode flowNode, Message message, 
-                MessageSelector substitutionSelector, 
-                Target substitutionTarget, int stateType )
+                Message substitutionMessage, int stateType )
         {
-            super( flowNode, message, substitutionSelector, 
-                    substitutionTarget, stateType );
+            super( flowNode, message, substitutionMessage, stateType );
             
             outTransitions = new Vector();
             inTransitions = new Vector();

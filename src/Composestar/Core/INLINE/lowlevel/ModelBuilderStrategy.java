@@ -12,7 +12,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionE
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.FIRE2.model.FlowChartNames;
@@ -526,9 +525,9 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		currentBlock.addInstruction(action);
 
 		Target target = callMessage.getTarget();
-		MessageSelector selector = callMessage.getSelector();
+		String selector = callMessage.getSelector();
 		if (!Message.checkEquals(Message.INNER_TARGET, target)
-				|| !selector.getName().equals(builder.getCurrentSelector()))
+				|| !Message.checkEquals(selector, builder.getCurrentSelector()))
 		{
 			empty = false;
 		}
@@ -606,7 +605,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		{
 			MethodInfo calledMethod;
 
-			if (callMessage.getSelector().getName().equals(currentMethod.name()))
+			if (callMessage.getSelector().equals(currentMethod.name()))
 			{
 				calledMethod = currentMethod;
 			}
@@ -620,7 +619,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 					parameters[i] = parameter.parameterType().fullName();
 				}
 
-				calledMethod = currentMethod.parent().getMethod(callMessage.getSelector().getName(), parameters);
+				calledMethod = currentMethod.parent().getMethod(callMessage.getSelector(), parameters);
 			}
 
 			// it is possible that a called method could not be found, SIGN
@@ -671,12 +670,13 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	private Message getSubstitutedMessage(ExecutionState state)
 	{
 		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionTarget();
+		Target dispTarget = state.getSubstitutionMessage().getTarget();
 		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
 
 		// get the dispatch selector:
-		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		String dispSelector = state.getSubstitutionMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = 
+			state.getMessage().getSelector();
 
 		return new Message(dispTarget, dispSelector);
 	}

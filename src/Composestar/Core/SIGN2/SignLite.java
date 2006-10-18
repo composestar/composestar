@@ -11,7 +11,6 @@ import java.util.List;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.Signature;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.Exception.ModuleException;
@@ -213,20 +212,25 @@ public class SignLite implements CTCommonModule
 	private void checkDispatchExistence(Concern concern, MethodInfo method, ExecutionState state)
 	{
 		// get the dispatch target:
-		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		Target dispTarget = state.getSubstitutionMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)){
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
-		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		String dispSelector = state.getSubstitutionMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)){ 
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get dispatchtarget concern and methods:
-		String dispatchMethodName = dispSelector.getName();
+		String dispatchMethodName = dispSelector;
 		List methods;
-		if (dispTarget.name.equals("inner") || dispTarget.name.equals("self"))
+		if (Message.checkEquals(dispTarget, Message.INNER_TARGET) || 
+				Message.checkEquals(dispTarget, Message.SELF_TARGET))
 		{
 			Type type = (Type) concern.getPlatformRepresentation();
-			MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
+			MethodInfo targetMethod = method.getClone(dispSelector, type);
 
 			methods = getMethodList(concern);
 			if (!containsMethod(methods, targetMethod))
@@ -255,7 +259,7 @@ public class SignLite implements CTCommonModule
 			Concern targetConcern = ref.getRef().getType().getRef();
 
 			Type type = (Type) concern.getPlatformRepresentation();
-			MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
+			MethodInfo targetMethod = method.getClone(dispSelector, type);
 
 			Signature signature = getSignature(targetConcern);
 			if (!signature.hasMethod(targetMethod))
