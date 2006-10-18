@@ -2,7 +2,7 @@
 
 
 
-namespace Composestar.CpsParser
+namespace Composestar.StarLight.CpsParser
 {
 	// Generate header specific to lexer CSharp file
 	using System;

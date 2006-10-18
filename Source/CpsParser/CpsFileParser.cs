@@ -9,20 +9,26 @@ using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 #endregion
 
-namespace Composestar.CpsParser
+namespace Composestar.StarLight.CpsParser
 {
     /// <summary>
     /// A CPS (Concern) file parser using Antlr.
     /// </summary>
     public class CpsFileParser : ICpsParser
     {
+        private String _filename = String.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CpsFileParser"/> class.
         /// </summary>
-        public CpsFileParser()
+        public CpsFileParser(String filename)
         {
+            _filename = filename;
+        }
 
+        private String FileName
+        {
+            get { return _filename; }
         }
 
         private List<String> types = new List<string>();
@@ -37,6 +43,13 @@ namespace Composestar.CpsParser
             set { types = value; }
         }
 
+        private bool _hasOutputFilters = false;
+
+        public bool HasOutputFilters
+        {
+            get { return _hasOutputFilters; }
+        }
+
         /// <summary>
         /// Parse file for referenced types
         /// </summary>
@@ -44,7 +57,8 @@ namespace Composestar.CpsParser
         /// <returns>List</returns>
         public List<String> ParseFileForReferencedTypes(String fileName)
         {
-            ParseFile(fileName);
+            Parse();
+            //ParseFile(fileName);
 
             return types;
         } // ParseFileForReferencedTypes(fileName)
@@ -52,15 +66,14 @@ namespace Composestar.CpsParser
         /// <summary>
         /// Parses the file.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void ParseFile(String fileName)
+        public void Parse()
         {
             FileStream inputStream = null;
 
             try
             {
                 // Open a filestream for the file
-                inputStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                inputStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 // Create a new ANTLR Lexer for the filestream
                 CpsLexer lexer = new CpsLexer(inputStream);
@@ -88,9 +101,13 @@ namespace Composestar.CpsParser
                     //}
                 }
             }
+            catch (IOException ex)
+            {
+                throw new CpsParserException(String.Format(Properties.Resources.ConcernNotFound, FileName), FileName, ex);
+            }
             catch (antlr.ANTLRException ex)
             {
-                throw new CpsParserException(String.Format(Properties.Resources.UnableToParseConcern, ex.Message), fileName, ex);
+                throw new CpsParserException(String.Format(Properties.Resources.UnableToParseConcern, FileName), FileName, ex);
             }
             finally 
             {
@@ -117,6 +134,8 @@ namespace Composestar.CpsParser
             {
                 doType = true;
             }
+
+            if (tree.Type == CpsTokenTypes.OFILTER_) this._hasOutputFilters = true;
 
             // Initialize the parsingType string when we find a type node
             if (doType && tree.Type == CpsTokenTypes.TYPE_)
