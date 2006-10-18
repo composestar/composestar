@@ -25,9 +25,12 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.FileUtils;
 
 public class AttributeCollector extends DefaultHandler implements CTCommonModule
 {
+	public static final String MODULE_NAME = "TAC";
+
 	public AttributeCollector()
 	{
 	}
@@ -42,30 +45,27 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			Project p = (Project)prjIt.next();
 			String projectFolder = p.getBasePath();
 			String xmlFile = projectFolder + "attributes.xml";
+			
+			if (! FileUtils.fileExist(xmlFile))
+				throw new ModuleException("Unable to collect attributes: File not found: " + xmlFile, MODULE_NAME);
+			
 			try
 			{
 				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 				SAXParser saxParser = saxParserFactory.newSAXParser();
-				XMLReader parser  = saxParser.getXMLReader();
+				XMLReader parser = saxParser.getXMLReader();
 				parser.setContentHandler(this);
 				parser.parse(new InputSource(xmlFile));
 			}
 			catch (Exception e)
 			{
-				throw new ModuleException("Unable to collect attributes: " +  e.getMessage());
+				throw new ModuleException("Unable to collect attributes: " + e.getMessage(), MODULE_NAME);
 			}
 		}
 	}
 
-	/**
-	 * @param uri
-	 * @param localName
-	 * @param qName
-	 * @param attr
-	 * @throws org.xml.sax.SAXException
-	 * @roseuid 40AB539D030D
-	 */
-	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException
+	{
 		if( "Attribute".equalsIgnoreCase(qName) && attr != null ) {
 			Annotation attribute = new Annotation();
 			Concern c = (Concern) DataStore.instance().getObjectByID(attr.getValue("type"));
@@ -98,7 +98,8 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 		}
 	}
 
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName) throws SAXException
+	{
 	}
 
 	public Type getTypeLocation(String location)

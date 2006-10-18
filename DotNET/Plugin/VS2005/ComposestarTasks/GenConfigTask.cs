@@ -122,7 +122,7 @@ namespace Trese.ComposestarTasks
 				project.deps.Add(dep.GetMetadata("FullPath"));
 
 			// module settings
-			config.AddModuleSetting("INCRE", "config", "INCRE-DotNET2.xml");
+			config.AddModuleSetting("INCRE", "config", "INCRE-DotNET20.xml");
 			config.AddModuleSetting("SECRET", "mode", "2");
 			config.AddModuleSetting("ILICIT", "verifyAssemblies", "false");
 
