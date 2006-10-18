@@ -18,6 +18,8 @@ namespace Composestar.StarLight.ILAnalyzer
                
 
         private readonly string _repositoryFilename;
+        private bool _doFieldAnalysis = true;
+        private bool _doMethodCallAnalysis = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
@@ -37,6 +39,18 @@ namespace Composestar.StarLight.ILAnalyzer
         public string RepositoryFilename
         {
             get { return _repositoryFilename; }
+        }
+
+        public bool DoMethodCallAnalysis
+        {
+            get { return _doMethodCallAnalysis; }
+            set { _doMethodCallAnalysis = value; }
+        }
+
+        public bool DoFieldAnalysis
+        {
+            get { return _doFieldAnalysis; }
+            set { _doFieldAnalysis = value; }
         }
 
         /// <summary>
