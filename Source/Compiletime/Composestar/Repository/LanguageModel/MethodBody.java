@@ -1,6 +1,5 @@
 package Composestar.Repository.LanguageModel;
 
-import Composestar.Repository.LanguageModel.Inlining.*;
 
 /**
  * Contains information about the method body.
@@ -9,7 +8,7 @@ public class MethodBody
 {
 	private String _id;
 	private String _parentMethodId;
-	private InlineInstruction _inputFilter;
+	private String _inputFilter;
 
 	/** @attribute com.db4o.Transient() */
 	private CallElement[] _callElements;
@@ -39,13 +38,13 @@ public class MethodBody
 	}
 
 	/** @property */
-	public InlineInstruction get_InputFilter()
+	public String get_InputFilter()
 	{
 		return _inputFilter;
 	}
 
 	/** @property */
-	public void set_InputFilter(InlineInstruction value)
+	public void set_InputFilter(String value)
 	{
 		_inputFilter = value;
 	}
