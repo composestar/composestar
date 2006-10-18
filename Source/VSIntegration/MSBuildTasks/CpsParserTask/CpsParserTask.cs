@@ -76,10 +76,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _referencedTypes = value; }
         }
 
-        private ITaskItem _hasOutputFilters = false;
+        private ITaskItem _hasOutputFilters = new TaskItem(false.ToString());
 
         [Output()]
-        public ITaskItem[] HasOutputFilters
+        public ITaskItem HasOutputFilters
         {
             get { return _hasOutputFilters; }
             set { _hasOutputFilters = value; }
@@ -129,7 +129,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     refTypes.AddRange(cfp.ReferencedTypes);
 
-                    if (cfp.HasOutputFilters) HasOutputFilters = true;
+                    if (cfp.HasOutputFilters) HasOutputFilters = new TaskItem(true.ToString());
 
                     string path = Path.GetDirectoryName(concernFile);
                     string filename = Path.GetFileName(concernFile);
@@ -181,9 +181,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// Creates the services container.
         /// </summary>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer()
+        internal IServiceProvider CreateContainer(String concernfile)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(string), ConcernFiles);
 
             return serviceContainer;
         }
