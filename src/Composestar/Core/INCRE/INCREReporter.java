@@ -3,6 +3,7 @@ package Composestar.Core.INCRE;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.*;
 
 import Composestar.Utils.*;
@@ -15,6 +16,7 @@ public class INCREReporter
 	private String cssFile;
 	private String reportFile;
 	private LinkedHashMap timings;
+	private long timeStart, timeEnd, totalElapsed;
 	 
 	public INCREReporter() 
 	{
@@ -83,6 +85,7 @@ public class INCREReporter
 	
 	public void open()
 	{
+		timeStart = System.currentTimeMillis();
 		//DataStore ds = DataStore.instance();
 		//Properties resources = (Properties)ds.getObjectByID("config");
 		//String tempPath = resources.getProperty( "TempFolder", "ERROR" );
@@ -115,6 +118,10 @@ public class INCREReporter
 
 	public void close()
 	{
+		// total time elapsed
+		timeEnd = System.currentTimeMillis();
+		totalElapsed = timeEnd - timeStart;
+		
 		// append all timings
 		Iterator modules = timings.keySet().iterator();
 		while(modules.hasNext()){
@@ -161,7 +168,12 @@ public class INCREReporter
 			buffer.append("	ms</td></tr>");
 			buffer.append("<tr class=endmodulerow><td align=right>Total Elapsed</td><td></td><td>");
             buffer.append("").append(elapsed);
-			buffer.append("	ms</td></tr>");
+			buffer.append("	ms (");
+			double percentage = ((double)elapsed * 100d / (double) totalElapsed);
+			BigDecimal percDec = new BigDecimal(percentage);
+			percDec = percDec.setScale(1, BigDecimal.ROUND_HALF_UP);
+			buffer.append(percDec.toString());
+			buffer.append("%)</td></tr>");
 		}
 		
 		// append end of report
