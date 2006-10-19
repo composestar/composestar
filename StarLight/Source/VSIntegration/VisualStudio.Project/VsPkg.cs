@@ -33,9 +33,9 @@ namespace Composestar.StarLight.VisualStudio.Project
     [ProvideEditorLogicalView(typeof(EditorFactory), "{7651a702-06e5-11d1-8ebd-00a0c90f26ea}")]  //LOGVIEWID_Designer
     [ProvideEditorLogicalView(typeof(EditorFactory), "{7651a701-06e5-11d1-8ebd-00a0c90f26ea}")]  //LOGVIEWID_Code
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [ProvideLoadKey("standard", "8.0", "ComposeStar StarLight", "University of Twente", 150)]	
+    [ProvideLoadKey("standard", "1.0", "ComposeStar StarLight", "University of Twente", 150)]	
     [InstalledProductRegistration(true, null, null, null)]
-    [Guid("9D31CB73-40A7-4dcc-8C01-BBFBBB66001C")]
+    [Guid("9D31CB73-40A7-4DCC-8C01-BBFBBB66001C")]
     public class ComposeStarProjectPackage : ProjectPackage, IVsInstalledProduct
     {
         protected override void Initialize()

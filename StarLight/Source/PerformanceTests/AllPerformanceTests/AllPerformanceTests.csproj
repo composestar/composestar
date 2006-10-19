@@ -36,7 +36,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CpsFileParser\PTestCpsFileParser.csproj">
+    <ProjectReference Include="..\PTestCpsFileParser\PTestCpsFileParser.csproj">
       <Project>{D518CE08-B54C-4727-B307-E1EEE3D54EB7}</Project>
       <Name>PTestCpsFileParser</Name>
     </ProjectReference>

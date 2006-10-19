@@ -685,7 +685,7 @@ namespace Composestar.StarLight.ILWeaver
         private void ParseInstruction(Block block, XmlTextReader reader)
         {
             string name = reader.Name;
-            Console.WriteLine("name is {0}", name);
+           // Console.WriteLine("name is {0}", name);
                         
 
         } // ParseInstruction(block, reader)
