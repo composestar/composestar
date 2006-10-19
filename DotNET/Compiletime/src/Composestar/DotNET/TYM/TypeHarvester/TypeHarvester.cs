@@ -120,7 +120,7 @@ public class TypeHarvester
 		Type[] types = asm.GetTypes();
 		foreach (Type t in types)
 		{
-			HarvesterType ht = new HarvesterType("dll", t);
+			HarvesterType ht = new HarvesterType(dll, t);
 			ProcessType(ht);
 		}
 

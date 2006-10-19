@@ -81,7 +81,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 		Debug.parseLog(cle.outputNormal());
 		
 		if (result != 0)
-			throw new ModuleException("TypeHarvester failed");
+			throw new ModuleException("TypeHarvester failed", MODULE_NAME);
 	}
 
 	private String getExecutable() throws ModuleException
@@ -89,7 +89,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 		File cs = new File(config.getPathSettings().getPath("Composestar"));
 		File exe = new File(cs, "binaries/TypeHarvester.exe");
 		if (!exe.exists())
-			throw new ModuleException("TypeHarvester not found on it's expected location: " + exe);
+			throw new ModuleException("TypeHarvester not found on it's expected location: " + exe, MODULE_NAME);
 
 		return exe.getAbsolutePath();
 	}

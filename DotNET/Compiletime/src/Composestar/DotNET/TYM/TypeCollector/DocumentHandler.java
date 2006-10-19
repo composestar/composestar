@@ -1,7 +1,3 @@
-//Source file: C:\\local\\staijen\\composestar\\src\\Composestar\\CTAdaption\\TYM\\TypeCollector\\DocumentHandler.java
-
-//Source file: H:\\cvs\\composestar\\src\\Composestar\\CTAdaption\\TYM\\TypeCollector\\DocumentHandler.java
-
 /*
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.
@@ -24,36 +20,23 @@ import javax.xml.parsers.SAXParserFactory;
 /**
  * Main XML document parser. Handles the top level XML structures.
  */
-public class DocumentHandler extends DefaultHandler implements ContentHandler {
+public class DocumentHandler extends DefaultHandler implements ContentHandler
+{    
+    private boolean inDocument = false;
+    private XMLReader xr;
     
-    /**
-     * hash map with all the types
-     */
-    boolean InDocument = false;
-    XMLReader Parser;
-    
-    /**
-     * @param parser
-     * @roseuid 40502BDA0305
-     */
-    public DocumentHandler(XMLReader parser) {
-        Parser = parser;     
+    public DocumentHandler(XMLReader parser)
+    {
+        xr = parser;     
     }
     
-    /**
-     * @param namespaceURI
-     * @param localName
-     * @param rawName
-     * @param atts
-     * @throws org.xml.sax.SAXException
-     * @roseuid 40502BDA0323
-     */
-    public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException {
-        if( !InDocument && "Types".equals(rawName) ) {
-            InDocument = true;
+    public void startElement(String namespaceURI, String localName, String rawName, Attributes atts) throws SAXException
+    {
+        if( !inDocument && "Types".equals(rawName) ) {
+            inDocument = true;
             // doc started
         }
-        else if( InDocument && "Type".equals(rawName) ) {
+        else if( inDocument && "Type".equals(rawName) ) {
             // create new TypeHandler and install it
             DotNETType type = new DotNETType();
             String fullName = atts.getValue( "name" );
@@ -64,46 +47,36 @@ public class DocumentHandler extends DefaultHandler implements ContentHandler {
             }
             // add type to type map
 
-            DotNETTypeHandler typeHandler = new DotNETTypeHandler( type, Parser, this );
-            Parser.setContentHandler( typeHandler );
-            
+            DotNETTypeHandler typeHandler = new DotNETTypeHandler( type, xr, this );
+            xr.setContentHandler( typeHandler );            
         }
         else {
-            throw new SAXNotRecognizedException( "Can't process type " + rawName );
+            throw new SAXNotRecognizedException("Cannot process element " + rawName);
         }     
     }
     
-    /**
-     * @param namespaceURI
-     * @param localName
-     * @param rawName
-     * @throws org.xml.sax.SAXException
-     * @roseuid 40502BDA03CE
-     */
-    public void endElement(String namespaceURI, String localName, String rawName) throws SAXException {
+    public void endElement(String namespaceURI, String localName, String rawName) throws SAXException
+    {
         if( "Types".equals(rawName) ) {
-            InDocument = false;
+            inDocument = false;
         }
         else {
             throw new SAXNotRecognizedException( "Unknown end of document: " + rawName );
         }     
     }
     
-    /**
-     * @param args
-     * @roseuid 40502BDB0090
-     */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         try {
-            SAXParserFactory saxParserFactory =
-                SAXParserFactory.newInstance();
+            SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
             SAXParser saxParser = saxParserFactory.newSAXParser();
-            XMLReader  parser  = saxParser.getXMLReader();
+            XMLReader parser = saxParser.getXMLReader();
             DocumentHandler handler = new DocumentHandler( parser );
             parser.setContentHandler( handler );
             parser.parse( new InputSource( "types.xml" ));
-        }catch( Exception e ){
-            System.out.println( e.getMessage() );
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
         }     
     }
 }

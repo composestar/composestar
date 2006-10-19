@@ -7,107 +7,69 @@ Common routines. Always include this file in every build.xml file
 <project name="ComposeStarCommon">
 
 	<target name="init" unless="build.initialized">
-		<property name="build.initialized" value="false" />
+		<property name="build.initialized" value="false"/>
 		<tstamp/>
 
 		<!-- figure out the directory where common.xml is located -->
-		<dirname property="build.core.tmp" file="${ant.file.ComposeStarCommon}" />
+		<dirname property="build.core.init" file="${ant.file.ComposeStarCommon}"/>
 
 		<!-- load build.ini (if available) -->
-		<property file="${build.core.tmp}/build.ini"/>
+		<!-- all properties can be overridden in this file -->
+		<property file="${build.core.init}/build.ini"/>
 		
 		<!-- various config items -->
-		<property name="out.build" value="build" />
-		<property name="out.dist" value="dist" />
+		<property name="out.build" value="build"/>
+		<property name="out.dist"  value="dist"/>
 		
-		<property name="out.jar.core" value="${out.dist}/ComposestarCORE.jar" />
-		<property name="out.jar.dotnet" value="${out.dist}/ComposestarDotNET.jar" />
-		<property name="out.jar.starlight" value="${out.dist}/StarLight.jar" />
-		
-		<condition property="build.debug" value="true">
-			<not>
-				<isset property="build.debug" />
-			</not>
-		</condition>
+		<property name="out.jar.core"      value="${out.dist}/ComposestarCORE.jar"/>
+		<property name="out.jar.dotnet"    value="${out.dist}/ComposestarDotNET.jar"/>
+		<property name="out.jar.starlight" value="${out.dist}/StarLight.jar"/>
 
+		<property name="build.debug" value="true"/>
 		<property name="build.deprecation" value="false"/>
 
 		<!-- register environment variables -->
-		<property environment="env" />
-		<condition property="env.PATH" value="${env.Path}">
-			<not>
-				<isset property="env.PATH" />
-			</not>
-		</condition>		
+		<property environment="env"/>
+		<property name="env.PATH" value="${env.Path}"/>
 	
 		<!-- set the core path -->
-		<condition property="build.core" value="${build.core.tmp}">
-			<not>
-				<isset property="build.core" />
-			</not>
-		</condition>
+		<property name="build.core" value="${build.core.init}"/>
 		
 		<!-- set the root path -->
-		<dirname property="build.root" file="${build.core}" />
+		<dirname property="build.root" file="${build.core}"/>
 		
-		<!-- set the dotnet path -->
-		<condition property="build.dotnet" value="${build.root}${file.separator}DotNET">
-			<not>
-				<isset property="build.dotnet" />
-			</not>
-		</condition>
+		<!-- set platform paths -->
+		<property name="build.dotnet" value="${build.root}/DotNET"/>
+		<property name="build.starlight" value="${build.root}/StarLight"/>
+		<property name="build.java" value="${build.root}/Java"/>
+		<property name="build.c" value="${build.root}/C"/>
 		
-				<!-- set the starlight path -->
-		<condition property="build.starlight" value="${build.root}${file.separator}StarLight">
-			<not>
-				<isset property="build.starlight" />
-			</not>
-		</condition>
-		
-		<!-- set the java path -->
-		<condition property="build.java" value="${build.root}${file.separator}Java">
-			<not>
-				<isset property="build.java" />
-			</not>
-		</condition>
-		
-		<!-- set the c path -->
-		<condition property="build.c" value="${build.root}${file.separator}C">
-			<not>
-				<isset property="build.c" />
-			</not>
-		</condition>
-		
-		<!-- check what is available -->
-		<available file="${build.dotnet}/build.xml" property="available.dotnet" />
-		<available file="${build.starlight}/build.xml" property="available.starlight" />
-		<available file="${build.java}/build.xml" property="available.java" />
-		<available file="${build.c}/build.xml" property="available.c" />
+		<!-- check which platforms are available -->
+		<available file="${build.dotnet}/build.xml"    property="available.dotnet"/>
+		<available file="${build.starlight}/build.xml" property="available.starlight"/>
+		<available file="${build.java}/build.xml"      property="available.java"/>
+		<available file="${build.c}/build.xml"         property="available.c"/>
 		
 		<!-- resolve system variables -->		
-		<exec executable="${build.core}\Development\AntHelper.exe" failifexecutionfails="false">
-			<arg value="getsystemproperties" />
-			<arg value="${build.core}\Development\system.properties" />
+		<exec executable="${build.core}/Development/AntHelper.exe" failifexecutionfails="false">
+			<arg value="getsystemproperties"/>
+			<arg value="${build.core}/Development/system.properties"/>
 		</exec>
-		<property file="${build.core}/Development/system.properties" />
+		<property file="${build.core}/Development/system.properties"/>
 		
-		<!-- force defaults -->
-		<condition property="composestar.installdir" value="C:/Program Files/ComposeStar">
-			<not>
-				<isset property="composestar.installdir" />
-			</not>
-		</condition>
+		<!-- location of the Compose* installation -->
+		<property name="composestar.installdir" value="C:/Program Files/ComposeStar"/>
 		
 		<!-- make macro -->
 		<macrodef name="make">
-			<attribute name="target" default="" />
+			<attribute name="target" default=""/>
 			<sequential>
 				<condition property="bin.make" value="${build.core}\Compiletime\binaries\make\make" else="make">
 					<os family="windows"/>
 				</condition>
 				<exec executable="${bin.make}" searchpath="true">
-					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}" />
-					<arg value="@{target}" />
+					<env key="PATH" path="${env.PATH};${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}make${file.separator}"/>
+					<arg value="@{target}"/>
 				</exec>
 			</sequential>
 		</macrodef>
@@ -131,122 +93,123 @@ Common routines. Always include this file in every build.xml file
 
 		</macrodef>
 
-		<!-- calling of devenv.exe -->
-		<available file="devenv.com" filepath="${env.PATH}${path.separator}C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\" property="available.devenv" />
-		<available file="devenv.com" filepath="${env.PATH}" property="available.devenv.path" />				
+		<!-- devenv macro -->
+		<available file="devenv.com" filepath="${env.PATH}${path.separator}C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\" property="available.devenv"/>
+		<available file="devenv.com" filepath="${env.PATH}" property="available.devenv.path"/>				
 		<condition property="bin.devenv" value="C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.com" else="devenv.com">
-			<not>
-				<isset property="available.devenv.path" />
-			</not>
+			<not><isset property="available.devenv.path"/></not>
 		</condition>
 		
 		<macrodef name="devenv">
-			<attribute name="solution" />
-			<attribute name="target" default="Release" />
-			<attribute name="action" default="rebuild" />
+			<attribute name="solution"/>
+			<attribute name="target" default="Release"/>
+			<attribute name="action" default="rebuild"/>
 			<sequential>
-				<echo message="Running devenv [@{action}] for solution @{solution} (@{target})" />
+				<echo message="Running devenv [@{action}] for solution @{solution} (@{target})"/>
 				<exec executable="${bin.devenv}" failonerror="true">
-					<arg value="@{solution}" />
-					<arg value="/@{action}" />
-					<arg value="@{target}" />
+					<arg value="@{solution}"/>
+					<arg value="/@{action}"/>
+					<arg value="@{target}"/>
 				</exec>
 			</sequential>
 		</macrodef>
-		
+
+		<!-- registerAssembly macro -->
 		<macrodef name="registerAssembly">
-			<attribute name="dll" />
+			<attribute name="dll"/>
 			<sequential>
 				<exec executable="regasm.exe" failifexecutionfails="false">
-					<arg value="@{dll}" />
-					<arg value="/silent" />
-					<arg value="/codebase" />
+					<arg value="@{dll}"/>
+					<arg value="/silent"/>
+					<arg value="/codebase"/>
 				</exec>
 			</sequential>
 		</macrodef>
 		
+		<!-- unregisterAssembly macro -->
 		<macrodef name="unregisterAssembly">
-			<attribute name="dll" />
+			<attribute name="dll"/>
 			<sequential>
 				<exec executable="regasm.exe" failifexecutionfails="false">
-					<arg value="@{dll}" />
-					<arg value="/silent" />
-					<arg value="/unregister" />
+					<arg value="@{dll}"/>
+					<arg value="/silent"/>
+					<arg value="/unregister"/>
 				</exec>
 			</sequential>
 		</macrodef>
 		
 		<!-- register additional libraries -->
 		<path id="lib.core">	  
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries" includes="*${file.separator}*.jar"/>
+			<fileset dir="${build.core}/Compiletime/binaries" includes="*/*.jar"/>
 		</path>
 		
 		<path id="lib.dotnet">
-			<path refid="lib.core" />
-			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}/Compiletime" includes="${out.jar.core}"/>
 		</path>
 		
 		<path id="lib.starlight">
-			<path refid="lib.core" />
-			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
-			<fileset dir="${build.starlight}${file.separator}Libraries" includes="*${file.separator}*.jar"/>
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}/Compiletime" includes="${out.jar.core}"/>
+			<fileset dir="${build.starlight}/Libraries" includes="*/*.jar"/>
 		</path>
 			
 		<!-- findbugs jars -->
 		<path id="lib.findbugs">	  
-			<fileset dir="${build.core}${file.separator}Development${file.separator}findbugs${file.separator}lib${file.separator}" includes="*.jar"/>
+			<fileset dir="${build.core}/Development/findbugs/lib" includes="*.jar"/>
 		</path>
 		
 		<!-- register findbugs task -->
-		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs" />
-		<condition property="bin.findbugs" value="${build.core}${file.separator}Development${file.separator}findbugs">
-			<not>
-				<isset property="bin.findbugs" />
-			</not>
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="lib.findbugs"/>
+		
+		<condition property="bin.findbugs" value="${build.core}/Development/findbugs">
+			<not><isset property="bin.findbugs"/></not>
 		</condition>
 		
 		<condition property="findbugs.jvmargs" value="-Xms64M -Xmx256M">
-			<not><isset property="findbugs.jvmargs" /></not>
+			<not><isset property="findbugs.jvmargs"/></not>
 		</condition>
+		
 		<condition property="findbugs.style" value="${bin.findbugs}/src/xsl/fancy.xsl">
-			<not><isset property="findbugs.style" /></not>
+			<not><isset property="findbugs.style"/></not>
 		</condition>
+		
 		<condition property="findbugs.effort" value="max">
-			<not><isset property="findbugs.effort" /></not>
+			<not><isset property="findbugs.effort"/></not>
 		</condition>
+		
 		<condition property="findbugs.reportLevel" value="medium">
-			<not><isset property="findbugs.reportLevel" /></not>
+			<not><isset property="findbugs.reportLevel"/></not>
 		</condition>
 		
 		<!-- checkstyle jars -->
 		<path id="lib.checkstyle">	  
-			<fileset dir="${build.core}${file.separator}Development${file.separator}checkstyle${file.separator}lib${file.separator}" includes="*.jar"/>
-			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr" includes="*.jar"/>
+			<fileset dir="${build.core}/Development/checkstyle/lib" includes="*.jar"/>
+			<fileset dir="${build.core}/Compiletime/binaries/antlr" includes="*.jar"/>
 		</path>
 		
 		<!-- register checkstyle task -->
-		<taskdef resource="checkstyletask.properties" classpathref="lib.checkstyle" />
-		<condition property="bin.checkstyle" value="${build.core}${file.separator}Development${file.separator}checkstyle">
-			<not>
-				<isset property="bin.checkstyle" />
-			</not>
+		<taskdef resource="checkstyletask.properties" classpathref="lib.checkstyle"/>
+		
+		<condition property="bin.checkstyle" value="${build.core}/Development/checkstyle">
+			<not><isset property="bin.checkstyle"/></not>
 		</condition>
 		
 		<condition property="checkstyle.style" value="${bin.checkstyle}/checkstyle.xsl">
-			<not><isset property="checkstyle.style" /></not>
+			<not><isset property="checkstyle.style"/></not>
 		</condition>
 
 		<!-- register QAlab; just to make you depressive over time -->
 		<!--
 		<path id="lib.qalab">	  
-			<fileset dir="${build.core}${file.separator}Development${file.separator}qalab${file.separator}lib${file.separator}" includes="*.jar"/>
+			<fileset dir="${build.core}/Development/qalab/lib" includes="*.jar"/>
 		</path>
-		<taskdef name="mergestat" classname="net.objectlab.qalab.ant.BuildStatMergeTask" classpathref="lib.qalab" />
+		<taskdef name="mergestat" classname="net.objectlab.qalab.ant.BuildStatMergeTask" classpathref="lib.qalab"/>
 		-->
 		
 	</target>
 	
 	<!-- generic target to rebuild all -->
-	<target name="rebuild" depends="init,clean,build" description="Clean and then compile" />
+	<target name="rebuild" depends="init,clean,build" description="Clean and then compile"/>
 
 </project>

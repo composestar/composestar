@@ -3,10 +3,12 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import Composestar.Utils.FileUtils;
 
@@ -158,6 +160,24 @@ public class Projects implements Serializable
 			}
 		}
 		return dependencies;
+	}
+	
+	public Iterator dependencies()
+	{
+		Set depset = new HashSet();
+		Iterator projIt = allProjects.iterator();
+		while (projIt.hasNext())
+		{
+			Project p = (Project)projIt.next();
+			List deps = p.getDependencies();
+			Iterator depIt = deps.iterator();
+			while (depIt.hasNext())
+			{
+				Dependency dependency = (Dependency)depIt.next();
+				depset.add(dependency);
+			}
+		}
+		return depset.iterator();
 	}
 
 	public List getSources()

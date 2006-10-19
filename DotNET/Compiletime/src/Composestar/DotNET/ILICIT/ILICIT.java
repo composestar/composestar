@@ -31,7 +31,6 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.ModuleSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Utils.CommandLineExecutor;

@@ -15,34 +15,13 @@
 	<module name="COMP" fulltype="Composestar.DotNET.COMP.COMP" enabled="true" incremental="false" summary="Compiling sources...">
 		<dependencies></dependencies>		
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.HARVESTER2" enabled="true" incremental="false" summary="Harvesting type information...">
 		<dependencies>
-			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>	
-		<dependency type="OBJECT" name="previousinput">
-			<path>
-				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevInput"></node>
-			</path>
-		</dependency>	
-		<dependency type="FILE" name="previousassemblies">
-			<path>
-				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevAssemblies"></node>
-			</path>
-		</dependency>
-		<dependency type="FILE" name="externalassemblies" isAdded="false">
-			<path>
-				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.externalAssemblies"></node>
-			</path>
-		</dependency>
 	</module>
 	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
 		<dependencies></dependencies>		
 	</module>
-	<!--
-	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" enabled="true" incremental="false" summary="Collecting attributes...">
-		<dependencies></dependencies>	
-	</module>
-	-->
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
 	</module>
