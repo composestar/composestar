@@ -540,7 +540,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 			setLabel(filterAction);
 
 			buffer.append(" type=\"");
-			buffer.append(filterAction.getType());
+			String fullName = (String) fullNameMap.get(filterAction.getType());
+			buffer.append(fullName);
 			buffer.append("\">");
 
 			buffer.append("<OriginalMessage");
