@@ -134,7 +134,7 @@ public class Projects implements Serializable
 		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project) projIt.next();
+			Project p = (Project)projIt.next();
 			if (p.getCompiledSources() != null)
 				compiledSources.addAll(p.getCompiledSources());
 		}

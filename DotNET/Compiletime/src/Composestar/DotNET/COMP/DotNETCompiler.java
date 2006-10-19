@@ -199,7 +199,6 @@ public class DotNETCompiler implements LangCompiler
 	/**
 	 * Returns the filename of the dummy-assembly to generate for the specified project.
 	 * "{basepath}/obj/dummies/{projectname}.dummies.dll"
-     * @param p
      */
 	private String getDummiesFilePath(Project p)
 	{
@@ -214,7 +213,6 @@ public class DotNETCompiler implements LangCompiler
 	
 	/**
 	 * Returns a space-separated list of sourcefiles in the specified project.
-     * @param p
      */
 	private String getSourceFiles(Project p)
 	{
@@ -259,9 +257,9 @@ public class DotNETCompiler implements LangCompiler
 	}
 	
 	/**
-	 * @return a list containing the filenames of all externally linked sources
+	 * Returns a list containing the filenames of all externally linked sources
      */
-	public ArrayList externalSources(Source src) throws ModuleException
+	private List externalSources(Source src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();
 		ArrayList extSources = new ArrayList();
@@ -293,7 +291,7 @@ public class DotNETCompiler implements LangCompiler
 			}
 		}
 		catch (FileNotFoundException e) {
-			throw new ModuleException( "Cannot read " + ilFile, "COMP");
+			throw new ModuleException("Cannot read " + ilFile, "COMP");
 		}
 		catch (IOException e) {
 			throw new ModuleException("Error occured while reading " + ilFile, "COMP");
@@ -318,7 +316,7 @@ public class DotNETCompiler implements LangCompiler
 	}
 
 	/**
-	 * returns a list containing modified signatures (signatures with ADDED/REMOVED methodwrappers)
+	 * Returns a list containing modified signatures (signatures with ADDED/REMOVED methodwrappers)
 	 * of concerns extracted from external linked source files
 	 * 
 	 * Used by INCRE
@@ -326,7 +324,6 @@ public class DotNETCompiler implements LangCompiler
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{ 
 		INCRE incre = INCRE.instance();
-		ArrayList extSources;
 		ArrayList signatures = new ArrayList();
 		ArrayList concernsToCheck;
 		HashSet concernsCheckedByKey = new HashSet();
@@ -334,7 +331,7 @@ public class DotNETCompiler implements LangCompiler
 		String buildPath = Configuration.instance().getPathSettings().getPath("Base")+"obj/";
 		concernsToCheck = incre.getConcernsWithModifiedSignature();
 
-		/** add full signatures of src 
+		/* add full signatures of src 
 		 * When compiling a source the compiler does not use 
 		 * the modified signature from its dummy source
 		 */
@@ -354,23 +351,23 @@ public class DotNETCompiler implements LangCompiler
 			/* add full signatures of external linked sources */
 			//String target = buildPath+createTargetFile(src.getFileName(),false);
 			String target = buildPath+src.getTarget();
-			extSources = (ArrayList)incre.externalSourcesBySource.get(FileUtils.removeExtension(target));
+			List extSources = (List)incre.externalSourcesBySource.get(FileUtils.removeExtension(target));
 
-			if(extSources == null){		
+			if (extSources == null){		
 				extSources = this.externalSources(src);
 			}
 
 			Iterator externals = extSources.iterator();
-			while(externals.hasNext()){
+			while (externals.hasNext())
+			{
 				String external = (String)externals.next();
 				Iterator conIter = concernsToCheck.iterator();
-				while ( conIter.hasNext() )
+				while (conIter.hasNext())
 				{
 					Concern c = (Concern)conIter.next();
-
-					if(incre.declaredInSource(c,external))
+					if (incre.declaredInSource(c,external))
 					{
-						if(!concernsCheckedByKey.contains(c.getQualifiedName()))
+						if (!concernsCheckedByKey.contains(c.getQualifiedName()))
 						{
 							signatures.add(c.getSignature());
 							concernsCheckedByKey.add(c.getQualifiedName());
