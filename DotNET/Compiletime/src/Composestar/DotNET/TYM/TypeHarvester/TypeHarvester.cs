@@ -101,6 +101,8 @@ public class TypeHarvester
 			ProcessAssembly(dll, asm);
 		}
 
+		Debug.Out(Debug.MODE_DEBUG, "Harvested a total of " + m_processedTypes.Count + " types");
+
 		// close root element
 		m_writer.WriteEndElement();
 		m_writer.Close();

@@ -35,7 +35,7 @@
 	<target name="clean"/>
 	<target name="build"/>
 
-	<target name="test" depends="test_exec" description="Execute the DotNET system test."/>
+	<target name="test" depends="test_comp,test_exec" description="Execute the DotNET system test."/>
 	
 	<!-- generate BuildConfiguration.xml files -->
 
@@ -93,7 +93,7 @@
 
 	<!-- executes tests -->
 	
-	<target name="test_exec" depends="init_local,test_comp">
+	<target name="test_exec" depends="init_local">
 		<cstarTest>
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
@@ -124,7 +124,7 @@
 
 	<!-- generates VS2005 project files based on the VS2003 versions -->
 	
-	<target name="test_convert" depends="init_local">
+	<target name="test_convert" depends="init_local" if="test.mode.2005">
 		<cstarConvert xslt="${basedir}/AntSystemTest/genCpsProject.xslt">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.vjsproj"/>

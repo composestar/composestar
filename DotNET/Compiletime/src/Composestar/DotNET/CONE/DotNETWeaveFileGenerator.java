@@ -144,7 +144,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 				if (dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0)
 					continue;
 
-			//	String filename = new File(dep).getName();
 				String dllname  = FileUtils.removeExtension(FileUtils.getFilenamePart(dep));			
 				writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
 			}
