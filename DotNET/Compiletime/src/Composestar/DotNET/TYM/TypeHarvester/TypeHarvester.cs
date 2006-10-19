@@ -95,7 +95,6 @@ public class TypeHarvester
 		// process dlls
 		foreach (string dll in dlls)
 		{
-			Debug.Out(Debug.MODE_DEBUG, "Harvesting " + dll + "...");
 			Assembly asm = LoadAssembly(dll);
 			if (asm == null) continue;
 
@@ -118,6 +117,8 @@ public class TypeHarvester
 			m_write = true;
 
 		Type[] types = asm.GetTypes();
+		Debug.Out(Debug.MODE_DEBUG, String.Format("Harvesting {0,3} types from {1}...", types.Length, dll));
+
 		foreach (Type t in types)
 		{
 			HarvesterType ht = new HarvesterType(dll, t);
@@ -672,12 +673,12 @@ public class TypeHarvester
 		}
 		catch (FileNotFoundException)
 		{
-			Debug.Out(Debug.MODE_WARNING, "File not found " + dll + ". Skipping.");
+			Debug.Out(Debug.MODE_WARNING, "File not found: " + dll + ". Skipping.");
 			return null;
 		}
 		catch (ArgumentException)
 		{
-			Debug.Out(Debug.MODE_WARNING, "Cannot harvest type of " + dll + ". Skipping.");
+			Debug.Out(Debug.MODE_WARNING, "Cannot harvest types from " + dll + ". Skipping.");
 			return null;
 		}
 	}
