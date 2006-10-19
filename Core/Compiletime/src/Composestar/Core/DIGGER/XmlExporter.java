@@ -32,14 +32,11 @@ import org.w3c.dom.Element;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
 import Composestar.Core.DIGGER.Graph.CondMatchEdge;
-import Composestar.Core.DIGGER.Graph.ConditionalEdge;
 import Composestar.Core.DIGGER.Graph.Edge;
 import Composestar.Core.DIGGER.Graph.FilterChainNode;
 import Composestar.Core.DIGGER.Graph.FilterElementNode;
 import Composestar.Core.DIGGER.Graph.FilterNode;
 import Composestar.Core.DIGGER.Graph.Graph;
-import Composestar.Core.DIGGER.Graph.MatchingEdge;
-import Composestar.Core.DIGGER.Graph.MatchingPatternNode;
 import Composestar.Core.DIGGER.Graph.Node;
 import Composestar.Core.DIGGER.Graph.SimpleConcernNode;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
@@ -66,8 +63,7 @@ public class XmlExporter
 	public XmlExporter(Graph inGraph, File filename) throws ModuleException
 	{
 		Debug.out(Debug.MODE_INFORMATION, DIGGER.MODULE_NAME, "Exporting dispatch graph to " + filename.toString());
-		addComments = Boolean.valueOf(Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "xmlComments",
-				"false")).booleanValue();
+		addComments = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "xmlComments", false);
 		graph = inGraph;
 
 		// create parent directory if it doesn't exist
@@ -188,20 +184,12 @@ public class XmlExporter
 		parentNode.appendChild(xmlEdge);
 		addComment(xmlEdge, edge);
 		xmlEdge.setAttribute("destination", getIdForNode(edge.getDestination()));
-		
+
 		if (edge instanceof CondMatchEdge)
 		{
 			xmlEdge.setAttribute("condition", ((CondMatchEdge) edge).getConditionAsString());
 			xmlEdge.setAttribute("enabler", Boolean.toString(((CondMatchEdge) edge).getEnabler()));
 			xmlEdge.setAttribute("matching", ((CondMatchEdge) edge).getMatchingPartsAsString());
-		}
-		else if (edge instanceof ConditionalEdge)
-		{
-			xmlEdge.setAttribute("condition", ((ConditionalEdge) edge).getExpressionAsString());
-		}
-		else if (edge instanceof MatchingEdge)
-		{
-			xmlEdge.setAttribute("matching", ((MatchingEdge) edge).getMatchingPartsAsString());
 		}
 		else if (edge instanceof SubstitutionEdge)
 		{
@@ -252,10 +240,10 @@ public class XmlExporter
 		{
 			processFilterElementNode((FilterElementNode) node, parentNode);
 		}
-		else if (node instanceof MatchingPatternNode)
-		{
-			processMatchingPatternNode((MatchingPatternNode) node, parentNode);
-		}
+		/*
+		 * else if (node instanceof MatchingPatternNode) {
+		 * processMatchingPatternNode((MatchingPatternNode) node, parentNode); }
+		 */
 	}
 
 	protected void processFilterNode(FilterNode filterNode, Element parentNode)
@@ -290,14 +278,5 @@ public class XmlExporter
 		addComment(xmlFE, feNode);
 		xmlFE.setAttribute("id", getIdForNode(feNode));
 		processEdges(feNode, xmlFE);
-	}
-
-	protected void processMatchingPatternNode(MatchingPatternNode mpNode, Element parentNode)
-	{
-		Element xmlFE = xmlDoc.createElement("matchingpattern");
-		parentNode.appendChild(xmlFE);
-		addComment(xmlFE, mpNode);
-		xmlFE.setAttribute("id", getIdForNode(mpNode));
-		processEdges(mpNode, xmlFE);
 	}
 }

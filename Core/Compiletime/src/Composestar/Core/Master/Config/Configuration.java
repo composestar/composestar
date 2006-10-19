@@ -83,6 +83,18 @@ public class Configuration implements Serializable
 		ModuleSettings ms = getModuleSettings(module);
 		return (ms == null ? def : ms.getProperty(key, def));
 	}
+	
+	public int getModuleProperty(String module, String key, int def)
+	{
+		ModuleSettings ms = getModuleSettings(module);
+		return (ms == null ? def : ms.getProperty(key, def));
+	}
+	
+	public boolean getModuleProperty(String module, String key, boolean def)
+	{
+		ModuleSettings ms = getModuleSettings(module);
+		return (ms == null ? def : ms.getProperty(key, def));
+	}
 
 	public PathSettings getPathSettings()
 	{

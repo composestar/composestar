@@ -74,23 +74,15 @@ public class CKRET implements CTCommonModule
 		}
 
 		// fetch the ckret runmode
-		try
+		int mode = config.getModuleProperty("SECRET", "mode", MODE);
+		if (mode >= 0 && mode <= 2)
 		{
-			String modeStr = config.getModuleProperty("SECRET", "mode", "" + MODE);
-			int mode = Integer.parseInt(modeStr);
-			if (mode >= 0 && mode <= 2)
-			{
-				Debug.out(Debug.MODE_INFORMATION,"CKRET","CKRET mode set to " + MODES[mode]);
-				MODE = mode;
-			}
-			else
-			{
-				Debug.out(Debug.MODE_WARNING,"CKRET","Unknown CKRET mode: " + mode + ", CKRET will run in " + MODES[MODE] + " mode");
-			}
+			Debug.out(Debug.MODE_INFORMATION,"CKRET","CKRET mode set to " + MODES[mode]);
+			MODE = mode;
 		}
-		catch (Exception e)
+		else
 		{
-			Debug.out(Debug.MODE_WARNING,"CKRET","Failed to fetch CKRET mode, CKRET will run in " + MODES[MODE] + " mode");
+			Debug.out(Debug.MODE_WARNING,"CKRET","Unknown CKRET mode: " + mode + ", CKRET will run in " + MODES[MODE] + " mode");
 		}
 		
 		try

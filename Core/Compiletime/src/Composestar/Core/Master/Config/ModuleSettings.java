@@ -39,8 +39,24 @@ public class ModuleSettings implements Serializable
 	/**
 	 * Do not access this directly; use Configuration.getModuleProperty.
 	 */
-	protected String getProperty(String key, String def)
+	public String getProperty(String key, String def)
 	{
 		return properties.getProperty(key, def);
+	}
+	
+	public int getProperty(String key, int def)
+	{
+		try {
+			return Integer.parseInt(properties.getProperty(key, Integer.toString(def)));
+		}
+		catch (NumberFormatException e)
+		{
+			return def;
+		}
+	}
+	
+	public boolean getProperty(String key, boolean def)
+	{
+		return Boolean.valueOf(properties.getProperty(key, Boolean.toString(def))).booleanValue();
 	}
 }

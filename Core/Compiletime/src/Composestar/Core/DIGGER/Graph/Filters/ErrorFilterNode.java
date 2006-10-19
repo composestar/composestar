@@ -15,7 +15,6 @@ import Composestar.Core.DIGGER.Graph.FilterElementNode;
 import Composestar.Core.DIGGER.Graph.FilterNode;
 import Composestar.Core.DIGGER.Graph.Graph;
 import Composestar.Core.DIGGER.Graph.LambdaEdge;
-import Composestar.Core.DIGGER.Graph.MatchingPatternNode;
 import Composestar.Core.Exception.ModuleException;
 
 /**
@@ -28,15 +27,6 @@ public class ErrorFilterNode extends FilterNode
 	public ErrorFilterNode(Graph inGraph, Filter inFilter, byte inDirection)
 	{
 		super(inGraph, inFilter, inDirection);
-	}
-
-	/**
-	 * Error filter always links to the exception node
-	 * @deprecated
-	 */
-	protected void processSubstitutionParts(MatchingPattern mp, MatchingPatternNode mpNode) throws ModuleException
-	{
-		mpNode.addOutgoingEdge(new LambdaEdge(graph.getExceptionNode(true)));
 	}
 	
 	protected void processSubstitutionParts(MatchingPattern mp, FilterElementNode mpNode) throws ModuleException
