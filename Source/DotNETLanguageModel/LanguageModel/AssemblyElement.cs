@@ -10,7 +10,7 @@ namespace Composestar.StarLight.LanguageModel
     /// Contains a single Assembly definition.
     /// </summary>
     [Serializable()]
-    [XmlRoot("AssemblyElement", Namespace="Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("Assembly", Namespace="Entities.TYM.DotNET.Composestar")]
     public sealed class AssemblyElement
     {
         /// <summary>
@@ -23,6 +23,8 @@ namespace Composestar.StarLight.LanguageModel
         /// <summary>
         /// Collection of TypeElements
         /// </summary>
+        [XmlArray("Types")]
+        [XmlArrayItem("Type")]
         public List<TypeElement> Types
         {
             get { return _types; }

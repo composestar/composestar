@@ -10,7 +10,7 @@ namespace Composestar.StarLight.LanguageModel
     /// Contains a single field.
     /// </summary>
     [Serializable]
-    [XmlRoot("FieldElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("Field", Namespace = "Entities.TYM.DotNET.Composestar")]
     public sealed class FieldElement
     {
         private string _name;

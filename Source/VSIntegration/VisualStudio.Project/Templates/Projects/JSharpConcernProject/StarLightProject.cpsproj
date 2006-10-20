@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>$guid1$</ProjectGuid>
     <ProjectType>StarLight</ProjectType> 
-    <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
+    <RepositoryFilename>obj\starlight.xml</RepositoryFilename>
     <RootNamespace>$safeprojectname$</RootNamespace>
     <AssemblyName>$safeprojectname$</AssemblyName>
     <OutputType>Library</OutputType>

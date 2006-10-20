@@ -115,7 +115,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assembly has not been modified, analysis of this file is skipped..
+        ///   Looks up a localized string similar to Assembly &apos;{0}&apos; has not been modified, analysis of this file is skipped..
         /// </summary>
         internal static string AssemblyNotModified {
             get {

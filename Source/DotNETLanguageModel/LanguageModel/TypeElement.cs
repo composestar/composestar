@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
- 
+
 namespace Composestar.StarLight.LanguageModel
 {
     /// <summary>
     /// Contains a single type with properties and fields/methods.
     /// </summary>
     [Serializable()]
-    [XmlRoot("TypeElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("Type", Namespace = "Entities.TYM.DotNET.Composestar")]
     public sealed class TypeElement
     {
-        private string _name;
+        private string _name = string.Empty;
 
         /// <summary>
         /// Name of this type.
@@ -24,7 +24,7 @@ namespace Composestar.StarLight.LanguageModel
             get { return _name; }
             set { _name = value; }
         }
-        private string _baseType;
+        private string _baseType = string.Empty;
 
         /// <summary>
         /// Base type of this type.
@@ -36,21 +36,18 @@ namespace Composestar.StarLight.LanguageModel
             set { _baseType = value; }
         }
 
-        private string _fullName;
-
         /// <summary>
-        /// Gets or sets the fullname.
+        /// Gets the fullname.
         /// </summary>
         /// <value>The fullname.</value>
-        [XmlAttribute]
+        [XmlIgnore]
         public string FullName
         {
-            get { return _fullName; }
-            set { _fullName = value; }
+            get { return string.Format("{0}.{1}", _namespace, _name); } // get
         }
-	
 
-        private string _namespace;
+
+        private string _namespace = string.Empty;
 
         /// <summary>
         /// Full namespace of this type.
@@ -64,18 +61,19 @@ namespace Composestar.StarLight.LanguageModel
         }
 
 
-        private string _implementedInterfaces;
+        private string _implementedInterfaces = string.Empty;
 
         /// <summary>
         /// Gets or sets the implemented interfaces.
         /// </summary>
         /// <value>The implemented interfaces.</value>
+        [XmlAttribute]
         public string ImplementedInterfaces
         {
             get { return _implementedInterfaces; }
             set { _implementedInterfaces = value; }
         }
-	
+
 
         private bool _isAbstract;
 
@@ -210,24 +208,28 @@ namespace Composestar.StarLight.LanguageModel
             set { _isSerializable = value; }
         }
 
-        private List<MethodElement> _methods = new List<MethodElement> ();
+        private List<MethodElement> _methods = new List<MethodElement>();
 
         /// <summary>
         /// Gets or sets the methods.
         /// </summary>
         /// <value>The methods.</value>
+        [XmlArray("Methods")]
+        [XmlArrayItem("Method")]
         public List<MethodElement> Methods
         {
             get { return _methods; }
             set { _methods = value; }
         }
 
-        private List<FieldElement> _fields = new List<FieldElement> ();
+        private List<FieldElement> _fields = new List<FieldElement>();
 
         /// <summary>
         /// Gets or sets the fields.
         /// </summary>
         /// <value>The fields.</value>
+        [XmlArray("Fields")]
+        [XmlArrayItem("Field")]
         public List<FieldElement> Fields
         {
             get { return _fields; }

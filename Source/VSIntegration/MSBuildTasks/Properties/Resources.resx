@@ -175,7 +175,7 @@
     <value>Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} types not resolved).</value>
   </data>
   <data name="AssemblyNotModified" xml:space="preserve">
-    <value>Assembly has not been modified, analysis of this file is skipped.</value>
+    <value>Assembly '{0}' has not been modified, analysis of this file is skipped.</value>
   </data>
   <data name="FoundInDatabase" xml:space="preserve">
     <value>Retrieved {0} types from the local database in {1:0.0000} seconds.</value>

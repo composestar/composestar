@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace Composestar.StarLight.Configuration
 {
     [Serializable]
-    [XmlRoot("FilterActionElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("FilterAction", Namespace = "Entities.TYM.DotNET.Composestar")]
     public class FilterActionElement
     {
         public  const int FlowContinue = 1;

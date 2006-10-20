@@ -11,7 +11,7 @@ namespace Composestar.StarLight.Concerns
     /// A concern specification.
     /// </summary>
     [Serializable]
-    [XmlRoot("ConcernElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("Concern", Namespace = "Entities.TYM.DotNET.Composestar")]
     public class ConcernElement
     {
         private string _fileName;

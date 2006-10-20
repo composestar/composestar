@@ -10,7 +10,7 @@ namespace Composestar.StarLight.LanguageModel
     /// Contains information about a single method.
     /// </summary>
     [Serializable]
-    [XmlRoot("MethodElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("Method", Namespace = "Entities.TYM.DotNET.Composestar")]
     public sealed class MethodElement
     {
         private string _name;
@@ -123,6 +123,8 @@ namespace Composestar.StarLight.LanguageModel
         /// Gets or sets the parameters.
         /// </summary>
         /// <value>The parameters.</value>
+        [XmlArray("Parameters") ]
+        [XmlArrayItem("Parameter") ]
         public List<ParameterElement> Parameters
         {
             get { return _parameters; }

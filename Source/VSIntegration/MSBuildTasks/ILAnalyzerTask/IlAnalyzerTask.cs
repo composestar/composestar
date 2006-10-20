@@ -195,7 +195,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         if (assConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
                         {
                             // Assembly has not been modified, skipping analysis
-                            Log.LogMessageFromResources("AssemblyNotModified");
+                            Log.LogMessageFromResources("AssemblyNotModified", assConfig.Name);
 
                             assembliesToStore.Add(assConfig); 
                             continue;

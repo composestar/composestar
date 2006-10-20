@@ -26,8 +26,8 @@ namespace Composestar.Repository
     /// <summary>
     /// Facade to XML serialization and deserialization of strongly typed objects to/from an XML file.
     /// 
-    /// References: XML Serialization at http://samples.gotdotnet.com/:
-    /// http://samples.gotdotnet.com/QuickStart/howto/default.aspx?url=/quickstart/howto/doc/xmlserialization/rwobjfromxml.aspx
+    /// <seealso cref="http://samples.gotdotnet.com/">XML Serialization</seealso>
+    /// <seealso cref="http://samples.gotdotnet.com/QuickStart/howto/default.aspx?url=/quickstart/howto/doc/xmlserialization/rwobjfromxml.aspx">GotDotNet</seealso>
     /// </summary>
     public static class ObjectXMLSerializer<T> where T : class // Specify that T must be a class.
     {
