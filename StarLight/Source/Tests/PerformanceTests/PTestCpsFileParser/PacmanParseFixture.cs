@@ -15,10 +15,10 @@ namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
         public PacmanParseFixture() : base()
         {
             // Pacman concerns
-            Concerns.Add("Pacman_DynamicStrategy", "..\\..\\..\\..\\..\\Examples\\Pacman\\concerns\\DynamicStrategy.cps");
-            Concerns.Add("Pacman_Levels", "..\\..\\..\\..\\..\\Examples\\Pacman\\concerns\\Levels.cps");
-            Concerns.Add("Pacman_Scoring", "..\\..\\..\\..\\..\\Examples\\Pacman\\concerns\\Scoring.cps");
-            Concerns.Add("Pacman_Sound", "..\\..\\..\\..\\..\\Examples\\Pacman\\concerns\\Sound.cps");
+            Concerns.Add("Pacman_DynamicStrategy", ExamplePath + "Pacman\\concerns\\DynamicStrategy.cps");
+            Concerns.Add("Pacman_Levels", ExamplePath + "Pacman\\concerns\\Levels.cps");
+            Concerns.Add("Pacman_Scoring", ExamplePath + "Pacman\\concerns\\Scoring.cps");
+            Concerns.Add("Pacman_Sound", ExamplePath + "Pacman\\concerns\\Sound.cps");
 
         }
 

@@ -6,7 +6,6 @@ using NTime.Framework;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
-using Composestar.StarLight.TestMocks.LanguageModelAccessor;
 
 namespace Composestar.StarLight.ILAnalyzer.Tests.PerformanceTests
 {

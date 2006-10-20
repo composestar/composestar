@@ -23,9 +23,9 @@ namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
             base.GlobalSetUp();
 
             // iTextSharp concerns
-            Concerns.Add("iTextSharp_PdfDocumentConcern", "..\\..\\..\\..\\..\\Examples\\iTextSharp\\iTextSharp.Concerns\\PdfDocumentConcern.cps");
-            Concerns.Add("iTextSharp_PhraseConcern", "..\\..\\..\\..\\..\\Examples\\iTextSharp\\iTextSharp.Concerns\\PhraseConcern.cps");
-            Concerns.Add("iTextSharp_TrackAndTrace", "..\\..\\..\\..\\..\\Examples\\iTextSharp\\iTextSharp.Concerns\\TrackAndTrace.cps");
+            Concerns.Add("iTextSharp_PdfDocumentConcern", ExamplePath + "iTextSharp\\iTextSharp.Concerns\\PdfDocumentConcern.cps");
+            Concerns.Add("iTextSharp_PhraseConcern", ExamplePath + "iTextSharp\\iTextSharp.Concerns\\PhraseConcern.cps");
+            Concerns.Add("iTextSharp_TrackAndTrace", ExamplePath + "iTextSharp\\iTextSharp.Concerns\\TrackAndTrace.cps");
             
         }
 
