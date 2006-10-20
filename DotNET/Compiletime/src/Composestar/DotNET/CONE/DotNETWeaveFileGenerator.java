@@ -327,9 +327,9 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			Concern c = (Concern)iterConcerns.next();
 			boolean castConcern = false;
 
-			if (c.getDynObject("SingleOrder") != null) 
+			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null) 
 			{
-				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
+				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
 				Iterator iterFilterModules = fmo.orderAsList().iterator();
 				while (iterFilterModules.hasNext())
@@ -418,9 +418,9 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 		{
 			Concern c = (Concern)iterConcerns.next();
 			
-			if (c.getDynObject("SingleOrder") != null)
+			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 			{
-				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
+				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
 				Iterator iterFilterModules = fmo.orderAsList().iterator();
 				while (iterFilterModules.hasNext())

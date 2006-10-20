@@ -308,7 +308,7 @@ public class ILICIT implements WEAVER
 
 				if(incre.declaredInSources(c,sources))
 				{
-					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
+					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
 					Iterator iterFilterModules = fmo.orderAsList().iterator();
 					while ( iterFilterModules.hasNext() )
@@ -414,7 +414,7 @@ public class ILICIT implements WEAVER
 			{
 				Concern c = (Concern)iterConcerns.next();
 				if(incre.declaredInSources(c,sources)){
-					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject("SingleOrder");
+					FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
 					Iterator iterFilterModules = fmo.orderAsList().iterator();
 					while ( iterFilterModules.hasNext() )
