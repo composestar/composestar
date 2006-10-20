@@ -79,13 +79,13 @@
       <Project>{44C00A21-5832-4331-BEBB-0669F4CA299A}</Project>
       <Name>RuntimeInterpreter.vs2005</Name>
     </ProjectReference>
-    <ProjectReference Include="..\util\CoreUtilities.vs2005.vjsproj">
+    <ProjectReference Include="..\Utils\CoreUtilities.vs2005.vjsproj">
       <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
       <Name>CoreUtilities.vs2005</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.java">
+    <Compile Include="..\..\..\..\..\..\DotNET\Runtime\src\AssemblyInfos\FLIRT\AssemblyInfo.java">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BreakPointListener.java">

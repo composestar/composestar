@@ -46,7 +46,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.java" />
+    <Compile Include="..\..\..\DotNET\Runtime\src\AssemblyInfos\CORE\AssemblyInfo.java" />
     <Compile Include="Composestar\core\CpsProgramRepository\Concern.java" />
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\CpsConcern.java" />
     <Compile Include="Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\AbstractPattern.java" />

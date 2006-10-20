@@ -82,7 +82,7 @@ Common routines. Always include this file in every build.xml file
 			<attribute name="target" default="rebuild"/>
 			
 			<sequential>
-				<exec executable="msbuild">
+				<exec executable="msbuild" failonerror="true">
 					<arg value="@{solution}"/>
 					<arg value="/nologo"/>
 					<arg value="/v:quiet"/>

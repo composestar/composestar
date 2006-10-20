@@ -67,9 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actions\AppendAction.java">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="..\..\..\..\..\..\DotNET\Runtime\src\AssemblyInfos\FLIRT\AssemblyInfo.java"/>
+    <Compile Include="actions\AppendAction.java"/>
     <Compile Include="actions\ComposeStarAction.java">
       <SubType>Code</SubType>
     </Compile>
@@ -95,9 +94,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="actions\WaitAction.java">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfo.java">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CastingFacility.java">
@@ -191,12 +187,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="interpreter\BinaryOperatorRuntime.java" />
-    <Compile Include="interpreter\ConditionExpressionRuntime.java">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="interpreter\ConditionResolver.java">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="interpreter\ConditionExpressionRuntime.java"/>
+    <Compile Include="interpreter\ConditionResolver.java"/>
     <Compile Include="interpreter\ConditionVariableRuntime.java" />
     <Compile Include="interpreter\CondLiteralRuntime.java" />
     <Compile Include="interpreter\CorFilterElementCompositionOperatorRuntime.java">
@@ -335,7 +327,7 @@
       <Project>{AF0ABE9F-8EBA-49E5-A4EB-56ECE134B382}</Project>
       <Name>Core.vs2005</Name>
     </ProjectReference>
-    <ProjectReference Include="..\util\CoreUtilities.vs2005.vjsproj">
+    <ProjectReference Include="..\Utils\CoreUtilities.vs2005.vjsproj">
       <Project>{F694E733-E82A-4C5E-8D4A-2B888F6C915F}</Project>
       <Name>CoreUtilities.vs2005</Name>
     </ProjectReference>

@@ -33,8 +33,8 @@ public class DotNETBACO extends BACO
 		Iterator it = builtLibs.iterator();
 		while (it.hasNext())
 		{
-			String dll = FileUtils.unquote((String)it.next());
-			String pdb = FileUtils.removeExtension(dll) + ".pdb";
+			String dll = (String)it.next();
+			String pdb = FileUtils.replaceExtension(dll, "pdb");
 
 			Debug.out(Debug.MODE_DEBUG,"BACO","Adding built library PDB: '" + pdb + "'");
 			filesToCopy.add(pdb);

@@ -7,7 +7,7 @@ Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "DotNET.vs2005", "..\Compile
 EndProject
 Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "RuntimeInterpreter.vs2005", "..\..\Core\Runtime\src\Composestar\RuntimeCore\FLIRT\RuntimeInterpreter.vs2005.vjsproj", "{44C00A21-5832-4331-BEBB-0669F4CA299A}"
 EndProject
-Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "CoreUtilities.vs2005", "..\..\Core\Runtime\src\Composestar\RuntimeCore\util\CoreUtilities.vs2005.vjsproj", "{F694E733-E82A-4C5E-8D4A-2B888F6C915F}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "CoreUtilities.vs2005", "..\..\Core\Runtime\src\Composestar\RuntimeCore\Utils\CoreUtilities.vs2005.vjsproj", "{F694E733-E82A-4C5E-8D4A-2B888F6C915F}"
 EndProject
 Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "DotNETUtilities.vs2005", "src\util\DotNETUtilities.vs2005.vjsproj", "{50342189-4B39-4980-8CE7-E75BD1066B47}"
 EndProject

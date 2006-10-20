@@ -19,10 +19,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -62,7 +58,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.java">
+    <Compile Include="..\..\Runtime\src\AssemblyInfos\COREDOTNET\AssemblyInfo.java">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Composestar\dotnet\LAMA\DotNETAttribute.java">
