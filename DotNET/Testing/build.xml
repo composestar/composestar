@@ -56,6 +56,12 @@
 				<exclude name="DesignPatterns/Annotations/**"/>
 			</FileSet>
 		</delete>
+		<!-- delete /analyses dir -->
+		<delete includeEmptyDirs="true">
+			<FileSet dir="${build.dotnet}/Examples">
+				<include name="**/analyses/"/>
+			</FileSet>
+		</delete>
 	</target>
 	
 	<target name="build"/>
