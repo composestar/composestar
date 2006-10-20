@@ -18,7 +18,7 @@
 	Compile, run and test the examples.
 	</description>
 	
-	<target name="build" /><!-- dummy -->
+	<target name="build" />
 	
 	<target name="clean" description="Clean intermediate files from the examples.">
 		<delete includeemptydirs="true">
