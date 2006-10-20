@@ -75,41 +75,8 @@
 	<module name="CONE-IS" fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" enabled="true" incremental="false" summary="Generating weave specification file...">
 		<dependencies></dependencies>	
 	</module>	
-	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
+	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT2" enabled="true" incremental="false" summary="Weaving assemblies...">
 		<dependencies>
-			<dependencies>
-				<dependency type="FILE" name="assembly" isAdded="false"></dependency>
-			</dependencies>
-			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
-				<path>
-					<node type="CONFIG" nodevalue="ApplicationStart"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="RunDebugLevel" store="true" lookup="true">
-				<path>
-					<node type="CONFIG" nodevalue="RunDebugLevel"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="ConcernsWithFMO">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getConcernsWithFMO"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="CastingInterceptions">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.castingInterceptions"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="InstantiationClasses">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getAfterInstantiationClasses"></node>
-				</path>
-			</dependency>
-			<dependency type="OBJECT" name="ConcernsWithOutputFilters">
-				<path>
-					<node type="METHOD" nodevalue="Composestar.DotNET.ILICIT.ILICIT.getConcernsWithOutputFilters"></node>
-				</path>
-			</dependency>
 		</dependencies>	
 	</module>
 	<module name="SEMTEX" fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" phase="two" enabled="true" incremental="true" summary="Collecting semantic information...">

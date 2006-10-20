@@ -55,7 +55,6 @@ public class ILICIT implements WEAVER
 	
 	public void run(CommonResources resources) throws ModuleException
 	{
-		String cpsPath = config.getPathSettings().getPath("Composestar");
 		String basePath = config.getPathSettings().getPath("Base");
 
 		File weaveDir = new File(basePath, "obj/weaver");
@@ -73,7 +72,7 @@ public class ILICIT implements WEAVER
 		if (toBeWoven.size() > 0)
 		{
 			Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"To be woven file list: " + toBeWoven);
-			invokeWeaver(cpsPath, basePath, toBeWoven);
+			invokeWeaver(basePath, toBeWoven);
 		}
 		else
 			Debug.out(Debug.MODE_WARNING,MODULE_NAME,"No files to weave");
@@ -153,15 +152,11 @@ public class ILICIT implements WEAVER
 		}
 	}
 
-	private void invokeWeaver(String cpsPath, String projectPath, List toBeWoven) throws ModuleException
+	private void invokeWeaver(String basePath, List toBeWoven) throws ModuleException
 	{
 		// build command line
-		String peweaver = cpsPath + "binaries/peweaver.exe";
-		if (!FileUtils.fileExist(peweaver))
-			throw new ModuleException("Unable to locate the executable '" + peweaver + "'!");
-
 		List cmdList = new ArrayList();
-		cmdList.add(peweaver);
+		cmdList.add(getExecutable());
 		cmdList.add("/nologo");
 
 		// verify libraries?
@@ -174,11 +169,11 @@ public class ILICIT implements WEAVER
 			cmdList.add("/debug");
 		
 		// add weave specification
-		String weaveFile = projectPath + "weavespec.xml";
+		String weaveFile = basePath + "weavespec.xml";
 		cmdList.add("/ws=" + weaveFile);
 
 		// add build file
-		String buildfile = projectPath + "filelist.peweaver";
+		String buildfile = basePath + "filelist.peweaver";
 		createBuildfile(buildfile, toBeWoven);
 		cmdList.add("/filelist=" + FileUtils.quote(buildfile));
 
@@ -196,6 +191,17 @@ public class ILICIT implements WEAVER
 		}
 	}
 
+	private String getExecutable() throws ModuleException
+	{
+		String cpsPath = config.getPathSettings().getPath("Composestar");
+		File exe = new File(cpsPath, "binaries/peweaver.exe");
+		
+		if (! exe.exists())
+			throw new ModuleException("Unable to locate the executable '" + exe + "'!");
+		
+		return exe.getAbsolutePath();
+	}
+
 	private void createBuildfile(String buildfile, List toBeWoven) throws ModuleException
 	{
 		PrintWriter out = null; 
@@ -205,8 +211,6 @@ public class ILICIT implements WEAVER
 			Iterator it = toBeWoven.iterator();
 			while (it.hasNext())
 				out.println((String)it.next());
-
-			out.flush();
 		}
 		catch (IOException e) {
 			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(), MODULE_NAME);

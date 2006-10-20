@@ -42,7 +42,6 @@ public class ILCodeParser extends TransformerBase
 
 	/**
 	 * Sets the name of the assembly to transform.
-     * @param an
      */
 	public void setAssemblyName(String an)
 	{
@@ -50,8 +49,7 @@ public class ILCodeParser extends TransformerBase
 	}
 
 	/**
-	 * Adds a concern to superimpose.
-     * @param concern
+	 * Adds a concern to transform.
      */
 	public void addConcern(Concern concern)
 	{
@@ -83,9 +81,7 @@ public class ILCodeParser extends TransformerBase
 	}
 
 	/**
-	 * Applies the transformations to the assembly.
-	 * 
-	 * FIXME: clarify 'the transformations'?
+	 * Applies the signature transformations to the assembly.
 	 */
 	public void run() throws ModifierException
 	{
