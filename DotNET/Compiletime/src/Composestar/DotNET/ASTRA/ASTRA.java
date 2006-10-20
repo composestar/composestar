@@ -16,6 +16,8 @@ import Composestar.Utils.Debug;
  */
 public class ASTRA implements CTCommonModule
 {
+	public static final String MODULE_NAME = "ASTRA";
+	
 	public ASTRA()
 	{
 	}
@@ -25,7 +27,7 @@ public class ASTRA implements CTCommonModule
 		// only run ASTRA when SIGN found ADDED or REMOVED methods
 		if (! resources.getBoolean("signaturesmodified"))
 		{
-			Debug.out(Debug.MODE_INFORMATION,"ASTRA","No need to transform assemblies");
+			Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"No need to transform assemblies");
 			return;
 		}
 
@@ -62,7 +64,7 @@ public class ASTRA implements CTCommonModule
 		}
 		catch (ModifierException e)
 		{
-			throw new ModuleException(e.getMessage(), "ASTRA");
+			throw new ModuleException(e.getMessage(), MODULE_NAME);
 		}
 	}
 }

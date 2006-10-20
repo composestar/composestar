@@ -110,7 +110,7 @@ public class ILCodeParser extends TransformerBase
 		}
 
 		// remove the old .post.il file
-		if (! FileUtils.delete(postIlName))
+		if (! FileUtils.deleteIfExists(postIlName))
 			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + postIlName + "'");
 
 		// open dissassembled file

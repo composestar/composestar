@@ -17,6 +17,8 @@ import Composestar.Utils.FileUtils;
 
 public class DummyManager implements CTCommonModule
 {
+	public static final String MODULE_NAME = "DUMMER";
+	
 	public DummyManager() 
 	{
 	}
@@ -45,8 +47,8 @@ public class DummyManager implements CTCommonModule
 		List sources = project.getSources();
 		List outputFilenames = new ArrayList(sources.size());
 		
-		File base = new File(project.getBasePath());
-		File dummyDir = new File(base, "obj/" + dummyPath);
+		File baseDir = new File(project.getBasePath());
+		File dummyDir = new File(baseDir, "obj/" + dummyPath);
 
 		// Make sure the directory exists
 		dummyDir.mkdirs();
@@ -57,7 +59,7 @@ public class DummyManager implements CTCommonModule
 			Source source = (Source)sourceIt.next();			
 			try {
 				File sourceFile = new File(source.getFileName());				
-				String target = FileUtils.createOutputFilename(base.getAbsolutePath(), "/obj/" + dummyPath, sourceFile.getAbsolutePath());
+				String target = FileUtils.createOutputFilename(baseDir.getAbsolutePath(), "/obj/" + dummyPath, sourceFile.getAbsolutePath());
 				String targetPath = FileUtils.getDirectoryPart(target);
 				FileUtils.createFullPath(targetPath); // Make sure the directory exists
 				
@@ -67,7 +69,7 @@ public class DummyManager implements CTCommonModule
 				source.setDummy(absolutePath);
 			}
 			catch (Exception e) {
-				throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),"DUMMER");
+				throw new ModuleException("Error while creating targetfile of dummy: "+e.getMessage(),MODULE_NAME);
 			}
 		}
 		
@@ -82,7 +84,7 @@ public class DummyManager implements CTCommonModule
 		}
 		catch (CompilerException e) {
 			e.printStackTrace();
-			throw new ModuleException("Cannot compile dummies: "+e.getMessage(),"DUMMER");
+			throw new ModuleException("Cannot compile dummies: "+e.getMessage(),MODULE_NAME);
 		}
 	}
 }

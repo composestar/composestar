@@ -58,7 +58,7 @@ public class ILICIT implements WEAVER
 		String cpsPath = config.getPathSettings().getPath("Composestar");
 		String basePath = config.getPathSettings().getPath("Base");
 
-		File weaveDir = new File(basePath, "obj/Weaver");
+		File weaveDir = new File(basePath, "obj/weaver");
 		if (!weaveDir.exists()) weaveDir.mkdir();
 
 		// determine the assemblies to weave
@@ -132,8 +132,6 @@ public class ILICIT implements WEAVER
 
 	private void copyDummies(File weaveDir) throws ModuleException 
 	{
-		Configuration config = Configuration.instance();
-
 		List dummies = config.getProjects().getCompiledDummies();
 		Iterator dumIt = dummies.iterator();
 		while (dumIt.hasNext()) 

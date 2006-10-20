@@ -32,7 +32,32 @@
 		<taskdef name="msbatchbuild"  classname="Composestar.Ant.Taskdefs.MSBatchBuild"/>
 	</target>
 
-	<target name="clean"/>
+	<target name="clean" depends="init">
+		<!-- delete /obj dirs -->
+		<delete includeEmptyDirs="true">
+			<FileSet dir="${build.dotnet}/Examples">
+				<include name="**/obj/"/>
+				<exclude name="AOSD2006Demo/EncryptionFilter/**"/>
+				<exclude name="AOSD2006Demo/ProtocolLib/**"/>
+			</FileSet>
+		</delete>
+		<!-- delete generated files in /bin -->
+		<!-- (cannot delete the whole dir because of correct.txt files and such) -->
+		<delete includeEmptyDirs="true">
+			<FileSet dir="${build.dotnet}/Examples">
+				<include name="**/bin/**/*.exe"/>
+				<include name="**/bin/**/*.dll"/>
+				<include name="**/bin/**/*.pdb"/>
+				<include name="**/bin/**/repository.xml"/>
+				<include name="**/bin/**/runlog.txt"/>
+				<exclude name="AOSD2006Demo/EncryptionFilter/**"/>
+				<exclude name="AOSD2006Demo/ProtocolLib/**"/>
+				<exclude name="Jukebox/jukeboxframe/**"/>
+				<exclude name="DesignPatterns/Annotations/**"/>
+			</FileSet>
+		</delete>
+	</target>
+	
 	<target name="build"/>
 
 	<target name="test" depends="test_comp,test_exec" description="Execute the DotNET system test."/>

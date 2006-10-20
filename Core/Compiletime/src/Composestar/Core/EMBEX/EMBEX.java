@@ -20,16 +20,17 @@ import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.Master.Config.TypeSource;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 /**
  * Class responsible for extracting embedded sources and storing them
  */
 public class EMBEX implements CTCommonModule
 {
-    private String embeddedPath = "";
+	public static final String MODULE_NAME = "EMBEX";
 
-	public EMBEX() 
-	{     	
+	public EMBEX()
+	{
 	}
 
 	/**
@@ -43,88 +44,76 @@ public class EMBEX implements CTCommonModule
 		PathSettings ps = config.getPathSettings();
 		Projects allProjects = config.getProjects();
 
-		Iterator cpsConcernIter = ds.getAllInstancesOf(CpsConcern.class);
-
 		// fetch temppath
-		String projectBase = ps.getPath("Base");
-		if (projectBase == null || projectBase.length() == 0) 
-			throw new ModuleException("Error in configuration file: no path Base", "EMBEX");
+		String basePath = ps.getPath("Base");
+		if (basePath == null || basePath.length() == 0) 
+			throw new ModuleException("Error in configuration file: no path Base", MODULE_NAME);
 
-		// fetch embedded sources directory
-        String embeddedDir1 = ps.getPath("EmbeddedSources", "embedded/");
-
-        // create directory for embedded code
-		embeddedPath = projectBase + "obj/" + embeddedDir1;
-		File embeddedDir = new File(embeddedPath);
-		if (embeddedDir.exists())
-		{
-			// bad news
-			String msg = "Cannot create directory '" + embeddedPath + "' for embedded sources. Directory exists! Removing files in directory";
-			Debug.out(Debug.MODE_WARNING,"EMBEX",msg);	
-			embeddedDir.delete();
-		}
+		// create directory for embedded code
+		File embeddedDir = new File(basePath, "obj/embedded/");
+		embeddedDir.mkdirs();
 
 		// iterate over all cps concerns
-		while (cpsConcernIter.hasNext()) 
+		Iterator concernIt = ds.getAllInstancesOf(CpsConcern.class);
+		while (concernIt.hasNext()) 
 		{
 			// fetch implementation
-			CpsConcern cps = (CpsConcern)cpsConcernIter.next();
+			CpsConcern cps = (CpsConcern)concernIt.next();
 			Implementation imp = cps.getImplementation();
 
 			if (imp instanceof Source)
 			{
-				if (!embeddedDir.exists())
-					embeddedDir.mkdirs();
-
 				// fetch embedded source and save
-				Source src = (Source)imp;
-				String language = src.getLanguage();
+				Source sourceCode = (Source)imp;
+				String language = sourceCode.getLanguage();
+				File target = new File(embeddedDir, sourceCode.getSourceFile());
 
-				Debug.out(Debug.MODE_DEBUG,"EMBEX","Found embedded source: "+src.getClassName());
-				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tLanguage: "+language);
-				Debug.out(Debug.MODE_DEBUG,"EMBEX","\tFile: "+src.getSourceFile());
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Found embedded source: "+sourceCode.getClassName());
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tLanguage: "+language);
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tFile: "+sourceCode.getSourceFile());
 
 				List languageProjects = allProjects.getProjectsByLanguage(language);
 				if (languageProjects == null)
-					throw new ModuleException("No projects for language " + language, "EMBEX");
+					throw new ModuleException("No projects for language " + language, MODULE_NAME);
 
 				Iterator lpIter = languageProjects.iterator();
 				if (!lpIter.hasNext())
-					throw new ModuleException("There is no project to add the embedded source to, the embedded code: "+src.className+" is added to the first project of type: "+src.language, "EMBEX");
+					throw new ModuleException("There is no project to add the embedded source to, the embedded code: "+sourceCode.className+" is added to the first project of type: "+sourceCode.language, MODULE_NAME);
 				else
 				{
 					Project prj = (Project)lpIter.next();
-					Debug.out(Debug.MODE_DEBUG,"EMBEX","Adding embedded code to project: " + prj.getName());
+					Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Adding embedded code to project: " + prj.getName());
 
 					Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
-					source.setFileName(embeddedPath+src.getSourceFile());
+					source.setFileName(target.getAbsolutePath());
 					prj.addSource(source);
 
-					TypeSource tsource = new TypeSource();
-					tsource.setFileName(embeddedPath+src.getSourceFile());
-					tsource.setName(src.getClassName());
-					prj.addTypeSource(tsource);
+					TypeSource ts = new TypeSource();
+					ts.setFileName(target.getAbsolutePath());
+					ts.setName(sourceCode.getClassName());
+					prj.addTypeSource(ts);
 
-					this.saveToFile(src,resources);
+					this.saveToFile(sourceCode, target);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Stores the embedded source in a new file
-     * @param src
-     * @param resources
-     */
-	private void saveToFile(Source src,CommonResources resources) throws ModuleException
+	 * Stores the embedded source in a new file.
+	 */
+	private void saveToFile(Source src, File target) throws ModuleException
 	{
+		BufferedWriter bw = null;
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(embeddedPath+src.getSourceFile()));
+			bw = new BufferedWriter(new FileWriter(target));
 			bw.write(src.getSource());
-			bw.close();
 		}
 		catch (IOException e) {
-			throw new ModuleException("ERROR while trying to save embedded source!:" + e.getMessage() , "EMBEX");
+			throw new ModuleException("Could not save embedded source:" + e.getMessage() , MODULE_NAME);
+		}
+		finally {
+			FileUtils.close(bw);
 		}
 	}
 }

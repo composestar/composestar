@@ -96,6 +96,12 @@ public class FileUtils
 	{
 		return new File(filename).delete();
 	}
+	
+	public static boolean deleteIfExists(String filename)
+	{
+		File f = new File(filename);
+		return (f.exists() ? f.delete() : true);
+	}
 
 	public static void copyFile(String dest, String source) throws IOException
 	{
@@ -133,10 +139,11 @@ public class FileUtils
 
 	/**
 	 * Create a name for an output file based on the input name; this is used
-	 * e.g. when creating dummies. The conversion works as follows: a sourceName
-	 * should like this: basePath/project/specific/subdirs/SomeSourceFile.ext
+	 * e.g. when creating dummies. The conversion works as follows: 
+	 * A sourceName should look like this: 
+	 *    "basePath/project/specific/subdirs/SomeSourceFile.ext".
 	 * The converted version will look like:
-	 * basePath/prefix/project/specific/subdirs/SomeSourceFile.ext
+	 *    "basePath/prefix/project/specific/subdirs/SomeSourceFile.ext".
 	 * 
 	 * @param basePath
 	 * @param prefix the prefix to be prepended before the project-specific directories
