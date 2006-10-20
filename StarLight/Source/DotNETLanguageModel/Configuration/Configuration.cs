@@ -22,6 +22,7 @@ namespace Composestar.StarLight.Configuration
         /// </summary>
         /// <value>The concerns.</value>
         [XmlArray("Concerns")]
+        [XmlArrayItem("Concern")] 
         public List<ConcernElement> Concerns
         {
             get { return _concerns; }
@@ -86,6 +87,7 @@ namespace Composestar.StarLight.Configuration
         /// </summary>
         /// <value>The assemblies.</value>
         [XmlArray("Assemblies")]
+        [XmlArrayItem("AssemblyConfig")]
         public List<AssemblyConfig> Assemblies
         {
             get { return _assemblies; }

@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace Composestar.StarLight.Configuration
 {
     [Serializable ]
-    [XmlRoot("FilterTypeElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("FilterType", Namespace = "Entities.TYM.DotNET.Composestar")]
     public class FilterTypeElement
     {
         private string _name;

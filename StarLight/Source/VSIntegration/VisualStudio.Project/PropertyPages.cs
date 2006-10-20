@@ -51,7 +51,7 @@ namespace Composestar.StarLight.VisualStudio.Project
 	public class GeneralPropertyPage : SettingsPage, EnvDTE80.IInternalExtenderProvider
 	{
 		#region fields
-		private string repositoryFilename = @"obj\starlight.yap";
+		private string repositoryFilename = @"obj\starlight.xml";
         private string assemblyName;
 		private OutputType outputType;
 		private string defaultNamespace;

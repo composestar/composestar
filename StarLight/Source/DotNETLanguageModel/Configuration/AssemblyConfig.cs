@@ -113,5 +113,19 @@ namespace Composestar.StarLight.Configuration
 
         } // GenerateSerializedFilename()
 
+        private String _weaveSpec;
+
+        /// <summary>
+        /// Gets or sets the weave specification file.
+        /// </summary>
+        /// <value>The weave specification file.</value>
+        [XmlAttribute]
+        public String WeaveSpecificationFile
+        {
+            get { return _weaveSpec; }
+            set { _weaveSpec = value; }
+        }
+	
+
     }
 }

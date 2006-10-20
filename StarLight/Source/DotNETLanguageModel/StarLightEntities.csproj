@@ -47,14 +47,88 @@
     <Compile Include="LanguageModel\ParameterOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LanguageModel\TypeElement.cs" />
+    <Compile Include="SerializableDictionary.cs" />
+    <Compile Include="WeaveSpec\WeaveMethod.cs" />
+    <Compile Include="WeaveSpec\External.cs" />
+    <Compile Include="WeaveSpec\Internal.cs" />
+    <Compile Include="WeaveSpec\WeaveSpecification.cs" />
+    <Compile Include="WeaveSpec\WeaveType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration\Config.cd" />
     <None Include="Concerns\Concerns.cd" />
     <None Include="LanguageModel\Language Model.cd" />
+    <None Include="WeaveSpec\WeaveSpec.cd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Visitor\IVisitable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Visitor\IVisitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Block.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\While.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Branch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Case.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\ContextExpression.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\ContextInstruction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\FilterAction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\InlineInstruction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Jump.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\Label.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\Instructions\ContextType.cs" />
+    <Compile Include="WeaveSpec\Instructions\Switch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\And.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\ConditionExpression.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\ConditionLiteral.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\False.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\Not.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\Or.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\True.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\Visitor\IVisitable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="WeaveSpec\ConditionExpressions\Visitor\IVisitor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

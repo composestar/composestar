@@ -10,7 +10,7 @@ namespace Composestar.StarLight.LanguageModel
     /// A parameter of a method.
     /// </summary>
     [Serializable]
-    [XmlRoot("ParameterElement", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("Parameter", Namespace = "Entities.TYM.DotNET.Composestar")]
     public sealed class ParameterElement
     {
 

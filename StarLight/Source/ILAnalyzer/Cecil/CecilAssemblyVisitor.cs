@@ -288,7 +288,7 @@ namespace Composestar.StarLight.ILAnalyzer
             // Name
             typeElement.Name = type.Name;
             typeElement.Namespace = type.Namespace;
-            typeElement.FullName = CreateTypeName(type);
+            //typeElement.FullName = CreateTypeName(type);
 
             // Properties
             typeElement.IsAbstract = type.IsAbstract;
