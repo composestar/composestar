@@ -11,8 +11,8 @@ import Composestar.Core.Master.Config.Configuration;
 
 public class INCREReporter 
 {
-	private BufferedWriter writer;
-	private StringBuffer buffer;
+	private BufferedWriter writer, writer2;
+	private StringBuffer buffer, buffer2;
 	private String cssFile;
 	private String reportFile;
 	private LinkedHashMap timings;
@@ -41,16 +41,19 @@ public class INCREReporter
 		
 		//String reportFile = resources.getProperty("TempFolder") + "INCRE.html";
 		String reportFile = config.getPathSettings().getPath("Base") + "INCRE.html";
+		String reportFile2 = config.getPathSettings().getPath("Base") + "INCRE.txt";
 		try 
 		{
 			writer = new BufferedWriter(new FileWriter(reportFile));
+			writer2 = new BufferedWriter(new FileWriter(reportFile2));
 		} 
 		catch(Exception e)
 		{
 			Debug.out(Debug.MODE_WARNING, "INCRE", "INCRE report file creation failed (" + reportFile + ')');
 		}
 
-		buffer = new StringBuffer("");
+		buffer = new StringBuffer();
+		buffer2 = new StringBuffer();
 		timings = new LinkedHashMap();
 	}
 	
@@ -135,6 +138,9 @@ public class INCREReporter
 			buffer.append("</b></td><td align=center><b>ELAPSED");
 			buffer.append("</b></td></tr>");
 			
+			buffer2.append(modulename);
+			buffer2.append(":");
+			
 			// append timings of processes
 			Iterator timerItr = moduletimings.iterator();
 			while(timerItr.hasNext()){
@@ -168,6 +174,8 @@ public class INCREReporter
 			buffer.append("	ms</td></tr>");
 			buffer.append("<tr class=endmodulerow><td align=right>Total Elapsed</td><td></td><td>");
             buffer.append("").append(elapsed);
+            buffer2.append(elapsed);
+            buffer2.append('\n');
 			buffer.append("	ms (");
 			double percentage = ((double)elapsed * 100d / (double) totalElapsed);
 			BigDecimal percDec = new BigDecimal(percentage);
@@ -178,6 +186,7 @@ public class INCREReporter
 		
 		// append end of report
 		buffer.append("</table></body></html>");
+		buffer2.append( totalElapsed );
 		
 		try
 		{
@@ -185,6 +194,9 @@ public class INCREReporter
 			writer.write(buffer.toString());
 			writer.flush();
 			writer.close();	
+			writer2.write(buffer2.toString());
+			writer2.flush();
+			writer2.close();
 		}
 		catch(Exception e)
 		{
