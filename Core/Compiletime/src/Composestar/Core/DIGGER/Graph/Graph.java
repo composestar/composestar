@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.DIGGER.DIGGER;
 import Composestar.Core.DIGGER.Graph.SpecialNodes.ExceptionNode;
+import Composestar.Core.FILTH.FilterModuleOrder;
 
 /**
  * Contains the filter dispatch graph
@@ -57,7 +59,7 @@ public class Graph
 	public AbstractConcernNode createConcernNode(Concern forConcern)
 	{
 		AbstractConcernNode newNode;
-		if (forConcern.getDynObject("SingleOrder") != null)
+		if (forConcern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 		{
 			newNode = new ConcernNode(this, forConcern);
 		}
@@ -65,6 +67,7 @@ public class Graph
 		{
 			newNode = new SimpleConcernNode(this, forConcern);
 		}
+		//forConcern.addDynObject(DIGGER.CONCERN_NODE_KEY, newNode);
 		concernNodes.put(forConcern, newNode);
 		return newNode;
 	}

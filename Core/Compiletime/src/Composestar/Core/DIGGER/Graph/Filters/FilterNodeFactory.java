@@ -16,6 +16,7 @@ import Composestar.Core.DIGGER.Graph.FilterNode;
 import Composestar.Core.DIGGER.Graph.Graph;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Utils.Debug;
 
 /**
  * Factory for creation appropiate filter node types
@@ -58,15 +59,18 @@ public final class FilterNodeFactory
 		{
 			return new CustomFilterNode(inGraph, forFilter, inDirection);
 		}
-		/*
-		 * else if (FilterType.APPEND.equals(filterType)) { return new
-		 * AppendFilterNode(inGraph, forFilter, inDirection); } else if
-		 * (FilterType.PREPEND.equals(filterType)) { return new
-		 * PrependFilterNode(inGraph, forFilter, inDirection); }
-		 */
+		else if (FilterType.APPEND.equals(filterType))
+		{
+			return new AppendFilterNode(inGraph, forFilter, inDirection);
+		}
+		else if (FilterType.PREPEND.equals(filterType))
+		{
+			return new PrependFilterNode(inGraph, forFilter, inDirection);
+		}
 
 		if (Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "acceptUnknownFilter", true))
 		{
+			Debug.out(Debug.MODE_WARNING, DIGGER.MODULE_NAME, "Unknown filter type: " + filterType);
 			return new UnknownFilterNode(inGraph, forFilter, inDirection);
 		}
 		else

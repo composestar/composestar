@@ -36,6 +36,15 @@ import Composestar.Utils.Debug;
 public class DIGGER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DIGGER";
+	
+	/**
+	 * The key for the dispatch graph in repository
+	 */
+	public static final String DISPATCH_GRAPH_KEY = "DispatchGraph";
+	/**
+	 * The key used to store the concern nodes in the concerns
+	 */
+	public static final String CONCERN_NODE_KEY = "DiggerNode";
 
 	protected Graph graph;
 
@@ -46,13 +55,16 @@ public class DIGGER implements CTCommonModule
 		dig();
 
 		// export to XML
-		new XmlExporter(graph, new File(Configuration.instance().getPathSettings().getPath("Base") + File.separator
-				+ Configuration.instance().getPathSettings().getPath("Analysis", "analyses") + File.separator
-				+ "DispatchGraph.xml"));
+		if (Configuration.instance().getModuleProperty(MODULE_NAME, "exportToXML", true))
+		{
+			new XmlExporter(graph, new File(Configuration.instance().getPathSettings().getPath("Base") + File.separator
+					+ Configuration.instance().getPathSettings().getPath("Analysis", "analyses") + File.separator
+					+ "DispatchGraph.xml"));
+		}
 	}
 
 	/**
-	 * Dig through the repository and process all concerns with a "SingleOrder"
+	 * Dig through the repository and process all concerns with a FilterModuleOrder
 	 * object
 	 * 
 	 * @throws ModuleException
@@ -60,12 +72,13 @@ public class DIGGER implements CTCommonModule
 	protected void dig() throws ModuleException
 	{
 		graph = new Graph();
+		//DataStore.instance().addObject(DISPATCH_GRAPH_KEY, graph);
 
 		Iterator concerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (concerns.hasNext())
 		{
 			Concern concern = (Concern) concerns.next();
-			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+			FilterModuleOrder fmOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 			if (fmOrder != null)
 			{
 				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Generating dispatch graph for: "

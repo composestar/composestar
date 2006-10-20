@@ -126,10 +126,10 @@ public class ObjectManager implements ChildRunnable
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found concern for '"+concern.getQualifiedName()+"'.");
 			
 			// Try to fetch the order for this concern from the repository
-			if(concern.getDynObject("SingleOrder") != null && concern.getDynObject("SingleOrder") instanceof FilterModuleOrder)
+			if(concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null && concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) instanceof FilterModuleOrder)
 			{
 				// For each order add the filtermodule to this object manager
-				FilterModuleOrder fmo = (FilterModuleOrder)concern.getDynObject("SingleOrder");
+				FilterModuleOrder fmo = (FilterModuleOrder)concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 				Vector order = fmo._order;
 				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Getting "+order.size()+" orderings.");
 				for(int i=0; i<order.size(); i++)
@@ -357,7 +357,7 @@ public class ObjectManager implements ChildRunnable
 	public static boolean hasFilterModules(Object o, DataStore store)
 	{
 		Concern concern = (Concern)store.getObjectByID(o.getClass().getName());
-		return (concern != null && concern.getDynObject("SingleOrder") != null );
+		return (concern != null && concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null );
 	}
 
     /**

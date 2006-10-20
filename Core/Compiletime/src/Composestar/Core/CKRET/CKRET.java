@@ -141,7 +141,7 @@ public class CKRET implements CTCommonModule
 	{
 		getReporter().openConcern(concern);
 		
-		FilterModuleOrder singleOrder = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+		FilterModuleOrder singleOrder = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 		if (singleOrder != null)
 		{
 			// ok need to do some checking
@@ -189,7 +189,7 @@ public class CKRET implements CTCommonModule
 								{
 									// so this is the first good order found...
 									foundGoodOrder = true;
-									concern.addDynObject("SingleOrder",fmo);
+									concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,fmo);
 									Debug.out(Debug.MODE_INFORMATION,"CKRET","Selected filtermodule order for concern " + concern.getQualifiedName() + ':');
 									Debug.out(Debug.MODE_INFORMATION,"CKRET", '\t' + fmo.toString());
 								} 
@@ -220,7 +220,7 @@ public class CKRET implements CTCommonModule
 
 		// set singleorder from previous CKRET run
 		Concern oldconcern = (Concern)incre.findHistoryObject(concern);
-		concern.addDynObject("SingleOrder",oldconcern.getDynObject("SingleOrder"));
+		concern.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,oldconcern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY));
 				
 		//get CKRET reports and let HTMLReporter print them
 		List reports = (List)oldconcern.getDynObject("CKRETReports");					

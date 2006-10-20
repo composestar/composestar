@@ -45,14 +45,14 @@ public class FILTHServiceImpl extends FILTHService
 	
 	public List getOrder(Concern c)
 	{
-		FilterModuleOrder fo = (FilterModuleOrder)c.getDynObject("SingleOrder");
+		FilterModuleOrder fo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 		if (fo == null)
 			return new LinkedList();
 		
 		//getMultipleOrder(c);
 		// TODO: calling getMultipleOrder(c) generates lots of exceptions for CONE-IS (filenotfound & nullpointer)
 		
-		return ((FilterModuleOrder)c.getDynObject("SingleOrder")).orderAsList(); 
+		return ((FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY)).orderAsList(); 
 	}
 	
 	public List getMultipleOrder(Concern c)
@@ -185,12 +185,12 @@ public class FILTHServiceImpl extends FILTHService
 		/* DEBUG info end */
 		
 		/*** attaching all orders to the concern in DataStore */
-		c.addDynObject("FilterModuleOrders",forders);
+		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY,forders);
 		
 		/* attaching the first order with different key to be dumped in the repository
 		 * the list is encapsulated in FilterModuleOrder for the XML generator */  
 		FilterModuleOrder fmorder = new FilterModuleOrder( (LinkedList)forders.getFirst());
-		c.addDynObject("SingleOrder",fmorder);
+		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,fmorder);
 
 		
 		//FILTHService.print("FILTH::order (1) added to the repository {"+c.getName()+"}\n");
@@ -280,11 +280,11 @@ public class FILTHServiceImpl extends FILTHService
 		/* Copy dynamic objects 'FilterModuleOrders' and 'SingleOrder' */	
 		Concern cop = (Concern)inc.findHistoryObject(c);
 		
-		LinkedList forders = (LinkedList)cop.getDynObject("FilterModuleOrders");
+		LinkedList forders = (LinkedList)cop.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 		
-		c.addDynObject("FilterModuleOrders",forders);
+		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY,forders);
 		FilterModuleOrder fmorder = new FilterModuleOrder( (LinkedList)forders.getFirst());
-		c.addDynObject("SingleOrder",fmorder);
+		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,fmorder);
 	}
 	/* 
 	public List getOrder(CpsConcern c){

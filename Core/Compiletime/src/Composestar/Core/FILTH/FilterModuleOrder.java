@@ -13,16 +13,25 @@ package Composestar.Core.FILTH;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {
+	/**
+	 * The key used to store this variable in the concern's dynamicmap
+	 */
+	public static final String SINGLE_ORDER_KEY = "SingleOrder";
+	
+	/**
+	 * Key used to store all filter module orders
+	 */
+	public static final String ALL_ORDERS_KEY = "FilterModuleOrders";
+	
 	public Vector _order;
 	
 	public FilterModuleOrder()

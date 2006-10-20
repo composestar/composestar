@@ -49,7 +49,7 @@ public class Core implements CTCommonModule{
             
             if (concern.getDynObject("superImpInfo") != null){
                 FilterModuleOrder filterModules = 
-                    (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
+                    (FilterModuleOrder) concern.getDynObject( FilterModuleOrder.SINGLE_ORDER_KEY );
                 
                 check( concern, filterModules );
             }

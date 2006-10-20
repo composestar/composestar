@@ -24,6 +24,7 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.Config.ConfigManager;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -247,7 +248,7 @@ public class INCRE implements CTCommonModule
 		while (concernIt.hasNext())
 		{
 			Concern c = (Concern)concernIt.next();
-			if (c.getDynObject("SingleOrder") != null)
+			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 				concerns.add(c);	
 		}
 		

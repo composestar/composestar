@@ -144,7 +144,7 @@ public class Sign implements CTCommonModule {
             Concern concern = (Concern) conIter.next();
             
             if (concern.getDynObject("superImpInfo") != null) {
-                filterModules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+                filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
                 model = new FireModel(concern, filterModules, true);
                 analysisModels.put(concern, model);
 

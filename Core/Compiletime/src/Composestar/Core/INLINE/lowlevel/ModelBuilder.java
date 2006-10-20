@@ -105,7 +105,7 @@ public class ModelBuilder implements CTCommonModule{
 
         //get filtermodules:
         FilterModuleOrder filterModules = 
-            (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
+            (FilterModuleOrder) concern.getDynObject( FilterModuleOrder.SINGLE_ORDER_KEY );
 
         currentFireModelIF = new FireModel( concern, filterModules, true );
         currentFireModelOF = new FireModel( concern, filterModules, false );

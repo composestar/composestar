@@ -22,6 +22,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjec
 import Composestar.Core.DIGGER.DIGGER;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.RepositoryImplementation.TypedDeclaration;
+import Composestar.Utils.Debug;
 
 /**
  * Base for all filter nodes
@@ -30,6 +31,9 @@ import Composestar.Core.RepositoryImplementation.TypedDeclaration;
  */
 public abstract class FilterNode extends Node
 {
+	/**
+	 * @deprecated
+	 */
 	protected FilterElementNode lastElement;
 
 	protected Filter filter;
@@ -105,7 +109,6 @@ public abstract class FilterNode extends Node
 	public void appendFilterElement(FilterElementNode inElement, FilterElement fe)
 	{
 		inElement.setOwner(this);
-		// TODO: link previous FE to this one
 		addOutgoingEdge(new CondMatchEdge(inElement, fe));
 		lastElement = inElement;
 	}
@@ -199,6 +202,9 @@ public abstract class FilterNode extends Node
 			if (targetNode != null)
 			{
 				mpNode.addOutgoingEdge(new SubstitutionEdge(targetNode, subst));
+			}
+			else {
+				Debug.out(Debug.MODE_WARNING, DIGGER.MODULE_NAME, "Unknown substitution target: "+subst.getTarget());
 			}
 		}
 	}

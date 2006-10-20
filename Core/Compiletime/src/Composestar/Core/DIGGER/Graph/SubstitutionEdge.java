@@ -13,9 +13,11 @@ package Composestar.Core.DIGGER.Graph;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 
 /**
+ * Edge for substitutions
+ * 
  * @author Michiel Hendriks
  */
-public class SubstitutionEdge extends Edge
+public class SubstitutionEdge extends LambdaEdge
 {
 	protected SubstitutionPart substitutionPart;
 
