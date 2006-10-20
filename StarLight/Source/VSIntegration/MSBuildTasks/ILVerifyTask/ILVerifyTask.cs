@@ -1,10 +1,16 @@
 using System;
 using System.IO;
 using System.ComponentModel;
+using System.Diagnostics;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.Configuration;
+using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
@@ -18,20 +24,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
         private const int ErrorAccessDenied = 5;
 
         #region Properties for MSBuild
+        private string _repositoryFilename;
 
-        private ITaskItem[] _assemblyFiles;
-        // TODO Verifier should work on the assemblies it just weaved. So the assemblies from the database
-        /// <summary>
-        /// Gets or sets the assembly files to analyze.
-        /// </summary>
-        /// <value>The assembly files.</value>
         [Required()]
-        public ITaskItem[] AssemblyFiles
+        public string RepositoryFilename
         {
-            get { return _assemblyFiles; }
-            set { _assemblyFiles = value; }
+            get { return _repositoryFilename; }
+            set { _repositoryFilename = value; }
         }
-
         #endregion
 
         #region ctor
@@ -42,7 +42,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         public ILVerifyTask()
             : base(Properties.Resources.ResourceManager)
         {
-           
+
         }
 
         #endregion
@@ -60,60 +60,58 @@ namespace Composestar.StarLight.MSBuild.Tasks
             string filename;
             string extension;
 
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            Stopwatch sw = new Stopwatch();
             sw.Start();
 
             // Get the location of PEVerify
             PEVerifyLocation = RegistrySettings.GetNETSDKLocation();
- 
-            if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(Path.Combine(PEVerifyLocation, PEVerifyExecutable)) )
+
+            if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(Path.Combine(PEVerifyLocation, PEVerifyExecutable)))
             {
-                Log.LogWarningFromResources("PEVerifyExecutableNotFound", "PEVerify.exe");  
+                Log.LogWarningFromResources("PEVerifyExecutableNotFound", "PEVerify.exe");
                 return true;
             }
-            
+
             // Setup process
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            Process process = new Process();
 
             // Determine filename
             process.StartInfo.FileName = Path.Combine(PEVerifyLocation, PEVerifyExecutable);
-               
+
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
 
+            IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
+
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+
             // Execute PEVerify for each file
-            foreach (ITaskItem item in AssemblyFiles)
+            foreach (AssemblyConfig assembly in configContainer.Assemblies)
             {
                 try
                 {
-                    filename = item.ToString();
-                    extension = Path.GetExtension(filename).ToLower(); 
-                    if (!extension.Equals(".dll") && !extension.Equals(".exe"))
-                    {
-                        continue;
-                    } // foreach  (item)
 
-                    Log.LogMessageFromResources("VerifyingAssembly", filename);
+                    Log.LogMessageFromResources("VerifyingAssembly", assembly.Filename);
 
-                    process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", filename);
+                    process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", assembly.Filename);
 
                     process.Start();
                     while (!process.HasExited)
                     {
-                        
+
                     }
                     if (process.ExitCode == 0)
                     {
-                        Log.LogMessageFromResources("VerifySuccess", filename);                         
+                        Log.LogMessageFromResources("VerifySuccess", assembly.Filename);
                     }
                     else
                     {
                         while (!process.StandardOutput.EndOfStream)
                         {
-                            ParseOutput(process.StandardOutput.ReadLine(), filename);
-                        }                        
+                            ParseOutput(process.StandardOutput.ReadLine(), assembly.Filename);
+                        }
                     }
 
                 }
@@ -121,31 +119,31 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     if (exception.NativeErrorCode == ErrorFileNotFound)
                     {
-                        Log.LogWarningFromResources("PEVerifyExecutableNotFound", process.StartInfo.FileName);                        
+                        Log.LogWarningFromResources("PEVerifyExecutableNotFound", process.StartInfo.FileName);
                         return true;
                     }
                     else if (exception.NativeErrorCode == ErrorAccessDenied)
                     {
-                        Log.LogWarningFromResources("PEVerifyExecutableAccessDenied", process.StartInfo.FileName);                        
-                    return true;
+                        Log.LogWarningFromResources("PEVerifyExecutableAccessDenied", process.StartInfo.FileName);
+                        return true;
                     }
                     else
                     {
                         Log.LogErrorFromResources("PEVerifyExecutionException", exception.ToString());
                         return false;
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
                     Log.LogErrorFromException(ex, true);
                 }
-                 
+
             }
 
             sw.Stop();
 
-            Log.LogMessageFromResources("VerificationCompleted", AssemblyFiles.Length, sw.Elapsed.TotalSeconds);
+            Log.LogMessageFromResources("VerificationCompleted", configContainer.Assemblies.Count, sw.Elapsed.TotalSeconds);
 
             return !Log.HasLoggedErrors;
 
@@ -175,7 +173,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     Log.LogError(message);
                 }
-                
+
             }
 
         }

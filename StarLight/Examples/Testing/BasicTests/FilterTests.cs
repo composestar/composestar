@@ -1,4 +1,6 @@
+#region Using directives
 using System;
+#endregion
 
 namespace BasicTests
 {
@@ -40,6 +42,19 @@ namespace BasicTests
 
             return s;
         }
+
+        /// <summary>
+        /// Func out test
+        /// </summary>
+        /// <param name="number">Number</param>
+        /// <param name="refnumber">Refnumber</param>
+        /// <returns>String</returns>
+        public string funcOutTest(out int number, ref int refnumber)
+        {
+            number = 3;
+            refnumber = 4;
+            return number.ToString(); 
+        } // funcOutTest(number, refnumber)
 
         public void func5(int number)
         {

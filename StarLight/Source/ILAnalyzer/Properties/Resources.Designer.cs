@@ -122,5 +122,14 @@ namespace Composestar.StarLight.ILAnalyzer.Properties {
                 return ResourceManager.GetString("RepositoryFilenameNotSpecified", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve assembly &apos;{0}&apos;..
+        /// </summary>
+        internal static string UnableToResolveAssembly {
+            get {
+                return ResourceManager.GetString("UnableToResolveAssembly", resourceCulture);
+            }
+        }
     }
 }

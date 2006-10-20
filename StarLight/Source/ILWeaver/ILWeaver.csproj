@@ -89,10 +89,6 @@
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
-      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
-      <Name>LanguageModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ContextInfo\ContextInfo.csproj">
       <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
       <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
@@ -100,6 +96,10 @@
     <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DotNETLanguageModel\StarLightEntities.csproj">
+      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
+      <Name>StarLightEntities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utilities\Cecil\CecilUtilities.csproj">
       <Project>{125370E1-A7FB-4458-A2AC-CA7C044FC944}</Project>

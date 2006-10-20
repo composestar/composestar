@@ -15,11 +15,11 @@ namespace Composestar.StarLight.ILAnalyzer
     /// </remarks> 
     public sealed class CecilAnalyzerConfiguration
     {
-               
-
+              
         private readonly string _repositoryFilename;
         private bool _doFieldAnalysis = true;
         private bool _doMethodCallAnalysis = true;
+        private string _binFolder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
@@ -41,16 +41,42 @@ namespace Composestar.StarLight.ILAnalyzer
             get { return _repositoryFilename; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to do method call analysis.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the analyzer has to do method call analysis; otherwise, <c>false</c>.
+        /// </value>
         public bool DoMethodCallAnalysis
         {
             get { return _doMethodCallAnalysis; }
             set { _doMethodCallAnalysis = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to do field analysis.
+        /// </summary>
+        /// <value><c>true</c> if the analyzer has to do field analysis; otherwise, <c>false</c>.</value>
         public bool DoFieldAnalysis
         {
             get { return _doFieldAnalysis; }
             set { _doFieldAnalysis = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the bin folder.
+        /// </summary>
+        /// <value>The bin folder.</value>
+        public string BinFolder
+        {
+            get
+            {
+                return _binFolder;
+            }
+            set
+            {
+                _binFolder = value;
+            }
         }
 
         /// <summary>

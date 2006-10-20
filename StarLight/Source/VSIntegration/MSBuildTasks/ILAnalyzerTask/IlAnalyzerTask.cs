@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Diagnostics; 
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -9,9 +10,9 @@ using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
-using Composestar.Repository.LanguageModel;  
-using Composestar.Repository.Configuration; 
-using Composestar.Repository.Db4oContainers;
+using Composestar.StarLight.LanguageModel;  
+using Composestar.StarLight.Configuration; 
+
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices.Exceptions;
 
@@ -23,6 +24,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class IlAnalyzerTask : Task
     {
+
         #region Properties for MSBuild
 
         private ITaskItem[] _assemblyFiles;
@@ -79,6 +81,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _binFolder = value; }
         }
 
+        private String _intermediateOutputPath;
+
+        /// <summary>
+        /// Gets or sets the intermediate output path.
+        /// </summary>
+        /// <value>The intermediate output path.</value>
+        [Required()]
+        public String IntermediateOutputPath
+        {
+            get { return _intermediateOutputPath; }
+            set { _intermediateOutputPath = value; }
+        }
+
         #endregion
 
         #region ctor
@@ -106,7 +121,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             IILAnalyzer analyzer = null;
             CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
-            ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
+            IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
+            
+            // Set configuration settings
+            configuration.BinFolder = BinFolder;
 
             // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
@@ -118,12 +136,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             List<FilterActionElement> filterActions = new List<FilterActionElement>();
                    
             // Create the analyzer using the object builder
-            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
-            ((CecilILAnalyzer)analyzer).BinFolder = BinFolder;
-
-            // TODO: this aint the best approach, clearing everything...
-            langModelAccessor.DeleteWeavingInstructions();
-
+            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
+            
             // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
             List<String> assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
@@ -147,20 +161,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
             }
 
-            // TODO Remove all obsolete assemblies from the database?
-            //// Remove all obsolete assemblies from the database
-            //IList<AssemblyElement> storedAssemblies = langModelAccessor.GetAssemblyElements();
-            //foreach (AssemblyElement storedAssembly in storedAssemblies)
-            //{
-            //    if (!assemblyFileList.Contains(storedAssembly.FileName) && !refAssemblies.ContainsKey(storedAssembly.Name))
-            //    {
-            //        Log.LogMessage("Removing {0}", storedAssembly.Name);
-            //        langModelAccessor.DeleteAssembly(storedAssembly.Name);
-            //    }
-            //}
+            // Get the configuration
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);               
+
+            // Get the assemblies in the config file
+            List<AssemblyConfig> assembliesInConfig = configContainer.Assemblies;
+
+            List<AssemblyConfig> assembliesToStore = new List<AssemblyConfig>();  
 
             // Add all the unresolved types (used in the concern files) to the analyser
-            Log.LogMessageFromResources("NumberOfReferencesToResolve", ReferencedTypes.Length);
+            Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", ReferencedTypes.Length);
             foreach (ITaskItem item in ReferencedTypes)
             {
                 analyzer.UnresolvedTypes.Add(item.ToString());
@@ -171,45 +181,67 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 try
                 {
+                    // See if we already have this assembly in the list
+                    AssemblyConfig assConfig =null;
+
+                    assConfig = assembliesInConfig.Find(delegate(AssemblyConfig ac)
+                    {
+                        return ac.Filename.Equals(item); 
+                    });
+
+                    if (assConfig != null)
+                    {
+                        // Already in the config. Check the last modification date.
+                        if (assConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
+                        {
+                            // Assembly has not been modified, skipping analysis
+                            Log.LogMessageFromResources("AssemblyNotModified");
+
+                            assembliesToStore.Add(assConfig); 
+                            continue;
+                        } // if
+                    } // if
+
+                    // Either we could not find the assembly in the config or it was changed.
+                   
                     AssemblyElement assembly = null;
-                    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                    Stopwatch sw = new Stopwatch();
                     
                     Log.LogMessageFromResources("AnalyzingFile", item);
                     
                     sw.Start();
-    
-                    // Try to get the assembly information from the database
-                    assembly = langModelAccessor.GetAssemblyElementByFileName(item);
+               
+                    assembly = analyzer.ExtractAllTypes(item);
+
                     if (assembly != null)
                     {
-                        if (assembly.Timestamp == File.GetLastWriteTime(item).Ticks)
-                        {
-                            // Assembly has not been modified, skipping analysis
-                            Log.LogMessageFromResources("AssemblyNotModified");
-                            continue;
-                        }
-                        else
-                        {
-                            // Assembly has been modified, removing all existing types from database
-                            langModelAccessor.DeleteTypeElements(item);
-                        }
-                    }
+                        // Create a new AssemblyConfig object
+                        assConfig = new AssemblyConfig();
 
-                    assembly = analyzer.ExtractAllTypes(item);
-                    assemblies.Add(assembly);
+                        assConfig.Filename = item;
+                        assConfig.Name = assembly.Name;
+                        assConfig.Timestamp = File.GetLastWriteTime(item).Ticks;
+                        assConfig.Assembly = assembly;
 
+                        // Generate a unique filename
+                        assConfig.GenerateSerializedFilename(IntermediateOutputPath);
+  
+                        assembliesToStore.Add(assConfig);  
+                        assemblies.Add(assembly);
+                    } // if
+                                     
                     sw.Stop();
 
-                    Log.LogMessageFromResources("AssemblyAnalyzed", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+                    Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
 
                     sw.Reset();
 
                     sw.Start();
 
-                    // add FilterTypes
+                    // Add FilterTypes
                     filterTypes.AddRange(analyzer.FilterTypes);
 
-                    // add FilterActions
+                    // Add FilterActions
                     filterActions.AddRange(analyzer.FilterActions);
 
                     sw.Stop();
@@ -241,8 +273,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // Analyze the non-local copied assemblies for missing types
             if (analyzer.UnresolvedTypes.Count > 0)
             {
-                // Step 1: Check if local database already contain the type
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                // Step 1: Check if local database already contains the type
+                Stopwatch sw = new Stopwatch();
                 Log.LogMessageFromResources("SearchingInDatabase", analyzer.UnresolvedTypes.Count);
 
                 sw.Start();
@@ -253,12 +285,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     String typeName = type;
                     if (type.Contains(", ")) typeName = type.Substring(0, type.IndexOf(", "));
-                    TypeElement te = langModelAccessor.GetTypeElement(typeName);
-                    if (te != null)
-                    {
-                        analyzer.UnresolvedTypes.Remove(type);
-                        numberOfResolvedTypes++;
-                    }
+
+                    // TODO dit wordt lastig. Misschien iets te doen met alle assembly elements laden?
+
+                    //TypeElement te = langModelAccessor.GetTypeElement(typeName);
+                    //if (te != null)
+                    //{
+                    //    analyzer.UnresolvedTypes.Remove(type);
+                    //    numberOfResolvedTypes++;
+                    //}
                 }
 
                 sw.Stop();
@@ -268,7 +303,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             if (analyzer.UnresolvedTypes.Count > 0)
             {
                 // Step 2: Analyze all referenced assemblies in the hope we find the unresolved types
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                Stopwatch sw = new Stopwatch();
                 Log.LogMessageFromResources("AnalyzingUnresolved", analyzer.UnresolvedTypes.Count);
 
                 try
@@ -286,7 +321,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogError(ex.Message);
                 }
                 finally {
-                    if (sw.IsRunning) sw.Stop();
+                    if (sw.IsRunning) 
+                        sw.Stop();
                 }
             }
             if (analyzer.UnresolvedTypes.Count > 0)
@@ -298,30 +334,40 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
             }
 
-            // Storing types in database
+            // Storing types 
             if (assemblies.Count > 0 && !Log.HasLoggedErrors)
             {
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                Stopwatch sw = new Stopwatch();
                 Log.LogMessageFromResources("StoreInDatabase", assemblies.Count);
 
                 sw.Start();
+                              
+                foreach (AssemblyConfig assembly in assembliesToStore)
+                {
+                    // save each assembly if needed (there must be an assemblyElement)
+                    if (assembly.Assembly != null)
+                        entitiesAccessor.SaveAssemblyElement(assembly.SerializedFilename, assembly.Assembly);  
+                    
+                }
 
-                langModelAccessor.AddAssemblies(assemblies, analyzer.ResolvedTypes);
-                langModelAccessor.AddFilterTypes(filterTypes);
-                langModelAccessor.AddFilterActions(filterActions);
+                // Set the assemblies to store
+                configContainer.Assemblies = assembliesToStore; 
+                
+                // Add the filtertypes and actions
+                configContainer.FilterTypes = filterTypes;
+                configContainer.FilterActions = filterActions;
 
-                langModelAccessor.Commit();
+                // Save the config
+                entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer); 
 
                 sw.Stop();
 
                 Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
-
-          
+                      
             // Close the analyzer
             analyzer.Close();
-            langModelAccessor.Close();
-
+      
             return !Log.HasLoggedErrors;
         }
 
@@ -331,12 +377,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <param name="languageModel">The language model.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilAnalyzerConfiguration configuration)
+        internal IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilAnalyzerConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
+            serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);
             serviceContainer.AddService(typeof(CecilAnalyzerConfiguration), configuration);
-            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new IlAnalyzerBuilderConfigurator());
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILAnalyzerBuilderConfigurator());
 
             return serviceContainer;
         }

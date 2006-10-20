@@ -322,7 +322,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Storing type information for {0} assemblies in database..
+        ///   Looks up a localized string similar to Saving {0} assemblies to disk..
         /// </summary>
         internal static string StoreInDatabase {
             get {
@@ -331,7 +331,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} assemblies with a total of {1} types stored in the database in {2:0.0000} seconds..
+        ///   Looks up a localized string similar to {0} assemblies with a total of {1} types saved in {2:0.0000} seconds..
         /// </summary>
         internal static string StoreInDatabaseCompleted {
             get {

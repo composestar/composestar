@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Composestar.StarLight.ILWeaver.Properties;
-
+using Composestar.StarLight.Configuration;
+ 
 namespace Composestar.StarLight.ILWeaver
 {
 
@@ -18,6 +19,7 @@ namespace Composestar.StarLight.ILWeaver
         readonly string _outputImagePath;
         readonly string _inputImagePath;
         private string _binfolder;
+        private AssemblyConfig _assemblyConfig;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
@@ -25,8 +27,14 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="outputImagePath">The output image path.</param>
         /// <param name="shouldSignOutput">if set to <c>true</c> [should sign output].</param>
         /// <param name="outputImageSNK">The output image SNK.</param>
-        public CecilWeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK, string inputImagePath, bool delaySignOutput)
+        /// <param name="inputImagePath">The input image path.</param>
+        /// <param name="delaySignOutput">if set to <c>true</c> [delay sign output].</param>
+        /// <param name="assemblyConfig">The assembly config.</param>
+        public CecilWeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK, string inputImagePath, bool delaySignOutput, AssemblyConfig assemblyConfig)
         {
+            if (assemblyConfig == null)
+                throw new ArgumentNullException("AssemblyConfig"); 
+
             if (shouldSignOutput && string.IsNullOrEmpty(outputImageSNK)) 
                 throw new ArgumentException(Resources.NoSNKSpecified, "outputImageSNK");
 
@@ -38,10 +46,29 @@ namespace Composestar.StarLight.ILWeaver
 
             _binfolder = System.IO.Path.GetDirectoryName(inputImagePath); 
             _outputImageSNK = outputImageSNK;
+            _assemblyConfig = assemblyConfig; 
             _shouldSignOutput = shouldSignOutput;
             _outputImagePath = outputImagePath;
             _inputImagePath = inputImagePath;
             _delaySignOutput = delaySignOutput;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CecilWeaverConfiguration"/> class.
+        /// </summary>
+        /// <param name="assemblyConfig">The assembly config.</param>
+        public CecilWeaverConfiguration(AssemblyConfig assemblyConfig)
+        {
+            if (assemblyConfig == null)
+                throw new ArgumentNullException("AssemblyConfig");
+
+            _binfolder = System.IO.Path.GetDirectoryName(assemblyConfig.Filename);
+            _outputImageSNK = string.Empty;
+            _assemblyConfig = assemblyConfig;
+            _shouldSignOutput = false;
+            _outputImagePath = assemblyConfig.Filename;
+            _inputImagePath = assemblyConfig.Filename;
+            _delaySignOutput = false;
         }
 
         /// <summary>
@@ -52,6 +79,18 @@ namespace Composestar.StarLight.ILWeaver
         {
             get { return _outputImageSNK; }
         }
+
+        /// <summary>
+        /// Assembly configuration
+        /// </summary>
+        /// <returns>Assembly config</returns>
+        public AssemblyConfig AssemblyConfiguration
+        {
+            get
+            {
+                return _assemblyConfig;
+            } 
+        } // AssemblyConfiguration
 
         /// <summary>
         /// Gets or sets the binfolder.
@@ -112,7 +151,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath)
         {
-            return new CecilWeaverConfiguration(inputImagePath, false, string.Empty, inputImagePath, false);
+            return new CecilWeaverConfiguration(inputImagePath, false, string.Empty, inputImagePath, false, null);
         }
 
         /// <summary>
@@ -123,7 +162,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath, string outputImagePath)
         {
-            return new CecilWeaverConfiguration(outputImagePath, false, string.Empty, inputImagePath, false);
+            return new CecilWeaverConfiguration(outputImagePath, false, string.Empty, inputImagePath, false, null);
         }
 
         internal void RuntimeValidate()

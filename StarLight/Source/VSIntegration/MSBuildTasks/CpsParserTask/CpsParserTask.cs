@@ -2,7 +2,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel.Design;  
+using System.ComponentModel.Design;
+using System.Diagnostics;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -11,9 +12,8 @@ using Microsoft.Practices.ObjectBuilder;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.CpsParser;
-using Composestar.Repository.LanguageModel;
-using Composestar.Repository.Configuration;
-using Composestar.Repository.Db4oContainers;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.Configuration;   
 using Composestar.Repository;
 
 #endregion
@@ -25,6 +25,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class CpsParserTask : Task
     {
+
         #region Constructor
         
         /// <summary>
@@ -97,10 +98,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
         public override bool Execute()
         {
             List<string> refTypes = new List<string>();
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                        
-            RepositoryAccess repositoryAccess = null;
-
+            Stopwatch sw = new Stopwatch();                        
+       
             try
             {
                 sw.Start();
@@ -109,14 +108,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 
                 // Open DB
                 Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
-                repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
+                IEntitiesAccessor entitiesAccessor = new EntitiesAccessor(); 
 
-                // TODO this can be optimized. Save data in the database so we also know if concerns are not changes
-                // Do not start master when assemblies and concerns are not changed.
+                ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);               
 
-                // Remove all concerns first because the user may have removed a concern from the project
-                // after a previous run.
-                repositoryAccess.DeleteConcernInformations();
+                // Clear all existing concerns
+                configContainer.Concerns.Clear();  
 
                 // Parse all concern files and add to the database
                 foreach (ITaskItem item in ConcernFiles)
@@ -139,10 +136,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     string path = Path.GetDirectoryName(concernFile);
                     string filename = Path.GetFileName(concernFile);
 
-                    ConcernInformation ci = new ConcernInformation(filename, path);
+                    ConcernElement ce = new ConcernElement();
+                    ce.PathName = path;
+                    ce.FileName = filename;
+                    ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks; 
                   
                     Log.LogMessageFromResources("AddingConcernFile", filename);
-                    repositoryAccess.AddConcern(ci);
+                    configContainer.Concerns.Add(ce);
                 }
 
                 sw.Stop();
@@ -162,7 +162,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 } // foreach  (item)
 
-                //
+                // Save the configContainer
+                entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer); 
                 
             }
             catch (CpsParserException ex)
@@ -173,11 +174,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 Log.LogErrorFromException(ex, false);
             }
-            finally
-            {
-                if (repositoryAccess != null)   repositoryAccess.Close(); 
-            } // finally
-           
+                
             return !Log.HasLoggedErrors;
 
         } // Execute()
@@ -195,6 +192,4 @@ namespace Composestar.StarLight.MSBuild.Tasks
             return serviceContainer;
         }
     }
-
-
 }

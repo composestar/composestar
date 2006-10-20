@@ -8,8 +8,9 @@ using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.ILWeaver;
-using Composestar.Repository.Db4oContainers;
+//using Composestar.StarLight.ILWeaver;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.Configuration;
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -23,17 +24,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
         private const string ContextInfoFileName = "Composestar.StarLight.ContextInfo.dll";
 
         #region Properties for MSBuild
-
-        private ITaskItem[] _assemblyFiles;
-
-        // TODO Weaver should only work on the assemblies in the database. Thus supplied by the analyzer.
-
-        [Required()]
-        public ITaskItem[] AssemblyFiles
-        {
-            get { return _assemblyFiles; }
-            set { _assemblyFiles = value; }
-        }
 
         private string _repositoryFilename;
 
@@ -78,70 +68,66 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             Log.LogMessageFromResources("WeavingStartText");
 
-            String filename;
-            String extension;
-            IILWeaver weaver = null;
-            ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
-            
-            try
-            {
-                foreach (ITaskItem item in AssemblyFiles)
-                {
-                    filename = item.ToString();
-                    extension = Path.GetExtension(filename).ToLower(); 
-                    if (!extension.Equals(".dll") && !extension.Equals(".exe"))
-                    {
-                        continue;
-                    } // foreach  (item)
-                
+            //String filename;
+            //String extension;
+            //IILWeaver weaver = null;
+            //IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
 
-                    // Exclude StarLight ContextInfo assembly from the weaving process
-                    if (filename.EndsWith(ContextInfoFileName)) continue;
+            //// Get the configuration container
+            //ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
-                    Log.LogMessageFromResources("WeavingFile", filename);
+            //try
+            //{
+            //    // For each assembly in the config
+            //    foreach (AssemblyConfig assembly in configContainer.Assemblies)
+            //    {                    
+                              
+            //        // Exclude StarLight ContextInfo assembly from the weaving process
+            //        if (assembly.Filename.EndsWith(ContextInfoFileName)) continue;
 
-                    // Preparing config
-                    //CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(Path.Combine(Path.GetDirectoryName(filename), @"woven\" + Path.GetFileName(filename)), false, "", filename, false);
-                    CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(filename, false, "", filename, false);
-                    if (!String.IsNullOrEmpty(BinFolder))
-                    {
-                        configuration.BinFolder = BinFolder;
-                    }
+            //        Log.LogMessageFromResources("WeavingFile", assembly.Filename);
 
-                    try
-                    {
-                        // Retrieve a weaver instance from the ObjectManager
-                        weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(langModelAccessor, configuration));
+            //        // Preparing config
+            //        CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly);
 
-                        // Perform weaving
-                        weaver.DoWeave();
+            //        if (!String.IsNullOrEmpty(BinFolder))
+            //        {
+            //            configuration.BinFolder = BinFolder;
+            //        }
 
-                        Log.LogMessageFromResources("WeavingCompleted", weaver.LastDuration.TotalSeconds);
-                    }
-                    catch (ILWeaverException ex)
-                    {
-                        Log.LogErrorFromException(ex, false);
-                        if (ex.InnerException != null)
-                            Log.LogErrorFromException(ex.InnerException, true);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        Log.LogErrorFromException(ex, true);
-                    }
-                    catch (BadImageFormatException ex)
-                    {
-                        Log.LogErrorFromException(ex, true);
-                    }
+            //        try
+            //        {
+            //            // Retrieve a weaver instance from the ObjectManager
+            //            weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration));
 
-                }
-            }
-            finally
-            {
-                // Close the weaver, so it closes the database, performs cleanups etc
-                if (weaver != null)
-                    weaver.Close();
-                langModelAccessor.Close(); 
-            }
+            //            // Perform weaving
+            //            weaver.DoWeave();
+
+            //            Log.LogMessageFromResources("WeavingCompleted", weaver.LastDuration.TotalSeconds);
+            //        }
+            //        catch (ILWeaverException ex)
+            //        {
+            //            Log.LogErrorFromException(ex, false);
+            //            if (ex.InnerException != null)
+            //                Log.LogErrorFromException(ex.InnerException, true);
+            //        }
+            //        catch (ArgumentException ex)
+            //        {
+            //            Log.LogErrorFromException(ex, true);
+            //        }
+            //        catch (BadImageFormatException ex)
+            //        {
+            //            Log.LogErrorFromException(ex, true);
+            //        }
+
+            //    }
+            //}
+            //finally
+            //{
+            //    // Close the weaver, so it closes the database, performs cleanups etc
+            //    if (weaver != null)
+            //        weaver.Close();                
+            //}
 
             return !Log.HasLoggedErrors;
         }
@@ -152,15 +138,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <param name="languageModel">The language model.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilWeaverConfiguration configuration)
-        {
-            ServiceContainer serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
-            serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration);
-            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverBuilderConfigurator());
+        //internal IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilWeaverConfiguration configuration)
+        //{
+        //    ServiceContainer serviceContainer = new ServiceContainer();
+        //    serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);
+        //    serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration);
+        //    serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverBuilderConfigurator());
 
-            return serviceContainer;
-        }
+        //    return serviceContainer;
+        //}
 
     }
 }

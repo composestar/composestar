@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Text;
-
-using Composestar.Repository.LanguageModel;
-using Composestar.Repository;
-
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.Configuration;
+  
 namespace Composestar.StarLight.CoreServices
 {
 
@@ -51,7 +49,6 @@ namespace Composestar.StarLight.CoreServices
         /// </summary>
         List<FilterActionElement> FilterActions { get; }
         
-
         /// <summary>
         /// Gets the duration of the last executed method.
         /// </summary>

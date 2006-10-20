@@ -30,9 +30,10 @@ namespace Composestar.StarLight.ILWeaver
     /// </summary>
     public class CecilILWeaver : IILWeaver
     {
+
         private TimeSpan m_LastDuration;
         private CecilWeaverConfiguration _configuration;
-        private ILanguageModelAccessor _languageModelAccessor;
+        private IEntitiesAccessor _entitiesAccessor;
         private int _internalsAdded;
         private int _externalsAdded;
         private int _outputFiltersAdded;
@@ -43,18 +44,18 @@ namespace Composestar.StarLight.ILWeaver
         /// Initializes a new instance of the <see cref="T:CecilILWeaver"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="languageModelAccessor">The language model accessor.</param>
-        public CecilILWeaver(CecilWeaverConfiguration configuration, ILanguageModelAccessor languageModelAccessor)
+        /// <param name="entitiesAccessor">The entities accessor.</param>
+        public CecilILWeaver(CecilWeaverConfiguration configuration, IEntitiesAccessor entitiesAccessor)
         {
             #region Check for null values
 
             if (configuration == null) throw new ArgumentNullException("configuration");
-            if (languageModelAccessor == null) throw new ArgumentNullException("languageModelAccessor");
+            if (entitiesAccessor == null) throw new ArgumentNullException("entitiesAccessor");
 
             #endregion
 
             _configuration = configuration;
-            _languageModelAccessor = languageModelAccessor;
+            _entitiesAccessor = entitiesAccessor;
 
             CecilUtilities.BinFolder = _configuration.BinFolder;
 
@@ -144,25 +145,25 @@ namespace Composestar.StarLight.ILWeaver
             
             // Prepare the data for this assembly (precaching)
             AssemblyElement assemblyElement;
-            assemblyElement = _languageModelAccessor.GetAssemblyElementByName(targetAssembly.Name.FullName);
+            assemblyElement = _entitiesAccessor.LoadAssemblyElement(_configuration.AssemblyConfiguration.SerializedFilename);
             if (assemblyElement == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.AssemblyElementNotFound, targetAssembly.Name.FullName));
 
             // Get all the typeElements for this Assembly
-            Dictionary<String, TypeElement> typeElements = _languageModelAccessor.GetTypeElementsByAssembly(assemblyElement);
+            Dictionary<String, TypeElement> typeElements = _entitiesAccessor.GetTypeElementsByAssembly(assemblyElement);
 
             // If empty, we can quit
             if (typeElements.Count == 0)
                 return;
 
             // Get all the externals
-            Dictionary<String, List<External>> externals = _languageModelAccessor.GetExternals();
+            Dictionary<String, List<External>> externals = _entitiesAccessor.GetExternals();
 
             // Get all the internals
-            Dictionary<String, List<Internal>> internals = _languageModelAccessor.GetInternals();
+            Dictionary<String, List<Internal>> internals = _entitiesAccessor.GetInternals();
 
             // Get all the methodElements
-            Dictionary<String, List<MethodElement>> methodElements = _languageModelAccessor.GetMethodElements();
+            Dictionary<String, List<MethodElement>> methodElements = _entitiesAccessor.GetMethodElements();
 
             // Run the optimizer
             typeElements = OptimizeTypeElements(ref typeElements, ref externals, ref internals, ref methodElements, assemblyElement);
@@ -276,7 +277,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
 
-                TypeElement internalTypeElement = _languageModelAccessor.GetTypeElement(internalTypeString);
+                TypeElement internalTypeElement = _entitiesAccessor.GetTypeElement(internalTypeString);
                 if (internalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
 
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, internalTypeElement.Assembly, internalTypeElement.FromDLL);
@@ -364,7 +365,7 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (External external in externals)
             {
-                TypeElement externalTypeElement = _languageModelAccessor.GetTypeElement(external.Type);
+                TypeElement externalTypeElement = _entitiesAccessor.GetTypeElement(external.Type);
                 if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
 
 
@@ -385,7 +386,7 @@ namespace Composestar.StarLight.ILWeaver
                 _externalsAdded++;
 
                 // Get the method referenced by the external
-                TypeElement initTypeElement = _languageModelAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
+                TypeElement initTypeElement = _entitiesAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
                 if (initTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target)));
 
                 MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, initTypeElement.FullName, initTypeElement.Assembly, initTypeElement.FromDLL);
@@ -500,7 +501,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Worker = worker;
             visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
-            visitor.RepositoryAccess = _languageModelAccessor;
+            visitor.RepositoryAccess = _entitiesAccessor;
 
             // Visit the elements in the block
             try
@@ -554,7 +555,7 @@ namespace Composestar.StarLight.ILWeaver
             if (method.HasBody == false)
                 return;
 
-            IList<CallElement> calls = _languageModelAccessor.GetCallByMethodElement(methodElement);
+            IList<CallElement> calls = _entitiesAccessor.GetCallByMethodElement(methodElement);
 
             if (calls == null || calls.Count == 0)
                 return;
@@ -630,7 +631,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         void IILWeaver.Close()
         {
-            _languageModelAccessor.Close();
+            _entitiesAccessor.Close();
         }
 
         #region Helper functions
@@ -684,7 +685,22 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="reader">Reader</param>
         private void ParseInstruction(Block block, XmlTextReader reader)
         {
-            string name = reader.Name;
+            string name = reader.Name.ToLower();
+            switch (name)
+            {
+                case "block":
+                    Block b = new Block();
+                    ParseInstruction(b, reader);
+                    block.addInstruction(b); 
+                    break;
+                case "contextinstruction":
+                    //ContextInstruction c = new ContextInstruction(reader.GetAttribute("type"), reader.GetAttribute("code"));
+                    //ParseInstruction(c.InnerBlock, reader); 
+                    break;
+                default:
+                    break;
+            }
+
            // Console.WriteLine("name is {0}", name);
                         
 

@@ -37,7 +37,7 @@ namespace Composestar.StarLight.ILWeaver
         private MethodDefinition m_Method;
         private int m_NumberOfBranches = 0;
         private AssemblyDefinition m_TargetAssemblyDefinition;
-        private ILanguageModelAccessor m_LanguageModelAccessor;  // FIXME we now pass this model through the visitors because we need the repository to get the conditions. Not a good seperation...
+        private IEntitiesAccessor m_entitiesAccessor;  // FIXME we now pass this model through the visitors because we need the repository to get the conditions. Not a good seperation...
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
         #endregion
 
@@ -111,15 +111,15 @@ namespace Composestar.StarLight.ILWeaver
         /// Gets or sets the repository access.
         /// </summary>
         /// <value>The repository access.</value>
-        public ILanguageModelAccessor RepositoryAccess
+        public IEntitiesAccessor RepositoryAccess
         {
             get
             {
-                return m_LanguageModelAccessor;
+                return m_entitiesAccessor;
             }
             set
             {
-                m_LanguageModelAccessor = value;
+                m_entitiesAccessor = value;
             }
         }
         #endregion

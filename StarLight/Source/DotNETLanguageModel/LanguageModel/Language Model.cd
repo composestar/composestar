@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="Composestar.StarLight.LanguageModel.AssemblyElement">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\AssemblyElement.cs</FileName>
+      <HashCode>EgAAIAAAAAAAAAQAAAACAAQAAAAAAAAAAAAAAABAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Types" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.TypeElement">
+    <Position X="9.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\TypeElement.cs</FileName>
+      <HashCode>AAQgIQAACBQAgIAAAIDCAAZAADAAIECqAAAAAUAAmME=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Methods" />
+      <Property Name="Fields" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.MethodElement">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\MethodElement.cs</FileName>
+      <HashCode>AAAAIAAAQBAEAAAQECABAAQIAiAAAGAAAIMAAABEFAE=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Body" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parameters" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.ParameterElement">
+    <Position X="3.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\ParameterElement.cs</FileName>
+      <HashCode>AAAAIAAAAAAAAAQAIBAAAAQEAAAAAAAAAQAAAAgAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ParameterOption" />
+    </ShowAsAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.FieldElement">
+    <Position X="12.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\FieldElement.cs</FileName>
+      <HashCode>AAAAIAAAQAAAAAQAAAAAAAQIACAAAEAAAQAAAAAAFAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.MethodBody">
+    <Position X="6.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\MethodBody.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Calls" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.CallElement">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\CallElement.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Composestar.StarLight.LanguageModel.ParameterOptions">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\ParameterOptions.cs</FileName>
+      <HashCode>QAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAACQ=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+</ClassDiagram>

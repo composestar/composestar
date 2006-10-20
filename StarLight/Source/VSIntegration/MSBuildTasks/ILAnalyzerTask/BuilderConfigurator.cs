@@ -9,11 +9,11 @@ using Composestar.StarLight.CoreServices;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
-    class IlAnalyzerBuilderConfigurator : ObjectBuilderConfiguratorBase
+    class ILAnalyzerBuilderConfigurator : ObjectBuilderConfiguratorBase
     {
         public override void ApplyConfiguration(IBuilder<BuilderStage> builder)
         {
-            builder.Policies.Set<ITypeMappingPolicy>(new TypeMappingPolicy(typeof(RepositoryAccess), null), typeof(ILanguageModelAccessor), null);
+            builder.Policies.Set<ITypeMappingPolicy>(new TypeMappingPolicy(typeof(EntitiesAccessor), null), typeof(IEntitiesAccessor), null);
         }
     }
 

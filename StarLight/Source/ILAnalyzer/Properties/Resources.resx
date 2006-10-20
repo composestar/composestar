@@ -138,4 +138,7 @@
   <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
     <value>The config collection did not contain a valid filename to the repository file.</value>
   </data>
+  <data name="UnableToResolveAssembly" xml:space="preserve">
+    <value>Unable to resolve assembly '{0}'.</value>
+  </data>
 </root>

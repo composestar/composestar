@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.4" />
+  <Class Name="Composestar.StarLight.Configuration.ConfigurationContainer">
+    <Position X="3.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\Configuration.cs</FileName>
+      <HashCode>UAAAACAgAAAAAgADAAEAAAQABAAIAAQAEAgAgABAAAA=</HashCode>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Concerns" />
+      <Property Name="Assemblies" />
+      <Property Name="FilterActions" />
+      <Property Name="FilterTypes" />
+    </ShowAsCollectionAssociation>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.Configuration.AssemblyConfig">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\AssemblyConfig.cs</FileName>
+      <HashCode>EAAAIAAAAAAAQAQAAAACAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.Concerns.ConcernElement">
+    <Position X="3.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Concerns\ConcernElement.cs</FileName>
+      <HashCode>GAAAAEAAAAAAAAQAAAACCAIAAAAAAAAAAAAAAABAAAg=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.FilterActionElement">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\FilterActionElement.cs</FileName>
+      <HashCode>AIAEIAAAAAAgAIAAgAgAAAYAIACIAACAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.LanguageModel.FilterTypeElement">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>LanguageModel\FilterTypeElement.cs</FileName>
+      <HashCode>AAAAIACAAACAAAAAAAAgAAQACACAACIAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+</ClassDiagram>
