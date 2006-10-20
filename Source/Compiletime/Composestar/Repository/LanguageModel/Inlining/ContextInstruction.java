@@ -18,10 +18,10 @@ public class ContextInstruction extends InlineInstruction implements IVisitable
 	public final static int RESTORE_JOIN_POINT_CONTEXT = 31;
     public final static int RETURN_ACTION = 100;
 
-	public ContextInstruction(int type, int methodId, Block innerBlock)
+	public ContextInstruction(int type, int code, Block innerBlock)
 	{
 		this.type = type;
-		this.code = methodId;
+		this.code = code;
 		this.innerBlock = innerBlock;
 	}
 

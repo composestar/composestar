@@ -338,7 +338,8 @@ This target will be called whenever the Clean target is invoked.
  
     <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" 
         AssemblyFiles="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" 
-        RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" />
+        RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"
+        IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" />
   </Target>
 
   <!--MasterCaller target -->
@@ -352,12 +353,12 @@ This target will be called whenever the Clean target is invoked.
   <Target
        Name="ILWeaverRunner">
     <Message Text="Performing IL weaving." />
-    <ILWeaverTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"  />
+    <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"  />
   </Target>
 
   <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True'">
     <Message Text ="Verifying generated IL code." />
-    <ILVerifyTask AssemblyFiles="@(ReferenceCopyLocalPaths->'$(ProjectDir)$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" />    
+    <ILVerifyTask RepositoryFilename="$(RepositoryFilename)" />
   </Target>
 
  

@@ -13,7 +13,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     {
         public override void ApplyConfiguration(IBuilder<BuilderStage> builder)
         {
-            builder.Policies.Set<ITypeMappingPolicy>(new TypeMappingPolicy(typeof(RepositoryAccess), null), typeof(ILanguageModelAccessor), null);
+            builder.Policies.Set<ITypeMappingPolicy>(new TypeMappingPolicy(typeof(EntitiesAccessor), null), typeof(IEntitiesAccessor), null);
         }
     }
 

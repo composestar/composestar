@@ -43,7 +43,7 @@ namespace Composestar.StarLight.ILWeaver
         private AssemblyDefinition m_TargetAssemblyDefinition;
         private FilterTypes m_FilterType;
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
-        private ILanguageModelAccessor m_LanguageModelAccessor;
+        private IEntitiesAccessor m_entitiesAccessor;
         #endregion
 
         #region FilterType Enumeration
@@ -90,15 +90,15 @@ namespace Composestar.StarLight.ILWeaver
         /// Gets or sets the repository access.
         /// </summary>
         /// <value>The repository access.</value>
-        public ILanguageModelAccessor RepositoryAccess
+        public IEntitiesAccessor RepositoryAccess
         {
             get
             {
-                return m_LanguageModelAccessor;
+                return m_entitiesAccessor;
             }
             set
             {
-                m_LanguageModelAccessor = value;
+                m_entitiesAccessor = value;
             }
         }
 
@@ -228,7 +228,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             ArgumentAttributes attr = ArgumentAttributes.In;
 
-            if ((attrMono & ParamAttributes.In) == ParamAttributes.In) 
+            if ((attrMono & ParamAttributes.Out) != ParamAttributes.Out) 
                 attr = attr | ArgumentAttributes.In;
             else
                 attr &= ~ArgumentAttributes.In;
@@ -567,7 +567,7 @@ namespace Composestar.StarLight.ILWeaver
             conditionsVisitor.Method = Method;
             conditionsVisitor.Worker = Worker;
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
-            conditionsVisitor.RepositoryAccess = m_LanguageModelAccessor;
+            conditionsVisitor.RepositoryAccess = m_entitiesAccessor;
             ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
 
             // Add the instructions containing the conditions to the IL instruction list
@@ -873,7 +873,7 @@ namespace Composestar.StarLight.ILWeaver
 
                         // Determine type
                         Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
-                        Instructions.Add(Worker.Create(OpCodes.Call,CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle )));                       
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle )));                       
 
                         // Determine the parameter direction
                         ArgumentAttributes attr = ConvertAttributes(param.Attributes);

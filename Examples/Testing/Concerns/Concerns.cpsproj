@@ -4,7 +4,7 @@
     <Name>"Concerns"</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{a2606d7a-857f-49c4-966d-65c6f2fb7d93}</ProjectGuid>
-    <RepositoryFilename>obj\StarLight.yap</RepositoryFilename>
+    <RepositoryFilename>obj\StarLight.xml</RepositoryFilename>
     <ProjectType>StarLight</ProjectType>
     <RootNamespace>Concerns</RootNamespace>
   </PropertyGroup>

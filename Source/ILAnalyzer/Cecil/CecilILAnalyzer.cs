@@ -16,11 +16,13 @@ using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
 using Composestar.Repository;
-using Composestar.Repository.LanguageModel;
+using Composestar.StarLight.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
+using Composestar.StarLight.Configuration;   
 
 using Composestar.StarLight.ContextInfo.FilterTypes;
+using Composestar.StarLight.Utilities.Cecil;
 
 namespace Composestar.StarLight.ILAnalyzer
 {
@@ -30,12 +32,6 @@ namespace Composestar.StarLight.ILAnalyzer
     public class CecilILAnalyzer : IILAnalyzer
     {
 
-        #region Constants
-
-        private const string ModuleName = "<Module>";
-
-        #endregion
-
         #region Private Variables
       
         private TimeSpan _lastDuration = TimeSpan.Zero;
@@ -44,18 +40,14 @@ namespace Composestar.StarLight.ILAnalyzer
         private List<String> _cachedTypes = new List<String>();
         private bool _saveType = false;
         private bool _saveInnerType = false;
-        private bool _processMethodBody = true;
         private bool _processAttributes = false;
         private string _binFolder = "";
 
         private CecilAnalyzerConfiguration _configuration;
-        private ILanguageModelAccessor _languageModelAccessor;
+        private IEntitiesAccessor _entitiesAccessor;
 
-        private string _filterTypeName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterType).FullName;
-        private string _filterTypeAnnotationName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterTypeAttribute).FullName;
-        private string _filterActionName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterAction).FullName;
-        private string _filterActionAnnotationName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAttribute).FullName;
-
+        private StarLightAssemblyResolver _dar;
+ 
         private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
         private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
 
@@ -69,7 +61,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="configuration">The configuration.</param>
         /// <param name="languageModelAccessor">The language model accessor.</param>
-        public CecilILAnalyzer(CecilAnalyzerConfiguration configuration, ILanguageModelAccessor languageModelAccessor)
+        public CecilILAnalyzer(CecilAnalyzerConfiguration configuration, IEntitiesAccessor entitiesAccessor)
         {
             #region Check for null values
 
@@ -78,13 +70,36 @@ namespace Composestar.StarLight.ILAnalyzer
             #endregion
 
             _configuration = configuration;
-            _languageModelAccessor = languageModelAccessor;
-            _processMethodBody = configuration.DoMethodCallAnalysis;
+            _entitiesAccessor = entitiesAccessor;
+
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the assembly resolver.
+        /// </summary>
+        /// <value>The assembly resolver.</value>
+        private StarLightAssemblyResolver AssemblyResolver
+        {
+            get
+            {
+                if (_dar == null)
+                {
+                    lock (this)
+                    {
+                        if (_dar == null)
+                        {
+                            _dar = new StarLightAssemblyResolver(_configuration.BinFolder); 
+                        } // if
+                    } // lock
+
+                } // if
+                return _dar;
+            } 
+        }
 
         /// <summary>
         /// Gets the unresolved types.
@@ -113,6 +128,10 @@ namespace Composestar.StarLight.ILAnalyzer
             get { return _cachedTypes; }
         }
 
+        /// <summary>
+        /// Gets all encountered FilterTypes
+        /// </summary>
+        /// <value></value>
         public List<FilterTypeElement> FilterTypes
         {
             get
@@ -121,6 +140,10 @@ namespace Composestar.StarLight.ILAnalyzer
             }
         }
 
+        /// <summary>
+        /// Gets all encountered FilterActions
+        /// </summary>
+        /// <value></value>
         public List<FilterActionElement> FilterActions
         {
             get
@@ -131,616 +154,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #endregion
 
-        public String BinFolder
-        {
-            get { return _binFolder; }
-            set { _binFolder = value; }
-        }
+        #region IILAnalyzer Implementation
 
-        #region Helper Functions
-
-        /// <summary>
-        /// Extracts the attribute elements.
-        /// </summary>
-        /// <param name="parent">The parent.</param>
-        /// <param name="attributes">The attributes.</param>
-        private void ExtractAttributeElements(IRepositoryElement parent, CustomAttributeCollection attributes)
-        {
-            if (!this._processAttributes) return;
-
-            foreach (CustomAttribute attr in attributes)
-            {
-                AttributeElement ae = new AttributeElement();
-                ae.Type = attr.Constructor.Name;
-                if (attr.ConstructorParameters.Count > 0)
-                {
-                    ae.Value = attr.ConstructorParameters[0].ToString();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates the Assembly Fully Qualified Name.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        private String CreateAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
-        {
-            if (targetAssemblyDefinition == null)
-                throw new ArgumentNullException("targetAssemblyDefinition");
-
-            if (type == null)
-                throw new ArgumentNullException("type");
-
-
-            if (type.Scope != null)
-            {
-                // Locally declared type
-                if (type.Scope is ModuleDefinition)
-                {
-                    if (((ModuleDefinition)type.Scope).Assembly != null)
-                    {
-                        return ((ModuleDefinition)type.Scope).Assembly.Name.FullName;
-                    }
-                }
-
-                // Referenced type
-                foreach (AssemblyNameReference assembly in targetAssemblyDefinition.MainModule.AssemblyReferences)
-                {
-                    if (type.Scope.Name == assembly.Name)
-                    {
-                        return assembly.FullName;
-                    }
-                }
-            }
-
-            return "NULL";
-        }
-
-        /// <summary>
-        /// Creates the name of the type.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        private string CreateTypeName(TypeReference type)
-        {
-            String typeName = type.FullName;
-
-            if (typeName.Contains("`")) typeName = String.Format("{0}.{1}", type.Namespace, type.Name);
-            if (typeName.EndsWith("&")) typeName = typeName.Substring(0, typeName.Length - 1);
-            if (typeName.EndsWith("**")) typeName = typeName.Substring(0, typeName.Length - 2);
-            if (typeName.EndsWith("*")) typeName = typeName.Substring(0, typeName.Length - 1);
-            if (typeName.Contains("[")) typeName = typeName.Substring(0, typeName.IndexOf("[", 0));
-            if (typeName.Contains(" modreq(")) typeName = typeName.Substring(0, typeName.IndexOf(" modreq(", 0));
-            if (typeName.Contains(" modopt(")) typeName = typeName.Substring(0, typeName.IndexOf(" modopt(", 0));
-
-            return typeName;
-        }
-
-        /// <summary>
-        /// Creates the type Assembly Fully Qualified Name.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        private String CreateTypeAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
-        {
-            return String.Format("{0}, {1}", CreateTypeName(type), CreateAFQN(targetAssemblyDefinition, type));
-        }
-
-
-
-        /// <summary>
-        /// Gets the parameter types list.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        /// <returns></returns>
-        private String[] GetParameterTypesList(MethodDefinition method)
-        {
-            List<String> ret = new List<String>();
-            foreach (ParameterDefinition param in method.Parameters)
-            {
-                ret.Add(param.ParameterType.FullName);
-            }
-
-            return ret.ToArray();
-        }
-        #endregion
-
-        #region Extract type information
-
-        /// <summary>
-        /// Extracts all types.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        private AssemblyElement ExtractAllTypes(AssemblyDefinition targetAssemblyDefinition, String fileName)
-        {
-            AssemblyElement ae = new AssemblyElement();
-
-            ae.Name = targetAssemblyDefinition.Name.FullName;
-            ae.FileName = fileName;
-
-            if (!String.IsNullOrEmpty(fileName))
-            {
-                ae.Timestamp = File.GetLastWriteTime(fileName).Ticks;
-            }
-            else
-            {
-                ae.Timestamp = TimeSpan.Zero.Ticks;
-            }
-
-            ae.TypeElements = ExtractTypes(targetAssemblyDefinition, ae, targetAssemblyDefinition.MainModule.Types);
-
-            return ae;
-        }
-
-        /// <summary>
-        /// Extracts the field.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="field">The field.</param>
-        /// <returns></returns>
-        private FieldElement ExtractField(AssemblyDefinition targetAssemblyDefinition, FieldDefinition field)
-        {
-            FieldElement fe = new FieldElement(System.Guid.NewGuid().ToString());
-
-            fe.Name = field.Name;
-            fe.Type = field.FieldType.FullName;
-
-            fe.IsPrivate = field.Attributes == Mono.Cecil.FieldAttributes.Private;
-            fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
-            fe.IsStatic = field.IsStatic;
-
-            // If the field type has not yet been resolved, add it to the list of unresolved types
-            //String fieldTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, field.FieldType);
-            //if (this._saveInnerType && !CachedTypes.Contains(fieldTypeAFQN) && !UnresolvedTypes.Contains(fieldTypeAFQN))
-            //{
-            //    UnresolvedTypes.Add(fieldTypeAFQN);
-            //}
-
-            return fe;
-        }
-
-        /// <summary>
-        /// Extracts the fields.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="fields">The fields.</param>
-        /// <returns></returns>
-        private FieldElement[] ExtractFields(AssemblyDefinition targetAssemblyDefinition, FieldDefinitionCollection fields)
-        {
-            List<FieldElement> result = null;
-
-            if (_configuration.DoFieldAnalysis)
-            {
-                result = new List<FieldElement>(fields.Count);
-
-                foreach (FieldDefinition field in fields)
-                {
-                    result.Add(ExtractField(targetAssemblyDefinition, field));
-                }
-            }
-            else
-            {
-                result = new List<FieldElement>(0);
-            }
-
-            return result.ToArray();
-        }
-
-        /// <summary>
-        /// Extracts the filter action.
-        /// </summary>
-        /// <param name="type">The type.</param>       
-        private void ExtractFilterAction(TypeDefinition type)
-        {
-            // We use .NET reflection here, because Cecil can not read the enumerations
-          
-            // TODO Loading an assembly locks the assembly for the duration of the appdomain.
-            // The weaver can no loner access the file to weave in it.
-            // We now use ShadowCopy to overcome this. It is an obsolute method
-            // Switch to a seperate appdomain.
-
-            AppDomain.CurrentDomain.SetShadowCopyFiles();
-            AppDomain.CurrentDomain.AppendPrivatePath(type.Module.Image.FileInformation.Directory.FullName);
-            m_rootAssembly = type.Module.Image.FileInformation.Directory.FullName;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += new ResolveEventHandler(MyReflectionOnlyResolveEventHandler);
-          
-            Assembly assembly = Assembly.ReflectionOnlyLoadFrom(type.Module.Image.FileInformation.FullName);
-            // We have to inject the ContextInfo into the domain, or we cannot find the specific type.
-            Assembly assmContext = 
-                Assembly.ReflectionOnlyLoadFrom(Path.Combine(type.Module.Image.FileInformation.Directory.FullName, 
-                "Composestar.StarLight.ContextInfo.dll"));
-
-            if (assembly == null)
-            {
-                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
-            } // if
-                       
-            Type refType = assembly.GetType(type.FullName);
-            
-            if(refType == null) {
-                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
-            } // if
-
-            IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
-            foreach (CustomAttributeData cad in attributes)
-            {
-                if (!cad.ToString().Contains("Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAttribute")) continue;
-                
-                FilterActionElement faEl = new FilterActionElement();
-
-                faEl.FullName = type.FullName;
-                faEl.Name = ((string)cad.ConstructorArguments[0].Value);
-
-                switch ((FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
-                {
-                    case FilterFlowBehaviour.Continue:
-                        faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
-                        break;
-                    case FilterFlowBehaviour.Exit:
-                        faEl.FlowBehaviour = FilterActionElement.FLOW_EXIT;
-                        break;
-                    case FilterFlowBehaviour.Return:
-                        faEl.FlowBehaviour = FilterActionElement.FLOW_RETURN;
-                        break;
-                    default:
-                        faEl.FlowBehaviour = FilterActionElement.FLOW_CONTINUE;
-                        break;
-                } // switch
-
-                switch ((MessageSubstitutionBehaviour)cad.ConstructorArguments[1].Value)
-                {
-                    case MessageSubstitutionBehaviour.Original:
-                        faEl.MessageChangeBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
-                        break;
-                    case MessageSubstitutionBehaviour.Substituted:
-                        faEl.MessageChangeBehaviour = FilterActionElement.MESSAGE_SUBSTITUTED;
-                        break;
-                    case MessageSubstitutionBehaviour.Any:
-                        faEl.MessageChangeBehaviour = FilterActionElement.MESSAGE_ANY;
-                        break;
-                    default:
-                        faEl.MessageChangeBehaviour = FilterActionElement.MESSAGE_ORIGINAL;
-                        break;
-                } // switch
-
-                _filterActions.Add(faEl);
-            }
-
-        
-
-            type = null;
-            assembly = null;
-            
-            return;
-        }
-
-        private String m_rootAssembly;
-
-        /// <summary>
-        /// Mies the reflection only resolve event handler.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="args">The <see cref="T:System.ResolveEventArgs"/> instance containing the event data.</param>
-        /// <returns></returns>
-        private Assembly MyReflectionOnlyResolveEventHandler(object sender, ResolveEventArgs args)
-        {
-
-            AssemblyName name = new AssemblyName(args.Name);
-
-            String asmToCheck = Path.GetDirectoryName(m_rootAssembly) + "\\" + name.Name + ".dll";
-
-            if (File.Exists(asmToCheck))
-            {
-                return Assembly.ReflectionOnlyLoadFrom(asmToCheck);
-            }
-
-            return Assembly.ReflectionOnlyLoad(args.Name);
-        }
-
-        /// <summary>
-        /// Extracts the type of the filter.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        private void ExtractFilterType(TypeDefinition type)
-        {
-            foreach (CustomAttribute attr in type.CustomAttributes)
-            {
-                if (attr.Constructor.DeclaringType.FullName.Equals(_filterTypeAnnotationName))
-                {
-                    FilterTypeElement ftEl = new FilterTypeElement();
-                    _filterTypes.Add(ftEl);
-
-                    ftEl.Name = (String)attr.ConstructorParameters[0];
-                    ftEl.AcceptCallAction = (String)attr.ConstructorParameters[1];
-                    ftEl.RejectCallAction = (String)attr.ConstructorParameters[2];
-                    ftEl.AcceptReturnAction = (String)attr.ConstructorParameters[3];
-                    ftEl.RejectReturnAction = (String)attr.ConstructorParameters[4];
-
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Extracts the method.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="method">The method.</param>
-        /// <returns></returns>
-        private MethodElement ExtractMethod(AssemblyDefinition targetAssemblyDefinition, MethodDefinition method)
-        {
-            // Create a new method element
-            MethodElement me = new MethodElement(System.Guid.NewGuid().ToString());
-            me.Signature = method.ToString();
-            me.Name = method.Name;
-            me.ReturnType = method.ReturnType.ReturnType.FullName;
-
-            // If the return type has not yet been resolved, add it to the list of unresolved types
-            String returnTypeAFQN = CreateTypeAFQN(targetAssemblyDefinition, method.ReturnType.ReturnType);
-            //if (this._saveInnerType && !CachedTypes.Contains(returnTypeAFQN) && !UnresolvedTypes.Contains(returnTypeAFQN))
-            //{
-            //    UnresolvedTypes.Add(returnTypeAFQN);
-            //}
-
-            me.IsAbstract = method.IsAbstract;
-            me.IsConstructor = method.IsConstructor;
-            me.IsPrivate = method.Attributes == Mono.Cecil.MethodAttributes.Private;
-            me.IsPublic = method.Attributes == Mono.Cecil.MethodAttributes.Public;
-            me.IsStatic = method.IsStatic;
-            me.IsVirtual = method.IsVirtual;
-
-            // Add the parameters
-            me.ParameterElements = ExtractParameters(targetAssemblyDefinition, method.Parameters);
-
-            // Add the method body
-            if (method.Body != null && this._processMethodBody)
-            {
-                me.MethodBody = new Composestar.Repository.LanguageModel.MethodBody(System.Guid.NewGuid().ToString(), me.Id);
-
-                List<String> callList = new List<string>();
-
-                List<CallElement> callElements = new List<CallElement>();
-                foreach (Instruction instr in method.Body.Instructions)
-                {
-                    if (instr.OpCode.Value == OpCodes.Call.Value ||
-                        instr.OpCode.Value == OpCodes.Calli.Value ||
-                        instr.OpCode.Value == OpCodes.Callvirt.Value
-                        )
-                    {
-                        CallElement ce = new CallElement();
-                        MethodReference mr = (MethodReference)(instr.Operand);
-                        ce.MethodReference = mr.ToString();
-
-                        if (!callList.Contains(mr.ToString()))
-                        {
-                            callElements.Add(ce);
-                            callList.Add(mr.ToString());
-                        }
-
-
-                        
-                    }
-                }
-           
-                me.MethodBody.CallElements = callElements.ToArray();
-            }
-
-            return me;
-        }
-
-        /// <summary>
-        /// Extracts the methods.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="methods">The methods.</param>
-        /// <returns></returns>
-        private MethodElement[] ExtractMethods(AssemblyDefinition targetAssemblyDefinition, MethodDefinitionCollection methods)
-        {
-            List<MethodElement> result = new List<MethodElement>(methods.Count);
-
-            foreach (MethodDefinition method in methods)
-            {
-                result.Add(ExtractMethod(targetAssemblyDefinition, method));
-            }
-
-            return result.ToArray();
-        }
-
-        /// <summary>
-        /// Extracts the parameter.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="parameter">The parameter.</param>
-        /// <returns></returns>
-        private ParameterElement ExtractParameter(AssemblyDefinition targetAssemblyDefinition, ParameterDefinition parameter)
-        {
-            ParameterElement pe = new ParameterElement();
-
-            pe.Name = parameter.Name;
-            pe.Ordinal = (short)(parameter.Sequence);
-            pe.ParameterType = parameter.ParameterType.FullName;
-
-            // If the parameter type has not yet been resolved, add it to the list of unresolved types
-            //String parameterTypeAFQN = CreateTypeAFQN(_targetAssemblyDefinition, parameter.ParameterType);
-            //if (this._saveInnerType && !CachedTypes.Contains(parameterTypeAFQN) && !UnresolvedTypes.Contains(parameterTypeAFQN))
-            //{
-            //    UnresolvedTypes.Add(parameterTypeAFQN);
-            //}
-
-            pe.IsIn = parameter.Attributes == ParamAttributes.In;
-            pe.IsOptional = parameter.Attributes == ParamAttributes.Optional;
-            pe.IsOut = parameter.Attributes == ParamAttributes.Out;
-            pe.IsRetVal = !parameter.ParameterType.FullName.Equals("System.Void", StringComparison.CurrentCultureIgnoreCase);
-
-            return pe;
-        }
-
-        /// <summary>
-        /// Extracts the parameters.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns></returns>
-        private ParameterElement[] ExtractParameters(AssemblyDefinition targetAssemblyDefinition, ParameterDefinitionCollection parameters)
-        {
-            List<ParameterElement> result = new List<ParameterElement>(parameters.Count);
-
-            foreach (ParameterDefinition parameter in parameters)
-            {
-                result.Add(ExtractParameter(targetAssemblyDefinition, parameter));
-            }
-
-            return result.ToArray();
-        }
-
-        /// <summary>
-        /// Extracts the type.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="parentAssembly">The parent assembly.</param>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        private TypeElement ExtractType(AssemblyDefinition targetAssemblyDefinition, AssemblyElement parentAssembly, TypeDefinition type)
-        {
-            TypeElement te = new TypeElement(System.Guid.NewGuid().ToString());
-
-            // Name
-            te.Name = type.Name;
-            te.Namespace = type.Namespace;
-            te.FullName = CreateTypeName(type);
-
-            String assembly = CreateAFQN(targetAssemblyDefinition, type);
-            te.Assembly = assembly;
-
-            String typeAFQN = CreateTypeAFQN(targetAssemblyDefinition, type);
-            this._saveInnerType = this._saveType || UnresolvedTypes.Contains(typeAFQN);
-
-            // Properties
-            te.IsAbstract = type.IsAbstract;
-            te.IsEnum = type.IsEnum;
-            te.IsInterface = type.IsInterface;
-            te.IsSealed = type.IsSealed;
-            te.IsValueType = type.IsValueType;
-            te.IsClass = !type.IsValueType & !type.IsInterface;
-            te.IsNotPublic = type.Attributes == Mono.Cecil.TypeAttributes.NotPublic;
-            te.IsPrimitive = false;
-            te.IsPublic = type.Attributes == Mono.Cecil.TypeAttributes.Public;
-            te.IsSerializable = type.Attributes == Mono.Cecil.TypeAttributes.Serializable;
-
-            // Interface
-            foreach (TypeReference interfaceDef in type.Interfaces)
-            {
-                te.ImplementedInterface = String.Format("{0};{1}", te.ImplementedInterface, interfaceDef.FullName);
-            }
-
-            // Basetype
-            if (type.BaseType != null)
-            {
-                te.BaseType = type.BaseType.FullName;
-
-                // If the base type has not yet been resolved, add it to the list of unresolved types
-                String baseTypeAFQN = CreateTypeAFQN(targetAssemblyDefinition, type.BaseType);
-                if (!CachedTypes.Contains(baseTypeAFQN) && !UnresolvedTypes.Contains(baseTypeAFQN) && !ResolvedTypes.Contains(baseTypeAFQN))
-                {
-                    UnresolvedTypes.Add(baseTypeAFQN);
-                }
-
-
-                // Check whether type is a FilterType:
-                if (type.BaseType.FullName.Equals(_filterTypeName))
-                {
-                    ExtractFilterType(type);
-                }
-
-                // Check whether type is a FilterAction:
-                if (type.BaseType.FullName.Equals(_filterActionName))
-                {
-                    ExtractFilterAction(type);
-                }
-            }
-
-            te.FieldElements = ExtractFields(targetAssemblyDefinition, type.Fields);
-            te.MethodElements = ExtractMethods(targetAssemblyDefinition, type.Methods);
-
-            CachedTypes.Add(typeAFQN);
-            if (this._saveType || (UnresolvedTypes.Contains(typeAFQN) || UnresolvedTypes.Contains(type.FullName))) ResolvedTypes.Add(typeAFQN);
-
-            // Remove this type from the list of unresolved types
-            if (UnresolvedTypes.Contains(typeAFQN)) UnresolvedTypes.Remove(typeAFQN);
-            if (UnresolvedTypes.Contains(type.FullName)) UnresolvedTypes.Remove(type.FullName); // Unresolved types from the cps files are not AFQN style
-
-            return te;
-        }
-
-        /// <summary>
-        /// Extracts the types.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="assembly">The assembly.</param>
-        /// <param name="types">The types.</param>
-        /// <returns></returns>
-        private TypeElement[] ExtractTypes(AssemblyDefinition targetAssemblyDefinition, AssemblyElement assembly, List<String> types)
-        {
-            TypeDefinitionCollection tdc = new TypeDefinitionCollection(targetAssemblyDefinition.MainModule);
-
-            foreach (String type in types)
-            {
-                string typename = type;
-
-                if (type.Contains(", "))
-                {
-                    typename = type.Substring(0, type.IndexOf(", "));
-                    String assemblyPart = type.Substring(type.IndexOf(", ") + 2);
-                    if (assembly.Name != assemblyPart) continue;
-                }
-
-                if (targetAssemblyDefinition.MainModule.Types.Contains(typename))
-                {
-                    tdc.Add(targetAssemblyDefinition.MainModule.Types[typename]);
-                }
-            }
-
-            return ExtractTypes(targetAssemblyDefinition, assembly, tdc);
-        }
-
-        /// <summary>
-        /// Extracts the types.
-        /// </summary>
-        /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
-        /// <param name="assembly">The assembly.</param>
-        /// <param name="types">The types.</param>
-        /// <returns></returns>
-        private TypeElement[] ExtractTypes(AssemblyDefinition targetAssemblyDefinition, AssemblyElement assembly, TypeDefinitionCollection types)
-        {
-            List<TypeElement> result = new List<TypeElement>();
-
-            foreach (TypeDefinition type in types)
-            {
-                if (type.Name != ModuleName)
-                {
-                    result.Add(ExtractType(targetAssemblyDefinition, assembly, type));
-                }
-            }
-
-            // Remove types without a proper assembly name, e.g. the generic identifiers T, V, K, TKey, TValue, TOutput, TItem
-            IList<String> unresolvedtypes = new List<String>(UnresolvedTypes);
-            foreach (String type in unresolvedtypes)
-            {
-                if (type.EndsWith(", NULL"))
-                {
-                    UnresolvedTypes.Remove(type);
-                }
-            }
-
-            return result.ToArray();
-        }
-        #endregion
-             
         /// <summary>
         /// Extracts all types.
         /// </summary>
@@ -750,6 +165,9 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <exception cref="FileNotFoundException">If the source file cannot be found, this exception will be thrown.</exception>
         public AssemblyElement ExtractAllTypes(String fileName)
         {
+
+            #region Checks for null and file exists
+
             if (String.IsNullOrEmpty(fileName))
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNameNullOrEmpty));
 
@@ -757,39 +175,41 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 throw new FileNotFoundException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.FileNotFound, fileName));
             }
-
+            
+            #endregion
+           
             AssemblyElement result = null;
 
+            // Create a stopwatch for timing
             Stopwatch sw = new Stopwatch();
 
-            this._saveType = true;
-            this._saveInnerType = true;
-
-            AssemblyDefinition targetAssemblyDefinition = null;
-
-            _filterTypes.Clear();
-            _filterActions.Clear();
+            // Create the visitor
+            CecilAssemblyVisitor visitor = new CecilAssemblyVisitor();
             
+            // Set visitor properties
+            visitor.ProcessMethodBody = _configuration.DoMethodCallAnalysis;
+            visitor.IncludeFields = _configuration.DoFieldAnalysis;
+            visitor.SaveInnerType = true;
+            visitor.SaveType = true;
+            visitor.ResolvedTypes = _resolvedTypes;
+            visitor.UnresolvedTypes = _unresolvedTypes; 
 
-            // Error checks
-            try
-            {                
-                targetAssemblyDefinition = AssemblyFactory.GetAssembly(fileName);
+            // Start the visitor
+            result = visitor.Analyze(fileName);
 
-                result = ExtractAllTypes(targetAssemblyDefinition, fileName);
-            }
-            catch (EndOfStreamException)
-            {
-                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, fileName));
-            }
-            finally
-            {
-                targetAssemblyDefinition = null;
-                sw.Stop();
-            }
+            // Update the unresolved types
+            _unresolvedTypes = visitor.UnresolvedTypes;
+            _resolvedTypes = visitor.ResolvedTypes;  
 
+            // Update the filtertypes
+            _filterTypes.AddRange(visitor.FilterTypes);
+            _filterActions.AddRange(visitor.FilterActions);
+                     
+            // Stop the timer
+            sw.Stop();
             _lastDuration = sw.Elapsed;
 
+            // Return the result
             return result;
         }
 
@@ -805,8 +225,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
 
-            //Stopwatch sw = new Stopwatch();
-            //sw.Start();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             
             if (UnresolvedTypes.Count > 0)
             {
@@ -814,73 +234,73 @@ namespace Composestar.StarLight.ILAnalyzer
                 foreach (String type in UnresolvedTypes)
                 {
                     String assemblyName = null;
-                    if (type.Contains(", ")) assemblyName = type.Substring(type.IndexOf(", ") + 2);
-                    if (assemblyName != null && !assemblyNames.ContainsKey(assemblyName)) assemblyNames.Add(assemblyName, String.Empty);
+                    if (type.Contains(", "))
+                        assemblyName = type.Substring(type.IndexOf(", ") + 2);
+                    if (assemblyName != null && !assemblyNames.ContainsKey(assemblyName))
+                        assemblyNames.Add(assemblyName, String.Empty);
                 }
 
-                if (assemblyNames.Count == 0) return new List<AssemblyElement>();
-
-                // TODO remove console.writeline
-                //Console.WriteLine("BinFolder voor assembly resolver: "+_binFolder);
-                // Use the Cecil assembly resolver to find the missing assemblies
-                Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver dar = new Composestar.StarLight.Utilities.Cecil.StarLightAssemblyResolver(_binFolder);//new DefaultAssemblyResolver();
-                
+                if (assemblyNames.Count == 0) 
+                    return new List<AssemblyElement>();
+               
+                // Go through each assembly name
                 foreach (String assemblyName in assemblyNames.Keys)
                 {
+                    // TODO add to resource or remove the CW
                     Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
 
                     try
                     {
-                        AssemblyDefinition ad = dar.Resolve(assemblyName);
-                        
+                        AssemblyDefinition ad = AssemblyResolver.Resolve(assemblyName);
+
                         if (ad != null)
                         {
-                            _processMethodBody = false;
+                            // Create the visitor
+                            CecilAssemblyVisitor visitor = new CecilAssemblyVisitor();
 
-                            AssemblyElement ae = new AssemblyElement();
-                            ae.Name = ad.Name.FullName;
-                            ae.FileName = assemblyNames[assemblyName];
+                            // Set visitor properties
+                            visitor.ProcessMethodBody = false;
+                            visitor.IncludeFields = _configuration.DoFieldAnalysis;
+                            visitor.SaveType = false;
+                            visitor.ResolvedTypes = _resolvedTypes;
+                            visitor.UnresolvedTypes = _unresolvedTypes;
 
-                            if (File.Exists(ae.FileName))
+                            // Start the visitor
+                            AssemblyElement result = visitor.Analyze(assemblyNames[assemblyName]);
+
+                            if (result.Types.Count > 0)
                             {
-                                ae.Timestamp = File.GetLastWriteTime(ae.FileName).Ticks;
-                            }
-                            else
-                            {
-                                ae.Timestamp = TimeSpan.Zero.Ticks;
-                            }
+                                assemblies.Add(result);
+                            } // if
 
-                            ae = ExtractAllTypes(ad, ae.FileName);
+                            // Add the unresolved types
+                            _unresolvedTypes = visitor.UnresolvedTypes;
+                            _resolvedTypes = visitor.ResolvedTypes;
 
-                            if (ae.TypeElements.Length > 0)
-                            {
-                                assemblies.Add(ae);
-                            
-                            }
-                            ad = null;
+                            // Update the filtertypes
+                            _filterTypes.AddRange(visitor.FilterTypes);
+                            _filterActions.AddRange(visitor.FilterActions);
 
-                            _processMethodBody = true;
-                        }
+                        } // if
                         else
-                        {
-                            throw new ILAnalyzerException(String.Format("Unable to resolve assembly '{0}'.", assemblyName), assemblyName);
-                        }
-                    }
+                        {                            
+                            throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
+                        } // else
+                    } // try
                     catch (Exception ex)
-                    {
-                        throw new ILAnalyzerException(String.Format("Unable to resolve assembly '{0}'.", assemblyName), assemblyName, ex);
-                    }
-                }
-                dar = null;
+                    {                        
+                        throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
+                    } // catch
+                } // foreach  (assemblyName)
 
                 if (UnresolvedTypes.Count > 0)
                 {
                     ProcessUnresolvedTypes(new Dictionary<string, string>());
-                }
+                } // if
             }
 
-            //sw.Stop();
-            //_lastDuration = sw.Elapsed;
+            sw.Stop();
+            _lastDuration = sw.Elapsed;
 
             return assemblies;
         }
@@ -890,10 +310,10 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         public void Close()
         {
-            
+            if (_dar != null)
+                _dar = null;
         }
-
-
+        
         /// <summary>
         /// Gets the duration of the last executed method.
         /// </summary>
@@ -905,6 +325,8 @@ namespace Composestar.StarLight.ILAnalyzer
                 return _lastDuration;
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.

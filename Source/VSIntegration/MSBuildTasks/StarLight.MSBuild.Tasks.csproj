@@ -41,10 +41,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4oTools, Version=5.7.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\db4o\Db4oTools.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build.Engine" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities" />
@@ -53,7 +49,6 @@
       <HintPath>..\..\..\Libraries\Microsoft\Microsoft.Practices.ObjectBuilder.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
@@ -84,14 +79,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Compiletime\Composestar\Repository\Configuration\ConfigurationModel.vjsproj">
-      <Project>{0D8DC240-AE5E-4B45-A07F-E2EFA10F07BF}</Project>
-      <Name>ConfigurationModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Compiletime\Composestar\Repository\LanguageModel\LanguageModel.vjsproj">
-      <Project>{12970BDF-D7FE-4206-A988-1940B7B9A93B}</Project>
-      <Name>LanguageModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ContextInfo\ContextInfo.csproj">
       <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
       <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
@@ -104,13 +91,13 @@
       <Project>{4684F559-E4BA-466E-8EED-962987B34363}</Project>
       <Name>CpsParser %28Source\CpsParser\CpsParser%29</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DotNETLanguageModel\StarLightEntities.csproj">
+      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
+      <Name>StarLightEntities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ILAnalyzer\ILAnalyzer.csproj">
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ILWeaver\ILWeaver.csproj">
-      <Project>{7A30904D-40C9-408D-813E-12E16C488EAA}</Project>
-      <Name>ILWeaver</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Repository\DataStoreContainer.csproj">
       <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>

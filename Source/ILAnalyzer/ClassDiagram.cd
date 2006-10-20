@@ -1,47 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Font Name="Tahoma" Size="8.4" />
-  <Class Name="Composestar.StarLight.ILAnalyzer.MethodElement">
-    <Position X="4.5" Y="1.25" Width="1.5" />
+  <Class Name="Composestar.StarLight.ILAnalyzer.CecilILAnalyzer" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <FileName>Model\MethodElement.cs</FileName>
-      <HashCode>AAAAAAAAAAAEAAABAAAAAAgAAgAAAAAAAIACQAAEAAA=</HashCode>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Property Name="Calls" />
-      <Property Name="Parameters" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="Composestar.StarLight.ILAnalyzer.CallConstruction">
-    <Position X="7.5" Y="1" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Model\CallConstruction.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Composestar.StarLight.ILAnalyzer.ParameterElement">
-    <Position X="1.5" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>Model\ParameterElement.cs</FileName>
-      <HashCode>AAAAMAAAAABAAAAAABAAAAQEAAAAAAAAAAAAAAAAAAA=</HashCode>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Composestar.StarLight.ILAnalyzer.CecilILAnalyzer" Collapsed="true">
-    <Position X="10" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <FileName>CecilILAnalyzer.cs</FileName>
-      <HashCode>ABAAARAQAAAAAYQEAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Cecil\CecilILAnalyzer.cs</FileName>
+      <HashCode>QpAAAjAAAAIAAAAEACCAARAAQAAYAACDAAkAAAjEAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Interface Name="Composestar.StarLight.ILAnalyzer.IILAnalyzer" Collapsed="true">
-    <Position X="10" Y="2" Width="1.5" />
+  <Class Name="Composestar.StarLight.ILAnalyzer.CecilAnalyzerConfiguration">
+    <Position X="2" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <FileName>IILAnalyzer.cs</FileName>
-      <HashCode>ABAAAQAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cecil\CecilAnalyzerConfiguration.cs</FileName>
+      <HashCode>AEAAAABIAAAAAAABAAAAAAgAQAAICAABAAAACAAAAAA=</HashCode>
     </TypeIdentifier>
-  </Interface>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
+  <Class Name="Composestar.StarLight.ILAnalyzer.CecilAssemblyVisitor">
+    <Position X="7" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <FileName>Cecil\CecilAssemblyVisitor.cs</FileName>
+      <HashCode>QIAAACAhEYIEQIAAARCAg1AAgAAQAKKhQJgAAAhGAwA=</HashCode>
+    </TypeIdentifier>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+  </Class>
 </ClassDiagram>

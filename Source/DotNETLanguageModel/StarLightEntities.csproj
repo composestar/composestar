@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{11331540-BE27-41A8-B10C-D1C7A686E554}</ProjectGuid>
+    <ProjectGuid>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Composestar.StarLight.CoreServices</RootNamespace>
-    <AssemblyName>Composestar.StarLight.CoreServices</AssemblyName>
+    <RootNamespace>Composestar.StarLight</RootNamespace>
+    <AssemblyName>Composestar.StarLight.Entities</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,7 +18,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Composestar.StarLight.CoreServices.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,34 +28,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ObjectBuilder, Version=1.0.51205.0, Culture=neutral, PublicKeyToken=375fcb186afc7c59, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Microsoft\Microsoft.Practices.ObjectBuilder.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DIHelper.cs" />
-    <Compile Include="Exceptions\CpsParserException.cs" />
-    <Compile Include="Exceptions\ILAnalyzerException.cs" />
-    <Compile Include="Exceptions\ILWeaverException.cs" />
-    <Compile Include="Exceptions\StarLightException.cs" />
-    <Compile Include="ObjectBuilderConfiguratorBase.cs" />
+    <Compile Include="Configuration\AssemblyConfig.cs" />
+    <Compile Include="Concerns\ConcernElement.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="LanguageModel\AssemblyElement.cs" />
+    <Compile Include="LanguageModel\CallElement.cs" />
+    <Compile Include="LanguageModel\FieldElement.cs" />
+    <Compile Include="Configuration\FilterActionElement.cs" />
+    <Compile Include="Configuration\FilterTypeElement.cs" />
+    <Compile Include="LanguageModel\MethodBody.cs" />
+    <Compile Include="LanguageModel\MethodElement.cs" />
+    <Compile Include="LanguageModel\ParameterElement.cs" />
+    <Compile Include="LanguageModel\ParameterOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ICpsParser.cs" />
-    <Compile Include="Services\IILAnalyzer.cs" />
-    <Compile Include="Services\IILWeaver.cs" />
-    <Compile Include="Services\IEntitiesAccessor.cs" />
-    <Compile Include="Services\IRepositoryContainer.cs" />
+    <Compile Include="LanguageModel\TypeElement.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration\Config.cd" />
+    <None Include="Concerns\Concerns.cd" />
+    <None Include="LanguageModel\Language Model.cd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DotNETLanguageModel\StarLightEntities.csproj">
-      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
-      <Name>StarLightEntities</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

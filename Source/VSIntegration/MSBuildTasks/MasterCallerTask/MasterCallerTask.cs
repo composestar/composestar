@@ -6,9 +6,9 @@ using System.ComponentModel;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.Repository.LanguageModel;  
-using Composestar.Repository.Configuration;
-using Composestar.Repository.Db4oContainers;  
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.Configuration;
+using Composestar.StarLight.CoreServices;  
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -25,7 +25,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </summary>
         public MasterCallerTask() : base(Properties.Resources.ResourceManager)      {    }
         
-#endregion
+        #endregion
 
         #region Properties
 
@@ -87,9 +87,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         
         private bool BuildErrorsEncountered = false;
         private DebugMode CurrentDebugMode;
-
-        private RepositoryAccess _repositoryAccess;
-
+   
         private const int ErrorFileNotFound = 2;
         private const int ErrorAccessDenied = 5;
 
@@ -117,12 +115,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             // Open DB
             Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
-            _repositoryAccess = new RepositoryAccess(Db4oRepositoryContainer.Instance, RepositoryFilename);
+            IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
 
-            if (_repositoryAccess.GetConcerns().Count == 0)
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+
+            if (configContainer.Concerns.Count == 0)
             {
-                Log.LogMessageFromResources("MasterSkipNoConcerns");
-                _repositoryAccess.CloseContainer(); 
+                Log.LogMessageFromResources("MasterSkipNoConcerns");             
                 return !Log.HasLoggedErrors;
             }
 
@@ -131,8 +130,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             RegistrySettings rs = new RegistrySettings();
             if (!rs.ReadSettings())
             {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues"); 
-                _repositoryAccess.CloseContainer(); 
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");                 
                 return false;
             }
 
@@ -140,18 +138,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Log.LogMessageFromResources("StoreDebugLevel", DebugLevel);             
 
             // Set the Common Configuration
-            CommonConfiguration cc = _repositoryAccess.GetCommonConfiguration();                
-            int debugLevelValue;
-            if (!int.TryParse(DebugLevel, out debugLevelValue ))
+             short debugLevelValue;
+             if (!short.TryParse(DebugLevel, out debugLevelValue))
             {
                 Log.LogErrorFromResources("CouldNotConvertDebugLevel", DebugLevel); 
-                _repositoryAccess.CloseContainer(); 
                 return false;
             }
+
             CurrentDebugMode = (DebugMode)debugLevelValue;
-            cc.CompiletimeDebugLevel = debugLevelValue;  
-            cc.IntermediateOutputPath = IntermediateOutputPath;     
-            cc.InstallFolder = rs.InstallFolder;
+
+            configContainer.CompiletimeDebugLevel = debugLevelValue;
+            configContainer.IntermediateOutputPath = IntermediateOutputPath;
+            configContainer.InstallFolder = rs.InstallFolder;
 
             // Set FILTH Specification
             String filthFile = "FILTH.xml";
@@ -159,14 +157,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 filthFile = Path.Combine(rs.InstallFolder, filthFile);
             }
-            cc.FILTHSpecification = filthFile;
+            configContainer.SpecificationFILTH = filthFile;
             
             // Save common config
-            _repositoryAccess.SetCommonConfiguration(cc);
-        
-            // Close database so MASTER can access it
-            _repositoryAccess.CloseContainer(); 
-                                              
+            entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer);
+                                                                 
             // Start java                  
             System.Diagnostics.Process process = new System.Diagnostics.Process();
 

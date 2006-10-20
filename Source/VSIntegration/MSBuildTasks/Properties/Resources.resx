@@ -205,10 +205,10 @@
     <value>Storing debug level {0} in the repository.</value>
   </data>
   <data name="StoreInDatabase" xml:space="preserve">
-    <value>Storing type information for {0} assemblies in database.</value>
+    <value>Saving {0} assemblies to disk.</value>
   </data>
   <data name="StoreInDatabaseCompleted" xml:space="preserve">
-    <value>{0} assemblies with a total of {1} types stored in the database in {2:0.0000} seconds.</value>
+    <value>{0} assemblies with a total of {1} types saved in {2:0.0000} seconds.</value>
   </data>
   <data name="UnableToResolve" xml:space="preserve">
     <value>Unable to resolve type '{0}', are you missing an assembly reference?</value>
