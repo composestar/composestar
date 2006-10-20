@@ -65,14 +65,18 @@ public class ILICIT implements WEAVER
 		List toBeWoven = new ArrayList();
 		List compiledSources = config.getProjects().getCompiledSources();
 		addBuiltAssemblies(weaveDir, compiledSources, toBeWoven);
-		Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"To be woven file list: " + toBeWoven);
 
-		// also copy dummies 
+		// also copy dummies
 		copyDummies(weaveDir);
 
 		// start the weaver
 		if (toBeWoven.size() > 0)
+		{
+			Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"To be woven file list: " + toBeWoven);
 			invokeWeaver(cpsPath, basePath, toBeWoven);
+		}
+		else
+			Debug.out(Debug.MODE_WARNING,MODULE_NAME,"No files to weave");
 	}
 
 	private void addBuiltAssemblies(File weaveDir, List compiledSources, List toBeWoven) 

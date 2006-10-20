@@ -35,6 +35,7 @@ import Composestar.Utils.TokenReplacer;
 
 public class DotNETCompiler implements LangCompiler
 {
+	public static final String MODULE_NAME = "RECOMA";
 	private final static String TOKEN_LIB = "\\{LIB\\}";
 
 	public DotNETCompiler()
@@ -93,9 +94,9 @@ public class DotNETCompiler implements LangCompiler
 
 		// incremental compilation
 		INCRE incre = INCRE.instance();
-		if (new File(targetPath).exists() && incre.isProcessedByModule(source,"RECOMA"))
+		if (new File(targetPath).exists() && incre.isProcessedByModule(source,MODULE_NAME))
 		{
-			Debug.out(Debug.MODE_DEBUG, "INCRE","No need to recompile " + filename);
+			Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"No need to recompile " + filename);
 
 			config.getLibraries().addLibrary(targetPath);
 			project.addCompiledSource(targetPath);
@@ -105,7 +106,7 @@ public class DotNETCompiler implements LangCompiler
 		}
 
 		// time compilation of source
-		INCRETimer timer = incre.getReporter().openProcess("RECOMA",filename,INCRETimer.TYPE_NORMAL);
+		INCRETimer timer = incre.getReporter().openProcess(MODULE_NAME,filename,INCRETimer.TYPE_NORMAL);
 		
 		// construct the command line
 		String an = (source.isExecutable() ? "CompileExecutable" : "CompileLibrary");

@@ -1,5 +1,6 @@
 package Composestar.DotNET.SEMTEX;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,12 +36,7 @@ public class DotNETSemTexRunner implements CTCommonModule
 		String projectPath = config.getPathSettings().getPath("Base");
 
 		String exe = getExecutable();
-		if (exe == null)
-		{
-			Debug.out(Debug.MODE_WARNING , "SEMTEX", "SemTex Analyzer not found on it's expected location: " + exe + ". Semantic Analyzing will be skipped.");
-			Debug.out(Debug.MODE_INFORMATION , "SEMTEX", "Semantic Analyzer cannot be executed because of missing files. See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");			
-		}
-		else
+		if (exe != null)
 		{
 			List cmdList = new ArrayList();
 			cmdList.add(exe);
@@ -71,8 +67,15 @@ public class DotNETSemTexRunner implements CTCommonModule
 	{
 		Configuration config = Configuration.instance();
 		String cpsPath = config.getPathSettings().getPath("Composestar");
-		String exe = cpsPath + "binaries/SemanticExtractorConsole.exe";
-
-		return (FileUtils.fileExist(exe) ? exe : null);
+		File exe = new File(cpsPath, "binaries/SemanticExtractorConsole.exe");
+		
+		if (exe.exists())
+			return exe.getAbsolutePath();
+		else
+		{
+			Debug.out(Debug.MODE_WARNING , "SEMTEX", "SemTex Analyzer not found on it's expected location: " + exe + ". Semantic Analyzing will be skipped.");
+			Debug.out(Debug.MODE_INFORMATION , "SEMTEX", "Semantic Analyzer cannot be executed because of missing files. See http://janus.cs.utwente.nl:8000/twiki/bin/view/Composer/SemanticAnalyser for more information.");
+			return null;
+		}
 	}
 }
