@@ -146,7 +146,7 @@ namespace Composestar.StarLight.TestMocks.LanguageModelAccessor
         /// </summary>
         /// <param name="assemblies">Assemblies</param>
         /// <param name="assembliesToSave">Assemblies to save</param>
-        public void AddAssemblies(List<AssemblyElement> assemblies, List<String> assembliesToSave)
+        public void AddAssemblies(IList<AssemblyElement> assemblies, List<String> assembliesToSave)
         {
         } // AddAssemblies(assemblies, assembliesToSave)
 
