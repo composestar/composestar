@@ -6,7 +6,6 @@ using NTime.Framework;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
-using Composestar.StarLight.TestMocks.LanguageModelAccessor;
 
 namespace Composestar.StarLight.ILAnalyzer.Tests.PerformanceTests
 {
@@ -26,10 +25,10 @@ namespace Composestar.StarLight.ILAnalyzer.Tests.PerformanceTests
         {
             // initialize data for every test found in this testfixture class
             svcContainer = new ServiceContainer();
-            svcContainer.AddService(typeof(ILanguageModelAccessor), new EmptyMock());
-            svcContainer.AddService(typeof(CecilAnalyzerConfiguration), config);
+            //svcContainer.AddService(typeof(ILanguageModelAccessor), new EmptyMock());
+            //svcContainer.AddService(typeof(CecilAnalyzerConfiguration), config);
 
-            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(svcContainer);
+            //analyzer = DIHelper.CreateObject<CecilILAnalyzer>(svcContainer);
         }
 
 
