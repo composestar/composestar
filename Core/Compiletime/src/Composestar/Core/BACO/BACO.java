@@ -19,46 +19,22 @@ import Composestar.Utils.FileUtils;
 
 public abstract class BACO implements CTCommonModule
 {
+	public BACO()
+	{		
+	}
+	
 	public void run(CommonResources resources) throws ModuleException
 	{
 		Debug.out(Debug.MODE_DEBUG, "BACO","Copying files to output directory...");
-		Configuration config = Configuration.instance();
 
-		HashSet filesToCopy = new HashSet();
+		Set filesToCopy = new HashSet();
 		addRequiredFiles(filesToCopy);
 		addBuiltLibraries(filesToCopy);
 		addCustomFilters(filesToCopy);
 		addDependencies(filesToCopy);
+		addRepository(filesToCopy);
 
-		// add repository.xml: 
-		String projectPath = config.getPathSettings().getPath("Base");
-		String repository = projectPath + "repository.xml";
-		
-		Debug.out(Debug.MODE_DEBUG,"BACO","Adding repository: '" + repository + "'");
-		filesToCopy.add(repository);
-
-		// determine output dir:
-		String outputPath = config.getProjects().getOutputPath();
-		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
-		
-		// create the output dir if needed
-		if (!FileUtils.createFullPath(outputPath))
-			throw new ModuleException("Unable to create output directory: '" + outputPath + "'", "BACO");
-
-		// start the actual copying
-		Iterator filesIt = filesToCopy.iterator();
-		while (filesIt.hasNext())
-		{
-			String source = (String)filesIt.next();
-			String dest = outputPath + FileUtils.getFilenamePart(source);
-			try {
-				Debug.out(Debug.MODE_DEBUG,"BACO","Copying '" + source + "' to '" + dest + "'");
-				FileUtils.copyFile(dest, source);
-			}
-			catch (IOException e) {
-				Debug.out(Debug.MODE_WARNING,"BACO","Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
-			}
-		}
+		copyFiles(filesToCopy);
 	}
 
 	protected void addRequiredFiles(Set filesToCopy)
@@ -129,9 +105,50 @@ public abstract class BACO implements CTCommonModule
 
 			// add dummies
 			String dummies = project.getCompiledDummies();
-			Debug.out(Debug.MODE_DEBUG,"BACO","Adding dummies: '" + dummies + "'");
+			if (dummies != null)
+			{
+				Debug.out(Debug.MODE_DEBUG,"BACO","Adding dummies: '" + dummies + "'");
+				filesToCopy.add(FileUtils.unquote(dummies));
+			}
+		}
+	}
 
-			filesToCopy.add(FileUtils.unquote(dummies));
+	protected void addRepository(Set filesToCopy)
+	{
+		Configuration config = Configuration.instance();
+
+		String basePath = config.getPathSettings().getPath("Base");
+		String repository = basePath + "repository.xml";
+		
+		Debug.out(Debug.MODE_DEBUG,"BACO","Adding repository: '" + repository + "'");
+		filesToCopy.add(repository);
+	}
+
+	private void copyFiles(Set filesToCopy) throws ModuleException
+	{
+		Configuration config = Configuration.instance();
+
+		// determine output dir:
+		String outputPath = config.getProjects().getOutputPath();
+		Debug.out(Debug.MODE_DEBUG,"BACO","outputPath='" + outputPath + "'");
+		
+		// create the output dir if needed
+		if (!FileUtils.createFullPath(outputPath))
+			throw new ModuleException("Unable to create output directory: '" + outputPath + "'", "BACO");
+
+		// start the actual copying
+		Iterator filesIt = filesToCopy.iterator();
+		while (filesIt.hasNext())
+		{
+			String source = (String)filesIt.next();
+			String dest = outputPath + FileUtils.getFilenamePart(source);
+			try {
+				Debug.out(Debug.MODE_DEBUG,"BACO","Copying '" + source + "' to '" + dest + "'");
+				FileUtils.copyFile(dest, source);
+			}
+			catch (IOException e) {
+				Debug.out(Debug.MODE_WARNING,"BACO","Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
+			}
 		}
 	}
 

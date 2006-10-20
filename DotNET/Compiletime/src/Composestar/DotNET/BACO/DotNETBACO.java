@@ -28,6 +28,7 @@ public class DotNETBACO extends BACO
 
 	protected void addBuiltLibraries(Set filesToCopy)
 	{
+		// TODO: only copy PDB's when runDebugLevel >= x?
 		List builtLibs = (List)DataStore.instance().getObjectByID("BuiltLibs");
 		Iterator it = builtLibs.iterator();
 		while (it.hasNext())

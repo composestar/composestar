@@ -46,94 +46,33 @@ public class ILICIT implements WEAVER
 {
 	public static final String version = "$Revision$";
 	
+	private Configuration config;
+	
+	public ILICIT()
+	{
+		config = Configuration.instance();
+	}
+	
 	public void run(CommonResources resources) throws ModuleException
 	{
-		Configuration config = Configuration.instance();
-
 		String cpsPath = config.getPathSettings().getPath("Composestar");
-		String projectPath = config.getPathSettings().getPath("Base");
+		String basePath = config.getPathSettings().getPath("Base");
 
-		String weavePath = projectPath + "obj/Weaver";
-		File weaveDir = new File(weavePath);
+		File weaveDir = new File(basePath, "obj/Weaver");
 		if (!weaveDir.exists()) weaveDir.mkdir();
 
-		// make a copy of the built binaries and do more stuff
-		// TODO: describe 'more stuff'
+		// determine the assemblies to weave
 		List toBeWoven = new ArrayList();
 		List compiledSources = config.getProjects().getCompiledSources();
 		addBuiltAssemblies(weaveDir, compiledSources, toBeWoven);
 		Debug.out(Debug.MODE_DEBUG,"ILICIT","To be woven file list: " + toBeWoven);
 
 		// also copy dummies 
-		copyDummies(weavePath);
+		copyDummies(weaveDir);
 
+		// start the weaver
 		if (toBeWoven.size() > 0)
-		{
-			// build command line
-			String peweaver = cpsPath + "binaries/peweaver.exe";
-			if (!FileUtils.fileExist(peweaver))
-				throw new ModuleException("Unable to locate the executable '" + peweaver + "'!");
-
-			List cmdList = new ArrayList();
-			cmdList.add(peweaver);
-			cmdList.add("/nologo");
-
-			// verify libraries?
-			String va = config.getModuleProperty("ILICIT", "verifyAssemblies", "false");
-			if ("true".equalsIgnoreCase(va))
-				cmdList.add("/verify");
-
-			// if debugging supply the /debug switch
-			if (Debug.getMode() == Debug.MODE_DEBUG)
-				cmdList.add("/debug");
-			
-			// add weave specification
-			String weaveFile = projectPath + "weavespec.xml";
-			cmdList.add("/ws=" + weaveFile);
-
-			// add build file
-			String buildfile = projectPath + "filelist.peweaver";
-			createBuildfile(buildfile, toBeWoven);
-			cmdList.add("/filelist=" + FileUtils.quote(buildfile));
-
-			// If debugging write output from PeWeaver to log file
-			//	if (Debug.getMode() == Debug.MODE_DEBUG) 
-			//		command += " > \"" + weavePath + "/peweaver.log\"";
-
-			Debug.out(Debug.MODE_DEBUG, "ILICIT", "Command: " + StringUtils.join(cmdList));
-
-			CommandLineExecutor cle = new CommandLineExecutor();
-			int exitcode = cle.exec(cmdList);
-			
-			if (exitcode == 0)
-				Debug.out(Debug.MODE_DEBUG, "ILICIT", "Successfully executed the 'PE Weaver' tool.");
-			else
-			{
-				Debug.out(Debug.MODE_DEBUG, "ILICIT", cle.outputNormal());
-				throw new ModuleException(getExitMessage(exitcode), "ILICIT");
-			}
-		}
-	}
-
-	private void copyDummies(String weavePath) throws ModuleException 
-	{
-		Configuration config = Configuration.instance();
-
-		List dummies = config.getProjects().getCompiledDummies();
-		Iterator dumIt = dummies.iterator();
-		while (dumIt.hasNext()) 
-		{
-			String source = (String)dumIt.next();
-			String dest = weavePath + File.separator + FileUtils.getFilenamePart(source);
-
-			try {
-				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + source + "' to Weaver directory");
-				FileUtils.copyFile(dest, source);
-			}
-			catch (IOException e) {
-				throw new ModuleException("Unable to copy dummy: " + e.getMessage(), "ILICIT");
-			}
-		}
+			invokeWeaver(cpsPath, basePath, toBeWoven);
 	}
 
 	private void addBuiltAssemblies(File weaveDir, List compiledSources, List toBeWoven) 
@@ -188,6 +127,70 @@ public class ILICIT implements WEAVER
 				Debug.out(Debug.MODE_DEBUG,"ILICIT","No need to re-weave " + asm);
 				builtAssemblies.add(targetFilename);
 			}
+		}
+	}
+
+	private void copyDummies(File weaveDir) throws ModuleException 
+	{
+		Configuration config = Configuration.instance();
+
+		List dummies = config.getProjects().getCompiledDummies();
+		Iterator dumIt = dummies.iterator();
+		while (dumIt.hasNext()) 
+		{
+			String source = (String)dumIt.next();
+			File destFile = new File(weaveDir, FileUtils.getFilenamePart(source));
+
+			try {
+				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + source + "' to Weaver directory");
+				FileUtils.copyFile(destFile.getAbsolutePath(), source);
+			}
+			catch (IOException e) {
+				throw new ModuleException("Unable to copy dummy: " + e.getMessage(), "ILICIT");
+			}
+		}
+	}
+
+	private void invokeWeaver(String cpsPath, String projectPath, List toBeWoven) throws ModuleException
+	{
+		// build command line
+		String peweaver = cpsPath + "binaries/peweaver.exe";
+		if (!FileUtils.fileExist(peweaver))
+			throw new ModuleException("Unable to locate the executable '" + peweaver + "'!");
+
+		List cmdList = new ArrayList();
+		cmdList.add(peweaver);
+		cmdList.add("/nologo");
+
+		// verify libraries?
+		String va = config.getModuleProperty("ILICIT", "verifyAssemblies", "false");
+		if ("true".equalsIgnoreCase(va))
+			cmdList.add("/verify");
+
+		// if debugging supply the /debug switch
+		if (Debug.getMode() == Debug.MODE_DEBUG)
+			cmdList.add("/debug");
+		
+		// add weave specification
+		String weaveFile = projectPath + "weavespec.xml";
+		cmdList.add("/ws=" + weaveFile);
+
+		// add build file
+		String buildfile = projectPath + "filelist.peweaver";
+		createBuildfile(buildfile, toBeWoven);
+		cmdList.add("/filelist=" + FileUtils.quote(buildfile));
+
+		Debug.out(Debug.MODE_DEBUG, "ILICIT", "Command: " + StringUtils.join(cmdList));
+
+		CommandLineExecutor cle = new CommandLineExecutor();
+		int exitcode = cle.exec(cmdList);
+		
+		if (exitcode == 0)
+			Debug.out(Debug.MODE_DEBUG, "ILICIT", "Successfully executed the 'PE Weaver' tool.");
+		else
+		{
+			Debug.out(Debug.MODE_DEBUG, "ILICIT", cle.outputNormal());
+			throw new ModuleException(getExitMessage(exitcode), "ILICIT");
 		}
 	}
 
