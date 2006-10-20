@@ -37,8 +37,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MiscellaneousParseFixture.cs" />
+    <Compile Include="PacmanParseFixture.cs" />
     <Compile Include="CpsFileParserFixtureBase.cs" />
-    <Compile Include="ParseFixture.cs" />
+    <Compile Include="iTextSharpParseFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
