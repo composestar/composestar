@@ -1,6 +1,3 @@
-
-package Composestar.Core.WEAVER;
-
 /*
  * This file is part of Composestar project [http://composestar.sf.net].
  * Copyright (C) 2003 University of Twente.
@@ -11,13 +8,13 @@ package Composestar.Core.WEAVER;
  * $Id$
  */
 
+package Composestar.Core.WEAVER;
+
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 
-public interface WEAVER extends CTCommonModule {
-
-	public abstract void run(CommonResources resources) throws ModuleException;  
-    public abstract void main(String[] args);
-   
+public interface WEAVER extends CTCommonModule
+{
+	void run(CommonResources resources) throws ModuleException;  
 }

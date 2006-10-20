@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
@@ -44,8 +43,9 @@ import Composestar.Utils.StringUtils;
  */
 public class ILICIT implements WEAVER
 {
-	public static final String version = "$Revision$";
-	
+	public static final String VERSION = "$Revision$";
+	public static final String MODULE_NAME = "ILICIT";
+		
 	private Configuration config;
 	
 	public ILICIT()
@@ -65,7 +65,7 @@ public class ILICIT implements WEAVER
 		List toBeWoven = new ArrayList();
 		List compiledSources = config.getProjects().getCompiledSources();
 		addBuiltAssemblies(weaveDir, compiledSources, toBeWoven);
-		Debug.out(Debug.MODE_DEBUG,"ILICIT","To be woven file list: " + toBeWoven);
+		Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"To be woven file list: " + toBeWoven);
 
 		// also copy dummies 
 		copyDummies(weaveDir);
@@ -92,20 +92,20 @@ public class ILICIT implements WEAVER
 			String sourceFilename = source.getAbsolutePath();
 			String targetFilename = target.getAbsolutePath();				
 
-			if (!INCRE.instance().isProcessedByModule(asm,"ILICIT"))
+			if (!INCRE.instance().isProcessedByModule(asm, MODULE_NAME))
 			{
 				try {
-					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + sourceFilename + "' to Weaver directory");					
+					Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Copying '" + sourceFilename + "' to Weaver directory");					
 					FileUtils.copyFile(targetFilename, sourceFilename);
 				}
 				catch (IOException e) {
-					throw new ModuleException("Unable to copy assembly: " + e.getMessage(), "ILICIT");
+					throw new ModuleException("Unable to copy assembly: " + e.getMessage(), MODULE_NAME);
 				}
 				
 				String pdbFile = FileUtils.replaceExtension(sourceFilename, "pdb");
 				if (FileUtils.fileExist(pdbFile))
 				{
-					Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + pdbFile + "' to Weaver directory");
+					Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Copying '" + pdbFile + "' to Weaver directory");
 					
 					String pdbSourceFilename = new File(pdbFile).getAbsolutePath(); 
 					String pdbTargetFilename = FileUtils.replaceExtension(targetFilename, "pdb");
@@ -114,7 +114,7 @@ public class ILICIT implements WEAVER
 						FileUtils.copyFile(pdbTargetFilename, pdbSourceFilename);
 					}
 					catch (IOException e) {
-						throw new ModuleException("Unable to copy PDB: " + e.getMessage(), "ILICIT");
+						throw new ModuleException("Unable to copy PDB: " + e.getMessage(), MODULE_NAME);
 					}
 				}
 				
@@ -124,7 +124,7 @@ public class ILICIT implements WEAVER
 			else
 			{
 				// no need to weave the file
-				Debug.out(Debug.MODE_DEBUG,"ILICIT","No need to re-weave " + asm);
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"No need to re-weave " + asm);
 				builtAssemblies.add(targetFilename);
 			}
 		}
@@ -142,11 +142,11 @@ public class ILICIT implements WEAVER
 			File destFile = new File(weaveDir, FileUtils.getFilenamePart(source));
 
 			try {
-				Debug.out(Debug.MODE_DEBUG,"ILICIT","Copying '" + source + "' to Weaver directory");
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Copying '" + source + "' to Weaver directory");
 				FileUtils.copyFile(destFile.getAbsolutePath(), source);
 			}
 			catch (IOException e) {
-				throw new ModuleException("Unable to copy dummy: " + e.getMessage(), "ILICIT");
+				throw new ModuleException("Unable to copy dummy: " + e.getMessage(), MODULE_NAME);
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class ILICIT implements WEAVER
 		cmdList.add("/nologo");
 
 		// verify libraries?
-		String va = config.getModuleProperty("ILICIT", "verifyAssemblies", "false");
+		String va = config.getModuleProperty(MODULE_NAME, "verifyAssemblies", "false");
 		if ("true".equalsIgnoreCase(va))
 			cmdList.add("/verify");
 
@@ -180,17 +180,17 @@ public class ILICIT implements WEAVER
 		createBuildfile(buildfile, toBeWoven);
 		cmdList.add("/filelist=" + FileUtils.quote(buildfile));
 
-		Debug.out(Debug.MODE_DEBUG, "ILICIT", "Command: " + StringUtils.join(cmdList));
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		int exitcode = cle.exec(cmdList);
 		
 		if (exitcode == 0)
-			Debug.out(Debug.MODE_DEBUG, "ILICIT", "Successfully executed the 'PE Weaver' tool.");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Successfully executed the 'PE Weaver' tool.");
 		else
 		{
-			Debug.out(Debug.MODE_DEBUG, "ILICIT", cle.outputNormal());
-			throw new ModuleException(getExitMessage(exitcode), "ILICIT");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, cle.outputNormal());
+			throw new ModuleException(getExitMessage(exitcode), MODULE_NAME);
 		}
 	}
 
@@ -207,7 +207,7 @@ public class ILICIT implements WEAVER
 			out.flush();
 		}
 		catch (IOException e) {
-			throw new ModuleException("Unable to create the build file for the weaver.","CONE_IS");
+			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(), MODULE_NAME);
 		}
 		finally {
 			FileUtils.close(out);
@@ -423,30 +423,5 @@ public class ILICIT implements WEAVER
 		}
 
 		return concerns;
-	}
-
-	/**
-	 * For testing purposes.
-	 */
-	public void main(String[] args)
-	{
-		CommonResources resources = new CommonResources();
-		DataStore ds = DataStore.instance();
-
-		Properties props = new Properties();
-		props.setProperty("ILICIT_PEWEAVER", "C:\\Documents and Settings\\%username%\\My Documents\\Visual Studio Projects\\Composestar\\PeWeaver\\bin\\Debug\\peweaver.exe");
-		props.setProperty("ILICIT_WEAVEFILE", "ws.xml");
-		props.setProperty("ILICIT_VERIFY", "yes");
-		props.setProperty("ILICIT_TARGETS", "\"C:\\Documents and Settings\\%username%\\My Documents\\Visual Studio Projects\\Composestar\\PeWeaver\\bin\\Debug\\bak\\TestProfilee.exe\"");
-
-		ds.addObject("config", props);
-
-		try {
-			ILICIT ilicit = new ILICIT();
-			ilicit.run(resources);
-		}
-		catch (ModuleException me) {
-			System.out.println(me.getMessage());
-		}
 	}
 }
