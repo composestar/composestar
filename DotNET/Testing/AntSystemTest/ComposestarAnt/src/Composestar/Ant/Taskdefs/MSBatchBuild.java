@@ -11,6 +11,9 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 
+/**
+* @author Marcus Klimstra
+*/
 public final class MSBatchBuild extends BaseTask
 {
 	private final static String EXECUTABLE = "msbuild";

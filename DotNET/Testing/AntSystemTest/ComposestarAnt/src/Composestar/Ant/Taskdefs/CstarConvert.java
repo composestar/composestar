@@ -1,24 +1,18 @@
 package Composestar.Ant.Taskdefs;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Transforms x to y.
+ * Transform VS2003 project files to VS2005 ones.
  * 
- * @author Marcus
+ * @author Marcus Klimstra
  */
 public final class CstarConvert extends TransformTask
 {
@@ -44,11 +38,11 @@ public final class CstarConvert extends TransformTask
 
 		t.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
 
-		log("Generating " + inputs.size() + " VS2005 project files", Project.MSG_INFO);
+		log("Generating up to " + inputs.size() + " VS2005 project files", Project.MSG_INFO);
 		transform(t, inputs);
 	}
 
-	private File getOutputFile(File input)
+	protected File getOutputFile(File input)
 	{
 		File baseDir = input.getParentFile();
 		String filename = input.getName();
@@ -58,32 +52,22 @@ public final class CstarConvert extends TransformTask
 		return new File(baseDir, newName);
 	}
 
-	private void transform(Transformer t, List inputs)
+	protected boolean needToTransform(File input, File output)
 	{
-		Iterator it = inputs.iterator();
-		while (it.hasNext())
-		{
-			File input = (File)it.next();
-			File output = getOutputFile(input);
-
-			transform(t, input, output);
-		}
+		if (! output.exists())
+			return true;
+		
+		if (input.lastModified() > output.lastModified())
+			return true;
+		
+		if (getXslt().lastModified() > output.lastModified())
+			return true;
+		
+		return false;
 	}
 
-	private void transform(Transformer t, File input, File output)
+	protected void beforeTransform(Transformer t, File input, File output)
 	{
 		log(input.getParent(), Project.MSG_INFO);
-
-		try
-		{
-			Source xmlSource = new StreamSource(input);
-			Result result = new StreamResult(output);
-
-			t.transform(xmlSource, result);
-		}
-		catch (TransformerException e)
-		{
-			throw new BuildException(e.toString(), e);
-		}
-	}	
+	}
 }

@@ -9,7 +9,10 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
-public class BaseTask extends Task
+/**
+* @author Marcus Klimstra
+*/
+public abstract class BaseTask extends Task
 {
 	private final List m_fileSets;
 	

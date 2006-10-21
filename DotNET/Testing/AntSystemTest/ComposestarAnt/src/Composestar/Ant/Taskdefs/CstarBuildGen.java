@@ -6,12 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -20,10 +15,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
 
+import Composestar.Ant.XsltUtils;
+
 /**
  * Generates the BuildConfiguration.xml for Compose* from a VS2003 project file.
  * 
- * @author Marcus
+ * @author Marcus Klimstra
+ * @author Michiel Hendriks
  */
 public final class CstarBuildGen extends TransformTask
 {
@@ -52,7 +50,7 @@ public final class CstarBuildGen extends TransformTask
 	 */
 	public void setAntHelperPath(String path)
 	{
-		if (!Composestar.Ant.XsltUtils.setAntHelperPath(path))
+		if (!XsltUtils.setAntHelperPath(path))
 		{
 			throw new BuildException("Invalid antHelperPath value: " + path);
 		}
@@ -83,6 +81,9 @@ public final class CstarBuildGen extends TransformTask
 		return new Modules();
 	}
 
+	/**
+	 * Adds a module setting that will be passed to the stylesheet as a parameter.
+	 */
 	private void addModuleSetting(String moduleName, String setting, String value)
 	{
 		String key = moduleName + "_" + setting;
@@ -121,44 +122,19 @@ public final class CstarBuildGen extends TransformTask
 		}
 	}
 	
-	private File getOutputFile(File input)
+	protected File getOutputFile(File input)
 	{
 		File baseDir = input.getParentFile();
 		return new File(baseDir, BUILD_CONFIGURATION_XML);
 	}
 
-	private void transform(Transformer t, List inputs)
-	{
-		Iterator it = inputs.iterator();
-		while (it.hasNext())
-		{
-			File input = (File)it.next();
-			File output = getOutputFile(input);
-
-			transform(t, input, output);
-		}
-	}
-
-	private void transform(Transformer t, File input, File output)
+	protected void beforeTransform(Transformer t, File input, File output)
 	{
 		String baseDir = input.getParent();
+		XsltUtils.setCurrentDirectory(baseDir);
+		t.setParameter("basepath", baseDir + "/");
+
 		log(baseDir, Project.MSG_INFO);
-
-		try
-		{
-			Composestar.Ant.XsltUtils.setCurrentDirectory(baseDir);
-			t.setParameter("basepath", baseDir + "/");
-
-			Source xmlSource = new StreamSource(input);
-			Result result = new StreamResult(output);
-
-			t.transform(xmlSource, result);
-		}
-		catch (TransformerException e)
-		{
-			//e.getCause().printStackTrace();
-			throw new BuildException(e.toString(), e);
-		}
 	}
 
 	private void registerCstarAsms()
@@ -172,18 +148,21 @@ public final class CstarBuildGen extends TransformTask
 		String[] files = ds.getIncludedFiles();
 		for (int i = 0; i < files.length; i++)
 		{
-			File asmPath = new File(ds.getBasedir().getPath(), files[i]);
-			String asm = asmPath.getName();
-			asm = asm.substring(0, asm.lastIndexOf("."));
-			Composestar.Ant.XsltUtils.registerAssembly(asm, asmPath.toString());
+			File assembly = new File(ds.getBasedir().getPath(), files[i]);
+			String name = getAssemblyName(assembly);
+			XsltUtils.registerAssembly(name, assembly.getAbsolutePath());
 		}
+	}
+	
+	private String getAssemblyName(File assembly)
+	{
+		String asm = assembly.getName();
+		return asm.substring(0, asm.lastIndexOf("."));		
 	}
 	
 	class Modules implements DynamicConfiguratorNS
 	{
-		public Modules()
-		{
-		}
+		public Modules() {}
 		
 		public void setDynamicAttribute(String uri, String localName, String qName, String value) throws BuildException
 		{
@@ -213,6 +192,6 @@ public final class CstarBuildGen extends TransformTask
 		public Object createDynamicElement(String uri, String localName, String qName) throws BuildException
 		{
 			throw new BuildException(getClass() + " doesn't support any nested elements.");
-		}		
+		}
 	}
 }
