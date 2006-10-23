@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.Entities.Configuration;
 
 using Composestar.StarLight.ContextInfo.FilterTypes;
+#endregion
 
 namespace Composestar.StarLight.ILAnalyzer
 {
@@ -41,8 +43,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
         private AssemblyElement _assemblyElement = new AssemblyElement();
         private AssemblyDefinition _assembly;
-        private List<String> _resolvedTypes = new List<String>();
-        private List<String> _unresolvedTypes = new List<String>();
+        private List<String> _resolvedAssemblies = new List<String>();
+        private List<String> _unresolvedAssemblies = new List<String>();
         private List<String> _cachedTypes = new List<String>();
         private bool _saveType = false;
         private bool _saveInnerType = false;
@@ -178,34 +180,34 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
         /// <summary>
-        /// Gets or sets the unresolved types.
+        /// Gets or sets the unresolved assemblies.
         /// </summary>
-        /// <value>The unresolved types.</value>
-        public List<String> UnresolvedTypes
+        /// <value>The unresolved assemblies.</value>
+        public List<String> UnresolvedAssemblies
         {
             get
             {
-                return _unresolvedTypes;
+                return _unresolvedAssemblies;
             }
             set
             {
-                _unresolvedTypes = value;
+                _unresolvedAssemblies = value;
             }
         }
 
         /// <summary>
-        /// Gets or sets the resolved types.
+        /// Gets or sets the resolved assemblies.
         /// </summary>
-        /// <value>The resolved types.</value>
-        public List<String> ResolvedTypes
+        /// <value>The resolved assemblies.</value>
+        public List<String> ResolvedAssemblies
         {
             get
             {
-                return _resolvedTypes;
+                return _resolvedAssemblies;
             }
             set
             {
-                _resolvedTypes = value;
+                _resolvedAssemblies = value;
             }
         }
 
@@ -239,6 +241,8 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, assemblyFilename));
             }
+
+            AddResolvedAssemblyList(_assembly.Name.ToString());
    
             // Fill the assemblyElement values
             _assemblyElement.Name = _assembly.Name.ToString();
@@ -255,15 +259,15 @@ namespace Composestar.StarLight.ILAnalyzer
             }
 
             // Remove types without a proper assembly name, e.g. the generic identifiers T, V, K, TKey, TValue, TOutput, TItem
-            IList<String> unresolvedtypes = new List<String>(UnresolvedTypes);
-            foreach (String type in unresolvedtypes)
-            {
-                if (type.EndsWith(", NULL"))
-                {
-                    UnresolvedTypes.Remove(type);
-                }
-            }
-
+            //IList<String> unresolvedtypes = new List<String>(UnresolvedTypes);
+            //foreach (String type in unresolvedtypes)
+            //{
+            //    if (type.EndsWith(", NULL"))
+            //    {
+            //        UnresolvedTypes.Remove(type);
+            //    }
+            //}
+                      
             // Return the assembly element
             return _assemblyElement;
         }
@@ -306,6 +310,7 @@ namespace Composestar.StarLight.ILAnalyzer
             foreach (TypeReference interfaceDef in type.Interfaces)
             {
                 typeElement.ImplementedInterfaces = String.Format("{0};{1}", typeElement.ImplementedInterfaces, interfaceDef.FullName);
+                AddUnresolvedAssemblyList(interfaceDef);
             }
 
             // Basetype
@@ -313,13 +318,8 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 typeElement.BaseType = type.BaseType.FullName;
 
-                // If the base type has not yet been resolved, add it to the list of unresolved types
-                String baseTypeAFQN = CreateTypeAFQN(_assembly, type.BaseType);
-                if (!CachedTypes.Contains(baseTypeAFQN) && !UnresolvedTypes.Contains(baseTypeAFQN) && !ResolvedTypes.Contains(baseTypeAFQN))
-                {
-                    UnresolvedTypes.Add(baseTypeAFQN);
-                }
-
+                AddUnresolvedAssemblyList(type.BaseType);
+                
                 // Check whether type is a FilterType:
                 if (type.BaseType.FullName.Equals(_filterTypeName))
                 {
@@ -332,22 +332,9 @@ namespace Composestar.StarLight.ILAnalyzer
                     ExtractFilterAction(type);
                 }
             }
-
-            String typeAFQN = CreateTypeAFQN(_assembly, type);
-            this._saveInnerType = this._saveType || UnresolvedTypes.Contains(typeAFQN);
-
-            CachedTypes.Add(typeAFQN);
-
-            if (this._saveType || (UnresolvedTypes.Contains(typeAFQN) || UnresolvedTypes.Contains(type.FullName)))
-                ResolvedTypes.Add(typeAFQN);
-
-            // Remove this type from the list of unresolved types
-            UnresolvedTypes.Remove(typeAFQN);
-            UnresolvedTypes.Remove(type.FullName); // Unresolved types from the cps files are not AFQN style
-
+                 
             _currentType = typeElement;
-            _assemblyElement.Types.Add(_currentType);
-            
+            _assemblyElement.Types.Add(_currentType);            
         }
 
         /// <summary>
@@ -374,12 +361,9 @@ namespace Composestar.StarLight.ILAnalyzer
             me.Name = method.Name;
             me.ReturnType = method.ReturnType.ReturnType.FullName;
 
-            // If the return type has not yet been resolved, add it to the list of unresolved types
-            String returnTypeAFQN = CreateTypeAFQN(_assembly, method.ReturnType.ReturnType);
-            //if (this._saveInnerType && !CachedTypes.Contains(returnTypeAFQN) && !UnresolvedTypes.Contains(returnTypeAFQN))
-            //{
-            //    UnresolvedTypes.Add(returnTypeAFQN);
-            //}
+            // If the return type has not yet been resolved, add it to the list of unresolved types   
+            if (!method.ReturnType.ReturnType.FullName.Equals("System.Void")  )
+                AddUnresolvedAssemblyList(method.ReturnType.ReturnType);
 
             me.IsAbstract = method.IsAbstract;
             me.IsConstructor = method.IsConstructor;
@@ -404,6 +388,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 //pe.IsOut = parameter.Attributes == ParamAttributes.Out;
                 //pe.IsRetVal = !parameter.ParameterType.FullName.Equals("System.Void", StringComparison.CurrentCultureIgnoreCase);
 
+                AddUnresolvedAssemblyList(param.ParameterType);
 
                 me.Parameters.Add(pe);
             }
@@ -469,6 +454,8 @@ namespace Composestar.StarLight.ILAnalyzer
             fe.IsPrivate = field.Attributes == Mono.Cecil.FieldAttributes.Private;
             fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
             fe.IsStatic = field.IsStatic;
+
+            AddUnresolvedAssemblyList(field.FieldType);
 
             _currentType.Fields.Add(fe);
         }
@@ -619,6 +606,70 @@ namespace Composestar.StarLight.ILAnalyzer
         #endregion
 
         #region Helper Functions
+
+
+        /// <summary>
+        /// Adds the assembly to the resolved list.
+        /// </summary>
+        /// <param name="assemblyName">Assembly name</param>
+        private void AddResolvedAssemblyList(string assemblyName)
+        {
+            // Add to resolved
+            if (!_resolvedAssemblies.Contains(assemblyName))
+                _resolvedAssemblies.Add(assemblyName); 
+
+            // remove from unresolved
+            _unresolvedAssemblies.Remove(assemblyName);
+
+        } // UpdateAssemblyList(assemblyName)
+
+        /// <summary>
+        /// Adds the assembly to the unresolved list.
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        private void AddUnresolvedAssemblyList(string assemblyName)
+        {
+            // Check if the assembly is not yet resolved.
+            if (!_resolvedAssemblies.Contains(assemblyName))
+            {
+                if (!_unresolvedAssemblies.Contains(assemblyName))
+                {
+                    _unresolvedAssemblies.Add(assemblyName);                   
+                } // if
+            } // if
+           
+        }
+
+        /// <summary>
+        /// Adds the assembly to the unresolved list.
+        /// </summary>
+        /// <param name="typeReference">The type reference.</param>
+        private void AddUnresolvedAssemblyList(TypeReference typeReference)
+        {
+            if (typeReference == null)
+                return;
+
+            if (typeReference.Scope != null)
+            {
+                // Locally declared type
+                if (typeReference.Scope is ModuleDefinition)
+                {
+                    if (((ModuleDefinition)typeReference.Scope).Assembly != null)
+                    {
+                        AddUnresolvedAssemblyList(((ModuleDefinition)typeReference.Scope).Assembly.Name.FullName);
+                    }
+                }
+
+                // Referenced type
+                foreach (AssemblyNameReference assembly in _assembly.MainModule.AssemblyReferences)
+                {
+                    if (typeReference.Scope.Name == assembly.Name)
+                    {
+                        AddUnresolvedAssemblyList(assembly.FullName);
+                    }
+                }
+            }
+        } 
 
         /// <summary>
         /// Creates the name of the type.

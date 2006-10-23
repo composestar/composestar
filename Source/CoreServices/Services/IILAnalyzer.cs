@@ -14,16 +14,22 @@ namespace Composestar.StarLight.CoreServices
     {
 
         /// <summary>
-        /// Gets the unresolved types.
+        /// Gets the unresolved assemblies.
         /// </summary>
-        /// <value>The unresolved types.</value>
-        List<string> UnresolvedTypes { get; }
+        /// <value>The unresolved assemblies.</value>
+        List<string> UnresolvedAssemblies { get; }
 
         /// <summary>
-        /// Gets the resolved types.
+        /// Gets the resolved assemblies.
         /// </summary>
-        /// <value>The resolved types.</value>
-        List<string> ResolvedTypes { get; }
+        /// <value>The resolved assemblies.</value>
+        List<string> ResolvedAssemblies { get; }
+
+        /// <summary>
+        /// Resolves the assembly locations.
+        /// </summary>
+        /// <returns></returns>
+        List<String> ResolveAssemblyLocations();
 
         /// <summary>
         /// Processes the unresolved types.
