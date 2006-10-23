@@ -67,7 +67,7 @@ public class Graph
 		{
 			newNode = new SimpleConcernNode(this, forConcern);
 		}
-		//forConcern.addDynObject(DIGGER.CONCERN_NODE_KEY, newNode);
+		forConcern.addDynObject(DIGGER.CONCERN_NODE_KEY, newNode);
 		concernNodes.put(forConcern, newNode);
 		return newNode;
 	}

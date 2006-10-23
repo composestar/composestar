@@ -212,7 +212,7 @@ public class FILTHServiceImpl extends FILTHService
 		LinkedList modulerefs = new LinkedList();
 		
 		/* get the superimposition from the repository */
-		SIinfo sinfo = (SIinfo)c.getDynObject("superImpInfo");
+		SIinfo sinfo = (SIinfo)c.getDynObject(SIinfo.DATAMAP_KEY);
 		/* get the firt altnernative */
 		Vector msalts = sinfo.getFilterModSIAlts();
 		

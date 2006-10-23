@@ -27,6 +27,7 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.SIinfo;
 
 public class ModelBuilder implements CTCommonModule{
     private LowLevelInliner inliner;
@@ -95,7 +96,7 @@ public class ModelBuilder implements CTCommonModule{
 
     private void processConcern( Concern concern ){
         //get inputFiltermodules:
-        if ( concern.getDynObject("superImpInfo") == null ){
+        if ( concern.getDynObject(SIinfo.DATAMAP_KEY) == null ){
             return;
         }
         

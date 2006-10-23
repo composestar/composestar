@@ -39,6 +39,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 
 /**
@@ -143,7 +144,7 @@ public class Sign implements CTCommonModule {
         while (conIter.hasNext()) {
             Concern concern = (Concern) conIter.next();
             
-            if (concern.getDynObject("superImpInfo") != null) {
+            if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null) {
                 filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
                 model = new FireModel(concern, filterModules, true);
                 analysisModels.put(concern, model);
@@ -1223,7 +1224,7 @@ public class Sign implements CTCommonModule {
             Concern concern = (Concern) conIter.next();
 
             Signature st = concern.getSignature();
-            if (st != null && concern.getDynObject("superImpInfo") != null) {
+            if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null) {
                 Debug.out(Debug.MODE_INFORMATION, "Sign",
                         "\tSignature for concern: "
                                 + concern.getQualifiedName());

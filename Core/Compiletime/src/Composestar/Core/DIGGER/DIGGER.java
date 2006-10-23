@@ -72,7 +72,7 @@ public class DIGGER implements CTCommonModule
 	protected void dig() throws ModuleException
 	{
 		graph = new Graph();
-		//DataStore.instance().addObject(DISPATCH_GRAPH_KEY, graph);
+		DataStore.instance().addObject(DISPATCH_GRAPH_KEY, graph);
 
 		Iterator concerns = DataStore.instance().getAllInstancesOf(Concern.class);
 		while (concerns.hasNext())

@@ -26,6 +26,7 @@ import Composestar.Core.FIRE2.util.iterator.ExecutionStateIterator;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 
 /**
@@ -47,7 +48,7 @@ public class Core implements CTCommonModule{
         {
             Concern concern = (Concern) conIter.next();
             
-            if (concern.getDynObject("superImpInfo") != null){
+            if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null){
                 FilterModuleOrder filterModules = 
                     (FilterModuleOrder) concern.getDynObject( FilterModuleOrder.SINGLE_ORDER_KEY );
                 

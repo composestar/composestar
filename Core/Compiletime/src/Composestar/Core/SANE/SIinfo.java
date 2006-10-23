@@ -15,6 +15,9 @@ import Composestar.Utils.*;
  * [this aggregate is necessary to enable the inclusion of alternatives]
  */
 public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity {
+	
+	public static final String DATAMAP_KEY = "superImpInfo";
+	
   /**
 	 * 
 	 */

@@ -47,7 +47,7 @@ public class FILTH implements CTCommonModule
 		{   
 			Concern c = (Concern)conIter.next();
  
-			SIinfo sinfo = (SIinfo)c.getDynObject("superImpInfo");
+			SIinfo sinfo = (SIinfo)c.getDynObject(SIinfo.DATAMAP_KEY);
 			if(sinfo != null)
 			{
 				List list;

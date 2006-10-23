@@ -51,7 +51,7 @@ public class SANE implements CTCommonModule {
          
          /*	TODO why was this removed??     
          	SIinfo siInfo =  new SIinfo(nextEnt);  // create SIinfo instance and set its parent
-            nextEnt.addDynObject("superImpInfo",siInfo);  // add to hashtable entry of concern
+            nextEnt.addDynObject(SIinfo.DATAMAP_KEY,siInfo);  // add to hashtable entry of concern
             siInfo.resolveSI(nextEnt); // start actual resolving of selector
          */
       }
@@ -91,7 +91,7 @@ public class SANE implements CTCommonModule {
     * @roseuid 405A0C100376
     */
    public static SIinfo getSIinfo(Concern concern) {
-      return (SIinfo)concern.getDynObject("superImpInfo");
+      return (SIinfo)concern.getDynObject(SIinfo.DATAMAP_KEY);
    }
 
    /**
@@ -134,11 +134,11 @@ public class SANE implements CTCommonModule {
 	               siConcern= ((ConcernReference)aRef).getRef();
 	               if (siConcern != null) //TODO: now exception generated!
 	                  {
-	                  siInfo= (SIinfo)siConcern.getDynObject("superImpInfo");
+	                  siInfo= (SIinfo)siConcern.getDynObject(SIinfo.DATAMAP_KEY);
 	                  // if this is not available yet, create it, including one alternative.
 	                  if (siInfo == null) {
 	                     siInfo= new SIinfo();
-	                     siConcern.addDynObject("superImpInfo", siInfo);
+	                     siConcern.addDynObject(SIinfo.DATAMAP_KEY, siInfo);
 	                  }
 	                  try {
 	                     siInfo.addFMsAt(fmBinding.getFilterModuleIterator(), 0);
@@ -193,11 +193,11 @@ public class SANE implements CTCommonModule {
 	         while (selConcIter.hasNext()) {
 	            siConcern=
 	               ((ConcernReference)selConcIter.next()).getRef();
-	            siInfo= (SIinfo)siConcern.getDynObject("superImpInfo");
+	            siInfo= (SIinfo)siConcern.getDynObject(SIinfo.DATAMAP_KEY);
 	            // if this is not available yet, create it, including one alternative.
 	            if (siInfo == null) {
 	               siInfo= new SIinfo();
-	               siConcern.addDynObject("superImpInfo", siInfo);
+	               siConcern.addDynObject(SIinfo.DATAMAP_KEY, siInfo);
 	            }
 	            siInfo.addMethodsAt(methodBinding.getMethodIterator(), 1);
 	         } // for
@@ -241,11 +241,11 @@ public class SANE implements CTCommonModule {
 	         while (selConcIter.hasNext()) {
 	            siConcern=
 	               ((ConcernReference)selConcIter.next()).getRef();
-	            siInfo= (SIinfo)siConcern.getDynObject("superImpInfo");
+	            siInfo= (SIinfo)siConcern.getDynObject(SIinfo.DATAMAP_KEY);
 	            // if this is not available yet, create it, including one alternative.
 	            if (siInfo == null) {
 	               siInfo= new SIinfo();
-	               siConcern.addDynObject("superImpInfo", siInfo);
+	               siConcern.addDynObject(SIinfo.DATAMAP_KEY, siInfo);
 	            }
 	            siInfo.addCondsAt(condBinding.getConditionIterator(), 1);
 	         } // for

@@ -30,6 +30,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
@@ -119,7 +120,7 @@ public class CKRET implements CTCommonModule
 		{
 			Concern concern = (Concern) conIt.next();
 
-			if (concern.getDynObject("superImpInfo") != null)
+			if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null)
 			{
 				if (incre.isProcessedByModule(concern,"CKRET"))
 				{
