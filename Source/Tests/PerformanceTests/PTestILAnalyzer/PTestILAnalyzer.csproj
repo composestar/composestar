@@ -60,10 +60,6 @@
       <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
       <Name>ILAnalyzer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TestMocks\TestMocks.csproj">
-      <Project>{E3F2BDF7-7AC5-4C89-A01E-10D269EB0B1C}</Project>
-      <Name>TestMocks</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
