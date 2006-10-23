@@ -1,0 +1,72 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"Concerns"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a2606d7a-857f-49c4-966d-65c6f2fb7d93}</ProjectGuid>
+    <RepositoryFilename>obj\StarLight.xml</RepositoryFilename>
+    <ProjectType>StarLight</ProjectType>
+    <RootNamespace>Concerns</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+    <VerifyIL>False</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FilterTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>FilterTypes</Name>
+      <AssemblyName>FilterTypes.dll</AssemblyName>
+      <HintPath>..\..\FilterTypes\FilterTypes\bin\Debug\FilterTypes.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FilterTypes\FilterTypes\FilterTypes.csproj">
+      <Name>FilterTypes</Name>
+      <Project>{015c33a1-b6a8-4dfa-9baf-29744096e160}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Configuration\Configuration.csproj">
+      <Name>Configuration</Name>
+      <Project>{af96c135-7b5d-4165-b846-1bc1fab3a026}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeviceA\DeviceA.csproj">
+      <Name>DeviceA</Name>
+      <Project>{ee305668-b39a-4a26-a064-d7e8ecdb0cae}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeviceB\DeviceB.csproj">
+      <Name>DeviceB</Name>
+      <Project>{3d5e0c04-5d5d-491e-965c-0c9f4d8dd7d2}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeviceController\DeviceController.csproj">
+      <Name>DeviceController</Name>
+      <Project>{e8abbf05-ad46-442d-9c83-5d1a1a59c514}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="TraceDeviceA.cps" />
+    <Concern Include="TraceDeviceB.cps" />
+  </ItemGroup>
+  <!--Import the standards targets-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />
+</Project>
