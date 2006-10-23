@@ -30,6 +30,10 @@ namespace Composestar.StarLight.CpsParser
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Gets the filename of the concern to parse.
+        /// </summary>
+        /// <value>The filename of the concern.</value>
         private String FileName
         {
             get { return _configuration.Filename; }
@@ -49,23 +53,14 @@ namespace Composestar.StarLight.CpsParser
 
         private bool _hasOutputFilters = false;
 
+        /// <summary>
+        /// Get whether or not a concern with outputfilters was parsed.
+        /// </summary>
+        /// <value>True if a concern with outputfilters was parsed, false otherwise.</value>
         public bool HasOutputFilters
         {
             get { return _hasOutputFilters; }
         }
-
-        /// <summary>
-        /// Parse file for referenced types
-        /// </summary>
-        /// <param name="fileName">File name</param>
-        /// <returns>List</returns>
-        public List<String> ParseFileForReferencedTypes(String fileName)
-        {
-            Parse();
-            //ParseFile(fileName);
-
-            return types;
-        } // ParseFileForReferencedTypes(fileName)
 
         /// <summary>
         /// Parses the file.
@@ -98,11 +93,6 @@ namespace Composestar.StarLight.CpsParser
                     {
                         Walk(top, false, null);
                     } // if
-
-                    //if (parser.sourceIncluded)
-                    //{
-                    //    Console.WriteLine("Embedded source found!!");
-                    //}
                 }
             }
             catch (IOException ex)
@@ -139,6 +129,7 @@ namespace Composestar.StarLight.CpsParser
                 doType = true;
             }
 
+            // Set the global HasOutputFilters variable, if we find a 'outputfilters' token
             if (tree.Type == CpsTokenTypes.OFILTER_) this._hasOutputFilters = true;
 
             // Initialize the parsingType string when we find a type node
