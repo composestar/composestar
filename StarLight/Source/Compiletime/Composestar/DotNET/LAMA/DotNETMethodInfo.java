@@ -10,16 +10,19 @@
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-import Composestar.Repository.LanguageModel.MethodElement;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.UnitResult;
+
+import composestar.dotNET.tym.entities.MethodElement;
 
 /**
  * Corresponds to the MethodInfo class in the .NET framework. For more information 

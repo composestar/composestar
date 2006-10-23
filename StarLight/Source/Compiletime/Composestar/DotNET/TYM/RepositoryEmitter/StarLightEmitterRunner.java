@@ -4,10 +4,11 @@
  */
 package Composestar.DotNET.TYM.RepositoryEmitter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -22,12 +23,10 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
-import Composestar.Core.FIRE2.model.Message;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INLINE.lowlevel.ModelBuilder;
 import Composestar.Core.INLINE.model.Block;
 import Composestar.Core.INLINE.model.Branch;
@@ -41,9 +40,7 @@ import Composestar.Core.INLINE.model.Label;
 import Composestar.Core.INLINE.model.Switch;
 import Composestar.Core.INLINE.model.Visitor;
 import Composestar.Core.INLINE.model.While;
-import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ParameterInfo;
 import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
@@ -51,370 +48,363 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.DotNET.LAMA.DotNETCallToOtherMethod;
 import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
-import Composestar.Repository.RepositoryAccess;
-import Composestar.Repository.LanguageModel.CallElement;
-import Composestar.Repository.LanguageModel.MethodBody;
-import Composestar.Repository.LanguageModel.MethodElement;
-import Composestar.Repository.LanguageModel.Reference;
-import Composestar.Repository.LanguageModel.TypeElement;
+import Composestar.DotNET.MASTER.StarLightMaster;
 import Composestar.Utils.Debug;
 
-public class StarLightEmitterRunner implements CTCommonModule 
+import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
+import composestar.dotNET.tym.entities.AssemblyConfig;
+import composestar.dotNET.tym.entities.ContextType;
+import composestar.dotNET.tym.entities.InlineInstruction;
+import composestar.dotNET.tym.entities.Reference;
+import composestar.dotNET.tym.entities.WeaveCall;
+import composestar.dotNET.tym.entities.WeaveMethod;
+import composestar.dotNET.tym.entities.WeaveSpecification;
+import composestar.dotNET.tym.entities.WeaveSpecificationDocument;
+import composestar.dotNET.tym.entities.WeaveType;
+
+public class StarLightEmitterRunner implements CTCommonModule
 {
-    private Vector callsToOtherMethods = new Vector();
-    private RepositoryAccess repository;
-    
-    private INCRETimer emitTimer = INCRE.instance().getReporter().openProcess( 
-    		"EMITTER", "storing to database", INCRETimer.TYPE_NORMAL );
-    private INCRETimer commitTimer = INCRE.instance().getReporter().openProcess( 
-    		"EMITTER", "comitting to database", INCRETimer.TYPE_NORMAL );
+	private Vector callsToOtherMethods = new Vector();
 
-    public void run(CommonResources resources) throws ModuleException 
-    {
-        repository = new RepositoryAccess();
-        
-        // Emit all types to persistent repository
-        emitTypes();
-    }
-    
-    private void emitTypes() throws ModuleException
-    {
-    	int count = 0;
-        DataStore dataStore = DataStore.instance();
-        
-        Iterator concernIterator = dataStore.getAllInstancesOf( Concern.class );
-        while( concernIterator.hasNext() ){
-            Concern concern = (Concern) concernIterator.next();
-            DotNETType type = (DotNETType) concern.getPlatformRepresentation();
-            
-            if ( type == null )
-                continue;
-            
-            if ( concern.getDynObject("superImpInfo") != null ){
-                //get filtermodules:
-                FilterModuleOrder order = 
-                    (FilterModuleOrder) concern.getDynObject( "SingleOrder" );
+	private Hashtable weaveSpecs = new Hashtable();
 
-//                TypeElement storedType = repository.GetTypeElement( type.fullName() );
-                TypeElement storedType = type.getTypeElement();
+	public void run(CommonResources resources) throws ModuleException
+	{
 
-                Iterator filterModules = order.orderAsList().iterator();
-                while( filterModules.hasNext() ){
-                    String ref = (String) filterModules.next();
-                    FilterModule filterModule = (FilterModule) dataStore.getObjectByID( ref );
-                    
-                    //internals:
-                    Iterator internals = filterModule.getInternalIterator();
-                    
-                    while( internals.hasNext() ){
-                        Internal internal = (Internal) internals.next();
-                        Composestar.Repository.LanguageModel.Internal storedInternal =
-                            new Composestar.Repository.LanguageModel.Internal();
-                        
-                        //name:
-                        storedInternal.set_Name( internal.getName() );
-                        
-                        //namespace:
-                        StringBuffer namespace = new StringBuffer();
-                        Enumeration packages = internal.getType().getPackage().elements();
-                        while( packages.hasMoreElements() ){
-                            namespace.append( packages.nextElement() );
-                            if ( packages.hasMoreElements() ){
-                                namespace.append( "." );
-                            }
-                        }
-                        storedInternal.set_NameSpace( namespace.toString() );
-                        
-                        //typename:
-                        storedInternal.set_Type( internal.getType().getName() );
-                        
-                        storedInternal.set_ParentTypeId( storedType.get_Id() );
-                        
-                        //store internal:
-                        repository.storeInternal( storedInternal );
-                    }
-                    
-                    
-                    //externals:
-                    Iterator externals = filterModule.getExternalIterator();
-                    
-                    while( externals.hasNext() ){
-                        External external = (External) externals.next();
-                        Composestar.Repository.LanguageModel.External storedExternal =
-                            new Composestar.Repository.LanguageModel.External();
-                        
-                        //name:
-                        storedExternal.set_Name( external.getName() );
-                        
-                        //reference:
-                        ExternalConcernReference reference = external.getShortinit();
-                        Reference storedReference = createReference( type, reference.getPackage(), 
-                        		reference.getName(), reference.getInitSelector() );
-                        storedExternal.set_Reference( storedReference );
-                        
-                        //type:
-                        StringBuffer packages = new StringBuffer();
-                        Enumeration enumer = external.getType().getPackage().elements();
-                        while( enumer.hasMoreElements() ){
-                            packages.append( enumer.nextElement() );
-                            packages.append( '.' );
-                        }
-                        storedExternal.set_Type( packages.toString() + external.getType().getName() );
-                        
-                        //parent id:
-                        storedExternal.set_ParentTypeId( storedType.get_Id() );
-                        
-                        //store external:
-                        repository.storeExternal( storedExternal );
-                    }
-                    
-                    
-                    //conditions:
-                    Iterator conditions = filterModule.getConditionIterator();
-                    while( conditions.hasNext() ){
-                        Condition condition = (Condition) conditions.next();
-                        
-                        Composestar.Repository.LanguageModel.Condition storedCondition =
-                            new Composestar.Repository.LanguageModel.Condition();
-                        
-                        //name:
-                        storedCondition.set_Name( condition.getName() );
-                        
-                        //reference:
-                        Reference reference = createReference( type, 
-                        		condition.getShortref().getPackage(), 
-                                condition.getShortref().getName(), 
-                                (String) condition.getDynObject( "selector" ) );
-                        
-                        storedCondition.set_Reference( reference );
-                        
-                        storedCondition.set_ParentTypeId( storedType.get_Id() );
-                        
-                        //store condition:
-                        repository.storeCondition( storedCondition );
-                    }
-                }
+		// Emit all types to persistent repository
+		try
+		{
+			emitTypes();
+		}
+		catch (NullPointerException exc)
+		{
+			throw new ModuleException("NullPointerException in emitter", "EMITTER");
+		}
+	}
 
-                //emit methods:
-                emitMethods( type, storedType );
+	private void emitTypes() throws ModuleException
+	{
+		DataStore dataStore = DataStore.instance();
 
-                //store type:
-                repository.storeTypeElement( storedType );
-                
-                //commit on every onehundred stored typeelements:
-                count++;
-                if ( count == 100 ){
-                	commitTimer.start();
-                	repository.commit();
-                	commitTimer.stop();
-                	count = 0;
-                }
-            }
-        }
-        
-        commitTimer.start();
-    	repository.commit();
-    	commitTimer.stop();
-    }
-    
-    private Reference createReference( Type type, Vector pack, String target,
-            String selector )
-    {
-        Reference storedRef = new Reference();
-        
-        //namespace:
-        StringBuffer namespace = new StringBuffer();
-        Enumeration packages = pack.elements();
-        while( packages.hasMoreElements() ){
-            namespace.append( packages.nextElement() );
-            if ( packages.hasMoreElements() ){
-                namespace.append( '.' );
-            }
-        }
-        storedRef.set_NameSpace( namespace.toString() );
-        
-        //selector:
-        storedRef.set_Selector( selector );
-        
-        //target:
-        storedRef.set_Target( target );
-        
-        //innercall context:
-        if ( target.equals( "inner" ) ){
-        	MethodInfo methodInfo = type.getMethod( selector, new String[0] );
-        	if ( methodInfo != null ){
-        		storedRef.set_InnerCallContext( ModelBuilder.getInnerCallContext( methodInfo ) );
-        	}
-        	else{
-        		storedRef.set_InnerCallContext( -1 );
-        	}
-        }
-        else{
-        	storedRef.set_InnerCallContext( -1 );
-        }
-        
-        return storedRef;
-    }
-    
-    
-    private void emitMethods(Type type, TypeElement storedType) throws ModuleException
-    {
-    	Debug.out( Debug.MODE_DEBUG, "Emitter",  "Emit type: " + type.fullName());
-    	
-        Iterator methods = type.getMethods().iterator();
-        
-        while( methods.hasNext() ){
-        	DotNETMethodInfo method = (DotNETMethodInfo) methods.next();
-//            Debug.out( Debug.MODE_DEBUG, "Emitter",  "  Emit method: " + method.name());
-            MethodElement storedMethod;
-            
-            //get the block containing the filterinstructions:
-            Block filterInstructions = ModelBuilder.getInputFilterCode( method );
-            
-            if ( filterInstructions != null ){
-            
-                //get stored method:
-                String key = createKey( method );
-                
-                storedMethod = method.getMethodElement();
-                storedMethod.set_HasInputfilters( true );
-                Debug.out( Debug.MODE_DEBUG, "Emitter",  "key:" +key);
+		WeaveSpecification weaveSpec;
 
-                if (storedMethod == null) {
-                	Debug.out( Debug.MODE_ERROR, "Emitter", "Method not found : " + method.name() + "in type " + type.fullName() );
-                	return;
-                }
-                
-                //add inputfilter code:
-                if (storedMethod.get_HasMethodBody()) {
-                	MethodBody body = storedMethod.get_MethodBody();
-//                	body.set_InputFilter( translateInstruction( filterInstructions ) );
-                	body.set_InputFilter(translateInstruction(filterInstructions));
-                }
-                           
-                //store methodElement:
-//                Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing method" + storedMethod.toString() );
-                emitTimer.start();
-                repository.storeMethodElement( storedMethod );
-                emitTimer.stop();
-                
-                // emit calls:
-                emitCalls( method, storedMethod );
-            }
-        }
-    }
-    
-    private Hashtable createMethodIndex( List storedMethods ){
-        Hashtable index = new Hashtable();
-        
-        Iterator methodIter = storedMethods.iterator();
-        
-        while( methodIter.hasNext() ){
-            MethodElement method = (MethodElement) methodIter.next();
-            String key = createKey( method );
-            index.put( key, method );
-        }
-        
-        return index;
-    }
-    
-    private String createKey( MethodInfo method ){
-        StringBuffer buffer = new StringBuffer();
-        
-        buffer.append( method.getReturnTypeString() );
-        buffer.append( ' ' );
-        buffer.append( method.parent().fullName() );
-        
-        buffer.append( "::" );
-        
-        buffer.append( method.name() );
-        
-        buffer.append( '(' );
-        Iterator parameters = method.getParameters().iterator();
-        while( parameters.hasNext() ){
-            ParameterInfo parameter = (ParameterInfo) parameters.next();
-            buffer.append( parameter.ParameterTypeString );//FIXME use parametertype instead
-            if ( parameters.hasNext() ){
-                buffer.append( ',' );
-            }
-        }
-        buffer.append( ')' );
-        
-        return buffer.toString();
-    }
-    
-    private String createKey( MethodElement method ){
-        return method.get_Signature();
-    }
-    
-    private void emitCalls( MethodInfo method, MethodElement storedMethod ){
-        MethodBody body = storedMethod.get_MethodBody();
-                
-        Iterator calls = method.getCallsToOtherMethods().iterator();
-        
-        while( calls.hasNext() ){
-            DotNETCallToOtherMethod call = (DotNETCallToOtherMethod) calls.next();
-            
-            //get stored call:
-            String key = createKey( call );
-            CallElement storedCall = call.getCallElement();
-            
-            //add outputfilter code:
-            Block code = ModelBuilder.getOutputFilterCode( call );
-            if ( code != null ){
-            	String instructionXml = translateInstruction( code );
-            	storedCall.set_OutputFilter( instructionXml );
+		Iterator concernIterator = dataStore.getAllInstancesOf(Concern.class);
+		while (concernIterator.hasNext())
+		{
+			Concern concern = (Concern) concernIterator.next();
+			DotNETType type = (DotNETType) concern.getPlatformRepresentation();
 
-            	Debug.out( Debug.MODE_DEBUG, "Emitter", "Storing call" + storedCall.toString() );
-            	
-            	//write call back:
-            	repository.storeCallElement( storedCall );
-            	
-            	//tag MethodElement:
-            	storedMethod.set_HasOutputFilters( true );
-            	repository.storeMethodElement( storedMethod );
-            }
-        }
-    }
-    
-    private Hashtable createCallIndex( List storedCalls ){
-        Hashtable index = new Hashtable();
-        
-        Iterator callIter = storedCalls.iterator();
-        
-        while( callIter.hasNext() ){
-            CallElement call = (CallElement) callIter.next();
-            String key = createKey( call );
-            index.put( key, call );
-        }
-        
-        return index;
-    }
-    
-    private String createKey( CallToOtherMethod call ){
-        return call.getOperationName();
-    }
-    
-    private String createKey( CallElement call ){
-        return call.get_MethodReference();
-    }
-    
-    private String translateInstruction( Block block ){
-    	InstructionTranslater translater = InstructionTranslater.getInstance();
-    	translater.start();
-    	block.accept( translater );
-    	return translater.getXml();
-    }
-    
-    
-    
-    private static class InstructionTranslater implements Visitor
+			if (type == null) continue;
+
+			if (concern.getDynObject("superImpInfo") != null)
+			{
+				// get weavespec:
+				weaveSpec = getWeaveSpec(type.getFromDLL());
+
+				// get filtermodules:
+				FilterModuleOrder order = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+
+				WeaveType weaveType = weaveSpec.getWeaveTypes().addNewWeaveType();
+				weaveType.addNewConditions();
+				weaveType.addNewExternals();
+				weaveType.addNewInternals();
+				weaveType.addNewMethods();
+
+				Iterator filterModules = order.orderAsList().iterator();
+				while (filterModules.hasNext())
+				{
+					String ref = (String) filterModules.next();
+					FilterModule filterModule = (FilterModule) dataStore.getObjectByID(ref);
+
+					// internals:
+					Iterator internals = filterModule.getInternalIterator();
+
+					while (internals.hasNext())
+					{
+						weaveType.getInternals().addNewInternal();
+
+						// store internal:
+						Internal internal = (Internal) internals.next();
+						composestar.dotNET.tym.entities.Internal storedInternal = weaveType.getInternals()
+								.addNewInternal();
+
+						// name:
+						storedInternal.setName(internal.getName());
+
+						// namespace:
+						StringBuffer namespace = new StringBuffer();
+						Enumeration packages = internal.getType().getPackage().elements();
+						while (packages.hasMoreElements())
+						{
+							namespace.append(packages.nextElement());
+							if (packages.hasMoreElements())
+							{
+								namespace.append(".");
+							}
+						}
+						storedInternal.setNameSpace(namespace.toString());
+
+						// typename:
+						storedInternal.setType(internal.getType().getName());
+
+						// assembly:
+						DotNETType type2 = (DotNETType) internal.getType().getRef().getPlatformRepresentation();
+						storedInternal.setAssembly(type2.fromDLL);
+					}
+
+					// externals:
+					Iterator externals = filterModule.getExternalIterator();
+
+					while (externals.hasNext())
+					{
+						// store external
+						External external = (External) externals.next();
+						composestar.dotNET.tym.entities.External storedExternal = weaveType.getExternals()
+								.addNewExternal();
+
+						// name:
+						storedExternal.setName(external.getName());
+
+						// reference:
+						ExternalConcernReference reference = external.getShortinit();
+						DotNETType refType = (DotNETType) reference.getRef().getPlatformRepresentation();
+						Reference storedReference = createReference(type, refType.getFromDLL(), reference.getPackage(),
+								reference.getName(), reference.getInitSelector());
+						storedExternal.setReference(storedReference);
+
+						// type:
+						StringBuffer packages = new StringBuffer();
+						Enumeration enumer = external.getType().getPackage().elements();
+						while (enumer.hasMoreElements())
+						{
+							packages.append(enumer.nextElement());
+							packages.append('.');
+						}
+						storedExternal.setType(packages.toString() + external.getType().getName());
+
+						// assembly:
+						DotNETType type2 = (DotNETType) external.getType().getRef().getPlatformRepresentation();
+						storedExternal.setAssembly(type2.getFromDLL());
+					}
+
+					// conditions:
+					Iterator conditions = filterModule.getConditionIterator();
+					while (conditions.hasNext())
+					{
+
+						// store condition:
+						Condition condition = (Condition) conditions.next();
+						composestar.dotNET.tym.entities.Condition storedCondition = weaveType.getConditions()
+								.addNewCondition();
+
+						// name:
+						storedCondition.setName(condition.getName());
+
+						// reference:
+						DeclaredObjectReference dor = (DeclaredObjectReference) condition.getShortref();
+						DotNETType type2 = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
+						Reference reference = createReference(type, type2.getFromDLL(), condition.getShortref()
+								.getPackage(), condition.getShortref().getName(), (String) condition
+								.getDynObject("selector"));
+
+						storedCondition.setReference(reference);
+					}
+				}
+
+				// emit methods:
+				emitMethods(type, weaveType);
+			}
+		}
+
+		// write specfiles:
+		ArrayOfAssemblyConfig assemblies = StarLightMaster.getConfigContainer().getAssemblies();
+		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
+		{
+			AssemblyConfig config = assemblies.getAssemblyConfigArray(i);
+			if (weaveSpecs.containsKey(config.getFilename()))
+			{
+				weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getFilename());
+				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
+				doc.setWeaveSpecification(weaveSpec);
+				String filename = config.getSerializedFilename() + "weavespec.xml";
+				File file = new File(filename);
+				try
+				{
+					doc.save(file);
+				}
+				catch (IOException e)
+				{
+					throw new ModuleException("IOException while writing weavespecfile " + filename, "EMITTER");
+				}
+				config.setWeaveSpecificationFile(filename);
+			}
+		}
+	}
+
+	/**
+	 * Gets the weavespecification corresponding with a given dll
+	 * 
+	 * @param dllName The dll for which the weavespec needs to be returned
+	 * @return The weavespec for the given dll. If not existing, a new one is
+	 *         created.
+	 */
+	private WeaveSpecification getWeaveSpec(String dllName)
+	{
+		if (weaveSpecs.containsKey(dllName))
+		{
+			return (WeaveSpecification) weaveSpecs.get(dllName);
+		}
+		else
+		{
+			WeaveSpecification weaveSpec = WeaveSpecification.Factory.newInstance();
+			weaveSpec.addNewWeaveTypes();
+			weaveSpecs.put(dllName, weaveSpec);
+			return weaveSpec;
+		}
+	}
+
+	/**
+	 * Creates the reference used by the external and condition to retrieve it's
+	 * instance/value
+	 * 
+	 * @param type
+	 * @param pack
+	 * @param target
+	 * @param selector
+	 * @return
+	 */
+	private Reference createReference(Type type, String assembly, Vector pack, String target, String selector)
+	{
+		Reference storedRef = Reference.Factory.newInstance();
+
+		// namespace:
+		StringBuffer namespace = new StringBuffer();
+		Enumeration packages = pack.elements();
+		while (packages.hasMoreElements())
+		{
+			namespace.append(packages.nextElement());
+			if (packages.hasMoreElements())
+			{
+				namespace.append('.');
+			}
+		}
+		storedRef.setNameSpace(namespace.toString());
+
+		// selector:
+		storedRef.setSelector(selector);
+
+		// target:
+		storedRef.setTarget(target);
+
+		// innercall context:
+		if (target.equals("inner"))
+		{
+			MethodInfo methodInfo = type.getMethod(selector, new String[0]);
+			if (methodInfo != null)
+			{
+				storedRef.setInnerCallContext(ModelBuilder.getInnerCallContext(methodInfo));
+			}
+			else
+			{
+				storedRef.setInnerCallContext(-1);
+			}
+		}
+		else
+		{
+			storedRef.setInnerCallContext(-1);
+		}
+
+		// assembly:
+		storedRef.setAssembly(assembly);
+
+		return storedRef;
+	}
+
+	private void emitMethods(Type type, WeaveType weaveType) throws ModuleException
+	{
+		boolean hasFilters;
+		Vector methods = new Vector();
+
+		Debug.out(Debug.MODE_DEBUG, "Emitter", "Emit type: " + type.fullName());
+
+		Iterator methodIter = type.getMethods().iterator();
+
+		while (methodIter.hasNext())
+		{
+			hasFilters = false;
+			DotNETMethodInfo method = (DotNETMethodInfo) methodIter.next();
+			WeaveMethod weaveMethod = WeaveMethod.Factory.newInstance();
+			weaveMethod.addNewWeaveCalls();
+
+			// get the block containing the filterinstructions:
+			Block filterInstructions = ModelBuilder.getInputFilterCode(method);
+
+			if (filterInstructions != null)
+			{
+				hasFilters = true;
+
+				// add inputfilter code:
+				weaveMethod.setInputFilter(translateInstruction(filterInstructions));
+			}
+
+			// emit calls:
+			hasFilters = hasFilters || emitCalls(method, weaveMethod);
+
+			// add method if it has filters inlined:
+			if (hasFilters)
+			{
+				methods.add(weaveMethod);
+			}
+		}
+
+		// add inlined methods to type:
+		weaveType.getMethods().setWeaveMethodArray((WeaveMethod[]) methods.toArray(new WeaveMethod[0]));
+	}
+
+	private boolean emitCalls(MethodInfo method, WeaveMethod weaveMethod)
+	{
+		boolean hasFilters = false;
+		Iterator calls = method.getCallsToOtherMethods().iterator();
+
+		while (calls.hasNext())
+		{
+			DotNETCallToOtherMethod call = (DotNETCallToOtherMethod) calls.next();
+
+			// add outputfilter code:
+			Block code = ModelBuilder.getOutputFilterCode(call);
+			if (code != null)
+			{
+				WeaveCall weaveCall = weaveMethod.getWeaveCalls().addNewWeaveCall();
+
+				// set methodname:
+				weaveCall.setMethodName(call.getMethodName());
+
+				// set filtercode
+				weaveCall.setOutputFilter(translateInstruction(code));
+
+				Debug.out(Debug.MODE_DEBUG, "Emitter", "Storing call" + weaveCall.toString());
+
+				// set hasfilters to true to indicate that the method has
+				// filters
+				hasFilters = true;
+			}
+		}
+
+		// return hasfilters
+		return hasFilters;
+	}
+
+	private InlineInstruction translateInstruction(Block block)
+	{
+		InstructionTranslater translater = InstructionTranslater.getInstance();
+		return (InlineInstruction) block.accept(translater);
+	}
+
+	private static class InstructionTranslater implements Visitor
 	{
 		private final static InstructionTranslater INSTANCE = new InstructionTranslater();
 
 		private Hashtable fullNameMap = new Hashtable();
-
-		private StringBuffer buffer = new StringBuffer();
 
 		private InstructionTranslater()
 		{
@@ -435,42 +425,34 @@ public class StarLightEmitterRunner implements CTCommonModule
 		{
 			return INSTANCE;
 		}
-		
-		public void start(){
-			buffer = new StringBuffer();
-			buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		}
-		
-		public void stop(){
-			
-		}
-		
-		public String getXml(){
-			return buffer.toString();
-		}
 
 		/**
 		 * @see Composestar.Core.INLINE.model.Visitor#visitBlock(Composestar.Core.INLINE.model.Block)
 		 */
 		public Object visitBlock(Block block)
 		{
-			buffer.append("<Block");
-			setLabel(block);
-			buffer.append(">");
-			
+			composestar.dotNET.tym.entities.Block weaveBlock = composestar.dotNET.tym.entities.Block.Factory
+					.newInstance();
+			weaveBlock.addNewInstructions();
+
+			setLabel(block, weaveBlock);
+
+			// create contained instructions:
+			Vector inlineInstructions = new Vector();
 			Enumeration instructions = block.getInstructions();
 			while (instructions.hasMoreElements())
 			{
 				Instruction instruction = (Instruction) instructions.nextElement();
 
-				//buffer.append("<BlockItem>");
-				instruction.accept(this);
-				//buffer.append("</BlockItem>");
+				InlineInstruction inlineInstruction = (InlineInstruction) instruction.accept(this);
+				inlineInstructions.add(inlineInstruction);
 			}
 
-			buffer.append("</Block>");
+			// add contained instructions to the weaveBlock:
+			weaveBlock.getInstructions().setInstructionArray(
+					(InlineInstruction[]) inlineInstructions.toArray(new InlineInstruction[0]));
 
-			return null;
+			return weaveBlock;
 		}
 
 		/**
@@ -478,25 +460,18 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitBranch(Branch branch)
 		{
-			buffer.append("<Branch");
-			setLabel(branch);
-			buffer.append(">");
+			composestar.dotNET.tym.entities.Branch weaveBranch = composestar.dotNET.tym.entities.Branch.Factory
+					.newInstance();
 
-			buffer.append("<ConditionExpression>");
-			translateConditionExpression(branch.getConditionExpression());
-			buffer.append("</ConditionExpression>");
+			setLabel(branch, weaveBranch);
 
-			buffer.append("<TrueBlock>");
-			branch.getTrueBlock().accept(this);
-			buffer.append("</TrueBlock>");
+			weaveBranch.setCondition(translateConditionExpression(branch.getConditionExpression()));
 
-			buffer.append("<FalseBlock>");
-			branch.getFalseBlock().accept(this);
-			buffer.append("</FalseBlock>");
+			weaveBranch.setTrueBlock((composestar.dotNET.tym.entities.Block) branch.getTrueBlock().accept(this));
 
-			buffer.append("</Branch>");
+			weaveBranch.setFalseBlock((composestar.dotNET.tym.entities.Block) branch.getFalseBlock().accept(this));
 
-			return null;
+			return weaveBranch;
 		}
 
 		/**
@@ -504,31 +479,53 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitContextInstruction(ContextInstruction contextInstruction)
 		{
-			buffer.append("<ContextInstruction");
-			setLabel(contextInstruction);
+			composestar.dotNET.tym.entities.ContextInstruction weaveInstr = composestar.dotNET.tym.entities.ContextInstruction.Factory
+					.newInstance();
 
-			buffer.append(" type=\"");
-			buffer.append(contextInstruction.getType());
-			buffer.append("\"");
+			setLabel(contextInstruction, weaveInstr);
 
-			buffer.append(" code=\"");
-			buffer.append(contextInstruction.getCode());
-			buffer.append("\"");
+			switch (contextInstruction.getType())
+			{
+				case ContextInstruction.CHECK_INNER_CALL:
+					weaveInstr.setType(ContextType.CHECK_INNER_CALL);
+					break;
+				case ContextInstruction.CREATE_ACTION_STORE:
+					weaveInstr.setType(ContextType.CREATE_ACTION_STORE);
+					break;
+				case ContextInstruction.CREATE_JOIN_POINT_CONTEXT:
+					weaveInstr.setType(ContextType.CREATE_JPC);
+					break;
+				case ContextInstruction.REMOVED:
+					weaveInstr.setType(ContextType.REMOVED);
+					break;
+				case ContextInstruction.RESET_INNER_CALL:
+					weaveInstr.setType(ContextType.RESET_INNER_CALL);
+					break;
+				case ContextInstruction.RESTORE_JOIN_POINT_CONTEXT:
+					weaveInstr.setType(ContextType.RESTORE_JPC);
+					break;
+				case ContextInstruction.RETURN_ACTION:
+					weaveInstr.setType(ContextType.RETURN_ACTION);
+					break;
+				case ContextInstruction.SET_INNER_CALL:
+					weaveInstr.setType(ContextType.SET_INNER_CALL);
+					break;
+				case ContextInstruction.STORE_ACTION:
+					weaveInstr.setType(ContextType.STORE_ACTION);
+					break;
+				default:
+					throw new RuntimeException("Unknown contextinstruction");
+			}
+
+			weaveInstr.setCode(contextInstruction.getCode());
 
 			if (contextInstruction.getInstruction() != null)
 			{
-				buffer.append(">");
-				contextInstruction.getInstruction().accept(this);
-				//buffer.append("");
-				buffer.append("</ContextInstruction>");
+				weaveInstr.setInnerBlock((composestar.dotNET.tym.entities.Block) contextInstruction.getInstruction()
+						.accept(this));
 			}
-			else
-			{
-				buffer.append("/>");
-			}
-				
 
-			return null;
+			return weaveInstr;
 		}
 
 		/**
@@ -536,25 +533,20 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitFilterAction(FilterAction filterAction)
 		{
-			buffer.append("<FilterAction");
-			setLabel(filterAction);
+			composestar.dotNET.tym.entities.FilterAction weaveAction = composestar.dotNET.tym.entities.FilterAction.Factory
+					.newInstance();
 
-			buffer.append(" type=\"");
-			String fullName = (String) fullNameMap.get(filterAction.getType());
-			buffer.append(fullName);
-			buffer.append("\">");
+			setLabel(filterAction, weaveAction);
 
-			buffer.append("<OriginalMessage");
-			createMessage(filterAction.getMessage());
-			buffer.append("/>");
+			weaveAction.setFullName((String) fullNameMap.get(filterAction.getType()));
 
-			buffer.append("<SubstitutedMessage");
-			createMessage(filterAction.getSubstitutedMessage());
-			buffer.append("/>");
+			weaveAction.setSelector(filterAction.getMessage().getSelector());
+			weaveAction.setTarget(filterAction.getMessage().getTarget().getName());
 
-			buffer.append("</FilterAction>");
+			weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
+			weaveAction.setSubstitutionTarget(filterAction.getSubstitutedMessage().getTarget().getName());
 
-			return null;
+			return weaveAction;
 		}
 
 		/**
@@ -562,16 +554,13 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitJump(Jump jump)
 		{
-			buffer.append("<Jump");
-			setLabel(jump);
+			composestar.dotNET.tym.entities.Jump weaveJump = composestar.dotNET.tym.entities.Jump.Factory.newInstance();
 
-			buffer.append(" target=\"");
-			buffer.append(jump.getTarget().getId());
-			buffer.append("\"/>");
+			setLabel(jump, weaveJump);
 
-			//buffer.append("</Jump>");
+			weaveJump.setTarget(jump.getTarget().getId());
 
-			return null;
+			return weaveJump;
 		}
 
 		/**
@@ -579,20 +568,16 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitCase(Case caseInstruction)
 		{
-			buffer.append("<Case");
-			setLabel(caseInstruction);
+			composestar.dotNET.tym.entities.Case weaveCase = composestar.dotNET.tym.entities.Case.Factory.newInstance();
 
-			buffer.append(" checkConstant=\"");
-			buffer.append(caseInstruction.getCheckConstant());
-			buffer.append("\">");
+			setLabel(caseInstruction, weaveCase);
 
-			buffer.append("<Instructions>");
-			caseInstruction.getInstructions().accept(this);
-			buffer.append("</Instructions>");
+			weaveCase.setCheckConstant(caseInstruction.getCheckConstant());
 
-			buffer.append("</Case>");
+			weaveCase.setInstructions((composestar.dotNET.tym.entities.Block) caseInstruction.getInstructions().accept(
+					this));
 
-			return null;
+			return weaveCase;
 		}
 
 		/**
@@ -600,23 +585,25 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitSwitch(Switch switchInstruction)
 		{
-			buffer.append("<Switch>");
+			composestar.dotNET.tym.entities.Switch weaveSwitch = composestar.dotNET.tym.entities.Switch.Factory
+					.newInstance();
+			weaveSwitch.addNewCases();
 
-			buffer.append("<Expression>");
-			setExpression(switchInstruction.getExpression());
-			buffer.append("</Expression>");
+			setLabel(switchInstruction, weaveSwitch);
 
+			weaveSwitch.setExpression(getContextExpression(switchInstruction.getExpression()));
+
+			Vector weaveCases = new Vector();
 			Case[] cases = switchInstruction.getCases();
 			for (int i = 0; i < cases.length; i++)
 			{
-				buffer.append("<CaseItems>");
-				cases[i].accept(this);
-				buffer.append("</CaseItems>");
+				weaveCases.add(cases[i].accept(this));
 			}
+			weaveSwitch.getCases().setCaseArray(
+					(composestar.dotNET.tym.entities.Case[]) weaveCases
+							.toArray(new composestar.dotNET.tym.entities.Case[0]));
 
-			buffer.append("</Switch>");
-
-			return null;
+			return weaveSwitch;
 		}
 
 		/**
@@ -624,116 +611,96 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitWhile(While whileInstruction)
 		{
-			buffer.append("<While>");
+			composestar.dotNET.tym.entities.While weaveWhile = composestar.dotNET.tym.entities.While.Factory
+					.newInstance();
 
-			buffer.append("<Expression>");
-			setExpression(whileInstruction.getExpression());
-			buffer.append("</Expression>");
+			weaveWhile.setExpression(getContextExpression(whileInstruction.getExpression()));
 
-			buffer.append("<Instructions>");
-			whileInstruction.getInstructions().accept(this);
-			buffer.append("</Instructions>");
+			weaveWhile.setInstructions((composestar.dotNET.tym.entities.Block) whileInstruction.getInstructions()
+					.accept(this));
 
-			buffer.append("</While>");
-
-			return null;
+			return weaveWhile;
 		}
 
-		private void translateConditionExpression(ConditionExpression expression)
+		private composestar.dotNET.tym.entities.ConditionExpression translateConditionExpression(
+				ConditionExpression expression)
 		{
 			if (expression instanceof And)
 			{
 				And and = (And) expression;
 
-				buffer.append("<And>");
+				composestar.dotNET.tym.entities.And weaveAnd = composestar.dotNET.tym.entities.And.Factory
+						.newInstance();
 
-				buffer.append("<Left>");
-				translateConditionExpression(and.getLeft());
-				buffer.append("</Left>");
+				weaveAnd.setLeft(translateConditionExpression(and.getLeft()));
+				weaveAnd.setRight(translateConditionExpression(and.getRight()));
 
-				buffer.append("<Right>");
-				translateConditionExpression(and.getRight());
-				buffer.append("</Right>");
-
-				buffer.append("</And>");
+				return weaveAnd;
 			}
 			else if (expression instanceof Or)
 			{
 				Or or = (Or) expression;
 
-				buffer.append("<Or>");
+				composestar.dotNET.tym.entities.Or weaveOr = composestar.dotNET.tym.entities.Or.Factory.newInstance();
 
-				buffer.append("<Left>");
-				translateConditionExpression(or.getLeft());
-				buffer.append("</Left>");
+				weaveOr.setLeft(translateConditionExpression(or.getLeft()));
+				weaveOr.setRight(translateConditionExpression(or.getRight()));
 
-				buffer.append("<Right>");
-				translateConditionExpression(or.getRight());
-				buffer.append("</Right>");
-
-				buffer.append("</Or>");
+				return weaveOr;
 			}
 			else if (expression instanceof Not)
 			{
 				Not not = (Not) expression;
 
-				buffer.append("<Not>");
+				composestar.dotNET.tym.entities.Not weaveNot = composestar.dotNET.tym.entities.Not.Factory
+						.newInstance();
 
-				buffer.append("<Operand>");
-				translateConditionExpression(not.getOperand());
-				buffer.append("</Operand>");
+				weaveNot.setOperand(translateConditionExpression(not.getOperand()));
 
-				buffer.append("</Not>");
+				return weaveNot;
 			}
 			else if (expression instanceof ConditionLiteral)
 			{
 				ConditionLiteral literal = (ConditionLiteral) expression;
 
-				buffer.append("<Literal>");
+				composestar.dotNET.tym.entities.ConditionLiteral weaveLiteral = composestar.dotNET.tym.entities.ConditionLiteral.Factory
+						.newInstance();
 
-				buffer.append("<Operand>");
-				buffer.append(literal.getCondition().getRef().getName());
-				buffer.append("</Operand>");
+				weaveLiteral.setName(literal.getCondition().getRef().getName());
 
-				buffer.append("</Literal>");
+				return weaveLiteral;
 			}
 			else if (expression instanceof True)
 			{
-				buffer.append("<True />");
+				return composestar.dotNET.tym.entities.True.Factory.newInstance();
 			}
 			else if (expression instanceof False)
 			{
-				buffer.append("<False />");
+				return composestar.dotNET.tym.entities.False.Factory.newInstance();
+			}
+			else
+			{
+				throw new RuntimeException("Unknown ConditionExpression");
 			}
 		}
 
-		private void createMessage(Message message)
+		private composestar.dotNET.tym.entities.ContextExpression.Enum getContextExpression(ContextExpression expression)
 		{
-			//buffer.append("<Message");
+			composestar.dotNET.tym.entities.ContextExpression weaveExpression = composestar.dotNET.tym.entities.ContextExpression.Factory
+					.newInstance();
 
-			buffer.append(" target=\"");
-			buffer.append(message.getTarget().getName());
-			buffer.append("\"");
-
-			buffer.append(" selector=\"");
-			buffer.append(message.getSelector());
-			buffer.append("\"");
-
-			//buffer.append("</Message>");
+			switch (expression.getType())
+			{
+				case ContextExpression.HAS_MORE_ACTIONS:
+					return composestar.dotNET.tym.entities.ContextExpression.HAS_MORE_ACTIONS;
+				case ContextExpression.RETRIEVE_ACTION:
+					return composestar.dotNET.tym.entities.ContextExpression.RETRIEVE_ACTION;
+				default:
+					throw new RuntimeException("Unknown contextexpression");
+			}
 		}
 
-		private void setExpression(ContextExpression expression)
-		{
-			buffer.append("<ContextExpression");
-
-			buffer.append(" type=\"");
-			buffer.append(expression.getType());
-			buffer.append("\"/>");
-
-			//buffer.append("</ContextExpression>");
-		}
-
-		private void setLabel(Instruction instruction)
+		private void setLabel(Instruction instruction, InlineInstruction inlineInstruction)
 		{
 			Label label = instruction.getLabel();
 
@@ -742,9 +709,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				return;
 			}
 
-			buffer.append(" label=\"");
-			buffer.append(label.getId());
-			buffer.append("\"");
+			inlineInstruction.setLabel(label.getId());
 		}
 	}
 

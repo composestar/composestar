@@ -194,7 +194,7 @@ namespace Composestar.Repository
             get
             {
                 if (_extraTypes == null)
-                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(Case), typeof(Jump), typeof(Switch), typeof(While) };
+                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(Case), typeof(Jump), typeof(Switch), typeof(While), typeof(ContextInstruction)  };
                 return _extraTypes; 
             } // return
         } // ExtraTypes

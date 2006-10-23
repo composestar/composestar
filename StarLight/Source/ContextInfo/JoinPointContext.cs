@@ -594,6 +594,24 @@ namespace Composestar.StarLight.ContextInfo
             set { _value = value; }
         }
 
+        /// <summary>
+        /// Returns true when the argument is an 'in' argument
+        /// </summary>
+        /// <returns></returns>
+        public bool isIn()
+        {
+            return (Attributes & ArgumentAttributes.In) == ArgumentAttributes.In;
+        }
+
+        /// <summary>
+        /// Returns true when the argument is an 'out' argument
+        /// </summary>
+        /// <returns></returns>
+        public bool isOut()
+        {
+            return (Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out;
+        }
+
         private ArgumentAttributes _argumentAttributes;
 
         /// <summary>

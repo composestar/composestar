@@ -152,7 +152,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             {
                 foreach (WeaveMethod method in _methods)
                 {
-                    if (method.OutputFilters.Count > 0)
+                    if (method.Calls.Count > 0)
                         return true;
                 }
 

@@ -5,7 +5,8 @@
 package Composestar.DotNET.LAMA;
 
 import Composestar.Core.LAMA.CallToOtherMethod;
-import Composestar.Repository.LanguageModel.CallElement;
+
+import composestar.dotNET.tym.entities.CallElement;
 
 public class DotNETCallToOtherMethod extends CallToOtherMethod
 {

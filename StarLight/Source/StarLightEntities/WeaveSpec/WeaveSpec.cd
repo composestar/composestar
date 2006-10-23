@@ -6,7 +6,7 @@
     <TypeIdentifier>
       <FileName>WeaveSpec\External.cs</FileName>
       <NewMemberFileName>WeaveSpec\Internal.cs</NewMemberFileName>
-      <HashCode>AAAAIACAAAAAAAQBAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <HashCode>AAAAIACAEAAAAAQBAAAAAAQAAAAAAIAAAQAAAAAAAAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -29,7 +29,7 @@
     <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>WeaveSpec\Internal.cs</FileName>
-      <HashCode>AAAAIAAAAAAAAAQAAAAAAAQAAAAIAAAAAQBAAAAACAA=</HashCode>
+      <HashCode>AAAAIAAAEAAAAAQAAAAAAAQAAAAIAIAAAQBAAAAACAA=</HashCode>
     </TypeIdentifier>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -39,7 +39,7 @@
     <Position X="7.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>WeaveSpec\WeaveType.cs</FileName>
-      <HashCode>AEAAMCAAAACAAIAAIIAAAAQAAAAAAAAAAAAAIAAACEA=</HashCode>
+      <HashCode>QEAAMCAAAgCAAIAAIJAAAAQAAAAAAAAAAAAAIAAACEA=</HashCode>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Internals" />
@@ -54,14 +54,11 @@
     <Position X="4.75" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>WeaveSpec\WeaveMethod.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAIABAAQAAAgAAAAAAAAE=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAICAAAAwAAABAAAAAAgAAIAAAAAE=</HashCode>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="InputFilter" />
     </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Property Name="OutputFilters" />
-    </ShowAsCollectionAssociation>
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
