@@ -131,7 +131,7 @@
     <Compile Include="WeaveSpec\ConditionExpressions\Visitor\IVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Condition.cs" />
+    <Compile Include="WeaveSpec\Condition.cs" />
     <Compile Include="WeaveSpec\Reference.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
