@@ -132,9 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Condition.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Configuration\Reference.cs" />
+    <Compile Include="WeaveSpec\Reference.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

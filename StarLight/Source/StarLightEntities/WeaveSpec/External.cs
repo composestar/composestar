@@ -53,6 +53,23 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             get { return _type; }
             set { _type = value; }
         }
-      
+
+        private String _assembly;
+
+        /// <summary>
+        /// Gets or sets the assembly containing the type.
+        /// </summary>
+        [XmlAttribute]
+        public String Assembly
+        {
+            get
+            {
+                return _assembly;
+            }
+            set
+            {
+                _assembly = value;
+            }
+        }
     }
 }
