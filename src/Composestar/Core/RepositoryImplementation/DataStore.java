@@ -374,11 +374,11 @@ public class DataStore implements Serializable, Cloneable
 	 * @roseuid 404DC0490173
 	 */
 	public Iterator getAllInstancesOf(Class theclass) {
-		java.util.Enumeration enumer = this.map.m_values.elements();
+		Iterator iter = this.map.values().iterator();
 		//Debug.out(Debug.MODE_DEBUG,"DataStore","HAS NEXT: "+enumer.hasMoreElements());
 		ArrayList list = new ArrayList();
-		while (enumer.hasMoreElements()) {
-			Object obj = enumer.nextElement();
+		while (iter.hasNext()) {
+			Object obj = iter.next();
 			if (theclass.isInstance(obj)) {
 				list.add(obj);
 			}
@@ -391,10 +391,10 @@ public class DataStore implements Serializable, Cloneable
 	 * @return java.util.ArrayList
 	 */
 	public ArrayList getListOfAllInstances(Class theclass){
-		java.util.Enumeration enumer = this.map.m_values.elements();
+		Iterator iter = this.map.values().iterator();
 		ArrayList list = new ArrayList();
-		while (enumer.hasMoreElements()) {
-			Object obj = enumer.nextElement();
+		while (iter.hasNext()) {
+			Object obj = iter.next();
 			if (theclass.isInstance(obj)) {
 				list.add(obj);
 			}
