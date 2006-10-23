@@ -15,6 +15,7 @@ import java.util.Iterator;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.ConcernSource;
@@ -181,6 +182,8 @@ public class StarLightMaster extends Master  {
 				// Execute enabled modules one by one
 				Module m = (Module)modulesIter.next();
 				m.execute(resources);
+				Debug.out(Debug.MODE_DEBUG, "INCRE", m.getName() + " executed in " + incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL) + " ms");
+				
 			}
 			
 			// Close INCRE
