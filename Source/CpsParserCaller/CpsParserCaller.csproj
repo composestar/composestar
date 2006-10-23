@@ -7,7 +7,7 @@
     <ProjectGuid>{1FEAFB7D-1173-4B2D-ABB1-B546941053AB}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CpsParserCaller</RootNamespace>
+    <RootNamespace>Composestare.StarLight.CpsParserCaller</RootNamespace>
     <AssemblyName>CpsParserCaller</AssemblyName>
     <StartupObject>
     </StartupObject>
