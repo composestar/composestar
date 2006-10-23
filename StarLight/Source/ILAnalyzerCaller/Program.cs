@@ -18,232 +18,251 @@ using Composestar.Repository;
 
 namespace Composestar.StarLight.ILAnalyzerCaller
 {
+    class AssemblyInfo
+    {
+        private int _typeCount = 0;
+
+        public int TypeCount
+        {
+            get { return _typeCount; }
+            set { _typeCount = value; }
+        }
+
+        private int _fieldCount = 0;
+
+        public int FieldCount
+        {
+            get { return _fieldCount; }
+            set { _fieldCount = value; }
+        }
+
+        private int _methodCount = 0;
+
+        public int MethodCount
+        {
+            get { return _methodCount; }
+            set { _methodCount = value; }
+        }
+
+        private int _parameterCount = 0;
+
+        public int ParameterCount
+        {
+            get { return _parameterCount; }
+            set { _parameterCount = value; }
+        }	
+
+        private int _methodCallCount = 0;
+
+        public int MethodCallCount
+        {
+            get { return _methodCallCount; }
+            set { _methodCallCount = value; }
+        }
+
+        private double _elapsedTime = 0;
+
+        public double ElapsedTime
+        {
+            get { return _elapsedTime; }
+            set { _elapsedTime = value; }
+        }
+
+        private int _unresolvedTypes = 0;
+
+        public int UnresolvedTypes
+        {
+            get { return _unresolvedTypes; }
+            set { _unresolvedTypes = value; }
+        }
+	
+    }
 
     class Program
     {
+        IILAnalyzer analyzer = null;
+        String file;
+        bool resolve;
+        String outputFile;
+
+        private Program(String path, bool shouldResolve, String outfile)
+        {
+            file = path;
+            resolve = shouldResolve;
+            outputFile = outfile;
+        }
+
         private static void Main(string[] args)
         {
             if (args.Length < 1)
             {
-                Console.WriteLine("Usage: IlAnalyzerCaller <YapFile>/<assembly>/<folder> [nocache]");
+                Console.WriteLine("Usage: IlAnalyzerCaller [-resolve] [-out=<filename>] <assembly>/<folder>");
                 return;
             }
 
             string file = string.Empty;
-            if (args[0].StartsWith("\"") && args[0].EndsWith("\""))
+            bool resolve = false;
+            string outfile=  string.Empty;
+
+            foreach (string arg in args)
             {
-                file = args[0].Substring(1, args[0].Length - 2);
-            }
-            else
-            {
-                file = args[0];
+                // Parse options
+                if (arg.StartsWith("-"))
+                {
+                    if (arg.ToLower().Equals("-resolve")) resolve = true;
+
+                    if (arg.ToLower().StartsWith("-out=")) outfile = arg.Substring(5);
+                    
+                }
+                else
+                {
+                    if (arg.StartsWith("\"") && arg.EndsWith("\""))
+                    {
+                        file = arg.Substring(1, args.Length - 2);
+                    }
+                    else
+                    {
+                        file = arg;
+                    }
+                }
+
             }
 
-            bool resolveFromCache = true;
-            if (args.Length == 2)
-            {
-                if (args[1].ToLower().Equals("nocache")) resolveFromCache = false;
-            }
+            Program p = new Program(file, resolve, outfile);
+            p.Execute();
+        }
 
-            IILAnalyzer analyzer = null;
-
+        private void Execute()
+        {
             if (Directory.Exists(file))
             {
+                List<AssemblyInfo> info = new List<AssemblyInfo>();
+
+                // Store output to file
+                StreamWriter writer = null;
+                if (!String.IsNullOrEmpty(outputFile))
+                {
+                    writer = File.CreateText(outputFile);
+                    writer.WriteLine("Analysis report for '{0}':", file);
+                }
+
                 // Analyse entire folder
                 DirectoryInfo di = new DirectoryInfo(file);
                 foreach (FileInfo fi in di.GetFiles("*.dll"))
                 {
-                    Console.WriteLine("Analyzing file '{0}'", fi.FullName);
-
                     try
                     {
-                        System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(fi.FullName);
+                        Console.WriteLine("Analyzing '{0}'...", fi.FullName);
+                        if (writer != null) writer.WriteLine("Analyzing '{0}'...", fi.FullName);
 
-                        String yap = assembly.GetName().FullName.Replace(", Version=", "_");
-                        yap = yap.Replace(", Culture=", "_");
-                        yap = yap.Replace(", PublicKeyToken=", "_");
-                        yap = yap + ".yap";
+                        AssemblyInfo ai = AnalyzeFile(fi.FullName);
 
-                        ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine("c:\\temp", yap));
-                        CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(Path.Combine("c:\\temp", yap));
+                        Console.WriteLine("File summary: {0} resolved types ({3} fields, {4} methods, {5} parameters, {6} methodcalls), {1} unresolved types, {2:0} ms", ai.TypeCount, ai.UnresolvedTypes, ai.ElapsedTime, ai.FieldCount, ai.MethodCount, ai.ParameterCount, ai.MethodCallCount);
+                        if (writer != null) writer.WriteLine("File summary: {0} resolved types ({3} fields, {4} methods, {5} parameters, {6} methodcalls), {1} unresolved types, {2:0} ms", ai.TypeCount, ai.UnresolvedTypes, ai.ElapsedTime, ai.FieldCount, ai.MethodCount, ai.ParameterCount, ai.MethodCallCount);
 
-                        NameValueCollection config = new NameValueCollection();
-                        config.Add("RepositoryFilename", Path.Combine("c:\\temp", yap));
-                        config.Add("ProcessMethodBody", "false");
-                        config.Add("CacheFolder", "D:\\ComposestarRepository\\trunk\\StarLight\\installed");
-
-                        analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
-
-                        AssemblyElement result = analyzer.ExtractAllTypes(fi.FullName);
-
-                        Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
-
-                        analyzer.Close();
+                        info.Add(ai);
                     }
                     catch (BadImageFormatException)
                     {
                         Console.WriteLine("Not a valid assembly file, skipped.");
+                        if (writer != null) writer.WriteLine("Not a valid assembly file, skipped.");
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("{0}\n{1}", e.Message, e.StackTrace);
+                        Console.WriteLine("Exception: {0}", e.Message, e.StackTrace);
+                        if (writer != null) writer.WriteLine("Exception: {0}", e.Message, e.StackTrace);
                     }
 
-
-
+                    Console.WriteLine();
+                    if (writer != null) writer.WriteLine();
 
                 }
 
+                // Summary
+                int totaltypes = 0;
+                int totalfields = 0;
+                int totalmethods = 0;
+                int totalparameters = 0;
+                int totalmethodcalls = 0;
+                double totaltime = 0;
+                
+                Console.WriteLine("Summary for {0} analyzed assemblies:", info.Count);
+                if (writer != null) writer.WriteLine("Summary for {0} analyzed assemblies:", info.Count);
 
-
-            }
-            else if (file.EndsWith(".yap"))
-            {
-                Console.WriteLine("Dumping contents of '{0}'", file);
-
-                // Read from YAP file
-                int methodCount = 0;
-
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-
-                Repository.RepositoryAccess repository = new Repository.RepositoryAccess(Repository.Db4oContainers.Db4oRepositoryContainer.Instance, file);
-
-                IList<Composestar.Repository.LanguageModel.TypeElement> dbtypes = repository.GetTypeElements();
-                foreach (Composestar.Repository.LanguageModel.TypeElement type in dbtypes)
+                foreach (AssemblyInfo ai in info)
                 {
-                    int numOfMethods = repository.GetMethodElements(type).Count;
-                    methodCount = methodCount + numOfMethods;
-                    Console.WriteLine("Type {0} ({1}) found with {2} methods.", type.Name, type.BaseType, numOfMethods);
+                    totaltypes += ai.TypeCount;
+                    totalfields += ai.FieldCount;
+                    totalmethods += ai.MethodCount;
+                    totalparameters += ai.ParameterCount;
+                    totalmethodcalls += ai.MethodCallCount;
+                    totaltime += ai.ElapsedTime;
                 }
-                sw.Stop();
+                TimeSpan ts = TimeSpan.FromMilliseconds(totaltime);
+                
+                Console.WriteLine("total types: {0} (avg. types per assembly {1:0.0})", totaltypes, totaltypes / (float)info.Count);
+                Console.WriteLine("total fields: {0} (avg. per assembly {1:0.0}, avg. per type {2:0.0})", totalfields, totalfields / (float)info.Count, totalfields / (float)totaltypes);
+                Console.WriteLine("total methods: {0} (avg. per assembly {1:0.0}, avg. per type {2:0.0})", totalmethods, totalmethods / (float)info.Count, totalmethods / (float)totaltypes);
+                Console.WriteLine("total parameters: {0} (avg. per method {1:0.0})", totalparameters, totalparameters / (float)totalmethods);
+                Console.WriteLine("total methodcalls: {0} (avg. per type {1:0.0}. avg. per method {2:0.0})", totalmethodcalls, totalmethodcalls / (float)totaltypes, totalmethodcalls / (float)totalmethods);
+                Console.WriteLine("total analysis time: {0:00}:{1:00}.{2:00} minutes", ts.Minutes, ts.Seconds, ts.Milliseconds);
 
-                Console.WriteLine("\n{0} types with in total {1} methods found in {2:0.0000} seconds.", dbtypes.Count, methodCount, sw.Elapsed.TotalSeconds);
+                if (writer != null) writer.WriteLine("total types: {0} (avg. types per assembly {1:0.0})", totaltypes, totaltypes / (float)info.Count);
+                if (writer != null) writer.WriteLine("total fields: {0} (avg. per assembly {1:0.0}, avg. per type {2:0.0})", totalfields, totalfields / (float)info.Count, totalfields / (float)totaltypes);
+                if (writer != null) writer.WriteLine("total methods: {0} (avg. per assembly {1:0.0}, avg. per type {2:0.0})", totalmethods, totalmethods / (float)info.Count, totalmethods / (float)totaltypes);
+                if (writer != null) writer.WriteLine("total parameters: {0} (avg. per method {1:0.0})", totalparameters, totalparameters / (float)totalmethods);
+                if (writer != null) writer.WriteLine("total methodcalls: {0} (avg. per type {1:0.0}. avg. per method {2:0.0})", totalmethodcalls, totalmethodcalls / (float)totaltypes, totalmethodcalls / (float)totalmethods);
+                if (writer != null) writer.WriteLine("total analysis time: {0:00}:{1:00}.{2:00} minutes", ts.Minutes, ts.Seconds, ts.Milliseconds);
 
-                repository.Close();
+
+                if (writer != null) writer.Close();
             }
             else if (file.EndsWith(".dll"))
             {
-                Console.WriteLine("Analyzing '{0}'...", file);
-
-                if (!resolveFromCache && File.Exists("starlight.yap")) File.Delete("starlight.yap");
-
-                ILanguageModelAccessor langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
-                CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
-
-                NameValueCollection config = new NameValueCollection();
-                config.Add("RepositoryFilename", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
-                config.Add("ProcessMethodBody", "true");
-                config.Add("CacheFolder", "D:\\ComposestarRepository\\trunk\\StarLight\\installed");
-
-                RepositoryAccess ra = new RepositoryAccess("starlight.yap");
-
-                //IILAnalyzer analyzer = new ReflectionILAnalyzer();
-                analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
-
-
-                ra.DeleteTypeElements(file);
-
-                //if (resolveFromCache)
-                //{
-                //    foreach (TypeElement t in ra.GetTypeElements())
-                //    {
-                //        analyzer.CachedTypes.Add(String.Format("{0}, {1}", t.FullName, t.Assembly));
-                //    }
-
-
-                //}
-
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
-
-                AssemblyElement assembly = analyzer.ExtractAllTypes(file);
-
-                sw.Stop();
-
-                //Console.WriteLine("File summary: {0} resolved types, {1} unresolved types, {2} cached types, {3:0.0000} seconds", assembly.TypeElements.Length, analyzer.UnresolvedTypes.Count, analyzer.CachedTypes.Count, sw.Elapsed.TotalSeconds);
-
-                sw.Reset();
-
-                List<AssemblyElement> assemblies = new List<AssemblyElement>();
-                assemblies.Add(assembly);
-
-                if (analyzer.UnresolvedTypes.Count > 0 && resolveFromCache)
+                try
                 {
-                    Console.WriteLine("Processing {0} unresolved types...", analyzer.UnresolvedTypes.Count);
-                    foreach (String ut in analyzer.UnresolvedTypes)
-                    {
-                        Console.WriteLine("  {0}", ut);
-                    }
+                    Console.WriteLine("Analyzing '{0}'...", file);
 
-                    sw.Start();
+                    AssemblyInfo ai = AnalyzeFile(file);
 
-                    //assemblies.AddRange(analyzer.ProcessUnresolvedTypes());
-
-                    sw.Stop();
-
-                    //                    Console.WriteLine("Resolving summary: {0} total types resolved, {1} unresolvable types, {2} total cached types, {3:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.CachedTypes.Count, sw.Elapsed.TotalSeconds);
-
-                    if (analyzer.UnresolvedTypes.Count > 0)
-                    {
-                        foreach (String ut in analyzer.UnresolvedTypes)
-                        {
-                            Console.WriteLine("  {0}", ut);
-                        }
-                    }
+                    Console.WriteLine("File summary: {0} resolved types ({3} fields, {4} methods, {5} parameters, {6} methodcalls), {1} unresolved types, {2:0} ms", ai.TypeCount, ai.UnresolvedTypes, ai.ElapsedTime, ai.FieldCount, ai.MethodCount, ai.ParameterCount, ai.MethodCallCount);
                 }
-
-                sw.Reset();
-
-                Console.WriteLine("Storing type information in database...");
-
-
-
-                sw.Start();
-
-                ra.AddFilterTypes(analyzer.FilterTypes);
-                ra.AddFilterActions(analyzer.FilterActions);
-                ra.AddAssemblies(assemblies, analyzer.ResolvedTypes);
-
-                ra.Close();
-
-                sw.Stop();
-
-
-                Console.WriteLine("Storage summary: {0} assemblies stored in {1:0.0000} seconds.", assemblies.Count, sw.Elapsed.TotalSeconds);
-
-
-                //Console.WriteLine("Extracted {1} types from '{0}' in {2} seconds.", assembly.Name, assembly.TypeElements.Length, sw.Elapsed.TotalSeconds);
-                //IlAnalyzerResults result = analyzer.ExtractTypeElements(file);
-
-
-                //if (result == IlAnalyzerResults.FROM_ASSEMBLY)
-                //{
-                //    Console.WriteLine("Summary: {0} resolved types, {1} unresolved types, {2:0.0000} seconds", analyzer.ResolvedTypes.Count, analyzer.UnresolvedTypes.Count, analyzer.LastDuration.TotalSeconds);
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Summary: Assembly has not been modified, skipping analysis. (time {0:0.0000} seconds)", analyzer.LastDuration.TotalSeconds);
-                //}
-
-                //if (analyzer.UnresolvedTypes.Count > 0)
-                //{
-                //    foreach (String ut in analyzer.UnresolvedTypes)
-                //    {
-                //        Console.WriteLine("  {0}", ut);
-                //    }
-                //}
-                //if (analyzer.UnresolvedTypes.Count > 0 && resolveFromCache)
-                //{
-                //    Console.WriteLine("Accessing cache for {0} unresolved types:", analyzer.UnresolvedTypes.Count);
-                //    int unresolvedCount = analyzer.UnresolvedTypes.Count;
-                //    analyzer.ProcessUnresolvedTypes();
-                //    Console.WriteLine("Cache lookup summary: {0} out of {1} types found in {2:0.0000} seconds.", unresolvedCount - analyzer.UnresolvedTypes.Count, unresolvedCount, analyzer.LastDuration.TotalSeconds);
-                //}
-                //analyzer.Close();
+                catch (BadImageFormatException)
+                {
+                    Console.WriteLine("Not a valid assembly file, skipped.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception: {0}", e.Message, e.StackTrace);
+                }
             }
+            //else if (file.EndsWith(".yap"))
+            //{
+            //    Console.WriteLine("Dumping contents of '{0}'", file);
 
-            //Console.ReadKey(); 
+            //    // Read from YAP file
+            //    int methodCount = 0;
+
+            //    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            //    sw.Start();
+
+            //    Repository.RepositoryAccess repository = new Repository.RepositoryAccess(Repository.Db4oContainers.Db4oRepositoryContainer.Instance, file);
+
+            //    IList<Composestar.Repository.LanguageModel.TypeElement> dbtypes = repository.GetTypeElements();
+            //    foreach (Composestar.Repository.LanguageModel.TypeElement type in dbtypes)
+            //    {
+            //        int numOfMethods = repository.GetMethodElements(type).Count;
+            //        methodCount = methodCount + numOfMethods;
+            //        Console.WriteLine("Type {0} ({1}) found with {2} methods.", type.Name, type.BaseType, numOfMethods);
+            //    }
+            //    sw.Stop();
+
+            //    Console.WriteLine("\n{0} types with in total {1} methods found in {2:0.0000} seconds.", dbtypes.Count, methodCount, sw.Elapsed.TotalSeconds);
+
+            //    repository.Close();
+            //}
+
+
         }
 
         /// <summary>
@@ -259,6 +278,89 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             serviceContainer.AddService(typeof(CecilAnalyzerConfiguration), configuration);
 
             return serviceContainer;
+        }
+
+        private AssemblyInfo AnalyzeFile(String file)
+        {
+            AssemblyInfo result = new AssemblyInfo();
+
+            ILanguageModelAccessor langModelAccessor = null;
+            try
+            {
+                langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
+                CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
+
+                NameValueCollection config = new NameValueCollection();
+                config.Add("ProcessMethodBody", "true");
+
+                analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
+
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+
+                AssemblyElement assembly = analyzer.ExtractAllTypes(file);
+
+                sw.Stop();
+
+                // Create statistics
+                int fields = 0;
+                int methods = 0;
+                int parameters = 0;
+                int methodcalls = 0;
+                int attributes = 0;
+                foreach (TypeElement te in assembly.TypeElements)
+                {
+                    fields += te.FieldElements.Length;
+                    methods += te.MethodElements.Length;
+                    foreach (MethodElement me in te.MethodElements)
+                    {
+                        parameters += me.ParameterElements.Length;
+
+                        if (me.HasMethodBody && me.MethodBody.CallElements != null)
+                        {
+
+                            methodcalls += me.MethodBody.CallElements.Length;
+                        }
+                    }
+                }
+                
+                result.TypeCount = assembly.TypeElements.Length;
+                result.FieldCount = fields;
+                result.MethodCount = methods;
+                result.ParameterCount = parameters;
+                result.MethodCallCount = methodcalls;
+                result.ElapsedTime = sw.Elapsed.TotalMilliseconds;
+                result.UnresolvedTypes = analyzer.UnresolvedTypes.Count;
+
+                sw.Reset();
+
+                List<AssemblyElement> assemblies = new List<AssemblyElement>();
+                assemblies.Add(assembly);
+
+                if (analyzer.UnresolvedTypes.Count > 0 && resolve)
+                {
+//                    Console.WriteLine("Processing {0} unresolved types...", analyzer.UnresolvedTypes.Count);
+                    foreach (String ut in analyzer.UnresolvedTypes)
+                    {
+                        Console.WriteLine("  {0}", ut);
+                    }
+
+                    if (analyzer.UnresolvedTypes.Count > 0)
+                    {
+                        foreach (String ut in analyzer.UnresolvedTypes)
+                        {
+                            Console.WriteLine("  {0}", ut);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                analyzer.Close();
+                langModelAccessor.Close();
+            }
+
+            return result;
         }
     }
 }
