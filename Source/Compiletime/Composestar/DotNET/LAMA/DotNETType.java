@@ -29,7 +29,8 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitRegister;
 import Composestar.Core.LAMA.UnitResult;
-import Composestar.Repository.LanguageModel.TypeElement;
+
+import composestar.dotNET.tym.entities.TypeElement;
 
 /**
  * Corresponds to the Type class in the .NET framework. For more information on 
@@ -979,6 +980,22 @@ public class DotNETType extends Type {
 	
 	
 	
+
+	/**
+	 * @return the fromDLL
+	 */
+	public String getFromDLL()
+	{
+		return fromDLL;
+	}
+
+	/**
+	 * @param fromDLL the fromDLL to set
+	 */
+	public void setFromDLL(String fromDLL)
+	{
+		this.fromDLL = fromDLL;
+	}
 
 	/**
 	 * @return the typeElement

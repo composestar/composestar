@@ -133,6 +133,7 @@
   <ItemGroup>
     <Compile Include="WeaveSpec\Condition.cs" />
     <Compile Include="WeaveSpec\Reference.cs" />
+    <Compile Include="WeaveSpec\WeaveCall.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

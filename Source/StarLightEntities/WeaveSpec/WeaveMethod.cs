@@ -41,17 +41,19 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             set { _inputFilter = value; }
         }
 
-        private SerializableDictionary<string, InlineInstruction> _outputFilters = new SerializableDictionary<string,InlineInstruction>();
+        private List<WeaveCall> _weaveCalls = new List<WeaveCall>();
 
         /// <summary>
-        /// Gets or sets the outputfilters. 
-        /// Specified as a dictionary with the methodreference as the key and the instruction as the value.
+        /// Gets or sets the calls to weave. 
+        /// Specified as a list with WeaveCall elements.
         /// </summary>
-        /// <value>The output filter.</value>
-        public SerializableDictionary<string, InlineInstruction> OutputFilters
+        /// <value>The calls to weave.</value>
+        [XmlArray("WeaveCalls")]
+        [XmlArrayItem("WeaveCall")]
+        public List<WeaveCall> Calls
         {
-            get { return _outputFilters; }
-            set { _outputFilters = value; }
+            get { return _weaveCalls; }
+            set { _weaveCalls = value; }
         }
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             get
             {
 
-                if (OutputFilters.Count > 0)
+                if (Calls.Count > 0)
                     return true;
 
                 return false;

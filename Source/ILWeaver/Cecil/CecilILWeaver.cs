@@ -541,7 +541,7 @@ namespace Composestar.StarLight.ILWeaver
             if (targetAssembly == null)
                 throw new ArgumentNullException("targetAssembly");
 
-            if (weaveMethod.OutputFilters.Count == 0)
+            if (!weaveMethod.HasOutputFilters)
                 return;
 
             // Only proceed when there is a message body
@@ -569,7 +569,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Find the corresponding call in the list of calls
                 MethodReference mr = (MethodReference) (instruction.Operand);
                 MethodDefinition md = CecilUtilities.ResolveMethodDefinition(mr);
-                InlineInstruction outputFilter = weaveMethod.OutputFilters[md.ToString()];
+                InlineInstruction outputFilter = weaveMethod.Calls[0].OutputFilter; //TODO get outputfilter corresponding with methodname
 
                 // If we found an outputFilter in the repository, then see if we have to perform weaving
                 if (outputFilter != null)
