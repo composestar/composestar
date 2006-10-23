@@ -6,6 +6,7 @@ using System.Text;
 
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration; 
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
@@ -48,6 +49,8 @@ namespace Composestar.StarLight.ILWeaver
         private FilterTypes m_FilterType;
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
         private IEntitiesAccessor m_entitiesAccessor;
+        private ConfigurationContainer _weaveConfiguration;
+        private WeaveType _weaveType;
         #endregion
 
         #region FilterType Enumeration
@@ -74,6 +77,23 @@ namespace Composestar.StarLight.ILWeaver
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the WeaveType object.
+        /// </summary>
+        /// <value>The type of the weave.</value>
+        public WeaveType WeaveType
+        {
+            get
+            {
+                return _weaveType;
+            }
+            set
+            {
+                _weaveType = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the type of the filter.
         /// </summary>
@@ -89,12 +109,12 @@ namespace Composestar.StarLight.ILWeaver
                 m_FilterType = value;
             }
         }
-
+        
         /// <summary>
-        /// Gets or sets the repository access.
+        /// Gets or sets the entities accessor.
         /// </summary>
-        /// <value>The repository access.</value>
-        public IEntitiesAccessor RepositoryAccess
+        /// <value>The entities accessor.</value>
+        public IEntitiesAccessor EntitiesAccessor
         {
             get
             {
@@ -105,6 +125,22 @@ namespace Composestar.StarLight.ILWeaver
                 m_entitiesAccessor = value;
             }
         }
+
+        /// <summary>
+        /// Weave configuration
+        /// </summary>
+        /// <returns>Configuration container</returns>
+        public ConfigurationContainer WeaveConfiguration
+        {
+            get
+            {
+                return _weaveConfiguration;
+            } // get
+            set
+            {
+                _weaveConfiguration = value;
+            } // set
+        } // WeaveConfiguration
 
         /// <summary>
         /// Gets or sets the target assembly definition.
@@ -565,16 +601,9 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitBranch(Branch branch)
         {
             // Add condition code
-            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor();
-            conditionsVisitor.Method = Method;
-            conditionsVisitor.Worker = Worker;
-            conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
-            conditionsVisitor.RepositoryAccess = m_entitiesAccessor;
+            CecilConditionsVisitor conditionsVisitor = new CecilConditionsVisitor(this);
             ((Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
-
-            // Add the instructions containing the conditions to the IL instruction list
-            AddInstructionList(conditionsVisitor.Instructions);
-
+                        
             // Add branch code
             branch.Label = BranchLabelOffSet + m_NumberOfBranches;   // TODO check the correctness of this constructions (Michiel)
             m_NumberOfBranches = m_NumberOfBranches + 2;

@@ -67,8 +67,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             set { _externals = value; }
         }
 
-
-
         /// <summary>
         /// Gets a value indicating whether this instance has conditions.
         /// </summary>
@@ -94,9 +92,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             get { return _conditions; }
             set { _conditions = value; }
         }
-
-
-
+        
         private string _name;
 
         /// <summary>

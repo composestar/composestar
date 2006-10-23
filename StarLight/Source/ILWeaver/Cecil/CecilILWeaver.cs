@@ -58,7 +58,7 @@ namespace Composestar.StarLight.ILWeaver
 
             _configuration = configuration;
             _entitiesAccessor = entitiesAccessor;
-
+             
             CecilUtilities.BinFolder = _configuration.BinFolder;
 
         }
@@ -153,7 +153,7 @@ namespace Composestar.StarLight.ILWeaver
 
             if (weaveSpec == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.WeavingSpecNotFound, _configuration.AssemblyConfiguration.WeaveSpecificationFile, _configuration.AssemblyConfiguration.Name));
-        
+         
             // If empty, we can quit
             if (weaveSpec.WeaveTypes.Count == 0)
             {
@@ -195,7 +195,7 @@ namespace Composestar.StarLight.ILWeaver
                         if (weaveMethod == null)
                             continue;
 
-                        WeaveMethod(targetAssembly, method, weaveMethod);
+                        WeaveMethod(targetAssembly, method, weaveMethod, weaveType);
 
                     } // foreach  (method)
                 } // if
@@ -261,12 +261,8 @@ namespace Composestar.StarLight.ILWeaver
             foreach (Internal inter in internals)
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
-
-                TypeElement internalTypeElement = _entitiesAccessor.GetTypeElement(internalTypeString);
-                if (internalTypeElement == null) 
-                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
-
-                internalTypeRef = CecilUtilities.ResolveType(internalTypeString, internalTypeElement.Assembly, internalTypeElement.FromDLL);
+                                
+                internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
                 if (internalTypeRef == null) 
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
 
@@ -284,7 +280,8 @@ namespace Composestar.StarLight.ILWeaver
                 _internalsAdded++;
 
                 // Add initialization code to type constructor(s)
-                if (internalTypeElement.IsClass && internalTypeElement.Name != "String" && internalTypeElement.Name != "Array")
+               // if (internalTypeRef..IsClass && internalTypeElement.Name != "String" && internalTypeElement.Name != "Array")
+                if (!internalTypeRef.IsValueType)
                 {
                     // Get the .ctor() constructor for the internal type
                     TypeDefinition internalTypeDef = CecilUtilities.ResolveTypeDefinition(internalTypeRef);
@@ -352,11 +349,11 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (External external in externals)
             {
-                TypeElement externalTypeElement = _entitiesAccessor.GetTypeElement(external.Type);
-                if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
+                //TypeElement externalTypeElement = _entitiesAccessor.GetTypeElement(external.Type);
+                //if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
 
 
-                externalTypeRef = CecilUtilities.ResolveType(external.Type, externalTypeElement.Assembly, externalTypeElement.FromDLL);
+                externalTypeRef = CecilUtilities.ResolveType(external.Type, external.Assembly, "");
                 if (externalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 2)"));
 
                 externalAttrs = Mono.Cecil.FieldAttributes.Private;
@@ -373,11 +370,12 @@ namespace Composestar.StarLight.ILWeaver
                 _externalsAdded++;
 
                 // Get the method referenced by the external
-                TypeElement initTypeElement = _entitiesAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
-                if (initTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target)));
+                //TypeElement initTypeElement = _entitiesAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
+                //if (initTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target)));
 
-                MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, initTypeElement.FullName, initTypeElement.Assembly, initTypeElement.FromDLL);
-                if (initMethodDef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound, external.Reference.Selector, external.Reference.Target, externalTypeElement.Assembly));
+                MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target), external.Assembly, "");
+                if (initMethodDef == null) 
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound, external.Reference.Selector, external.Reference.Target, external.Assembly));
 
                 MethodReference initMethodRef = targetAssembly.MainModule.Import(initMethodDef);
 
@@ -412,7 +410,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method definition.</param>
         /// <param name="weaveMethod">The weave method.</param>
-        private void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod)
+        /// <param name="weaveType">Type of the weave.</param>
+        private void WeaveMethod(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod, WeaveType weaveType)
         {
 
             #region Check for null
@@ -425,18 +424,21 @@ namespace Composestar.StarLight.ILWeaver
             if (weaveMethod == null)
                 throw new ArgumentNullException("weaveMethod");
 
+            if (weaveType == null)
+                throw new ArgumentNullException("weaveType");
+
             #endregion
 
             // Add the inputfilters
             if (weaveMethod.HasInputFilters)
             {
-                WeaveInputFilters(targetAssembly, method, weaveMethod);
+                WeaveInputFilters(targetAssembly, method, weaveMethod, weaveType);
             } // if
 
             // Add the outputfilters
             if (weaveMethod.HasOutputFilters)
             {
-                WeaveOutputFilters(targetAssembly, method, weaveMethod);
+                WeaveOutputFilters(targetAssembly, method, weaveMethod, weaveType);
             } // if
         }
 
@@ -446,11 +448,12 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method we are weaving in.</param>
         /// <param name="weaveMethod">The weave method.</param>
+        /// <param name="weaveType">Type of the weave.</param>
         /// <remarks>
         /// InputFilters are added at the top of the methodbody.
         /// We call a visitor to generate IL instructions and we add those to the top of the method.
         /// </remarks>
-        private void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod)
+        private void WeaveInputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod, WeaveType weaveType)
         {
 
             #region Check for null and retrieve inputFilter
@@ -488,7 +491,9 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Worker = worker;
             visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
-            visitor.RepositoryAccess = _entitiesAccessor;
+            visitor.EntitiesAccessor = _entitiesAccessor;
+            visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
+            visitor.WeaveType = weaveType;
 
             // Visit the elements in the block
             try
@@ -523,12 +528,13 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="targetAssembly">The target assembly.</param>
         /// <param name="method">The method.</param>
-        /// <param name="methodElement">The method element.</param>
+        /// <param name="weaveMethod">The weave method.</param>
+        /// <param name="weaveType">Type of the weave.</param>
         /// <remarks>
         /// We look for each call and see if we have an outputfilter for it.
         /// If we do, then call the visitor to generate code to replace the call.
         /// </remarks>
-        private void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod)
+        private void WeaveOutputFilters(AssemblyDefinition targetAssembly, MethodDefinition method, WeaveMethod weaveMethod, WeaveType weaveType)
         {
             #region Check for null and retrieve calls for this method
 
@@ -575,6 +581,8 @@ namespace Composestar.StarLight.ILWeaver
                     visitor.Worker = worker;
                     visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
                     visitor.TargetAssemblyDefinition = targetAssembly;
+                    visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
+                    visitor.WeaveType = weaveType;
 
                     // Visit the elements in the block
                     try

@@ -57,9 +57,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             string PEVerifyLocation;
             string PEVerifyExecutable = "bin\\PEVerify.exe";
-            string filename;
-            string extension;
-
+      
             Stopwatch sw = new Stopwatch();
             sw.Start();
 

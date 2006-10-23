@@ -133,6 +133,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve filter action named &apos;{0}&apos;. .
+        /// </summary>
+        internal static string CouldNotResolveFilterAction {
+            get {
+                return ResourceManager.GetString("CouldNotResolveFilterAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to resolve the method &apos;{0}&apos; from &apos;{1}&apos; to a Type used by the weaver. Make sure all the references are in place and the method has bee specified correctly..
         /// </summary>
         internal static string CouldNotResolveMethod {

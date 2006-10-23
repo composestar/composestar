@@ -15,6 +15,7 @@ using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
 using Composestar.Repository;
+using Composestar.StarLight.Entities.Configuration;   
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions; 
 using Composestar.StarLight.Utilities.Cecil;
@@ -224,6 +225,23 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #region Resolve Types
+
+        /// <summary>
+        /// Get filter action element
+        /// </summary>
+        /// <param name="elements">Elements</param>
+        /// <param name="fullname">The fullname.</param>
+        /// <returns>Filter action element</returns>
+        public static FilterActionElement GetFilterActionElement(List<FilterActionElement> elements, string fullname)
+        {
+            foreach (FilterActionElement  fae in elements)
+            {
+                if (fae.FullName.Equals(fullname))
+                    return fae;
+            }
+
+            return null;
+        } // GetFilterActionElement(elements, name)
 
         /// <summary>
         /// Resolves the type.

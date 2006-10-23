@@ -20,6 +20,7 @@ namespace Composestar.StarLight.ILWeaver
         readonly string _inputImagePath;
         private string _binfolder;
         private AssemblyConfig _assemblyConfig;
+        private ConfigurationContainer _weaveConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
@@ -30,7 +31,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="inputImagePath">The input image path.</param>
         /// <param name="delaySignOutput">if set to <c>true</c> [delay sign output].</param>
         /// <param name="assemblyConfig">The assembly config.</param>
-        public CecilWeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK, string inputImagePath, bool delaySignOutput, AssemblyConfig assemblyConfig)
+        /// <param name="weaveConfiguration">The weave configuration.</param>
+        public CecilWeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK, string inputImagePath, bool delaySignOutput, AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
         {
             if (assemblyConfig == null)
                 throw new ArgumentNullException("AssemblyConfig"); 
@@ -51,17 +53,23 @@ namespace Composestar.StarLight.ILWeaver
             _outputImagePath = outputImagePath;
             _inputImagePath = inputImagePath;
             _delaySignOutput = delaySignOutput;
+            _weaveConfiguration = weaveConfiguration;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CecilWeaverConfiguration"/> class.
         /// </summary>
         /// <param name="assemblyConfig">The assembly config.</param>
-        public CecilWeaverConfiguration(AssemblyConfig assemblyConfig)
+        /// <param name="weaveConfiguration">The weave configuration.</param>
+        public CecilWeaverConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
         {
             if (assemblyConfig == null)
                 throw new ArgumentNullException("AssemblyConfig");
 
+            if (weaveConfiguration == null)
+                throw new ArgumentNullException("weaveConfiguration");
+
+            _weaveConfiguration = weaveConfiguration;
             _binfolder = System.IO.Path.GetDirectoryName(assemblyConfig.Filename);
             _outputImageSNK = string.Empty;
             _assemblyConfig = assemblyConfig;
@@ -79,6 +87,16 @@ namespace Composestar.StarLight.ILWeaver
         {
             get { return _outputImageSNK; }
         }
+
+        /// <summary>
+        /// Gets the weave configuration.
+        /// </summary>
+        /// <value>The weave configuration.</value>
+        /// <returns>Configuration container</returns>
+        public ConfigurationContainer WeaveConfiguration
+        {
+            get { return _weaveConfiguration; } // get
+        } // WeaveConfiguration
 
         /// <summary>
         /// Assembly configuration
@@ -151,7 +169,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath)
         {
-            return new CecilWeaverConfiguration(inputImagePath, false, string.Empty, inputImagePath, false, null);
+            return new CecilWeaverConfiguration(inputImagePath, false, string.Empty, inputImagePath, false, null, null);
         }
 
         /// <summary>
@@ -162,7 +180,18 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath, string outputImagePath)
         {
-            return new CecilWeaverConfiguration(outputImagePath, false, string.Empty, inputImagePath, false, null);
+            return new CecilWeaverConfiguration(outputImagePath, false, string.Empty, inputImagePath, false, null, null);
+        }
+
+        /// <summary>
+        /// Creates the default configuration.
+        /// </summary>
+        /// <param name="assemblyConfig">The assembly config.</param>
+        /// <param name="weaveConfiguration">The weave configuration.</param>
+        /// <returns></returns>
+        public static CecilWeaverConfiguration CreateDefaultConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
+        {
+            return new CecilWeaverConfiguration(assemblyConfig, weaveConfiguration);
         }
 
         internal void RuntimeValidate()
