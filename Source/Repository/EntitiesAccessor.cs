@@ -10,6 +10,8 @@ using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 
 namespace Composestar.Repository
 {
@@ -172,7 +174,7 @@ namespace Composestar.Repository
 
             if (File.Exists(filename))
             {
-                weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(filename, SerializedFormat.Document);
+                weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(filename, ExtraTypes);
             } // if
             else
             {
@@ -181,6 +183,21 @@ namespace Composestar.Repository
 
             return weaveSpecification;
         }
+
+        private Type[] _extraTypes = null;
+
+        /// <summary>
+        /// Extra types
+        /// </summary>
+        private Type[] ExtraTypes
+        {
+            get
+            {
+                if (_extraTypes == null)
+                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(Case), typeof(Jump), typeof(Switch), typeof(While) };
+                return _extraTypes; 
+            } // return
+        } // ExtraTypes
 
         /// <summary>
         /// Saves the weave specification.
