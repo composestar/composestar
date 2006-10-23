@@ -83,6 +83,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     // Exclude StarLight ContextInfo assembly from the weaving process
                     if (assembly.Filename.EndsWith(ContextInfoFileName)) continue;
 
+                    if (assembly.IsReference)
+                        continue;
+
                     // If there is no weaving spec file, then skip
                     if (String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
                     {

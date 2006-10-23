@@ -43,14 +43,20 @@ namespace Composestar.StarLight.ILAnalyzer
 
         private AssemblyElement _assemblyElement = new AssemblyElement();
         private AssemblyDefinition _assembly;
+
         private List<String> _resolvedAssemblies = new List<String>();
         private List<String> _unresolvedAssemblies = new List<String>();
         private List<String> _cachedTypes = new List<String>();
+        private List<String> _resolvedTypes = new List<String>();
+        private List<String> _unresolvedTypes = new List<String>();
+
         private bool _saveType = false;
         private bool _saveInnerType = false;
         private bool _processMethodBody = true;
         private bool _processAttributes = false;
         private bool _includeFields = true;
+        private bool _extractUnresolvedOnly;
+
         private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
         private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
 
@@ -58,6 +64,56 @@ namespace Composestar.StarLight.ILAnalyzer
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [extract unresolved only].
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [extract unresolved only]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ExtractUnresolvedOnly
+        {
+            get
+            {
+                return _extractUnresolvedOnly;
+            }
+            set
+            {
+                _extractUnresolvedOnly = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the resolved types.
+        /// </summary>
+        /// <value>The resolved types.</value>
+        public List<String> ResolvedTypes
+        {
+            get
+            {
+                return _resolvedTypes;
+            }
+            set
+            {
+                _resolvedTypes = value;
+            } // set
+        }
+
+        /// <summary>
+        /// Gets or sets the unresolved types.
+        /// </summary>
+        /// <value>The unresolved types.</value>
+        public List<String> UnresolvedTypes
+        {
+            get
+            {
+                return _unresolvedTypes;
+            }
+            set
+            {
+                _unresolvedTypes = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the filter actions.
@@ -259,14 +315,14 @@ namespace Composestar.StarLight.ILAnalyzer
             }
 
             // Remove types without a proper assembly name, e.g. the generic identifiers T, V, K, TKey, TValue, TOutput, TItem
-            //IList<String> unresolvedtypes = new List<String>(UnresolvedTypes);
-            //foreach (String type in unresolvedtypes)
-            //{
-            //    if (type.EndsWith(", NULL"))
-            //    {
-            //        UnresolvedTypes.Remove(type);
-            //    }
-            //}
+            IList<String> unresolvedtypes = new List<String>(UnresolvedTypes);
+            foreach (String type in unresolvedtypes)
+            {
+                if (type.EndsWith(", NULL"))
+                {
+                    UnresolvedTypes.Remove(type);
+                }
+            }
                       
             // Return the assembly element
             return _assemblyElement;
@@ -309,8 +365,10 @@ namespace Composestar.StarLight.ILAnalyzer
             // Interface
             foreach (TypeReference interfaceDef in type.Interfaces)
             {
-                typeElement.ImplementedInterfaces = String.Format("{0};{1}", typeElement.ImplementedInterfaces, interfaceDef.FullName);
-                AddUnresolvedAssemblyList(interfaceDef);
+                if (string.IsNullOrEmpty(typeElement.ImplementedInterfaces))
+                    typeElement.ImplementedInterfaces = interfaceDef.FullName;
+                else
+                    typeElement.ImplementedInterfaces = String.Format("{0};{1}", typeElement.ImplementedInterfaces, interfaceDef.FullName);
             }
 
             // Basetype
@@ -331,30 +389,51 @@ namespace Composestar.StarLight.ILAnalyzer
                 {
                     ExtractFilterAction(type);
                 }
-            }
-                 
-            _currentType = typeElement;
-            _assemblyElement.Types.Add(_currentType);            
-        }
 
-        /// <summary>
-        /// Visits the method definition collection.
-        /// </summary>
-        /// <param name="methods">The methods.</param>
-        public override void VisitMethodDefinitionCollection(MethodDefinitionCollection methods)
-        {
-            foreach (MethodDefinition  method in methods)
+                // We may need the base class
+                AddUnresolvedType(type.BaseType); 
+
+            }
+
+            if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
             {
-                method.Accept(this); 
+                
+                _currentType = typeElement;
+                // Visit methods
+                foreach (MethodDefinition method in type.Methods)
+                {
+                    method.Accept(this);
+                }
+
+                // Visit fields
+                foreach (FieldDefinition field in type.Fields)
+                {
+                    field.Accept(this);
+                }
+
+                _assemblyElement.Types.Add(_currentType);
+
+                // Add this type to the resolved types
+                AddResolvedType(type);
+
+                // Remove from unresolved
+                _unresolvedTypes.Remove(CreateTypeName(type));
             }
         }
 
+       
         /// <summary>
         /// Visits the method definition.
         /// </summary>
         /// <param name="method">The method.</param>
         public override void VisitMethodDefinition(MethodDefinition method)
         {
+
+            // If we only extract the unresolvedtypes then we most likely are only interested
+            // in methods which can be overriden. So skip the rest.
+            if (ExtractUnresolvedOnly && !method.IsVirtual)
+                return;
+
             // Create a new method element
             MethodElement me = new MethodElement();
             me.Signature = method.ToString();
@@ -362,8 +441,8 @@ namespace Composestar.StarLight.ILAnalyzer
             me.ReturnType = method.ReturnType.ReturnType.FullName;
 
             // If the return type has not yet been resolved, add it to the list of unresolved types   
-            if (!method.ReturnType.ReturnType.FullName.Equals("System.Void")  )
-                AddUnresolvedAssemblyList(method.ReturnType.ReturnType);
+           // if (!method.ReturnType.ReturnType.FullName.Equals("System.Void")  )
+           //     AddUnresolvedAssemblyList(method.ReturnType.ReturnType);
 
             me.IsAbstract = method.IsAbstract;
             me.IsConstructor = method.IsConstructor;
@@ -381,15 +460,15 @@ namespace Composestar.StarLight.ILAnalyzer
                 pe.Ordinal = (short)(param.Sequence);
                 pe.Type = param.ParameterType.FullName;
 
-                // TODO parameter options
-
-                //pe.IsIn = parameter.Attributes != ParamAttributes.Out;
-                //pe.IsOptional = parameter.Attributes == ParamAttributes.Optional;
-                //pe.IsOut = parameter.Attributes == ParamAttributes.Out;
-                //pe.IsRetVal = !parameter.ParameterType.FullName.Equals("System.Void", StringComparison.CurrentCultureIgnoreCase);
-
-                AddUnresolvedAssemblyList(param.ParameterType);
-
+                if ((param.Attributes & ParamAttributes.Out) != ParamAttributes.Out)
+                    pe.ParameterOption = pe.ParameterOption | ParameterOptions.In;
+                else
+                    pe.ParameterOption &= ~ParameterOptions.In;
+                if ((param.Attributes & ParamAttributes.Out) == ParamAttributes.Out) 
+                    pe.ParameterOption = pe.ParameterOption | ParameterOptions.Out;
+                if ((param.Attributes & ParamAttributes.Optional) == ParamAttributes.Optional) 
+                    pe.ParameterOption = pe.ParameterOption | ParameterOptions.Optional;
+   
                 me.Parameters.Add(pe);
             }
 
@@ -426,18 +505,7 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
 
-        /// <summary>
-        /// Visits the field definition collection.
-        /// </summary>
-        /// <param name="fields">The fields.</param>
-        public override void VisitFieldDefinitionCollection(FieldDefinitionCollection fields)
-        {
-            foreach (FieldDefinition  field in fields)
-            {
-                field.Accept(this); 
-            }
-        }
-
+      
         /// <summary>
         /// Visits the field definition.
         /// </summary>
@@ -455,7 +523,7 @@ namespace Composestar.StarLight.ILAnalyzer
             fe.IsPublic = field.Attributes == Mono.Cecil.FieldAttributes.Public;
             fe.IsStatic = field.IsStatic;
 
-            AddUnresolvedAssemblyList(field.FieldType);
+            //AddUnresolvedAssemblyList(field.FieldType);
 
             _currentType.Fields.Add(fe);
         }
@@ -607,6 +675,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Helper Functions
 
+        #region Resolve and unresolved functions
 
         /// <summary>
         /// Adds the assembly to the resolved list.
@@ -616,7 +685,7 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             // Add to resolved
             if (!_resolvedAssemblies.Contains(assemblyName))
-                _resolvedAssemblies.Add(assemblyName); 
+                _resolvedAssemblies.Add(assemblyName);
 
             // remove from unresolved
             _unresolvedAssemblies.Remove(assemblyName);
@@ -634,10 +703,10 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 if (!_unresolvedAssemblies.Contains(assemblyName))
                 {
-                    _unresolvedAssemblies.Add(assemblyName);                   
+                    _unresolvedAssemblies.Add(assemblyName);
                 } // if
             } // if
-           
+
         }
 
         /// <summary>
@@ -669,7 +738,59 @@ namespace Composestar.StarLight.ILAnalyzer
                     }
                 }
             }
-        } 
+        }
+
+        /// <summary>
+        /// Adds the type of the resolved.
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        private void AddResolvedType(string typeName)
+        {
+            // Add to resolved
+            if (!_resolvedTypes.Contains(typeName))
+                _resolvedTypes.Add(typeName);
+
+            // remove from unresolved
+            _unresolvedTypes.Remove(typeName);
+
+        }
+
+        /// <summary>
+        /// Adds the type of the unresolved.
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        private void AddUnresolvedType(string typeName)
+        {
+            // Check if the assembly is not yet resolved.
+            if (!_resolvedTypes.Contains(typeName))
+            {
+                if (!_unresolvedTypes.Contains(typeName))
+                {
+                    _unresolvedTypes.Add(typeName);
+                } // if
+            } // if
+
+        }
+
+        /// <summary>
+        /// Adds the type of the unresolved.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        private void AddUnresolvedType(TypeReference type)
+        {
+            AddUnresolvedType(CreateTypeName(type));
+        } // AddUnresolvedType(type)
+
+        /// <summary>
+        /// Adds the type of the resolved.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        private void AddResolvedType(TypeReference type)
+        {
+            AddResolvedType(CreateTypeName(type));
+        }
+
+        #endregion
 
         /// <summary>
         /// Creates the name of the type.

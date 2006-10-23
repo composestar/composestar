@@ -91,7 +91,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 try
                 {
                     // Only verify files we weaved on. Skip the rest.
-                    if (String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
+                    if (!assembly.IsReference && String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
                         continue;
  
                     Log.LogMessageFromResources("VerifyingAssembly", assembly.Filename);

@@ -125,6 +125,21 @@ namespace Composestar.StarLight.Entities.Configuration
             get { return _weaveSpec; }
             set { _weaveSpec = value; }
         }
+
+        private bool _isReference;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this assembly is a reference.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is reference; otherwise, <c>false</c>.
+        /// </value>
+        [XmlAttribute]
+        public bool IsReference
+        {
+            get { return _isReference; }
+            set { _isReference = value; }
+        }
 	
 
     }
