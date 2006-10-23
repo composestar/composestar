@@ -126,13 +126,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {                   
             Log.LogMessageFromResources("AnalyzerStartText");
 
+            #region Setup of configuration, analyzer and lists
+
             IILAnalyzer analyzer = null;
             CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
-          
+
+            RegistrySettings rs = new RegistrySettings();
+            if (!rs.ReadSettings())
+            {
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");
+                return false;
+            }
+
             // Set configuration settings
             configuration.BinFolder = BinFolder;
-						configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
+            configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
 
             // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
@@ -142,10 +151,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             // Create a list to store the FilterActions in
             List<FilterActionElement> filterActions = new List<FilterActionElement>();
-                   
+
             // Create the analyzer using the object builder
             analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
-            
+          
+            #endregion
+
+            #region Find the assemblies to analyze
+
             // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
             List<String> assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
@@ -160,7 +173,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             // Create a list of all the referenced assemblies, which are not copied local for complete analysis
             Dictionary<String, String> refAssemblies = new Dictionary<string, string>();
-            
+
             foreach (ITaskItem item in ReferencedAssemblies)
             {
                 if (item.GetMetadata("CopyLocal") == "false")
@@ -170,12 +183,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Get the configuration
-            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);               
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
             // Get the assemblies in the config file
             List<AssemblyConfig> assembliesInConfig = configContainer.Assemblies;
 
-            List<AssemblyConfig> assembliesToStore = new List<AssemblyConfig>();  
+            List<AssemblyConfig> assembliesToStore = new List<AssemblyConfig>();
 
             // Add all the unresolved types (used in the concern files) to the analyser
             Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", ReferencedTypes.Length);
@@ -184,20 +197,24 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 analyzer.UnresolvedTypes.Add(item.ToString());
             }
 
-            // Analyze all assemblies
+            #endregion
+
+            #region Analyze the assemblies in the output folder
+
+            // Analyze all assemblies in the output folder
             foreach (String item in assemblyFileList)
             {
                 try
                 {
                     // See if we already have this assembly in the list
-                    AssemblyConfig assConfig =null;
+                    AssemblyConfig assConfig = null;
 
                     assConfig = assembliesInConfig.Find(delegate(AssemblyConfig ac)
                     {
-                        return ac.Filename.Equals(item); 
+                        return ac.Filename.Equals(item);
                     });
 
-                    if (assConfig != null)
+                    if (assConfig != null && File.Exists(assConfig.SerializedFilename))
                     {
                         // Already in the config. Check the last modification date.
                         if (assConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
@@ -205,23 +222,23 @@ namespace Composestar.StarLight.MSBuild.Tasks
                             // Assembly has not been modified, skipping analysis
                             Log.LogMessageFromResources("AssemblyNotModified", assConfig.Name);
 
-                            assembliesToStore.Add(assConfig); 
+                            assembliesToStore.Add(assConfig);
                             continue;
                         } // if
                     } // if
 
                     // Either we could not find the assembly in the config or it was changed.
-                   
+
                     AssemblyElement assembly = null;
                     Stopwatch sw = new Stopwatch();
-                    
+
                     Log.LogMessageFromResources("AnalyzingFile", item);
-                    
+
                     sw.Start();
-               
+
                     assembly = analyzer.ExtractAllTypes(item);
 
-                    if (assembly != null)
+                    if (assembly != null )
                     {
                         // Create a new AssemblyConfig object
                         assConfig = new AssemblyConfig();
@@ -233,11 +250,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                         // Generate a unique filename
                         assConfig.GenerateSerializedFilename(IntermediateOutputPath);
-  
-                        assembliesToStore.Add(assConfig);  
+
+                        assembliesToStore.Add(assConfig);
                         assemblies.Add(assembly);
                     } // if
-                                     
+
                     sw.Stop();
 
                     Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
@@ -278,69 +295,126 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             }
 
-            // Analyze the non-local copied assemblies for missing types
-            if (analyzer.UnresolvedTypes.Count > 0)
+            #endregion
+
+            #region Analyze the assemblies referenced to this project or subprojects.
+
+            //
+            // Analyze all referenced assemblies
+            //
+
+            // Disable some options
+            configuration.DoFieldAnalysis = false;
+            configuration.DoMethodCallAnalysis = false;
+
+            // Create the analyzer using the object builder
+            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
+
+            // Get the cache folder
+            String cacheFolder;
+            cacheFolder = Path.Combine(rs.InstallFolder, "AssemblyCache");
+
+            // Create if it does not exists
+            if (!Directory.Exists(cacheFolder))
+                Directory.CreateDirectory(cacheFolder);
+            
+            // Loop through all the referenced assemblies.
+            foreach (String item in refAssemblies.Values)
             {
-                // Step 1: Check if local database already contains the type
-                Stopwatch sw = new Stopwatch();
-                Log.LogMessageFromResources("SearchingInDatabase", analyzer.UnresolvedTypes.Count);
-
-                sw.Start();
-
-                int numberOfResolvedTypes = 0;
-                List<String> unresolvedTypes = new List<string>(analyzer.UnresolvedTypes);
-                foreach (String type in unresolvedTypes)
-                {
-                    String typeName = type;
-                    if (type.Contains(", ")) typeName = type.Substring(0, type.IndexOf(", "));
-
-                    // TODO dit wordt lastig. Misschien iets te doen met alle assembly elements laden?
-
-                    //TypeElement te = langModelAccessor.GetTypeElement(typeName);
-                    //if (te != null)
-                    //{
-                    //    analyzer.UnresolvedTypes.Remove(type);
-                    //    numberOfResolvedTypes++;
-                    //}
-                }
-
-                sw.Stop();
-
-                Log.LogMessageFromResources("FoundInDatabase", numberOfResolvedTypes, sw.Elapsed.TotalSeconds);
-            }
-            if (analyzer.UnresolvedTypes.Count > 0)
-            {
-                // Step 2: Analyze all referenced assemblies in the hope we find the unresolved types
-                Stopwatch sw = new Stopwatch();
-                Log.LogMessageFromResources("AnalyzingUnresolved", analyzer.UnresolvedTypes.Count);
-
                 try
                 {
+                    // See if we already have this assembly in the list
+                    AssemblyConfig assConfig = null;
+
+                    assConfig = assembliesInConfig.Find(delegate(AssemblyConfig ac)
+                    {
+                        return ac.Filename.Equals(item);
+                    });
+
+                    if (assConfig != null && File.Exists(assConfig.SerializedFilename))
+                    {
+                        // Already in the config. Check the last modification date.
+                        if (assConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
+                        {
+                            // Assembly has not been modified, skipping analysis
+                            Log.LogMessageFromResources("AssemblyNotModified", assConfig.Name);
+
+                            assembliesToStore.Add(assConfig);
+                            continue;
+                        } // if
+                    } // if
+
+                    // Either we could not find the assembly in the config or it was changed.
+
+                    AssemblyElement assembly = null;
+                    Stopwatch sw = new Stopwatch();
+
+                    Log.LogMessageFromResources("AnalyzingFile", item);
+
                     sw.Start();
 
-                    assemblies.AddRange(analyzer.ProcessUnresolvedTypes(refAssemblies));
+                    assembly = analyzer.ExtractAllTypes(item);
+
+                    if (assembly != null)
+                    {
+                        // Create a new AssemblyConfig object
+                        assConfig = new AssemblyConfig();
+
+                        assConfig.Filename = item;
+                        assConfig.Name = assembly.Name;
+                        assConfig.Timestamp = File.GetLastWriteTime(item).Ticks;
+                        assConfig.Assembly = assembly;
+
+                        // Generate a unique filename
+                        assConfig.GenerateSerializedFilename(cacheFolder);
+
+                        assembliesToStore.Add(assConfig);
+                        assemblies.Add(assembly);
+                    } // if
 
                     sw.Stop();
 
-                    Log.LogMessageFromResources("AnalyzingUnresolvedCompleted", analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+                    Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedTypes.Count, sw.Elapsed.TotalSeconds);
+
+                    sw.Reset();
+
+                    sw.Start();
+
+                    // Add FilterTypes
+                    filterTypes.AddRange(analyzer.FilterTypes);
+
+                    // Add FilterActions
+                    filterActions.AddRange(analyzer.FilterActions);
+
+                    sw.Stop();
+
+                    if (analyzer.FilterTypes.Count > 0 && analyzer.FilterActions.Count > 0)
+                    {
+                        Log.LogMessageFromResources("FiltersAnalyzed", analyzer.FilterTypes.Count, analyzer.FilterActions.Count, sw.Elapsed.TotalSeconds);
+                    }
                 }
                 catch (ILAnalyzerException ex)
                 {
-                    Log.LogError(ex.Message);
+                    Log.LogErrorFromException(ex, true);
                 }
-                finally {
-                    if (sw.IsRunning) 
-                        sw.Stop();
-                }
-            }
-            if (analyzer.UnresolvedTypes.Count > 0)
-            {
-                // Step 3: Unable to resolve some types, throw an error
-                foreach (String type in analyzer.UnresolvedTypes)
+                catch (ArgumentException ex)
                 {
-                    Log.LogErrorFromResources("UnableToResolve", type);
+                    Log.LogErrorFromException(ex, true);
                 }
+                catch (FileNotFoundException ex)
+                {
+                    Log.LogErrorFromException(ex, true);
+                }
+                catch (BadImageFormatException ex)
+                {
+                    Log.LogErrorFromException(ex, false);
+                }
+
             }
+
+            #endregion
+
+            #region Store the found assemblies in the configuration container
 
             // Storing types 
             if (assemblies.Count > 0 && !Log.HasLoggedErrors)
@@ -349,29 +423,32 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessageFromResources("StoreInDatabase", assemblies.Count);
 
                 sw.Start();
-                              
+
+                // Check if we have to save the assembly data
                 foreach (AssemblyConfig assembly in assembliesToStore)
                 {
                     // save each assembly if needed (there must be an assemblyElement)
                     if (assembly.Assembly != null)
-                        entitiesAccessor.SaveAssemblyElement(assembly.SerializedFilename, assembly.Assembly);  
-                    
+                        entitiesAccessor.SaveAssemblyElement(assembly.SerializedFilename, assembly.Assembly);
+
                 }
 
                 // Set the assemblies to store
-                configContainer.Assemblies = assembliesToStore; 
-                
+                configContainer.Assemblies = assembliesToStore;
+
                 // Add the filtertypes and actions
                 configContainer.FilterTypes = filterTypes;
                 configContainer.FilterActions = filterActions;
 
                 // Save the config
-                entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer); 
+                entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer);
 
                 sw.Stop();
 
                 Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedTypes.Count, sw.Elapsed.TotalSeconds);
             }
+
+            #endregion
                       
             // Close the analyzer
             analyzer.Close();
@@ -396,5 +473,4 @@ namespace Composestar.StarLight.MSBuild.Tasks
         }
 
     }
-
 }

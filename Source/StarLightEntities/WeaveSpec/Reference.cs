@@ -55,6 +55,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// </summary>
         /// <value>The fullname.</value>
         /// <returns>String</returns>
+        [XmlIgnore]
         public string Fullname
         {
             get

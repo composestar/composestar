@@ -79,7 +79,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Properties
 
-        /// <summary>
+           /// <summary>
         /// Gets the assembly resolver.
         /// </summary>
         /// <value>The assembly resolver.</value>
