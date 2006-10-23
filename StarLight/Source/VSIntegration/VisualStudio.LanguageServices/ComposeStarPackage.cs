@@ -24,7 +24,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 namespace Composestar.StarLight.VisualStudio.LanguageServices {
 
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [ProvideLoadKey("standard", "1.0", "Visual Studio Integration of ComposeStar Language Service", "University of Twente", 1)]
+    [ProvideLoadKey("standard", "1.0", "ComposeStar StarLight Language", "University of Twente", 150)]	
     [ProvideService(typeof(ComposeStarLangServ), ServiceName = "StarLight")]
     [ProvideLanguageService(typeof(ComposeStarLangServ), "StarLight", 100,
        CodeSense = true,
