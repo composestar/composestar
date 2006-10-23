@@ -40,6 +40,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private List<String> _cachedTypes = new List<String>();
         private bool _saveType = false;
         private bool _saveInnerType = false;
+        private bool _processMethodBody = false;  // true for outputfilters
         private bool _processAttributes = false;
         private string _binFolder = "";
 
