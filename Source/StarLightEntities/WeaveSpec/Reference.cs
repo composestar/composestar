@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using Composestar.StarLight.Entities.LanguageModel;  
 #endregion
 
-namespace Composestar.StarLight.Entities.Configuration
+namespace Composestar.StarLight.Entities.WeaveSpec
 {
     /// <summary>
     /// Reference
