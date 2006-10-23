@@ -10,6 +10,7 @@ using Composestar.StarLight.CoreServices.Exceptions;
 
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration; 
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
@@ -58,9 +59,14 @@ namespace Composestar.StarLight.ILWeaver
             WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
             // Create FilterAction object:
-            TypeElement typeElement = visitor.RepositoryAccess.GetTypeElement(filterAction.FullName);
+            FilterActionElement filterActionElement;
+            filterActionElement = CecilUtilities.GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
+
+            if (filterActionElement == null)
+                throw new ILWeaverException(string.Format(Properties.Resources.CouldNotResolveFilterAction, filterAction.FullName)); 
+            
             TypeReference typeRef =
-                CecilUtilities.ResolveType(filterAction.FullName, typeElement.Assembly, null);
+                CecilUtilities.ResolveType(filterAction.FullName, filterActionElement.Assembly, null);
             TypeDefinition typeDef =
                 CecilUtilities.ResolveTypeDefinition(typeRef);
             MethodReference constructor = typeDef.Constructors.GetConstructor(false, new Type[0]);

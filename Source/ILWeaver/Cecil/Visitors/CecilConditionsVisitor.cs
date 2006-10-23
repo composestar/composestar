@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,7 @@ using Composestar.StarLight.ContextInfo;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+#endregion
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -37,99 +39,127 @@ namespace Composestar.StarLight.ILWeaver
         #endregion
 
         #region Private variables
-        private IList<Instruction> m_Instructions = new List<Instruction>();
-        private CilWorker m_Worker;
-        private MethodDefinition m_Method;
         private int m_NumberOfBranches = 0;
-        private AssemblyDefinition m_TargetAssemblyDefinition;
-        private IEntitiesAccessor m_entitiesAccessor;  // FIXME we now pass this model through the visitors because we need the repository to get the conditions. Not a good seperation...
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
+        private CecilInliningInstructionVisitor _visitor;
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets the target assembly definition.
+        /// Gets the target assembly definition.
         /// </summary>
         /// <value>The target assembly definition.</value>
-        public AssemblyDefinition TargetAssemblyDefinition
+         private AssemblyDefinition TargetAssemblyDefinition
         {
             get
             {
-                return m_TargetAssemblyDefinition;
-            }
-            set
-            {
-                m_TargetAssemblyDefinition = value;
+                return _visitor.TargetAssemblyDefinition;
             }
         }
 
         /// <summary>
-        /// Gets or sets the method.
+        /// Gets the method.
         /// </summary>
         /// <value>The method.</value>
-        public MethodDefinition Method
+        private MethodDefinition Method
         {
             get
             {
-                return m_Method;
-            }
-            set
-            {
-                m_Method = value;
+                return _visitor.Method;
             }
         }
 
+
         /// <summary>
-        /// Gets or sets the worker.
+        /// Gets the worker.
         /// </summary>
         /// <value>The worker.</value>
-        public CilWorker Worker
+        private CilWorker Worker
         {
             get
             {
-                return m_Worker;
-            }
-            set
-            {
-                m_Worker = value;
+                return _visitor.Worker;
             }
         }
 
         /// <summary>
-        /// Gets or sets the instructions.
+        /// Gets the conditions.
         /// </summary>
-        /// <value>The instructions.</value>
-        public IList<Instruction> Instructions
+        /// <value>The conditions.</value>
+        private List<Condition> Conditions
         {
             get
             {
-                return m_Instructions;
-            }
-            set
-            {
-                m_Instructions = value;
+                return _visitor.WeaveType.Conditions;  
             }
         }
 
         /// <summary>
-        /// Gets or sets the repository access.
+        /// Weave configuration
         /// </summary>
-        /// <value>The repository access.</value>
-        public IEntitiesAccessor RepositoryAccess
+        /// <returns>Configuration container</returns>
+        private ConfigurationContainer WeaveConfiguration
         {
             get
             {
-                return m_entitiesAccessor;
-            }
-            set
+                return _visitor.WeaveConfiguration;
+            } 
+        } // WeaveConfiguration
+
+        /// <summary>
+        /// Weave type
+        /// </summary>
+        /// <returns>Weave type</returns>
+        private WeaveType WeaveType
+        {
+            get
             {
-                m_entitiesAccessor = value;
+                return _visitor.WeaveType;
+            } // get
+        }
+        
+         /// <summary>
+         /// Gets the instructions.
+         /// </summary>
+         /// <value>The instructions.</value>
+        private IList<Instruction> Instructions
+        {
+            get
+            {
+                return _visitor.Instructions;
+            }
+        }
+
+        /// <summary>
+        /// Gets the entities accessor.
+        /// </summary>
+        /// <value>The entities accessor.</value>
+        public IEntitiesAccessor EntitiesAccessor
+        {
+            get
+            {
+                return _visitor.EntitiesAccessor;
             }
         }
         #endregion
 
         #region Helper functions
+
+        /// <summary>
+        /// Gets the condition by its name.
+        /// </summary>
+        /// <param name="name">Name of the condition to retrieve from the weavetype in the parent visitor.</param>
+        /// <returns>The <see cref="T:Condition"></see> object or <see langword="null" /> if not found in the weave type.</returns>
+        private Condition GetConditionByName(string name)
+        {
+            foreach (Condition con in Conditions)
+            {
+                if (con.Name.Equals(name))
+                    return con;
+            } // foreach  (con)
+            return null;
+        } // GetConditionByName(name)
 
         /// <summary>
         /// Gets the jump label.
@@ -163,6 +193,22 @@ namespace Composestar.StarLight.ILWeaver
 
         #endregion
 
+        #region ctor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CecilConditionsVisitor"/> class.
+        /// </summary>
+        /// <param name="visitor">The parent visitor.</param>
+        public CecilConditionsVisitor(CecilInliningInstructionVisitor visitor)
+        {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+             
+            _visitor = visitor;
+        }
+
+        #endregion
+
         #region Condition Visitor Implementation
 
         #region Variable Value
@@ -177,31 +223,29 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitConditionLiteral(ConditionLiteral conditionLiteral)
         {
             // Get the condition
-            Condition con = RepositoryAccess.GetConditionByName(conditionLiteral.Name);
+                        
+            Condition con = GetConditionByName(conditionLiteral.Name);
             if (con == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.ConditionNotFound, conditionLiteral.Name));
-
-            // Get the type
-            TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
-
+                       
             MethodReference method;
             if (con.Reference.Target.Equals(Reference.InnerTarget) ||
                 con.Reference.Target.Equals(Reference.SelfTarget))
             {
                 method = CecilUtilities.ResolveMethod(
-                    con.Reference.Selector, te.FullName,
-                    te.Assembly, te.FromDLL);
+                    con.Reference.Selector, con.Reference.Fullname,
+                    con.Reference.Assembly, "");
             }
             else
             {
                 method = CecilUtilities.ResolveMethod(
                     con.Reference.Selector,
                     (con.Reference.NameSpace.Length > 0 ? con.Reference.NameSpace + "." : "") + con.Reference.Target,
-                    te.Assembly, te.FromDLL);
+                    con.Reference.Assembly, "");
             }
 
             if (method == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
+                throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, con.Reference.Fullname, con.Reference.Assembly));
 
 
             if (con.Reference.Target.Equals(Reference.InnerTarget) ||
@@ -232,7 +276,7 @@ namespace Composestar.StarLight.ILWeaver
             //else do nothing, because of static call
 
             // Create a call instruction
-            Instructions.Add(Worker.Create(OpCodes.Call, m_TargetAssemblyDefinition.MainModule.Import(method)));
+            Instructions.Add(Worker.Create(OpCodes.Call, TargetAssemblyDefinition.MainModule.Import(method)));
 
         }
 

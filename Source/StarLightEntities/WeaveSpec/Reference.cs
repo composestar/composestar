@@ -51,6 +51,19 @@ namespace Composestar.StarLight.Entities.WeaveSpec
 
 
         /// <summary>
+        /// Gets the fullname.
+        /// </summary>
+        /// <value>The fullname.</value>
+        /// <returns>String</returns>
+        public string Fullname
+        {
+            get
+            {
+                return string.Format("{0}.{1}", _nameSpace, _target);
+            } // get
+        } // Fullname
+
+        /// <summary>
         /// Gets or sets the target.
         /// </summary>
         /// <value>The target.</value>

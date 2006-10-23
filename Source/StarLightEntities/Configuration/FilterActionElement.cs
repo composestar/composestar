@@ -66,7 +66,19 @@ namespace Composestar.StarLight.Entities.Configuration
             set { _fullName = value; }
         }
 
+        private String _assembly;
 
+        /// <summary>
+        /// Gets or sets the assembly.
+        /// </summary>
+        /// <value>The assembly.</value>
+        [XmlAttribute]
+        public String Assembly
+        {
+            get { return _assembly; }
+            set { _assembly = value; }
+        }
+	
 
     }
 }

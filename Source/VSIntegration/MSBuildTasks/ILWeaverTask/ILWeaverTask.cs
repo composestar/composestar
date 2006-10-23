@@ -8,7 +8,7 @@ using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-//using Composestar.StarLight.ILWeaver;
+using Composestar.StarLight.ILWeaver;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.Repository;
@@ -68,8 +68,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             Log.LogMessageFromResources("WeavingStartText");
 
-            String filename;
-            String extension;
             IILWeaver weaver = null;
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 
@@ -95,7 +93,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogMessageFromResources("WeavingFile", assembly.Filename);
 
                     // Preparing config
-                    CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly);
+                    CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(assembly, configContainer);
 
                     if (!String.IsNullOrEmpty(BinFolder))
                     {

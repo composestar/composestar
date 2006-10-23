@@ -526,7 +526,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
                 faEl.FullName = type.FullName;
                 faEl.Name = ((string)cad.ConstructorArguments[0].Value);
-
+                faEl.Assembly = type.Module.Assembly.Name.ToString();
+ 
                 switch ((FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
                 {
                     case FilterFlowBehaviour.Continue:

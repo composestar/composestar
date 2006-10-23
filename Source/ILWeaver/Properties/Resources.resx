@@ -187,4 +187,7 @@
   <data name="WeavingSpecNotFound" xml:space="preserve">
     <value>Could not find weaving specification file '{0}' for assembly '{1}'.</value>
   </data>
+  <data name="CouldNotResolveFilterAction" xml:space="preserve">
+    <value>Unable to resolve filter action named '{0}'. </value>
+  </data>
 </root>
