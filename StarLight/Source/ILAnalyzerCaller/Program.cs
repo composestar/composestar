@@ -10,10 +10,9 @@ using System.Text;
 
 using Microsoft.Practices.ObjectBuilder;
 
-using Composestar.Repository.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.ILAnalyzer;
-using Composestar.Repository.Db4oContainers;
+using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.Repository;
 
 namespace Composestar.StarLight.ILAnalyzerCaller
@@ -271,10 +270,10 @@ namespace Composestar.StarLight.ILAnalyzerCaller
         /// <param name="languageModel">The language model.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        internal static IServiceProvider CreateContainer(ILanguageModelAccessor languageModel, CecilAnalyzerConfiguration configuration)
+        internal static IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilAnalyzerConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(ILanguageModelAccessor), languageModel);
+            serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);
             serviceContainer.AddService(typeof(CecilAnalyzerConfiguration), configuration);
 
             return serviceContainer;
@@ -284,16 +283,16 @@ namespace Composestar.StarLight.ILAnalyzerCaller
         {
             AssemblyInfo result = new AssemblyInfo();
 
-            ILanguageModelAccessor langModelAccessor = null;
+            IEntitiesAccessor entitiesAccessor = null;
             try
             {
-                langModelAccessor = new RepositoryAccess(Db4oRepositoryContainer.Instance, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
+                entitiesAccessor = EntitiesAccessor.Instance;
                 CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "starlight.yap"));
 
                 NameValueCollection config = new NameValueCollection();
                 config.Add("ProcessMethodBody", "true");
 
-                analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(langModelAccessor, configuration));
+                analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
 
                 System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
@@ -308,23 +307,23 @@ namespace Composestar.StarLight.ILAnalyzerCaller
                 int parameters = 0;
                 int methodcalls = 0;
                 int attributes = 0;
-                foreach (TypeElement te in assembly.TypeElements)
+                foreach (TypeElement te in assembly.Types)
                 {
-                    fields += te.FieldElements.Length;
-                    methods += te.MethodElements.Length;
-                    foreach (MethodElement me in te.MethodElements)
+                    fields += te.Fields.Count;
+                    methods += te.Methods.Count;
+                    foreach (MethodElement me in te.Methods)
                     {
-                        parameters += me.ParameterElements.Length;
+                        parameters += me.Parameters.Count;
 
-                        if (me.HasMethodBody && me.MethodBody.CallElements != null)
+                        if (me.HasMethodBody && me.Body.Calls != null)
                         {
 
-                            methodcalls += me.MethodBody.CallElements.Length;
+                            methodcalls += me.Body.Calls.Count;
                         }
                     }
                 }
                 
-                result.TypeCount = assembly.TypeElements.Length;
+                result.TypeCount = assembly.Types.Count;
                 result.FieldCount = fields;
                 result.MethodCount = methods;
                 result.ParameterCount = parameters;
@@ -357,7 +356,6 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             finally
             {
                 analyzer.Close();
-                langModelAccessor.Close();
             }
 
             return result;
