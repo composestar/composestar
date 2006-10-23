@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -6,6 +7,7 @@ using NTime.Framework;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CpsParser;
+#endregion
 
 namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
 {
@@ -14,11 +16,6 @@ namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
     {
         public PacmanParseFixture() : base()
         {
-            // Pacman concerns
-            Concerns.Add("Pacman_DynamicStrategy", ExamplePath + "Pacman\\concerns\\DynamicStrategy.cps");
-            Concerns.Add("Pacman_Levels", ExamplePath + "Pacman\\concerns\\Levels.cps");
-            Concerns.Add("Pacman_Scoring", ExamplePath + "Pacman\\concerns\\Scoring.cps");
-            Concerns.Add("Pacman_Sound", ExamplePath + "Pacman\\concerns\\Sound.cps");
 
         }
 
@@ -26,28 +23,28 @@ namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
         public void Parse_Pacman_DynamicStrategy()
         {
-            CpsFileParser cfp = CreateParser(Concerns["Pacman_DynamicStrategy"]);
+            CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\DynamicStrategy.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
         public void Parse_Pacman_Levels()
         {
-            CpsFileParser cfp = CreateParser(Concerns["Pacman_Levels"]);
+            CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\Levels.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
         public void Parse_Pacman_Scoring()
         {
-            CpsFileParser cfp = CreateParser(Concerns["Pacman_Scoring"]);
+            CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\Scoring.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
         public void Parse_Pacman_Sound()
         {
-            CpsFileParser cfp = CreateParser(Concerns["Pacman_Sound"]);
+            CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\Sound.cps");
             cfp.Parse();
         }
         #endregion

@@ -1,32 +1,31 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.ComponentModel.Design;
 using System.Text;
 using NTime.Framework;
 
 using Composestar.StarLight.CoreServices;
+#endregion
 
 namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
 {
-    public class CpsFileParserFixtureBase
+    public abstract class CpsFileParserFixtureBase
     {
-        private Dictionary<String, String> _concerns = null;
-        private String _testPath = "..\\..\\..\\..\\";
-        private String _examplePath = "..\\..\\..\\..\\..\\..\\Examples\\";
+        #region Local variables
+        private String _testPath;
+        private String _examplePath;
         private ServiceContainer svcContainer = null;
+        #endregion
 
         protected CpsFileParserFixtureBase()
         {
-            _concerns = new Dictionary<string, string>();
+            _testPath = "..\\..\\..\\..\\";
+            _examplePath = "..\\..\\..\\..\\..\\..\\Examples\\";
         }
 
         #region Properties
-        protected Dictionary<String, String> Concerns
-        {
-            get { return _concerns; }
-            set { _concerns = value; }
-        }
-
         protected String TestPath 
         {
             get { return _testPath; }
