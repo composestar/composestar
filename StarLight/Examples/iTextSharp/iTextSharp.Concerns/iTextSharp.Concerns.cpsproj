@@ -56,15 +56,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Concern Include="PdfDocumentConcern.cps" />
+    <None Include="PdfDocumentConcern.cps" />
   </ItemGroup>
   <ItemGroup>
-    <Concern Include="PhraseConcern.cps">
+    <None Include="PhraseConcern.cps">
       <SubType>Code</SubType>
-    </Concern>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TrackAndTrace.cps" />
+    <Concern Include="TrackAndTrace.cps" />
   </ItemGroup>
   <!-- Import the CSharp targets -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
