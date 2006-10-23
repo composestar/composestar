@@ -30,6 +30,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         private ITaskItem[] _assemblyFiles;
         private ITaskItem[] _referencedAssemblies;
         private ITaskItem[] _referencedTypes;
+        private bool _doMethodCallAnalysis = true;
 
         /// <summary>
         /// Gets or sets the assembly files to analyze.
@@ -67,6 +68,12 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             get { return _referencedTypes; }
             set { _referencedTypes = value; }
+        }
+
+        public bool DoMethodCallAnalysis
+        {
+            get { return _doMethodCallAnalysis; }
+            set { _doMethodCallAnalysis = value; }
         }
 
         private string _binFolder;
@@ -122,9 +129,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             IILAnalyzer analyzer = null;
             CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
-            
+          
             // Set configuration settings
             configuration.BinFolder = BinFolder;
+						configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
 
             // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
