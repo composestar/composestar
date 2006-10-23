@@ -19,14 +19,5 @@ namespace Composestar.StarLight.CoreServices
         /// <param name="fileName">Name of the file.</param>
         void Parse();
 
-        /// <summary>
-        /// Parses the file for referenced types.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        /// <exception cref="System.IO.FileNotFoundException">Thrown when the file cannot be found.</exception>
-        /// <exception cref="Composestar.StarLight.CoreServices.Exceptions.CpsParserException"></exception>
-        List<String> ParseFileForReferencedTypes(String fileName);
-
     }
 }
