@@ -8,7 +8,11 @@ using Mono.Cecil.Cil;
 
 using Composestar.StarLight.CoreServices.Exceptions;
 
-using Composestar.Repository.LanguageModel.Inlining;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.WeaveSpec.Instructions;
 
 using Composestar.StarLight.ContextInfo;
 
@@ -82,8 +86,8 @@ namespace Composestar.StarLight.ILWeaver
             // Place target on the stack:
             if(methodToCall.HasThis)
             {
-                if(filterAction.SubstitutionTarget.Equals(FilterAction.INNER_TARGET) ||
-                    filterAction.SubstitutionTarget.Equals(FilterAction.SELF_TARGET))
+                if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+                    filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
                 {
                     WeaveStrategyUtilities.LoadSelfObject(visitor, jpcVar);
                 }
@@ -121,8 +125,8 @@ namespace Composestar.StarLight.ILWeaver
         private MethodReference GetMethodToCall(CecilInliningInstructionVisitor visitor,
             FilterAction filterAction, TypeDefinition parentType)
         {
-            if(filterAction.SubstitutionTarget.Equals(FilterAction.INNER_TARGET) ||
-                filterAction.SubstitutionTarget.Equals(FilterAction.SELF_TARGET))
+            if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+                filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
             {
                 return CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_JpcTypes);
             }

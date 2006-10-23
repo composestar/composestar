@@ -237,4 +237,7 @@
   <data name="MasterSkipNoConcerns" xml:space="preserve">
     <value>Skipping StarLight Java Master, no concerns found.</value>
   </data>
+  <data name="SkippedWeavingFile" xml:space="preserve">
+    <value>Skipped weaving of '{0}' because there is no weaving specification for this assembly.</value>
+  </data>
 </root>

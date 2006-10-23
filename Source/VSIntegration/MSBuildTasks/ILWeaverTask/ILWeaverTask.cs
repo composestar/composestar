@@ -68,66 +68,73 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             Log.LogMessageFromResources("WeavingStartText");
 
-            //String filename;
-            //String extension;
-            //IILWeaver weaver = null;
-            //IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
+            String filename;
+            String extension;
+            IILWeaver weaver = null;
+            IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 
-            //// Get the configuration container
-            //ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+            // Get the configuration container
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
-            //try
-            //{
-            //    // For each assembly in the config
-            //    foreach (AssemblyConfig assembly in configContainer.Assemblies)
-            //    {                    
-                              
-            //        // Exclude StarLight ContextInfo assembly from the weaving process
-            //        if (assembly.Filename.EndsWith(ContextInfoFileName)) continue;
+            try
+            {
+                // For each assembly in the config
+                foreach (AssemblyConfig assembly in configContainer.Assemblies)
+                {
 
-            //        Log.LogMessageFromResources("WeavingFile", assembly.Filename);
+                    // Exclude StarLight ContextInfo assembly from the weaving process
+                    if (assembly.Filename.EndsWith(ContextInfoFileName)) continue;
 
-            //        // Preparing config
-            //        CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly);
+                    // If there is no weaving spec file, then skip
+                    if (String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
+                    {
+                        Log.LogMessageFromResources("SkippedWeavingFile", assembly.Filename);
+                        continue; 
+                    } // if
 
-            //        if (!String.IsNullOrEmpty(BinFolder))
-            //        {
-            //            configuration.BinFolder = BinFolder;
-            //        }
+                    Log.LogMessageFromResources("WeavingFile", assembly.Filename);
 
-            //        try
-            //        {
-            //            // Retrieve a weaver instance from the ObjectManager
-            //            weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration));
+                    // Preparing config
+                    CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly);
 
-            //            // Perform weaving
-            //            weaver.DoWeave();
+                    if (!String.IsNullOrEmpty(BinFolder))
+                    {
+                        configuration.BinFolder = BinFolder;
+                    }
 
-            //            Log.LogMessageFromResources("WeavingCompleted", weaver.LastDuration.TotalSeconds);
-            //        }
-            //        catch (ILWeaverException ex)
-            //        {
-            //            Log.LogErrorFromException(ex, false);
-            //            if (ex.InnerException != null)
-            //                Log.LogErrorFromException(ex.InnerException, true);
-            //        }
-            //        catch (ArgumentException ex)
-            //        {
-            //            Log.LogErrorFromException(ex, true);
-            //        }
-            //        catch (BadImageFormatException ex)
-            //        {
-            //            Log.LogErrorFromException(ex, true);
-            //        }
+                    try
+                    {
+                        // Retrieve a weaver instance from the ObjectManager
+                        weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration));
 
-            //    }
-            //}
-            //finally
-            //{
-            //    // Close the weaver, so it closes the database, performs cleanups etc
-            //    if (weaver != null)
-            //        weaver.Close();                
-            //}
+                        // Perform weaving
+                        weaver.DoWeave();
+
+                        Log.LogMessageFromResources("WeavingCompleted", weaver.LastDuration.TotalSeconds);
+                    }
+                    catch (ILWeaverException ex)
+                    {
+                        Log.LogErrorFromException(ex, false);
+                        if (ex.InnerException != null)
+                            Log.LogErrorFromException(ex.InnerException, true);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Log.LogErrorFromException(ex, true);
+                    }
+                    catch (BadImageFormatException ex)
+                    {
+                        Log.LogErrorFromException(ex, true);
+                    }
+
+                }
+            }
+            finally
+            {
+                // Close the weaver, so it closes the database, performs cleanups etc
+                if (weaver != null)
+                    weaver.Close();
+            }
 
             return !Log.HasLoggedErrors;
         }
@@ -138,15 +145,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <param name="languageModel">The language model.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        //internal IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilWeaverConfiguration configuration)
-        //{
-        //    ServiceContainer serviceContainer = new ServiceContainer();
-        //    serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);
-        //    serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration);
-        //    serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverBuilderConfigurator());
+        internal IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilWeaverConfiguration configuration)
+        {
+            ServiceContainer serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);
+            serviceContainer.AddService(typeof(CecilWeaverConfiguration), configuration);
+            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new ILWeaverBuilderConfigurator());
 
-        //    return serviceContainer;
-        //}
+            return serviceContainer;
+        }
 
     }
 }

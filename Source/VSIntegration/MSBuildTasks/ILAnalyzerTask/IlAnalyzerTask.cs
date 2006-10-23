@@ -121,7 +121,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             IILAnalyzer analyzer = null;
             CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
-            IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
+            IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
             
             // Set configuration settings
             configuration.BinFolder = BinFolder;

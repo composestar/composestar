@@ -313,6 +313,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipped weaving of &apos;{0}&apos; because there is no weaving specification for this assembly..
+        /// </summary>
+        internal static string SkippedWeavingFile {
+            get {
+                return ResourceManager.GetString("SkippedWeavingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Storing debug level {0} in the repository..
         /// </summary>
         internal static string StoreDebugLevel {

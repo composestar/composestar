@@ -8,8 +8,11 @@ using Mono.Cecil.Cil;
 
 using Composestar.StarLight.CoreServices.Exceptions;
 
-using Composestar.Repository.LanguageModel;
-using Composestar.Repository.LanguageModel.Inlining;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.WeaveSpec.Instructions;
 
 using Composestar.StarLight.ContextInfo;
 

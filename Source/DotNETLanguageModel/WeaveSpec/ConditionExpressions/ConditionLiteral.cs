@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Composestar.StarLight.Configuration;  
 using Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor;
 #endregion
 

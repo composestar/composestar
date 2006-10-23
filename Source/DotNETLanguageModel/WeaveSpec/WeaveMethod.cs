@@ -53,7 +53,45 @@ namespace Composestar.StarLight.WeaveSpec
             get { return _outputFilters; }
             set { _outputFilters = value; }
         }
-	
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has input filters.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has input filters; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool HasInputFilters
+        {
+            get
+            {
+                if (InputFilter != null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has output filters.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has output filters; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool HasOutputFilters
+        {
+            get
+            {
+
+                if (OutputFilters.Count > 0)
+                    return true;
+
+                return false;
+            }
+        }
          
     }
 }

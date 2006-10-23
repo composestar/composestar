@@ -184,4 +184,7 @@
   <data name="MethodSignatureNotFound" xml:space="preserve">
     <value>Could not find method with signature '{0}' in the cache.</value>
   </data>
+  <data name="WeavingSpecNotFound" xml:space="preserve">
+    <value>Could not find weaving specification file '{0}' for assembly '{1}'.</value>
+  </data>
 </root>

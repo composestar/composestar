@@ -108,7 +108,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 
                 // Open DB
                 Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
-                IEntitiesAccessor entitiesAccessor = new EntitiesAccessor(); 
+                IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
 
                 ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);               
 

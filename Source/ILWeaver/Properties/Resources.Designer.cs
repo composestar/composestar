@@ -258,5 +258,14 @@ namespace Composestar.StarLight.ILWeaver.Properties {
                 return ResourceManager.GetString("TypeNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find weaving specification file &apos;{0}&apos; for assembly &apos;{1}&apos;..
+        /// </summary>
+        internal static string WeavingSpecNotFound {
+            get {
+                return ResourceManager.GetString("WeavingSpecNotFound", resourceCulture);
+            }
+        }
     }
 }

@@ -2,9 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Composestar.Repository.LanguageModel;
-using Composestar.Repository.LanguageModel.ConditionExpressions;
-using Composestar.Repository.LanguageModel.ConditionExpressions.Visitor;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor;
+using Composestar.StarLight.WeaveSpec.Instructions;
+using Composestar.StarLight.Configuration;
+ 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 
@@ -172,16 +177,16 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitConditionLiteral(ConditionLiteral conditionLiteral)
         {
             // Get the condition
-            Composestar.Repository.LanguageModel.Condition con = RepositoryAccess.GetConditionByName(conditionLiteral.Name);
+            Condition con = RepositoryAccess.GetConditionByName(conditionLiteral.Name);
             if (con == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.ConditionNotFound, conditionLiteral.Name));
 
             // Get the type
-            Composestar.Repository.LanguageModel.TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
+            TypeElement te = RepositoryAccess.GetTypeElementById(con.ParentTypeId);
 
             MethodReference method;
-            if (con.Reference.Target.Equals(Reference.INNER_TARGET) ||
-                con.Reference.Target.Equals(Reference.SELF_TARGET))
+            if (con.Reference.Target.Equals(Reference.InnerTarget) ||
+                con.Reference.Target.Equals(Reference.SelfTarget))
             {
                 method = CecilUtilities.ResolveMethod(
                     con.Reference.Selector, te.FullName,
@@ -199,8 +204,8 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, te.FullName, te.Assembly));
 
 
-            if (con.Reference.Target.Equals(Reference.INNER_TARGET) ||
-                con.Reference.Target.Equals(Reference.SELF_TARGET))
+            if (con.Reference.Target.Equals(Reference.InnerTarget) ||
+                con.Reference.Target.Equals(Reference.SelfTarget))
             {
                 // Set innercall context
                 if(con.Reference.InnerCallContext >= 0)
