@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using Composestar.CpsParser;
+using Composestar.StarLight.CpsParser;
 using Composestar.StarLight.CoreServices;
   
-namespace Composestar.CpsParserCaller
+namespace Composestar.StarLight.CpsParserCaller
 {
     class Program
     {
@@ -17,9 +17,11 @@ namespace Composestar.CpsParserCaller
                 return;
             }
 
-            CpsParser.CpsFileParser cfp = new Composestar.CpsParser.CpsFileParser();
+            CpsParserConfiguration config = new CpsParserConfiguration(args[0]);
 
-            cfp.ParseFile(args[0]);
+            CpsParser.CpsFileParser cfp = new CpsFileParser(config);
+
+            cfp.Parse();
         }
 
 
