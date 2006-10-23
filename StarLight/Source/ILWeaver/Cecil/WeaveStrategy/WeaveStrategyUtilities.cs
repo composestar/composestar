@@ -7,7 +7,11 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using Composestar.Repository.LanguageModel.Inlining;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.WeaveSpec.Instructions;   
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.CoreServices.Exceptions;
 
@@ -34,8 +38,8 @@ namespace Composestar.StarLight.ILWeaver
             VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
             
             // Store current target
-            if(filterAction.Target.Equals(FilterAction.INNER_TARGET) ||
-                filterAction.Target.Equals(FilterAction.SELF_TARGET))
+            if(filterAction.Target.Equals(FilterAction.InnerTarget) ||
+                filterAction.Target.Equals(FilterAction.SelfTarget))
             {
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));               
@@ -82,8 +86,8 @@ namespace Composestar.StarLight.ILWeaver
 
 
             // Store substitution target
-            if(filterAction.SubstitutionTarget.Equals(FilterAction.INNER_TARGET) ||
-                filterAction.SubstitutionTarget.Equals(FilterAction.SELF_TARGET))
+            if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+                filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
             {
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));                

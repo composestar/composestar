@@ -5,7 +5,11 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using Composestar.Repository.LanguageModel.Inlining;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.WeaveSpec.Instructions;
 
 namespace Composestar.StarLight.ILWeaver
 {

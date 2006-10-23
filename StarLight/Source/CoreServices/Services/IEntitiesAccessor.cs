@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 using Composestar.StarLight.LanguageModel;
 using Composestar.StarLight.Configuration;
-using Composestar.StarLight.Concerns;  
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.WeaveSpec;
 
 
 namespace Composestar.StarLight.CoreServices
@@ -12,7 +13,7 @@ namespace Composestar.StarLight.CoreServices
     /// <summary>
     /// Combines the interfaces for the entities.
     /// </summary>
-    public interface IEntitiesAccessor : IConfigurationAccessors, IAssemblyAccessors
+    public interface IEntitiesAccessor : IConfigurationAccessors, IAssemblyAccessors, IWeaveSpecAccessors
     {
 
     }
@@ -62,5 +63,24 @@ namespace Composestar.StarLight.CoreServices
         bool SaveAssemblyElement(string filename, AssemblyElement assemblyElement);
 
     } // IAssemblyAccessors
-           
+
+    public interface IWeaveSpecAccessors
+    {
+        /// <summary>
+        /// Loads the weave specification.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        WeaveSpecification LoadWeaveSpecification(string filename);
+
+        /// <summary>
+        /// Saves the weave specification.
+        /// </summary>
+        /// <param name="weaveSpecification">The weave specification.</param>
+        /// <param name="filename">The filename.</param>
+        /// <returns></returns>
+        bool SaveWeaveSpecification(WeaveSpecification weaveSpecification, string filename);
+
+    } // IWeaveSpecAccessors
+
 }

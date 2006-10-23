@@ -114,7 +114,7 @@ namespace Composestar.StarLight.WeaveSpec
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance has metrhods with output filters.
+        /// Gets a value indicating whether this instance has methods with output filters.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance has output filters; otherwise, <c>false</c>.

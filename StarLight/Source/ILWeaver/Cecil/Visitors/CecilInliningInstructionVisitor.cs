@@ -4,8 +4,12 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-using Composestar.Repository.LanguageModel.Inlining;
-using Composestar.Repository.LanguageModel.Inlining.Visitor;
+using Composestar.StarLight.Concerns;
+using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.WeaveSpec.Instructions;
+using Composestar.StarLight.WeaveSpec.Instructions.Visitor;
 
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.CoreServices;
@@ -194,9 +198,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </remarks> 
         /// <param name="expr">The expr.</param>
         private void CreateContextExpression(ContextExpression expr)
-        {
-            if (expr == null)
-                return;
+        {           
 
             // Get an actionstore local
             VariableDefinition asVar = CreateActionStoreLocal();
@@ -204,13 +206,13 @@ namespace Composestar.StarLight.ILWeaver
             // Load the local
             Instructions.Add(Worker.Create(OpCodes.Ldloc, asVar));
 
-            switch (expr.Type)
+            switch (expr)
             {
-                case ContextExpression.HAS_MORE_ACTIONS:
+                case ContextExpression.HasMoreActions:
                     // Call the HasMoreStoredActions method
                     Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.HasMoreStoredActions)));
                     break;
-                case ContextExpression.RETRIEVE_ACTION:
+                case ContextExpression.RetrieveAction:
                     // Call the NextStoredAction method
                     Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.NextStoredAction)));
                     break;
@@ -568,7 +570,7 @@ namespace Composestar.StarLight.ILWeaver
             conditionsVisitor.Worker = Worker;
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
             conditionsVisitor.RepositoryAccess = m_entitiesAccessor;
-            ((Composestar.Repository.LanguageModel.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
+            ((Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
 
             // Add the instructions containing the conditions to the IL instruction list
             AddInstructionList(conditionsVisitor.Instructions);

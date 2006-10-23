@@ -14,7 +14,6 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
-using Composestar.Repository.LanguageModel;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions; 

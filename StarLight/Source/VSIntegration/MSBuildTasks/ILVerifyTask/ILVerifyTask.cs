@@ -83,7 +83,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
 
-            IEntitiesAccessor entitiesAccessor = new EntitiesAccessor();
+            IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
 
             ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
@@ -92,7 +92,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 try
                 {
-
+                    // Only verify files we weaved on. Skip the rest.
+                    if (String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
+                        continue;
+ 
                     Log.LogMessageFromResources("VerifyingAssembly", assembly.Filename);
 
                     process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", assembly.Filename);
