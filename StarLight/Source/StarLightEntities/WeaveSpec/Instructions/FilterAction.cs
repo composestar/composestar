@@ -16,7 +16,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     /// The filter action to perform.
     /// </summary>
     [Serializable]
-    [XmlRoot("FilterAction", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [XmlRoot("FilterActionInstruction", Namespace = "Entities.TYM.DotNET.Composestar")]
     public class FilterAction : InlineInstruction, IVisitable
     {
         private string _type;

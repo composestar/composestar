@@ -70,6 +70,25 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         private String _target;
 
 
+        private String _assembly;
+
+        /// <summary>
+        /// Gets or sets the assembly containing the type of the reference.
+        /// </summary>
+        [XmlAttribute]
+        public String Assembly
+        {
+            get
+            {
+                return _assembly;
+            }
+            set
+            {
+                _assembly = value;
+            }
+        }
+
+
         /// <summary>
         /// Gets or sets the selector.
         /// </summary>

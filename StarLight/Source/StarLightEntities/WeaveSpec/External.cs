@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.Entities.Configuration;  
  
 namespace Composestar.StarLight.Entities.WeaveSpec
 {
@@ -34,7 +33,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// Gets or sets the reference.
         /// </summary>
         /// <value>The reference.</value>
-        [XmlAttribute]
         public Reference Reference
         {
             get { return _reference; }
