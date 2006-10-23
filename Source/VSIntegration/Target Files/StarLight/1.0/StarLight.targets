@@ -328,6 +328,7 @@ This target will be called whenever the Clean target is invoked.
     <Message Text="Parsing concern files." />
     <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
       <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
+      <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
     </CpsParserTask>
   </Target>
   
@@ -338,7 +339,7 @@ This target will be called whenever the Clean target is invoked.
  
     <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" 
         AssemblyFiles="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" 
-        RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"
+        RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" DoMethodCallAnalysis="$(HasOutputFilters)"
         IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" />
   </Target>
 
