@@ -49,6 +49,11 @@ namespace Weavers.IlWeaving
 			addedExternalAssemblies = new Hashtable();
 		}
 
+		private string CreateLabel()
+		{
+			return "PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0');
+		}
+
 		/// <summary>
 		/// Creates a list of opcodes pushing the selected argument onto the stack.
 		/// </summary>
@@ -69,56 +74,56 @@ namespace Weavers.IlWeaving
 			{
 				case "%calledtype":
 					argumentTypes.Add("string");
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\"" + calledClass + "\""));
+					result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + calledClass + "\""));
 					break;
 				case "%createdobject":
 					argumentTypes.Add("object");
 					if (indCreatedObject >= 0)
 					{
-						result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCreatedObject));
+						result.Add(CreateLoadOpcode(CreateLabel(), indCreatedObject));
 					}
 					else 
 					{
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldnull"));
+						result.Add(new IlOpcode(CreateLabel(), "ldnull"));
 					}
 					break;
 				case "%senderobject":
 					if (containingMethod.IsStatic()) 
 					{
 						argumentTypes.Add("string");
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\"" + containingClass + "\""));
+						result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + containingClass + "\""));
 					}
 					else 
 					{
 						argumentTypes.Add("object");
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldarg.0"));
+						result.Add(new IlOpcode(CreateLabel(), "ldarg.0"));
 					}
 					break;
 				case "%targetname":
 					argumentTypes.Add("string");
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\"" + calledClass + "::" + calledMethod + "\""));
+					result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + calledClass + "::" + calledMethod + "\""));
 					break;
 				case "%targetobject":
 					if (callConventions.IndexOf("instance") >= 0) 
 					{
 						// Call is made to an instance, we already stored the target object
 						argumentTypes.Add("object");
-						result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indTemporaryObject));
+						result.Add(CreateLoadOpcode(CreateLabel(), indTemporaryObject));
 					}
 					else 
 					{
 						// Call is not made to an instance, argument will be the name of the target object
 						argumentTypes.Add("string");
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\"" + calledClass + "\""));
+						result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + calledClass + "\""));
 					}
 					break;
 				case "%targetmethod":
 					argumentTypes.Add("string");
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\"" + calledMethod + "\""));
+					result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + calledMethod + "\""));
 					break;
 				case "%originalparameters":
 					argumentTypes.Add("object[]");
-					result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCallArguments));
+					result.Add(CreateLoadOpcode(CreateLabel(), indCallArguments));
 					break;
 				case "%casttarget":
 					argumentTypes.Add("string");
@@ -127,9 +132,9 @@ namespace Weavers.IlWeaving
 					argumentTypes.Add("object");
 					if (this.tempIlOpcode.Opcode.Equals("ldfld")) 
 					{
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldarg.0"));
+						result.Add(new IlOpcode(CreateLabel(), "ldarg.0"));
 					}
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), this.tempIlOpcode.Opcode, this.tempIlOpcode.Argument));
+					result.Add(new IlOpcode(CreateLabel(), this.tempIlOpcode.Opcode, this.tempIlOpcode.Argument));
 					break;
 				default:
 					argumentTypes.Add(argument.Type);
@@ -137,11 +142,11 @@ namespace Weavers.IlWeaving
 					{
 						if (argument.Type.Equals("string"))
 						{
-							result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\"" + argument.Value + "\""));
+							result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + argument.Value + "\""));
 						}
 						else if (argument.Type.Equals("int32")) 
 						{
-							result.Add(CreateLiteralOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), int.Parse(argument.Value)));
+							result.Add(CreateLiteralOpcode(CreateLabel(), int.Parse(argument.Value)));
 						}
 					}
 					// TODO: add more types here
@@ -183,7 +188,7 @@ namespace Weavers.IlWeaving
 				}
 			}
 
-			return new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "call", call);
+			return new IlOpcode(CreateLabel(), "call", call);
 		}
 
 		/// <summary>
@@ -280,7 +285,7 @@ namespace Weavers.IlWeaving
 			}
 
 			if (debug) Console.WriteLine("Creating CIL instruction for call '" + methodCall + "'.");
-			result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "call", methodCall));
+			result.Add(new IlOpcode(CreateLabel(), "call", methodCall));
 
 			// Add the referenced assembly to the list of added assemblies.
 			if ( !this.addedExternalAssemblies.ContainsKey(mi.AssemblyName)) 
@@ -302,86 +307,85 @@ namespace Weavers.IlWeaving
 			return result;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="returntype"></param>
-		/// <returns></returns>
 		private ArrayList CreateCastOpcode(string returntype)
-		{
-			ArrayList result = new ArrayList();
-				
+		{				
 			if (IsValueType(returntype)) 
 			{
-				// Unbox to value type
-				if (returntype.Equals("bool")) 
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.u1"));
-				}
-				else if (returntype.Equals("wchar")) 
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.u2"));
-				}
-				else if (returntype.Equals("string")) 
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "castclass", returntype));
-				}
-				else if (returntype.Equals("int8"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.i1"));
-				}
-				else if (returntype.Equals("int16"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.i2"));
-				}
-				else if (returntype.Equals("int32"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.i4"));
-				}
-				else if (returntype.Equals("int64"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.i8"));
-				}
-				else if (returntype.Equals("float32"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.r4"));
-				}
-				else if (returntype.Equals("float64"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.r8"));
-				}
-				else if (returntype.Equals("unsigned int8"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.u1"));
-				}
-				else if (returntype.Equals("unsigned int16"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.u2"));
-				}
-				else if (returntype.Equals("unsigned int32"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.u4"));
-				}
-				else if (returntype.Equals("unsigned int64"))
-				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "unbox", GetFulltypeForValuetype(returntype)));
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldind.u8"));
-				}
+				return CreateUnboxOpcode(returntype);
 			}
 			else 
 			{
-				result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "castclass", returntype));
+				ArrayList result = new ArrayList();
+				result.Add(new IlOpcode(CreateLabel(), "castclass", returntype));
+				return result;
+			}
+		}
+
+		private ArrayList CreateUnboxOpcode(string returntype)
+		{
+			if (mDebug) Console.WriteLine("Creating unbox opcode for type '" + returntype + "'");
+			
+			ArrayList result = new ArrayList();
+			switch (returntype)
+			{
+				case "bool":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.u1"));
+					break;
+				case "wchar":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.u2"));
+					break;
+				case "int8":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.i1"));
+					break;
+				case "int16":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.i2"));
+					break;
+				case "int32":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.i4"));
+					break;
+				case "int64":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.i8"));
+					break;
+				case "float32":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.r4"));
+					break;
+				case "float64":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.r8"));
+					break;
+				case "uint8":
+				case "unsigned int8":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.u1"));
+					break;
+				case "uint16":
+				case "unsigned int16":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.u2"));
+					break;
+				case "uint32":
+				case "unsigned int32":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.u4"));
+					break;
+				case "uint64":
+				case "unsigned int64":
+					result.Add(new IlOpcode(CreateLabel(), "unbox", GetFulltypeForValuetype(returntype)));
+					result.Add(new IlOpcode(CreateLabel(), "ldind.u8"));
+					break;
+				case "string":
+					result.Add(new IlOpcode(CreateLabel(), "castclass", returntype));
+					break;
+				default:
+					Console.WriteLine("ERROR: Cannot unbox unknown type '" + returntype + "'"); 
+					break;
 			}
 
 			return result;
@@ -503,15 +507,19 @@ namespace Weavers.IlWeaving
 				case "int64":
 					fullType = "[mscorlib]System.Int64";
 					break;
+				case "uint8":
 				case "unsigned int8":
 					fullType = "[mscorlib]System.Byte";
 					break;
+				case "uint16":
 				case "unsigned int16":
 					fullType = "[mscorlib]System.UInt16";
 					break;
+				case "uint32":
 				case "unsigned int32":
 					fullType = "[mscorlib]System.UInt32";
 					break;
+				case "uint64":
 				case "unsigned int64":
 					fullType = "[mscorlib]System.UInt64";
 					break;
@@ -532,7 +540,7 @@ namespace Weavers.IlWeaving
 		{
 			return new IlOpcode(label, "box", GetFulltypeForValuetype(type));
 		}
-
+	/*
 		/// <summary>
 		/// 
 		/// </summary>
@@ -543,7 +551,7 @@ namespace Weavers.IlWeaving
 		{
 			return new IlOpcode(label, "unbox", GetFulltypeForValuetype(type));
 		}
-
+	*/
 		/// <summary>
 		/// Creates a load literal of type i4 instruction for the specified literal.
 		/// </summary>
@@ -638,9 +646,9 @@ namespace Weavers.IlWeaving
 			if (!methodArgs.Equals("")) 
 			{
 				// Opcodes to create the object array 
-				result.Add(CreateLiteralOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), methodArgsArray.Length));
-				result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "newarr", "[mscorlib]System.Object"));
-				result.Add(CreateStoreOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCallArguments));
+				result.Add(CreateLiteralOpcode(CreateLabel(), methodArgsArray.Length));
+				result.Add(new IlOpcode(CreateLabel(), "newarr", "[mscorlib]System.Object"));
+				result.Add(CreateStoreOpcode(CreateLabel(), indCallArguments));
 			
 				// Process all the arguments
 				for (int i=methodArgsArray.Length-1; i >=0; i--) 
@@ -648,32 +656,32 @@ namespace Weavers.IlWeaving
 					if (IsValueType(methodArgsArray[i]))
 					{
 						// This argument is a valuetype, it has to be boxed!
-						result.Add(CreateBoxOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), methodArgsArray[i]));
+						result.Add(CreateBoxOpcode(CreateLabel(), methodArgsArray[i]));
 					}
 					
 					// Store argument value to temporary object local
-					result.Add(CreateStoreOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indTemporaryObject));
+					result.Add(CreateStoreOpcode(CreateLabel(), indTemporaryObject));
 					
 					// Load array
-					result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCallArguments));
+					result.Add(CreateLoadOpcode(CreateLabel(), indCallArguments));
 					
 					// Push array index onto stack
-					result.Add(CreateLiteralOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), i));
+					result.Add(CreateLiteralOpcode(CreateLabel(), i));
 				
 					// Load argument value from temporary object local
-					result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indTemporaryObject));
+					result.Add(CreateLoadOpcode(CreateLabel(), indTemporaryObject));
 
 					// Store argument in array
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "stelem.ref"));
+					result.Add(new IlOpcode(CreateLabel(), "stelem.ref"));
 				
 				}
 			}
 			else 
 			{
 				// Create an empty array
-				result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldc.i4.0"));
-				result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "newarr", "[mscorlib]System.Object"));
-				result.Add(CreateStoreOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCallArguments));
+				result.Add(new IlOpcode(CreateLabel(), "ldc.i4.0"));
+				result.Add(new IlOpcode(CreateLabel(), "newarr", "[mscorlib]System.Object"));
+				result.Add(CreateStoreOpcode(CreateLabel(), indCallArguments));
 			}
 
 			return result;
@@ -758,19 +766,19 @@ namespace Weavers.IlWeaving
 							callerMethod.AddLocal("object createdobject");
 							indCreatedObject = callerMethod.CountLocals()-1;
 						}
-						result.Add(CreateStoreOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCreatedObject));
+						result.Add(CreateStoreOpcode(CreateLabel(), indCreatedObject));
 						
 						result.AddRange(CreateCallStatement(ws, mi, calledAssembly, calledClass, calledMethod, methodArgs, callConventions, (int)CallContext.AfterInstantiation, callerClass.Name, ref callerMethod, quiet, debug));
 						if (mi.HasArgument("%originalparameters") || mi.HasArgument("%createdobject"))
 						{
 							// Load newly created object and cast it back to the right type (we stored it in an System.Object)
-							result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCreatedObject));
+							result.Add(CreateLoadOpcode(CreateLabel(), indCreatedObject));
 							string newobj = calledClass;
 							if (!calledAssembly.Equals("")) 
 							{
 								newobj = "[" + calledAssembly + "]" + newobj;
 							}
-							result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "castclass", newobj));
+							result.Add(new IlOpcode(CreateLabel(), "castclass", newobj));
 						}
 						//result = VerifyBranchStatements(result, debug);
 						if (mi.GetArgumentCount() > stackIncrease ) 
@@ -834,12 +842,12 @@ namespace Weavers.IlWeaving
 						{
 							CreateLocalVariables(ref callerMethod);
 						}
-						result.Add(CreateStoreOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indTemporaryObject));
+						result.Add(CreateStoreOpcode(CreateLabel(), indTemporaryObject));
 					}
 					else if (callConventions.IndexOf("instance") >= 0 && redirectTo.GetArgumentCount() == 0)
 					{
 						// Pop the loaded instance object from the stack
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "pop"));
+						result.Add(new IlOpcode(CreateLabel(), "pop"));
 					}
 
 					ArrayList newCallStatement = CreateCallStatement(ws, redirectTo, calledAssembly, calledClass, calledMethod, methodArgs, callConventions, (int)CallContext.Call, callerClass.Name, ref callerMethod, quiet, debug);
@@ -915,12 +923,12 @@ namespace Weavers.IlWeaving
 						{
 							CreateLocalVariables(ref callerMethod);
 						}
-						result.Add(CreateStoreOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indTemporaryObject));
+						result.Add(CreateStoreOpcode(CreateLabel(), indTemporaryObject));
 					}
 					else if (callConventions.IndexOf("instance") >= 0 && redirectTo.GetArgumentCount() == 0)
 					{
 						// Pop the loaded instance object from the stack
-						result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "pop"));
+						result.Add(new IlOpcode(CreateLabel(), "pop"));
 					}
 
 					ArrayList newCallStatement = CreateCallStatement(ws, redirectTo, calledAssembly, calledClass, calledMethod, methodArgs, callConventions, (int)CallContext.Call, callerClass.Name, ref callerMethod, quiet, debug);
@@ -977,7 +985,7 @@ namespace Weavers.IlWeaving
 
 			if ( cii != null )
 			{
-				result.Add( new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldstr", "\""+code.Argument+"\"") );
+				result.Add( new IlOpcode(CreateLabel(), "ldstr", "\""+code.Argument+"\"") );
 				result.Add( CreateSimpleCallStatement(ws.GetMethodInformation(cii.ExecuteMethodBefore), ws, ref callerMethod) );
 				result.Add( code );
 
@@ -1008,7 +1016,7 @@ namespace Weavers.IlWeaving
 
 				if (!fi.ExecuteMethodReplace.Equals("")) 
 				{
-					result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "pop"));
+					result.Add(new IlOpcode(CreateLabel(), "pop"));
 					this.tempIlOpcode = code;
 					MethodInformation mi = ws.GetMethodInformation(fi.ExecuteMethodReplace);
 					result.AddRange(this.CreateCallStatement(ws, mi, "", "", "", "", mi.ReturnType, (int)CallContext.AfterFieldAccess, callerClass.Name, ref callerMethod, quiet, debug));
@@ -1330,11 +1338,11 @@ namespace Weavers.IlWeaving
 			int i = 0;
 			foreach (string arg in arglist)
 			{
-				result.Add(CreateLoadOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), indCallArguments));
+				result.Add(CreateLoadOpcode(CreateLabel(), indCallArguments));
 				
-				result.Add(CreateLiteralOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), i));
+				result.Add(CreateLiteralOpcode(CreateLabel(), i));
 			
-				result.Add(new IlOpcode("PW_" + Convert.ToString(NextLabel++, 16).PadLeft(4, '0'), "ldelem.ref"));
+				result.Add(new IlOpcode(CreateLabel(), "ldelem.ref"));
 				
 				string goodarg = "";
 				if (arg.IndexOf("class") >= 0)

@@ -107,11 +107,7 @@ public class Sign implements CTCommonModule {
         phase0();
 
         Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase1");
-        try {
-            phase1();
-        } catch (NullPointerException exc) {
-            exc.printStackTrace();
-        }
+        phase1();
 
         Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase2");
         phase2();
@@ -593,9 +589,6 @@ public class Sign implements CTCommonModule {
 
         // get donor methods:
         DeclaredObjectReference ref = (DeclaredObjectReference) donor.getRef();
-        if (ref == null) {
-            int x = 1;
-        }
         Concern donorConcern = ref.getRef().getType().getRef();
         Signature donorSignature = getSignature(donorConcern);
         List methods = donorSignature.getMethods();
@@ -1217,9 +1210,7 @@ public class Sign implements CTCommonModule {
         DataStore datastore = DataStore.instance();
 
         // Get all the concerns
-        Iterator conIter = DataStore.instance()
-                .getAllInstancesOf(Concern.class);
-
+        Iterator conIter = datastore.getAllInstancesOf(Concern.class);
         while (conIter.hasNext()) {
             Concern concern = (Concern) conIter.next();
 
@@ -1247,8 +1238,7 @@ public class Sign implements CTCommonModule {
                         relation = "kept";
 
                     // TODO: remove this, needed for demo!
-                    if (!Configuration.instance().getProperty("Platform")
-                            .equalsIgnoreCase("c")) {
+                    if (!Configuration.instance().getPlatformName().equalsIgnoreCase("c")) {
                         String returntype = mw.theMethodInfo.getReturnTypeString();
 
                         String parameters = "";
