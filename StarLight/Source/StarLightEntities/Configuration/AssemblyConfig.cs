@@ -57,7 +57,7 @@ namespace Composestar.StarLight.Entities.Configuration
             set { _filename = value; }
         }
 
-        private string _serializedFilename;
+        private string _serializedFilename = string.Empty;
 
         /// <summary>
         /// Gets or sets the serialized filename.

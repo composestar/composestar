@@ -1,3 +1,4 @@
+#region Using directives
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ using Composestar.StarLight.Entities.Configuration;
 
 using Composestar.StarLight.ContextInfo.FilterTypes;
 using Composestar.StarLight.Utilities.Cecil;
+#endregion
 
 namespace Composestar.StarLight.ILAnalyzer
 {
@@ -35,14 +37,9 @@ namespace Composestar.StarLight.ILAnalyzer
         #region Private Variables
       
         private TimeSpan _lastDuration = TimeSpan.Zero;
-        private List<String> _resolvedTypes = new List<String>();
-        private List<String> _unresolvedTypes = new List<String>();
+        private List<String> _resolvedAssemblies = new List<String>();
+        private List<String> _unresolvedAssemblies = new List<String>();
         private List<String> _cachedTypes = new List<String>();
-        private bool _saveType = false;
-        private bool _saveInnerType = false;
-        private bool _processMethodBody = false;  // true for outputfilters
-        private bool _processAttributes = false;
-        private string _binFolder = "";
 
         private CecilAnalyzerConfiguration _configuration;
         private IEntitiesAccessor _entitiesAccessor;
@@ -51,7 +48,6 @@ namespace Composestar.StarLight.ILAnalyzer
  
         private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
         private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
-
 
         #endregion
 
@@ -102,22 +98,23 @@ namespace Composestar.StarLight.ILAnalyzer
             } 
         }
 
+
         /// <summary>
-        /// Gets the unresolved types.
+        /// Gets the unresolved assemblies.
         /// </summary>
-        /// <value>The unresolved types.</value>
-        public List<String> UnresolvedTypes
+        /// <value>The unresolved assemblies.</value>
+        public List<String> UnresolvedAssemblies
         {
-            get { return _unresolvedTypes; }
+            get { return _unresolvedAssemblies; }
         }
 
         /// <summary>
-        /// Gets the resolved types.
+        /// Gets the resolved assemblies.
         /// </summary>
-        /// <value>The resolved types.</value>
-        public List<String> ResolvedTypes
+        /// <value>The resolved assemblies.</value>
+        public List<String> ResolvedAssemblies
         {
-            get { return _resolvedTypes; }
+            get { return _resolvedAssemblies; }
         }
 
         /// <summary>
@@ -192,19 +189,19 @@ namespace Composestar.StarLight.ILAnalyzer
             visitor.IncludeFields = _configuration.DoFieldAnalysis;
             visitor.SaveInnerType = true;
             visitor.SaveType = true;
-            visitor.ResolvedTypes = _resolvedTypes;
-            visitor.UnresolvedTypes = _unresolvedTypes; 
+            visitor.ResolvedAssemblies = _resolvedAssemblies;
+            visitor.UnresolvedAssemblies = _unresolvedAssemblies; 
 
             // Start the visitor
             result = visitor.Analyze(fileName);
 
             // Update the unresolved types
-            _unresolvedTypes = visitor.UnresolvedTypes;
-            _resolvedTypes = visitor.ResolvedTypes;  
+            _unresolvedAssemblies = visitor.UnresolvedAssemblies;
+            _resolvedAssemblies = visitor.ResolvedAssemblies;  
 
             // Update the filtertypes
-            _filterTypes.AddRange(visitor.FilterTypes);
-            _filterActions.AddRange(visitor.FilterActions);
+            _filterTypes =visitor.FilterTypes;
+            _filterActions =visitor.FilterActions;
                      
             // Stop the timer
             sw.Stop();
@@ -214,6 +211,39 @@ namespace Composestar.StarLight.ILAnalyzer
             return result;
         }
 
+        /// <summary>
+        /// Resolve assembly locations
+        /// </summary>
+        /// <returns>List</returns>
+        public List<String> ResolveAssemblyLocations()
+        {
+            List<string> ret = new List<string>();
+
+            // Go through each assembly name
+            foreach (String assemblyName in _unresolvedAssemblies)
+            {           
+                try
+                {
+                    AssemblyDefinition ad = AssemblyResolver.Resolve(assemblyName);
+
+                    if (ad != null)
+                    {
+                        ret.Add(ad.MainModule.Image.FileInformation.FullName);
+                    } // if
+                    else
+                    {
+                        throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
+                    } // else
+                } // try
+                catch (Exception ex)
+                {
+                    throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
+                } // catch
+            } // foreach  (assemblyName)
+
+
+            return ret;
+        } // ResolveAssemblyLocations()
           
         /// <summary>
         /// Processes the unresolved types.
@@ -222,83 +252,82 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <returns></returns>
         public List<AssemblyElement> ProcessUnresolvedTypes(Dictionary<String, String> assemblyNames)
         {
-            this._saveType = false;
-
+         
             List<AssemblyElement> assemblies = new List<AssemblyElement>();
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
             
-            if (UnresolvedTypes.Count > 0)
-            {
-                // Add all assemblies we can resolve from the AFQN type names
-                foreach (String type in UnresolvedTypes)
-                {
-                    String assemblyName = null;
-                    if (type.Contains(", "))
-                        assemblyName = type.Substring(type.IndexOf(", ") + 2);
-                    if (assemblyName != null && !assemblyNames.ContainsKey(assemblyName))
-                        assemblyNames.Add(assemblyName, String.Empty);
-                }
+            //if (UnresolvedTypes.Count > 0)
+            //{
+            //    // Add all assemblies we can resolve from the AFQN type names
+            //    foreach (String type in UnresolvedTypes)
+            //    {
+            //        String assemblyName = null;
+            //        if (type.Contains(", "))
+            //            assemblyName = type.Substring(type.IndexOf(", ") + 2);
+            //        if (assemblyName != null && !assemblyNames.ContainsKey(assemblyName))
+            //            assemblyNames.Add(assemblyName, String.Empty);
+            //    }
 
-                if (assemblyNames.Count == 0) 
-                    return new List<AssemblyElement>();
+            //    if (assemblyNames.Count == 0) 
+            //        return new List<AssemblyElement>();
                
-                // Go through each assembly name
-                foreach (String assemblyName in assemblyNames.Keys)
-                {
-                    // TODO add to resource or remove the CW
-                    Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
+            //    // Go through each assembly name
+            //    foreach (String assemblyName in assemblyNames.Keys)
+            //    {
+            //        // TODO add to resource or remove the CW
+            //        Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
 
-                    try
-                    {
-                        AssemblyDefinition ad = AssemblyResolver.Resolve(assemblyName);
+            //        try
+            //        {
+            //            AssemblyDefinition ad = AssemblyResolver.Resolve(assemblyName);
 
-                        if (ad != null)
-                        {
-                            // Create the visitor
-                            CecilAssemblyVisitor visitor = new CecilAssemblyVisitor();
+            //            if (ad != null)
+            //            {
+            //                // Create the visitor
+            //                CecilAssemblyVisitor visitor = new CecilAssemblyVisitor();
 
-                            // Set visitor properties
-                            visitor.ProcessMethodBody = false;
-                            visitor.IncludeFields = _configuration.DoFieldAnalysis;
-                            visitor.SaveType = false;
-                            visitor.ResolvedTypes = _resolvedTypes;
-                            visitor.UnresolvedTypes = _unresolvedTypes;
+            //                // Set visitor properties
+            //                visitor.ProcessMethodBody = false;
+            //                visitor.IncludeFields = _configuration.DoFieldAnalysis;
+            //                visitor.SaveType = false;
+            //                visitor.ResolvedTypes = _resolvedTypes;
+            //                visitor.UnresolvedTypes = _unresolvedTypes;
 
-                            // Start the visitor
-                            AssemblyElement result = visitor.Analyze(assemblyNames[assemblyName]);
+            //                // Start the visitor
+            //                AssemblyElement result = visitor.Analyze(assemblyNames[assemblyName]);
 
-                            if (result.Types.Count > 0)
-                            {
-                                assemblies.Add(result);
-                            } // if
+            //                if (result.Types.Count > 0)
+            //                {
+            //                    assemblies.Add(result);
+            //                } // if
 
-                            // Add the unresolved types
-                            _unresolvedTypes = visitor.UnresolvedTypes;
-                            _resolvedTypes = visitor.ResolvedTypes;
+            //                // Add the unresolved types
+            //                _unresolvedTypes = visitor.UnresolvedTypes;
+            //                _resolvedTypes = visitor.ResolvedTypes;
 
-                            // Update the filtertypes
-                            _filterTypes.AddRange(visitor.FilterTypes);
-                            _filterActions.AddRange(visitor.FilterActions);
+            //                // Update the filtertypes
+            //                _filterTypes.AddRange(visitor.FilterTypes);
+            //                _filterActions.AddRange(visitor.FilterActions);
 
-                        } // if
-                        else
-                        {                            
-                            throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
-                        } // else
-                    } // try
-                    catch (Exception ex)
-                    {                        
-                        throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
-                    } // catch
-                } // foreach  (assemblyName)
+            //            } // if
+            //            else
+            //            {                            
+            //                throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
+            //            } // else
+            //        } // try
+            //        catch (Exception ex)
+            //        {                        
+            //            throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
+            //        } // catch
+            //    } // foreach  (assemblyName)
 
-                if (UnresolvedTypes.Count > 0)
-                {
-                    ProcessUnresolvedTypes(new Dictionary<string, string>());
-                } // if
-            }
+            //    if (UnresolvedTypes.Count > 0)
+            //    {
+            //        ProcessUnresolvedTypes(new Dictionary<string, string>());
+            //    } // if
+            //}
 
             sw.Stop();
             _lastDuration = sw.Elapsed;

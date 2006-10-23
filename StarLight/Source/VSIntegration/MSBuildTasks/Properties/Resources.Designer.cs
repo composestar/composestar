@@ -88,7 +88,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Analyzing referenced assemblies for {0} unresolved types..
+        ///   Looks up a localized string similar to Analyzing referenced assemblies for unresolved types..
         /// </summary>
         internal static string AnalyzingUnresolved {
             get {
@@ -97,7 +97,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining..
+        ///   Looks up a localized string similar to Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved assemblies remaining..
         /// </summary>
         internal static string AnalyzingUnresolvedCompleted {
             get {
@@ -106,7 +106,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} types not resolved)..
+        ///   Looks up a localized string similar to Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} assemblies not resolved)..
         /// </summary>
         internal static string AssemblyAnalyzed {
             get {
@@ -151,7 +151,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assembly analyzer: {0} filter types and {1} filter actions found in {2:0.0000} seconds..
+        ///   Looks up a localized string similar to Assembly analyzer: {0} filter types and {1} filter actions found..
         /// </summary>
         internal static string FiltersAnalyzed {
             get {
@@ -160,7 +160,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retrieved {0} types from the local database in {1:0.0000} seconds..
+        ///   Looks up a localized string similar to Retrieved {0} assemblies from the local database in {1:0.0000} seconds..
         /// </summary>
         internal static string FoundInDatabase {
             get {
@@ -340,7 +340,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} assemblies with a total of {1} types saved in {2:0.0000} seconds..
+        ///   Looks up a localized string similar to {0} assemblies with a total of {1} resolved assemblies saved in {2:0.0000} seconds..
         /// </summary>
         internal static string StoreInDatabaseCompleted {
             get {

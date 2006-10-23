@@ -166,19 +166,19 @@
     <value>Analyzing file '{0}'.</value>
   </data>
   <data name="AnalyzingUnresolved" xml:space="preserve">
-    <value>Analyzing referenced assemblies for {0} unresolved types.</value>
+    <value>Analyzing referenced assemblies for unresolved types.</value>
   </data>
   <data name="AnalyzingUnresolvedCompleted" xml:space="preserve">
-    <value>Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved types remaining.</value>
+    <value>Referenced assemblies analyzed in {1:0.0000} seconds, {0} unresolved assemblies remaining.</value>
   </data>
   <data name="AssemblyAnalyzed" xml:space="preserve">
-    <value>Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} types not resolved).</value>
+    <value>Assembly analyzer: {0} types found in {2:0.0000} seconds. ({1} assemblies not resolved).</value>
   </data>
   <data name="AssemblyNotModified" xml:space="preserve">
     <value>Assembly '{0}' has not been modified, analysis of this file is skipped.</value>
   </data>
   <data name="FoundInDatabase" xml:space="preserve">
-    <value>Retrieved {0} types from the local database in {1:0.0000} seconds.</value>
+    <value>Retrieved {0} assemblies from the local database in {1:0.0000} seconds.</value>
   </data>
   <data name="JavaStartMessage" xml:space="preserve">
     <value>Java will be executed with the following arguments: {0}</value>
@@ -208,7 +208,7 @@
     <value>Saving {0} assemblies to disk.</value>
   </data>
   <data name="StoreInDatabaseCompleted" xml:space="preserve">
-    <value>{0} assemblies with a total of {1} types saved in {2:0.0000} seconds.</value>
+    <value>{0} assemblies with a total of {1} resolved assemblies saved in {2:0.0000} seconds.</value>
   </data>
   <data name="UnableToResolve" xml:space="preserve">
     <value>Unable to resolve type '{0}', are you missing an assembly reference?</value>
@@ -232,7 +232,7 @@
     <value>Weaving the filter code using the Cecil IL Weaver.</value>
   </data>
   <data name="FiltersAnalyzed" xml:space="preserve">
-    <value>Assembly analyzer: {0} filter types and {1} filter actions found in {2:0.0000} seconds.</value>
+    <value>Assembly analyzer: {0} filter types and {1} filter actions found.</value>
   </data>
   <data name="MasterSkipNoConcerns" xml:space="preserve">
     <value>Skipping StarLight Java Master, no concerns found.</value>
