@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.WeaveSpec.Instructions.Visitor;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
 
-namespace Composestar.StarLight.WeaveSpec.Instructions
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
     /// <summary>
     /// A block containg a list of <see cref="T:InlineInstruction"></see> objects.
@@ -61,4 +61,4 @@ namespace Composestar.StarLight.WeaveSpec.Instructions
 
     }
 
-} // namespace Composestar.StarLight.WeaveSpec.Instructions
+} // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions

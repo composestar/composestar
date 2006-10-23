@@ -16,10 +16,10 @@ using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
 using Composestar.Repository;
-using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.Configuration;   
+using Composestar.StarLight.Entities.Configuration;   
 
 using Composestar.StarLight.ContextInfo.FilterTypes;
 using Composestar.StarLight.Utilities.Cecil;

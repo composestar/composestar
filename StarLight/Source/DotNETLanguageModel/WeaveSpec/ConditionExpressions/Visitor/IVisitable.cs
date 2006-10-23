@@ -1,4 +1,4 @@
-namespace Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor
+namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor
 {
     /// <summary>
     /// Indicates that the class is visitable.

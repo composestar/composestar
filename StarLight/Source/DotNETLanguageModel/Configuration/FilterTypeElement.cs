@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Composestar.StarLight.Configuration
+namespace Composestar.StarLight.Entities.Configuration
 {
     [Serializable ]
     [XmlRoot("FilterType", Namespace = "Entities.TYM.DotNET.Composestar")]

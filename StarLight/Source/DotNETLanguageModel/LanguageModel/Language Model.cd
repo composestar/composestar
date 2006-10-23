@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Font Name="Tahoma" Size="8.4" />
-  <Class Name="Composestar.StarLight.LanguageModel.AssemblyElement">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.AssemblyElement">
     <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\AssemblyElement.cs</FileName>
@@ -14,7 +14,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.LanguageModel.TypeElement">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.TypeElement">
     <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\TypeElement.cs</FileName>
@@ -28,7 +28,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.LanguageModel.MethodElement">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.MethodElement">
     <Position X="6.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\MethodElement.cs</FileName>
@@ -44,7 +44,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.LanguageModel.ParameterElement">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.ParameterElement">
     <Position X="3.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\ParameterElement.cs</FileName>
@@ -57,7 +57,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.LanguageModel.FieldElement">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.FieldElement">
     <Position X="12.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\FieldElement.cs</FileName>
@@ -67,7 +67,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.LanguageModel.MethodBody">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.MethodBody">
     <Position X="6.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\MethodBody.cs</FileName>
@@ -77,14 +77,14 @@
       <Property Name="Calls" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="Composestar.StarLight.LanguageModel.CallElement">
+  <Class Name="Composestar.StarLight.Entities.LanguageModel.CallElement">
     <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\CallElement.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Enum Name="Composestar.StarLight.LanguageModel.ParameterOptions">
+  <Enum Name="Composestar.StarLight.Entities.LanguageModel.ParameterOptions">
     <Position X="0.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>LanguageModel\ParameterOptions.cs</FileName>

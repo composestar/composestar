@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Composestar.StarLight
+namespace Composestar.StarLight.Entities
 {
 
     [XmlRoot("dictionary")]

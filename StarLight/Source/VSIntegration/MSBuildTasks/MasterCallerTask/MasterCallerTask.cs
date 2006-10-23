@@ -6,8 +6,8 @@ using System.ComponentModel;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Composestar.StarLight.LanguageModel;
-using Composestar.StarLight.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration;
 using Composestar.StarLight.CoreServices;  
 using Composestar.Repository;
 

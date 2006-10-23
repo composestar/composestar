@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.WeaveSpec.Instructions.Visitor;
-using Composestar.StarLight.WeaveSpec.ConditionExpressions; 
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions; 
 #endregion
 
 /// <summary>
 /// Composestar. star light. weave spec. instructions
 /// </summary>
-namespace Composestar.StarLight.WeaveSpec.Instructions
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
 
     /// <summary>
@@ -114,4 +114,4 @@ namespace Composestar.StarLight.WeaveSpec.Instructions
 
 
     } // class Branch
-} // namespace Composestar.StarLight.WeaveSpec.Instructions
+} // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions

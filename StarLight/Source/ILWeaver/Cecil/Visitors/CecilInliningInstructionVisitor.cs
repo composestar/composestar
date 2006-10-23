@@ -4,12 +4,12 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-using Composestar.StarLight.Concerns;
-using Composestar.StarLight.LanguageModel;
-using Composestar.StarLight.WeaveSpec;
-using Composestar.StarLight.WeaveSpec.ConditionExpressions;
-using Composestar.StarLight.WeaveSpec.Instructions;
-using Composestar.StarLight.WeaveSpec.Instructions.Visitor;
+using Composestar.StarLight.Entities.Concerns;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.WeaveSpec;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
 
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.CoreServices;
@@ -570,7 +570,7 @@ namespace Composestar.StarLight.ILWeaver
             conditionsVisitor.Worker = Worker;
             conditionsVisitor.TargetAssemblyDefinition = TargetAssemblyDefinition;
             conditionsVisitor.RepositoryAccess = m_entitiesAccessor;
-            ((Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
+            ((Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
 
             // Add the instructions containing the conditions to the IL instruction list
             AddInstructionList(conditionsVisitor.Instructions);

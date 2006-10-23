@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.WeaveSpec.Instructions.Visitor;    
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;    
 #endregion
 
-namespace Composestar.StarLight.WeaveSpec.Instructions
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
     /// <summary>
     /// A label is used to specify points in the control flow.

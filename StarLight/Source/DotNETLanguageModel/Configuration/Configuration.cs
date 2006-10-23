@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.Concerns;
-using Composestar.StarLight.LanguageModel;
+using Composestar.StarLight.Entities.Concerns;
+using Composestar.StarLight.Entities.LanguageModel;
 
-namespace Composestar.StarLight.Configuration
+namespace Composestar.StarLight.Entities.Configuration
 {
     /// <summary>
     /// Contains all the settings for the current starlight project that is currenlty building.

@@ -6,10 +6,10 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using Composestar.StarLight.CoreServices;
-using Composestar.StarLight.Concerns;
-using Composestar.StarLight.Configuration;
-using Composestar.StarLight.LanguageModel;
-using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.Entities.Concerns;
+using Composestar.StarLight.Entities.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.WeaveSpec;
 
 namespace Composestar.Repository
 {

@@ -4,9 +4,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Composestar.StarLight;
-using Composestar.StarLight.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
    
-namespace Composestar.StarLight.WeaveSpec
+namespace Composestar.StarLight.Entities.WeaveSpec
 {
     /// <summary>
     /// The method in a type with certain input filters and output filters.

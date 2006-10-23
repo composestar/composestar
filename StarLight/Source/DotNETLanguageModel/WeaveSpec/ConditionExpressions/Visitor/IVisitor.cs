@@ -1,11 +1,11 @@
 #region Using directives
-using Composestar.StarLight.WeaveSpec.ConditionExpressions;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 #endregion
 
 /// <summary>
 /// Composestar. star light. weave spec. condition expressions. visitor
 /// </summary>
-namespace Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor
+namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor
 {
 
     /// <summary>

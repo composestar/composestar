@@ -6,10 +6,10 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-using Composestar.StarLight.LanguageModel;  
+using Composestar.StarLight.Entities.LanguageModel;  
 #endregion
 
-namespace Composestar.StarLight.Configuration
+namespace Composestar.StarLight.Entities.Configuration
 {
     /// <summary>
     /// Reference

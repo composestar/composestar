@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.WeaveSpec.ConditionExpressions.Visitor;
+using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor;
 #endregion
 
 /// <summary>
 /// Composestar. star light. weave spec. condition expression
 /// </summary>
-namespace Composestar.StarLight.WeaveSpec.ConditionExpressions
+namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
 {
 
     /// <summary>
@@ -27,4 +27,4 @@ namespace Composestar.StarLight.WeaveSpec.ConditionExpressions
 
     } // class ConditionExpression
 
-} // namespace Composestar.StarLight.WeaveSpec.ConditionExpression
+} // namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpression
