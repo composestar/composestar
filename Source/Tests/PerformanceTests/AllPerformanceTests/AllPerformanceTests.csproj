@@ -40,6 +40,10 @@
       <Project>{D518CE08-B54C-4727-B307-E1EEE3D54EB7}</Project>
       <Name>PTestCpsFileParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PTestEntitiesAccessor\PTestEntitiesAccessor.csproj">
+      <Project>{751E86D7-4BAF-4F79-AABE-F73E1FB02094}</Project>
+      <Name>PTestEntitiesAccessor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PTestILAnalyzer\PTestILAnalyzer.csproj">
       <Project>{75ACE89F-E583-4A5B-94F8-218C764B4EF9}</Project>
       <Name>PTestILAnalyzer</Name>
