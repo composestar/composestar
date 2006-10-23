@@ -114,11 +114,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Performance Tests", "Perfor
 		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTestCpsFileParser", "PerformanceTests\PTestCpsFileParser\PTestCpsFileParser.csproj", "{D518CE08-B54C-4727-B307-E1EEE3D54EB7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTestCpsFileParser", "Tests\PerformanceTests\PTestCpsFileParser\PTestCpsFileParser.csproj", "{D518CE08-B54C-4727-B307-E1EEE3D54EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllPerformanceTests", "PerformanceTests\AllPerformanceTests\AllPerformanceTests.csproj", "{8FFA9599-9D70-4C45-AD9A-E803D6322753}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllPerformanceTests", "Tests\PerformanceTests\AllPerformanceTests\AllPerformanceTests.csproj", "{8FFA9599-9D70-4C45-AD9A-E803D6322753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTestILAnalyzer", "PerformanceTests\PTestILAnalyzer\PTestILAnalyzer.csproj", "{75ACE89F-E583-4A5B-94F8-218C764B4EF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTestILAnalyzer", "Tests\PerformanceTests\PTestILAnalyzer\PTestILAnalyzer.csproj", "{75ACE89F-E583-4A5B-94F8-218C764B4EF9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C6578CAD-D331-409C-BC16-989AEDF2A660}"
 	ProjectSection(FolderStartupServices) = postProject
@@ -127,7 +127,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C6578CAD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMocks", "TestMocks\TestMocks.csproj", "{E3F2BDF7-7AC5-4C89-A01E-10D269EB0B1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLightEntities", "DotNETLanguageModel\StarLightEntities.csproj", "{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLightEntities", "StarLightEntities\StarLightEntities.csproj", "{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

@@ -263,10 +263,12 @@ namespace Composestar.StarLight.ILWeaver
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
 
                 TypeElement internalTypeElement = _entitiesAccessor.GetTypeElement(internalTypeString);
-                if (internalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
+                if (internalTypeElement == null) 
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 1)"));
 
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, internalTypeElement.Assembly, internalTypeElement.FromDLL);
-                if (internalTypeRef == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
+                if (internalTypeRef == null) 
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
 
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
 
