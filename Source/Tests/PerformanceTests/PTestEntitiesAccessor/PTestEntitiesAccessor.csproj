@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E3F2BDF7-7AC5-4C89-A01E-10D269EB0B1C}</ProjectGuid>
+    <ProjectGuid>{751E86D7-4BAF-4F79-AABE-F73E1FB02094}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Composestar.StarLight.TestMocks</RootNamespace>
-    <AssemblyName>Composestar.StarLight.TestMocks</AssemblyName>
+    <RootNamespace>Composestar.Repository.Tests.PerformanceTests</RootNamespace>
+    <AssemblyName>Composestar.Repository.PerformanceTests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,25 +28,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NTime.Framework, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Libraries\NTime\NTime.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LanguageModel\SimpleLanguageModelMock.cs" />
+    <Compile Include="SaveLanguageModelFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreServices\StarLight.CoreServices.csproj">
+    <ProjectReference Include="..\..\..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DotNETLanguageModel\StarLightEntities.csproj">
+    <ProjectReference Include="..\..\..\DotNETLanguageModel\StarLightEntities.csproj">
       <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
       <Name>StarLightEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Repository\DataStoreContainer.csproj">
+      <Project>{40B1F906-58AC-42AD-837C-3F31B289659C}</Project>
+      <Name>DataStoreContainer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TestMocks\TestMocks.csproj">
+      <Project>{E3F2BDF7-7AC5-4C89-A01E-10D269EB0B1C}</Project>
+      <Name>TestMocks</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
