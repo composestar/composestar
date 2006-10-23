@@ -56,7 +56,7 @@ namespace Composestar.StarLight.CpsParser
         /// <summary>
         /// Get whether or not a concern with outputfilters was parsed.
         /// </summary>
-        /// <value>True if a concern with outputfilters was parsed, false otherwise.</value>
+        /// <value><see langword="true" /> if a concern with outputfilters was parsed, <see langword="false" /> otherwise.</value>
         public bool HasOutputFilters
         {
             get { return _hasOutputFilters; }
