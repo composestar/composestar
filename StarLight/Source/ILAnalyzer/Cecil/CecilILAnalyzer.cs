@@ -39,6 +39,8 @@ namespace Composestar.StarLight.ILAnalyzer
         private TimeSpan _lastDuration = TimeSpan.Zero;
         private List<String> _resolvedAssemblies = new List<String>();
         private List<String> _unresolvedAssemblies = new List<String>();
+        private List<String> _resolvedTypes = new List<String>();
+        private List<String> _unresolvedTypes = new List<String>();
         private List<String> _cachedTypes = new List<String>();
 
         private CecilAnalyzerConfiguration _configuration;
@@ -75,7 +77,36 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Properties
 
-           /// <summary>
+
+        /// <summary>
+        /// Gets or sets the resolved types.
+        /// </summary>
+        /// <value>The resolved types.</value>
+        public List<String> ResolvedTypes
+        {
+            get
+            {
+                return _resolvedTypes;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the unresolved types.
+        /// </summary>
+        /// <value>The unresolved types.</value>
+        public List<String> UnresolvedTypes
+        {
+            get
+            {
+                return _unresolvedTypes;
+            }
+            set
+            {
+                _unresolvedTypes = value;
+            }
+        }
+
+        /// <summary>
         /// Gets the assembly resolver.
         /// </summary>
         /// <value>The assembly resolver.</value>
@@ -187,17 +218,22 @@ namespace Composestar.StarLight.ILAnalyzer
             // Set visitor properties
             visitor.ProcessMethodBody = _configuration.DoMethodCallAnalysis;
             visitor.IncludeFields = _configuration.DoFieldAnalysis;
+            visitor.ExtractUnresolvedOnly = _configuration.ExtractUnresolvedOnly;  
             visitor.SaveInnerType = true;
             visitor.SaveType = true;
             visitor.ResolvedAssemblies = _resolvedAssemblies;
-            visitor.UnresolvedAssemblies = _unresolvedAssemblies; 
+            visitor.UnresolvedAssemblies = _unresolvedAssemblies;
+            visitor.UnresolvedTypes = _unresolvedTypes;
+            visitor.ResolvedTypes = _resolvedTypes; 
 
             // Start the visitor
             result = visitor.Analyze(fileName);
 
             // Update the unresolved types
             _unresolvedAssemblies = visitor.UnresolvedAssemblies;
-            _resolvedAssemblies = visitor.ResolvedAssemblies;  
+            _resolvedAssemblies = visitor.ResolvedAssemblies;
+            _unresolvedTypes = visitor.UnresolvedTypes;
+            _resolvedTypes = visitor.ResolvedTypes;  
 
             // Update the filtertypes
             _filterTypes =visitor.FilterTypes;

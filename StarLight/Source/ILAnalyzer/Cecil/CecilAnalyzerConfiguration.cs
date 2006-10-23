@@ -19,6 +19,7 @@ namespace Composestar.StarLight.ILAnalyzer
         private readonly string _repositoryFilename;
         private bool _doFieldAnalysis = true;
         private bool _doMethodCallAnalysis = true;
+        private bool _extractUnresolvedOnly;
         private string _binFolder;
 
         /// <summary>
@@ -39,6 +40,18 @@ namespace Composestar.StarLight.ILAnalyzer
         public string RepositoryFilename
         {
             get { return _repositoryFilename; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to extract only unresolved types.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if [extract unresolved only]; otherwise, <c>false</c>.
+        /// </value>
+        public bool ExtractUnresolvedOnly
+        {
+            get { return _extractUnresolvedOnly; }
+            set { _extractUnresolvedOnly = value; }
         }
 
         /// <summary>
