@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Composestar.StarLight.Concerns
+namespace Composestar.StarLight.Entities.Concerns
 {
     /// <summary>
     /// A concern specification.

@@ -1,6 +1,6 @@
-using Composestar.StarLight.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 
-namespace Composestar.StarLight.WeaveSpec.Instructions.Visitor
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 {
 
     /// <summary>
@@ -36,4 +36,4 @@ namespace Composestar.StarLight.WeaveSpec.Instructions.Visitor
         void VisitCreateJoinPointContext(ContextInstruction contextInstruction);
         void VisitRestoreJoinPointContext(ContextInstruction contextInstruction);
     } // IVisitor
-} // namespace Composestar.StarLight.WeaveSpec.Instructions.Visitor
+} // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Composestar.StarLight.LanguageModel;
-using Composestar.StarLight.Configuration;
-using Composestar.StarLight.Concerns;
-using Composestar.StarLight.WeaveSpec;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration;
+using Composestar.StarLight.Entities.Concerns;
+using Composestar.StarLight.Entities.WeaveSpec;
 
 
 namespace Composestar.StarLight.CoreServices

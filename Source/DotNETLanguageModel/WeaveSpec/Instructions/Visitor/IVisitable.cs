@@ -1,4 +1,4 @@
-namespace Composestar.StarLight.WeaveSpec.Instructions.Visitor
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 {
     /// <summary>
     /// Interface for instructions which can be visited.
@@ -12,4 +12,4 @@ namespace Composestar.StarLight.WeaveSpec.Instructions.Visitor
         void Accept(IVisitor visitor);
 
     } // IVisitable
-} // namespace Composestar.StarLight.WeaveSpec.Instructions.Visitor
+} // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor

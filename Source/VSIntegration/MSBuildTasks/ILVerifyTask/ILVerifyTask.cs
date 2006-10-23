@@ -8,8 +8,8 @@ using Microsoft.Build.Utilities;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.LanguageModel;
-using Composestar.StarLight.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration;
 using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks

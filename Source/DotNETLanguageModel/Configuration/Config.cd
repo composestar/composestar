@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Font Name="Tahoma" Size="8.4" />
-  <Class Name="Composestar.StarLight.Configuration.ConfigurationContainer">
+  <Class Name="Composestar.StarLight.Entities.Configuration.ConfigurationContainer">
     <Position X="6.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\Configuration.cs</FileName>
@@ -17,7 +17,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.Configuration.AssemblyConfig">
+  <Class Name="Composestar.StarLight.Entities.Configuration.AssemblyConfig">
     <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\AssemblyConfig.cs</FileName>
@@ -27,7 +27,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.Concerns.ConcernElement">
+  <Class Name="Composestar.StarLight.Entities.Concerns.ConcernElement">
     <Position X="6.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Concerns\ConcernElement.cs</FileName>
@@ -37,7 +37,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.Configuration.FilterActionElement">
+  <Class Name="Composestar.StarLight.Entities.Configuration.FilterActionElement">
     <Position X="9.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\FilterActionElement.cs</FileName>
@@ -47,7 +47,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
   </Class>
-  <Class Name="Composestar.StarLight.Configuration.FilterTypeElement">
+  <Class Name="Composestar.StarLight.Entities.Configuration.FilterTypeElement">
     <Position X="3.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Configuration\FilterTypeElement.cs</FileName>

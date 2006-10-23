@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Composestar.StarLight.LanguageModel
+namespace Composestar.StarLight.Entities.LanguageModel
 {
     /// <summary>
     /// Contains a single field.

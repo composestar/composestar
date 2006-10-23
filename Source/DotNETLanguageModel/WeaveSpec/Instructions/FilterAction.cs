@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Composestar.StarLight.WeaveSpec.Instructions.Visitor;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
 #endregion
 
 /// <summary>
 /// Composestar. star light. weave spec. instructions
 /// </summary>
-namespace Composestar.StarLight.WeaveSpec.Instructions
+namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
     /// <summary>
     /// The filter action to perform.
@@ -153,4 +153,4 @@ namespace Composestar.StarLight.WeaveSpec.Instructions
 
 
     } // class FilterAction
-} // namespace Composestar.StarLight.WeaveSpec.Instructions
+} // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions

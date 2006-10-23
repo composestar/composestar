@@ -14,9 +14,9 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
-using Composestar.StarLight.WeaveSpec;
-using Composestar.StarLight.WeaveSpec.Instructions;
-using Composestar.StarLight.LanguageModel; 
+using Composestar.StarLight.Entities.WeaveSpec;
+using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Entities.LanguageModel; 
 
 using Composestar.Repository;
 
@@ -182,7 +182,9 @@ namespace Composestar.StarLight.ILWeaver
                 if (weaveType.Internals.Count > 0)
                     WeaveInternals(targetAssembly, type, weaveType, weaveType.Internals);
 
-                
+                if (weaveType.Methods.Count > 0)
+                {
+                    // Loop through all the methods
                     foreach (MethodDefinition method in type.Methods)
                     {
 
@@ -196,7 +198,7 @@ namespace Composestar.StarLight.ILWeaver
                         WeaveMethod(targetAssembly, method, weaveMethod);
 
                     } // foreach  (method)
-              
+                } // if
 
                 // Import the changed type into the AssemblyDefinition
                 if (_typeChanged) targetAssembly.MainModule.Import(type);
@@ -489,7 +491,7 @@ namespace Composestar.StarLight.ILWeaver
             // Visit the elements in the block
             try
             {
-                ((Composestar.StarLight.WeaveSpec.Instructions.Visitor.IVisitable)inputFilter).Accept(visitor);
+                ((Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor.IVisitable)inputFilter).Accept(visitor);
             }
             catch (Exception ex)
             {

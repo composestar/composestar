@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Composestar.StarLight.LanguageModel;
-using Composestar.StarLight.Configuration;
+using Composestar.StarLight.Entities.LanguageModel;
+using Composestar.StarLight.Entities.Configuration;
   
 namespace Composestar.StarLight.CoreServices
 {

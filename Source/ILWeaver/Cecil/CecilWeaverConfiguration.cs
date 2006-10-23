@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Composestar.StarLight.ILWeaver.Properties;
-using Composestar.StarLight.Configuration;
+using Composestar.StarLight.Entities.Configuration;
  
 namespace Composestar.StarLight.ILWeaver
 {
