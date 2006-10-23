@@ -67,6 +67,36 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             set { _externals = value; }
         }
 
+
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has conditions.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has conditions; otherwise, <c>false</c>.
+        /// </value>
+        [XmlIgnore]
+        public bool HasConditions
+        {
+            get { return Conditions.Count > 0; }
+        }
+
+        private List<Condition> _conditions = new List<Condition>();
+
+        /// <summary>
+        /// Gets or sets the conditions.
+        /// </summary>
+        /// <value>The conditions.</value>
+        [XmlArray("Conditions")]
+        [XmlArrayItem("Condition")]
+        public List<Condition> Conditions
+        {
+            get { return _conditions; }
+            set { _conditions = value; }
+        }
+
+
+
         private string _name;
 
         /// <summary>

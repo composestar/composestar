@@ -118,9 +118,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLightEntities", "StarLightEntities\StarLightEntities.csproj", "{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = StarLight.vsmdi
-	EndGlobalSection
 	GlobalSection(TextTemplating) = postSolution
 		TextTemplating = 1
 	EndGlobalSection
@@ -592,5 +589,8 @@ Global
 		{8FFA9599-9D70-4C45-AD9A-E803D6322753} = {DD7707E3-DA7B-4747-BC1C-12126CBF581C}
 		{3FAF05BF-F8E8-408B-AC7F-F4A30C93BCC6} = {C0F8605A-5ACF-4D1E-AA33-8D059E509998}
 		{4C476CD9-B9C2-4BBD-9494-DE738D7D5FA2} = {C0F8605A-5ACF-4D1E-AA33-8D059E509998}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = StarLight.vsmdi
 	EndGlobalSection
 EndGlobal
