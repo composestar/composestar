@@ -143,7 +143,7 @@ public class StarLightMaster extends Master  {
     	
     	// Set the debugmode
     	Debug.setMode(configContainer.getCompiletimeDebugLevel());
-    	Debug.setMode(Debug.MODE_WARNING);
+    	//Debug.setMode(Debug.MODE_WARNING);
 	    
 		// Apache XML driver is moved to a different package in Java 5
 		if (System.getProperty("java.version").substring(0, 3).equals("1.5")) {
