@@ -61,6 +61,9 @@ public class DIGGER implements CTCommonModule
 					+ Configuration.instance().getPathSettings().getPath("Analysis", "analyses") + File.separator
 					+ "DispatchGraph.xml"));
 		}
+		
+		//NOBBIN nobbin = new NOBBIN(graph);
+		//nobbin.walk();
 	}
 
 	/**
@@ -123,5 +126,5 @@ public class DIGGER implements CTCommonModule
 			filterNode.processElements();
 			// digFilter(filter, filterNode);
 		}
-	}
+	}	
 }
