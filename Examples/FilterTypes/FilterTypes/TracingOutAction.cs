@@ -21,6 +21,8 @@ namespace FilterTypes
                 return;
             }
 
+
+            // Sender, Target, Methodname
             String sender = "unknown";
             if (context.Sender != null) sender = context.Sender.GetType().FullName;
 
@@ -29,6 +31,36 @@ namespace FilterTypes
 
             TraceFile.WriteLine("OUT Tracing: Sender={0}, Target={1}, MethodName={2} ", sender, target, context.StartSelector);
 
+
+            // Out arguments
+            if (context.ArgumentCount > 0)
+            {
+                for (short i = 1; i <= context.ArgumentCount; i++)
+                {
+                    ArgumentInfo argumentInfo = context.GetArgumentInfo(i);
+                    if (argumentInfo.isOut())
+                    {
+                        if (argumentInfo.Value == null)
+                        {
+                            TraceFile.WriteLine("  argument {0} (out) -> {1} = null", i, context.GetArgumentType(i));
+                            continue;
+                        }
+
+                        String argvalue;
+                        try
+                        {
+                            argvalue = argumentInfo.Value.ToString();
+                        }
+                        catch(Exception){
+                            argvalue = "<exception>";
+                        }
+                        TraceFile.WriteLine("  argument {0} (out) -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue);
+                    }
+                }
+            }
+
+
+            // Returnvalue
             if (context.HasReturnValue)
             {
                 if (context.ReturnType == null)
@@ -41,11 +73,20 @@ namespace FilterTypes
                 }
                 else if (context.StartSelector != "ToString")
                 {
-                    TraceFile.WriteLine("  return type = {0}, return value = {1}", context.ReturnType.FullName, context.ReturnValue.ToString());
+                    TraceFile.WriteLine("  return type = {0}, return value = ", context.ReturnType.FullName);
                 }
                 else
                 {
-                    TraceFile.WriteLine("  return type = {0}, return value = [...]", context.ReturnType.FullName);
+                    String returnValue;
+                    try
+                    {
+                        returnValue = context.ReturnValue.ToString();
+                    }
+                    catch (Exception)
+                    {
+                        returnValue = "<exception>";
+                    }
+                    TraceFile.WriteLine("  return type = {0}, return value = (1)", context.ReturnType.FullName, returnValue);
                 }
             }
 
