@@ -82,7 +82,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Instructions.Add(visitor.Worker.Create(
                 OpCodes.Callvirt, 
                 CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
-                    CachedMethodDefinition.JoinPointContextSetCurrentTarget)));
+                    CachedMethodDefinition.JoinPointContextSetCurrentSelector)));
 
 
             // Store substitution target

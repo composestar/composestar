@@ -148,6 +148,7 @@ namespace Composestar.StarLight.ILWeaver
             AddMethodToCache(CachedMethodDefinition.JoinPointContextGetReturnValue, typeof(JoinPointContext).GetMethod("get_ReturnValue", new Type[] { }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextGetStartTarget, typeof(JoinPointContext).GetMethod("get_StartTarget", new Type[0]));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetCurrentTarget, typeof(JoinPointContext).GetMethod("set_CurrentTarget", new Type[] { typeof(object) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetCurrentSelector, typeof(JoinPointContext).GetMethod("set_CurrentSelector", new Type[] { typeof(string) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextGetSubstitutionTarget, typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionTarget, typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextGetArgumentValue, typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) })); 
@@ -527,7 +528,8 @@ namespace Composestar.StarLight.ILWeaver
         JoinPointContextSetStartSelector,
         JoinPointContextGetReturnValue,
         JoinPointContextGetStartTarget,
-        JoinPointContextSetCurrentTarget,  
+        JoinPointContextSetCurrentTarget,
+        JoinPointContextSetCurrentSelector,
         JoinPointContextGetSubstitutionTarget,
         JoinPointContextSetSubstitutionTarget,
         JoinPointContextSetSubstitutionSelector,
