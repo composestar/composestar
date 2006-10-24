@@ -17,47 +17,51 @@ namespace FilterTypes
         {
             if (context == null)
             {
-                TraceFile.WriteLine("IN Tracing: Context not set!");
+                TraceFile.WriteLine("TracingIN: Context not set!");
                 return;
             }
 
+            
             String sender = "unknown";
             if (context.Sender != null) sender = context.Sender.GetType().FullName;
 
             String target = "unknown";
             if (context.StartTarget != null) target = context.StartTarget.GetType().FullName;
 
-            TraceFile.WriteLine("IN Tracing: Sender={0}, Target={1}, Selector={2} ", sender, target, context.StartSelector);
+            TraceFile.WriteLine("TracingIN: Sender={0}, Target={1}, Selector={2} ", sender, target, context.StartSelector);
 
-            foreach (short argOrdinal in context.GetArguments.Keys)
+            if (context.ArgumentCount > 0)
             {
-                ArgumentInfo arg = context.GetArguments[argOrdinal];
-                
-                string argdirection = "-";
-                if ((arg.Attributes & ArgumentAttributes.In) == ArgumentAttributes.In)
-                    argdirection = "input";
-                if ((arg.Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out)
-                    argdirection = "output";
-                if ((arg.Attributes & ArgumentAttributes.Optional) == ArgumentAttributes.Optional)
-                    argdirection = "optional";
-
-                if (arg.Value == null)
+                for (short i=1; i <= context.ArgumentCount; i++)
                 {
-                    TraceFile.WriteLine("  argument {0} ({1}) = null", argOrdinal, argdirection);
-                    continue;
-                }
-
-                if (arg.Type.IsPrimitive || arg.Type.FullName == "System.String")
-                {
-                    String argvalue = arg.Value.ToString();
-                    TraceFile.WriteLine("  argument {0} ({3}) -> {1} = {2}", argOrdinal, arg.Type.FullName, argvalue, argdirection);
-                }
-                else
-                {
-                    TraceFile.WriteLine("  argument {0} ({2}) -> {1}", argOrdinal, arg.Type.FullName, argdirection);
+                    ArgumentInfo argumentInfo = context.GetArgumentInfo(i);
+                    
+                    string argdirection = "-";
+                    if ((argumentInfo.Attributes & ArgumentAttributes.In) == ArgumentAttributes.In)
+                        argdirection = "input";
+                    if ((argumentInfo.Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out)
+                        argdirection = "output";
+                    if ((argumentInfo.Attributes & ArgumentAttributes.Optional) == ArgumentAttributes.Optional)
+                        argdirection = "optional";
+                    
+                    if (argumentInfo.Value == null)
+                    {
+                        TraceFile.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentType(i), argdirection);
+                        continue;
+                    }
+                    String argvalue;
+                    try
+                    {
+                        argvalue = argumentInfo.Value.ToString();
+                    }
+                    catch (Exception)
+                    {
+                        argvalue = "<exception>";
+                    }
+                    TraceFile.WriteLine("  argument {0} ({3})-> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue, argdirection);
                 }
             }
-           
+
 
             //Type t = context.GetProperty("target").GetType();
             ////Console.WriteLine("Tracing IN method: "+t.get_Name() + "." + rm.getSelector());
