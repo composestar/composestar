@@ -84,7 +84,7 @@ public class INCRETester
 		closeTag("tr");
 
 		/* Compare objects by ID */
-		Iterator datakeys = record1.ds.map.m_keys.iterator();
+		Iterator datakeys = record1.ds.map.keySet().iterator();
 		while(datakeys.hasNext()){
 			String key = (String)datakeys.next();
 			if(key.indexOf('_')==-1){
