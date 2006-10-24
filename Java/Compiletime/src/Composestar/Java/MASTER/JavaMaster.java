@@ -17,7 +17,7 @@ import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.XmlHandlers.BuildXMLHandler;
+import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
@@ -59,7 +59,7 @@ public class JavaMaster extends Master
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
-			BuildXMLHandler handler = new BuildXMLHandler(parser);
+			BuildConfigHandler handler = new BuildConfigHandler(parser);
 			parser.setContentHandler(handler);
 			parser.parse(new InputSource(configurationFile));
 		}
