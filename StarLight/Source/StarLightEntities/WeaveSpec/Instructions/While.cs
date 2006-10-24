@@ -69,7 +69,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
             int label = this.Label; // FIXME nice way to restore label after visitor has changed it
             visitor.VisitWhile(this);
             if (_instructions != null)
-                _instructions.Accept(visitor);
+                ((IVisitable)_instructions).Accept(visitor);
             visitor.VisitWhileEnd(this);
             this.Label = label; // FIXME
         } // Accept(visitor)

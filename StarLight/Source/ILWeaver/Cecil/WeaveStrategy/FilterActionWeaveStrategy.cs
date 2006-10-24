@@ -49,11 +49,15 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static FilterActionWeaveStrategy GetFilterActionWeaveStrategy(string filterAction)
         {
+            if (string.IsNullOrEmpty(filterAction))
+                throw new ArgumentNullException("filterAction"); 
+
             if (strategyMapping == null)
             {
                 lock (lockObject)
                 {
-                    if (strategyMapping == null) CreateStrategyMapping();
+                    if (strategyMapping == null) 
+                        CreateStrategyMapping();
                 } // lock
             }
 

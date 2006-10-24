@@ -158,6 +158,7 @@ namespace Composestar.StarLight.ILWeaver
                 if (con.Name.Equals(name))
                     return con;
             } // foreach  (con)
+
             return null;
         } // GetConditionByName(name)
 
@@ -233,7 +234,7 @@ namespace Composestar.StarLight.ILWeaver
                 con.Reference.Target.Equals(Reference.SelfTarget))
             {
                 method = CecilUtilities.ResolveMethod(
-                    con.Reference.Selector, con.Reference.Fullname,
+                    con.Reference.Selector, WeaveType.Name,
                     con.Reference.Assembly, "");
             }
             else

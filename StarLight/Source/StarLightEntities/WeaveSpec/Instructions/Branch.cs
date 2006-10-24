@@ -104,10 +104,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 
             visitor.VisitBranch(this);
             if (_trueBlock != null)
-                _trueBlock.Accept(visitor);
+                ((IVisitable)_trueBlock).Accept(visitor);
             visitor.VisitBranchFalse(this);
             if (_falseBlock != null)
-                _falseBlock.Accept(visitor);
+                ((IVisitable)_falseBlock).Accept(visitor);
             visitor.VisitBranchEnd(this);
 
         } // Accept(visitor)

@@ -52,7 +52,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         {
             base.Accept(visitor);
 
-            foreach (InlineInstruction instr in _instructions)
+            foreach (IVisitable instr in _instructions)
             {
                 instr.Accept(visitor);
             }
