@@ -403,7 +403,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weaving completed in {0:0.0000} seconds..
+        ///   Looks up a localized string similar to Weaving completed in {4:0.0000} seconds. Added: {0} internals, {1} externals, {2} inputfilters, {3} outputfilters.
         /// </summary>
         internal static string WeavingCompleted {
             get {

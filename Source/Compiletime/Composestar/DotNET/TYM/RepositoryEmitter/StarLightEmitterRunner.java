@@ -254,7 +254,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 				String filename = FileUtils.removeExtension(config.getSerializedFilename());
 				filename = filename + "_weavespec.xml";
-				System.out.println(filename);
 				File file = new File(filename);
 				try
 				{

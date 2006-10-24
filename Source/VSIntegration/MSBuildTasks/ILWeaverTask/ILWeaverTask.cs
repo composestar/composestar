@@ -7,11 +7,13 @@ using Microsoft.Build.Utilities;
 using Microsoft.Practices.ObjectBuilder;
 
 using Composestar.StarLight.CoreServices;
+using Composestar.StarLight.CoreServices.ILWeaver; 
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.ILWeaver;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.Configuration;
 using Composestar.Repository;
+
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
@@ -109,9 +111,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         weaver = DIHelper.CreateObject<CecilILWeaver>(CreateContainer(entitiesAccessor, configuration));
 
                         // Perform weaving
-                        weaver.DoWeave();
+                        WeaveStatistics weaveStats = weaver.DoWeave();                                            
 
-                        Log.LogMessageFromResources("WeavingCompleted", weaver.LastDuration.TotalSeconds);
+                        Log.LogMessageFromResources("WeavingCompleted", weaveStats.InternalsAdded, weaveStats.ExternalsAdded, weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded, weaveStats.TotalWeaveTime.TotalSeconds);
+   
                     }
                     catch (ILWeaverException ex)
                     {

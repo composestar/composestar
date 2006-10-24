@@ -274,6 +274,13 @@ namespace Composestar.StarLight.ILWeaver
             return typeDef;
         }
 
+        /// <summary>
+        /// Resolves the type.
+        /// </summary>
+        /// <param name="typeName">Name of the type.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <param name="assemblyFile">The assembly file.</param>
+        /// <returns></returns>
         public static TypeReference ResolveType(string typeName, string assemblyName, string assemblyFile)
         {
             if (_resolver == null)
