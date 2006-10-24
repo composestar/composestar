@@ -567,6 +567,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 			setLabel(filterAction, weaveAction);
 
+			weaveAction.setType(filterAction.getType());
+
 			weaveAction.setFullName((String) fullNameMap.get(filterAction.getType()));
 
 			weaveAction.setSelector(filterAction.getMessage().getSelector());
@@ -574,7 +576,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 			weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
 			weaveAction.setSubstitutionTarget(filterAction.getSubstitutedMessage().getTarget().getName());
-			weaveAction.setType(filterAction.getType());
 
 			return weaveAction;
 		}
@@ -643,6 +644,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 		{
 			composestar.dotNET.tym.entities.While weaveWhile = composestar.dotNET.tym.entities.While.Factory
 					.newInstance();
+			
+			setLabel(whileInstruction, weaveWhile);
 
 			weaveWhile.setExpression(getContextExpression(whileInstruction.getExpression()));
 
