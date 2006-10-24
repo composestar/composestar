@@ -7,8 +7,6 @@ namespace DeviceController.Configuration
 {
     public class DeviceConfiguration
     {
-        //private static DeviceConfiguration instance = null;
-        
         private static bool _doTraceDeviceA = false;
         private static bool _doTraceDeviceB = false;
 
@@ -18,20 +16,13 @@ namespace DeviceController.Configuration
             if (ConfigurationManager.AppSettings.Get("TraceDeviceB").Equals("yes")) _doTraceDeviceB = true;
         }
 
-        //public static DeviceConfiguration GetInstance()
-        //{
-        //    if (instance == null) instance = new DeviceConfiguration();
-        //    return instance;
-        //}
-
-        public static bool DoTraceDeviceA()
+        public static bool DoTrace(Composestar.StarLight.ContextInfo.JoinPointContext context)
         {
-           return _doTraceDeviceA; 
+            // TODO: base return value on the context info
+            if (_doTraceDeviceA && _doTraceDeviceB) return true;
+
+            return false;
         }
         
-        public static bool DoTraceDeviceB()
-        {
-            return _doTraceDeviceB;
-        }
     }
 }

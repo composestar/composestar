@@ -30,6 +30,9 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
+    <Concern Include="Trace.cps" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\FilterTypes\FilterTypes\FilterTypes.csproj">
       <Name>FilterTypes</Name>
       <Project>{015c33a1-b6a8-4dfa-9baf-29744096e160}</Project>
@@ -55,10 +58,6 @@
       <Project>{e8abbf05-ad46-442d-9c83-5d1a1a59c514}</Project>
       <Private>True</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Concern Include="TraceDeviceA.cps" />
-    <Concern Include="TraceDeviceB.cps" />
   </ItemGroup>
   <!--Import the standards targets-->
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />

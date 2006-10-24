@@ -2,10 +2,10 @@ concern TraceDeviceA in DeviceController.Concerns
 {
 	filtermodule Trace
 	{
-		externals		// declare used external (global) objects
-			config : DeviceController.Configuration.DeviceConfiguration = DeviceController.Configuration.DeviceConfiguration.GetInstance();
+		//externals		// declare used external (global) objects
+		//	config : DeviceController.Configuration.DeviceConfiguration = DeviceController.Configuration.DeviceConfiguration.GetInstance();
 		conditions		// declare used conditions
-			doTrace : config.DoTraceDeviceB();
+			doTrace : DeviceController.Configuration.DeviceConfiguration.DoTraceDeviceB();
 		inputfilters	// define the inputfilters
 			trace_DoSomething : Tracing = {doTrace => [*.DoSomething] };	// Trace input parameters
 			trace_Result : Tracing = {doTrace => [*.get_Result] }			// Trace return value
