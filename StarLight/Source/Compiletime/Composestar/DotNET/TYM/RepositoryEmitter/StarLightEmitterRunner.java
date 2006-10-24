@@ -110,6 +110,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveType.addNewExternals();
 				weaveType.addNewInternals();
 				weaveType.addNewMethods();
+				weaveType.setName( type.fullName() );
 
 				Iterator filterModules = order.orderAsList().iterator();
 				while (filterModules.hasNext())
@@ -266,6 +267,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		{
 			WeaveSpecification weaveSpec = WeaveSpecification.Factory.newInstance();
 			weaveSpec.addNewWeaveTypes();
+			weaveSpec.setAssemblyName(dllName);
 			weaveSpecs.put(dllName, weaveSpec);
 			return weaveSpec;
 		}
@@ -343,6 +345,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			DotNETMethodInfo method = (DotNETMethodInfo) methodIter.next();
 			WeaveMethod weaveMethod = WeaveMethod.Factory.newInstance();
 			weaveMethod.addNewWeaveCalls();
+			weaveMethod.setSignature( method.getMethodElement().getSignature() );
 
 			// get the block containing the filterinstructions:
 			Block filterInstructions = ModelBuilder.getInputFilterCode(method);
