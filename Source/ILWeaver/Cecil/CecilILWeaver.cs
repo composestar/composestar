@@ -192,6 +192,8 @@ namespace Composestar.StarLight.ILWeaver
                         // Update stats
                         _weaveStats.MethodsProcessed++;  
                         _weaveStats.TotalMethodWeaveTime = _weaveStats.TotalMethodWeaveTime.Add(swMethod.Elapsed);
+                        _weaveStats.MaxWeaveTimePerMethod = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerMethod.Ticks, swMethod.Elapsed.Ticks));
+
                         swMethod.Reset(); 
 
                     } // foreach  (method)
@@ -206,6 +208,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Update stats
                 _weaveStats.TypesProcessed++;
                 _weaveStats.TotalTypeWeaveTime = _weaveStats.TotalTypeWeaveTime.Add(swType.Elapsed);
+                _weaveStats.MaxWeaveTimePerType = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerType.Ticks, swType.Elapsed.Ticks));
                 swType.Reset();
 
             } // foreach  (typeElement)
@@ -228,7 +231,7 @@ namespace Composestar.StarLight.ILWeaver
             sw.Stop();
            
             _weaveStats.TotalWeaveTime = sw.Elapsed;
-
+             
             return _weaveStats;  
         }
 

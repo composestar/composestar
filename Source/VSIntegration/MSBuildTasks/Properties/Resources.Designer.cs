@@ -403,7 +403,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weaving completed in {4:0.0000} seconds. Added: {0} internals, {1} externals, {2} inputfilters, {3} outputfilters.
+        ///   Looks up a localized string similar to Weaving completed in {4:0.0000} seconds. Added {0} internal(s), {1} external(s), {2} inputfilter(s) and {3} outputfilter(s)..
         /// </summary>
         internal static string WeavingCompleted {
             get {
@@ -426,6 +426,17 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         internal static string WeavingStartText {
             get {
                 return ResourceManager.GetString("WeavingStartText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weaving statistics for {8}:
+        ///#{7:000}   Types: total {5:0.0000} sec. max {3:0.0000} sec. avg {1:0.0000} sec.
+        ///#{6:000} Methods: total {4:0.0000} sec. max {2:0.0000} sec. avg {0:0.0000} sec..
+        /// </summary>
+        internal static string WeavingStats {
+            get {
+                return ResourceManager.GetString("WeavingStats", resourceCulture);
             }
         }
     }

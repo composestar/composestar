@@ -113,8 +113,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         // Perform weaving
                         WeaveStatistics weaveStats = weaver.DoWeave();                                            
 
+                        // Show information about weaving
                         Log.LogMessageFromResources("WeavingCompleted", weaveStats.InternalsAdded, weaveStats.ExternalsAdded, weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded, weaveStats.TotalWeaveTime.TotalSeconds);
-   
+                        Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
+                                                                    weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
+                                                                    weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds, 
+                                                                    weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
+                                                                    assembly.Filename); 
                     }
                     catch (ILWeaverException ex)
                     {
