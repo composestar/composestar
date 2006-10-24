@@ -23,6 +23,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
 import Composestar.Core.Exception.ModuleException;
@@ -111,7 +112,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveType.addNewExternals();
 				weaveType.addNewInternals();
 				weaveType.addNewMethods();
-				weaveType.setName( type.fullName() );
+				weaveType.setName(type.fullName());
 
 				Iterator filterModules = order.orderAsList().iterator();
 				while (filterModules.hasNext())
@@ -204,15 +205,31 @@ public class StarLightEmitterRunner implements CTCommonModule
 						storedCondition.setName(condition.getName());
 
 						// reference:
-						DeclaredObjectReference dor = (DeclaredObjectReference) condition.getShortref();
 						DotNETType refType;
-						if ( dor.getName().equals("inner")  ||  dor.getName().equals("self") ){
-							refType = type;
+						Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference condRef = condition
+								.getShortref();
+						if (condRef instanceof DeclaredObjectReference)
+						{
+							DeclaredObjectReference dor = (DeclaredObjectReference) condRef;
+							if (dor.getName().equals("inner") || dor.getName().equals("self"))
+							{
+								refType = type;
+							}
+							else
+							{
+								refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
+							}
 						}
-						else{
-							refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
+						else if (condRef instanceof ConcernReference)
+						{
+							ConcernReference cor = (ConcernReference) condRef;
+							refType = (DotNETType) cor.getRef().getPlatformRepresentation();
 						}
-						
+						else
+						{
+							throw new RuntimeException("Unknown reference type");
+						}
+
 						Reference reference = createReference(type, refType.getFromDLL(), condition.getShortref()
 								.getPackage(), condition.getShortref().getName(), (String) condition
 								.getDynObject("selector"));
@@ -236,8 +253,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getName());
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
-				
-				String filename = FileUtils.removeExtension(config.getSerializedFilename());				
+
+				String filename = FileUtils.removeExtension(config.getSerializedFilename());
 				filename = filename + "_weavespec.xml";
 				System.out.println(filename);
 				File file = new File(filename);
@@ -349,7 +366,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			DotNETMethodInfo method = (DotNETMethodInfo) methodIter.next();
 			WeaveMethod weaveMethod = WeaveMethod.Factory.newInstance();
 			weaveMethod.addNewWeaveCalls();
-			weaveMethod.setSignature( method.getMethodElement().getSignature() );
+			weaveMethod.setSignature(method.getMethodElement().getSignature());
 
 			// get the block containing the filterinstructions:
 			Block filterInstructions = ModelBuilder.getInputFilterCode(method);
