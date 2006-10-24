@@ -144,14 +144,20 @@ public abstract class BACO implements CTCommonModule
 		while (filesIt.hasNext())
 		{
 			String source = (String)filesIt.next();
-			String dest = outputPath + FileUtils.getFilenamePart(source);
-			try {
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Copying '" + source + "' to '" + dest + "'");
-				FileUtils.copyFile(dest, source);
-			}
-			catch (IOException e) {
-				Debug.out(Debug.MODE_WARNING,MODULE_NAME,"Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
-			}
+			copyFile(outputPath, source);
+		}
+	}
+	
+	protected void copyFile(String outputPath, String source) throws ModuleException
+	{
+		String dest = outputPath + FileUtils.getFilenamePart(source);
+		try 
+		{
+			Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Copying '" + source + "' to '" + dest + "'");
+			FileUtils.copyFile(dest, source);
+		}
+		catch (IOException e) {
+			Debug.out(Debug.MODE_WARNING,MODULE_NAME,"Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
 		}
 	}
 
