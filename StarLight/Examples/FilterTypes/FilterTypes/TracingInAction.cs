@@ -32,31 +32,30 @@ namespace FilterTypes
             foreach (short argOrdinal in context.GetArguments.Keys)
             {
                 ArgumentInfo arg = context.GetArguments[argOrdinal];
+                
+                string argdirection = "-";
+                if ((arg.Attributes & ArgumentAttributes.In) == ArgumentAttributes.In)
+                    argdirection = "input";
+                if ((arg.Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out)
+                    argdirection = "output";
+                if ((arg.Attributes & ArgumentAttributes.Optional) == ArgumentAttributes.Optional)
+                    argdirection = "optional";
 
                 if (arg.Value == null)
                 {
-                    TraceFile.WriteLine("  argument {0} = null", argOrdinal);
+                    TraceFile.WriteLine("  argument {0} ({1}) = null", argOrdinal, argdirection);
                     continue;
                 }
 
                 if (arg.Type.IsPrimitive || arg.Type.FullName == "System.String")
                 {
                     String argvalue = arg.Value.ToString();
-                    TraceFile.WriteLine("  argument {0} -> {1} = {2}", argOrdinal, arg.Type.FullName, argvalue);
+                    TraceFile.WriteLine("  argument {0} ({3}) -> {1} = {2}", argOrdinal, arg.Type.FullName, argvalue, argdirection);
                 }
                 else
                 {
-                    TraceFile.WriteLine("  argument {0} -> {1}", argOrdinal, arg.Type.FullName);
+                    TraceFile.WriteLine("  argument {0} ({2}) -> {1}", argOrdinal, arg.Type.FullName, argdirection);
                 }
-               
-                //(value & flag) == flag
-                if ((arg.Attributes & ArgumentAttributes.In) == ArgumentAttributes.In)
-                    TraceFile.WriteLine("  input");
-                if ((arg.Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out)
-                    TraceFile.WriteLine("  output");
-                if ((arg.Attributes & ArgumentAttributes.Optional) == ArgumentAttributes.Optional)
-                    TraceFile.WriteLine("  optional");
-                
             }
            
 

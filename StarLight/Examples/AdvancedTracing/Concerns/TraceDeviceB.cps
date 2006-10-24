@@ -1,4 +1,4 @@
-concern TraceDeviceA in DeviceController.Concerns
+concern TraceDeviceB in DeviceController.Concerns
 {
 	filtermodule Trace
 	{
