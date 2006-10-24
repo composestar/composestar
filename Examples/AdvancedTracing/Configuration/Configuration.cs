@@ -18,12 +18,6 @@ namespace DeviceController.Configuration
             if (ConfigurationManager.AppSettings.Get("TraceDeviceB").Equals("yes")) _doTraceDeviceB = true;
         }
 
-        //public static DeviceConfiguration GetInstance()
-        //{
-        //    if (instance == null) instance = new DeviceConfiguration();
-        //    return instance;
-        //}
-
         public static bool DoTraceDeviceA()
         {
            return _doTraceDeviceA; 
