@@ -276,6 +276,16 @@ namespace Composestar.StarLight.ILWeaver
             }
             //else do nothing, because of static call
 
+            // Check if we have to add the JPC
+            if (method.Parameters.Count == 1)
+            {
+                if (method.Parameters[0].ParameterType.FullName.Equals(typeof(JoinPointContext ).FullName))
+                {
+                    VariableDefinition jpcVar = _visitor.CreateJoinPointContextLocal();
+                    Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar)); 
+                } // VisitConditionLiteral(conditionLiteral)
+            } // if
+
             // Create a call instruction
             Instructions.Add(Worker.Create(OpCodes.Call, TargetAssemblyDefinition.MainModule.Import(method)));
 
