@@ -992,13 +992,17 @@ namespace Weavers.IlWeaving
 
 			CastInterceptionInformation cii = ws.GetCastInterception(callerClass.FullName, targetAssembly, targetClass);
 
-			if ( cii != null )
+			if (cii != null)
 			{
-				result.Add( new IlOpcode(CreateLabel(), "ldstr", "\""+code.Argument+"\"") );
-				result.Add( CreateSimpleCallStatement(ws.GetMethodInformation(cii.ExecuteMethodBefore), ws, ref callerMethod) );
-				result.Add( code );
+				result.Add(new IlOpcode(CreateLabel(), "ldstr", "\"" + code.Argument + "\""));
+				result.Add(CreateSimpleCallStatement(ws.GetMethodInformation(cii.ExecuteMethodBefore), ws, ref callerMethod));
+				result.Add(code);
 
 				stackIncrease = 1;
+			}
+			else
+			{
+				result.Add(code);
 			}
 
 			return result;
