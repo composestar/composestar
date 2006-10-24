@@ -223,7 +223,7 @@
     <value>Verifying assembly '{0}' using PEVerify.</value>
   </data>
   <data name="WeavingCompleted" xml:space="preserve">
-    <value>Weaving completed in {0:0.0000} seconds.</value>
+    <value>Weaving completed in {4:0.0000} seconds. Added: {0} internals, {1} externals, {2} inputfilters, {3} outputfilters</value>
   </data>
   <data name="WeavingFile" xml:space="preserve">
     <value>Weaving file '{0}'.</value>

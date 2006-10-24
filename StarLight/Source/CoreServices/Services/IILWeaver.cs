@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;   
 using System.Text;
 
-using Composestar.Repository;
+using Composestar.StarLight.CoreServices.ILWeaver;   
 
 namespace Composestar.StarLight.CoreServices
 {
@@ -15,14 +15,8 @@ namespace Composestar.StarLight.CoreServices
         /// <summary>
         /// Does the actual weaving.
         /// </summary>
-        void DoWeave();
-        
-        /// <summary>
-        /// Gets the duration of the last executed method.
-        /// </summary>
-        /// <value>The last duration.</value>
-        TimeSpan LastDuration{ get; }
-
+        WeaveStatistics DoWeave();
+      
         /// <summary>
         /// Closes this instance.
         /// </summary>
