@@ -227,21 +227,21 @@ namespace Weavers.IlWeaving
 			}
 			else 
 			{
-				methodCall += "(" + String.Join(",", (string[])argumentTypes.ToArray(typeof(string))) + ")";
+				string args = String.Join(",", (string[])argumentTypes.ToArray(typeof(string)));
+				methodCall += "(" + args + ")";
 			}
 
 			string returntype = "";
-			bool castReturntype = false;
-			if (!calledMethod.Equals("_ctor")) 
-			{
-				if (callConventions.IndexOf("instance") >= 0) 
-				{
-					returntype = callConventions.Remove(callConventions.IndexOf("instance"), 8).Trim();
-				}
-				else 
-				{
-					returntype = callConventions.Trim();
-				}
+			bool convertReturntype = false;
+		//	if (calledMethod.Equals("_ctor"))
+		//	{
+		//		methodCall = methodCall.Insert(0, "void ");
+		//	}
+		//	else
+		//	{
+				// returntype is callConventions without "instance"
+				int ii = callConventions.IndexOf("instance");
+				returntype = (ii == -1 ? callConventions : callConventions.Remove(ii, 8)).Trim();
 
 				if (returntype.Equals("void") || returntype.Equals("")) 
 				{
@@ -262,7 +262,7 @@ namespace Weavers.IlWeaving
 					else if (mi.ReturnType.Equals("object"))
 					{
 						methodCall = methodCall.Insert(0, "object ");
-						castReturntype = true;
+						convertReturntype = true;
 					}
 					else if (mi.ReturnType.Equals("string"))
 					{
@@ -278,11 +278,7 @@ namespace Weavers.IlWeaving
 						}
 					}
 				}
-			}
-			else 
-			{
-				methodCall = methodCall.Insert(0, "void ");
-			}
+			//}
 
 			if (debug) Console.WriteLine("Creating CIL instruction for call '" + methodCall + "'.");
 			result.Add(new IlOpcode(CreateLabel(), "call", methodCall));
@@ -298,27 +294,40 @@ namespace Weavers.IlWeaving
 				}
 			}
 
-			// If the return type has to be casted back create the IL code to do so
-			if (castReturntype) 
+			// If the return type has to be casted or unboxed create the IL code to do so
+			if (convertReturntype) 
 			{
-				result.AddRange(CreateCastOpcode(returntype));
+				result.AddRange(CreateConvertOpcode(returntype));
 			}
 
 			return result;
 		}
 
-		private ArrayList CreateCastOpcode(string returntype)
-		{				
+		private ArrayList CreateConvertOpcode(string returntype)
+		{
+			if (returntype == null)
+				throw new ArgumentNullException("returntype");
+
+			if ("class".Equals(returntype))
+				throw new ArgumentException("Invalid type '" + returntype + "'");
+
 			if (IsValueType(returntype)) 
 			{
 				return CreateUnboxOpcode(returntype);
 			}
 			else 
 			{
-				ArrayList result = new ArrayList();
-				result.Add(new IlOpcode(CreateLabel(), "castclass", returntype));
-				return result;
+				return CreateCastOpcode(returntype);
 			}
+		}
+
+		private ArrayList CreateCastOpcode(string returntype)
+		{
+			if (mDebug) Console.WriteLine("Creating cast opcode for type '" + returntype + "'");
+
+			ArrayList result = new ArrayList();
+			result.Add(new IlOpcode(CreateLabel(), "castclass", returntype));
+			return result;
 		}
 
 		private ArrayList CreateUnboxOpcode(string returntype)
@@ -1168,7 +1177,6 @@ namespace Weavers.IlWeaving
 				MethodBlock method = (MethodBlock)enumMethods.Current;
 
 				// Add attributes
-//block.FullName 
 //				method.AddAttribute("// added attribute goes here!");
 				ArrayList attributes = ws.GetAttributeDefinitions(block.FullName, method.Name);
 				if ( attributes.Count > 0 ) 
@@ -1208,114 +1216,115 @@ namespace Weavers.IlWeaving
 					string calledMethod = "";
 					string methodArgs = "";
 
-					IlOpcode code = (IlOpcode)enumCodes.Current;
+					IlOpcode instruction = (IlOpcode)enumCodes.Current;
+					string opcode = instruction.Opcode;
+					string arg = instruction.Argument;
 
 					// Parse opcode argument
-					bool success = true;
-					if (code.Opcode.Equals("newobj") || code.Opcode.Equals("callvirt") || code.Opcode.Equals("call")) 
+					if ("newobj".Equals(opcode) || "call".Equals(opcode) || "callvirt".Equals(opcode))
 					{
-						methodArgs = code.Argument.Substring(code.Argument.LastIndexOf("(")+1, code.Argument.LastIndexOf(")")-code.Argument.LastIndexOf("(")-1);
+						if (debug) Console.WriteLine(instruction);
 
-						string argumentToSplit = code.Argument.Substring(0, code.Argument.IndexOf("("));
+						int lastOpenColon = arg.LastIndexOf("(");
+						int lastCloseColon = arg.LastIndexOf(")");
+						methodArgs = arg.Substring(lastOpenColon + 1, lastCloseColon - lastOpenColon - 1);
+
+						string argumentToSplit = arg.Substring(0, arg.IndexOf("("));
 						
 						string[] splitArgument = argumentToSplit.Split(' ');
 						string fullCalledMethod = splitArgument[splitArgument.Length-1];
 
-						if (fullCalledMethod.IndexOf("[") >= 0 ) 
+						// ReturnType [Assembly]? TargetClass :: MethodName
+
+						int openBracket = fullCalledMethod.IndexOf("[");
+						int closeBracket = fullCalledMethod.IndexOf("]");
+						int doubleColon = fullCalledMethod.IndexOf("::");
+						
+						if (openBracket != -1) 
 						{
-							calledAssembly = fullCalledMethod.Substring(fullCalledMethod.IndexOf("[")+1, fullCalledMethod.IndexOf("]")-fullCalledMethod.IndexOf("[")-1);
-							calledClass = fullCalledMethod.Substring(fullCalledMethod.IndexOf("]")+1, fullCalledMethod.IndexOf("::")-fullCalledMethod.IndexOf("]")-1);
+							calledAssembly = fullCalledMethod.Substring(openBracket + 1, closeBracket - openBracket - 1);
+							calledClass = fullCalledMethod.Substring(closeBracket + 1, doubleColon - closeBracket - 1);
 						}
-						else if (fullCalledMethod.IndexOf("::") >= 0)
+						else if (doubleColon != -1)
 						{
-							calledClass = fullCalledMethod.Substring(0, fullCalledMethod.IndexOf("::"));
-							calledClass = calledClass.Remove(0, calledClass.LastIndexOf(" ")+1);
+							calledClass = fullCalledMethod.Substring(0, doubleColon);
+							calledClass = calledClass.Remove(0, calledClass.LastIndexOf(" ") + 1);
+						}
+						else 
+							throw new Exception("Unable to process argument '" + arg + "' for opcode '" + opcode + "'!");
+
+						if (calledAssembly.Equals("")) 
+						{
+							callConventions = arg.Substring(0, arg.IndexOf(calledClass + "::")).Trim();
 						}
 						else 
 						{
-							if (debug) Console.WriteLine("Unable to process argument '" + code.Argument + "' for opcode '" + code.Opcode + "'!");
-							success = false;
+							callConventions = arg.Substring(0, arg.IndexOf("[" + calledAssembly + "]" + calledClass + "::"));
 						}
 
-						if (calledAssembly.Equals("") && !calledClass.Equals("")) 
-						{
-							callConventions = code.Argument.Substring(0, code.Argument.IndexOf(calledClass)).Trim();
-						}
-						else 
-						{
-							callConventions = code.Argument.Substring(0, code.Argument.IndexOf("[" + calledAssembly + "]" + calledClass + "::"));
-						}
-
-						calledMethod = code.Argument.Substring(code.Argument.IndexOf("::")+2, code.Argument.LastIndexOf("(")-code.Argument.IndexOf("::")-2);
+						calledMethod = arg.Substring(arg.IndexOf("::") + 2, arg.LastIndexOf("(") - arg.IndexOf("::") - 2);
 					}
 
-					if (success) 
+					switch (opcode)
 					{
-						switch (code.Opcode)
-						{
-							// Detect class instantiations
-							case "newobj":
-								relabelOpcode(code, newCodes);
-								newCodes.AddRange(ProcessClassInstantiation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
-								break;
+						// Detect class instantiations
+						case "newobj":
+							relabelOpcode(instruction, newCodes);
+							newCodes.AddRange(ProcessClassInstantiation(ws, instruction, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
+							break;
 
-							// Detect method invocation
-							case "call":
-								relabelOpcode(code, newCodes);
-								newCodes.AddRange(ProcessMethodInvocation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
-								break;
-							
-							case "callvirt":
-								relabelOpcode(code, newCodes);
-								ArrayList insert = ProcessMethodInvocation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug);
-								if (insert.Count == 1) 
-								{
-									// Search for possible inherited method calls
-									newCodes.AddRange(ProcessInheritedMethodInvocation(ws, code, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
-								}
-								else 
-								{
-									newCodes.AddRange(insert);
-								}
-								
-								break;
-
-							// Detect load of field of an object
-							case "ldfld":
-								relabelOpcode(code, newCodes);
-								insert = ProcessFieldAccess(ws, code, ref block, ref method, ref stackIncrease, quiet, debug);
-								if (insert.Count > 0)
-								{
-									if ( ((IlOpcode)insert[0]).Opcode.Equals("pop") )
-									{
-										newCodes.RemoveAt(newCodes.Count - 1);
-										insert.RemoveAt(0);
-									}
-								}
+						// Detect method invocation
+						case "call":
+							relabelOpcode(instruction, newCodes);
+							newCodes.AddRange(ProcessMethodInvocation(ws, instruction, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
+							break;
+						
+						case "callvirt":
+							relabelOpcode(instruction, newCodes);
+							ArrayList insert = ProcessMethodInvocation(ws, instruction, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug);
+							if (insert.Count == 1) 
+							{
+								// Search for possible inherited method calls
+								newCodes.AddRange(ProcessInheritedMethodInvocation(ws, instruction, callConventions, calledAssembly, calledClass, calledMethod, methodArgs, ref block, ref method, ref stackIncrease, quiet, debug));
+							}
+							else 
+							{
 								newCodes.AddRange(insert);
-								break;
+							}
+							
+							break;
 
-							// Detect static load of field of an object
-							case "ldsfld":
-								relabelOpcode(code, newCodes);
-								newCodes.AddRange(ProcessStaticFieldAccess(ws, code, ref block, ref method, ref stackIncrease, quiet, debug));
-								break;
+						// Detect load of field of an object
+						case "ldfld":
+							relabelOpcode(instruction, newCodes);
+							insert = ProcessFieldAccess(ws, instruction, ref block, ref method, ref stackIncrease, quiet, debug);
+							if (insert.Count > 0)
+							{
+								if ( ((IlOpcode)insert[0]).Opcode.Equals("pop") )
+								{
+									newCodes.RemoveAt(newCodes.Count - 1);
+									insert.RemoveAt(0);
+								}
+							}
+							newCodes.AddRange(insert);
+							break;
 
-							// Detect casting
-							case "castclass":
-								relabelOpcode(code, newCodes);
-								newCodes.AddRange(ProcessCast(ws, code, ref block, ref method, ref stackIncrease, quiet, debug));
-								break;
+						// Detect static load of field of an object
+						case "ldsfld":
+							relabelOpcode(instruction, newCodes);
+							newCodes.AddRange(ProcessStaticFieldAccess(ws, instruction, ref block, ref method, ref stackIncrease, quiet, debug));
+							break;
 
-							// Add original opcode by default
-							default:
-								newCodes.Add(code);
-								break;
-						}
-					}
-					else 
-					{
-						newCodes.Add(code);
+						// Detect casting
+						case "castclass":
+							relabelOpcode(instruction, newCodes);
+							newCodes.AddRange(ProcessCast(ws, instruction, ref block, ref method, ref stackIncrease, quiet, debug));
+							break;
+
+						// Add original opcode by default
+						default:
+							newCodes.Add(instruction);
+							break;
 					}
 				}
 
@@ -1339,9 +1348,7 @@ namespace Weavers.IlWeaving
 			foreach (string arg in arglist)
 			{
 				result.Add(CreateLoadOpcode(CreateLabel(), indCallArguments));
-				
-				result.Add(CreateLiteralOpcode(CreateLabel(), i));
-			
+				result.Add(CreateLiteralOpcode(CreateLabel(), i++));
 				result.Add(new IlOpcode(CreateLabel(), "ldelem.ref"));
 				
 				string goodarg = "";
@@ -1354,11 +1361,8 @@ namespace Weavers.IlWeaving
 					goodarg = arg;
 				}
 				
-				result.AddRange(CreateCastOpcode(goodarg));
-
-				i++;
+				result.AddRange(CreateConvertOpcode(goodarg));
 			}
-
 			return result;
 		}
 

@@ -99,6 +99,11 @@ namespace Weavers.IlStructures
 		
 			return result;
 		}
+
+		public override string ToString()
+		{
+			return mLabel + ": " + mOpcode + " " + mArgument;
+		}
 	}
 
 }

@@ -245,13 +245,10 @@ namespace Weavers.PeWeaver
 			}
 			else if (pm.ProcessExitCode != 0 ) 
 			{
-				IlWeaverExitCodes iec = (IlWeaverExitCodes)Enum.ToObject(typeof(IlWeaverExitCode), (int)pm.ProcessExitCode);
-				IlWeaverExitCode iwec = new IlWeaverExitCode(iec);
-				Console.WriteLine("Process exit code: " + pm.ProcessExitCode + " (" + iwec.Message + ")");
-			}
-			else 
-			{
-				
+				//IlWeaverExitCodes iec = (IlWeaverExitCodes)Enum.ToObject(typeof(IlWeaverExitCode), (int)pm.ProcessExitCode);
+				//IlWeaverExitCode iwec = new IlWeaverExitCode(iec);
+				//Console.WriteLine("Process exit code: " + pm.ProcessExitCode + " (" + iwec.Message + ")");
+				SetExitCode(PeWeaverExitCodes.IlweaverExecutionFailure);
 			}
 
 			return result;

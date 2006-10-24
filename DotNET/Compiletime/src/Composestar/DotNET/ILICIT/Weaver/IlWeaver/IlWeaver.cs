@@ -60,7 +60,7 @@ namespace Weavers.IlWeaver
 			bool inspectingOptions = true;
 
 			// Inspect arguments
-			for (int i=0; i < args.Length; i++)
+			for (int i = 0; i < args.Length; i++)
 			{
 				if (inspectingOptions) 
 				{
@@ -114,17 +114,10 @@ namespace Weavers.IlWeaver
 			if (weaveSpecificationFile.Equals("") || (files.Count == 0 && fileList.Equals("")) || showhelp)
 			{
 				PrintHelp();
+				Environment.Exit((int)IlWeaverExitCodes.UnknownFailure);
 			}
 			else 
 			{
-				// Backup files
-				if ( backup ) 
-				{
-					//TODO: files = Backup(files);
-				}
-
-				WeaveSpecification ws = new WeaveSpecification(quiet, debug);
-
 				if ( !fileList.Equals("")) 
 				{
 					System.IO.StreamReader sr = System.IO.File.OpenText(fileList);
@@ -137,100 +130,46 @@ namespace Weavers.IlWeaver
 					sr.Close();
 				}
 
-				if ( ws.Load(weaveSpecificationFile) )
+				// Backup files
+				if (backup)
 				{
+					//TODO: files = Backup(files);
+				}
 
-					for (int i=0; i < files.Count; i++) 
-					{
-						long StartTime=0, FileReadEndTime=0, WeaveEndTime=0, FileWriteEndTime=0;
-						bool HighTimerEnabled=false;
-						long StartCounter=0, FileReadCounter=0, WeaveCounter=0, FileWriteCounter=0, freq=0;
-
-						if (debug) 
-						{
-							if (QueryPerformanceCounter(ref StartCounter)!=0)
-							{
-								HighTimerEnabled = true;
-							}
-							else
-							{
-								StartTime = DateTime.Now.Ticks;
-								HighTimerEnabled = false;
-							}
-						}
-
-                        IlFileReader ifr = new IlFileReader(quiet, debug);
-						ArrayList il = ifr.Read(files[i]);
-
-						if (debug)
-						{
-							if (HighTimerEnabled)
-							{
-								QueryPerformanceCounter(ref FileReadCounter);
-							}
-							else 
-							{
-								FileReadEndTime = DateTime.Now.Ticks;
-							}
-						}
-
-						ws.CurrentAssembly = files[i];
-						if (debug && !quiet) Console.WriteLine("Starting weaving of '" + ws.CurrentAssembly + "'");
-						Weaver w = new Weaver(quiet, debug);
-						il = w.Process(ws, il, quiet, debug);
-
-						if (debug)
-						{
-							if (HighTimerEnabled)
-							{
-								QueryPerformanceCounter(ref WeaveCounter);
-							}
-							else 
-							{
-								WeaveEndTime = DateTime.Now.Ticks;
-							}
-						}
-
-						IlFileWriter ifw = new IlFileWriter(quiet, debug);
-						ifw.Save(il, files[i]);
-
-						if (debug)
-						{
-							if (HighTimerEnabled)
-							{
-								QueryPerformanceCounter(ref FileWriteCounter);
-							}
-							else 
-							{
-								FileWriteEndTime = DateTime.Now.Ticks;
-							}
-						}
-
-						if (debug) 
-						{
-							double FileReadTime=0, WeaveTime=0, FileWriteTime=0;
-
-							if (HighTimerEnabled)
-							{								
-								QueryPerformanceFrequency(ref freq);
-								FileReadTime = (double)(FileReadCounter - StartCounter) / freq;
-								WeaveTime = (double)(WeaveCounter - FileReadCounter) / freq;
-								FileWriteTime = (double)(FileWriteCounter - WeaveCounter) / freq;
-							}
-							else
-							{
-								FileReadTime = new TimeSpan(FileReadEndTime - StartTime).Seconds;
-								WeaveTime = new TimeSpan(WeaveEndTime - FileReadEndTime).Seconds;
-								FileWriteTime = new TimeSpan(FileWriteEndTime - WeaveEndTime).Seconds;
-							}
-
-							Console.WriteLine("Summary for '" + ws.CurrentAssembly + "': Reading file: {0:0.00}s   Weaving file: {1:0.00}s   Writing file: {2:0.00}s", FileReadTime, WeaveTime, FileWriteTime);
-						}
-					}
+				try
+				{
+					exitcode = ProcessFiles(files, weaveSpecificationFile);
+					Environment.Exit((int)exitcode);
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.ToString());
+					Environment.Exit((int)IlWeaverExitCodes.UnknownFailure);
 				}
 			}
+		}
 
-			Environment.Exit((int)exitcode);
+		private static IlWeaverExitCodes ProcessFiles(StringCollection files, string weaveSpecificationFile)
+		{
+			WeaveSpecification ws = new WeaveSpecification(quiet, debug);
+			if (!ws.Load(weaveSpecificationFile))
+				return IlWeaverExitCodes.WeaveFileNotFound;
+
+			for (int i = 0; i < files.Count; i++)
+			{
+				IlFileReader ifr = new IlFileReader(quiet, debug);
+				ArrayList il = ifr.Read(files[i]);
+
+				ws.CurrentAssembly = files[i];
+				if (debug && !quiet) Console.WriteLine("Starting weaving of '" + ws.CurrentAssembly + "'");
+				Weaver w = new Weaver(quiet, debug);
+				il = w.Process(ws, il, quiet, debug);
+
+				IlFileWriter ifw = new IlFileWriter(quiet, debug);
+				ifw.Save(il, files[i]);
+			}
+
+			return IlWeaverExitCodes.Success;
 		}
 	}
 }

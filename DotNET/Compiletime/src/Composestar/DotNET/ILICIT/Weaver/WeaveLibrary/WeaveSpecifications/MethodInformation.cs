@@ -138,5 +138,10 @@ namespace Weavers.WeaveSpecifications
 		{
 			return this.mArguments.GetEnumerator();
 		}
+
+		public override string ToString()
+		{
+			return mReturnType + " [" + mAssemblyName + "]" + mFullClassName + "::" + mMethodName + "(...)";
+		}
 	}
 }
