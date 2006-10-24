@@ -259,6 +259,8 @@ public class DotNETCompiler implements LangCompiler
 	
 	/**
 	 * Returns a list containing the filenames of all externally linked sources
+	 * 
+	 * Used indirectly by INCRE
      */
 	private List externalSources(Source src) throws ModuleException
 	{ 
