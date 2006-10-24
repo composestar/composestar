@@ -223,7 +223,7 @@
     <value>Verifying assembly '{0}' using PEVerify.</value>
   </data>
   <data name="WeavingCompleted" xml:space="preserve">
-    <value>Weaving completed in {4:0.0000} seconds. Added {0} internal(s), {1} external(s), {2} inputfilter(s) and {3} outputfilter(s).</value>
+    <value>Weaving completed in {0:0.0000} seconds.</value>
   </data>
   <data name="WeavingFile" xml:space="preserve">
     <value>Weaving file '{0}'.</value>
@@ -242,6 +242,8 @@
   </data>
   <data name="WeavingStats" xml:space="preserve">
     <value>Weaving statistics for {8}:
+Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
+                       {11} inputfilter(s), {12} outputfilter(s)
 #{7:000}   Types: total {5:0.0000} sec. max {3:0.0000} sec. avg {1:0.0000} sec.
 #{6:000} Methods: total {4:0.0000} sec. max {2:0.0000} sec. avg {0:0.0000} sec.</value>
   </data>

@@ -403,7 +403,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weaving completed in {4:0.0000} seconds. Added {0} internal(s), {1} external(s), {2} inputfilter(s) and {3} outputfilter(s)..
+        ///   Looks up a localized string similar to Weaving completed in {0:0.0000} seconds..
         /// </summary>
         internal static string WeavingCompleted {
             get {
@@ -431,6 +431,8 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Weaving statistics for {8}:
+        ///Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
+        ///                       {11} inputfilter(s), {12} outputfilter(s)
         ///#{7:000}   Types: total {5:0.0000} sec. max {3:0.0000} sec. avg {1:0.0000} sec.
         ///#{6:000} Methods: total {4:0.0000} sec. max {2:0.0000} sec. avg {0:0.0000} sec..
         /// </summary>

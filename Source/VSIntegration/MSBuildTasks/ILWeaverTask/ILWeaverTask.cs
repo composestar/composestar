@@ -83,8 +83,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
 
                     // Exclude StarLight ContextInfo assembly from the weaving process
-                    if (assembly.Filename.EndsWith(ContextInfoFileName)) continue;
+                    if (assembly.Filename.EndsWith(ContextInfoFileName)) 
+                        continue;
 
+                    // Exclude references
                     if (assembly.IsReference)
                         continue;
 
@@ -114,12 +116,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         WeaveStatistics weaveStats = weaver.DoWeave();                                            
 
                         // Show information about weaving
-                        Log.LogMessageFromResources("WeavingCompleted", weaveStats.InternalsAdded, weaveStats.ExternalsAdded, weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded, weaveStats.TotalWeaveTime.TotalSeconds);
+                        Log.LogMessageFromResources("WeavingCompleted", weaveStats.TotalWeaveTime.TotalSeconds);
                         Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
                                                                     weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
                                                                     weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds, 
                                                                     weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
-                                                                    assembly.Filename); 
+                                                                    assembly.Filename, 
+                                                                    weaveStats.InternalsAdded, weaveStats.ExternalsAdded, 
+                                                                    weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded, 
+                                                                    weaveStats.TotalWeaveTime.TotalSeconds); 
                     }
                     catch (ILWeaverException ex)
                     {
