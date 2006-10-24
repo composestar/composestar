@@ -442,8 +442,10 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		if (node.containsName("ContinueAction"))
 		{
-			instruction = new FilterAction("ContinueAction", state.getMessage(), getSubstitutedMessage(state));
-			currentBlock.addInstruction(instruction);
+//			if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE)  ||  node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE)){
+//				instruction = new FilterAction("ContinueAction", state.getMessage(), getSubstitutedMessage(state));
+//				currentBlock.addInstruction(instruction);
+//			}
 		}
 		else if (node.containsName("DispatchAction"))
 		{
