@@ -50,6 +50,7 @@ import Composestar.DotNET.LAMA.DotNETMethodInfo;
 import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.DotNET.MASTER.StarLightMaster;
 import Composestar.Utils.Debug;
+import Composestar.Utils.FileUtils;
 
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyConfig;
@@ -235,7 +236,10 @@ public class StarLightEmitterRunner implements CTCommonModule
 				weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getFilename());
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
-				String filename = config.getSerializedFilename() + "weavespec.xml";
+				
+				String filename = FileUtils.removeExtension(config.getSerializedFilename());				
+				filename = filename + "_weavespec.xml";
+				System.out.println(filename);
 				File file = new File(filename);
 				try
 				{
