@@ -207,9 +207,21 @@ Common routines. Always include this file in every build.xml file
 		<taskdef name="mergestat" classname="net.objectlab.qalab.ant.BuildStatMergeTask" classpathref="lib.qalab"/>
 		-->
 		
+		<!-- svn task -->
+		<path id="lib.svnant">	  
+			<fileset dir="${build.core}/Development/svnant/lib" includes="*.jar"/>
+		</path>
+		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="lib.svnant"/>
+		
 	</target>
 	
 	<!-- generic target to rebuild all -->
 	<target name="rebuild" depends="init,clean,build" description="Clean and then compile"/>
+	
+	<target name="svn-update" depends="init" description="Update the sources from the SVN repository">
+		<svn>
+			<update />
+		</svn>
+	</target>
 
 </project>
