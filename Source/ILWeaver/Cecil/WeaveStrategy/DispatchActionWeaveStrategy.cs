@@ -113,7 +113,7 @@ namespace Composestar.StarLight.ILWeaver
             // Call the method         
             if(visitor.CalledMethod.HasThis)
             {
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
             }
             else
             {
