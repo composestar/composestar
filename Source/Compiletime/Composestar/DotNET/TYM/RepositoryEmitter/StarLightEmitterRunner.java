@@ -125,8 +125,6 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 					while (internals.hasNext())
 					{
-						weaveType.getInternals().addNewInternal();
-
 						// store internal:
 						Internal internal = (Internal) internals.next();
 						composestar.dotNET.tym.entities.Internal storedInternal = weaveType.getInternals()
