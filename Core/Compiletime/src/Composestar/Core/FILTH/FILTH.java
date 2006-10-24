@@ -57,7 +57,7 @@ public class FILTH implements CTCommonModule
 					/* Copy FilterModuleOrders */
 					INCRETimer filthcopy = incre.getReporter().openProcess("FILTH",c.getUniqueID(),INCRETimer.TYPE_INCREMENTAL);
 					filthservice.copyOperation(c,incre);
-					list = (List)c.getDynObject("FilterModuleOrders");
+					list = (List)c.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 					filthcopy.stop();
 
 				}

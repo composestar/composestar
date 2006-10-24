@@ -52,7 +52,7 @@ public class FILTHServiceImpl extends FILTHService
 		//getMultipleOrder(c);
 		// TODO: calling getMultipleOrder(c) generates lots of exceptions for CONE-IS (filenotfound & nullpointer)
 		
-		return ((FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY)).orderAsList(); 
+		return fo.orderAsList();
 	}
 	
 	public List getMultipleOrder(Concern c)
