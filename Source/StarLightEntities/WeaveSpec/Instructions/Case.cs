@@ -85,7 +85,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
             base.Accept(visitor);
             visitor.VisitCase(this);
             if (_instructions != null)
-                _instructions.Accept(visitor);
+                ((IVisitable)_instructions).Accept(visitor);
         } // Accept(visitor)
 
 

@@ -574,6 +574,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 			weaveAction.setSubstitutionSelector(filterAction.getSubstitutedMessage().getSelector());
 			weaveAction.setSubstitutionTarget(filterAction.getSubstitutedMessage().getTarget().getName());
+			weaveAction.setType(filterAction.getType());
 
 			return weaveAction;
 		}
