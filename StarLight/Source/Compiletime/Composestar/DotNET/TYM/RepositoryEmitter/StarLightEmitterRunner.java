@@ -231,9 +231,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 		for (int i = 0; i < assemblies.sizeOfAssemblyConfigArray(); i++)
 		{
 			AssemblyConfig config = assemblies.getAssemblyConfigArray(i);
-			if (weaveSpecs.containsKey(config.getFilename()))
+			if (weaveSpecs.containsKey(config.getName()))
 			{
-				weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getFilename());
+				weaveSpec = (WeaveSpecification) weaveSpecs.get(config.getName());
 				WeaveSpecificationDocument doc = WeaveSpecificationDocument.Factory.newInstance();
 				doc.setWeaveSpecification(weaveSpec);
 				

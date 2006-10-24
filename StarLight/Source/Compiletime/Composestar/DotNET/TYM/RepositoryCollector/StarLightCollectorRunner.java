@@ -206,9 +206,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 			AssemblyDocument doc;
 			try
 			{
+				String name = assemblies.getAssemblyConfigArray(i).getSerializedFilename();
 				deserializeTimer.start();
-				doc = AssemblyDocument.Factory.parse(new File(assemblies.getAssemblyConfigArray(i)
-						.getSerializedFilename()));
+				doc = AssemblyDocument.Factory.parse(new File(name));
 				deserializeTimer.stop();
 			}
 			catch (XmlException e)
@@ -430,7 +430,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			if (typeElement.getNamespace() != null && typeElement.getName() != null)
 			{
-				type.setFullName(typeElement.getNamespace() + "." + typeElement.getName());
+				type.setFullName(typeElement.getNamespace() + '.' + typeElement.getName());
 			}
 			else
 			{
@@ -488,7 +488,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			type.setNamespace(typeElement.getNamespace());
 			// --type.setunderlyingSystemType( lastCharData );
 			// --type.setHashCode( Integer.parseInt( lastCharData ) );
-			type.setFromDLL(assembly.getFileName().replaceAll("\"", ""));
+			type.setFromDLL(assembly.getName());
 
 			collectFields(typeElement, type);
 			storeTimer.start();
