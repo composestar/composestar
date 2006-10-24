@@ -14,6 +14,8 @@
         </File>
         <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
         <File Id='StarLightJar' Name='StrLght.jar' LongName='StarLight.jar' DiskId='1' Source='../../Source/Compiletime/dist/StarLight.jar' Vital='yes'></File>
+        <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../libraries/xmltypes.jar' Vital='yes'></File>
+        <File Id="ContextInfo" Name="ContextInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
       </Component>
       <Directory Id ='Binaries' Name ='Binaries' />
       <Component Id='Registry' Guid ='0F390058-3D07-496a-8AA3-EF1DC4C64B13'>
@@ -26,7 +28,7 @@
         <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaFolder'
   Action='write' Type='string' Value='[JAVALOC]\bin\' />
         <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
-  Action='write' Type='string' Value='[INSTALLDIR]ComposestarCore.jar;[INSTALLDIR]Starlight.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[Db4OFolder]db4o-5.7-java1.2.jar;[Db4OFolder]db4o-5.7-nqopt.jar;[Db4OFolder]bloat-1.0.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
+  Action='write' Type='string' Value='[INSTALLDIR]ComposestarCore.jar;[INSTALLDIR]Starlight.jar;[INSTALLDIR]xmltypes.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[XmlBeansFolder]jsr173_1.0_api.jar;[XmlBeansFolder]resolver.jar;[XmlBeansFolder]xbean.jar;[XmlBeansFolder]xbean_xpath.jar;[XmlBeansFolder]xmlpublic.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
       </Component>
     </DirectoryRef>
   </Fragment>

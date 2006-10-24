@@ -99,7 +99,7 @@
       <Feature Id='CoreComponents' Title='Core Components' Description='The core components of the StarLight system.' Level='1'>
         <ComponentRef Id='CoreFiles' Primary ='yes' />
         <ComponentRef Id='Prolog'/>
-        <ComponentRef Id='Db4o'/>
+        <ComponentRef Id='xmlbeans'/>
         <ComponentRef Id='Groove'/>
         <ComponentRef Id='Antlr'/>
         <ComponentRef Id='Registry'/>

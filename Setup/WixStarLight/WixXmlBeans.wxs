@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment Id="XmlBeansInst">
+    <DirectoryRef Id ='Binaries'>
+      <Directory Id ='XmlBeansFolder' Name ='xmlbeans'>
+          <Component Id='xmlbeans' Guid ='E84C4D97-D750-4132-BD16-60D42C061017'>
+            <File Id='jsr173_10_apijar' Name='jsr173.jar' LongName='jsr173_1.0_api.jar' DiskId='1'
+                         Source='../../libraries/xmlbeans/jsr173_1.0_api.jar' Vital='yes'>
+            </File>
+            <File Id='resolverjar' Name='resolver.jar' LongName='resolver.jar' DiskId='1'
+                     Source='../../libraries/xmlbeans/resolver.jar' Vital='yes'>
+            </File>
+            <File Id='xbeanjar' Name='xbean.jar' LongName='xbean.jar' DiskId='1'
+                     Source='../../libraries/xmlbeans/xbean.jar' Vital='yes'>
+            </File>
+            <File Id='xbean_xpathjar' Name='xbeanxp.jar' LongName='xbean_xpath.jar' DiskId='1'
+                     Source='../../libraries/xmlbeans/xbean_xpath.jar' Vital='yes'>
+            </File>
+            <File Id='xmlpublicjar' Name='xmlpub.jar' LongName='xmlpublic.jar' DiskId='1'
+                     Source='../../libraries/xmlbeans/xmlpublic.jar' Vital='yes'>
+            </File>
+          </Component>
+        </Directory>
+    </DirectoryRef>
+  </Fragment>
+</Wix>
