@@ -1,0 +1,50 @@
+﻿<Project DefaultTargets="Weave" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"Concerns"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a2606d7a-857f-49c4-966d-65c6f2fb7d93}</ProjectGuid>
+    <RepositoryFilename>obj\StarLight.xml</RepositoryFilename>
+    <ProjectType>StarLight</ProjectType>
+    <RootNamespace>Concerns</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugLevel>4</DebugLevel>
+    <VerifyIL>True</VerifyIL>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugLevel>1</DebugLevel>
+    <VerifyIL>False</VerifyIL>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>Composestar.StarLight.ContextInfo</Name>
+      <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
+      <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FilterTypes\FilterTypes\FilterTypes.csproj">
+      <Name>FilterTypes</Name>
+      <Project>{015c33a1-b6a8-4dfa-9baf-29744096e160}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Benchmark\Benchmark.csproj">
+      <Name>Benchmark</Name>
+      <Project>{50aae842-aa44-4619-833f-df4de29cf3b6}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Concern Include="Overhead.cps" />
+  </ItemGroup>
+  <!--Import the standards targets-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />
+</Project>
