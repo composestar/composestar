@@ -6,6 +6,10 @@
  */
 package Composestar.Core.FIRE2.preprocessing;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FlowModel;
 import Composestar.Core.RepositoryImplementation.RepositoryEntity;
@@ -62,8 +66,19 @@ public class FirePreprocessingResult extends RepositoryEntity {
         return flowModelOutputFilters;
     }
     
-    
-    
-    
-    
+    /**
+	 * Custom deserialization of this object
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		
+	}
+
+	/**
+	 * Custom serialization of this object
+	 */
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		
+	}
 }
