@@ -1,5 +1,8 @@
 package Composestar.Java.LAMA;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -336,5 +339,21 @@ public class JavaType extends Type
 	public void setParentNamespace(ProgramElement parentNS)
 	{
 		this.parentNS = parentNS;
+	}
+	
+	/**
+	 * Custom deserialization of this object
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		ImplementedInterfaceNames = (ArrayList)in.readObject();
+	}
+
+	/**
+	 * Custom serialization of this object
+	 */
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		out.writeObject(ImplementedInterfaceNames);
 	}
 }

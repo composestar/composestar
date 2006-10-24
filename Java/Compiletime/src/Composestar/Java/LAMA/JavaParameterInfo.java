@@ -1,5 +1,9 @@
 package Composestar.Java.LAMA;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -63,5 +67,21 @@ public class JavaParameterInfo extends ParameterInfo
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Custom deserialization of this object
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		
+	}
+
+	/**
+	 * Custom serialization of this object
+	 */
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		
 	}
 }
