@@ -78,6 +78,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		}
 		catch (NullPointerException exc)
 		{
+			exc.printStackTrace();
 			throw new ModuleException("NullPointerException in emitter", "EMITTER");
 		}
 	}
@@ -202,8 +203,15 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 						// reference:
 						DeclaredObjectReference dor = (DeclaredObjectReference) condition.getShortref();
-						DotNETType type2 = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
-						Reference reference = createReference(type, type2.getFromDLL(), condition.getShortref()
+						DotNETType refType;
+						if ( dor.getName().equals("inner")  ||  dor.getName().equals("self") ){
+							refType = type;
+						}
+						else{
+							refType = (DotNETType) dor.getRef().getType().getRef().getPlatformRepresentation();
+						}
+						
+						Reference reference = createReference(type, refType.getFromDLL(), condition.getShortref()
 								.getPackage(), condition.getShortref().getName(), (String) condition
 								.getDynObject("selector"));
 
