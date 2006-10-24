@@ -17,7 +17,7 @@
 		<antcall target="clean_c" />
 	</target>
 	
-	<target name="clean_dotnet" if="available.dotnet">
+	<target name="clean_dotnet" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="clean" dir="${build.dotnet}" />
 	</target>
 	
@@ -39,7 +39,7 @@
 		<ant target="build" dir="${build.core}" />
 	</target>
 	
-	<target name="dotnet" depends="core" if="available.dotnet" description="Compile the .NET port">
+	<target name="dotnet" depends="core" if="available.dotnet" unless="ignore.dotnet" description="Compile the .NET port">
 		<ant target="build" dir="${build.dotnet}" />
 	</target>
 	
@@ -64,7 +64,7 @@
 		<antcall target="install_dotnet" />
 	</target>
 	
-	<target name="install_dotnet" if="available.dotnet">
+	<target name="install_dotnet" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="install" dir="${build.dotnet}" />
 	</target>
 	
@@ -75,7 +75,7 @@
 		<antcall target="uninstall_dotnet" />
 	</target>
 	
-	<target name="uninstall_dotnet" if="available.dotnet">
+	<target name="uninstall_dotnet" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="uninstall" dir="${build.dotnet}" />
 	</target>
 	
@@ -85,7 +85,7 @@
 		<antcall target="plugin_dotnet" />
 	</target>
 	
-	<target name="plugin_dotnet" depends="init" if="available.dotnet">
+	<target name="plugin_dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="plugin" dir="${build.dotnet}" />
 	</target>
 	
@@ -102,7 +102,7 @@
 		<ant target="findbugs" dir="${build.core}" />
 	</target>
 	
-	<target name="findbugs_dotnet" depends="init" if="available.dotnet">
+	<target name="findbugs_dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="findbugs" dir="${build.dotnet}" />
 	</target>
 	
@@ -116,7 +116,7 @@
 		<ant target="checkstyle" dir="${build.core}" />
 	</target>
 	
-	<target name="checkstyle_dotnet" depends="init" if="available.dotnet">
+	<target name="checkstyle_dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="checkstyle" dir="${build.dotnet}" />
 	</target>
 
@@ -130,8 +130,33 @@
 		<ant target="test" dir="${build.core}"/>
 	</target>
 	
-	<target name="test_dotnet" depends="init" if="available.dotnet">
+	<target name="test_dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="test" dir="${build.dotnet}" />
+	</target>
+	
+	<!-- SVN tasks -->
+	<target name="svn-update-all" description="Update all trees from the svn"
+		depends="svn-update-core,svn-update-dotnet,svn-update-starlight,svn-update-java,svn-update-c"
+	/>
+	
+	<target name="svn-update-core" depends="init">
+		<ant target="svn-update" dir="${build.core}" />
+	</target>
+	
+	<target name="svn-update-dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
+		<ant target="svn-update" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="svn-update-starlight" depends="init" if="available.starlight" unless="ignore.starlight">
+		<ant target="svn-update" dir="${build.starlight}" />
+	</target>
+	
+	<target name="svn-update-java" depends="init" if="available.java" unless="ignore.java">
+		<ant target="svn-update" dir="${build.java}" />
+	</target>
+	
+	<target name="svn-update-c" depends="init" if="available.c" unless="ignore.c">
+		<ant target="svn-update" dir="${build.c}" />
 	</target>
 	
 	<!-- do everything -->
@@ -139,6 +164,11 @@
 	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
 	<target name="required" depends="clean,install,test" description="Perform the required actions before allowing a commit." />	
 	<target name="cleaninstall" depends="clean,install" description="Clean, compile, and then install" />
+	
+	<target name="integration">
+		<antcall target="svn-update-all" />
+		<antcall target="required" />
+	</target>
 	
 	<target name="nightlybuild" description="Execute the nightly build">
 		<tstamp />
