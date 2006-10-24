@@ -28,8 +28,7 @@ namespace Composestar.Repository
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
         static EntitiesAccessor()
-        {
-            Console.WriteLine("created singleton");
+        {           
         }
 
         /// <summary>
@@ -194,7 +193,8 @@ namespace Composestar.Repository
             get
             {
                 if (_extraTypes == null)
-                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(Case), typeof(Jump), typeof(Switch), typeof(While), typeof(ContextInstruction)  };
+                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(Case), typeof(Jump), typeof(Switch), typeof(While), typeof(ContextInstruction),
+                    typeof(And), typeof(ConditionExpression), typeof(ConditionLiteral), typeof(False), typeof(Not), typeof(Or), typeof(True) };
                 return _extraTypes; 
             } // return
         } // ExtraTypes
