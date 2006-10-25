@@ -6,6 +6,9 @@ import java.util.List;
 
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
@@ -65,7 +68,7 @@ public class JavaWeaver implements WEAVER
 
 			// add classpaths
 			p = (Project) projIt.next();
-			deps = p.getDependencies();
+			deps = (ArrayList) p.getDependencies();
 			depsIt = deps.iterator();
 			while (depsIt.hasNext())
 			{
@@ -88,26 +91,41 @@ public class JavaWeaver implements WEAVER
 
 	public void getAfterInstantationInterceptions()
 	{
-	/*
-	 * DataStore ds = DataStore.instance(); HookDictionary hd =
-	 * HookDictionary.instance(); Iterator it =
-	 * ds.getAllInstancesOf(CompiledImplementation.class); while (it.hasNext()) {
-	 * CompiledImplementation ci = (CompiledImplementation)it.next(); String
-	 * className = ci.getClassName(); if (className != null) {
-	 * hd.addAfterInstantationInterception(className); } } it =
-	 * ds.getAllInstancesOf(CpsConcern.class); while (it.hasNext()) { CpsConcern
-	 * c = (CpsConcern)it.next(); Object impl =
-	 * c.getDynObject("IMPLEMENTATION"); if (impl != null) { PrimitiveConcern pc =
-	 * (PrimitiveConcern)impl;
-	 * hd.addAfterInstantationInterception(pc.getQualifiedName()); } } it =
-	 * ds.getAllInstancesOf(Concern.class); while (it.hasNext()) { Concern c =
-	 * (Concern)it.next(); if (c.getDynObject("superImpInfo") != null && !(c
-	 * instanceof CpsConcern)) {
-	 * hd.addAfterInstantationInterception(c.getQualifiedName()); } }
-	 */
+
+		DataStore ds = DataStore.instance();
+		HookDictionary hd = HookDictionary.instance();
+		Iterator it = ds.getAllInstancesOf(CompiledImplementation.class);
+		while (it.hasNext())
+		{
+			CompiledImplementation ci = (CompiledImplementation) it.next();
+			String className = ci.getClassName();
+			if (className != null)
+			{
+				hd.addAfterInstantationInterception(className);
+			}
+		}
+		it = ds.getAllInstancesOf(CpsConcern.class);
+		while (it.hasNext())
+		{
+			CpsConcern c = (CpsConcern) it.next();
+			Object impl = c.getDynObject("IMPLEMENTATION");
+			if (impl != null)
+			{
+				PrimitiveConcern pc = (PrimitiveConcern) impl;
+				hd.addAfterInstantationInterception(pc.getQualifiedName());
+			}
+		}
+		it = ds.getAllInstancesOf(Concern.class);
+		while (it.hasNext())
+		{
+			Concern c = (Concern) it.next();
+			if (c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
+			{
+				hd.addAfterInstantationInterception(c.getQualifiedName());
+			}
+		}
 	}
 
-	
 	public void getCastInterceptions()
 	{
 	/*

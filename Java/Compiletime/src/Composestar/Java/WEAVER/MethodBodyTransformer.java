@@ -93,7 +93,8 @@ public class MethodBodyTransformer extends ExprEditor
 		HookDictionary hd = HookDictionary.instance();
 		try
 		{
-			String classname = m.getMethod().getDeclaringClass().getName();
+			String classname = m.getClassName();
+						
 			if (hd.isMethodInterception(classname))
 			{
 				if (m.getMethod().getReturnType() == CtClass.voidType)
@@ -129,10 +130,20 @@ public class MethodBodyTransformer extends ExprEditor
 	 */
 	public void edit(NewExpr e) throws CannotCompileException
 	{
-		if (e.getClassName().equals("pacman.Main"))
+		
+		HookDictionary hd = HookDictionary.instance();
+		if (hd.isAfterInstantationInterception(e.getClassName()))
 		{
-			e
-					.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(\"Main\",$_,$args);}");
+			int mod = e.where().getModifiers();
+			boolean isStaticCaller = Modifier.isStatic(mod);
+			if(isStaticCaller)
+			{
+				e.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(" + '"' + e.where().getName() + '"' + ",$_,$args);}");
+			}
+			else
+			{
+				e.replace("{$_ = $proceed($$); Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleInstanceCreation(this,$_,$args);}");
+			}
 		}
 	}
 
@@ -167,8 +178,8 @@ public class MethodBodyTransformer extends ExprEditor
 		else if (!isStaticCaller && isStaticTarget)
 		{
 			// non-static caller, static target
-			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"'
-					+ m.getMethod().getDeclaringClass().getName() + '"' + "," + '"' + m.getMethodName() + '"'
+			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"' 
+					+ m.getMethod().getDeclaringClass().getName()+ '"' + "," + '"' + m.getMethodName() + '"'
 					+ ",$args);");
 		}
 		else

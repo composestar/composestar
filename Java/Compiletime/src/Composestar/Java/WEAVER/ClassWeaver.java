@@ -1,6 +1,9 @@
 package Composestar.Java.WEAVER;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -10,6 +13,8 @@ import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.TypeSource;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.FileUtils;
 
 /**
  * A Class Weaver. Uses Javassist to transform a class.
@@ -51,6 +56,22 @@ public class ClassWeaver
 	}
 
 	/**
+	 * Returns the output file of a class.
+	 * It concatenates baseDir and the package of the class.
+	 * 
+	 * @param baseDir base directory
+	 * @param clazz CtClass
+	 */
+	public String getOutputFile(String baseDir, CtClass clazz)
+	{
+		String outputFile = baseDir;
+		String fqName = clazz.getName();
+		fqName = fqName.replace(".",java.io.File.separator);
+		outputFile += fqName + ".class";
+		return FileUtils.normalizeFilename(outputFile);
+	}
+	
+	/**
 	 * Weaves a project.
 	 * <p>
 	 * 1. Adds the application start info to the Main Class.
@@ -69,10 +90,13 @@ public class ClassWeaver
 	{
 		TypeSource type;
 		String name;
-		String outputFile;
+		String outputDir;
+		
+		List weavedClasses = new ArrayList();
+		DataStore.instance().addObject("WeavedClasses", weavedClasses);
 
 		// write applicationStart
-		// writeApplicationStart();
+		writeApplicationStart();
 
 		Iterator typeIt = p.getTypeSources().iterator();
 		while (typeIt.hasNext())
@@ -81,15 +105,16 @@ public class ClassWeaver
 			name = type.getName();
 
 			// create outputFile
-			outputFile = p.getProperty("basePath");
-			outputFile += "obj/weaver/";
+			outputDir = p.getProperty("basePath");
+			outputDir += "obj/weaver/";
 
 			// weave the class and write to disk
 			try
 			{
 				CtClass clazz = classpool.get(name);
 				clazz.instrument(new MethodBodyTransformer());
-				clazz.writeFile(outputFile);
+				clazz.writeFile(outputDir);
+				weavedClasses.add(getOutputFile(outputDir,clazz));
 			}
 			catch (Exception e)
 			{
@@ -113,7 +138,7 @@ public class ClassWeaver
 		{
 			CtClass clazz = classpool.get(startobject);
 			CtMethod mainmethod = clazz.getMethod("main", "([Ljava/lang/String;)V");
-			String src = "Composestar.RuntimeJava.FLIRT.JavaMessageHandlingFacility.handleApplicationStart("
+			String src = "Composestar.RuntimeJava.FLIRT.JavaMessageHandlingFacility.handleJavaApplicationStart("
 					+ "\"repository.dat\"" + "," + rundebuglevel + ");";
 			mainmethod.insertBefore(src);
 		}
