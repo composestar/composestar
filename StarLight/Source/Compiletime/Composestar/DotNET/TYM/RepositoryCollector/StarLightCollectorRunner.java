@@ -497,7 +497,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 
 			// Add the DotNETType to the TypeMap
 			// storeTimer.start();
-			Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Adding type: " + type.fullName());
+			//Debug.out(Debug.MODE_DEBUG, "COLLECTOR", "Adding type: " + type.fullName());
 			TypeMap.instance().addType(type.fullName(), type);
 			// storeTimer.stop();
 		}
