@@ -175,7 +175,7 @@ public class Message
     /**
      * Reifies this message.
      * It produces a version of this message that is fit for manipulation
-     * inside a ACT.
+     * inside an ACT.
      * @return Reified version of this message
      * @roseuid 3F36532702FC
      */

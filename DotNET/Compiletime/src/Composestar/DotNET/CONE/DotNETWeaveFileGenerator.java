@@ -63,7 +63,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	public void run(CommonResources resources) throws ModuleException 
 	{
 		Configuration config = Configuration.instance();
-		File destination = new File(config.getPathSettings().getPath("Base") + "weavespec.xml");
+		File destination = new File(config.getPathSettings().getPath("Base"), "weavespec.xml");
 
 		Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
 
@@ -331,7 +331,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
-				Iterator iterFilterModules = fmo.orderAsList().iterator();
+				Iterator iterFilterModules = fmo.order();
 				while (iterFilterModules.hasNext())
 				{
 					String fmn = (String)iterFilterModules.next();
@@ -422,7 +422,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			{
 				FilterModuleOrder fmo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 
-				Iterator iterFilterModules = fmo.orderAsList().iterator();
+				Iterator iterFilterModules = fmo.order();
 				while (iterFilterModules.hasNext())
 				{
 					String fmn = (String)iterFilterModules.next();

@@ -13,6 +13,7 @@ package Composestar.Core.FILTH;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -61,13 +62,23 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	}
 
 
-	public List orderAsList(){
+	public List orderAsList()
+	{
 		return _order;
 	}
 	
-	public boolean equals(Object other)
+	public Iterator order()
 	{
-        return other instanceof FilterModuleOrder && this.orderAsList().equals(((FilterModuleOrder) other).orderAsList());
+		return _order.iterator();
+	}
+	
+	public boolean equals(Object o)
+	{
+		if (! (o instanceof FilterModuleOrder))
+			return false;
+		
+		FilterModuleOrder other = (FilterModuleOrder)o;
+		return _order.equals(other._order);
 	}
 	
 	public String toString()
