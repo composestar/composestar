@@ -70,7 +70,7 @@ namespace Composestar.StarLight.CpsParser.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to parse concern, {0}.
+        ///   Looks up a localized string similar to Unable to parse concern &apos;{0}&apos;; {1}.
         /// </summary>
         internal static string UnableToParseConcern {
             get {

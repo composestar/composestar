@@ -135,7 +135,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             // Set configuration settings
             configuration.BinFolder = BinFolder;
-            configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
+			configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
 
             // Create a list to store the retrieved assemblies in            
             List<AssemblyElement> assemblies = new List<AssemblyElement>();

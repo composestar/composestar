@@ -101,7 +101,7 @@ namespace Composestar.StarLight.CpsParser
             }
             catch (antlr.ANTLRException ex)
             {
-                throw new CpsParserException(String.Format(Properties.Resources.UnableToParseConcern, FileName), FileName, ex);
+                throw new CpsParserException(String.Format(Properties.Resources.UnableToParseConcern, FileName, ex.Message), FileName, ex);
             }
             finally 
             {
