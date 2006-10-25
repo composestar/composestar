@@ -1,8 +1,11 @@
 /*
- * Created on Dec 9, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
@@ -14,10 +17,7 @@ import java.io.Serializable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
 /**
- * @author Administrator
  *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class FilterAction implements Serializable{
 	
@@ -25,9 +25,9 @@ public class FilterAction implements Serializable{
 	boolean eos = false;
 	private List operations;
 	
-	private static int counter;
+	//private static int counter;
 	
-	private int uniqid;
+	//private int uniqid;
 	
 	public FilterAction(String name)
 	{
@@ -66,7 +66,7 @@ public class FilterAction implements Serializable{
 	{
 		List operations = new ArrayList(getMatchingOperations(filter));
 		/*
-		SecretRepository repository = SecretRepository.instance();
+		CkretRepository repository = CkretRepository.instance();
 		List operations = repository.getAllResourcesForAction(this.name);
 		
 		ArrayList v =  new ArrayList();
@@ -85,9 +85,8 @@ public class FilterAction implements Serializable{
 
 	public boolean equals(Object o)
 	{
-        if( this.toString() == null && o.toString() == null )
-			return true;
-		return (o.toString().equals(this.toString()));
+		if (o == null) return false;
+        return (this.toString() == null && o.toString() == null) || (o.toString().equals(this.toString()));
 	}
 
 }

@@ -76,7 +76,9 @@ public class MethodNode extends Node
 				return classes;
 			}
 		}
-		catch(NullPointerException npex){}
+		catch(NullPointerException npex){
+            npex.printStackTrace();
+        }
 			
 		return null;	
 	}

@@ -47,7 +47,7 @@ public class FILTH implements CTCommonModule
 		{   
 			Concern c = (Concern)conIter.next();
  
-			SIinfo sinfo = (SIinfo)c.getDynObject("superImpInfo");
+			SIinfo sinfo = (SIinfo)c.getDynObject(SIinfo.DATAMAP_KEY);
 			if(sinfo != null)
 			{
 				List list;
@@ -57,7 +57,7 @@ public class FILTH implements CTCommonModule
 					/* Copy FilterModuleOrders */
 					INCRETimer filthcopy = incre.getReporter().openProcess("FILTH",c.getUniqueID(),INCRETimer.TYPE_INCREMENTAL);
 					filthservice.copyOperation(c,incre);
-					list = (List)c.getDynObject("FilterModuleOrders");
+					list = (List)c.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 					filthcopy.stop();
 
 				}
@@ -72,7 +72,7 @@ public class FILTH implements CTCommonModule
 				if(list.size() > 1)
 				{
 					Debug.out(Debug.MODE_INFORMATION, "FILTH", "Encountered shared join point: "+c.getQualifiedName(),c.getDescriptionFileName());
-					FilterModuleOrder singleOrder = (FilterModuleOrder) c.getDynObject("SingleOrder");
+					FilterModuleOrder singleOrder = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 					String tmpstr="";
 					if(singleOrder!=null)
 					{

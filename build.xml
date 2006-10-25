@@ -1,49 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Compiletime" default="build">
 	
-	<condition property="build.core" value="${basedir}${file.separator}..">
+	<condition property="build.core" value="..">
 		<and>
-			<not>
-				<isset property="build.core" />
-			</not>
-			<available file="${basedir}${file.separator}..${file.separator}common.xml" />
+			<not><isset property="build.core"/></not>
+			<available file="../common.xml"/>
 		</and>
 	</condition>
-	<import file="..${file.separator}common.xml" />
+	<import file="${build.core}/common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
-	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler (YARLY).</description>
+	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler.</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<delete dir="${out.build}" />
-		<delete dir="${out.dist}" />
-		<delete>
-			<fileset dir="src/Composestar/Core/COPPER">
-				<include name="CpsLexer.java" />
-				<include name="CpsParser.java" />
-				<include name="CpsTokenTypes.*" />
-				<include name="CpsTreeWalker.java" />				
-				<include name="CpsTreeWalkerTokenTypes.*" />
-				<include name="*.smap" />
-			</fileset>
-		</delete>
+
+		<!-- Java build files -->
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
 		<delete>
 			<fileset dir="src">
-				<include name="**/*.class" />
+				<include name="**/*.class"/>
 			</fileset>
 			<fileset dir="test">
-				<include name="**/*.class" />
+				<include name="**/*.class"/>
 			</fileset>
 		</delete>
+
+		<!-- COPPER parser -->
+		<delete>
+			<fileset dir="src/Composestar/Core/COPPER">
+				<include name="CpsLexer.java"/>
+				<include name="CpsParser.java"/>
+				<include name="CpsTokenTypes.*"/>
+				<include name="CpsTreeWalker.java"/>				
+				<include name="CpsTreeWalkerTokenTypes.*"/>
+				<include name="*.smap"/>
+			</fileset>
+		</delete>
+
 	</target>
 	
 	<target name="local_init" depends="init">
-		<mkdir dir="${out.build}" />
-		<mkdir dir="${out.dist}" />
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file" />
+	<target name="build" depends="local_init,antlr,compile,jar" description="Compile the code and create the jar file"/>
 	
 	<target name="antlr">
 		<antlr target="src/Composestar/Core/COPPER/grammar/cps.g" outputdirectory="src/Composestar/Core/COPPER">
@@ -55,11 +58,8 @@
 	</target>
 	
 	<target name="compile" depends="local_init,antlr">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
-			<exclude name="**/AssemblyInfo.java" />
-			<exclude name="Composestar/Core/SECRET/*"/>
-			<exclude name="Composestar/Core/CORE/*"/>
-			<exclude name="Composestar/Core/SIGN/*"/>
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+			<exclude name="**/AssemblyInfo.java"/>
 			<!--<exclude name="Composestar/Core/FIRE/*"/>-->			
 		</javac>
 	</target>
@@ -68,27 +68,41 @@
 		<copy todir="${out.build}"><!-- copy groove grammars -->
 			<fileset dir="src">
 				<include name="**/*.gpr"/>
+				<include name="Composestar/Core/DIGGER/Xslt/*.xslt"/>
 			</fileset>
 		</copy>
-		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF" />
+		<jar destfile="${out.jar.core}" basedir="${out.build}" manifest="src/MANIFEST.MF"/>
 	</target>
 	
 	<target name="install" depends="build" description="Install the core files">
-		<copy todir="${composestar.installdir}${file.separator}Binaries">
-			<fileset dir="${out.dist}" />
+
+		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}"/>
+		<copy file="src/Composestar/Core/CKRET/CKRET.css" todir="${composestar.installdir}"/>
+		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}"/>
+
+		<copy todir="${composestar.installdir}/Binaries">
+			<fileset dir="${out.dist}"/>
 		</copy>
-		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}${file.separator}Binaries" />
-		<copy file="binaries/prolog/prolog.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
-		<copy file="binaries/prolog/lib.pro" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
-		<copy file="binaries/prolog/connector.pro" todir="${composestar.installdir}${file.separator}Binaries${file.separator}prolog" />
-		<copy file="binaries/groove/groove-1_2_0.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
-		<copy file="binaries/groove/castor-0_9_5_2-xml.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
-		<copy file="binaries/groove/jgraph.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
-		<copy file="binaries/groove/xerces-2_6_0-xercesImpl.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
-		<copy file="binaries/groove/xerces-2_6_0-xml-apis.jar" todir="${composestar.installdir}${file.separator}Binaries${file.separator}groove" />
-		<copy file="src/Composestar/Core/INCRE/INCRE.css" todir="${composestar.installdir}" />
-		<copy file="src/Composestar/Core/CKRET/SECRET.css" todir="${composestar.installdir}" />
-		<copy file="src/Composestar/Core/CKRET/filterdesc.xml" todir="${composestar.installdir}" />
+		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}/Binaries"/>
+
+		<copy todir="${composestar.installdir}/Binaries/prolog">
+			<fileset dir="binaries/prolog">
+				<include name="prolog.jar"/>
+				<include name="lib.pro"/>
+				<include name="connector.pro"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${composestar.installdir}/Binaries/groove">
+			<fileset dir="binaries/groove">
+				<include name="groove-1_2_0.jar"/>
+				<include name="castor-0_9_5_2-xml.jar"/>
+				<include name="jgraph.jar"/>
+				<include name="xerces-2_6_0-xercesImpl.jar"/>
+				<include name="xerces-2_6_0-xml-apis.jar"/>
+			</fileset>
+		</copy>
+
 	</target>
 
 	<target name="compile_tests" depends="local_init,compile">
@@ -96,7 +110,7 @@
 			<path refid="lib.core"/>
 			<pathelement path="${out.build}"/>
 		</path>
-		<javac srcdir="test" destdir="test" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
+		<javac srcdir="test" destdir="test" classpathref="lib.test" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
 			<include name="**/*.java"/>
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>

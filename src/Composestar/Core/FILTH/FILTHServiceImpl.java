@@ -6,12 +6,6 @@
  */
 package Composestar.Core.FILTH;
 
-/**
- * @author Isti
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -20,7 +14,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Vector;
 
 import org.xml.sax.InputSource;
@@ -30,8 +23,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-import Composestar.Utils.*;
-import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
@@ -40,31 +31,32 @@ import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.FilterModSIinfo;
 import Composestar.Core.SANE.SIinfo;
+import Composestar.Utils.Debug;
 
-public class FILTHServiceImpl extends FILTHService{
-	private DataStore _ds;
-	private String _specfile;
-	private CommonResources _cr;
+public class FILTHServiceImpl extends FILTHService
+{
+    private String _specfile;
 		
-	protected FILTHServiceImpl(CommonResources cr){
-		//Configuration.instance().getModuleSettings().getModule("FILTH").getProperty("FILTH_INPUT");
-		_ds = DataStore.instance();
-	}
+	protected FILTHServiceImpl(CommonResources cr)
+	{
+    }
 	
-	public List getOrder(Concern c){
-		FilterModuleOrder fo = (FilterModuleOrder)c.getDynObject("SingleOrder");
-		if (fo==null)
+	public List getOrder(Concern c)
+	{
+		FilterModuleOrder fo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+		if (fo == null)
 			return new LinkedList();
-		//	getMultipleOrder(c);
-			// TODO: calling getMultipleOrder(c) generates lot's of exceptions for CONE-IS (filenotfound & nullpointer)
 		
-		return ((FilterModuleOrder)c.getDynObject("SingleOrder")).orderAsList(); 
+		//getMultipleOrder(c);
+		// TODO: calling getMultipleOrder(c) generates lots of exceptions for CONE-IS (filenotfound & nullpointer)
+		
+		return fo.orderAsList();
 	}
 	
-	public List getMultipleOrder(Concern c) { 
+	public List getMultipleOrder(Concern c)
+	{ 
 		String filename = "";
 		String cssFile = "";
 		try
@@ -104,7 +96,7 @@ public class FILTHServiceImpl extends FILTHService{
         buffer.append("<link id=\"css_color\" rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>\n");
 		buffer.append("</head>\n");
 		buffer.append("<body>\n");
-        buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://" + Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
+        buffer.append("<div id=\"headerbox\" class=\"headerbox\"><font size=6><b><i><img src=\"" + "file://").append(Configuration.instance().getPathSettings().getPath("Composestar")).append("/logo.gif\"/>  /TRESE/Compose*/FILTH</i></b></font></div>\n");
         buffer.append("<h3>Report generated on:  ").append(new Date().toString()).append("</h3>\n");
 
 		FILTHService.log.print(buffer.toString());
@@ -193,12 +185,12 @@ public class FILTHServiceImpl extends FILTHService{
 		/* DEBUG info end */
 		
 		/*** attaching all orders to the concern in DataStore */
-		c.addDynObject("FilterModuleOrders",forders);
+		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY,forders);
 		
 		/* attaching the first order with different key to be dumped in the repository
 		 * the list is encapsulated in FilterModuleOrder for the XML generator */  
 		FilterModuleOrder fmorder = new FilterModuleOrder( (LinkedList)forders.getFirst());
-		c.addDynObject("SingleOrder",fmorder);
+		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,fmorder);
 
 		
 		//FILTHService.print("FILTH::order (1) added to the repository {"+c.getName()+"}\n");
@@ -220,7 +212,7 @@ public class FILTHServiceImpl extends FILTHService{
 		LinkedList modulerefs = new LinkedList();
 		
 		/* get the superimposition from the repository */
-		SIinfo sinfo = (SIinfo)c.getDynObject("superImpInfo");
+		SIinfo sinfo = (SIinfo)c.getDynObject(SIinfo.DATAMAP_KEY);
 		/* get the firt altnernative */
 		Vector msalts = sinfo.getFilterModSIAlts();
 		
@@ -254,16 +246,17 @@ public class FILTHServiceImpl extends FILTHService{
 			ConstraintFilter of = new ConstraintFilter(g);
 			of.setParent(xr);
 			
-			_specfile = Configuration.instance().getModuleSettings().getModule("FILTH").getProperty("input");
+			Configuration config = Configuration.instance();
+			_specfile = config.getModuleProperty("FILTH", "input", null);
 			
-			if(_specfile != null)
+			if (_specfile != null)
 			{
 				//System.out.println(_specfile);
 				File file = new File(_specfile);
-				if(file!=null && file.exists() && file.canRead())
+				if (file != null && file.exists() && file.canRead())
 				{
-					FileReader r = new FileReader(_specfile);
-					of.parse(new InputSource(r));
+					FileReader fr = new FileReader(_specfile);
+					of.parse(new InputSource(fr));
 				}
 				else
 				{
@@ -271,7 +264,8 @@ public class FILTHServiceImpl extends FILTHService{
 				}
 			}
 		}
-		catch (SAXException se){
+		catch (SAXException se)
+		{
 			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: "+_specfile+", message: "+se.getMessage());
 			se.printStackTrace();
 		}
@@ -279,7 +273,18 @@ public class FILTHServiceImpl extends FILTHService{
 		{
 			Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification (" + _specfile + ").",c.getName());
 		}
+	}
+
+	public void copyOperation(Concern c, INCRE inc)
+	{
+		/* Copy dynamic objects 'FilterModuleOrders' and 'SingleOrder' */	
+		Concern cop = (Concern)inc.findHistoryObject(c);
 		
+		LinkedList forders = (LinkedList)cop.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
+		
+		c.addDynObject(FilterModuleOrder.ALL_ORDERS_KEY,forders);
+		FilterModuleOrder fmorder = new FilterModuleOrder( (LinkedList)forders.getFirst());
+		c.addDynObject(FilterModuleOrder.SINGLE_ORDER_KEY,fmorder);
 	}
 	/* 
 	public List getOrder(CpsConcern c){
@@ -311,16 +316,5 @@ public class FILTHServiceImpl extends FILTHService{
 		
 		return forder; 
 	}
-	*/
-	
-	public void copyOperation(Concern c,INCRE inc){
-		/* Copy dynamic objects 'FilterModuleOrders' and 'SingleOrder' */	
-		Concern cop = (Concern)inc.findHistoryObject(c);
-		
-		LinkedList forders = (LinkedList)cop.getDynObject("FilterModuleOrders");
-		
-		c.addDynObject("FilterModuleOrders",forders);
-		FilterModuleOrder fmorder = new FilterModuleOrder( (LinkedList)forders.getFirst());
-		c.addDynObject("SingleOrder",fmorder);
-	}
+	*/	
 }

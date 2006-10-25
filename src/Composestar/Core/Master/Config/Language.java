@@ -30,8 +30,7 @@ public class Language implements Serializable{
 		//return DummyEmitter based on string, use reflection
 		try {
 			Class myclass = Class.forName(this.dummyEmitter);
-			DummyEmitter emitter = (DummyEmitter)myclass.newInstance();
-			return emitter;
+			return (DummyEmitter)myclass.newInstance();
 		}
 		catch(Exception e) {
 			throw new ModuleException("Error while instantiating Dummy Emitter: "+this.dummyEmitter,"DUMMER");

@@ -63,7 +63,7 @@ public abstract class LOLA implements CTCommonModule
 	  
 	  public String initLanguageModel() throws ModuleException
 	  {
-		String generatedPredicatesFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Base") + "langmap.pro");
+		String generatedPredicatesFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath("Base") + "langmap.pro");
 	    try
 	    {
 	      langModel.createMetaModel();
@@ -95,8 +95,8 @@ public abstract class LOLA implements CTCommonModule
 	  public void initPrologEngine(CommonResources resources, String generatedPredicatesFilename) throws ModuleException
 	  {
 	    /* Get the names of special files (containing base predicate libraries) */
-	    String prologLibraryFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/prolog/lib.pro");
-	    String prologConnectorFilename = FileUtils.fixFilename(Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/prolog/connector.pro"); 
+	    String prologLibraryFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/prolog/lib.pro");
+	    String prologConnectorFilename = FileUtils.normalizeFilename(Configuration.instance().getPathSettings().getPath("Composestar") + "binaries/prolog/connector.pro"); 
 	    
 		/* Initialize the prolog engine */
 	    Debug.out(Debug.MODE_DEBUG, "LOLA", "Initializing the prolog interpreter");
@@ -327,7 +327,6 @@ public abstract class LOLA implements CTCommonModule
 									Type annotation = (Type)annotRef.getRef().getPlatformRepresentation();
 									if(annotation.getUnitName().equals(annotToFind)){
 										depSelectorsList.add(annotBind.getSelector().getRef());
-										continue;
 									}
 								}
 							}
@@ -385,7 +384,10 @@ public abstract class LOLA implements CTCommonModule
 		return toBeProcessed;
 	  }
 	  
-	  /*** helper method: moving selectors between lists */
+	  /*** helper method: moving selectors between lists
+       * @param from
+       * @param list
+       * @param to*/
 	  public void moveSelectors(ArrayList list,ArrayList from, ArrayList to){
 	  	if(!list.isEmpty()){
 	  		Iterator predItr = list.iterator();
@@ -397,7 +399,10 @@ public abstract class LOLA implements CTCommonModule
 	  	}
 	  }
 	  
-	  /*** helper method: move selector between lists */
+	  /*** helper method: move selector between lists
+       * @param from
+       * @param to
+       * @param predSel*/
 	  public void moveSelector(PredicateSelector predSel,ArrayList from, ArrayList to){
 	  	
 	  	if(!to.contains(predSel))

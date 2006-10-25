@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.util.Properties;
 
 import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Utils.Debug;
 
 /**
  * This class holds the shared resources between the modules e.g the repository object.
@@ -23,11 +22,6 @@ import Composestar.Utils.Debug;
 public class CommonResources implements Serializable
 {
 	private static final long serialVersionUID = 2652039710117430543L;
-
-//	/**
-//	 * The main project configuration file. This resource is initialized by Master
-//	 */
-//	public Properties ProjectConfiguration;
 	
 	/**
 	 * Information about the Custom Filters that are used in this project.
@@ -46,6 +40,7 @@ public class CommonResources implements Serializable
 	 */
 	public CommonResources()
 	{
+		CustomFilters = new Properties();
 		resources = new DataMap();
 	}
 

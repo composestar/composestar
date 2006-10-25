@@ -8,14 +8,15 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
+import Composestar.Utils.Debug;
 
 public class ProjectHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
-	ProjectConfigurationHandler returnHandler;
+	ProjectsHandler returnHandler;
 	Project project;
 	
-	public ProjectHandler(XMLReader parser, ProjectConfigurationHandler documentHandler)
+	public ProjectHandler(XMLReader parser, ProjectsHandler documentHandler)
 	{
 		this.parser = parser;
 		this.returnHandler = documentHandler;
@@ -25,13 +26,23 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 	{
 		if("Project".equals(raw_name))
 		{// in <Project>
-			//System.out.println("<project>");
-			project = new Project();
-			
-			for(int i=0;i<amap.getLength();i++){
+			project = new Project();			
+			for (int i = 0; i < amap.getLength(); i++)
+			{
 				String key = amap.getQName(i);
-				String val = amap.getValue(key);
-				project.addProperty(key,val);
+				String val = amap.getValue(i);
+				
+				if ("name".equals(key))
+					project.setName(val);
+				else if ("language".equals(key))
+					project.setLanguageName(val);
+				else if ("basePath".equals(key))
+					project.setBasePath(val);
+				else
+				{
+					Debug.out(Debug.MODE_WARNING, "MASTER", "Unknown attribute " + key + " in Project");
+					project.addProperty(key, val);
+				}
 			}
 			
 			Configuration.instance().getProjects().addProject(project);
@@ -39,7 +50,6 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 		
 		if("Sources".equals(raw_name))
 		{// in <Sources>	
-			//System.out.println("<sources>");	
 			//look further
 			ProjectSourcesHandler sourceshandler = new ProjectSourcesHandler(project,parser,this);
 			parser.setContentHandler( sourceshandler );
@@ -47,7 +57,6 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 		
 		if("Dependencies".equals(raw_name))
 		{// in <Dependencies>	
-			//System.out.println("<dependencies>");	
 			//look further
 			ProjectDependenciesHandler dependencyhandler = new ProjectDependenciesHandler(project,parser,this);
 			parser.setContentHandler( dependencyhandler );
@@ -66,12 +75,9 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 
 	public void startDocument() 
 	{
- 
 	}
 
 	public void endDocument() 
 	{
- 
 	}
-
 }

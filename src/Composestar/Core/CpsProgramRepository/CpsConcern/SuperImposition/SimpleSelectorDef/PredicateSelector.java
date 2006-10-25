@@ -152,6 +152,7 @@ public class PredicateSelector extends SimpleSelExpression
   
   /**
    * @param predicate The query to set.
+   * @param query
    */
   public void setQuery(String query)
   {
@@ -319,6 +320,7 @@ public class PredicateSelector extends SimpleSelExpression
   /**
    * @param key - FullName of a class
    * @param obj - Type information represented FieldNode,MethodNode or Path
+   * @param method
    */
   public void addTYMInfo(String key, MethodNode method){
   		

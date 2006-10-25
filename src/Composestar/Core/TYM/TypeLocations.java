@@ -92,7 +92,8 @@ public class TypeLocations
 	/**
 	 * Returns the source path for the type with the specified name,
 	 * or null if there is no mapping.
-	 */
+     * @param type
+     */
 	public String getSourceByType(String type)
 	{
 		return (String)typeToSource.get(type);
@@ -121,7 +122,8 @@ public class TypeLocations
 	/**
 	 * Returns the name of the assembly that the class 
 	 * with the specified name will compiled to (or is in?)
-	 */
+     * @param typeName
+     */
 	public String getAssemblyByType(String typeName)
 	{
 		String result = (String)typeToAssembly.get(typeName);
@@ -130,7 +132,7 @@ public class TypeLocations
 	}
 
 	/**
-	 * Returns a list containing the names of all types that are known to the compiler (?)
+	 * Returns a set containing the names of all user-defined types.
 	 */
 	public Set typeNames()
 	{
@@ -138,7 +140,7 @@ public class TypeLocations
 	}
 	
 	/**
-	 * Returns a set of all assemblies that are known to the compiler (?)
+	 * Returns a set of all assemblies that were generated from user sources.
 	 */
 	public Set assemblies()
 	{

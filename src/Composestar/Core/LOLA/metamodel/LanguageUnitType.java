@@ -87,6 +87,7 @@ public class LanguageUnitType
 	 * @param relationName Name of the relation that point to other language unit(s)
 	 * @return Returns the relationType specifying this relation.
 	 * @throws ModelClashException, when the relation does not exist for this language unit.
+     * @param relName
 	 */
 	public RelationType getRelationType(String relName) throws ModelClashException
 	{

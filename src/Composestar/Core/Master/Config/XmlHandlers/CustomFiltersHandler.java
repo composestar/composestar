@@ -12,9 +12,9 @@ import Composestar.Core.Master.Config.CustomFilter;
 public class CustomFiltersHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
-	ProjectConfigurationHandler returnHandler;
+	ProjectsHandler returnHandler;
 	
-	public CustomFiltersHandler(XMLReader parser, ProjectConfigurationHandler returnHandler)
+	public CustomFiltersHandler(XMLReader parser, ProjectsHandler returnHandler)
 	{
 		this.parser = parser;
 		this.returnHandler = returnHandler;
@@ -47,11 +47,9 @@ public class CustomFiltersHandler extends DefaultHandler implements ContentHandl
 
 	public void startDocument() 
 	{
- 
 	}
 
 	public void endDocument() 
 	{
-			
 	}
 }

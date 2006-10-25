@@ -6,7 +6,6 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +23,7 @@ public class FileUtils
 
 	/**
 	 * Adds double quotes around the specified filename.
-	 */
+     */
 	public static String quote(String filename)
 	{
 		if (filename == null)
@@ -35,7 +34,7 @@ public class FileUtils
 	
 	/**
 	 * Removes double quotes around the specified filename.
-	 */
+     */
 	public static String unquote(String filename)
 	{
 		if (filename == null)
@@ -67,39 +66,24 @@ public class FileUtils
 	 * only work in Windows.
 	 * 
 	 * @param name A filename, possibly containing backslashes.
-	 * @return The filename, with backslashes converted to slashes.
-	 * 
-	 * TODO: perhaps rename to 'normalizeFilename'?
+	 * @return The filename, with all backslashes converted to slashes.
 	 */
-	public static String fixFilename(String name)
+	public static String normalizeFilename(String name)
 	{
 		return name.replace('\\', '/');
 	}
 
 	/**
-	 * FIXME: wtf!? It makes no sense I tell you!
-	 * The places where this method is used should be checked out, 
-	 * to see what functionality is really needed. 
+	 * @deprecated use normalizeFilename
 	 */
-	public static String fixSlashes(String command)
+	public static String fixFilename(String name)
 	{
-		char[] cmd = command.toCharArray();
-		StringBuffer buffer = new StringBuffer();
-		for (int i = 0; i < cmd.length; i++)
-		{
-			if (cmd[i] == '/')
-				buffer.append(File.separator).append(File.separator);
-			else if (cmd[i] == '\\')
-				buffer.append(File.separator).append(File.separator);
-			else
-				buffer.append(cmd[i]);
-		}
-		return buffer.toString();
+		return normalizeFilename(name);
 	}
-
+	
 	/**
 	 * Returns true if the specified filename refers to an existing file.
-	 */
+     */
 	public static boolean fileExist(String filename)
 	{
 		return new File(filename).exists();
@@ -107,10 +91,16 @@ public class FileUtils
 	
 	/**
 	 * Returns true if the file specified by the filename was succesfully deleted.
-	 */
+     */
 	public static boolean delete(String filename)
 	{
 		return new File(filename).delete();
+	}
+	
+	public static boolean deleteIfExists(String filename)
+	{
+		File f = new File(filename);
+		return (f.exists() ? f.delete() : true);
 	}
 
 	public static void copyFile(String dest, String source) throws IOException
@@ -149,10 +139,11 @@ public class FileUtils
 
 	/**
 	 * Create a name for an output file based on the input name; this is used
-	 * e.g. when creating dummies. The conversion works as follows: a sourceName
-	 * should like this: basePath/project/specific/subdirs/SomeSourceFile.ext
+	 * e.g. when creating dummies. The conversion works as follows: 
+	 * A sourceName should look like this: 
+	 *    "basePath/project/specific/subdirs/SomeSourceFile.ext".
 	 * The converted version will look like:
-	 * basePath/prefix/project/specific/subdirs/SomeSourceFile.ext
+	 *    "basePath/prefix/project/specific/subdirs/SomeSourceFile.ext".
 	 * 
 	 * @param basePath
 	 * @param prefix the prefix to be prepended before the project-specific directories
@@ -177,11 +168,8 @@ public class FileUtils
 	{		
 		try {
 			File f = new File(path);
-			
-			if (f.exists())
-				return true;
-			else
-				return f.mkdirs(); // Returns false if the string is not a valid pathname
+
+            return f.exists() || f.mkdirs();
 		}
 		catch (SecurityException e) { 
 			// We don't really care about the reason; the important thing is the path could not be created
@@ -192,16 +180,10 @@ public class FileUtils
 	public static String getFilenamePart(String pathToFile)
 	{
 		return new File(pathToFile).getName();
-//		int pathEnd = pathToFile.lastIndexOf('/');
-//		if (pathEnd > 0)
-//			return pathToFile.substring(pathEnd + 1);
-//		else
-//			return pathToFile;
 	}
 
 	public static String getDirectoryPart(String pathToFile)
 	{
-//		return new File(pathToFile).getParent();
 		int pathEnd = pathToFile.lastIndexOf('/');
 		if (pathEnd > 0)
 			return pathToFile.substring(0, pathEnd);
@@ -213,9 +195,9 @@ public class FileUtils
 	 * Get a file stream for the SAX parser whitout the Root element could not
 	 * be found exception. This is caused by a BOM character which is skipped by
 	 * this file reader.
-	 */
+     */
 	public static FileInputStream getCleanInputStream(File xmlFile)
-		throws FileNotFoundException, IOException
+		throws  IOException
 	{
 		FileInputStream in = new FileInputStream(xmlFile);
 		int bomKount = getBOMCount(xmlFile);
@@ -230,9 +212,9 @@ public class FileUtils
 	/**
 	 * Get count of leading characters that denote the byte order mark, part of
 	 * the unicode standard. These make SaxParser barf
-	 */
+     */
 	private static int getBOMCount(File xmlFile) 
-		throws FileNotFoundException, IOException
+		throws  IOException
 	{
 		DataInputStream din = new DataInputStream(new FileInputStream(xmlFile));
 		int bomKount = 0;
@@ -249,7 +231,7 @@ public class FileUtils
 
 	/**
 	 * Closes the specified Reader instance, provided it is not null.
-	 */
+     */
 	public static void close(Reader reader)
 	{
 		try {
@@ -264,7 +246,7 @@ public class FileUtils
 
 	/**
 	 * Closes the specified Writer instance, provided it is not null.
-	 */
+     */
 	public static void close(Writer writer)
 	{
 		try {
@@ -279,7 +261,7 @@ public class FileUtils
 	
 	/**
 	 * Closes the specified InputStream instance, provided it is not null.
-	 */
+     */
 	public static void close(InputStream is)
 	{
 		try {
@@ -289,12 +271,12 @@ public class FileUtils
 		catch (IOException e) {
 			// this shouldnt happen
 			throw new RuntimeException("Unable to close stream: " + e.getMessage());
-		}		
+		}
 	}
 
 	/**
 	 * Closes the specified OutputStream instance, provided it is not null.
-	 */
+     */
 	public static void close(OutputStream os)
 	{
 		try {
@@ -304,6 +286,6 @@ public class FileUtils
 		catch (IOException e) {
 			// this shouldnt happen
 			throw new RuntimeException("Unable to close stream: " + e.getMessage());
-		}		
+		}
 	}
 }

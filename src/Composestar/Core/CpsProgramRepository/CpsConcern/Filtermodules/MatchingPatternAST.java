@@ -18,7 +18,15 @@ public class MatchingPatternAST extends ContextRepositoryEntity {
 	
   public Vector matchingParts;
   public Vector substitutionParts;
-
+  
+  /**
+   * If true this is a multiple message list.
+   * A multiple message list contains multiple matching and substituion parts. (sequences)
+   * When it's not a multiple message list only matchingParts can contain a list.
+   * In the latter case it's a list of matching parts that individually match
+   * instead of the whole list that should match.
+   */
+  public boolean isMessageList;
 
   /**
    * @roseuid 404C4B6B0167
@@ -29,6 +37,13 @@ public class MatchingPatternAST extends ContextRepositoryEntity {
 	substitutionParts = new Vector();
   }
 
+  public boolean getIsMessageList() {
+	  return isMessageList;
+  }
+  
+  public void setIsMessageList(boolean isML) {
+	  isMessageList = isML;
+  }
 
   /**
    * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart
@@ -75,4 +90,14 @@ public class MatchingPatternAST extends ContextRepositoryEntity {
   public void addSubstitutionPart(SubstitutionPartAST substitutionPartValue) {
     this.substitutionParts.addElement( substitutionPartValue );
   }
+
+
+public void setMatchingParts(Vector matchingParts) {
+	this.matchingParts = matchingParts;
+}
+
+
+public void setSubstitutionParts(Vector substitutionParts) {
+	this.substitutionParts = substitutionParts;
+}
 }

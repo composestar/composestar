@@ -73,7 +73,8 @@ public class Annotation implements Serializable
 	
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		m_type = (Type)in.readObject();
@@ -86,7 +87,8 @@ public class Annotation implements Serializable
 	 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(m_type);

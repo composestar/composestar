@@ -1,8 +1,11 @@
 /*
- * Created on 3-dec-2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
@@ -15,22 +18,18 @@ import Composestar.Core.CpsProgramRepository.Concern;
 
 /**
  * @author Staijen
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class MessageAnalysis {
-	
-	private String selector;
-	private Concern concern;
+
+    private Concern concern;
 	
 	private List states;
 	
 	
 	public MessageAnalysis(Concern concern, String selector)
 	{
-		this.selector = selector;
-		this.concern = concern;
+        //String selector1 = selector;
+        this.concern = concern;
 		this.states = new ArrayList();
 	}
 	

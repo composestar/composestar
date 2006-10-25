@@ -33,9 +33,7 @@ public class HighLevelInliner {
     private StateType isFilter;
     private StateType isAction;
     private StateType isEnd;
-    
-    private ExecutionModel currentModel;
-    
+
     public HighLevelInliner( HighLevelInlineStrategy strategy ){
         this.strategy = strategy;
         conditionalInliner = new ConditionalInliner( strategy );
@@ -55,8 +53,8 @@ public class HighLevelInliner {
     public void inline( ExecutionModel model, FilterModule[] modules, 
             MethodInfo method )
     {
-        this.currentModel = model;
-        
+        ExecutionModel currentModel = model;
+
         try{
             Vector blocks = identifyFilterModuleBlocks( model );
         

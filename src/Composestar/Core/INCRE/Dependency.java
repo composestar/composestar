@@ -11,6 +11,7 @@ public class Dependency
 	   
 	/**
 	 * @roseuid 42206A590280
+     * @param name
 	 */
 	public Dependency(String name) 
 	{
@@ -20,6 +21,7 @@ public class Dependency
 	/**
 	  * @return Object
 	  * @roseuid 420A220F0128
+     * @param obj
 	  */
 	public Object getDepObject(Object obj) throws ModuleException
 	{

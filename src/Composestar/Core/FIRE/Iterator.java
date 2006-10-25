@@ -67,8 +67,7 @@ public abstract class Iterator implements Cloneable
 		return String.valueOf (stack.size());
 	}
 
-	public Object clone()
-	{
+	public Object clone() throws CloneNotSupportedException {
 		try 
 		{
 			Iterator i = (Iterator) super.clone();

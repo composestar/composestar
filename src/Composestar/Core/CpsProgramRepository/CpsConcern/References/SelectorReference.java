@@ -49,7 +49,8 @@ public class SelectorReference extends ConcernElementReference
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		// nothing yet
@@ -57,7 +58,8 @@ public class SelectorReference extends ConcernElementReference
 	 
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		// nothing yet

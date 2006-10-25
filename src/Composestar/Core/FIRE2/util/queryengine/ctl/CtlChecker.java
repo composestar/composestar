@@ -63,7 +63,7 @@ public class CtlChecker {
 
         Vector v = (Vector) reverseTable.get( state );
 
-        ExecutionState state2 = null;
+        ExecutionState state2;
         HashSet satSet2=null, reverseSatSet2=null;
         Vector v2=null;
         if (!v.isEmpty() ){
@@ -213,13 +213,10 @@ public class CtlChecker {
                     (ExecutionState) enumer.nextElement();
 
                 //check whether current state doesn't satisfy the subformula
-                if ( !isSatisfied( state, formula.subFormula, (Boolean) arg ) )
+                if (isSatisfied( state, formula.subFormula, (Boolean) arg ))
                 {
-                    continue;
-                }
-                //else check whether at least one next state satisfies the formula
+                //check whether at least one next state satisfies the formula
                 //(due to backward traversal this state is already checked):
-                else{
                     Enumeration nextStates = getNextStates( state, (Boolean) arg );
                     
                     //if it hasn't any next states, this is an end state, so this
@@ -560,7 +557,6 @@ public class CtlChecker {
     
     private class ControlPanel extends JPanel{
         private JTree tree;
-        private Viewer viewer;
         private boolean simplified;
 
         public ControlPanel( boolean simplified ){
@@ -572,8 +568,8 @@ public class CtlChecker {
         }
         
         public void setViewer( Viewer viewer ){
-            this.viewer = viewer;
-            
+            Viewer viewer1 = viewer;
+
             tree.addTreeSelectionListener( 
                     new FormulaSelectionListener( viewer, simplified ) );
         }

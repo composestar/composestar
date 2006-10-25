@@ -1,4 +1,12 @@
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET.Config;
 
 import org.xml.sax.Attributes;
@@ -13,11 +21,9 @@ import Composestar.Utils.StringConverter;
 public class ResourceHandler extends DefaultHandler {
     //String filter = "";
     //boolean accept = false;
-    
-    private Repository repository;
-    
-    
-    public ConfigParser theSecretFilterXMLParser;
+
+
+    public ConfigParser theCkretFilterXMLParser;
     ConfigParser returnhandler;
     XMLReader parser;
     
@@ -26,11 +32,12 @@ public class ResourceHandler extends DefaultHandler {
      * @param parser
      * @param sr
      * @roseuid 405026C5011E
+     * @param repository
      */
     public ResourceHandler(ConfigParser handler, XMLReader parser, Repository repository) {
 		this.returnhandler = handler;
 		this.parser = parser;
-		this.repository = repository;
+        //Repository repository1 = repository;
 
     }
     

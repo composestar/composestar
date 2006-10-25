@@ -27,20 +27,24 @@ import java.util.List;
  */
 public class CommandLineExecutor
 {
-	private StreamGobbler ErrorGobbler;
-	private StreamGobbler OutputGobbler;
+	private StreamGobbler errorGobbler;
+	private StreamGobbler outputGobbler;
 
 	/**
 	 * Executess the command and waits for it to return. 
 	 * WARNING: If the program hangs this function will never return.
 	 * Please note that return values indicating error differ between programs and 
 	 * operating systems.
-	 */
+	 * @deprecated
+     */
 	public int exec(String command)
 	{
 		return exec(command, null);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public int exec(String command, File dir)
 	{
 		try {
@@ -67,17 +71,17 @@ public class CommandLineExecutor
 			// connect error and output filters
 			// these are threads because the buffers used to hold the output data
 			// could otherwise overrun which blocks the program.
-			ErrorGobbler = new StreamGobbler(proc.getErrorStream());
-			OutputGobbler = new StreamGobbler(proc.getInputStream());
-			ErrorGobbler.start();
-			OutputGobbler.start();
+			errorGobbler = new StreamGobbler(proc.getErrorStream());
+			outputGobbler = new StreamGobbler(proc.getInputStream());
+			errorGobbler.start();
+			outputGobbler.start();
 
 			// wait for program return.
 			int result = proc.waitFor();
 
 			// wait for the output threads
-			OutputGobbler.waitForResult();
-			ErrorGobbler.waitForResult();
+			outputGobbler.waitForResult();
+			errorGobbler.waitForResult();
 			
 			return result;
 		}
@@ -103,17 +107,17 @@ public class CommandLineExecutor
 			Process proc = rt.exec(command);
 			
 			// connect error and output filters
-			ErrorGobbler = new StreamGobbler(proc.getErrorStream());
-			OutputGobbler = new StreamGobbler(proc.getInputStream());
-			ErrorGobbler.start();
-			OutputGobbler.start();
+			errorGobbler = new StreamGobbler(proc.getErrorStream());
+			outputGobbler = new StreamGobbler(proc.getInputStream());
+			errorGobbler.start();
+			outputGobbler.start();
 
 			// wait for program return.
 			int result = proc.waitFor();
 			
 			// wait for the output threads
-			OutputGobbler.waitForResult();
-			ErrorGobbler.waitForResult();
+			outputGobbler.waitForResult();
+			errorGobbler.waitForResult();
 
 			return result;
 		}
@@ -123,13 +127,13 @@ public class CommandLineExecutor
 			return -1;
 		}
 	}
-
+	
 	/**
 	 * Returns the program output to STDOUT.
 	 */
 	public String outputNormal()
 	{
-		return OutputGobbler.result();
+		return outputGobbler.result();
 	}
 
 	/**
@@ -137,12 +141,12 @@ public class CommandLineExecutor
 	 */
 	public String outputError()
 	{
-		return ErrorGobbler.result();
+		return errorGobbler.result();
 	}
 
 	/**
 	 * For testing purposes
-	 */
+     */
 	public static void main(String args[])
 	{
 		CommandLineExecutor e = new CommandLineExecutor();

@@ -4,9 +4,8 @@ import java.util.*;
 import java.io.*;
 import Composestar.Core.RepositoryImplementation.DataStore;
 
-public class PropertyManager extends Object implements Cloneable, Serializable {
+public class PropertyManager  implements Cloneable, Serializable {
     static final long serialVersionUID = 4343139487235166396L;
-    private Properties props = null;
     private String filename;
     private DataStore ds;
     
@@ -68,9 +67,9 @@ public class PropertyManager extends Object implements Cloneable, Serializable {
     public void load(String keyname, String filename) {
     	try
 		{
-		    props = new Properties();
-		    props.load(new FileInputStream(filename));
-		    ds.addObject(keyname,props);
+            Properties props = new Properties();
+            props.load(new FileInputStream(filename));
+		    ds.addObject(keyname, props);
 		}
 		catch(Exception e) { e.printStackTrace(); }     
     }

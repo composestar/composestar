@@ -102,6 +102,8 @@ public class MyComparator {
      * @param AbstractList a1
      * @param AbstractList a2
      * @return
+     * @param a1
+     * @param a2
      */
     public boolean compareAbstractLists(AbstractList a1, AbstractList a2) throws ModuleException {
         if (a1.size() != a2.size()) // compare sizes first
@@ -124,6 +126,8 @@ public class MyComparator {
      * @param HashSet s1
      * @param HashSet s2
      * @return
+     * @param s2
+     * @param s1
      */
     public boolean compareAbstractSets(AbstractSet s1, AbstractSet s2) throws ModuleException {
         if (s1.size() != s2.size()) // compare sizes first
@@ -149,6 +153,7 @@ public class MyComparator {
     /**
      * @param Class
      * @return
+     * @param c
      */
     public Vector getFields(Class c) {
 
@@ -229,6 +234,8 @@ public class MyComparator {
     /**
      * Compares all 'INCRE fields' of two objects
      * The fields are acquired from the Module and were extracted from the incre configuration file
+     * @param b
+     * @param a
      */
     public boolean compareINCREfields(Object a, Object b) throws ModuleException {
         try {

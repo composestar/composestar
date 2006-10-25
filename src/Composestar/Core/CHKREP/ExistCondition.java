@@ -1,11 +1,18 @@
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.Exception.ModuleException;
+import java.util.Iterator;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * Checks whether a Condtion which is used in a Input or outpurfilter is
@@ -96,37 +103,26 @@ public class ExistCondition implements BaseChecker {
 		// standard non fatal
 		boolean nonFatal = true;
 		
-		if(ce instanceof ConditionLiteral){
-			ConditionLiteral cl = (ConditionLiteral) ce;
+		if(ce instanceof ConditionVariable){
+			ConditionVariable cl = (ConditionVariable) ce;
 			String conditionName = cl.getCondition().getName();
-			if(conditionName.equals("True")||conditionName.equals("False")||conditionName.equals("true")||conditionName.equals("false")){
-				// do nothing since it is a Compose* keyword
-			}else{
-				if(!doesConditionExists(conditionName, fm))
-				{
-					ConditionLiteral tempCe = (ConditionLiteral)ce;
-					Debug.out(Debug.MODE_ERROR, "CHKREP", "Condition " + conditionName + " is not declared in Conditions", tempCe.getDescriptionFileName(), tempCe.getDescriptionLineNumber());
-					nonFatal = false;
-				}
+			if(!doesConditionExists(conditionName, fm))
+			{
+				ConditionVariable tempCe = (ConditionVariable)ce;
+				Debug.out(Debug.MODE_ERROR, "CHKREP", "Condition " + conditionName + " is not declared in Conditions", tempCe.getDescriptionFileName(), tempCe.getDescriptionLineNumber());
+				nonFatal = false;
 			}
 		}
 		
-		//Checks on a Not
-		if(ce instanceof Not){
-			Not n = (Not) ce;
-			nonFatal = checkConditionInConditionExpression(n.getOperand(), fm);
+		//Checks on a UnaryOperators
+		if(ce instanceof UnaryOperator){
+			nonFatal = checkConditionInConditionExpression(((UnaryOperator) ce).getOperand(), fm);
 		}
 		
-		// checks in an And
-		if(ce instanceof And){
-			And a = (And) ce;
-			nonFatal = (checkConditionInConditionExpression(a.getLeft(), fm) && checkConditionInConditionExpression(a.getRight(), fm));
-		}
-		
-		// checks in an Or
-		if(ce instanceof Or){
-			Or o = (Or) ce;
-			nonFatal = (checkConditionInConditionExpression(o.getLeft(), fm) && checkConditionInConditionExpression(o.getRight(), fm));
+		// checks in BinaryOperators
+		if(ce instanceof BinaryOperator){
+			nonFatal = (checkConditionInConditionExpression(((BinaryOperator) ce).getLeft(), fm) 
+					&& checkConditionInConditionExpression(((BinaryOperator) ce).getRight(), fm));
 		}
 		
 		return nonFatal;

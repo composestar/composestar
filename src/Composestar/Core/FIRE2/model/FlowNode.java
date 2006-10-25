@@ -28,6 +28,7 @@ public interface FlowNode{
      * null when no such transition exists.
      * 
      * @return
+     * @param endNode
      */
     public FlowTransition getTransition(FlowNode endNode);
     

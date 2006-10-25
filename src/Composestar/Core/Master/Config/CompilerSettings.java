@@ -52,9 +52,7 @@ public class CompilerSettings implements Serializable{
 	public LangCompiler getCompiler() throws ModuleException {
 		try {
 			Class myclass = Class.forName(this.getProperty("implementedBy"));
-			LangCompiler comp = (LangCompiler)myclass.newInstance();
-			//LangCompiler comp = new Composestar.DotNET.
-			return comp;
+			return (LangCompiler)myclass.newInstance();
 		}
 		catch(Exception e) {
 			throw new ModuleException("Error while creating compiler..");

@@ -1,5 +1,12 @@
-//Source file: H:\\composestar\\src\\Composestar\\core\\SECRET\\filterxmlparser\\SecretFilterXMLParser.java
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET.Config;
 
 import org.xml.sax.Attributes;
@@ -11,15 +18,16 @@ import Composestar.Utils.*;
 import Composestar.Core.CKRET.Repository;
 
 public class ConfigParser extends DefaultHandler {
-    boolean inDocument = false;
+    //boolean inDocument = false;
     private Repository repository = null;
-    public FiltersHandler theSecretFiltersXMLHandler;
+    public FiltersHandler theCkretFiltersXMLHandler;
     XMLReader parser = null;
 
     /**
      * @param filename
      * @param sr
      * @roseuid 405026C60063
+     * @param repository
      */
     public void parse(String filename, Repository repository) {
     	try
@@ -35,7 +43,7 @@ public class ConfigParser extends DefaultHandler {
 		}
 		catch(SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING,"SECRET","Error parsing " + filename + ": " + se.getMessage());
+			Debug.out(Debug.MODE_WARNING,"CKRET","Error parsing " + filename + ": " + se.getMessage());
 		}
 		catch(Exception e)
 		{

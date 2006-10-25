@@ -37,6 +37,7 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
 
 /**
@@ -46,8 +47,6 @@ import Composestar.Utils.Debug;
  */
 public class Sign implements CTCommonModule {
     private HashSet unsolvedConcerns;
-
-    private HashSet solvedConcerns;
 
     private Hashtable analysisModels;
 
@@ -107,11 +106,7 @@ public class Sign implements CTCommonModule {
         phase0();
 
         Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase1");
-        try {
-            phase1();
-        } catch (NullPointerException exc) {
-            exc.printStackTrace();
-        }
+        phase1();
 
         Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "phase2");
         phase2();
@@ -140,7 +135,7 @@ public class Sign implements CTCommonModule {
 
     private void phase0() {
         unsolvedConcerns = new HashSet();
-        solvedConcerns = new HashSet();
+        HashSet solvedConcerns = new HashSet();
         analysisModels = new Hashtable();
         FilterModuleOrder filterModules;
         FireModel model;
@@ -149,8 +144,8 @@ public class Sign implements CTCommonModule {
         while (conIter.hasNext()) {
             Concern concern = (Concern) conIter.next();
             
-            if (concern.getDynObject("superImpInfo") != null) {
-                filterModules = (FilterModuleOrder) concern.getDynObject("SingleOrder");
+            if (concern.getDynObject(SIinfo.DATAMAP_KEY) != null) {
+                filterModules = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
                 model = new FireModel(concern, filterModules, true);
                 analysisModels.put(concern, model);
 
@@ -592,9 +587,6 @@ public class Sign implements CTCommonModule {
 
         // get donor methods:
         DeclaredObjectReference ref = (DeclaredObjectReference) donor.getRef();
-        if (ref == null) {
-            int x = 1;
-        }
         Concern donorConcern = ref.getRef().getType().getRef();
         Signature donorSignature = getSignature(donorConcern);
         List methods = donorSignature.getMethods();
@@ -676,6 +668,8 @@ public class Sign implements CTCommonModule {
      * an not existing dispatch.
      * 
      * @param selector
+     * @param concern
+     * @param fireModel
      */
     private void checkNonDispatchable(Concern concern, FireModel fireModel,
             String selector) {
@@ -1207,14 +1201,12 @@ public class Sign implements CTCommonModule {
         DataStore datastore = DataStore.instance();
 
         // Get all the concerns
-        Iterator conIter = DataStore.instance()
-                .getAllInstancesOf(Concern.class);
-
+        Iterator conIter = datastore.getAllInstancesOf(Concern.class);
         while (conIter.hasNext()) {
             Concern concern = (Concern) conIter.next();
 
             Signature st = concern.getSignature();
-            if (st != null && concern.getDynObject("superImpInfo") != null) {
+            if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null) {
                 Debug.out(Debug.MODE_INFORMATION, "Sign",
                         "\tSignature for concern: "
                                 + concern.getQualifiedName());
@@ -1237,8 +1229,7 @@ public class Sign implements CTCommonModule {
                         relation = "kept";
 
                     // TODO: remove this, needed for demo!
-                    if (!Configuration.instance().getProperty("Platform")
-                            .equalsIgnoreCase("c")) {
+                    if (!Configuration.instance().getPlatformName().equalsIgnoreCase("c")) {
                         String returntype = mw.theMethodInfo.getReturnTypeString();
 
                         String parameters = "";

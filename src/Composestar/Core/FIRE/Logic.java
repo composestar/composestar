@@ -55,7 +55,9 @@ class Logic
 
 	/**
 	 * TODO: Review: Not checked if they have the same length
-	 */
+     * @param rh
+     * @param lh
+     */
 	public static void and(Column lh, Column rh)
 	{
 		int smallestCol = Logic.smallestColumn (lh, rh);

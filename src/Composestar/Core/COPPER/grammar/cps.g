@@ -198,22 +198,25 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                   notExpr : (NOT)? ( NAME )
                           { #notExpr = #([NOTEXPR_, "notExpression"], #notExpr);};
 
-              messagePatternSet : (LCURLY! messagePattern (COMMA messagePattern)* RCURLY!
-                                | messagePattern)
+              messagePatternSet : messagePattern
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
                 messagePattern : ( matchingPart (substitutionPart)? )
                                  { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
                 
-                 matchingPart : ( 
-                                  HASH! LPARENTHESIS! singleTargetSelector (SEMICOLON singleTargetSelector)* RPARENTHESIS!
+                 matchingPart : (
+                 				  // matching list
+                 				  LCURLY! singleTargetSelector (COMMA! singleTargetSelector)* RCURLY!
+                 				  // matching sequence for multiple message
+                                | HASH LPARENTHESIS! singleTargetSelector (SEMICOLON singleTargetSelector)* RPARENTHESIS!
+                                  // normal
                                 | singleTargetSelector
                                 )
                                 { #matchingPart = #([MPART_, "matchingPart"], #matchingPart);}
                                 ;
                 
                  substitutionPart : ( 
-                                      HASH! LPARENTHESIS! targetSelector (SEMICOLON targetSelector)* RPARENTHESIS!
+                                      HASH LPARENTHESIS! targetSelector (SEMICOLON targetSelector)* RPARENTHESIS!
                                     | targetSelector
                                     )
                                     { #substitutionPart = #([SPART_, "substitutionPart"], #substitutionPart);}
@@ -293,7 +296,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
           				     {#fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
           argument : fqn
           		   {#argument = #([ARGUMENT_, "argument"], #argument);}
-          		    | LCURLY! fqn (COMMA fqn)* RCURLY!
+          		    | LCURLY! fqn (COMMA! fqn)* RCURLY!
           		   {#argument = #([ARGUMENT_, "argument"], #argument);};
 
     /*---------------------------------------------------------------------------*/

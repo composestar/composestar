@@ -16,12 +16,12 @@ import Composestar.Core.Master.Config.Project;
 public class PlatformHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
-	BuildXMLHandler returnHandler;
+	BuildConfigHandler returnHandler;
 	
-	public PlatformHandler(XMLReader parser,BuildXMLHandler returnHandler){
+	public PlatformHandler(XMLReader parser,BuildConfigHandler returnHandler){
 		this.parser = parser;
 		this.returnHandler = returnHandler;
-	} 
+	}
 	
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
 	{
@@ -75,6 +75,6 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 	}
 
 	public void endDocument() 
-	{	
+	{
 	}
 }

@@ -24,6 +24,7 @@ import Composestar.Core.CpsProgramRepository.Signature;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.Config.ConfigManager;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.Type;
@@ -108,13 +109,8 @@ public class INCRE implements CTCommonModule
 		this.historyfile = ps.getPath("Base") + "history.dat";
 
 		// check if incremental compilation is enabled
-		ModuleSettings ms = config.getModuleSettings("INCRE");
-		if (ms != null)
-		{
-			String enabled = ms.getProperty("enabled");
-			if ("true".equalsIgnoreCase(enabled))
-				this.enabled = true;
-		}
+		String enabled = config.getModuleProperty("INCRE", "enabled", "false");
+		this.enabled = "true".equalsIgnoreCase(enabled);
 
 		// non-incremental compilation so clean history
 		if (!this.enabled)
@@ -152,19 +148,13 @@ public class INCRE implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, "INCRE","INCRE is " + (this.enabled ? "enabled" : "disabled"));
 	}
 	
-	private String getModuleSetting(String key, String def)
-	{
-		ModuleSettings ms = config.getModuleSettings("INCRE");
-		return (ms == null ? def : ms.getProperty(key, def));
-	}
-	
 	private String getConfigFile() throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
 		
 		String projectBase = ps.getPath("Base");
 		String cps = ps.getPath("Composestar");
-		String filename = getModuleSetting("config", "INCREconfig.XML");
+		String filename = config.getModuleProperty("INCRE", "config", "INCREconfig.XML");
 
 		File file = new File(projectBase, filename);
 		if (file.exists())
@@ -258,7 +248,7 @@ public class INCRE implements CTCommonModule
 		while (concernIt.hasNext())
 		{
 			Concern c = (Concern)concernIt.next();
-			if (c.getDynObject("SingleOrder") != null)
+			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
 				concerns.add(c);	
 		}
 		
@@ -391,6 +381,7 @@ public class INCRE implements CTCommonModule
     * Searches the history repository for the specified object. 
 	* Return null if object can't be found.
     * Uses getQualifiedName to compare objects
+    * @param obj
     */
    public Object findHistoryObject(Object obj) 
    {
@@ -452,6 +443,7 @@ public class INCRE implements CTCommonModule
     * Compares timestamp of file with last compilation time
     * @return boolean
     * @roseuid 42109419032C
+    * @param file
     */
 	public boolean isFileModified(File file) 
 	{
@@ -471,6 +463,8 @@ public class INCRE implements CTCommonModule
 	  * Checks whether a file has been added to the project since last compilation
 	  * returns false when file has been found in previous project configurations
 	  * @return boolean
+     * @param fdep
+     * @param filename
 	  */
 	public boolean isFileAdded(String filename,FileDependency fdep) throws ModuleException
 	{
@@ -478,8 +472,7 @@ public class INCRE implements CTCommonModule
   			return ((Boolean)filesCheckedOnProjectConfig.get(filename)).booleanValue();	
 		
 		boolean isAdded = true;
-		String fixedFile = FileUtils.fixFilename(filename).toLowerCase();
-		String searchStr;
+		String fixedFile = FileUtils.normalizeFilename(filename).toLowerCase();
 		StringBuffer searchBuffer = new StringBuffer("");	
 		
 		// As an optimalization: 
@@ -538,26 +531,25 @@ public class INCRE implements CTCommonModule
 		}
 		
 		// file in old project configurations?
-		searchStr = FileUtils.fixFilename(searchBuffer.toString()).toLowerCase();
-		if(searchStr.indexOf(fixedFile)>=0)
+		String searchStr = FileUtils.normalizeFilename(searchBuffer.toString()).toLowerCase();
+		if (searchStr.indexOf(fixedFile) != -1)
 			isAdded = false; // file not added to project
 		
-		if(isAdded){
+		if (isAdded)
 			Debug.out(Debug.MODE_DEBUG,"INCRE","File "+fixedFile+" added to project since last compilation run");
-		}
 				
 		this.filesCheckedOnProjectConfig.put(filename, Boolean.valueOf(isAdded));
 		return isAdded;
 	}
    /**
-    * @return true when module is incremental
+    * @return true when module with the specified name is incremental
     */
 	public boolean isModuleInc(String name)
 	{
 		if (! enabled) return false;
 		
 		Module m = configmanager.getModuleByID(name);
-		return (m == null ? false : m.isIncremental());
+		return (m != null && m.isIncremental());
 	}
    
 	/**
@@ -626,11 +618,11 @@ public class INCRE implements CTCommonModule
 	 * Returns true if concern is possible declared in a sourcefile
 	 * @param c - The concern possible declared in sourcefile
 	 * @param src - Fullpath of sourcefile
+     * @param source
 	 */
-	public boolean declaredInSource(Concern c,String src){
+	public boolean declaredInSource(Concern c,String source){
 		
 		/* Sourcefile format: C:/Program Files/ComposeStar/... */
-		String source = src;
 		TypeLocations locations = TypeLocations.instance();
 		PlatformRepresentation repr = c.getPlatformRepresentation();
 		
@@ -658,7 +650,7 @@ public class INCRE implements CTCommonModule
 	/**
 	 * Returns true if concern is possible declared in one of the source files
 	 * @param c - The concern possible declared in sourcefile
-	 * @param src - Fullpath of sourcefile
+	 * @param sources - Fullpath of sourcefile
 	 */
 	public boolean declaredInSources(Concern c,ArrayList sources){
 		
@@ -691,13 +683,14 @@ public class INCRE implements CTCommonModule
 	 * 7. stop if modification found
 	 * 
 	 * @roseuid 41F4E50900CB
+     * @param modulename
+     * @param input
 	 */
 	public boolean isProcessedByModule(Object input, String modulename) throws ModuleException  
 	{
 		comparator = new MyComparator(modulename);
 	   	currentRepository = DataStore.instance();
 	   	searchingHistory = false;
-	   	Object inputobject = input;
 		Object historyobject = null;
 		Object depofinputobject;
 		Object depofhistoryobject;
@@ -728,10 +721,10 @@ public class INCRE implements CTCommonModule
 			searchingHistory = false;
 			Composestar.Core.INCRE.Dependency dep = (Composestar.Core.INCRE.Dependency)dependencies.next();
 			try {
-				depofinputobject = dep.getDepObject(inputobject);
+				depofinputobject = dep.getDepObject(input);
 			}
 			catch (Exception e){
-				Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+inputobject);
+				Debug.out(Debug.MODE_DEBUG,"INCRE","Could not capture dependency "+dep.getName()+ " for "+input);
 				Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
 				return false;
 			}
@@ -746,7 +739,7 @@ public class INCRE implements CTCommonModule
 					// special case, file has not been configured
 					currentRepository = history;
 					searchingHistory = true;
-					List hfiles = (List)dep.getDepObject(inputobject);
+					List hfiles = (List)dep.getDepObject(input);
 					if(!hfiles.get(0).equals("EMPTY_CONFIG")){
 						// configuration has been removed since last compilation run
 						Debug.out(Debug.MODE_DEBUG, "INCRE","Found modified dependency [module="+modulename+",dep="+dep.getName()+",input="+input+ ']');
@@ -791,7 +784,7 @@ public class INCRE implements CTCommonModule
 				{
 					// find object in history
 					if (historyobject == null)
-						historyobject = findHistoryObject(inputobject);
+						historyobject = findHistoryObject(input);
 											
 					if (historyobject!=null)
 					{
@@ -841,7 +834,8 @@ public class INCRE implements CTCommonModule
 
 	/**
 	 * Loads the history repository specified by the filename. Uses objectinputstream.
-	 */
+     * @param filename
+     */
 	public boolean loadHistory(String filename) throws ModuleException
 	{
 		try 

@@ -144,6 +144,7 @@ public class SymbolTable
 
 	/**
 	 * @Return the number of symbols that are available of a given type.
+     * @param type
 	 */
 	public int totalSymbols (int type) { return symbolCounter[type]; }
 
@@ -176,7 +177,8 @@ public class SymbolTable
 	
 	/**
 	 * Get all symbols of a given type.
-	 */
+     * @param type
+     */
 	private Symbol [] getSymbolArray (int type)
 	{
 		if (symbolCounter[type] == 0) return null;
@@ -211,7 +213,8 @@ public class SymbolTable
 
 	/**
 	 * Calculate 2^x
-	 */
+     * @param power
+     */
 	private int power2(int power)
 	{
 		int val = 1;	

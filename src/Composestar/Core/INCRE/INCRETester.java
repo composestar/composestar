@@ -197,7 +197,6 @@ public class INCRETester
 					}
 					catch(EOFException ex){
 						System.out.println("[WARNING] End of file exception occurred");
-						continue;
 					}	
 				}
 				ois.close(); /* close objectinputstream */

@@ -11,8 +11,7 @@ public class INCRETimer
     private String description;
     private int type = 0;
     private long startTime;
-	private long stopTime;
-	private long elapsedTime;
+    private long elapsedTime;
 	
 	public INCRETimer(String module, String description, int type){
 		this.module = module;
@@ -27,8 +26,8 @@ public class INCRETimer
 
 	public void stop()
 	{
-		this.stopTime = System.currentTimeMillis();
-		this.elapsedTime = this.stopTime - this.startTime;	
+        long stopTime = System.currentTimeMillis();
+        this.elapsedTime = stopTime - this.startTime;
 	}
 
 	public long getElapsed()

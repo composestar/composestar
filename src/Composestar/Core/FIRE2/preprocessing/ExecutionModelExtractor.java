@@ -15,6 +15,9 @@ import groove.lts.DefaultGraphState;
 import groove.lts.DefaultGraphTransition;
 import groove.lts.GTS;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -340,10 +343,26 @@ public class ExecutionModelExtractor{
             return entranceStates.containsKey( message );
         }
         
+        /**
+    	 * Custom deserialization of this object
+    	 */
+    	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    	{
+    		
+    	}
+
+    	/**
+    	 * Custom serialization of this object
+    	 */
+    	private void writeObject(ObjectOutputStream out) throws IOException
+    	{
+    		
+    	}
+    	
     }
     
     
-    private static class BasicExecutionState extends ExecutionState{
+    private static class BasicExecutionState extends ExecutionState {
         private Vector outTransitions;
         private Vector inTransitions;
         
@@ -384,7 +403,7 @@ public class ExecutionModelExtractor{
     }
     
     
-    private static class BasicExecutionTransition extends ExecutionTransition{
+    private static class BasicExecutionTransition extends ExecutionTransition {
         /**
          * The startState
          */

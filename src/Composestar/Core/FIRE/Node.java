@@ -26,8 +26,7 @@ public abstract class Node implements Comparable, Cloneable
 	FilterReasoningEngine fireInfo = null;
 	protected int filterNumber = -2;
 	
-	public Object clone()
-	{
+	public Object clone() throws CloneNotSupportedException {
 		try 
 		{
 			Node n = (Node) super.clone();
@@ -217,10 +216,9 @@ public abstract class Node implements Comparable, Cloneable
 			else deleteNode = false;
 		}
 
-		if (subsetOfExpression(compareWith)) return false;
+        return !subsetOfExpression(compareWith) && deleteNode;
 
-		return deleteNode;
-	}
+		}
 
 	// Goes wrong by Signature match. But must be fixed in the future.
 	public void minimizeLossy()
@@ -321,11 +319,8 @@ public abstract class Node implements Comparable, Cloneable
 
 	public boolean equals (Object node)
 	{
-        if(node instanceof Node){
-		    return (subsetOf((Node)node) && ((Node)node).subsetOf(this));
+        return node instanceof Node && (subsetOf((Node) node) && ((Node) node).subsetOf(this));
         }
-        return false;
-	}
 
 	public boolean equalsSingle (Node node)
 	{

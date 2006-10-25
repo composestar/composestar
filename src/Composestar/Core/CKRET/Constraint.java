@@ -1,18 +1,18 @@
 /*
- * Created on Mar 4, 2005
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2005-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
 import java.util.regex.Pattern;
 
 /**
- * @author Administrator
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * 
  */
 public class Constraint {
 

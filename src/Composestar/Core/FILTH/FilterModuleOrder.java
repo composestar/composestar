@@ -13,16 +13,26 @@ package Composestar.Core.FILTH;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {
+	/**
+	 * The key used to store this variable in the concern's dynamicmap
+	 */
+	public static final String SINGLE_ORDER_KEY = "SingleOrder";
+	
+	/**
+	 * Key used to store all filter module orders
+	 */
+	public static final String ALL_ORDERS_KEY = "FilterModuleOrders";
+	
 	public Vector _order;
 	
 	public FilterModuleOrder()
@@ -52,16 +62,23 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	}
 
 
-	public List orderAsList(){
+	public List orderAsList()
+	{
 		return _order;
 	}
 	
-	public boolean equals(Object other)
+	public Iterator order()
 	{
-		if( other instanceof FilterModuleOrder )
-			return this.orderAsList().equals(((FilterModuleOrder)other).orderAsList());
-		else
+		return _order.iterator();
+	}
+	
+	public boolean equals(Object o)
+	{
+		if (! (o instanceof FilterModuleOrder))
 			return false;
+		
+		FilterModuleOrder other = (FilterModuleOrder)o;
+		return _order.equals(other._order);
 	}
 	
 	public String toString()

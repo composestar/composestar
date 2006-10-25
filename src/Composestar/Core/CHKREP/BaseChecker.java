@@ -26,7 +26,7 @@ public interface BaseChecker {
   /**
    * This is the function to perform the check
    * It also gives the debug warnings and possible throws errors.
-   * @param ds The DataStore that needs to be checked
+   * @param newDs The DataStore that needs to be checked
    * @throws ModuleException
    */
   void check(DataStore newDs) throws ModuleException;

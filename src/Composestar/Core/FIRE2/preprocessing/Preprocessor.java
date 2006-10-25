@@ -46,7 +46,6 @@ public class Preprocessor implements CTCommonModule{
     private RuleViewGrammar runtimeGrammar;
     
     private GrooveASTBuilder astBuilder;
-    private FlowModelExtractor flowModelExtractor;
     private ExecutionModelExtractor executionModelExtractor;
     
     private final static ExploreStrategy LINEAR_STRATEGY = new LinearStrategy();
@@ -76,7 +75,7 @@ public class Preprocessor implements CTCommonModule{
         loadGrammars();
         
         astBuilder = new GrooveASTBuilder();
-        flowModelExtractor = new FlowModelExtractor();
+        FlowModelExtractor flowModelExtractor = new FlowModelExtractor();
         executionModelExtractor = new ExecutionModelExtractor();
     }
     

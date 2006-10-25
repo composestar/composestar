@@ -20,10 +20,8 @@ public class StateTable
 	private LinkedList statesList = new LinkedList();  // Tables.
 
 	private Symbol [] allSymbols = null;
-	private Symbol [] conditionSymbols = null;
-	private int columnLength = 0;
 
-	private FilterReasoningEngine fireInfo = null;
+    private FilterReasoningEngine fireInfo = null;
 
 	public StateTable(Symbol [] _allSymbols, Symbol [] _conditionSymbols, FilterReasoningEngine _fireInfo)
 	{
@@ -31,9 +29,9 @@ public class StateTable
 		fireInfo = _fireInfo;
 
 		allSymbols = _allSymbols;
-		conditionSymbols = _conditionSymbols;
-		columnLength = allSymbols[0].getColumnLength();
-		addElements(columnLength);
+        Symbol[] conditionSymbols = _conditionSymbols;
+        int columnLength = allSymbols[0].getColumnLength();
+        addElements(columnLength);
 	}
 
 	public void empty()
@@ -61,7 +59,9 @@ public class StateTable
 		statesList.add(root);
 	}
 
-	/** Add also pointers to the new table. */
+	/** Add also pointers to the new table.
+     * @param size
+     * @param status*/
 	public void addElements(int size, StatusColumn status)
 	{
 		addElements(size);

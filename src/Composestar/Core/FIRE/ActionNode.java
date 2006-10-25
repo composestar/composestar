@@ -46,21 +46,12 @@ public class ActionNode extends Node implements Cloneable
 
 /////// Conditions /////////////
 
-	public Object clone()
+	public Object clone() throws CloneNotSupportedException
 	{
-		/*try 
-		{*/
-			ActionNode n = (ActionNode) super.clone();
-			n.conditions = new LinkedList();
-			//n.target = null;
-			return n;
-		/*} 
-		catch (CloneNotSupportedException e)
-		{
-			return null;
-		}
-		*/
-
+		ActionNode n = (ActionNode) super.clone();
+		n.conditions = new LinkedList();
+		//n.target = null;
+		return n;
 	}
 
         public void addCondition (Symbol s)

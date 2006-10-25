@@ -28,7 +28,7 @@ public class MatchingPart extends AbstractPattern {
 	target = mpa.getTarget();
 	MessageSelectorAST msAST = mpa.getSelector();
 	if(msAST instanceof ParameterizedMessageSelectorAST){
-		selector = new ParameterizedMessageSelector((ParameterizedMessageSelectorAST) msAST);
+		selector = new ParameterizedMessageSelector(msAST);
 		selector.setParent(this);
 	}else{
 		selector = new MessageSelector(msAST);

@@ -115,17 +115,19 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
                   notExpr : #(NOTEXPR_ {namev.clear(); n = null; } (n:NOT)? (na:NAME {namev.add(na.getText());} )+ { if(n!=null) b.addNot(namev); else b.addConditionLiteral(namev, null); } );
 
-              messagePatternSet : #(MPSET_ (messagePattern)+);
+              messagePatternSet : #(MPSET_ messagePattern);
 
-                messagePattern : #(MP_
+                messagePattern : #(MP_ 
                                     { objv.clear(); typev.clear(); typev2.clear(); }
                                     {b.addMessagePattern( /*objv, typev, typev2, matching*/ );}
                                     matchingPart
                                     (substitutionPart)?
                                   );
                 
-                matchingPart : #(MPART_ singleTargetSelector (SEMICOLON singleTargetSelector)* );
-                substitutionPart : #(SPART_ targetSelector2 (SEMICOLON targetSelector2)* );
+                matchingPart : #(MPART_ {h = null;} (h:HASH)? singleTargetSelector ((SEMICOLON | COMMA) singleTargetSelector)* )
+                			{ b.setMessagePatternList(h != null); };
+                substitutionPart : #(SPART_ {h = null;} (h:HASH)? targetSelector2 (SEMICOLON targetSelector2)* )
+                			{ b.setMessagePatternList(h != null); };
                 
                 singleTargetSelector : 
                 					{ matching = 1; target = null; selector = null; typev.clear(); paratype= 0; }

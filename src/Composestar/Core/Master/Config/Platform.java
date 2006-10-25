@@ -2,10 +2,11 @@ package Composestar.Core.Master.Config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Platform implements Serializable{
 
-	private ArrayList requiredFiles;
+	private List requiredFiles;
 	
 	public Platform() {
 		requiredFiles = new ArrayList();
@@ -15,7 +16,7 @@ public class Platform implements Serializable{
 		requiredFiles.add(file);
 	}
 	
-	public ArrayList getRequiredFiles() {
+	public List getRequiredFiles() {
 		return requiredFiles;
 	}
 }

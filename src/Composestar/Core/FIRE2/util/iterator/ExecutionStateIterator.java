@@ -20,13 +20,12 @@ import Composestar.Core.FIRE2.model.ExecutionTransition;
  * @author Arjan de Roo
  */
 public class ExecutionStateIterator implements Iterator{
-    private ExecutionModel model;
     public Stack unvisitedStates = new Stack();
     public HashSet visitedStates = new HashSet();
     
     public ExecutionStateIterator( ExecutionModel model ){
-        this.model = model;
-        
+        ExecutionModel model1 = model;
+
         Enumeration enumer = model.getEntranceStates();
         while( enumer.hasMoreElements() ){
             unvisitedStates.push( enumer.nextElement() );

@@ -49,6 +49,7 @@ public class CpsPosLexer extends CpsLexer {
    * Construction
    *
    * @param in InputBuffer containing the text to be parsed
+   * @param ib
    */
   public CpsPosLexer(InputBuffer ib) {
     super(ib);

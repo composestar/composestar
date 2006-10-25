@@ -11,6 +11,9 @@ import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Label;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -201,10 +204,26 @@ public class FlowModelExtractor {
         public Enumeration getTransitions(){
             return transitions.elements();
         }
+        
+        /**
+    	 * Custom deserialization of this object
+    	 */
+    	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    	{
+    		
+    	}
+
+    	/**
+    	 * Custom serialization of this object
+    	 */
+    	private void writeObject(ObjectOutputStream out) throws IOException
+    	{
+    		
+    	}
     }
     
     
-    private static class BasicFlowNode implements FlowNode{
+    private static class BasicFlowNode implements FlowNode {
         private HashSet names;
         
         private RepositoryEntity repositoryLink;
@@ -225,6 +244,8 @@ public class FlowModelExtractor {
         /**
          * Default constructor
          *
+         * @param names
+         * @param repositoryLink
          */
         public BasicFlowNode( HashSet names, RepositoryEntity repositoryLink ){
             super();
@@ -290,7 +311,7 @@ public class FlowModelExtractor {
     }
     
     
-    private static class BasicFlowTransition implements FlowTransition{
+    private static class BasicFlowTransition implements FlowTransition {
         /**
          * The type of the transition;
          */
@@ -311,6 +332,9 @@ public class FlowModelExtractor {
         /**
          * The constructor
          *
+         * @param startNode
+         * @param type
+         * @param endNode
          */
         public BasicFlowTransition( int type, BasicFlowNode startNode, 
                 BasicFlowNode endNode )

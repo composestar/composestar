@@ -37,8 +37,7 @@ public class ViewPanel extends JPanel {
     private final static int ARROW_HEAD_YOFFSET = -5;
     
     private int height = 0;
-    private int width = 0;
-    
+
     private final static Edge[] EmptyEdgeArray = {};
     public ViewPanel( ExecutionModel model ){
         super();
@@ -191,10 +190,10 @@ public class ViewPanel extends JPanel {
     
     
     private void calculatePositions(){
-        this.width = calculatePosition( rootNode, 0, 0 );
+        int width = calculatePosition(rootNode, 0, 0);
         this.height += 4*( MARGIN+RADIUS );
         
-        this.setPreferredSize( new Dimension( width, height ) );
+        this.setPreferredSize( new Dimension(width, height ) );
     }
     
     

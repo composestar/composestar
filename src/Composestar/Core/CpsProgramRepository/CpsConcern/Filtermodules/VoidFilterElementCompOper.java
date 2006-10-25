@@ -30,7 +30,7 @@ public class VoidFilterElementCompOper extends FilterElementCompOper {
    *
    * @roseuid 402AA8640295
    */
-  public FilterElement getRightArgument() {
+  public FilterElementAST getRightArgument() {
     return null;
   }
 
@@ -41,7 +41,7 @@ public class VoidFilterElementCompOper extends FilterElementCompOper {
    * @param element
    * @roseuid 402AA8CF0362
    */
-  public void setRightArgument(FilterElement element) {
+  public void setRightArgument(FilterElementAST element) {
 
   }
 }

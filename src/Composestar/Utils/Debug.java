@@ -19,7 +19,7 @@ public class Debug
 	
 	public static final int MODE_DEFAULTMODE = MODE_INFORMATION;
 	
-	private static int currentMode = 0;
+	private static int currentMode = MODE_DEFAULTMODE;
 	private static int warnings = 0;
     
 	/**
@@ -42,7 +42,7 @@ public class Debug
 	{
 		if (currentMode >= mode) 
 		{
-			String modeDescription = "";
+			String modeDescription;
     	
 			switch (mode)
 			{

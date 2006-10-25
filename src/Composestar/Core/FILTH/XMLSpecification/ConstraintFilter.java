@@ -26,7 +26,7 @@ import Composestar.Core.FILTH.Core.SoftPreRule;
 
 public class ConstraintFilter extends ArgumentFilter{
 	private ArgumentFilter _af;
-	private String type, value;
+    private String value;
 	
 	private Graph _graph;
 	
@@ -51,8 +51,8 @@ public class ConstraintFilter extends ArgumentFilter{
 	   if ("constraint".equals(localName)){
 		/* attrbutes for s */
 		if (atts != null) {
-			type=atts.getQName(0);
-			value=atts.getValue(0);
+            String type = atts.getQName(0);
+            value=atts.getValue(0);
 		}
 //		System.out.println("BEGIN ");
 	   }

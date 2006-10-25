@@ -14,10 +14,11 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.CORfilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.DisableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
@@ -25,7 +26,6 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAST;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
@@ -48,6 +48,7 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureM
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPartAST;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
@@ -92,8 +93,7 @@ public class CpsRepositoryBuilder
   private FilterElementAST fe;
   private FilterModuleAST fm;
   private FilterModuleBinding fmb;
-  private FilterModuleReference fmref;
-  private MatchingPartAST mp;
+    private MatchingPartAST mp;
   private MatchingPatternAST mpat;
   private MatchingType mt;
   private MessageSelectorAST s;
@@ -112,8 +112,7 @@ public class CpsRepositoryBuilder
   private Vector condAll;                    //temporary vector used to store conditionparts
   private boolean parsingInput = true;       //whether we're parsing an input- or outputfilter (needed because of generalfilter)
   private boolean workingOnMatching = true;  //whether we're busy creating the matching or substitution part in a messagepatternset
-  private SelectorDefinition concernSelf;    //special hard coded selector definition so we can resolve 'self'
-  // equal to 'self <- { * = ConcernName }'
+    // equal to 'self <- { * = ConcernName }'
 
   private Splitter split;
   
@@ -128,8 +127,8 @@ public class CpsRepositoryBuilder
    */
   public CpsRepositoryBuilder() {
     condAll = new Vector();
-    concernSelf = null;
-    namespace = null;
+      //SelectorDefinition concernSelf = null;
+      namespace = null;
     split = new Splitter();
     split.setBuilder(this);
     ds = DataStore.instance();
@@ -140,6 +139,7 @@ public class CpsRepositoryBuilder
    * Use this instead of ds.addObject for incremental runs of COPPER
    * 
    * @param Object
+   * @param obj
    */
    public void addToRepository(RepositoryEntity obj)
    {
@@ -151,6 +151,7 @@ public class CpsRepositoryBuilder
    * Adds a Concern object to the repository
    *
    * @param name Name for the concern
+   * @param line
    */
   public void addConcern(String name,int line) {
     cpsc = new CpsConcern();
@@ -211,6 +212,7 @@ public class CpsRepositoryBuilder
    * Adds a FilterModule object to the repository
    *
    * @param name Name for the filtermodule
+   * @param lineNumber
    */
   public void addFilterModule(String name,int lineNumber) {
     fm = new FilterModuleAST();
@@ -243,7 +245,10 @@ public class CpsRepositoryBuilder
    *
    * @param namev the names of the internals
    * @param typev the type shared by the internals (can contain a package e.g. x.y.z.int)
-   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
+   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+   * @param lineNumber
+   * @param idv
+   * @param parameterized
    */
   public void addInternals(Vector namev, Vector idv,int lineNumber, boolean parameterized) throws SemanticException {
     for (int j = 0; j < namev.size(); j++) {
@@ -281,7 +286,9 @@ public class CpsRepositoryBuilder
 * @param namev The names of the internals
 * @param typev The type shared by the internals (can contain a package e.g. x.y.z.int)
 * @param init  Common initialization expression (can be an internal / external)
-* @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers 
+* @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+ * @param type
+ * @param lineNumber
 */
 public void addExternals(Vector namev, Vector typev, Vector init, int type,int lineNumber) throws SemanticException
 {
@@ -368,6 +375,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param name
    * @param init Name of the condition
    @param type
+    * @param lineNumber
    */
   public void addCondition(String name, Vector init, int type, int lineNumber) {
     Condition c = new Condition();
@@ -416,6 +424,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param name Name of the method
    * @deprecated
    * obselete now? DD
+   * @param lineNumber
    */
   public void addMethod(String name,int lineNumber) {
     m = new Method();
@@ -472,7 +481,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name name of the inputfilter
    * @param type the type of the filter (e.g. a.b.c.Meta)
-   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers  
+   * @ throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+   * @param lineNumber
    */
   public void addInputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = true;
@@ -494,6 +504,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterType to an input- or outputfilter
    *
    * @param type the type of the filter (e.g. Meta)
+   * @param lineNumber
    */
   public void addFilterType(String type,int lineNumber) {
 	  FilterType ft = FilterType.getFilterType( type );
@@ -536,6 +547,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterElement to an input- or outputfilter (e.g. C => { [t.s]t.s] })
    *
    * @param filterop2 inclusion of exclusion (can be '=>' or '~>'
+   * @param lineNumber
    */
   public void addFilterElement(String filterop2,int lineNumber) {
     int i;
@@ -619,11 +631,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   public void addNot(Vector condname) {
     Not not = new Not();
     if (lastTouched != null) {    //means we're the right part of the branch, don't adjust lastTouched
-      if (lastTouched instanceof And) {
-        ((And)lastTouched).setRight(not);
-        not.setParent(lastTouched);
-      } else if (lastTouched instanceof Or) {
-        ((Or) lastTouched).setRight(not);
+      if (lastTouched instanceof BinaryOperator) {
+        ((BinaryOperator)lastTouched).setRight(not);
         not.setParent(lastTouched);
       }
     } else {                     //we're the left part, so change lastTouched
@@ -637,130 +646,46 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
 
   /**
-   * Adds a literal (i.e. a condition name)
+   * Adds a literal or variable (i.e. a condition name)
    *
    * @param condname Name of the condition (may include package + concern + fm)
    * @param override If called from Not, this points to the Not object to attach this condition to; if null, then just add using the default algoritm
    */
   public void addConditionLiteral(Vector condname, ConditionExpression override) {
-    final int NONCASE = 0;
-    final int TRUECASE = 1;
-    final int FALSECASE = 2;
-
-    int usewhat = NONCASE;
-    ConditionLiteral cl = null;
-    True true_ = null;
-    False false_ = null;
+	  
+    ConditionExpression ce;
+    
     //special case if "true" or "false" are specified
     if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("true")) {
-      true_ = new True();
-      usewhat = TRUECASE;
-    } else if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("false")) {
-      false_ = new False();
-      usewhat = FALSECASE;
-    } else {
-      cl = new ConditionLiteral();
+      ce = new True();
+    } 
+    else if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("false")) {
+      ce = new False();
+    } 
+    else {
+      ce = new ConditionVariable();
       split.splitFmElemReference(condname, true);
-      cl.setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
-      //added for FIRE
-      cl.setName((String) condname.lastElement());
+      ((ConditionVariable) ce).setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
     }
 
     if (override != null) {               //we're adding under a not
-      switch (usewhat) {
-        case NONCASE:
-          ((Not) override).setOperand(cl);
-          cl.setParent(override);
-          break;
-        case TRUECASE:
-          ((Not) override).setOperand(true_);
-          true_.setParent(override);
-          break;
-        case FALSECASE:
-        default:
-          ((Not) override).setOperand(false_);
-          false_.setParent(override);
-          break;
+      ((Not) override).setOperand(ce);
+      ce.setParent(override);
+    } 
+    else if (lastTouched != null) {            //means we're the right part of the branch
+      if (lastTouched instanceof BinaryOperator) {
+        ((BinaryOperator) lastTouched).setRight(ce);
+        ce.setParent(lastTouched);
+      } else if (lastTouched instanceof UnaryOperator) {
+        ((UnaryOperator) lastTouched).setOperand(ce);
+        ce.setParent(lastTouched);
       }
-    } else {                                //not adding under a not
-      if (lastTouched != null) {            //means we're the right part of the branch
-        if (lastTouched instanceof And) {
-          switch (usewhat) {
-            case NONCASE:
-              ((And) lastTouched).setRight(cl);
-              cl.setParent(lastTouched);
-              break;
-            case TRUECASE:
-              ((And) lastTouched).setRight(true_);
-              true_.setParent(lastTouched);
-              break;
-            case FALSECASE:
-            default:
-              ((And) lastTouched).setRight(false_);
-              false_.setParent(lastTouched);
-              break;
-          }
-        } else if (lastTouched instanceof Or) {
-          switch (usewhat) {
-            case NONCASE:
-              ((Or) lastTouched).setRight(cl);
-              cl.setParent(lastTouched);
-              break;
-            case TRUECASE:
-              ((Or) lastTouched).setRight(true_);
-              true_.setParent(lastTouched);
-              break;
-            case FALSECASE:
-            default:
-              ((Or) lastTouched).setRight(false_);
-              false_.setParent(lastTouched);
-              break;
-          }
-        } else if (lastTouched instanceof Not) {
-          switch (usewhat) {
-            case NONCASE:
-              ((Not) lastTouched).setOperand(cl);
-              cl.setParent(lastTouched);
-              break;
-            case TRUECASE:
-              ((Not) lastTouched).setOperand(true_);
-              true_.setParent(lastTouched);
-              break;
-            case FALSECASE:
-            default:
-              ((Not) lastTouched).setOperand(false_);
-              false_.setParent(lastTouched);
-              break;
-          }
-        }
-      } else { //if this is null, the parent has nog yet been created, so we're on the left side of the branch
-        switch (usewhat) {
-          case NONCASE:
-            lastTouched = cl;
-            break;
-          case TRUECASE:
-            lastTouched = true_;
-            break;
-          case FALSECASE:
-          default:
-            lastTouched = false_;
-            break;
-        }
-      }
-    }
-
-    switch (usewhat) {
-      case NONCASE:
-        condAll.add(cl);
-        break;
-      case TRUECASE:
-        condAll.add(true_);
-        break;
-      case FALSECASE:
-      default:
-        condAll.add(false_);
-        break;
-    }
+    } 
+    else { 
+      //if this is null, the parent has nog yet been created, so we're on the left side of the branch
+      lastTouched = ce;
+    }    
+    condAll.add(ce);
 
     //    cp.setParent(fe);
     //    fe.setConditionPart(cp); ;
@@ -782,9 +707,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterOperatorType (i.e. an inclusion or exclusion)
    *
    * @param filterop Inclusion or Exclusion (can be '=>' or '~>'
+   * @param lineNumber
    */
   public void addFilterOperatorType(String filterop,int lineNumber) {
-    EnableOperatorType eot = null;
+    EnableOperatorType eot;
     if (filterop.equals("=>")) {
       eot = new EnableOperator();
     }
@@ -807,6 +733,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a FilterElementCompOper (the character separating each FilterElement)
    *
    * @param sep The separator: can be ',' (i.e. an OR) or null (if the last FilterElement)
+   * @param line
    */
   public void addFilterElementCompOper(String sep,int line) { //throws ModuleException {
     if (sep == null) { //null, so we're at the last element
@@ -829,11 +756,11 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     }
   }
 
-
   /**
    * Adds a FilterCompOper (the character separating each Filter)
    *
    * @param sep The separator: can be ';' (i.e. continue to next)
+   * @param line
    */
   public void addFilterCompOper(String sep,int line) {
     if (sep.equals(";")) { //currently only semicolon, no way to 'see' last element
@@ -864,12 +791,13 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *                    Contains Vectors with the complete packages of the parameters
    * @param orgmatching Whether the matching is name or signature (0=name, 1=signature)
    */
-  public void addMessagePattern( /*Vector objv, Vector typev, Vector typev2, int orgmatching */ ) {
+  public void addMessagePattern( /*Vector objv, Vector typev, Vector typev2, int orgmatching, */ ) {
     //int matching;
 
     mpat = new MatchingPatternAST();
     mpat.setParent(fe);
-    fe.addMatchingPattern(mpat);
+    //fe.addMatchingPattern(mpat);    
+    fe.setMatchingPattern(mpat);
     this.addToRepository(mpat);
 
     /*
@@ -912,6 +840,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     }
     */
   }
+  
+  public void setMessagePatternList(boolean isMessageList) {
+	  mpat.setIsMessageList(isMessageList);
+  }
 
 
   /**
@@ -922,6 +854,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param argTypes All the types of the selector (i.e. method(int, String))
    *                 Consists of multiple vectors within this vector (each parameter a separate vector)
    * @param matching Whether the matching is name or signature (0=name, 1=signature)
+   * @param lineNumber
+   * @param paratype
    */
   public void addMatchingPart(String target, String selector, Vector argTypes, int matching, int paratype, int lineNumber) {
     workingOnMatching = true; //busy with matching
@@ -980,6 +914,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param selector The selector
    * @param argTypes All the types of the selector (i.e. method(int, String))
    *                 Consists of multiple vectors within this vector (each parameter a separate vector)
+   * @param lineNumber
    */
   public void addSubstitutionPart(String target, String selector, Vector argTypes,int lineNumber) {
     workingOnMatching = false; //busy with substitution
@@ -1036,6 +971,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param typev The types of parameters of the method
    *              Consists of Vectors within a Vector (each parameter has a separate Vector,
    *              so it can contain a package in front of the type)
+   * @param lineNumber
    */
   public void addSelector(String name, Vector typev,int lineNumber) {
     int j;
@@ -1065,6 +1001,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param typev The types of parameters of the method
    *              Consists of Vectors within a Vector (each parameter has a separate Vector,
    *              so it can contain a package in front of the type)
+   * @param lineNumber
    */
   public void addParameterizedSelector(String name, Vector typev,int lineNumber) {
     int j;
@@ -1093,7 +1030,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param name name of the inputfilter
    * @param type the type of the filter (e.g. Meta)
-   * @throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers  
+   * @throws SemanticException when internals/externals/inputfilters/outputfilters have duplicate identifiers
+   * @param lineNumber
    */
   public void addOutputFilter(String name, Vector type,int lineNumber) throws SemanticException {
     parsingInput = false;
@@ -1152,6 +1090,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a SelectorDefinition
    *
    * @param name name of the selector
+   * @param lineNumber
    */
   public void addSelectorDefinition(String name,int lineNumber) {
     sd = new SelectorDefinition();
@@ -1195,6 +1134,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param variable - the variable to be used as 'output' of the predicate
    * @param predicate - a prolog predicate resulting in a set of concerns
+   * @param line
    */
   public void addPredicateSelectorExpression(String variable, String predicate,int line)
   {
@@ -1211,6 +1151,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new ConditionBinding (i.e. sel <- {a, b})
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addConditionBinding(Vector name, int line) {
     cb = new ConditionBinding();
@@ -1249,6 +1190,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new MethodBinding (i.e. sel <- {a, b})
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addMethodBinding(Vector name, int line) {
     mb = new MethodBinding();
@@ -1288,6 +1230,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new FilterModuleBinding
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addFilterModuleBinding(Vector name, int line) {
     fmb = new FilterModuleBinding();
@@ -1307,10 +1250,12 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds a filtermodule to the current binding
    *
    * @param name Name of the fm (may include package + concern)
+   * @param args
+   * @param line
    */
   public void addFilterModuleName(Vector name, Vector args, int line) {
-    fmref = new FilterModuleReference();
-    fmref.setDescriptionFileName(filename);
+      FilterModuleReference fmref = new FilterModuleReference();
+      fmref.setDescriptionFileName(filename);
     fmref.setDescriptionLineNumber(line);
     split.splitConcernElemReference(name, true);
     fmref.setPackage(split.getPack());
@@ -1333,6 +1278,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Creates a new AnnotationBinding
    *
    * @param name the selector (can include package + concern)
+   * @param line
    */
   public void addAnnotationBinding(Vector name, int line)
   {
@@ -1400,6 +1346,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param lang     Language of the embedded source (i.e. to call the correct compiler)
    * @param filename Name of the file to which the source needs to be saved
+   * @param line
+   * @param className
    */
   public void addEmbeddedSource(String lang, Vector className, String filename,int line) {
     Source src = new Source();
@@ -1504,6 +1452,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param cname Name of the concern containing the selector
    * @param sname Name of the selector
    * @return the created reference
+   * @param line
    */
   public SelectorReference addSelectorRef(Vector pack, String cname, String sname, int line) {
     if ("self".equals(sname)) {    //fixme: should not happen here, but in the syntactic sugar part
@@ -1612,7 +1561,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Makes sure the rightOperator fields in all inputfilters point to the correct objects
    */
   private void completeInputFilters() {
-    int i;
+    //int i;
     FilterModule temp;
     Filter current;
     Filter next;
@@ -1651,7 +1600,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Makes sure the rightOperator fields in all outputfilters point to the correct objects
    */
   private void completeOutputFilters() {
-    int i;
+    //int i;
     FilterModule temp;
     Filter current;
     Filter next;
@@ -1690,20 +1639,20 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Makes sure the rightOperator fields in all FilterElements point to the correct objects
    */
   private void completeFilterElements() {
-    int i;
-    Filter temp;
-    FilterElement current;
-    FilterElement next;
+    //int i;
+    FilterAST temp;
+    FilterElementAST current;
+    FilterElementAST next;
 
-    for (Iterator it = ds.getAllInstancesOf(Filter.class); it.hasNext();) {
-    	temp=(Filter)it.next();
+    for (Iterator it = ds.getAllInstancesOf(FilterAST.class); it.hasNext();) {
+    	temp=(FilterAST)it.next();
     	Iterator it1 = temp.getFilterElementIterator();
         Iterator it2 = temp.getFilterElementIterator();
         if (it2.hasNext()) it2.next(); //increase by 1, so it is one ahead of it
         while (it1.hasNext()) {
-          current = (FilterElement) it1.next();
+          current = (FilterElementAST) it1.next();
           if (it2.hasNext()) {
-            next = (FilterElement) it2.next(); //check for next filter
+            next = (FilterElementAST) it2.next(); //check for next filter
           } else {
             next = null;
           }
@@ -1716,7 +1665,6 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
         }
       }
   }
-
 
   //used by splitter
   public String getFm() {

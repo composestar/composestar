@@ -59,7 +59,7 @@ public class DepthFirstIterator extends ChildIterator
 		return done;
 	}
 
-	public Object clone()
+	public Object clone() throws CloneNotSupportedException
 	{
 		DepthFirstIterator i = (DepthFirstIterator) super.clone();
 		i.done = done;

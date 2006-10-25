@@ -3,7 +3,7 @@ package Composestar.Utils;
 import java.util.*;
 import java.io.*;
 
-public class StringConverter extends Object implements Cloneable, Serializable {
+public class StringConverter  implements Cloneable, Serializable {
     static final long serialVersionUID = - 8091413342863554190L;
     
     /**
@@ -52,7 +52,9 @@ public class StringConverter extends Object implements Cloneable, Serializable {
             {
                 list.add(Integer.valueOf(tmp));
             }
-            catch(Exception e) {}
+            catch(Exception e) {
+                e.printStackTrace();
+            }
         }
         return(list.iterator());     
     }

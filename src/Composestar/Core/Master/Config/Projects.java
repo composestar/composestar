@@ -3,10 +3,12 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import Composestar.Utils.FileUtils;
 
@@ -32,6 +34,56 @@ public class Projects implements Serializable
 		//compiledDummies = new ArrayList();
 		//compiledSources = new ArrayList();
 	}
+	
+	public void setRunDebugLevel(int value)
+	{
+		properties.setProperty("runDebugLevel", "" + value);		
+	}
+
+	public int getRunDebugLevel()
+	{
+		String level = properties.getProperty("runDebugLevel");
+		return Integer.parseInt(level);
+	}
+	
+	public void setOutputPath(String value)
+	{
+		properties.setProperty("outputPath", value);		
+	}
+
+	public String getOutputPath()
+	{
+		return properties.getProperty("outputPath");
+	}
+	
+	public void setApplicationStart(String value)
+	{
+		properties.setProperty("applicationStart", value);		
+	}
+	
+	public String getApplicationStart()
+	{
+		return properties.getProperty("applicationStart");
+	}
+	
+	/**
+	 * @deprecated Use setRunDebugLevel/setOutputPath/setApplicationStart/setExecutable.
+     * @param key
+     * @param value
+	 */
+	public void addProperty(String key, String value)
+	{
+		properties.setProperty(key, value);
+	}
+
+	/**
+	 * @deprecated Use getRunDebugLevel/getOutputPath/getApplicationStart/getExecutable.
+     * @param key
+	 */
+	public String getProperty(String key)
+	{
+		return properties.getProperty(key);
+	}
 
 	public void addConcernSource(ConcernSource concernsource)
 	{
@@ -47,7 +99,7 @@ public class Projects implements Serializable
 	{
 		allProjects.add(proj);
 
-		String language = proj.getProperty("language");
+		String language = proj.getLanguageName();
 		getProjectsByLanguage(language).add(proj);
 	}
 
@@ -63,16 +115,6 @@ public class Projects implements Serializable
 			projectsByLanguage.put(language, projects = new ArrayList());
 
 		return projects;
-	}
-
-	public void addProperty(String key, String value)
-	{
-		properties.setProperty(key, value);
-	}
-
-	public String getProperty(String key)
-	{
-		return properties.getProperty(key); // returns null if not found
 	}
 
 	public List getCompiledDummies()
@@ -94,7 +136,7 @@ public class Projects implements Serializable
 		Iterator projIt = allProjects.iterator();
 		while (projIt.hasNext())
 		{
-			Project p = (Project) projIt.next();
+			Project p = (Project)projIt.next();
 			if (p.getCompiledSources() != null)
 				compiledSources.addAll(p.getCompiledSources());
 		}
@@ -119,6 +161,24 @@ public class Projects implements Serializable
 		}
 		return dependencies;
 	}
+	
+	public Iterator dependencies()
+	{
+		Set depset = new HashSet();
+		Iterator projIt = allProjects.iterator();
+		while (projIt.hasNext())
+		{
+			Project p = (Project)projIt.next();
+			List deps = p.getDependencies();
+			Iterator depIt = deps.iterator();
+			while (depIt.hasNext())
+			{
+				Dependency dependency = (Dependency)depIt.next();
+				depset.add(dependency);
+			}
+		}
+		return depset.iterator();
+	}
 
 	public List getSources()
 	{
@@ -136,14 +196,15 @@ public class Projects implements Serializable
 	 * Returns the source instance for the specified filename. TODO: this can be
 	 * implemented a lot more efficiently by using a map from filename to
 	 * source.
-	 */
+     * @param fileName
+     */
 	public Source getSource(String fileName)
 	{
 		if (fileName == null)
 			throw new IllegalArgumentException("specified filename cannot be null");
 
 		// normalize specified filename
-		String nfn = FileUtils.fixFilename(fileName);
+		String nfn = FileUtils.normalizeFilename(fileName);
 
 		List sources = getSources();
 		Iterator sourceIt = sources.iterator();
@@ -154,7 +215,7 @@ public class Projects implements Serializable
 			if (sfn == null) continue; // FIXME: can this even happen? if so: how should it be handled?
 			
 			// normalize source filename
-			String nsfn = FileUtils.fixFilename(sfn);
+			String nsfn = FileUtils.normalizeFilename(sfn);
 			
 			// compare specified and source
 			if (nfn.equals(nsfn)) return s;

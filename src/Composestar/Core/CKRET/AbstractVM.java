@@ -1,8 +1,11 @@
 /*
- * Created on Dec 13, 2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
 package Composestar.Core.CKRET;
 
@@ -14,16 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
-import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Utils.Debug;
 
 /**
- * @author Administrator
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * 
  */
 public class AbstractVM {
 
@@ -52,7 +50,7 @@ public class AbstractVM {
 		for( Iterator ri = getResources().iterator(); ri.hasNext(); )
 		{
 			Resource res = (Resource) ri.next();
-			Debug.out(Debug.MODE_DEBUG,"SECRET","Resource-op["+res.getName()+"]: "+res.fancySequence());
+			Debug.out(Debug.MODE_DEBUG,"CKRET","Resource-op["+res.getName()+"]: "+res.fancySequence());
 			//System.err.println(res);
 			//msg+=res.toString()+"\n";
 		}
@@ -116,7 +114,7 @@ public class AbstractVM {
 			for( Iterator operationIterator = operations.iterator(); operationIterator.hasNext(); )
 			{
 				boolean forked = false;
-				boolean proceeded = false;
+				//boolean proceeded = false;
 				Operation operation = (Operation) operationIterator.next();
 				if( operation.isFork() )
 				{
@@ -159,7 +157,7 @@ public class AbstractVM {
 		
 		if( returnOp == null )
 		{
-			Debug.out(Debug.MODE_WARNING,"SECRET","Filterset doesn't dispatch!");
+			Debug.out(Debug.MODE_WARNING,"CKRET","Filterset doesn't dispatch!");
 		}
 		else
 		{

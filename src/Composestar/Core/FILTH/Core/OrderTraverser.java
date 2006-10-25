@@ -263,9 +263,9 @@ public class OrderTraverser {
 		
 		public Edge removeAnEdge(){ 
 			Edge deleted=null;
-			try{
-				deleted=(Edge)_edges.removeFirst();
-			}catch(NoSuchElementException  e){}
+            if(_edges.size() != 0){
+            	deleted=(Edge)_edges.removeFirst();
+            }
 			return deleted;
 		}
 		

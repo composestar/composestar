@@ -16,7 +16,7 @@ import Composestar.Core.RepositoryImplementation.*;
  * the ',' (or the void operator for the last filter element)
  */
 public abstract class FilterElementCompOper extends ContextRepositoryEntity {
-  public FilterElement rightArgument;
+  public FilterElementAST rightArgument;
 
 
   /**
@@ -31,7 +31,7 @@ public abstract class FilterElementCompOper extends ContextRepositoryEntity {
    * @param rightArgumentValue
    * @roseuid 402AA867024A
    */
-  public void setRightArgument(FilterElement rightArgumentValue) {
+  public void setRightArgument(FilterElementAST rightArgumentValue) {
     this.rightArgument = rightArgumentValue;
   }
 
@@ -41,7 +41,7 @@ public abstract class FilterElementCompOper extends ContextRepositoryEntity {
    *
    * @roseuid 402AA8CC0169
    */
-  public FilterElement getRightArgument() {
+  public FilterElementAST getRightArgument() {
     return rightArgument;
   }
 }

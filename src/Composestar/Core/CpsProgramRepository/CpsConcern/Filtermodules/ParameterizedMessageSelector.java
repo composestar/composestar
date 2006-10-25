@@ -18,4 +18,8 @@ public class ParameterizedMessageSelector extends MessageSelector {
 	public void setParameter(String parameter) {
 		this.parameter = parameter;
 	}
+	
+	public boolean isList(){
+		return ((ParameterizedMessageSelectorAST) msAST).isList();
+	}
 }

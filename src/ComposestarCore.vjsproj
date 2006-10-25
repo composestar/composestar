@@ -54,7 +54,7 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.java"
+                    RelPath = "../../../DotNET/Runtime/src/AssemblyInfos/CORE/AssemblyInfo.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -109,6 +109,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\BinaryOperator.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\BooleanOclExpression.java"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -124,7 +129,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionLiteral.java"
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\ConditionVariable.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\CondLiteral.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -325,6 +335,11 @@
                 />
                 <File
                     RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\True.java"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Composestar\core\CpsProgramRepository\CpsConcern\Filtermodules\UnaryOperator.java"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

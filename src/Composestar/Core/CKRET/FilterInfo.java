@@ -1,5 +1,12 @@
-//Source file: F:\\composestar\\src\\Composestar\\core\\SECRET\\SecretFilterInformationHarvestor.java
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2004-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.CKRET;
 
 import java.util.ArrayList;
@@ -7,19 +14,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Utils.CPSIterator;
 
 public class FilterInfo {
     private ArrayList conditions = new ArrayList();
@@ -29,6 +35,7 @@ public class FilterInfo {
     
     /**
      * @roseuid 40D8440101EB
+     * @param filter
      */
     public FilterInfo(Filter filter) {
      	this.run(filter);
@@ -53,14 +60,14 @@ public class FilterInfo {
      * @param increase
      * @roseuid 40D841900341
      */
-    public void collectConditions(ConditionExpression cond_part, boolean increase) {
-    	if(cond_part instanceof True)
+    public void collectConditions(ConditionExpression cond_part, boolean increase) {    	
+    	if(cond_part instanceof True) //TODO: why?
     	{
     		//this.conditions.add("*");
     	}
-    	else if(cond_part.isLiteral()) // Only name so get it!
+    	else if(cond_part instanceof ConditionVariable) // Only name so get it!
     	{
-    		ConditionLiteral cl = (ConditionLiteral)cond_part;
+    		ConditionVariable cl = (ConditionVariable)cond_part;
     		String conditionname = cl.getCondition().getRef().getQualifiedName();
     		if(increase)
     		{
@@ -71,34 +78,23 @@ public class FilterInfo {
     			this.conditions.remove(conditionname);
     		}
     	}
-    	else if(cond_part.isUnary()) // Now only NOT but in the future??? We need to fix this
+    	else if(cond_part instanceof UnaryOperator)
     	{
-    		if(cond_part instanceof Not)
-    		{
-    			Not cl = (Not)cond_part;
-    			this.collectConditions(cl.getOperand(),false);
-    		}
+    		UnaryOperator cl = (UnaryOperator) cond_part;
+    		this.collectConditions(cl.getOperand(),false);
     	}
-    	else if(cond_part.isBinary())
+    	else if(cond_part instanceof BinaryOperator)
     	{
-    		if(cond_part instanceof Or)
-    		{
-    			Or or = (Or)cond_part;
-    			this.collectConditions(or.getLeft(),true);
-    			this.collectConditions(or.getRight(),true);
-    		}
-    		else if(cond_part instanceof And)
-    		{
-    			And and = (And)cond_part;
-    			this.collectConditions(and.getLeft(),true);
-    			this.collectConditions(and.getRight(),true);
-    		}
+    		BinaryOperator bo = (BinaryOperator) cond_part;
+    		this.collectConditions(bo.getLeft(),true);
+    		this.collectConditions(bo.getRight(),true);
     	}     
     }
     
     /**
      * @param matchingpart
      * @roseuid 40D841C001A5
+     * @param matchingparts
      */
     public void collectMacthingSpecification(Vector matchingparts) {
     	Iterator mpi = new CPSIterator( matchingparts );
@@ -120,6 +116,7 @@ public class FilterInfo {
     /**
      * @param subspart
      * @roseuid 40D843320234
+     * @param subsparts
      */
     public void collectSubstitutionSpecification(Vector subsparts) {
     	if(subsparts.isEmpty() )

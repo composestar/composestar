@@ -210,6 +210,7 @@ public class UnitDictionary
 
   /**
    * Returns all units of the specified type.
+   * @param type
    */
   public UnitResult getByType(String type)
   {

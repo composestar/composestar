@@ -53,7 +53,8 @@ public class DeclaredObjectReference extends FilterModuleElementReference
 
 	/**
 	 * Custom deserialization of this object
-	 */
+     * @param in
+     */
 	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
 	{
 		// nothing yet
@@ -61,7 +62,8 @@ public class DeclaredObjectReference extends FilterModuleElementReference
 	
 	/**
 	 * Custom serialization of this object
-	 */
+     * @param out
+     */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		// nothing yet

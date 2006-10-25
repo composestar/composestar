@@ -40,12 +40,11 @@ public class RepositoryPtrList extends TreeBuilder
 		{
 			return new MatchFalse();
 		}
-		if (ce instanceof ConditionLiteral)
+		if (ce instanceof ConditionVariable)
 		{
-			ConditionLiteral cl = (ConditionLiteral) ce;
+			ConditionVariable cl = (ConditionVariable) ce;
 
-			// TODO deprecated
-			String conditionString = cl.getName();
+			String conditionString = cl.getCondition().getName();
 
 			if (conditionString == null || conditionString.length() == 0)
 			{
