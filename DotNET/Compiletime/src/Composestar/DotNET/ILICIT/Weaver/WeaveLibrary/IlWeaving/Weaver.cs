@@ -1002,7 +1002,7 @@ namespace Weavers.IlWeaving
 			}
 			else
 			{
-				//result.Add(code);
+				result.Add(code);
 			}
 
 			return result;
