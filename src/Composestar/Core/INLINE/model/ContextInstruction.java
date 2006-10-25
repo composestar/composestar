@@ -4,10 +4,22 @@
  */
 package Composestar.Core.INLINE.model;
 
-
+/**
+ * Indicates an instruction that manipulates the filtercontext or the joinpointcontext.
+ *
+ * @author Arjan
+ */
 public class ContextInstruction extends Instruction{
+	/**
+	 * The type of the instruction
+	 */
     private int type;
+    
+    /**
+     * An extra code
+     */
     private int code;
+    
     private Instruction instruction;
 
     public final static int REMOVED = 0;

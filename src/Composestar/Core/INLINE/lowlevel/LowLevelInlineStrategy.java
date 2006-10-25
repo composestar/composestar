@@ -10,21 +10,80 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.LAMA.MethodInfo;
 
-public interface LowLevelInlineStrategy {
-    public void startInline( FilterModule[] filterSet, MethodInfo method, String[] argReferences );
-    public void endInline();
+/**
+ * This strategy is called by the LowLevelInliner to do the actual code
+ * generation.
+ * 
+ * @author Arjan
+ */
+public interface LowLevelInlineStrategy
+{
+	/**
+	 * Called to indicate that the inlining starts.
+	 * 
+	 * @param filterSet The filterset
+	 * @param method The method for which inlining is done
+	 * @param argReferences
+	 */
+	public void startInline(FilterModule[] filterSet, MethodInfo method, String[] argReferences);
 
-    public void startFilter( Filter filter, int jumpLabel );
-    public void endFilter();
+	/**
+	 * Called when inlining is done.
+	 */
+	public void endInline();
 
-    public void evalCondExpr( ConditionExpression condition );
-    public void beginTrueBranch();
-    public void endTrueBranch();
+	/**
+	 * Called to indicate the start of a filterblock.
+	 * 
+	 * @param filter The filter
+	 * @param jumpLabel The label of this filterblock
+	 */
+	public void startFilter(Filter filter, int jumpLabel);
 
-    public void beginFalseBranch();
-    public void endFalseBranch();
+	/**
+	 * Called to indicate the end of a filterblock.
+	 */
+	public void endFilter();
 
-    public void jump( int jumpLabel );
+	/**
+	 * Called to indicate that a conditionexpression needs to be evaluated
+	 * 
+	 * @param condition The conditionexpression
+	 */
+	public void evalCondExpr(ConditionExpression condition);
 
-    public void generateAction( ExecutionState state );
+	/**
+	 * The start of the truebranch after a condition expression evaluation.
+	 */
+	public void beginTrueBranch();
+
+	/**
+	 * The end of the truebranch.
+	 */
+	public void endTrueBranch();
+
+	/**
+	 * The start of the falsebranch after a condition expression evaluation.
+	 */
+	public void beginFalseBranch();
+
+	/**
+	 * The end of the falsebranch.
+	 */
+	public void endFalseBranch();
+
+	/**
+	 * Called when a jump needs to be done to the given jumplabel. When the
+	 * jumplabel is -1, this indicates a jump to the end of the filtercode.
+	 * 
+	 * @param jumpLabel
+	 */
+	public void jump(int jumpLabel);
+
+	/**
+	 * Called when the code for a certain filteraction needs to be generated.
+	 * 
+	 * @param state The executionstate corresponding with the filteraction.
+	 */
+	public void generateAction(ExecutionState state);
 }

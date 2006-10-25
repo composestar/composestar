@@ -12,14 +12,11 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.FIRE2.model.ExecutionModel;
 import Composestar.Core.FIRE2.model.FireModel;
-import Composestar.Core.FIRE2.model.Message;
 import Composestar.Core.INLINE.model.Block;
-import Composestar.Core.INLINE.model.Branch;
 import Composestar.Core.INLINE.model.ContextInstruction;
 import Composestar.Core.LAMA.CallToOtherMethod;
 import Composestar.Core.LAMA.MethodInfo;
@@ -27,36 +24,88 @@ import Composestar.Core.LAMA.Type;
 import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
+/**
+ * Creates an abstract code object model for all methods in all concerns. It
+ * uses the LowLevelInliner engine to translate the filterset to code.
+ * 
+ * @author Arjan
+ */
 public class ModelBuilder implements CTCommonModule
 {
+	/**
+	 * The LowLevelInliner used to translate an inputfilterset to code.
+	 */
 	private LowLevelInliner inputFilterInliner;
 
+	/**
+	 * The LowLevelInlineStrategy used to translate an inputfilterset to code.
+	 */
 	private ModelBuilderStrategy inputFilterBuilderStrategy;
 
+	/**
+	 * The LowLevelInliner used to translate an outputfilterset to code.
+	 */
 	private LowLevelInliner outputFilterInliner;
 
+	/**
+	 * The LowLevelInlineStrategy used to translate an outputfilterset to code.
+	 */
 	private ModelBuilderStrategy outputFilterBuilderStrategy;
 
-	// private Concern currentConcern;
+	/**
+	 * Contains the methodId's of methods that have inputfilters inlined. Used
+	 * to check whether an setInnerCall contextInstruction is necessary.
+	 */
 	private HashSet inlinedMethodSet;
 
-	private FilterModule[] modules;
-
-	private FireModel currentFireModelIF;
-
-	private FireModel currentFireModelOF;
-
-	private DataStore dataStore;
-
+	/**
+	 * Contains all setInnerCall ContextInstructions that need to be checked
+	 * whether they are really necessary.
+	 */
 	private Vector innerCallCheckTasks = new Vector();
 
+	/**
+	 * All filtermodules in the filterset.
+	 */
+	private FilterModule[] modules;
+
+	/**
+	 * The FireModel of the inputfilters in the filterset.
+	 */
+	private FireModel currentFireModelIF;
+
+	/**
+	 * The FireModel of the outputFilters in the filterset.
+	 */
+	private FireModel currentFireModelOF;
+
+	/**
+	 * The Datastore.
+	 */
+	private DataStore dataStore;
+
+	/**
+	 * Contains a mapping from MethodInfo to the code objectmodel of the
+	 * inputfilters that need to be inlined in the method.
+	 */
 	private static Hashtable inputFilterCode;
 
+	/**
+	 * Contains a mapping from CallToOtherMethod to the code objectmodel of the
+	 * outputfilters that need to be inlined on the call.
+	 */
 	private static Hashtable outputFilterCode;
 
+	/**
+	 * The current selector being processed.
+	 */
 	private String currentSelector;
 
+	/**
+	 * Creates the ModelBuilder.
+	 */
 	public ModelBuilder()
 	{
 		this.inputFilterBuilderStrategy = new ModelBuilderStrategy(this, ModelBuilderStrategy.INPUT_FILTERS);
@@ -75,34 +124,65 @@ public class ModelBuilder implements CTCommonModule
 
 	}
 
+	/**
+	 * Returns the inputfiltercode that needs to be inlined on the given method,
+	 * or <code>null</code> if no inputfilters need to be inlined in the
+	 * method.
+	 * 
+	 * @param method
+	 * @return
+	 */
 	public static Block getInputFilterCode(MethodInfo method)
 	{
 		return (Block) inputFilterCode.get(method);
 	}
 
+	/**
+	 * Returns the outputfiltercode that needs to be inlined on the given call,
+	 * or <code>null</code> if no outputfilters need to be inlined in the
+	 * call.
+	 * 
+	 * @param call
+	 * @return
+	 */
 	public static Block getOutputFilterCode(CallToOtherMethod call)
 	{
 		return (Block) outputFilterCode.get(call);
 	}
-	
-	public static int getInnerCallContext(MethodInfo method){
+
+	/**
+	 * Returns the methodid of the given method.
+	 * 
+	 * @param method
+	 * @return
+	 */
+	public static int getMethodId(MethodInfo method)
+	{
 		return ModelBuilderStrategy.getMethodId(method);
 	}
 
+	/**
+	 * Starts the inlining.
+	 */
 	private void startInliner()
 	{
 		initialize();
-		processInfo();
-		storeInfo();
+		process();
 	}
 
+	/**
+	 * Initialization
+	 */
 	private void initialize()
 	{
 		inputFilterCode = new Hashtable();
 		outputFilterCode = new Hashtable();
 	}
 
-	private void processInfo()
+	/**
+	 * Begins processing.
+	 */
+	private void process()
 	{
 		Iterator concerns = dataStore.getAllInstancesOf(Concern.class);
 
@@ -113,6 +193,11 @@ public class ModelBuilder implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Processes the given concern.
+	 * 
+	 * @param concern
+	 */
 	private void processConcern(Concern concern)
 	{
 		// get inputFiltermodules:
@@ -120,6 +205,8 @@ public class ModelBuilder implements CTCommonModule
 		{
 			return;
 		}
+
+		Debug.out(Debug.MODE_DEBUG, "INLINER", "Processing concern " + concern.getName());
 
 		// initialize:
 		innerCallCheckTasks = new Vector();
@@ -148,6 +235,7 @@ public class ModelBuilder implements CTCommonModule
 		{
 			MethodInfo method = (MethodInfo) iter.next();
 
+			long time = System.currentTimeMillis();
 			processMethod(method);
 		}
 
@@ -162,6 +250,11 @@ public class ModelBuilder implements CTCommonModule
 		}
 	}
 
+	/**
+	 * Processes the given method.
+	 * 
+	 * @param methodInfo
+	 */
 	private void processMethod(MethodInfo methodInfo)
 	{
 		// set current selector:
@@ -189,78 +282,20 @@ public class ModelBuilder implements CTCommonModule
 			CallToOtherMethod call = (CallToOtherMethod) iter.next();
 			processCall(call);
 		}
-
 	}
 
+	/**
+	 * Processes the given call.
+	 * 
+	 * @param call
+	 */
 	private void processCall(CallToOtherMethod call)
 	{
 		// set current selector:
 		this.currentSelector = call.getMethodName();
 
-		Block callBlock = new Block();
-		Target target;
-		Branch currentBranch = null;
-
 		// retrieve target methodinfo:
 		MethodInfo methodInfo = call.getCalledMethod();
-
-		// create executionmodel for distinguishable targets and the
-		// undistinguishable target
-
-		// Distinguishable:
-		// TODO first do only undistinguishable. The implementation for doing
-		// also distinguishable
-		// needs to be worked out further.
-		// HashSet distTargets = currentFireModel.getDistinguishableTargets();
-		// Iterator iter = distTargets.iterator();
-		// while( iter.hasNext() ){
-		// target = (Target) iter.next();
-
-		// //get callblock:
-		// Block block = createCallBlock( target, methodInfo );
-
-		// //create branch to check target:
-		// Branch branch = new Branch( new TargetSelectExpression(
-		// target.getName() ) );
-		// branch.setTrueBlock( block );
-
-		// block = new Block();
-		// block.addInstruction( branch );
-
-		// if ( currentBranch == null ){
-		// //add first branch:
-		// currentBranch = branch;
-		// callBlock.addInstruction( currentBranch );
-		// }
-		// else{
-		// //add new branch to previous branch:
-		// currentBranch.setFalseBlock( block );
-		// currentBranch = branch;
-		// }
-		// }
-
-		// Undistinguishable:
-		Block block = createCallBlock(call, Message.UNDISTINGUISHABLE_TARGET, methodInfo);
-		if (currentBranch == null)
-		{
-			// no distinguishable targets.
-			// set callblock to the undistinguishable block:
-			callBlock = block;
-		}
-		else
-		{
-			currentBranch.setFalseBlock(block);
-		}
-
-		// add callBlock to call
-		if (callBlock != null)
-		{
-			outputFilterCode.put(call, callBlock);
-		}
-	}
-
-	private Block createCallBlock(CallToOtherMethod call, Target target, MethodInfo methodInfo)
-	{
 
 		// create executionModel:
 		ExecutionModel execModel;
@@ -279,19 +314,28 @@ public class ModelBuilder implements CTCommonModule
 		// store inlineModel in callStructure:
 		Block callBlock = outputFilterBuilderStrategy.getInlineBlock();
 
-		return callBlock;
+		// add callBlock to call
+		if (callBlock != null)
+		{
+			outputFilterCode.put(call, callBlock);
+		}
 	}
 
-	private void storeInfo()
-	{
-	// TODO
-	}
-
+	/**
+	 * Adds a SetInnerCall ContextInstruction to the set of SetInnerCall
+	 * ContextInstructions, that are checked after processing whether they are
+	 * really needed.
+	 * 
+	 * @param innerCallAction
+	 */
 	protected void addInnerCallCheckTask(ContextInstruction innerCallAction)
 	{
 		innerCallCheckTasks.add(innerCallAction);
 	}
 
+	/**
+	 * @return The current selector being processed.
+	 */
 	protected String getCurrentSelector()
 	{
 		return this.currentSelector;

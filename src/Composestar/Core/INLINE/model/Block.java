@@ -7,27 +7,50 @@ package Composestar.Core.INLINE.model;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public class Block extends Instruction{
-    private Vector instructions;
+/**
+ * A Block instruction is a container for other instructions
+ * 
+ * @author Arjan
+ */
+public class Block extends Instruction
+{
+	/**
+	 * The instructions contained in this block.
+	 */
+	private Vector instructions;
 
-    public Block(){
-        instructions = new Vector();
-    }
+	/**
+	 * The constructor
+	 */
+	public Block()
+	{
+		instructions = new Vector();
+	}
 
-    public void addInstruction( Instruction instruction ){
-        instructions.addElement( instruction );
-    }
+	/**
+	 * Adds an instruction to the end of this block.
+	 * 
+	 * @param instruction The instruction to add.
+	 */
+	public void addInstruction(Instruction instruction)
+	{
+		instructions.addElement(instruction);
+	}
 
-    public Enumeration getInstructions(){
-        return instructions.elements();
-    }
+	/**
+	 * @return An enumeration of the instructions in this block.
+	 */
+	public Enumeration getInstructions()
+	{
+		return instructions.elements();
+	}
 
-    /**
-     * @see Composestar.Core.INLINE.model.Visitable#accept(Composestar.Core.INLINE.model.Visitor)
-     */
-    public Object accept(Visitor visitor){
-        return visitor.visitBlock( this );
-    }
-    
-    
+	/**
+	 * @see Composestar.Core.INLINE.model.Visitable#accept(Composestar.Core.INLINE.model.Visitor)
+	 */
+	public Object accept(Visitor visitor)
+	{
+		return visitor.visitBlock(this);
+	}
+
 }

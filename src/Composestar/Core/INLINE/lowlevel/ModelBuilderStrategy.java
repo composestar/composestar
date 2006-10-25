@@ -78,12 +78,25 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	 */
 	private static Hashtable methodTable;
 
+	/**
+	 * The last generated methodid.
+	 */
 	private static int lastMethodId;
 
+	/**
+	 * Id of the last processed on-return action
+	 */
 	private int nextReturnActionId;
 
+	/**
+	 * Switch containing cases for each on-return action
+	 */
 	private Switch onReturnInstructions;
 
+	/**
+	 * The CreateActionStore ContextInstruction. Is globally maintained, so that
+	 * it can be set to removed if it isn't needed.
+	 */
 	private ContextInstruction createActionStoreInstruction;
 
 	private Label returnLabel;
@@ -442,10 +455,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		if (node.containsName("ContinueAction"))
 		{
-//			if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE)  ||  node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE)){
-//				instruction = new FilterAction("ContinueAction", state.getMessage(), getSubstitutedMessage(state));
-//				currentBlock.addInstruction(instruction);
-//			}
+			// if ( node.containsName(FlowChartNames.ACCEPT_CALL_ACTION_NODE) ||
+			// node.containsName(FlowChartNames.REJECT_CALL_ACTION_NODE)){
+			// instruction = new FilterAction("ContinueAction",
+			// state.getMessage(), getSubstitutedMessage(state));
+			// currentBlock.addInstruction(instruction);
+			// }
 		}
 		else if (node.containsName("DispatchAction"))
 		{
@@ -487,6 +502,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
+	/**
+	 * Generates an action on call
+	 * 
+	 * @param state The state corresponding with the action
+	 * @param action The action
+	 */
 	private void generateCallAction(ExecutionState state,
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
@@ -495,6 +516,12 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		currentBlock.addInstruction(instruction);
 	}
 
+	/**
+	 * Generates an action on return
+	 * 
+	 * @param state The state corresponding with the action
+	 * @param action The action
+	 */
 	private void generateReturnAction(ExecutionState state,
 			Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterAction action)
 	{
@@ -513,6 +540,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 	}
 
+	/**
+	 * Generates a dispatch action
+	 * 
+	 * @param state The state corresponding with the action
+	 */
 	private void generateDispatchAction(ExecutionState state)
 	{
 		Message callMessage = getSubstitutedMessage(state);
@@ -535,6 +567,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
+	/**
+	 * Generates an advice action, either before or after
+	 * 
+	 * @param state The state corresponding with the action
+	 */
 	private void generateAdviceAction(ExecutionState state)
 	{
 		FlowNode flowNode = state.getFlowNode();
@@ -549,6 +586,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
+	/**
+	 * Generates a before action
+	 * 
+	 * @param state The state corresponding with the action
+	 */
 	private void generateBeforeAction(ExecutionState state)
 	{
 		Message callMessage = getSubstitutedMessage(state);
@@ -565,6 +607,11 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		empty = false;
 	}
 
+	/**
+	 * Generates an after action
+	 * 
+	 * @param state The state corresponding with the action
+	 */
 	private void generateAfterAction(ExecutionState state)
 	{
 		Message callMessage = getSubstitutedMessage(state);
@@ -677,8 +724,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 
 		// get the dispatch selector:
 		String dispSelector = state.getSubstitutionMessage().getSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = 
-			state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
 
 		return new Message(dispTarget, dispSelector);
 	}
@@ -705,13 +751,19 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 	}
 
+	/**
+	 * Returns the methodid corresponding with the given MethodInfo.
+	 * 
+	 * @param method
+	 * @return
+	 */
 	public static int getMethodId(MethodInfo method)
 	{
 		if (method == null)
 		{
 			return -1;
 		}
-		
+
 		Integer id = (Integer) methodTable.get(method);
 		if (id == null)
 		{
