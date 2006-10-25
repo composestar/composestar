@@ -49,7 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core Elements", "Core Eleme
 		{B4F97281-0DBD-4835-9ED8-7DFB966E87FF} = {B4F97281-0DBD-4835-9ED8-7DFB966E87FF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContextInfo", "ContextInfo\ContextInfo.csproj", "{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.ContextInfo", "ContextInfo\StarLight.ContextInfo.csproj", "{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarLight.CoreServices", "CoreServices\StarLight.CoreServices.csproj", "{11331540-BE27-41A8-B10C-D1C7A686E554}"
 EndProject

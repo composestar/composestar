@@ -116,7 +116,6 @@ namespace Composestar.StarLight.Filters.FilterTypes
         }
 
         #endregion
-
   
         #region ctors
 

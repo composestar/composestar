@@ -51,12 +51,12 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// To use this filter action, implement a <see cref="T:FilterType"></see> and specify, using the <see cref="T:FilterTypeAttribute"></see>, the name of this filter action. 
     /// Now you can use the filter type in your concern specification.   
     /// </para> 
-    /// <para>
-    /// <b>Note:</b> To make a properly working filter, implement also a <i>StopTimerAction</i>, which retrieves the properties from the context and calculates the end time and thus the duration.
-    /// </para> 
-    /// <para>
-    /// <b>Note:</b> The above example uses kernel calls to a high performance counter. It is also possible to use the <see cref="T:System.Diagnostics.Stopwatch"></see> class.
-    /// </para> 
+    /// <note>
+    /// To make a properly working filter, implement also a <i>StopTimerAction</i>, which retrieves the properties from the context and calculates the end time and thus the duration.
+    /// </note> 
+    /// <note>
+    /// The above example uses kernel calls to a high performance counter. It is also possible to use the <see cref="T:System.Diagnostics.Stopwatch"></see> class.
+    /// </note> 
     /// </example> 
     /// <seealso cref="T:FilterType"/>
     /// <seealso cref="T:FilterActionAttribute"/>

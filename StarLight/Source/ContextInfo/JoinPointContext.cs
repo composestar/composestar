@@ -110,7 +110,7 @@ namespace Composestar.StarLight.ContextInfo
         #region ctor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:JoinPointContext"/> class.
+        /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.JoinPointContext"/> class.
         /// </summary>
         public JoinPointContext()
         {
@@ -236,7 +236,7 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Get the <see cref="T:ArgumentInfo"></see> object or <see langword="null"></see> when the <paramref name="ordinal"/> is not found.
+        /// Get the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"></see> object or <see langword="null"></see> when the <paramref name="ordinal"/> is not found.
         /// </summary>
         /// <param name="ordinal">The ordinal of the argument.</param>
         /// <returns>Argument info object or <see langword="null"></see> when the <paramref name="ordinal"/> is not found.</returns>
@@ -543,14 +543,14 @@ namespace Composestar.StarLight.ContextInfo
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
+        /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"/> class.
         /// </summary>
         public ArgumentInfo()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
+        /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
@@ -561,7 +561,7 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ArgumentInfo"/> class.
+        /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>

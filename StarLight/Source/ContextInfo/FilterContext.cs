@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace Composestar.StarLight.ContextInfo
 {
     /// <summary>
-    /// The FilterContext class is used to store <see cref="T:FilterContext.InnerFilterContext"/> objects in a thread-safe way.
+    /// The FilterContext class is used to store <see cref="T:Composestar.StarLight.ContextInfo.FilterContext.InnerFilterContext"/> objects in a thread-safe way.
     /// These objects contain information about the usage of the innercalls.    
     /// </summary>
     [DebuggerNonUserCode()]
@@ -26,7 +26,7 @@ namespace Composestar.StarLight.ContextInfo
         #region ctor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:FilterContext"/> class.
+        /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.FilterContext"/> class.
         /// </summary>
         public FilterContext()
         {
@@ -121,8 +121,8 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Gets the inner filter context.
         /// </summary>
-        /// <returns>Returns an <see cref="T:InnerFilterContext"></see> object based on the current thread id if it is set in the 
-        /// inner calls list. If no <see cref="T:InnerFilterContext"></see> with the current thread id could be found, <see langword="null"></see> will be returned.</returns>
+        /// <returns>Returns an <see cref="T:Composestar.StarLight.ContextInfo.FilterContext.InnerFilterContext"></see> object based on the current thread id if it is set in the 
+        /// inner calls list. If no <see cref="T:Composestar.StarLight.ContextInfo.FilterContext.InnerFilterContext"></see> with the current thread id could be found, <see langword="null"></see> will be returned.</returns>
         private static InnerFilterContext GetInnerFilterContext()
         {
             int threadId = GetThreadId();
@@ -154,7 +154,7 @@ namespace Composestar.StarLight.ContextInfo
         {
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="T:InnerFilterContext"/> class.
+            /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.FilterContext.InnerFilterContext"/> class.
             /// </summary>
             /// <param name="instance">The instance.</param>
             /// <param name="methodId">The method id.</param>

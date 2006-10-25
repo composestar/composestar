@@ -122,10 +122,10 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// <remarks>
         /// <para>There are three options possible:
         /// <list type="definition">
-        /// <item><term>Continue:</term><description>To indicate that flow continues to the next filter.</description></item>
-        /// <item><term>Exit:</term><description>To indicate that flow exits the filterset without a return,
+        /// <item><term>Continue</term><description>To indicate that flow continues to the next filter.</description></item>
+        /// <item><term>Exit</term><description>To indicate that flow exits the filterset without a return,
         /// for example with an <c>Error</c> action.</description></item>
-        /// <item><term>Return:</term><description>To indicate that flow changes from call to return, 
+        /// <item><term>Return</term><description>To indicate that flow changes from call to return, 
         /// for example with a <c>Dispatch</c> action.</description></item>
         /// </list>
         /// </para>
@@ -211,7 +211,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// Gets or sets the specification.
         /// </summary>
         /// <value>The specification.</value>
-        public string Spec
+        public string Specification
         {
             get
             {
