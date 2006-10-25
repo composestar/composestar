@@ -2,10 +2,8 @@ concern TraceDeviceB in DeviceController.Concerns
 {
 	filtermodule Trace
 	{
-		//externals		// declare used external (global) objects
-		//	config : DeviceController.Configuration.DeviceConfiguration = DeviceController.Configuration.DeviceConfiguration.GetInstance();
 		conditions		// declare used conditions
-			doTrace : DeviceController.Configuration.DeviceConfiguration.DoTraceDeviceB();
+			doTrace : DeviceController.Configuration.DeviceConfiguration.DoTraceDeviceB();	// condition to enable/disable runtime tracing
 		inputfilters	// define the inputfilters
 			trace_DoSomething : Tracing = {doTrace => [*.DoSomething] };	// Trace input parameters
 			trace_Result : Tracing = {doTrace => [*.get_Result] }			// Trace return value
