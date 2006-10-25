@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B896F0E9-570E-4128-9C14-19E24BA6C5F6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>TestILAnalyzer</RootNamespace>
+    <AssemblyName>TestILAnalyzer</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\WINDOWS\assembly\GAC_MSIL\Microsoft.VisualStudio.QualityTools.UnitTestFramework\8.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CecilAnalyzerConfigurationTest.cs" />
+    <Compile Include="CecilAssemblyVisitorTest.cs" />
+    <Compile Include="CecilILAnalyzerFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VSCodeGenAccessors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\cecil-0.4.3\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ContextInfo\ContextInfo.csproj">
+      <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
+      <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ILAnalyzer\ILAnalyzer.csproj">
+      <Project>{DBE39397-4AAC-443E-B18F-8C2FFE097E3D}</Project>
+      <Name>ILAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\StarLightEntities\StarLightEntities.csproj">
+      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
+      <Name>StarLightEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Utilities\Cecil\CecilUtilities.csproj">
+      <Project>{125370E1-A7FB-4458-A2AC-CA7C044FC944}</Project>
+      <Name>CecilUtilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+</Project>

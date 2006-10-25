@@ -75,7 +75,7 @@ namespace Composestar.StarLight.TestMocks.LanguageModel
                 }
 
                 te.Fields = GenerateFields(fieldCount);
-                te.Methods = GenerateMethods(methodCount);
+                te.Methods = GenerateMethods(methodCount, parameterCount);
 
                 result.Add(te);
             }
@@ -108,7 +108,7 @@ namespace Composestar.StarLight.TestMocks.LanguageModel
             return result;
         }
 
-        private List<MethodElement> GenerateMethods(int methodCount)
+        private List<MethodElement> GenerateMethods(int methodCount, int parameterCount)
         {
             List<MethodElement> result = new List<MethodElement>();
 
@@ -127,6 +127,19 @@ namespace Composestar.StarLight.TestMocks.LanguageModel
                 {
                     me.IsPrivate = false;
                     me.IsPublic = true;
+                }
+
+                // Add parameters
+                for (short k = 0; k < parameterCount; k++)
+                {
+                    ParameterElement pe = new ParameterElement();                    
+                    pe.Ordinal = k;
+                    pe.Name = String.Format("Method_{0}-Parameter_{1}", i, k);
+                    if (k % 3 == 0) { pe.Type = "System.String"; }
+                    else if (k % 3 == 1) { pe.Type = "System.Boolean"; }
+                    else { pe.Type = "System.Int32"; }
+
+                    me.Parameters.Add(pe);
                 }
 
                 result.Add(me);
