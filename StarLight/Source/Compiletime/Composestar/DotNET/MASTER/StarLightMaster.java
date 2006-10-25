@@ -51,6 +51,7 @@ public class StarLightMaster extends Master  {
     private static ConfigurationContainerDocument configDocument;
     private static ConfigurationContainer configContainer;
     
+    long timer;
     /**
      * Default ctor.
      * @param configurationFile
@@ -127,7 +128,7 @@ public class StarLightMaster extends Master  {
      * @throws XmlException 
 	 */
 	private void initialize() throws XmlException, IOException {
-		
+		timer = System.currentTimeMillis();
 		Debug.out(Debug.MODE_INFORMATION,MODULENAME,"Master initializing.");
 		
 		File f = new File(getConfigFileName());
@@ -163,7 +164,7 @@ public class StarLightMaster extends Master  {
 		Configuration.instance().getPathSettings().addPath("Composestar", configContainer.getInstallFolder() + "\\" );
         
         //Set platform:
-        Configuration.instance().addProperty( "Platform", "dotnet" );
+//        Configuration.instance().addProperty( "Platform", "dotnet" );
         
         // Set FILTH input file
         Composestar.Core.Master.Config.ModuleSettings filthSettings = new Composestar.Core.Master.Config.ModuleSettings();
@@ -214,9 +215,6 @@ public class StarLightMaster extends Master  {
 				
 			}
 			
-			// Close INCRE
-			incre.getReporter().close();
-
 			// Shutdown
 			shutdown();
 
@@ -247,6 +245,12 @@ public class StarLightMaster extends Master  {
     	File file = new File(configFileName);
     	configDocument.save(file);
 		
+    	long elapsed = System.currentTimeMillis() - timer;
+    	System.out.println( "total elapsed time"  + elapsed);
+    	
+    	// Close INCRE
+		INCRE.instance().getReporter().close();
+    	
 		// Successfull exit
 		System.exit(0);
     }

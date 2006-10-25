@@ -15,7 +15,7 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionLiteral;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
@@ -330,7 +330,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			MethodInfo methodInfo = type.getMethod(selector, new String[0]);
 			if (methodInfo != null)
 			{
-				storedRef.setInnerCallContext(ModelBuilder.getInnerCallContext(methodInfo));
+				storedRef.setInnerCallContext(ModelBuilder.getMethodId(methodInfo));
 			}
 			else
 			{
@@ -692,9 +692,9 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 				return weaveNot;
 			}
-			else if (expression instanceof ConditionLiteral)
+			else if (expression instanceof ConditionVariable)
 			{
-				ConditionLiteral literal = (ConditionLiteral) expression;
+				ConditionVariable literal = (ConditionVariable) expression;
 
 				composestar.dotNET.tym.entities.ConditionLiteral weaveLiteral = composestar.dotNET.tym.entities.ConditionLiteral.Factory
 						.newInstance();
