@@ -1,4 +1,4 @@
-<!-- INCRE configuration for .NET 2.0 -->
+<!-- INCRE configuration for .NET 1.1 -->
 <modules>
 	<module name="COPPER" fulltype="Composestar.Core.COPPER.COPPER" input="Composestar.Core.Master.Config.ConcernSource" enabled="true" incremental="true" summary="Parsing concerns...">
 		<dependencies>
@@ -10,17 +10,36 @@
 		</dependencies>
 	</module>
 	<module name="EMBEX" fulltype="Composestar.Core.EMBEX.EMBEX" enabled="true" incremental="false" summary="Extracting embedded sources...">
-		<dependencies></dependencies>
+		<dependencies></dependencies>	
 	</module>
-	<module name="COMP" fulltype="Composestar.DotNET.COMP.COMP2" enabled="true" incremental="false" summary="Compiling sources...">
-		<dependencies></dependencies>		
+	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="true" incremental="false" summary="Generating dummy sources...">
+		<dependencies></dependencies>	
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.HARVESTER2" enabled="true" incremental="false" summary="Harvesting type information...">
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
 		<dependencies>
+			<dependency type="FILE" name="assembly"></dependency>
 		</dependencies>	
+		<dependency type="OBJECT" name="previousinput">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevInput"></node>
+			</path>
+		</dependency>	
+		<dependency type="FILE" name="previousassemblies">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevAssemblies"></node>
+			</path>
+		</dependency>
+		<dependency type="FILE" name="externalassemblies" isAdded="false">
+			<path>
+				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.externalAssemblies"></node>
+			</path>
+		</dependency>
 	</module>
 	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
 		<dependencies></dependencies>		
+	</module>
+	<module name="AttributeCollector" fulltype="Composestar.DotNET.TYM.TypeCollector.AttributeCollector" enabled="true" incremental="false" summary="Collecting attributes...">
+		<dependencies></dependencies>	
 	</module>
 	<module name="REXREF" fulltype="Composestar.Core.REXREF.Main" enabled="true" incremental="false" summary="Resolving references...">
 		<dependencies></dependencies>	
@@ -72,12 +91,17 @@
 	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
 		<dependencies></dependencies>	
 	</module>
+	<module name="ASTRA" fulltype="Composestar.DotNET.ASTRA.ASTRA" enabled="true" incremental="false" summary="Transforming signatures...">
+		<dependencies></dependencies>	
+	</module>
+	<module name="RECOMA" fulltype="Composestar.Core.TYM.SrcCompiler.RealSourceManager" input="Composestar.Core.Master.Config.Source" enabled="true" incremental="true" summary="Compiling all sources...">
+		<dependencies></dependencies>
+	</module>
 	<module name="CONE-IS" fulltype="Composestar.DotNET.CONE.DotNETWeaveFileGenerator" enabled="true" incremental="false" summary="Generating weave specification file...">
 		<dependencies></dependencies>	
 	</module>	
-	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT2" enabled="true" incremental="false" summary="Weaving assemblies...">
-		<dependencies>
-		</dependencies>	
+	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT2" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
+		<dependencies></dependencies>	
 	</module>
 	<module name="SEMTEX" fulltype="Composestar.DotNET.SEMTEX.DotNETSemTexRunner" phase="two" enabled="true" incremental="true" summary="Collecting semantic information...">
 		<dependencies>

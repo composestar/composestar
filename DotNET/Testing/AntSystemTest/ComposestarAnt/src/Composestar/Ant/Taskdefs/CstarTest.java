@@ -8,31 +8,24 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Runs a test
+ * Runs multiple tests
  * 
  * @author Michiel Hendriks
  */
-public class CstarTest extends Task
+public class CstarTest extends BaseTask
 {
-
-	protected String CORRECT_OUTPUT = "correct.txt";
-
-	protected long TEST_TIMEOUT = 300000; // 5 minutes
-
-	protected Vector fileSets = new Vector();
+	protected static final String CORRECT_OUTPUT = "correct.txt";
 
 	/**
 	 * If true fail the build if a single test failed
@@ -45,6 +38,11 @@ public class CstarTest extends Task
 	protected boolean failOnFirstError = false;
 
 	/**
+	 * 5 minutes by default.
+	 */
+	protected long timeout = 300000; 
+	
+	/**
 	 * Total tests executed
 	 */
 	protected int cntTotal;
@@ -53,6 +51,11 @@ public class CstarTest extends Task
 	 * Number of succesful tests
 	 */
 	protected int cntSuccess;
+	
+	/**
+	 * Number of timed-out tests.
+	 */
+	protected int cntTimeout;
 
 	/**
 	 * Number of failed tests
@@ -65,10 +68,14 @@ public class CstarTest extends Task
 	protected int cntCurrent;
 
 	/**
-	 * List of failed tests. Incleased with final exception.
+	 * List of failed tests. Included with final exception.
 	 */
-	protected String failList;
+	protected List failList = new ArrayList();
 
+	public CstarTest()
+	{
+	}
+	
 	public void setFailOnError(boolean failOnError)
 	{
 		this.failOnError = failOnError;
@@ -81,60 +88,71 @@ public class CstarTest extends Task
 
 	public void setTimeout(long timeout)
 	{
-		this.TEST_TIMEOUT = timeout;
+		this.timeout = timeout;
 	}
 
 	public void addFileset(FileSet set)
 	{
-		fileSets.add(set);
+		super.addFileset(set);
 	}
-
+	
 	public void execute() throws BuildException
 	{
-		cntTotal = 0;
-		cntSuccess = 0;
-		cntFail = 0;
-		failList = "";
-		cntCurrent = 0;
-
-		List tests = new ArrayList();
-		for (Iterator it = fileSets.iterator(); it.hasNext(); /* nop */)
-		{
-			FileSet fileSet = (FileSet) it.next();
-			DirectoryScanner ds = fileSet.getDirectoryScanner(this.getProject());
-			String[] files = ds.getIncludedFiles();
-			for (int i = 0; i < files.length; i++)
-			{
-				tests.add(ds.getBasedir().getPath() + File.separator + files[i]);
-			}
-		}
+		List tests = collectInputs();
 
 		cntTotal = tests.size();
-		log("Testing " + cntTotal + " Compose* programs", Project.MSG_INFO);
+		cntSuccess = 0;
+		cntTimeout = 0;
+		cntFail = 0;
+		cntCurrent = 0;
+		failList.clear();
+		
+		runTests(tests);
+		reportResults();
+		
+		if (failOnError && (cntFail > 0))
+		{
+			throw new BuildException("" + cntFail + " test(s) failed.");
+		}
+	}
+	
+	private void reportResults()
+	{
+		log(""
+			+ cntTotal + " test(s)" 
+			+ "; success: " + cntSuccess
+			+ "; timeouts: " + cntTimeout
+			+ "; failed: " + cntFail
+			+ "; ratio: " + (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
+		
+		log("The following tests failed:", Project.MSG_INFO);
+		
+		Iterator it = failList.iterator();
+		while (it.hasNext())
+		{
+			String failed = (String)it.next();
+			log(failed, Project.MSG_INFO);
+		}
+	}
+
+	private void runTests(List tests)
+	{
+		log("Testing " + tests.size() + " Compose* programs", Project.MSG_INFO);
 
 		Iterator it = tests.iterator();
 		while (it.hasNext())
 		{
-			runTest((String) it.next());
-		}
-
-		getProject().log(
-				this,
-				"" + cntTotal + " test(s); success: " + cntSuccess + "; failed: " + cntFail + "; ratio: "
-						+ (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
-		if (failOnError && (cntFail > 0))
-		{
-			throw new BuildException("" + cntFail + " test(s) failed: " + failList);
+			File exec = (File)it.next();
+			runTest(exec);
 		}
 	}
-
-	protected void runTest(String exec) throws BuildException
+	
+	protected void runTest(File exec) throws BuildException
 	{
 		getProject().log(this, "" + (cntCurrent * 100 / cntTotal) + "% - " + exec, Project.MSG_INFO);
 		cntCurrent++;
 
-		File execPath = new File(exec);
-		log(exec, Project.MSG_VERBOSE);
+		log(exec.getAbsolutePath(), Project.MSG_VERBOSE);
 
 		// exec command on system runtime
 		try
@@ -142,18 +160,20 @@ public class CstarTest extends Task
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 			ExecuteStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
-			ExecuteWatchdog watchdog = new ExecuteWatchdog(TEST_TIMEOUT);
+			ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
 			Execute execute = new Execute(streamHandler, watchdog);
 			execute.setAntRun(getProject());
 			execute.setSpawn(false);
-			execute.setWorkingDirectory(execPath.getParentFile());
-			String[] cmd = { exec };
+			execute.setWorkingDirectory(exec.getParentFile());
+			
+			String[] cmd = { exec.getAbsolutePath() };
 			execute.setCommandline(cmd);
 
 			int err = execute.execute();
 
 			if (execute.killedProcess())
 			{
+				cntTimeout++;
 				throw new Exception("Process killed; Time-out reached.");
 			}
 
@@ -161,20 +181,8 @@ public class CstarTest extends Task
 			{
 				throw new Exception("Exit code is not zero");
 			}
-
-			BufferedReader correctFile = new BufferedReader(new FileReader(execPath.getParent() + File.separator
-					+ CORRECT_OUTPUT));
-			BufferedReader actualOutput = new BufferedReader(new StringReader(outputStream.toString()));
-			String cline = correctFile.readLine();
-			String aline = actualOutput.readLine();
-
-			while ((cline != null) && (aline != null))
-			{
-				if (!cline.equals(aline)) throw new Exception("Output data invalid: '" + cline + "' vs '" + aline + "'");
-				cline = correctFile.readLine();
-				aline = actualOutput.readLine();
-			}
-			if ((cline != null) || (aline != null)) throw new Exception("Output data invalid " + cline + " " + aline);
+			
+			checkOutput(exec, outputStream.toString());
 
 			cntSuccess++;
 		}
@@ -187,10 +195,57 @@ public class CstarTest extends Task
 			}
 			else
 			{
-				getProject().log(this, "Testing of " + exec + " failed; " + e.getMessage(), Project.MSG_ERR);
-				if (failList.length() > 0) failList += "; ";
-				failList += exec;
+				getProject().log(this, "! Failed ! " + e.getMessage(), Project.MSG_ERR);
+				failList.add("" + exec);
 			}
 		}
+	}
+
+	private void checkOutput(File exec, String output) throws Exception
+	{
+		File correct = new File(exec.getParentFile(), CORRECT_OUTPUT);
+		
+		BufferedReader expectedReader = null;
+		BufferedReader actualReader = null;
+		
+		try {
+			expectedReader = new BufferedReader(new FileReader(correct));
+			actualReader = new BufferedReader(new StringReader(output));
+
+			while (true)
+			{
+				String expected = expectedReader.readLine();
+				String actual = actualReader.readLine();
+				
+				if (! compareLines(expected, actual))
+				{
+					throw new Exception(
+							"Invalid output: expected " + quote(expected) 
+							+ ", but encountered " + quote(actual));
+				}
+				
+				if (expected == null || actual == null)
+					break;
+			}
+		}
+		finally {
+			FileUtils.close(expectedReader);
+			FileUtils.close(actualReader);
+		}
+	}
+	
+	private boolean compareLines(String e, String a)
+	{
+		// if one is null then both must be
+		if (e == null || a == null)
+			return e == a;
+		
+		// else just check for equality
+		return e.equals(a);
+	}
+	
+	private String quote(String line)
+	{
+		return (line == null ? "<EOF>" : "'" + line + "'");
 	}
 }
