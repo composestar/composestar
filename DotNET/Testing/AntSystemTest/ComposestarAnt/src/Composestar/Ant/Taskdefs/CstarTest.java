@@ -118,20 +118,22 @@ public class CstarTest extends BaseTask
 	
 	private void reportResults()
 	{
-		log(""
-			+ cntTotal + " test(s)" 
-			+ "; success: " + cntSuccess
-			+ "; timeouts: " + cntTimeout
-			+ "; failed: " + cntFail
-			+ "; ratio: " + (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
+		log("" +
+			"total: " + cntTotal + 
+			"; success: " + cntSuccess +
+			"; timeouts: " + cntTimeout +
+			"; failed: " + cntFail +
+			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
 		
-		log("The following tests failed:", Project.MSG_INFO);
-		
-		Iterator it = failList.iterator();
-		while (it.hasNext())
+		if (cntFail > 0)
 		{
-			String failed = (String)it.next();
-			log(failed, Project.MSG_INFO);
+			log("The following tests failed:", Project.MSG_INFO);		
+			Iterator it = failList.iterator();
+			while (it.hasNext())
+			{
+				String failed = (String)it.next();
+				log(failed, Project.MSG_INFO);
+			}
 		}
 	}
 

@@ -24,11 +24,11 @@ public class Main
 
 		System.out.println("");
  
-		System.out.println("Is young '" + young.name + "' hungry? " + young.isHungry() );
+		System.out.println("Is young '" + young.getName() + "' hungry? " + young.isHungry() );
 		Mammal m = (Mammal)(Object)young; 
-		//m.setName(young.name);
+		m.setName(young.name); // hmmm...?
 		
 		man.feedMilk(m);  // Casting required to pass type verification of the J# compiler 
-		System.out.println("Is young '" + young.name + "' still hungry? " + young.isHungry() );
+		System.out.println("Is young '" + young.getName() + "' still hungry? " + young.isHungry() );
 	}
 }

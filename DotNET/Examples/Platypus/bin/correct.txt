@@ -10,4 +10,5 @@ Mother platypus 'Mary' proudly looks at her young 'Kevin'.
 
 Is young 'Kevin' hungry? true
 Caretaker 'John' is feeding 'Kevin' with a bottle of milk...
-Is young 'Kevin' still hungry? true
+'Kevin' is eating the food 'milk' it was given.
+Is young 'Kevin' still hungry? false
