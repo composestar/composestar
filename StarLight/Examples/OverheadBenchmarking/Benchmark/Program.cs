@@ -9,20 +9,11 @@ namespace Benchmark
     {
         private void Execute()
         {
-            int counter = 0;
-            for (int i = 0; i < 3000000; i++)
-            {
-                counter++;
-            }
+
         }
 
         private void ExecuteFiltered()
         {
-            int counter = 0;
-            for (int i = 0; i < 3000000; i++)
-            {
-                counter++;
-            }
         }
 
         public void Run(int tests, bool details)
@@ -38,22 +29,41 @@ namespace Benchmark
             Execute();
             ExecuteFiltered();
 
+            tests = tests * 1000;
+
             int dotter = 1;
             if (tests >= 100) dotter = tests / 100;
 
             for (int i = 0; i < tests; i++)
             {
-                sw.Reset();
-                sw.Start();
-                Execute();
-                sw.Stop();
-                baseTimings.Add(sw.Elapsed);
+                if (i % 2 == 0)
+                {
+                    sw.Reset();
+                    sw.Start();
+                    Execute();
+                    sw.Stop();
+                    baseTimings.Add(sw.Elapsed);
 
-                sw.Reset();
-                sw.Start();
-                ExecuteFiltered();
-                sw.Stop();
-                filteredTimings.Add(sw.Elapsed);
+                    sw.Reset();
+                    sw.Start();
+                    ExecuteFiltered();
+                    sw.Stop();
+                    filteredTimings.Add(sw.Elapsed);
+                }
+                else
+                {
+                    sw.Reset();
+                    sw.Start();
+                    Execute();
+                    sw.Stop();
+                    baseTimings.Add(sw.Elapsed);
+
+                    sw.Reset();
+                    sw.Start();
+                    ExecuteFiltered();
+                    sw.Stop();
+                    filteredTimings.Add(sw.Elapsed);
+                }
 
                 if (i % dotter == 0) Console.Write(".");
             }
@@ -82,7 +92,7 @@ namespace Benchmark
             
             Console.WriteLine("Normal Avg.: {0:0.0000} ms", baseElapsedTotal.TotalMilliseconds / tests);
             Console.WriteLine("WithFilter Avg.: {0:0.0000} ms", filteredElapsedTotal.TotalMilliseconds / tests);
-            Console.WriteLine("Overhead Avg.: {0:0.0000} ms   ({1:0.00%})", overheadTotal.TotalMilliseconds / tests, overheadTotal.TotalMilliseconds / baseElapsedTotal.TotalMilliseconds);
+            Console.WriteLine("Overhead Avg.: {0:0.0000} ms   (equivalent to {1:0.00} method invocations)", overheadTotal.TotalMilliseconds / tests, overheadTotal.TotalMilliseconds / baseElapsedTotal.TotalMilliseconds);
         }
     }
 
@@ -91,7 +101,7 @@ namespace Benchmark
 
         static void Main(string[] args)
         {
-            int runs = 5;
+            int runs = 10;
             bool details = false;
 
             foreach (string arg in args)
