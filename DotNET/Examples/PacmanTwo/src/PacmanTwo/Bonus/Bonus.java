@@ -57,8 +57,10 @@ public class Bonus
 	 */
 	public void tick(ReifiedMessage rm)
 	{
-		float delta = ((Float) rm.getArg(0)).floatValue();
+		float delta = (float)((System.Single)rm.getArg(0));
+		
 		rm.proceed();
+		
 		if (bonusPickups >= 2) return; // max of 2 pickups per level
 		timeTillBonus -= delta;
 		if ((activeBonus == null) && (timeTillBonus < 0))
