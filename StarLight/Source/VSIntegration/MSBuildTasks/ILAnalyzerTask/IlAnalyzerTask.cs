@@ -179,6 +179,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // Get the configuration
             ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
+            filterActions = configContainer.FilterActions;
+            filterTypes = configContainer.FilterTypes;  
+
             // Get the assemblies in the config file
             List<AssemblyConfig> assembliesInConfig = configContainer.Assemblies;
 
@@ -255,20 +258,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 
-                    sw.Reset();
-
-                    sw.Start();
-
-                    // Add FilterTypes
-                    filterTypes.AddRange(analyzer.FilterTypes);
-
-                    // Add FilterActions
-                    filterActions.AddRange(analyzer.FilterActions);
-
-                    // HACK We only check for filtertypes and filteractions in the output assemblies, 
-                    // not in the reference assemblies.
-
-                    sw.Stop();
+                    sw.Reset();                    
 
                 }
                 catch (ILAnalyzerException ex)
@@ -288,10 +278,44 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogErrorFromException(ex, false);
                 }
 
-            }
+            }         
 
             if (analyzer.FilterTypes.Count > 0 && analyzer.FilterActions.Count > 0)
             {
+                // Add FilterTypes
+                foreach (FilterTypeElement ft in analyzer.FilterTypes)
+                {
+                    bool canAdd = true;
+                    foreach (FilterTypeElement ftConfig in filterTypes)
+                    {
+                        if (ft.Name.Equals(ftConfig.Name))
+                        {
+                            canAdd = false;
+                            continue;
+                        } // if
+                    }
+                    if (canAdd)
+                        filterTypes.Add(ft);
+                }
+
+                // Add FilterActions
+                foreach (FilterActionElement fa in analyzer.FilterActions)
+                {
+                    bool canAdd = true;
+                    foreach (FilterActionElement faConfig in filterActions)
+                    {
+                        if (fa.Name.Equals(faConfig.Name))
+                        {
+                            canAdd = false;
+                            continue;
+                        } // if
+                    }
+                    if (canAdd)
+                        filterActions.Add(fa);
+                }
+
+                // TODO we miss a cleanup of the filtertypes and actions no longer in the assemblies. User has to use a rebuild.
+
                 Log.LogMessageFromResources("FiltersAnalyzed", analyzer.FilterTypes.Count, analyzer.FilterActions.Count);
             }
 

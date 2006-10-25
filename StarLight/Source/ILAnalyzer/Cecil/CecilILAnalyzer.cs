@@ -235,8 +235,8 @@ namespace Composestar.StarLight.ILAnalyzer
             _resolvedTypes = visitor.ResolvedTypes;  
 
             // Update the filtertypes
-            _filterTypes =visitor.FilterTypes;
-            _filterActions =visitor.FilterActions;
+            _filterTypes.AddRange(visitor.FilterTypes);
+            _filterActions.AddRange(visitor.FilterActions);
                      
             // Stop the timer
             sw.Stop();
