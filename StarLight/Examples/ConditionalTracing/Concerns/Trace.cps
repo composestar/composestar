@@ -1,9 +1,9 @@
-concern TraceDeviceA in DeviceController.Concerns
+concern Trace in DeviceController.Concerns
 {
-	filtermodule Trace
+	filtermodule TraceModule
 	{
 		conditions		// declare used conditions
-			doTrace : DeviceController.Configuration.DeviceConfiguration.DoTrace();
+			doTrace : DeviceController.Configuration.DeviceConfiguration.DoTrace();		// Condition used to check if tracing is enabled at runtime
 		inputfilters	// define the inputfilters
 			trace_DoSomething : Tracing = {doTrace => [*.DoSomething] };	// Trace input parameters
 			trace_Result : Tracing = {doTrace => [*.get_Result] }			// Trace return value
@@ -15,7 +15,7 @@ concern TraceDeviceA in DeviceController.Concerns
 			deviceAClasses = { C | isClassWithName(C , 'DeviceController.Devices.DeviceA.DeviceA') };
 			deviceBClasses = { C | isClassWithName(C , 'DeviceController.Devices.DeviceB.DeviceB') };
 		filtermodules	
-			deviceAClasses <- Trace;
-			deviceBClasses <- Trace;
+			deviceAClasses <- TraceModule;
+			deviceBClasses <- TraceModule;
 	}
 }    

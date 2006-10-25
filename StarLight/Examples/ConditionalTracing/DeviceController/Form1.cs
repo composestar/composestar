@@ -25,9 +25,10 @@ namespace DeviceController
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Initialize the DeviceConfiguration Singleton
+            // Load the device configutation
             DeviceConfiguration.Load();
 
+            // Initialize the devices
             deviceA = new DeviceA();
             deviceB = new DeviceB();
 
@@ -36,6 +37,7 @@ namespace DeviceController
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Execute the command on device A and show the result in the listbox
             deviceA.DoSomething(textBox1.Text);
             listBox1.Items.Add(deviceA.Result);
             textBox1.Text = "";
@@ -44,6 +46,7 @@ namespace DeviceController
 
         private void button2_Click(object sender, EventArgs e)
         {
+            // Execute the command on device B and show the result in the listbox
             deviceB.DoSomething(textBox1.Text);
             listBox1.Items.Add(deviceB.Result);
             textBox1.Text = "";
