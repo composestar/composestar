@@ -5,9 +5,9 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    ///  TODO Generate comments
+    /// The before filter implements a call the a method.
     /// </summary>
-    [FilterTypeAttribute("Before", "AdviceAction", "ContinueAction", "ContinueAction", "ContinueAction")]
+    [FilterTypeAttribute(FilterType.BeforeFilter, FilterAction.AdviceAction, FilterAction.ContinueAction,FilterAction.ContinueAction,FilterAction.ContinueAction)]
     public class BeforeFilterType : FilterType
     {
     }

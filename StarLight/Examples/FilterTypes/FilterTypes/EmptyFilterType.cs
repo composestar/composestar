@@ -7,8 +7,8 @@ using Composestar.StarLight.ContextInfo.FilterTypes;
 
 namespace FilterTypes
 {
-    [FilterTypeAttribute("Empty", "StartEmptyAction", "ContinueAction", 
-        "StopEmptyAction", "ContinueAction")]
+    [FilterTypeAttribute("Empty", "StartEmptyAction", FilterAction.ContinueAction, 
+        "StopEmptyAction", FilterAction.ContinueAction)]
     public class EmptyFilterType : FilterType
     {
     }

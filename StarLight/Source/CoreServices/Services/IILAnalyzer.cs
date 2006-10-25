@@ -43,14 +43,7 @@ namespace Composestar.StarLight.CoreServices
         /// <returns></returns>
         List<String> ResolveAssemblyLocations();
 
-        /// <summary>
-        /// Processes the unresolved types.
-        /// </summary>
-        /// <param name="assemblyNames">The assembly names.</param>
-        /// <returns>List of AssemblyElements</returns>
-        List<AssemblyElement> ProcessUnresolvedTypes(Dictionary<String, String> assemblyNames);
-
-        /// <summary>
+             /// <summary>
         /// Extracts all types.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -67,12 +60,6 @@ namespace Composestar.StarLight.CoreServices
         /// </summary>
         List<FilterActionElement> FilterActions { get; }
         
-        /// <summary>
-        /// Gets the duration of the last executed method.
-        /// </summary>
-        /// <value>The last duration.</value>
-        TimeSpan LastDuration { get; }
-
         /// <summary>
         /// Closes this instance. Cleanup any used resources.
         /// </summary>

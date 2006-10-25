@@ -6,8 +6,8 @@ using Composestar.StarLight.ContextInfo.FilterTypes;
 
 namespace FilterTypes
 {
-    [FilterTypeAttribute("Tracing", "TracingInAction", "ContinueAction", 
-        "TracingOutAction", "ContinueAction")]
+    [FilterTypeAttribute("Tracing", "TracingInAction", FilterAction.ContinueAction, 
+        "TracingOutAction", FilterAction.ContinueAction)]
     public class TracingFilterType : FilterType
     {
     }

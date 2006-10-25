@@ -20,7 +20,6 @@ namespace Composestar.StarLight.ContextInfo
         #region Private Variables
 
         private Dictionary<short, ArgumentInfo> _arguments;
-
         private Dictionary<string, object> _properties;
 
         private object _sender;
@@ -54,21 +53,6 @@ namespace Composestar.StarLight.ContextInfo
         {
             get { return _startTarget; }
             set { _startTarget = value; }
-        }
-
-        /// <summary>
-        /// Sets the target in the given JoinPointContext to obj. This static method is usefull
-        /// to store a target that is on the stack, because we cannot directly place the JoinPointContext 
-        /// object before it on the stack.
-        /// </summary>
-        /// <param name="obj">The target object to store</param>
-        /// <param name="context">The JoinPointContext to store it in</param>
-        public static void SetTarget(object obj, JoinPointContext context)
-        {
-            if(context != null)
-            {
-                context.StartTarget = obj;
-            }
         }
 
         /// <summary>
@@ -334,6 +318,25 @@ namespace Composestar.StarLight.ContextInfo
 
         #endregion
 
+        #region Set Target
+
+        /// <summary>
+        /// Sets the target in the given JoinPointContext to obj. This static method is usefull
+        /// to store a target that is on the stack, because we cannot directly place the JoinPointContext 
+        /// object before it on the stack.
+        /// </summary>
+        /// <param name="obj">The target object to store.</param>
+        /// <param name="context">The JoinPointContext to store it in.</param>
+        public static void SetTarget(object obj, JoinPointContext context)
+        {
+            if (context != null)
+            {
+                context.StartTarget = obj;
+            }
+        }
+
+        #endregion
+
         #region Return Values
 
         /// <summary>
@@ -351,9 +354,9 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Gets or sets the type of the return.
+        /// Gets or sets the type of the return value.
         /// </summary>
-        /// <value>The type of the return.</value>
+        /// <value>The type of the return value.</value>
         public Type ReturnType
         {
             get
@@ -402,11 +405,11 @@ namespace Composestar.StarLight.ContextInfo
 
         /// <summary>
         /// Sets the returnvalue in the given JoinPointContext to obj. This static method is usefull
-        /// to store a returnvalue that is on the stack, because we cannot directly place the JoinPointContext 
+        /// to store a returnvalue that is on the stack, because we cannot directly place the JoinPointContext
         /// object before it on the stack.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="context"></param>
+        /// <param name="obj">The object to store as return value.</param>
+        /// <param name="context">The join point context it applies to.</param>
         public static void SetReturnValue(Object obj, JoinPointContext context){
             if(context != null)
             {
@@ -597,8 +600,8 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Returns true when the argument is an 'in' argument
         /// </summary>
-        /// <returns></returns>
-        public bool isIn()
+        /// <returns><see langword="true" /> when the argument is an input argument, <see langword="false" /> otherelse.</returns>
+        public bool IsIn()
         {
             return (Attributes & ArgumentAttributes.In) == ArgumentAttributes.In;
         }
@@ -606,8 +609,8 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Returns true when the argument is an 'out' argument
         /// </summary>
-        /// <returns></returns>
-        public bool isOut()
+        /// <returns><see langword="true" /> when the argument is an output argument, <see langword="false" /> otherelse.</returns>
+        public bool IsOut()
         {
             return (Attributes & ArgumentAttributes.Out) == ArgumentAttributes.Out;
         }

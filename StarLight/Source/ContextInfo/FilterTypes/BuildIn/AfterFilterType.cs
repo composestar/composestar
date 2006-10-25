@@ -5,9 +5,9 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    ///  TODO Generate comments
+    /// A call to a method, implemented by the <see cref="T:AdviceAction"></see>. 
     /// </summary>
-    [FilterTypeAttribute("After", "ContinueAction", "ContinueAction", "AdviceAction", "ContinueAction")]
+    [FilterTypeAttribute(FilterType.AfterFilter, typeof(ContinueAction), typeof(ContinueAction), typeof(AdviceAction), typeof(ContinueAction))]
     public class AfterFilterType : FilterType
     {
     }

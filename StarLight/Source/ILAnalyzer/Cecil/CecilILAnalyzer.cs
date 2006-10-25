@@ -77,7 +77,6 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Properties
 
-
         /// <summary>
         /// Gets or sets the resolved types.
         /// </summary>
@@ -281,96 +280,7 @@ namespace Composestar.StarLight.ILAnalyzer
             return ret;
         } // ResolveAssemblyLocations()
           
-        /// <summary>
-        /// Processes the unresolved types.
-        /// </summary>
-        /// <param name="assemblyNames">The assembly names.</param>
-        /// <returns></returns>
-        public List<AssemblyElement> ProcessUnresolvedTypes(Dictionary<String, String> assemblyNames)
-        {
-         
-            List<AssemblyElement> assemblies = new List<AssemblyElement>();
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            
-            //if (UnresolvedTypes.Count > 0)
-            //{
-            //    // Add all assemblies we can resolve from the AFQN type names
-            //    foreach (String type in UnresolvedTypes)
-            //    {
-            //        String assemblyName = null;
-            //        if (type.Contains(", "))
-            //            assemblyName = type.Substring(type.IndexOf(", ") + 2);
-            //        if (assemblyName != null && !assemblyNames.ContainsKey(assemblyName))
-            //            assemblyNames.Add(assemblyName, String.Empty);
-            //    }
-
-            //    if (assemblyNames.Count == 0) 
-            //        return new List<AssemblyElement>();
-               
-            //    // Go through each assembly name
-            //    foreach (String assemblyName in assemblyNames.Keys)
-            //    {
-            //        // TODO add to resource or remove the CW
-            //        Console.WriteLine(String.Format("Analyzing '{0}', please wait...", assemblyName));
-
-            //        try
-            //        {
-            //            AssemblyDefinition ad = AssemblyResolver.Resolve(assemblyName);
-
-            //            if (ad != null)
-            //            {
-            //                // Create the visitor
-            //                CecilAssemblyVisitor visitor = new CecilAssemblyVisitor();
-
-            //                // Set visitor properties
-            //                visitor.ProcessMethodBody = false;
-            //                visitor.IncludeFields = _configuration.DoFieldAnalysis;
-            //                visitor.SaveType = false;
-            //                visitor.ResolvedTypes = _resolvedTypes;
-            //                visitor.UnresolvedTypes = _unresolvedTypes;
-
-            //                // Start the visitor
-            //                AssemblyElement result = visitor.Analyze(assemblyNames[assemblyName]);
-
-            //                if (result.Types.Count > 0)
-            //                {
-            //                    assemblies.Add(result);
-            //                } // if
-
-            //                // Add the unresolved types
-            //                _unresolvedTypes = visitor.UnresolvedTypes;
-            //                _resolvedTypes = visitor.ResolvedTypes;
-
-            //                // Update the filtertypes
-            //                _filterTypes.AddRange(visitor.FilterTypes);
-            //                _filterActions.AddRange(visitor.FilterActions);
-
-            //            } // if
-            //            else
-            //            {                            
-            //                throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
-            //            } // else
-            //        } // try
-            //        catch (Exception ex)
-            //        {                        
-            //            throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
-            //        } // catch
-            //    } // foreach  (assemblyName)
-
-            //    if (UnresolvedTypes.Count > 0)
-            //    {
-            //        ProcessUnresolvedTypes(new Dictionary<string, string>());
-            //    } // if
-            //}
-
-            sw.Stop();
-            _lastDuration = sw.Elapsed;
-
-            return assemblies;
-        }
-
+        
         /// <summary>
         /// Closes this instance. Cleanup any used resources.
         /// </summary>
@@ -379,19 +289,8 @@ namespace Composestar.StarLight.ILAnalyzer
             if (_dar != null)
                 _dar = null;
         }
-        
-        /// <summary>
-        /// Gets the duration of the last executed method.
-        /// </summary>
-        /// <value>The last duration.</value>
-        public TimeSpan LastDuration
-        {
-            get
-            {
-                return _lastDuration;
-            }
-        }
-
+       
+  
         #endregion
 
         /// <summary>

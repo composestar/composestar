@@ -5,9 +5,9 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    /// TODO Generate comments
+    /// Performs a dispatch to another method.
     /// </summary>
-    [FilterTypeAttribute("Dispatch", "DispatchAction", "ContinueAction", "ContinueAction", "ContinueAction")]
+    [FilterTypeAttribute(FilterType.DispatchFilter, FilterAction.DispatchAction, FilterAction.ContinueAction, FilterAction.ContinueAction,FilterAction.ContinueAction)]
     public class DispatchFilterType : FilterType
     {
     }

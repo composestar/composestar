@@ -5,10 +5,10 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    ///  TODO Generate comments    
+    /// An error filter.   
     /// </summary>
-    [FilterTypeAttribute("Error", "ContinueAction", "ErrorAction",
-      "ContinueAction", "ContinueAction")]
+    [FilterTypeAttribute(FilterType.ErrorFilter, FilterAction.ContinueAction, FilterAction.ErrorAction,
+      FilterAction.ContinueAction, FilterAction.ContinueAction)]
     public class ErrorFilterType : FilterType
     {
     }

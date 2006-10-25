@@ -6,10 +6,10 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
 
     /// <summary>
-    ///  TODO Generate comments
+    /// The continue action simply performs no operation.
     /// </summary>
-    [FilterActionAttribute( "ContinueAction", FilterFlowBehaviour.Continue,
-        MessageSubstitutionBehaviour.Original )]
+    [FilterActionAttribute(FilterAction.ContinueAction, FilterActionAttribute.FilterFlowBehaviour.Continue,
+       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
     public class ContinueAction : FilterAction
     {
         /// <summary>

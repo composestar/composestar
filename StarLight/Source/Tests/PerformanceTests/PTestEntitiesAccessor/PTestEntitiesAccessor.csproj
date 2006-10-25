@@ -48,7 +48,7 @@
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\DotNETLanguageModel\StarLightEntities.csproj">
+    <ProjectReference Include="..\..\..\StarLightEntities\StarLightEntities.csproj">
       <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
       <Name>StarLightEntities</Name>
     </ProjectReference>

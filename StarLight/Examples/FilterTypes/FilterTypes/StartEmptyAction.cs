@@ -7,8 +7,8 @@ using Composestar.StarLight.ContextInfo.FilterTypes;
 
 namespace FilterTypes
 {
-    [FilterActionAttribute("StartEmptyAction", FilterFlowBehaviour.Continue, 
-        MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute("StartEmptyAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
+       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
     public class StartEmptyAction : FilterAction
     {
         public override void Execute(JoinPointContext context)

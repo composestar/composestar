@@ -5,17 +5,17 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    ///  TODO Generate comments
+    /// Substitution action.
     /// </summary>
-    [FilterActionAttribute( "SubstitutionAction", FilterFlowBehaviour.Continue,
-        MessageSubstitutionBehaviour.Substituted )]
+    [FilterActionAttribute(FilterAction.SubstitutionAction, FilterActionAttribute.FilterFlowBehaviour.Continue,
+       FilterActionAttribute.MessageSubstitutionBehaviour.Substituted)]
     public class SubstitutionAction : FilterAction
     {
         /// <summary>
         /// Implements the behaviour of the FilterAction.
         /// </summary>
         /// <param name="context">Context information</param>
-        public override void Execute( JoinPointContext context )
+        public override void Execute(JoinPointContext context)
         {
         }
     }

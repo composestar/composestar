@@ -1,12 +1,25 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
+#endregion
 
 namespace Composestar.StarLight.ContextInfo.FilterTypes
 {
     /// <summary>
-    /// Generate documentation here...
+    /// The <see cref="T:FilterTypeAttribute"></see> can be applied to classes and describes a <see cref="T:FilterType"></see>.
     /// </summary>
+    /// <example>
+    /// Apply this custom attribute to a custom filter class as shown in the following example:
+    /// <code>
+    /// [FilterTypeAttribute("Tracing", "TracingInAction", "ContinueAction", "TracingOutAction", "ContinueAction")]
+    /// public class TracingFilterType : FilterType
+    /// {
+    /// }
+    /// </code>
+    /// In this example, a custom <i>tracing</i> filter type is created. The accept actions are defined in the filteractions 
+    /// <c>TracingInAction</c> and <c>TracingOutAction</c>. For the reject actions, the default <c>ContinueAction</c> is used.
+    /// </example>     
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class FilterTypeAttribute : Attribute
     {
@@ -43,20 +56,16 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
         #region Properties
 
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets or sets the name of the filter. This name can be used in the concern specification.
         /// </summary>
-        /// <value>The name.</value>
+        /// <value>The unique name of the filter.</value>
         public string Name
         {
             get
             {
                 return _name;
             }
-            set
-            {
-                _name = value;
-            }
-        }
+          }
 
         /// <summary>
         /// Gets or sets the accept call action.
@@ -67,10 +76,6 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             get
             {
                 return _acceptCallAction;
-            }
-            set
-            {
-                _acceptCallAction = value;
             }
         }
 
@@ -84,10 +89,6 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             {
                 return _rejectCallAction;
             }
-            set
-            {
-                _rejectCallAction = value;
-            }
         }
 
         /// <summary>
@@ -99,10 +100,6 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             get
             {
                 return _acceptReturnAction;
-            }
-            set
-            {
-                _acceptReturnAction = value;
             }
         }
 
@@ -116,27 +113,41 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             {
                 return _rejectReturnAction;
             }
-            set
-            {
-                _rejectReturnAction = value;
-            }
         }
 
         #endregion
 
-        #region ctor
+  
+        #region ctors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:FilterTypeAnnotation"/> class.
+        /// Initializes a new instance of the <see cref="T:FilterTypeAnnotation"/> class describing a custom filter type.
         /// </summary>
-        /// <param name="name">The name of the type.</param>
-        /// <param name="acceptCallAction">The accept call action.</param>
-        /// <param name="rejectCallAction">The reject call action.</param>
-        /// <param name="acceptReturnAction">The accept return action.</param>
-        /// <param name="rejectReturnAction">The reject return action.</param>
+        /// <param name="name">The unique name of the filtertype.</param>
+        /// <param name="acceptCallAction">The accept call filter action.</param>
+        /// <param name="rejectCallAction">The reject call filter action.</param>
+        /// <param name="acceptReturnAction">The accept return filter action.</param>
+        /// <param name="rejectReturnAction">The reject return filter action.</param>
+        /// <example>
+        /// Apply this custom attribute to a custom filter class as shown in the following example:
+        /// <code>
+        /// [FilterTypeAttribute("Tracing", "TracingInAction", "ContinueAction", "TracingOutAction", "ContinueAction")]
+        /// public class TracingFilterType : FilterType
+        /// {
+        /// }
+        /// </code>
+        /// In this example, a custom <i>tracing</i> filter type is created. The accept actions are defined in the filteractions 
+        /// <c>TracingInAction</c> and <c>TracingOutAction</c>. For the reject actions, the default <c>ContinueAction</c> is used.
+        /// </example> 
+        /// <exception cref="ArgumentNullException">
+        /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
+        /// </exception>
         public FilterTypeAttribute(string name, string acceptCallAction, string rejectCallAction,
                     string acceptReturnAction, string rejectReturnAction)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+ 
             _name = name;
             _acceptCallAction = acceptCallAction;
             _rejectCallAction = rejectCallAction;
@@ -144,7 +155,61 @@ namespace Composestar.StarLight.ContextInfo.FilterTypes
             _rejectReturnAction = rejectReturnAction;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:FilterTypeAttribute"/> class describing a custom filter type using the types of the filteractions.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="acceptCallAction">The accept call filter action type.</param>
+        /// <param name="rejectCallAction">The reject call filter action type.</param>
+        /// <param name="acceptReturnAction">The accept return filter action type.</param>
+        /// <param name="rejectReturnAction">The reject return filter action type.</param>
+        /// <example>
+        /// Apply this custom attribute to a custom filter class as shown in the following example:
+        /// <code>
+        /// [FilterTypeAttribute("After", typeof(ContinueAction), typeof(ContinueAction), typeof(AdviceAction), typeof(ContinueAction))]
+        /// public class AfterFilterType : FilterType
+        /// {
+        /// }
+        /// </code>
+        /// In this example, an <i>AfterFilterType</i> filter type is created. The actions are defined in the filteractions 
+        /// which are identief using their types.
+        /// </example> 
+        /// <exception cref="ArgumentNullException">
+        /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// If one of the actions does not have a <see cref="T:FilterActionAttribute"/>, then it is not possible to read the name of the filteraction.
+        /// </exception>
+        public FilterTypeAttribute(string name, Type acceptCallAction, Type rejectCallAction,
+            Type acceptReturnAction, Type rejectReturnAction)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+ 
+            _name = name;
+            
+            _acceptCallAction = GetNameOfFilterAction(acceptCallAction);
+            _rejectCallAction = GetNameOfFilterAction(rejectCallAction);
+            _acceptReturnAction = GetNameOfFilterAction(acceptReturnAction);
+            _rejectReturnAction = GetNameOfFilterAction(rejectReturnAction);
+        }
         #endregion
+
+        /// <summary>
+        /// Gets the name of filter action.
+        /// </summary>
+        /// <param name="filterAction">The filter action.</param>
+        /// <returns></returns>
+        private string GetNameOfFilterAction(Type filterAction)
+        {
+            FilterActionAttribute[] fac = (FilterActionAttribute[]) filterAction.GetCustomAttributes(typeof(FilterActionAttribute), true);
+
+            if (fac.Length == 1)
+                return fac[0].ActionName;
+            else
+                throw new ArgumentException(Properties.Resources.FilterActionNameNotFound, filterAction.Name); 
+  
+        } // GetNameOfFilterAction(filterAction)
 
     }
 }

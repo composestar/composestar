@@ -549,29 +549,22 @@ namespace Composestar.StarLight.ILAnalyzer
             // We now use ShadowCopy to overcome this. It is an obsolute method
             // Switch to a seperate appdomain.
 
-            AppDomain.CurrentDomain.SetShadowCopyFiles();
-            AppDomain.CurrentDomain.AppendPrivatePath(type.Module.Image.FileInformation.Directory.FullName);
-            m_rootAssembly = type.Module.Image.FileInformation.Directory.FullName;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += new ResolveEventHandler(MyReflectionOnlyResolveEventHandler);
+            SetupReflectionAssembly(type.Module.Image.FileInformation.Directory.FullName);    
 
             Assembly assembly = Assembly.ReflectionOnlyLoadFrom(type.Module.Image.FileInformation.FullName);
-            // We have to inject the ContextInfo into the domain, or we cannot find the specific type.
-            Assembly assmContext =
-                Assembly.ReflectionOnlyLoadFrom(Path.Combine(type.Module.Image.FileInformation.Directory.FullName,
-                "Composestar.StarLight.ContextInfo.dll"));
-
+            
             if (assembly == null)
             {
                 throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
             } // if
 
             Type refType = assembly.GetType(type.FullName);
-
+           
             if (refType == null)
             {
                 throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
             } // if
-
+            
             IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
             foreach (CustomAttributeData cad in attributes)
             {
@@ -583,15 +576,15 @@ namespace Composestar.StarLight.ILAnalyzer
                 faEl.Name = ((string)cad.ConstructorArguments[0].Value);
                 faEl.Assembly = type.Module.Assembly.Name.ToString();
  
-                switch ((FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
+                switch ((FilterActionAttribute.FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
                 {
-                    case FilterFlowBehaviour.Continue:
+                    case FilterActionAttribute.FilterFlowBehaviour.Continue:
                         faEl.FlowBehavior = FilterActionElement.FlowContinue;
                         break;
-                    case FilterFlowBehaviour.Exit:
+                    case FilterActionAttribute.FilterFlowBehaviour.Exit:
                         faEl.FlowBehavior = FilterActionElement.FlowExit;
                         break;
-                    case FilterFlowBehaviour.Return:
+                    case FilterActionAttribute.FilterFlowBehaviour.Return:
                         faEl.FlowBehavior = FilterActionElement.FlowReturn;
                         break;
                     default:
@@ -599,15 +592,15 @@ namespace Composestar.StarLight.ILAnalyzer
                         break;
                 } // switch
 
-                switch ((MessageSubstitutionBehaviour)cad.ConstructorArguments[1].Value)
+                switch ((FilterActionAttribute.MessageSubstitutionBehaviour)cad.ConstructorArguments[1].Value)
                 {
-                    case MessageSubstitutionBehaviour.Original:
+                    case FilterActionAttribute.MessageSubstitutionBehaviour.Original:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
                         break;
-                    case MessageSubstitutionBehaviour.Substituted:
+                    case FilterActionAttribute.MessageSubstitutionBehaviour.Substituted:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageSubstituted;
                         break;
-                    case MessageSubstitutionBehaviour.Any:
+                    case FilterActionAttribute.MessageSubstitutionBehaviour.Any:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageAny;
                         break;
                     default:
@@ -647,28 +640,92 @@ namespace Composestar.StarLight.ILAnalyzer
             return Assembly.ReflectionOnlyLoad(args.Name);
         }
 
+        private bool _reflectionAssemblySetup = false;
+
+        /// <summary>
+        /// Setups the reflection assembly.
+        /// </summary>
+        /// <param name="rootPath">The root path.</param>
+        private void SetupReflectionAssembly(string rootPath)
+        {
+            if (_reflectionAssemblySetup) return;
+
+            AppDomain.CurrentDomain.SetShadowCopyFiles();
+            AppDomain.CurrentDomain.AppendPrivatePath(rootPath);
+            m_rootAssembly = rootPath;
+            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += new ResolveEventHandler(MyReflectionOnlyResolveEventHandler);
+
+            // We have to inject the ContextInfo into the domain, or we cannot find the specific type.
+            Assembly assmContext =
+                Assembly.ReflectionOnlyLoadFrom(Path.Combine(rootPath, "Composestar.StarLight.ContextInfo.dll"));
+
+            _reflectionAssemblySetup = true;
+
+        } 
+
         /// <summary>
         /// Extracts the type of the filter.
         /// </summary>
         /// <param name="type">The type.</param>
         private void ExtractFilterType(TypeDefinition type)
         {
-            foreach (CustomAttribute attr in type.CustomAttributes)
+            // We use .NET reflection here, because Cecil can not read the enumerations
+
+            // TODO Loading an assembly locks the assembly for the duration of the appdomain.
+            // The weaver can no loner access the file to weave in it.
+            // We now use ShadowCopy to overcome this. It is an obsolute method
+            // Switch to a seperate appdomain.
+
+            SetupReflectionAssembly(type.Module.Image.FileInformation.Directory.FullName);          
+
+            Assembly assembly = Assembly.LoadFrom(type.Module.Image.FileInformation.FullName);
+           
+
+            if (assembly == null)
             {
-                if (attr.Constructor.DeclaringType.FullName.Equals(_filterTypeAnnotationName))
-                {
-                    FilterTypeElement ftEl = new FilterTypeElement();
+                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
+            } // if
+
+            Type refType = assembly.GetType(type.FullName);
+
+            if (refType == null)
+            {
+                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
+            } // if
+
+            FilterTypeAttribute[] ftas = (FilterTypeAttribute[]) refType.GetCustomAttributes(typeof(FilterTypeAttribute), true);
+            foreach (FilterTypeAttribute fta in ftas)
+            {
+                     FilterTypeElement ftEl = new FilterTypeElement();
                     _filterTypes.Add(ftEl);
 
-                    ftEl.Name = (String)attr.ConstructorParameters[0];
-                    ftEl.AcceptCallAction = (String)attr.ConstructorParameters[1];
-                    ftEl.RejectCallAction = (String)attr.ConstructorParameters[2];
-                    ftEl.AcceptReturnAction = (String)attr.ConstructorParameters[3];
-                    ftEl.RejectReturnAction = (String)attr.ConstructorParameters[4];
+                    ftEl.Name = fta.Name;
+                    ftEl.AcceptCallAction = fta.AcceptCallAction;
+                    ftEl.RejectCallAction = fta.RejectCallAction;
+                    ftEl.AcceptReturnAction = fta.AcceptReturnAction;
+                    ftEl.RejectReturnAction = fta.RejectReturnAction;
 
-                    return;
-                }
-            }
+            } // foreach  (fta)
+
+            // Using .NET reflection, because otherelse we cannot resolve the types used in the 
+            // FilterTypeAttribute constructor.
+
+            //foreach (CustomAttribute attr in type.CustomAttributes)
+            //{
+            //    if (attr.Constructor.DeclaringType.FullName.Equals(_filterTypeAnnotationName))
+            //    {
+            //        FilterTypeElement ftEl = new FilterTypeElement();
+            //        _filterTypes.Add(ftEl);
+
+            //        ftEl.Name = (String)attr.ConstructorParameters[0];
+            //        ftEl.AcceptCallAction = (String)attr.ConstructorParameters[1];
+            //        ftEl.RejectCallAction = (String)attr.ConstructorParameters[2];
+            //        ftEl.AcceptReturnAction = (String)attr.ConstructorParameters[3];
+            //        ftEl.RejectReturnAction = (String)attr.ConstructorParameters[4];
+
+            //        return;
+            //    }
+            //}
         }
 
         #endregion

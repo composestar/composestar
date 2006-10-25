@@ -23,14 +23,20 @@ namespace Composestar.StarLight.ContextInfo
 
         #endregion
 
+        #region ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterContext"/> class.
         /// </summary>
         public FilterContext()
         {
-            _storedActions = new Stack<int>();               
+            _storedActions = new Stack<int>();
         }
 
+        #endregion
+
+        #region Actions handling
+        
         /// <summary>
         /// Stores the action.
         /// </summary>
@@ -62,6 +68,10 @@ namespace Composestar.StarLight.ContextInfo
         {
             return _storedActions.Count > 0;
         }
+
+        #endregion
+
+        #region InnerCall handling
 
         /// <summary>
         /// Determines whether the current thread is making an inner call.
@@ -107,16 +117,17 @@ namespace Composestar.StarLight.ContextInfo
         {
             _innercalls.Remove(GetThreadId());
         }
-                
+
         /// <summary>
         /// Gets the inner filter context.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns an <see cref="T:InnerFilterContext"></see> object based on the current thread id if it is set in the 
+        /// inner calls list. If no <see cref="T:InnerFilterContext"></see> with the current thread id could be found, <see langword="null"></see> will be returned.</returns>
         private static InnerFilterContext GetInnerFilterContext()
         {
             int threadId = GetThreadId();
 
-            InnerFilterContext ifc;            
+            InnerFilterContext ifc;
             if (_innercalls.TryGetValue(threadId, out ifc))
                 return ifc;
             else
@@ -124,13 +135,15 @@ namespace Composestar.StarLight.ContextInfo
         }
 
         /// <summary>
-        /// Gets the current thread identifier as an <see cref="T:System.Int32" />.
+        /// Gets the current thread identifier as an <see cref="T:System.Int32" /> value.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="T:System.Int32" /> representation of the current thread.</returns>
         private static int GetThreadId()
         {
             return Thread.CurrentThread.ManagedThreadId;
         }
+
+        #endregion
 
         #region InnerFilterContext class
         

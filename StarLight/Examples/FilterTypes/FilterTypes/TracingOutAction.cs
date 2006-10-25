@@ -9,8 +9,8 @@ using Composestar.StarLight.ContextInfo.FilterTypes;
 
 namespace FilterTypes
 {
-    [FilterActionAttribute("TracingOutAction", FilterFlowBehaviour.Continue,
-        MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute("TracingOutAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
+       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
     public class TracingOutAction : FilterAction
     {
         public override void Execute(JoinPointContext context)
@@ -38,7 +38,7 @@ namespace FilterTypes
                 for (short i = 1; i <= context.ArgumentCount; i++)
                 {
                     ArgumentInfo argumentInfo = context.GetArgumentInfo(i);
-                    if (argumentInfo.isOut())
+                    if (argumentInfo.IsOut())
                     {
                         if (argumentInfo.Value == null)
                         {

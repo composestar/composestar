@@ -5,10 +5,10 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    ///  TODO Generate comments
+    /// Substitution filter type.
     /// </summary>
-    [FilterTypeAttribute( "Substitution", "SubstitutionAction", "ContinueAction", 
-        "ContinueAction", "ContinueAction" )]
+    [FilterTypeAttribute(FilterType.SubstitutionFilter, FilterAction.SubstitutionAction, FilterAction.ContinueAction,
+        FilterAction.ContinueAction, FilterAction.ContinueAction)]
     public class SubstitutionFilterType : FilterType
     {
     }

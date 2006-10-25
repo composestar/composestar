@@ -5,9 +5,9 @@ using System.Text;
 namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
 {
     /// <summary>
-    /// 
+    /// Implements a call to an advice.
     /// </summary>
-    [FilterActionAttribute("AdviceAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute(FilterAction.AdviceAction, FilterActionAttribute.FilterFlowBehaviour.Continue, FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
     public class AdviceAction : FilterAction
     {
         /// <summary>
