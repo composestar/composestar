@@ -116,6 +116,7 @@
 				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
 				<exclude name="AOSD2006Demo/ProtocolLib/*"/>
 				<exclude name="DesignPatterns/Annotations/*"/>
+				<exclude name="DesignPatterns/Implementations/Composite/*"/>
 				<exclude name="Jukebox/jukeboxframe/*"/>
 				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
@@ -137,7 +138,7 @@
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
-				<include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe"/>
+				<!--include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe"/-->
 				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Facade/bin/Composestar.Patterns.Facade.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Interpreter/bin/Composestar.Patterns.Interpreter.Main.exe"/>

@@ -4,8 +4,8 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Caretaker men = new Caretaker("John");
-		System.out.println("We contracted an animal caretaker: " + men.name);
+		Caretaker man = new Caretaker("John");
+		System.out.println("We contracted an animal caretaker: " + man.name);
 
 		Platypus mother = new Platypus();
 		mother.setName("Mary");
@@ -15,18 +15,20 @@ public class Main
 
 		Object egg = mother.reproduce();
 
-		men.collectEggs((Bird)(Object)mother, (Egg)egg);  // Casting required to pass type verification of the J# compiler
+		man.collectEggs((Bird)(Object)mother, (Egg)egg);  // Casting required to pass type verification of the J# compiler
 
 		System.out.println("");
 
-		Platypus young = (Platypus)(Object)men.hatchEgg();
+		Platypus young = (Platypus)(Object)man.hatchEgg();
 		System.out.println("Mother platypus '" + mother.name + "' proudly looks at her young '" + young.name + "'.");
 
 		System.out.println("");
  
 		System.out.println("Is young '" + young.name + "' hungry? " + young.isHungry() );
-		Mammal m = (Mammal)(Object)young; m.setName(young.name);
-		men.feedMilk(m);  // Casting required to pass type verification of the J# compiler 
+		Mammal m = (Mammal)(Object)young; 
+		//m.setName(young.name);
+		
+		man.feedMilk(m);  // Casting required to pass type verification of the J# compiler 
 		System.out.println("Is young '" + young.name + "' still hungry? " + young.isHungry() );
 	}
 }

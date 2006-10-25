@@ -1,6 +1,6 @@
-concern Platypus in PlatypusExample
+concern PlatypusConcern in PlatypusExample
 {
-	filtermodule MultitpleInheritance
+	filtermodule MultipleInheritance
 	{
 		internals
 			m : PlatypusExample.Mammal;
@@ -12,8 +12,8 @@ concern Platypus in PlatypusExample
 	superimposition
 	{
 		selectors
-			files = { C | isClassWithName(C, 'PlatypusExample.Platypus') };
+			platypus = { C | isClassWithName(C, 'PlatypusExample.Platypus') };
 		filtermodules
-			files <- MultitpleInheritance;
+			platypus <- MultipleInheritance;
 	}
 }
