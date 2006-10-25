@@ -22,7 +22,7 @@ using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.Entities.Configuration;
 
-using Composestar.StarLight.ContextInfo.FilterTypes;
+using Composestar.StarLight.Filters.FilterTypes;
 #endregion
 
 namespace Composestar.StarLight.ILAnalyzer
@@ -271,10 +271,10 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Filter Type Naming
 
-        private string _filterTypeName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterType).FullName;
-        private string _filterTypeAnnotationName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterTypeAttribute).FullName;
-        private string _filterActionName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterAction).FullName;
-        private string _filterActionAnnotationName = typeof(Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAttribute).FullName;
+        private string _filterTypeName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterType).FullName;
+        private string _filterTypeAnnotationName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterTypeAttribute).FullName;
+        private string _filterActionName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterAction).FullName;
+        private string _filterActionAnnotationName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute).FullName;
 
         #endregion
 
@@ -568,7 +568,7 @@ namespace Composestar.StarLight.ILAnalyzer
             IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
             foreach (CustomAttributeData cad in attributes)
             {
-                if (!cad.ToString().Contains("Composestar.StarLight.ContextInfo.FilterTypes.FilterActionAttribute")) continue;
+                if (!cad.ToString().Contains("Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute")) continue;
 
                 FilterActionElement faEl = new FilterActionElement();
 
@@ -658,6 +658,8 @@ namespace Composestar.StarLight.ILAnalyzer
             // We have to inject the ContextInfo into the domain, or we cannot find the specific type.
             Assembly assmContext =
                 Assembly.ReflectionOnlyLoadFrom(Path.Combine(rootPath, "Composestar.StarLight.ContextInfo.dll"));
+            Assembly assmFilters =
+              Assembly.ReflectionOnlyLoadFrom(Path.Combine(rootPath, "Composestar.StarLight.Filters.dll"));
 
             _reflectionAssemblySetup = true;
 

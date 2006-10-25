@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Composestar.StarLight.Filters.FilterTypes;
+using Composestar.StarLight.ContextInfo;
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
+namespace Composestar.StarLight.Filters.BuildIn
 {
     /// <summary>
     /// Generates an exception.

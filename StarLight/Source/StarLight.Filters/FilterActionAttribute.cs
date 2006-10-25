@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes
+namespace Composestar.StarLight.Filters.FilterTypes
 {
     /// <summary>
     /// This custom attribute defines a FilterAction used by one ore more <see cref="T:FilterType">FilterTypes</see>.

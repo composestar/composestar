@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes
+namespace Composestar.StarLight.Filters.FilterTypes
 {
     /// <summary>
     /// The base class of every FilterType. Each subclass should be annotated with the FilterTypeAnnotation

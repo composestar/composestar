@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 using Composestar.StarLight.ContextInfo;
-using Composestar.StarLight.ContextInfo.FilterTypes;
-using Composestar.StarLight.ContextInfo.FilterTypes.BuildIn;
+using Composestar.StarLight.Filters.FilterTypes;
+using Composestar.StarLight.Filters.BuildIn;
     
 namespace FilterTypes
 {

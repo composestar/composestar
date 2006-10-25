@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes
+namespace Composestar.StarLight.Filters.FilterTypes
 {
     //class Resource
     //{

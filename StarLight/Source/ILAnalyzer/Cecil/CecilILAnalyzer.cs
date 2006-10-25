@@ -22,7 +22,7 @@ using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.Entities.Configuration;   
 
-using Composestar.StarLight.ContextInfo.FilterTypes;
+using Composestar.StarLight.Filters.FilterTypes;
 using Composestar.StarLight.Utilities.Cecil;
 #endregion
 

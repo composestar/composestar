@@ -84,11 +84,15 @@
     </ProjectReference>
     <ProjectReference Include="..\ContextInfo\ContextInfo.csproj">
       <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
-      <Name>ContextInfo %28Source\ContextInfo\ContextInfo%29</Name>
+      <Name>ContextInfo</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
       <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
       <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StarLight.Filters\StarLight.Filters.csproj">
+      <Project>{2E8080B8-CD6E-4AFC-AB32-6032ED9F99C5}</Project>
+      <Name>StarLight.Filters</Name>
     </ProjectReference>
     <ProjectReference Include="..\StarLightEntities\StarLightEntities.csproj">
       <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>

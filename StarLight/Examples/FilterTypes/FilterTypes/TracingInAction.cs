@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Collections;
 
 using Composestar.StarLight.ContextInfo;
-using Composestar.StarLight.ContextInfo.FilterTypes;
+using Composestar.StarLight.Filters.FilterTypes;
 
 namespace FilterTypes
 {

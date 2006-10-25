@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Composestar.StarLight.Filters.FilterTypes;
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
+namespace Composestar.StarLight.Filters.BuildIn
 {
     /// <summary>
     /// An error filter.   

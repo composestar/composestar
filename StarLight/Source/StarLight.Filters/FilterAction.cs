@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Composestar.StarLight.ContextInfo;
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes
+namespace Composestar.StarLight.Filters.FilterTypes
 {
     /// <summary>
     /// The base class of every FilterAction. Each subclass should be annotated with the FilterActionAnnotation

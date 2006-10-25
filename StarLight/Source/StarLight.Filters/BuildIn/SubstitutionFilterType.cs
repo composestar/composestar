@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-namespace Composestar.StarLight.ContextInfo.FilterTypes.BuildIn
+using Composestar.StarLight.Filters.FilterTypes;
+   
+namespace Composestar.StarLight.Filters.BuildIn
 {
     /// <summary>
     /// Substitution filter type.

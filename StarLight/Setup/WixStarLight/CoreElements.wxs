@@ -15,7 +15,8 @@
         <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
         <File Id='StarLightJar' Name='StrLght.jar' LongName='StarLight.jar' DiskId='1' Source='../../Source/Compiletime/dist/StarLight.jar' Vital='yes'></File>
         <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../libraries/xmltypes.jar' Vital='yes'></File>
-        <File Id="ContextInfo" Name="ContextInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
+        <File Id="ContextInfo" Name="ContInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
+        <File Id="Filters" Name="Filters" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" />
       </Component>
       <Directory Id ='Binaries' Name ='Binaries' />
       <Component Id='Registry' Guid ='0F390058-3D07-496a-8AA3-EF1DC4C64B13'>

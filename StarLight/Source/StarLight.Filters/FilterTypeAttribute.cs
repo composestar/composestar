@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 #endregion
 
-namespace Composestar.StarLight.ContextInfo.FilterTypes
+namespace Composestar.StarLight.Filters.FilterTypes
 {
     /// <summary>
     /// The <see cref="T:FilterTypeAttribute"></see> can be applied to classes and describes a <see cref="T:FilterType"></see>.
