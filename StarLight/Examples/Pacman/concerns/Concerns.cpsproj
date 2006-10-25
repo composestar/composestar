@@ -24,7 +24,13 @@
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>..\..\..\Source\ContextInfo\bin\Release\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Composestar.StarLight.Filters, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>Composestar.StarLight.Filters</Name>
+      <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
+      <HintPath>..\..\..\..\..\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.Filters.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

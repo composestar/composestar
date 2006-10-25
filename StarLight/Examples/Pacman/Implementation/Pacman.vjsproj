@@ -72,7 +72,7 @@
   <ItemGroup>
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Source\ContextInfo\bin\Release\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
