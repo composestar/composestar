@@ -111,12 +111,23 @@ namespace Composestar.StarLight.ILWeaver
             WeaveStrategyUtilities.LoadArguments(visitor, originalCall, jpcVar);
 
             // Call the method         
-            if(visitor.CalledMethod.HasThis)
+            if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) &&
+                filterAction.SubstitutionSelector.Equals(originalCall.Name))
             {
+                //Because it is an inner call targeting the method itself, we must call the method
+                //in the class itself. Therefore we do a Call instead of a Callvirt, to prevent that
+                //the call is dispatched to an overriding method in a subclass.
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
+            }
+            else if(visitor.CalledMethod.HasThis)
+            {
+                //Because we dispatch to another method than the original called method, we do a Callvirt
+                //so that an overriding method in a subclass may be called.
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
             }
             else
             {
+                //static method cannot be called with Callvirt.
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
             }
 
