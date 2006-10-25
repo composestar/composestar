@@ -62,8 +62,8 @@ public class DIGGER implements CTCommonModule
 					+ "DispatchGraph.xml"));
 		}
 		
-		//NOBBIN nobbin = new NOBBIN(graph);
-		//nobbin.walk();
+		NOBBIN nobbin = new NOBBIN(graph);
+		nobbin.walk();
 	}
 
 	/**
