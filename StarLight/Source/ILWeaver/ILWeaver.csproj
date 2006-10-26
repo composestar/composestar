@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil\CecilILWeaver.cs" />
-    <Compile Include="Cecil\CecilUtilities.cs" />
     <Compile Include="Cecil\CecilWeaverConfiguration.cs" />
     <Compile Include="Cecil\Visitors\CecilInliningInstructionVisitor.cs" />
     <Compile Include="Cecil\WeaveStrategy\AdviceActionWeaveStrategy.cs" />

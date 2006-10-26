@@ -11,6 +11,8 @@ using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 
+using Composestar.StarLight.Utilities;
+
 namespace Composestar.StarLight.ILWeaver
 {
     /// <summary>
@@ -53,7 +55,8 @@ namespace Composestar.StarLight.ILWeaver
         {
             // Create an exception
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj, 
-                CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, CachedMethodDefinition.ExceptionConstructor)));
+                CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
+                CachedMethodDefinition.ExceptionConstructor)));
 
             // Throw the exception
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Throw));

@@ -22,7 +22,9 @@ using Composestar.Repository;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
-using Composestar.StarLight.CoreServices.ILWeaver; 
+using Composestar.StarLight.CoreServices.ILWeaver;
+
+using Composestar.StarLight.Utilities;
 #endregion
 
 namespace Composestar.StarLight.ILWeaver
@@ -106,7 +108,7 @@ namespace Composestar.StarLight.ILWeaver
                 try
                 {
                     fileStream = new FileStream(_configuration.InputImagePath, FileMode.Open);
-                    binaryFile = CecilUtilities.ReadFully(fileStream, -1);
+                    binaryFile = CecilUtilities.ReadFileStream(fileStream, -1);
 
                 } // try
                 catch (Exception ex)

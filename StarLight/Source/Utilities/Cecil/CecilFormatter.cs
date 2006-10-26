@@ -29,7 +29,7 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Composestar.StarLight.Utilities.Cecil
+namespace Composestar.StarLight.Utilities
 {
 	/// <summary>
 	/// </summary>

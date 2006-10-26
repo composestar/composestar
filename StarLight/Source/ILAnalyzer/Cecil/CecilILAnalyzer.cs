@@ -23,7 +23,7 @@ using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.Entities.Configuration;   
 
 using Composestar.StarLight.Filters.FilterTypes;
-using Composestar.StarLight.Utilities.Cecil;
+using Composestar.StarLight.Utilities;
 #endregion
 
 namespace Composestar.StarLight.ILAnalyzer

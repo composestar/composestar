@@ -13,7 +13,7 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
-namespace Composestar.StarLight.Utilities.Cecil
+namespace Composestar.StarLight.Utilities
 {
     /// <summary>
     /// Assembly resolver to resolve assemblies and store those in a cache for quick lookup.

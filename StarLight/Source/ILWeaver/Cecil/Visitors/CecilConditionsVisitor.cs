@@ -15,6 +15,7 @@ using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
 
 using Composestar.StarLight.ContextInfo;
+using Composestar.StarLight.Utilities;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;

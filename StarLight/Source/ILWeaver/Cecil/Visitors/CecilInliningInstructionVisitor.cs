@@ -19,6 +19,8 @@ using Composestar.StarLight.CoreServices.Exceptions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Composestar.StarLight.Utilities;
+
 namespace Composestar.StarLight.ILWeaver
 {
 
@@ -523,8 +525,7 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         #endregion
-
-        
+              
 
         /// <summary>
         /// Visits the filter action. Uses Strategypattern to weave a specific instruction.

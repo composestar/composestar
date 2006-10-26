@@ -13,6 +13,7 @@ using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Utilities;
 
 namespace Composestar.StarLight.ILWeaver
 {
