@@ -37,6 +37,17 @@ public class ReifiedMessage implements ChildRunnable
 	// otherwise there should be a returnvalue
 	private boolean shouldContinue = true;
 
+	public ReifiedMessage(Message m) 
+	{
+		this.message = m;     
+	}
+
+	public ReifiedMessage( MessageList m )
+	{
+		this.message = m.getOrgMessage();
+		this.messagelist = m;
+	}
+    
 	public void setActMethodInfo(Object act, String method, Object[] args) 
 	{
 		this.actObject = act;
@@ -50,7 +61,7 @@ public class ReifiedMessage implements ChildRunnable
 		return this.continueBuffer;
 	}
 
-	public  synchronized  void run()
+	public synchronized void run()
 	{
 		Invoker.getInstance().invoke(this.actObject, this.actMethod, this.actArgs);
 
@@ -71,25 +82,7 @@ public class ReifiedMessage implements ChildRunnable
 		}
 	}
 
-	/**
-	 * @param m
-	 * @roseuid 404C4B5D0199
-	 */
-	public ReifiedMessage(Message m) 
-	{
-		this.message = m;     
-	}
-
-	public ReifiedMessage( MessageList m )
-	{
-		this.message = m.getOrgMessage();
-		this.messagelist = m;
-	}
-    
-	/**
-	 * @roseuid 40EA9DD10250
-	 */
-	public  synchronized void resume() 
+	public synchronized void resume() 
 	{
 		if( this.state == REIFIED )
 		{
@@ -108,7 +101,7 @@ public class ReifiedMessage implements ChildRunnable
 		return this.shouldContinue;
 	}
 
-	public synchronized  void reply() 
+	public synchronized void reply() 
 	{
 		if( this.state == REIFIED )
 		{
@@ -138,9 +131,6 @@ public class ReifiedMessage implements ChildRunnable
 		this.message.getResponseBuffer().produceFirst(dummy);
 	}
     
-	/**
-	 * @roseuid 40EAA183019C
-	 */
 	public synchronized void proceed() 
 	{
 		if( this.state == REIFIED || this.state == RESPONDED )
@@ -180,43 +170,26 @@ public class ReifiedMessage implements ChildRunnable
 		return this.state;     
 	}
     
-	/**
-	 * @return java.lang.String
-	 * @roseuid 40EA9F7903CC
-	 */
 	public String getSelector() 
 	{
 		return this.message.getSelector();     
 	}
     
-	/**
-	 * @param s
-	 * @roseuid 40EA9F8100C0
-     * @param obj
-	 */
-	public void setTarget(Object obj) 
-	{
-		this.message.setTarget(obj);     
-	}
-
-	public Object getTarget() 
-	{
-		return this.message.getTarget();     
-	}
-    
-	/**
-	 * @param s
-	 * @roseuid 40EA9F8100C0
-	 */
 	public void setSelector(String s) 
 	{
 		this.message.setSelector(s);     
 	}
     
-	/**
-	 * @return java.lang.Object[]
-	 * @roseuid 40EA9FA903DF
-	 */
+	public Object getTarget() 
+	{
+		return this.message.getTarget();     
+	}
+    
+	public void setTarget(Object obj) 
+	{
+		this.message.setTarget(obj);     
+	}
+
 	public Object[] getArgs() 
 	{
 		return this.message.getArguments();     
@@ -239,10 +212,6 @@ public class ReifiedMessage implements ChildRunnable
 		this.message.setArguments(args);
 	}
 
-	/**
-	 * @return java.lang.Object
-	 * @roseuid 40EA9FB70277
-	 */
 	public Object getReturnValue() 
 	{
 		return this.returnValue;     

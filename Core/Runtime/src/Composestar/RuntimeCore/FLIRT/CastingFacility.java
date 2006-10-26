@@ -1,4 +1,3 @@
-// .NET specific
 package Composestar.RuntimeCore.FLIRT;
 
 import java.util.Enumeration;
@@ -8,119 +7,93 @@ import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
 import Composestar.RuntimeCore.Utils.Debug;
 
 /**
- * Summary description for CastingFacility.
+ * This code is .NET specific (then why is it in RuntimeCore?)
  */
 public class CastingFacility
 {
-	private CastingFacility()
-	{
-
-	}
+	private CastingFacility() {}
 
 	public synchronized static Object handleCast(Object from, String to) 
 	{
-		Object result = null;
+		if (from == null) //return null; // because there is nothing to reason about.
+			throw new System.ArgumentNullException("from");
 
-		if (from == null) return null; // because there is nothing to reason about.
+		if (to == null)
+			throw new System.ArgumentNullException("to");
 
-		if (to.indexOf(']') >= 0)
+		// remove assembly name
+		int bracket = to.indexOf(']');
+		if (bracket != -1)
 		{
-			to = to.substring(to.indexOf(']')+1);
+			to = to.substring(bracket + 1);
 		}
 		
-		ObjectManager om = (ObjectManager)GlobalObjectManager.getObjectManagerFor(from);
-		
-		if (om != null) 
+		ObjectManager om = (ObjectManager)GlobalObjectManager.getObjectManagerFor(from);		
+		if (om == null) 
+		{
+			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No object manager found for '" + from + "'.");
+		}
+		else
 		{
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found an object manager for '" + from.getClass().getName() + "'.");
 
 			java.util.ArrayList filterModules = om.getFilterModules();
 			for (int i = 0; i < filterModules.size(); i++) 
 			{
-			
 				FilterModuleRuntime fmr = (FilterModuleRuntime)filterModules.get(i);
 
 				java.util.Hashtable internals = (java.util.Hashtable)fmr.getInternals();
 				java.util.Enumeration internalObjects = internals.elements();
 
-				while( internalObjects.hasMoreElements())
+				while (internalObjects.hasMoreElements())
 				{
 					Object internal = internalObjects.nextElement();
 					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Checking internal: "+internal.getClass().getName());
 
-					if ( internal.getClass().getName().equals(to) )
+					if (internal.getClass().getName().equals(to))
 					{
 						// This should be the match and return the correct internal object
-						result = internal;
-						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found internal object of type to return for casting: "+result);
-						break;
+						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found internal object of type to return for casting: " + internal);
+						return internal;
 					}
-				}
-
-				if (result != null) 
-				{
-					break;
 				}
 			}
 		}
-		else 
-		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No object manager found for '" + from + "'.");
-		}
 
-		if (result == null)
+		// Search for a possible cast in the other direction, from internal object to concern object...
+		Enumeration enumManagers = GlobalObjectManager.getEnumerator();
+		while (enumManagers.hasMoreElements())
 		{
-			// Search for a possible cast in the other direction, from internal object to concern object...
-			Enumeration enumManagers = GlobalObjectManager.getEnumerator();
-			while (enumManagers.hasMoreElements())
+			om = (ObjectManager)enumManagers.nextElement();
+			Iterator i = om.getFilterModules().iterator();
+			while (i.hasNext())
 			{
-				om = (ObjectManager)enumManagers.nextElement();
-				Iterator i = om.getFilterModules().iterator();
-				while (i.hasNext())
+				FilterModuleRuntime fmr = (FilterModuleRuntime)i.next();
+				if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Inspecting FilterModuleRuntime: " + fmr);
+
+				java.util.Hashtable internals = (java.util.Hashtable)fmr.getInternals();
+				java.util.Enumeration internalObjects = internals.elements();
+
+				while (internalObjects.hasMoreElements())
 				{
-					FilterModuleRuntime fmr = (FilterModuleRuntime)i.next();
-					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Inspecting FilterModuleRuntime: " + fmr);
-
-					java.util.Hashtable internals = (java.util.Hashtable)fmr.getInternals();
-					java.util.Enumeration internalObjects = internals.elements();
-
-					while(internalObjects.hasMoreElements())
-					{
-						Object internal = internalObjects.nextElement();
-					
-						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Inspecting internal '" + internal + "' of '" + fmr  + "'.");
-						
-						if ( internal.hashCode() == from.hashCode() )
-						{
-							// This should be the match and return the correct parent concern object
-							result = fmr.getObjectManager().theObject;
-							if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: "+result.getClass().getName() + ", key " + result.hashCode());
-							break;
-						}
-					}
-
-					if (result != null) 
-					{
-						break;
-					}
-				}
+					Object internal = internalObjects.nextElement();
 				
-				if (result != null) 
-				{
-					break;
+					if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Inspecting internal '" + internal + "' of '" + fmr  + "'.");
+					
+					// FIXME: identical hashCode does not guarantee equality
+					if (internal.hashCode() == from.hashCode())
+					{
+						// This should be the match and return the correct parent concern object
+						Object obj = fmr.getObjectManager().theObject;
+						if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","Found managed object for given internal to return for casting: " + obj.getClass().getName() + ", key " + obj.hashCode());
+						return obj;
+					}
 				}
 			}
-
 		}
 
-		if (result == null) 
-		{
-			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No internal object found for casting: "+from.getClass().getName() + " -> " + to);
-
-			result = from;
-		}
-		
-		return result;
+		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","No internal object found for casting: "+from.getClass().getName() + " -> " + to);
+		return from;
 	}
 
 	public synchronized static Object handleInheritedCall(Object target) 

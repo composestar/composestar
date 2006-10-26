@@ -33,23 +33,17 @@ public class DotNETInvoker extends Invoker
 		Object reply = null;
 		try
 		{
-			 reply = target.GetType().InvokeMember(selector,
-				System.Reflection.BindingFlags.Public 
-				| System.Reflection.BindingFlags.NonPublic
-				| System.Reflection.BindingFlags.Instance 
-				| System.Reflection.BindingFlags.InvokeMethod,
-				null, target, args);
+			BindingFlags flags = BindingFlags.Public 
+			                   | BindingFlags.NonPublic
+			                   | BindingFlags.Instance 
+			                   | BindingFlags.InvokeMethod;
+
+			reply = target.GetType().InvokeMember(selector, flags, null, target, args);
 		}
-		catch(System.Exception e) {
-			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation on instance "+ target + ":" + selector + " failed.");
-			String inner = "";
-			Console.WriteLine(e.get_StackTrace());
-			while(e != null)
-			{
-				Console.WriteLine(inner + "exception:" + e.getClass().getName() + ":" + e.get_Message());
-				inner += "inner";
-				e = e.get_InnerException();
-			}
+		catch (System.Exception e)
+		{
+			Debug.out(Debug.MODE_ERROR,"FLIRT","Invocation on instance " + target + ":" + selector + " failed:");
+			Debug.out(Debug.MODE_ERROR,"FLIRT",e.ToString());
 			System.exit(1);
 		}
 		return reply;
@@ -66,12 +60,12 @@ public class DotNETInvoker extends Invoker
 		Object reply = null;
 		try
 		{
-			reply = targetType.InvokeMember(selector,
-				System.Reflection.BindingFlags.Public 
-				| System.Reflection.BindingFlags.NonPublic 
-				| System.Reflection.BindingFlags.InvokeMethod 
-				| System.Reflection.BindingFlags.Static,
-				null, null, args);
+			BindingFlags flags = BindingFlags.Public 
+			                   | BindingFlags.NonPublic
+			                   | BindingFlags.Static 
+			                   | BindingFlags.InvokeMethod;
+
+			reply = targetType.InvokeMember(selector, flags, null, null, args);
 		}
 		catch(System.Exception e) 
 		{ 
