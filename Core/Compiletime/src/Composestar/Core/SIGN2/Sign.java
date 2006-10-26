@@ -41,41 +41,36 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.SANE.SIinfo;
 import Composestar.Utils.Debug;
+import Composestar.Utils.StringUtils;
 
 /**
  * 
  * 
  * @author Arjan de Roo
  */
-public class Sign implements CTCommonModule {
+public class Sign implements CTCommonModule
+{
+	private final static String MODULE_NAME = "SIGN";
+    
+	private final static int IN_SIGNATURE = 1;
+    private final static int POSSIBLE = 2;
+    private final static int NOT_IN_SIGNATURE = 3;
+
+    private final static String DISPATCH_FORMULA = "isDispatch";
+    private final static String META_FORMULA = "isMeta";
+    private final static String MATCHPART_FORMULA = "EXEXisState";
+    private final static String SIGMATCH_FORMULA = "E[!sigMatch U isState]";
+    private final static String[] META_PARAMS = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
+    private final static MethodInfo[] EmptyMethodInfoArray = {};
+	
     private HashSet unsolvedConcerns;
 
     private Hashtable analysisModels;
-
-    private final static int IN_SIGNATURE = 1;
-
-    private final static int POSSIBLE = 2;
-
-    private final static int NOT_IN_SIGNATURE = 3;
 
     // ctl-reusable fields:
     private Dictionary dictionary;
 
     private IsState isStatePredicate;
-
-    private final static String DISPATCH_FORMULA = "isDispatch";
-
-    private final static String META_FORMULA = "isMeta";
-
-    private final static String MATCHPART_FORMULA = "EXEXisState";
-
-    private final static String SIGMATCH_FORMULA = "E[!sigMatch U isState]";
-
-    private final static String[] META_PARAMS = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
-
-    private final static String MODULE_NAME = "SIGN";
-
-    private static final Composestar.Core.LAMA.MethodInfo[] EmptyMethodInfoArray = {};
 
     public Sign() {
         init();
@@ -1216,15 +1211,14 @@ public class Sign implements CTCommonModule {
 
             Signature st = concern.getSignature();
             if (st != null && concern.getDynObject(SIinfo.DATAMAP_KEY) != null) {
-                Debug.out(Debug.MODE_INFORMATION, "Sign",
-                        "\tSignature for concern: "
-                                + concern.getQualifiedName());
+                Debug.out(Debug.MODE_INFORMATION, MODULE_NAME,
+                        "\tSignature for concern: " + concern.getQualifiedName());
 
                 // Show them your goodies.
-                Iterator itr = (st.getMethodWrappers()).iterator();
-
-                while (itr.hasNext()) {
-                    MethodWrapper mw = (MethodWrapper) itr.next();
+                Iterator mwIt = st.getMethodWrapperIterator();
+                while (mwIt.hasNext())
+                {
+                    MethodWrapper mw = (MethodWrapper) mwIt.next();
                     if (mw.getRelationType() == MethodWrapper.REMOVED
                             || mw.getRelationType() == MethodWrapper.ADDED)
                         signaturesmodified = true;
@@ -1238,34 +1232,30 @@ public class Sign implements CTCommonModule {
                         relation = "kept";
 
                     // TODO: remove this, needed for demo!
-                    if (!Configuration.instance().getPlatformName().equalsIgnoreCase("c")) {
-                        String returntype = mw.theMethodInfo.getReturnTypeString();
+                    if (!Configuration.instance().getPlatformName().equalsIgnoreCase("c"))
+                    {
+                        MethodInfo mi = mw.getMethodInfo();
+                        String returntype = mi.getReturnTypeString();
 
-                        String parameters = "";
-                        Iterator itrpara = mw.theMethodInfo.getParameters()
-                                .iterator();
-                        while (itrpara.hasNext()) {
-                            ParameterInfo parainfo = (ParameterInfo) itrpara
-                                    .next();
-                            if (parameters.equalsIgnoreCase("")
-                                    && parainfo.parameterType() != null) {
-                                parameters = parainfo.parameterType().m_name;
-                            } else {
-                                parameters = parameters + ", " + parainfo.Name;
-                            }
-
+                        List paramNames = new ArrayList();
+                        Iterator piIt = mi.getParameters().iterator();
+                        while (piIt.hasNext())
+                        {
+                            ParameterInfo pi = (ParameterInfo)piIt.next();
+                            paramNames.add(pi.name());
                         }
-                        Debug.out(Debug.MODE_INFORMATION, "Sign", "\t\t[ "
-                                + relation + " ]  (" + returntype + ") "
-                                + mw.getMethodInfo().name() + '(' + parameters
-                                + ')');
+                        
+                        Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, 
+                                "\t[ " + relation + " ] " +
+                                "(" + returntype + ") " +
+                                mi.name() + 
+                                "(" + StringUtils.join(paramNames, ", ") + ")");
                     }
                 }
             }
         }
 
-        resources.addResource("signaturesmodified", Boolean
-                .valueOf(signaturesmodified));
+        resources.addBoolean("signaturesmodified", signaturesmodified);
     }
 
     

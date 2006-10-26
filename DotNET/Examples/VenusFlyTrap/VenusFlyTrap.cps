@@ -1,19 +1,22 @@
-concern VenusFlyTrap in VenusFlyTrapExample {
-	filtermodule InsectTrap{
+concern VenusFlyTrap in VenusFlyTrapExample
+{
+	filtermodule InsectTrap
+	{
 		internals
 			a : VenusFlyTrapExample.Animal;
 		conditions
-			isfly : a.hasPrey();
+			hasPrey : a.hasPrey();
 		inputfilters
-			eat : Dispatch = {[*.catchFly] a.catchPrey };
-			grow : Dispatch = {isfly => [*.grow] a.grow }
+			eat  : Dispatch = {[*.catchFly] a.catchPrey };
+			grow : Dispatch = {hasPrey => [*.grow] a.grow }
 	}
 	
-	superimposition{
+	superimposition
+	{
 		selectors
-			files = { C | isClassWithName(C,'VenusFlyTrapExample.VenusFlyTrap') };
+			vft = { C | isClassWithName(C,'VenusFlyTrapExample.VenusFlyTrap') };
 		filtermodules
-			files <-InsectTrap;
+			vft <- InsectTrap;
 	}
 	
 	implementation by VenusFlyTrapExample.VenusFlyTrap;

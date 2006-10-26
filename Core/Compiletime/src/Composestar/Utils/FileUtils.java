@@ -125,16 +125,27 @@ public class FileUtils
 
 	public static String removeExtension(String filename)
 	{
+		if (filename == null)
+			throw new IllegalArgumentException("filename can not be null");
+		
 		int lastdot = filename.lastIndexOf('.');
-		if (lastdot > 0)
-			return filename.substring(0, lastdot);
-
-		return filename;
+		return (lastdot == -1 ? filename : filename.substring(0, lastdot));
 	}
 	
 	public static String replaceExtension(String filename, String newext)
 	{
-		return removeExtension(filename) + "." + newext;
+		if (filename == null)
+			throw new IllegalArgumentException("filename can not be null");
+		
+		if (newext == null)
+			throw new IllegalArgumentException("newext can not be null");
+		
+		StringBuffer sb = new StringBuffer(filename.length() + 16);
+		sb.append(removeExtension(filename));
+		if (! newext.startsWith(".")) sb.append(".");
+		sb.append(newext);
+		
+		return sb.toString();
 	}
 
 	/**
