@@ -2,8 +2,10 @@
     <assemblies>
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\StarLight.Filters\bin\Debug\Composestar.StarLight.Filters.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\StarLight.Filters\bin\Debug\Composestar.StarLight.Filters.xml" />
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.xml" />
+        <assembly assemblyPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Utilities.Cecil.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Utilities.Cecil.xml" />
     </assemblies>
     <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False" />
         <namespaceSummaryItem name="Composestar.StarLight.ContextInfo" isDocumented="True">Contains the context information classes. The JoinPointContext is used as an argument to the execute functions in the filter actions and can be used by the conditions.
 The FilterContext is used internally by the StarLight compiler to include runtime information about the order and flow of the filters in a method.</namespaceSummaryItem>
         <namespaceSummaryItem name="Composestar.StarLight.ContextInfo.FilterTypes" isDocumented="False" />
@@ -12,8 +14,17 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <namespaceSummaryItem name="Composestar.StarLight.Filters.BuildIn" isDocumented="True">Contains all the buildin filters.</namespaceSummaryItem>
         <namespaceSummaryItem name="Composestar.StarLight.Filters.FilterTypes" isDocumented="True">Defines the filter types and actions and how they can be created.</namespaceSummaryItem>
         <namespaceSummaryItem name="Composestar.StarLight.Filters.Properties" isDocumented="False" />
+        <namespaceSummaryItem name="Composestar.StarLight.Utilities" isDocumented="True">The Utilities namespace contains functionality to lookup types and methods so they can be injected into the code. Most of those functions use some sort of caching system and it is highly recommended to use these functions for performance reasons.</namespaceSummaryItem>
+        <namespaceSummaryItem name="Composestar.StarLight.Utilities.Properties" isDocumented="False" />
     </namespaceSummaries>
     <contentPlacement>AboveNamespaces</contentPlacement>
+    <dependencies>
+        <dependencyItem depPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Mono.Cecil.dll" />
+        <dependencyItem depPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.CoreServices.dll" />
+        <dependencyItem depPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.DataStore.dll" />
+        <dependencyItem depPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Entities.dll" />
+        <dependencyItem depPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Microsoft.Practices.ObjectBuilder.dll" />
+    </dependencies>
     <projectSummary>ComposeStar StarLight Core Elements contain the StarLight classes to be used by the concern developer.</projectSummary>
     <sandcastlePath />
     <hhcPath />

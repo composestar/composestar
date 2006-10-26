@@ -16,29 +16,49 @@ using Mono.Cecil.Signatures;
 namespace Composestar.StarLight.Utilities
 {
     /// <summary>
-    /// Assembly resolver to resolve assemblies and store those in a cache for quick lookup.
+    /// Assembly resolver to resolve assemblies and store those in a cache for quick lookup. 
+    /// It will try to lookup assemblies on their assembly name of assembly definition.
     /// </summary>
+    /// <remarks>This class holds an internal cache for the found assemblies.</remarks>
     public class StarLightAssemblyResolver : BaseAssemblyResolver
     {
+
+        #region Private variables
 
         private Dictionary<string, AssemblyDefinition> m_cache;
         private string _binFolder;
 
+        #endregion
+
+        #region ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverAssemblyResolver"/> class.
         /// </summary>
-        /// <param name="binFolder">The bin folder.</param>
+        /// <param name="binFolder">The search folder containing the assemblies.</param>
         public StarLightAssemblyResolver(string binFolder)
         {
             _binFolder = binFolder;
             m_cache = new Dictionary<string, AssemblyDefinition>();
         }
 
+        #endregion
+
+        #region Resolvers
+
         /// <summary>
-        /// Resolves the specified full name.
+        /// Resolves the assembly by its full name.
         /// </summary>
-        /// <param name="fullName">The full name.</param>
-        /// <returns></returns>
+        /// <param name="fullName">The full name of an assembly.</param>
+        /// <example>
+        /// <code>
+        /// StarLightAssemblyResolver assemblyResolver = new StarLightAssemblyResolver("c:\project\bin");
+        /// String assemblyName = "assembly.dll";
+        /// AssemblyDefinition ad = assemblyResolver.Resolve(assemblyName);
+        /// </code>
+        /// </example>
+        /// <remarks>This functions will parse the <paramref name="fullName"/> to create an <see cref="T:Mono.Cecil.AssemblyNameReference"/>.</remarks>
+        /// <returns>Return an <see cref="T:Mono.Cecil.AssemblyDefinition"></see> or <see langword="null"/> when the assembly could not be found.</returns>
         public override AssemblyDefinition Resolve(string fullName)
         {
             if (String.IsNullOrEmpty(fullName))
@@ -62,10 +82,10 @@ namespace Composestar.StarLight.Utilities
         }
 
         /// <summary>
-        /// Resolves the specified name.
+        /// Resolves the assembly by its <see cref="T:Mono.Cecil.AssemblyNameReference"/>.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
+        /// <param name="name">The name and details of the assembly.</param>
+        /// <returns>Return an <see cref="T:Mono.Cecil.AssemblyDefinition"></see> or <see langword="null"/> when the assembly could not be found.</returns>
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
             AssemblyDefinition asm;
@@ -109,5 +129,8 @@ namespace Composestar.StarLight.Utilities
             return null;
 
         }
+
+        #endregion
+    
     }
 }

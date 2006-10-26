@@ -37,6 +37,23 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
+        /// <summary>
+        /// Get filter action element
+        /// </summary>
+        /// <param name="elements">Elements</param>
+        /// <param name="fullname">The fullname.</param>
+        /// <returns>Filter action element</returns>
+        private FilterActionElement GetFilterActionElement(List<FilterActionElement> elements, string fullname)
+        {
+            foreach (FilterActionElement fae in elements)
+            {
+                if (fae.FullName.Equals(fullname))
+                    return fae;
+            }
+
+            return null;
+        } // GetFilterActionElement(elements, name)
+
 
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
@@ -61,7 +78,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Create FilterAction object:
             FilterActionElement filterActionElement;
-            filterActionElement = CecilUtilities.GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
+            filterActionElement = GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
 
             if (filterActionElement == null)
                 throw new ILWeaverException(string.Format(Properties.Resources.CouldNotResolveFilterAction, filterAction.FullName)); 

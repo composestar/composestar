@@ -32,6 +32,7 @@ using Mono.Cecil.Cil;
 namespace Composestar.StarLight.Utilities
 {
 	/// <summary>
+    /// Utility to format Cecil IL constructions to a textual representation.
 	/// </summary>
 	public class CecilFormatter 
     {
@@ -40,7 +41,7 @@ namespace Composestar.StarLight.Utilities
         /// Formats the instruction.
         /// </summary>
         /// <param name="instruction">The instruction.</param>
-        /// <returns></returns>
+        /// <returns>A formatted instruction.</returns>
 		public static string FormatInstruction (Instruction instruction)
 		{
 			StringWriter writer = new StringWriter ();
@@ -52,7 +53,7 @@ namespace Composestar.StarLight.Utilities
         /// Formats the method body.
         /// </summary>
         /// <param name="method">The method.</param>
-        /// <returns></returns>
+        /// <returns>A formatted method body.</returns>
 		public static string FormatMethodBody (MethodDefinition method)
 		{
 			StringWriter writer = new StringWriter ();
@@ -61,7 +62,7 @@ namespace Composestar.StarLight.Utilities
 		}
 
         /// <summary>
-        /// Writes the method body.
+        /// Writes the method body of the <paramref name="method"/> to the <paramref name="writer"/>.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="method">The method.</param>
@@ -76,7 +77,7 @@ namespace Composestar.StarLight.Utilities
 		}
 
         /// <summary>
-        /// Writes the instruction.
+        /// Writes the instruction to the <paramref name="writer"/>.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="instruction">The instruction.</param>
@@ -95,7 +96,7 @@ namespace Composestar.StarLight.Utilities
         /// Formats the label.
         /// </summary>
         /// <param name="offset">The offset.</param>
-        /// <returns></returns>
+        /// <returns>A formatted IL label.</returns>
 		private static string FormatLabel (int offset)
 		{
 			string label = "000" + offset.ToString ("x");
@@ -103,10 +104,11 @@ namespace Composestar.StarLight.Utilities
 		}
 
         /// <summary>
-        /// Writes the operand.
+        /// Writes the operand to the <paramref name="writer"/>.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="operand">The operand.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="operand"/> is <see langword="null"/>.</exception>
 		private static void WriteOperand (TextWriter writer, object operand)
 		{
 			if (null == operand) throw new ArgumentNullException ("operand");
@@ -141,7 +143,7 @@ namespace Composestar.StarLight.Utilities
 		}
 
         /// <summary>
-        /// Toes the invariant culture string.
+        /// Convert a value to an invariant culture string.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
@@ -154,10 +156,10 @@ namespace Composestar.StarLight.Utilities
 		}
 
         /// <summary>
-        /// Writes the method reference.
+        /// Writes the method reference specified by the <paramref name="method"/> parameter to the <paramref name="writer"/>.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        /// <param name="method">The method.</param>
+        /// <param name="method">The method.</param>        
 		private static void WriteMethodReference (TextWriter writer, MethodReference method)
 		{
 			writer.Write (FormatTypeReference (method.ReturnType.ReturnType));
@@ -178,7 +180,7 @@ namespace Composestar.StarLight.Utilities
         /// Formats the type reference.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
+        /// <returns>A formatted type reference.</returns>
 		public static string FormatTypeReference (TypeReference type)
 		{
 			string typeName = type.FullName;
@@ -194,6 +196,9 @@ namespace Composestar.StarLight.Utilities
 			return typeName;
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CecilFormatter"/> class.
+        /// </summary>
 		private CecilFormatter ()
 		{
 		}

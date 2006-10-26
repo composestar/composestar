@@ -30,6 +30,7 @@ namespace Composestar.StarLight.Utilities
     /// </summary>
     public class CecilUtilities
     {
+
         #region Constants
 
         /// <summary>
@@ -85,9 +86,10 @@ namespace Composestar.StarLight.Utilities
         }
 
         /// <summary>
-        /// Gets the assembly resolver. Use this resolver to retrieve assemblies based on their name. It will first look in the folder specified by the BinFolder, the subfolders and finally the GAC.
+        /// Gets the assembly resolver. 
         /// </summary>
-        /// <remarks>Set the <see cref="P:Composestar.StarLight.Utilities.CecilUtilities.BinFolder"></see> first to a location where all the binaries can be found.</remarks> 
+        /// <remarks>Use this resolver to retrieve assemblies based on their name. It will first look in the folder specified by the BinFolder, the subfolders and finally the GAC.
+        /// Set the <see cref="P:Composestar.StarLight.Utilities.CecilUtilities.BinFolder"></see> first to a location where all the binaries can be found.</remarks> 
         /// <value>The assembly resolver.</value>
         public static StarLightAssemblyResolver AssemblyResolver
         {
@@ -704,12 +706,13 @@ namespace Composestar.StarLight.Utilities
 
         /// <summary>
         /// Reads data from a stream until the end is reached. The
-        /// data is returned as a byte array. An IOException is
-        /// thrown if any of the underlying IO calls fail.
+        /// data is returned as a byte array. 
         /// </summary>
         /// <param name="stream">The stream to read data from</param>
         /// <param name="initialLength">The initial buffer length</param>
         /// <returns>Byte array with the contents of the file.</returns>
+        /// <exception cref="System.IO.EndOfStreamException">An IOException is
+        /// thrown if any of the underlying IO calls fail.</exception>
         public static byte[] ReadFileStream(Stream stream, int initialLength)
         {
             // If we've been passed an unhelpful initial length, just
@@ -718,7 +721,7 @@ namespace Composestar.StarLight.Utilities
             {
                 initialLength = 32768;
             }
-
+             
             byte[] buffer = new byte[initialLength];
             int read = 0;
 
@@ -753,23 +756,6 @@ namespace Composestar.StarLight.Utilities
             Array.Copy(buffer, ret, read);
             return ret;
         }
-
-        /// <summary>
-        /// Get filter action element
-        /// </summary>
-        /// <param name="elements">Elements</param>
-        /// <param name="fullname">The fullname.</param>
-        /// <returns>Filter action element</returns>
-        public static FilterActionElement GetFilterActionElement(List<FilterActionElement> elements, string fullname)
-        {
-            foreach (FilterActionElement fae in elements)
-            {
-                if (fae.FullName.Equals(fullname))
-                    return fae;
-            }
-
-            return null;
-        } // GetFilterActionElement(elements, name)
 
         #endregion
     }
