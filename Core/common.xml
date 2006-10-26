@@ -106,7 +106,7 @@ Common routines. Always include this file in every build.xml file
 			<attribute name="target" default="Release"/>
 			<attribute name="action" default="rebuild"/>
 			<sequential>
-				<echo message="Running devenv [@{action}] for solution @{solution} (@{target})"/>
+				<echo message="Running devenv [@{action}] for solution @{solution} (@{target})" level="info"/>
 				<exec executable="${bin.devenv}" failonerror="true">
 					<arg value="@{solution}"/>
 					<arg value="/@{action}"/>
@@ -221,7 +221,7 @@ Common routines. Always include this file in every build.xml file
 	
 	<target name="svn-update" depends="init" description="Update the sources from the SVN repository">
 		<svn>
-			<update />
+			<update dir="${basedir}" />
 		</svn>
 	</target>
 
