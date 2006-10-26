@@ -138,16 +138,17 @@ public class CstarComp extends BaseTask
 				"total: " + cntTotal + 
 				"; success: " + cntSuccess +
 				"; failed: " + cntFail +
-				"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", Project.MSG_INFO);
+				"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
+				(cntFail == 0)?Project.MSG_INFO:Project.MSG_ERR );
 			
 		if (cntFail > 0)
 		{
-			log("Compilation of the following projects failed:", Project.MSG_INFO);		
+			log("Compilation of the following projects failed:", Project.MSG_ERR);		
 			Iterator it = failList.iterator();
 			while (it.hasNext())
 			{
 				String failed = (String)it.next();
-				log(failed, Project.MSG_INFO);
+				log(failed, Project.MSG_ERR);
 			}
 		}
 	}
