@@ -15,11 +15,11 @@ public class CastingFacility
 
 	public synchronized static Object handleCast(Object from, String to) 
 	{
-		if (from == null) //return null; // because there is nothing to reason about.
-			throw new System.ArgumentNullException("from");
-
-		if (to == null)
-			throw new System.ArgumentNullException("to");
+		// no need to convert null
+		if (from == null) return null;
+		
+		// a null typename is wrong though
+		if (to == null) throw new System.ArgumentNullException("to");
 
 		// remove assembly name
 		int bracket = to.indexOf(']');
