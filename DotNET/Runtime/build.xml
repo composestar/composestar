@@ -58,7 +58,7 @@
 			</fileset>
 		</copy>
 		
-		<echo message="Registering assemblies"/>
+		<echo message="Registering assemblies" level="info"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCore.dll"/>
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposestarCoreDotNET.dll"/> <!-- MISSING -->
 		<registerAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETRuntimeInterpreter.dll"/>
@@ -71,7 +71,7 @@
 	</target>
 	
 	<target name="uninstall" depends="init" description="uninstall the .net runtime">
-		<echo message="Unregistering assemblies"/>
+		<echo message="Unregistering assemblies" level="info"/>
 		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposestarCore.dll"/>
 		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposestarCoreDotNET.dll"/>
 		<unregisterAssembly dll="${composestar.installdir}/Binaries/ComposeStarDotNETRuntimeInterpreter.dll"/>
