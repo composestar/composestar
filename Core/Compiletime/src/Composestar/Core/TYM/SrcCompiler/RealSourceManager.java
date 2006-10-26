@@ -53,7 +53,7 @@ public class RealSourceManager implements CTCommonModule
 		{
 			Project project = (Project)projIt.next();
 			Language lang = project.getLanguage();
-			CompilerSettings compsettings = lang.compilerSettings;
+			CompilerSettings compsettings = lang.getCompilerSettings();
 			LangCompiler comp = compsettings.getCompiler();
 
 			String exetype = config.getProjects().getApplicationStart();
@@ -86,8 +86,6 @@ public class RealSourceManager implements CTCommonModule
 
 	/**
 	 * Returns the name of the sourcefile in which the specified executable type is defined.
-     * @param project
-     * @param exec
      */
 	private String getExeFile(Project project, String exec) throws ModuleException
 	{
@@ -113,7 +111,7 @@ public class RealSourceManager implements CTCommonModule
 		
 		// convert / to \ because of build.ini format
 		// nsp = normalized source path
-		String nsp = sourcePath.replace('/','\\'); 
+		String nsp = sourcePath.replace('/','\\');
 
 		// last part of sourcefile's path, without extension
 		// e.g. C:\pacman\Main.jsl => Main
@@ -146,7 +144,7 @@ public class RealSourceManager implements CTCommonModule
 				Debug.out(Debug.MODE_WARNING, "RECOMA",srcType+" is not a fully qualified target of source "+sourcePath);
 				targetFile = srcType; // last part of sourcefile's path
 			}
-		}   
+		}
 
 		// finish by adding .dll or .exe 
 		targetFile += (isExec ? ".exe" : ".dll");
@@ -154,4 +152,5 @@ public class RealSourceManager implements CTCommonModule
 		return targetFile; 
 	}
 }
+
 

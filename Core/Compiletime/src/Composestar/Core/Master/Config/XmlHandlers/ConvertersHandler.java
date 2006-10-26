@@ -34,7 +34,7 @@ public class ConvertersHandler extends DefaultHandler implements ContentHandler
 				converter.setName(name);
 				converter.setReplaceBy(replaceBy);
 				converter.setExpression(expression);
-				language.compilerSettings.addCompilerConverter(converter);
+				language.getCompilerSettings().addCompilerConverter(converter);
 			}
 		}
 	}
@@ -49,11 +49,9 @@ public class ConvertersHandler extends DefaultHandler implements ContentHandler
 
 	public void startDocument() 
 	{
-		
 	}
 
 	public void endDocument() 
 	{
-			
 	}
 }

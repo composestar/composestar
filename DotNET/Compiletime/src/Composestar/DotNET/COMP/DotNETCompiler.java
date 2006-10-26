@@ -50,7 +50,7 @@ public class DotNETCompiler implements LangCompiler
 		if (lang == null)
 			throw new CompilerException("Project has no language object");            	
 
-		CompilerSettings cs = lang.compilerSettings;
+		CompilerSettings cs = lang.getCompilerSettings();
 
 		// work out the libraries string
 		CompilerConverter compconv = cs.getCompilerConverter("libraryParam");
@@ -150,7 +150,7 @@ public class DotNETCompiler implements LangCompiler
 		if (lang == null)
 			throw new CompilerException("Project has no language object");
 		
-		CompilerSettings cs = lang.compilerSettings;
+		CompilerSettings cs = lang.getCompilerSettings();
 
 		// generate and execute command
 		CompilerAction action = cs.getCompilerAction("CompileLibrary");
@@ -166,7 +166,7 @@ public class DotNETCompiler implements LangCompiler
 		tr.addReplacement("OUT", FileUtils.quote(targetPath));
 		tr.addReplacement("LIBS", getLibrariesString(project, cs));
 		tr.addReplacement("OPTIONS", cs.getProperty("options"));
-		tr.addReplacement("SOURCES", getSourceFiles(project));
+		tr.addReplacement("SOURCES", getDummySources(project));
 		command = tr.process(command);
 
 		Debug.out(Debug.MODE_DEBUG,"COMP","Command " + command);
@@ -215,7 +215,7 @@ public class DotNETCompiler implements LangCompiler
 	/**
 	 * Returns a space-separated list of sourcefiles in the specified project.
      */
-	private String getSourceFiles(Project p)
+	private String getDummySources(Project p)
 	{
 		StringBuffer sb = new StringBuffer();
 		
