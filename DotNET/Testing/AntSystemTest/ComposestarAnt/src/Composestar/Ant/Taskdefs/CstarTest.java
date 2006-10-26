@@ -74,6 +74,7 @@ public class CstarTest extends BaseTask
 
 	public CstarTest()
 	{
+		super();
 	}
 	
 	public void setFailOnError(boolean failOnError)
