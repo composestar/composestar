@@ -24,9 +24,7 @@
 			</fileset>
 		</delete>
 		
-		
 	</target>
-
 	
 	<target name="init_local" depends="init">
 		<mkdir dir="${out.build}"/>
@@ -44,7 +42,7 @@
 	</target>
 	
 	<target name="compile_java">
-		<javac srcdir="Composestar" destdir="${out.build}" classpathref="lib.starlight" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.debug}">
+		<javac srcdir="Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.debug}">
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>
 	</target>

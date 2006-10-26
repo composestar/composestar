@@ -49,7 +49,7 @@
 
 	<target name="qa_build" depends="init"><!-- special target to build the source for QA inspection -->	
 		<mkdir dir="${out.build}"/>
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
 			<exclude name="Composestar/RuntimeCore/CODER/**"/> <!-- doesn't compile yet -->
 		</javac>
