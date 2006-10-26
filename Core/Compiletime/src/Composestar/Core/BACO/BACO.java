@@ -104,15 +104,6 @@ public abstract class BACO implements CTCommonModule
 					Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Adding dependency: '" + depFilename + "'");
 				}
 			}
-			/*
-			// add dummies (should not be needed)
-			String dummies = project.getCompiledDummies();
-			if (dummies != null)
-			{
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Adding dummies: '" + dummies + "'");
-				filesToCopy.add(FileUtils.unquote(dummies));
-			}
-			*/
 		}
 	}
 

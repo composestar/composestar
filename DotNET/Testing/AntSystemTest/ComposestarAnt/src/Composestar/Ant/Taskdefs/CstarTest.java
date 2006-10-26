@@ -140,6 +140,9 @@ public class CstarTest extends BaseTask
 
 	private void runTests(List tests)
 	{
+		if (tests.size() == 0)
+			throw new BuildException("No tests to run");
+		
 		log("Testing " + tests.size() + " Compose* programs", Project.MSG_INFO);
 
 		Iterator it = tests.iterator();
@@ -152,7 +155,7 @@ public class CstarTest extends BaseTask
 	
 	protected void runTest(File exec) throws BuildException
 	{
-		getProject().log(this, "" + (cntCurrent * 100 / cntTotal) + "% - " + exec, Project.MSG_INFO);
+		log("" + (cntCurrent * 100 / cntTotal) + "% - " + exec, Project.MSG_INFO);
 		cntCurrent++;
 
 		log(exec.getAbsolutePath(), Project.MSG_VERBOSE);
@@ -198,7 +201,7 @@ public class CstarTest extends BaseTask
 			}
 			else
 			{
-				getProject().log(this, "! Failed ! " + e.getMessage(), Project.MSG_ERR);
+				log("! Failed ! " + e.getMessage(), Project.MSG_ERR);
 				failList.add("" + exec);
 			}
 		}

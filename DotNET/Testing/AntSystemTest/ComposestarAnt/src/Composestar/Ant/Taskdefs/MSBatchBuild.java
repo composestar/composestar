@@ -45,12 +45,13 @@ public final class MSBatchBuild extends BaseTask
 				cmd[1] = buildFile.getAbsolutePath();
 				exec.setCommandline(cmd);
 				
-				log("Building " + buildFile, Project.MSG_INFO);
+				log(buildFile.getAbsolutePath(), Project.MSG_INFO);
 	
 				int result = exec.execute();			
 				if (Execute.isFailure(result))
-					log(EXECUTABLE + " failed with code " + result, Project.MSG_INFO);
-					//throw new BuildException(EXECUTABLE + " failed with code " + result);
+					log("! Failed ! Exitcode is " + result, Project.MSG_INFO);
+				
+				// TODO: add failOnError
 			}
 		}
 		catch (IOException e)

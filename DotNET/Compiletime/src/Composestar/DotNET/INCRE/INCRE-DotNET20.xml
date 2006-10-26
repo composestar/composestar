@@ -176,4 +176,7 @@
 	<module name="BACO" fulltype="Composestar.DotNET.BACO.DotNETBACO" enabled="true" incremental="false" summary="Copying libraries...">
 		<dependencies></dependencies>	
 	</module>
+	<module name="VERIFY" fulltype="Composestar.DotNET.VERIFY.VERIFY" enabled="true" incremental="false" summary="Verifying built assemblies...">
+		<dependencies></dependencies>		
+	</module>
 </modules>
