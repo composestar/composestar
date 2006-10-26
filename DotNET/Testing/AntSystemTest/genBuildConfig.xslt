@@ -111,6 +111,7 @@
 							</xsl:call-template>
 						</xsl:attribute>
 					</xsl:element>
+					<!-- (not used)
 					<xsl:element name="Path">
 						<xsl:attribute name="name">NET</xsl:attribute>
 						<xsl:attribute name="pathName">
@@ -125,8 +126,9 @@
 							<xsl:call-template name="convertBackSlashes">
 								<xsl:with-param name="str" select="$dotnetsdkpath" />
 							</xsl:call-template>
-						</xsl:attribute><!-- TODO: -->
+						</xsl:attribute>
 					</xsl:element>
+					-->
 					<xsl:element name="Path">
 						<xsl:attribute name="name">EmbeddedSources</xsl:attribute>
 						<xsl:attribute name="pathName">embedded/</xsl:attribute>
