@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="CecilFormatter.cs" />
     <Compile Include="CecilUtilities.cs" />
+    <Compile Include="ICecilInstructionVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

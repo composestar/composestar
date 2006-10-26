@@ -2,12 +2,12 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?include $(var.VariablesFile)?>
   <Fragment Id="MSBuildInst">
-   
+
     <ComponentGroup Id="CompGroup_MSBuild">
       <ComponentRef Id="Comp_MSBuild" />
     </ComponentGroup>
 
-       <DirectoryRef Id="ProgramFilesFolder">
+    <DirectoryRef Id="ProgramFilesFolder">
       <Directory Id="Dir_MSBuild" Name="MSBuild">
         <Directory Id="Dir_MSBuildMSStarLight" Name="STARLGHT" LongName="StarLight">
           <Directory Id="Dir_MSBuildStarLight10" Name="$(var.ProductVersionText)">
@@ -26,6 +26,7 @@
               <File Id="File_Tasks13" Name="TASKS13" LongName="Composestar.StarLight.CpsParser.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks14" Name="TASKS14" LongName="Composestar.StarLight.Utilities.Cecil.dll" src="$(var.IntegrationTasksPath)\" />
               <File Id="File_Tasks15" Name="TASKS15" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" />
+              <File Id="File_Tasks15" Name="TASKS15" LongName="Composestar.StarLight.Weaving.dll" src="$(var.IntegrationTasksPath)\" />
             </Component>
           </Directory>
         </Directory>

@@ -10,15 +10,15 @@ using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
-
+using Composestar.StarLight.Utilities.Interfaces;
 using Composestar.StarLight.Utilities;
 
-namespace Composestar.StarLight.ILWeaver
+namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// TODO generate comment
+    /// Strategy to create the ErrorFilterAction. Basically it injects an exception throw into the instruction code.
     /// </summary>
-    class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
+    public class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
     {
         /// <summary>
         /// Returns the name of the FilterAction for which this is the 
@@ -50,7 +50,7 @@ namespace Composestar.StarLight.ILWeaver
         ///   throw 
         /// </code>
         /// </example> 
-        public override void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
+        public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall)
         {
             // Create an exception

@@ -64,6 +64,9 @@ namespace Composestar.StarLight.CoreServices
 
     } // IAssemblyAccessors
 
+    /// <summary>
+    /// Interface for the weave specification load and save functions.
+    /// </summary>
     public interface IWeaveSpecAccessors
     {
         /// <summary>

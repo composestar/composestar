@@ -34,9 +34,51 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\AdviceActionWeaveStrategy.cs" />
+    <Compile Include="Strategies\ContinueActionWeaveStrategy.cs" />
+    <Compile Include="Strategies\DefaultWeaveStrategy.cs" />
+    <Compile Include="Strategies\DispatchActionWeaveStrategy.cs" />
+    <Compile Include="Strategies\ErrorActionWeaveStrategy.cs" />
+    <Compile Include="Strategies\FilterActionWeaveStrategy.cs" />
+    <Compile Include="Strategies\SubstitutionActionWeaveStrategy.cs" />
+    <Compile Include="Strategies\WeaveStrategyUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\cecil-0.4.3\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ContextInfo\StarLight.ContextInfo.csproj">
+      <Project>{C61238A6-EA8A-427F-BCF1-5D70DBEF06F6}</Project>
+      <Name>StarLight.ContextInfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreServices\StarLight.CoreServices.csproj">
+      <Project>{11331540-BE27-41A8-B10C-D1C7A686E554}</Project>
+      <Name>StarLight.CoreServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StarLightEntities\StarLightEntities.csproj">
+      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
+      <Name>StarLightEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Cecil\CecilUtilities.csproj">
+      <Project>{125370E1-A7FB-4458-A2AC-CA7C044FC944}</Project>
+      <Name>CecilUtilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

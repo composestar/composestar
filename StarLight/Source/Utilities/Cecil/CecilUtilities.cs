@@ -129,17 +129,19 @@ namespace Composestar.StarLight.Utilities
         /// Creates the method reference using a cached version of the method.
         /// </summary>
         /// <param name="assemblyDefinition">The assembly definition to input the method into.</param>
-        /// <param name="methodSignature">The method signature.</param>
+        /// <param name="methodDefinitionType">Type of the method definition.</param>
+        /// <returns>
+        /// A <see cref="T:Mono.Cecil.MethodReference"></see> based on the supplied <paramref name="methodDefinitionType"/>.
+        /// </returns>
         /// <example>
         /// The following example creates a call instruction to the <c>SetInnerCall</c> function.
-        /// <code>       
+        /// <code>
         /// // Call the SetInnerCall
-        /// Instructions.Add(Worker.Create(OpCodes.Call, 
-        ///   CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, 
-        ///                                        CachedMethodDefinition.SetInnerCall)));
+        /// Instructions.Add(Worker.Create(OpCodes.Call,
+        /// CecilUtilities.CreateMethodReference(TargetAssemblyDefinition,
+        /// CachedMethodDefinition.SetInnerCall)));
         /// </code>
         /// </example>
-        /// <returns>A <see cref="T:Mono.Cecil.MethodReference"></see> based on the supplied <paramref name="methodDefinitionType"/>.</returns>
         /// <exception cref="Composestar.StarLight.CoreServices.Exceptions.ILWeaverException">Thrown when the cached method definition could not be found.</exception>
         public static MethodReference CreateMethodReference(AssemblyDefinition assemblyDefinition, CachedMethodDefinition methodDefinitionType)
         {
@@ -153,7 +155,7 @@ namespace Composestar.StarLight.Utilities
         /// <summary>
         /// Add method to cache
         /// </summary>
-        /// <param name="methodSignature">Method signature</param>
+        /// <param name="methodDefinitionType">The method definition type.</param>
         /// <param name="methodBase">Method base</param>
         private static void AddMethodToCache(CachedMethodDefinition methodDefinitionType, MethodBase methodBase)
         {

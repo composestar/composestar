@@ -25,6 +25,8 @@ using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.CoreServices.ILWeaver;
 
 using Composestar.StarLight.Utilities;
+using Composestar.StarLight.Utilities.Interfaces;
+
 #endregion
 
 namespace Composestar.StarLight.ILWeaver
@@ -500,7 +502,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Method = method;
             visitor.CalledMethod = method;
             visitor.Worker = worker;
-            visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.InputFilter;
+            visitor.FilterType = FilterTypes.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
             visitor.EntitiesAccessor = _entitiesAccessor;
             visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
@@ -591,7 +593,7 @@ namespace Composestar.StarLight.ILWeaver
                     visitor.Method = method;
                     visitor.CalledMethod = md;
                     visitor.Worker = worker;
-                    visitor.FilterType = CecilInliningInstructionVisitor.FilterTypes.OutputFilter;
+                    visitor.FilterType = FilterTypes.OutputFilter;
                     visitor.TargetAssemblyDefinition = targetAssembly;
                     visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
                     visitor.WeaveType = weaveType;

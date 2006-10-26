@@ -10,37 +10,20 @@ using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Utilities.Interfaces;
 
-namespace Composestar.StarLight.ILWeaver
+using Composestar.StarLight.Weaving.Strategies;  
+
+namespace Composestar.StarLight.ILWeaver.WeaveStrategy
 {
-
     /// <summary>
-    /// TODO generate comment
+    /// This class is responsible for calling the correct strategy.
     /// </summary>
-    public abstract class FilterActionWeaveStrategy
+    public sealed class FilterActionStrategyDispatcher
     {
         private static Dictionary<string, FilterActionWeaveStrategy> strategyMapping;
         private static FilterActionWeaveStrategy defaultStrategy = new DefaultWeaveStrategy();
         private static object lockObject = new Object();
-
-        /// <summary>
-        /// Returns the name of the FilterAction for which this is the 
-        /// weaving strategy.
-        /// </summary>
-        public abstract String FilterActionName
-        {
-            get;
-        }
-
-
-        /// <summary>
-        /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
-        /// </summary>
-        /// <param name="visitor">The visitor.</param>
-        /// <param name="filterAction">The filter action.</param>
-        /// <param name="originalCall">The original call.</param>
-        public abstract void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
-            MethodDefinition originalCall);
 
         /// <summary>
         /// Gets the filter action weave strategy.
@@ -50,18 +33,18 @@ namespace Composestar.StarLight.ILWeaver
         public static FilterActionWeaveStrategy GetFilterActionWeaveStrategy(string filterAction)
         {
             if (string.IsNullOrEmpty(filterAction))
-                throw new ArgumentNullException("filterAction"); 
+                throw new ArgumentNullException("filterAction");
 
             if (strategyMapping == null)
             {
                 lock (lockObject)
                 {
-                    if (strategyMapping == null) 
+                    if (strategyMapping == null)
                         CreateStrategyMapping();
                 } // lock
             }
 
-            if(strategyMapping.ContainsKey(filterAction))
+            if (strategyMapping.ContainsKey(filterAction))
             {
                 return strategyMapping[filterAction];
             }
@@ -70,7 +53,6 @@ namespace Composestar.StarLight.ILWeaver
                 return defaultStrategy;
             }
 
-            
         }
 
         /// <summary>
@@ -80,8 +62,10 @@ namespace Composestar.StarLight.ILWeaver
         {
             strategyMapping = new Dictionary<string, FilterActionWeaveStrategy>();
 
-            FilterActionWeaveStrategy strategy;
+            // TODO create strategies based on file contents.
 
+            FilterActionWeaveStrategy strategy;
+            
             strategy = new AdviceActionWeaveStrategy();
             strategyMapping.Add(strategy.FilterActionName, strategy);
             strategyMapping.Add("BeforeAction", strategy);
@@ -99,5 +83,6 @@ namespace Composestar.StarLight.ILWeaver
             strategy = new SubstitutionActionWeaveStrategy();
             strategyMapping.Add(strategy.FilterActionName, strategy);
         }
+
     }
 }

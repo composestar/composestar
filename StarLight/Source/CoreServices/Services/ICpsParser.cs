@@ -9,14 +9,23 @@ namespace Composestar.StarLight.CoreServices
     /// </summary>
     public interface ICpsParser
     {
+        /// <summary>
+        /// Gets the referenced types.
+        /// </summary>
+        /// <value>The referenced types.</value>
         List<String> ReferencedTypes { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has output filters.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has output filters; otherwise, <c>false</c>.
+        /// </value>
         bool HasOutputFilters { get; }
 
         /// <summary>
         /// Parses the file.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
         void Parse();
 
     }

@@ -10,36 +10,36 @@ using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Utilities.Interfaces;
 
-namespace Composestar.StarLight.ILWeaver
+namespace Composestar.StarLight.Weaving.Strategies
 {
+
     /// <summary>
-    /// TODO generate comment
+    /// Base class of the filter action weave strategies.
     /// </summary>
-    class SubstitutionActionWeaveStrategy : FilterActionWeaveStrategy
+    public abstract class FilterActionWeaveStrategy
     {
+    
         /// <summary>
         /// Returns the name of the FilterAction for which this is the 
         /// weaving strategy.
         /// </summary>
-        public override String FilterActionName
+        public abstract String FilterActionName
         {
-            get
-            {
-                return "SubstitutionAction";
-            }
+            get;
         }
-        
+
+
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filter action.</param>
         /// <param name="originalCall">The original call.</param>
-        public override void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
-            MethodDefinition originalCall)
-        {
-            //do nothing
-        }
+        public abstract void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
+            MethodDefinition originalCall);
+
+       
     }
 }

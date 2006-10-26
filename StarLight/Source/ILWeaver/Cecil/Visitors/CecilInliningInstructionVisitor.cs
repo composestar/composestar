@@ -20,6 +20,9 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using Composestar.StarLight.Utilities;
+using Composestar.StarLight.Utilities.Interfaces;
+using Composestar.StarLight.Weaving.Strategies;
+using Composestar.StarLight.ILWeaver.WeaveStrategy;
 
 namespace Composestar.StarLight.ILWeaver
 {
@@ -31,7 +34,7 @@ namespace Composestar.StarLight.ILWeaver
     /// <remarks>
     /// This visitor can also add types and local variables to the method.
     /// </remarks> 
-    public class CecilInliningInstructionVisitor : IVisitor
+    public class CecilInliningInstructionVisitor : IVisitor, ICecilInliningInstructionVisitor
     {
 
         #region Constant values
@@ -54,30 +57,7 @@ namespace Composestar.StarLight.ILWeaver
         private ConfigurationContainer _weaveConfiguration;
         private WeaveType _weaveType;
         #endregion
-
-        #region FilterType Enumeration
-
-        /// <summary>
-        /// Possible filter types this visitor can generate code for.
-        /// </summary>
-        public enum FilterTypes
-        {
-            /// <summary>
-            /// Default none.
-            /// </summary>
-            None = 0,
-            /// <summary>
-            /// Input filter.
-            /// </summary>
-            InputFilter = 1,
-            /// <summary>
-            /// Output filter.
-            /// </summary>
-            OutputFilter = 2,
-        }
-
-        #endregion
-
+             
         #region Properties
 
         /// <summary>
@@ -264,7 +244,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="attrMono">The attr mono.</param>
         /// <returns></returns>
-        public ArgumentAttributes ConvertAttributes(Mono.Cecil.ParamAttributes attrMono)
+        private ArgumentAttributes ConvertAttributes(Mono.Cecil.ParamAttributes attrMono)
         {
             ArgumentAttributes attr = ArgumentAttributes.In;
 
@@ -276,7 +256,7 @@ namespace Composestar.StarLight.ILWeaver
             if ((attrMono & ParamAttributes.Optional) == ParamAttributes.Optional) attr = attr | ArgumentAttributes.Optional;
             if ((attrMono & ParamAttributes.HasDefault) == ParamAttributes.HasDefault) attr = attr | ArgumentAttributes.HasDefault;
             if ((attrMono & ParamAttributes.HasFieldMarshal) == ParamAttributes.HasFieldMarshal) attr = attr | ArgumentAttributes.HasFieldMarshal;
- 
+  
             return attr;
         }
 
@@ -301,26 +281,26 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Creates the local var.
+        /// Creates the local variable.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>Returns the variable</returns>
-        private VariableDefinition CreateLocalVar(Type type)
+        /// <param name="type">The type of the variable to create.</param>
+        /// <returns>Returns the variable as a <see cref="T:Mono.Cecil.VariableDefinition"></see>.</returns>
+        public VariableDefinition CreateLocalVariable(Type type)
         {
             TypeReference typeRef = CecilUtilities.CreateTypeReference(TargetAssemblyDefinition, type);
-            return CreateLocalVar(typeRef);
+            return CreateLocalVariable(typeRef);
         }
 
         /// <summary>
-        /// Creates the local var.
+        /// Creates the local variable.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>Returns the variable</returns>
-        private VariableDefinition CreateLocalVar(TypeReference type)
+        /// <param name="type">The typereference to create.</param>
+        /// <returns>Returns the variable as a <see cref="T:Mono.Cecil.VariableDefinition"></see>.</returns>
+        public VariableDefinition CreateLocalVariable(TypeReference type)
         {
             VariableDefinition var = new VariableDefinition(type);
             var.Name = type.ToString();
-
+            Method.Body.InitLocals = true; 
             Method.Body.Variables.Add(var);
 
             return var;
@@ -343,7 +323,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             if (m_ObjectLocal == null)
             {
-                m_ObjectLocal = CreateLocalVar(typeof(Object));
+                m_ObjectLocal = CreateLocalVariable(typeof(Object));
             }
 
             return m_ObjectLocal;
@@ -357,7 +337,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             if (m_ActionStoreLocal == null)
             {
-                m_ActionStoreLocal = CreateLocalVar(typeof(FilterContext));
+                m_ActionStoreLocal = CreateLocalVariable(typeof(FilterContext));
             }
 
             return m_ActionStoreLocal;
@@ -371,7 +351,7 @@ namespace Composestar.StarLight.ILWeaver
         {
             if (m_TypeLocal == null)
             {
-                m_TypeLocal = CreateLocalVar(typeof(System.Type));
+                m_TypeLocal = CreateLocalVariable(typeof(System.Type));
             }
 
             return m_TypeLocal;
@@ -380,12 +360,11 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Creates the join point context variable.
         /// </summary>
-        internal VariableDefinition CreateJoinPointContextLocal()
+        public VariableDefinition CreateJoinPointContextLocal()
         {
             if (m_JpcLocal == null)
             {
-                m_JpcLocal = CreateLocalVar(typeof(JoinPointContext));
-                Method.Body.InitLocals = true;
+                m_JpcLocal = CreateLocalVariable(typeof(JoinPointContext));              
             }
 
             return m_JpcLocal;
@@ -533,8 +512,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="filterAction">The filter action.</param>
         public void VisitFilterAction(FilterAction filterAction)
         {
-            FilterActionWeaveStrategy strategy = FilterActionWeaveStrategy.GetFilterActionWeaveStrategy(
-                filterAction.Type);
+            FilterActionWeaveStrategy strategy = FilterActionStrategyDispatcher.GetFilterActionWeaveStrategy(filterAction.Type);
 
             strategy.Weave(this, filterAction, CalledMethod);
         }
@@ -944,7 +922,7 @@ namespace Composestar.StarLight.ILWeaver
 
                         // Determine the parameter direction
                         ArgumentAttributes attr = ConvertAttributes(param.Attributes); 
-
+                        
                         Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
              
                         // Load jpc

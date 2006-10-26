@@ -15,13 +15,14 @@ using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.CoreServices.Exceptions;
 using Composestar.StarLight.Utilities;
-   
-namespace Composestar.StarLight.ILWeaver
+using Composestar.StarLight.Utilities.Interfaces;
+
+namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
     /// Utilities for specific weaving tasks like creating JoinPointContext objects and reading those objects.
     /// </summary>
-    class WeaveStrategyUtilities
+    public class WeaveStrategyUtilities
     {
         
         /// <summary>
@@ -32,7 +33,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="originalCall">The original call</param>
         /// <param name="filterAction">The filterAction</param>
         internal static void SetJoinPointContext(
-            CecilInliningInstructionVisitor visitor,
+            ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, FilterAction filterAction)
         {
           
@@ -141,7 +142,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <summary>
         /// Creates the code that loads the arguments from the JoinPointContext onto the stack
         /// </summary>
-        internal static void LoadArguments(CecilInliningInstructionVisitor visitor,
+        internal static void LoadArguments(ICecilInliningInstructionVisitor visitor,
             MethodReference originalMethod, VariableDefinition jpcVar)
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
@@ -176,7 +177,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="visitor"></param>
         /// <param name="originalCall"></param>
         /// <param name="jpcVar"></param>
-        internal static void StoreReturnValue(CecilInliningInstructionVisitor visitor,
+        internal static void StoreReturnValue(ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, VariableDefinition jpcVar)
         {
             // Store returnvalue
@@ -208,9 +209,9 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="visitor">The visitor</param>
         /// <param name="jpcVar">The JoinPointContext VariableDefinition</param>
-        internal static void LoadSelfObject(CecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
+        internal static void LoadSelfObject(ICecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
         {
-            if(visitor.FilterType == CecilInliningInstructionVisitor.FilterTypes.InputFilter)
+            if(visitor.FilterType == FilterTypes.InputFilter)
             {
                 // Load this
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));

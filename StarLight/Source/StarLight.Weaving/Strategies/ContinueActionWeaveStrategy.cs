@@ -10,13 +10,14 @@ using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
+using Composestar.StarLight.Utilities.Interfaces;
 
-namespace Composestar.StarLight.ILWeaver
+namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
     /// TODO generate comment
     /// </summary>
-    class ContinueActionWeaveStrategy : FilterActionWeaveStrategy
+    public class ContinueActionWeaveStrategy : FilterActionWeaveStrategy
     {
         /// <summary>
         /// Returns the name of the FilterAction for which this is the 
@@ -37,7 +38,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filter action.</param>
         /// <param name="originalCall">The original call.</param>
-        public override void Weave(CecilInliningInstructionVisitor visitor, FilterAction filterAction,
+        public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall)
         {
             //do nothing
