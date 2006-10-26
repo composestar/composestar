@@ -17,8 +17,8 @@ namespace Trese.ComposestarTasks
 		private ITaskItem[] m_dependencies;
 		private string m_outputPath;
 		private string m_startupObject;
-		private string m_frameworkPath;
-		private string m_frameworkSdkPath;
+	//	private string m_frameworkPath;
+	//	private string m_frameworkSdkPath;
 
 		public GenConfigTask()
 		{
@@ -71,7 +71,7 @@ namespace Trese.ComposestarTasks
 		{
 			set { m_startupObject = value; }
 		}
-
+	/*
 		[Required]
 		public string FrameworkPath
 		{
@@ -83,7 +83,7 @@ namespace Trese.ComposestarTasks
 		{
 			set { m_frameworkSdkPath = value; }
 		}
-
+	*/
 		public override bool Execute()
 		{
 			WriteConfiguration();
@@ -129,8 +129,8 @@ namespace Trese.ComposestarTasks
 			// paths
 			config.AddPath("Base", m_projectPath);
 			config.AddPath("Composestar", @"C:\Program Files\ComposeStar\");
-			config.AddPath("NET", m_frameworkPath);
-			config.AddPath("NETSDK", m_frameworkSdkPath);
+		//	config.AddPath("NET", m_frameworkPath);
+		//	config.AddPath("NETSDK", m_frameworkSdkPath);
 			config.AddPath("EmbeddedSources", @"embedded\");
 			config.AddPath("Dummy", @"dummies\");
 

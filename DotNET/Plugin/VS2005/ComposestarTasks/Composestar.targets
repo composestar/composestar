@@ -11,12 +11,6 @@
         Name="ComposeStarGen"
         DependsOnTargets="ResolveReferences">
       <Message Text="Generating BuildConfiguration.xml"/>
-      <GetFrameworkPath>
-        <Output TaskParameter="Path" PropertyName="FrameworkPath"/>
-      </GetFrameworkPath>
-      <GetFrameworkSdkPath>
-        <Output TaskParameter="Path" PropertyName="FrameworkSdkPath"/>
-      </GetFrameworkSdkPath>
       <GenConfigTask
           ProjectName="$(Name)" 
           ProjectPath="$(MSBuildProjectDirectory)"
@@ -25,10 +19,19 @@
           Concerns="@(Concern)" 
           Dependencies="@(ReferencePath)"
           OutputPath="$(MSBuildProjectDirectory)\$(OutputPath)"
-          StartupObject="$(StartupObject)" 
+          StartupObject="$(StartupObject)"/>
+    </Target>
+<!--
+      <GetFrameworkPath>
+        <Output TaskParameter="Path" PropertyName="FrameworkPath"/>
+      </GetFrameworkPath>
+      <GetFrameworkSdkPath>
+        <Output TaskParameter="Path" PropertyName="FrameworkSdkPath"/>
+      </GetFrameworkSdkPath>
+      <...
           FrameworkPath="$(FrameworkPath)" 
           FrameworkSdkPath="$(FrameworkSdkPath)"/>
-    </Target>
+-->
   
     <!--Compile target (this is the target that calls the compiler task)-->
     <Target Name="ComposeStarCompilerTarget">
