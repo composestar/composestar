@@ -14,10 +14,16 @@
         </File>
         <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
         <File Id='StarLightJar' Name='StrLght.jar' LongName='StarLight.jar' DiskId='1' Source='../../Source/Compiletime/dist/StarLight.jar' Vital='yes'></File>
-        <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../libraries/xmltypes.jar' Vital='yes'></File>
-        <File Id="ContextInfo" Name="ContInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
-        <File Id="Filters" Name="Filters" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" />
+        <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../libraries/xmltypes.jar' Vital='yes'></File>       
       </Component>
+      <Directory Id="CoreElements" Name="CoreElements">
+        <Component Id="CoreElements" Guid="B77B1F5E-4EA7-41ee-8D51-44C531C8D03D">
+          <File Id="ContextInfo" Name="ContInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
+          <File Id="Filters" Name="Filters" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" />
+          <RegistryKey Action="createAndRemoveOnUninstall" Id ="AssmblKey" Root="HKLM" Key ="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" />
+          <RegistryValue Action="write" Id="assmblValue" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" Root ="HKLM" Type="string" Value="[CoreElements]" />
+        </Component>
+      </Directory>
       <Directory Id ='Binaries' Name ='Binaries' />
       <Component Id='Registry' Guid ='0F390058-3D07-496a-8AA3-EF1DC4C64B13'>
         <Registry Id='RegInstallDir' Root='HKLM' Key='Software\Composestar\StarLight' Name='StarLightInstallFolder'
