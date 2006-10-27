@@ -20,5 +20,8 @@ namespace FilterModuleParameter
 		{
 			Console.Out.WriteLine("meow");
 		}
+
+		// needed to make it compile with .NET 2.0
+		public void walk() { }
 	}
 }

@@ -13,7 +13,10 @@ namespace FilterModuleParameter
 
 		public void feed()
 		{
-			Console.Out.WriteLine("eating letuce");
+			Console.Out.WriteLine("eating lettuce");
 		}
+
+		// needed to make it compile with .NET 2.0
+		public void walk() { }
 	}
 }
