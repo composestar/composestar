@@ -7,7 +7,7 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace BasicTests
 {
-    [FilterTypeAttribute("NotImplemented", "NotImplementedAction", FilterAction.ContinueAction, FilterAction.ContinueAction, FilterAction.ContinueAction)]
+    [FilterTypeAttribute("NotImplemented",  FilterAction.ContinueAction, "NotImplementedAction", FilterAction.ContinueAction, FilterAction.ContinueAction)]
     class NotImplementedFilterType : FilterType
     {
     }

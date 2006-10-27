@@ -86,8 +86,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="NotImplementedFilterType.cs" />
-    <None Include="NotImplementedAction.cs" />
+    <Compile Include="NotImplementedFilterType.cs" />
+    <Compile Include="NotImplementedAction.cs" />
     <Compile Include="FilterTests.cs">
       <SubType>Code</SubType>
     </Compile>

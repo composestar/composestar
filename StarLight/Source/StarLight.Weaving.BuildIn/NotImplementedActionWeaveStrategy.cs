@@ -1,14 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using Composestar.StarLight.Entities.Concerns;
-using Composestar.StarLight.Entities.LanguageModel;
-using Composestar.StarLight.Entities.WeaveSpec;
-using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities.Interfaces;
 using Composestar.StarLight.Utilities;
@@ -34,11 +28,11 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <example>
         /// The following construction should be created:
         /// <code>
-        /// throw new NotYetImplementedException();
+        /// throw new NotImplementedException();
         /// </code>
         /// or in IL code:
         /// <code>
-        /// newobj instance void [mscorlib]System.Exception::.ctor()
+        /// newobj instance void [mscorlib]System.NotImplementedException::.ctor()
         /// throw
         /// </code>
         /// </example>

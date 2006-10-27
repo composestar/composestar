@@ -7,7 +7,7 @@ concern FilterTestsConcern in BasicTests
 	    myInternal : BasicTests.TestInternal;
 	    myInteger : System.Int32;
 	    myBigInteger : System.Int64;
-	    myString : System.String;	    
+	    myString : System.String;	  
 	  externals
 	  	myExternal : BasicTests.TestExternal = BasicTests.TestExternal.getInstance();
 
@@ -17,8 +17,8 @@ concern FilterTestsConcern in BasicTests
 		    //produceerrordisp : Dispatch = { True => [*.getProduceError] };
 		    logging : Logging = { True => [*.*] };
 		    profiling: Profiling = { True => [*.*] };
-			//makeError : NotImplemented = {  doError ~> [*.makeError], !doError => [*.*] };
-			makeError : Error = {  doError ~> [*.makeError], !doError => [*.*] };
+			makeError : NotImplemented = {  doError ~> [*.makeError], !doError => [*.*] };
+			//makeError : Error = {  doError ~> [*.makeError], !doError => [*.*] };
 			aftertest : After = { True => [*.func4] myExternal.after };
 			test : Dispatch = { True => [*.func1] myExternal.externalMe };
 			test2 : Dispatch = { True => [*.func2] myInternal.internalMe };

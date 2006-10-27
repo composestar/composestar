@@ -275,6 +275,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
                                 
+                // TODO this only works for types in the mscorlib. Other types cannot be resolved without an assemblyname.
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
                 if (internalTypeRef == null) 
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
