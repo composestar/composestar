@@ -867,34 +867,49 @@ namespace Composestar.StarLight.ILWeaver
                 case FilterTypes.None:
                     break;
                 case FilterTypes.InputFilter:
-                    foreach (ParameterDefinition param in CalledMethod.Parameters)
+                    foreach(ParameterDefinition param in CalledMethod.Parameters)
                     {
-                        // Load the argument
-                        Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
-
-                        // Check if parameter is value type, then box
-                        if (param.ParameterType.IsValueType)
+                        if((param.Attributes & ParamAttributes.Out) != ParamAttributes.Out)
                         {
-                            Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                            // Load the argument
+                            Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
+
+                            // Check for reference parameter
+                            if(param.ParameterType.FullName.EndsWith("&"))
+                            {
+                                Instructions.Add(Worker.Create(OpCodes.Ldobj, param.ParameterType));
+                            }
+
+                            // Check if parameter is value type, then box
+                            if(param.ParameterType.IsValueType)
+                            {
+                                Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
+                            }
                         }
-                       
+                        else
+                        {
+                            // Load null if parameter is out
+                            Instructions.Add(Worker.Create(OpCodes.Ldnull));
+                        }
+
                         // Load the ordinal
                         Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
 
                         // Determine type
                         Instructions.Add(Worker.Create(OpCodes.Ldtoken, param.ParameterType));
-                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle )));                       
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.GetTypeFromHandle)));
 
                         // Determine the parameter direction
                         ArgumentAttributes attr = ConvertAttributes(param.Attributes);
-                    
-                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int)attr));
-               
+
+                        Instructions.Add(Worker.Create(OpCodes.Ldc_I4, (int) attr));
+
                         // Load jpc
                         Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                         // Call the AddArgument function statically
-                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextAddArgument)));                            
+                        Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextAddArgument)));
+
 
                     }
                     break;
@@ -906,6 +921,12 @@ namespace Composestar.StarLight.ILWeaver
                     for (int i = count - 1; i >= 0; i--)
                     {
                         ParameterDefinition param = parameters[i];
+
+                        // Check for reference parameter
+                        if(param.ParameterType.FullName.EndsWith("&"))
+                        {
+                            Instructions.Add(Worker.Create(OpCodes.Ldobj, param.ParameterType));
+                        }
 
                         // Check if parameter is value type, then box
                         if (param.ParameterType.IsValueType)
@@ -986,18 +1007,73 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="contextInstruction"></param>
         public void VisitRestoreJoinPointContext(ContextInstruction contextInstruction)
         {
+            // Get JoinPointContext
+            VariableDefinition jpcVar = CreateJoinPointContextLocal();
+
+            //
+            // Restore out/ref parameters
+            //
+            switch(FilterType)
+            {
+                case FilterTypes.None:
+                    break;
+                case FilterTypes.InputFilter:
+                    foreach(ParameterDefinition param in CalledMethod.Parameters)
+                    {
+                        if(param.ParameterType.FullName.EndsWith("&"))
+                        {
+                            // Load the argument
+                            Instructions.Add(Worker.Create(OpCodes.Ldarg, param));
+
+                            //
+                            // Load the value
+                            //
+
+                            // Load jpc
+                            Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                            // Load the ordinal
+                            Instructions.Add(Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                            // Call the GetArgumentValue function
+                            Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetArgumentValue)));
+
+                            // Check if returnvalue is value type, then unbox, else cast
+                            if(param.ParameterType.IsValueType)
+                            {
+                                Instructions.Add(Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
+                            }
+                            else
+                            {
+                                Instructions.Add(Worker.Create(OpCodes.Castclass, param.ParameterType));
+                            }
+
+                            //
+                            // Store the value
+                            //
+                            Instructions.Add(Worker.Create(OpCodes.Stobj, param.ParameterType));
+                        }
+
+                    }
+                    break;
+                case FilterTypes.OutputFilter:
+                    //TODO
+                    break;
+                default:
+                    break;
+            }
+
             // Retrieve returnvalue
             if(!CalledMethod.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
-                // Get JoinPointContext
-                VariableDefinition jpcVar = CreateJoinPointContextLocal();
-
                 // Load JoinPointContext
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
 
                 // Get returnvalue
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetReturnValue)));
-                           
+                 
+                
+
 
                 // Check if returnvalue is value type, then unbox, else cast
                 if(CalledMethod.ReturnType.ReturnType.IsValueType)

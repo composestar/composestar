@@ -195,6 +195,7 @@ namespace Composestar.StarLight.Utilities
             AddMethodToCache(CachedMethodDefinition.JoinPointContextGetSubstitutionTarget, typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionTarget, typeof(JoinPointContext).GetMethod("set_SubstitutionTarget", new Type[] { typeof(object) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextGetArgumentValue, typeof(JoinPointContext).GetMethod("GetArgumentValue", new Type[] { typeof(Int16) }));
+            AddMethodToCache(CachedMethodDefinition.JoinPointContextSetArgumentValue, typeof(JoinPointContext).GetMethod("SetArgumentValue", new Type[] { typeof(Int16), typeof(object) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetSubstitutionSelector, typeof(JoinPointContext).GetMethod("set_SubstitutionSelector", new Type[] { typeof(string) }));
             AddMethodToCache(CachedMethodDefinition.JoinPointContextSetReturnValue, typeof(JoinPointContext).GetMethod("SetReturnValue", new Type[] { typeof(object), typeof(JoinPointContext) }));
             AddMethodToCache(CachedMethodDefinition.HasMoreStoredActions, typeof(FilterContext).GetMethod("HasMoreStoredActions", new Type[] { }));
@@ -810,6 +811,10 @@ namespace Composestar.StarLight.Utilities
         /// Retrieve an argument value from the JoinPoinContext.
         /// </summary>
         JoinPointContextGetArgumentValue,
+        /// <summary>
+        /// Set an argument value in the JoinPoinContext.
+        /// </summary>
+        JoinPointContextSetArgumentValue,
         /// <summary>
         /// Set the sender.
         /// </summary>

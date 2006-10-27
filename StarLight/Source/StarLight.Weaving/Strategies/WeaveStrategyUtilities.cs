@@ -147,26 +147,189 @@ namespace Composestar.StarLight.Weaving.Strategies
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
             {
-                // Load jpc
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
-
-                // Load the ordinal
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
-
-                // Call the GetArgumentValue(int16) function                    
-                visitor.Instructions.Add(visitor.Worker.Create(
-                    OpCodes.Callvirt, 
-                    CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
-                        CachedMethodDefinition.JoinPointContextGetArgumentValue)));
-
-                // Check if parameter is value type, then unbox
-                if(param.ParameterType.IsValueType)
+                //check for reference:
+                if(param.ParameterType.FullName.EndsWith("&"))
                 {
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
+                    if(visitor.FilterType == FilterTypes.InputFilter)
+                    {
+                        // For out parameters that are value type, check whether a value was set
+                        if((param.Attributes & ParamAttributes.Out) == ParamAttributes.Out &&
+                            param.ParameterType.IsValueType)
+                        {
+                            //
+                            // Store value from joinpointcontext into out
+                            //
+
+                            // Load param
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
+
+                            // Load jpc
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                            // Load the ordinal
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                            // Call the GetArgumentValue(int16) function                    
+                            visitor.Instructions.Add(visitor.Worker.Create(
+                                OpCodes.Callvirt,
+                                CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+                                    CachedMethodDefinition.JoinPointContextGetArgumentValue)));
+
+                            // Duplicate value
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Dup));
+
+                            // Load null
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
+
+                            // Check equals
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ceq));
+
+                            // If not null, branch
+                            Instruction falseNop = visitor.Worker.Create(OpCodes.Nop);
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Brfalse, falseNop));
+
+                            // True branch
+
+                            // Pop unnecessary argument value
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Pop));
+
+                            // Jump to end (let parameter on the stack
+                            Instruction endNop = visitor.Worker.Create(OpCodes.Nop);
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Br, endNop));
+
+                            // End True branch
+
+
+                            // False branch
+
+                            // Nop instruction
+                            visitor.Instructions.Add(falseNop);
+
+                            // Unbox value
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
+
+                            // Store value
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Stobj, param.ParameterType));
+
+                            // Load param
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
+
+                            // End False branch
+
+                            // End nop instruction
+                            visitor.Instructions.Add(endNop);
+                        }
+                        else
+                        {
+                            //
+                            // Store value from joinpointcontext into out
+                            //
+
+                            // Load param
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
+
+                            // Duplicate
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Dup));
+
+                            // Load jpc
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                            // Load the ordinal
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                            // Call the GetArgumentValue(int16) function                    
+                            visitor.Instructions.Add(visitor.Worker.Create(
+                                OpCodes.Callvirt,
+                                CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+                                    CachedMethodDefinition.JoinPointContextGetArgumentValue)));
+
+                            // If valuetype unbox, else cast
+                            if(param.ParameterType.IsValueType)
+                            {
+                                // Unbox value
+                                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
+                            }
+                            else
+                            {
+                                // Cast
+                                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Castclass, param.ParameterType));
+                            }
+
+                            // Store value
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Stobj, param.ParameterType));
+                        }
+                    }
                 }
-                else
+                else //not a reference parameter
                 {
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Castclass, param.ParameterType));
+                    // Load jpc
+                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                    // Load the ordinal
+                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                    // Call the GetArgumentValue(int16) function                    
+                    visitor.Instructions.Add(visitor.Worker.Create(
+                        OpCodes.Callvirt,
+                        CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+                            CachedMethodDefinition.JoinPointContextGetArgumentValue)));
+
+                    // Check if parameter is value type, then unbox
+                    if(param.ParameterType.IsValueType)
+                    {
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
+                    }
+                    else
+                    {
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Castclass, param.ParameterType));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Restores the values of reference arguments in the JoinPointContext
+        /// </summary>
+        public static void RestoreArguments(ICecilInliningInstructionVisitor visitor,
+            MethodReference originalMethod, VariableDefinition jpcVar)
+        {
+            foreach(ParameterDefinition param in originalMethod.Parameters)
+            {
+                //check for reference:
+                if(param.ParameterType.FullName.EndsWith("&"))
+                {
+                    if(visitor.FilterType == FilterTypes.InputFilter)
+                    {
+
+                        //
+                        // Store value from out/ref into JPC
+                        //
+
+                        // Load jpc
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+
+                        // Load ordinal
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+
+                        // Load param
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
+
+                        // Load value
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldobj, param.ParameterType));
+
+                        // If valuetype, box
+                        if(param.ParameterType.IsValueType)
+                        {
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Box, param.ParameterType));
+                        }
+
+                        // Store value
+                        // Call the SetArgumentValue(int16, object) function                    
+                        visitor.Instructions.Add(visitor.Worker.Create(
+                            OpCodes.Callvirt,
+                            CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition,
+                                CachedMethodDefinition.JoinPointContextSetArgumentValue)));
+                    }
                 }
             }
         }

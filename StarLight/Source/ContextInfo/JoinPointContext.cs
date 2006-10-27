@@ -155,6 +155,8 @@ namespace Composestar.StarLight.ContextInfo
                 _arguments.Add(ordinal, new ArgumentInfo(argumentType, value, argumentAttributes));
         }
 
+        
+
         /// <summary>
         /// Adds the argument of a method to the list of arguments in the given JoinPointContext.
         /// This static method is usefull to add an argument that is on the stack, because we cannot 
@@ -215,6 +217,30 @@ namespace Composestar.StarLight.ContextInfo
                 return ai.Value;
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Sets the argument value based on the ordinal.
+        /// </summary>
+        /// <param name="ordinal">The ordinal of the argument.</param>
+        /// <param name="value">The value</param>
+        /// <example>Use the <c>SetArgumentValue</c> function to set a value of an argument (The argument needs to
+        /// be added already by the AddArgument method).
+        /// <code>
+        /// JoinPointContext jpc = new JoinPointContext();
+        /// jpc.AddArgument(1, typeof(int), 1024);
+        /// object o = (object) 1025;
+        /// jpc.SetArgumentValue( 1, o );
+        /// </code>
+        /// </example> 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void SetArgumentValue(short ordinal, object value)
+        {
+            ArgumentInfo ai;
+            if(_arguments.TryGetValue(ordinal, out ai))
+            {
+                ai.Value = value;
+            }
         }
 
         /// <summary>
@@ -545,7 +571,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Composestar.StarLight.ContextInfo.ArgumentInfo"/> class.
         /// </summary>
-        public ArgumentInfo()
+        internal ArgumentInfo()
         {
         }
 
@@ -554,7 +580,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </summary>
         /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
-        public ArgumentInfo(Type type, Object value)
+        internal ArgumentInfo(Type type, Object value)
         {
             _type = type;
             _value = value;
@@ -566,7 +592,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <param name="type">The type.</param>
         /// <param name="value">The value.</param>
         /// <param name="argumentAttributes">The argument attributes.</param>
-        public ArgumentInfo(Type type, Object value, ArgumentAttributes argumentAttributes)
+        internal ArgumentInfo(Type type, Object value, ArgumentAttributes argumentAttributes)
         {
             _type = type;
             _value = value;

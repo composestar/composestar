@@ -124,6 +124,9 @@ namespace Composestar.StarLight.Weaving.Strategies
 
             //Store the return value:
             WeaveStrategyUtilities.StoreReturnValue(visitor, originalCall, jpcVar);
+
+            //Restore arguments:
+            WeaveStrategyUtilities.RestoreArguments(visitor, originalCall, jpcVar);
         }
     }
 }
