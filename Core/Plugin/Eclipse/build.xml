@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Core/Plugin/Eclipse" default="build">
+
+	<condition property="build.core" value="../../../Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../../Core/common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+	
+	<echo>Processing: ${ant.project.name} ...</echo>
+		
+	<description>
+	The Compose* Eclipse Plugin (Core Part)
+	</description>
+	
+	<target name="init_local" depends="init">
+		<!-- fail if ECLIPSE_HOME environment variable not set! -->
+		<fail unless="env.ECLIPSE_HOME" message="ECLIPSE_HOME environment variable has not been set!"></fail>
+		
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin"/>
+		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/META-INF"/>
+		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/binaries"/>
+		<mkdir dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin/binaries/prolog"/>
+	</target>
+	
+	<!-- clean -->
+	<target name="clean" depends="init">
+		<delete dir="${out.build}"/>
+		<delete dir="${eclipse.pluginsdir}/ComposestarEclipsePlugin"/>
+	</target>
+	
+	<!-- build -->	
+	<target name="build" depends="init_local,compile,jar" description="compile the plugin core source">
+	</target>
+	
+	<!-- compile -->
+	<target name="compile">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.eclipse" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		</javac>
+	</target>
+	
+	<!-- jar -->
+	<target name="jar">
+		<jar destfile="${out.build}/ComposestarEclipsePluginCore.jar" basedir="${out.build}" excludes="*.jar"/>
+	</target>
+	
+	<!-- install -->	
+	<target name="install" depends="init_local,build" description="">
+		<!-- prolog -->
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/binaries/prolog">
+			<fileset dir="../../Compiletime/binaries/prolog/" excludes="prolog-src.jar"/>
+		</copy>
+	</target>
+</project>
