@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/Java/Plugin/Eclipse" default="build">
+
+	<condition property="build.core" value="../../../Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="../../../Core/common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+	
+	<echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>
+	The Compose* Eclipse Java Plugin
+	</description>
+	
+	<target name="init_local" depends="init">
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
+	</target>
+	
+	<!-- clean -->
+	<target name="clean" depends="init,clean_core">
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
+	</target>
+	
+	<!-- clean core -->
+	<target name="clean_core">
+		<ant target="clean" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
+	</target>
+	
+	<!-- build -->	
+	<target name="build" depends="init_local,build_core,compile,jar" description="compile the eclipse plugin" />
+		
+	<!-- build core -->
+	<target name="build_core">
+		<ant target="build" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
+	</target>
+	
+	<!-- compile -->
+	<target name="compile" depends="init_local" >
+		<javac srcdir="src" destdir="${out.build}" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+			<classpath>
+				<pathelement location="${build.core}/Plugin/Eclipse/${out.build}/ComposestarEclipsePluginCore.jar"/>
+			</classpath>
+			<classpath refid="lib.eclipse" />
+		</javac>
+	</target>
+	
+	<!-- create jar -->
+	<target name="jar">
+		<jar destfile="${out.dist}/ComposestarEclipsePlugin.jar">
+			<fileset dir="${build.core}/Plugin/Eclipse/${out.build}" />
+			<fileset dir="${out.build}" />
+		</jar>
+	</target>
+	
+	<!-- install -->	
+	<target name="install" depends="init_local,install_core,build" description="install the eclipse plugin">
+		
+		<!-- classes -->
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+			<fileset dir="${out.dist}"/>
+		</copy>
+		
+		<!-- plugin files -->
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+			<fileset dir=".">
+				<filename name="*.*"></filename>
+			</fileset>
+		</copy>
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/META-INF">
+			<fileset dir="META-INF">
+				<filename name="MANIFEST.MF"/>
+			</fileset>
+		</copy>
+		
+		<!-- INCREConfig -->
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin">
+			<fileset dir="../../Compiletime/src/Composestar/Java/INCRE/">
+				<include name="*.xml"/>
+			</fileset>
+		</copy>
+		
+		<!-- PlatformConfigurations ?? -->
+	</target>
+	
+		<!-- clean core -->
+	<target name="install_core">
+		<ant target="install" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
+	</target>
+	
+</project>

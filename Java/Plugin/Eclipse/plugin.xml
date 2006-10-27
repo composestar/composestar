@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.1"?>
+<plugin>
+   <extension point="org.eclipse.ui.actionSets">
+     <actionSet
+     		id="actionset"
+           	label="%COMPOSESTAR_NAME"
+           	visible="true">
+        <menu
+        	id="composestar"
+       		label="%COMPOSESTAR_NAME"
+       		path="project/additions">
+       		<separator name="slot1"/>
+       	</menu>
+       	<action
+       		id="clean"
+            label="%COMPOSESTAR_MENU_CLEAN"
+            menubarPath="project/composestar/slot1">
+            <enablement>
+            	<systemProperty
+            		name="NonExistingProperty"
+            		value="SomeValue">
+            	</systemProperty>
+            </enablement>
+        </action>
+        <action
+       		id="debug"
+           	label="%COMPOSESTAR_MENU_DEBUG"
+           	menubarPath="project/composestar/slot1"
+           	icon="icons/debug_exc.gif">
+            <enablement>
+            	<systemProperty
+            		name="NonExistingProperty"
+            		value="SomeValue">
+            	</systemProperty>
+            </enablement>
+        </action>
+        <action
+         	id="run"
+            label="%COMPOSESTAR_MENU_RUN"
+            menubarPath="project/composestar/slot1"
+            icon="icons/run_exc.gif">
+            <enablement>
+            	<systemProperty
+            		name="NonExistingProperty"
+            		value="SomeValue">
+            	</systemProperty>
+            </enablement>
+        </action>
+        <action
+       		id="build"
+           	label="%COMPOSESTAR_MENU_BUILD"
+           	menubarPath="project/composestar/slot1"
+            class="ComposestarEclipsePlugin.Java.Actions.JavaBuildAction"
+            enablesFor="1">
+		   <selection class="org.eclipse.core.resources.IProject"
+				name="*">
+		   </selection>
+        </action>
+      </actionSet>
+	</extension>
+ 	<extension point="org.eclipse.ui.preferencePages">
+ 		<page
+ 			id="composestareclipseplugin.ui.preferencepage"
+ 			name="%COMPOSESTAR_NAME"
+ 			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPreferencePage">
+ 		</page>
+ 	</extension>
+ 	<extension point="org.eclipse.ui.propertyPages">
+ 		<page
+ 			id="composestareclipseplugin.ui.propertypage"
+ 			name="%COMPOSESTAR_NAME"
+ 			objectClass="org.eclipse.core.resources.IProject"
+ 			class="ComposestarEclipsePlugin.Java.UI.JavaComposestarPropertyPage"
+ 			adaptable="true">
+ 		</page>
+ 	</extension>
+ 	<extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="composestarbuild">
+        <action
+            label="%BUILD_WITH_COMPOSESTAR"
+            menubarPath="C*" 
+            class="ComposestarEclipsePlugin.Java.Actions.JavaBuildAction"
+            enablesFor="1"
+            id="composestar.build">
+        </action>
+      </objectContribution>
+     </extension> 
+</plugin>
