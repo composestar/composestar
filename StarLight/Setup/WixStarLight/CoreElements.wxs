@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include $(var.VariablesFile)?>
   <Fragment>
     <DirectoryRef Id='INSTALLDIR'>
-      <Component Id='CoreFiles' Guid='8BAEEC8F-694C-42d4-A5C4-FBB18F5F4C36'>
-        <File Id='INCRECONFIG' Name='INCRcnfg.xml' LongName='INCREconfig.xml' DiskId='1'
-          Source='../../installed/INCREconfig.xml' Vital='yes'>
-        </File>
-        <File Id='INCREcss' Name='INCRE.css' LongName='INCRE.css' DiskId='1'
-          Source='../../installed/INCRE.css' Vital='yes'>
-        </File>
-        <File Id='FILTHxml' Name='FILTH.xml' LongName='FILTH.xml' DiskId='1'
-          Source='../../installed/FILTH.xml' Vital='yes'>
-        </File>
-        <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
-        <File Id='StarLightJar' Name='StrLght.jar' LongName='StarLight.jar' DiskId='1' Source='../../Source/Compiletime/dist/StarLight.jar' Vital='yes'></File>
-        <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../libraries/xmltypes.jar' Vital='yes'></File>       
-      </Component>
-      <Directory Id="CoreElements" Name="CoreElements">
-        <Component Id="CoreElements" Guid="B77B1F5E-4EA7-41ee-8D51-44C531C8D03D">
-          <File Id="ContextInfo" Name="ContInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" />
-          <File Id="Filters" Name="Filters" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" />
-          <RegistryKey Action="createAndRemoveOnUninstall" Id ="AssmblKey" Root="HKLM" Key ="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" />
-          <RegistryValue Action="write" Id="assmblValue" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" Root ="HKLM" Type="string" Value="[CoreElements]" />
+        <Component Id='InstallFolderCoreFiles' Guid='C814CA94-C727-46e7-B35C-DDB236071D24'>
+          <File Id='INCRECONFIG' Name='INCRcnfg.xml' LongName='INCREconfig.xml' DiskId='1'
+            Source='../../installed/INCREconfig.xml' Vital='yes'>
+          </File>
+          <File Id='INCREcss' Name='INCRE.css' LongName='INCRE.css' DiskId='1'
+            Source='../../installed/INCRE.css' Vital='yes'>
+          </File>
+          <File Id='FILTHxml' Name='FILTH.xml' LongName='FILTH.xml' DiskId='1'
+            Source='../../installed/FILTH.xml' Vital='yes'>
+          </File>
+        </Component>
+      <Directory Id="CompileTime" Name="comptime" LongName="Compiletime">
+        <Component Id='CoreFiles' Guid='8BAEEC8F-694C-42d4-A5C4-FBB18F5F4C36'>          
+          <File Id='ComposeStarCoreJar' Name='Core.jar' LongName='ComposestarCORE.jar' DiskId='1' Source='../../../Core/Compiletime/dist/ComposestarCORE.jar' Vital='yes'></File>
+          <File Id='StarLightJar' Name='StrLght.jar' LongName='StarLight.jar' DiskId='1' Source='../../Source/Compiletime/dist/StarLight.jar' Vital='yes'></File>
+          <File Id='xmltypesjar' Name='xmltypes.jar' LongName='xmltypes.jar' DiskId='1' Source='../../libraries/xmltypes.jar' Vital='yes'></File>
         </Component>
       </Directory>
-      <Directory Id ='Binaries' Name ='Binaries' />
+      <Directory Id="CoreElements" Name="coreelem" LongName="CoreElements">
+        <Component Id="CoreElements" Guid="B77B1F5E-4EA7-41ee-8D51-44C531C8D03D">
+          <File Id="ContextInfo" Name="ContInfo" LongName="Composestar.StarLight.ContextInfo.dll" src="$(var.IntegrationTasksPath)\" DiskId='1' />
+          <File Id="ContextInfoXml" Name="ContInfX" LongName="Composestar.StarLight.ContextInfo.xml" src="$(var.IntegrationTasksPath)\" DiskId='1' />
+          <File Id="Filters" Name="Filters" LongName="Composestar.StarLight.Filters.dll" src="$(var.IntegrationTasksPath)\" DiskId='1' />
+          <File Id="FiltersXml" Name="FiltersX" LongName="Composestar.StarLight.Filters.xml" src="$(var.IntegrationTasksPath)\" DiskId='1' />
+          <File Id="Weaving" Name="Weaving" LongName="Composestar.StarLight.Weaving.dll" src="$(var.IntegrationTasksPath)\" DiskId='1' />
+          <File Id="WeavingXml" Name="WeavingX" LongName="Composestar.StarLight.Weaving.xml" src="$(var.IntegrationTasksPath)\" DiskId='1' />
+          <Registry Action="write" Id="assmblValue" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\StarLight" Root ="HKLM" Type="string" Value="[CoreElements]" />
+        </Component>
+      </Directory>
+      <Directory Id="WeaveStrategies" Name="Weave" LongName="WeaveStrategies">
+        <Component Id="WeaveStrategies" Guid="23698DA6-DA18-4339-85AB-789FE509FE73">
+          <File Id="BuildInStrategies" Name="Buildin" DiskId="1" LongName="Composestar.StarLight.Weaving.BuildIn.dll" src="$(var.weaveStrategyBinPath)\" />
+        </Component>
+      </Directory>
+      <Directory Id ='Binaries' Name='Binaries' />
       <Component Id='Registry' Guid ='0F390058-3D07-496a-8AA3-EF1DC4C64B13'>
         <Registry Id='RegInstallDir' Root='HKLM' Key='Software\Composestar\StarLight' Name='StarLightInstallFolder'
   Action='write' Type='string' Value='[INSTALLDIR]' />
@@ -34,8 +47,10 @@
    Action='write' Type='string' Value='-Xmx512M' />
         <Registry Id='RegJavaFolder' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaFolder'
   Action='write' Type='string' Value='[JAVALOC]\bin\' />
+        <Registry Id='RegWeaveStrategies' Root='HKLM' Key='Software\Composestar\StarLight' Name='WeaveStrategiesFolder'
+  Action='write' Type='string' Value='[WeaveStrategies]' />
         <Registry Id='RegJavaClassPath' Root='HKLM' Key='Software\Composestar\StarLight' Name='JavaClassPath'
-  Action='write' Type='string' Value='[INSTALLDIR]ComposestarCore.jar;[INSTALLDIR]Starlight.jar;[INSTALLDIR]xmltypes.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[XmlBeansFolder]jsr173_1.0_api.jar;[XmlBeansFolder]resolver.jar;[XmlBeansFolder]xbean.jar;[XmlBeansFolder]xbean_xpath.jar;[XmlBeansFolder]xmlpublic.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
+  Action='write' Type='string' Value='[CompileTime]ComposestarCore.jar;[CompileTime]Starlight.jar;[CompileTime]xmltypes.jar;[AntlrFolder]antlr.jar;[PrologFolder]prolog.jar;[XmlBeansFolder]jsr173_1.0_api.jar;[XmlBeansFolder]resolver.jar;[XmlBeansFolder]xbean.jar;[XmlBeansFolder]xbean_xpath.jar;[XmlBeansFolder]xmlpublic.jar;[GrooveFolder]groove-1_2_0.jar;[GrooveFolder]castor-0_9_5_2-xml.jar;[GrooveFolder]xerces-2_6_0-xml-apis.jar;[GrooveFolder]xerces-2_6_0-xercesImpl.jar;[GrooveFolder]jgraph.jar' />
       </Component>
     </DirectoryRef>
   </Fragment>

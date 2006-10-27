@@ -11,9 +11,9 @@
       <ComponentRef Id="Comp_ItemTemplates" />
     </ComponentGroup>
 
-    <DirectoryRef Id="INSTALLDIR">
+    <DirectoryRef Id="VSIntr">
       <Directory Id="SystemFolder" Name="System32" />
-
+      
       <Component Id="Comp_LanguageService" DiskId="1" Guid="$(var.Comp_LanguageService_Guid)">
         <File Id="File_Composestar.StarLight.VisualStudio.LanguageServices.dll" Name="LANGSVC.DLL" LongName="Composestar.StarLight.VisualStudio.LanguageServices.dll" Source="$(var.IntegrationBinPath)\" />
         <?include StarLight.LanguageService.generated.wxi ?>
@@ -23,6 +23,7 @@
         <File Id="File_Composestar.StarLight.VisualStudio.Project.dll" Name="PROJECT.DLL" LongName="Composestar.StarLight.VisualStudio.Project.dll" Source="$(var.IntegrationBinPath)\" />
         <?include StarLightProject.generated.wxi ?>
       </Component>
+
     </DirectoryRef>
     <CustomAction Id='PropertyAssign' Property='RUNDEVENV'  Value='1' />
     

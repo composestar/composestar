@@ -77,9 +77,12 @@
       <Directory Id="ProgramFilesFolder" Name="PFILES">
         <Directory Id='ComposeStar' Name='CmpseStr' LongName ='ComposeStar'>
           <Directory Id="INSTALLDIR" Name="Strlght" LongName="$(var.ProductShortName) $(var.ProductVersionText)">
-            <Directory Id="Dir_SnippetsIndex" Name="CODESNIP" LongName="CodeSnippets">
-              <Directory Id="Dir_Snippets" Name="Snippets" />
+            <Directory Id="VSIntr" Name="VSInt" LongName="VSIntegration">
+              <Directory Id="Dir_SnippetsIndex" Name="CODESNIP" LongName="CodeSnippets">
+                <Directory Id="Dir_Snippets" Name="Snippets" />
+              </Directory>
             </Directory>
+            <Directory Id ="DocumentationFolder" Name="Docs" LongName="Documentation" />
           </Directory>
         </Directory>
       </Directory>
@@ -98,7 +101,9 @@
       Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
       <Feature Id='CoreComponents' Title='Core Components' Description='The core components of the StarLight system.' Level='1'>
         <ComponentRef Id='CoreFiles' Primary ='yes' />
+        <ComponentRef Id='InstallFolderCoreFiles' Primary ='yes' />        
         <ComponentRef Id='CoreElements' Primary ='yes' />
+        <ComponentRef Id='WeaveStrategies' Primary ='yes' />
         <ComponentRef Id='Prolog'/>
         <ComponentRef Id='xmlbeans'/>
         <ComponentRef Id='Groove'/>
@@ -112,7 +117,7 @@
         <ComponentGroupRef Id='CompGroup_Integration'/>
       </Feature>
       <Feature Id='Documentation' Title ='Documentation' Description ='StarLight specific and general composition filters documentation.' Level ='1'>
-
+        <ComponentRef Id='ChmCoreElements'/>
       </Feature>
       <Feature Id='Examples' Title ='StarLight Examples' Description ='Source code examples.' Level ='1'>
 

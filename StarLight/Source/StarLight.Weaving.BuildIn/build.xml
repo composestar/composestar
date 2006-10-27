@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/StarLight/BuildInWeaveStrategies" default="build">
+	
+	<condition property="build.core" value="${basedir}${file.separator}..">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}/common.xml" />
+
+  <property name="BuildInWeaveStrategies.dir" location=""/>
+
+  <echo>Processing: ${ant.project.name} ...</echo>
+	
+	<description>The Compose* StarLight Building Strategies.</description>
+
+	<target name="clean" depends="init" description="Clean compile results">
+    <antcall target="clean_msbuild"/>
+	</target>
+  
+  <target name="clean_msbuild" if="available.msbuild">
+    <msbuild solution="${MSBuildTasks.dir}\StarLight.Weaving.BuildIn.csproj" target="clean"/>    
+  </target>
+  
+	<target name="build" depends="init,compile" description="Compile the Weaving Strategies code" />
+		
+	<target name="compile" depends="init">
+    <msbuild solution="${BuildInWeaveStrategies.dir}\StarLight.Weaving.BuildIn.csproj" target="build" config="release" />
+	</target>
+	
+	
+</project>

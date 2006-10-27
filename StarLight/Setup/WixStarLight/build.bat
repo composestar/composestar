@@ -1,3 +1,3 @@
 set VariablesFile=%~dp0Variables.wxi
-candle -dVariablesFile="%VariablesFile%" WixStarLight.wxs WixProlog.wxs WixXmlBeans.wxs WixGroove.wxs WixAntlr.wxs MSBuild.wxs VSIntegration.wxs CoreElements.wxs
-light -out ..\releases\StarLight.msi WixStarLight.wixobj WixProlog.wixobj WixXmlBeans.wixobj VSIntegration.wixobj MSBuild.wixobj CoreElements.wixobj WixAntlr.wixobj WixGroove.wixobj wixui.wixlib -loc WixUI_en-us.wxl
+candle -dVariablesFile="%VariablesFile%" WixStarLight.wxs WixProlog.wxs WixDocuments.wxs WixXmlBeans.wxs WixGroove.wxs WixAntlr.wxs MSBuild.wxs VSIntegration.wxs CoreElements.wxs
+light -out ..\releases\StarLight.msi WixStarLight.wixobj WixProlog.wixobj WixDocuments.wixobj WixXmlBeans.wixobj VSIntegration.wixobj MSBuild.wixobj CoreElements.wixobj WixAntlr.wixobj WixGroove.wixobj wixui.wixlib -loc WixUI_en-us.wxl

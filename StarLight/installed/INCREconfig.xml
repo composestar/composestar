@@ -58,7 +58,7 @@
 	<module name="CORE" fulltype="Composestar.Core.CORE2.Core" enabled="true" incremental="false" summary="Detecting conflicts...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="SIGN" fulltype="Composestar.Core.SIGN2.Sign" enabled="true" incremental="false" summary="Generating signatures...">
+	<module name="SIGN" fulltype="Composestar.Core.SIGN2.SignLite" enabled="true" incremental="false" summary="Generating signatures...">
 		<dependencies></dependencies>	
 	</module>
 	<module name="INLINE" fulltype="Composestar.Core.INLINE.lowlevel.ModelBuilder" enabled="true" incremental="false" summary="Generating inline information...">

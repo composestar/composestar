@@ -3,6 +3,7 @@
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\StarLight.Filters\bin\Debug\Composestar.StarLight.Filters.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\StarLight.Filters\bin\Debug\Composestar.StarLight.Filters.xml" />
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.xml" />
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Utilities.Cecil.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Utilities.Cecil.xml" />
+        <assembly assemblyPath="C:\ComposeStar\StarLight\Source\StarLight.Weaving\bin\Release\Composestar.StarLight.Weaving.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\StarLight.Weaving\bin\Release\Composestar.StarLight.Weaving.xml" />
     </assemblies>
     <namespaceSummaries>
         <namespaceSummaryItem name="" isDocumented="False" />
@@ -15,7 +16,10 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <namespaceSummaryItem name="Composestar.StarLight.Filters.FilterTypes" isDocumented="True">Defines the filter types and actions and how they can be created.</namespaceSummaryItem>
         <namespaceSummaryItem name="Composestar.StarLight.Filters.Properties" isDocumented="False" />
         <namespaceSummaryItem name="Composestar.StarLight.Utilities" isDocumented="True">The Utilities namespace contains functionality to lookup types and methods so they can be injected into the code. Most of those functions use some sort of caching system and it is highly recommended to use these functions for performance reasons.</namespaceSummaryItem>
+        <namespaceSummaryItem name="Composestar.StarLight.Utilities.Interfaces" isDocumented="True" />
         <namespaceSummaryItem name="Composestar.StarLight.Utilities.Properties" isDocumented="False" />
+        <namespaceSummaryItem name="Composestar.StarLight.Weaving.Properties" isDocumented="False" />
+        <namespaceSummaryItem name="Composestar.StarLight.Weaving.Strategies" isDocumented="True">Contains the classes for the weaving strategies.</namespaceSummaryItem>
     </namespaceSummaries>
     <contentPlacement>AboveNamespaces</contentPlacement>
     <dependencies>
