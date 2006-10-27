@@ -55,7 +55,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
                         Properties.Resources.AdviceMethodNotFound, filterAction.SubstitutionSelector, filterAction.SubstitutionTarget));
             }
-
+             
 
             // Set JoinPointContext
             WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);

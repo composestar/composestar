@@ -117,86 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AssemblyNotOpen" xml:space="preserve">
-    <value>The assembly is not open.</value>
-  </data>
-  <data name="ConstructorNotFound" xml:space="preserve">
-    <value>The constructor .ctor() for the type {0} could not be found.</value>
-  </data>
-  <data name="CouldNotSaveAssembly" xml:space="preserve">
-    <value>Could not write the assembly to file '{0}'. Check if the file is not in use and has the correct access permissions.</value>
-  </data>
-  <data name="FileNameNullOrEmpty" xml:space="preserve">
-    <value>The supplied filename is null or empty.</value>
-  </data>
-  <data name="FileNotFound" xml:space="preserve">
-    <value>The file {0} could not be found.</value>
-  </data>
-  <data name="FilterJumpLabelIsNotSet" xml:space="preserve">
-    <value>The label for the JumpFilterAction has not been set.</value>
-  </data>
-  <data name="ImageIsBad" xml:space="preserve">
-    <value>The format of binary image {0} is invalid.</value>
-  </data>
-  <data name="NoSNKSpecified" xml:space="preserve">
-    <value>Invalid configuration. No Strong Name Key file specified.</value>
-  </data>
-  <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
-    <value>The config collection did not contain a valid filename to the repository file.</value>
-  </data>
-  <data name="SNKFileNotFound" xml:space="preserve">
-    <value>Failed to find Strong Name Key file at {0}.</value>
-  </data>
-  <data name="TypeNotFound" xml:space="preserve">
-    <value>The type {0} could not be found.</value>
-  </data>
-  <data name="CecilVisitorRaisedException" xml:space="preserve">
-    <value>An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details.</value>
-  </data>
-  <data name="CannotDelaySignWithoutSigning" xml:space="preserve">
-    <value>Invalid configuration. Cannot specify delaysign without shouldSign set to true</value>
-  </data>
-  <data name="InputImageNotFound" xml:space="preserve">
-    <value>The input image {0} could not be found.
-</value>
-  </data>
-  <data name="CouldNotResolveMethod" xml:space="preserve">
-    <value>Unable to resolve the method '{0}' from '{1}' to a Type used by the weaver. Make sure all the references are in place and the method has bee specified correctly.</value>
-  </data>
-  <data name="ConditionNotFound" xml:space="preserve">
-    <value>Could not find condition named '{0}'.</value>
-  </data>
-  <data name="MethodNotFound" xml:space="preserve">
-    <value>Could not create a method reference for method named '{0}' in type '{1}' and assembly '{2}'.</value>
-  </data>
-  <data name="FieldNotFound" xml:space="preserve">
-    <value>The field {0} could not be found.</value>
-  </data>
   <data name="AdviceMethodNotFound" xml:space="preserve">
     <value>Could not find method named '{0}(JoinpointContext)' in type '{1}'</value>
-  </data>
-  <data name="AssemblyElementNotFound" xml:space="preserve">
-    <value>Could not find the assembly named '{0}' in the database. The file is not analyzed and cannot be processed bij the weaver.</value>
-  </data>
-  <data name="CouldNotLoadAssembly" xml:space="preserve">
-    <value>Unable to open assembly '{0}' due to the following error: {1}</value>
-  </data>
-  <data name="MethodSignatureNotFound" xml:space="preserve">
-    <value>Could not find method with signature '{0}' in the cache.</value>
-  </data>
-  <data name="WeavingSpecNotFound" xml:space="preserve">
-    <value>Could not find weaving specification file '{0}' for assembly '{1}'.</value>
   </data>
   <data name="CouldNotResolveFilterAction" xml:space="preserve">
     <value>Unable to resolve filter action named '{0}'. </value>
   </data>
-  <data name="StrategiesFolderNotFound" xml:space="preserve">
-    <value>Unable to retrieve the weaving strategies folder location from the registry. Make sure there is a WeaveStrategiesFolder string value in the HKEY_LOCAL_MACHINE\SOFTWARE\Composestar\StarLight hive.</value>
-  </data>
-  <data name="WeaveStrategyAttributeNotFound" xml:space="preserve">
-    <value>The class '{0}' inherits from '{1}' but did not have a custom attribute to describe the weaving strategy. Add a {2} attribute to this class.</value>
-  </data>
-  <data name="WeaveStrategyNotUnique" xml:space="preserve">
-    <value>The weaving strategy '{0}' is already in the list of strategies. make sure you have unique weaving strategy names.</value>
+  <data name="FieldNotFound" xml:space="preserve">
+    <value>The field {0} could not be found.</value>
   </data>
 </root>

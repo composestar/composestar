@@ -260,11 +260,38 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to retrieve the weaving strategies folder location from the registry. Make sure there is a WeaveStrategiesFolder string value in the HKEY_LOCAL_MACHINE\SOFTWARE\Composestar\StarLight hive..
+        /// </summary>
+        internal static string StrategiesFolderNotFound {
+            get {
+                return ResourceManager.GetString("StrategiesFolderNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The type {0} could not be found..
         /// </summary>
         internal static string TypeNotFound {
             get {
                 return ResourceManager.GetString("TypeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The class &apos;{0}&apos; inherits from &apos;{1}&apos; but did not have a custom attribute to describe the weaving strategy. Add a {2} attribute to this class..
+        /// </summary>
+        internal static string WeaveStrategyAttributeNotFound {
+            get {
+                return ResourceManager.GetString("WeaveStrategyAttributeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The weaving strategy &apos;{0}&apos; is already in the list of strategies. make sure you have unique weaving strategy names..
+        /// </summary>
+        internal static string WeaveStrategyNotUnique {
+            get {
+                return ResourceManager.GetString("WeaveStrategyNotUnique", resourceCulture);
             }
         }
         

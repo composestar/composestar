@@ -1,6 +1,11 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Permissions;
+using System.IO;
+using System.Reflection;
+using Microsoft.Win32;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -12,7 +17,9 @@ using Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Utilities.Interfaces;
 
-using Composestar.StarLight.Weaving.Strategies;  
+using Composestar.StarLight.Weaving.Strategies;
+using Composestar.StarLight.CoreServices.Exceptions;
+#endregion
 
 namespace Composestar.StarLight.ILWeaver.WeaveStrategy
 {
@@ -44,45 +51,86 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
                 } // lock
             }
 
-            if (strategyMapping.ContainsKey(filterAction))
-            {
-                return strategyMapping[filterAction];
-            }
-            else
-            {
-                return defaultStrategy;
-            }
+            FilterActionWeaveStrategy strategy;
 
+            if (strategyMapping.TryGetValue(filterAction, out strategy))
+                return strategy;
+            else
+                return defaultStrategy;
         }
 
         /// <summary>
         /// Creates the strategy mapping.
         /// </summary>
+        /// <remarks>Uses reflection to look for weaving strategies.</remarks> 
         private static void CreateStrategyMapping()
         {
             strategyMapping = new Dictionary<string, FilterActionWeaveStrategy>();
 
-            // TODO create strategies based on file contents.
+            string strategiesPath = GetWeaveStrategiesLocation();
 
-            FilterActionWeaveStrategy strategy;
+            if (string.IsNullOrEmpty(strategiesPath))
+                throw new ILWeaverException(Properties.Resources.StrategiesFolderNotFound);
+
+            string[] dir = Directory.GetFiles(strategiesPath, "*.dll");
+            Assembly assembly;
+
+            foreach (string filename in dir)
+            {
+                string dll = Path.GetFileNameWithoutExtension(filename);
+                assembly = Assembly.LoadFrom(filename);
+                  
+                Type[] types = assembly.GetTypes();
+                foreach (Type t in types)
+                {
+                    if (t.BaseType != null && t.BaseType.Equals(typeof(FilterActionWeaveStrategy)))
+                    {
+                        WeaveStrategyAttribute[] wsas = (WeaveStrategyAttribute[])t.GetCustomAttributes(typeof(WeaveStrategyAttribute), true);
+                        if (wsas.Length > 0)
+                        {
+                            // dynamically load thisclass
+                            FilterActionWeaveStrategy strategy = (FilterActionWeaveStrategy)Activator.CreateInstance(t);
+                            foreach (WeaveStrategyAttribute wsa in wsas)
+                            {
+                                // Check if we already have this strategy
+                                if (strategyMapping.ContainsKey(wsa.WeavingStrategyName))
+                                    throw new ILWeaverException(String.Format(Properties.Resources.WeaveStrategyNotUnique, wsa.WeavingStrategyName));
+                                else
+                                    strategyMapping.Add(wsa.WeavingStrategyName, strategy);
+                            } // foreach  (wsa)
+                        } // if
+                        else
+                        {
+                            throw new ILWeaverException(string.Format(Properties.Resources.WeaveStrategyAttributeNotFound, t.FullName, typeof(FilterActionWeaveStrategy).Name, typeof(WeaveStrategyAttribute).FullName));
+                        } // else
+                    } // if
+                } // foreach 
+            } // foreach 
             
-            strategy = new AdviceActionWeaveStrategy();
-            strategyMapping.Add(strategy.FilterActionName, strategy);
-            strategyMapping.Add("BeforeAction", strategy);
-            strategyMapping.Add("AfterAction", strategy);
-
-            strategy = new ContinueActionWeaveStrategy();
-            strategyMapping.Add(strategy.FilterActionName, strategy);
-
-            strategy = new DispatchActionWeaveStrategy();
-            strategyMapping.Add(strategy.FilterActionName, strategy);
-
-            strategy = new ErrorActionWeaveStrategy();
-            strategyMapping.Add(strategy.FilterActionName, strategy);
-
-            strategy = new SubstitutionActionWeaveStrategy();
-            strategyMapping.Add(strategy.FilterActionName, strategy);
         }
+
+        /// <summary>
+        /// Get weave strategies location
+        /// </summary>
+        /// <returns>String</returns>
+        private static string GetWeaveStrategiesLocation()
+        {
+            // Retrieve the settings from the registry
+            RegistryPermission keyPermissions = new RegistryPermission(
+               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\Software\Composestar\StarLight");
+
+            RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
+
+            if (regKey != null)
+            {
+                return (string)regKey.GetValue("WeaveStrategiesFolder", "");
+            }
+            else
+            {
+                return string.Empty;
+            }
+
+        } // GetWeaveStrategiesLocation()
 
     }
 }

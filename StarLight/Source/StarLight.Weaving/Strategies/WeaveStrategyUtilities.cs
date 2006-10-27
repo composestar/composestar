@@ -32,7 +32,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor</param>
         /// <param name="originalCall">The original call</param>
         /// <param name="filterAction">The filterAction</param>
-        internal static void SetJoinPointContext(
+        public static void SetJoinPointContext(
             ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, FilterAction filterAction)
         {
@@ -142,7 +142,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <summary>
         /// Creates the code that loads the arguments from the JoinPointContext onto the stack
         /// </summary>
-        internal static void LoadArguments(ICecilInliningInstructionVisitor visitor,
+        public static void LoadArguments(ICecilInliningInstructionVisitor visitor,
             MethodReference originalMethod, VariableDefinition jpcVar)
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
@@ -177,7 +177,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor"></param>
         /// <param name="originalCall"></param>
         /// <param name="jpcVar"></param>
-        internal static void StoreReturnValue(ICecilInliningInstructionVisitor visitor,
+        public static void StoreReturnValue(ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, VariableDefinition jpcVar)
         {
             // Store returnvalue
@@ -209,7 +209,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// </summary>
         /// <param name="visitor">The visitor</param>
         /// <param name="jpcVar">The JoinPointContext VariableDefinition</param>
-        internal static void LoadSelfObject(ICecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
+        public static void LoadSelfObject(ICecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
         {
             if(visitor.FilterType == FilterTypes.InputFilter)
             {
