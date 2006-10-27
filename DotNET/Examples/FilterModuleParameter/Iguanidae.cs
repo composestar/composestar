@@ -15,8 +15,5 @@ namespace FilterModuleParameter
 		{
 			Console.Out.WriteLine("eating lettuce");
 		}
-
-		// needed to make it compile with .NET 2.0
-		public void walk() { }
 	}
 }

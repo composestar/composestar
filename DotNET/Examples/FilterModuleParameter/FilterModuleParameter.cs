@@ -19,10 +19,10 @@ namespace FilterModuleParameter
 			karel.feed();
 			ziggy.feed();
 
-			karel.walk();
-			ziggy.walk();
+			((Animal)(Object)karel).walk();
+			((Animal)(Object)ziggy).walk();
 
-			karel.makeNoise();  
+			karel.makeNoise();
 		}
 	}
 }
