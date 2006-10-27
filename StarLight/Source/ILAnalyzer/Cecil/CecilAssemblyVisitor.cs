@@ -480,7 +480,7 @@ namespace Composestar.StarLight.ILAnalyzer
             }
 
             // Add the method body
-            if (ProcessMethodBody && method.Body != null)
+            if (ProcessMethodBody && method.HasBody)
             {
                 me.Body = new Entities.LanguageModel.MethodBody();
 
@@ -494,13 +494,14 @@ namespace Composestar.StarLight.ILAnalyzer
                         )
                     {
                         CallElement ce = new CallElement();
-                        MethodReference mr = (MethodReference)(instr.Operand);
-                        ce.MethodReference = mr.ToString();
+                        
+                        // instr.Operand can be a MethodReference or a CallSite
+                        ce.MethodReference = instr.Operand.ToString();
 
-                        if (!callList.Contains(mr.ToString()))
+                        if (!callList.Contains(ce.MethodReference))
                         {
                             me.Body.Calls.Add(ce);
-                            callList.Add(mr.ToString());
+                            callList.Add(ce.MethodReference);
                         }
                     }
                 }
