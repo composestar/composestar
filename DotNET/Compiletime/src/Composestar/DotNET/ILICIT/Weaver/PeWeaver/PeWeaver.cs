@@ -216,13 +216,14 @@ namespace Weavers.PeWeaver
 				sw.Close();
 			}
 		
-			if ( !quiet ) Console.WriteLine("Running IlWeaver...");
-
-			// Run ilweaver on specified files
 			if ( !filelistFile.Equals("") )
 			{
 				filelist = " /filelist=" + filelistFile;
 			}
+
+			// Run ilweaver on specified files
+			if (!quiet) Console.WriteLine("Running IlWeaver...");
+
 			ProcessManager pm = new ProcessManager("ilweaver.exe", args + " " + filelist);
 			pm.DirectOutput = true;
 			pm.Run();

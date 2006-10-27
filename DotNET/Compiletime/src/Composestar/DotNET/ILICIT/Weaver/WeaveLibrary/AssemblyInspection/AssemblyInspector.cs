@@ -231,9 +231,8 @@ namespace Weavers.AssemblyInspection
 
 			if (t != null) 
 			{
-
-				//Console.WriteLine("Found type: " + t.ToString() + "  | " + methodName);
-//methodName = "*";
+				//Console.WriteLine("Found type: " + t.ToString() + " | " + methodName);
+				//methodName = "*";
 				System.Reflection.MemberInfo[] mi = t.GetMember( methodName );
 				
 				//for(int index=0; index < mi.Length; index++)

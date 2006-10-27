@@ -161,55 +161,55 @@ namespace Weavers.WeaveSpecifications
 
 		private MethodInformation ScanMethodInvocations(ArrayList invocations, string calledAssembly, string calledClass, string calledMethod) 
 		{
+			if (invocations == null)
+				return null;
+			
 			MethodInformation invocation = null;
-
-			if (invocations != null) 
+			IEnumerator enumInvocations = invocations.GetEnumerator();
+			while (enumInvocations.MoveNext()) 
 			{
-				IEnumerator enumInvocations = invocations.GetEnumerator();
-				while (enumInvocations.MoveNext()) 
+				MethodInformation mi = (MethodInformation)enumInvocations.Current;
+				if (mi.AssemblyName.Equals(calledAssembly) &&
+					mi.FullClassName.Equals(calledClass) &&
+					mi.Name.Equals(calledMethod))
 				{
-					if (((MethodInformation)enumInvocations.Current).AssemblyName.Equals(calledAssembly) &&
-						((MethodInformation)enumInvocations.Current).FullClassName.Equals(calledClass) &&
-						((MethodInformation)enumInvocations.Current).Name.Equals(calledMethod))
+					invocation = mi;
+				}
+				else if (mi.AssemblyName.Equals("") &&
+					mi.FullClassName.Equals(calledClass) &&
+					mi.Name.Equals(calledMethod))
+				{
+					invocation = mi;
+				}
+				else if (mi.AssemblyName.Equals("") &&
+					mi.FullClassName.Equals(calledClass) &&
+					mi.Name.Equals("*"))
+				{
+					invocation = mi;
+				}
+				else if (mi.FullClassName.Equals("*") &&
+					mi.Name.Equals("*"))
+				{
+					invocation = mi;
+				}
+				else if (mi.FullClassName.Equals("*") &&
+					mi.Name.Equals(calledMethod))
+				{
+					invocation = mi;
+				}
+				else if ((mi).AssemblyName.Equals(calledAssembly) &&
+					(mi).FullClassName.Equals(calledClass) &&
+					(mi).Name.Equals("*"))
+				{
+					invocation = mi;
+				}
+				else if (calledAssembly.Equals("*") && calledClass.Equals("*parent*"))
+				{
+					// Special lookup for inherited methods, called virtually on superclass
+					AssemblyInspector ai = AssemblyInspector.GetInstance(this.mQuiet, this.mDebug);
+					if ( ai.IsMethod(this.CurrentAssembly, this.GetAssemblyEnumerator(), mi.FullClassName, calledMethod) )
 					{
-						invocation = (MethodInformation)enumInvocations.Current;
-					}
-					else if (((MethodInformation)enumInvocations.Current).AssemblyName.Equals("") &&
-						((MethodInformation)enumInvocations.Current).FullClassName.Equals(calledClass) &&
-						((MethodInformation)enumInvocations.Current).Name.Equals(calledMethod))
-					{
-						invocation = (MethodInformation)enumInvocations.Current;
-					}
-					else if (((MethodInformation)enumInvocations.Current).AssemblyName.Equals("") &&
-						((MethodInformation)enumInvocations.Current).FullClassName.Equals(calledClass) &&
-						((MethodInformation)enumInvocations.Current).Name.Equals("*"))
-					{
-						invocation = (MethodInformation)enumInvocations.Current;
-					}
-					else if (((MethodInformation)enumInvocations.Current).FullClassName.Equals("*") &&
-						((MethodInformation)enumInvocations.Current).Name.Equals("*"))
-					{
-						invocation = (MethodInformation)enumInvocations.Current;
-					}
-					else if (((MethodInformation)enumInvocations.Current).FullClassName.Equals("*") &&
-						((MethodInformation)enumInvocations.Current).Name.Equals(calledMethod))
-					{
-						invocation = (MethodInformation)enumInvocations.Current;
-					}
-					else if (((MethodInformation)enumInvocations.Current).AssemblyName.Equals(calledAssembly) &&
-						((MethodInformation)enumInvocations.Current).FullClassName.Equals(calledClass) &&
-						((MethodInformation)enumInvocations.Current).Name.Equals("*"))
-					{
-						invocation = (MethodInformation)enumInvocations.Current;
-					}
-					else if (calledAssembly.Equals("*") && calledClass.Equals("*parent*"))
-					{
-						// Special lookup for inherited methods, called virtually on superclass
-						AssemblyInspector ai = AssemblyInspector.GetInstance(this.mQuiet, this.mDebug);
-						if ( ai.IsMethod(this.CurrentAssembly, this.GetAssemblyEnumerator(), ((MethodInformation)enumInvocations.Current).FullClassName, calledMethod) )
-						{
-							invocation = (MethodInformation)enumInvocations.Current;
-						}
+						invocation = mi;
 					}
 				}
 			}

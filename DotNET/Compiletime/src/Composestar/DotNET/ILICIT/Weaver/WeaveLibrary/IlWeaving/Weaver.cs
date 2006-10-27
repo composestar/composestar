@@ -790,11 +790,7 @@ namespace Weavers.IlWeaving
 							result.Add(new IlOpcode(CreateLabel(), "castclass", newobj));
 						}
 						//result = VerifyBranchStatements(result, debug);
-						if (mi.GetArgumentCount() > stackIncrease ) 
-						{
-							stackIncrease = mi.GetArgumentCount();
-						}
-
+						stackIncrease = Math.Max(stackIncrease, mi.GetArgumentCount());
 					}
 				}
 			}
@@ -871,18 +867,15 @@ namespace Weavers.IlWeaving
 					
 						result.AddRange(newCallStatement);
 						//result = VerifyBranchStatements(result, debug);
-						if ( redirectTo.GetArgumentCount() > stackIncrease ) 
-						{
-							stackIncrease = redirectTo.GetArgumentCount();
-						}
+						stackIncrease = Math.Max(stackIncrease, redirectTo.GetArgumentCount());
 					}
 				}
-				else 
+				else
 				{
 					result.Add(code);
 				}
 			}
-			else 
+			else
 			{
 				// Keep the original method call, no modifications needed
 				// TODO: in case of instance call, push instance back on stack
@@ -952,10 +945,7 @@ namespace Weavers.IlWeaving
 
 						result.AddRange(newCallStatement);
 						//result = VerifyBranchStatements(result, debug);
-						if ( redirectTo.GetArgumentCount() > stackIncrease ) 
-						{
-							stackIncrease = redirectTo.GetArgumentCount();
-						}
+						stackIncrease = Math.Max(stackIncrease, redirectTo.GetArgumentCount());
 					}
 				}
 				else 
@@ -998,7 +988,7 @@ namespace Weavers.IlWeaving
 				result.Add(CreateSimpleCallStatement(ws.GetMethodInformation(cii.ExecuteMethodBefore), ws, ref callerMethod));
 				result.Add(code);
 
-				stackIncrease = 1;
+				stackIncrease = Math.Max(stackIncrease, 1);
 			}
 			else
 			{
@@ -1023,7 +1013,7 @@ namespace Weavers.IlWeaving
 					this.tempIlOpcode = code;
 					result.AddRange(this.CreateCallStatement(ws, ws.GetMethodInformation(fi.ExecuteMethodBefore), "", "", "", "", "void", (int)CallContext.AfterFieldAccess, callerClass.Name, ref callerMethod, quiet, debug));
 					callerMethod.MaxStack += 1;
-					if ( fi.ExecuteMethodAfter.Equals("") && fi.ExecuteMethodReplace.Equals("") ) result.Add(code);
+					if (fi.ExecuteMethodAfter.Equals("") && fi.ExecuteMethodReplace.Equals("")) result.Add(code);
 					this.tempIlOpcode = null;
 				}
 
@@ -1039,7 +1029,7 @@ namespace Weavers.IlWeaving
 
 				if (!fi.ExecuteMethodAfter.Equals("")) 
 				{
-					if ( fi.ExecuteMethodReplace.Equals("") ) result.Add(code);
+					if (fi.ExecuteMethodReplace.Equals("")) result.Add(code);
 					this.tempIlOpcode = code;
 					result.AddRange(this.CreateCallStatement(ws, ws.GetMethodInformation(fi.ExecuteMethodAfter), "", "", "", "", "void", (int)CallContext.AfterFieldAccess, callerClass.Name, ref callerMethod, quiet, debug));
 					callerMethod.MaxStack += 1;	
@@ -1227,7 +1217,7 @@ namespace Weavers.IlWeaving
 					// Parse opcode argument
 					if ("newobj".Equals(opcode) || "call".Equals(opcode) || "callvirt".Equals(opcode))
 					{
-						if (debug) Console.WriteLine(instruction);
+						//if (debug) Console.WriteLine(instruction);
 
 						int lastOpenColon = arg.LastIndexOf("(");
 						int lastCloseColon = arg.LastIndexOf(")");

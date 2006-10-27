@@ -54,16 +54,17 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 	private final static String MODULE_NAME	= "CONE-IS";
 	private final static String REPOSITORY	= "repository.xml";
 
+	private Configuration config;
 	private PrintWriter out = null;
 	private int debugLevel = 0;
 
 	public DotNETWeaveFileGenerator() 
 	{
+		config = Configuration.instance();
 	}
 
 	public void run(CommonResources resources) throws ModuleException 
 	{
-		Configuration config = Configuration.instance();
 		File destination = new File(config.getPathSettings().getPath("Base"), "weavespec.xml");
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing weave specifications to file '" + destination.getName() + "'...");
@@ -75,12 +76,12 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 			out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			out.println("<weaveSpecification version=\"1.0\">");
+			
+			String entryAssembly = getEntryAssembly();
 
-			String applicationStart = config.getProjects().getApplicationStart();
-
-			writeAssemblyReferenceDefinitions(resources, applicationStart);
+			writeAssemblyReferenceDefinitions(resources, entryAssembly);
 			writeMethodDefinitions();
-			writeApplicationInfo(applicationStart);
+			writeApplicationInfo(entryAssembly);
 			writeClassDefinitions(resources);
 
 			out.println("</weaveSpecification>");
@@ -96,12 +97,33 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			FileUtils.close(out);
 		}
 	}
+	
+	private String getEntryAssembly()
+	{
+		TypeLocations typeLocations = TypeLocations.instance();
 
-	private void writeAssemblyReferenceDefinitions(CommonResources resources, String applicationStart)
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving entry assembly...");
+
+		String applicationStart = config.getProjects().getApplicationStart();
+		String entryAssembly = typeLocations.getAssemblyByType(applicationStart);
+
+		if (entryAssembly == null)
+		{
+			int dot = applicationStart.lastIndexOf('.');
+			entryAssembly = applicationStart.substring(0, dot);
+
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The entry assembly could not be reliably determined. Using '" + entryAssembly + "'.");
+		}
+		else
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolved '" + entryAssembly + "' as entry assembly.");
+
+		return entryAssembly;
+	}
+
+	private void writeAssemblyReferenceDefinitions(CommonResources resources, String entryAssembly)
 		throws ModuleException
 	{
 		TypeLocations typeLocations = TypeLocations.instance();
-		Configuration config = Configuration.instance();
 
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Writing assembly reference block...");
 		out.println("<assemblies>");
@@ -116,20 +138,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			String dummies = p.getName() + ".dummies";
 			writeAssemblyDefinitionRecord(dummies, "0.0.0.0", true);
 		}
-
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolving entry assembly...");
-		String entryAssembly = typeLocations.getAssemblyByType(applicationStart);
-
-		if (entryAssembly == null)
-		{
-			int dot = applicationStart.lastIndexOf('.');
-			entryAssembly = applicationStart.substring(0, dot);
-
-			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The entry assembly could not be reliably determined. Using '" + entryAssembly + "'.");
-		}
-		else
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolved '" + entryAssembly + "' as entry assembly.");
-
+		
 		prjIt = config.getProjects().getProjects().iterator();
 		while (prjIt.hasNext())
 		{
@@ -172,7 +181,7 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 					{
 						String dllname  = FileUtils.removeExtension(file.getName()); 
 						Debug.out( Debug.MODE_DEBUG, MODULE_NAME, "Adding DLL '" +dllname+ "'." );
-						writeAssemblyDefinitionRecord( dllname, "0.0.0.0", entryAssembly);
+						writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
 					}
 					else 
 						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Referenced DLL '" + file.getAbsolutePath() + "' does not exist." );
@@ -371,7 +380,6 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 	private void writeClassReplacements()
 	{
-		Configuration config = Configuration.instance();
 		Projects projects = config.getProjects();
 		TypeLocations typeLocations = TypeLocations.instance();
 

@@ -207,7 +207,7 @@ namespace Weavers.IlStructures
 
 			result.AddRange(this.mTryLines);
 			
-			result.Add("} // end of method "+this.mName);
+			result.Add("} // end of method " + this.mName);
 
 			return result;
 		}
