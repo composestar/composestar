@@ -142,7 +142,10 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         {
             get
             {
-                return TimeSpan.FromTicks(TotalTypeWeaveTime.Ticks / TypesProcessed);
+                if (TypesProcessed > 0)
+                    return TimeSpan.FromTicks(TotalTypeWeaveTime.Ticks / TypesProcessed);
+                else
+                    return TimeSpan.Zero; 
             } // get
         } // AverageWeaveTimePerType
 
@@ -154,7 +157,10 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         {
             get
             {
-                return TimeSpan.FromTicks(TotalMethodWeaveTime.Ticks / MethodsProcessed);
+                if (MethodsProcessed > 0)
+                    return TimeSpan.FromTicks(TotalMethodWeaveTime.Ticks / MethodsProcessed);
+                else
+                    return TimeSpan.Zero;  
             } // get
         } // AverageWeaveTimePerMethod
 
