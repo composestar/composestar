@@ -18,20 +18,10 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// <summary>
     /// Strategy to create the ErrorFilterAction. Basically it injects an exception throw into the instruction code.
     /// </summary>
+    [WeaveStrategyAttribute("ErrorAction")]
     public class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
     {
-        /// <summary>
-        /// Returns the name of the FilterAction for which this is the 
-        /// weaving strategy.
-        /// </summary>
-        public override String FilterActionName
-        {
-            get
-            {
-                return "ErrorAction";
-            }
-        }
-
+       
         /// <summary>
         /// Weaves the error action.
         /// </summary>

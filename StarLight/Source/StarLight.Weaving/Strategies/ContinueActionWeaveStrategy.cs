@@ -17,21 +17,10 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// <summary>
     /// TODO generate comment
     /// </summary>
+    [WeaveStrategyAttribute("ContinueAction")]
     public class ContinueActionWeaveStrategy : FilterActionWeaveStrategy
     {
-        /// <summary>
-        /// Returns the name of the FilterAction for which this is the 
-        /// weaving strategy.
-        /// </summary>
-        public override String FilterActionName
-        {
-            get
-            {
-                return "ContinueAction";
-            }
-        }
-
-
+   
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
         /// </summary>

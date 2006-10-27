@@ -22,7 +22,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// <summary>
     /// Utilities for specific weaving tasks like creating JoinPointContext objects and reading those objects.
     /// </summary>
-    public class WeaveStrategyUtilities
+    public partial class WeaveStrategyUtilities
     {
         
         /// <summary>

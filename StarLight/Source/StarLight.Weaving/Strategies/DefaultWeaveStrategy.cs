@@ -24,20 +24,10 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// <summary>
     /// TODO generate comment
     /// </summary>
+    [WeaveStrategyAttribute("Default")]
     public class DefaultWeaveStrategy : FilterActionWeaveStrategy
     {
-        /// <summary>
-        /// Returns the name of the FilterAction for which this is the 
-        /// weaving strategy.
-        /// </summary>
-        public override String FilterActionName
-        {
-            get
-            {
-                return "Default";
-            }
-        }
-
+        
         /// <summary>
         /// Get filter action element
         /// </summary>

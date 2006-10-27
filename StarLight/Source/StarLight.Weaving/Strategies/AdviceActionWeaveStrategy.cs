@@ -17,26 +17,19 @@ using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.ContextInfo;
 using Composestar.StarLight.Utilities;
 using Composestar.StarLight.Utilities.Interfaces;
-
+using Composestar.StarLight.Weaving;
+  
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
     /// TODO generate comment
     /// </summary>
+    [WeaveStrategyAttribute("AdviceAction")]
+    [WeaveStrategyAttribute("BeforeAction")]
+    [WeaveStrategyAttribute("AfterAction")]
     public class AdviceActionWeaveStrategy : FilterActionWeaveStrategy
     {
-        /// <summary>
-        /// Returns the name of the FilterAction for which this is the 
-        /// weaving strategy.
-        /// </summary>
-        public override String FilterActionName
-        {
-            get
-            {
-                return "AdviceAction";
-            }
-        }
-        
+               
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
         /// </summary>

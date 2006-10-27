@@ -20,17 +20,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// </summary>
     public abstract class FilterActionWeaveStrategy
     {
-    
-        /// <summary>
-        /// Returns the name of the FilterAction for which this is the 
-        /// weaving strategy.
-        /// </summary>
-        public abstract String FilterActionName
-        {
-            get;
-        }
-
-
+         
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
         /// </summary>
