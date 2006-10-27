@@ -17,6 +17,7 @@ concern FilterTestsConcern in BasicTests
 		    //produceerrordisp : Dispatch = { True => [*.getProduceError] };
 		    logging : Logging = { True => [*.*] };
 		    profiling: Profiling = { True => [*.*] };
+			//makeError : NotImplemented = {  doError ~> [*.makeError], !doError => [*.*] };
 			makeError : Error = {  doError ~> [*.makeError], !doError => [*.*] };
 			aftertest : After = { True => [*.func4] myExternal.after };
 			test : Dispatch = { True => [*.func1] myExternal.externalMe };

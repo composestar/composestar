@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="AdviceActionWeaveStrategy.cs" />
     <Compile Include="ContinueActionWeaveStrategy.cs" />
+    <Compile Include="NotImplementedActionWeaveStrategy.cs" />
     <Compile Include="DispatchActionWeaveStrategy.cs" />
     <Compile Include="ErrorActionWeaveStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

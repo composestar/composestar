@@ -20,7 +20,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     [WeaveStrategyAttribute("SubstitutionAction")]
     public class SubstitutionActionWeaveStrategy : FilterActionWeaveStrategy
     {
-               
+
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
         /// </summary>

@@ -16,14 +16,14 @@ using Composestar.StarLight.Utilities;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// Strategy to create the ErrorFilterAction. Basically it injects an exception throw into the instruction code.
+    /// Strategy to create the NotImplementedAction. This action injects NotImplementedExceptions into the code.
     /// </summary>
-    [WeaveStrategyAttribute("ErrorAction")]
-    public class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
+    [WeaveStrategyAttribute("NotImplementedAction")]
+    public class NotImplementedActionWeaveStrategy : FilterActionWeaveStrategy
     {
 
         /// <summary>
-        /// Weaves the error action.
+        /// Weaves the NotImplementedException action.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filter action.</param>
@@ -34,7 +34,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <example>
         /// The following construction should be created:
         /// <code>
-        /// throw new Exception();
+        /// throw new NotYetImplementedException();
         /// </code>
         /// or in IL code:
         /// <code>
@@ -48,7 +48,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             // Create an exception
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj, 
                 CecilUtilities.CreateMethodReference(visitor.TargetAssemblyDefinition, 
-                CachedMethodDefinition.ExceptionConstructor)));
+                typeof(NotImplementedException).GetConstructors()[0])));
 
             // Throw the exception
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Throw));

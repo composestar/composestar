@@ -30,14 +30,18 @@ namespace BasicTests
 
 			filtTests.makeError();
 			filtTests.setProduceError(true);
-			try 
-			{
-				filtTests.makeError();
-			}
-			catch (Exception e)
-			{
-				Console.Out.WriteLine("An exception was raised.");
-			}
+            try
+            {
+                filtTests.makeError();
+            }
+            catch (NotImplementedException)
+            {
+                Console.Out.WriteLine("A NotImplementedException was raised.");
+            } 
+            catch (Exception)
+            {
+                Console.Out.WriteLine("An exception was raised.");
+            }
 			filtTests.setProduceError(false);
 
 			filtTests.makeTrip();
