@@ -19,7 +19,7 @@ public class CastingFacility
 		if (from == null) return null;
 		
 		// a null typename is wrong though
-		if (to == null) throw new System.ArgumentNullException("to");
+		if (to == null) throw new IllegalArgumentException("to cannot be null");
 
 		// remove assembly name
 		int bracket = to.indexOf(']');
