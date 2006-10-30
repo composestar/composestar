@@ -66,7 +66,7 @@ public class ClassWeaver
 	{
 		String outputFile = baseDir;
 		String fqName = clazz.getName();
-		fqName = fqName.replace(".",java.io.File.separator);
+		fqName = fqName.replaceAll(".",java.io.File.separator);
 		outputFile += fqName + ".class";
 		return FileUtils.normalizeFilename(outputFile);
 	}
