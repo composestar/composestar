@@ -14,7 +14,17 @@
 	
 	<import file="${build.core}${file.separator}common.xml"/>
 
-	<target name="clean"/>
+	<target name="clean">
+		<delete dir="${composestar.installerdir}${file.separator}binaries"/>
+		<delete>
+			<fileset dir="${composestar.installerdir}$">
+				<include name="*.css"/>
+				<include name="INCRE*.xml"/>
+				<include name="filterdesc.xml"/>
+			</fileset>
+		</delete>
+		<delete dir="${composestar.installerdir}${file.separator}ComposestarVSAddin"/>
+	</target>
 	
 	<target name="build"/>
 	
