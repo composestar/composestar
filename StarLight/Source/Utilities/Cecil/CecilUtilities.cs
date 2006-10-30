@@ -26,9 +26,9 @@ namespace Composestar.StarLight.Utilities
 {
 
     /// <summary>
-    /// Contains functions used by the Cecil visitors, strategies and weaver. 
+    /// Contains functions used by the Cecil visitors, strategies, and weaver. 
     /// </summary>
-    public class CecilUtilities
+    public partial class CecilUtilities
     {
 
         #region Constants

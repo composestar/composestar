@@ -22,7 +22,8 @@ using Composestar.StarLight.Utilities.Interfaces;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// TODO generate comment
+    /// The default weave strategy, which will emit a call to an execute method defined by the filteraction.
+    /// The developer can create his/her own implementation of the filter action in this function.
     /// </summary>
     [WeaveStrategyAttribute("Default")]
     public class DefaultWeaveStrategy : FilterActionWeaveStrategy
@@ -49,23 +50,28 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
         /// </summary>
+        /// <remarks>The creating of the JoinPointContext is optional and indicated by the FilterAction. If disabled, we emit a <see langword="null"></see> as the parameter.</remarks> 
         /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filter action.</param>
         /// <param name="originalCall">The original call.</param>
         public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall)
         {
+            // The method we have to call, an Execute(JoinPointContext) function.
             MethodReference methodToCall;
 
             // Get JoinPointContext
-            VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
-
+            VariableDefinition jpcVar = null;
+            if (filterAction.CreateJPC)
+                jpcVar = visitor.CreateJoinPointContextLocal();
+        
             // Get the methodReference
             MethodReference methodReference = (MethodReference) originalCall;
             TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
             // Set JoinPointContext
-            WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
+            if (filterAction.CreateJPC)
+                WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
             // Create FilterAction object:
             FilterActionElement filterActionElement;
@@ -79,23 +85,32 @@ namespace Composestar.StarLight.Weaving.Strategies
             TypeDefinition typeDef =
                 CecilUtilities.ResolveTypeDefinition(typeRef);
             MethodReference constructor = typeDef.Constructors.GetConstructor(false, new Type[0]);
+
+            if (constructor == null)
+                throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, filterAction.FullName));
+
             constructor = visitor.TargetAssemblyDefinition.MainModule.Import(constructor);
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj, constructor));
 
             // Get method to call
             methodToCall = CecilUtilities.ResolveMethod(typeDef, "Execute", new Type[] { typeof(JoinPointContext) });
+
+            // Check for null value
+            if (methodToCall == null)
+                throw new ILWeaverException(String.Format(Properties.Resources.AdviceMethodNotFound, "Execute", filterAction.FullName));
+            
             methodToCall = visitor.TargetAssemblyDefinition.MainModule.Import(methodToCall);
 
-            // Load the JoinPointObject as the parameter
-            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            // Load the JoinPointObject as the parameter if required
+            if (filterAction.CreateJPC)
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+            else
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));
 
             // Do the call
             // We can safely emit a callvirt here. The JITter will make the right call.
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodToCall));
 
-
-            // Add nop to enable debugging
-            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Nop));
         }
     }
 }

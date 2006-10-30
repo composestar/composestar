@@ -86,5 +86,14 @@ namespace Composestar.StarLight.Weaving.Properties {
                 return ResourceManager.GetString("FieldNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} could not be found..
+        /// </summary>
+        internal static string TypeNotFound {
+            get {
+                return ResourceManager.GetString("TypeNotFound", resourceCulture);
+            }
+        }
     }
 }

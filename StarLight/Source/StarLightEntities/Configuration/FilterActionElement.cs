@@ -17,6 +17,20 @@ namespace Composestar.StarLight.Entities.Configuration
         public  const int MessageSubstituted = 2;
         public  const int MessageAny = 3;
 
+        private bool _createJPC;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to create a JoinPointContext object.
+        /// </summary>
+        /// <value><c>true</c> if the weaver has to create a JPC; otherwise, <c>false</c>.</value>
+        [XmlAttribute]
+        public bool CreateJPC
+        {
+            get { return _createJPC; }
+            set { _createJPC = value; }
+        }
+	
+
         private int _flowBehavior;
 
         /// <summary>

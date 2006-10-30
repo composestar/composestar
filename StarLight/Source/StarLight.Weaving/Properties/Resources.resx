@@ -126,4 +126,7 @@
   <data name="FieldNotFound" xml:space="preserve">
     <value>The field {0} could not be found.</value>
   </data>
+  <data name="TypeNotFound" xml:space="preserve">
+    <value>The type {0} could not be found.</value>
+  </data>
 </root>

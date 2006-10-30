@@ -19,69 +19,21 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     [XmlRoot("FilterActionInstruction", Namespace = "Entities.TYM.DotNET.Composestar")]
     public class FilterAction : InlineInstruction, IVisitable
     {
+
+        #region Private Variables
+
         private string _type;
         private string _fullName;
-
-        /// <summary>
-        /// Gets or sets the full name.
-        /// </summary>
-        /// <value>The full name.</value>
-        [XmlAttribute]
-        public string FullName
-        {
-            get { return _fullName; }
-            set { _fullName = value; }
-        }
         private string _selector;
-
-        /// <summary>
-        /// Gets or sets the selector.
-        /// </summary>
-        /// <value>The selector.</value>
-        [XmlAttribute]
-        public string Selector
-        {
-            get { return _selector; }
-            set { _selector = value; }
-        }
         private string _target;
-
-        /// <summary>
-        /// Gets or sets the target.
-        /// </summary>
-        /// <value>The target.</value>
-        [XmlAttribute]
-        public string Target
-        {
-            get { return _target; }
-            set { _target = value; }
-        }
         private string _substitutionSelector;
-
-        /// <summary>
-        /// Gets or sets the substitution selector.
-        /// </summary>
-        /// <value>The substitution selector.</value>
-        [XmlAttribute]
-        public string SubstitutionSelector
-        {
-            get { return _substitutionSelector; }
-            set { _substitutionSelector = value; }
-        }
         private string _substitutionTarget;
+        private bool _createJPC = true;
 
-        /// <summary>
-        /// Gets or sets the substitution target.
-        /// </summary>
-        /// <value>The substitution target.</value>
-        [XmlAttribute]
-        public string SubstitutionTarget
-        {
-            get { return _substitutionTarget; }
-            set { _substitutionTarget = value; }
-        }
+        #endregion
 
-        // TODO Change to an enumeration?
+        #region Constants
+
         public const String DispatchAction = "DispatchAction";
         public const String BeforeAction = "BeforeAction";
         public const String AfterAction = "AfterAction";
@@ -94,14 +46,112 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         public const String InnerTarget = "inner";
         public const String SelfTarget = "self";
 
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to create a Join Point Context for this FilterAction
+        /// </summary>
+        /// <value><c>true</c> if the weaver has to create a Join Point Context, otherwise, <c>false</c>.</value>
+        [XmlAttribute]
+        public bool CreateJPC
+        {
+            get
+            {
+                return _createJPC;
+            }
+            set
+            {
+                _createJPC = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the full name.
+        /// </summary>
+        /// <value>The full name.</value>
+        [XmlAttribute]
+        public string FullName
+        {
+            get { return _fullName; }
+            set { _fullName = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the selector.
+        /// </summary>
+        /// <value>The selector.</value>
+        [XmlAttribute]
+        public string Selector
+        {
+            get { return _selector; }
+            set { _selector = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the target.
+        /// </summary>
+        /// <value>The target.</value>
+        [XmlAttribute]
+        public string Target
+        {
+            get { return _target; }
+            set { _target = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the substitution selector.
+        /// </summary>
+        /// <value>The substitution selector.</value>
+        [XmlAttribute]
+        public string SubstitutionSelector
+        {
+            get { return _substitutionSelector; }
+            set { _substitutionSelector = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the substitution target.
+        /// </summary>
+        /// <value>The substitution target.</value>
+        [XmlAttribute]
+        public string SubstitutionTarget
+        {
+            get { return _substitutionTarget; }
+            set { _substitutionTarget = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        [XmlAttribute]
+        public String Type
+        {
+            get
+            {
+                return _type;
+            } // get
+            set
+            {
+                _type = value;
+            } // set
+        } // Type
+
+        #endregion
+
+        #region ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterAction"/> class.
         /// </summary>
         public FilterAction()
         {
-            
+
         }
 
+   
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterAction"/> class.
         /// </summary>
@@ -122,23 +172,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
             _substitutionTarget = substitutionTarget;
         } // FilterAction(type, fullName, selector)
 
+        #endregion
 
-        /// <summary>
-        /// Gets or sets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        [XmlAttribute]
-        public String Type
-        {
-            get
-            {
-                return _type;
-            } // get
-            set
-            {
-                _type = value;
-            } // set
-        } // Type
+        #region IVisitable
 
         /// <summary>
         /// Accepts the specified visitor.
@@ -151,6 +187,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
             visitor.VisitFilterAction(this);
         } // Accept(visitor)
 
+        #endregion
 
     } // class FilterAction
 } // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions

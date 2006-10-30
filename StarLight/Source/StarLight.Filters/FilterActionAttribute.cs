@@ -31,10 +31,32 @@ namespace Composestar.StarLight.Filters.FilterTypes
         private string _actionName;
         private FilterFlowBehaviour _flowBehaviour;
         private MessageSubstitutionBehaviour _substitutionBehaviour;
+        private bool _createJPC = true;
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to create a <see cref="T:Composestar.StarLight.ContextInfo.JoinPointContext"></see> object.
+        /// Default, this is enabled and the <c>Execute</c> function has access to this object which is passed as it's argument.
+        /// However, creating the Join Point Context object does imply some overhead. If you do not use the Join Point Context in your code, 
+        /// then disable this option.
+        /// </summary>
+        /// <value>
+        /// 	<see langword="true"/> if the weaver has to create a Join Point Context; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool CreateJoinPointContext
+        {
+            get
+            {
+                return _createJPC;
+            }
+            set
+            {
+                _createJPC = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the flow behaviour.
@@ -108,6 +130,45 @@ namespace Composestar.StarLight.Filters.FilterTypes
             _actionName = name;
             _flowBehaviour = flowBehaviour;
             _substitutionBehaviour = substitutionBehaviour;
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:FilterActionAnnotation"/> class describing a FilterAction.
+        /// </summary>
+        /// <param name="name">The unique name of the filter action.</param>
+        /// <param name="flowBehaviour">The flow behaviour of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
+        /// <param name="substitutionBehaviour">The substitution behaviour of the filter action.</param>
+        /// <param name="createJoinPointContext">if set to <c>true</c>, the weaver injects a join point context object to be used in the <c>Execute</c> method. 
+        /// When <c>false</c>, this step will be skipped and a null reference is placed instead of a Join Point Context.</param>
+        /// <remarks>Place this attribute only at classes inheriting the <see cref="T:FilterType"></see> base class since the filter action must implement the <c>Execute</c> method.</remarks>
+        /// <example>
+        /// Place this custom attribute on classes inheriting <see cref="T:FilterAction"></see> like in the following example.
+        /// <code>
+        /// [FilterActionAttribute("TracingInAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original, false)]
+        /// public class TracingInAction : FilterAction
+        /// {
+        ///    public override void Execute(JoinPointContext context)
+        ///    {
+        ///       // Because the createJoinPointContext parameter is false, the context will be null!
+        ///    }
+        /// }
+        /// </code>
+        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>.
+        /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation.
+        /// </example>
+        /// <exception cref="ArgumentNullException">
+        /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
+        /// </exception>
+        public FilterActionAttribute(string name, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour, bool createJoinPointContext)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
+
+            _actionName = name;
+            _flowBehaviour = flowBehaviour;
+            _substitutionBehaviour = substitutionBehaviour;
+            _createJPC = createJoinPointContext;
 
         }
 

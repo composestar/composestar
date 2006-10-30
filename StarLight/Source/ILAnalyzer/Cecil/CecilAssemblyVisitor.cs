@@ -557,9 +557,9 @@ namespace Composestar.StarLight.ILAnalyzer
             // We now use ShadowCopy to overcome this. It is an obsolute method
             // Switch to a seperate appdomain.
 
-            SetupReflectionAssembly(type.Module.Image.FileInformation.Directory.FullName);    
+            SetupReflectionAssembly(type.Module.Image.FileInformation.Directory.FullName);
 
-            Assembly assembly = Assembly.ReflectionOnlyLoadFrom(type.Module.Image.FileInformation.FullName);
+            Assembly assembly = Assembly.LoadFrom(type.Module.Image.FileInformation.FullName);
             
             if (assembly == null)
             {
@@ -572,19 +572,17 @@ namespace Composestar.StarLight.ILAnalyzer
             {
                 throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
             } // if
-            
-            IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
-            foreach (CustomAttributeData cad in attributes)
-            {
-                if (!cad.ToString().Contains("Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute")) continue;
 
+            FilterActionAttribute[] faas = (FilterActionAttribute[])refType.GetCustomAttributes(typeof(FilterActionAttribute), true);
+            foreach (FilterActionAttribute faa in faas)
+            {
                 FilterActionElement faEl = new FilterActionElement();
 
                 faEl.FullName = type.FullName;
-                faEl.Name = ((string)cad.ConstructorArguments[0].Value);
+                faEl.Name = faa.ActionName;
                 faEl.Assembly = type.Module.Assembly.Name.ToString();
- 
-                switch ((FilterActionAttribute.FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
+
+                switch (faa.FlowBehaviour)
                 {
                     case FilterActionAttribute.FilterFlowBehaviour.Continue:
                         faEl.FlowBehavior = FilterActionElement.FlowContinue;
@@ -600,7 +598,7 @@ namespace Composestar.StarLight.ILAnalyzer
                         break;
                 } // switch
 
-                switch ((FilterActionAttribute.MessageSubstitutionBehaviour)cad.ConstructorArguments[1].Value)
+                switch (faa.SubstitutionBehaviour )
                 {
                     case FilterActionAttribute.MessageSubstitutionBehaviour.Original:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
@@ -616,8 +614,60 @@ namespace Composestar.StarLight.ILAnalyzer
                         break;
                 } // switch
 
+                faEl.CreateJPC = faa.CreateJoinPointContext; 
+
                 _filterActions.Add(faEl);
-            }
+            } // ExtractFilterAction(type)
+
+            //IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
+            //foreach (CustomAttributeData cad in attributes)
+            //{
+            //    if (!cad.ToString().Contains("Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute")) continue;
+
+            //    FilterActionElement faEl = new FilterActionElement();
+
+            //    faEl.FullName = type.FullName;
+            //    faEl.Name = ((string)cad.ConstructorArguments[0].Value);
+            //    faEl.Assembly = type.Module.Assembly.Name.ToString();
+ 
+            //    switch ((FilterActionAttribute.FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
+            //    {
+            //        case FilterActionAttribute.FilterFlowBehaviour.Continue:
+            //            faEl.FlowBehavior = FilterActionElement.FlowContinue;
+            //            break;
+            //        case FilterActionAttribute.FilterFlowBehaviour.Exit:
+            //            faEl.FlowBehavior = FilterActionElement.FlowExit;
+            //            break;
+            //        case FilterActionAttribute.FilterFlowBehaviour.Return:
+            //            faEl.FlowBehavior = FilterActionElement.FlowReturn;
+            //            break;
+            //        default:
+            //            faEl.FlowBehavior = FilterActionElement.FlowContinue;
+            //            break;
+            //    } // switch
+
+            //    switch ((FilterActionAttribute.MessageSubstitutionBehaviour)cad.ConstructorArguments[2].Value)
+            //    {
+            //        case FilterActionAttribute.MessageSubstitutionBehaviour.Original:
+            //            faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
+            //            break;
+            //        case FilterActionAttribute.MessageSubstitutionBehaviour.Substituted:
+            //            faEl.MessageChangeBehavior = FilterActionElement.MessageSubstituted;
+            //            break;
+            //        case FilterActionAttribute.MessageSubstitutionBehaviour.Any:
+            //            faEl.MessageChangeBehavior = FilterActionElement.MessageAny;
+            //            break;
+            //        default:
+            //            faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
+            //            break;
+            //    } // switch
+
+            //    // CreateJPC
+            //    if (cad.ConstructorArguments[3] != null)
+            //        faEl.CreateJPC = (bool)cad.ConstructorArguments[3].Value;
+
+            //    _filterActions.Add(faEl);
+            //}
 
             type = null;
             assembly = null;
