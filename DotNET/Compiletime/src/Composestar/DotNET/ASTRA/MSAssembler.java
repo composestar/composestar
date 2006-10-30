@@ -5,7 +5,6 @@ import java.util.List;
 
 import Composestar.Utils.CommandLineExecutor;
 import Composestar.Utils.Debug;
-import Composestar.Utils.FileUtils;
 import Composestar.Utils.StringUtils;
 
 /**
@@ -22,7 +21,7 @@ public class MSAssembler implements Assembler
 		cmdList.add(s_basepath + "ilasm");
 		cmdList.add("/debug");
 		cmdList.add("/quiet");
-		cmdList.add(outputFile.matches(".*\\.dll") ? "/dll" : "/exe");
+		cmdList.add(outputFile.endsWith(".dll") ? "/dll" : "/exe");
 		cmdList.add("/output=" + outputFile);
 		cmdList.add(inputFile);
 
@@ -42,6 +41,7 @@ public class MSAssembler implements Assembler
 		cmdList.add(s_basepath + "ildasm");
 		cmdList.add("/linenum");
 		cmdList.add("/nobar");
+	//	cmdList.add("/raweh");	// for .NET 2
 		cmdList.add("/out=" + outputFile);
 		cmdList.add(inputFile);
 
