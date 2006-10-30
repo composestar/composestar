@@ -90,7 +90,7 @@
 					</xsl:element>
 					<xsl:element name="Module">
 						<xsl:attribute name="name">ILICIT</xsl:attribute>
-						<xsl:attribute name="verifyAssemblies">False</xsl:attribute><!-- TODO: verifyAssemblies is broken -->
+						<xsl:attribute name="verifyAssemblies">false</xsl:attribute><!-- TODO: verifyAssemblies is broken -->
 					</xsl:element>
 				</xsl:element><!-- /Modules -->
 				
