@@ -60,9 +60,16 @@ namespace Composestar.StarLight.Weaving.Strategies
             // The method we have to call, an Execute(JoinPointContext) function.
             MethodReference methodToCall;
 
+            // Create FilterAction object:
+            FilterActionElement filterActionElement;
+            filterActionElement = GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
+
+            if (filterActionElement == null)
+                throw new ILWeaverException(string.Format(Properties.Resources.CouldNotResolveFilterAction, filterAction.FullName)); 
+
             // Get JoinPointContext
             VariableDefinition jpcVar = null;
-            if (filterAction.CreateJPC)
+            if (filterActionElement.CreateJPC)
                 jpcVar = visitor.CreateJoinPointContextLocal();
         
             // Get the methodReference
@@ -70,16 +77,9 @@ namespace Composestar.StarLight.Weaving.Strategies
             TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
             // Set JoinPointContext
-            if (filterAction.CreateJPC)
+            if (filterActionElement.CreateJPC)
                 WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
-
-            // Create FilterAction object:
-            FilterActionElement filterActionElement;
-            filterActionElement = GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
-
-            if (filterActionElement == null)
-                throw new ILWeaverException(string.Format(Properties.Resources.CouldNotResolveFilterAction, filterAction.FullName)); 
-            
+                        
             TypeReference typeRef =
                 CecilUtilities.ResolveType(filterAction.FullName, filterActionElement.Assembly, null);
             TypeDefinition typeDef =
@@ -102,7 +102,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             methodToCall = visitor.TargetAssemblyDefinition.MainModule.Import(methodToCall);
 
             // Load the JoinPointObject as the parameter if required
-            if (filterAction.CreateJPC)
+            if (filterActionElement.CreateJPC)
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
             else
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldnull));

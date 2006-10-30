@@ -247,7 +247,7 @@ namespace Composestar.StarLight.ContextInfo
         /// Gets the argument attributes.
         /// </summary>
         /// <param name="ordinal">The ordinal.</param>
-        /// <returns></returns>
+        /// <returns>Returns a <see cref="T:ArgumentAttributes"/> object containing the attributes for the specified <paramref name="ordinal"/>.</returns>
         /// <exception cref="ArgumentNullException">
         /// This exception will be raised when the ordinal could not be found in the list of arguments.
         /// </exception>

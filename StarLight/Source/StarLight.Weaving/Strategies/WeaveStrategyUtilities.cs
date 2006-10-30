@@ -24,7 +24,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// </summary>
     public partial class WeaveStrategyUtilities
     {
-        
+
         /// <summary>
         /// Sets the current selector and target in the JoinPointContext. Note that these might be different
         /// from the original selector and target, and depend on the position in the filterset.
@@ -140,8 +140,11 @@ namespace Composestar.StarLight.Weaving.Strategies
         }
 
         /// <summary>
-        /// Creates the code that loads the arguments from the JoinPointContext onto the stack
+        /// Creates the code that loads the arguments from the JoinPointContext onto the stack.
         /// </summary>
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="originalMethod">The original method.</param>
+        /// <param name="jpcVar">The Join Point Context variable.</param>
         public static void LoadArguments(ICecilInliningInstructionVisitor visitor,
             MethodReference originalMethod, VariableDefinition jpcVar)
         {
@@ -290,6 +293,9 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <summary>
         /// Restores the values of reference arguments in the JoinPointContext
         /// </summary>
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="originalMethod">The original method.</param>
+        /// <param name="jpcVar">The Join Point Context variable.</param>
         public static void RestoreArguments(ICecilInliningInstructionVisitor visitor,
             MethodReference originalMethod, VariableDefinition jpcVar)
         {
@@ -337,9 +343,9 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <summary>
         /// Stores the returnvalue from the stack into the JoinPointContext object.
         /// </summary>
-        /// <param name="visitor"></param>
-        /// <param name="originalCall"></param>
-        /// <param name="jpcVar"></param>
+        /// <param name="visitor">The visitor.</param>
+        /// <param name="originalCall">The original call.</param>
+        /// <param name="jpcVar">The Join Point variable.</param>
         public static void StoreReturnValue(ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, VariableDefinition jpcVar)
         {

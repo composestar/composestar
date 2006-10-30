@@ -28,7 +28,6 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         private string _target;
         private string _substitutionSelector;
         private string _substitutionTarget;
-        private bool _createJPC = true;
 
         #endregion
 
@@ -49,24 +48,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to create a Join Point Context for this FilterAction
-        /// </summary>
-        /// <value><c>true</c> if the weaver has to create a Join Point Context, otherwise, <c>false</c>.</value>
-        [XmlAttribute]
-        public bool CreateJPC
-        {
-            get
-            {
-                return _createJPC;
-            }
-            set
-            {
-                _createJPC = value;
-            }
-        }
-
+            
         /// <summary>
         /// Gets or sets the full name.
         /// </summary>
