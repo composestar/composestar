@@ -180,12 +180,6 @@ public class JavaCollectorRunner implements CollectorRunner
 			jtype.setName(jtype.fullName());
 		}
 
-		// is annotation?
-		if (c.isAnnotation())
-		{
-			jtype.setIsAnnotation(true);
-		}
-
 		// add superclass
 		Class superclass = c.getSuperclass();
 		if (superclass != null)
