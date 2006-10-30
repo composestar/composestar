@@ -23,6 +23,8 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 	public ArrayList matchingParts, substitutionParts;
 	public FilterElementRuntime theFilterElement;
 	public boolean isMessageList;
+	
+	public EnableOperatorTypeRuntime oper;
     
     /**
      * @roseuid 40DD68840299
@@ -59,6 +61,13 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		return returnvalue;
 		*/
 		boolean returnvalue = this.match( m, context );
+		
+		if (oper instanceof DisableOperatorRuntime) // invert the match 
+		{
+			m.getOriginalMessageList().matchAll();
+			returnvalue = !returnvalue;
+		}
+		
 		if( returnvalue && !substitutionParts.isEmpty() )
 		{
 			returnvalue = substitute( m, context );
@@ -94,6 +103,23 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		{
 			ml.matchAll();
 			return true;
+		}
+		
+		// not a message list pattern, check if it matches one of the elements
+		if (!isMessageList && (ml.getMessages().size() > 0))
+		{
+			for( int j = 0; j < ml.getMessages().size(); j++ ) 
+			{
+				for( int i = 0; i < matchingParts.size(); i++ ) 
+				{
+					if( ((MatchingPartRuntime)matchingParts.get(i)).interpret( (Message) ml.getMessages().get( j ), context ) ) 
+					{
+						ml.matchAll();
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 		if( ml.getMessages().size() != matchingParts.size() ) 

@@ -47,6 +47,7 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     	this.matchingPatterns = matchingPatterns;
     	this.matchingPattern = (MatchingPatternRuntime) matchingPatterns.get(0);
     	this.theEnableOperatorTypeRuntime = operatorType;     
+    	this.matchingPattern.oper = operatorType;
     }
     
     public FilterElementRuntime(FilterElementCompositionOperatorRuntime compositionOperator, EnableOperatorTypeRuntime operatorType, ConditionExpressionRuntime conditionexpr, MatchingPatternRuntime matchingPattern) {
@@ -54,6 +55,7 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     	this.conditionpart = conditionexpr;
     	this.matchingPattern = matchingPattern;
     	this.theEnableOperatorTypeRuntime = operatorType;
+    	this.matchingPattern.oper = operatorType;
     	
     	this.matchingPatterns = new ArrayList();
     	this.matchingPatterns.add(matchingPattern);
@@ -70,7 +72,7 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     	boolean returnvalue = true;
     	if(this.conditionpart.interpret(m,context))
     	{
-    		boolean matches = false;
+    		//boolean matches = false;
     		/*
 			if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tCondition OK, checking "+this.matchingPatterns.size() + " pattern(s)...");
 			for(int i=0; i<this.matchingPatterns.size(); i++)
@@ -80,8 +82,11 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
 			}
 			*/
     		if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION,"FLIRT","\t\t\tCondition OK, checking pattern...");
-			matches = matchingPattern.interpret(m, context);
+			
+    		returnvalue = matchingPattern.interpret(m, context);
 
+    		/*
+    		// this is now done by matchingPattern 
     		if(this.theEnableOperatorTypeRuntime instanceof EnableOperatorRuntime) // =>
     		{
     			returnvalue = matches;
@@ -90,6 +95,7 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     		{
     			returnvalue = !matches;
     		}
+    		*/
     	}
     	else
     	{
