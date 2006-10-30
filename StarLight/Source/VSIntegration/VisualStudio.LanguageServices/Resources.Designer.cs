@@ -70,6 +70,15 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HTJDRJJKE1KAIMPHQDECA0IZR3QAJ2EMK0DCK9HHC1M8CKZAQPK0DCZJCMEDDQD1MRD9A1EPHIZPZHDZC3DDPTM0J3H0IQJDMDJAC2HPK1D0KTC3P3REK8J9JAEDMAHR.
+        /// </summary>
+        internal static string _150 {
+            get {
+                return ResourceManager.GetString("150", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Base Types.
         /// </summary>
         internal static string BaseTypesNodeText {
