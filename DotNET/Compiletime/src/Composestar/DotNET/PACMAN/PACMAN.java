@@ -27,6 +27,8 @@ import Composestar.DotNET.LAMA.DotNETType;
  */
 public class PACMAN implements CTCommonModule
 {
+	private static final String MODULE_NAME = "PACMAN";
+	
 	private Configuration m_config;
 	private DataStore m_dataStore;
 	
@@ -53,7 +55,7 @@ public class PACMAN implements CTCommonModule
 			pce.emit();
 		}
 		catch (IOException e) {
-			throw new ModuleException("Unable to generate partial classes: " + e.getMessage());
+			throw new ModuleException("Unable to generate partial classes: " + e.getMessage(), MODULE_NAME);
 		}
 	}
 	
