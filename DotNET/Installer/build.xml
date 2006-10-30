@@ -119,7 +119,12 @@
 		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes" path="${bin.nsis}">
         		<define name="VERSION" value="2.1"/>
         		<scriptcmd cmd="AutoCloseWindow true"/>
-    		</nsis>
+		</nsis>
+
+		<property name="composestar.installerdir" value="${build.dotnet}${file.separator}Installer"/>
+		
+		<checksum file="ComposeStar.NET_0.6.exe" forceOverwrite="yes"/>
+		
 	</target>
 
 	<target name="build-addinfixer">
