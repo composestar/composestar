@@ -116,14 +116,14 @@
 	</target>
 
 	<target name="make-installer" depends="copy-files,build-addinfixer">
-		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes">
+		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes" path="${bin.nsis}">
         		<define name="VERSION" value="2.1"/>
         		<scriptcmd cmd="AutoCloseWindow true"/>
     		</nsis>
 	</target>
 
 	<target name="build-addinfixer">
-		<nsis script="ComposeStarAddIn.nsi" verbosity="4" out="build_addinfixer.log" noconfig="yes">
+		<nsis script="ComposeStarAddIn.nsi" verbosity="4" out="build_addinfixer.log" noconfig="yes" path="${bin.nsis}">
         		<define name="VERSION" value="2.1"/>
         		<scriptcmd cmd="AutoCloseWindow true"/>
     		</nsis>
