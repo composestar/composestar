@@ -840,30 +840,27 @@ public class Sign implements CTCommonModule
             dispSelector = state.getMessage().getSelector();
 
         // get dispatchtarget concern and methods:
-        String dispatchMethodName = dispSelector.getName();
-        List methods;
-        if (dispTarget.name.equals("inner")) {
+        if (dispTarget.name.equals("inner"))
+        {
             Type type = (Type) concern.getPlatformRepresentation();
-            MethodInfo targetMethod = method.getClone(dispSelector.getName(),
-                    type);
+            MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
 
-            methods = getMethodList(concern);
+            List methods = getMethodList(concern);
             if (containsMethod(methods, targetMethod)) {
                 return IN_SIGNATURE;
             }
-        } else {
-            DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget
-                    .getRef();
+        }
+        else
+        {
+            DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
             Concern targetConcern = ref.getRef().getType().getRef();
 
             Type type = (Type) concern.getPlatformRepresentation();
-            MethodInfo targetMethod = method.getClone(dispSelector.getName(),
-                    type);
+            MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
 
             Signature signature = getSignature(targetConcern);
             if (signature.hasMethod(targetMethod)) {
-                MethodWrapper wrapper = signature
-                        .getMethodWrapper(targetMethod);
+                MethodWrapper wrapper = signature.getMethodWrapper(targetMethod);
                 if (wrapper.getRelationType() == MethodWrapper.UNKNOWN) {
                     return POSSIBLE;
                 } else if (wrapper.getRelationType() == MethodWrapper.REMOVED) {
@@ -877,8 +874,8 @@ public class Sign implements CTCommonModule
         return NOT_IN_SIGNATURE;
     }
 
-    private int resolveMetaExistence(Concern concern, MethodInfo method,
-            ExecutionState state) {
+    private int resolveMetaExistence(Concern concern, MethodInfo method, ExecutionState state)
+    {
         // get the dispatch target:
         Target dispTarget = state.getSubstitutionTarget();
         if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
@@ -890,34 +887,31 @@ public class Sign implements CTCommonModule
             dispSelector = state.getMessage().getSelector();
 
         // get dispatchtarget concern and methods:
-        String dispatchMethodName = dispSelector.getName();
-        List methods;
-        if (dispTarget.name.equals("inner")) {
+        if (dispTarget.name.equals("inner"))
+        {
             Type type = (Type) concern.getPlatformRepresentation();
 
             MethodInfo m = type.getMethod(dispSelector.getName(), META_PARAMS);
-            if (m != null) {
-                return IN_SIGNATURE;
-            }
-        } else {
-            DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget
-                    .getRef();
+            if (m != null) return IN_SIGNATURE;
+        }
+        else
+        {
+            DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
             Concern targetConcern = ref.getRef().getType().getRef();
-
-            Type type = (Type) concern.getPlatformRepresentation();
-            
 
             Signature signature = getSignature(targetConcern);
 
-            MethodWrapper wrapper = getMethodWrapper(signature, dispSelector
-                    .getName(), META_PARAMS);
+            MethodWrapper wrapper = getMethodWrapper(signature, dispSelector.getName(), META_PARAMS);
 
-            if (wrapper != null) {
+            if (wrapper != null) 
+            {
                 if (wrapper.getRelationType() == MethodWrapper.UNKNOWN) {
                     return POSSIBLE;
-                } else if (wrapper.getRelationType() == MethodWrapper.REMOVED) {
+                }
+                else if (wrapper.getRelationType() == MethodWrapper.REMOVED) {
                     return NOT_IN_SIGNATURE;
-                } else {
+                }
+                else {
                     return IN_SIGNATURE;
                 }
             }
@@ -999,14 +993,11 @@ public class Sign implements CTCommonModule
             dispSelector = state.getMessage().getSelector();
 
         // get dispatchtarget concern and methods:
-        String dispatchMethodName = dispSelector.getName();
-        List methods;
         if (dispTarget.name.equals("inner")) {
             Type type = (Type) concern.getPlatformRepresentation();
-            MethodInfo targetMethod = method.getClone(dispSelector.getName(),
-                    type);
+            MethodInfo targetMethod = method.getClone(dispSelector.getName(), type);
 
-            methods = getMethodList(concern);
+            List methods = getMethodList(concern);
             if (!containsMethod( methods, targetMethod )) {
                 for (int i = 0; i < methods.size(); i++) {
                     MethodInfo m = (MethodInfo) methods.get(i);
@@ -1075,14 +1066,14 @@ public class Sign implements CTCommonModule
             dispSelector = state.getMessage().getSelector();
 
         // get dispatchtarget concern and methods:
-        String dispatchMethodName = dispSelector.getName();
-        List methods;
+        //String dispatchMethodName = dispSelector.getName();
+        //List methods;
         if (dispTarget.name.equals("inner")) {
             Type type = (Type) concern.getPlatformRepresentation();
 
             MethodInfo m = type.getMethod(dispSelector.getName(), META_PARAMS);
             if (m == null) {
-                Debug.out(Debug.MODE_ERROR, MODULE_NAME,
+                Debug.out(Debug.MODE_WARNING, MODULE_NAME,
                         "The methodcall to method '" + methodInfoString(method)
                                 + "' in concern '" + concern.name
                                 + "' might lead to a meta-call to an"
@@ -1090,35 +1081,34 @@ public class Sign implements CTCommonModule
                                 + "' in inner!", state.getFlowNode()
                                 .getRepositoryLink());
             }
-        } else {
-            DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget
-                    .getRef();
+        }
+        else
+        {
+            DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
             Concern targetConcern = ref.getRef().getType().getRef();
-
-            Type type = (Type) concern.getPlatformRepresentation();
 
             Signature signature = getSignature(targetConcern);
 
-            MethodWrapper wrapper = getMethodWrapper(signature, dispSelector
-                    .getName(), META_PARAMS);
+            MethodWrapper wrapper = getMethodWrapper(signature, dispSelector.getName(), META_PARAMS);
 
             if (wrapper == null) {
-                Debug.out(Debug.MODE_ERROR, MODULE_NAME,
+                Debug.out(Debug.MODE_WARNING, MODULE_NAME,
                         "The methodcall to method '" + methodInfoString(method)
-                                + "' in concern '" + concern.name
-                                + "' might lead to a meta-call to an"
-                                + " unresolved meta-method '"
-                                + dispSelector.getName() + "' in concern '"
-                                + targetConcern.getName() + "'!", state
-                                .getFlowNode().getRepositoryLink());
+                        + "' in concern '" + concern.name
+                        + "' might lead to a meta-call to an"
+                        + " unresolved meta-method '"
+                        + dispSelector.getName() + "' in concern '"
+                        + targetConcern.getName() + "'!", 
+                        state.getFlowNode().getRepositoryLink());
             }
         }
     }
 
-    private MethodWrapper getMethodWrapper(Signature signature, String name,
-            String[] types) {
+    private MethodWrapper getMethodWrapper(Signature signature, String name, String[] types)
+    {
         Iterator iter = signature.getMethodWrapperIterator();
-        while (iter.hasNext()) {
+        while (iter.hasNext())
+        {
             MethodWrapper wrapper = (MethodWrapper) iter.next();
             MethodInfo method = wrapper.getMethodInfo();
 
