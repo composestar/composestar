@@ -120,7 +120,7 @@ namespace Composestar.StarLight.Utilities
                     }
                 }
             }
-
+     
             if (name.Name == "mscorlib")
                 return GetCorlib(name);
             else if (IsInGac(name))

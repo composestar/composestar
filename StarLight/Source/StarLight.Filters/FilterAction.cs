@@ -1,7 +1,9 @@
+#region Using directives
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Composestar.StarLight.ContextInfo;
+#endregion
 
 namespace Composestar.StarLight.Filters.FilterTypes
 {
@@ -65,33 +67,36 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// <summary>
         /// Implements the behaviour of the FilterAction. You must override this method and supply your own filteraction implementation.
         /// </summary>
-        /// <param name="context">Context information</param>
+        /// <param name="context">Join Point Context information.</param>
+        /// <remarks>If the developer has set the CreateJoinPointContext to <see langword="false"/> 
+        /// in the <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute"/>, then the weaver injects <see langword="null"/> instead of a 
+        /// <see cref="Composestar.StarLight.ContextInfo.JoinPointContext"/></remarks>
         public abstract void Execute(JoinPointContext context);
 
         #region BuildIn FilterActions
 
         /// <summary>
-        /// Advice action.
+        /// Advice action constant value.
         /// </summary>
         public const string AdviceAction = "AdviceAction";
 
         /// <summary>
-        /// Continue action.
+        /// Continue action constant value.
         /// </summary>
         public const string ContinueAction = "ContinueAction";
 
         /// <summary>
-        /// Dispatch action.
+        /// Dispatch action constant value.
         /// </summary>
         public const string DispatchAction = "DispatchAction";
 
         /// <summary>
-        /// Error action.
+        /// Error action constant value.
         /// </summary>
         public const string ErrorAction = "ErrorAction";
 
         /// <summary>
-        /// Substitution action.
+        /// Substitution action constant value.
         /// </summary>
         public const string SubstitutionAction = "SubstitutionAction";
         
