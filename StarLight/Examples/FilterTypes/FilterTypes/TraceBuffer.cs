@@ -33,6 +33,7 @@ namespace FilterTypes
             {
                 TraceFile.WriteLine(_lines.Dequeue());  
             } // while
+            TraceFile.Flush();
         }
 
         #region IDisposable

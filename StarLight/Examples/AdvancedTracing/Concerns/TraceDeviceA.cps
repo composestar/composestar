@@ -2,6 +2,8 @@ concern TraceDeviceA in DeviceController.Concerns
 {
 	filtermodule Trace
 	{
+		internals
+		  test : System.Data.DataTable;
 		conditions		// declare used conditions
 			doTrace : DeviceController.Configuration.DeviceConfiguration.DoTraceDeviceA();	// condition to enable/disable runtime tracing
 		inputfilters	// define the inputfilters

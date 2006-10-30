@@ -9,9 +9,9 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace FilterTypes
 {
-    [FilterActionAttribute("TracingOutAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
+    [FilterActionAttribute("ReflectionTracingOutAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
        FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
-    public class TracingOutAction : FilterAction
+    public class ReflectionTracingOutAction : FilterAction
     {
         public override void Execute(JoinPointContext context)
         {
@@ -26,39 +26,41 @@ namespace FilterTypes
             String sender = "unknown";
             if (context.Sender != null) sender = context.Sender.GetType().FullName;
 
-            String target = "unknown";
-            if (context.StartTarget != null) target = context.StartTarget.GetType().FullName;
+            Type target = null;
+            if (context.StartTarget != null) target = context.StartTarget.GetType();
 
             TraceBuffer.WriteLine("OUT Tracing: Sender={0}, Target={1}, MethodName={2} ", sender, target, context.StartSelector);
 
+            System.Reflection.MethodInfo mi = target.GetMethod(context.StartSelector, BindingFlags.Public
+                | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.Instance);
 
-            // Out arguments
-            if (context.ArgumentCount > 0)
+            if (mi != null && context.ArgumentCount > 0)
             {
-                for (short i = 1; i <= context.ArgumentCount; i++)
+                System.Reflection.ParameterInfo[] pi = mi.GetParameters();
+                for (int j = 0; j < pi.Length; j++)
                 {
-                    ArgumentInfo argumentInfo = context.GetArgumentInfo(i);
-                    if (argumentInfo.IsOut())
+                    if (pi[j].IsOut)
                     {
+                        ArgumentInfo argumentInfo = context.GetArgumentInfo((short)(j + 1));
+                        
                         if (argumentInfo.Value == null)
                         {
-                            TraceBuffer.WriteLine("  argument {0} (out) -> {1} = null", i, context.GetArgumentType(i));
+                            TraceBuffer.WriteLine("  argument {0} (out) -> {1} = null", j + 1, pi[j].ParameterType.FullName);
                             continue;
                         }
-
                         String argvalue;
                         try
                         {
                             argvalue = argumentInfo.Value.ToString();
                         }
-                        catch(Exception){
+                        catch (Exception)
+                        {
                             argvalue = "<exception>";
                         }
-                        TraceBuffer.WriteLine("  argument {0} (out) -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue);
+                        TraceBuffer.WriteLine("  argument {0} (out) -> {1} = {2}", j + 1, pi[j].ParameterType.FullName, argvalue);
                     }
                 }
             }
-
 
             // Returnvalue
             if (context.HasReturnValue)

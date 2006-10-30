@@ -51,6 +51,11 @@ namespace FilterTypes
             _tracefileWriter.WriteLine(line, args);            
         }
 
+        public static void Flush()
+        {
+            _tracefileWriter.Flush();
+        }
+
         #region IDisposable
 
         public void Dispose()

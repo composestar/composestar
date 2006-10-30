@@ -17,7 +17,7 @@ namespace FilterTypes
         {
             if (context == null)
             {
-                TraceFile.WriteLine("TracingIN: Context not set!");
+                TraceBuffer.WriteLine("TracingIN: Context not set!");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace FilterTypes
             String target = "unknown";
             if (context.StartTarget != null) target = context.StartTarget.GetType().FullName;
 
-            TraceFile.WriteLine("TracingIN: Sender={0}, Target={1}, Selector={2} ", sender, target, context.StartSelector);
+            TraceBuffer.WriteLine("TracingIN: Sender={0}, Target={1}, Selector={2} ", sender, target, context.StartSelector);
 
             if (context.ArgumentCount > 0)
             {
@@ -46,7 +46,7 @@ namespace FilterTypes
                     
                     if (argumentInfo.Value == null)
                     {
-                        TraceFile.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentType(i), argdirection);
+                        TraceBuffer.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentType(i), argdirection);
                         continue;
                     }
                     String argvalue;
@@ -58,7 +58,7 @@ namespace FilterTypes
                     {
                         argvalue = "<exception>";
                     }
-                    TraceFile.WriteLine("  argument {0} ({3})-> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue, argdirection);
+                    TraceBuffer.WriteLine("  argument {0} ({3}) -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue, argdirection);
                 }
             }
 

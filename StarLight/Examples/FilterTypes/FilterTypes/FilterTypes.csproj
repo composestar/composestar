@@ -37,8 +37,13 @@
       <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.Filters.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReflectionTracingOutAction.cs" />
+    <Compile Include="ReflectionTracingInAction.cs" />
+    <Compile Include="ReflectionTracingFilterType.cs" />
     <Compile Include="StopEmptyAction.cs" />
     <Compile Include="StartEmptyAction.cs" />
     <Compile Include="EmptyFilterType.cs" />

@@ -36,6 +36,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FilterTypes\FilterTypes\FilterTypes.csproj">
+      <Project>{015C33A1-B6A8-4DFA-9BAF-29744096E160}</Project>
+      <Name>FilterTypes</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
