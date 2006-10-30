@@ -234,21 +234,21 @@ namespace BuildConfiguration
 	 
 				// First the projects
 				writer.WriteStartElement("Projects");
-				writer.WriteAttributeString("executable", this.Executable);
-				writer.WriteAttributeString("applicationStart", this.ApplicationStart);
+				writer.WriteAttributeString("buildDebugLevel", ((int)this.Settings.BuildDebugLevel).ToString());
 				writer.WriteAttributeString("runDebugLevel", ((int)this.RunDebugLevel).ToString());
 				writer.WriteAttributeString("outputPath", FormatPath(this.OutputPath));
-			
+				writer.WriteAttributeString("applicationStart", this.ApplicationStart);			
+			//	writer.WriteAttributeString("executable", this.Executable);
 
 				// All the projects
 				foreach (Project p in this._projects)
 				{
 					writer.WriteStartElement("Project");
-					writer.WriteAttributeString("name", p.Name );
-					writer.WriteAttributeString("language", p.Language  );
-					writer.WriteAttributeString("buildPath", FormatPath(p.BuildPath)  );
-					writer.WriteAttributeString("basePath", FormatPath(p.BasePath)  );
-					writer.WriteAttributeString("outputPath", FormatPath(p.OutputPath)  );
+					writer.WriteAttributeString("name", p.Name);
+					writer.WriteAttributeString("language", p.Language);
+					writer.WriteAttributeString("basePath", FormatPath(p.BasePath));
+				//	writer.WriteAttributeString("buildPath", FormatPath(p.BuildPath);
+				//	writer.WriteAttributeString("outputPath", FormatPath(p.OutputPath));
 				
 					// Sources
 					writer.WriteStartElement("Sources");
@@ -321,21 +321,22 @@ namespace BuildConfiguration
 
 				// Settings
 				writer.WriteStartElement("Settings");
+			/*
 				writer.WriteAttributeString("composestarIni", FormatPath(this.Settings.ComposestarIni ) );
 				writer.WriteAttributeString("buildDebugLevel", ((int)this.Settings.BuildDebugLevel).ToString());
 				writer.WriteAttributeString("compilePhase", this.Settings.CompilePhase   );
 				writer.WriteAttributeString("platform", "dotNET" );
-				
+			*/	
 				// Modules
 				writer.WriteStartElement("Modules");
 
 				foreach (ModuleSetting ms in Settings.Modules.Values)
 				{
 					writer.WriteStartElement("Module");
-					writer.WriteAttributeString("name", ms.Name );
+					writer.WriteAttributeString("name", ms.Name);
 
 					// Add all the properties
-					foreach (String s in ms.Elements.AllKeys  )
+					foreach (String s in ms.Elements.AllKeys)
 					{
 						writer.WriteAttributeString(s, ms.Elements[s]);
 					}

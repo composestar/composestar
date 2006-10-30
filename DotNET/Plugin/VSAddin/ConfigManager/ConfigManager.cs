@@ -20,7 +20,7 @@ namespace ComposestarVSAddin
 		public ConfigManager(IniFile inifile) : base (inifile)
 		{
 			languages = new SupportedLanguages();
-            mSources = new Hashtable(languages.GetCount());
+			mSources = new Hashtable(languages.GetCount());
 			mSources.Add("ConcernSources", new ArrayList()); // ConcernSources tag should always be in the project.ini
 
 			mUsedCompilers = new ArrayList(languages.GetCount());
@@ -148,7 +148,7 @@ namespace ComposestarVSAddin
 			// Include Composestar.ini and overwrite values with Project.ini, if it exists
 			StreamReader composestarIni = null;
 			composestarIni = File.OpenText(this.readIniValue("Common", "ComposestarIniFile"));
-			processIniFile( composestarIni );
+			processIniFile(composestarIni);
 			composestarIni.Close();
 
 			if ( File.Exists(readIniValue("Common", "TempFolder") + "project.ini") ) 
