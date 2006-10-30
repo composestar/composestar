@@ -1,8 +1,8 @@
 eating catfood
 eating lettuce
-logging...
+logging: FilterModuleParameter.Cat.walk
 walking
-logging...
+logging: FilterModuleParameter.Iguanidae.walk
 walking
-logging...
+logging: FilterModuleParameter.Cat.makeNoise
 meow

@@ -10,17 +10,21 @@ namespace FilterModuleParameter
 		public class Logger
 		{
 			public Logger()	{	}
-	
+		/*	
 			public void log()
 			{
 				Console.Out.WriteLine("logging...");
-				//rm.proceed();
 			}
-			
+		*/
 			public void log(ReifiedMessage rm)
 			{
-				Console.Out.WriteLine("logging...");
+				Console.Out.WriteLine("logging: " + ToString(rm));
 				rm.proceed();
+			}
+
+			private String ToString(ReifiedMessage rm)
+			{
+				return rm.getTarget() + "." + rm.getSelector();
 			}
 		}
 }

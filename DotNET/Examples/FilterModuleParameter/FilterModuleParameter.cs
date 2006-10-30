@@ -19,8 +19,8 @@ namespace FilterModuleParameter
 			karel.feed();
 			ziggy.feed();
 
-			((Animal)(Object)karel).walk();
-			((Animal)(Object)ziggy).walk();
+			karel.walk();
+			ziggy.walk();
 
 			karel.makeNoise();
 		}
