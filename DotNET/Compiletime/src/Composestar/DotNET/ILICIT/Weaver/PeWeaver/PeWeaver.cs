@@ -218,7 +218,7 @@ namespace Weavers.PeWeaver
 		
 			if ( !filelistFile.Equals("") )
 			{
-				filelist = " /filelist=" + filelistFile;
+				filelist = " /filelist=\"" + filelistFile + "\"";
 			}
 
 			// Run ilweaver on specified files
@@ -538,7 +538,7 @@ namespace Weavers.PeWeaver
 					}
 					else 
 					{
-						Console.WriteLine("Error: File containting the filelist not found!");
+						Console.WriteLine("Error: File containing the filelist not found!");
 					}
 				}
 
