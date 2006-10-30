@@ -31,7 +31,7 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init_local,compile_java,jar,compile_starlight" description="compile the StarLight compiletime"/>
+	<target name="build" depends="init_local,build_xmltypes,compile_java,jar,compile_starlight" description="compile the StarLight compiletime"/>
 	
 	<target name="antlr">
 		<!--
@@ -39,6 +39,18 @@
 			<classpath refid="lib.dotnet"/>
 		</antlr>
 		-->
+	</target>
+	
+	<target name="create_xsd">
+    <msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build"/>
+    <exec dir="..\StarLightEntities\bin\debug" executable="xsd.exe">
+  		<arg line="Composestar.StarLight.Entities.dll" />
+  		<arg line="/outputdir:../../obj" />
+		</exec>
+  </target>
+	
+	<target name="build_xmltypes" depends="create_xsd">
+	  <xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="../../Libraries/xmltypes.jar" classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 	</target>
 	
 	<target name="compile_java">
@@ -54,5 +66,10 @@
 	<target name="jar">
 		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="composestar/MANIFEST.MF"/>
 	</target>
+	
+	<taskdef name="xmlbean"
+     classname="org.apache.xmlbeans.impl.tool.XMLBean"
+     classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
+
 		
 </project>
