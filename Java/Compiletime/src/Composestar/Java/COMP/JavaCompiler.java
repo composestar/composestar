@@ -63,14 +63,14 @@ public class JavaCompiler implements LangCompiler
 		createFile(p, false, target);
 
 		// create command
-		CompilerAction action = lang.compilerSettings.getCompilerAction("Compile");
+		CompilerAction action = lang.getCompilerSettings().getCompilerAction("Compile");
 		if (action == null)
 		{
 			throw new CompilerException("Cannot obtain compileraction");
 		}
 
 		command = action.getArgument();
-		command = lang.compilerSettings.getProperty("executable") + " " + command;
+		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
 		command = command.replaceAll("\\{OPTIONS\\}", options);
 		command = command.replaceAll("\\{SOURCES\\}", argfiles);
 
@@ -140,14 +140,14 @@ public class JavaCompiler implements LangCompiler
 		String argfiles = "@dummies.txt";
 		createFile(p, true, target);
 
-		CompilerAction action = lang.compilerSettings.getCompilerAction("Compile");
+		CompilerAction action = lang.getCompilerSettings().getCompilerAction("Compile");
 		if (action == null) 
 		{	
 			throw new CompilerException("Cannot obtain compileraction");
 		}
 
 		command = action.getArgument();
-		command = lang.compilerSettings.getProperty("executable") + " " + command;
+		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
 		command = command.replaceAll("\\{OPTIONS\\}", options);
 		command = command.replaceAll("\\{SOURCES\\}", argfiles);
 
@@ -220,7 +220,7 @@ public class JavaCompiler implements LangCompiler
 		String name = p.getProperty("name") + ".dummies.jar";
 		String compiledUnit = targetPath + name;
 
-		command = p.getLanguage().compilerSettings.getCompilerAction("CreateJar").getArgument();
+		command = p.getLanguage().getCompilerSettings().getCompilerAction("CreateJar").getArgument();
 		command = command.replaceAll("\\{OPTIONS\\}", "-cf");
 		command = command.replaceAll("\\{NAME\\}", name);
 		command = command.replaceAll("\\{CLASSES\\}", paths);
