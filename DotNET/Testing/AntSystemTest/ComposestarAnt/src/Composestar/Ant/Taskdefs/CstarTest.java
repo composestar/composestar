@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,11 +66,6 @@ public class CstarTest extends BaseTask
 	 */
 	protected int cntCurrent;
 
-	/**
-	 * List of failed tests. Included with final exception.
-	 */
-	protected List failList = new ArrayList();
-
 	public CstarTest()
 	{
 		super();
@@ -125,17 +119,12 @@ public class CstarTest extends BaseTask
 			"; timeouts: " + cntTimeout +
 			"; failed: " + cntFail +
 			"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
-			(cntFail == 0)?Project.MSG_INFO:Project.MSG_ERR);
+			(cntFail == 0)?Project.MSG_INFO:Project.MSG_WARN);
 		
 		if (cntFail > 0)
 		{
 			log("The following tests failed:", Project.MSG_ERR);		
-			Iterator it = failList.iterator();
-			while (it.hasNext())
-			{
-				String failed = (String)it.next();
-				log(failed, Project.MSG_ERR);
-			}
+			reportFailures();
 		}
 	}
 
@@ -186,7 +175,7 @@ public class CstarTest extends BaseTask
 
 			if (err != 0)
 			{
-				throw new Exception("Exit code is not zero");
+				throw new Exception("Exit code is not zero: "+err);
 			}
 			
 			checkOutput(exec, outputStream.toString());
@@ -202,8 +191,7 @@ public class CstarTest extends BaseTask
 			}
 			else
 			{
-				log("! Failed ! " + e.getMessage(), Project.MSG_ERR);
-				failList.add("" + exec);
+				addFailure(exec.toString(), e.getMessage());
 			}
 		}
 	}

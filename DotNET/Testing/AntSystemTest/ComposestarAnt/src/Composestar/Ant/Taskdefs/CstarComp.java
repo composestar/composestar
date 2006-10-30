@@ -1,7 +1,6 @@
 package Composestar.Ant.Taskdefs;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -65,11 +64,6 @@ public class CstarComp extends BaseTask
 	 * Number of failed builds
 	 */
 	protected int cntFail;
-
-	/**
-	 * List of failed tests. Inceased with final exception.
-	 */
-	protected List failList = new ArrayList();
 	
 	public CstarComp()
 	{
@@ -139,17 +133,12 @@ public class CstarComp extends BaseTask
 				"; success: " + cntSuccess +
 				"; failed: " + cntFail +
 				"; ratio: " + (cntSuccess * 100 / cntTotal) + "%", 
-				(cntFail == 0)?Project.MSG_INFO:Project.MSG_ERR );
+				(cntFail == 0)?Project.MSG_INFO:Project.MSG_WARN );
 			
 		if (cntFail > 0)
 		{
 			log("Compilation of the following projects failed:", Project.MSG_ERR);		
-			Iterator it = failList.iterator();
-			while (it.hasNext())
-			{
-				String failed = (String)it.next();
-				log(failed, Project.MSG_ERR);
-			}
+			reportFailures();
 		}
 	}
 
@@ -180,7 +169,7 @@ public class CstarComp extends BaseTask
 			int err = java.executeJava();
 			if (err != 0)
 			{
-				throw new Exception("Exit code is not zero");
+				throw new Exception("Exit code is not zero: "+err);
 			}
 
 			cntSuccess++;
@@ -194,8 +183,7 @@ public class CstarComp extends BaseTask
 			}
 			else
 			{
-				getProject().log(this, "! Failed ! " + e.getMessage(), Project.MSG_ERR);
-				failList.add(projectDir.getAbsolutePath());
+				addFailure(projectDir.getAbsolutePath(), e.getMessage());
 			}
 		}
 	}

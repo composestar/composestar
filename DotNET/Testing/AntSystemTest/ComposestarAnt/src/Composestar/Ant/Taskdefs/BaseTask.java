@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
@@ -15,6 +16,11 @@ import org.apache.tools.ant.types.FileSet;
 public abstract class BaseTask extends Task
 {
 	private final List m_fileSets;
+	
+	/**
+	 * List of failed tests. Inceased with final exception.
+	 */
+	protected List failList = new ArrayList();	
 	
 	protected BaseTask()
 	{
@@ -45,5 +51,21 @@ public abstract class BaseTask extends Task
 			}
 		}
 		return result;
+	}
+	
+	protected void addFailure(String subject, String reason)
+	{
+		log("Failed: " + reason, Project.MSG_ERR);
+		failList.add(subject+" : "+reason);
+	}
+	
+	protected void reportFailures()
+	{
+		Iterator it = failList.iterator();
+		while (it.hasNext())
+		{
+			String failed = (String)it.next();
+			log(failed, Project.MSG_ERR);
+		}
 	}
 }
