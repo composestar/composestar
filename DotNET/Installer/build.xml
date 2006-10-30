@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ComposeStar/DotNET" default="build-installer">
+
+	<taskdef name="nsis" classname="net.sf.nsisant.Task">
+		<classpath location="nsisant-1.2.jar"/>
+        </taskdef>
+
+	<target name="build-installer" depends="build-addinfixer">
+		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes">
+        		<define name="VERSION" value="2.1"/>
+        		<scriptcmd cmd="AutoCloseWindow true"/>
+    		</nsis>
+	</target>
+
+	<target name="build-addinfixer">
+		<nsis script="ComposeStarAddIn.nsi" verbosity="4" out="build_addinfixer.log" noconfig="yes">
+        		<define name="VERSION" value="2.1"/>
+        		<scriptcmd cmd="AutoCloseWindow true"/>
+    		</nsis>
+	</target> 
+	
+</project>
