@@ -25,6 +25,9 @@ Common routines. Always include this file in every build.xml file
 		<property name="out.jar.dotnet"    value="${out.dist}/ComposestarDotNET.jar"/>
 		<property name="out.jar.starlight" value="${out.dist}/StarLight.jar"/>
 
+		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version number -->
+		<property name="label"				value="build.dev"/>
+		
 		<property name="build.java.version" value="1.4"/>
 		<property name="build.debug"        value="true"/>
 		<property name="build.deprecation"  value="false"/>

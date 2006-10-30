@@ -1,0 +1,65 @@
+<cruisecontrol>
+
+	<!-- location where cruise control is running, used for reporting -->
+	<property name="cchost" value="ewi666.cs.utwente.nl" />
+	
+	<!-- expose environment vars -->
+	<property environment="env" toupper="true"/>
+
+	<project name="composestar">
+		
+		<!-- set this to the location of the composestar root -->
+		<property name="composestar.path" value="c:\sandbox" />
+		
+		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
+		
+		<listeners>
+			<!-- used by the reporting interface -->
+			<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+		</listeners>
+
+		<!-- wait 5 minutes after the last commit before continuing -->
+		<modificationset quietperiod="300">			
+			<!-- note: svn action needs svn commandline client in the path  -->
+			<svn LocalWorkingCopy="${composestar.path}" property="composestar.modified" />
+		</modificationset>
+		
+		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
+		<schedule>
+			<ant target="integration" 
+				buildfile="${composestar.path}\Core\Development\build_total.xml" 
+				uselogger="true" 
+				anthome="${composestar.ant}" 
+				antWorkingDir="${composestar.path}" 
+				usedebug="false" 
+			/>
+		</schedule>
+		
+		<publishers>
+			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
+				xslfile="webapps\cruisecontrol\xsl\buildresults.xsl" 
+				mailhost="smtp.utwente.nl" 
+				reportsuccess="fixes" 
+				skipusers="true" 
+				returnaddress="composestar-developers@lists.sourceforge.net"
+			>
+				<always address="composestar-developers@lists.sourceforge.net" />
+			</htmlemail>
+			
+			<!--
+			<onsuccess>
+				<antpublisher target="installer" 
+					buildfile="${composestar.path}\Core\Development\build_total.xml" 
+					uselogger="true" 
+					anthome="${composestar.ant}" 
+					antWorkingDir="${composestar.path}" 
+					usedebug="false"			
+				/>
+				<artifactspublisher ... />
+			</onsuccess>
+			-->
+		</publishers>
+	
+	</project>
+
+</cruisecontrol>
