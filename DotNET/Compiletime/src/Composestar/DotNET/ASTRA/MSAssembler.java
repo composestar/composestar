@@ -23,8 +23,8 @@ public class MSAssembler implements Assembler
 		cmdList.add("/debug");
 		cmdList.add("/quiet");
 		cmdList.add(outputFile.matches(".*\\.dll") ? "/dll" : "/exe");
-		cmdList.add("/output=" + FileUtils.quote(outputFile));
-		cmdList.add(FileUtils.quote(inputFile));
+		cmdList.add("/output=" + outputFile);
+		cmdList.add(inputFile);
 
 		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Command: " + StringUtils.join(cmdList));
 	
@@ -42,8 +42,8 @@ public class MSAssembler implements Assembler
 		cmdList.add(s_basepath + "ildasm");
 		cmdList.add("/linenum");
 		cmdList.add("/nobar");
-		cmdList.add("/out=" + FileUtils.quote(outputFile));
-		cmdList.add(FileUtils.quote(inputFile));
+		cmdList.add("/out=" + outputFile);
+		cmdList.add(inputFile);
 
 		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Command: " + StringUtils.join(cmdList));
 
