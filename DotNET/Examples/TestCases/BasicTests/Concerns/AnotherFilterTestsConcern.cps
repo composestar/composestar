@@ -5,7 +5,7 @@ concern AnotherFilterTestsConcern in BasicTests
 		internals
 			visitor : BasicTests.Visitor;
 		conditions
-			enoughVisits : visitor.enoughVisits();
+			enoughVisits : visitor.get_Enough();
 		inputfilters
 			makeVisit : Dispatch = { !enoughVisits => [*.makeTrip] *.doVisit };
 			countVisit : Meta = { [*.doVisit] visitor.visit };
@@ -61,9 +61,9 @@ namespace BasicTests
 			Console.Out.WriteLine("It's raining, staying home #{0} time(s)", visits);
 		}
 
-		public bool enoughVisits()
+		public bool Enough
 		{
-			return visits >= 5;
+			get { return visits >= 5; }
 		}
 	}
 }
