@@ -1,11 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/DotNET" default="build-installer">
+<project name="ComposeStar/DotNET/Installer" default="make-installer">
 
 	<taskdef name="nsis" classname="net.sf.nsisant.Task">
 		<classpath location="nsisant-1.2.jar"/>
-        </taskdef>
+	</taskdef>
 
-	<target name="build-installer" depends="build-addinfixer">
+	<condition property="build.core" value="..${file.separator}..${file.separator}Core">
+		<and>
+			<not><isset property="build.core"/></not>
+			<available file="..${file.separator}..${file.separator}Core${file.separator}common.xml"/>
+		</and>
+	</condition>
+	
+	<import file="${build.core}${file.separator}common.xml"/>
+
+	<target name="clean"/>
+	
+	<target name="build"/>
+	
+	<target name="copy-files">
+		
+		<property name="composestar.installerdir" value="${build.dotnet}${file.separator}Installer"/>
+		
+		<mkdir dir="${composestar.installerdir}${file.separator}binaries"/>
+		<mkdir dir="${composestar.installerdir}${file.separator}binaries${file.separator}prolog"/>
+		<mkdir dir="${composestar.installerdir}${file.separator}binaries${file.separator}groove"/>
+		<mkdir dir="${composestar.installerdir}${file.separator}ComposestarVSAddin"/>
+		
+		<!-- Compose* .NET .CSS and .XML files -->
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}INCRE${file.separator}INCRE.css" todir="${composestar.installerdir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}CKRET.css" todir="${composestar.installerdir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}filterdesc.xml" todir="${composestar.installerdir}"/>
+
+		<!-- Compose* .NET ANTLR libs -->
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr${file.separator}antlr.jar" todir="${composestar.installerdir}${file.separator}binaries"/>
+
+		<!-- Compose* .NET prolog libs -->
+		<copy todir="${composestar.installerdir}${file.separator}binaries${file.separator}prolog">
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}prolog">
+				<include name="prolog.jar"/>
+				<include name="lib.pro"/>
+				<include name="connector.pro"/>
+			</fileset>
+		</copy>
+
+		<!-- Compose* .NET Compiletime libs -->
+		<copy todir="${composestar.installerdir}${file.separator}binaries">
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}dist"/>
+		</copy>
+
+		<!-- Compose* .NET Groove libs -->
+		<copy todir="${composestar.installerdir}${file.separator}binaries${file.separator}groove">
+			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}groove">
+				<include name="groove-1_2_0.jar"/>
+				<include name="castor-0_9_5_2-xml.jar"/>
+				<include name="jgraph.jar"/>
+				<include name="xerces-2_6_0-xercesImpl.jar"/>
+				<include name="xerces-2_6_0-xml-apis.jar"/>
+			</fileset>
+		</copy>
+
+		<!-- Compose* .NET Compiletime libs -->
+		<copy todir="${composestar.installerdir}${file.separator}binaries">
+			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}dist"/>
+		</copy>
+
+		<!-- Compose* .NET C# Dummygenerator -->
+		<copy todir="${composestar.installerdir}${file.separator}binaries">
+			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}DUMMER${file.separator}CSharpDummyGenerator${file.separator}bin">
+				<include name="CSharpDummyGenerator.exe"/>
+				<include name="antlr.runtime.dll"/>
+			</fileset>
+		</copy>
+		
+		<!-- Compose* .NET Weavers -->
+		<copy todir="${composestar.installerdir}${file.separator}binaries">
+			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}ILICIT${file.separator}Weaver${file.separator}bin${file.separator}Release">
+				<include name="IlWeaver.exe"/>
+				<include name="PeWeaver.exe"/>
+				<include name="WeaveLibrary.dll"/>
+			</fileset>
+		</copy>
+
+		<!-- Compose* .NET INCRE configs -->
+		<copy todir="${composestar.installerdir}">
+			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}INCRE">
+				<include name="*.xml"/>
+			</fileset>
+		</copy>
+
+		<!-- Compose* .NET Runtime libs -->
+		<copy todir="${composestar.installerdir}/binaries">
+			<fileset dir="${build.dotnet}${file.separator}Runtime${file.separator}src${file.separator}FLIRT${file.separator}bin${file.separator}Release">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>
+
+		<!-- Compose* .NET Plugin -->
+		<copy todir="${composestar.installerdir}${file.separator}ComposestarVSAddin"> 
+			<fileset dir="${build.dotnet}${file.separator}Plugin${file.separator}VSAddin${file.separator}bin">
+				<include name="ComposestarVSAddin.*" />
+			</fileset>
+		</copy>
+		
+	</target>
+
+	<target name="make-installer" depends="copy-files,build-addinfixer">
 		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes">
         		<define name="VERSION" value="2.1"/>
         		<scriptcmd cmd="AutoCloseWindow true"/>

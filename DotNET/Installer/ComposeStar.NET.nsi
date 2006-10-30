@@ -8,7 +8,6 @@
 ;--------------------------------
 
 ; Variables
-; Variables
 ;--------------------------------
   Var JAVA_HOME
 	Var REAL_JAVA_HOME
@@ -32,7 +31,7 @@
 
   Name "Compose*.NET"
   Icon cstar.ico
-  OutFile "ComposeStar.NET_0.5.4.exe"
+  OutFile "ComposeStar.NET_0.6.exe"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -109,7 +108,7 @@ Section "Compose*" Compose
 	SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
-  File ABOUT.txt
+	File ABOUT.txt
 	File ComposeStarSyntaxHighlighting.reg
 	File filterdesc.xml
 	File ComposeStarAddInFixer.exe

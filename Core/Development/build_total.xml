@@ -67,6 +67,11 @@
 	<target name="install_dotnet" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="install" dir="${build.dotnet}" />
 	</target>
+
+	<!-- installer tasks -->
+	<target name="installer_dotnet" depends="init,dotnet" if="available.dotnet" unless="ignore.dotnet" description="Create installer for Compose* .NET">
+		<ant target="make-installer" dir="${build.dotnet}${file.separator}Installer"/>
+	</target>		
 	
 	<!-- uninstall tasks -->
 	
@@ -204,6 +209,9 @@ If the build failed the cause will be listed at the end of the report.
 				</antMenuItem>
 				<antMenuItem name="Plugin">
 					<antMenuItem name="DotNET" target="plugin_dotnet" />
+				</antMenuItem>
+				<antMenuItem name="Installer">
+					<antMenuItem name="DotNET" target="installer_dotnet" />
 				</antMenuItem>
 				<antMenuItem name="Installation">
 					<antMenuItem name="Install" target="install" />
