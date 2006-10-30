@@ -35,8 +35,8 @@ public abstract class BACO implements CTCommonModule
 		addCustomFilters(filesToCopy);
 		addDependencies(filesToCopy);
 		addRepository(filesToCopy);
-
-		copyFiles(filesToCopy);
+		
+		copyFiles(filesToCopy, false);
 	}
 
 	protected void addRequiredFiles(Set filesToCopy)
@@ -118,7 +118,7 @@ public abstract class BACO implements CTCommonModule
 		filesToCopy.add(repository);
 	}
 
-	private void copyFiles(Set filesToCopy) throws ModuleException
+	private void copyFiles(Set filesToCopy, boolean fatal) throws ModuleException
 	{
 		Configuration config = Configuration.instance();
 
@@ -135,11 +135,11 @@ public abstract class BACO implements CTCommonModule
 		while (filesIt.hasNext())
 		{
 			String source = (String)filesIt.next();
-			copyFile(outputPath, source);
+			copyFile(outputPath, source, fatal);
 		}
 	}
 	
-	protected void copyFile(String outputPath, String source) throws ModuleException
+	protected void copyFile(String outputPath, String source, boolean fatal) throws ModuleException
 	{
 		String dest = outputPath + FileUtils.getFilenamePart(source);
 		try 
@@ -148,7 +148,9 @@ public abstract class BACO implements CTCommonModule
 			FileUtils.copyFile(dest, source);
 		}
 		catch (IOException e) {
-			Debug.out(Debug.MODE_WARNING,MODULE_NAME,"Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
+			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
+			if (fatal) throw new ModuleException(msg, MODULE_NAME);
+			else Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
 		}
 	}
 
