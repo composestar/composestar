@@ -3,6 +3,9 @@ using System.IO;
 
 namespace FilterTypes
 {
+    /// <summary>
+    /// Saves a string to a file.
+    /// </summary>
     public class TraceFile : IDisposable 
     {
         
@@ -10,19 +13,34 @@ namespace FilterTypes
         private static StreamWriter _tracefileWriter = null;
         private bool disposed = false;
 
+        /// <summary>
+        /// Opens the filestream.
+        /// </summary>
         private static void Open()
         {
             _tracefile = new FileStream("tracelog.txt", FileMode.Create);
             _tracefileWriter = new StreamWriter(_tracefile);
         }
 
+        /// <summary>
+        /// Determines whether the filestream is open.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if the filestream is open; otherwise, <c>false</c>.
+        /// </returns>
         private static bool IsOpen()
         {
-            if (_tracefile != null) return true;
+            if (_tracefile != null) 
+                return true;
 
             return false;
         }
 
+        /// <summary>
+        /// Writes the line to the filestream.
+        /// </summary>
+        /// <param name="line">The line.</param>
+        /// <param name="args">The args.</param>
         public static void WriteLine(String line, params Object[] args)
         {
             if (!IsOpen())
@@ -30,12 +48,13 @@ namespace FilterTypes
                 Open();
             }
 
-            _tracefileWriter.WriteLine(line, args);
-            _tracefileWriter.Flush();
+            _tracefileWriter.WriteLine(line, args);            
         }
 
+        #region IDisposable
+
         public void Dispose()
-        {          
+        {
             // dispose of the managed and unmanaged resources
             Dispose(true);
 
@@ -52,19 +71,20 @@ namespace FilterTypes
             {
                 if (disposeManagedResources)
                 {
-                  
+
                     // dispose managed resources
                     if (_tracefileWriter != null)
                     {
+                        _tracefileWriter.Flush();
                         _tracefileWriter.Dispose();
                         _tracefileWriter = null;
                     }
                 }
-                
+
                 disposed = true;
-            }       
+            }
         }
+
+        #endregion
     }
-
-
 }
