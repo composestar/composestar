@@ -176,18 +176,19 @@ public class ILICIT implements WEAVER
 		String buildfile = basePath + "filelist.peweaver";
 		createBuildfile(buildfile, toBeWoven);
 		cmdList.add("/filelist=" + FileUtils.quote(buildfile));
-
+		
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		int exitcode = cle.exec(cmdList);
 		
-		if (exitcode == 0)
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Successfully executed the 'PE Weaver' tool.");
-		else
+		File logFile = new File(basePath, "weavelog.txt");
+		createLog(logFile, cle.outputNormal());
+		
+		if (exitcode != 0)
 		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, cle.outputNormal());
-			throw new ModuleException(getExitMessage(exitcode), MODULE_NAME);
+			String msg = getExitMessage(exitcode) + ". See weavelog.txt for more information.";
+			throw new ModuleException(msg, MODULE_NAME);
 		}
 	}
 
@@ -197,7 +198,7 @@ public class ILICIT implements WEAVER
 		File exe = new File(cpsPath, "binaries/peweaver.exe");
 		
 		if (! exe.exists())
-			throw new ModuleException("Unable to locate the executable '" + exe + "'!");
+			throw new ModuleException("Unable to locate the executable '" + exe + "'!", MODULE_NAME);
 		
 		return exe.getAbsolutePath();
 	}
@@ -214,6 +215,21 @@ public class ILICIT implements WEAVER
 		}
 		catch (IOException e) {
 			throw new ModuleException("Unable to create build file for the weaver: " + e.getMessage(), MODULE_NAME);
+		}
+		finally {
+			FileUtils.close(out);
+		}
+	}
+	
+	private void createLog(File logFile, String log) throws ModuleException
+	{
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter(new BufferedWriter(new FileWriter(logFile)));
+			out.println(log);
+		}
+		catch (IOException e) {
+			throw new ModuleException("Unable to create PEWeaver logfile: " + e.getMessage(), MODULE_NAME);
 		}
 		finally {
 			FileUtils.close(out);
@@ -243,7 +259,7 @@ public class ILICIT implements WEAVER
 		case 19: return "PEVerify execution failure";
 		case 25: return "ILWeaver not found (ilweaver.exe)";
 		case 26: return "ILWeaver execution failure";
-		case -532459699: return "PeWeaver or ILWeaver had a CLR crash. Most likely your compiler created rubish from your sourcefiles."; //Happens if your compiler creates rubbish
+		case -532459699: return "PeWeaver or ILWeaver had a CLR crash";
 		default: return "PeWeaver execution failure (exitcode " + code + ')';
 		}		
 	}
