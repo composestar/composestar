@@ -16,7 +16,7 @@ concern FilterTestsConcern in BasicTests
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
-			makeError : Error = { doError ~> [*.makeError], !doError => [*.*] };
+			makeError : Error = { doError ~> [*.setProduceError], !doError => [*.*] };
 			toNext2 : Dispatch = { [*.func2] *.func3 }
 	}
 
