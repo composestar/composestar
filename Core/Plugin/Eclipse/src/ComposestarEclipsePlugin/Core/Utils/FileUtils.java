@@ -17,4 +17,13 @@ public class FileUtils
   {
     return name.replace('\\', '/');
   }
+  
+  public static String getDirectoryPart(String pathToFile)
+	{
+		int pathEnd = pathToFile.lastIndexOf('/');
+		if (pathEnd > 0)
+			return pathToFile.substring(0, pathEnd);
+		else
+			return pathToFile;
+	}
 }
