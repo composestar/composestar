@@ -103,11 +103,6 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "JoinPointInfoConcern.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "JoinPointInfoExtractor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

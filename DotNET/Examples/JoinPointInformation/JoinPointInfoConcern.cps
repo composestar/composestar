@@ -14,11 +14,27 @@ concern JoinPointInfoConcern(ext_foo : JPInfo.Foo ; ext_bar : JPInfo.Bar) in JPI
 
 	superimposition
 	{
-		selectors
-			selectees = { C | isClassWithName(C, 'JPInfo.JoinPointInfoConcern') };
 		filtermodules
-			selectees <- JPInfoModule;
+			self <- JPInfoModule;
 	}
 
-	implementation by JPInfo.JoinPointInfoConcern;
+	implementation in CSharp by JPInfo.JoinPointInfoConcern as "JoinPointInfoConcern.cs"
+	{
+		using System;
+
+		namespace JPInfo
+		{
+			public class JoinPointInfoConcern
+			{
+				public JoinPointInfoConcern(Foo foo, Bar bar)
+				{
+				}
+
+				public void sayHello()
+				{
+					Console.WriteLine("Hello");
+				}
+			}
+		}
+	}
 }
