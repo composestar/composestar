@@ -21,6 +21,7 @@ import java.util.Vector;
 import Composestar.Core.Exception.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 }
 
 class CpsTreeWalker extends TreeParser;
@@ -107,13 +108,45 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
           filterElements : #(FILTERSET_ (filterElement {c = null;} (c:COMMA)? {if(c!=null) b.addFilterElementCompOper(c.getText(),c.getLine()); else b.addFilterElementCompOper(null,0);} )* );
 
-            filterElement : #(FILTERELEM_ {f = null; namev.clear();} ( orExpr f:FILTER_OP)? {if(f!=null) b.addFilterElement(f.getText(),f.getLine()); else b.addFilterElement(null,0);} messagePatternSet);
+            filterElement { ConditionExpression fec = null; }
+                          : #(FILTERELEM_ {f = null; namev.clear();} ( fec=orExpr f:FILTER_OP)? 
+                             {
+                               if(f!=null) b.addFilterElement(f.getText(),f.getLine(),fec); 
+                               else b.addFilterElement(null,0,fec);
+                             } messagePatternSet);
 
+// old --
+/*
               orExpr : #(OREXPR_ andExpr (OR { b.addOr(); } andExpr)*);
 
                 andExpr : #(ANDEXPR_ notExpr (AND { b.addAnd(); } notExpr)*);
 
                   notExpr : #(NOTEXPR_ {namev.clear(); n = null; } (n:NOT)? (na:NAME {namev.add(na.getText());} )+ { if(n!=null) b.addNot(namev); else b.addConditionLiteral(namev, null); } );
+*/
+// -- old
+// new --
+              orExpr returns [ConditionExpression expr=null]
+                     {ConditionExpression lhs, rhs;}
+                     : #(OR lhs=orExpr rhs=orExpr {expr = b.addOr(lhs, rhs);} )
+                     | expr=andExpr
+              		 ;
+              
+              	andExpr returns [ConditionExpression expr=null]
+                        {ConditionExpression lhs, rhs;}
+              	        : #(AND lhs=orExpr rhs=orExpr {expr = b.addAnd(lhs, rhs);} )
+              	        | expr=unaryExpr
+              	        ;
+              	
+              	  unaryExpr returns [ConditionExpression expr=null]
+                            {ConditionExpression oper;}              	  
+              	            : #(n:NOT oper=orExpr {expr = b.addNot(oper);} )
+              	  			| expr=operandExpr
+              	  			;
+              	  
+              	    operandExpr returns [ConditionExpression expr=null]
+              	                : na:NAME {expr = b.addConditionOperand(na.getText());}
+              	                ;
+// -- new           
 
               messagePatternSet : #(MPSET_ messagePattern);
 

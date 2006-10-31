@@ -77,6 +77,7 @@ tokens {                                //extra tokens used in constructing the 
         TYPE_;
         VAR_;
         APS_;
+        PROLOG_EXPRESSION;
 }
 {
   public boolean sourceIncluded = false;        //source included in Cps file?
@@ -188,6 +189,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                           | messagePatternSet)
                           { #filterElement = #([FILTERELEM_, "filterelement"], #filterElement);} ;
 
+// old --
+/*
               orExpr : andExpr (OR andExpr)*
                      { #orExpr = #([OREXPR_, "orExpression"], #orExpr);};
 
@@ -197,7 +200,19 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                   //changed it from fmElemReferenceCond to NAME, since reuse must be done in the conditions block
                   notExpr : (NOT)? ( NAME )
                           { #notExpr = #([NOTEXPR_, "notExpression"], #notExpr);};
-
+*/
+// -- old                          
+// new --
+              orExpr : andExpr (OR^ orExpr)?;
+                     
+                andExpr : unaryExpr (AND^ andExpr)?;
+                       
+                  unaryExpr : (NOT^)? operandExpr;
+                         
+                    operandExpr : LPARENTHESIS! orExpr RPARENTHESIS!
+                                | NAME // name is either a literal or identifier
+                                ;
+// -- new
               messagePatternSet : messagePattern
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
@@ -226,7 +241,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                    singleTargetSelector : (
                                           LSQUARE targetSelector RSQUARE!          // name
                                         | LANGLE targetSelector RANGLE!            // signature
-                                        | SINGLEQUOTE targetSelector SINGLEQUOTE!  // name
+                                        //| SINGLEQUOTE targetSelector SINGLEQUOTE!  // name
                                         | targetSelector
                                         ) ;
                   
@@ -268,7 +283,16 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
         { #oldSelExpression = #([SELEXP_, "selectorexpression"], #oldSelExpression);} ;
         
 
-	   predSelExpression : NAME PROLOG_EXPRESSION;
+	   predSelExpression : NAME OR! prologExpression RCURLY!;
+	  
+	     prologExpression 
+	     { StringBuffer sb = new StringBuffer(); }
+	     :	(	x:~(RCURLY)
+	     		{ sb.append(x.getText()); }
+	     	)*
+	     	{ #prologExpression = #([PROLOG_EXPRESSION, sb.toString()]); }
+	     ;
+	                     
 	   
 
     /*---------------------------------------------------------------------------*/
@@ -366,7 +390,6 @@ RPARENTHESIS            : ')';
 RSQUARE                 : ']' ;
 SEMICOLON               : ';' ;
 STAR                    : '*' ;
-SINGLEQUOTE             : '\'';
 QUESTIONMARK			: '?';
 
 protected DIGIT         : '0'..'9' ;
@@ -378,6 +401,10 @@ protected NEWLINE       : (("\r\n") => "\r\n"           //DOS
 
 protected SPECIAL       : '_';
 protected QUOTE         : '"';
+protected SINGLEQUOTE   : '\'';
+
+// used for prolog expressions
+PROLOG_STRING			: SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
 
 protected COMMENTITEMS  : NEWLINE COMMENTITEMS
 				  | ("*/") => "*/"
@@ -399,9 +426,11 @@ PARAMETER_NAME          : QUESTIONMARK NAME;
 WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
                           | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
 
+/*
 PROLOG_EXPRESSION       :   '|' (PROLOG_SUB_EXPRESSION)* RCURLY!;
 
 protected PROLOG_SUB_EXPRESSION : (~ ('{'|'}'|'\n'|'\r'))
 					| (LCURLY (PROLOG_SUB_EXPRESSION)* RCURLY)
 					| NEWLINE
 					;
+*/

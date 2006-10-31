@@ -567,9 +567,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param filterop2 inclusion of exclusion (can be '=>' or '~>'
    * @param lineNumber
    */
-  public void addFilterElement(String filterop2,int lineNumber) {
-    int i;
-    ConditionExpression tempce;
+  public void addFilterElement(String filterop2,int lineNumber, ConditionExpression fec) {
+    //int i;
+    //ConditionExpression tempce;
 
     fe = new FilterElementAST();
 	  fe.setDescriptionFileName(filename);
@@ -583,8 +583,27 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       fe.setParent(of);
     }
     this.addToRepository(fe);
+    
+    //TODO: this is not very nice
+    if (filterop2 != null) 
+    {
+    	addFilterOperatorType(filterop2,lineNumber);
+    }
+    else // sugar
+    {
+    	addFilterOperatorType("=>",lineNumber);
+    }
+    
+    if (fec == null) // sugar
+    {
+    	fec = new True();
+    }    
+    fec.setParent(fe);
+    fe.setConditionPart(fec);
+    this.addToRepository(fec);
 
     //fixme: conditions and filteroperator can be both null (if not specified); in that case, should we create objects?
+    /*
     if (filterop2 != null) {  //conditions and filteroperator present
       addFilterOperatorType(filterop2,lineNumber);
       for (i = 0; i < condAll.size(); i++) {
@@ -608,13 +627,62 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
         this.addToRepository(tempce);  //add it to the real 'all' vector
       }
     }
-    condAll.clear();  //clear the condition Vector for the next filterelement
+    */
+    condAll.clear();  //clear the condition Vector for the next filterelement    
     lastTouched = null; //reset this for the next series
+  }
+  
+  public ConditionExpression addAnd(ConditionExpression lhs, ConditionExpression rhs) 
+  {
+	  And and = new And();
+	  and.setLeft(lhs);
+	  lhs.setParent(and);
+	  and.setRight(rhs);
+	  rhs.setParent(and);
+	  return and;
+  }
+  
+  public ConditionExpression addOr(ConditionExpression lhs, ConditionExpression rhs) 
+  {
+	  Or or = new Or();
+	  or.setLeft(lhs);
+	  lhs.setParent(or);
+	  or.setRight(rhs);
+	  rhs.setParent(or);
+	  return or;
+  }
+  
+  public ConditionExpression addNot(ConditionExpression oper) 
+  {
+	  Not not = new Not();
+	  not.setOperand(oper);
+	  oper.setParent(not);
+	  return not;
+  }
+  
+  public ConditionExpression addConditionOperand(String operand) 
+  {
+	  // special case if "true" or "false" are specified
+	  if (operand.equalsIgnoreCase("true")) 
+	  {
+		  return new True();
+	  } 
+	  else if (operand.equalsIgnoreCase("false")) 
+	  {
+	      return new False();
+	  }
+	  else {
+		  ConditionVariable cv = new ConditionVariable();
+		  split.splitFmElemReference(operand, true);
+		  cv.setCondition(addConditionReference(split.getPack(), split.getConcern(), split.getFm(), split.getFmelem()));
+		  return cv;
+	  }
   }
 
 
   /**
    * Adds an And object (can be present in an FilterElement)
+   * @deprecated
    */
   public void addAnd() {
     And and = new And();
@@ -629,6 +697,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
   /**
    * Adds an Or object (can be present in an FilterElement)
+   * @deprecated
    */
   public void addOr() {
     Or or = new Or();
@@ -645,6 +714,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * Adds an Not object
    *
    * @param condname Name of the literal to apply not to
+   * @deprecated
    */
   public void addNot(Vector condname) {
     Not not = new Not();
@@ -668,6 +738,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    *
    * @param condname Name of the condition (may include package + concern + fm)
    * @param override If called from Not, this points to the Not object to attach this condition to; if null, then just add using the default algoritm
+   * @deprecated
    */
   public void addConditionLiteral(Vector condname, ConditionExpression override) {
 	  
@@ -713,6 +784,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 
   /**
    * Adds a True (happens when you do not specify any condition in FilterElement; i.e. always true)
+   * @deprecated
    */
   public void addConditionTrue() {
     True true_ = new True();
@@ -1156,8 +1228,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addPredicateSelectorExpression(String variable, String predicate,int line)
   {
-    String realPredicate = predicate.substring(1,predicate.length()); //Cut of the | and } at start and end
-    PredicateSelector selector = new PredicateSelector(variable, realPredicate);
+    //predicate = predicate.substring(1,predicate.length()); //Cut of the | and } at start and end
+    PredicateSelector selector = new PredicateSelector(variable, predicate);
     selector.setDescriptionFileName(filename);
     selector.setDescriptionLineNumber(line);
 	selector.setParent(sd);
