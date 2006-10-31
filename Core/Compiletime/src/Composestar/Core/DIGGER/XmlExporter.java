@@ -115,15 +115,15 @@ public class XmlExporter
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new ModuleException("ParserConfigurationException: " + e.getMessage());
+			throw new ModuleException("ParserConfigurationException: " + e.getMessage(), DIGGER.MODULE_NAME);
 		}
 		catch (TransformerConfigurationException e)
 		{
-			throw new ModuleException("TransformerConfigurationException: " + e.getMessage());
+			throw new ModuleException("TransformerConfigurationException: " + e.getMessage(), DIGGER.MODULE_NAME);
 		}
 		catch (TransformerException e)
 		{
-			throw new ModuleException("TransformerException: " + e.getMessage());
+			throw new ModuleException("TransformerException: " + e.getMessage(), DIGGER.MODULE_NAME);
 		}
 	}
 
