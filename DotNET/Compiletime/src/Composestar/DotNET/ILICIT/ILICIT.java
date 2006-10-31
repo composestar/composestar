@@ -175,7 +175,7 @@ public class ILICIT implements WEAVER
 		// add build file
 		String buildfile = basePath + "filelist.peweaver";
 		createBuildfile(buildfile, toBeWoven);
-		cmdList.add("/filelist=" + FileUtils.quote(buildfile));
+		cmdList.add("/filelist=" + buildfile);
 		
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Command: " + StringUtils.join(cmdList));
 
