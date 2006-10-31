@@ -18,16 +18,8 @@ using DDW.CSharp;
 
 namespace DDW.CSharpUI
 {
-	class CSharpDummyGenerator
+	public class CSharpDummyGenerator
 	{
-		private static CSharpAST antlrTree = null;
-		private static string filename; // File currently being parsed
-
-		public static string Filename
-		{
-			get { return filename; }
-		}
-
 		[STAThread]
 		public static int Main(string[] args) 
 		{
@@ -36,78 +28,87 @@ namespace DDW.CSharpUI
 				Console.WriteLine("Usage: CSharpDummyGenerator <attribute-xml-filename>");
 				return 2; // Failure
 			}
+
 			try 
 			{	
-				filename = "";
-				while ((filename = Console.ReadLine()) != null)
+				string input = "";
+				while ((input = Console.ReadLine()) != null)
 				{
-					IGraph ig = GetGraph(filename);
-					// Arg[0] = output directory.
-					string outputFilename = Console.ReadLine();
+					currentFilename = input;
 
-					// Create directory when missing
-					FileInfo fi = new FileInfo(outputFilename);
-					Directory.CreateDirectory(fi.DirectoryName);
+					// next line is the target filename.
+					string output = Console.ReadLine();
 
-					StreamWriter sr = fi.CreateText();
-					CSharpGen csg = new CSharpGen(sr);
-					csg.Parse(ig);
-					csg.Close();
-					sr.Close();
+					if (output == null || output.Length == 0)
+						throw new Exception("No target filename specified for input '" + input + "'");
+
+					IGraph graph = GetGraph(input);
+					WriteDummy(graph, output);
 				}
-				AttributeWriter.Instance.writeXML(args[0]);
+
+				String attributeFile = args[0];
+				AttributeWriter.Instance.writeXML(attributeFile);
+
+				return 0; // Success
 			}
-			catch(Exception e) 
+			catch (Exception e) 
 			{
-				Console.WriteLine("exception: "+e);
+				Console.WriteLine("exception: " + e);
+
 				return 1; // Failure
 			}
-			return 0; // Success
 		}
+
+		private static IGraph GetGraph(string filename)
+		{
+			CSharpAST ast = GetAST(filename);
+			return (ast == null ? null : ast.GetGraph());
+		}
+
 		private static CSharpAST GetAST(string filename)
 		{
-			CSharpParser parser = null;
-			if (File.Exists(filename)) 
+			if (! File.Exists(filename)) 
+				throw new Exception("File not found: '" + filename + "'");
+
+			Console.Write("Parsing " + filename + "..");
+
+			using (FileStream s = new FileStream(filename, FileMode.Open, FileAccess.Read))
 			{
-				Console.Write("Parsing " + filename + "..");
-				FileStream s = new FileStream(filename, FileMode.Open, FileAccess.Read);
 				CSharpLexer lexer = new CSharpLexer(s);
 				lexer.setFilename(filename);
-				parser = new CSharpParser(lexer);
+				
+				CSharpParser parser = new CSharpParser(lexer);
 				parser.setFilename(filename);
-				//parser.setASTFactory(new LineNumberFactory() );
+				
 				// Parse the input expression
 				DateTime tStart = DateTime.Now;
 				parser.compilation_unit();
 				TimeSpan compTime = DateTime.Now - tStart;
 				Console.WriteLine(compTime.ToString());
-				//App.StatsText = "Time to parse (lex, parse & attrib): " + compTime.ToString();
-				s.Close();
+
+				CSharpAST ast = (CSharpAST)parser.getAST();
+				ast.FileName = filename;
+				return ast;
 			}
-			else
-				throw new Exception("File not found: '" + filename + "'");
-			if(parser != null)
-			{
-				antlrTree = (CSharpAST)(parser.getAST());
-				antlrTree.FileName = filename;
-			}
-			return antlrTree;
 		}
 
-		public static IGraph GetGraph(string filename)
+		private static void WriteDummy(IGraph graph, string output)
 		{
-			GetAST(filename);
-			if(antlrTree!=null)
-				return antlrTree.GetGraph();
-			else
-				return null;
+			// Create directory when missing
+			FileInfo fi = new FileInfo(output);
+			Directory.CreateDirectory(fi.DirectoryName);
+
+			StreamWriter sr = fi.CreateText();
+			CSharpGen csg = new CSharpGen(sr);
+			csg.Parse(graph);
+			csg.Close();
+			sr.Close();
 		}
-		public static string AntlrText
+
+		private static string currentFilename;
+		public static string getCurrentFilename()
 		{
-			get
-			{
-				return antlrTree.ToStringTree();
-			}
-		}			 
+			return currentFilename;
+		}
 	}
 }

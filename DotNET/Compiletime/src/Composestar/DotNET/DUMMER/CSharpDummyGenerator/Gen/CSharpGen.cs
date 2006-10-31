@@ -463,7 +463,7 @@ namespace DDW.CSharp.Gen
 			// Match class - store TypeLocation information
 			// Store Current filename?
 			Console.WriteLine("TypeLocation");
-			Console.WriteLine(CSharpUI.CSharpDummyGenerator.Filename);
+			Console.WriteLine(CSharpUI.CSharpDummyGenerator.getCurrentFilename());
 			Console.WriteLine(AttributeState.Target);
 
 			Parse(gr.BaseTypes);
@@ -484,7 +484,7 @@ namespace DDW.CSharp.Gen
 			// Match interface - store TypeLocation information
 			// Store Current filename?
 			Console.WriteLine("TypeLocation");
-			Console.WriteLine(CSharpUI.CSharpDummyGenerator.Filename);
+			Console.WriteLine(CSharpUI.CSharpDummyGenerator.getCurrentFilename());
 			Console.WriteLine(AttributeState.Target);
 
 			Parse(gr.BaseTypes);
