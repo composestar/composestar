@@ -1,4 +1,4 @@
-Welcome to the 'Rembrandt' 0.5.1 maintance release of Compose*.NET.
+Welcome to the 'M.C. Escher' 0.6 maintance release of Compose*.NET.
 
 Please visit [http://composestar.sourceforge.net/] for more information.
 
@@ -27,7 +27,7 @@ Compose* is licensed under LGPL v2.1 or (at your option) any later version.
 Copyright (C) 2003,2004,2005 University of Twente.
 
 Credits go to:
-Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkelink, Rolf Huisman, Wim Minnen, Michiel van Oudheusden, Olaf Conradi, Stephan Huttenhuis, Dirk Doornenbal, Arjan de Roo, Roy Spenkelink, and Johan te Winkel.
+Lodewijk Bergmans, Carlos Noguera, Christian Vinkes, Frederik Holljen, Istvan Nagy, Pascal Dürr, Raymond Bosman, Sverre Boschman, Tom Staijen, Gurcan Gulesir, Wilke Havinga, Dennis Spenkelink, Rolf Huisman, Wim Minnen, Michiel van Oudheusden, Olaf Conradi, Stephan Huttenhuis, Dirk Doornenbal, Arjan de Roo, Roy Spenkelink, Johan te Winkel, Michiel Hendriks, and Marcus Klimstra.
 
 
-The splash screen is taken from: http://nl.wikipedia.org/wiki/Afbeelding:RembrandtNightwatch.jpg
+The splash screen is taken from: http://en.wikipedia.org/wiki/Image:Escher%27s_Relativity.jpg

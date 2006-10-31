@@ -73,7 +73,7 @@
 
 Function .onInit
   SetOutPath $TEMP
-  File /oname=spltmp.bmp "RembrandtNightwatch.bmp"
+  File /oname=spltmp.bmp "EschersRelativity.bmp"
 
 	advsplash::show 3000 600 400 -1 $TEMP\spltmp
 

@@ -112,6 +112,12 @@
 				<include name="ComposestarVSAddin.*" />
 			</fileset>
 		</copy>
+
+		<!-- .NET Examples -->
+		<delete dir="${composestar.installerdir}${file.separator}examplesDotNET"/>
+		<svn>
+			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${composestar.installerdir}${file.separator}examplesDotNET"/>
+		</svn>
 		
 	</target>
 
