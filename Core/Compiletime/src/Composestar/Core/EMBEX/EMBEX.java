@@ -29,8 +29,11 @@ public class EMBEX implements CTCommonModule
 {
 	public static final String MODULE_NAME = "EMBEX";
 
+	Configuration config;
+
 	public EMBEX()
 	{
+		config = Configuration.instance();
 	}
 
 	/**
@@ -40,9 +43,7 @@ public class EMBEX implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException 
 	{
 		DataStore ds = DataStore.instance();
-		Configuration config = Configuration.instance();
 		PathSettings ps = config.getPathSettings();
-		Projects allProjects = config.getProjects();
 
 		// fetch temppath
 		String basePath = ps.getPath("Base");
@@ -68,41 +69,51 @@ public class EMBEX implements CTCommonModule
 				String language = sourceCode.getLanguage();
 				File target = new File(embeddedDir, sourceCode.getSourceFile());
 
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Found embedded source: "+sourceCode.getClassName());
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tLanguage: "+language);
-				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tFile: "+sourceCode.getSourceFile());
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Found embedded source: " + sourceCode.getClassName());
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tLanguage: " + language);
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"\tFile: " + sourceCode.getSourceFile());
+				
+				Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
+				source.setFileName(target.getAbsolutePath());
 
-				List languageProjects = allProjects.getProjectsByLanguage(language);
-				if (languageProjects == null)
-					throw new ModuleException("No projects for language " + language, MODULE_NAME);
+				TypeSource ts = new TypeSource();
+				ts.setFileName(target.getAbsolutePath());
+				ts.setName(sourceCode.getClassName());
 
-				Iterator lpIter = languageProjects.iterator();
-				if (!lpIter.hasNext())
-					throw new ModuleException("There is no project to add the embedded source to, the embedded code: "+sourceCode.className+" is added to the first project of type: "+sourceCode.language, MODULE_NAME);
-				else
-				{
-					Project prj = (Project)lpIter.next();
-					Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Adding embedded code to project: " + prj.getName());
+				Project prj = getProject(language);				
+				prj.addSource(source);
+				prj.addTypeSource(ts);
 
-					Composestar.Core.Master.Config.Source source = new Composestar.Core.Master.Config.Source();
-					source.setFileName(target.getAbsolutePath());
-					prj.addSource(source);
+				Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"Added embedded code to project: " + prj.getName());
 
-					TypeSource ts = new TypeSource();
-					ts.setFileName(target.getAbsolutePath());
-					ts.setName(sourceCode.getClassName());
-					prj.addTypeSource(ts);
-
-					this.saveToFile(sourceCode, target);
-				}
+				this.saveToFile(target, sourceCode);
 			}
+		}
+	}
+	
+	/**
+	 * Returns the first project with the specified language 
+	 * which will be used to add embedded code in that language to.
+	 */
+	private Project getProject(String language) throws ModuleException
+	{
+		Projects solution = config.getProjects();
+		List languageProjects = solution.getProjectsByLanguage(language);
+		if (languageProjects == null || languageProjects.size() == 0)
+		{
+			throw new ModuleException(
+					"No suitable project found for embedded code in language " + language, MODULE_NAME);
+		}
+		else
+		{
+			return (Project)languageProjects.get(0);
 		}
 	}
 
 	/**
 	 * Stores the embedded source in a new file.
 	 */
-	private void saveToFile(Source src, File target) throws ModuleException
+	private void saveToFile(File target, Source src) throws ModuleException
 	{
 		BufferedWriter bw = null;
 		try {
@@ -110,7 +121,7 @@ public class EMBEX implements CTCommonModule
 			bw.write(src.getSource());
 		}
 		catch (IOException e) {
-			throw new ModuleException("Could not save embedded source:" + e.getMessage() , MODULE_NAME);
+			throw new ModuleException("Could not save embedded source: " + e.getMessage() , MODULE_NAME);
 		}
 		finally {
 			FileUtils.close(bw);
