@@ -88,5 +88,15 @@
             id="composestar.build">
         </action>
       </objectContribution>
-     </extension> 
+    </extension>
+     
+    <extension
+        id="testbuild"
+        point="org.eclipse.core.runtime.applications">
+      	<application> 
+         	<run class="ComposestarEclipsePlugin.Java.Actions.TestBuild"> 
+         	</run> 
+      	</application>
+   	</extension>
+   	 
 </plugin>
