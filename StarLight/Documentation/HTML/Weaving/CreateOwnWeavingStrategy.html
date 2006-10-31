@@ -18,15 +18,43 @@
             <h1 class="heading">
                 Create your own weaving strategy</h1>
             <p>
-                The StarLight IL weaver performs code injection at the IL level. It adds IL instructions,
-                the filter actions and some management functions, at the start of a method and it
-                can replace calls with outputfilters. Besides the methods, it can also add internals
-                and externals to a type.
+                If you have created your own <a href="../Filters/FilterActions.html">Filter Action</a>
+                and do not want to use the
+                <see cref="M:Composestar.StarLight.Filters.FilterTypes.FilterAction.Execute(Composestar.StarLight.ContextInfo.JoinPointContext)">Execute</see>
+                method of the Filter Action, then create your own weaving strategy. This gives you
+                direct control over the emitted IL code, but introduces a more complex model to
+                inject code into assemblies.
+            </p>
+            <h3 class="subHeading">
+                How to create a weave strategy</h3>
+            <p>
+                A custom weave strategy is basically a type implementing the
+                <see cref="T:Composestar.StarLight.Weaving.Strategies.FilterActionWeaveStrategy">FilterActionWeaveStrategy</see>
+                . Besides the inheritance, you also have to add a
+                <see cref="T:Composestar.StarLight.Weaving.Strategies.WeaveStrategyAttribute">WeaveStrategyAttribute</see>
+                to the class so it can be discovered and added to the weaving strategies by the
+                IL Weaver.
             </p>
             <p>
-                Code injection is only performed when the analysis tools indicate that the weaver
-                has to generate code for a certain type or method. Methods with no filter actions
-                are left untouchted by the StarLight weaver.</p>
+                The next step is to add your weave strategy to the list of strategies used by the
+                weaver. Place your assembly containing the weave strategy implementation in the
+                <strong><em>StarLight installation folder</em>/WeaveStrategies</strong> folder.
+                When the IL weaver is started for the first time, it will read all the assemblies
+                in this folder, looks for the WeaveStrategyAttribute, and add the found strategies
+                to the list.</p>
+            <p>
+                To help you in your development of a custom weave strategy, you can use the
+                <see cref="T:Composestar.StarLight.Weaving.Strategies.WeaveStrategyUtilities">WeaveStrategyUtilities</see>
+                , the
+                <see cref="T:Composestar.StarLight.Utilities.CecilUtilities">CecilUtilities</see>
+                , and
+                <see cref="T:Composestar.StarLight.ContextInfo.JoinPointContext">JoinPointContext</see>
+                classes during the development.
+            </p>
+            <p>
+                The WeaveStrategyUtilities contains functionality to work with arguments and Join
+                Points, the CecilUtilities has functions to resolve methods and types from assemblies
+                so they can be used in your code.</p>
         </div>
     </div>
 </body>

@@ -18,8 +18,80 @@
             <h1 class="heading">
                 Filter Types</h1>
             <p>
-            </p>               
-            
+                TODO Add filter type info
+            </p>
+            <h3 class="subHeading">
+                Build-in Filter Types</h3>
+            <p>
+                The following build-in filter types are available:</p>
+            <table class="members" id="tasks">
+                <tr>
+                    <th class="nameColumn">
+                        Filter Name</th>
+                    <th class="descriptionColumn">
+                        Description</th>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">After</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Executes an AdviceAction on return (after dispatch).</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Before</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Executes an AdviceAction on call (before dispatch).
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Dispatch</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Executes a DispatchAction.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Error</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Executes an ErrorAction.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Substitution</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Executes a SubstitutionAction.
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <h3 class="subHeading">
+                Defining new Filter Types</h3>
+            <p>
+                A new filtertype can be defined by creating a class extending the abstract class
+                <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterType">FilterType</see>
+                . No method needs to be implemented for a filter type, although it should contain
+                a custom attribute
+                <see cref="TComposestar.StarLight.Filters.FilterTypes.FilterTypeAttribute">FilterTypeAttribute</see>
+                , containing the following information:
+                <ul>
+                    <li>The unique name of the filter type.</li>
+                    <li>The names of the four different filter actions.</li>
+                </ul>
+            </p>
+            <p>
+                <strong>Note</strong>&nbsp;The filter type class is only used at compiletime.</p>
         </div>
     </div>
 </body>

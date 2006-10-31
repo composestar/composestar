@@ -18,15 +18,26 @@
             <h1 class="heading">
                 Weaving Strategies</h1>
             <p>
-                The StarLight IL weaver performs code injection at the IL level. It adds IL instructions,
-                the filter actions and some management functions, at the start of a method and it
-                can replace calls with outputfilters. Besides the methods, it can also add internals
-                and externals to a type.
+                The weaving model determines, at a high level, what type of code has to be generated.
+                The IL weaver is reponsible for generation the correct IL statements like creating
+                branches, jumps, conditions, calls, and so on. A visitor design pattern is used
+                to accomplish this.
             </p>
             <p>
-                Code injection is only performed when the analysis tools indicate that the weaver
-                has to generate code for a certain type or method. Methods with no filter actions
-                are left untouchted by the StarLight weaver.</p>
+                Filter Action code however is handled by dedicated weaving strategies. The default
+                <a href="../Filters/FilterActions.html">Filter Actions</a> have each a buildin weaving
+                strategy which determines what type of IL code has to be generated.<br />
+                These buildin weaving strategies can be found in the <strong><em>StarLight installation
+                    folder</em>/WeaveStrategies</strong> folder.</p>
+            <p>
+                If there is no weaving strategy for a Filter Action, the
+                <see cref="M:Composestar.StarLight.Filters.FilterTypes.FilterAction.Execute(Composestar.StarLight.ContextInfo.JoinPointContext)">Execute</see>
+                method will be used.
+            </p>
+            <p>
+                If you have created your own Filter Action and do not want to use the
+                <see cref="M:Composestar.StarLight.Filters.FilterTypes.FilterAction.Execute(Composestar.StarLight.ContextInfo.JoinPointContext)">Execute</see>
+                method, you can <a href="createownweavingstrategy.html">create your own weaving strategy</a>.</p>
         </div>
     </div>
 </body>

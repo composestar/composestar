@@ -18,8 +18,85 @@
             <h1 class="heading">
                 Filter Actions</h1>
             <p>
-            </p>               
-            
+                TODO generate FA help
+            </p>
+            <h3 class="subHeading">Build-in Filter Actions</h3>
+            <p>The following build-in filter actions are available:</p>
+             <table class="members" id="tasks">
+                <tr>
+                    <th class="nameColumn">
+                        Filter Name</th>
+                    <th class="descriptionColumn">
+                        Description</th>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">AdviceAction</span></b></td>
+                    <td>
+                        <div class="summary">
+                           Calls the substitution-message with the JoinPointContext as an argument and then continues in the filterset. Can be used for example to implement certain advicebehaviour before or after a dispatch.      </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">ContinueAction</span></b></td>
+                    <td>
+                        <div class="summary">
+                           Does nothing.
+                        </div>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>
+                        <b><span class="nolink">DispatchAction</span></b></td>
+                    <td>
+                        <div class="summary">
+                           Dispatches to the substitution-message and returns afterwards.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">ErrorAction</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Throws an exception.
+                        </div>
+                    </td>
+                </tr>
+                  <tr>
+                    <td>
+                        <b><span class="nolink">SubstitutionAction</span></b></td>
+                    <td>
+                        <div class="summary">
+                           Has only filterbehaviour (empty execute method); substitutes the message with the substitutionmessage and continues.
+                        </div>
+                    </td>
+                </tr>                
+            </table>
+            <h3 class="subHeading">
+                Defining new filter actions</h3>
+            <p>
+                A new filter action can be defined by creating a class extending the abstract class
+                <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterAction">FilterAction</see>
+                . This enforces the implementation of an <strong>Execute</strong> method, which
+                should implement the behaviour of the filteraction.<br />
+                This method is called when the filter action is encountered in a filterset and is
+                provided with the
+                <see cref="T:Composestar.StarLight.ContextInfo.JoinPointContext">JoinPointContext</see>
+                object. The filter action class should also contain a custom attribute
+                <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute">FilterActionAttribute</see>
+                , containing the following information needed by the compiletime:
+                <ul>
+                    <li>The unique name of the filter action.</li>
+                    <li>The Flow behaviour in the filterset.</li>
+                    <li>The Message-substitution behaviour: Whether the message is still the original message,
+                        the substituted message or any message. </li>
+                    <li>Whether the JoinPointContext needs to be supplied (optional). The default value
+                        is true, but disabling this can give a slight increase in performance, at the cost
+                        of not having the JPC information available in the execute method.</li>
+                </ul>
+            </p>
         </div>
     </div>
 </body>
