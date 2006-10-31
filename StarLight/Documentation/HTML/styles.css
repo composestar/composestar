@@ -1,0 +1,11 @@
+.TopHeaderRepeat
+{
+	background-image: url(images/logo_top_repeat.png);
+	background-repeat: repeat-x;
+}
+
+.TopHeaderRepeatSmall
+{
+	background-image: url(images/logo_top_small_repeat.png);
+	background-repeat: repeat-x;
+}
