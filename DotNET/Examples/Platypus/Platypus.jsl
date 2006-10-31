@@ -1,6 +1,6 @@
 package PlatypusExample;
 
-public class Platypus extends Animal
+public class Platypus
 {
 	public Platypus()
 	{
@@ -9,9 +9,10 @@ public class Platypus extends Animal
 	public Object reproduce()
 	{
 		Platypus pl = new Platypus();
-		pl.setName("Kevin");
-		Egg egg = new Egg( pl );
-		System.out.println("Platypus '" + name + "' has laid an egg: " + egg.name);
+	//	pl.setName("Kevin"); // FIXME: this will not work because of how signature expansion works atm (dummies)
+
+		Egg egg = new Egg(pl);
+		System.out.println("Platypus mother has laid an egg: " + egg.getName());
 		return egg;
 	}
 

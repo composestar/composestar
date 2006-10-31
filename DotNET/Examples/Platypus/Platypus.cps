@@ -6,8 +6,7 @@ concern PlatypusConcern in PlatypusExample
 			m : PlatypusExample.Mammal;
 			b : PlatypusExample.Bird;
 		inputfilters
-			eat : Dispatch = { [*.eat] m.eat };
-			hungry : Dispatch = { [*.isHungry] m.isHungry }
+			rest : Dispatch = { <inner.*> inner.*, <m.*> m.*, <b.*> b.* }
 	}
 	superimposition
 	{

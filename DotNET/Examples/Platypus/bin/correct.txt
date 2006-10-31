@@ -1,14 +1,14 @@
 We contracted an animal caretaker: John
 We caught a female platypus: Mary
 
-Platypus 'Mary' has laid an egg: Egg#1
+Platypus mother has laid an egg: Egg#1
 Caretaker 'John' has collected the egg 'Egg#1'
 
 Caretaker 'John' is waiting for 'Egg#1' to hatch...
-Hatchling 'Kevin' has hatched from 'Egg#1'.
-Mother platypus 'Mary' proudly looks at her young 'Kevin'.
+Egg 'Egg#1' has hatched.
+Mother platypus 'Mary' proudly looks at her young 'Kyle'.
 
-Is young 'Kevin' hungry? true
-Caretaker 'John' is feeding 'Kevin' with a bottle of milk...
-'Kevin' is eating the food 'milk' it was given.
-Is young 'Kevin' still hungry? false
+Is young 'Kyle' hungry? true
+Caretaker 'John' is feeding 'Kyle' with a bottle of milk...
+'Kyle' is eating the food 'milk' it was given.
+Is young 'Kyle' still hungry? false

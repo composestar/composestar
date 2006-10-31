@@ -1,48 +1,55 @@
 package PlatypusExample;
+
 import System.Collections.ArrayList;
 
 public class Caretaker
 {
-	private ArrayList mBag = null;
-	public String name = "";
+	private String name;
+	private ArrayList bag;
 	
 	public Caretaker(String name)
 	{
 		this.name = name;
-		this.mBag = new ArrayList();
+		this.bag = new ArrayList();
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 
 	public void collectEggs(Bird mother, Egg egg)
 	{
-		this.mBag.Add(egg);
-		System.out.println("Caretaker '" + name + "' has collected the egg '" + egg.name +"'");
+		bag.Add(egg);
+		System.out.println("Caretaker '" + getName() + "' has collected the egg '" + egg.getName() +"'");
 	}
 
-	public Bird hatchEgg() 
+	public Animal hatchEgg() 
 	{
-		if (this.mBag.get_Count() == 0) 
+		if (bag.get_Count() == 0) 
 		{
 			return null;
 		}
 
-		Egg hatchingEgg = (Egg)this.mBag.get_Item(0);
-		System.out.println("Caretaker '" + name + "' is waiting for '" + hatchingEgg.name + "' to hatch...");
-		this.mBag.RemoveAt(0);
-		Animal a = (Animal)hatchingEgg.hatch();
-		Bird hatchling = (Bird)a;
-		System.out.println("Hatchling '" + a.getName() + "' has hatched from '" + hatchingEgg.name + "'.");
+		Egg hatchingEgg = (Egg)bag.get_Item(0);
+		bag.RemoveAt(0);
+
+		System.out.println("Caretaker '" + name + "' is waiting for '" + hatchingEgg.getName() + "' to hatch...");		
+		Animal hatchling = hatchingEgg.hatch();
+		
+		System.out.println("Egg '" + hatchingEgg.getName() + "' has hatched.");
 		return hatchling;
 	}
 
 	public void feedInsect(Bird youngster)
 	{
-        System.out.println("Caretaker '" + name + "' is feeding '" + youngster.name + "' an insect...");
-		youngster.eat(Food.Insect);
+        System.out.println("Caretaker '" + name + "' is feeding '" + youngster.getName() + "' an insect...");
+		youngster.eat(Food.INSECT);
 	}
 
 	public void feedMilk(Mammal youngster)
 	{
-		System.out.println("Caretaker '" + name + "' is feeding '" + youngster.name + "' with a bottle of milk...");
-		youngster.eat(Food.Milk);
+		System.out.println("Caretaker '" + name + "' is feeding '" + youngster.getName() + "' with a bottle of milk...");
+		youngster.eat(Food.MILK);
 	}
 }

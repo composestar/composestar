@@ -2,17 +2,27 @@ package PlatypusExample;
 
 public class Egg
 {
-	private Animal mHatchling;
-	public String name = "";
+	private Animal hatchling;
+	private String name;
+
+	public Egg(Platypus h)
+	{
+		this((Bird)(Object)h);
+	}
 	
 	public Egg(Animal hatchling)
 	{
-		this.mHatchling = hatchling;
+		this.hatchling = hatchling;
         this.name = "Egg#1";
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 
 	public Animal hatch() 
 	{
-        return mHatchling;
+        return hatchling;
 	}
 }
