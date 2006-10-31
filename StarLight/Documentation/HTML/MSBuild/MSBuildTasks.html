@@ -32,25 +32,36 @@
                         <b><span class="nolink">CPS Parser</span></b></td>
                     <td>
                         <div class="summary">
-                            Parses the concern files and determines if the analzyer has to perform call analysis and what types of internals and externals are defined in the concern file.
+                            Parses the concern files and determines if the analyzer has to perform call analysis and 
+                            determine the types defined for internals and externals in the concern file.
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <b><span class="nolink">InputFilter</span></b></td>
+                        <b><span class="nolink">IL Analyzer</span></b></td>
                     <td>
                         <div class="summary">
-                            Input filter.
+                            Scans the .NET assemblies and retrieves the code model and call analysis from the assemblies. 
+                            This information is needed for the Java part to reason about the code.
+                        </div>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>
+                        <b><span class="nolink">Master Caller</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Executes the Java Master to perform the filter reasoning and filter generation.
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <b><span class="nolink">OutputFilter</span></b></td>
+                        <b><span class="nolink">IL Weaver</span></b></td>
                     <td>
                         <div class="summary">
-                            Output filter.
+                            Uses the output of the Java part to inject the filters into the assemblies.
                         </div>
                     </td>
                 </tr>

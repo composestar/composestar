@@ -28,7 +28,6 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\logo_top.png" destPath="images\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\logo_top_small_repeat.png" destPath="images\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\logo_top_small.png" destPath="images\" />
-        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\w2.html" destPath="" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\add_new_item.png" destPath="images\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\concern_properties.png" destPath="images\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\concern_template.png" destPath="images\" />
@@ -36,6 +35,10 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\project_properties_build.png" destPath="images\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\project_properties_general.png" destPath="images\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\solution_explorer.png" destPath="images\" />
+        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\styles.css" destPath="" />
+        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\MSBuild\*.*" destPath="MSBuild\" />
+        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\Filters\*.*" destPath="Filters\" />
+        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\Weaving\*.*" destPath="Weaving\" />
     </additionalContent>
     <contentPlacement>AboveNamespaces</contentPlacement>
     <dependencies>
@@ -56,9 +59,9 @@ The FilterContext is used internally by the StarLight compiler to include runtim
     <binaryTOC>True</binaryTOC>
     <includeFavorites>True</includeFavorites>
     <preliminary>True</preliminary>
-    <rootNSContainer>False</rootNSContainer>
-    <helpTitle>ComposeStar StarLight Core Elements Class Library</helpTitle>
-    <htmlHelpName>StarLightCoreElements</htmlHelpName>
+    <rootNSContainer>True</rootNSContainer>
+    <helpTitle>ComposeStar StarLight Help</helpTitle>
+    <htmlHelpName>ComposeStarStarLight</htmlHelpName>
     <language>en-US</language>
     <copyrightHref>http://composestar.sf.net</copyrightHref>
     <copyrightText>Copyright 2006, ComposeStar StarLight, University of Twente</copyrightText>
