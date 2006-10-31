@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: CWrapper.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.wrapper;
 
@@ -67,6 +67,7 @@ public class CWrapper implements CTCommonModule
     public Hashtable fileASTMap = new Hashtable();
     private Vector functions = null;
     private String filename = null;
+    private Hashtable absolutePaths= new Hashtable();
     private String tempFolder = null;
     public String objectname = null;
     public HashMap structASTMap = new HashMap();
@@ -85,47 +86,46 @@ public class CWrapper implements CTCommonModule
     	tempFolder= Configuration.instance().getPathSettings().getPath("Base");
     	/** here a new file(typ): Semantics of the annotations is instantiaded 
     	 * just as the xml file where the annotion information will be saved **/
-    	File destination = new File(tempFolder+"attributes.xml");
-    	CFile semantics = new CFile();
     	usedTypes=new HashMap();
-    	DataStore dataStore = DataStore.instance();
-    	PrimitiveConcern pcFile = new PrimitiveConcern();
-    	semantics.setName("Semantics");
-    	semantics.setFullName("Composestar.Semantics");
-    	semantics.setAnnotation(true);
-    	pcFile.setName( semantics.name() );
-		pcFile.setPlatformRepresentation(semantics);
-		semantics.setParentConcern(pcFile);
+    	//CFile semantics = new CFile();
+     	DataStore dataStore = DataStore.instance();
+    	//PrimitiveConcern pcFile = new PrimitiveConcern();
+    	//semantics.setName("Semantics");
+    	//semantics.setFullName("Composestar.Semantics");
+    	//semantics.setAnnotation(true);
+    	//pcFile.setName( semantics.name() );
+		//pcFile.setPlatformRepresentation(semantics);
+		//semantics.setParentConcern(pcFile);
 		
-		dataStore.addObject( semantics.name(), pcFile );
+		//dataStore.addObject( semantics.name(), pcFile );
 		//FileMap fm = FileMap.instance();
 		
-	 	try{
-    		out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
-    		out.println("<?xml version=\"1.0\"?>");
-    	    out.println("<Attributes>");
-    	}
-    	catch (IOException e) {
-            e.printStackTrace();
-        }
     	if( filename.equals( "ERROR" ) ) 
 		{
 			throw new ModuleException( "Error in configuration file: No such property TempFolder" );
 		}
     	/**@Todo: now the subdirs are searched for .c files and not the sources of build.ini is used**/
     	
-    	createNameSpace(new File(filename),true,new InputFileNameFilter(), resources);
-    	cfiles = getAllFilesFromDirectory(new File(filename),true,new InputFileNameFilter());
+    	//createDirectoryStructure(new File(filename),true,new InputFileNameFilter(), resources);
+    	cfiles = getAllFilesFromDirectory(new File(filename),true,new InputFileNameFilter(), null);
   	
     	for(int i=0; i<cfiles.size(); i++)
 		{
-				this.fileASTMap.put((String)cfiles.get(i),new Object());
+    		this.fileASTMap.put((String)cfiles.get(i),new Object());	
+    		//this.fileASTMap.put(((String)cfiles.get(i)).substring(((String)cfiles.get(i)).lastIndexOf("\\"),((String)cfiles.get(i)).indexOf(".ccc")));
 		}
         
     	Iterator it = this.fileASTMap.keySet().iterator();
 		while(it.hasNext())
 		{
-			filename = (String)it.next();//(String)cfiles.get(i); //
+			filename= (String)it.next();
+			String cfName =filename.substring(filename.lastIndexOf("\\")+1,filename.indexOf(".ccc"));
+			CFile cf =(CFile)absolutePaths.get(cfName);
+			//filename =((File)absolutePaths.get(filename)).getAbsolutePath();//(String)cfiles.get(i); //
+			
+			//filename = (String)it.next();//(String)cfiles.get(i); //
+			//System.out.println("Handling file"+ filename);
+			
 			try
 	    	{
 				/******************************8
@@ -137,7 +137,7 @@ public class CWrapper implements CTCommonModule
 		    	
 				setObjectName(filename,resources);
 				setNameSpace(filename, resources);
-				wrapper.createWrappedAST(filename, objectname, namespace, out, usedTypes, this);
+				wrapper.createWrappedAST(filename, objectname, namespace,usedTypes, cf ,this);
 				this.fileASTMap.put(filename,wrapper);
 				FileMap.instance().addFileAST(filename,wrapper);//createWrappedAST(filename, objectname, namespace, out, usedTypes, this));
 			}
@@ -145,37 +145,57 @@ public class CWrapper implements CTCommonModule
     		{
 	    		e.printStackTrace();
 	    	}
-		}
-		out.println("</Attributes>");
-		out.close();
-		
+    	}
+		/** Write annotations to attributes.xml**/
+		AttributeWriter.instance().saveToXML(tempFolder+"attributes.xml");
+				
 		//Iterator i = usedTypes.values().iterator();
-        //while(i.hasNext()){
-        	//System.out.println("HashMap usedTypes entry:" +(String)i.next());
-        //}
+       // while(i.hasNext()){
+       // 	System.out.println("HashMap usedTypes entry:" +(String)i.next());
+       // }
     }
 	
    
-    private ArrayList getAllFilesFromDirectory(File dir, boolean recurse, FilenameFilter fnf) 
+    private ArrayList getAllFilesFromDirectory(File dir, boolean recurse, FilenameFilter fnf, CDirectory cdirectory) 
     {
     	ArrayList list = new ArrayList();
+    	CDirectory cdir = null;
     	if (dir.isDirectory())
         {
-            String[] children = dir.list(fnf);
+    		String[] children = dir.list(fnf);
+    		if(children.length>0){
+    			cdir = new CDirectory();
+                cdir.setDirName(dir.getName());
+                //System.out.println("Added directory"+dir.getName());
+                if(cdirectory !=null) 
+                	cdirectory.addSubDir(cdir);
+    		}
             for (int i=0; i<children.length; i++)
             {
             	File f = new File(dir, children[i]);
-                if(!recurse && f.isFile())
+            	if(!recurse && f.isFile())
                 	list.add(f.getAbsolutePath());
                 else if(recurse)
                 {
-                	list.addAll(getAllFilesFromDirectory(f,recurse,fnf));
+                	list.addAll(getAllFilesFromDirectory(f,recurse,fnf,cdir));
                 }
             }
         }
         else
         {
-        	list.add(dir.getAbsolutePath());
+        	CFile cf = new CFile();
+            cf.setName(dir.getName().substring(0,dir.getName().indexOf(".ccc"))); 
+            if(cdirectory!=null){
+            	cf.setDirectory(cdirectory);
+            	cdirectory.addFile(cf);
+            //	System.out.println("CFile "+cf.getFullName()+ " instantiated and added to " + cdirectory.getDirName()); 
+            }
+           // System.out.println("CFile "+cf.getFullName()+ " added to absolutepaths" ); 
+            if(absolutePaths.put(cf.getFullName(),cf)!= null)
+            {
+            	System.out.println("Already contained object"+cf.FullName);
+            }
+            list.add(dir.getAbsolutePath());
         }
         return list;
     }
@@ -184,11 +204,12 @@ public class CWrapper implements CTCommonModule
      * this does not work well cause is only looks for the path and not for the parent namespaces 
      * **/ 
     
-    private void createNameSpace(File dir, boolean recurse, FilenameFilter fnf, CommonResources resources){
+    private void createDirectoryStructure(File dir, boolean recurse, FilenameFilter fnf, CommonResources resources){
     	{
         	if (dir.isDirectory())
             {
         		namespace=dir.getName();
+        		
               	firstNameSpace = true;
             	String[] children = dir.list(fnf);
                 for (int i=0; i<children.length; i++)
@@ -196,7 +217,7 @@ public class CWrapper implements CTCommonModule
                 	File f = new File(dir, children[i]);
                     if(recurse)
                     {
-                    	createNameSpace(f,recurse,fnf, resources);
+                    	createDirectoryStructure(f,recurse,fnf, resources);
                     }
                 }
             }
@@ -241,7 +262,7 @@ public class CWrapper implements CTCommonModule
 		this.objectname = Configuration.instance().getPathSettings().getPath("Base");
 		this.objectname = objectname.replace('/','\\');
 		this.objectname = filename.substring(objectname.length());
-		this.objectname = objectname.substring(0,objectname.lastIndexOf(".c"));
+		this.objectname = objectname.substring(0,objectname.lastIndexOf(".ccc"));
 		this.objectname = objectname.replace('\\','.');
 	}
 	

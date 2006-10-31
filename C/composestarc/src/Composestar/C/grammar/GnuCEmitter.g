@@ -47,7 +47,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCEmitter.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -480,9 +480,14 @@ externalDef
         :       declaration
         |       functionDef
         |       asm_expr
+        |	annotatedExternal //veranderd 31aug
         |       typelessDeclaration
         |       s:SEMI                          { print( s ); }
         ;
+        
+annotatedExternal 
+	  :       annotation externalDef  //veranderd 31aug
+      	  ;
 
 typelessDeclaration
         :       #(NTypeMissing initDeclList s: SEMI)    { print( s ); }
@@ -504,6 +509,7 @@ asm_expr
 
 declaration
         :       #( NDeclaration
+        	    (annotation)?	
                     declSpecifiers
                     (                   
                         initDeclList
@@ -511,6 +517,20 @@ declaration
                     ( s:SEMI { print( s ); } )+
                 )
         ;
+        
+annotation
+	:
+	#("$"
+		 LPAREN
+		 ID 
+		 LPAREN 
+		 	(
+		 		StringLiteral 
+		 		( COMMA StringLiteral)*
+		 	)?
+		 RPAREN
+		 RPAREN 
+	);
 
 
 declSpecifiers 
@@ -764,7 +784,7 @@ declarator
 
  
 parameterTypeList
-        :       ( parameterDeclaration
+        :       (  (annotation)? parameterDeclaration //toegevoegd 31aug (annotation)?
                     ( c:COMMA { print( c ); }
                       | s:SEMI { print( s ); }
                     )?

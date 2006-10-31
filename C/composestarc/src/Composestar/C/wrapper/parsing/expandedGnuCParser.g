@@ -31,7 +31,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCParser.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -216,8 +216,12 @@ externalDef :( "typedef" | declaration )=> declaration
         |       functionDef
         |       typelessDeclaration
         |       asm_expr
+        |	annotatedExternal 
         |       SEMI
         ;
+
+annotatedExternal :annotation (( "typedef" | declaration )=> declaration | functionDef) 
+      	  ;
 
 functionDef { String declName; }
 :( (functionDeclSpecifiers)=> ds:functionDeclSpecifiers
@@ -241,7 +245,7 @@ traceDef :// __trace__(( in(a), out(b)))
         ;
 
 annotation :// __ANOTATIONNAME__(  )
-		"__"^ ID "__" LPAREN (stringConst ( COMMA stringConst)* )? RPAREN;
+		"$"^ LPAREN ID LPAREN (StringLiteral ( COMMA StringLiteral)* )? RPAREN RPAREN;
 
 typelessDeclaration { AST typeMissing = #[NTypeMissing]; }
 :initDeclList[typeMissing] SEMI          { ## = #( #[NTypeMissing], ##); }
@@ -292,6 +296,7 @@ declaratorParamaterList[boolean isFunctionDefinition, String declName] :LPAREN^
                                                 }
                 (                           
                         (declSpecifiers)=> parameterTypeList
+                        |("$" LPAREN)=> parameterTypeList
                         | (idList)?
                 )
                                                 {
@@ -303,11 +308,13 @@ declaratorParamaterList[boolean isFunctionDefinition, String declName] :LPAREN^
                                                 }      
         ;
 
-parameterTypeList :parameterDeclaration 
+parameterTypeList :(annotation)?
+        	parameterDeclaration 
                 (   options {
                             warnWhenFollowAmbig = false;
                         } : 
                   ( COMMA | SEMI )  
+                  (annotation)?
                   parameterDeclaration
                 )*
                 ( ( COMMA | SEMI ) 
@@ -331,7 +338,8 @@ localLabelDeclaration :( //GNU note:  any __label__ declarations must come befor
         ;
 
 declaration { AST ds1 = null; }
-:ds:declSpecifiers       { ds1 = astFactory.dupList(#ds); }
+:(annotation)?
+        	ds:declSpecifiers       { ds1 = astFactory.dupList(#ds); }
                 (                       
                     initDeclList[ds1]
                 )?
@@ -412,8 +420,8 @@ enumSpecifier :"enum"^
 enumList[String enumName] :enumerator[enumName] ( options{warnWhenFollowAmbig=false;}: COMMA! enumerator[enumName] )* ( COMMA! )?
         ;
 
-initDeclList[AST declarationSpecifiers] :initDecl[declarationSpecifiers] 
-                ( options{warnWhenFollowAmbig=false;}: COMMA! initDecl[declarationSpecifiers] )*
+initDeclList[AST declarationSpecifiers] :initDecl[declarationSpecifiers] //(annotation)?
+                ( options{warnWhenFollowAmbig=false;}: COMMA! initDecl[declarationSpecifiers] )* //(annotation)?
                 ( COMMA! )?
         ;
 
@@ -422,6 +430,7 @@ initDecl[AST declarationSpecifiers] { String declName = ""; }
                                         {   AST ds1, d1;
                                             ds1 = astFactory.dupList(declarationSpecifiers);
                                             d1 = astFactory.dupList(#d);
+                                            //System.out.println("declaration="+ ds1.getText()+"&" +d1.getText() + "&"+ declName);
                                             symbolTable.add(declName, #(null, ds1, d1) );
                                         }
                 ( attributeDecl )*
@@ -486,7 +495,7 @@ statement :SEMI                    // Empty statements
         
         |       compoundStatement[getAScopeName()] // Group of statements
 
-        |       (annotation)* expr SEMI!               { ## = #( #[NStatementExpr], ## );} // Expressions
+        |        (annotation)* expr SEMI!               { ## = #( #[NStatementExpr], ## );} // Expressions (annotation)* expr SEMI!
 
 // Iteration statements:
 
@@ -943,6 +952,7 @@ tokens {
     literals.put(new ANTLRHashString("__typeof__", this), new Integer(LITERAL_typeof));
     literals.put(new ANTLRHashString("__volatile", this), new Integer(LITERAL_volatile));
     literals.put(new ANTLRHashString("__volatile__", this), new Integer(LITERAL_volatile));
+    //literals.put(new ANTLRHashString("$$", this), new Integer(LITERAL_annotation));
 	//literals.put(new ANTLRHashString("__extension__", this), new Integer(LITERAL_extension));
   }
 

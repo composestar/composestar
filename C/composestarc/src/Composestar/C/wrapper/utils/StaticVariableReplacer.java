@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: StaticVariableReplacer.java,v 1.5 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.wrapper.utils;
 
@@ -73,7 +73,7 @@ public class StaticVariableReplacer
 		{
 			out = str.substring(str.lastIndexOf(File.separator)+1);
 		}
-		if(out.endsWith(".c") || out.endsWith(".C"))
+		if(out.endsWith(".ccc") || out.endsWith(".CCC"))
 			out = out.substring(0,out.length()-2);
 		return out;
 	}

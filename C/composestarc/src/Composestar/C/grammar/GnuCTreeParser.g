@@ -47,7 +47,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCTreeParser.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -64,6 +64,7 @@ import Composestar.C.LAMA.*;
 import Composestar.Core.LAMA.*;
 import Composestar.Core.CpsProgramRepository.*;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 }
 
                      
@@ -91,15 +92,16 @@ options
 		private Vector functions = new Vector();
 		private FunctionFactory functionFactory = new FunctionFactory();
 		private HashMap structASTMap = new HashMap();
-		private CFile file = new CFile();
+		private HashMap annotationASTMap= new HashMap();
+		private CFile file;
 		//private CMethodInfo method = new CMethodInfo();
 		private DataStore dataStore = DataStore.instance();
 		private PrimitiveConcern pcFile = new PrimitiveConcern();
 		private Signature sig = new Signature();
-		private PrintWriter out = null; //xml writer
 		private ArrayList parameterList = new ArrayList();
             	private HashMap usedTypes= new HashMap();
             	private HashMap fields= new HashMap();
+            	private String inFunctionWithName = "";
             	protected int pointer = 0;
             	protected int array = 0;
             	protected int returnTypePointerLevel=0;
@@ -113,12 +115,16 @@ options
 		public void setFilename(String filename)
 		{
 			this.filename = filename;
-			file.setName(filename);
-			file.setFullName(filename);
-			pcFile.setName( file.name() );
+			
+		}
+		
+		public void setCFile(CFile cf){
+			this.file=cf;
+			pcFile.setName( file.getFullName() );
 			pcFile.setPlatformRepresentation(file);
 			file.setParentConcern(pcFile);
-			dataStore.addObject( file.name(), pcFile );
+			Debug.out(Debug.MODE_INFORMATION,"WRAPPER","Treeparser added concern: "+file.getFullName() + " & " + cf.fullname());
+			dataStore.addObject( file.getFullName(), pcFile );
 		}
 		
 		public GlobalIntroductionPoint getIntroductionPoint()
@@ -153,6 +159,11 @@ options
 		public HashMap getStructASTMap()
 		{
 			return this.structASTMap;
+		}
+		
+		public HashMap getAnnotationASTMap()
+		{
+			return this.annotationASTMap;
 		}
 		
 		public HashMap getUsedTypes()
@@ -292,15 +303,13 @@ options
           super.traceOut(rname, t);
           traceDepth -= 1;
         }
-        public void initiateXMLFile(PrintWriter out){
-        	this.out=out;
-        }
+        
         public void addBasicType(String typeName){
         	if(!usedTypes.containsValue(typeName)){
                 		usedTypes.put(typeName,typeName);
-                		CFile usedType = new CFile();
-                		usedType.setName(typeName);
-                		usedType.setFullName(typeName);
+                		CType usedType = new CType(typeName);
+                		//usedType.setName(typeName);
+                		//usedType.setFullName(typeName);
                 		PrimitiveConcern pcType = new PrimitiveConcern();
                 		pcType.setName(typeName);
                 		pcType.setPlatformRepresentation(usedType);
@@ -308,11 +317,138 @@ options
                 		dataStore.addObject( typeName, pcType );
           	}
         }
+        public String getTypeOfAST(AST node, int pointerLevel, int arrayLevel, int num){
+        	String type="";
+        	if(node.getText().equals("$"))
+			type=node.getFirstChild().getNextSibling().getText();
+		else if(node.getType() == GnuCTokenTypes.NTypedefName)
+		{
+			type= node.getFirstChild().getFirstChild().getText();	
+			Debug.out(Debug.MODE_INFORMATION,"WRAPPER","Typedef"+type);	
+		}
+		else if (node.getText().equals("struct"))
+		{
+			type= "struct "+node.getFirstChild().getText();
+        	//	System.out.println("Struct"+type);
+        	}
+		else if (node.getText().equals("enum"))
+		{
+			type= "enum "+ node.getFirstChild().getText();
+		//	System.out.println("EnumFound");
+		}
+		else if	(node.getText().equals("union"))
+		{
+			type= "union "+node.getFirstChild().getText();
+		//	System.out.println("UnionFound");
+		}
+		else type = node.getText(); 
+		//System.out.println("Type%%%%"+ num+ "%%%%%"+type);
+		for(int j =0; j< pointerLevel;j++){
+			type=type+"*";
+		}
+		for(int j =0; j< arrayLevel;j++){
+			type=type+"[]";
+		}
+        	return type;
+        }
+        
+        public void createVariable(TNode declarationNode){
+           	boolean noFunction=true;
+		AST child=null;
+		TNode childID=null;
+		TNode pointer=null;
+		TNode array=null;
+		int pointerLevel=0;
+		int arrayLevel=0;
+		String basicType = "";
+ 		//decl.printTree(decl);
+	        child=declarationNode.getFirstChild();
+	        if(child!=null){
+      			if(child.getType() == GnuCTokenTypes.NTypedefName) 
+      			{
+      				/**For sure, adds the used typedef for declaring a variable to the repository **/
+      				addBasicType(((TNode)child.getFirstChild()).getText());
+      			}
+      			//else{
+      			if((childID=declarationNode.firstChildOfType(GnuCTokenTypes.NInitDecl))!=null){
+   				if((childID=childID.firstChildOfType(GnuCTokenTypes.NDeclarator))!=null){
+   					if((pointer=childID.firstChildOfType(GnuCTokenTypes.NPointerGroup))!=null){
+   						if((pointer=pointer.firstChildOfType(GnuCTokenTypes.STAR))!=null){
+   							pointerLevel++;
+   							if((pointer=pointer.firstSiblingOfType(GnuCTokenTypes.STAR))!=null){
+   								pointerLevel++;
+   							}
+   						}
+   					}
+   					if((array=childID.firstChildOfType(GnuCTokenTypes.LBRACKET))!=null){
+   						arrayLevel++;
+   						if((array=array.firstSiblingOfType(GnuCTokenTypes.LBRACKET))!=null){
+							arrayLevel++;
+					}
+				}
+				if((childID=childID.firstChildOfType(GnuCTokenTypes.ID))!=null){
+					
+					String test=(String)childID.getAttribute("source");
+					int endindex=test.lastIndexOf(".");
+					int beginindex=test.lastIndexOf("/")+1;
+					test=test.substring(beginindex,endindex);
+					if(test.equals(getFilename())){
+						Variable var =new Variable();
+					var.setName(childID.getText());	    
+					switch(child.getType()){
+   							case GnuCTokenTypes.LITERAL_extern: var.setIsExtern(true);
+   							case GnuCTokenTypes.LITERAL_static: var.setIsStatic(true);
+   							case GnuCTokenTypes.LITERAL_inline: var.setIsInline(true);
+   							//case GnuCTokenTypes.NTypedefName:System.out.println("Typedef found in variable:xxx"+ childID.getText());
+   							case GnuCTokenTypes.SEMI:break;
+						case GnuCTokenTypes.NInitDecl: break;
+						default:{ 
+								basicType= getTypeOfAST(child, pointerLevel, arrayLevel,1);
+								var.setFieldTypeString(basicType);
+								//System.out.println("Variable:"+childID.getText()+" & "+ basicType );
+								addBasicType(basicType);
+								getTypeOfAST(declarationNode,pointerLevel,arrayLevel,2);
+							}
+   						}
+   						//System.out.print(" declaration: "+ childID.getText()+ " " + child.getText()+ " ");
+   						for(int i=1; i<declarationNode.numberOfChildren();i++){
+   							child=child.getNextSibling();
+   							if(child!=null){
+   								switch(child.getType()){
+   									case GnuCTokenTypes.LITERAL_extern: var.setIsExtern(true);
+   									case GnuCTokenTypes.LITERAL_static: var.setIsStatic(true);
+   									case GnuCTokenTypes.LITERAL_inline: var.setIsInline(true);
+   									case GnuCTokenTypes.SEMI:break;
+								case GnuCTokenTypes.NInitDecl: break;
+								default: { 
+										basicType= getTypeOfAST(child, pointerLevel, arrayLevel,3);
+										var.setFieldTypeString(basicType);
+										//System.out.println("Variable:"+childID.getText()+" & "+ basicType );
+										addBasicType(basicType);
+										getTypeOfAST(declarationNode,pointerLevel,arrayLevel,4);
+							
+									}
+   								}
+   								//System.out.print(child.getText()+ " ");
+   							}
+   			
+   						}
+   						var.setPointerLevel(pointerLevel);
+   						var.setArrayLevel(arrayLevel);
+   						var.setFileName(this.filename);
+   						fields.put(childID.getText(),var);
+   					}
+				}
+			}
+			}
+		}	
+	}																											
+        //}
+        
         public void printFields(){
         	Iterator it = ((this.fields).values()).iterator();
         	while(it.hasNext()){
         		Variable var= (Variable)it.next();
-        		//System.out.println("Fields value:"+ var.name() + " & isStatic:"+ var.isStatic() + " & type is: " +var.FieldTypeString() + " & Levels[p,a]: [" + var.getPointerLevel() + "," + var.getArrayLevel() + "]");
         	}
         }
         public void addFieldsToRepository(){
@@ -328,6 +464,7 @@ options
         		cvar.setArrayLevel(var.getArrayLevel());
         		cvar.setIsInline(var.isInline());
         		cvar.setIsExtern(var.isExtern());
+        		file.addVariable(cvar);
         	}
         }
 }
@@ -343,7 +480,7 @@ exception
 catch [RecognitionException ex]
                         {
                         reportError(ex);
-                        System.out.println("PROBLEM TREE:\n" 
+                        Debug.out(Debug.MODE_ERROR,"WRAPPER","PROBLEM TREE:\n" 
                                                 + _t.toStringList());
                         if (_t!=null) {_t = _t.getNextSibling();}
                         }
@@ -356,111 +493,28 @@ externalList
 
 
 externalDef
-	{boolean noFunction=true;
-	TNode declarationNode=null;
-	AST child=null;
-	TNode childID=null;
-	TNode pointer=null;
-	TNode array=null;
-	int pointerLevel=0;
-	int arrayLevel=0;
+	{
+		boolean noFunction=true;
 	}
         :       decl:declaration[noFunction]
         	{
-        		declarationNode=decl;
-        		//decl.printTree(decl);
-   		        child=declarationNode.getFirstChild();
-             		if(child!=null){
-             			if((childID=declarationNode.firstChildOfType(GnuCTokenTypes.NInitDecl))!=null){
-          				if((childID=childID.firstChildOfType(GnuCTokenTypes.NDeclarator))!=null){
-          					if((pointer=childID.firstChildOfType(GnuCTokenTypes.NPointerGroup))!=null){
-          						if((pointer=pointer.firstChildOfType(GnuCTokenTypes.STAR))!=null){
-          							pointerLevel++;
-          							if((pointer=pointer.firstSiblingOfType(GnuCTokenTypes.STAR))!=null){
-          								pointerLevel++;
-          							}
-          						}
-          					}
-          					if((array=childID.firstChildOfType(GnuCTokenTypes.LBRACKET))!=null){
-          						arrayLevel++;
-          						if((array=array.firstSiblingOfType(GnuCTokenTypes.LBRACKET))!=null){
-          								arrayLevel++;
-          						}
-          					}
-          					if((childID=childID.firstChildOfType(GnuCTokenTypes.ID))!=null){
-          						String test=(String)childID.getAttribute("source");
-     							int endindex=test.indexOf(".");
-     							int beginindex=test.lastIndexOf("/")+1;
-     							test=test.substring(beginindex,endindex);
-     							if(test.equals(getFilename())){
-     								Variable var =new Variable();
-								var.setName(childID.getText());	    
-								switch(child.getType()){
-                  							case GnuCTokenTypes.LITERAL_extern: var.setIsExtern(true);
-                  							case GnuCTokenTypes.LITERAL_static: var.setIsStatic(true);
-                  							case GnuCTokenTypes.LITERAL_inline: var.setIsInline(true);
-                  							case GnuCTokenTypes.SEMI:break;
-									case GnuCTokenTypes.NInitDecl: break;
-									default:{ 
-											var.setFieldTypeString(child.getText());
-											String basicType = child.getText();
-											for(int j =0; j< pointerLevel;j++){
-												basicType=basicType+"*";
-											}
-											for(int j =0; j< arrayLevel;j++){
-												basicType=basicType+"[]";
-											}
-											addBasicType(basicType);
-										}
-                  						}
-                  						//System.out.print(" declaration: "+ childID.getText()+ " " + child.getText()+ " ");
-                  						for(int i=1; i<declarationNode.numberOfChildren();i++){
-                  							child=child.getNextSibling();
-                  							if(child!=null){
-                  								switch(child.getType()){
-                  									case GnuCTokenTypes.LITERAL_extern: var.setIsExtern(true);
-                  									case GnuCTokenTypes.LITERAL_static: var.setIsStatic(true);
-                  									case GnuCTokenTypes.LITERAL_inline: var.setIsInline(true);
-                  									case GnuCTokenTypes.SEMI:break;
-											case GnuCTokenTypes.NInitDecl: break;
-											default: { 
-												var.setFieldTypeString(child.getText());
-												String basicType = child.getText();
-												for(int j =0; j< pointerLevel;j++){
-													basicType=basicType+"*";
-												}
-												for(int j =0; j< arrayLevel;j++){
-													basicType=basicType+"[]";
-												}
-												addBasicType(basicType);
-											}
-                  								}
-                  								//System.out.print(child.getText()+ " ");
-                  							}
-                  			
-                  						}
-                  						var.setPointerLevel(pointerLevel);
-                  						var.setArrayLevel(arrayLevel);
-                  						var.setFileName(this.filename);
-                  						fields.put(childID.getText(),var);
-                  					}
-          					}
-          				}
-          			}	
-     			}	
+        	  createVariable(decl);	
         	}
         |       functionDef
         |       asm_expr
         |       SEMI
+        |	annotatedExternal
         |       typelessDeclaration
         ;
+
+annotatedExternal
+	  :       annotation externalDef
+      	  ;
 
 typelessDeclaration
         :       #(NTypeMissing initDeclList[false] SEMI)
         ;
-
-
-
+ 
 asm_expr
         :       #( "asm" ( "volatile" )? LCURLY expr RCURLY ( SEMI )+ )
         ;
@@ -468,7 +522,10 @@ asm_expr
 
 declaration[boolean noFunction]
         :       #( ND:NDeclaration
-                   decl:declSpecifiers//{System.out.println("Declaration:" + decl.getText());}
+                   (annotation)?
+                   decl:declSpecifiers{
+                   		 //if(!inFunctionWithName.equals(""))System.out.println("Declaration:" + decl.getText()+" in functionwith name : " + inFunctionWithName);
+                   		}
                     (                   
                         in:initDeclList[noFunction]
                     )?
@@ -500,7 +557,8 @@ storageClassSpecifier
 	            			struct.setName(idnode.getText());
 	            			struct.setNode(sib);
 	            			this.structASTMap.put(struct.getName(),struct);
-	            			//System.out.println("Found typdef: "+idnode.getText());
+	            			//System.out.println("Found typdef: "+typedef.getText()+" "+typedef.getFirstChild().getText());
+	            			addBasicType(idnode.getText());
 	            			
 	            		}
         			}
@@ -535,7 +593,7 @@ typeSpecifier returns [TNode type]
         |       nodeType9:structSpecifier ( attributeDecl )*{type=nodeType9;}
         |       nodeType10:unionSpecifier  ( attributeDecl )*{type=nodeType10;}
         |       nodeType11:enumSpecifier{type=nodeType11;}
-        |       nodeType12:typedefName{type=nodeType12;}
+        |       nodeType12:typedefName{type=nodeType12; }//System.out.println("Typedef in typespecifier: "+nodeType12.getFirstChild().getText());
         |       #("typeof" LPAREN
                     ( (typeName )=> typeName 
                     | expr
@@ -701,7 +759,8 @@ initDeclList[boolean noFunction]
 
 
 initDecl[boolean noFunction]{String id="";}
-        :       #( NInitDecl
+        :       
+        	 #( NInitDecl
                 decl:declarator[false,false,(!noFunction)]{//if(decl.firstChildOfType(27)!=null)System.out.println("id: " + (decl.firstChildOfType(27)).getText());
                 						//if(decl.parentOfType(102)!=null) System.out.println("parent: "+ (decl.parentOfType(102)).getText());
                 						}
@@ -760,7 +819,7 @@ declarator [boolean isReturnType, boolean isParameter, boolean isFunction] retur
 	}
         :   #( NDeclarator
                 ( pointerGroup[isReturnType, isParameter, isFunction] )?          
-                ( id:ID {idname = id.getText(); }
+                ( id:ID {idname = id.getText();}
                 | LPAREN declarator[false,false,false] RPAREN
                 )
                 (   #( NParameterTypeList{if(isFunction)parameterList.clear();}
@@ -781,7 +840,7 @@ declarator [boolean isReturnType, boolean isParameter, boolean isFunction] retur
 parameterTypeList
 	{clearPointerLevel(); clearArrayLevel(); } 
 	:      
-	( parameterDeclaration {clearPointerLevel(); clearArrayLevel();}( COMMA | SEMI )?)+ ( VARARGS )?  
+	( (annotation)? parameterDeclaration {clearPointerLevel(); clearArrayLevel();}( COMMA | SEMI )?)+ ( VARARGS )?  
         ;
     
 
@@ -797,24 +856,41 @@ parameterDeclaration
         	#( npd:NParameterDeclaration
                 parameterNode = declSpecifiers  
                 (declName=declarator[false,true,true] 
-                {               	
-                	//if(isFunction)
-                	//{	
-                		
-                		parameterType=parameterNode.getText();
-                		for (int i =0; i< getPointerLevel(); i++){
-                			parameterType=parameterType+"*";
-                		}
-                		for (int i =0; i< getArrayLevel(); i++){
-                			parameterType=parameterType+"[]";
-                		}
-                		addBasicType(parameterType);
-                		                			
-                		CParameterInfo parameter = new CParameterInfo();
-                		parameter.setName(declName);
-                		parameter.setParameterType(parameterType);
-                		parameterList.add(parameter);
-           
+                {       
+                	String type="";
+			if(parameterNode.getText().equals("$"))
+				type=parameterNode.getFirstChild().getNextSibling().getText();
+			else if(parameterNode.getType() == GnuCTokenTypes.NTypedefName)
+				type= parameterNode.getFirstChild().getText();					
+			else if (parameterNode.getText().equals("struct"))
+			{
+				type= "struct "+parameterNode.getFirstChild().getText();
+        		}
+        		else if (parameterNode.getText().equals("enum"))
+			{
+				type= "enum "+parameterNode.getFirstChild().getText();
+        		}
+        		else if (parameterNode.getText().equals("union"))
+			{
+				type= "union "+parameterNode.getFirstChild().getText();
+        		}
+        		
+        		else type = parameterNode.getText(); 
+						
+                	for (int i =0; i< getPointerLevel(); i++){
+               			type=type+"*";
+               		}
+               		for (int i =0; i< getArrayLevel(); i++){
+               			type=type+"[]";
+               		}
+               		addBasicType(type);
+               		                			
+               		CParameterInfo parameter = new CParameterInfo();
+               		parameter.setName(declName);
+               		parameter.setParameterType(type);
+               		parameterList.add(parameter);   
+               		//System.out.println("Parameter: "+ declName + "Type of parameter: "+type);
+              		       
                 	//}
                 }
                  | nonemptyAbstractDeclarator)?
@@ -828,12 +904,34 @@ functionDef
         String returnType="";
        	}
         :   #( ndef:NFunctionDef
+                {inFunctionWithName=ndef.firstChildOfType(100).firstChildOfType(27).getText();}
                 ( retType=functionDeclSpecifiers)? 
                 declarator[true,false,true]
-                	{returnTypePointerLevel=getReturnTypePointerLevel(); 
-                	returnType = retType.getText();
+                	{
+                	returnTypePointerLevel=getReturnTypePointerLevel(); 
+                	if(retType.getText().equals("$"))
+				returnType=retType.getFirstChild().getNextSibling().getText();
+			else if(retType.getType() == GnuCTokenTypes.NTypedefName)
+				returnType= retType.getFirstChild().getText();					
+			else if (retType.getText().equals("struct"))
+			{
+				returnType= "struct "+retType.getFirstChild().getText();
+        		}
+        		else if (retType.getText().equals("enum"))
+			{
+				returnType= "enum "+retType.getFirstChild().getText();
+        		}
+        		else if (retType.getText().equals("union"))
+			{
+				returnType= "union "+retType.getFirstChild().getText();
+        		}
+        		
+        		else returnType = retType.getText();
 			for (int i =0; i< getReturnTypePointerLevel(); i++){
                 		returnType=returnType+"*";
+                	}
+                	for (int i =0; i< getReturnTypeArrayLevel(); i++){
+                		returnType=returnType+"[]";
                 	}	
                 	addBasicType(returnType);
 			//System.out.println("returntype is:" + returnType );	
@@ -843,19 +941,31 @@ functionDef
                 (traceDef)? 
                 compoundStatement
             	{ 
+            	inFunctionWithName="";
+            	Function f = functionFactory.createFunction(ndef, getFilename());
+            	//CFunction function = new CFunction();
+            	//function.setReturnType(returnType);
+            	//function.setName(f.getName());
+            	//function.setParent(file);
             		
                 CMethodInfo method= new CMethodInfo();
-		Function f = functionFactory.createFunction(ndef, getFilename(),out);
 		method.setReturnType(returnType);
 		method.setName(f.getName());
 		method.setParent((Type)file);
+		//for(int i= 0 ; i< parameterList.size(); i++){
+		//	((CParameterInfo)parameterList.get(i)).setParentFunction(function);
+		//	function.addParameter((CParameterInfo)parameterList.get(i)); 
+		//	//System.out.println(((CParameterInfo)parameterList.get(i)).getUnitName() + " " + ((CParameterInfo)parameterList.get(i)).getParameterTypeString());
+		//}
 		for(int i= 0 ; i< parameterList.size(); i++){
 			((CParameterInfo)parameterList.get(i)).setParent(method);
 			method.addParameter((CParameterInfo)parameterList.get(i)); 
 		}
 		parameterList.clear();
+		//file.addFunction(function);
 		file.addMethod(method);
-		
+		//function.addMethod(method);
+		//method.addFunction(function);
 		sig.add(method,MethodWrapper.UNKNOWN);
 		pcFile.setSignature(sig);
 	
@@ -873,6 +983,14 @@ functionDef
 			//System.out.println("Key deleted: " + f.getName());
 			fields.remove(f.getName());
 		}
+		//Signature functionsig = new Signature();
+		//functionsig.add(method,MethodWrapper.UNKNOWN);
+		//PrimitiveConcern pcFunction = new PrimitiveConcern();
+                //pcFunction.setName(f.getName());
+		//pcFunction.setPlatformRepresentation(function);
+		//function.setParentConcern(pcFunction);
+		//pcFunction.setSignature(functionsig);
+		//dataStore.addObject( f.getName(), pcFunction );
             })
         ;
         
@@ -891,16 +1009,53 @@ traceDef:
 	  //( #(ID LPAREN ID (COMMA ID)* RPAREN) )*
 	 );
 	 
-annotation: // __ANOTATIONNAME__(  )
-		#("__"
-		 id:ID { System.out.println("Found annotation: "+id.getText()); } "__"
+annotation {Annotation a = new Annotation();}
+	: 
+		#(anno:"$"
+		 LPAREN
+		 //if id is in structHashMap
+		 id:ID 
+		 { 
+		 	a.setType(id.getText());
+		 	Struct stru=(Struct)structASTMap.get(id.getText());
+			if(stru!=null){
+				for(int i=0; i<stru.getNumberOfElements(); i++){
+					Parameter param=stru.getElement(i);
+					/**FIXME: probably real error needs to be thrown**/
+					if(!param.getParameterTypeName().startsWith("char*")){
+						Debug.out(Debug.MODE_ERROR,"WRAPPER","Wrong element type in annotation type: " + stru.getName());
+					}
+				}
+				
+			}
+		 		
+		 }
 		 LPAREN 
 		 	(
-		 		st: stringConst 
-		 		( COMMA st1:stringConst)*
+		 		//check if st equals first element of struct
+		 		
+		 		st: StringLiteral 
+		 		{
+		 			a.addValue(st);
+		 		}
+		 		( COMMA st1:StringLiteral {a.addValue(st1);})*
 		 	)?
+		 RPAREN
 		 RPAREN 
+		 {
+			a.retrieveTarget(anno);
+			//a.printAnnotation();
+			a.setFileName(filename);
+			//AttributeWriter.instance().addAnnotations(a);
+			annotationASTMap.put(a.getType()+a.getTargetName()+inFunctionWithName,a);
+			a.setFunctionName(inFunctionWithName);
+			
+			/**a.addAnnotationtoLAMA(); 
+			 dit is weg gehaald hier aangezien nog niet alles
+			 is toegevoegd aan Language model **/
+		}
 		);
+		
 
 	/*
 exception

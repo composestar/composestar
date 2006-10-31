@@ -5,41 +5,30 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CWeaveFileGenerator.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.CONE;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.HashMap;
-
-import org.w3c.dom.Element;
+import java.lang.Class;
 
 import Composestar.Core.CONE.WeaveFileGenerator;
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.Exception.ModuleException;
-
-import Composestar.Core.FILTH.FILTHService;
+import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.Master.CommonResources;
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
+
 import Composestar.C.LAMA.CFile;
 import Composestar.C.LAMA.CMethodInfo;
-import Composestar.C.LAMA.CParameterInfo;
 import Composestar.C.specification.Advice;
 import Composestar.C.specification.AdviceApplication;
 import  Composestar.C.specification.Aspect;
@@ -47,21 +36,24 @@ import Composestar.C.specification.Functions;
 import Composestar.C.specification.Pointcut;
 import Composestar.C.wrapper.utils.GeneralUtils;
 import Composestar.C.wrapper.WeaveblePoint;
+
 import Composestar.Utils.Debug;
 
 
 /**
- * This class generates the interception specification file for ILICIT based on 
- * information in the repository.
+ * This class generates the aspects for weavec,
+ * An aspect can add header files or add filter advice to super imposed functions
  * 
- * @author Sverre Boschman
+ * @author Johan te Winkel
  */
 public class CWeaveFileGenerator implements WeaveFileGenerator
 {
-    private PrintWriter out = null;
     public static HashMap filterModuleReferenceMap = new HashMap();
 	private HashMap aspects= new HashMap();
 	private DataStore ds  = DataStore.instance();
+	private CFile file;
+	private CMethodInfo method;
+	private int methodOffset=-1;
     
     /**
      * @roseuid 40EBC2AE0112
@@ -83,7 +75,6 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 				FilterModule fm = new FilterModule();
 				fm = (FilterModule)filterModuleIter.next();
 				fullname = fullname + "." +fm.getName();
-				//System.out.println("FilterModule: "+ fullname + " has filter: " + fm.getName() );
 				filterModuleReferenceMap.put(fullname,fm);
 			}
 		}
@@ -103,7 +94,6 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			pointcutNumber++;
 			aspectInConcern=false;
 			Concern c = (Concern)it.next();
-			//Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Found Concern with name["+c.getName()+"]: " + c.getQualifiedName());
 			if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
 			{
 				/** Dit levert de namen van de filtermodules die op dit concern werken op**/
@@ -134,27 +124,93 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 								filter= (Filter)inputfilters.next();
 								int numberOfFilterElements =filter.filterElements.size();//.elementAt(0))..getFilterElement(0) //.getMatchingPattern(0).getMatchingParts().size();
 								for(int x=0; x<numberOfFilterElements; x++){
-									//System.out.println("Other superimposed functions are:" + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
-									/*** concern has to contain the function**/
-									CFile file= (CFile)c.getPlatformRepresentation();
-									CMethodInfo method =(CMethodInfo)file.getMethod(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
-									/****/
-									if(method != null){
-										AdviceApplication aa = new AdviceApplication();
-										//aa.setId(((Filter)fm.inputFilters.elementAt(0)).getFilterType().getType());
-										aa.setId(filter.getName()+x+((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
-				            	
-										aa.setType(GeneralUtils.getTypeOfAdvice("before"));
-				            
+									Debug.out(Debug.MODE_INFORMATION,"cone","Other superimposed functions are:" + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+									HashMap methods= new HashMap(); 
+									
+									if(c.getPlatformRepresentation() instanceof CFile){
+										file= (CFile)c.getPlatformRepresentation();
+										if(!((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName().equals("*"))
+										{
+											if(((CMethodInfo)file.getMethodInfo(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()))!=null)
+											{
+												methods.put(((CMethodInfo)file.getMethodInfo(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName())), file);
+											}
+										}
+										else
+										{
+											Iterator filemethodIt =file.getMethods().iterator();
+											while(filemethodIt.hasNext()){
+												methods.put((CMethodInfo)filemethodIt.next(),file);		
+											}
+										}
+										/** we cannot overwrite the original parent of the methods, for the 
+										 * functions of a defined concern in CConcern.xml
+										 * we look if there is a file without any functions 
+										 * if this is the case and the signature of the concern does has a
+										 * function with the name of the method in the filter
+										 * then this is the method where is superimposed on.
+										 */
+										
+										if(methods.size()==0 && file.getMethods().size()==0)
+										{
+											Iterator methodIterator=c.getSignature().methodByName.keys.iterator();
+											while(methodIterator.hasNext())
+											{
+												String methodName=(String)methodIterator.next();
+												if(methodName.equals(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()))
+												{
+													CMethodInfo mi=(CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
+													//file=(CFile)((CFunction)method.Parent).Parent;
+													CFile fl=(CFile)mi.Parent;
+													methods.put(mi,fl);
+													Debug.out(Debug.MODE_INFORMATION,"cone","Need to weave on function: "+((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo().Name + " in file " + file.FullName +"/"+ file.Name);
+												}
+												else if("*".equals(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()))
+												{
+													CMethodInfo mi=(CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();//(CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
+													//file=(CFile)((CFunction)method.Parent).Parent;
+													CFile fl=(CFile)mi.Parent;
+													methods.put(mi,fl);
+												}
+											}
+										}
+									}	
+									/** when there are conditions used, include the file where it is declared**/
+									if(filter.getFilterElement(x).getConditionPart()instanceof ConditionLiteral)
+									{	
+										addConditionHeader(((ConditionLiteral)filter.getFilterElement(x).getConditionPart()).getName(), method, file);
+									}
+									Iterator methodsIter =methods.keySet().iterator();
+									methodOffset=-1;
+									while(methodsIter.hasNext()){
+										methodOffset+=1;
+										method =(CMethodInfo)methodsIter.next();
+										file=(CFile)methods.get(method);
+										Debug.out(Debug.MODE_INFORMATION,"CCONE","Superimposed on file " + file.FullName + " and  function " + method.Name + " size of methods " + methods.size());
+										int priority =order.size()-i;
 										Pointcut pointcut = createPointcut(filter,c,x,pointcutNumber);
-										pointcut.addAdviceApplication(aa);
+										Advice beforeAdvice =createAdvice(filter,priority,x, "input",c,"before");
+										if(beforeAdvice != null){
+											AdviceApplication beforeAA = new AdviceApplication();
+											beforeAA.setId(filter.getName()+x+method.Name+methodOffset+"before");//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+											asp.addAdvice(beforeAdvice);
+											beforeAA.setType(GeneralUtils.getTypeOfAdvice("before"));
+											pointcut.addAdviceApplication(beforeAA);	
+										}
+										
+										Advice afterAdvice =createAdvice(filter,priority,x, "input",c,"after");
+										if(afterAdvice!=null){
+											AdviceApplication afterAA = new AdviceApplication();
+											afterAA.setId(filter.getName()+x+method.Name+methodOffset+"after");//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+											asp.addAdvice(afterAdvice);
+											afterAA.setType(GeneralUtils.getTypeOfAdvice("after"));
+											pointcut.addAdviceApplication(afterAA);	
+										}
+										
+										//pointcut.addAdviceApplication(afterAdvice);
+										
 										pointcut.setParent(asp);
 										asp.addPointcut(pointcut);
-										int priority =order.size()-i;
-										Advice advice =createAdvice(filter,priority,x, "input",c);
-										asp.addAdvice(advice);
-										System.out.println("Pointcuts: "+pointcut.getId()+" "+ aa.getId()+ " "+ advice.getId()+  " "+ advice.getCode());
-										
 										aspectInConcern=true;
 										//addSubstitutionTargetHeader(filter, x);
 									}
@@ -164,68 +220,106 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 							Iterator outputfilters = fm.getOutputFilterIterator();
 							while(outputfilters.hasNext()){
 								filter= (Filter)outputfilters.next();
-								//aa.setId(((Filter)fm.inputFilters.elementAt(0)).getFilterType().getType());
-								
 								int numberOfFilterElements =filter.filterElements.size();//.elementAt(0))..getFilterElement(0) //.getMatchingPattern(0).getMatchingParts().size();
 								for(int x=0; x<numberOfFilterElements; x++){
-									//System.out.println("Other superimposed functions are:" + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
-									/*****/
-									CFile file= (CFile)c.getPlatformRepresentation();
-									CMethodInfo method =(CMethodInfo)file.getMethod(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
-									/****/
-									if(method != null){
+									HashMap methods= new HashMap(); 
 									
-										AdviceApplication aa = new AdviceApplication();
-									
-										aa.setId(filter.getName()+x+((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
-										aa.setType(GeneralUtils.getTypeOfAdvice("before"));
-				            
+									if(c.getPlatformRepresentation() instanceof CFile){
+										file= (CFile)c.getPlatformRepresentation();
+										if(!((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName().equals("*"))
+										{
+											if(((CMethodInfo)file.getMethodInfo(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()))!=null)
+											{
+												methods.put(((CMethodInfo)file.getMethodInfo(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName())), file);
+											}
+										}
+										else
+										{
+											Iterator filemethodIt =file.getMethods().iterator();
+											while(filemethodIt.hasNext()){
+												methods.put((CMethodInfo)filemethodIt.next(),file);		
+											}
+										}
+										/** we cannot overwrite the original parent of the methods, for the 
+										 * functions of a defined concern in CConcern.xml
+										 * we look if there is a file without any functions 
+										 * if this is the case and the signature of the concern does has a
+										 * function with the name of the method in the filter
+										 * then this is the method where is superimposed on.
+										 */
+										
+										if(methods.size()==0 && file.getMethods().size()==0)
+										{
+											Iterator methodIterator=c.getSignature().methodByName.keys.iterator();
+											while(methodIterator.hasNext())
+											{
+												String methodName=(String)methodIterator.next();
+												if(methodName.equals(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()))
+												{
+													CMethodInfo mi=(CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
+													//file=(CFile)((CFunction)method.Parent).Parent;
+													CFile fl=(CFile)mi.Parent;
+													methods.put(mi,fl);
+													Debug.out(Debug.MODE_INFORMATION,"cone","Need to weave on function: "+((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo().Name + " in file " + file.FullName +"/"+ file.Name);
+												}
+												else if("*".equals(((MatchingPart)(filter.getFilterElement(x).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()))
+												{
+													CMethodInfo mi=(CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();//(CMethodInfo)((MethodWrapper)c.getSignature().methodByName.get(methodName)).getMethodInfo();
+													//file=(CFile)((CFunction)method.Parent).Parent;
+													CFile fl=(CFile)mi.Parent;
+													methods.put(mi,fl);
+												}
+											}
+										}
+									}	
+									/** when there are conditions used, include the file where it is declared**/
+									if(filter.getFilterElement(x).getConditionPart()instanceof ConditionLiteral)
+									{	
+										addConditionHeader(((ConditionLiteral)filter.getFilterElement(x).getConditionPart()).getName(), method, file);
+									}
+									Iterator methodsIter =methods.keySet().iterator();
+									methodOffset=-1;
+									while(methodsIter.hasNext()){
+										methodOffset+=1;
+										method =(CMethodInfo)methodsIter.next();
+										file=(CFile)methods.get(method);
+										Debug.out(Debug.MODE_INFORMATION,"CCONE","Superimposed on file " + file.FullName + " and  function " + method.Name + " size of methods " + methods.size());
+										int priority =order.size()-i;
 										Pointcut pointcut = createPointcut(filter,c,x,pointcutNumber);
-										pointcut.addAdviceApplication(aa);
+										Advice beforeAdvice =createAdvice(filter,priority,x, "output",c,"before");
+										if(beforeAdvice != null){
+											AdviceApplication beforeAA = new AdviceApplication();
+											beforeAA.setId(filter.getName()+x+method.Name+methodOffset+"before");//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+											asp.addAdvice(beforeAdvice);
+											beforeAA.setType(GeneralUtils.getTypeOfAdvice("before"));
+											pointcut.addAdviceApplication(beforeAA);	
+										}
+										
+										Advice afterAdvice =createAdvice(filter,priority,x, "output",c,"after");
+										if(afterAdvice!=null){
+											AdviceApplication afterAA = new AdviceApplication();
+											afterAA.setId(filter.getName()+x+method.Name+methodOffset+"after");//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+											asp.addAdvice(afterAdvice);
+											afterAA.setType(GeneralUtils.getTypeOfAdvice("after"));
+											pointcut.addAdviceApplication(afterAA);	
+										}			
 										pointcut.setParent(asp);
 										asp.addPointcut(pointcut);
-										int priority =order.size()-i;
-										Advice advice =createAdvice(filter,priority,x, "output",c);
-										asp.addAdvice(advice);
 										aspectInConcern=true;
 									}
 								}
 							}
-							
-				            //if(!asp.aspectIsSane())
-			        		//{
-			        		//	System.out.println("Advice reference in aspect: "+asp.getId()+" can not be resolved...");
-			            	//	System.exit(-1);
-			        		//}
-							
-							out.println("<aspect id=\""+ fm.getName() +"\">");
-							//out.println("<pointcut id=\""+ ((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).matchingPart.selector.getName()+"\">");
-							//out.println("<elements files=\""+c.getName()+".c\" identifier=\"function\" data=\""+((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).matchingPart.selector.getName() +"\"/>");
-							out.println("<advices><adviceapplication id=\""+((Filter)fm.inputFilters.elementAt(0)).getFilterType().type+"\" type=\"before\"/></advices>");
-							out.println("</pointcut>");
-							//out.println("<advice id=\""+ ((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).matchingPart.selector.getName()+"\" type=\"execution\" priority=\""+(order.size()-i)+"\">");
-							out.println("<code><![CDATA[");
-							//((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getSubstitutionPart();
-							if(!((Filter)fm.inputFilters.elementAt(0)).getFilterType().type.equals("Custom") && !((Filter)fm.inputFilters.elementAt(0)).getFilterType().type.equals("Error")){
-								out.println("if("+1+"){"+((SubstitutionPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getSubstitutionParts().elementAt(0)).getSelector().getName()+"();}");
-							}
-							out.println("]]></code>");
-							out.println("</advice></aspect>");
-													
-							
 						}
 					}
 				}
 	
 			}
 			/** include header file **/
-			if(aspectInConcern==true)includeMessageHeader(c);
+			if(aspectInConcern==true)includeMessageHeader();
 		}	
     }
     
-    private void includeMessageHeader(Concern c){
-    	CFile file=(CFile)c.getPlatformRepresentation();
-    	
+    private void includeMessageHeader(){
     	Aspect aspect = new Aspect();
 		aspect.setId(file.getUnitName());
 		AdviceApplication aa = new AdviceApplication();
@@ -257,13 +351,12 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
     
     public Pointcut createPointcut(Filter filter, Concern c, int filterelem, int pointcutNumber){
     	
-    	Pointcut pointcut = new Pointcut(((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName()+pointcutNumber);
+    	Pointcut pointcut = new Pointcut(method.name()+pointcutNumber);
         Functions functions = new Functions();
-        functions.setFile(c.getName());
-        functions.setData(((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
-		//System.out.println("Function to be superimposed:" + ((MatchingPart)(((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName() + " & " + fm.getQualifiedName() );
-		//System.out.println("FQN: " + fm.getQualifiedName()+  " Concern : " + c.getName() + "has Filtermodule with name: "+fm.getName() + " Number of [c,m,i,filtertype,internals] : [" + fm.conditions.size() + "," + ((MatchingPart)((Filter)fm.inputFilters.elementAt(0)).getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName()+ "," + fm.inputFilters.size()+ "," + ((Filter)fm.inputFilters.elementAt(0)).getFilterType().type + "," + fm.internals.size() + "]" );
-        int type = GeneralUtils.getTypeForProgramElement("function");
+        functions.setFile(file.getFullName());
+        functions.setData(method.name());
+		Debug.out(Debug.MODE_INFORMATION,"CCONE","Function to be superimposed:" + method.name() + " & " + filter.getQualifiedName() );
+		int type = GeneralUtils.getTypeForProgramElement("function");
      	if(type ==0)
      	{
      		Debug.out(Debug.MODE_ERROR,"CONE","Unknown program element type: function");
@@ -271,22 +364,124 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
      	}
      	functions.setType(type);
      	functions.setParent(pointcut);
-     	
-     	/**TODO: if we want to select functions based 
-     	 * on there parameters or returntype the following
-     	 * functions can be used:
-     	functions.setReturnType();
-     	functions.addParameter()**/
-     	
      	pointcut.addFunctions(functions);
      	return pointcut;
     }
     
-    public Advice createAdvice(Filter filter, int priority, int filterelem, String filtertype, Concern c){
+    public Advice createAdvice(Filter filter, int priority, int filterelem, String filtertype, Concern c, String adviceType){
+    	String code="";
+    	if(filter.getFilterType().getType().equals("Dispatch")){
+    		Semantic filterSemantic=new DispatchSemantic();
+    		instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
+    		if(adviceType.equals("before")&&filterSemantic.beforeAdvice())
+    		{	
+    			code=filterSemantic.getBeforeAdvice();
+				addSubstitutionTargetHeader(filter, filterelem);
+    		}
+    		else if(adviceType.equals("after")&&filterSemantic.afterAdvice()){
+    			code=filterSemantic.getAfterAdvice();
+				addSubstitutionTargetHeader(filter, filterelem);
+    		}
+    		else return null;
+    	}
+    	else if(filter.getFilterType().getType().equals("Error")){
+    		Semantic filterSemantic=new ErrorSemantic();
+    		instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
+    		if(adviceType.equals("before")&&filterSemantic.beforeAdvice())
+    		{	
+    				code=filterSemantic.getBeforeAdvice();
+    				addAssertHeader();
+    		}
+    		else if(adviceType.equals("after")&&filterSemantic.afterAdvice()){
+    			code=filterSemantic.getAfterAdvice();
+    			addAssertHeader();
+    		}
+    		else return null;
+    	}
+     	
+    	else if(filter.getFilterType().getType().equals("Custom")){
+    		if(filter.getFilterType().name.equals("Test")){
+        		Semantic filterSemantic=new TestSemantic();
+        		instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
+        		if(adviceType.equals("before")&&filterSemantic.beforeAdvice())
+        		{	
+        				code=filterSemantic.getBeforeAdvice();
+        				addSubstitutionTargetHeader(filter, filterelem);
+        		}
+        		else if(adviceType.equals("after")&&filterSemantic.afterAdvice()){
+        			code=filterSemantic.getAfterAdvice();
+        			addSubstitutionTargetHeader(filter, filterelem);
+        		}
+        		else return null;
+        	}
+    		else
+    		{
+    		try{
+					Class cl = Class.forName(filter.getFilterType().getName());//CF.getFilter());//Fully qualified name of class
+					Semantic filterSemantic = (Semantic) cl.newInstance();
+					instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
+					if(!filter.getFilterType().getName().equalsIgnoreCase(filterSemantic.getType()))
+    					Debug.out(Debug.MODE_ERROR,"CONE","No Custom filter found with type:"+ filter.getFilterType().getName());
+					if(adviceType.equals("before") && filterSemantic.beforeAdvice())
+		    		{	
+						code=filterSemantic.getBeforeAdvice();
+		    			if(filterSemantic.redirectMessage())addSubstitutionTargetHeader(filter, filterelem);
+		    			if(filterSemantic.needsHeaderFiles())addHeader(filter,filterelem,filterSemantic.headerFile());
+		    		}
+		    		else if(adviceType.equals("after")&& filterSemantic.afterAdvice()){
+		    			code=filterSemantic.getAfterAdvice();
+						if(filterSemantic.redirectMessage())addSubstitutionTargetHeader(filter, filterelem);
+						if(filterSemantic.needsHeaderFiles())addHeader(filter,filterelem,filterSemantic.headerFile());
+		    		}
+		    		else return null;
+				}
+				catch(ClassNotFoundException e){
+					Debug.out(Debug.MODE_ERROR, "CONE", "Class "+filter.getFilterType().getName()+" not found");
+				}
+				catch(IllegalAccessException e)
+				{
+					Debug.out(Debug.MODE_ERROR, "CONE", "Class "+filter.getFilterType().getName()+" not found");
+				}
+	            catch(InstantiationException e)
+	            {
+	            	Debug.out(Debug.MODE_ERROR, "CONE", "Class "+filter.getFilterType().getName()+" not found");
+	            } 
+    		}
+    	}
+    	else if(filter.getFilterType().getType().equals("Substitute")){
+    		Semantic filterSemantic=new SubstituteSemantic();
+    		instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
+    		if(adviceType.equals("before")&&filterSemantic.beforeAdvice())
+    		{	
+    			code=filterSemantic.getBeforeAdvice();
+				addSubstitutionTargetHeader(filter, filterelem);
+    		}
+    		else if(adviceType.equals("after")&&filterSemantic.afterAdvice()){
+    			code=filterSemantic.getAfterAdvice();
+				addSubstitutionTargetHeader(filter, filterelem);
+    		}
+    		else return null;
+    	}
+    	else if(filter.getFilterType().getType().equals("Meta")){
+    		MetaSemantic filterSemantic=new MetaSemantic();
+    		instantiateFilterSemantic(filter, filterelem, c, filterSemantic);
+    		if(adviceType.equals("before")&&filterSemantic.beforeAdvice())
+    		{	
+    			code=filterSemantic.getBeforeAdvice();
+				addSubstitutionTargetHeader(filter, filterelem);
+    		}
+    		else if(adviceType.equals("after")&&filterSemantic.afterAdvice()){
+    			code=filterSemantic.getAfterAdvice();
+				addSubstitutionTargetHeader(filter, filterelem);
+    		}
+    		else return null;
+    	}
+    	else Debug.out(Debug.MODE_ERROR,"CONE","Filter type not found: "+filter.getFilterType().getType());
     	Advice advice = new Advice();
+    	advice.setCode(code);
     	int ttype=0;
     	if(filtertype.equals("input"))
-    	 ttype= GeneralUtils.getTypeOfProgramPoint("execution");
+    		ttype= GeneralUtils.getTypeOfProgramPoint("execution");
     	else if(filtertype.equals("output"))
     		ttype= GeneralUtils.getTypeOfProgramPoint("call");
     	if(ttype == 0)
@@ -294,28 +489,136 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
     		Debug.out(Debug.MODE_ERROR, "CONE","Undefined join point type: execution");
     		System.exit(-1);
     	}
-    	advice.setId(filter.getName()+filterelem+((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName());
+    	advice.setId(filter.getName()+filterelem+method.name()+methodOffset+adviceType);
     	advice.setType(ttype);
     	advice.setPriority(priority);
-    	String code="";
-    	if(filter.getFilterType().getType().equals("Dispatch")){
-    		Semantic filterSemantic=new DispatchSemantic(filter,filterelem,c);
-    		code=filterSemantic.retrieveSemantics();
-			addSubstitutionTargetHeader(filter, filterelem);
-    	}
-    	else code="int"+ filter.getFilterType().getType()+ ";";
-    	advice.setCode(code);
-    	Debug.out(Debug.MODE_INFORMATION,"CONE","Filter: "+filter.getName());
-		 
+    	
+    	Debug.out(Debug.MODE_INFORMATION,"CONE","Filter: "+filter.getName() + " sets code: " +code);	 
         return advice;
+    }
+    
+    public void addAssertHeader(){
+    	if(!aspects.containsKey(file+"Assert")){
+			Aspect aspect=new Aspect();
+        	
+			aspect.setId(file+"Assert");
+			AdviceApplication aa = new AdviceApplication();
+		
+			aa.setId(file+"Assert");
+			aa.setType(GeneralUtils.BEFORE);
+			Pointcut pointcut = new Pointcut(file+"Assert");
+			int type = GeneralUtils.HEADER;
+			Functions functions = new Functions();
+			functions.setFile(file.fullname()+".c");
+			functions.setData(file.fullname()+".c");
+		 
+			functions.setType(type);
+			functions.setParent(pointcut);
+			Advice advice = new Advice();
+	    	int ttype=GeneralUtils.HEADER_INTRODUCTION;
+	    	advice.setId(file+"Assert");
+	    	advice.setType(ttype);
+	    	advice.setPriority(1);
+	    	advice.setCode("#include <assert.h>");
+			aspect.addAdvice(advice);
+			pointcut.addAdviceApplication(aa);
+			pointcut.setParent(aspect);
+			pointcut.addFunctions(functions);
+			aspect.addPointcut(pointcut);
+			aspects.put(file+"Assert",aspect);
+		}
+    }
+    
+    public void addConditionHeader(String condition, CMethodInfo methodInfo, CFile cfile)
+    {
+    	CFile conditionFile = null;
+    	Iterator it = ds.getAllInstancesOf(Concern.class);
+		while (it.hasNext()) {
+			Concern c = (Concern)it.next();
+			if(!(c instanceof CpsConcern) && c.getPlatformRepresentation() instanceof CFile)
+			{
+				conditionFile=(CFile)c.getPlatformRepresentation();
+				if((CMethodInfo)conditionFile.getMethodInfo(condition)!=null)
+					break;
+				else conditionFile =null;
+			}
+		}
+		if(conditionFile==null){
+			Debug.out(Debug.MODE_WARNING, "Cone", "No file found where condition is declared: "+condition);
+			return;
+		}
+    	
+    	Aspect aspect=new Aspect();
+        	
+    	aspect.setId(conditionFile+cfile.FullName+"CH");
+		AdviceApplication aa = new AdviceApplication();
+		
+		aa.setId(conditionFile+cfile.FullName+"CH");
+		aa.setType(GeneralUtils.BEFORE);
+		Pointcut pointcut = new Pointcut(conditionFile+cfile.FullName+"CH");
+        int type = GeneralUtils.HEADER;
+        Functions functions = new Functions();
+        functions.setFile(cfile.fullname()+".c");
+        functions.setData(cfile.fullname()+".c");
+		 
+     	functions.setType(type);
+     	functions.setParent(pointcut);
+     	
+		Advice advice = new Advice();
+    	int ttype=GeneralUtils.HEADER_INTRODUCTION;
+    	advice.setId(conditionFile+cfile.FullName+"CH");
+    	advice.setType(ttype);
+    	advice.setPriority(1);
+    	advice.setCode("#include \""+ conditionFile.fullname()+".h\"");
+		aspect.addAdvice(advice);
+		pointcut.addAdviceApplication(aa);
+		pointcut.setParent(aspect);
+		pointcut.addFunctions(functions);
+		aspect.addPointcut(pointcut);
+		aspects.put(conditionFile+cfile.FullName+"CH",aspect);
+    	
+    }
+    
+    public void addHeader(Filter filter, int filterelem, String filename){
+    	Aspect aspect=new Aspect();
+    	
+    	String matchingFunction=method.name();
+    	String matchingFile=file.FullName;
+    	Debug.out(Debug.MODE_INFORMATION,"CCONE", "Header added to file:"+ matchingFile + "For function" + matchingFunction );    	
+    	aspect.setId(matchingFunction+filename+"STH");
+		AdviceApplication aa = new AdviceApplication();
+		
+		aa.setId(matchingFunction+filename+"STH");//.getFilterElement(0).getMatchingPattern(0).getMatchingParts().elementAt(0)).getSelector().getName());
+		aa.setType(GeneralUtils.BEFORE);
+		Pointcut pointcut = new Pointcut(matchingFunction+filename+"STH");
+        int type = GeneralUtils.HEADER;
+        Functions functions = new Functions();
+        functions.setFile(matchingFile+".c");
+        functions.setData(matchingFile+".c");
+		 
+     	functions.setType(type);
+     	functions.setParent(pointcut);
+     	
+		Advice advice = new Advice();
+    	int ttype=GeneralUtils.HEADER_INTRODUCTION;
+    	advice.setId(matchingFunction+filename+"STH");
+    	advice.setType(ttype);
+    	advice.setPriority(1);
+    	advice.setCode("#include \""+ filename+"\"");
+		aspect.addAdvice(advice);
+		pointcut.addAdviceApplication(aa);
+		pointcut.setParent(aspect);
+		pointcut.addFunctions(functions);
+		aspect.addPointcut(pointcut);
+		aspects.put(matchingFunction+filename+"STH",aspect);
     }
     
     public void addSubstitutionTargetHeader(Filter filter, int filterelem){
     	Aspect aspect=new Aspect();
     	SubstitutionPart sub=(SubstitutionPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getSubstitutionParts().elementAt(0));
     	String substitutionFunction=sub.getSelector().name;
-    	String matchingFunction=((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getSelector().getName();
-    	String matchingFile=((MatchingPart)(filter.getFilterElement(filterelem).getMatchingPattern(0).getMatchingParts().elementAt(0))).getTarget().getName();
+    	String matchingFunction=method.name();
+    	String matchingFile=file.FullName;
     	
     	CFile file=null;
     	CFile substitutionFile=null;
@@ -324,10 +627,10 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
     	Iterator it = ds.getAllInstancesOf(Concern.class);
 		while (it.hasNext()) {
 			c = (Concern)it.next();
-			if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern))
+			if(c.getDynObject("superImpInfo") != null && !(c instanceof CpsConcern) && c.getPlatformRepresentation() instanceof CFile)
 			{
 				file=(CFile)c.getPlatformRepresentation();
-				method =(CMethodInfo)file.getMethod(substitutionFunction);
+				method =(CMethodInfo)file.getMethodInfo(substitutionFunction);
 				if(method!=null) {
 					substitutionFile=file;
 					break;
@@ -338,7 +641,7 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 			Debug.out(Debug.MODE_WARNING, "Cone", "No substitution target found for filter:"+filter.getName());
 			return;
 		}
-		System.out.println("Aspect:"+ matchingFunction+substitutionFile.getUnitName()+"STH superimposes:"+ substitutionFile.getUnitName());			
+		Debug.out(Debug.MODE_INFORMATION,"cone","Aspect:"+ matchingFunction+substitutionFile.getUnitName()+"STH superimposes:"+ substitutionFile.getUnitName());			
     	aspect.setId(matchingFunction+substitutionFile.getUnitName()+"STH");
 		AdviceApplication aa = new AdviceApplication();
 		
@@ -367,43 +670,21 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
 		aspects.put(matchingFunction+substitutionFile.getUnitName()+"STH",aspect);
     }
     
-    /**
-     * @param destination
-     * @param store
-     * @param resources
-     * @throws Composestar.core.Exception.ModuleException
-     * @roseuid 40EBC2AE0344
-     */
+    public void instantiateFilterSemantic(Filter filter,int filterelem,Concern c, Semantic filterSemantic){
+    	filterSemantic.setFilter(filter);
+		filterSemantic.setElementNumber(filterelem);
+		filterSemantic.setConcern(c);
+		filterSemantic.setMethod(method);
+		filterSemantic.setFile(file);
+    }
+    
     public void run(CommonResources resources) throws ModuleException 
 	{
-    	File destination = new File(Configuration.instance().getPathSettings().getPath("Base") + "weavespec.xml");
-    	
-      Debug.out(Debug.MODE_DEBUG, "CONE-IS", "Writing weave specifications to file '" + destination.getName() + "'...");
-      
-      try
-      {
-        out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
-
-        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
- 
-        createAspects();
-
-        out.flush();
-        out.close();
-        
-        
-      }
-      catch (IOException e) {
-        throw new ModuleException("Unable to create weave specification file '" + destination + "'.","CONE_IS");
-      }
-      catch (Exception e) {
-        throw new ModuleException("Unhandled exception: " + e.getClass().toString() + ";"+ e.getMessage(),"CONE_IS");
-      } 
-      
-//    Last piece of WeaveC weaver.java
+      createAspects();      
       WeaverEngine we = new WeaverEngine();
       Hashtable functionsToRealWeavebaleObjectsMap = we.populateFunctionsWithRealInfo(aspects, resources);
       HashSet weavebleobjects = we.attachAdvicesToFunctions(functionsToRealWeavebaleObjectsMap);
+      /**Tracing is switched off**/
       //we.processAllInternalAdvices(weavebleobjects);
       Iterator weaveit = weavebleobjects.iterator();
   	  while(weaveit.hasNext())
@@ -412,39 +693,4 @@ public class CWeaveFileGenerator implements WeaveFileGenerator
   	  }
   	  we.emitFiles();
     }
-    
-   
-    
-    class MethodInformation {
-        private String mClassName;
-        private String mMethodName;
-        
-        /**
-         * @param className
-         * @param methodName
-         * @roseuid 40EBC2C9001B
-         */
-        public MethodInformation(String className, String methodName) {
-        mClassName = className;
-        mMethodName = methodName;
-        }
-        
-        /**
-         * @return java.lang.String
-         * @roseuid 40EBC2C9003B
-         */
-        public String getClassName() {
-        return mClassName;
-        }
-        
-        /**
-         * @return java.lang.String
-         * @roseuid 40EBC2C9005A
-         */
-        public String getMethodName() {
-        return mMethodName;
-        }
-    }
-    
-   
 }

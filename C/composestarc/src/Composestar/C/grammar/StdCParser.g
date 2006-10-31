@@ -77,7 +77,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: StdCParser.g,v 1.3 2005/11/11 21:04:31 pascal_durr Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;

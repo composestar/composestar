@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: TNode.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.wrapper.parsing;
 
@@ -563,6 +563,24 @@ public void initialize(AST tr) {
     if(down.getType() == type)
       return down;
     return down.firstSiblingOfType(type);
+  }
+  
+  public int numberOfChildsOfType(int type){
+	  int nocot=0;
+	  TNode down = (TNode)getFirstChild();
+	    if(down == null) 
+	      return 0;
+	    if(down.getType() == type)
+	      nocot++;
+	    return down.numberOfSiblingsOfType(type,nocot);
+  }
+  public int numberOfSiblingsOfType(int type, int nocot) {
+	    TNode right = (TNode)getNextSibling();
+	    if(right == null) 
+	      return nocot;
+	    if(right.getType() == type)
+	      nocot++;
+	    return right.numberOfSiblingsOfType(type, nocot);
   }
 
   /** find the first sibling of the node 

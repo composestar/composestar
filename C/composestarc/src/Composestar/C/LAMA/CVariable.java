@@ -20,21 +20,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * @author havingaw
- *
- * Contains the .Net reflection information of a Field
- * See documentation of .NET System.Reflection.FieldInfo (on MSDN).
- */
-
 public class CVariable extends FieldInfo implements SerializableRepositoryEntity
 {
   
   private static final long serialVersionUID = 235924601234730641L;
-  public int HashCode;                
-  public String FieldTypeString;      
-  private Type FieldType;       
-  private CFile Parent;
+  public int HashCode;    
+  public String Name;
+  public String FieldTypeString;       
+  private CType FieldType;       
+  private CFile ParentFile;
   public boolean IsStatic;   
   private int pointerLevel;
   private boolean isGlobal;
@@ -56,17 +50,17 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
   {
     this.HashCode = hashcode;
   }
-  
-  public Type fieldType()
+  /** test is dit nodig??
+  public CType fieldType()
   {
    if (this.FieldType == null)
-    { // We don't do this in setFieldType because at that point
-      // the DotNETType of the field may not be registered yet (!)
-      TypeMap map = TypeMap.instance();
-      this.FieldType = (Type)map.getType( FieldTypeString );
+    { 
+      CTypeMap map = CTypeMap.instance();
+      this.FieldType = (CType)map.getType( FieldTypeString );
     }
     return FieldType;
   }
+  **/
   
   public void setFieldType(String fieldtype)
   {
@@ -142,24 +136,42 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
 
   public void setParent(CFile parent)
   {
-    this.Parent = parent;
+    this.ParentFile = parent;
   }
   
-  //public CFile parent()
-  //{
-  //  return this.Parent;
-  //}
+  public String getUnitName()
+  {
+	    return name();
+  }
+	
+	public boolean hasUnitAttribute(String attribute)
+	{
+		if(attribute.equals("static") && IsStatic) return true;
+		if(attribute.equals("extern") && isExtern) return true;
+		if(attribute.equals("inline") &&isInline) return true;
+		return false;
+	}
 
-  /* (non-Javadoc)
-   * @see Composestar.CTCommon.LogicLang.metamodel.LanguageUnit#getUnitRelation(java.lang.String)
-   */
+  
   public UnitResult getUnitRelation(String argumentName)
   {
-    if ("ParentType".equals(argumentName))
-      return new UnitResult(Parent);
-    else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType()))
-      return new UnitResult(fieldType());
-    return null;
+    /** Real language model
+  	if(isGlobal){
+	  if ("ParentFile".equals(argumentName))
+		  return new UnitResult(ParentFile);
+    }
+    else{
+    	if("ParentFunction".equals(argumentName))
+    		return new UnitResult(ParentFunction);
+    }
+    if ("Type".equals(argumentName))
+      return new UnitResult(FieldType);
+    return null;**/
+  	 if ("ParentType".equals(argumentName))
+        return new UnitResult(ParentFile);
+      else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType()))
+        return new UnitResult(fieldType());
+      return null;
   }
 
   public Collection getUnitAttributes()
@@ -167,6 +179,8 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
     HashSet result = new HashSet();
     if (isStatic())
       result.add("static");
+    if(isExtern) result.add("extern");
+	if(isInline)result.add("inline");
     return result;
   }
 
@@ -182,7 +196,7 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
 		pointerLevel = in.readInt();
 		arrayLevel = in.readInt();
 		Name = in.readUTF();
-		Parent = (CFile)in.readObject();
+		ParentFile = (CFile)in.readObject();
 	}
 	 
 	/**
@@ -197,6 +211,6 @@ public class CVariable extends FieldInfo implements SerializableRepositoryEntity
 		out.writeInt(pointerLevel);
 		out.writeInt(arrayLevel);
 		out.writeUTF(Name);
-		out.writeObject(Parent);
+		out.writeObject(ParentFile);
 	}
 }

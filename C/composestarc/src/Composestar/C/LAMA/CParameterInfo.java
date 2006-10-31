@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: DotNETParameterInfo.java,v 1.1 2006/02/16 23:10:59 pascal_durr Exp $
+ * $Id$
  */
 
 package Composestar.C.LAMA;
@@ -33,12 +33,15 @@ public class CParameterInfo extends ParameterInfo /*implements LanguageUnit*/
 	private static final long serialVersionUID = -527486572514730318L;
 	private int HashCode;
     public int Position;
-    public boolean IsIn;
-    public boolean IsLcid;
-    public boolean IsOptional;
-    public boolean IsOut;
-    public boolean IsRetval;
+    //public boolean IsIn;
+    //public boolean IsLcid;
+    //public boolean IsOptional;
+    //public boolean IsOut;
+    //public boolean IsRetval;
     public CMethodInfo Parent;
+    public String ParameterTypeString;
+	private CType ParameterType;
+	public String Name;
     
     /**
      * @roseuid 401B84CF0220
@@ -46,87 +49,7 @@ public class CParameterInfo extends ParameterInfo /*implements LanguageUnit*/
     public CParameterInfo() {
       UnitRegister.instance().registerLanguageUnit(this);
     }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0217
-     */
-    public boolean isIn() {
-        return IsIn;     
-    }
-    
-    /**
-     * @param isln
-     * @roseuid 402A06EE014F
-     */
-    public void setIsln(boolean isln) {
-        IsIn = isln;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0218
-     */
-    public boolean isLcid() {
-        return IsLcid;     
-    }
-    
-    /**
-     * @param isLcid
-     * @roseuid 402A070000BE
-     */
-    public void setIsLcid(boolean isLcid) {
-        IsLcid = isLcid;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0219
-     */
-    public boolean isOptional() {
-        return IsOptional;     
-    }
-    
-    /**
-     * @param isOptional
-     * @roseuid 402A070A020D
-     */
-    public void setIsOptional(boolean isOptional) {
-        IsOptional = isOptional;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF021A
-     */
-    public boolean isOut() {
-        return IsOut;     
-    }
-    
-    /**
-     * @param isOut
-     * @roseuid 402A07140077
-     */
-    public void setIsOut(boolean isOut) {
-        IsOut = isOut;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF021B
-     */
-    public boolean isRetval() {
-        return IsRetval;     
-    }
-    
-    /**
-     * @param isRetval
-     * @roseuid 402A071C000A
-     */
-    public void setIsRetVal(boolean isRetval) {
-        IsRetval = isRetval;     
-    }
-    
+        
     /**
      * @param name
      * @roseuid 402A072800EE
@@ -134,7 +57,22 @@ public class CParameterInfo extends ParameterInfo /*implements LanguageUnit*/
     public void setName(String name) {
         Name = name;     
     }
-       
+    
+    //public CType parameterType() 
+	//{
+	//	if( ParameterType == null ) 
+	//	{
+	//		CTypeMap map = CTypeMap.instance();
+	//		ParameterType = map.getType( ParameterTypeString );
+	//	}
+	//	return ParameterType;     
+	//}
+    
+    public void setParameterType(String paramType) 
+	{
+		ParameterTypeString = paramType;     
+	}  
+   
     /**
      * @return int
      * @roseuid 401B84CF021E
@@ -166,30 +104,49 @@ public class CParameterInfo extends ParameterInfo /*implements LanguageUnit*/
     public void setHashCode(int code) {
         HashCode = code;     
     }
-
-    /**
-     * @return Returns the parent.
-     */
-    //public CMethodInfo getParent()
-    //{
-     // return Parent;
-    //}
-    /**
-     * @param parent The parent to set.
-     */
     
     public void setParent(CMethodInfo parent)
     {
       Parent = parent;
     }
     
+    
     /****** Implementation of Language Unit interface **********/   
+    
+    public String getUnitName()
+	{
+		return Name;
+	}
+	
+	/* (non-Javadoc)
+	 * @see Composestar.Core.LAMA.ProgramElement#getUnitType()
+	 */
+	public String getUnitType()
+	{
+		return "Parameter";
+	}
+    
+    public boolean hasUnitAttribute(String attribute)
+	{
+		return false;
+	}
+	public String getParameterTypeString(){
+		return ParameterTypeString;
+	}
     
     public UnitResult getUnitRelation(String argumentName)
     {
+      /** Real C Languagemodel	
+      if (argumentName.equals("ParentFunction"))
+        return new UnitResult(ParentFunction);
       if (argumentName.equals("ParentMethod"))
-        return new UnitResult(Parent);
-      return null;
+          return new UnitResult(Parent);
+      if (argumentName.equals("ChildType"))
+          return new UnitResult(ParameterType);
+       return null;**/
+    	if (argumentName.equals("ParentMethod"))
+            return new UnitResult(Parent);
+          return null;
     }
 
     /* (non-Javadoc)
@@ -208,11 +165,6 @@ public class CParameterInfo extends ParameterInfo /*implements LanguageUnit*/
 		HashCode = in.readInt();
 		Name = in.readUTF();
 		Position = in.readInt();
-		IsIn = in.readBoolean();
-		IsLcid = in.readBoolean();
-		IsOptional = in.readBoolean();
-		IsOut = in.readBoolean();
-		IsRetval = in.readBoolean();
 		ParameterTypeString = in.readUTF();
 		Parent = (CMethodInfo)in.readObject();
 	}
@@ -225,11 +177,6 @@ public class CParameterInfo extends ParameterInfo /*implements LanguageUnit*/
 		out.writeInt(HashCode);
 		out.writeUTF(Name);
 		out.writeInt(Position);
-		out.writeBoolean(IsIn);
-		out.writeBoolean(IsLcid);
-		out.writeBoolean(IsOptional);
-		out.writeBoolean(IsOut);
-		out.writeBoolean(IsRetval);
 		out.writeUTF(ParameterTypeString);
 		out.writeObject(Parent);
 	}

@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CMaster.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 
 package Composestar.C.MASTER;
@@ -103,14 +103,14 @@ public class CMaster extends Master  {
     public static void main(String[] args) {
 
 		if(args.length == 0) {
-    		System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
+    		//System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
     		return;
     	}
     	Master master = null;
 
     	if(args[0].equalsIgnoreCase("-v")) {
-    		System.out.println(Version.getTitleString());
-    		System.out.println(Version.getAuthorString());
+    		//System.out.println(Version.getTitleString());
+    		//System.out.println(Version.getAuthorString());
     		System.exit(0);
     	}
     	
@@ -119,8 +119,8 @@ public class CMaster extends Master  {
     		master = new CMaster(args[0]);
     		Debug.out(Debug.MODE_DEBUG,"Master","Master initialized.");
     	} catch(ModuleException e) {
-    		System.out.println("Could not open configuration file: " + args[0]);
-    		System.out.println("Exiting...");
+    		///System.out.println("Could not open configuration file: " + args[0]);
+    		//System.out.println("Exiting...");
     		System.exit(-1);
     	}
 

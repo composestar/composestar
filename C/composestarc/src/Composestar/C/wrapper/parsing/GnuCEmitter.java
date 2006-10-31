@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCEmitter.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -448,6 +448,7 @@ public GnuCEmitter() {
 		case NDeclaration:
 		case NFunctionDef:
 		case NTypeMissing:
+		case 142:
 		{
 			externalList(_t);
 			_t = _retTree;
@@ -528,6 +529,12 @@ public GnuCEmitter() {
 				_t = _retTree;
 				break;
 			}
+			case 142:
+			{
+				annotatedExternal(_t);
+				_t = _retTree;
+				break;
+			}
 			case NTypeMissing:
 			{
 				typelessDeclaration(_t);
@@ -567,10 +574,51 @@ public GnuCEmitter() {
 		TNode s = null;
 		
 		try {      // for error handling
-			AST __t13 = _t;
+			AST __t14 = _t;
 			TNode tmp1_AST_in = (TNode)_t;
 			match(_t,NDeclaration);
 			_t = _t.getFirstChild();
+			{
+			if (_t==null) _t=ASTNULL;
+			switch ( _t.getType()) {
+			case 142:
+			{
+				annotation(_t);
+				_t = _retTree;
+				break;
+			}
+			case LITERAL_typedef:
+			case LITERAL_volatile:
+			case LITERAL_struct:
+			case LITERAL_union:
+			case LITERAL_enum:
+			case LITERAL_auto:
+			case LITERAL_register:
+			case LITERAL_extern:
+			case LITERAL_static:
+			case LITERAL_const:
+			case LITERAL_void:
+			case LITERAL_char:
+			case LITERAL_short:
+			case LITERAL_int:
+			case LITERAL_long:
+			case LITERAL_float:
+			case LITERAL_double:
+			case LITERAL_signed:
+			case LITERAL_unsigned:
+			case NTypedefName:
+			case LITERAL_inline:
+			case LITERAL_typeof:
+			case LITERAL___complex:
+			{
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(_t);
+			}
+			}
+			}
 			declSpecifiers(_t);
 			_t = _retTree;
 			{
@@ -593,8 +641,8 @@ public GnuCEmitter() {
 			}
 			}
 			{
-			int _cnt16=0;
-			_loop16:
+			int _cnt18=0;
+			_loop18:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==SEMI)) {
@@ -606,13 +654,13 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					if ( _cnt16>=1 ) { break _loop16; } else {throw new NoViableAltException(_t);}
+					if ( _cnt18>=1 ) { break _loop18; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt16++;
+				_cnt18++;
 			} while (true);
 			}
-			_t = __t13;
+			_t = __t14;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -633,7 +681,7 @@ public GnuCEmitter() {
 		TNode v = null;
 		
 		try {      // for error handling
-			AST __t123 = _t;
+			AST __t131 = _t;
 			ndef = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NFunctionDef);
 			_t = _t.getFirstChild();
@@ -681,7 +729,7 @@ public GnuCEmitter() {
 			declarator(_t);
 			_t = _retTree;
 			{
-			_loop126:
+			_loop134:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
@@ -703,7 +751,7 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					break _loop126;
+					break _loop134;
 				}
 				}
 			} while (true);
@@ -729,7 +777,7 @@ public GnuCEmitter() {
 			}
 			compoundStatement(_t);
 			_t = _retTree;
-			_t = __t123;
+			_t = __t131;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -753,7 +801,7 @@ public GnuCEmitter() {
 		TNode s = null;
 		
 		try {      // for error handling
-			AST __t10 = _t;
+			AST __t11 = _t;
 			a = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LITERAL_asm);
 			_t = _t.getFirstChild();
@@ -803,8 +851,29 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				print( s );
 			}
-			_t = __t10;
+			_t = __t11;
 			_t = _t.getNextSibling();
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				if (_t!=null) {_t = _t.getNextSibling();}
+			} else {
+			  throw ex;
+			}
+		}
+		_retTree = _t;
+	}
+	
+	public final void annotatedExternal(AST _t) throws RecognitionException {
+		
+		TNode annotatedExternal_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		
+		try {      // for error handling
+			annotation(_t);
+			_t = _retTree;
+			externalDef(_t);
+			_t = _retTree;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
@@ -823,7 +892,7 @@ public GnuCEmitter() {
 		TNode s = null;
 		
 		try {      // for error handling
-			AST __t8 = _t;
+			AST __t9 = _t;
 			TNode tmp2_AST_in = (TNode)_t;
 			match(_t,NTypeMissing);
 			_t = _t.getFirstChild();
@@ -832,11 +901,87 @@ public GnuCEmitter() {
 			s = (TNode)_t;
 			match(_t,SEMI);
 			_t = _t.getNextSibling();
-			_t = __t8;
+			_t = __t9;
 			_t = _t.getNextSibling();
 			if ( inputState.guessing==0 ) {
 				print( s );
 			}
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				if (_t!=null) {_t = _t.getNextSibling();}
+			} else {
+			  throw ex;
+			}
+		}
+		_retTree = _t;
+	}
+	
+	public final void annotation(AST _t) throws RecognitionException {
+		
+		TNode annotation_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
+		
+		try {      // for error handling
+			AST __t20 = _t;
+			TNode tmp3_AST_in = (TNode)_t;
+			match(_t,142);
+			_t = _t.getFirstChild();
+			TNode tmp4_AST_in = (TNode)_t;
+			match(_t,LPAREN);
+			_t = _t.getNextSibling();
+			TNode tmp5_AST_in = (TNode)_t;
+			match(_t,ID);
+			_t = _t.getNextSibling();
+			TNode tmp6_AST_in = (TNode)_t;
+			match(_t,LPAREN);
+			_t = _t.getNextSibling();
+			{
+			if (_t==null) _t=ASTNULL;
+			switch ( _t.getType()) {
+			case StringLiteral:
+			{
+				TNode tmp7_AST_in = (TNode)_t;
+				match(_t,StringLiteral);
+				_t = _t.getNextSibling();
+				{
+				_loop23:
+				do {
+					if (_t==null) _t=ASTNULL;
+					if ((_t.getType()==COMMA)) {
+						TNode tmp8_AST_in = (TNode)_t;
+						match(_t,COMMA);
+						_t = _t.getNextSibling();
+						TNode tmp9_AST_in = (TNode)_t;
+						match(_t,StringLiteral);
+						_t = _t.getNextSibling();
+					}
+					else {
+						break _loop23;
+					}
+					
+				} while (true);
+				}
+				break;
+			}
+			case RPAREN:
+			{
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltException(_t);
+			}
+			}
+			}
+			TNode tmp10_AST_in = (TNode)_t;
+			match(_t,RPAREN);
+			_t = _t.getNextSibling();
+			TNode tmp11_AST_in = (TNode)_t;
+			match(_t,RPAREN);
+			_t = _t.getNextSibling();
+			_t = __t20;
+			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
@@ -857,7 +1002,7 @@ public GnuCEmitter() {
 			initDecl(_t);
 			_t = _retTree;
 			{
-			_loop76:
+			_loop83:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==NInitDecl)) {
@@ -868,7 +1013,7 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					break _loop76;
+					break _loop83;
 				}
 				
 			} while (true);
@@ -1019,8 +1164,8 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt19=0;
-			_loop19:
+			int _cnt26=0;
+			_loop26:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
@@ -1064,10 +1209,10 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					if ( _cnt19>=1 ) { break _loop19; } else {throw new NoViableAltException(_t);}
+					if ( _cnt26>=1 ) { break _loop26; } else {throw new NoViableAltException(_t);}
 				}
 				}
-				_cnt19++;
+				_cnt26++;
 			} while (true);
 			}
 		}
@@ -1308,7 +1453,7 @@ public GnuCEmitter() {
 				structSpecifier(_t);
 				_t = _retTree;
 				{
-				_loop25:
+				_loop32:
 				do {
 					if (_t==null) _t=ASTNULL;
 					if ((_t.getType()==NAsmAttribute||_t.getType()==LITERAL___attribute)) {
@@ -1316,7 +1461,7 @@ public GnuCEmitter() {
 						_t = _retTree;
 					}
 					else {
-						break _loop25;
+						break _loop32;
 					}
 					
 				} while (true);
@@ -1328,7 +1473,7 @@ public GnuCEmitter() {
 				unionSpecifier(_t);
 				_t = _retTree;
 				{
-				_loop27:
+				_loop34:
 				do {
 					if (_t==null) _t=ASTNULL;
 					if ((_t.getType()==NAsmAttribute||_t.getType()==LITERAL___attribute)) {
@@ -1336,7 +1481,7 @@ public GnuCEmitter() {
 						_t = _retTree;
 					}
 					else {
-						break _loop27;
+						break _loop34;
 					}
 					
 				} while (true);
@@ -1357,7 +1502,7 @@ public GnuCEmitter() {
 			}
 			case LITERAL_typeof:
 			{
-				AST __t28 = _t;
+				AST __t35 = _t;
 				n = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_typeof);
 				_t = _t.getFirstChild();
@@ -1458,7 +1603,7 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( rp );
 				}
-				_t = __t28;
+				_t = __t35;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -1552,7 +1697,7 @@ public GnuCEmitter() {
 		TNode a = null;
 		
 		try {      // for error handling
-			AST __t35 = _t;
+			AST __t42 = _t;
 			a = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LITERAL_struct);
 			_t = _t.getFirstChild();
@@ -1561,7 +1706,7 @@ public GnuCEmitter() {
 			}
 			structOrUnionBody(_t);
 			_t = _retTree;
-			_t = __t35;
+			_t = __t42;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1589,7 +1734,7 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case LITERAL___attribute:
 			{
-				AST __t70 = _t;
+				AST __t77 = _t;
 				a = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL___attribute);
 				_t = _t.getFirstChild();
@@ -1597,7 +1742,7 @@ public GnuCEmitter() {
 					print( a );
 				}
 				{
-				_loop72:
+				_loop79:
 				do {
 					if (_t==null) _t=ASTNULL;
 					if (((_t.getType() >= LITERAL_typedef && _t.getType() <= LITERAL___imag))) {
@@ -1609,18 +1754,18 @@ public GnuCEmitter() {
 						}
 					}
 					else {
-						break _loop72;
+						break _loop79;
 					}
 					
 				} while (true);
 				}
-				_t = __t70;
+				_t = __t77;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NAsmAttribute:
 			{
-				AST __t73 = _t;
+				AST __t80 = _t;
 				n = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,NAsmAttribute);
 				_t = _t.getFirstChild();
@@ -1644,7 +1789,7 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( rp );
 				}
-				_t = __t73;
+				_t = __t80;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -1671,7 +1816,7 @@ public GnuCEmitter() {
 		TNode a = null;
 		
 		try {      // for error handling
-			AST __t37 = _t;
+			AST __t44 = _t;
 			a = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LITERAL_union);
 			_t = _t.getFirstChild();
@@ -1680,7 +1825,7 @@ public GnuCEmitter() {
 			}
 			structOrUnionBody(_t);
 			_t = _retTree;
-			_t = __t37;
+			_t = __t44;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1703,7 +1848,7 @@ public GnuCEmitter() {
 		TNode rc = null;
 		
 		try {      // for error handling
-			AST __t61 = _t;
+			AST __t68 = _t;
 			a = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LITERAL_enum);
 			_t = _t.getFirstChild();
@@ -1765,7 +1910,7 @@ public GnuCEmitter() {
 			}
 			}
 			}
-			_t = __t61;
+			_t = __t68;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1785,8 +1930,8 @@ public GnuCEmitter() {
 		TNode i = null;
 		
 		try {      // for error handling
-			AST __t33 = _t;
-			TNode tmp3_AST_in = (TNode)_t;
+			AST __t40 = _t;
+			TNode tmp12_AST_in = (TNode)_t;
 			match(_t,NTypedefName);
 			_t = _t.getFirstChild();
 			i = (TNode)_t;
@@ -1795,7 +1940,7 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				print( i );
 			}
-			_t = __t33;
+			_t = __t40;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -1860,28 +2005,28 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			boolean synPredMatched41 = false;
+			boolean synPredMatched48 = false;
 			if (((_t.getType()==ID))) {
-				AST __t41 = _t;
-				synPredMatched41 = true;
+				AST __t48 = _t;
+				synPredMatched48 = true;
 				inputState.guessing++;
 				try {
 					{
-					TNode tmp4_AST_in = (TNode)_t;
+					TNode tmp13_AST_in = (TNode)_t;
 					match(_t,ID);
 					_t = _t.getNextSibling();
-					TNode tmp5_AST_in = (TNode)_t;
+					TNode tmp14_AST_in = (TNode)_t;
 					match(_t,LCURLY);
 					_t = _t.getNextSibling();
 					}
 				}
 				catch (RecognitionException pe) {
-					synPredMatched41 = false;
+					synPredMatched48 = false;
 				}
-				_t = __t41;
+				_t = __t48;
 				inputState.guessing--;
 			}
-			if ( synPredMatched41 ) {
+			if ( synPredMatched48 ) {
 				i1 = (TNode)_t;
 				match(_t,ID);
 				_t = _t.getNextSibling();
@@ -2017,8 +2162,8 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt46=0;
-			_loop46:
+			int _cnt53=0;
+			_loop53:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_tokenSet_1.member(_t.getType()))) {
@@ -2029,10 +2174,10 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					if ( _cnt46>=1 ) { break _loop46; } else {throw new NoViableAltException(_t);}
+					if ( _cnt53>=1 ) { break _loop53; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt46++;
+				_cnt53++;
 			} while (true);
 			}
 		}
@@ -2074,8 +2219,8 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt50=0;
-			_loop50:
+			int _cnt57=0;
+			_loop57:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
@@ -2108,10 +2253,10 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					if ( _cnt50>=1 ) { break _loop50; } else {throw new NoViableAltException(_t);}
+					if ( _cnt57>=1 ) { break _loop57; } else {throw new NoViableAltException(_t);}
 				}
 				}
-				_cnt50++;
+				_cnt57++;
 			} while (true);
 			}
 		}
@@ -2134,7 +2279,7 @@ public GnuCEmitter() {
 			structDeclarator(_t);
 			_t = _retTree;
 			{
-			_loop53:
+			_loop60:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==NStructDeclarator)) {
@@ -2145,7 +2290,7 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					break _loop53;
+					break _loop60;
 				}
 				
 			} while (true);
@@ -2168,8 +2313,8 @@ public GnuCEmitter() {
 		TNode c = null;
 		
 		try {      // for error handling
-			AST __t55 = _t;
-			TNode tmp6_AST_in = (TNode)_t;
+			AST __t62 = _t;
+			TNode tmp15_AST_in = (TNode)_t;
 			match(_t,NStructDeclarator);
 			_t = _t.getFirstChild();
 			{
@@ -2222,7 +2367,7 @@ public GnuCEmitter() {
 			}
 			}
 			{
-			_loop59:
+			_loop66:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==NAsmAttribute||_t.getType()==LITERAL___attribute)) {
@@ -2230,12 +2375,12 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					break _loop59;
+					break _loop66;
 				}
 				
 			} while (true);
 			}
-			_t = __t55;
+			_t = __t62;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -2261,8 +2406,8 @@ public GnuCEmitter() {
 		TNode rb = null;
 		
 		try {      // for error handling
-			AST __t105 = _t;
-			TNode tmp7_AST_in = (TNode)_t;
+			AST __t112 = _t;
+			TNode tmp16_AST_in = (TNode)_t;
 			match(_t,NDeclarator);
 			_t = _t.getFirstChild();
 			{
@@ -2323,13 +2468,13 @@ public GnuCEmitter() {
 			}
 			}
 			{
-			_loop113:
+			_loop120:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
 				case NParameterTypeList:
 				{
-					AST __t109 = _t;
+					AST __t116 = _t;
 					n = _t==ASTNULL ? null :(TNode)_t;
 					match(_t,NParameterTypeList);
 					_t = _t.getFirstChild();
@@ -2340,6 +2485,7 @@ public GnuCEmitter() {
 					if (_t==null) _t=ASTNULL;
 					switch ( _t.getType()) {
 					case NParameterDeclaration:
+					case 142:
 					{
 						parameterTypeList(_t);
 						_t = _retTree;
@@ -2381,7 +2527,7 @@ public GnuCEmitter() {
 					if ( inputState.guessing==0 ) {
 						print( r );
 					}
-					_t = __t109;
+					_t = __t116;
 					_t = _t.getNextSibling();
 					break;
 				}
@@ -2470,12 +2616,12 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					break _loop113;
+					break _loop120;
 				}
 				}
 			} while (true);
 			}
-			_t = __t105;
+			_t = __t112;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -2497,7 +2643,7 @@ public GnuCEmitter() {
 			enumerator(_t);
 			_t = _retTree;
 			{
-			_loop66:
+			_loop73:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==ID)) {
@@ -2508,7 +2654,7 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					break _loop66;
+					break _loop73;
 				}
 				
 			} while (true);
@@ -2584,14 +2730,14 @@ public GnuCEmitter() {
 		String declName = "";
 		
 		try {      // for error handling
-			AST __t78 = _t;
-			TNode tmp8_AST_in = (TNode)_t;
+			AST __t85 = _t;
+			TNode tmp17_AST_in = (TNode)_t;
 			match(_t,NInitDecl);
 			_t = _t.getFirstChild();
 			declarator(_t);
 			_t = _retTree;
 			{
-			_loop80:
+			_loop87:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==NAsmAttribute||_t.getType()==LITERAL___attribute)) {
@@ -2599,7 +2745,7 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					break _loop80;
+					break _loop87;
 				}
 				
 			} while (true);
@@ -2641,7 +2787,7 @@ public GnuCEmitter() {
 			}
 			}
 			}
-			_t = __t78;
+			_t = __t85;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -2664,8 +2810,8 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case NInitializer:
 			{
-				AST __t92 = _t;
-				TNode tmp9_AST_in = (TNode)_t;
+				AST __t99 = _t;
+				TNode tmp18_AST_in = (TNode)_t;
 				match(_t,NInitializer);
 				_t = _t.getFirstChild();
 				{
@@ -2737,7 +2883,7 @@ public GnuCEmitter() {
 				}
 				expr(_t);
 				_t = _retTree;
-				_t = __t92;
+				_t = __t99;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -2770,13 +2916,13 @@ public GnuCEmitter() {
 		TNode a = null;
 		
 		try {      // for error handling
-			AST __t83 = _t;
-			TNode tmp10_AST_in = (TNode)_t;
+			AST __t90 = _t;
+			TNode tmp19_AST_in = (TNode)_t;
 			match(_t,NPointerGroup);
 			_t = _t.getFirstChild();
 			{
-			int _cnt87=0;
-			_loop87:
+			int _cnt94=0;
+			_loop94:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==STAR)) {
@@ -2787,7 +2933,7 @@ public GnuCEmitter() {
 						print( a );
 					}
 					{
-					_loop86:
+					_loop93:
 					do {
 						if (_t==null) _t=ASTNULL;
 						if ((_t.getType()==LITERAL_volatile||_t.getType()==LITERAL_const)) {
@@ -2795,20 +2941,20 @@ public GnuCEmitter() {
 							_t = _retTree;
 						}
 						else {
-							break _loop86;
+							break _loop93;
 						}
 						
 					} while (true);
 					}
 				}
 				else {
-					if ( _cnt87>=1 ) { break _loop87; } else {throw new NoViableAltException(_t);}
+					if ( _cnt94>=1 ) { break _loop94; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt87++;
+				_cnt94++;
 			} while (true);
 			}
-			_t = __t83;
+			_t = __t90;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -2837,7 +2983,7 @@ public GnuCEmitter() {
 				print( i );
 			}
 			{
-			_loop90:
+			_loop97:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==COMMA)) {
@@ -2855,7 +3001,7 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					break _loop90;
+					break _loop97;
 				}
 				
 			} while (true);
@@ -2885,8 +3031,8 @@ public GnuCEmitter() {
 		TNode a2 = null;
 		
 		try {      // for error handling
-			AST __t95 = _t;
-			TNode tmp11_AST_in = (TNode)_t;
+			AST __t102 = _t;
+			TNode tmp20_AST_in = (TNode)_t;
 			match(_t,NInitializerElementLabel);
 			_t = _t.getFirstChild();
 			{
@@ -2970,7 +3116,7 @@ public GnuCEmitter() {
 			}
 			}
 			}
-			_t = __t95;
+			_t = __t102;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -2991,7 +3137,7 @@ public GnuCEmitter() {
 		TNode rc = null;
 		
 		try {      // for error handling
-			AST __t100 = _t;
+			AST __t107 = _t;
 			n = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NLcurlyInitializer);
 			_t = _t.getFirstChild();
@@ -3006,7 +3152,7 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				tabs--; print( rc );
 			}
-			_t = __t100;
+			_t = __t107;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -3027,7 +3173,7 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			_loop103:
+			_loop110:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==NInitializer||_t.getType()==NLcurlyInitializer)) {
@@ -3039,7 +3185,7 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					break _loop103;
+					break _loop110;
 				}
 				
 			} while (true);
@@ -3065,11 +3211,30 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt117=0;
-			_loop117:
+			int _cnt125=0;
+			_loop125:
 			do {
 				if (_t==null) _t=ASTNULL;
-				if ((_t.getType()==NParameterDeclaration)) {
+				if ((_t.getType()==NParameterDeclaration||_t.getType()==142)) {
+					{
+					if (_t==null) _t=ASTNULL;
+					switch ( _t.getType()) {
+					case 142:
+					{
+						annotation(_t);
+						_t = _retTree;
+						break;
+					}
+					case NParameterDeclaration:
+					{
+						break;
+					}
+					default:
+					{
+						throw new NoViableAltException(_t);
+					}
+					}
+					}
 					parameterDeclaration(_t);
 					_t = _retTree;
 					{
@@ -3098,6 +3263,7 @@ public GnuCEmitter() {
 					case RPAREN:
 					case VARARGS:
 					case NParameterDeclaration:
+					case 142:
 					{
 						break;
 					}
@@ -3109,10 +3275,10 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					if ( _cnt117>=1 ) { break _loop117; } else {throw new NoViableAltException(_t);}
+					if ( _cnt125>=1 ) { break _loop125; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt117++;
+				_cnt125++;
 			} while (true);
 			}
 			{
@@ -3155,8 +3321,8 @@ public GnuCEmitter() {
 		TNode parameterDeclaration_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t120 = _t;
-			TNode tmp12_AST_in = (TNode)_t;
+			AST __t128 = _t;
+			TNode tmp21_AST_in = (TNode)_t;
 			match(_t,NParameterDeclaration);
 			_t = _t.getFirstChild();
 			declSpecifiers(_t);
@@ -3186,7 +3352,7 @@ public GnuCEmitter() {
 			}
 			}
 			}
-			_t = __t120;
+			_t = __t128;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -3213,8 +3379,8 @@ public GnuCEmitter() {
 		TNode rb2 = null;
 		
 		try {      // for error handling
-			AST __t201 = _t;
-			TNode tmp13_AST_in = (TNode)_t;
+			AST __t209 = _t;
+			TNode tmp22_AST_in = (TNode)_t;
 			match(_t,NNonemptyAbstractDeclarator);
 			_t = _t.getFirstChild();
 			{
@@ -3225,7 +3391,7 @@ public GnuCEmitter() {
 				pointerGroup(_t);
 				_t = _retTree;
 				{
-				_loop208:
+				_loop216:
 				do {
 					if (_t==null) _t=ASTNULL;
 					switch ( _t.getType()) {
@@ -3248,6 +3414,7 @@ public GnuCEmitter() {
 							break;
 						}
 						case NParameterDeclaration:
+						case 142:
 						{
 							parameterTypeList(_t);
 							_t = _retTree;
@@ -3359,7 +3526,7 @@ public GnuCEmitter() {
 					}
 					default:
 					{
-						break _loop208;
+						break _loop216;
 					}
 					}
 				} while (true);
@@ -3370,8 +3537,8 @@ public GnuCEmitter() {
 			case LBRACKET:
 			{
 				{
-				int _cnt214=0;
-				_loop214:
+				int _cnt222=0;
+				_loop222:
 				do {
 					if (_t==null) _t=ASTNULL;
 					switch ( _t.getType()) {
@@ -3394,6 +3561,7 @@ public GnuCEmitter() {
 							break;
 						}
 						case NParameterDeclaration:
+						case 142:
 						{
 							parameterTypeList(_t);
 							_t = _retTree;
@@ -3505,10 +3673,10 @@ public GnuCEmitter() {
 					}
 					default:
 					{
-						if ( _cnt214>=1 ) { break _loop214; } else {throw new NoViableAltException(_t);}
+						if ( _cnt222>=1 ) { break _loop222; } else {throw new NoViableAltException(_t);}
 					}
 					}
-					_cnt214++;
+					_cnt222++;
 				} while (true);
 				}
 				break;
@@ -3519,7 +3687,7 @@ public GnuCEmitter() {
 			}
 			}
 			}
-			_t = __t201;
+			_t = __t209;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -3539,8 +3707,8 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt135=0;
-			_loop135:
+			int _cnt143=0;
+			_loop143:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
@@ -3581,10 +3749,10 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					if ( _cnt135>=1 ) { break _loop135; } else {throw new NoViableAltException(_t);}
+					if ( _cnt143>=1 ) { break _loop143; } else {throw new NoViableAltException(_t);}
 				}
 				}
-				_cnt135++;
+				_cnt143++;
 			} while (true);
 			}
 		}
@@ -3613,7 +3781,7 @@ public GnuCEmitter() {
 		TNode rp3 = null;
 		
 		try {      // for error handling
-			AST __t129 = _t;
+			AST __t137 = _t;
 			t = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LITERAL___trace__);
 			_t = _t.getFirstChild();
@@ -3630,7 +3798,7 @@ public GnuCEmitter() {
 				print(lp1); print(lp2);
 			}
 			{
-			_loop132:
+			_loop140:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==ID)) {
@@ -3675,7 +3843,7 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					break _loop132;
+					break _loop140;
 				}
 				
 			} while (true);
@@ -3689,7 +3857,7 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				print(rp2); print(rp3);
 			}
-			_t = __t129;
+			_t = __t137;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -3710,7 +3878,7 @@ public GnuCEmitter() {
 		TNode rc = null;
 		
 		try {      // for error handling
-			AST __t144 = _t;
+			AST __t152 = _t;
 			cs = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NCompoundStatement);
 			_t = _t.getFirstChild();
@@ -3718,7 +3886,7 @@ public GnuCEmitter() {
 				print( cs ); tabs++;
 			}
 			{
-			_loop146:
+			_loop154:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
@@ -3737,7 +3905,7 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					break _loop146;
+					break _loop154;
 				}
 				}
 			} while (true);
@@ -3781,7 +3949,7 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				tabs--; print( rc );
 			}
-			_t = __t144;
+			_t = __t152;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -3801,8 +3969,8 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt138=0;
-			_loop138:
+			int _cnt146=0;
+			_loop146:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==LITERAL___label__)) {
@@ -3814,10 +3982,10 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					if ( _cnt138>=1 ) { break _loop138; } else {throw new NoViableAltException(_t);}
+					if ( _cnt146>=1 ) { break _loop146; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt138++;
+				_cnt146++;
 			} while (true);
 			}
 		}
@@ -3839,7 +4007,7 @@ public GnuCEmitter() {
 		TNode i = null;
 		
 		try {      // for error handling
-			AST __t140 = _t;
+			AST __t148 = _t;
 			a = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LITERAL___label__);
 			_t = _t.getFirstChild();
@@ -3847,8 +4015,8 @@ public GnuCEmitter() {
 				print( a );
 			}
 			{
-			int _cnt142=0;
-			_loop142:
+			int _cnt150=0;
+			_loop150:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==ID)) {
@@ -3860,16 +4028,16 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					if ( _cnt142>=1 ) { break _loop142; } else {throw new NoViableAltException(_t);}
+					if ( _cnt150>=1 ) { break _loop150; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt142++;
+				_cnt150++;
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
 				print( ";" );
 			}
-			_t = __t140;
+			_t = __t148;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -3889,8 +4057,8 @@ public GnuCEmitter() {
 		
 		try {      // for error handling
 			{
-			int _cnt150=0;
-			_loop150:
+			int _cnt158=0;
+			_loop158:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_tokenSet_2.member(_t.getType()))) {
@@ -3898,10 +4066,10 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					if ( _cnt150>=1 ) { break _loop150; } else {throw new NoViableAltException(_t);}
+					if ( _cnt158>=1 ) { break _loop158; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt150++;
+				_cnt158++;
 			} while (true);
 			}
 		}
@@ -3974,8 +4142,8 @@ public GnuCEmitter() {
 			}
 			case NStatementExpr:
 			{
-				AST __t153 = _t;
-				TNode tmp14_AST_in = (TNode)_t;
+				AST __t161 = _t;
+				TNode tmp23_AST_in = (TNode)_t;
 				match(_t,NStatementExpr);
 				_t = _t.getFirstChild();
 				expr(_t);
@@ -3983,13 +4151,13 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( ";" );
 				}
-				_t = __t153;
+				_t = __t161;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_while:
 			{
-				AST __t154 = _t;
+				AST __t162 = _t;
 				w = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_while);
 				_t = _t.getFirstChild();
@@ -4003,13 +4171,13 @@ public GnuCEmitter() {
 				}
 				statement(_t);
 				_t = _retTree;
-				_t = __t154;
+				_t = __t162;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_do:
 			{
-				AST __t155 = _t;
+				AST __t163 = _t;
 				d = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_do);
 				_t = _t.getFirstChild();
@@ -4026,13 +4194,13 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( " );" );
 				}
-				_t = __t155;
+				_t = __t163;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_for:
 			{
-				AST __t156 = _t;
+				AST __t164 = _t;
 				f = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_for);
 				_t = _t.getFirstChild();
@@ -4056,13 +4224,13 @@ public GnuCEmitter() {
 				}
 				statement(_t);
 				_t = _retTree;
-				_t = __t156;
+				_t = __t164;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_goto:
 			{
-				AST __t157 = _t;
+				AST __t165 = _t;
 				g = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_goto);
 				_t = _t.getFirstChild();
@@ -4074,7 +4242,7 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( ";" );
 				}
-				_t = __t157;
+				_t = __t165;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -4100,7 +4268,7 @@ public GnuCEmitter() {
 			}
 			case LITERAL_return:
 			{
-				AST __t158 = _t;
+				AST __t166 = _t;
 				r = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_return);
 				_t = _t.getFirstChild();
@@ -4177,14 +4345,14 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( ";" );
 				}
-				_t = __t158;
+				_t = __t166;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NLabel:
 			{
-				AST __t160 = _t;
-				TNode tmp15_AST_in = (TNode)_t;
+				AST __t168 = _t;
+				TNode tmp24_AST_in = (TNode)_t;
 				match(_t,NLabel);
 				_t = _t.getFirstChild();
 				ni = (TNode)_t;
@@ -4226,13 +4394,13 @@ public GnuCEmitter() {
 				}
 				}
 				}
-				_t = __t160;
+				_t = __t168;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_case:
 			{
-				AST __t162 = _t;
+				AST __t170 = _t;
 				ca = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_case);
 				_t = _t.getFirstChild();
@@ -4277,13 +4445,13 @@ public GnuCEmitter() {
 				}
 				}
 				}
-				_t = __t162;
+				_t = __t170;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_default:
 			{
-				AST __t164 = _t;
+				AST __t172 = _t;
 				de = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_default);
 				_t = _t.getFirstChild();
@@ -4323,13 +4491,13 @@ public GnuCEmitter() {
 				}
 				}
 				}
-				_t = __t164;
+				_t = __t172;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_if:
 			{
-				AST __t166 = _t;
+				AST __t174 = _t;
 				i = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_if);
 				_t = _t.getFirstChild();
@@ -4368,13 +4536,13 @@ public GnuCEmitter() {
 				}
 				}
 				}
-				_t = __t166;
+				_t = __t174;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_switch:
 			{
-				AST __t168 = _t;
+				AST __t176 = _t;
 				sw = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_switch);
 				_t = _t.getFirstChild();
@@ -4388,7 +4556,7 @@ public GnuCEmitter() {
 				}
 				statement(_t);
 				_t = _retTree;
-				_t = __t168;
+				_t = __t176;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -4446,7 +4614,7 @@ public GnuCEmitter() {
 		TNode c = null;
 		
 		try {      // for error handling
-			AST __t194 = _t;
+			AST __t202 = _t;
 			q = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,QUESTION);
 			_t = _t.getFirstChild();
@@ -4530,7 +4698,7 @@ public GnuCEmitter() {
 			}
 			expr(_t);
 			_t = _retTree;
-			_t = __t194;
+			_t = __t202;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -4551,7 +4719,7 @@ public GnuCEmitter() {
 		TNode rp = null;
 		
 		try {      // for error handling
-			AST __t197 = _t;
+			AST __t205 = _t;
 			c = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NCast);
 			_t = _t.getFirstChild();
@@ -4568,7 +4736,7 @@ public GnuCEmitter() {
 			}
 			expr(_t);
 			_t = _retTree;
-			_t = __t197;
+			_t = __t205;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -4600,7 +4768,7 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case INC:
 			{
-				AST __t216 = _t;
+				AST __t224 = _t;
 				i = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,INC);
 				_t = _t.getFirstChild();
@@ -4609,13 +4777,13 @@ public GnuCEmitter() {
 				}
 				expr(_t);
 				_t = _retTree;
-				_t = __t216;
+				_t = __t224;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DEC:
 			{
-				AST __t217 = _t;
+				AST __t225 = _t;
 				d = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,DEC);
 				_t = _t.getFirstChild();
@@ -4624,14 +4792,14 @@ public GnuCEmitter() {
 				}
 				expr(_t);
 				_t = _retTree;
-				_t = __t217;
+				_t = __t225;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NUnaryExpr:
 			{
-				AST __t218 = _t;
-				TNode tmp16_AST_in = (TNode)_t;
+				AST __t226 = _t;
+				TNode tmp25_AST_in = (TNode)_t;
 				match(_t,NUnaryExpr);
 				_t = _t.getFirstChild();
 				u = _t==ASTNULL ? null : (TNode)_t;
@@ -4642,13 +4810,13 @@ public GnuCEmitter() {
 				}
 				expr(_t);
 				_t = _retTree;
-				_t = __t218;
+				_t = __t226;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL_sizeof:
 			{
-				AST __t219 = _t;
+				AST __t227 = _t;
 				s = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL_sizeof);
 				_t = _t.getFirstChild();
@@ -4656,14 +4824,14 @@ public GnuCEmitter() {
 					print( s );
 				}
 				{
-				boolean synPredMatched222 = false;
+				boolean synPredMatched230 = false;
 				if (((_t.getType()==LPAREN))) {
-					AST __t222 = _t;
-					synPredMatched222 = true;
+					AST __t230 = _t;
+					synPredMatched230 = true;
 					inputState.guessing++;
 					try {
 						{
-						TNode tmp17_AST_in = (TNode)_t;
+						TNode tmp26_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						typeName(_t);
@@ -4671,12 +4839,12 @@ public GnuCEmitter() {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched222 = false;
+						synPredMatched230 = false;
 					}
-					_t = __t222;
+					_t = __t230;
 					inputState.guessing--;
 				}
-				if ( synPredMatched222 ) {
+				if ( synPredMatched230 ) {
 					lps = (TNode)_t;
 					match(_t,LPAREN);
 					_t = _t.getNextSibling();
@@ -4701,13 +4869,13 @@ public GnuCEmitter() {
 				}
 				
 				}
-				_t = __t219;
+				_t = __t227;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL___alignof:
 			{
-				AST __t223 = _t;
+				AST __t231 = _t;
 				a = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,LITERAL___alignof);
 				_t = _t.getFirstChild();
@@ -4715,14 +4883,14 @@ public GnuCEmitter() {
 					print( a );
 				}
 				{
-				boolean synPredMatched226 = false;
+				boolean synPredMatched234 = false;
 				if (((_t.getType()==LPAREN))) {
-					AST __t226 = _t;
-					synPredMatched226 = true;
+					AST __t234 = _t;
+					synPredMatched234 = true;
 					inputState.guessing++;
 					try {
 						{
-						TNode tmp18_AST_in = (TNode)_t;
+						TNode tmp27_AST_in = (TNode)_t;
 						match(_t,LPAREN);
 						_t = _t.getNextSibling();
 						typeName(_t);
@@ -4730,12 +4898,12 @@ public GnuCEmitter() {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched226 = false;
+						synPredMatched234 = false;
 					}
-					_t = __t226;
+					_t = __t234;
 					inputState.guessing--;
 				}
-				if ( synPredMatched226 ) {
+				if ( synPredMatched234 ) {
 					lpa = (TNode)_t;
 					match(_t,LPAREN);
 					_t = _t.getNextSibling();
@@ -4760,7 +4928,7 @@ public GnuCEmitter() {
 				}
 				
 				}
-				_t = __t223;
+				_t = __t231;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -4796,15 +4964,15 @@ public GnuCEmitter() {
 		TNode g = null;
 		
 		try {      // for error handling
-			AST __t229 = _t;
-			TNode tmp19_AST_in = (TNode)_t;
+			AST __t237 = _t;
+			TNode tmp28_AST_in = (TNode)_t;
 			match(_t,NPostfixExpr);
 			_t = _t.getFirstChild();
 			primaryExpr(_t);
 			_t = _retTree;
 			{
-			int _cnt233=0;
-			_loop233:
+			int _cnt241=0;
+			_loop241:
 			do {
 				if (_t==null) _t=ASTNULL;
 				switch ( _t.getType()) {
@@ -4836,7 +5004,7 @@ public GnuCEmitter() {
 				}
 				case NFunctionCallArgs:
 				{
-					AST __t231 = _t;
+					AST __t239 = _t;
 					n = _t==ASTNULL ? null :(TNode)_t;
 					match(_t,NFunctionCallArgs);
 					_t = _t.getFirstChild();
@@ -4916,7 +5084,7 @@ public GnuCEmitter() {
 					if ( inputState.guessing==0 ) {
 						print( rp );
 					}
-					_t = __t231;
+					_t = __t239;
 					_t = _t.getNextSibling();
 					break;
 				}
@@ -4960,13 +5128,13 @@ public GnuCEmitter() {
 				}
 				default:
 				{
-					if ( _cnt233>=1 ) { break _loop233; } else {throw new NoViableAltException(_t);}
+					if ( _cnt241>=1 ) { break _loop241; } else {throw new NoViableAltException(_t);}
 				}
 				}
-				_cnt233++;
+				_cnt241++;
 			} while (true);
 			}
-			_t = __t229;
+			_t = __t237;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -5024,7 +5192,7 @@ public GnuCEmitter() {
 			}
 			case NExpressionGroup:
 			{
-				AST __t235 = _t;
+				AST __t243 = _t;
 				eg = _t==ASTNULL ? null :(TNode)_t;
 				match(_t,NExpressionGroup);
 				_t = _t.getFirstChild();
@@ -5036,7 +5204,7 @@ public GnuCEmitter() {
 				if ( inputState.guessing==0 ) {
 					print( ")" );
 				}
-				_t = __t235;
+				_t = __t243;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -5062,7 +5230,7 @@ public GnuCEmitter() {
 		TNode emptyExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			TNode tmp20_AST_in = (TNode)_t;
+			TNode tmp29_AST_in = (TNode)_t;
 			match(_t,NEmptyExpression);
 			_t = _t.getNextSibling();
 		}
@@ -5084,7 +5252,7 @@ public GnuCEmitter() {
 		TNode r = null;
 		
 		try {      // for error handling
-			AST __t172 = _t;
+			AST __t180 = _t;
 			l = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,LPAREN);
 			_t = _t.getFirstChild();
@@ -5099,7 +5267,7 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				print( r );
 			}
-			_t = __t172;
+			_t = __t180;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -5119,8 +5287,8 @@ public GnuCEmitter() {
 		TNode v = null;
 		
 		try {      // for error handling
-			AST __t174 = _t;
-			TNode tmp21_AST_in = (TNode)_t;
+			AST __t182 = _t;
+			TNode tmp30_AST_in = (TNode)_t;
 			match(_t,NRangeExpr);
 			_t = _t.getFirstChild();
 			expr(_t);
@@ -5133,7 +5301,7 @@ public GnuCEmitter() {
 			}
 			expr(_t);
 			_t = _retTree;
-			_t = __t174;
+			_t = __t182;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -5162,7 +5330,7 @@ public GnuCEmitter() {
 		TNode rp = null;
 		
 		try {      // for error handling
-			AST __t176 = _t;
+			AST __t184 = _t;
 			n = _t==ASTNULL ? null :(TNode)_t;
 			match(_t,NGnuAsmExpr);
 			_t = _t.getFirstChild();
@@ -5217,7 +5385,7 @@ public GnuCEmitter() {
 					strOptExprPair(_t);
 					_t = _retTree;
 					{
-					_loop181:
+					_loop189:
 					do {
 						if (_t==null) _t=ASTNULL;
 						if ((_t.getType()==COMMA)) {
@@ -5231,7 +5399,7 @@ public GnuCEmitter() {
 							_t = _retTree;
 						}
 						else {
-							break _loop181;
+							break _loop189;
 						}
 						
 					} while (true);
@@ -5266,7 +5434,7 @@ public GnuCEmitter() {
 						strOptExprPair(_t);
 						_t = _retTree;
 						{
-						_loop185:
+						_loop193:
 						do {
 							if (_t==null) _t=ASTNULL;
 							if ((_t.getType()==COMMA)) {
@@ -5280,7 +5448,7 @@ public GnuCEmitter() {
 								_t = _retTree;
 							}
 							else {
-								break _loop185;
+								break _loop193;
 							}
 							
 						} while (true);
@@ -5328,7 +5496,7 @@ public GnuCEmitter() {
 				stringConst(_t);
 				_t = _retTree;
 				{
-				_loop188:
+				_loop196:
 				do {
 					if (_t==null) _t=ASTNULL;
 					if ((_t.getType()==COMMA)) {
@@ -5342,7 +5510,7 @@ public GnuCEmitter() {
 						_t = _retTree;
 					}
 					else {
-						break _loop188;
+						break _loop196;
 					}
 					
 				} while (true);
@@ -5365,7 +5533,7 @@ public GnuCEmitter() {
 			if ( inputState.guessing==0 ) {
 				print( rp );
 			}
-			_t = __t176;
+			_t = __t184;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -5385,13 +5553,13 @@ public GnuCEmitter() {
 		TNode s = null;
 		
 		try {      // for error handling
-			AST __t241 = _t;
-			TNode tmp22_AST_in = (TNode)_t;
+			AST __t249 = _t;
+			TNode tmp31_AST_in = (TNode)_t;
 			match(_t,NStringSeq);
 			_t = _t.getFirstChild();
 			{
-			int _cnt243=0;
-			_loop243:
+			int _cnt251=0;
+			_loop251:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_t.getType()==StringLiteral)) {
@@ -5403,13 +5571,13 @@ public GnuCEmitter() {
 					}
 				}
 				else {
-					if ( _cnt243>=1 ) { break _loop243; } else {throw new NoViableAltException(_t);}
+					if ( _cnt251>=1 ) { break _loop251; } else {throw new NoViableAltException(_t);}
 				}
 				
-				_cnt243++;
+				_cnt251++;
 			} while (true);
 			}
-			_t = __t241;
+			_t = __t249;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -5486,210 +5654,210 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case ASSIGN:
 			{
-				TNode tmp23_AST_in = (TNode)_t;
+				TNode tmp32_AST_in = (TNode)_t;
 				match(_t,ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DIV_ASSIGN:
 			{
-				TNode tmp24_AST_in = (TNode)_t;
+				TNode tmp33_AST_in = (TNode)_t;
 				match(_t,DIV_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case PLUS_ASSIGN:
 			{
-				TNode tmp25_AST_in = (TNode)_t;
+				TNode tmp34_AST_in = (TNode)_t;
 				match(_t,PLUS_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MINUS_ASSIGN:
 			{
-				TNode tmp26_AST_in = (TNode)_t;
+				TNode tmp35_AST_in = (TNode)_t;
 				match(_t,MINUS_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case STAR_ASSIGN:
 			{
-				TNode tmp27_AST_in = (TNode)_t;
+				TNode tmp36_AST_in = (TNode)_t;
 				match(_t,STAR_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MOD_ASSIGN:
 			{
-				TNode tmp28_AST_in = (TNode)_t;
+				TNode tmp37_AST_in = (TNode)_t;
 				match(_t,MOD_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case RSHIFT_ASSIGN:
 			{
-				TNode tmp29_AST_in = (TNode)_t;
+				TNode tmp38_AST_in = (TNode)_t;
 				match(_t,RSHIFT_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LSHIFT_ASSIGN:
 			{
-				TNode tmp30_AST_in = (TNode)_t;
+				TNode tmp39_AST_in = (TNode)_t;
 				match(_t,LSHIFT_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BAND_ASSIGN:
 			{
-				TNode tmp31_AST_in = (TNode)_t;
+				TNode tmp40_AST_in = (TNode)_t;
 				match(_t,BAND_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BOR_ASSIGN:
 			{
-				TNode tmp32_AST_in = (TNode)_t;
+				TNode tmp41_AST_in = (TNode)_t;
 				match(_t,BOR_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BXOR_ASSIGN:
 			{
-				TNode tmp33_AST_in = (TNode)_t;
+				TNode tmp42_AST_in = (TNode)_t;
 				match(_t,BXOR_ASSIGN);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LOR:
 			{
-				TNode tmp34_AST_in = (TNode)_t;
+				TNode tmp43_AST_in = (TNode)_t;
 				match(_t,LOR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LAND:
 			{
-				TNode tmp35_AST_in = (TNode)_t;
+				TNode tmp44_AST_in = (TNode)_t;
 				match(_t,LAND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BOR:
 			{
-				TNode tmp36_AST_in = (TNode)_t;
+				TNode tmp45_AST_in = (TNode)_t;
 				match(_t,BOR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BXOR:
 			{
-				TNode tmp37_AST_in = (TNode)_t;
+				TNode tmp46_AST_in = (TNode)_t;
 				match(_t,BXOR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BAND:
 			{
-				TNode tmp38_AST_in = (TNode)_t;
+				TNode tmp47_AST_in = (TNode)_t;
 				match(_t,BAND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case EQUAL:
 			{
-				TNode tmp39_AST_in = (TNode)_t;
+				TNode tmp48_AST_in = (TNode)_t;
 				match(_t,EQUAL);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NOT_EQUAL:
 			{
-				TNode tmp40_AST_in = (TNode)_t;
+				TNode tmp49_AST_in = (TNode)_t;
 				match(_t,NOT_EQUAL);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LT:
 			{
-				TNode tmp41_AST_in = (TNode)_t;
+				TNode tmp50_AST_in = (TNode)_t;
 				match(_t,LT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LTE:
 			{
-				TNode tmp42_AST_in = (TNode)_t;
+				TNode tmp51_AST_in = (TNode)_t;
 				match(_t,LTE);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case GT:
 			{
-				TNode tmp43_AST_in = (TNode)_t;
+				TNode tmp52_AST_in = (TNode)_t;
 				match(_t,GT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case GTE:
 			{
-				TNode tmp44_AST_in = (TNode)_t;
+				TNode tmp53_AST_in = (TNode)_t;
 				match(_t,GTE);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LSHIFT:
 			{
-				TNode tmp45_AST_in = (TNode)_t;
+				TNode tmp54_AST_in = (TNode)_t;
 				match(_t,LSHIFT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case RSHIFT:
 			{
-				TNode tmp46_AST_in = (TNode)_t;
+				TNode tmp55_AST_in = (TNode)_t;
 				match(_t,RSHIFT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case PLUS:
 			{
-				TNode tmp47_AST_in = (TNode)_t;
+				TNode tmp56_AST_in = (TNode)_t;
 				match(_t,PLUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MINUS:
 			{
-				TNode tmp48_AST_in = (TNode)_t;
+				TNode tmp57_AST_in = (TNode)_t;
 				match(_t,MINUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case STAR:
 			{
-				TNode tmp49_AST_in = (TNode)_t;
+				TNode tmp58_AST_in = (TNode)_t;
 				match(_t,STAR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DIV:
 			{
-				TNode tmp50_AST_in = (TNode)_t;
+				TNode tmp59_AST_in = (TNode)_t;
 				match(_t,DIV);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MOD:
 			{
-				TNode tmp51_AST_in = (TNode)_t;
+				TNode tmp60_AST_in = (TNode)_t;
 				match(_t,MOD);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NCommaExpr:
 			{
-				TNode tmp52_AST_in = (TNode)_t;
+				TNode tmp61_AST_in = (TNode)_t;
 				match(_t,NCommaExpr);
 				_t = _t.getNextSibling();
 				break;
@@ -5720,63 +5888,63 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case BAND:
 			{
-				TNode tmp53_AST_in = (TNode)_t;
+				TNode tmp62_AST_in = (TNode)_t;
 				match(_t,BAND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case STAR:
 			{
-				TNode tmp54_AST_in = (TNode)_t;
+				TNode tmp63_AST_in = (TNode)_t;
 				match(_t,STAR);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case PLUS:
 			{
-				TNode tmp55_AST_in = (TNode)_t;
+				TNode tmp64_AST_in = (TNode)_t;
 				match(_t,PLUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MINUS:
 			{
-				TNode tmp56_AST_in = (TNode)_t;
+				TNode tmp65_AST_in = (TNode)_t;
 				match(_t,MINUS);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case BNOT:
 			{
-				TNode tmp57_AST_in = (TNode)_t;
+				TNode tmp66_AST_in = (TNode)_t;
 				match(_t,BNOT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LNOT:
 			{
-				TNode tmp58_AST_in = (TNode)_t;
+				TNode tmp67_AST_in = (TNode)_t;
 				match(_t,LNOT);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LAND:
 			{
-				TNode tmp59_AST_in = (TNode)_t;
+				TNode tmp68_AST_in = (TNode)_t;
 				match(_t,LAND);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL___real:
 			{
-				TNode tmp60_AST_in = (TNode)_t;
+				TNode tmp69_AST_in = (TNode)_t;
 				match(_t,LITERAL___real);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LITERAL___imag:
 			{
-				TNode tmp61_AST_in = (TNode)_t;
+				TNode tmp70_AST_in = (TNode)_t;
 				match(_t,LITERAL___imag);
 				_t = _t.getNextSibling();
 				break;
@@ -5806,7 +5974,7 @@ public GnuCEmitter() {
 			expr(_t);
 			_t = _retTree;
 			{
-			_loop238:
+			_loop246:
 			do {
 				if (_t==null) _t=ASTNULL;
 				if ((_tokenSet_3.member(_t.getType()))) {
@@ -5817,7 +5985,7 @@ public GnuCEmitter() {
 					_t = _retTree;
 				}
 				else {
-					break _loop238;
+					break _loop246;
 				}
 				
 			} while (true);
@@ -5867,63 +6035,63 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case IntOctalConst:
 			{
-				TNode tmp62_AST_in = (TNode)_t;
+				TNode tmp71_AST_in = (TNode)_t;
 				match(_t,IntOctalConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongOctalConst:
 			{
-				TNode tmp63_AST_in = (TNode)_t;
+				TNode tmp72_AST_in = (TNode)_t;
 				match(_t,LongOctalConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case UnsignedOctalConst:
 			{
-				TNode tmp64_AST_in = (TNode)_t;
+				TNode tmp73_AST_in = (TNode)_t;
 				match(_t,UnsignedOctalConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case IntIntConst:
 			{
-				TNode tmp65_AST_in = (TNode)_t;
+				TNode tmp74_AST_in = (TNode)_t;
 				match(_t,IntIntConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongIntConst:
 			{
-				TNode tmp66_AST_in = (TNode)_t;
+				TNode tmp75_AST_in = (TNode)_t;
 				match(_t,LongIntConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case UnsignedIntConst:
 			{
-				TNode tmp67_AST_in = (TNode)_t;
+				TNode tmp76_AST_in = (TNode)_t;
 				match(_t,UnsignedIntConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case IntHexConst:
 			{
-				TNode tmp68_AST_in = (TNode)_t;
+				TNode tmp77_AST_in = (TNode)_t;
 				match(_t,IntHexConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongHexConst:
 			{
-				TNode tmp69_AST_in = (TNode)_t;
+				TNode tmp78_AST_in = (TNode)_t;
 				match(_t,LongHexConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case UnsignedHexConst:
 			{
-				TNode tmp70_AST_in = (TNode)_t;
+				TNode tmp79_AST_in = (TNode)_t;
 				match(_t,UnsignedHexConst);
 				_t = _t.getNextSibling();
 				break;
@@ -5954,21 +6122,21 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case FloatDoubleConst:
 			{
-				TNode tmp71_AST_in = (TNode)_t;
+				TNode tmp80_AST_in = (TNode)_t;
 				match(_t,FloatDoubleConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DoubleDoubleConst:
 			{
-				TNode tmp72_AST_in = (TNode)_t;
+				TNode tmp81_AST_in = (TNode)_t;
 				match(_t,DoubleDoubleConst);
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LongDoubleConst:
 			{
-				TNode tmp73_AST_in = (TNode)_t;
+				TNode tmp82_AST_in = (TNode)_t;
 				match(_t,LongDoubleConst);
 				_t = _t.getNextSibling();
 				break;
@@ -5990,99 +6158,20 @@ public GnuCEmitter() {
 		_retTree = _t;
 	}
 	
-	public final void annotation(AST _t) throws RecognitionException {
-		
-		TNode annotation_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
-		TNode id = null;
-		TNode st = null;
-		TNode st1 = null;
-		
-		try {      // for error handling
-			AST __t247 = _t;
-			TNode tmp74_AST_in = (TNode)_t;
-			match(_t,LITERAL___);
-			_t = _t.getFirstChild();
-			id = (TNode)_t;
-			match(_t,ID);
-			_t = _t.getNextSibling();
-			if ( inputState.guessing==0 ) {
-				System.out.println("Found annotation: "+id.getText());
-			}
-			TNode tmp75_AST_in = (TNode)_t;
-			match(_t,LITERAL___);
-			_t = _t.getNextSibling();
-			TNode tmp76_AST_in = (TNode)_t;
-			match(_t,LPAREN);
-			_t = _t.getNextSibling();
-			{
-			if (_t==null) _t=ASTNULL;
-			switch ( _t.getType()) {
-			case NStringSeq:
-			{
-				st = _t==ASTNULL ? null : (TNode)_t;
-				stringConst(_t);
-				_t = _retTree;
-				{
-				_loop250:
-				do {
-					if (_t==null) _t=ASTNULL;
-					if ((_t.getType()==COMMA)) {
-						TNode tmp77_AST_in = (TNode)_t;
-						match(_t,COMMA);
-						_t = _t.getNextSibling();
-						st1 = _t==ASTNULL ? null : (TNode)_t;
-						stringConst(_t);
-						_t = _retTree;
-					}
-					else {
-						break _loop250;
-					}
-					
-				} while (true);
-				}
-				break;
-			}
-			case RPAREN:
-			{
-				break;
-			}
-			default:
-			{
-				throw new NoViableAltException(_t);
-			}
-			}
-			}
-			TNode tmp78_AST_in = (TNode)_t;
-			match(_t,RPAREN);
-			_t = _t.getNextSibling();
-			_t = __t247;
-			_t = _t.getNextSibling();
-		}
-		catch (RecognitionException ex) {
-			if (inputState.guessing==0) {
-				reportError(ex);
-				if (_t!=null) {_t = _t.getNextSibling();}
-			} else {
-			  throw ex;
-			}
-		}
-		_retTree = _t;
-	}
-	
 	public final void commaExpr(AST _t) throws RecognitionException {
 		
 		TNode commaExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t252 = _t;
-			TNode tmp79_AST_in = (TNode)_t;
+			AST __t255 = _t;
+			TNode tmp83_AST_in = (TNode)_t;
 			match(_t,NCommaExpr);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
 			expr(_t);
 			_t = _retTree;
-			_t = __t252;
+			_t = __t255;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -6105,51 +6194,9 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case ASSIGN:
 			{
-				AST __t254 = _t;
-				TNode tmp80_AST_in = (TNode)_t;
-				match(_t,ASSIGN);
-				_t = _t.getFirstChild();
-				expr(_t);
-				_t = _retTree;
-				expr(_t);
-				_t = _retTree;
-				_t = __t254;
-				_t = _t.getNextSibling();
-				break;
-			}
-			case DIV_ASSIGN:
-			{
-				AST __t255 = _t;
-				TNode tmp81_AST_in = (TNode)_t;
-				match(_t,DIV_ASSIGN);
-				_t = _t.getFirstChild();
-				expr(_t);
-				_t = _retTree;
-				expr(_t);
-				_t = _retTree;
-				_t = __t255;
-				_t = _t.getNextSibling();
-				break;
-			}
-			case PLUS_ASSIGN:
-			{
-				AST __t256 = _t;
-				TNode tmp82_AST_in = (TNode)_t;
-				match(_t,PLUS_ASSIGN);
-				_t = _t.getFirstChild();
-				expr(_t);
-				_t = _retTree;
-				expr(_t);
-				_t = _retTree;
-				_t = __t256;
-				_t = _t.getNextSibling();
-				break;
-			}
-			case MINUS_ASSIGN:
-			{
 				AST __t257 = _t;
-				TNode tmp83_AST_in = (TNode)_t;
-				match(_t,MINUS_ASSIGN);
+				TNode tmp84_AST_in = (TNode)_t;
+				match(_t,ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6159,11 +6206,11 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case STAR_ASSIGN:
+			case DIV_ASSIGN:
 			{
 				AST __t258 = _t;
-				TNode tmp84_AST_in = (TNode)_t;
-				match(_t,STAR_ASSIGN);
+				TNode tmp85_AST_in = (TNode)_t;
+				match(_t,DIV_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6173,11 +6220,11 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case MOD_ASSIGN:
+			case PLUS_ASSIGN:
 			{
 				AST __t259 = _t;
-				TNode tmp85_AST_in = (TNode)_t;
-				match(_t,MOD_ASSIGN);
+				TNode tmp86_AST_in = (TNode)_t;
+				match(_t,PLUS_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6187,11 +6234,11 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case RSHIFT_ASSIGN:
+			case MINUS_ASSIGN:
 			{
 				AST __t260 = _t;
-				TNode tmp86_AST_in = (TNode)_t;
-				match(_t,RSHIFT_ASSIGN);
+				TNode tmp87_AST_in = (TNode)_t;
+				match(_t,MINUS_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6201,11 +6248,11 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case LSHIFT_ASSIGN:
+			case STAR_ASSIGN:
 			{
 				AST __t261 = _t;
-				TNode tmp87_AST_in = (TNode)_t;
-				match(_t,LSHIFT_ASSIGN);
+				TNode tmp88_AST_in = (TNode)_t;
+				match(_t,STAR_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6215,11 +6262,11 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case BAND_ASSIGN:
+			case MOD_ASSIGN:
 			{
 				AST __t262 = _t;
-				TNode tmp88_AST_in = (TNode)_t;
-				match(_t,BAND_ASSIGN);
+				TNode tmp89_AST_in = (TNode)_t;
+				match(_t,MOD_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6229,11 +6276,11 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case BOR_ASSIGN:
+			case RSHIFT_ASSIGN:
 			{
 				AST __t263 = _t;
-				TNode tmp89_AST_in = (TNode)_t;
-				match(_t,BOR_ASSIGN);
+				TNode tmp90_AST_in = (TNode)_t;
+				match(_t,RSHIFT_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
@@ -6243,17 +6290,59 @@ public GnuCEmitter() {
 				_t = _t.getNextSibling();
 				break;
 			}
-			case BXOR_ASSIGN:
+			case LSHIFT_ASSIGN:
 			{
 				AST __t264 = _t;
-				TNode tmp90_AST_in = (TNode)_t;
-				match(_t,BXOR_ASSIGN);
+				TNode tmp91_AST_in = (TNode)_t;
+				match(_t,LSHIFT_ASSIGN);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
 				_t = __t264;
+				_t = _t.getNextSibling();
+				break;
+			}
+			case BAND_ASSIGN:
+			{
+				AST __t265 = _t;
+				TNode tmp92_AST_in = (TNode)_t;
+				match(_t,BAND_ASSIGN);
+				_t = _t.getFirstChild();
+				expr(_t);
+				_t = _retTree;
+				expr(_t);
+				_t = _retTree;
+				_t = __t265;
+				_t = _t.getNextSibling();
+				break;
+			}
+			case BOR_ASSIGN:
+			{
+				AST __t266 = _t;
+				TNode tmp93_AST_in = (TNode)_t;
+				match(_t,BOR_ASSIGN);
+				_t = _t.getFirstChild();
+				expr(_t);
+				_t = _retTree;
+				expr(_t);
+				_t = _retTree;
+				_t = __t266;
+				_t = _t.getNextSibling();
+				break;
+			}
+			case BXOR_ASSIGN:
+			{
+				AST __t267 = _t;
+				TNode tmp94_AST_in = (TNode)_t;
+				match(_t,BXOR_ASSIGN);
+				_t = _t.getFirstChild();
+				expr(_t);
+				_t = _retTree;
+				expr(_t);
+				_t = _retTree;
+				_t = __t267;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -6279,15 +6368,15 @@ public GnuCEmitter() {
 		TNode logicalOrExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t266 = _t;
-			TNode tmp91_AST_in = (TNode)_t;
+			AST __t269 = _t;
+			TNode tmp95_AST_in = (TNode)_t;
 			match(_t,LOR);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
 			expr(_t);
 			_t = _retTree;
-			_t = __t266;
+			_t = __t269;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -6306,15 +6395,15 @@ public GnuCEmitter() {
 		TNode logicalAndExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t268 = _t;
-			TNode tmp92_AST_in = (TNode)_t;
+			AST __t271 = _t;
+			TNode tmp96_AST_in = (TNode)_t;
 			match(_t,LAND);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
 			expr(_t);
 			_t = _retTree;
-			_t = __t268;
+			_t = __t271;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -6333,15 +6422,15 @@ public GnuCEmitter() {
 		TNode inclusiveOrExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t270 = _t;
-			TNode tmp93_AST_in = (TNode)_t;
+			AST __t273 = _t;
+			TNode tmp97_AST_in = (TNode)_t;
 			match(_t,BOR);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
 			expr(_t);
 			_t = _retTree;
-			_t = __t270;
+			_t = __t273;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -6360,15 +6449,15 @@ public GnuCEmitter() {
 		TNode exclusiveOrExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t272 = _t;
-			TNode tmp94_AST_in = (TNode)_t;
+			AST __t275 = _t;
+			TNode tmp98_AST_in = (TNode)_t;
 			match(_t,BXOR);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
 			expr(_t);
 			_t = _retTree;
-			_t = __t272;
+			_t = __t275;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -6387,15 +6476,15 @@ public GnuCEmitter() {
 		TNode bitAndExpr_AST_in = (_t == ASTNULL) ? null : (TNode)_t;
 		
 		try {      // for error handling
-			AST __t274 = _t;
-			TNode tmp95_AST_in = (TNode)_t;
+			AST __t277 = _t;
+			TNode tmp99_AST_in = (TNode)_t;
 			match(_t,BAND);
 			_t = _t.getFirstChild();
 			expr(_t);
 			_t = _retTree;
 			expr(_t);
 			_t = _retTree;
-			_t = __t274;
+			_t = __t277;
 			_t = _t.getNextSibling();
 		}
 		catch (RecognitionException ex) {
@@ -6418,29 +6507,29 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case EQUAL:
 			{
-				AST __t276 = _t;
-				TNode tmp96_AST_in = (TNode)_t;
+				AST __t279 = _t;
+				TNode tmp100_AST_in = (TNode)_t;
 				match(_t,EQUAL);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t276;
+				_t = __t279;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case NOT_EQUAL:
 			{
-				AST __t277 = _t;
-				TNode tmp97_AST_in = (TNode)_t;
+				AST __t280 = _t;
+				TNode tmp101_AST_in = (TNode)_t;
 				match(_t,NOT_EQUAL);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t277;
+				_t = __t280;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -6470,57 +6559,57 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case LT:
 			{
-				AST __t279 = _t;
-				TNode tmp98_AST_in = (TNode)_t;
+				AST __t282 = _t;
+				TNode tmp102_AST_in = (TNode)_t;
 				match(_t,LT);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t279;
+				_t = __t282;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case LTE:
 			{
-				AST __t280 = _t;
-				TNode tmp99_AST_in = (TNode)_t;
+				AST __t283 = _t;
+				TNode tmp103_AST_in = (TNode)_t;
 				match(_t,LTE);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t280;
+				_t = __t283;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case GT:
 			{
-				AST __t281 = _t;
-				TNode tmp100_AST_in = (TNode)_t;
+				AST __t284 = _t;
+				TNode tmp104_AST_in = (TNode)_t;
 				match(_t,GT);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t281;
+				_t = __t284;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case GTE:
 			{
-				AST __t282 = _t;
-				TNode tmp101_AST_in = (TNode)_t;
+				AST __t285 = _t;
+				TNode tmp105_AST_in = (TNode)_t;
 				match(_t,GTE);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t282;
+				_t = __t285;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -6550,29 +6639,29 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case LSHIFT:
 			{
-				AST __t284 = _t;
-				TNode tmp102_AST_in = (TNode)_t;
+				AST __t287 = _t;
+				TNode tmp106_AST_in = (TNode)_t;
 				match(_t,LSHIFT);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t284;
+				_t = __t287;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case RSHIFT:
 			{
-				AST __t285 = _t;
-				TNode tmp103_AST_in = (TNode)_t;
+				AST __t288 = _t;
+				TNode tmp107_AST_in = (TNode)_t;
 				match(_t,RSHIFT);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t285;
+				_t = __t288;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -6602,29 +6691,29 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case PLUS:
 			{
-				AST __t287 = _t;
-				TNode tmp104_AST_in = (TNode)_t;
+				AST __t290 = _t;
+				TNode tmp108_AST_in = (TNode)_t;
 				match(_t,PLUS);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t287;
+				_t = __t290;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MINUS:
 			{
-				AST __t288 = _t;
-				TNode tmp105_AST_in = (TNode)_t;
+				AST __t291 = _t;
+				TNode tmp109_AST_in = (TNode)_t;
 				match(_t,MINUS);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t288;
+				_t = __t291;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -6654,43 +6743,43 @@ public GnuCEmitter() {
 			switch ( _t.getType()) {
 			case STAR:
 			{
-				AST __t290 = _t;
-				TNode tmp106_AST_in = (TNode)_t;
+				AST __t293 = _t;
+				TNode tmp110_AST_in = (TNode)_t;
 				match(_t,STAR);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t290;
+				_t = __t293;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case DIV:
 			{
-				AST __t291 = _t;
-				TNode tmp107_AST_in = (TNode)_t;
+				AST __t294 = _t;
+				TNode tmp111_AST_in = (TNode)_t;
 				match(_t,DIV);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t291;
+				_t = __t294;
 				_t = _t.getNextSibling();
 				break;
 			}
 			case MOD:
 			{
-				AST __t292 = _t;
-				TNode tmp108_AST_in = (TNode)_t;
+				AST __t295 = _t;
+				TNode tmp112_AST_in = (TNode)_t;
 				match(_t,MOD);
 				_t = _t.getFirstChild();
 				expr(_t);
 				_t = _retTree;
 				expr(_t);
 				_t = _retTree;
-				_t = __t292;
+				_t = __t295;
 				_t = _t.getNextSibling();
 				break;
 			}
@@ -6855,7 +6944,7 @@ public GnuCEmitter() {
 		"Exponent",
 		"Number",
 		"\"__trace__\"",
-		"\"__\"",
+		"\"$\"",
 		"\"__label__\"",
 		"\"inline\"",
 		"\"typeof\"",
@@ -6867,7 +6956,7 @@ public GnuCEmitter() {
 	};
 	
 	private static final long[] mk_tokenSet_0() {
-		long[] data = { 544L, 2306124759068311552L, 0L, 0L};
+		long[] data = { 544L, 2306124759068311552L, 16384L, 0L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());

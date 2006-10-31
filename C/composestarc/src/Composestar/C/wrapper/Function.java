@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: Function.java,v 1.4 2005/11/24 00:46:45 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.wrapper;
 

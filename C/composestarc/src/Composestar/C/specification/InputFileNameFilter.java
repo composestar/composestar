@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: InputFileNameFilter.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.specification;
 
@@ -39,7 +39,7 @@ import java.io.FilenameFilter;
 public class InputFileNameFilter implements FilenameFilter {
 
 	public boolean accept(File arg0, String arg1) {
-		return(arg1.endsWith(".c"));
+		return(arg1.endsWith(".ccc"));
 	}
 
 }

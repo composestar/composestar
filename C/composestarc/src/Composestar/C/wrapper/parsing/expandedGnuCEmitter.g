@@ -31,7 +31,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCEmitter.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -440,9 +440,13 @@ externalList :( externalDef )+
 externalDef :declaration
         |       functionDef
         |       asm_expr
+        |	annotatedExternal //veranderd 31aug
         |       typelessDeclaration
         |       s:SEMI                          { print( s ); }
         ;
+
+annotatedExternal :annotation externalDef  //veranderd 31aug
+      	  ;
 
 typelessDeclaration :#(NTypeMissing initDeclList s: SEMI)    { print( s ); }
         ;
@@ -458,6 +462,7 @@ asm_expr :#( a:"asm"                              { print( a ); }
         ;
 
 declaration :#( NDeclaration
+        	    (annotation)?	
                     declSpecifiers
                     (                   
                         initDeclList
@@ -465,6 +470,18 @@ declaration :#( NDeclaration
                     ( s:SEMI { print( s ); } )+
                 )
         ;
+
+annotation :#("$"
+		 LPAREN
+		 ID 
+		 LPAREN 
+		 	(
+		 		StringLiteral 
+		 		( COMMA StringLiteral)*
+		 	)?
+		 RPAREN
+		 RPAREN 
+	);
 
 declSpecifiers :( storageClassSpecifier
                 | typeQualifier
@@ -665,7 +682,7 @@ declarator :#( NDeclarator
              )
         ;
 
-parameterTypeList :( parameterDeclaration
+parameterTypeList :(  (annotation)? parameterDeclaration //toegevoegd 31aug (annotation)?
                     ( c:COMMA { print( c ); }
                       | s:SEMI { print( s ); }
                     )?
@@ -1066,18 +1083,6 @@ protected floatConst :FloatDoubleConst
         |       DoubleDoubleConst
         |       LongDoubleConst
         ;
-
-// inherited from grammar GnuCTreeParser
-annotation :// __ANOTATIONNAME__(  )
-		#("__"
-		 id:ID { System.out.println("Found annotation: "+id.getText()); } "__"
-		 LPAREN 
-		 	(
-		 		st: stringConst 
-		 		( COMMA st1:stringConst)*
-		 	)?
-		 RPAREN 
-		);
 
 // inherited from grammar GnuCTreeParser
 commaExpr :#(NCommaExpr expr expr)

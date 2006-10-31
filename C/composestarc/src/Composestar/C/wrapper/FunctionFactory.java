@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: FunctionFactory.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 package Composestar.C.wrapper;
 
@@ -58,7 +58,7 @@ public class FunctionFactory
 
     private String name;
 
-    public Function createFunction(TNode mainNode, String filename, PrintWriter out)
+    public Function createFunction(TNode mainNode, String filename)
     {
         // should think maybe to change next booleans
         fVoid = false;
@@ -72,7 +72,7 @@ public class FunctionFactory
         ParameterType returnParameter = parseReturnParameterType();
         Vector inParameters = parseInputParameters();
         
-        parseTraceSpec(inParameters,filename, out);
+        parseTraceSpec(inParameters,filename);
 
         TNode toInsertBefore = parseBeforeNode();
         Vector vecReturnPoints = parseAfterNodes();
@@ -161,7 +161,7 @@ public class FunctionFactory
         else
         {
             TNode node114 = n.firstChildOfType(GnuCTokenTypes.NParameterDeclaration);
-            for(int i = 0; i < n.getNumberOfChildren()/2; i++)
+            for(int i = 0; i < n.numberOfChildsOfType(GnuCTokenTypes.NParameterDeclaration); i++)//n.getNumberOfChilds()/2
             {
                     TNode nnn = (TNode) node114.getFirstChild();
                     int type = nnn.getType();
@@ -308,7 +308,7 @@ public class FunctionFactory
          }
     }
     
-    private void parseTraceSpec(Vector params, String filename, PrintWriter out)
+    private void parseTraceSpec(Vector params, String filename)
     {
     	TNode tracenode = node.firstChildOfType(GnuCTokenTypes.LITERAL___trace__);
     	if(tracenode == null)
@@ -401,6 +401,10 @@ public class FunctionFactory
         				//System.out.println();
         			}
         		}
+        		/** 
+        		 * This else statement was needed when we used the tracing to add annotations
+        		 * this has become superfluous
+        		 * 
         		else if(node.getText().equals("Semantics"))
         		{
         			node = (TNode)node.getNextSibling();
@@ -421,7 +425,7 @@ public class FunctionFactory
     					}
         			}
         			
-        		}
+        		}**/
         	}
     	}
     	//TNode.printTree(tracenode);

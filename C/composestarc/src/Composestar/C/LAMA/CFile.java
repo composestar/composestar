@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: CFile.java,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 
 package Composestar.C.LAMA;
@@ -22,76 +22,81 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Corresponds to the Type class in the .NET framework. For more information on 
- * the methods and their meaning please refer to the microsoft documentation:
- * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/frlr
- * fsystemtypeclasstopic.asp
- * note that the name may be redundant, but should be consistent with the name of 
- * the concern.
+ * CFile is the class of the abstract meta model, from the core. 
  */
 public class CFile extends Type 
 {
     /**
     * File in C and as a hack this is also used as a annotation
+    * However not now at the moment
     */
     private static final long serialVersionUID = 5652622506200113401L;
     public int HashCode;
-    public boolean isAnnotation;
-   
-    /**
-     * @roseuid 4028E9FF026C
-     */
-    public CFile()
+	private CDirectory parent;
+	//private boolean isAnnotation;
+	public String Name;
+	public String FullName; 
+	
+	public CFile()
     {
     	super();
-    }
-        
+    } 
    
-    
-    /**
-     * @return int
-     * @roseuid 401B84CF01F8
-     */
     public int getHashCode() {
         return HashCode;     
     }
-    
-    /**
-     * @param code
-     * @roseuid 4029F8A400AE
-     */
+   
     public void setHashCode(int code) {
         HashCode = code;     
     }
     
-    public void addMethod(CMethodInfo method) {
-        Methods.add( method );
-        method.setParent(this);     
-    }
-    
-    public void addField(CVariable field) {
-      Fields.add(field);
-      field.setParent(this);
+    public void addVariable(CVariable variable) {
+      Fields.add(variable);
+      variable.setParent(this);
     }
     
     public void setName(String Name){
     	this.Name=Name;
+    	this.FullName=Name;
     }
     
-    public boolean isAnnotation(){
-    	return isAnnotation;
+    public String getFullName(){
+    	return FullName;
     }
     
-    public void setAnnotation(boolean isAnnotation){
-    	this.isAnnotation=isAnnotation;
+    public String fullname(){
+    	return FullName;
     }
     
-    public MethodInfo getMethod(String name) 
+    public void setDirectory(CDirectory dir){
+    	this.parent=dir;
+    }
+    
+    public CDirectory getDirectory(){
+    	return parent;
+    }
+    
+    /**
+    public CFunction getMethod(String name) 
 	{
-        MethodInfo method = null;
+        CFunction method = null;
+        for( ListIterator iter = Functions.listIterator(); iter.hasNext(); ) 
+        {
+        	method = (CFunction)iter.next();
+            // if same name && param length
+            if( method.name().equals( name ) ) {
+                return method;
+            }
+        }
+        return null;
+	}  **/
+    
+    public CMethodInfo getMethodInfo(String name) 
+	{
+        CMethodInfo method = null;
         for( ListIterator iter = Methods.listIterator(); iter.hasNext(); ) 
         {
-        	method = (MethodInfo)iter.next();
+        	method = (CMethodInfo)iter.next();
             // if same name && param length
             if( method.name().equals( name ) ) {
                 return method;
@@ -99,7 +104,6 @@ public class CFile extends Type
         }
         return null;
 	}  
-    
     
     /****** Implementation of Language Unit interface **********/
     
@@ -127,6 +131,16 @@ public class CFile extends Type
    
     public UnitResult getUnitRelation(String argumentName)
     {
+    	/**Real C model
+    		if (argumentName.equals("ChildMethods"))
+    			return new UnitResult(filterDeclaredHere(Methods));
+    		if (argumentName.equals("ChildFunctions"))
+    			return new UnitResult(filterDeclaredHere(Functions));
+    		else if (argumentName.equals("ChildVariables"))
+    			return new UnitResult(filterDeclaredHere(Fields));
+    		else if (argumentName.equals("ParentDirectory"))
+    			return new UnitResult(parent);
+    	**/
     	if (getUnitType().equals("Class")){
     		if (argumentName.equals("ChildMethods"))
     			return new UnitResult(filterDeclaredHere(Methods));
@@ -149,19 +163,28 @@ public class CFile extends Type
     	}
     	return null; // Should never happen!
     }
-  
+    
+    public String getUnitName()
+    {
+      return getFullName();
+    }
+    
+    public boolean hasUnitAttribute(String attribute)
+    {
+      return false;
+    }
+    
     public String getUnitType()
     {
-    	if (isAnnotation())
-            return "Annotation";
+    	//if (isAnnotation())
+        //    return "Annotation";
+    	//return "File";
     	return "Class";
     }
 
     public Collection getUnitAttributes()
     {
-      HashSet result = new HashSet();
-      result.add("public");
-      return result;
+      return null;
     }	
     
     
@@ -173,7 +196,8 @@ public class CFile extends Type
 		HashCode = in.readInt();
 		Methods = (ArrayList)in.readObject();
 		Fields = (ArrayList)in.readObject();
-		isAnnotation = in.readBoolean();
+		parent = (CDirectory)in.readObject();
+		//isAnnotation = in.readBoolean();
 	}
 	 
 	/**
@@ -182,8 +206,9 @@ public class CFile extends Type
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeInt(HashCode);
-		out.writeObject(Methods);
 		out.writeObject(Fields);
-		out.writeBoolean(isAnnotation);
+		out.writeObject(Methods);
+		out.writeObject(parent);
+		//out.writeBoolean(isAnnotation);
 	}
 }

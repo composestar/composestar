@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: LineObject.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.wrapper.parsing;
 

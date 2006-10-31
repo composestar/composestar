@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: AdviceFactory.java,v 1.3 2005/11/21 16:20:03 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.specification;
 

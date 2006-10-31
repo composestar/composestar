@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: InputFileNameFilter.java,v 1.2 2005/11/04 10:13:09 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.wrapper;
 
@@ -40,7 +40,10 @@ public class InputFileNameFilter implements FilenameFilter {
 	
 	public boolean accept(File arg0, String arg1) {
 		File f = new File(arg0,arg1);
-		if(arg1.endsWith(".c") )
+		/***********************************
+		 * Should normally be .c however named it.ccc because it is an intermediate file
+		 */
+		if(arg1.endsWith(".ccc") )
 		{
 			return true;
 		}

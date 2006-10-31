@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: PointcutFactory.java,v 1.4 2005/12/24 16:21:03 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.specification;
 

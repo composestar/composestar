@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: WeaverEngine.java,v 1.7 2005/12/01 16:02:28 gulesir Exp $
+ * $Id$
  */
 package Composestar.C.CONE;
 
@@ -47,6 +47,7 @@ import Composestar.C.wrapper.utils.StaticVariableReplacer;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.C.ASPECTS.TRACING.TracingAspect;
+import Composestar.Utils.Debug;
 
 public class WeaverEngine
 {
@@ -57,7 +58,7 @@ public class WeaverEngine
 	
 	public Hashtable populateFunctionsWithRealInfo(HashMap aspectMap, CommonResources resources)
 	{
-		System.out.println("Analyzing files...");
+		Debug.out(Debug.MODE_INFORMATION,"CONE","Analyzing files...");
 		FileMap fm= FileMap.instance();
 		Hashtable fileASTMap = fm.getFileASTs();
 		Hashtable functionsToRealWeavebaleObjectsMap = new Hashtable();
@@ -73,11 +74,9 @@ public class WeaverEngine
 				for(int j=0; j<pc.getNumberOfFunctions(); j++)
 				{
 					Functions funcs = pc.getFunctions(j);
-					//System.out.println("All files with function: "+funcs.toString());
 					
-					if(funcs.getFile().equalsIgnoreCase("*.c")) // TODO: make regex
+					if(funcs.getFile().equalsIgnoreCase("*.c")) 
 					{
-						System.out.println("All files with function: "+funcs.toString());
 						Iterator keyit = fileASTMap.values().iterator();
 						ArrayList list = new ArrayList();
 						while(keyit.hasNext())
@@ -99,8 +98,6 @@ public class WeaverEngine
 							else if(funcs.getType() == GeneralUtils.STRUCT)
 							{
 								String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(),wrapper.getFilename());
-								System.out.println("STRUCT: "+mod);
-								System.out.println("Found: "+wrapper.structASTMap.containsKey(mod));
 								if(wrapper.structASTMap.containsKey(mod))
 								{
 									Struct struct = (Struct)wrapper.structASTMap.get(mod);
@@ -109,12 +106,10 @@ public class WeaverEngine
 							}
 							else if(funcs.getType() == GeneralUtils.GLOBAL)
 							{
-								System.out.println("GLOBAL: "+wrapper.introductionPoint.getNode().getLineNum());
 								list.add(wrapper.introductionPoint);
 							}
 							else if(funcs.getType() == GeneralUtils.HEADER)
 							{
-								System.out.println("HEADER: "+wrapper.headerintroductionPoint.getNode().getLineNum());
 								list.add(wrapper.headerintroductionPoint);
 							}
 						}
@@ -147,8 +142,6 @@ public class WeaverEngine
 							else if(funcs.getType() == GeneralUtils.STRUCT)
 							{
 								String mod = StaticVariableReplacer.replaceStaticVariables(funcs.getData(),wrapper.getFilename());
-								//System.out.println("STRUCT: "+mod);
-								//System.out.println("Found: "+wrapper.structASTMap.containsKey(mod));
 								if(wrapper.structASTMap.containsKey(mod))
 								{
 									Struct struct = (Struct)wrapper.structASTMap.get(mod);
@@ -157,12 +150,10 @@ public class WeaverEngine
 							}
 							else if(funcs.getType() == GeneralUtils.GLOBAL)
 							{
-								System.out.println("GLOBAL: "+wrapper.introductionPoint.getNode().getLineNum());
 								list.add(wrapper.introductionPoint);
 							}
 							else if(funcs.getType() == GeneralUtils.HEADER)
 							{
-								System.out.println("HEADER: "+wrapper.headerintroductionPoint.getNode().getLineNum());
 								list.add(wrapper.headerintroductionPoint);
 							}
 						}
@@ -172,7 +163,6 @@ public class WeaverEngine
 				}
 			}
 		}
-		System.out.println(functionsToRealWeavebaleObjectsMap);
 		return functionsToRealWeavebaleObjectsMap;
 	}
 	
@@ -196,7 +186,6 @@ public class WeaverEngine
 						if(funcs.isInvertReturnType())
 						{
 							//Return type matches and we have a not, thus remove
-							//System.out.println("Same return type: "+funcs.getReturnType());
 							restrictedList.remove(func);
 						}
 					}
@@ -204,15 +193,11 @@ public class WeaverEngine
 					{
 						if(!funcs.isInvertReturnType())
 						{
-							//Return type matches and we have a not, thus remove
-							//System.out.println("Same return type: "+funcs.getReturnType());
 							restrictedList.remove(func);
 						}
 					}
 				}
 			}
-			//System.out.println("Updated restrictedList: ");
-			//this.printList(restrictedList);
 		}
 		if(!restrictedList.isEmpty() && funcs.hasParamSpec())
 		{
@@ -220,8 +205,6 @@ public class WeaverEngine
 			for(int i=0; i<funcs.getNumberOfParameters(); i++)
 			{
 				XMLParameter param = funcs.getParameter(i);
-				//System.out.println("Checking param: "+param);
-				//Parameter requiredParam = this.getParameterFromParameterString(param.getType());
 				funcit = restrictedList.iterator();
 				while(funcit.hasNext())
 				{
@@ -229,13 +212,12 @@ public class WeaverEngine
 					if(obj instanceof Function)
 					{
 						Function func = (Function)obj;
-						if(param.getName().equals("*")) //TODO: make regex
+						if(param.getName().equals("*")) 
 						{ // for all param names, thus ok
 							if(func.hasParameterWithType(param.getType()))
 							{
 								if(param.isInvert())
 									toBeRemoved.add(func);
-								//System.out.println("Same parameter type: "+param.getType());
 							}
 							else
 							{
@@ -251,7 +233,6 @@ public class WeaverEngine
 								{
 									if(param.isInvert())
 										toBeRemoved.add(func);
-									//System.out.println("Same parameter type: "+param.getType());
 								}
 								else // 1 0 = 0
 								{
@@ -269,16 +250,13 @@ public class WeaverEngine
 				}
 			}
 			funcit = toBeRemoved.iterator();
-			//System.out.println("To Be Removed: ");
-			//this.printList(toBeRemoved);
 			while(funcit.hasNext())
 			{
 				restrictedList.remove(funcit.next());
 			}
 			
 		}
-		System.out.println("Restricted functions for["+funcs.getParent().getId()+"]: "+funcs.getFile()+":"+funcs.getData()+" == "+restrictedList.size());		
-		//this.printList(restrictedList);
+		Debug.out(Debug.MODE_INFORMATION,"CONE","Restricted functions for["+funcs.getParent().getId()+"]: "+funcs.getFile()+":"+funcs.getData()+" == "+restrictedList.size());		
 		return restrictedList;
 	}
 	
@@ -290,16 +268,14 @@ public class WeaverEngine
     	while(funcit.hasNext())
     	{
     		Functions funcs = (Functions)funcit.next();
-    		System.out.println("Evaluating advice: "+funcs.getParent().getParent().getId() );
+    		Debug.out(Debug.MODE_INFORMATION,"CONE","Evaluating advice: "+funcs.getParent().getParent().getId() );
     		if(funcs.getType() == GeneralUtils.FUNCTION)
     		{
     			ArrayList list = (ArrayList)functionsToRealWeavebaleObjectsMap.get(funcs);
 	    		for(int i=0; i<list.size(); i++)
 	    		{
 	    			Function func = (Function)list.get(i);
-	    			//if(func.getName().equals("ZDAPSC_terminate"))
-	    				System.out.println("\t"+func.getClass().getName()+"@"+func.hashCode()+" "+func.getNumberOfWeaveInstructions());
-	    			for(int j=0; j< funcs.getParent().getNumberOfAdviceApplications(); j++)
+	    				for(int j=0; j< funcs.getParent().getNumberOfAdviceApplications(); j++)
 	    			{
 	    				AdviceApplication aa = (AdviceApplication)funcs.getParent().getAdviceApplication(j);
 	    				Hashtable defadvices = funcs.getParent().getParent().getAdvices();
@@ -309,15 +285,11 @@ public class WeaverEngine
 	    						|| adv.getType() == GeneralUtils.FUNCTION_CALL
 	    						|| adv.getType() == GeneralUtils.FUNCTION_BODY )
 	    				{
-	    					//System.out.println("\t\t\tAdding wi: "+func+" == "+aa.getId());
 	    					func.addWeavingInstruction(new WeavingInstruction(func,adv,aa));
 	    					NUMWS++;
 	    					weavebleobjects.add(func);
-	    					//if(tmp.get(func.getClass().getName()+"@"+func.hashCode()) != null)
-	    					//	tmp.put(func.getClass().getName()+"@"+func.hashCode())
-	    				}
+	    					}
 	    			}
-	    			System.out.println("\t"+func.getClass().getName()+"@"+func.hashCode()+" "+func.getNumberOfWeaveInstructions());
 	    		}
     		}
     		else if(funcs.getType() == GeneralUtils.STRUCT)
@@ -338,7 +310,6 @@ public class WeaverEngine
 	    					weavebleobjects.add(struct);
 	    				}
 	    			}
-	    			//System.out.println("\t"+struct.getClass().getName()+"@"+struct.hashCode()+" "+struct.getNumberOfWeaveInstructions());
 	    		}
     		}
     		else if(funcs.getType() == GeneralUtils.GLOBAL)
@@ -359,7 +330,6 @@ public class WeaverEngine
 	    					weavebleobjects.add(gip);
 	    				}
 	    			}
-	    			//System.out.println("\t"+gip.getClass().getName()+"@"+gip.hashCode()+" "+gip.getNumberOfWeaveInstructions());
 	    		}
     		}
     		else if(funcs.getType() == GeneralUtils.HEADER)
@@ -380,11 +350,10 @@ public class WeaverEngine
 	    					weavebleobjects.add(hip);
 	    				}
 	    			}
-	    			//System.out.println("\t"+gip.getClass().getName()+"@"+gip.hashCode()+" "+gip.getNumberOfWeaveInstructions());
 	    		}
     		}
     	}
-    	System.out.println("weaveinstructions: "+weavebleobjects);
+    	Debug.out(Debug.MODE_INFORMATION,"CCONE","weaveinstructions: "+weavebleobjects);
     	return weavebleobjects;
     }
 	
@@ -404,14 +373,11 @@ public class WeaverEngine
     }
 	public void weaveInstructionsForPoint(WeaveblePoint wp)
     {
-    	System.out.println("Weaving on: "+wp);
-		FileMap fm= FileMap.instance();
+    	FileMap fm= FileMap.instance();
 		Hashtable fileASTMap = fm.getFileASTs();
 		Hashtable test= fm.getFileASTs();
 		Enumeration ittest= test.keys();
-		//while(ittest.hasMoreElements()){System.out.println(ittest.nextElement());}//{CWrapper cw=(CWrapper)ittest.next(); System.out.println("Filename: "+cw.getFilename()+ "& ObjectName: " + cw.objectname ); }
 		ArrayList wis = wp.prioritizeWeavingInstructions();
-    	//System.out.println("New weave size: "+wis.size());
 		Iterator wisit = wis.iterator();
 		while(wisit.hasNext())
 		{
@@ -419,7 +385,7 @@ public class WeaverEngine
 			
 			if(wi.getCode() == null)
 	        {
-	        	System.out.println("WARNING: no code to weave, skipping...");
+	        	Debug.out(Debug.MODE_WARNING,"CONE","WARNING: no code to weave, skipping...");
 	        	return;
 	        }
 	    	
@@ -428,60 +394,46 @@ public class WeaverEngine
 	            case WeavingInstruction.FUNCTION_EXECUTION_BEFORE:
 	            {
 	                Function func = wi.getFunction();
-	                System.out.println("Weaving on function execution before: "+func.getFileName()+":"+func.getName());
-	                String filename = objectToFileName(func.getFileName(),fm);
-	                //System.out.println(filename);
+	                 String filename = objectToFileName(func.getFileName(),fm);
 	                
 	                retrieveAST cwrapper = (retrieveAST)fileASTMap.get(filename);
 	                WrappedAST wast = cwrapper.getWrappedAST();
-		            //Profiler.printStartStatus("Weaving before func exec");
-	                System.out.println("Code is:" + wi.getCode());//isempty not good
 		            wast.weaveEntryFunction(func, wi.getCode());
-		            //Profiler.printEndStatus("done");
-		            //System.out.println("weaving succeeded");
-	                
-	
-	                break;
+		             break;
 	            }
 	            case WeavingInstruction.FUNCTION_EXECUTION_AFTER:
 	            {
 	            	Function func = wi.getFunction();
-	                System.out.println("Weaving on function execution after: "+func.getFileName()+":"+func.getName()+ ": " +wi.getAdvice().getId());
-	            	retrieveAST cwrapper = (retrieveAST)fileASTMap.get(func.getFileName());
+	                String filename = objectToFileName(func.getFileName(),fm);
+	                System.out.println("Weaving on function execution after: "+func.getFileName()+":"+func.getName()+ ": " +wi.getAdvice().getId()+ "= this different then:" + filename);
+	                
+	                retrieveAST cwrapper = (retrieveAST)fileASTMap.get(filename);
 	                WrappedAST wast = cwrapper.getWrappedAST();
 	                
-	                //if(PROFILE) Profiler.printStartStatus("\tWeaving after func exec["+wi.getAdvice().getId()+"]: "+func.getName());
-		            wast.weaveExitFunction(func, wi.getCode());
-		            //if(PROFILE) Profiler.printEndStatus("\tdone");
-	                break;
+	                wast.weaveExitFunction(func, wi.getCode());
+		            break;
 	            }
 		        case WeavingInstruction.FUNCTION_CALL_BEFORE:
 	            {
 		        	Function func = wi.getFunction();
-	                System.out.println("Weaving on function call before: "+func.getFileName()+":"+func.getName());
 	                Iterator fileit = fileASTMap.values().iterator();
-	                //if(PROFILE) Profiler.printStartStatus("Weaving before func call");
-		            while(fileit.hasNext())
+	                while(fileit.hasNext())
 	                {
 		            	retrieveAST cwrapper = (retrieveAST)fileit.next();
 	                	cwrapper.getWrappedAST().weaveGlobalFunctionCallBefore(wi.getCode(),func.getName());
 	                }
-		            //if(PROFILE) Profiler.printEndStatus("done");
 		            break;
 	            }
 	            case WeavingInstruction.FUNCTION_CALL_AFTER:
 	            {
 	            	Function func = wi.getFunction();
-	                System.out.println("Weaving on function call after: "+func.getFileName()+":"+func.getName());
 	                Iterator fileit = fileASTMap.values().iterator();
-	                //if(PROFILE) Profiler.printStartStatus("Weaving after func call");
-		            while(fileit.hasNext())
+	                while(fileit.hasNext())
 	                {
 		            	retrieveAST cwrapper = (retrieveAST)fileit.next();
 	                	cwrapper.getWrappedAST().weaveGlobalFunctionCallAfter(wi.getCode(),func.getName());
 	                }
-		            //if(PROFILE) Profiler.printEndStatus("done");
-	                break;
+		            break;
 	            }
 	            case WeavingInstruction.GLOBAL_INTRODUCTION_BEFORE:
 	            case WeavingInstruction.GLOBAL_INTRODUCTION_AFTER:
@@ -491,11 +443,8 @@ public class WeaverEngine
 	            	String completeName = fm.getFileASTwithName(gip.getFileName());
 		            retrieveAST cwrapper = (retrieveAST)fileASTMap.get(completeName);
 	                WrappedAST wast = cwrapper.getWrappedAST();
-	                //wast.printAllNodes();
-	                //if(PROFILE) Profiler.printStartStatus("\tWeaving global introduction: "+gip.getFileName());
-		            wast.weaveGlobalIntroduction(wi.getCode(),gip);
-		            //if(PROFILE) Profiler.printEndStatus("\tdone");
-	                break;
+	                wast.weaveGlobalIntroduction(wi.getCode(),gip);
+		            break;
 	            }
 	            case WeavingInstruction.HEADER_INTRODUCTION_BEFORE:
 	            case WeavingInstruction.HEADER_INTRODUCTION_AFTER:
@@ -504,8 +453,7 @@ public class WeaverEngine
 	            	HeaderIntroductionPoint hip = (HeaderIntroductionPoint)wp;
 	            	
 	            	String completeName = fm.getFileASTwithName(hip.getFileName());
-	            	System.out.println("Weaving on header: "+completeName);
-		               
+	                 
 	            	retrieveAST cwrapper = (retrieveAST)fileASTMap.get(completeName);
 	                WrappedAST wast = cwrapper.getWrappedAST();
 	                
@@ -518,29 +466,21 @@ public class WeaverEngine
 	            	Struct struct = (Struct)wp; 
 	            	retrieveAST cwrapper = (retrieveAST)fileASTMap.get(struct.getFileName());
 	                WrappedAST wast = cwrapper.getWrappedAST();
-	                //wast.printAllNodes();
-	                //if(PROFILE) Profiler.printStartStatus("\tWeaving struct introduction: "+struct.getName());
-		            wast.weaveStructureIntroduction(wi.getCode(), (Struct)wp);
-		            //if(PROFILE) Profiler.printEndStatus("\tdone");
-	                break;
+	                wast.weaveStructureIntroduction(wi.getCode(), (Struct)wp);
+		            break;
 	            }
 	            case WeavingInstruction.FUNCTION_INTRODUCTION_AFTER:
 	            case WeavingInstruction.FUNCTION_INTRODUCTION_BEFORE:
 	            {
 	            	Function func = wi.getFunction();
-	                System.out.println("Weaving function intro into: "+func.getFileName()+":"+func.getName());
-	            	retrieveAST cwrapper = (retrieveAST)fileASTMap.get(func.getFileName());
+	             	retrieveAST cwrapper = (retrieveAST)fileASTMap.get(func.getFileName());
 	                WrappedAST wast = cwrapper.getWrappedAST();
-	                //wast.printAllNodes();
-	                //wast.weaveGlobalIntroduction(wi.getCode());
-	                //if(PROFILE) Profiler.printStartStatus("\tWeaving function introduction: "+wi.getAdvice().getId()+"("+wi.getCode()+")");
 	                wast.weaveFunctionIntroduction(func, wi.getCode());
-	                //if(PROFILE) Profiler.printEndStatus("\tdone");
 	                break;
 	            }
 	            default:
 	            {
-	                System.out.println("The specified weaving operation is not supported, exciting...");
+	                Debug.out(Debug.MODE_ERROR,"CONE","The specified weaving operation is not supported, exciting...");
 	            	System.exit(-1);
 	            }
 	        }
@@ -550,8 +490,7 @@ public class WeaverEngine
 	 public void emitFiles()
 	    {
 		 	String tempFolder= Configuration.instance().getPathSettings().getPath("Output");
-	    	System.out.println("Output saved in: " + tempFolder);
-		 	FileMap fm= FileMap.instance();
+	    	FileMap fm= FileMap.instance();
 			Hashtable fileASTMap = fm.getFileASTs();
 				
 			Iterator fileit = fileASTMap.keySet().iterator();
@@ -561,16 +500,16 @@ public class WeaverEngine
 	    		WrappedAST wast = ((retrieveAST)fileASTMap.get(file)).getWrappedAST();
 	    		if(file.lastIndexOf(File.separator) > 0)
 	    		{
-	    			file = file.substring(file.lastIndexOf(File.separator)+1)+".out";
+	    			file = file.substring(file.lastIndexOf(File.separator)+1)+"out";
 	    		}
-	    		System.out.println("Writing file: "+tempFolder+File.separator+file+"...");
+	    		Debug.out(Debug.MODE_INFORMATION,"CONE","Writing file: "+tempFolder+file+"...");
 	    		try
 	    		{
-	    			wast.emiteToFile(tempFolder+File.separator+file);
+	    			wast.emiteToFile(tempFolder+file);
 	    		}
 	    		catch(Exception e)
 	    		{
-	    			System.out.println("An error occured while writing the output file...");
+	    			Debug.out(Debug.MODE_ERROR,"CONE","An error occured while writing the output file...");
 	    			e.printStackTrace();
 	    		}
 	    	}
@@ -581,7 +520,7 @@ public class WeaverEngine
 		Iterator ittest= test.values().iterator();
 		while(ittest.hasNext()){
 			retrieveAST cw=(retrieveAST)ittest.next();
-			if(object.equals(cw.objectname));
+			if(object.equals(cw.objectname))
 				return (cw.getFilename()).replace('\\','\\');
 		}
 		return null;

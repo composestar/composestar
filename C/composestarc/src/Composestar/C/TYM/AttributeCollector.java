@@ -17,6 +17,7 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.PrimitiveConcern;
 import Composestar.Core.Exception.ModuleException;
 
 import javax.xml.parsers.SAXParser;
@@ -62,16 +63,19 @@ public class AttributeCollector extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attr) throws SAXException {
      	if( "Attribute".equals(qName) && attr != null ) {
      		Annotation attribute = new CAnnotation();
-     		String test = attr.getValue("type");
-			Concern c = (Concern) DataStore.instance().getObjectByID(test);
-			if( c != null && c.getPlatformRepresentation() != null )
+     		String annotype = attr.getValue("type");
+     		Concern c = (Concern) DataStore.instance().getObjectByID(annotype);
+     		if(c==null){
+     			//c=createType(annotype);
+     		}
+     		if( c != null && c.getPlatformRepresentation() != null )
 			{
 				Type annotType = (Type) c.getPlatformRepresentation();
 				
 				String target = attr.getValue("target").toLowerCase();
 				String location = attr.getValue("location");
-				
-				if( "type".equals(target))
+				/**
+				if( "parameter".equals(target))
 				{
 					attribute.register(annotType, getTypeLocation(location));
 				}
@@ -85,23 +89,35 @@ public class AttributeCollector extends DefaultHandler {
 				}
 				
 				attribute.setValue(attr.getValue("value"));
-
+				**/	
 				//attribute.setClassName(attr.getValue("Class"));
 				//attribute.setMethodSignature(attr.getValue("Method"));
 				//attribute.setTypeId(attr.getValue("TypeId"));
 			}
      	}
-    }
+    }   
     
-    /**
-     * @param uri
-     * @param localName
-     * @param qName
-     * @throws org.xml.sax.SAXException
-     * @roseuid 40AB53DC0213
-     */
     public void endElement(String uri, String localName, String qName) throws SAXException {
     }
+    
+    /***************************************************
+     * Creates a concern of the type of the annotation
+     * @param type
+     */
+    /**
+    public PrimitiveConcern createType(String type){
+    	CFile typeOfAnnotation = new CFile();
+     	DataStore dataStore = DataStore.instance();
+    	PrimitiveConcern pcFile = new PrimitiveConcern();
+    	typeOfAnnotation.setName(type);
+    	typeOfAnnotation.setFullName("Composestar."+ type);
+    	typeOfAnnotation.setAnnotation(true);
+    	pcFile.setName( typeOfAnnotation.name() );
+		pcFile.setPlatformRepresentation(typeOfAnnotation);
+		typeOfAnnotation.setParentConcern(pcFile);
+		dataStore.addObject( typeOfAnnotation.name(), pcFile );
+		return pcFile;
+    }   **/ 
     
 	public Type getTypeLocation(String location)
 	{

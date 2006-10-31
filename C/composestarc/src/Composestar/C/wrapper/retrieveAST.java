@@ -25,6 +25,7 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.C.LAMA.*;
 import Composestar.C.MASTER.FileMap;
 import Composestar.Core.LAMA.*;
+import Composestar.Utils.Debug;
 
 import Composestar.C.wrapper.parsing.WrappedAST;
 
@@ -46,16 +47,16 @@ public class retrieveAST {
 	    public HashMap structASTMap = new HashMap();
 	    private ArrayList cfiles = new ArrayList();
 	    private WrappedAST wrappedAST = null;
-	    private PrintWriter out=null;
 	    private String namespace=null;
 	    private boolean firstNameSpace = false;
 		private File directory=null;
+		private CFile cf;
 		private static HashMap usedTypes= null;
 		private CWrapper cw = null;
 		private CWrapper cw2 = null;
 	    private HashMap test =null;
 	    
-	    public WrappedAST createWrappedAST(String filename, String objectname, String namespace, PrintWriter pw, HashMap usedType, CWrapper t ) throws FileNotFoundException
+	    public WrappedAST createWrappedAST(String filename, String objectname, String namespace, HashMap usedType, CFile cf, CWrapper t ) throws FileNotFoundException
 	    {
 	    	allNodes = new Vector();
 	        setFunctions(new Vector());
@@ -63,13 +64,14 @@ public class retrieveAST {
 	        
 	    	this.setFilename(filename);
 	        this.getObjectname(objectname);
-	        this.pWriter(pw);
 	        this.getNameSpace(namespace);
 	        this.getUsedType(usedType);
+	        this.getCFile(cf);
 	        
 
 	        try
 	        {
+	        	Debug.out(Debug.MODE_INFORMATION,"Wrapper", filename);
 	        	DataInputStream input = new DataInputStream(new FileInputStream(filename));
 	        	initialization(input);
 	        	fillAllNodes();
@@ -77,6 +79,7 @@ public class retrieveAST {
 	        	this.setWrappedAST(new WrappedAST(node, infoChannel,
 	                     allNodes, getFunctions(), commentKeepers, this.introductionPoint, this.headerintroductionPoint));
 	             wrappedAST.setFilename(filename);
+	             
 	             //this.setCW(this);
 	             //System.out.println("CWrapper"+cw.getFilename());
 	             return getWrappedAST();
@@ -109,7 +112,7 @@ public class retrieveAST {
 	            
 	            GnuCTreeParser treeparser = new GnuCTreeParser();
 	            treeparser.setUsedTypes(usedTypes);
-	            treeparser.initiateXMLFile(out);
+	            treeparser.setCFile(cf);
 	            treeparser.setFilename(this.objectname);
 	            treeparser.translationUnit(parser.getAST());
 	            treeparser.printFields();
@@ -122,6 +125,12 @@ public class retrieveAST {
 	            this.functions = treeparser.getFunctions();
 	            this.structASTMap = treeparser.getStructASTMap();
 	            usedTypes.putAll(treeparser.getUsedTypes());
+	            HashMap annotations = treeparser.getAnnotationASTMap();
+	            Iterator annoIterator=annotations.values().iterator();
+	            while(annoIterator.hasNext())
+	            {
+	            	((Composestar.C.wrapper.parsing.Annotation)annoIterator.next()).addAnnotationtoLAMA();
+	            }
 	            //printMetaModel();
 	        }
 	        catch (RecognitionException e)
@@ -192,6 +201,10 @@ public class retrieveAST {
 			this.objectname =objectname;
 		}
 		
+		public void getCFile(CFile cf){
+			this.cf=cf;
+		}
+		
 		public void getNameSpace(String namespace){
 			this.namespace=namespace;
 		}
@@ -204,7 +217,7 @@ public class retrieveAST {
 			this.objectname = Configuration.instance().getPathSettings().getPath("Base");
 			this.objectname = objectname.replace('/','\\');
 			this.objectname = filename.substring(objectname.length());
-			this.objectname = objectname.substring(0,objectname.lastIndexOf(".c"));
+			this.objectname = objectname.substring(0,objectname.lastIndexOf(".ccc"));
 			this.objectname = objectname.replace('\\','.');
 		}
 		
@@ -255,10 +268,6 @@ public class retrieveAST {
 			return filename;
 		}
 		
-		public void pWriter(PrintWriter pw){
-			this.out=pw;
-		}
-
 		public void setWrappedAST(WrappedAST wrappedAST) {
 			this.wrappedAST = wrappedAST;
 		}

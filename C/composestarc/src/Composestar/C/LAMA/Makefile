@@ -3,9 +3,6 @@ include ${ROOTDIR}common.mk
 
 SUBDIRS=
 
-CLASSES=CFile.class \
-	CMethodInfo.class \
-	CParameterInfo.class \
-	CVariable.class \
+CLASSES=CMethodInfo.class CParameterInfo.class CVariable.class CDirectory.class CAnnotation.class CType.class CTypeMap.class CFile.class 
 	
 include ${ROOTDIR}default.mk

@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: TraceableType.java,v 1.1 2005/11/30 21:43:32 pascal_durr Exp $
+ * $Id$
  */
 package Composestar.C.ASPECTS.TRACING;
 

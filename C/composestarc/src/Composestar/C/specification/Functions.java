@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: Functions.java,v 1.4 2005/12/01 16:02:27 gulesir Exp $
+ * $Id$
  */
 package Composestar.C.specification;
 

@@ -48,7 +48,7 @@ header
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCParser.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -229,7 +229,7 @@ options
 
 
 translationUnit
-        :       ( externalList )?       /* Empty source files are allowed.  */
+        :      ( externalList )?       /* Empty source files are allowed.  */
         ;
 asm_expr
         :       "asm"^ 
@@ -245,11 +245,16 @@ externalDef
         |       functionDef
         |       typelessDeclaration
         |       asm_expr
+        |	annotatedExternal 
         |       SEMI
         ;
 
+annotatedExternal 
+	  :       annotation (( "typedef" | declaration )=> declaration | functionDef) 
+      	  ;
+
 functionDef { String declName; }
-        :       ( (functionDeclSpecifiers)=> ds:functionDeclSpecifiers
+        :      ( (functionDeclSpecifiers)=> ds:functionDeclSpecifiers
                 |  //epsilon
                 )
                 declName = d:declarator[true]
@@ -269,7 +274,10 @@ traceDef: // __trace__(( in(a), out(b)))
         ;
 
 annotation: // __ANOTATIONNAME__(  )
-		"__"^ ID "__" LPAREN (stringConst ( COMMA stringConst)* )? RPAREN;
+		"$"^ LPAREN ID LPAREN (StringLiteral ( COMMA StringLiteral)* )? RPAREN RPAREN;
+
+//Annotation: // __ANOTATIONNAME__(  )
+//		"__"^ ID "__" LPAREN (stringConst ( COMMA stringConst)* )? RPAREN;
 
 typelessDeclaration
                         { AST typeMissing = #[NTypeMissing]; }
@@ -308,6 +316,7 @@ initializerList
 declarator[boolean isFunctionDefinition] returns [String declName]
                                                 { declName = ""; }
         :
+        	
                 ( pointerGroup )?               
 
                 ( id:ID                         { declName = id.getText(); }
@@ -333,6 +342,7 @@ declaratorParamaterList[boolean isFunctionDefinition, String declName]
                                                 }
                 (                           
                         (declSpecifiers)=> parameterTypeList
+                        |("$" LPAREN)=> parameterTypeList
                         | (idList)?
                 )
                                                 {
@@ -345,11 +355,13 @@ declaratorParamaterList[boolean isFunctionDefinition, String declName]
         ;
            
 parameterTypeList
-        :       parameterDeclaration 
+        :       (annotation)?
+        	parameterDeclaration 
                 (   options {
                             warnWhenFollowAmbig = false;
                         } : 
                   ( COMMA | SEMI )  
+                  (annotation)?
                   parameterDeclaration
                 )*
                 ( ( COMMA | SEMI ) 
@@ -376,8 +388,9 @@ localLabelDeclaration
 
     
 declaration
-                                        { AST ds1 = null; }
-        :       ds:declSpecifiers       { ds1 = astFactory.dupList(#ds); }
+        { AST ds1 = null; }
+        :      	(annotation)?
+        	ds:declSpecifiers       { ds1 = astFactory.dupList(#ds); }
                 (                       
                     initDeclList[ds1]
                 )?
@@ -472,17 +485,19 @@ enumList[String enumName]
 
 
 initDeclList[AST declarationSpecifiers]
-        :       initDecl[declarationSpecifiers] 
-                ( options{warnWhenFollowAmbig=false;}: COMMA! initDecl[declarationSpecifiers] )*
+        :       initDecl[declarationSpecifiers] //(annotation)?
+                ( options{warnWhenFollowAmbig=false;}: COMMA! initDecl[declarationSpecifiers] )* //(annotation)?
                 ( COMMA! )?
         ;
 
 initDecl[AST declarationSpecifiers]
                                         { String declName = ""; }
-        :       declName = d:declarator[false]
+        :       
+        	declName = d:declarator[false]
                                         {   AST ds1, d1;
                                             ds1 = astFactory.dupList(declarationSpecifiers);
                                             d1 = astFactory.dupList(#d);
+                                            //System.out.println("declaration="+ ds1.getText()+"&" +d1.getText() + "&"+ declName);
                                             symbolTable.add(declName, #(null, ds1, d1) );
                                         }
                 ( attributeDecl )*
@@ -553,7 +568,7 @@ statement
         
         |       compoundStatement[getAScopeName()] // Group of statements
 
-        |       (annotation)* expr SEMI!               { ## = #( #[NStatementExpr], ## );} // Expressions
+        |        (annotation)* expr SEMI!               { ## = #( #[NStatementExpr], ## );} // Expressions (annotation)* expr SEMI!
 
 // Iteration statements:
 
@@ -746,6 +761,7 @@ tokens {
     literals.put(new ANTLRHashString("__typeof__", this), new Integer(LITERAL_typeof));
     literals.put(new ANTLRHashString("__volatile", this), new Integer(LITERAL_volatile));
     literals.put(new ANTLRHashString("__volatile__", this), new Integer(LITERAL_volatile));
+    //literals.put(new ANTLRHashString("$$", this), new Integer(LITERAL_annotation));
 	//literals.put(new ANTLRHashString("__extension__", this), new Integer(LITERAL_extension));
   }
 

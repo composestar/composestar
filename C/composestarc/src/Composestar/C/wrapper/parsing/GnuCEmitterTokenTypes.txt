@@ -138,7 +138,7 @@ FloatSuffix=138
 Exponent=139
 Number=140
 LITERAL___trace__="__trace__"=141
-LITERAL___="__"=142
+"$"=142
 LITERAL___label__="__label__"=143
 LITERAL_inline="inline"=144
 LITERAL_typeof="typeof"=145

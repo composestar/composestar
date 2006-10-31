@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Id: GnuCParser.g,v 1.1 2006/03/16 14:08:54 johantewinkel Exp $
+ * $Id$
  */
 	
 	package Composestar.C.wrapper.parsing;
@@ -177,7 +177,7 @@ public interface GnuCLexerTokenTypes {
 	int Exponent = 139;
 	int Number = 140;
 	int LITERAL___trace__ = 141;
-	int LITERAL___ = 142;
+	// "$" = 142
 	int LITERAL___label__ = 143;
 	int LITERAL_inline = 144;
 	int LITERAL_typeof = 145;

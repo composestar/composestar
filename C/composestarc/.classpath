@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/composestarcore"/>
-	<classpathentry kind="lib" path="/composestarcore/binaries/prolog/prolog.jar"/>
-	<classpathentry kind="lib" path="/composestarcore/binaries/junit/junit.jar"/>
-	<classpathentry kind="lib" path="/composestarcore/binaries/antlr/antlr.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/local/Johan/ComposeStarCVS/examplesC/EncryptionExample/Decrypt.jar"/>
+	<classpathentry kind="lib" path="C:/Utwente/Afstuderen/jwtewinkel/EclipsePluginSrc/ComposestarEclipsePlugin/binaries/antlr.jar"/>
+	<classpathentry kind="lib" path="C:/Utwente/Afstuderen/jwtewinkel/EclipsePluginSrc/ComposestarEclipsePlugin/binaries/prolog/prolog.jar"/>
+	<classpathentry kind="lib" path="C:/Utwente/Afstuderen/jwtewinkel/ComposestarCSrc/ComposestarCore/binaries/junit/junit.jar"/>
+	<classpathentry kind="src" path="/ComposestarCore"/>
 	<classpathentry kind="output" path="src"/>
 </classpath>

@@ -50,96 +50,153 @@ public class CLanguageModel extends LanguageModel
 	public void createMetaModel()  throws InvalidModelException
 	{
 		try {	
-		  	  Class typeImpl = Class.forName("Composestar.Core.LAMA.Type");
-			  Class fileImpl = Class.forName("Composestar.Core.LAMA.Type");
-			  Class methodImpl = Class.forName("Composestar.Core.LAMA.MethodInfo");	
-			  Class fieldImpl = Class.forName("Composestar.Core.LAMA.FieldInfo");	
-			  Class parameterImpl = Class.forName("Composestar.Core.LAMA.ParameterInfo");	
-			  Class annotationImpl = Class.forName("Composestar.Core.LAMA.Type");
-			 // Class basictypeImpl = Class.forName("Composestar.C.LAMA.CBasicType");
+		  	Class dirImpl= Class.forName("Composestar.C.LAMA.CDirectory");
+			Class typeImpl = Class.forName("Composestar.Core.LAMA.Type");
+			Class classImpl = Class.forName("Composestar.Core.LAMA.Type");
+			Class methodImpl = Class.forName("Composestar.C.LAMA.CMethodInfo");
+			Class fieldImpl = Class.forName("Composestar.Core.LAMA.FieldInfo");	
+			Class parameterImpl = Class.forName("Composestar.Core.LAMA.ParameterInfo");	
+			Class annotationImpl = Class.forName("Composestar.Core.LAMA.Type");
 			  
 			  /********* Definition of unit types ***********/ 
-			  // Define the 'Type' composite language unit type (Type = Class | Interface)
-			  LanguageUnitType utType = new LanguageUnitType(typeImpl,"Type" , false);
+			  
+			  LanguageUnitType utDir = new LanguageUnitType(dirImpl,"Namespace" , true);
+			  addLanguageUnitType(utDir);	
+			
+			  LanguageUnitType utType = new LanguageUnitType(typeImpl,"Type" , true);
 			  addLanguageUnitType(utType);
 			  
-			  LanguageUnitType utFile = new LanguageUnitType(fileImpl,"Class" , false);
-			  addLanguageUnitType(utFile);
+			  LanguageUnitType utClass = new LanguageUnitType(classImpl,"Class" , true);
+			  addLanguageUnitType(utClass);
 			  
-			  // Define the 'Method' language unit type
 			  LanguageUnitType utMethod = new LanguageUnitType(methodImpl,"Method", true);
 			  addLanguageUnitType(utMethod);
 			  
-			  // Define the 'Field' language unit type
 			  LanguageUnitType utField = new LanguageUnitType(fieldImpl,"Field", false);
 			  addLanguageUnitType(utField);	  
 			  
-			  // Define the 'Parameter' language unit type
 			  LanguageUnitType utParameter = new LanguageUnitType(parameterImpl,"Parameter", false);
 			  addLanguageUnitType(utParameter);
 			  
-			  // Define the 'Annotation' language unit type
 			  LanguageUnitType utAnnotation = new LanguageUnitType(annotationImpl,"Annotation", true);
 			  addLanguageUnitType(utAnnotation);
-			  
-			 // LanguageUnitType utBType = new LanguageUnitType(basictypeImpl,"BasicType" , false);
-			 // addLanguageUnitType(utBType);
-			 
+			   
 			  /********* Definition of unit relations *********/
 			  
 			  /**Annotation**/
-			  RelationType annotationAttachedMethods = new RelationType("AttachedMethods", utMethod, RelationType.MULTIPLE);
+			  RelationType annotationAttachedMethods = new RelationType("AttachedMethods", utMethod, RelationType.UNIQUE);
+			  utAnnotation.addRelationType(annotationAttachedMethods);	 
+			  
+			  RelationType annotationAttachedField = new RelationType("AttachedField", utField, RelationType.UNIQUE);
 			  utAnnotation.addRelationType(annotationAttachedMethods);	  
+			  
+			  RelationType annotationAttachedClass = new RelationType("AttachedClass", utClass, RelationType.UNIQUE);
+			  utAnnotation.addRelationType(annotationAttachedMethods);	  
+			  
+			  RelationType annotationAttachedParameter = new RelationType("AttachedParameter", utParameter, RelationType.UNIQUE);
+			  utAnnotation.addRelationType(annotationAttachedMethods);	  
+			  
+			  /** Namespace **/
+			  RelationType namespaceChildClasses = new RelationType("ChildClasses", utClass, RelationType.MULTIPLE);
+			  utClass.addRelationType(namespaceChildClasses);
+			  
+			  RelationType namespaceParentNamespace = new RelationType("ParentNamespace", utDir, RelationType.UNIQUE);
+			  utClass.addRelationType(namespaceParentNamespace); 
+			  
+			  RelationType namespaceChildNamespaces = new RelationType("ChildNamespaces", utDir, RelationType.MULTIPLE);
+			  utClass.addRelationType(namespaceChildNamespaces); 			  
+			  
 			  		  
 			  /** Class **/
+			  RelationType classChildMethods = new RelationType("ChildMethods", utMethod, RelationType.MULTIPLE);
+			  utClass.addRelationType(classChildMethods);
 			  
-			  RelationType fileChildMethods = new RelationType("ChildMethods", utMethod, RelationType.MULTIPLE);
-			  utFile.addRelationType(fileChildMethods);
+			  RelationType classChildFields = new RelationType("ChildFields", utField, RelationType.MULTIPLE);
+			  utClass.addRelationType(classChildFields);
 			  
-			  RelationType fileChildFields = new RelationType("ChildFields", utField, RelationType.MULTIPLE);
-			  utFile.addRelationType(fileChildFields);
+			  RelationType classParentDir = new RelationType("ParentDir", utDir, RelationType.UNIQUE);
+			  utClass.addRelationType(classParentDir); 
+			  
+			  RelationType classAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+			  utMethod.addRelationType(classAnnotations);
 			
 			  /** Method **/
-			  RelationType methodParentClass = new RelationType("ParentClass", utFile, RelationType.UNIQUE);
+			  RelationType methodParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
 			  utMethod.addRelationType(methodParentClass);
 		  
 			  RelationType methodChildParameters = new RelationType("ChildParameters", utParameter, RelationType.MULTIPLE);
 			  utMethod.addRelationType(methodChildParameters);
 		
-			  RelationType methodReturnType = new RelationType("ReturnClass", utType, RelationType.UNIQUE);
+			  RelationType methodReturnType = new RelationType("ReturnType", utType, RelationType.UNIQUE);
 			  utMethod.addRelationType(methodReturnType);
 			
-			  RelationType methodAnnotations = new RelationType("Annotations", utAnnotation, RelationType.MULTIPLE);
+			  RelationType methodAnnotations = new RelationType("Annotations", utAnnotation, RelationType.UNIQUE);
 			  utMethod.addRelationType(methodAnnotations);	  
 			  			  
 			  /** Field **/
-			  RelationType fieldFile = new RelationType("Class", utFile, RelationType.UNIQUE);
-			  utField.addRelationType(fieldFile);
+			  RelationType fieldParentClass = new RelationType("ParentClass", utClass, RelationType.UNIQUE);
+			  utField.addRelationType(fieldParentClass);
 			  
-			  RelationType fieldParentMethod = new RelationType("FieldParentMethod", utMethod, RelationType.UNIQUE);
-			  utMethod.addRelationType(fieldParentMethod);
+			  //We do not select internal variables/locals
+			  //RelationType fieldParentMethod = new RelationType("ParentMethod", utMethod, RelationType.UNIQUE);
+			  //utMethod.addRelationType(fieldParentMethod);
 			  
 			  RelationType fieldType = new RelationType("fieldType", utType, RelationType.UNIQUE);
 			  utMethod.addRelationType(fieldType);
 			  
-		
+			  RelationType fieldAnnotations = new RelationType("Annotations", utAnnotation, RelationType.UNIQUE);
+			  utMethod.addRelationType(fieldAnnotations);	 
+			  
 			  /** Parameter **/
 			  RelationType parameterParentMethod = new RelationType("ParentMethod", utMethod, RelationType.UNIQUE);
 			  utParameter.addRelationType(parameterParentMethod);
+
+			  RelationType parameterType = new RelationType("parameterType", utType, RelationType.UNIQUE);
+			  utParameter.addRelationType(parameterType);
+			  
+			  RelationType parameterAnnotations = new RelationType("Annotations", utAnnotation, RelationType.UNIQUE);
+			  utParameter.addRelationType(parameterAnnotations);	 
+			  
+			  /** Type **/
+			  RelationType typeOfParameter = new RelationType("typeOfParameter", utParameter, RelationType.UNIQUE);
+			  utParameter.addRelationType(parameterType);
+			  
+			  RelationType typeOfMethod = new RelationType("typeOfMethod", utMethod, RelationType.UNIQUE);
+			  utParameter.addRelationType(parameterType);
+			  
+			  RelationType typeOfField = new RelationType("typeOfField", utField, RelationType.UNIQUE);
+			  utParameter.addRelationType(parameterType);
+			  
 		
 			  /********* Definition of relation predicates *****/
+			  
+			  /** Directory **/
+			  RelationPredicate namespaceHasClass = 
+			    new RelationPredicate("namespaceHasClass", namespaceChildClasses, "Namespace",
+			    											classParentDir, "Class");	  
+			  addRelationPredicate(namespaceHasClass);
+			  
+			  RelationPredicate namespaceHasNamespace = 
+			    new RelationPredicate("namespaceHasNamespace", namespaceChildNamespaces, "Namespace",
+			    											namespaceParentNamespace, "Namespace");	  
+			  addRelationPredicate(namespaceHasNamespace);
 			  
 			  /** Class **/
 				  
 			  RelationPredicate classHasMethod = 
-			    new RelationPredicate("classHasMethod", fileChildMethods, "Class",
+			    new RelationPredicate("classHasMethod", classChildMethods, "Class",
 			                                            methodParentClass, "Method");	  
 			  addRelationPredicate(classHasMethod);
 			   
 			  RelationPredicate classHasField = 
-			    new RelationPredicate("classHasField", fileChildFields, "Class",
-			                                           fieldFile, "Field");	  
+			    new RelationPredicate("classHasField", classChildFields, "Class",
+			                                           fieldParentClass, "Field");	  
 			  addRelationPredicate(classHasField);
+			  
+			  RelationPredicate classHasAnnotation = 
+			    new RelationPredicate("classHasAnnotation", classAnnotations, "Class",
+			    										annotationAttachedClass, "Annotation");	  
+			  addRelationPredicate(classHasAnnotation);
 			  
 			  /** Method **/
 			  RelationPredicate methodHasParameter = 
@@ -147,10 +204,43 @@ public class CLanguageModel extends LanguageModel
 			                                                parameterParentMethod, "Parameter");	  
 			  addRelationPredicate(methodHasParameter);  
 			  
+			  RelationPredicate methodHasReturnType = 
+			    new RelationPredicate("methodHasReturnType", methodReturnType, "Method",
+			                                                typeOfMethod, "Type");	  
+			  addRelationPredicate(methodHasReturnType); 
+			  
 			  RelationPredicate methodHasAnnotation = 
 				    new RelationPredicate("methodHasAnnotation", methodAnnotations, "Method",
 				                                            	annotationAttachedMethods, "Annotation");	  
-			  addRelationPredicate(methodHasAnnotation);	  
+			  addRelationPredicate(methodHasAnnotation);	
+			  
+			  RelationPredicate methodHasClass = 
+			    new RelationPredicate("methodHasClass", methodParentClass, "Method",
+			    										classChildMethods, "Class");
+			  addRelationPredicate(methodHasClass);		  
+			  
+			  /** Field **/
+			  
+			  RelationPredicate fieldHasAnnotation= 
+			  			new RelationPredicate("fieldHasAnnotation", fieldAnnotations, "Field",
+			  								annotationAttachedField, "Annotation");	  
+			  addRelationPredicate(fieldHasAnnotation);
+			  
+			  RelationPredicate fieldHasType = 
+			  		new RelationPredicate("fieldHasType", fieldType, "Field",
+			  											typeOfField, "Type");	  
+			  addRelationPredicate(fieldHasType); 
+			  
+			  /** Parameter **/
+			  RelationPredicate parameterHasAnnotation= 
+	  			new RelationPredicate("parameterHasAnnotation", parameterAnnotations, "Parameter",
+	  								annotationAttachedParameter, "Annotation");	  
+			  addRelationPredicate(parameterHasAnnotation);
+	  
+			  RelationPredicate parameterHasType = 
+			  		new RelationPredicate("parameterHasType", parameterType, "Parameter",
+	  											typeOfParameter, "Type");	  
+			  addRelationPredicate(parameterHasType);   
 				  
 	  }
 	  catch(ClassNotFoundException cnfe){
@@ -268,7 +358,8 @@ public class CLanguageModel extends LanguageModel
 	    {
 	      ProgramElement unit = (ProgramElement)unitIter.next();
 	      Debug.out(Debug.MODE_WARNING, "CLanguagemodel", "Including: " + unit.getUnitType() + " " + unit.getUnitName());
-		  dict.addLanguageUnit(unit);
+	      //System.out.println("CLanguagemodel Including: " + unit.getUnitType() + " " + unit.getUnitName());
+	      dict.addLanguageUnit(unit);
 	    }
 	}
 	
