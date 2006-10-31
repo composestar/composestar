@@ -23,7 +23,7 @@ public class MatchingPart extends AbstractPattern {
   }
   
   public MatchingPart(MatchingPartAST abstr) {
-	super();
+	super(abstr);
 	mpa = abstr;
 	target = mpa.getTarget();
 	MessageSelectorAST msAST = mpa.getSelector();

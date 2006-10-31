@@ -13,7 +13,7 @@ public class INCREReporter
 	private BufferedWriter writer;
 	private StringBuffer buffer;
 	private String cssFile;
-	private String reportFile;
+	//private String reportFile;
 	private LinkedHashMap timings;
 	 
 	public INCREReporter() 

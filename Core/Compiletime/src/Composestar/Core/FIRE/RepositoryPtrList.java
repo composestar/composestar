@@ -166,30 +166,11 @@ public class RepositoryPtrList extends TreeBuilder
 		}		
 	}
 
-	private FilterComponent parseMultipleMatchings(Iterator iterator)
-	{
-		FilterComponent fc1 = parseMatching ((MatchingPattern) iterator.next());
-		if (iterator.hasNext())
-		{
-			FilterComponent fc2 = parseMultipleMatchings(iterator);
-			Tor tor = new Tor();
-
-			tor.addChild1 (fc1);
-			tor.addChild2 (fc2);
-			return tor;
-		}
-		else
-		{
-			return fc1;
-		}
-	}
-
 	private FilterComponent parseFilterElement(FilterElement fe)
 	{
 		FilterComponent fc1 = parseConditionExpression(fe.getConditionPart());
-
-		Iterator iterator = fe.getMatchingPatternIterator();
-		FilterComponent fc2 = parseMultipleMatchings(iterator);
+		
+		FilterComponent fc2 = parseMatching (fe.getMatchingPattern() );
 		
 		if (fe.getEnableOperatorType() instanceof DisableOperator)
 		{

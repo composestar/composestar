@@ -20,6 +20,7 @@ public class FLIRT {
     /**
      * @param obj
      * @roseuid 411734D50278
+     * @deprecated
      */
     public void run(Object obj) {
 		Filter filter = new Filter();

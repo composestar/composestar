@@ -158,15 +158,11 @@ public class FilterInfo {
 		{
 			FilterElement fe = (FilterElement)iterator.next();
 			this.collectConditions(fe.getConditionPart(), true);
-			CPSIterator matchiterator = (CPSIterator)fe.getMatchingPatternIterator();
-			while(matchiterator.hasNext())
-			{
-				MatchingPattern mp = (MatchingPattern)matchiterator.next();
-				Vector mpart = mp.getMatchingParts();
-				this.collectMacthingSpecification(mpart);
-				Vector spart = mp.getSubstitutionParts();
-				this.collectSubstitutionSpecification(spart);
-			}
+			MatchingPattern mp = fe.getMatchingPattern();
+			Vector mpart = mp.getMatchingParts();
+			this.collectMacthingSpecification(mpart);
+			Vector spart = mp.getSubstitutionParts();
+			this.collectSubstitutionSpecification(spart);
 		}
     }
     

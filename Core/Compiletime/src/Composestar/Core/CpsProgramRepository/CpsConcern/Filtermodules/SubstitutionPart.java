@@ -21,7 +21,7 @@ public class SubstitutionPart extends AbstractPattern {
   }
   
   public SubstitutionPart(SubstitutionPartAST aspAST) {
-	super();
+	super(aspAST);
 	spAST = aspAST;
 	target = spAST.getTarget();
 	selector = new MessageSelector(spAST.getSelector());

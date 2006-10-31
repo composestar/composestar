@@ -445,13 +445,16 @@ public class GrooveASTBuilder {
         graph.addEdge( edge );
         
         //iterate over matchingpatterns::
-        Iterator it = filterElement.getMatchingPatternIterator();
+        //!!! FilterElements only have one MatchingPattern now
+        
+        //!!! Iterator it = filterElement.getMatchingPatternIterator();
         MatchingPattern pattern;
         Node patternNode;
         Node previousPatternNode = null;
         int i = 0;
-        while(it.hasNext()){
-             pattern = (MatchingPattern) it.next();
+        // !!! while(it.hasNext()){
+        // !!!      pattern = (MatchingPattern) it.next();
+             pattern = filterElement.getMatchingPattern();
             
             //create patternNode:
             patternNode = buildMatchingPatternNode( pattern, graph );
@@ -476,7 +479,7 @@ public class GrooveASTBuilder {
             }
             
             previousPatternNode = patternNode;
-        }
+        // !!! }
         
         return filterElementNode;
     }
