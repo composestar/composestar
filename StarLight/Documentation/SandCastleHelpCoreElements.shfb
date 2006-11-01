@@ -3,7 +3,7 @@
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\StarLight.Filters\bin\Debug\Composestar.StarLight.Filters.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\StarLight.Filters\bin\Debug\Composestar.StarLight.Filters.xml" />
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\ContextInfo\bin\Debug\Composestar.StarLight.ContextInfo.xml" />
         <assembly assemblyPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Utilities.Cecil.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\Utilities\Cecil\bin\Debug\Composestar.StarLight.Utilities.Cecil.xml" />
-        <assembly assemblyPath="C:\ComposeStar\StarLight\Source\StarLight.Weaving\bin\Release\Composestar.StarLight.Weaving.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\StarLight.Weaving\bin\Release\Composestar.StarLight.Weaving.xml" />
+        <assembly assemblyPath="C:\ComposeStar\StarLight\Source\StarLight.Weaving\bin\debug\Composestar.StarLight.Weaving.dll" xmlCommentsPath="C:\ComposeStar\StarLight\Source\StarLight.Weaving\bin\debug\Composestar.StarLight.Weaving.xml" />
     </assemblies>
     <namespaceSummaries>
         <namespaceSummaryItem name="" isDocumented="False" />
@@ -71,5 +71,5 @@ The FilterContext is used internally by the StarLight compiler to include runtim
     <sdkLinks>Msdn</sdkLinks>
     <presentationStyle>VS2005</presentationStyle>
     <missingTags>Summary, Parameter, Returns, AutoDocumentCtors</missingTags>
-    <visibleItems>Attributes, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</visibleItems>
+    <visibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</visibleItems>
 </project>

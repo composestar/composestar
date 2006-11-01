@@ -10,7 +10,7 @@ using Composestar.StarLight.Utilities;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// Strategy to create the NotImplementedAction. This action injects NotImplementedExceptions into the code.
+    /// Strategy to create the NotImplementedAction. This action injects <see cref="T:System.NotImplementedException">NotImplementedExceptions</see> into the code.
     /// </summary>
     [WeaveStrategyAttribute("NotImplementedAction")]
     public class NotImplementedActionWeaveStrategy : FilterActionWeaveStrategy

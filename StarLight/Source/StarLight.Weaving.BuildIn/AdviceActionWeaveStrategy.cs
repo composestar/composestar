@@ -22,13 +22,17 @@ using Composestar.StarLight.Weaving;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// TODO generate comment
+    /// Calls the substitution-message with the JoinPointContext as an argument and 
+    /// then continues in the filterset. 
+    /// Can be used for example to implement certain advicebehaviour before or after a dispatch. 
     /// </summary>
     [WeaveStrategyAttribute("AdviceAction")]
     [WeaveStrategyAttribute("BeforeAction")]
     [WeaveStrategyAttribute("AfterAction")]
     public class AdviceActionWeaveStrategy : FilterActionWeaveStrategy
     {
+
+        private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
                
         /// <summary>
         /// Generate the code which has to be inserted at the place of the filter specified by the visitor.
@@ -54,8 +58,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             {
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
                         Properties.Resources.AdviceMethodNotFound, filterAction.SubstitutionSelector, filterAction.SubstitutionTarget));
-            }
-             
+            }             
 
             // Set JoinPointContext
             WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
@@ -68,12 +71,12 @@ namespace Composestar.StarLight.Weaving.Strategies
         }
 
         /// <summary>
-        /// Weaves the call to the advice
+        /// Weaves the call to the advice.
         /// </summary>
-        /// <param name="filterAction">The filteraction</param>
-        /// <param name="parentType">The type containing the original method</param>
-        /// <param name="methodToCall">The advice method</param>
-        /// <param name="jpcVar">The local variable containing the JoinPointContext</param>
+        /// <param name="filterAction">The filteraction.</param>
+        /// <param name="parentType">The type containing the original method.</param>
+        /// <param name="methodToCall">The advice method.</param>
+        /// <param name="jpcVar">The local variable containing the JoinPointContext.</param>
         private void CallAdvice(ICecilInliningInstructionVisitor visitor,
             FilterAction filterAction, TypeDefinition parentType, MethodReference methodToCall,
             VariableDefinition jpcVar)
@@ -107,16 +110,13 @@ namespace Composestar.StarLight.Weaving.Strategies
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodToCall));
 
         }
-
-
-        private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
-
+          
         /// <summary>
-        /// Returns the MethodReference to the advice method
+        /// Returns the MethodReference to the advice method.
         /// </summary>
-        /// <param name="filterAction">The filteraction</param>
-        /// <param name="parentType">The type containing the original method</param>
-        /// <returns>The MethodReference to the advice method</returns>
+        /// <param name="filterAction">The filteraction.</param>
+        /// <param name="parentType">The type containing the original method.</param>
+        /// <returns>The MethodReference to the advice method.</returns>
         private MethodReference GetMethodToCall(ICecilInliningInstructionVisitor visitor,
             FilterAction filterAction, TypeDefinition parentType)
         {
@@ -133,7 +133,6 @@ namespace Composestar.StarLight.Weaving.Strategies
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
                         Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
                 }
-
 
                 MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, 
                     filterAction.SubstitutionSelector, m_JpcTypes);

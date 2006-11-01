@@ -19,7 +19,7 @@ using Composestar.StarLight.Utilities.Interfaces;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// TODO generate comment
+    /// Dispatches to the substitution-message and returns afterwards. 
     /// </summary>
     [WeaveStrategyAttribute("DispatchAction")]
     public class DispatchActionWeaveStrategy : FilterActionWeaveStrategy

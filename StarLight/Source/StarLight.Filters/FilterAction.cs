@@ -14,8 +14,8 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// </summary>
     /// <example>
     /// <para>
-    /// To create a custom filter action, create a class inheriting <see cref="T:FilterAction"></see>. Override the <c>Execute</c> method and supply your own implementation.
-    /// Next, place a <see cref="T:FilterActionAttribute"></see> describing the filter action to the class.</para>
+    /// To create a custom filter action, create a class inheriting <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterAction"></see>. Override the <c>Execute</c> method and supply your own implementation.
+    /// Next, place a <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute"></see> describing the filter action to the class.</para>
     /// <para>
     /// The following code shows a <i>StartTimerAction</i>, which will start a timer and place the timer values in the context properties of the <see cref="T:JoinPointContext"></see> parameter.</para>
     /// <code>
@@ -50,7 +50,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// }
     /// </code>
     /// <para>
-    /// To use this filter action, implement a <see cref="T:FilterType"></see> and specify, using the <see cref="T:FilterTypeAttribute"></see>, the name of this filter action. 
+    /// To use this filter action, implement a <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterType"/> and specify, using the <see cref="T:Composestar.StarLight.Filters.FilterTypes.FilterTypeAttribute"/>, the name of this filter action. 
     /// Now you can use the filter type in your concern specification.   
     /// </para> 
     /// <note>
@@ -60,8 +60,8 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// The above example uses kernel calls to a high performance counter. It is also possible to use the <see cref="T:System.Diagnostics.Stopwatch"></see> class.
     /// </note> 
     /// </example> 
-    /// <seealso cref="T:FilterType"/>
-    /// <seealso cref="T:FilterActionAttribute"/>
+    /// <seealso cref="T:Composestar.StarLight.Filters.FilterTypes.FilterType"/>
+    /// <seealso cref="T:Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute"/>
     public abstract class FilterAction
     {
         /// <summary>

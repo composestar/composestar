@@ -90,10 +90,6 @@ internal class Composestar_Repository_EntitiesAccessorAccessor : BaseAccessor {
         return ((global::Composestar.Repository.EntitiesAccessor)(priv_obj.Target));
     }
     
-    internal static global::Composestar.Repository.EntitiesAccessor CreatePrivate() {
-        object[] args = new object[0];
-        Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject priv_obj = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(typeof(global::Composestar.Repository.EntitiesAccessor), new System.Type[0], args);
-        return ((global::Composestar.Repository.EntitiesAccessor)(priv_obj.Target));
-    }
+ 
 }
 }

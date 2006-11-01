@@ -15,7 +15,7 @@ using Composestar.StarLight.Utilities.Interfaces;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// The Substitution FilterAction Strategy does not inject any code. 
+    /// Has only filterbehaviour (empty execute method); substitutes the message with the substitutionmessage and continues. 
     /// </summary>
     [WeaveStrategyAttribute("SubstitutionAction")]
     public class SubstitutionActionWeaveStrategy : FilterActionWeaveStrategy

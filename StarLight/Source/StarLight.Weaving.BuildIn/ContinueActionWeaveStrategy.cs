@@ -15,7 +15,7 @@ using Composestar.StarLight.Utilities.Interfaces;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// TODO generate comment
+    /// A continue action does not perform any operation. It will simple skip to the next filter.
     /// </summary>
     [WeaveStrategyAttribute("ContinueAction")]
     public class ContinueActionWeaveStrategy : FilterActionWeaveStrategy

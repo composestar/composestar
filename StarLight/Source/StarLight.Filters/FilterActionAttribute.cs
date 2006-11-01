@@ -20,7 +20,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// }
     /// </code>
     /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>. 
-    /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation.
+    /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation (not shown here).
     /// </example> 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class FilterActionAttribute : Attribute
@@ -155,7 +155,8 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// }
         /// </code>
         /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>.
-        /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation.
+        /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. 
+        /// In this case, it can not use the JoinPointContext because the Attribute indicates that a JoinPointContext is not needed for this filter action.
         /// </example>
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
@@ -222,7 +223,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// <item><term>Original</term><description>The message is not changed.</description></item>
         /// <item><term>Substituted</term><description>The message is changed according to the substitutionpart.</description></item>
         /// <item><term>Any</term><description>The message can change into any other message. 
-        /// Be carefull when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
+        /// Be careful when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
         /// Use only this option when you cannot use a following substitution filter</description></item>
         /// </list>
         /// </para>  
@@ -241,7 +242,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
             /// The message can change into any other message. 
             /// </summary>
             /// <remarks>
-            /// Be carefull when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
+            /// Be careful when using this option, as it introduces more uncertainty in the static reasoning algorithms. 
             /// Only use this option when you cannot use a following substitution filter.
             /// </remarks> 
             Any

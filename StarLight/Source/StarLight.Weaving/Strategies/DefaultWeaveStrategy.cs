@@ -22,8 +22,9 @@ using Composestar.StarLight.Utilities.Interfaces;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// The default weave strategy, which will emit a call to an execute method defined by the filteraction.
-    /// The developer can create his/her own implementation of the filter action in this function.
+    /// The default weave strategy, which will emit a call to an execute method defined by the filter action.
+    /// The developer can create his/her own implementation of the filter action in this function. 
+    /// If more flexibility is needed, then create a custom weave strategy.
     /// </summary>
     [WeaveStrategyAttribute("Default")]
     public class DefaultWeaveStrategy : FilterActionWeaveStrategy

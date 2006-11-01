@@ -16,7 +16,8 @@ using Composestar.StarLight.Utilities;
 namespace Composestar.StarLight.Weaving.Strategies
 {
     /// <summary>
-    /// Strategy to create the ErrorFilterAction. Basically it injects an exception throw into the instruction code.
+    /// Strategy to create the ErrorFilterAction. 
+    /// Basically, it injects an <c>exception throw</c> statement into the instruction code.
     /// </summary>
     [WeaveStrategyAttribute("ErrorAction")]
     public class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
