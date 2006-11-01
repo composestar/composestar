@@ -43,7 +43,7 @@
 	
 	<!-- compile -->
 	<target name="compile" depends="init_local" >
-		<javac srcdir="src" destdir="${out.build}" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<classpath>
 				<pathelement location="${build.core}/Plugin/Eclipse/${out.build}/ComposestarEclipsePluginCore.jar"/>
 			</classpath>
@@ -54,7 +54,9 @@
 	<!-- create jar -->
 	<target name="jar">
 		<jar destfile="${out.dist}/ComposestarEclipsePlugin.jar">
-			<fileset dir="${build.core}/Plugin/Eclipse/${out.build}" />
+			<fileset dir="${build.core}/Plugin/Eclipse/${out.build}">
+				<filename name="**/*.class"/>
+			</fileset>
 			<fileset dir="${out.build}" />
 		</jar>
 	</target>
