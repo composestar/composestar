@@ -22,8 +22,10 @@
                 projects. By altering your <em>cpsproj</em> file or the StarLight.targets file you
                 can change this process.
             </p>
-            <p>It is possible to interface with a number of targets, which can be overriden in your own <em>cpsproj</em> project file:</p>
-             <table class="members" id="tasks">
+            <p>
+                It is possible to interface with a number of targets, which can be overriden in
+                your own <em>cpsproj</em> project file:</p>
+            <table class="members" id="tasks">
                 <tr>
                     <th class="nameColumn">
                         Target name</th>
@@ -35,7 +37,8 @@
                         <b><span class="nolink">BeforeWeave</span></b></td>
                     <td>
                         <div class="summary">
-                           Called before the actual weaving tasks are started. Also before any compilation of code inside the Concern project.
+                            Called before the actual weaving tasks are started. Also before any compilation
+                            of code inside the Concern project.
                         </div>
                     </td>
                 </tr>
@@ -44,16 +47,17 @@
                         <b><span class="nolink">AfterWeave</span></b></td>
                     <td>
                         <div class="summary">
-                           Called when the weave tasks are completed. Can, for instance, be used to copy the outputs to another folder.
+                            Called when the weave tasks are completed. This can, for instance, be used to copy
+                            the outputs to another folder.
                         </div>
                     </td>
                 </tr>
-                 <tr>
+                <tr>
                     <td>
                         <b><span class="nolink">BeforeReweave</span></b></td>
                     <td>
                         <div class="summary">
-                            Executed before a clean and weave call. 
+                            Executed before a clean and weave call.
                         </div>
                     </td>
                 </tr>
@@ -65,9 +69,43 @@
                             Target being called when a clean and weave action occurred.
                         </div>
                     </td>
-                </tr>                
+                </tr>
             </table>
-            <p>Besides the targets above, you can also use or override the default targets like <em>BeforeBuild</em>, <em>AfterBuild</em>, and so on.</p>
+            <p>
+                Besides the targets above, you can also use or override the default targets like
+                <em>BeforeBuild</em>, <em>AfterBuild</em>, and so on. See the MSDN for more information
+                about <a href="http://msdn2.microsoft.com/en-us/library/ms366724.aspx">extending the
+                    Visual Studio Build process</a>.</p>
+            <h3 class="subHeading">
+                Compile concern project by compiling source project</h3>
+            <p>
+                Normally, you build the concern project. This will build all the dependent projects
+                and perform the weaving. This will leave the original project untouched. If you
+                want to build the concern project when you are building your original source project,
+                then you have to edit your project file to build the concern file.</p>
+            <p>
+                For example; you have a source project called <b>S</b> and a concern project called
+                <b>C</b>. Normally, you build project <b>S</b> so you get a version without weaved
+                code, or you build project <b>C</b>, which first build project <b>S</b>, copies
+                the output to the bin folder of project <b>C</b> and performs the weaving.</p>
+            <p>
+                It is possible to build project <b>C</b> automatically when you build project <b>S</b>
+                by changing the project file of <b>S</b>. Add a new target called <em>AfterBuild</em>
+                to the project and add the <em>MSBuild</em> task to this target. Set the properties
+                of the MSBuild task to the concern project <b>C</b>. After each build, the concern
+                project is being build. If you want to copy the weaved output files to the non-weaved
+                output files, include a copy action in the target. This can be usefull when you
+                want to change the runnable file to a runnable file with weaved filters.
+            </p>
+            <p>
+                <b>Note:</b>&nbsp;the compilation performed by the concern project is incremental,
+                so the source will not be recompiled.</p>
+            <p>
+                <b>Note:</b>&nbsp;you can add a condition to the <em>AfterBuild</em> target. Use
+                for instance the <em>Configuration</em> value and define new configurations like
+                <em>ConcernsDebug</em> and <em>ConcernsRelease</em> in addition to the existing
+                <em>Debug</em> and <em>Release</em> configurations. The concern project can make
+                use of these configuration to perform certain operations in specific cases.</p>
         </div>
     </div>
 </body>
