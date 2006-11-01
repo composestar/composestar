@@ -94,6 +94,16 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "ConditionClass.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ConditionHelper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FilterTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -129,6 +139,10 @@
                 />
                 <File
                     RelPath = "Concerns\CombinedElms.cps"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Concerns\ConditionConcern.cps"
                     BuildAction = "None"
                 />
                 <File

@@ -17,7 +17,7 @@ concern AnotherFilterTestsConcern in BasicTests
 		internals
 			visitor : BasicTests.Visitor;
 		conditions
-			enoughVisits : visitor.enoughVisits();
+			enoughVisits : visitor.get_Enough();
 		inputfilters
 			countVisit : Meta = { [*.doOutsideVisit] visitor.visitHome };
 			makeTrip : Dispatch = { [*.doOutsideVisit] *.makeOutsideTrip }
