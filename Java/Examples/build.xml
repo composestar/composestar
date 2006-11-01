@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Composestar/Java/Examples">
+
+	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}..${file.separator}Core">
+		<and>
+			<not>
+				<isset property="build.core" />
+			</not>
+			<available file="${basedir}${file.separator}..${file.separator}..${file.separator}Core${file.separator}common.xml" />
+		</and>
+	</condition>
+	<import file="${build.core}${file.separator}common.xml" />
+
+	<echo message="Processing: ${ant.project.name}" />
+	
+	<description>
+	The Compose* Java Examples
+	Clean the examples.
+	</description>
+	
+	<target name="build" />
+	
+	<target name="clean" description="Clean intermediate files from the examples.">
+		<delete includeemptydirs="true">
+			<FileSet dir="${basedir}" >
+				<include name="*/BuildConfiguration.xml" />
+				<include name="*/repository.dat" />
+				<include name="*/buildlog.txt" />
+				<include name="*/langmap.pro" />			
+				<include name="*/obj/**" />
+			</FileSet>
+		</delete>
+	</target>
+
+</project>
