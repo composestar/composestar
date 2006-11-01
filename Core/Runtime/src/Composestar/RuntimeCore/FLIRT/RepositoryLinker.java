@@ -388,7 +388,7 @@ public class RepositoryLinker
 		if (conditionExpression instanceof BinaryOperator)
 		{
 			linkLeft(((BinaryOperator) conditionExpression).getLeft(),(BinaryOperatorRuntime) conditionExpressionRuntime);
-			linkRight(((BinaryOperator) conditionExpression).getLeft(),(BinaryOperatorRuntime) conditionExpressionRuntime);
+			linkRight(((BinaryOperator) conditionExpression).getRight(),(BinaryOperatorRuntime) conditionExpressionRuntime);
 		}
 		else if(conditionExpression instanceof UnaryOperator)
 		{
