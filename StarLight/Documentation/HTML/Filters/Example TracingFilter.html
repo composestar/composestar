@@ -1,0 +1,116 @@
+<html>
+<head>
+    <title>Example EmptyFilter</title>
+    <link href="..\styles.css" type="text/css" rel="STYLESHEET">
+    <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
+</head>
+<body topmargin="0" leftmargin="0">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%" class="TopHeaderRepeatSmall">
+                &nbsp;</td>
+            <td align="right">
+                <img src="images/logo_top_small.png" title="ComposeStar StarLight" /></td>
+        </tr>
+    </table>
+    <div id="mainSection">
+        <div id="mainBody">
+            <h1 class="heading">
+                Example TracingFilter</h1>
+                <p>
+                    The <i>Tracing</i> filtertype:</p>
+                <table border="1">
+                    <tr>
+                        <td>
+                            <code><span style="color: blue">using</span> Composestar.StarLight.Filters.FilterTypes;<br />
+                                <br />
+                                <span style="color: blue">namespace</span> FilterTypes {<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterTypeAttribute</span>(<span
+                                    style="color: maroon">"Tracing"</span>, <span style="color: maroon">"TracingInAction"</span>,
+                                <span style="color: aqua">FilterAction</span>.ContinueAction,<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"TracingOutAction"</span>,
+                                <span style="color: aqua">FilterAction</span>.ContinueAction)]<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
+                                    class</span> <span style="color: aqua">TracingFilterType</span> : <span style="color: aqua">
+                                        FilterType </span>
+                                <br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+                                } </code>
+                        </td>
+                    </tr>
+                </table>
+            <p>
+                The filter actions for the <i>Tracing</i> filtertype:</p>
+            <table border="1">
+                <tr>
+                    <td>
+                        <code>
+<pre>
+using Composestar.StarLight.ContextInfo;
+using Composestar.StarLight.Filters.FilterTypes;
+
+namespace FilterTypes
+{
+    [FilterActionAttribute("StartEmptyAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
+       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    public class StartEmptyAction : FilterAction
+    {
+        public override void Execute(JoinPointContext context)
+        {
+
+        }
+    }
+}                            
+</pre>   
+                        
+                        
+                        </code>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table border="1">
+                <tr>
+                    <td>
+                        <code>
+<pre>
+using Composestar.StarLight.ContextInfo;
+using Composestar.StarLight.Filters.FilterTypes;
+
+namespace FilterTypes
+{
+    [FilterActionAttribute("StopEmptyAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
+       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    public class StopEmptyAction : FilterAction
+    {
+        public override void Execute(JoinPointContext context)
+        {
+  
+        }
+    }
+}                         
+</pre>                         
+                        
+                        
+                        </code>
+                    </td>
+                </tr>
+            </table>
+            <p>
+                Using the EmptyFilter in a concern</p>
+            <table border="1">
+                <tr>
+                    <td>
+                        <code><span style="color: blue">inputfilters</span><br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">do_trace</span> : <span style="color: aqua">
+                                Tracing</span> = { <span style="color: aqua">True</span> => [*.*] };
+                            </code>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<!-- @SortOrder 5 -->
