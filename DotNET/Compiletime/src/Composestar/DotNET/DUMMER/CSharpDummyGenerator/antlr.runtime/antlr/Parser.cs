@@ -390,6 +390,7 @@ namespace antlr
 		public virtual void reportError(RecognitionException ex)
 		{
 			Console.Error.WriteLine(ex);
+			throw new Exception("Error while parsing: ", ex);
 		}
 		
 		/*Parser error-reporting function can be overridden in subclass */
@@ -403,6 +404,7 @@ namespace antlr
 			{
 				Console.Error.WriteLine(getFilename() + ": error: " + s);
 			}
+			throw new Exception("Error while parsing: " + s);
 		}
 		
 		/*Parser warning-reporting function can be overridden in subclass */
