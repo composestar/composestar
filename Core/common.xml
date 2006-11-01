@@ -23,6 +23,7 @@ Common routines. Always include this file in every build.xml file
 		
 		<property name="out.jar.core"      value="${out.dist}${file.separator}ComposestarCORE.jar"/>
 		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}ComposestarDotNET.jar"/>
+		<property name="out.jar.java"		value="${out.dist}${file.separator}ComposestarJava.jar"/>
 		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar"/>
 
 		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version number -->
@@ -63,6 +64,9 @@ Common routines. Always include this file in every build.xml file
 		
 		<!-- location of the Compose* installation -->
 		<property name="composestar.installdir" value="C:${file.separator}Program Files${file.separator}ComposeStar"/>
+		
+		<!-- location of Eclipse pluginsfolder -->
+		<property name="eclipse.pluginsdir" value="${env.ECLIPSE_HOME}${file.separator}plugins"/>
 		
 		<!-- make macro -->
 		<macrodef name="make">
@@ -159,11 +163,22 @@ Common routines. Always include this file in every build.xml file
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
 		</path>
 		
+		<path id="lib.java">
+			<path refid="lib.core"/>
+			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
+			<fileset dir="${build.java}${file.separator}Libraries" includes="*/*.jar"/>
+		</path>
+		
 		<path id="lib.starlight">
 			<path refid="lib.core"/>
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
 			<fileset dir="${build.starlight}${file.separator}Libraries" includes="*/*.jar"/>
-      <fileset dir="${build.starlight}${file.separator}Libraries" includes="*.jar" />
+			<fileset dir="${build.starlight}${file.separator}Libraries" includes="*.jar" />
+		</path>
+		
+		<!-- eclipse libraries -->
+		<path id="lib.eclipse">
+			<fileset dir="${env.ECLIPSE_HOME}${file.separator}plugins" includes="*.jar"/>
 		</path>
 			
 		<!-- findbugs jars -->
