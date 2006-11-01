@@ -32,7 +32,7 @@ public class JavaCompiler implements LangCompiler
 	public void compileSources(Project p) throws CompilerException
 	{
 		String command = "";
-		String options = "-cp ";
+		String options = "-classpath ";
 		Language lang = p.getLanguage();
 		if (lang != null)
 		{
@@ -127,7 +127,7 @@ public class JavaCompiler implements LangCompiler
 		Iterator deps = p.getDependencies().iterator();
 		if (deps.hasNext())
 		{
-			options = "-cp ";
+			options = "-classpath ";
 			options = options + "\"" + ((Dependency) deps.next()).getFileName() + "\"";
 			while (deps.hasNext())
 			{
