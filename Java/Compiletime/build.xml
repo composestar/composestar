@@ -10,7 +10,7 @@
 	
 	<import file="${build.core}/common.xml"/>
 	
-	<property name="Dummer.dir" location="src\Composestar\Java\DUMMER"/>
+	<property name="Dummer.dir" location="src/Composestar/Java/DUMMER"/>
 		
 	<echo>Processing: ${ant.project.name} ...</echo>	
 	<description>The Compose* Java Compiletime</description>
@@ -50,7 +50,7 @@
 	</target>
 	
 	<target name="compile_java" depends="init_local,antlr">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.java" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.java" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AnnotationCollector.java"/>
 		</javac>
 	</target>
