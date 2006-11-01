@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/DotNET/Installer" default="make-installer">
-
-	<taskdef name="nsis" classname="net.sf.nsisant.Task">
-		<classpath location="nsisant-1.2.jar"/>
-	</taskdef>
+<project name="ComposeStar/DotNET/Installer" default="installer">
 
 	<condition property="build.core" value="..${file.separator}..${file.separator}Core">
 		<and>
@@ -13,40 +9,50 @@
 	</condition>
 	
 	<import file="${build.core}${file.separator}common.xml"/>
+	
+	<target name="local_init" depends="init">
+		<taskdef name="nsis" classname="net.sf.nsisant.Task">
+			<classpath location="nsisant-1.2.jar"/>
+		</taskdef>
+		
+		<mkdir dir="${out.build}"/>
+		<mkdir dir="${out.dist}"/>
+	</target>
 
-	<target name="clean">
-		<delete dir="${composestar.installerdir}${file.separator}binaries"/>
+	<target name="clean" depends="init" description="clean intermediate files">
+		<delete dir="${out.build}"/>
+		<delete dir="${out.dist}"/>
+		
+		<delete dir="${basedir}${file.separator}binaries"/>
 		<delete>
-			<fileset dir="${composestar.installerdir}$">
+			<fileset dir="${basedir}">
 				<include name="*.css"/>
 				<include name="INCRE*.xml"/>
 				<include name="filterdesc.xml"/>
 			</fileset>
 		</delete>
-		<delete dir="${composestar.installerdir}${file.separator}ComposestarVSAddin"/>
+		<delete dir="${basedir}${file.separator}ComposestarVSAddin"/>
 	</target>
 	
 	<target name="build"/>
 	
-	<target name="copy-files">
-		
-		<property name="composestar.installerdir" value="${build.dotnet}${file.separator}Installer"/>
-		
-		<mkdir dir="${composestar.installerdir}${file.separator}binaries"/>
-		<mkdir dir="${composestar.installerdir}${file.separator}binaries${file.separator}prolog"/>
-		<mkdir dir="${composestar.installerdir}${file.separator}binaries${file.separator}groove"/>
-		<mkdir dir="${composestar.installerdir}${file.separator}ComposestarVSAddin"/>
+	<target name="copy_files" depends="local_init">
+	
+		<mkdir dir="${basedir}${file.separator}binaries"/>
+		<mkdir dir="${basedir}${file.separator}binaries${file.separator}prolog"/>
+		<mkdir dir="${basedir}${file.separator}binaries${file.separator}groove"/>
+		<mkdir dir="${basedir}${file.separator}ComposestarVSAddin"/>
 		
 		<!-- Compose* .NET .CSS and .XML files -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}INCRE${file.separator}INCRE.css" todir="${composestar.installerdir}"/>
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}CKRET.css" todir="${composestar.installerdir}"/>
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}filterdesc.xml" todir="${composestar.installerdir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}INCRE${file.separator}INCRE.css" todir="${basedir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}CKRET.css" todir="${basedir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}filterdesc.xml" todir="${basedir}"/>
 
 		<!-- Compose* .NET ANTLR libs -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr${file.separator}antlr.jar" todir="${composestar.installerdir}${file.separator}binaries"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr${file.separator}antlr.jar" todir="${basedir}${file.separator}binaries"/>
 
 		<!-- Compose* .NET prolog libs -->
-		<copy todir="${composestar.installerdir}${file.separator}binaries${file.separator}prolog">
+		<copy todir="${basedir}${file.separator}binaries${file.separator}prolog">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}prolog">
 				<include name="prolog.jar"/>
 				<include name="lib.pro"/>
@@ -55,12 +61,12 @@
 		</copy>
 
 		<!-- Compose* .NET Compiletime libs -->
-		<copy todir="${composestar.installerdir}${file.separator}binaries">
+		<copy todir="${basedir}${file.separator}binaries">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}dist"/>
 		</copy>
 
 		<!-- Compose* .NET Groove libs -->
-		<copy todir="${composestar.installerdir}${file.separator}binaries${file.separator}groove">
+		<copy todir="${basedir}${file.separator}binaries${file.separator}groove">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}groove">
 				<include name="groove-1_2_0.jar"/>
 				<include name="castor-0_9_5_2-xml.jar"/>
@@ -71,12 +77,12 @@
 		</copy>
 
 		<!-- Compose* .NET Compiletime libs -->
-		<copy todir="${composestar.installerdir}${file.separator}binaries">
+		<copy todir="${basedir}${file.separator}binaries">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}dist"/>
 		</copy>
 
 		<!-- Compose* .NET C# Dummygenerator -->
-		<copy todir="${composestar.installerdir}${file.separator}binaries">
+		<copy todir="${basedir}${file.separator}binaries">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}DUMMER${file.separator}CSharpDummyGenerator${file.separator}bin">
 				<include name="CSharpDummyGenerator.exe"/>
 				<include name="antlr.runtime.dll"/>
@@ -84,7 +90,7 @@
 		</copy>
 		
 		<!-- Compose* .NET Weavers -->
-		<copy todir="${composestar.installerdir}${file.separator}binaries">
+		<copy todir="${basedir}${file.separator}binaries">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}ILICIT${file.separator}Weaver${file.separator}bin${file.separator}Release">
 				<include name="IlWeaver.exe"/>
 				<include name="PeWeaver.exe"/>
@@ -93,51 +99,49 @@
 		</copy>
 
 		<!-- Compose* .NET INCRE configs -->
-		<copy todir="${composestar.installerdir}">
+		<copy todir="${basedir}">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}INCRE">
 				<include name="*.xml"/>
 			</fileset>
 		</copy>
 
 		<!-- Compose* .NET Runtime libs -->
-		<copy todir="${composestar.installerdir}/binaries">
+		<copy todir="${basedir}/binaries">
 			<fileset dir="${build.dotnet}${file.separator}Runtime${file.separator}src${file.separator}FLIRT${file.separator}bin${file.separator}Release">
 				<include name="*.dll"/>
 			</fileset>
 		</copy>
 
 		<!-- Compose* .NET Plugin -->
-		<copy todir="${composestar.installerdir}${file.separator}ComposestarVSAddin"> 
+		<copy todir="${basedir}${file.separator}ComposestarVSAddin"> 
 			<fileset dir="${build.dotnet}${file.separator}Plugin${file.separator}VSAddin${file.separator}bin">
 				<include name="ComposestarVSAddin.*" />
 			</fileset>
 		</copy>
 
 		<!-- .NET Examples -->
-		<delete dir="${composestar.installerdir}${file.separator}examplesDotNET"/>
+		<delete dir="${basedir}${file.separator}examplesDotNET"/>
 		<svn>
-			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${composestar.installerdir}${file.separator}examplesDotNET"/>
+			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${basedir}${file.separator}examplesDotNET"/>
 		</svn>
 		
 	</target>
 
-	<target name="make-installer" depends="copy-files,build-addinfixer">
-		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes" path="${bin.nsis}">
-        		<define name="VERSION" value="2.1"/>
-        		<scriptcmd cmd="AutoCloseWindow true"/>
-		</nsis>
-
-		<property name="composestar.installerdir" value="${build.dotnet}${file.separator}Installer"/>
-		
-		<checksum file="ComposeStar.NET_0.6.exe" forceOverwrite="yes"/>
-		
-	</target>
-
-	<target name="build-addinfixer">
+	<target name="build_addinfixer" depends="local_init">
 		<nsis script="ComposeStarAddIn.nsi" verbosity="4" out="build_addinfixer.log" noconfig="yes" path="${bin.nsis}">
-        		<define name="VERSION" value="2.1"/>
-        		<scriptcmd cmd="AutoCloseWindow true"/>
-    		</nsis>
+			<define name="VERSION" value="${version.dotnet}"/>
+			<define name="BUILD_LABEL" value="${version.build}"/>
+			<scriptcmd cmd="AutoCloseWindow true"/>
+		</nsis>
 	</target> 
-	
+
+	<target name="installer" depends="copy_files,build_addinfixer" if="available.nsis" description="build the DotNET installer">	
+		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes" path="${bin.nsis}">
+        	<define name="VERSION" value="${version.dotnet}"/>
+        	<define name="BUILD_NUMBER" value="${version.build}"/>
+        	<scriptcmd cmd="AutoCloseWindow true"/>
+		</nsis>
+		
+		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes"/>		
+	</target>	
 </project>

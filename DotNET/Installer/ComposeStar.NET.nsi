@@ -29,9 +29,25 @@
 ;--------------------------------
 ;General
 
-  Name "Compose*.NET"
+  !define PRODUCT_NAME "Compose*.NET"
+
+  !ifndef VERSION
+    !define VERSION "0.0.0"
+  !endif
+  
+  !ifndef BUILD_NUMBER
+    !define BUILD_NUMBER "0"
+  !endif
+
+  Name "${PRODUCT_NAME}"
+  Caption "${PRODUCT_NAME} ${VERSION} Setup"
   Icon cstar.ico
-  OutFile "ComposeStar.NET_0.6.exe"
+  OutFile "dist\ComposeStar.NET_${VERSION}.exe"
+  
+  VIProductVersion "${VERSION}.${BUILD_NUMBER}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT_NAME}"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "University of Twente"
+  VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}.${BUILD_NUMBER}"
 	
   XPStyle "on"
   ShowInstDetails show
@@ -327,13 +343,13 @@ Function writeRegistryKeys
 	;WriteRegStr HKLM "SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps" "@" "{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}"
 	
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayIcon" "$INSTDIR\cstar.ico"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayName" "Compose*"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayName" "${PRODUCT_NAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "UninstallString" "$INSTDIR\Uninstall.exe"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "Publisher" "University of Twente"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLUpdateInfo" "http://composestar.sourceforge.net"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "HelpLink" "http://composestar.sourceforge.net"
 ;	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "URLInfoAbout" "http://composestar.sourceforge.net"
-	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "0.6"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\composestar" "DisplayVersion" "${VERSION}.${BUILD_NUMBER}"
 FunctionEnd
 
 Function writeKeyWordFile
