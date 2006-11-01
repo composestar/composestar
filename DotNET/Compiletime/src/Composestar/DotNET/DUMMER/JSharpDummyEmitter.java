@@ -9,32 +9,37 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import Composestar.Core.DUMMER.DefaultEmitter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.Master.Config.TypeSource;
+import Composestar.Utils.FileUtils;
 import antlr.ASTFactory;
 import antlr.CommonAST;
 import antlr.collections.AST;
 
 public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTypes 
 {	
-	public StringBuffer dummy;
-	public String target = "";
-	private String basePath = "";
-	private java.util.Stack stack = new java.util.Stack();
 	private final static int ROOT_ID = 0;
-	private static int ALL = -1;
+	private final static int ALL = -1;
+
 	private static String[] tokenNames;
+
+	private StringBuffer dummy;
+	private String packageName = "";
+	private Source currentSource = null;
+
+	private ASTFactory factory = new ASTFactory();
+	private Stack stack = new Stack();
+
 	private int tabs = 0;
 	private boolean lastOutputWasNewline = true;
 	private PrintStream debug = System.err;
-	private String packageName = "";
-	private ArrayList packages = new ArrayList();
+	private List packages = new ArrayList();
 	private boolean packageDefinition = false; 
-	private Source currentSource = null;
 	
 	//Added attributes
 	private boolean attributeDefinition = false;
@@ -56,14 +61,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		packageName = "";
 		packages = new ArrayList();
 		currentSource = source;
+				
+		AST root = factory.create(ROOT_ID, "AST ROOT");
 		
-		ASTFactory factory = new ASTFactory();
-		AST root = factory.create(ROOT_ID,"AST ROOT");
-		
-		try {
-			// Attributes.xml is written to this directory
-			this.basePath = project.getBasePath();
-			
+		try {			
 			FileInputStream fis = new FileInputStream(source.getFileName());
 			// Create a scanner that reads from the input stream passed to us
 			JSharpLexer lexer = new JSharpLexer(fis);
@@ -93,7 +94,11 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	public void createDummies(Project project, List sources, List outputFilenames) throws ModuleException
 	{
 		super.createDummies(project, sources, outputFilenames);
-		writeAttributes();
+
+		// write attributes.xml
+		String basePath = project.getBasePath();
+		File attsFile = new File(basePath, "attributes.xml");
+		writeAttributes(attsFile);
 	}
 	
 	//Added Attributes
@@ -109,21 +114,24 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			+ 	" />\n";
 	}
 	
-	public void writeAttributes() throws ModuleException
+	public void writeAttributes(File target) throws ModuleException
 	{
+		BufferedWriter bw = null;
 		try
 		{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(basePath+"attributes.xml"));
+			bw = new BufferedWriter(new FileWriter(target));
 			bw.write("<?xml version=\"1.0\"?>\n");
 			String startElement = "<Attributes" +">\n"; 
 			bw.write(startElement);
 			bw.write(this.attributes);
 			bw.write("</Attributes>");
-			bw.close();
 		}
 		catch(IOException e)
 		{
 			throw new ModuleException( "ERROR while trying to write attributes!:\n" + e.getMessage() , "DUMMER");
+		}
+		finally {
+			FileUtils.close(bw);
 		}
 	}
 	//End Attributes Methods
@@ -282,10 +290,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		return (ast.getFirstChild() != null);
 	}
 	
-	public void interceptMethodBody(AST ast){
-		
+	public void interceptMethodBody(AST ast)
+	{	
 		//Attributes
-		if(hasChildren(ast)){
+		if (hasChildren(ast)) {
 			visitChildren(ast, "\n", ATTR, false);
 		}
 		//End Attributes
@@ -305,7 +313,7 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		//Attributes
 		String locationPackage = getPackageName();
 		if(!locationPackage.equals("")) locationPackage += ".";	
-		this.attributeLocation = locationPackage+this.className+"."+methodName;
+		this.attributeLocation = locationPackage + className + "." + methodName;
 		this.attributeTarget = "Method";
 		if(!this.attributeType.equals("")) {
 			addAttribute();
@@ -705,11 +713,20 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			break;
 			
 		case VARIABLE_DEF:
-			visit(getChild(ast, MODIFIERS));
+			AST assign = getChild(ast, ASSIGN);
+			AST mods = getChild(ast, MODIFIERS);
+			
+			// remove the final modifier from uninitialized variable declarations
+			// this is a fix for bug #1587894
+			if (assign == null) {
+				mods = filterChildren(mods, "final");
+			}
+			
+			visit(mods);
 			visit(getChild(ast, TYPE));
 			out(" ");
 			visit(getChild(ast, IDENT));
-			visit(getChild(ast, ASSIGN));
+			visit(assign);
 			printSemi(parent);
 			if (parent!= null && parent.getType() == OBJBLOCK) {
 				out(";");
@@ -1109,7 +1126,6 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		return visitChildren(ast, separator, ALL);
 	}
 
-	//Added attributes
 	//We do not want the separator printed
 	private boolean visitChildren(AST ast, String separator, int type)
 	{
@@ -1144,5 +1160,30 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 		}
 		return ret;
 	}
-	//End attributes
+
+	/**
+	 * Returns a copy of an AST without nodes that have the specified text.
+	 */
+	private AST filterChildren(AST ast, String remove)
+	{
+		if (ast == null)
+			throw new IllegalArgumentException("ast cannot be null");
+		
+		if (remove == null)
+			throw new IllegalArgumentException("remove cannot be null");
+		
+		AST result = factory.create(ast.getType(), ast.getText());
+		AST child = ast.getFirstChild();
+		while (child != null)
+		{
+			String text = child.getText(); 
+			if (! remove.equals(text))
+			{
+				AST clone = factory.create(child);
+				result.addChild(clone);
+			}
+			child = child.getNextSibling();			
+		}
+		return result;
+	}
 }

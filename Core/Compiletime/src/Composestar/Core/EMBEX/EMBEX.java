@@ -97,8 +97,8 @@ public class EMBEX implements CTCommonModule
 	 */
 	private Project getProject(String language) throws ModuleException
 	{
-		Projects solution = config.getProjects();
-		List languageProjects = solution.getProjectsByLanguage(language);
+		Projects allProjects = config.getProjects();
+		List languageProjects = allProjects.getProjectsByLanguage(language);
 		if (languageProjects == null || languageProjects.size() == 0)
 		{
 			throw new ModuleException(

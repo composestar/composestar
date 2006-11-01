@@ -93,7 +93,7 @@ public class CpsRepositoryBuilder
   private FilterElementAST fe;
   private FilterModuleAST fm;
   private FilterModuleBinding fmb;
-    private MatchingPartAST mp;
+  private MatchingPartAST mp;
   private MatchingPatternAST mpat;
   private MatchingType mt;
   private MessageSelectorAST s;
@@ -104,7 +104,7 @@ public class CpsRepositoryBuilder
   private SuperImposition si;
   private Target ta;
 
-	private int lineNumber = 0; // Sneaky default value
+  private int lineNumber = 0; // Sneaky default value
 
   //special variables
   private ConditionExpression lastTouched;   //used to insert condition stuff in the right place
@@ -112,7 +112,6 @@ public class CpsRepositoryBuilder
   private Vector condAll;                    //temporary vector used to store conditionparts
   private boolean parsingInput = true;       //whether we're parsing an input- or outputfilter (needed because of generalfilter)
   private boolean workingOnMatching = true;  //whether we're busy creating the matching or substitution part in a messagepatternset
-    // equal to 'self <- { * = ConcernName }'
 
   private Splitter split;
   
@@ -125,8 +124,8 @@ public class CpsRepositoryBuilder
    */
   public CpsRepositoryBuilder() {
     condAll = new Vector();
-      //SelectorDefinition concernSelf = null;
-      namespace = null;
+    //SelectorDefinition concernSelf = null;
+    namespace = null;
     split = new Splitter();
     split.setBuilder(this);
     ds = DataStore.instance();
@@ -487,10 +486,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     inf = new FilterAST();
     inf.setName(name);
     inf.setParent(fm);
-	  inf.setDescriptionFileName(filename);
+    inf.setDescriptionFileName(filename);
     inf.setDescriptionLineNumber(lineNumber);
-    inf.setTypeImplementation(addConcernReference(type));   //fixme: we do the same thing twice here basically
-    addFilterType((String) type.lastElement(),lineNumber);              //
+    inf.setTypeImplementation(addConcernReference(type));   // FIXME: we do the same thing twice here basically
+    addFilterType((String) type.lastElement(), lineNumber);
     if (fm.addInputFilter(inf))
     	this.addToRepository(inf);
     else
@@ -506,8 +505,8 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public void addFilterType(String type,int lineNumber) {
     FilterType ft = new FilterType();
-	  ft.setDescriptionFileName(filename);
-	  ft.setDescriptionLineNumber(lineNumber);
+    ft.setDescriptionFileName(filename);
+    ft.setDescriptionLineNumber(lineNumber);
     if ("wait".equalsIgnoreCase(type)) {
       ft.setType(FilterType.WAIT);
     } else if ("dispatch".equalsIgnoreCase(type)) {
@@ -568,12 +567,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    * @param lineNumber
    */
   public void addFilterElement(String filterop2,int lineNumber, ConditionExpression fec) {
-    //int i;
-    //ConditionExpression tempce;
-
     fe = new FilterElementAST();
-	  fe.setDescriptionFileName(filename);
-	  fe.setDescriptionLineNumber(lineNumber);
+    fe.setDescriptionFileName(filename);
+    fe.setDescriptionLineNumber(lineNumber);
 
     if (parsingInput) {
       inf.addFilterElement(fe);

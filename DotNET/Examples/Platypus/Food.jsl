@@ -5,7 +5,7 @@ public final class Food
 	public static final Food MILK   = new Food("milk");
 	public static final Food INSECT = new Food("insect");
 
-	private String name; // cannot be final because of bug #1587894
+	private final String name;
 
 	private Food(String name)
 	{
