@@ -18,8 +18,34 @@
             <h1 class="heading">
                 MSBuild</h1>
             <p>
-                The StarLight project uses the Microsoft Build system to perform the analysis and weaving of the concern code.</p>
-            
+                The StarLight project uses the Microsoft Build system to perform the analysis and
+                weaving of the concern code. The <em>cpsproj</em> file for a StarLight Concern project
+                consists of a number of tasks controlling the compilation and weaving. You can start
+                MSBuild by either running MSBuild (located in your .NET framework folder) with the
+                name of the <em>cpsproj</em> file, or use the <b>Build</b> option in Visual Studio
+                on the Concern project.</p>
+            <p>
+                For instance, to weave a Concern project names <em>Tracing.cpsproj</em>, execute
+                the following command from the command line:</p>
+            <div class="code">
+                <pre>MSBuild Tracing.cpsproj</pre>
+            </div>
+            <p>
+                A special <em>Weave</em> target is being called as the default target. To clean
+                and weave the project, use the following construction:</p>
+            <div class="code">
+                <pre>MSBuild Tracing.cpsproj /t:reweave</pre>
+            </div>
+            <p>
+                The <em>cpsproj</em> file contains an import of the <b>StarLight.targets</b> file,
+                located in the MSBuild folder under the Program Files folder. This target file contains
+                the tasks definitions and controls the compilation and weaving. It will build the
+                referenced projects first, copy the output to the bin folder of the concern project
+                and starts the analyzer and weaver.</p>
+            <p>
+                For more information about the tasks, see the <a href="MSBuildTasks.html">StarLight
+                    Tasks</a> page. To learn how to extend the MSBuild process, see the <a href="ExtendingMSBuild.html">
+                        extending the MSBuild</a> section.</p>
         </div>
     </div>
 </body>
