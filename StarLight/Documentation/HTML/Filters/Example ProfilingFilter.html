@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Example TracingFilter</title>
+    <title>Example ProfilingFilter</title>
     <link href="..\styles.css" type="text/css" rel="STYLESHEET">
     <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
 </head>
@@ -16,22 +16,26 @@
     <div id="mainSection">
         <div id="mainBody">
             <h1 class="heading">
-                Example TracingFilter</h1>
+                Example ProfilingFilter</h1>
                 <p>
-                    The <i>Tracing</i> filtertype:</p>
+                    The <i>Profiling</i> filtertype:</p>
                 <table border="1">
                     <tr>
                         <td>
                             <code><span style="color: blue">using</span> Composestar.StarLight.Filters.FilterTypes;<br />
+                                <span style="color: blue">using</span> Composestar.StarLight.Filters.BuildIn;<br />
                                 <br />
-                                <span style="color: blue">namespace</span> FilterTypes {<br />
+                                <span style="color: blue">namespace</span> FilterTypes<br />
+                                {<br />
                                 &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterTypeAttribute</span>(<span
-                                    style="color: maroon">"Tracing"</span>, <span style="color: maroon">"TracingInAction"</span>,
-                                <span style="color: aqua">FilterAction</span>.ContinueAction,<br />
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"TracingOutAction"</span>,
-                                <span style="color: aqua">FilterAction</span>.ContinueAction)]<br />
+                                    style="color: maroon">"Profiling"</span>, <span style="color: blue">typeof</span>(<span
+                                        style="color: aqua">StartTimerAction</span>), <span style="color: blue">typeof</span>(<span
+                                            style="color: aqua">ContinueAction</span>),<br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">typeof</span>(<span
+                                    style="color: aqua">StopTimerAction</span>), <span style="color: blue">typeof</span>(<span
+                                        style="color: aqua">ContinueAction</span>))]<br />
                                 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                    class</span> <span style="color: aqua">TracingFilterType</span> : <span style="color: aqua">
+                                    class</span> <span style="color: aqua">ProfilingFilterType</span> : <span style="color: aqua">
                                         FilterType </span>
                                 <br />
                                 &nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -47,21 +51,7 @@
                     <td>
                         <code>
 <pre>
-using Composestar.StarLight.ContextInfo;
-using Composestar.StarLight.Filters.FilterTypes;
-
-namespace FilterTypes
-{
-    [FilterActionAttribute("StartEmptyAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
-    public class StartEmptyAction : FilterAction
-    {
-        public override void Execute(JoinPointContext context)
-        {
-
-        }
-    }
-}                            
+                       
 </pre>   
                         
                         
@@ -75,21 +65,7 @@ namespace FilterTypes
                     <td>
                         <code>
 <pre>
-using Composestar.StarLight.ContextInfo;
-using Composestar.StarLight.Filters.FilterTypes;
-
-namespace FilterTypes
-{
-    [FilterActionAttribute("StopEmptyAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
-    public class StopEmptyAction : FilterAction
-    {
-        public override void Execute(JoinPointContext context)
-        {
-  
-        }
-    }
-}                         
+           
 </pre>                         
                         
                         
@@ -103,8 +79,8 @@ namespace FilterTypes
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">do_trace</span> : <span style="color: aqua">
-                                Tracing</span> = { <span style="color: aqua">True</span> => [*.*] };
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">do_timing</span> : <span style="color: aqua">
+                                Profiling</span> = { <span style="color: aqua">True</span> => [*.*] };
                             </code>
                     </td>
                 </tr>
@@ -113,4 +89,4 @@ namespace FilterTypes
     </div>
 </body>
 </html>
-<!-- @SortOrder 5 -->
+<!-- @SortOrder 6 -->
