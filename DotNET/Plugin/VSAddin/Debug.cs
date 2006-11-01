@@ -209,13 +209,14 @@ namespace ComposestarVSAddin
 				string msg = parsed[4];
 				DebugModes mode;
 
-				try
+				switch (warninglevel)
 				{
-					mode = (DebugModes)DebugModes.Parse(typeof(DebugModes), warninglevel, true);
-				}
-				catch (Exception)
-				{
-					mode = DebugModes.Warning; 
+					case "error" : mode = DebugModes.Error; break;
+					case "crucial" : mode = DebugModes.Crucial; break;
+					case "warning" : mode = DebugModes.Warning; break;
+					case "information" : mode = DebugModes.Information; break;
+					case "debug" : mode = DebugModes.Debug; break;
+					default: mode = DebugModes.NotSet; break;
 				}
 
 				int linenumber = 0;
@@ -425,7 +426,7 @@ namespace ComposestarVSAddin
 
 			foreach(TaskItem item in tl.TaskItems)
 			{
-				if(item.Category.Equals(TaskCategoryComposestar)) 
+				if(item.Category.Equals(TaskCategoryComposestar))
 					try 
 					{
 						item.Delete(); 

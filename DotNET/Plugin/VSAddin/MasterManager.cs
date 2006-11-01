@@ -64,10 +64,13 @@ namespace ComposestarVSAddin
 			try
 			{
 				p.Start();
-				while (!p.HasExited)
+
+				String line;
+				while ((line = p.StandardOutput.ReadLine()) != null)
 				{
-					Debug.Instance.ParseLog(p.StandardOutput.ReadLine());
+					Debug.Instance.ParseLog(line);
 				}
+				p.WaitForExit();
 				if (p.ExitCode == 0) 
 				{
 					mSuccess = true;
