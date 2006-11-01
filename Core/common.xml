@@ -26,9 +26,12 @@ Common routines. Always include this file in every build.xml file
 		<property name="out.jar.java"		value="${out.dist}${file.separator}ComposestarJava.jar"/>
 		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar"/>
 
-		<!-- build label, passed by CruiseControl as "<number>", could be used in the version number -->
-		<property name="label"				value="0"/>
-		<property name="version.build"		value="${label}"/><!-- just the build number -->
+		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version number -->
+		<property name="label"				value="build.0"/>
+		
+		<!-- just the build number -->
+		<taskdef name="extractBuildNumber" classname="Composestar.Ant.Taskdefs.BuildNumberExtractor"/>
+		<extractBuildNumber label="${label}" property="version.build" syntax="build.#" />
 
 		<!-- version numbers, used in installers e.a. Note: must be x.y.z -->
 		<property name="version.dotnet"		value="0.6.0"/>
