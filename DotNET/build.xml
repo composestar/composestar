@@ -25,6 +25,7 @@
 		<ant target="clean" dir="Runtime" />
 		<ant target="clean" dir="Examples" />
 		<ant target="clean" dir="Testing" />
+		<ant target="clean" dir="Installer" />
 	</target>	
 	
 	<target name="build" description="Build the .Net implementation of Compose*">

@@ -69,8 +69,10 @@
 	</target>
 
 	<!-- installer tasks -->
+	<target name="installer" depends="installer_dotnet" />
+	
 	<target name="installer_dotnet" depends="init,dotnet" if="available.dotnet" unless="ignore.dotnet" description="Create installer for Compose* .NET">
-		<ant target="make-installer" dir="${build.dotnet}${file.separator}Installer"/>
+		<ant target="installer" dir="${build.dotnet}${file.separator}Installer"/>
 	</target>		
 	
 	<!-- uninstall tasks -->

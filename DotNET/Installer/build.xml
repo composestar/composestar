@@ -15,6 +15,7 @@
 			<classpath location="nsisant-1.2.jar"/>
 		</taskdef>
 		
+		<delete dir="${out.dist}"/>
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
 	</target>

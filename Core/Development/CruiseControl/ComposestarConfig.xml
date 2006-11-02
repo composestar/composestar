@@ -1,7 +1,7 @@
 <cruisecontrol>
 
 	<!-- location where cruise control is running, used for reporting -->
-	<property name="cchost" value="ewi666.cs.utwente.nl" />
+	<property name="cchost" value="ewi650.cs.utwente.nl" />
 	
 	<!-- expose environment vars -->
 	<property environment="env" toupper="true"/>
@@ -9,7 +9,7 @@
 	<project name="composestar">
 		
 		<!-- set this to the location of the composestar root -->
-		<property name="composestar.path" value="c:\sandbox" />
+		<property name="composestar.path" value="c:\composestar" />
 		
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
 		
@@ -26,7 +26,8 @@
 		
 		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
 		<schedule>
-			<ant target="integration" 
+			<ant 
+				target="integration" 
 				buildfile="${composestar.path}\Core\Development\build_total.xml" 
 				uselogger="true" 
 				anthome="${composestar.ant}" 
@@ -35,29 +36,35 @@
 			/>
 		</schedule>
 		
+		<log>
+			<delete every="1" unit="MONTH" ignoreSuffix="false" />
+		</log>
+		
 		<publishers>
 			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
 				xslfile="webapps\cruisecontrol\xsl\buildresults.xsl" 
 				mailhost="smtp.utwente.nl" 
 				reportsuccess="fixes" 
-				skipusers="true" 
-				returnaddress="composestar-developers@lists.sourceforge.net"
+				skipusers="true"
+				returnname="Continuous Integration Server"
+				returnaddress="elmuerte@users.sourceforge.net"
 			>
 				<always address="composestar-developers@lists.sourceforge.net" />
 			</htmlemail>
-			
-			<!--
 			<onsuccess>
-				<antpublisher target="installer" 
+				<ant 
+					target="installer" 
 					buildfile="${composestar.path}\Core\Development\build_total.xml" 
 					uselogger="true" 
 					anthome="${composestar.ant}" 
 					antWorkingDir="${composestar.path}" 
-					usedebug="false"			
+					usedebug="false" 
 				/>
-				<artifactspublisher ... />
+				<artifactspublisher
+					dir="${composestar.path}/DotNET/Installer/dist"
+					dest="artifacts/${project.name}/"
+				/>
 			</onsuccess>
-			-->
 		</publishers>
 	
 	</project>
