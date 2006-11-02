@@ -36,7 +36,11 @@
 		</delete>
 	</target>	
 	
-	<target name="build" depends="init,antlr" description="create CODER parsers"/>
+	<target name="local_init" depends="init">
+		<mkdir dir="${out.build}"/>
+	</target>
+	
+	<target name="build" depends="init,antlr" description="Create CODER parsers"/>
 	
 	<target name="antlr">
 		<antlr target="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl/grammar/ltl.g" outputdirectory="src/Composestar/RuntimeCore/CODER/BreakPoint/Parsers/Ltl">
@@ -47,6 +51,20 @@
 		</antlr>
 	</target>
 
+	<target name="compile_java" depends="local_init,antlr">
+		<javac srcdir="src" destdir="${out.build}" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+			<classpath>
+				<pathelement location="${build.core}/Compiletime/${out.jar.core}"/>
+			</classpath>
+			<exclude name="**/AssemblyInfo.java"/>
+			<exclude name="Composestar/RuntimeCore/CODER/**"/> 
+		</javac>
+	</target>
+			
+	<target name="jar" depends="compile_java">
+		<jar destfile="${out.build}/ComposestarRuntimeInterpreter.jar" basedir="${out.build}" excludes="*.jar"/>
+	</target>
+	
 	<target name="qa_build" depends="init"><!-- special target to build the source for QA inspection -->	
 		<mkdir dir="${out.build}"/>
 		<javac srcdir="src" destdir="${out.build}" classpathref="lib.dotnet" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
