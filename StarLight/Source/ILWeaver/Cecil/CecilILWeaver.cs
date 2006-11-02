@@ -13,6 +13,7 @@ using Mono.Cecil.Binary;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
+using Mono.Cecil.Pdb;  
 
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
@@ -103,6 +104,9 @@ namespace Composestar.StarLight.ILWeaver
             // Load the file
             AssemblyDefinition targetAssembly;
 
+            PdbReader pdbReader;
+            PdbWriter pdbWriter;
+
             try
             {
                 byte[] binaryFile;
@@ -158,6 +162,10 @@ namespace Composestar.StarLight.ILWeaver
                 return _weaveStats;
             } // if
 
+            // open pdbreader
+            // pdbReader = (PdbReader) new PdbFactory().CreateReader(targetAssembly.MainModule, _configuration.InputImagePath);
+            // pdbWriter = (PdbWriter ) new PdbFactory().CreateWriter(targetAssembly.MainModule, _configuration.InputImagePath);             
+            
             // Get only the types we have info for
             foreach (WeaveType weaveType in weaveSpec.WeaveTypes)
             {
@@ -193,6 +201,8 @@ namespace Composestar.StarLight.ILWeaver
 
                         WeaveMethod(targetAssembly, method, weaveMethod, weaveType);
 
+                      //  pdbReader.Read(method.Body);
+           
                         // Update stats
                         _weaveStats.MethodsProcessed++;  
                         _weaveStats.TotalMethodWeaveTime = _weaveStats.TotalMethodWeaveTime.Add(swMethod.Elapsed);
@@ -497,6 +507,9 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
+
+            
+            
 
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();

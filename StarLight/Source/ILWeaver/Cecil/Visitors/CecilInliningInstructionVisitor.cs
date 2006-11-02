@@ -244,18 +244,18 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="attrMono">The attr mono.</param>
         /// <returns></returns>
-        private ArgumentAttributes ConvertAttributes(Mono.Cecil.ParamAttributes attrMono)
+        private ArgumentAttributes ConvertAttributes(Mono.Cecil.ParameterAttributes attrMono)
         {
             ArgumentAttributes attr = ArgumentAttributes.In;
 
-            if ((attrMono & ParamAttributes.Out) != ParamAttributes.Out) 
+            if ((attrMono & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out) 
                 attr = attr | ArgumentAttributes.In;
             else
                 attr &= ~ArgumentAttributes.In;
-            if ((attrMono & ParamAttributes.Out) == ParamAttributes.Out) attr = attr | ArgumentAttributes.Out;
-            if ((attrMono & ParamAttributes.Optional) == ParamAttributes.Optional) attr = attr | ArgumentAttributes.Optional;
-            if ((attrMono & ParamAttributes.HasDefault) == ParamAttributes.HasDefault) attr = attr | ArgumentAttributes.HasDefault;
-            if ((attrMono & ParamAttributes.HasFieldMarshal) == ParamAttributes.HasFieldMarshal) attr = attr | ArgumentAttributes.HasFieldMarshal;
+            if ((attrMono & Mono.Cecil.ParameterAttributes.Out) == Mono.Cecil.ParameterAttributes.Out) attr = attr | ArgumentAttributes.Out;
+            if ((attrMono & Mono.Cecil.ParameterAttributes.Optional) == Mono.Cecil.ParameterAttributes.Optional) attr = attr | ArgumentAttributes.Optional;
+            if ((attrMono & Mono.Cecil.ParameterAttributes.HasDefault) == Mono.Cecil.ParameterAttributes.HasDefault) attr = attr | ArgumentAttributes.HasDefault;
+            if ((attrMono & Mono.Cecil.ParameterAttributes.HasFieldMarshal) == Mono.Cecil.ParameterAttributes.HasFieldMarshal) attr = attr | ArgumentAttributes.HasFieldMarshal;
   
             return attr;
         }
@@ -869,7 +869,7 @@ namespace Composestar.StarLight.ILWeaver
                 case FilterTypes.InputFilter:
                     foreach(ParameterDefinition param in CalledMethod.Parameters)
                     {
-                        if((param.Attributes & ParamAttributes.Out) != ParamAttributes.Out)
+                        if((param.Attributes & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
                         {
                             // Load the argument
                             Instructions.Add(Worker.Create(OpCodes.Ldarg, param));

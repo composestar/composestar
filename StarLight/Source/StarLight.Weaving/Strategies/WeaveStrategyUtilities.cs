@@ -148,7 +148,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                     if(visitor.FilterType == FilterTypes.InputFilter)
                     {
                         // For out parameters that are value type, check whether a value was set
-                        if((param.Attributes & ParamAttributes.Out) == ParamAttributes.Out &&
+                        if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) == Mono.Cecil.ParameterAttributes.Out &&
                             param.ParameterType.IsValueType)
                         {
                             //

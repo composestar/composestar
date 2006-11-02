@@ -469,13 +469,13 @@ namespace Composestar.StarLight.ILAnalyzer
                 pe.Ordinal = (short)(param.Sequence);
                 pe.Type = param.ParameterType.FullName;
 
-                if ((param.Attributes & ParamAttributes.Out) != ParamAttributes.Out)
+                if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
                     pe.ParameterOption = pe.ParameterOption | ParameterOptions.In;
                 else
                     pe.ParameterOption &= ~ParameterOptions.In;
-                if ((param.Attributes & ParamAttributes.Out) == ParamAttributes.Out) 
+                if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) == Mono.Cecil.ParameterAttributes.Out) 
                     pe.ParameterOption = pe.ParameterOption | ParameterOptions.Out;
-                if ((param.Attributes & ParamAttributes.Optional) == ParamAttributes.Optional) 
+                if ((param.Attributes & Mono.Cecil.ParameterAttributes.Optional) == Mono.Cecil.ParameterAttributes.Optional) 
                     pe.ParameterOption = pe.ParameterOption | ParameterOptions.Optional;
    
                 me.Parameters.Add(pe);

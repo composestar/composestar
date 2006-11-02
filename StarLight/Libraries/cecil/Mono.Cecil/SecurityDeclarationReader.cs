@@ -41,10 +41,6 @@ namespace Mono.Cecil {
 
 	internal class SecurityDeclarationReader {
 
-#if !CF_1_0
-		static object [] action = new object [1] { (SSP.SecurityAction) 0 };
-#endif
-
 		private SecurityParser m_parser;
 		private SignatureReader sr;
 
@@ -63,6 +59,11 @@ namespace Mono.Cecil {
 
 		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration)
 		{
+			return FromByteArray (action, declaration, false);
+		}
+
+		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration, bool resolve)
+		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
 #if !CF_1_0 && !CF_2_0
 			dec.PermissionSet = new PermissionSet (SSP.PermissionState.None);
@@ -73,7 +74,7 @@ namespace Mono.Cecil {
 			if (declaration[0] == 0x2e) {
 				// new binary format introduced in 2.0
 				int pos = 1;
-				int start = 0;
+				int start;
 				int numattr = Utilities.ReadCompressedInteger (declaration, pos, out start);
 				if (numattr == 0)
 					return dec;
@@ -81,9 +82,9 @@ namespace Mono.Cecil {
 				BinaryReader br = new BinaryReader (new MemoryStream (declaration));
 				for (int i = 0; i < numattr; i++) {
 					pos = start;
-					SSP.SecurityAttribute sa = CreateSecurityAttribute (br, declaration, pos, out start);
+					SSP.SecurityAttribute sa = CreateSecurityAttribute (action, br, declaration, pos, out start, resolve);
 					if (sa == null) {
-						dec.IsReadable = false;
+						dec.Resolved = false;
 						dec.Blob = declaration;
 						return dec;
 					}
@@ -97,7 +98,7 @@ namespace Mono.Cecil {
 					dec.PermissionSet.FromXml (Parser.ToXml ());
 					dec.PermissionSet.ToXml ();
 				} catch {
-					dec.IsReadable = false;
+					dec.Resolved = false;
 					dec.Blob = declaration;
 				}
 			}
@@ -106,15 +107,19 @@ namespace Mono.Cecil {
 		}
 
 #if !CF_1_0 && !CF_2_0
-		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start)
+		private SSP.SecurityAttribute CreateSecurityAttribute (SecurityAction action, BinaryReader br, byte [] permset, int pos, out int start, bool resolve)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
-			Type secattr = Type.GetType (cname);
+			Type secattr = null;
 
 			// note: the SecurityAction parameter isn't important to generate the XML
 			SSP.SecurityAttribute sa = null;
 			try {
-				 sa = (Activator.CreateInstance (secattr, action) as SSP.SecurityAttribute);
+				secattr = Type.GetType (cname, false);
+				if (secattr == null)
+					return null;
+
+				sa = Activator.CreateInstance (secattr, new object [] {(SSP.SecurityAction) action}) as SSP.SecurityAttribute;
 			} catch {}
 
 			if (sa == null)
@@ -129,7 +134,7 @@ namespace Mono.Cecil {
 			br.BaseStream.Position = start;
 			for (int j = 0; j < numparams; j++) {
 				bool read = false;
-				CustomAttrib.NamedArg na = sr.ReadNamedArg (permset, br, ref read);
+				CustomAttrib.NamedArg na = sr.ReadNamedArg (permset, br, ref read, resolve);
 				if (!read)
 					return null;
 

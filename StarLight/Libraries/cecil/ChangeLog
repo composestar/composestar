@@ -1,3 +1,199 @@
+2006-10-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Use the proper generic context when reading memberrefs.
+
+2006-10-11  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/Document.cs:
+		Complete a little bit.
+
+	* Mono.Cecil/SecurityDeclarationReader.cs:
+		Get rid of a lot of exceptions when creating the security
+		attribute.
+
+2006-10-10  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+	  Mono.Cecil/CustomAttribute.cs:
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+	  Mono.Cecil/SecurityDeclarationReader.cs:
+		Patch from: Eyal Alaluf  <eyala@mainsoft.com>.
+		Add support for resolving custom attributes that contain references
+		to enum in other assemblies.
+
+2006-10-09  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IRequireResolving.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+		Introduce the interface IRequireResolving implemented
+		by CustomAttribute and SecurityDeclaration for when they can't
+		be read without loading another assembly.
+
+	* Mono.Cecil/SecurityDeclarationReader.cs:
+		Prevent Cecil to crash when it can not get the type
+		of the declaration.
+
+2006-10-04  Eyal Alaluf  <eyala@mainsoft.com>
+
+	* Mono.Cecil/StructureReader.cs:
+		Visit the module we load when a DLL has more then 1 module.
+	  Mono.Cecil/AssemblyNameReference.cs:
+	  	Allow "PublicToken=null" when parsing an assembly full name.
+
+2006-10-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/BaseAssemblyResolver.cs
+	  Mono.Cecil.Binary/ResourceReader.cs:
+		CompactFramework fix.
+
+2006-10-02  Jb Evain  <jbevain@gmail.com>
+
+	* implement IList on the named collections.
+
+	* implement the first bits of Win32 resources handling.
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		It does not make sense to import the assembly flags.
+
+2006-09-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/MethodDefinitionCollection.cs
+	  Mono.Cecil/ConstructorCollection.cs
+	  Mono.Cecil.Cil/InstructionCollection.cs
+	  CodeGen/templates/IndexedCollection.cs
+		Fix StackOverlow.
+
+2006-09-27  Jb Evain  <jbevain@gmail.com>
+
+	* *Collection.cs: use CollectionBase when possible.
+
+2006-09-24  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/ISymbolStoreFactory.cs
+	  Mono.Cecil.Cil/SymbolStoreHelper.cs:
+		Some more work on the debugging infos api.
+
+	* Mono.Cecil/MethodDefinitionCollection.cs
+	  Mono.Cecil/ConstructorCollection.cs
+	  CodeGen/templates/IndexedCollection.cs:
+		Fix the GetConstructor/GetMethod methods.
+		Based on a patch by Jon Chambers.
+
+2006-09-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil.Cil/ISymbolReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/ISymbolWriter.cs
+	  Mono.Cecil.Cil/SymbolStoreHelper.cs:
+		Working on the debug infos stuff.
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Ensure custom attributes are read when they can be.
+		Patch by Sebastien Pouliot.
+
+2006-09-19  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/Document.cs
+	  Mono.Cecil.Cil/Instruction.cs
+	  Mono.Cecil.Cil/SequencePoint.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/IScopeProvider.cs
+	  Mono.Cecil.Cil/ISymbolReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/ISymbolWriter.cs
+	  Mono.Cecil.Cil/IVariableDefinitionProvider.cs
+	  Mono.Cecil.Cil/SymbolStoreHelper.cs
+	  Mono.Cecil.Cil/ISymbolStoreFactory.cs
+	  Mono.Cecil.Cil/ScopeCollection.cs
+	  Mono.Cecil.Cil/Scope.cs:
+		Work on the architecture for debugging infos.
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.Cil/Document.cs
+	  Mono.Cecil.Cil/IVariableDefinitionProvider.cs
+	  Mono.Cecil.Cil/SequencePoint.cs
+	  Mono.Cecil.Cil/ScopeCollection.cs
+	  Mono.Cecil.Cil/BaseCodeVisitor.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/IScopeProvider.cs
+	  Mono.Cecil.Cil/MethodBody.cs
+	  Mono.Cecil.Cil/ICodeVisitor.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/Scope.cs
+	  Mono.Cecil.Cil/VariableDefinitionCollection.cs
+	  CodeGen/cecil.xml:
+		First bits of the debug infos stuff.
+
+	* Mono.Cecil.Cil/InstructionCollection.cs
+	  CodeGen/templates/IndexedCollection.cs:
+		The outside instruction has an offset of -1.
+
+	* Mono.Cecil.Cil/OpCodes.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/OpCode.cs
+	  CodeGen/templates/OpCodes.cs:
+		Simpliest way of dealing with different opcodes.
+
+2006-09-07  Jb Evain  <jbevain@gmail.com>
+
+	* support PE32+ file format.
+
+	* Add an Outside instruction to an InstructionCollection.
+	Cleaner than the old null instruction.
+
+	* Mono.Cecil/MarshalSpec.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  CodeGen/cecil-mig.rb:
+		Refactor names from Desc to Spec.
+
+	* *Collection.cs:
+		Remove the unused events stuff.
+
+2006-08-31  Jb Evain  <jbevain@gmail.com>
+
+	* /!\ Breaking changes:
+		On the way to Cecil 0.5. Remove meaningless interfaces.
+		GenericParamAttributes -> GenericParameterAttributes
+		ParamAttributes -> ParamAttributes
+
+		I'll provide a migration path with a script.
+
+		Please do not use this revision, other changes are on the way.
+
+2006-08-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix a bug when reading some parameters.
+
+2006-08-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/ReflectionWriter.cs:
+		Fix the computation of the size of the last opcode in case
+		of an exception handler is pointing outside the cil stream.
+
+	* Mono.Cecil.Cil/ReflectionWriter.cs:
+		Don't use seh tiny headers when the size can't fit in a byte.
+
+	* Mono.Cecil.Cil/ReflectionWriter.cs:
+		Fix a problem in the computation of the stack when the IL
+		is somewhat strange.
+
 2006-08-23  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyInfo.cs:

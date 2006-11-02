@@ -119,7 +119,7 @@ namespace Composestar.StarLight.Utilities
 				return;
 			}
 
-            Mono.Cecil.Cil.IVariableReference variableRef = operand as IVariableReference;
+            VariableReference variableRef = operand as VariableReference;
             if (null != variableRef)
             {
                 writer.Write(variableRef.Index.ToString());

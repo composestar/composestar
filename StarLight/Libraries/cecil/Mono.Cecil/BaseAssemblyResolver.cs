@@ -53,15 +53,18 @@ namespace Mono.Cecil {
 				}
 			}
 
+#if !CF_1_0 && !CF_2_0
 			if (name.Name == "mscorlib")
 				return GetCorlib (name);
 			else if (IsInGac (name))
 				return AssemblyFactory.GetAssembly (GetFromGac (name));
+#endif
 
 			throw new FileNotFoundException ("Could not resolve: " + name);
 		}
 
-		protected internal AssemblyDefinition GetCorlib (AssemblyNameReference reference)
+#if !CF_1_0 && !CF_2_0
+		public AssemblyDefinition GetCorlib (AssemblyNameReference reference)
 		{
 			SR.AssemblyName corlib = typeof (object).Assembly.GetName ();
 			if (corlib.Version == reference.Version)
@@ -98,7 +101,7 @@ namespace Mono.Cecil {
 			return typeof (object).Assembly.GetType ("System.MonoType", false) != null;
 		}
 
-		protected internal static bool IsInGac (AssemblyNameReference reference)
+		public static bool IsInGac (AssemblyNameReference reference)
 		{
 			if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
 				return false;
@@ -106,7 +109,7 @@ namespace Mono.Cecil {
 			return File.Exists (GetFromGac (reference));
 		}
 
-		protected internal static string GetFromGac (AssemblyNameReference reference)
+		public static string GetFromGac (AssemblyNameReference reference)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (reference.Version);
@@ -129,5 +132,6 @@ namespace Mono.Cecil {
 					).FullName
 				).FullName;
 		}
+#endif
 	}
 }
