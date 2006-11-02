@@ -131,12 +131,12 @@ Section "Compose*" Compose
 	File INCREconfig.xml
 	File /nonfatal INCRE.css
 	File /nonfatal *.gif
-	File /nonfatal /r /x CVS compilers
+	File /nonfatal /r /x .svn compilers
 	File cstar.ico
 	File /nonfatal /r binaries
-	File /nonfatal /r /x CVS documentation
+	File /nonfatal /r /x .svn documentation
 	File /nonfatal /r ComposestarVSAddin
-	File /nonfatal /r /x CVS examplesDotNET
+	File /nonfatal /r /x .svn examplesDotNET
 	File vjssupuilib.exe
   
   	;Call website for the install times!
