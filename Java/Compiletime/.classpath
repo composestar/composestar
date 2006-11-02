@@ -2,7 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/ComposestarCORE/binaries/antlr/antlr.jar"/>
+	<classpathentry kind="lib" path="binaries/javassist/javassist.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ComposestarCORE"/>
-	<classpathentry kind="lib" path="C:/Program Files/ComposeStar/binaries/antlr.jar"/>
 	<classpathentry kind="output" path="src"/>
 </classpath>
