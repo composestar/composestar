@@ -25,6 +25,7 @@ import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Projects;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 public class AttributeCollector extends DefaultHandler implements CTCommonModule
@@ -46,21 +47,23 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			String projectFolder = p.getBasePath();
 			String xmlFile = projectFolder + "attributes.xml";
 			
-			if (! FileUtils.fileExist(xmlFile))
-				throw new ModuleException("Unable to collect attributes: File not found: " + xmlFile, MODULE_NAME);
-			
-			try
+			if (FileUtils.fileExist(xmlFile))
 			{
-				SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-				SAXParser saxParser = saxParserFactory.newSAXParser();
-				XMLReader parser = saxParser.getXMLReader();
-				parser.setContentHandler(this);
-				parser.parse(new InputSource(xmlFile));
+				try
+				{
+					SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+					SAXParser saxParser = saxParserFactory.newSAXParser();
+					XMLReader parser = saxParser.getXMLReader();
+					parser.setContentHandler(this);
+					parser.parse(new InputSource(xmlFile));
+				}
+				catch (Exception e)
+				{
+					throw new ModuleException("Unable to collect attributes: " + e.getMessage(), MODULE_NAME);
+				}
 			}
-			catch (Exception e)
-			{
-				throw new ModuleException("Unable to collect attributes: " + e.getMessage(), MODULE_NAME);
-			}
+			else
+				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Attribute file not found: " + xmlFile);
 		}
 	}
 
