@@ -25,9 +25,11 @@ public class Sources {
 		this.selectedProjects = selectedProjects;
 	}
 	
-	public HashSet getSources(String extension){
+	public HashSet getSources(String extension, HashSet skiplist)
+	{
 		String languageTest = null;
 		HashSet list = new HashSet();
+		String folder = "";
 	    
 		if(selectedProjects.length == 1){
 			project = selectedProjects[0];
@@ -47,7 +49,15 @@ public class Sources {
 				}
 			}
 			if(projectMembers[i].getType()==IResource.FOLDER){
+				folder = projectMembers[i].getLocation().toPortableString().toString()+"/";
+				if(skiplist.contains(folder))
+				{
+					// skip folder
+				}
+				else
+				{
 				list.addAll(getAllFilesFromDirectory(projectMembers[i],list, extension));
+				}
 			}
 		}
 		return list;
