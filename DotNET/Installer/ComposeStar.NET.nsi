@@ -193,7 +193,7 @@ SectionEnd
 
   	;Language strings
   	LangString DESC_Checks ${LANG_ENGLISH} "The checks for the Compose*.NET package, this will check your current system to see if it meets some of the requirements."
-		LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."\
+		LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."
 		LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*.NET package, it can must be used for the first install and can be used for rescue purposes."
 
   	;Assign language strings to sections

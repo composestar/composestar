@@ -146,4 +146,16 @@
 		
 		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes"/>		
 	</target>	
+	
+	<!--if="available.innosetup" -->
+	<target name="installer-is" depends="copy_files" description="build the DotNET installer">	
+		<property name="bin.innosetup" value="C:\Program Files\Inno Setup 5\iscc.exe" />
+		<exec executable="${bin.innosetup}" >
+			<arg value="ComposeStar.NET.iss" />
+			<arg value="/q}" />
+			<arg value="/dVERSION=${version.dotnet}" />
+			<arg value="/dBUILD=${version.build}" />
+		</exec>		
+		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes"/>		
+	</target>
 </project>
