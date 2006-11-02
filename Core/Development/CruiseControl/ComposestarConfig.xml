@@ -52,7 +52,7 @@
 				<always address="composestar-developers@lists.sourceforge.net" />
 			</htmlemail>
 			<onsuccess>
-				<ant 
+				<antpublisher 
 					target="installer" 
 					buildfile="${composestar.path}\Core\Development\build_total.xml" 
 					uselogger="true" 
