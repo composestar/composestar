@@ -173,7 +173,7 @@ Common routines. Always include this file in every build.xml file
 		<path id="lib.java">
 			<path refid="lib.core"/>
 			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
-			<fileset dir="${build.java}${file.separator}Libraries" includes="*/*.jar"/>
+			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}binaries" includes="*/*.jar"/>
 		</path>
 		
 		<path id="lib.starlight">
