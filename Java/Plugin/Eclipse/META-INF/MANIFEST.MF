@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ComposestarEclipsePlugin Plug-in
-Bundle-SymbolicName: ComposestarEclipsePluginJava; singleton:=true
+Bundle-SymbolicName: ComposestarEclipsePlugin; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: ComposestarEclipsePlugin.jar
 Bundle-Activator: ComposestarEclipsePlugin.Core.ComposestarEclipsePluginPlugin
