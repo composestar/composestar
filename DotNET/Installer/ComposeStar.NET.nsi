@@ -172,7 +172,7 @@ Section "Settings" Settings
 	MessageBox MB_OK $JAVA_INSTALLATION_MSG
 	
 	OKK:
-	ExecWait '"$INSTDIR\vjssupuilib.exe"' $RESULT
+	ExecWait '"$INSTDIR\vjssupuilib.exe /C:\"installer /qb\""' $RESULT
 	IntCmp 0 $RESULT OKKK
 	StrCpy $JAVA_INSTALLATION_MSG "Could not install the Supplement UI library for Visual J# , please rerun it manually!"
 	MessageBox MB_OK $JAVA_INSTALLATION_MSG
@@ -193,8 +193,8 @@ SectionEnd
 
   	;Language strings
   	LangString DESC_Checks ${LANG_ENGLISH} "The checks for the Compose*.NET package, this will check your current system to see if it meets some of the requirements."
-		LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."
-		LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*.NET package, it can must be used for the first install and can be used for resque purposes."
+		LangString DESC_Settings ${LANG_ENGLISH} "The Compose*.NET package."\
+		LangString DESC_Compose ${LANG_ENGLISH} "The settings for the Compose*.NET package, it can must be used for the first install and can be used for rescue purposes."
 
   	;Assign language strings to sections
   	!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
