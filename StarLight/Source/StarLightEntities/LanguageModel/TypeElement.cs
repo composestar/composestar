@@ -11,7 +11,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
     /// </summary>
     [Serializable()]
     [XmlRoot("Type", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public sealed class TypeElement
+    public sealed class TypeElement : ICustomAttributes 
     {
         private string _name = string.Empty;
 
@@ -235,5 +235,44 @@ namespace Composestar.StarLight.Entities.LanguageModel
             get { return _fields; }
             set { _fields = value; }
         }
+
+        #region ICustomAttributes
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has attributes.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has attributes; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasAttributes
+        {
+            get
+            {
+                return _attributes.Count > 0;
+            }
+        }
+
+        private List<AttributeElement> _attributes = new List<AttributeElement>();
+
+        /// <summary>
+        /// Gets or sets the attributes.
+        /// </summary>
+        /// <value>The attributes.</value>
+        [XmlArray("Attributes")]
+        [XmlArrayItem("Attribute")]
+        public List<AttributeElement> Attributes
+        {
+            get
+            {
+                return _attributes;
+            }
+            set
+            {
+                _attributes = value;
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -131,6 +131,8 @@
     <Compile Include="WeaveSpec\ConditionExpressions\Visitor\IVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LanguageModel\AttributeElement.cs" />
+    <Compile Include="LanguageModel\ICustomAttributes.cs" />
     <Compile Include="WeaveSpec\Condition.cs" />
     <Compile Include="WeaveSpec\Reference.cs" />
     <Compile Include="WeaveSpec\WeaveCall.cs" />

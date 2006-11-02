@@ -404,6 +404,8 @@ namespace Composestar.StarLight.ILAnalyzer
 
             if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
             {
+                // Get custom attributes
+                typeElement.Attributes.AddRange(VisitCustomAttributes(type.CustomAttributes));
                 
                 _currentType = typeElement;
                 // Visit methods
@@ -507,6 +509,9 @@ namespace Composestar.StarLight.ILAnalyzer
                 }
 
             }
+
+            // Custom attributes
+            me.Attributes.AddRange(VisitCustomAttributes(method.CustomAttributes));
 
             // Add to the type
             _currentType.Methods.Add(me);
@@ -908,6 +913,45 @@ namespace Composestar.StarLight.ILAnalyzer
         }
 
         #endregion
+
+        /// <summary>
+        /// Visits the custom attributes.
+        /// </summary>
+        /// <param name="customAttributes">The custom attributes.</param>
+        /// <returns></returns>
+        private List<AttributeElement> VisitCustomAttributes(CustomAttributeCollection customAttributes)
+        {
+            List<AttributeElement> ret = new List<AttributeElement>();
+
+            if (customAttributes == null && customAttributes.Count == 0)
+                return ret;
+
+            foreach (CustomAttribute  ca in customAttributes)
+            {
+                AttributeElement ae = new AttributeElement();
+                ae.AttributeType = ca.Constructor.DeclaringType.ToString();
+
+                for (int i = 0; i < ca.ConstructorParameters.Count; i++)
+                {
+                    AttributeValueElement ave = new AttributeValueElement();
+                    ave.Name = ca.Constructor.Parameters[i].Name;
+                    ave.Value = ca.ConstructorParameters[i].ToString(); 
+                    ae.Values.Add(ave);  
+                }
+
+                foreach (object propKey in ca.Properties.Keys)
+                {
+                    AttributeValueElement ave = new AttributeValueElement();
+                    ave.Name =Convert.ToString( propKey);
+                    ave.Value = ca.Properties[propKey].ToString();
+                    ae.Values.Add(ave);
+                }
+
+                ret.Add(ae);
+            }
+
+            return ret;
+        }
 
         /// <summary>
         /// Creates the name of the type.
