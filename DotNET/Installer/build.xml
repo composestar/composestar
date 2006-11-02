@@ -38,22 +38,23 @@
 	<target name="build"/>
 	
 	<target name="copy_files" depends="local_init">
+		<property name="destdir" value="${basedir}" />
 	
-		<mkdir dir="${basedir}${file.separator}binaries"/>
-		<mkdir dir="${basedir}${file.separator}binaries${file.separator}prolog"/>
-		<mkdir dir="${basedir}${file.separator}binaries${file.separator}groove"/>
-		<mkdir dir="${basedir}${file.separator}ComposestarVSAddin"/>
+		<mkdir dir="${destdir}${file.separator}binaries"/>
+		<mkdir dir="${destdir}${file.separator}binaries${file.separator}prolog"/>
+		<mkdir dir="${destdir}${file.separator}binaries${file.separator}groove"/>
+		<mkdir dir="${destdir}${file.separator}ComposestarVSAddin"/>
 		
 		<!-- Compose* .NET .CSS and .XML files -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}INCRE${file.separator}INCRE.css" todir="${basedir}"/>
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}CKRET.css" todir="${basedir}"/>
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}filterdesc.xml" todir="${basedir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}INCRE${file.separator}INCRE.css" todir="${destdir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}CKRET.css" todir="${destdir}"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}Core${file.separator}CKRET${file.separator}filterdesc.xml" todir="${destdir}"/>
 
 		<!-- Compose* .NET ANTLR libs -->
-		<copy file="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr${file.separator}antlr.jar" todir="${basedir}${file.separator}binaries"/>
+		<copy file="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}antlr${file.separator}antlr.jar" todir="${destdir}${file.separator}binaries"/>
 
 		<!-- Compose* .NET prolog libs -->
-		<copy todir="${basedir}${file.separator}binaries${file.separator}prolog">
+		<copy todir="${destdir}${file.separator}binaries${file.separator}prolog">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}prolog">
 				<include name="prolog.jar"/>
 				<include name="lib.pro"/>
@@ -62,12 +63,12 @@
 		</copy>
 
 		<!-- Compose* .NET Compiletime libs -->
-		<copy todir="${basedir}${file.separator}binaries">
+		<copy todir="${destdir}${file.separator}binaries">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}dist"/>
 		</copy>
 
 		<!-- Compose* .NET Groove libs -->
-		<copy todir="${basedir}${file.separator}binaries${file.separator}groove">
+		<copy todir="${destdir}${file.separator}binaries${file.separator}groove">
 			<fileset dir="${build.core}${file.separator}Compiletime${file.separator}binaries${file.separator}groove">
 				<include name="groove-1_2_0.jar"/>
 				<include name="castor-0_9_5_2-xml.jar"/>
@@ -78,12 +79,12 @@
 		</copy>
 
 		<!-- Compose* .NET Compiletime libs -->
-		<copy todir="${basedir}${file.separator}binaries">
+		<copy todir="${destdir}${file.separator}binaries">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}dist"/>
 		</copy>
 
 		<!-- Compose* .NET C# Dummygenerator -->
-		<copy todir="${basedir}${file.separator}binaries">
+		<copy todir="${destdir}${file.separator}binaries">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}DUMMER${file.separator}CSharpDummyGenerator${file.separator}bin">
 				<include name="CSharpDummyGenerator.exe"/>
 				<include name="antlr.runtime.dll"/>
@@ -91,7 +92,7 @@
 		</copy>
 		
 		<!-- Compose* .NET Weavers -->
-		<copy todir="${basedir}${file.separator}binaries">
+		<copy todir="${destdir}${file.separator}binaries">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}ILICIT${file.separator}Weaver${file.separator}bin${file.separator}Release">
 				<include name="IlWeaver.exe"/>
 				<include name="PeWeaver.exe"/>
@@ -100,30 +101,30 @@
 		</copy>
 
 		<!-- Compose* .NET INCRE configs -->
-		<copy todir="${basedir}">
+		<copy todir="${destdir}">
 			<fileset dir="${build.dotnet}${file.separator}Compiletime${file.separator}src${file.separator}Composestar${file.separator}DotNET${file.separator}INCRE">
 				<include name="*.xml"/>
 			</fileset>
 		</copy>
 
 		<!-- Compose* .NET Runtime libs -->
-		<copy todir="${basedir}/binaries">
+		<copy todir="${destdir}/binaries">
 			<fileset dir="${build.dotnet}${file.separator}Runtime${file.separator}src${file.separator}FLIRT${file.separator}bin${file.separator}Release">
 				<include name="*.dll"/>
 			</fileset>
 		</copy>
 
 		<!-- Compose* .NET Plugin -->
-		<copy todir="${basedir}${file.separator}ComposestarVSAddin"> 
+		<copy todir="${destdir}${file.separator}ComposestarVSAddin"> 
 			<fileset dir="${build.dotnet}${file.separator}Plugin${file.separator}VSAddin${file.separator}bin">
 				<include name="ComposestarVSAddin.*" />
 			</fileset>
 		</copy>
 
 		<!-- .NET Examples -->
-		<delete dir="${basedir}${file.separator}examplesDotNET"/>
+		<delete dir="${destdir}${file.separator}examplesDotNET"/>
 		<svn>
-			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${basedir}${file.separator}examplesDotNET"/>
+			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${destdir}${file.separator}examplesDotNET"/>
 		</svn>
 		
 	</target>
