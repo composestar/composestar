@@ -80,7 +80,7 @@
 		<exec executable="${antlr-2.7.2.exe}" dir="${CSharpDummyGenerator.dir}/Parse">
 			<arg value="csharp.g"/>
 		</exec>
-		<antlr target="${Dummer.dir}/grammars/jsharp.g" outputdirectory="${Dummer.dir}">
+		<antlr target="${Dummer.dir}/jsharp.g" outputdirectory="${Dummer.dir}">
 			<classpath refid="lib.dotnet"/>
 		</antlr>
 	</target>
