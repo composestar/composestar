@@ -4,15 +4,16 @@ header {
 
 class JSharpRecognizer extends Parser;
 options {
-	k = 2;                           // two token lookahead
-	exportVocab=JSharp;                // Call its vocabulary "Java"
-	codeGenMakeSwitchThreshold = 2;  // Some optimizations
+	k = 2;								// two token lookahead
+	exportVocab=JSharp;					// Call its vocabulary "Java"
+	codeGenMakeSwitchThreshold = 2;		// Some optimizations
 	codeGenBitsetTestThreshold = 3;
-	defaultErrorHandler = false;     // Don't generate parser error handlers
+	defaultErrorHandler = false;		// Don't generate parser error handlers
 	buildAST = true;
 }
 
 tokens {
+	COMPILATION_UNIT;
 	BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF;
 	INSTANCE_INIT; STATIC_INIT; TYPE; CLASS_DEF; INTERFACE_DEF;
 	PACKAGE_DEF; ARRAY_DECLARATOR; EXTENDS_CLAUSE; IMPLEMENTS_CLAUSE;
@@ -21,49 +22,43 @@ tokens {
 	IMPORT; UNARY_MINUS; UNARY_PLUS; CASE_GROUP; ELIST; FOR_INIT; FOR_CONDITION;
 	FOR_ITERATOR; EMPTY_STAT; FINAL="final"; ABSTRACT="abstract";
 	STRICTFP="strictfp"; SUPER_CTOR_CALL; CTOR_CALL; 
-	ATTR; ATTR_IDENT; ATTR_ARGUMENT; ATTR_TARGET;
+	ATTR; ATTR_NAME; ATTR_ARGUMENT;
 }
 
 
-// Compilation Unit: In Java, this is a single file.  This is the start
-//   rule for this parser
+// Compilation Unit: In Java, this is a single file.  This is the start rule for this parser
 compilationUnit
 	:	// A compilation unit starts with an optional package definition
-		(	packageDefinition
-		|	/* nothing */
-		)
+		( packageDefinition )?
 
 		// Next we have a series of zero or more import statements
 		( importDefinition )*
 
-		// Wrapping things up with any number of class or interface
-		//    definitions
+		// Wrapping things up with any number of class or interface definitions
 		( (a:attributes!)? typeDefinition[#a] )*
+		
 		EOF!
+		{ ## = #(#[COMPILATION_UNIT,"COMPILATION_UNIT"], ##); }
 	;
 
 //Added for attributes
+
 attributes
 	:	(attribute_section)+
 	;
 
 attribute_section
-	:	JAVADOC_START (attribute)+ ML_COMMENT_END 
+	:	ATTRIBUTE_START! (attribute) ML_COMMENT_END!
 	;
 
 attribute!
-	:	at:attributeTargetSpecifier name:attributeName arguments:attributeArguments
-		{#attribute = #(#[ATTR,"ATTR"],at,name,arguments); }
-	;
-	
-attributeTargetSpecifier!
-	: 	at:ATTRIBUTE
-		{ #attributeTargetSpecifier = #([ATTR_TARGET, "ATTR_TARGET"], at); }
+	:	name:attributeName arguments:attributeArguments
+		{#attribute = #(#[ATTR,"ATTR"],name,arguments); }
 	;
 
 attributeName!
-	:	i:identifier  
-		{ #attributeName = #([ATTR_IDENT, "ATTR_IDENT"], i); }
+	:	id:identifier  
+		{ #attributeName = #([ATTR_NAME,"ATTR_NAME"], id); }
 	;
 	
 attributeArguments
@@ -82,33 +77,34 @@ attributeArgumentExpression!
 	: 	c:STRING_LITERAL
 		{ #attributeArgumentExpression = #([ATTR_ARGUMENT, "ATTR_ARGUMENT"], c);}
 	;
-	
+
 // Package statement: "package" followed by an identifier.
 packageDefinition
-	options {defaultErrorHandler = true;} // let ANTLR handle errors
-	:	p:"package"^ {#p.setType(PACKAGE_DEF);} identifier SEMI!
+	options {defaultErrorHandler = true;}
+	:	p:"package"^ identifier SEMI!
+		{ #p.setType(PACKAGE_DEF); }
 	;
 
 
 // Import statement: import followed by a package or class name
 importDefinition
 	options {defaultErrorHandler = true;}
-	:	i:"import"^ {#i.setType(IMPORT);} identifierStar SEMI!
+	:	i:"import"^ identifierStar SEMI!
+		{ #i.setType(IMPORT); }
 	;
 
 // A type definition in a file is either a class or interface definition.
-typeDefinition[AST a]
+typeDefinition[AST atts]
 	options {defaultErrorHandler = true;}
-	:	m:modifiers!
-		( classDefinition[#a,#m]
-		| interfaceDefinition[#a,#m]
+	:	mods:modifiers!
+		( classDefinition[#atts,#mods]
+		| interfaceDefinition[#atts,#mods]
 		)
 	|	SEMI!
 	;
 
-/** A declaration is the creation of a reference or primitive-type variable
- *  Create a separate Type/Var tree for each var in the var list.
- */
+// A declaration is the creation of a reference or primitive-type variable
+// Create a separate Type/Var tree for each var in the var list.
 declaration!
 	:	m:modifiers t:typeSpec[false] v:variableDefinitions[#m,#t]
 		{#declaration = #v;}
@@ -166,7 +162,7 @@ builtInType
 // A (possibly-qualified) java identifier.  We start with the first IDENT
 //   and expand its name by adding dots and following IDENTS
 identifier
-	:	IDENT  ( DOT^ IDENT )*
+	:	IDENT ( DOT^ IDENT )*
 	;
 
 identifierStar
@@ -181,7 +177,7 @@ identifierStar
 //   someone so desires
 modifiers
 	:	( modifier )*
-		{#modifiers = #([MODIFIERS, "MODIFIERS"], #modifiers);}
+		{ #modifiers = #([MODIFIERS, "MODIFIERS"], #modifiers); }
 	;
 
 // modifiers for Java classes, interfaces, class/instance vars and methods
@@ -202,16 +198,15 @@ modifier
 	;
 
 // Definition of a Java class
-classDefinition![AST a, AST modifiers]
-	:	"class" IDENT
+classDefinition![AST atts, AST mods]
+	:	"class" id:IDENT
 		// it _might_ have a superclass...
 		sc:superClassClause
 		// it might implement some interfaces...
 		ic:implementsClause
 		// now parse the body of the class
 		cb:classBlock
-		{#classDefinition = #(#[CLASS_DEF,"CLASS_DEF"],
-							   a,modifiers,IDENT,sc,ic,cb);}
+		{#classDefinition = #(#[CLASS_DEF,"CLASS_DEF"],atts,mods,id,sc,ic,cb);}
 	;
 
 superClassClause!
@@ -220,14 +215,13 @@ superClassClause!
 	;
 
 // Definition of a Java Interface
-interfaceDefinition![AST a, AST modifiers]
-	:	"interface" IDENT
+interfaceDefinition![AST atts, AST mods]
+	:	"interface" id:IDENT
 		// it might extend some other interfaces
 		ie:interfaceExtends
 		// now parse the body of the interface (looks like a class...)
 		cb:classBlock
-		{#interfaceDefinition = #(#[INTERFACE_DEF,"INTERFACE_DEF"],
-									a,modifiers,IDENT,ie,cb);}
+		{#interfaceDefinition = #(#[INTERFACE_DEF,"INTERFACE_DEF"],atts,mods,id,ie,cb);}
 	;
 
 
@@ -265,7 +259,7 @@ implementsClause
 //   need to be some semantic checks to make sure we're doing the right thing...
 field!
 	:	// method, constructor, or variable declaration
-			(a:attributes)? mods:modifiers
+		(a:attributes)? mods:modifiers
 		(	h:ctorHead s:constructorBody // constructor
 			{#field = #(#[CTOR_DEF,"CTOR_DEF"], mods, h, s);}
 
@@ -302,21 +296,23 @@ field!
 			)
 		)
 
-    // "static { ... }" class initializer
+	// "static { ... }" class initializer
 	|	"static" s3:compoundStatement
 		{#field = #(#[STATIC_INIT,"STATIC_INIT"], s3);}
 
-    // "{ ... }" instance initializer
+	// "{ ... }" instance initializer
 	|	s4:compoundStatement
 		{#field = #(#[INSTANCE_INIT,"INSTANCE_INIT"], s4);}
 	;
 
 constructorBody
-    :   lc:LCURLY^ {#lc.setType(SLIST);}
-            ( options { greedy=true; } : explicitConstructorInvocation)?
-            (statement)*
+	:   lc:LCURLY^ {#lc.setType(SLIST);}
+		(	options { greedy=true; }: 
+			explicitConstructorInvocation
+		)?
+		(statement)*
         RCURLY!
-    ;
+	;
 
 /** Catch obvious constructor calls, but not the expr.super(...) calls */
 explicitConstructorInvocation
@@ -950,9 +946,9 @@ constant:c
 class JSharpLexer extends Lexer;
 
 options {
-	exportVocab=JSharp;      // call the vocabulary "Java"
+	exportVocab=JSharp;     // call the vocabulary "Java"
 	testLiterals=false;    // don't automatically test for literals
-	k=4;                   // four characters of lookahead
+	k=5;                   // five characters of lookahead
 	charVocabulary='\u0003'..'\uFFFF';
 	// without inlining some bitset tests, couldn't do unicode;
 	// I need to make ANTLR generate smaller bitsets; see
@@ -1020,7 +1016,7 @@ WS	:	(	' '
 			)
 			{ newline(); }
 		)+
-		{ _ttype = Token.SKIP; }
+		{ $setType(Token.SKIP); }
 	;
 
 
@@ -1028,17 +1024,12 @@ WS	:	(	' '
 SL_COMMENT
 	:	"//"
 		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
-		{$setType(Token.SKIP); newline();}
+		{ $setType(Token.SKIP); newline(); }
 	;
 
 //Added for attributes	
-
-ATTRIBUTE
-	:	"@attribute"
-	;
-
-JAVADOC_START
-	:	"/** "
+ATTRIBUTE_START
+	:	"/** @attribute"
 	;
 
 ML_COMMENT_START
@@ -1061,14 +1052,14 @@ ML_COMMENT
 			options {
 				generateAmbigWarnings=false;
 			}
-		:	{ LA(2) != '/'}? '*' 
+		:	{ LA(2) != '/' }? '*' 
 		|	'\r' '\n'		{newline();}
 		|	'\r'			{newline();}
 		|	'\n'			{newline();}
 		|	~('*'|'\n'|'\r')
 		)*
 		ML_COMMENT_END
-		{$setType(Token.SKIP);}
+		{ $setType(Token.SKIP); }
 	;
 
 //pre-processing directives
@@ -1160,14 +1151,14 @@ IDENT
 // a numeric literal
 NUM_INT
 	{boolean isDecimal=false; Token t=null;}
-    :   '.' {_ttype = DOT;}
+    :   '.' { $setType(DOT);}
             (	('0'..'9')+ (EXPONENT)? (f1:FLOAT_SUFFIX {t=f1;})?
                 {
 				if (t != null && t.getText().toUpperCase().indexOf('F')>=0) {
-                	_ttype = NUM_FLOAT;
+                	$setType(NUM_FLOAT);
 				}
 				else {
-                	_ttype = NUM_DOUBLE; // assume double
+                	$setType(NUM_DOUBLE); // assume double
 				}
 				}
             )?
