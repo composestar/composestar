@@ -131,7 +131,6 @@
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
 				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
-				<include name="SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
 				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
 				<include name="Wedding/bin/wedding.Wedding.exe"/>
@@ -149,7 +148,11 @@
 				<include name="DesignPatterns/Implementations/TemplateMethod/bin/Composestar.Patterns.TemplateMethod.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Visitor/bin/Composestar.Patterns.Visitor.Main.exe"/>
 				<include name="FilterModuleParameter/bin/FilterModuleParameter.FilterModuleParameter.exe"/>
+				
+				<include name="TestCases/GrammarTest/bin/GrammarTest.Class1.exe"/>
 				<include name="TestCases/BasicTests/bin/BasicTests.MainClass.exe"/>
+				<include name="TestCases/ConditionTests/bin/ConditionTests.MainClass.exe"/>
+				<include name="TestCases/SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>				
 			</FileSet>
 		</cstarTest>
 	</target>
