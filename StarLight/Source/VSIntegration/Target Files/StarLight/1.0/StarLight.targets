@@ -104,6 +104,11 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Include" ItemName="TempXmlFiles"/>
     </CreateItem>
     <Delete Files="@(TempXmlFiles)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)analyses/*.*">
+      <Output TaskParameter="Include" ItemName="tempAnalyses"/>
+    </CreateItem>
+    <Delete Files="@(tempAnalyses)"/>
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)analyses" ContinueOnError="true" />
     <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)" ContinueOnError="true" />
   </Target>
 
