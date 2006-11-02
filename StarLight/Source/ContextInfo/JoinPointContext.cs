@@ -230,7 +230,7 @@ namespace Composestar.StarLight.ContextInfo
         /// JoinPointContext jpc = new JoinPointContext();
         /// jpc.AddArgument(1, typeof(int), 1024);
         /// object o = (object) 1025;
-        /// jpc.SetArgumentValue( 1, o );
+        /// jpc.SetArgumentValue(1, o);
         /// </code>
         /// </example> 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -387,7 +387,7 @@ namespace Composestar.StarLight.ContextInfo
         {
             get
             {
-                if (HasReturnValue)
+                if (_returnValue != null)
                     return _returnValue.Type;
                 else
                     return null;

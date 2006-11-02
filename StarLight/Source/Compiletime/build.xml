@@ -19,7 +19,7 @@
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
 		<delete>
-			<fileset dir="src">
+			<fileset dir="Composestar">
 				<include name="**/*.class"/>
 			</fileset>
 		</delete>
