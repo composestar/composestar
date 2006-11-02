@@ -47,6 +47,7 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 		t.start();
 		
 		builtOk = true;
+		projectConfig = new Project();
 		
     	Debug.instance().clear();
     	Debug.instance().Log("------ Composestar build started ------\n");
