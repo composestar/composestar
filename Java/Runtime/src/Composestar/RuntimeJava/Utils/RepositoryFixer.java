@@ -173,8 +173,8 @@ public class RepositoryFixer
 				}
 				else if (ref instanceof DeclaredObjectReference)
 				{
-					fqn = fqn.replace("::", ".");
-					fqn = fqn.replace(":", ".");
+					fqn = fqn.replaceAll("::", ".");
+					fqn = fqn.replaceAll(":", ".");
 
 					referenced = ds.getObjectByID(fqn);
 					if (referenced == null)
@@ -186,8 +186,8 @@ public class RepositoryFixer
 				}
 				else if (ref instanceof ConditionReference)
 				{
-					fqn = fqn.replace("::", ".");
-					fqn = fqn.replace(":", ".");
+					fqn = fqn.replaceAll("::", ".");
+					fqn = fqn.replaceAll(":", ".");
 
 					referenced = ds.getObjectByID(fqn);
 					if (referenced == null)
