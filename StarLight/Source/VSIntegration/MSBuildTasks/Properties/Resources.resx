@@ -154,7 +154,7 @@
     <value>Found {0} referenced types in {1} concern(s) in {2:0.0000} seconds.</value>
   </data>
   <data name="ParsingConcernFile" xml:space="preserve">
-    <value>Parsing concern file '{0}'.</value>
+    <value>Parsing and adding concern file '{0}'.</value>
   </data>
   <data name="AddingConcernFile" xml:space="preserve">
     <value>Adding concern file '{0}' to the repository.</value>
@@ -246,5 +246,8 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
                        {11} inputfilter(s), {12} outputfilter(s)
 #{7:000}   Types: total {5:0.0000} sec. max {3:0.0000} sec. avg {1:0.0000} sec.
 #{6:000} Methods: total {4:0.0000} sec. max {2:0.0000} sec. avg {0:0.0000} sec.</value>
+  </data>
+  <data name="UsingBackupWeaveFile" xml:space="preserve">
+    <value>File '{0}' does not require IL weaving, using backup file.</value>
   </data>
 </root>

@@ -87,6 +87,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _hasOutputFilters = value; }
         }
 
+        private bool _concernsDirty;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether oen or more concern files are changed.
+        /// </summary>
+        /// <value><c>true</c> if concerns dirty; otherwise, <c>false</c>.</value>
+        [Output]
+        public bool ConcernsDirty
+        {
+            get { return _concernsDirty; }
+            set { _concernsDirty = value; }
+        }
+	
+
         #endregion
 
         /// <summary>
@@ -112,37 +126,72 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);               
 
-                // Clear all existing concerns
-                configContainer.Concerns.Clear();  
+                // Create a list with all current concerns
+                List<ConcernElement> concernsInConfig = configContainer.Concerns;   
+                
+                // Create a list with the new concerns
+                List<ConcernElement> concernsToAdd = new List<ConcernElement>(); 
 
                 // Parse all concern files and add to the database
                 foreach (ITaskItem item in ConcernFiles)
                 {
                     String concernFile = item.ToString();
-
-                    Log.LogMessageFromResources("ParsingConcernFile", concernFile);
-
-                    CpsParserConfiguration config = CpsParserConfiguration.CreateDefaultConfiguration(concernFile);
-
-                    cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer(config));
-
-                    cfp.Parse();
-
-                    refTypes.AddRange(cfp.ReferencedTypes);
-
-                    // If this concern has output filters, then enable (do not override a previously set true value)
-                    HasOutputFilters = HasOutputFilters | cfp.HasOutputFilters;
-
                     string path = Path.GetDirectoryName(concernFile);
                     string filename = Path.GetFileName(concernFile);
+                
+                    // Find the concernElement
+                    ConcernElement ce = null;
+                    
+                    ce = concernsInConfig.Find(delegate(ConcernElement  conElem)
+                    {
+                        return conElem.FullPath.Equals(Path.Combine(path, filename) );
+                    });
 
-                    ConcernElement ce = new ConcernElement();
-                    ce.PathName = path;
-                    ce.FileName = filename;
-                    ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks; 
-                  
-                    Log.LogMessageFromResources("AddingConcernFile", filename);
-                    configContainer.Concerns.Add(ce);
+                    bool newConcern = false;
+
+                    if (ce == null)
+                    {
+                        // create a new ConcernElement
+                        ce = new ConcernElement();
+                        ce.PathName = path;
+                        ce.FileName = filename;
+                        ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks;
+                        ConcernsDirty = true;
+                        newConcern = true;
+                    }
+
+                    // Do a time check
+                    if (newConcern || File.GetLastWriteTime(concernFile).Ticks > ce.Timestamp)
+                    {
+                        Log.LogMessageFromResources("ParsingConcernFile", concernFile);
+
+                        // File is changed, we might not have the correct data
+                        CpsParserConfiguration config = CpsParserConfiguration.CreateDefaultConfiguration(concernFile);
+                        cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer(config));
+
+                        // Parse the concern file
+                        cfp.Parse();
+
+                        // indicate if there are any outputfilters
+                        ce.HasOutputFilters = cfp.HasOutputFilters;
+
+                        // Add the referenced types
+                        // TODO Should we also save this info in the ConcernElement?
+                        // Or is the assembly analyzed in a earlier, non-incremental, run?
+                        refTypes.AddRange(cfp.ReferencedTypes);
+
+                        // Indicate that the concerns are most likely dirty
+                        ConcernsDirty = true;
+                    }
+                    else
+                    {
+                        Log.LogMessageFromResources("AddingConcernFile", concernFile);
+                    }
+
+                    // If this concern has output filters, then enable (do not override a previously set true value)
+                    HasOutputFilters = HasOutputFilters | ce.HasOutputFilters;            
+
+                    concernsToAdd.Add(ce);
                 }
 
                 sw.Stop();
@@ -163,6 +212,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 } // foreach  (item)
 
                 // Save the configContainer
+                configContainer.Concerns = concernsToAdd;  
                 entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer); 
                 
             }

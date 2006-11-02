@@ -48,6 +48,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _binFolder = value; }
         }
 
+        private bool _concernsDirty;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [concerns dirty].
+        /// </summary>
+        /// <value><c>true</c> if [concerns dirty]; otherwise, <c>false</c>.</value>        
+        public bool ConcernsDirty
+        {
+            get { return _concernsDirty; }
+            set { _concernsDirty = value; }
+        }
+	
+
         #endregion
 
         #region ctor
@@ -96,6 +109,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         Log.LogMessageFromResources("SkippedWeavingFile", assembly.Filename);
                         continue; 
                     } // if
+
+                    // Check for modification
+                    if (!ConcernsDirty && File.GetLastWriteTime(assembly.Filename).Ticks <= assembly.Timestamp)
+                    {
+                        // we beter copy the backuped file
+                        String backupWeavefile = string.Format("{0}.weaved", assembly.Filename);
+                        if (File.Exists(backupWeavefile))
+                        {
+                            File.Copy(backupWeavefile, assembly.Filename, true);
+                            Log.LogMessageFromResources("UsingBackupWeaveFile", assembly.Filename);
+                            continue; 
+                        }
+                    }
 
                     Log.LogMessageFromResources("WeavingFile", assembly.Filename);
 

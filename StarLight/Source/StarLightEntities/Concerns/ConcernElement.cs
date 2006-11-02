@@ -63,6 +63,22 @@ namespace Composestar.StarLight.Entities.Concerns
             set { _pathName = value; }
         }
 
+        private bool _hasOutputFilters;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this concern has output filters.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this concern has output filters; otherwise, <c>false</c>.
+        /// </value>
+        [XmlAttribute]
+        public bool HasOutputFilters
+        {
+            get { return _hasOutputFilters; }
+            set { _hasOutputFilters = value; }
+        }
+	
+
         /// <summary>
         /// Gets the full path.
         /// </summary>

@@ -14,13 +14,17 @@ Copyright (C) University of Twente, 2006
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Weave">
-  
+
   <!--Reference the assembly where our tasks are defined-->
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+
+  <PropertyGroup>
+    <StarLightFolder>StarLight</StarLightFolder>
+  </PropertyGroup>
 
   <!--
     ============================================================
@@ -84,14 +88,27 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Include" ItemName="TempRepository"/>
     </CreateItem>
     <Delete Files="@(TempRepository)"/>
-    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)INCRE.html">
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)INCRE.*">
       <Output TaskParameter="Include" ItemName="TempIncre"/>
     </CreateItem>
     <Delete Files="@(TempIncre)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)langmap.pro">
+      <Output TaskParameter="Include" ItemName="TempProlog"/>
+    </CreateItem>
+    <Delete Files="@(TempProlog)"/>
+    <CreateItem Include="$(OutDir)*.weaved">
+      <Output TaskParameter="Include" ItemName="TempBackupWeave"/>
+    </CreateItem>
+    <Delete Files="@(TempBackupWeave)"/>
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)/*.xml">
+      <Output TaskParameter="Include" ItemName="TempXmlFiles"/>
+    </CreateItem>
+    <Delete Files="@(TempXmlFiles)"/>
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)" ContinueOnError="true" />
   </Target>
 
-  
-  
+
+
   <!--
     ============================================================
                                         Reweave
@@ -106,7 +123,7 @@ This target will be called whenever the Clean target is invoked.
         Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
         DependsOnTargets="$(ReweaveDependsOn)"
         Outputs="$(TargetPath)"/>
-    
+
   <PropertyGroup>
     <ReweaveDependsOn>
       BeforeReweave;
@@ -160,7 +177,7 @@ This target will be called whenever the Clean target is invoked.
     <TargetExt Condition="'$(OutputType)'=='library'">.dll</TargetExt>
     <TargetExt Condition="'$(OutputType)'=='module'">.netmodule</TargetExt>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <CompileCodeDependsOn>
       BuildOnlySettings;
@@ -183,7 +200,7 @@ This target will be called whenever the Clean target is invoked.
       DependsOnTargets="$(CompileCodeDependsOn)"
       Condition ="'$(CodeLanguage)'=='CSharp' or '$(CodeLanguage)'=='VB' or '$(CodeLanguage)'=='JSharp'" >
     <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
-    <OnError ExecuteTargets="_CleanRecordFileWrites"/>        
+    <OnError ExecuteTargets="_CleanRecordFileWrites"/>
   </Target>
 
 
@@ -196,6 +213,8 @@ This target will be called whenever the Clean target is invoked.
     -->
   <PropertyGroup>
     <CoreWeaveDependsOn>
+      BackupFiles;
+      CreateStarLightFolder;
       BuildOnlySettings;
       PrepareForBuild;
       ResolveReferences;
@@ -206,6 +225,7 @@ This target will be called whenever the Clean target is invoked.
       MasterCaller;
       ILWeaverRunner;
       ILVerifyRunner;
+      CleanBackup;
       IncrementalClean;
     </CoreWeaveDependsOn>
   </PropertyGroup>
@@ -225,7 +245,7 @@ This target will be called whenever the Clean target is invoked.
     <_DisabledWarnings>$(NoWarn)</_DisabledWarnings>
 
   </PropertyGroup>
- 
+
   <Target Name="CreateManifestResourceNames"/>
 
   <!--This is an override of targets-->
@@ -239,7 +259,7 @@ This target will be called whenever the Clean target is invoked.
             _CopyManifestFiles;
             _CheckForCompileOutputs;
             _SGenCheckForOutputs">
-   
+
     <Message Importance="High" Text="$(MSBuildProjectName) -&gt; @(MainAssembly->'%(FullPath)')" />
     <!-- Copy the build product (.dll or .exe). But only when we have a CodeLanguage -->
     <Copy
@@ -253,7 +273,7 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 
     </Copy>
-    
+
     <!-- Copy the additional modules. -->
     <Copy
         SourceFiles="@(AddModules)"
@@ -321,31 +341,55 @@ This target will be called whenever the Clean target is invoked.
     </Copy>
 
   </Target>
-  
+
+  <Target Name="CreateStarLightFolder" >
+    <MakeDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)" />
+  </Target>
+
+  <ItemGroup>
+    <BackupFiles
+      Include="$(OutDir)*.exe;$(OutDir)*.dll" 
+      Exclude="$(OutDir)Composestar.StarLight*.*" />
+  </ItemGroup>
+
+  <Target Name ="BackupFiles">
+    <Message Text="Creating backup of already weaved files." />
+    <Copy SourceFiles="@(BackupFiles)"
+    DestinationFiles="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError ="true" />
+  </Target>
+
+  <Target Name="CleanBackup">
+    <Message Text="Cleaning of backup (weave) files." />
+    <Delete Files="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError="true" />
+  </Target>
+
   <!--CpsParserRunner target -->
   <Target
        Name="CpsParserRunner">
-    <Message Text="Parsing concern files." />
+    <Message Text="Collecting and parsing concern files." />
     <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
       <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
       <Output TaskParameter="HasOutputFilters" PropertyName="HasOutputFilters"/>
+      <Output TaskParameter="ConcernsDirty" PropertyName="ConcernsDirty"/>
     </CpsParserTask>
   </Target>
-  
+
   <!--ILAnalyzerRunner target -->
   <Target
        Name="ILAnalyzerRunner">
-    <Message Text="Analyzing assemblies." />
- 
+    <Message Text="Collecting and analyzing assemblies." />
+
     <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" 
         AssemblyFiles="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" 
         RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" DoMethodCallAnalysis="$(HasOutputFilters)"
-        IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+        IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)">
+      <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty" />
+    </IlAnalyzerTask>
   </Target>
 
   <!--MasterCaller target -->
   <Target
-       Name="MasterCaller">
+       Name="MasterCaller" Condition="'$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False'">
     <Message Text="Executing Composestar Master." />
     <MasterCallerTask RepositoryFilename="$(ProjectDir)$(RepositoryFilename)" ConcernFiles="@(Concern->'%(FullPath)')" DebugLevel="$(DebugLevel)" IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)" />
   </Target>
@@ -354,13 +398,13 @@ This target will be called whenever the Clean target is invoked.
   <Target
        Name="ILWeaverRunner">
     <Message Text="Performing IL weaving." />
-    <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)"  />
+    <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" ConcernsDirty="$(ConcernsDirty)" />
   </Target>
 
-  <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True'">
+  <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True' And ('$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False')">
     <Message Text ="Verifying generated IL code." />
     <ILVerifyTask RepositoryFilename="$(RepositoryFilename)" />
   </Target>
 
- 
+
 </Project>

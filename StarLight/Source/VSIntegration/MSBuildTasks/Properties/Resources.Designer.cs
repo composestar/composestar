@@ -259,7 +259,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parsing concern file &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Parsing and adding concern file &apos;{0}&apos;..
         /// </summary>
         internal static string ParsingConcernFile {
             get {
@@ -354,6 +354,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         internal static string UnableToResolve {
             get {
                 return ResourceManager.GetString("UnableToResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File &apos;{0}&apos; does not require IL weaving, using backup file..
+        /// </summary>
+        internal static string UsingBackupWeaveFile {
+            get {
+                return ResourceManager.GetString("UsingBackupWeaveFile", resourceCulture);
             }
         }
         

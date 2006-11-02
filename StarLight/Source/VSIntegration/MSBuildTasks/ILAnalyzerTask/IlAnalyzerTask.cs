@@ -101,6 +101,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _intermediateOutputPath = value; }
         }
 
+
+        private bool _assembliesDirty;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether one or more assemblies are dirty.
+        /// </summary>
+        /// <value><c>true</c> if [assemblies dirty]; otherwise, <c>false</c>.</value>
+        [Output]
+        public bool AssembliesDirty
+        {
+            get { return _assembliesDirty; }
+            set { _assembliesDirty = value; }
+        }
+	
         #endregion
 
         #region ctor
@@ -157,6 +171,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             List<String> assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
             {
+                // Skip composestar files
+                if (Path.GetFileNameWithoutExtension(item.ToString()).StartsWith("Composestar.StarLight"))
+                    continue;
+
                 // We are only interested in assembly files.
                 string extension = Path.GetExtension(item.ToString()).ToLower();
                 if (extension.Equals(".dll") || extension.Equals(".exe"))
@@ -249,6 +267,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         assConfig.GenerateSerializedFilename(IntermediateOutputPath);
 
                         assemblyChanged = true;
+                        _assembliesDirty = true;
 
                         assembliesToStore.Add(assConfig);
                         assemblies.Add(assembly);

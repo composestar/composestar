@@ -78,7 +78,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             get { return _intermediateOutputPath; }
             set { _intermediateOutputPath = value; }
-        }
+        }        
 	
         #endregion
 
