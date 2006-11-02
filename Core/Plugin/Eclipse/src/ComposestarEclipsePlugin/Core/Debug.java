@@ -24,7 +24,8 @@ public class Debug implements IComposestarConstants {
 
 	private static Debug Instance = null;
 	private MessageConsoleStream stream;
-	private MessageConsole myConsole; 
+	private MessageConsole myConsole;
+	private boolean enabled = true;
 		
 	public Debug()
 	{
@@ -52,11 +53,13 @@ public class Debug implements IComposestarConstants {
 	
 	public void Log(String msg)
 	{
+		if(enabled)
 		this.PrintMessage(msg, MSG_INFORMATION);   
 	}
 	
 	public void Log(String msg, int msgKind)
 	{
+		if(enabled)
 		this.PrintMessage(msg, msgKind);   
 	}
 	
@@ -85,5 +88,10 @@ public class Debug implements IComposestarConstants {
 					stream.println(msg);
 			}
 		});
+	}
+
+	public void setEnabled(boolean b)
+	{
+		this.enabled = b;
 	}
 }
