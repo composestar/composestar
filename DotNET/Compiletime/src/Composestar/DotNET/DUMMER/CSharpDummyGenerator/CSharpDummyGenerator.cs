@@ -51,9 +51,17 @@ namespace DDW.CSharpUI
 
 				return 0; // Success
 			}
-			catch (Exception e) 
+			catch (RecognitionException re)
 			{
-				Console.WriteLine("exception: " + e);
+				Console.WriteLine();
+				Console.WriteLine("DUMMER~error~" + re.getFilename() + "~" + re.getLine() + "~" + re.Message);
+
+				return 1; // Failure!
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine();
+				Console.WriteLine("DUMMER~error~~0~" + e.Message);
 
 				return 1; // Failure
 			}
@@ -70,7 +78,7 @@ namespace DDW.CSharpUI
 			if (! File.Exists(filename)) 
 				throw new Exception("File not found: '" + filename + "'");
 
-			Console.Write("Parsing " + filename + "..");
+			Console.WriteLine("Parsing " + filename + "..");
 
 			using (FileStream s = new FileStream(filename, FileMode.Open, FileAccess.Read))
 			{
@@ -83,9 +91,11 @@ namespace DDW.CSharpUI
 				// Parse the input expression
 				DateTime tStart = DateTime.Now;
 				parser.compilation_unit();
+				if (parser.ErrorCounter > 0)
+					throw new Exception("Error while parsing file " + filename);
 				TimeSpan compTime = DateTime.Now - tStart;
 				Console.WriteLine(compTime.ToString());
-
+				
 				CSharpAST ast = (CSharpAST)parser.getAST();
 				ast.FileName = filename;
 				return ast;

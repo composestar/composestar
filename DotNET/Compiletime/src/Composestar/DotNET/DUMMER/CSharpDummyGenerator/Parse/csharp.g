@@ -9,6 +9,7 @@ header
 {
 	using CommonAST					= antlr.CommonAST; //DDW.CSharp.Parse.LineNumberAST;
 	using System.Collections;
+	using System;
 }
 
 options 
@@ -26,6 +27,7 @@ options
 	buildAST = true;   
  	exportVocab=CSharp;
 }
+
 tokens 
 {
 		
@@ -152,6 +154,30 @@ tokens
 	CustomAttribute			<AST=DDW.CSharp.Parse.CustomAttribute>;	
 	ModifierAttributes		<AST=DDW.CSharp.Parse.ModifierAttributes>;	
 }
+
+{
+	private int errorCounter = 0;
+	
+	public int ErrorCounter
+	{
+		get { return errorCounter; }
+	}
+	
+	public override void reportError(RecognitionException ex)
+	{
+		Console.WriteLine("DUMMER~error~" + ex.getFilename() + "~" + ex.getLine() + "~" + ex.Message);
+		this.errorCounter++;
+	}
+	
+	public override void reportError(string s)
+	{
+		string filename = getFilename();
+		Console.WriteLine("DUMMER~error~" + (filename == null ? "" : filename) + "~0~" + s);
+		this.errorCounter++;
+	}
+
+}
+
 
 identifier!
 	:	id:IDENTIFIER 
