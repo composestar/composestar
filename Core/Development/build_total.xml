@@ -62,12 +62,17 @@
 	<target name="install" depends="init" description="Copy the resulting binaries to the installation directory.">
 		<ant target="install" dir="${build.core}" />
 		<antcall target="install_dotnet" />
+		<antcall target="install_java" />	
 	</target>
 	
 	<target name="install_dotnet" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="install" dir="${build.dotnet}" />
 	</target>
 
+	<target name="install_java" if="available.java" unless="ignore.java">
+		<ant target="install" dir="${build.java}" />
+	</target>
+	
 	<!-- installer tasks -->
 	<target name="installer" depends="installer_dotnet" />
 	
@@ -90,10 +95,15 @@
 	
 	<target name="plugin" depends="init" description="Compile the IDE plugins">
 		<antcall target="plugin_dotnet" />
+		<antcall target="plugin_java" />	
 	</target>
 	
 	<target name="plugin_dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="plugin" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="plugin_java" depends="init" if="available.java" unless="ignore.java">
+		<ant target="plugin" dir="${build.java}" />
 	</target>
 	
 	<!-- QA tasks -->
@@ -131,6 +141,7 @@
 	<target name="test" depends="init" description="Execute system tests.">
 		<antcall target="test_core" />
 		<antcall target="test_dotnet" />
+		<antcall target="test_java" />
 	</target>
 
 	<target name="test_core" depends="init" description="Execute JUnit tests.">
@@ -139,6 +150,10 @@
 	
 	<target name="test_dotnet" depends="init" if="available.dotnet" unless="ignore.dotnet">
 		<ant target="test" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="test_java" depends="init" if="available.java" unless="ignore.java">
+		<ant target="test" dir="${build.java}" />
 	</target>
 	
 	<!-- SVN tasks -->
@@ -206,11 +221,12 @@ If the build failed the cause will be listed at the end of the report.
 					<antMenuItem name="Core" target="core" />
 					<antMenuItem name="DotNET" target="dotnet" />
 					<antMenuItem name="StarLight" target="starlight" />
-					<!--<antMenuItem name="Java" target="java" />
-					<antMenuItem name="C" target="c" />-->
+					<antMenuItem name="Java" target="java" />
+					<!--<antMenuItem name="C" target="c" />-->
 				</antMenuItem>
 				<antMenuItem name="Plugin">
 					<antMenuItem name="DotNET" target="plugin_dotnet" />
+					<antMenuItem name="Java" target="plugin_java" />
 				</antMenuItem>
 				<antMenuItem name="Installer">
 					<antMenuItem name="DotNET" target="installer_dotnet" />
