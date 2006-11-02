@@ -47,7 +47,7 @@ public class JavaBACO extends BACO
 		//So this is a redundant operation.
 	}
 	
-	protected void copyFile(String outputPath, String source) throws ModuleException
+	protected void copyFile(String outputPath, String source, boolean fatal) throws ModuleException
 	{
 		String dest;
 		Configuration config = Configuration.instance();
@@ -71,7 +71,9 @@ public class JavaBACO extends BACO
 		}
 		catch (IOException e) 
 		{
-			Debug.out(Debug.MODE_WARNING,"BACO","Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage());
+			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
+			if (fatal) throw new ModuleException(msg, MODULE_NAME);
+			else Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
 		}
 	}
 	
