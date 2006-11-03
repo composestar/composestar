@@ -104,9 +104,6 @@ namespace Composestar.StarLight.ILWeaver
             // Load the file
             AssemblyDefinition targetAssembly;
 
-            PdbReader pdbReader;
-            PdbWriter pdbWriter;
-
             try
             {
                 byte[] binaryFile;
@@ -129,7 +126,9 @@ namespace Composestar.StarLight.ILWeaver
                 } // finally
 
                 // We use a byte array to read the file, so we can close it after reading and can write to it again.  
-                targetAssembly = AssemblyFactory.GetAssembly(binaryFile);
+                // HACK We cannot use the byte array if we want to use debugging. The PdbReader must know the filename.
+                //targetAssembly = AssemblyFactory.GetAssembly(binaryFile);
+                targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
                 binaryFile = null;
                  
             }
@@ -140,8 +139,10 @@ namespace Composestar.StarLight.ILWeaver
 
             // Check if the _targetAssemblyDefinition is still available
             if (targetAssembly == null)
-                throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);             
-            
+                throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
+
+            targetAssembly.MainModule.LoadSymbols();
+
             // Prepare the data for this assembly (precaching)
             WeaveSpecification weaveSpec;
 
@@ -161,11 +162,7 @@ namespace Composestar.StarLight.ILWeaver
                 // Stop the execution
                 return _weaveStats;
             } // if
-
-            // open pdbreader
-            // pdbReader = (PdbReader) new PdbFactory().CreateReader(targetAssembly.MainModule, _configuration.InputImagePath);
-            // pdbWriter = (PdbWriter ) new PdbFactory().CreateWriter(targetAssembly.MainModule, _configuration.InputImagePath);             
-            
+                  
             // Get only the types we have info for
             foreach (WeaveType weaveType in weaveSpec.WeaveTypes)
             {
@@ -200,9 +197,7 @@ namespace Composestar.StarLight.ILWeaver
                         swMethod.Start();
 
                         WeaveMethod(targetAssembly, method, weaveMethod, weaveType);
-
-                      //  pdbReader.Read(method.Body);
-           
+ 
                         // Update stats
                         _weaveStats.MethodsProcessed++;  
                         _weaveStats.TotalMethodWeaveTime = _weaveStats.TotalMethodWeaveTime.Add(swMethod.Elapsed);
@@ -229,10 +224,12 @@ namespace Composestar.StarLight.ILWeaver
   
             // Save the modified assembly only if it is changed.
             if (_weaveStats.InputFiltersAdded > 0 || _weaveStats.OutputFiltersAdded > 0 || _weaveStats.InternalsAdded > 0 || _weaveStats.ExternalsAdded > 0)
-            {
+            {   
+                //targetAssembly.MainModule.SaveSymbols(); 
+  
                 try
-                {
-                    AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
+                {                                       
+                      AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
                 } // try
                 catch (Exception ex)
                 {
@@ -507,10 +504,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
-
             
-            
-
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
             visitor.Method = method;

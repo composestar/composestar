@@ -421,7 +421,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weaving file &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Weaving file &apos;{0}&apos;, please wait....
         /// </summary>
         internal static string WeavingFile {
             get {

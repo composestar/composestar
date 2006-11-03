@@ -85,8 +85,8 @@ namespace Mono.Cecil.Pdb {
 			IntPtr importerPtr = Marshal.GetComInterfaceForObject (objImporter, typeof (IMetadataImport));
 
 			try {
-				if (File.Exists (pdb))
-					File.Delete (pdb);
+                if (File.Exists(pdb))
+                    File.Delete(pdb);
 
 				writer.Initialize (importerPtr, pdb, false);
 			} finally {

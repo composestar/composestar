@@ -173,12 +173,6 @@
     <Compile Include="Mono.Cecil.Metadata\TypeSpec.cs" />
     <Compile Include="Mono.Cecil.Metadata\UserStringsHeap.cs" />
     <Compile Include="Mono.Cecil.Metadata\Utilities.cs" />
-    <Compile Include="Mono.Cecil.Pdb\IMetadataDispenser.cs" />
-    <Compile Include="Mono.Cecil.Pdb\IMetadataImport.cs" />
-    <Compile Include="Mono.Cecil.Pdb\PdbFactory.cs" />
-    <Compile Include="Mono.Cecil.Pdb\PdbHelper.cs" />
-    <Compile Include="Mono.Cecil.Pdb\PdbReader.cs" />
-    <Compile Include="Mono.Cecil.Pdb\PdbWriter.cs" />
     <Compile Include="Mono.Cecil.Signatures\Array.cs" />
     <Compile Include="Mono.Cecil.Signatures\ArrayShape.cs" />
     <Compile Include="Mono.Cecil.Signatures\BaseSignatureVisitor.cs" />
@@ -335,35 +329,6 @@
     <Compile Include="Mono.Cecil\TypeReferenceCollection.cs" />
     <Compile Include="Mono.Cecil\TypeSpecification.cs" />
     <Compile Include="Mono.Cecil\VariantType.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\BaseSymbolStoreVisitor.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Comparers.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Constant.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\ConstantCollection.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Document.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\DocumentCollection.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\DocumentType.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\GuidAttribute.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\HashAlgorithm.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\IScopeContainer.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\ISymbolStoreVisitable.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\ISymbolStoreVisitor.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Language.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\LanguageVendor.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Method.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\MethodCollection.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Scope.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\ScopeCollection.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\SequencePoint.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\SequencePointCollection.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStore.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStoreFactory.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStoreReader.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStoreWriter.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Using.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\UsingCollection.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\Variable.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\VariableAttributes.cs" />
-    <Compile Include="Mono.CompilerServices.SymbolStore\VariableCollection.cs" />
     <Compile Include="Mono.Xml\MiniParser.cs" />
     <Compile Include="Mono.Xml\SecurityParser.cs" />
     <Compile Include="Mono.Xml\SmallXmlParser.cs" />
@@ -373,7 +338,6 @@
     <None Include="Mono.Xml\ChangeLog" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ISymWrapper" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>

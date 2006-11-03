@@ -226,7 +226,7 @@
     <value>Weaving completed in {0:0.0000} seconds.</value>
   </data>
   <data name="WeavingFile" xml:space="preserve">
-    <value>Weaving file '{0}'.</value>
+    <value>Weaving file '{0}', please wait...</value>
   </data>
   <data name="WeavingStartText" xml:space="preserve">
     <value>Weaving the filter code using the Cecil IL Weaver.</value>
