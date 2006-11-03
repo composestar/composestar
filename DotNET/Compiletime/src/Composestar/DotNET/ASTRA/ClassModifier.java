@@ -36,6 +36,11 @@ public class ClassModifier extends TransformerBase
 			{
 				// split into string until "cil managed"
 				String plines = fetchMethodInfo(line);
+				write(plines);
+				
+				transformSection(false); // don't eat
+			/*
+			 	// disabled method-removal code. see bug #1441793.
 				String name = fetchMethodName(plines);
 				if (keepMethod(name))
 				{
@@ -44,6 +49,7 @@ public class ClassModifier extends TransformerBase
 				}
 				else
 					transformSection(true); // do eat
+			*/
 			}
 			else if (line.matches("\\s*\\}.*")) // end of class
 			{
@@ -68,25 +74,24 @@ public class ClassModifier extends TransformerBase
 		} while ((line = getLine()) != null);
 	}
 
-	/**
-	 * Checks if a method should be kept or if it should be removed.
-	 * @return true keep, false remove
-     * @param name
-	 */
-	private boolean keepMethod(String name) throws ModifierException
-	{
-		if (concern.getSignature().hasMethod(name))
-		{
-			int status = concern.getSignature().getMethodStatus(name);
-			return status != MethodWrapper.REMOVED;
-		}
-		else
-			return true;
-	}
+//	disabled method-removal code. see bug #1441793.
+//	/**
+//	 * Checks if a method should be kept or if it should be removed.
+//	 * @return true keep, false remove
+//	 */
+//	private boolean keepMethod(String name) throws ModifierException
+//	{
+//		if (concern.getSignature().hasMethod(name))
+//		{
+//			int status = concern.getSignature().getMethodStatus(name);
+//			return status != MethodWrapper.REMOVED;
+//		}
+//		else
+//			return true;
+//	}
 
 	/**
 	 * Parses input lines and transforms this into concrete method information.
-     * @param line
      */
 	private String fetchMethodInfo(String line) throws ModifierException
 	{
