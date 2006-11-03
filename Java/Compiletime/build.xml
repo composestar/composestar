@@ -63,6 +63,7 @@
 		<!-- jar files -->
 		<copy todir="${composestar.installdir}${file.separator}binaries">
 			<fileset dir="${out.dist}"/>
+			<fileset dir="${build.java}${file.separator}Compiletime${file.separator}binaries${file.separator}javassist"/>
 		</copy>
 	</target>
 
