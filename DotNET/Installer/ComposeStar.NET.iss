@@ -87,6 +87,15 @@ Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddi
 Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: ComposestarPath; ValueData: {app}; Flags: uninsdeletevalue uninsdeletekeyifempty
 Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty
 
+; only works for admins
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: CommandLineSafe; ValueData: 0; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: CommandPreload; ValueData: 0; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: Description; ValueData: Compose* VS AddIn; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: FriendlyName; ValueData: Compose*; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: dword; ValueName: LoadBehavior; ValueData: 3; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: ComposestarPath; ValueData: {app}; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+
 [Code]
 function detectedDotNet(): Boolean;
 begin
