@@ -85,7 +85,7 @@ Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddi
 Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: FriendlyName; ValueData: Compose*; Flags: uninsdeletevalue uninsdeletekeyifempty
 Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: dword; ValueName: LoadBehavior; ValueData: 3; Flags: uninsdeletevalue uninsdeletekeyifempty
 Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: ComposestarPath; ValueData: {app}; Flags: uninsdeletevalue uninsdeletekeyifempty
-Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty
+Root: HKCU; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty
 
 ; only works for admins
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: CommandLineSafe; ValueData: 0; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
@@ -94,7 +94,7 @@ Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddi
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: FriendlyName; ValueData: Compose*; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: dword; ValueName: LoadBehavior; ValueData: 3; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: ComposestarPath; ValueData: {app}; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
-Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
+Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
 
 [Code]
 function detectedDotNet(): Boolean;
@@ -185,11 +185,23 @@ begin
   end;
 end;
 
+procedure kwadd(lst: TStringList; s: String);
+var
+  i: integer;
+begin
+  for i := 0 to lst.count-1 do begin
+    if (CompareStr(lst[i], s) = 0) then exit;
+  end;
+  lst.add(s);
+end;
+
 procedure updateConfig();
 var
   cfg: String;
   app: String;
   app_r: String;
+  
+  keylist: TStringList;
 begin
   app := ExpandConstant('{app}\');
   app_r := ExpandConstant('{app}\');
@@ -204,6 +216,48 @@ begin
     StringChangeEx(cfg, '{app_r}', app_r, true);
     SaveStringToFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg, false);
   end;
+  
+  keylist := TStringList.create();
+  RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\7.1', 'InstallDir', cfg);
+  keylist.LoadFromFile(cfg+'\usertype.dat');
+  
+  kwadd(keylist, 'concern');
+  kwadd(keylist, 'filtermodule');
+  kwadd(keylist, 'inputfilters');
+  kwadd(keylist, 'outputfilters');
+  kwadd(keylist, 'internals');
+  kwadd(keylist, 'externals');
+  kwadd(keylist, 'conditions');
+  kwadd(keylist, 'superimposition');
+  kwadd(keylist, 'selectors');
+  kwadd(keylist, 'filtermodules');
+  kwadd(keylist, 'implementation');
+  kwadd(keylist, 'by');
+  kwadd(keylist, 'as');
+  kwadd(keylist, 'in');
+    
+  kwadd(keylist, 'true');
+  kwadd(keylist, 'false');
+  kwadd(keylist, 'True');
+  kwadd(keylist, 'False');
+  kwadd(keylist, 'inner');
+    
+  kwadd(keylist, 'Dispatch');
+  kwadd(keylist, 'Send');
+  kwadd(keylist, 'Meta');
+  kwadd(keylist, 'Error');
+  kwadd(keylist, 'Prepend');
+  kwadd(keylist, 'Append');
+  
+  kwadd(keylist, 'dispatch');
+  kwadd(keylist, 'send');
+  kwadd(keylist, 'meta');
+  kwadd(keylist, 'error');
+  kwadd(keylist, 'prepend');
+  kwadd(keylist, 'append');
+
+  keylist.SaveToFile(cfg+'\usertype.dat');
+  keylist.Free;
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
