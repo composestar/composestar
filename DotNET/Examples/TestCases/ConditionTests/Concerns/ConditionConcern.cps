@@ -14,7 +14,7 @@ concern ConditionConcern in Conditions
 			f2a : Dispatch = { (False & True) => [*.func2] inner.* }; // false
 			f3 : Dispatch = { cond1 => [*.func2] inner.* }; // false
 			f4 : Dispatch = { (cond1 & cond2) => [*.func2] inner.* }; // false
-			f5 : Dispatch = { (cond1 | cond2) => [*.func2] inner.func2correct }; // true <-- TODO: bug
+			f5 : Dispatch = { (cond1 | cond2) => [*.func2] inner.func2correct }; // true
 			f5a : Dispatch = { !True => [*.func3] inner.* }; // false
 			f6 : Dispatch = { (!cond1 & cond2) => [*.func3] inner.func3correct }; // true
 			f7 : Dispatch = { ((!cond1 & cond2) | cond3) => [*.func4] inner.func4correct }; // true
