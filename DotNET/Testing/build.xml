@@ -128,16 +128,18 @@
 	<target name="test_exec" depends="init_local">
 		<cstarTest>
 			<FileSet dir="${build.dotnet}/Examples">
+				<!--
+				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
+				<include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe"/>
+				-->
 				<include name="Platypus/bin/PlatypusExample.Main.exe"/>
 				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
-				<!-- <include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/> -->
 				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Builder/bin/Composestar.Patterns.Builder.Main.exe"/>
-				<!--include name="DesignPatterns/Implementations/Composite/bin/Composestar.Patterns.Composite.Main.exe"/-->
 				<include name="DesignPatterns/Implementations/Decorator/bin/Composestar.Patterns.Decorator.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Facade/bin/Composestar.Patterns.Facade.Main.exe"/>
 				<include name="DesignPatterns/Implementations/Interpreter/bin/Composestar.Patterns.Interpreter.Main.exe"/>
@@ -152,7 +154,8 @@
 				<include name="TestCases/GrammarTest/bin/GrammarTest.Class1.exe"/>
 				<include name="TestCases/BasicTests/bin/BasicTests.MainClass.exe"/>
 				<include name="TestCases/ConditionTests/bin/ConditionTests.MainClass.exe"/>
-				<include name="TestCases/SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>				
+				<include name="TestCases/SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>
+				<include name="TestCases/ErrorFilterTest/bin/ErrorFilterTest.MainClass.exe"/>
 			</FileSet>
 		</cstarTest>
 	</target>
