@@ -18,36 +18,14 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
 {
     public FilterElementCompositionOperatorRuntime rightOperator;
     public ConditionExpressionRuntime conditionpart;
-    /** @deprecated has only 1 matching pattern */
-    public List matchingPatterns = null;
     public MatchingPatternRuntime matchingPattern;
-    public EnableOperatorTypeRuntime theEnableOperatorTypeRuntime;
+    protected EnableOperatorTypeRuntime theEnableOperatorTypeRuntime;
 	public FilterRuntime theFilter = null;
     
     /**
      * @roseuid 40DDFC7202D8
      */
-    public FilterElementRuntime() {
-
-		matchingPatterns = new ArrayList();
-     
-    }
-    
-    /**
-     * @param compositionOperator
-     * @param operatorType
-     * @param conditionexpr
-     * @param matchingPatterns
-     * @roseuid 40DD59C5029B
-     * @deprecated
-     */
-    public FilterElementRuntime(FilterElementCompositionOperatorRuntime compositionOperator, EnableOperatorTypeRuntime operatorType, ConditionExpressionRuntime conditionexpr, List matchingPatterns) {
-    	this.rightOperator = compositionOperator;
-    	this.conditionpart = conditionexpr;
-    	this.matchingPatterns = matchingPatterns;
-    	this.matchingPattern = (MatchingPatternRuntime) matchingPatterns.get(0);
-    	this.theEnableOperatorTypeRuntime = operatorType;     
-    	this.matchingPattern.oper = operatorType;
+    public FilterElementRuntime() {     
     }
     
     public FilterElementRuntime(FilterElementCompositionOperatorRuntime compositionOperator, EnableOperatorTypeRuntime operatorType, ConditionExpressionRuntime conditionexpr, MatchingPatternRuntime matchingPattern) {
@@ -56,10 +34,13 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
     	this.matchingPattern = matchingPattern;
     	this.theEnableOperatorTypeRuntime = operatorType;
     	this.matchingPattern.oper = operatorType;
-    	
-    	this.matchingPatterns = new ArrayList();
-    	this.matchingPatterns.add(matchingPattern);
     }
+
+	public void setEnableOperatorTypeRuntime(EnableOperatorTypeRuntime operatorType)
+	{
+		this.theEnableOperatorTypeRuntime = operatorType;
+		this.matchingPattern.oper = operatorType;
+	}
     
     /**
      * @param m

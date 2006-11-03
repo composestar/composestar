@@ -345,7 +345,7 @@ public class RepositoryLinker
 		else
 			enableOperatorTypeRuntime = new DisableOperatorRuntime();
 		enableOperatorTypeRuntime.setReference(enableOperatorType);
-		filterElementRuntime.theEnableOperatorTypeRuntime = enableOperatorTypeRuntime;		
+		filterElementRuntime.setEnableOperatorTypeRuntime(enableOperatorTypeRuntime);
 	}
 	
 	/**
