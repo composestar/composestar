@@ -3,8 +3,7 @@ concern CombinedElms in BasicTests
 	filtermodule multiPatterns
 	{
 		inputfilters
-			// this is work in progress, it doesn't work yet, but it should in the future			
-			mpat1 : Dispatch = { True & True ~> {[*.foo], [*.bar], [*.FooBarQuux]} inner.success };
+			mpat1 : Dispatch = { True ~> {[*.foo], [*.bar], [*.FooBarQuux]} inner.success };
 			mpat2 : Dispatch = { [*.foo] *.bar, [*.bar] *.quux }
 	}
 
