@@ -2,12 +2,10 @@ package ComposestarEclipsePlugin.Java.Actions;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.IJavaProject;
-import org.osgi.framework.Bundle;
 
 import java.io.PrintStream;
 
@@ -22,16 +20,7 @@ public class TestBuild implements IPlatformRunnable
 		PrintStream orig = System.out;
 		
 		try {
-			
-			// FIXME: why is this necessary?
-			Bundle b = Platform.getBundle("ComposestarEclipsePlugin");
-			b.loadClass("ComposestarEclipsePlugin.Core.Utils.FileUtils");
-			b.loadClass("ComposestarEclipsePlugin.Core.Utils.Timer");
-			b.loadClass("ComposestarEclipsePlugin.Core.BuildConfiguration.ModuleSetting");
-			b.loadClass("ComposestarEclipsePlugin.Java.MasterManager");
-			b.loadClass("ComposestarEclipsePlugin.Core.Utils.CommandLineExecutor");
-			b.loadClass("ComposestarEclipsePlugin.Core.Utils.StreamGobbler");
-		
+					
 			// log compile results
 			MasterManager m = MasterManager.getInstance();
 			m.logOutput = true;
