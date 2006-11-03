@@ -114,6 +114,13 @@ Common routines. Always include this file in every build.xml file
 		<condition property="bin.nsis" value="C:${file.separator}Program Files${file.separator}NSIS" else="">
 			<not><isset property="available.nsis.path"/></not>
 		</condition>
+		
+		<!-- Inno setup -->
+		<available file="iscc.exe" filepath="${env.PATH}${path.separator}C:${file.separator}Program Files${file.separator}Inno Setup 5" property="available.innosetup"/>
+		<available file="iscc.exe" filepath="${env.PATH}" property="available.innosetup.path"/>
+		<condition property="bin.innosetup" value="C:${file.separator}Program Files${file.separator}Inno Setup 5${file.separator}iscc.exe" else="iscc.exe">
+			<not><isset property="available.innosetup.path"/></not>
+		</condition>
 
 		<!-- devenv macro -->
 		<available file="devenv.com" filepath="${env.PATH}${path.separator}C:${file.separator}Program Files${file.separator}Microsoft Visual Studio .NET 2003${file.separator}Common7${file.separator}IDE${file.separator}" property="available.devenv"/>
