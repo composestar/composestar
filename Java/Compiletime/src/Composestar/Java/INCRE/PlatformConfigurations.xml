@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Platforms>
+<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="C:\Program Files\ComposeStar\binaries\ComposestarCORE.jar;C:\Program Files\ComposeStar\binaries\ComposestarDotNET.jar;C:\Program Files\ComposeStar\binaries\antlr.jar;C:\Program Files\ComposeStar\binaries\prolog\prolog.jar;C:\Program Files\ComposeStar\binaries\groove\castor-0_9_5_2-xml.jar;C:\Program Files\ComposeStar\binaries\groove\groove-1_2_0.jar;C:\Program Files\ComposeStar\binaries\groove\jgraph.jar;C:\Program Files\ComposeStar\binaries\groove\xerces-2_6_0-xercesImpl.jar;C:\Program Files\ComposeStar\binaries\groove\xerces-2_6_0-xml-apis.jar" options="">
+<Languages defaultLanguage="CSharp">
+<Language name="CSharp" >
+<Compiler name="CSharpCompiler" executable="csc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">
+<Actions>
+<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+</Actions>
+<Converters>
+<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />
+</Converters>
+</Compiler>
+<DummyGeneration emitter="Composestar.DotNET.DUMMER.CSharpDummyEmitter" />
+<FileExtensions>
+<FileExtension extension=".cs" />
+</FileExtensions>
+</Language>
+<Language name="JSharp" >
+<Compiler name="JSharpCompiler" executable="vjc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">
+<Actions>
+<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+</Actions>
+<Converters>
+<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />
+</Converters>
+</Compiler>
+<DummyGeneration emitter="Composestar.DotNET.DUMMER.JSharpDummyEmitter" />
+<FileExtensions>
+<FileExtension extension=".jsl" />
+</FileExtensions>
+</Language>
+</Languages>
+<RequiredFiles>
+<RequiredFile fileName="AntlrDotNet.dll" />
+<RequiredFile fileName="ComposestarCore.dll" />
+<RequiredFile fileName="ComposestarCoreDotNET.dll" />
+<RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />
+<RequiredFile fileName="ComposeStarDotNETUtilities.dll" />
+<RequiredFile fileName="ComposeStarFilterDebugger.dll" />
+<RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />
+<RequiredFile fileName="ComposeStarUtilities.dll" />
+<RequiredFile fileName="DotNETPlatformInterface.dll" />
+</RequiredFiles>
+</Platform>
+<Platform name="Java" mainClass="Composestar.Java.MASTER.JavaMaster" classPath="C:\Program Files\ComposeStar\binaries\ComposestarCORE.jar;C:\Program Files\ComposeStar\binaries\ComposestarJava.jar;C:\Program Files\ComposeStar\binaries\antlr.jar;C:\Program Files\ComposeStar\binaries\prolog\prolog.jar;C:\Program Files\ComposeStar\binaries\groove\castor-0_9_5_2-xml.jar;C:\Program Files\ComposeStar\binaries\groove\groove-1_2_0.jar;C:\Program Files\ComposeStar\binaries\groove\jgraph.jar;C:\Program Files\ComposeStar\binaries\groove\xerces-2_6_0-xercesImpl.jar;C:\Program Files\ComposeStar\binaries\groove\xerces-2_6_0-xml-apis.jar;C:\Program Files\ComposeStar\binaries\javassist.jar" options="">
+    <Languages defaultLanguage="Java">
+      <Language name="Java">
+        <Compiler name="JavaCompiler" executable="javac.exe" options="" implementedBy="Composestar.Java.COMP.JavaCompiler">
+          <Actions>
+            <Action name="Compile" argument="{OPTIONS} {SOURCES}" />
+            <Action name="CreateJar" argument="jar {OPTIONS} {NAME} {CLASSES}" />
+          </Actions>
+          <Converters />
+        </Compiler>
+        <DummyGeneration emitter="Composestar.Java.DUMMER.JavaDummyEmitter" />
+        <FileExtensions>
+          <FileExtension extension=".java" />
+        </FileExtensions>
+	</Language>
+    </Languages>
+    <RequiredFiles>
+    	<RequiredFile fileName="ComposestarCore.jar" />
+    	<RequiredFile fileName="ComposestarJava.jar" />
+    	<RequiredFile fileName="prolog/prolog.jar" />
+    </RequiredFiles>
+  </Platform>
+</Platforms>
