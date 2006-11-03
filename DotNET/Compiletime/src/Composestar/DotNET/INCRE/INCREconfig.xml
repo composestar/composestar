@@ -56,6 +56,9 @@
 			</type>
 		</comparisons>		
 	</module>
+	<module name="FITER" fulltype="Composestar.Core.FITER.FITER" enabled="true" incremental="false" summary="Verifying filter types...">
+		<dependencies></dependencies>	
+	</module>
 	<module name="CHKREP" fulltype="Composestar.Core.CHKREP.Main" enabled="true" incremental="false" summary="Checking repository...">
 		<dependencies></dependencies>	
 	</module>

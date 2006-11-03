@@ -72,6 +72,7 @@ public class INCRE implements CTCommonModule
 	public INCREConfigurations configurations;
 	private HashMap filesCheckedOnTimeStamp;
 	private HashMap filesCheckedOnProjectConfig;
+	private HashMap modulesByName;
 	public HashMap externalSourcesBySource;
 	private HashMap dsObjectsOrdered;
 	private HashMap historyObjectsOrdered;
@@ -82,7 +83,7 @@ public class INCRE implements CTCommonModule
 	private ArrayList historyConcernsWithModifiedSignatures;
 	private String projectSources;
 	
-	public INCRE()
+	private INCRE()
 	{
 		config = Configuration.instance();
 		reporter = new INCREReporter();
@@ -93,6 +94,7 @@ public class INCRE implements CTCommonModule
 		historyObjectsOrdered = new HashMap();
 		externalSourcesBySource = new HashMap();
 		configurations = new INCREConfigurations();
+		modulesByName = new HashMap();
 	}
 	
 	public static INCRE instance()
@@ -924,5 +926,15 @@ public class INCRE implements CTCommonModule
 		catch (Exception e) {
 			throw new ModuleException("Error occured while creating history: "+e.toString(),MODULE_NAME);
 		}
+	}
+	
+	public void addModuleByName(String name, CTCommonModule module)
+	{
+		this.modulesByName.put(name, module);
+	}
+	
+	public CTCommonModule getModuleByName(String name)
+	{
+		return (CTCommonModule)this.modulesByName.get(name);
 	}
 }

@@ -42,7 +42,7 @@ import Composestar.Utils.FileUtils;
  */
 public abstract class LOLA implements CTCommonModule
 {
-	private static final String MODULE_NAME = "LOLA";
+	public static final String MODULE_NAME = "LOLA";
 
 	public boolean initialized; // Initialize only once
 	public DataStore dataStore;
@@ -211,7 +211,7 @@ public abstract class LOLA implements CTCommonModule
 			asi.run();
 			selcalc.stop();
 		}
-
+				
 		/* Connect stderr to the original stream again */
 		//System.setErr(stderr);
 	} 

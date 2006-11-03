@@ -507,21 +507,22 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     FilterType ft = new FilterType();
     ft.setDescriptionFileName(filename);
     ft.setDescriptionLineNumber(lineNumber);
-    if ("wait".equalsIgnoreCase(type)) {
+	  
+    if (FilterType.WAIT.equalsIgnoreCase(type)) {
       ft.setType(FilterType.WAIT);
-    } else if ("dispatch".equalsIgnoreCase(type)) {
+    } else if (FilterType.DISPATCH.equalsIgnoreCase(type)) {
       ft.setType(FilterType.DISPATCH);
-    } else if ("error".equalsIgnoreCase(type)) {
+    } else if (FilterType.ERROR.equalsIgnoreCase(type)) {
       ft.setType(FilterType.ERROR);
-    } else if ("meta".equalsIgnoreCase(type)) {
+    } else if (FilterType.META.equalsIgnoreCase(type)) {
       ft.setType(FilterType.META);
-    } else if ("substitution".equalsIgnoreCase(type)) {
+    } else if (FilterType.SUBSTITUTION.equalsIgnoreCase(type)) {
       ft.setType(FilterType.SUBSTITUTION);
-    } else if ("send".equalsIgnoreCase(type))  {
+    } else if (FilterType.SEND.equalsIgnoreCase(type))  {
       ft.setType(FilterType.SEND);
-    } else if ("append".equalsIgnoreCase(type))  {
+    } else if (FilterType.APPEND.equalsIgnoreCase(type))  {
         ft.setType(FilterType.APPEND);
-    } else if ("prepend".equalsIgnoreCase(type))  {
+    } else if (FilterType.PREPEND.equalsIgnoreCase(type))  {
         ft.setType(FilterType.PREPEND);
     } else {
       ft.setType(FilterType.CUSTOM);
