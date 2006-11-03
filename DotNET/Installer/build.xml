@@ -11,9 +11,11 @@
 	<import file="${build.core}${file.separator}common.xml"/>
 	
 	<target name="local_init" depends="init">
+		<!--
 		<taskdef name="nsis" classname="net.sf.nsisant.Task">
 			<classpath location="nsisant-1.2.jar"/>
 		</taskdef>
+		-->
 		
 		<delete dir="${out.dist}"/>
 		<mkdir dir="${out.build}"/>
@@ -23,22 +25,12 @@
 	<target name="clean" depends="init" description="clean intermediate files">
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
-		
-		<delete dir="${basedir}${file.separator}binaries"/>
-		<delete>
-			<fileset dir="${basedir}">
-				<include name="*.css"/>
-				<include name="INCRE*.xml"/>
-				<include name="filterdesc.xml"/>
-			</fileset>
-		</delete>
-		<delete dir="${basedir}${file.separator}ComposestarVSAddin"/>
 	</target>
 	
 	<target name="build"/>
 	
 	<target name="copy_files" depends="local_init">
-		<property name="destdir" value="${basedir}" />
+		<property name="destdir" value="${out.build}" />
 	
 		<mkdir dir="${destdir}${file.separator}binaries"/>
 		<mkdir dir="${destdir}${file.separator}binaries${file.separator}prolog"/>
@@ -125,31 +117,10 @@
 		<delete dir="${destdir}${file.separator}examplesDotNET"/>
 		<svn>
 			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${destdir}${file.separator}examplesDotNET"/>
-		</svn>
-		
+		</svn>		
 	</target>
-
-	<target name="build_addinfixer" depends="local_init">
-		<nsis script="ComposeStarAddIn.nsi" verbosity="4" out="build_addinfixer.log" noconfig="yes" path="${bin.nsis}">
-			<define name="VERSION" value="${version.dotnet}"/>
-			<define name="BUILD_LABEL" value="${version.build}"/>
-			<scriptcmd cmd="AutoCloseWindow true"/>
-		</nsis>
-	</target> 
-
-	<target name="installer" depends="copy_files,build_addinfixer" if="available.nsis" description="build the DotNET installer">	
-		<nsis script="ComposeStar.NET.nsi" verbosity="4" out="build_installer.log" noconfig="yes" path="${bin.nsis}">
-        	<define name="VERSION" value="${version.dotnet}"/>
-        	<define name="BUILD_NUMBER" value="${version.build}"/>
-        	<scriptcmd cmd="AutoCloseWindow true"/>
-		</nsis>
-		
-		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes"/>		
-	</target>	
 	
-	<!--if="available.innosetup" -->
-	<target name="installer-is" depends="copy_files" description="build the DotNET installer">	
-		<property name="bin.innosetup" value="C:\Program Files\Inno Setup 5\iscc.exe" />
+	<target name="installer" depends="local_init,copy_files" if="available.innosetup" description="build the DotNET installer">	
 		<exec executable="${bin.innosetup}" >
 			<arg value="ComposeStar.NET.iss" />
 			<arg value="/q}" />

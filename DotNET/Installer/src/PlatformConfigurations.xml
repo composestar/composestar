@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Platforms>
+<Platform name="dotNET" mainClass="Composestar.DotNET.MASTER.DotNETMaster" classPath="{app}binaries\ComposestarCORE.jar;{app}binaries\ComposestarDotNET.jar;{app}binaries\antlr.jar;{app}binaries\prolog\prolog.jar" options="">
+<Languages defaultLanguage="CSharp">
+<Language name="CSharp" >
+<Compiler name="CSharpCompiler" executable="csc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">
+<Actions>
+<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+</Actions>
+<Converters>
+<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />
+</Converters>
+</Compiler>
+<DummyGeneration emitter="Composestar.DotNET.DUMMER.CSharpDummyEmitter" />
+<FileExtensions>
+<FileExtension extension=".cs" />
+</FileExtensions>
+</Language>
+<Language name="JSharp" >
+<Compiler name="JSharpCompiler" executable="vjc.exe" options="/debug /nologo" implementedBy="Composestar.DotNET.COMP.DotNETCompiler">
+<Actions>
+<Action name="CompileLibrary" argument="/t:library /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+<Action name="CompileExecutable" argument="/t:exe /out:{OUT} {LIBS} {OPTIONS} {SOURCES}" />
+</Actions>
+<Converters>
+<Converter name="libraryParam" expression="{LIB}" replaceBy="/r:{LIB}" />
+</Converters>
+</Compiler>
+<DummyGeneration emitter="Composestar.DotNET.DUMMER.JSharpDummyEmitter" />
+<FileExtensions>
+<FileExtension extension=".jsl" />
+</FileExtensions>
+</Language>
+</Languages>
+<RequiredFiles>
+<RequiredFile fileName="AntlrDotNet.dll" />
+<RequiredFile fileName="ComposestarCore.dll" />
+<RequiredFile fileName="ComposestarCoreDotNET.dll" />
+<RequiredFile fileName="ComposeStarDotNETRuntimeInterpreter.dll" />
+<RequiredFile fileName="ComposeStarDotNETUtilities.dll" />
+<RequiredFile fileName="ComposeStarFilterDebugger.dll" />
+<RequiredFile fileName="ComposeStarRuntimeInterpreter.dll" />
+<RequiredFile fileName="ComposeStarUtilities.dll" />
+<RequiredFile fileName="DotNETPlatformInterface.dll" />
+</RequiredFiles>
+</Platform>
+</Platforms>
