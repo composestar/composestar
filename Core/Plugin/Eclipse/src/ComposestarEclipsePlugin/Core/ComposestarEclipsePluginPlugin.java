@@ -8,7 +8,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.plugin.*;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -28,6 +27,7 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin {
 	 * The constructor.
 	 */
 	public ComposestarEclipsePluginPlugin() {
+		super();
 		plugin = this;
 	}
 
@@ -49,7 +49,12 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static ComposestarEclipsePluginPlugin getDefault() {
+	public static ComposestarEclipsePluginPlugin getDefault() 
+	{
+		if(plugin == null)
+		{
+			plugin = new ComposestarEclipsePluginPlugin();
+		}
 		return plugin;
 	}
 
@@ -66,13 +71,13 @@ public class ComposestarEclipsePluginPlugin extends AbstractUIPlugin {
 	
 	public static String getAbsolutePath(String path) {
 		Bundle bundle = Platform.getBundle(PLUGIN_NAME);
-		URL fullPathString = BundleUtility.find(bundle, path);
+		URL relativePath = bundle.getEntry(path);
 		try{
-			fullPathString = Platform.resolve(fullPathString);
-			fullPathString = Platform.asLocalURL(fullPathString);
+			URL fullPathString = Platform.asLocalURL(relativePath);
+			return fullPathString.getFile();
 		}
 		catch(java.io.IOException io){;}
-		return fullPathString.getFile();
+		return relativePath.getFile();
 	}
 	
 	public IDialogSettings getDialogSettings() {
