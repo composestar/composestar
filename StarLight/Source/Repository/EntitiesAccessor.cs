@@ -4,7 +4,8 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-
+using System.Threading;
+ 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.Configuration;
@@ -28,9 +29,10 @@ namespace Composestar.Repository
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
         static EntitiesAccessor()
-        {           
+        {
+          
         }
-
+                
         /// <summary>
         /// Initializes a new instance of the <see cref="T:EntitiesAccessor"/> class.
         /// </summary>
@@ -202,10 +204,10 @@ namespace Composestar.Repository
         /// <summary>
         /// Saves the weave specification.
         /// </summary>
-        /// <param name="weaveSpecification">The weave specification.</param>
         /// <param name="filename">The filename.</param>
+        /// <param name="weaveSpecification">The weave specification.</param>
         /// <returns></returns>
-        public bool SaveWeaveSpecification(WeaveSpecification weaveSpecification, string filename)
+        public bool SaveWeaveSpecification(string filename, WeaveSpecification weaveSpecification)
         {
             if (weaveSpecification == null)
                 throw new ArgumentNullException("weaveSpecification");

@@ -188,9 +188,9 @@ namespace Composestar.Repository.Tests
 
             string filename = null;
 
-            target.SaveWeaveSpecification(null, filename);
+            target.SaveAssemblyElement(filename, null);
             target.SaveConfiguration(filename, null);
-            target.SaveWeaveSpecification(null, filename);
+            target.SaveWeaveSpecification(filename, null);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Composestar.Repository.Tests
             expected.AssemblyName = "test"; 
             WeaveSpecification actual;
 
-            Assert.IsTrue(target.SaveWeaveSpecification(expected, filename), "Save function for SaveWeaveSpecification did not return true");
+            Assert.IsTrue(target.SaveWeaveSpecification(filename, expected), "Save function for SaveWeaveSpecification did not return true");
             Assert.IsTrue(System.IO.File.Exists(filename), "File {0} did not exists while it should be wrtten.", filename);
 
             actual = target.LoadWeaveSpecification(filename);

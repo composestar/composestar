@@ -79,10 +79,10 @@ namespace Composestar.StarLight.CoreServices
         /// <summary>
         /// Saves the weave specification.
         /// </summary>
-        /// <param name="weaveSpecification">The weave specification.</param>
         /// <param name="filename">The filename.</param>
+        /// <param name="weaveSpecification">The weave specification.</param>
         /// <returns></returns>
-        bool SaveWeaveSpecification(WeaveSpecification weaveSpecification, string filename);
+        bool SaveWeaveSpecification(string filename, WeaveSpecification weaveSpecification);
 
     } // IWeaveSpecAccessors
 

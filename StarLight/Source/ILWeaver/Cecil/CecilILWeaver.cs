@@ -524,16 +524,21 @@ namespace Composestar.StarLight.ILWeaver
             catch (Exception ex)
             {
                 // Close the database and throw the error wrapped in an ILWeaverException                 
-                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(Properties.Resources.CecilVisitorRaisedException, 
+                                            _configuration.OutputImagePath, ex);
             }
 
             // Only add instructions if we have instructions
             if (visitor.Instructions.Count > 0)
             {
+                // Update the sequence point. Our instruction is now placed at the top. 
+                // This should have the same sequence as the previous first instruction.
+                visitor.Instructions[0].SequencePoint = ins.SequencePoint;
+ 
                 // Add the instructions
                 int instructionsCount = 0;
                 instructionsCount += InsertBeforeInstructionList(ref worker, ins, visitor.Instructions);
-
+                
                 // Increase the number of inputfilters added
                 _weaveStats.InputFiltersAdded++;
             }
@@ -619,6 +624,12 @@ namespace Composestar.StarLight.ILWeaver
                     // Only add instructions if we have instructions
                     if(visitor.Instructions.Count > 0)
                     {
+                        // Our newly added instructions must have the same sequence point as the instruction we are replacing
+                        visitor.Instructions[0].SequencePoint = instruction.SequencePoint;    
+
+                        // Or add a new document as sequence point to link to the concern file? 
+                        // Difficult to do here
+
                         int instructionsCount = 0;
                         // Add the instructions
                         instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);

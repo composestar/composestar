@@ -21,7 +21,8 @@ Copyright (C) University of Twente, 2006
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.JavaServerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  
   <PropertyGroup>
     <StarLightFolder>StarLight</StarLightFolder>
   </PropertyGroup>
@@ -222,7 +223,7 @@ This target will be called whenever the Clean target is invoked.
       CreateStarLightFolder;
       BuildOnlySettings;
       PrepareForBuild;
-      ResolveReferences;
+      ResolveReferences;      
       CpsParserRunner;
       GetTargetPath;
       CopyFilesToOutputDirectory;
@@ -240,7 +241,7 @@ This target will be called whenever the Clean target is invoked.
     <OnError ExecuteTargets="_TimeStampAfterCompile;PostBuildEvent" Condition="'$(RunPostBuildEvent)'=='Always' or '$(RunPostBuildEvent)'=='OnOutputUpdated'"/>
     <OnError ExecuteTargets="_CleanRecordFileWrites"/>
   </Target>
-
+ 
   <PropertyGroup>
     <!-- "None" is not technically a valid DebugType, so we can't pass it in as such
              to the compiler.  So here, we modify the properties so they make sense. -->

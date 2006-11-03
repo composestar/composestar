@@ -5,6 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
+ *
  */
 
 package Composestar.DotNET.MASTER;
@@ -52,6 +53,7 @@ public class StarLightMaster extends Master  {
     private static ConfigurationContainer configContainer;
     
     long timer;
+    
     /**
      * Default ctor.
      * @param configurationFile
@@ -68,7 +70,7 @@ public class StarLightMaster extends Master  {
     }
     
     /**
-     * @return The repository filename (Yap database).
+     * @return The repository filename.
      */
     public static String getConfigFileName(){
         return configFileName;        
@@ -92,7 +94,7 @@ public class StarLightMaster extends Master  {
     public static void main(String[] args) {
     	
 		if(args.length == 0) {
-    		System.out.println("Usage: java Composestar.DotNET.MASTER.StarLightMaster <config file>");
+    		System.out.println("Usage: java [classpath values] Composestar.DotNET.MASTER.StarLightMaster <config file>");
     		System.exit(0);
     	}
 		
@@ -163,9 +165,7 @@ public class StarLightMaster extends Master  {
 	    }
 		Configuration.instance().getPathSettings().addPath("Composestar", configContainer.getInstallFolder() + "\\" );
         
-        //Set platform:
-//        Configuration.instance().addProperty( "Platform", "dotnet" );
-        
+    
         // Set FILTH input file
         Composestar.Core.Master.Config.ModuleSettings filthSettings = new Composestar.Core.Master.Config.ModuleSettings();
         filthSettings.setName("FILTH");
