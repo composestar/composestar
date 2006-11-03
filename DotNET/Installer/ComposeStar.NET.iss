@@ -59,7 +59,7 @@ Source: src\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubd
 Source: build\*; DestDir: {app}; Flags: ignoreversion regserver regtypelib noregerror; Excludes: .svn; Components: core
 Source: build\binaries\*; DestDir: {app}\binaries; Flags: ignoreversion recursesubdirs createallsubdirs regserver regtypelib noregerror; Excludes: .svn; Components: core
 Source: build\ComposestarVSAddin\*; DestDir: {app}\ComposestarVSAddin; Flags: ignoreversion regserver regtypelib noregerror; Excludes: .svn; Components: core\addin
-Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: .svn,build.xml; Components: examples
+Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: .svn,build.xml,TestCases; Components: examples
 
 Source: vjssupuilib.exe; DestDir: {app}; Flags: ignoreversion deleteafterinstall
 Source: {#SPLASH_IMAGE}; DestDir: {tmp}; DestName: splash.bmp; Flags: ignoreversion dontcopy noencryption
