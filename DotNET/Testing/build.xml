@@ -132,7 +132,7 @@
 				<include name="PredicateQueries/bin/MyApp.Main.exe"/>
 				<include name="Rot13/bin/Rot13Filter.Rot13Example.exe"/>
 				<include name="VenusFlyTrap/bin/VenusFlyTrapExample.LivingBeing.exe"/>
-				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
+				<!-- <include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/> -->
 				<include name="Wedding/bin/wedding.Wedding.exe"/>
 				<include name="Inventory/bin/ExampleAOP.Example.exe"/>
 				<include name="DesignPatterns/Implementations/Adapter/bin/Composestar.Patterns.Adapter.Main.exe"/>
