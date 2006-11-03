@@ -11,12 +11,6 @@
 	<import file="${build.core}${file.separator}common.xml"/>
 	
 	<target name="local_init" depends="init">
-		<!--
-		<taskdef name="nsis" classname="net.sf.nsisant.Task">
-			<classpath location="nsisant-1.2.jar"/>
-		</taskdef>
-		-->
-		
 		<delete dir="${out.dist}"/>
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
