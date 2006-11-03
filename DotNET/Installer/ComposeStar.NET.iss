@@ -73,7 +73,7 @@ Name: {group}\Documentation; Filename: {app}\documentation\MessageAPI\index.html
 Name: {group}\{cm:UninstallProgram,{#SAFE_NAME}}; Filename: {uninstallexe}
 
 [Run]
-Filename: {app}\vjssupuilib.exe; parameters: "/C:""installer /qb"""; Components: core; StatusMsg: Installing J# UI supplemental; Flags: waituntilterminated
+Filename: {app}\vjssupuilib.exe; parameters: "/C:""installer /qb"""; Components: core; StatusMsg: Installing J# UI supplemental; Flags: waituntilterminated; Check: IsAdminLoggedOn
 
 [UninstallDelete]
 Type: files; Name: {app}\{#SAFE_NAME} Homepage.url
@@ -217,47 +217,49 @@ begin
     SaveStringToFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg, false);
   end;
   
-  keylist := TStringList.create();
-  RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\7.1', 'InstallDir', cfg);
-  keylist.LoadFromFile(cfg+'\usertype.dat');
-  
-  kwadd(keylist, 'concern');
-  kwadd(keylist, 'filtermodule');
-  kwadd(keylist, 'inputfilters');
-  kwadd(keylist, 'outputfilters');
-  kwadd(keylist, 'internals');
-  kwadd(keylist, 'externals');
-  kwadd(keylist, 'conditions');
-  kwadd(keylist, 'superimposition');
-  kwadd(keylist, 'selectors');
-  kwadd(keylist, 'filtermodules');
-  kwadd(keylist, 'implementation');
-  kwadd(keylist, 'by');
-  kwadd(keylist, 'as');
-  kwadd(keylist, 'in');
-    
-  kwadd(keylist, 'true');
-  kwadd(keylist, 'false');
-  kwadd(keylist, 'True');
-  kwadd(keylist, 'False');
-  kwadd(keylist, 'inner');
-    
-  kwadd(keylist, 'Dispatch');
-  kwadd(keylist, 'Send');
-  kwadd(keylist, 'Meta');
-  kwadd(keylist, 'Error');
-  kwadd(keylist, 'Prepend');
-  kwadd(keylist, 'Append');
-  
-  kwadd(keylist, 'dispatch');
-  kwadd(keylist, 'send');
-  kwadd(keylist, 'meta');
-  kwadd(keylist, 'error');
-  kwadd(keylist, 'prepend');
-  kwadd(keylist, 'append');
+  if IsAdminLoggedOn() then begin
+    keylist := TStringList.create();
+    RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\7.1', 'InstallDir', cfg);
+    keylist.LoadFromFile(cfg+'\usertype.dat');
 
-  keylist.SaveToFile(cfg+'\usertype.dat');
-  keylist.Free;
+    kwadd(keylist, 'concern');
+    kwadd(keylist, 'filtermodule');
+    kwadd(keylist, 'inputfilters');
+    kwadd(keylist, 'outputfilters');
+    kwadd(keylist, 'internals');
+    kwadd(keylist, 'externals');
+    kwadd(keylist, 'conditions');
+    kwadd(keylist, 'superimposition');
+    kwadd(keylist, 'selectors');
+    kwadd(keylist, 'filtermodules');
+    kwadd(keylist, 'implementation');
+    kwadd(keylist, 'by');
+    kwadd(keylist, 'as');
+    kwadd(keylist, 'in');
+
+    kwadd(keylist, 'true');
+    kwadd(keylist, 'false');
+    kwadd(keylist, 'True');
+    kwadd(keylist, 'False');
+    kwadd(keylist, 'inner');
+
+    kwadd(keylist, 'Dispatch');
+    kwadd(keylist, 'Send');
+    kwadd(keylist, 'Meta');
+    kwadd(keylist, 'Error');
+    kwadd(keylist, 'Prepend');
+    kwadd(keylist, 'Append');
+
+    kwadd(keylist, 'dispatch');
+    kwadd(keylist, 'send');
+    kwadd(keylist, 'meta');
+    kwadd(keylist, 'error');
+    kwadd(keylist, 'prepend');
+    kwadd(keylist, 'append');
+
+    keylist.SaveToFile(cfg+'\usertype.dat');
+    keylist.Free;
+  end;
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
