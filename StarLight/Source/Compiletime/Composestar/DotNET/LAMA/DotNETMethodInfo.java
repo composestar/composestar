@@ -37,19 +37,15 @@ public class DotNETMethodInfo extends MethodInfo {
 	private static final long serialVersionUID = -1303615818393508196L;
 	public int CallingConvention;
     private int HashCode;
-    public boolean IsAbstract;
-    public boolean IsAssembly;
-    public boolean IsConstructor;
-    public boolean IsFamily;
-    public boolean IsFamilyAndAssembly;
-    public boolean IsFamilyOrAssembly;
-    public boolean IsFinal;
-    public boolean IsHideBySig;
-    public boolean IsPrivate;
-    public boolean IsPublic;
-    public boolean IsStatic;
-    public boolean IsVirtual;
-    public boolean IsDeclaredHere;
+    private boolean IsAbstract;
+    private boolean IsAssembly;
+    private boolean IsConstructor;
+    private boolean IsFinal;
+    private boolean IsPrivate;
+    private boolean IsPublic;
+    private boolean IsStatic;
+    private boolean IsVirtual;
+    private boolean IsDeclaredHere;
     
     public MethodElement methodElement;
     
@@ -79,12 +75,8 @@ public class DotNETMethodInfo extends MethodInfo {
     	mi.IsAssembly = this.IsAssembly;
     	mi.IsConstructor = this.IsConstructor;
     	mi.IsDeclaredHere = this.IsDeclaredHere;
-    	mi.IsFamily = this.IsFamily;
-    	mi.IsFamilyAndAssembly = this.IsFamilyAndAssembly;
-    	mi.IsFamilyOrAssembly = this.IsFamilyOrAssembly;
-    	mi.IsFinal = this.IsFinal;
-    	mi.IsHideBySig = this.IsHideBySig;
-    	mi.IsPrivate = this.IsPrivate;
+       	mi.IsFinal = this.IsFinal;
+       	mi.IsPrivate = this.IsPrivate;
     	mi.IsPublic = this.IsPublic;
     	mi.IsStatic = this.IsStatic;
     	mi.IsVirtual = this.IsVirtual;
@@ -155,54 +147,8 @@ public class DotNETMethodInfo extends MethodInfo {
        IsConstructor = isConstructor;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0205
-     */
-    public boolean isFamily() {
-    return IsFamily;     
-    }
-    
-    /**
-     * @param isFamily
-     * @roseuid 402A01CB018A
-     */
-    public void setIsFamily(boolean isFamily) {
-       IsFamily = isFamily;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0206
-     */
-    public boolean isFamilyAndAssembly() {
-    return IsFamilyAndAssembly;     
-    }
-    
-    /**
-     * @param isFamAndAsm
-     * @roseuid 402A01D70000
-     */
-    public void setIsFamilyAndAssembly(boolean isFamAndAsm) {
-       IsFamilyAndAssembly = isFamAndAsm;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0207
-     */
-    public boolean isFamilyOrAssembly() {
-    return IsFamilyOrAssembly;     
-    }
-    
-    /**
-     * @param isFamOrAsm
-     * @roseuid 402A01EF0164
-     */
-    public void setIsFamilyOrAssembly(boolean isFamOrAsm) {
-       IsFamilyOrAssembly = isFamOrAsm;     
-    }
-    
+   
+        
     /**
      * @return boolean
      * @roseuid 401B84CF0208
@@ -219,21 +165,6 @@ public class DotNETMethodInfo extends MethodInfo {
        IsFinal = isFinal;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0209
-     */
-    public boolean isHideBySig() {
-    return IsHideBySig;     
-    }
-    
-    /**
-     * @param isHide
-     * @roseuid 402A0213006B
-     */
-    public void setIsHideBySig(boolean isHide) {
-       IsHideBySig = isHide;     
-    }
     
     /**
      * @return boolean
@@ -247,7 +178,7 @@ public class DotNETMethodInfo extends MethodInfo {
      * @param isPrivate
      * @roseuid 402A0240034B
      */
-    public void setIsprivate(boolean isPrivate) {
+    public void setIsPrivate(boolean isPrivate) {
        IsPrivate = isPrivate;     
     }
     
@@ -429,11 +360,7 @@ public class DotNETMethodInfo extends MethodInfo {
 		IsAbstract = in.readBoolean();
 		IsAssembly = in.readBoolean();
 		IsConstructor = in.readBoolean();
-		IsFamily = in.readBoolean();
-		IsFamilyAndAssembly = in.readBoolean();
-		IsFamilyOrAssembly = in.readBoolean();
 		IsFinal = in.readBoolean();
-		IsHideBySig = in.readBoolean();
 		IsPrivate = in.readBoolean();
 		IsPublic = in.readBoolean();
 		IsStatic = in.readBoolean();
@@ -451,11 +378,7 @@ public class DotNETMethodInfo extends MethodInfo {
 		out.writeBoolean(IsAbstract);
 		out.writeBoolean(IsAssembly);
 		out.writeBoolean(IsConstructor);
-		out.writeBoolean(IsFamily);
-		out.writeBoolean(IsFamilyAndAssembly);
-		out.writeBoolean(IsFamilyOrAssembly);
 		out.writeBoolean(IsFinal);
-		out.writeBoolean(IsHideBySig);
 		out.writeBoolean(IsPrivate);
 		out.writeBoolean(IsPublic);
 		out.writeBoolean(IsStatic);

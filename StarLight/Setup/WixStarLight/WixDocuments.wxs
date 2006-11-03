@@ -3,8 +3,8 @@
   <Fragment Id="documents">
     <DirectoryRef Id ='DocumentationFolder'>     
           <Component Id='ChmCoreElements' Guid ='6AAF80CD-3FD9-47fa-909F-7EE2322A6F6E'>
-            <File Id='StarLightCoreElementschm' Name='chm' LongName='StarLightCoreElements.chm' DiskId='1'
-                         Source='../../documentation/StarLightCoreElements.chm' Vital='yes'>
+            <File Id='StarLightCoreElementschm' Name='chm' LongName='ComposeStarStarLight.chm' DiskId='1'
+                         Source='../../documentation/ComposeStarStarLight.chm'>
             </File>           
           </Component>     
     </DirectoryRef>

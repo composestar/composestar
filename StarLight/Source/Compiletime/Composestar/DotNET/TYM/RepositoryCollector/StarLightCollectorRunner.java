@@ -437,14 +437,14 @@ public class StarLightCollectorRunner implements CollectorRunner
 				throw new ModuleException("Type must have a name attribute", "TYM");
 			}
 
-			// type.setAssemblyQualifedName(
-			// typeElement.get_AssemblyElement().get_Name() );
+			
 			type.setBaseType(typeElement.getBaseType());
+			//type.addImplementedInterface( )
 			// TODO: type.addImplementedInterface( lastCharData );
 			type.setIsAbstract(typeElement.getIsAbstract());
 			// --type.setIsAnsiClass( Boolean.valueOf( lastCharData
 			// ).booleanValue() );
-			// --type.setIsArray( typeElement.get_IsArray() );
+			//type.setIsArray( typeElement..get_IsArray() );
 			// --type.setIsAutoClass( Boolean.valueOf( lastCharData
 			// ).booleanValue() );
 			// --type.setIsAutoLayout( Boolean.valueOf( lastCharData
@@ -575,7 +575,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			// ).booleanValue() );
 			// --methodInfo.setIsHideBySig( Boolean.valueOf( lastCharData
 			// ).booleanValue() );
-			method.setIsprivate(storedMethod.getIsPrivate());
+			method.setIsPrivate(storedMethod.getIsPrivate());
 			method.setIsPublic(storedMethod.getIsPublic());
 			method.setIsStatic(storedMethod.getIsStatic());
 			method.setIsVirtual(storedMethod.getIsVirtual());
@@ -623,7 +623,7 @@ public class StarLightCollectorRunner implements CollectorRunner
 			}
 			else
 			{
-				throw new ModuleException("ParameterInfo must have a name attribute", "TYM");
+				throw new ModuleException("ParameterInfo must have a name attribute.", "TYM");
 			}
 
 			parameter.setPosition(storedParameter.getOrdinal());

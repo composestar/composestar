@@ -34,11 +34,10 @@ public class DotNETParameterInfo extends ParameterInfo {
 	private static final long serialVersionUID = -527486572514730318L;
 	private int HashCode;
     public int Position;
-    public boolean IsIn;
-    public boolean IsLcid;
-    public boolean IsOptional;
-    public boolean IsOut;
-    public boolean IsRetval;
+    private boolean IsIn;    
+    private boolean IsOptional;
+    private boolean IsOut;
+    private boolean IsRetval;
     
     /**
      * @roseuid 401B84CF0220
@@ -64,21 +63,7 @@ public class DotNETParameterInfo extends ParameterInfo {
         IsIn = isln;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF0218
-     */
-    public boolean isLcid() {
-        return IsLcid;     
-    }
-    
-    /**
-     * @param isLcid
-     * @roseuid 402A070000BE
-     */
-    public void setIsLcid(boolean isLcid) {
-        IsLcid = isLcid;     
-    }
+  
     
     /**
      * @return boolean
@@ -204,7 +189,6 @@ public class DotNETParameterInfo extends ParameterInfo {
 		HashCode = in.readInt();
 		Position = in.readInt();
 		IsIn = in.readBoolean();
-		IsLcid = in.readBoolean();
 		IsOptional = in.readBoolean();
 		IsOut = in.readBoolean();
 		IsRetval = in.readBoolean();
@@ -218,7 +202,6 @@ public class DotNETParameterInfo extends ParameterInfo {
 		out.writeInt(HashCode);
 		out.writeInt(Position);
 		out.writeBoolean(IsIn);
-		out.writeBoolean(IsLcid);
 		out.writeBoolean(IsOptional);
 		out.writeBoolean(IsOut);
 		out.writeBoolean(IsRetval);

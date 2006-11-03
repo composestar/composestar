@@ -33,18 +33,11 @@ public class DotNETFieldInfo extends FieldInfo
   private static final long serialVersionUID = 235924601234730641L;
 	
   public int HashCode;                // .NET hashcode
-  public boolean IsAssembly;          // Visible on Assembly level?
-  public boolean IsFamily;            // Visible on Family level?
-  public boolean IsFamilyAndAssembly; // Visible at both levels?
-  public boolean IsFamilyOrAssembly;  // Visible at (at least) one level?
-  public boolean IsInitOnly;          // Can only be set in body of constructor?
-  public boolean IsLiteral;           // Written at compile time (i.e. cannot be changed)?
-  //public boolean IsNotSerialized;     // Field has NotSerialized attribute?
-  //public boolean IsPinvokeImpl;
-  public boolean IsPrivate;           // Private field?
-  public boolean IsPublic;            // Public field?
-  public boolean IsStatic;            // Static field ('global')?
-  public boolean IsDeclaredHere;	  // Declared in this Type, or inherited from parent type?
+  private boolean IsAssembly;          // Visible on Assembly level?    
+  private boolean IsPrivate;           // Private field?
+  private boolean IsPublic;            // Public field?
+  private boolean IsStatic;            // Static field ('global')?
+  private boolean IsDeclaredHere;	  // Declared in this Type, or inherited from parent type?
     
   private DotNETType Parent;           // Type that this field belongs to.
   
@@ -72,57 +65,7 @@ public class DotNETFieldInfo extends FieldInfo
   {
      this.IsAssembly = isAssembly;     
   }
-
-  public boolean isFamily()
-  {
-    return this.IsFamily;     
-  }
     
-  public void setIsFamily(boolean isFamily)
-  {
-    this.IsFamily = isFamily;     
-  }
-  
-  public boolean isFamilyAndAssembly()
-  {
-    return this.IsFamilyAndAssembly;     
-  }
-  
-  public void setIsFamilyAndAssembly(boolean isFamilyAndAssembly)
-  {
-     this.IsFamilyAndAssembly = isFamilyAndAssembly;     
-  }
-
-  public boolean isFamilyOrAssembly()
-  {
-    return this.IsFamilyOrAssembly;     
-  }
-  
-  public void setIsFamilyOrAssembly(boolean isFamilyOrAssembly)
-  {
-    this.IsFamilyOrAssembly = isFamilyOrAssembly;     
-  }
-
-  public boolean isInitOnly()
-  {
-    return this.IsInitOnly;
-  }
-  
-  public void setIsInitOnly(boolean isInitOnly)
-  {
-    this.IsInitOnly = isInitOnly;
-  }
-  
-  public boolean isLiteral()
-  {
-    return this.IsLiteral;
-  }
-  
-  public void setIsLiteral(boolean isLiteral)
-  {
-    this.IsLiteral = isLiteral;
-  }
-  
   public boolean isPrivate()
   {
     return this.IsPrivate;     
@@ -213,11 +156,7 @@ public class DotNETFieldInfo extends FieldInfo
 	{
 		HashCode = in.readInt();
 		IsAssembly = in.readBoolean();
-		IsFamily = in.readBoolean();
-		IsFamilyAndAssembly = in.readBoolean();
-		IsFamilyOrAssembly = in.readBoolean();
-		IsInitOnly = in.readBoolean();
-		IsLiteral = in.readBoolean();
+		
 		IsPrivate = in.readBoolean();
 		IsPublic = in.readBoolean();
 		IsStatic = in.readBoolean();
@@ -231,11 +170,7 @@ public class DotNETFieldInfo extends FieldInfo
 	{
 		out.writeInt(HashCode);
 		out.writeBoolean(IsAssembly);
-		out.writeBoolean(IsFamily);
-		out.writeBoolean(IsFamilyAndAssembly);
-		out.writeBoolean(IsFamilyOrAssembly);
-		out.writeBoolean(IsInitOnly);
-		out.writeBoolean(IsLiteral);
+		
 		out.writeBoolean(IsPrivate);
 		out.writeBoolean(IsPublic);
 		out.writeBoolean(IsStatic);

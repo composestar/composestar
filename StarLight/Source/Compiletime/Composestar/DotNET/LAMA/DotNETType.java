@@ -45,27 +45,18 @@ public class DotNETType extends Type {
 	private static final long serialVersionUID = 5652622506200113401L;
 	
 	public int HashCode;
-    public boolean IsAbstract;
-    public boolean IsAnsiClass;
-    public boolean IsArray;
-    public boolean IsAutoClass;
-    public boolean IsAutoLayout;
-    public boolean IsByRef;
-    public boolean IsClass;
-    public boolean IsContextful;
-    public boolean IsEnum;
-    public boolean IsImport;
-    public boolean IsInterface;
-    public boolean IsMarshalByRef;
-    public boolean IsNestedAssembly;
-    public boolean IsNestedFamOrAssem;
-    public boolean IsPointer;
-    public boolean IsPrimitive;
-    public boolean IsPublic;
-    public boolean IsSealed;
-    public boolean IsSerializable;
-    public boolean IsValueType;
-    public boolean IsNotPublic;
+    private boolean IsAbstract;
+    private boolean IsByRef;
+    private boolean IsClass;
+    private boolean IsEnum;
+    private boolean IsInterface;
+    private boolean IsPointer;
+    private boolean IsPrimitive;
+    private boolean IsPublic;
+    private boolean IsSealed;
+    private boolean IsSerializable;
+    private boolean IsValueType;
+    private boolean IsNotPublic;
     
     public ArrayList ImplementedInterfaceNames; // List of Strings
     private ArrayList ImplementedInterfaces; // List of DotNETTypes
@@ -159,66 +150,7 @@ public class DotNETType extends Type {
         IsAbstract = isAbstract;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01DC
-     */
-    public boolean isAnsiClass() {
-        return IsAnsiClass;     
-    }
-    
-    /**
-     * @param isAnsi
-     * @roseuid 4029F6580153
-     */
-    public void setIsAnsiClass(boolean isAnsi) {
-        IsAnsiClass = isAnsi;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01DD
-     */
-    public boolean isArray() {
-        return IsArray;     
-    }
-    
-    /**
-     * @param isArray
-     * @roseuid 4029F66A031C
-     */
-    public void setIsArray(boolean isArray) {
-        IsArray = isArray;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01DE
-     */
-    public boolean isAutoClass() {
-        return IsAutoClass;     
-    }
-    
-    public void setIsAutoClass(boolean isAuto) {
-        IsAutoClass = isAuto;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01DF
-     */
-    public boolean isAutoLayout() {
-        return IsAutoLayout;     
-    }
-    
-    /**
-     * @param isAutoLayout
-     * @roseuid 4029F6850108
-     */
-    public void setIsAutoLayout(boolean isAutoLayout) {
-        IsAutoLayout = isAutoLayout;     
-    }
-    
+       
     /**
      * @return boolean
      * @roseuid 401B84CF01E0
@@ -251,21 +183,7 @@ public class DotNETType extends Type {
         IsClass = isClass;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E2
-     */
-    public boolean isContextful() {
-        return IsContextful;     
-    }
-    
-    /**
-     * @param isContextful
-     * @roseuid 4029F6EF02D7
-     */
-    public void setIsContextful(boolean isContextful) {
-        IsContextful = isContextful;     
-    }
+  
     
     /**
      * @return boolean
@@ -283,22 +201,7 @@ public class DotNETType extends Type {
         IsEnum = isEnum;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E4
-     */
-    public boolean isImport() {
-        return IsImport;     
-    }
-    
-    /**
-     * @param isImport
-     * @roseuid 4029F70D0117
-     */
-    public void setIsImport(boolean isImport) {
-        IsImport = isImport;     
-    }
-    
+
     /**
      * @return boolean
      * @roseuid 401B84CF01E5
@@ -315,54 +218,9 @@ public class DotNETType extends Type {
         IsInterface = isInterface;     
     }
     
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E6
-     */
-    public boolean isMarshalByRef() {
-        return IsMarshalByRef;     
-    }
+   
     
-    /**
-     * @param isMarshal
-     * @roseuid 4029F75E0286
-     */
-    public void setIsMarshalByRef(boolean isMarshal) {
-        IsMarshalByRef = isMarshal;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E7
-     */
-    public boolean isNestedAssembly() {
-        return IsNestedAssembly;     
-    }
-    
-    /**
-     * @param isNestedAsm
-     * @roseuid 4029F76E02A7
-     */
-    public void setIsNestedAssembly(boolean isNestedAsm) {
-        IsNestedAssembly = isNestedAsm;     
-    }
-    
-    /**
-     * @return boolean
-     * @roseuid 401B84CF01E8
-     */
-    public boolean isNestedFamOrAssem() {
-        return IsNestedFamOrAssem;     
-    }
-    
-    /**
-     * @param isNested
-     * @roseuid 4029F77B0166
-     */
-    public void setIsNestedFamOrAssem(boolean isNested) {
-        IsNestedFamOrAssem = isNested;     
-    }
-    
+  
     /**
      * @param isNested
      * @roseuid 4029F794018A
@@ -1020,19 +878,10 @@ public class DotNETType extends Type {
 	{
 		HashCode = in.readInt();
 		IsAbstract = in.readBoolean();
-		IsAnsiClass = in.readBoolean();
-		IsArray = in.readBoolean();
-		IsAutoClass = in.readBoolean();
-		IsAutoLayout = in.readBoolean();
 		IsByRef = in.readBoolean();
 		IsClass = in.readBoolean();
-		IsContextful = in.readBoolean();
 		IsEnum = in.readBoolean();
-		IsImport = in.readBoolean();
 		IsInterface = in.readBoolean();
-		IsMarshalByRef = in.readBoolean();
-		IsNestedAssembly = in.readBoolean();
-		IsNestedFamOrAssem = in.readBoolean();
 		IsPointer = in.readBoolean();
 		IsPrimitive = in.readBoolean();
 		IsPublic = in.readBoolean();
@@ -1063,19 +912,10 @@ public class DotNETType extends Type {
 	{
 		out.writeInt(HashCode);
 		out.writeBoolean(IsAbstract);
-		out.writeBoolean(IsAnsiClass);
-		out.writeBoolean(IsArray);
-		out.writeBoolean(IsAutoClass);
-		out.writeBoolean(IsAutoLayout);
 		out.writeBoolean(IsByRef);
 		out.writeBoolean(IsClass);
-		out.writeBoolean(IsContextful);
 		out.writeBoolean(IsEnum);
-		out.writeBoolean(IsImport);
 		out.writeBoolean(IsInterface);
-		out.writeBoolean(IsMarshalByRef);
-		out.writeBoolean(IsNestedAssembly);
-		out.writeBoolean(IsNestedFamOrAssem);
 		out.writeBoolean(IsPointer);
 		out.writeBoolean(IsPrimitive);
 		out.writeBoolean(IsPublic);
