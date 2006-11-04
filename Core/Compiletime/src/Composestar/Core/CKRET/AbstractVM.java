@@ -44,18 +44,13 @@ public class AbstractVM {
 			Resource res = getResource(op.getResource());
 			res.add(op.getName());
 		}
-		//System.err.println("AVM: printing resources...");
-		
-		//String msg = "";
+	/*
 		for( Iterator ri = getResources().iterator(); ri.hasNext(); )
 		{
 			Resource res = (Resource) ri.next();
 			Debug.out(Debug.MODE_DEBUG,"CKRET","Resource-op["+res.getName()+"]: "+res.fancySequence());
-			//System.err.println(res);
-			//msg+=res.toString()+"\n";
 		}
-		//JOptionPane.showMessageDialog(null,msg);
-		
+	*/
 		//System.err.println("AVM: checking constraints...");
 		for( Iterator ci = Repository.instance().getConstraints().iterator(); ci.hasNext(); )
 		{

@@ -13,14 +13,14 @@ package Composestar.Core.FIRE;
 
 import java.util.Stack;
 
-public class ChildIterator extends Iterator
+public class ChildIterator extends NodeIterator
 {
 	public ChildIterator(Node _node)
 	{
 		super(_node);
 	}
 
-	public ChildIterator(Iterator itr)
+	public ChildIterator(NodeIterator itr)
 	{
 		stack = (Stack) itr.stack.clone();
 		parent = itr.parent;
