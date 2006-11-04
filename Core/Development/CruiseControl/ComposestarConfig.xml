@@ -48,6 +48,7 @@
 				skipusers="true"
 				returnname="Continuous Integration Server"
 				returnaddress="elmuerte@users.sourceforge.net"
+				spamwhilebroken="false"				
 			>
 				<always address="composestar-developers@lists.sourceforge.net" />
 			</htmlemail>
