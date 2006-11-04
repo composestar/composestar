@@ -1005,20 +1005,21 @@ LAND			:	"&&"	;
 SEMI			:	';'		;
 
 // Whitespace -- ignored
+protected NEWLINE
+	:	(	("\r\n")=> "\r\n"	//DOS
+		|	'\r'				//Macintosh
+		|	'\n'				//Unix
+		)
+		{ newline(); }
+	;
+
 WS	:	(	' '
 		|	'\t'
 		|	'\f'
-			// handle newlines
-		|	(	options {generateAmbigWarnings=false;}
-			:	"\r\n"  // Evil DOS
-			|	'\r'    // Macintosh
-			|	'\n'    // Unix (the right way)
-			)
-			{ newline(); }
+		|	NEWLINE
 		)+
 		{ $setType(Token.SKIP); }
 	;
-
 
 // Single-line comments
 SL_COMMENT
@@ -1032,31 +1033,21 @@ ATTRIBUTE_START
 	:	"/** @attribute"
 	;
 
+// Multi-line comments
+
 ML_COMMENT_START
 	:	"/*"
 	;
-
+	
 ML_COMMENT_END
-	: 	"*/"
+	:	"*/"
 	;
-
+	
 ML_COMMENT
 	:	ML_COMMENT_START
-		(	/*	'\r' '\n' can be matched in one alternative or by matching
-				'\r' in one iteration and '\n' in another.  I am trying to
-				handle any flavor of newline that comes in, but the language
-				that allows both "\r\n" and "\r" and "\n" to all be valid
-				newline is ambiguous.  Consequently, the resulting grammar
-				must be ambiguous.  I'm shutting this warning off.
-			*/ 
-			options {
-				generateAmbigWarnings=false;
-			}
-		:	{ LA(2) != '/' }? '*' 
-		|	'\r' '\n'		{newline();}
-		|	'\r'			{newline();}
-		|	'\n'			{newline();}
-		|	~('*'|'\n'|'\r')
+		(	{ LA(2) != '/' }? '*'	// '*' if not followed by '/' 
+		|	NEWLINE					// newlines
+		|	~('*'|'\n'|'\r')		// everything else
 		)*
 		ML_COMMENT_END
 		{ $setType(Token.SKIP); }
@@ -1143,64 +1134,57 @@ VOCAB
 // that after we match the rule, we look in the literals table to see
 // if it's a literal or really an identifer
 IDENT
-	options {testLiterals=true;}
+	options { testLiterals=true; }
 	:	('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')*
 	;
 
 
 // a numeric literal
 NUM_INT
-	{boolean isDecimal=false; Token t=null;}
-    :   '.' { $setType(DOT);}
-            (	('0'..'9')+ (EXPONENT)? (f1:FLOAT_SUFFIX {t=f1;})?
-                {
-				if (t != null && t.getText().toUpperCase().indexOf('F')>=0) {
-                	$setType(NUM_FLOAT);
+	{ boolean isDecimal = false; Token t = null; }
+	:	'.' { $setType(DOT); }
+		(	('0'..'9')+ (EXPONENT)? (f1:FLOAT_SUFFIX { t = f1; })?
+			{
+				if (t != null && t.getText().toUpperCase().indexOf('F') >= 0) {
+					$setType(NUM_FLOAT);
 				}
 				else {
-                	$setType(NUM_DOUBLE); // assume double
+					$setType(NUM_DOUBLE); // assume double
 				}
-				}
-            )?
-
-	|	(	'0' {isDecimal = true;} // special case for just '0'
+			}
+		)?
+	|	(	'0' { isDecimal = true; } // special case for just '0'
 			(	('x'|'X')
-				(											// hex
-					// the 'e'|'E' and float suffix stuff look
+				(	// the 'e'|'E' and float suffix stuff look
 					// like hex digits, hence the (...)+ doesn't
 					// know when to stop: ambig.  ANTLR resolves
 					// it correctly by matching immediately.  It
 					// is therefor ok to hush warning.
-					options {
-						warnWhenFollowAmbig=false;
-					}
-				:	HEX_DIGIT
+					options { warnWhenFollowAmbig=false; }:
+					HEX_DIGIT
 				)+
-
-			|	//float or double with leading zero
-				(('0'..'9')+ ('.'|EXPONENT|FLOAT_SUFFIX)) => ('0'..'9')+
-
+			|	(('0'..'9')+ ('.'|EXPONENT|FLOAT_SUFFIX)) => ('0'..'9')+ //float or double with leading zero
 			|	('0'..'7')+									// octal
 			)?
-		|	('1'..'9') ('0'..'9')*  {isDecimal=true;}		// non-zero decimal
+		|	('1'..'9') ('0'..'9')*  { isDecimal = true; }	// non-zero decimal
 		)
 		(	('l'|'L') { _ttype = NUM_LONG; }
 
 		// only check to see if it's a float if looks like decimal so far
 		|	{isDecimal}?
-            (   '.' ('0'..'9')* (EXPONENT)? (f2:FLOAT_SUFFIX {t=f2;})?
-            |   EXPONENT (f3:FLOAT_SUFFIX {t=f3;})?
-            |   f4:FLOAT_SUFFIX {t=f4;}
-            )
-            {
-			if (t != null && t.getText().toUpperCase() .indexOf('F') >= 0) {
-                _ttype = NUM_FLOAT;
+			(	'.' ('0'..'9')* (EXPONENT)? (f2:FLOAT_SUFFIX {t=f2;})?
+			|	EXPONENT (f3:FLOAT_SUFFIX {t=f3;})?
+			|	f4:FLOAT_SUFFIX {t=f4;}
+			)
+			{
+				if (t != null && t.getText().toUpperCase() .indexOf('F') >= 0) {
+					_ttype = NUM_FLOAT;
+				}
+				else {
+					_ttype = NUM_DOUBLE; // assume double
+				}
 			}
-            else {
-	           	_ttype = NUM_DOUBLE; // assume double
-			}
-			}
-        )?
+		)?
 	;
 
 
