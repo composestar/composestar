@@ -18,7 +18,8 @@ import java.util.Collection;
  * TypeMap holds all the Types. It is used by the various classes to 
  * resolve their type dependencies.
  */
-public class TypeMap implements SerializableRepositoryEntity{
+public class TypeMap implements SerializableRepositoryEntity
+{
     private DataMap Types;
     private static TypeMap Instance;
     
@@ -26,7 +27,7 @@ public class TypeMap implements SerializableRepositoryEntity{
      * @roseuid 402CA342033C
      */
     public TypeMap() {
-        Types = new DataMap ();     
+        Types = new DataMap ();
     }
     
     /**
@@ -37,7 +38,7 @@ public class TypeMap implements SerializableRepositoryEntity{
      * @roseuid 402CA2FF0154
      */
     public void addType(String name, Type type) {
-        Types.put( name, type );     
+        Types.put( name, type );
     }
     
     /**
@@ -76,6 +77,6 @@ public class TypeMap implements SerializableRepositoryEntity{
      * @roseuid 405AD1CB0396
      */
     public java.util.HashMap map() {
-     return Types.getHashMap();
+     return Types.toHashMap();
     }
 }
