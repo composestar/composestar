@@ -183,9 +183,10 @@
 	
 	<!-- do everything -->
 	<!-- "install" (should) imply "build" -->
-	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
+	<target name="install_test" depends="install,test" description="Install and test the whole system"/>
 	<target name="required" depends="clean,install,test" description="Perform the required actions before allowing a commit." />	
 	<target name="cleaninstall" depends="clean,install" description="Clean, compile, and then install" />
+	<target name="all" depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
 	
 	<target name="integration">
 		<antcall target="svn-update-all" />
@@ -245,6 +246,7 @@ If the build failed the cause will be listed at the end of the report.
 					
 			<link label="Rebuild" target="rebuild" />
 			<link label="Clean install" target="cleaninstall" />			
+			<link label="Install &amp; test" target="install_test" />			
 			<link label="Clean, build, install &amp; test" target="required" />
 			
 			<separator />
