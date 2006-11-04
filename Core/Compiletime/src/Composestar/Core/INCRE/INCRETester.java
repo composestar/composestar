@@ -74,6 +74,7 @@ public class INCRETester
 				openTag("tr bgcolor=#AA8888");
 			else
 				openTag("tr");
+			
 			createCell("["+count1+"] "+type.substring(type.lastIndexOf('.')+1));
 			createCell("["+count2+"] "+type.substring(type.lastIndexOf('.')+1));
 			closeTag("tr");
@@ -84,9 +85,9 @@ public class INCRETester
 		closeTag("tr");
 
 		/* Compare objects by ID */
-		Iterator datakeys = record1.ds.map.m_keys.iterator();
-		while(datakeys.hasNext()){
-			String key = (String)datakeys.next();
+		Iterator keysIt = record1.ds.keys();
+		while(keysIt.hasNext()){
+			String key = (String)keysIt.next();
 			if(key.indexOf('_')==-1){
 				if(null==record2.ds.getObjectByID(key)){
 					/* object with key cannot be found */

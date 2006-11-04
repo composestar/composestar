@@ -61,12 +61,11 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	public void run(CommonResources resources) throws ModuleException
 	{
-		File destination;
 		DataStore ds = DataStore.instance();
 
 		String repositoryFilename = Configuration.instance().getPathSettings().getPath("Base") + "repository.xml";
 
-		destination = new File(repositoryFilename);
+		File destination = new File(repositoryFilename);
 
 		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "v0.2+(optimized)");
 		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "Writing repository to file '" + destination.getName() + "'...");
@@ -344,18 +343,20 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		}     
 	}
 
-	private void write(DataStore obj) throws ModuleException
+	private void write(DataStore ds) throws ModuleException
 	{
-		// removing useless crap
-		obj.map.excludeUnreferenced(PrimitiveConcern.class);
+		// remove useless objects
+		ds.excludeUnreferenced(PrimitiveConcern.class);
 
 		// little verification:
 		// check if all RepositoryEntities have a repositoryKey
-		Enumeration keys = obj.map.m_keys.elements();
+		// FIXME: will have to be moved to DataStore.
+		/*
+		Enumeration keys = ds.map.m_keys.elements();
 		while (keys.hasMoreElements()) 
 		{
 			String key = (String) keys.nextElement();
-			Object value = obj.getObjectByID(key);
+			Object value = ds.getObjectByID(key);
 
 			if (!(value instanceof RepositoryEntity)) 
 			{
@@ -369,11 +370,11 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				System.err.println("FATAL ERROR?!!!");
 				System.err.println("Key: " + key + " points to " + ((RepositoryEntity) value).repositoryKey);
 			}
-		}
+		}*/
 
 		out.println("<?xml version=\"1.0\"?>");
 		startElement("DataStore", "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-		writeFields(obj);
+		writeFields(ds);
 		endElement("DataStore");
 		out.flush();
 	}
