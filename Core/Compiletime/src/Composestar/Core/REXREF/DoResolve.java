@@ -158,7 +158,7 @@ public class DoResolve {
         		ParameterizedInternal pi = (ParameterizedInternal) o; 
         		Vector pack = (Vector)fm.getParameter(pi.getParameter()).getValue();
         		ConcernReference cref = new ConcernReference();
-        		ds.removeObject(cref);
+        		//ds.removeObject(cref); // FIXME: removeObject isn't implemented
         		Splitter split = new Splitter(); 
         		split.splitConcernReference(pack);
         	    cref.setPackage(split.getPack());
