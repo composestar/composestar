@@ -22,7 +22,7 @@ tokens {
 	IMPORT; UNARY_MINUS; UNARY_PLUS; CASE_GROUP; ELIST; FOR_INIT; FOR_CONDITION;
 	FOR_ITERATOR; EMPTY_STAT; FINAL="final"; ABSTRACT="abstract";
 	STRICTFP="strictfp"; SUPER_CTOR_CALL; CTOR_CALL; 
-	ATTR; ATTR_NAME; ATTR_ARGUMENT;
+	ATTR_START; ATTR; ATTR_NAME; ATTR_ARGUMENT;
 }
 
 
@@ -48,7 +48,7 @@ attributes
 	;
 
 attribute_section
-	:	ATTRIBUTE_START! (attribute) ML_COMMENT_END!
+	:	ATTR_START! (attribute) ML_COMMENT_END!
 	;
 
 attribute!
@@ -946,9 +946,9 @@ constant:c
 class JSharpLexer extends Lexer;
 
 options {
-	exportVocab=JSharp;     // call the vocabulary "Java"
+	exportVocab=JSharp;    // call the vocabulary "JSharp"
 	testLiterals=false;    // don't automatically test for literals
-	k=5;                   // five characters of lookahead
+	k=4;                   // four characters of lookahead
 	charVocabulary='\u0003'..'\uFFFF';
 	// without inlining some bitset tests, couldn't do unicode;
 	// I need to make ANTLR generate smaller bitsets; see
@@ -987,7 +987,7 @@ MOD_ASSIGN		:	"%="	;
 SR				:	">>"	;
 SR_ASSIGN		:	">>="	;
 BSR				:	">>>"	;
-BSR_ASSIGN		:	">>>="	;
+BSR_ASSIGN		:	">>>="	;	// requires k=4
 GE				:	">="	;
 GT				:	">"		;
 SL				:	"<<"	;
@@ -1028,11 +1028,6 @@ SL_COMMENT
 		{ $setType(Token.SKIP); newline(); }
 	;
 
-//Added for attributes	
-ATTRIBUTE_START
-	:	"/** @attribute"
-	;
-
 // Multi-line comments
 
 ML_COMMENT_START
@@ -1042,22 +1037,24 @@ ML_COMMENT_START
 ML_COMMENT_END
 	:	"*/"
 	;
-	
+
 ML_COMMENT
 	:	ML_COMMENT_START
-		(	{ LA(2) != '/' }? '*'	// '*' if not followed by '/' 
-		|	NEWLINE					// newlines
-		|	~('*'|'\n'|'\r')		// everything else
-		)*
-		ML_COMMENT_END
-		{ $setType(Token.SKIP); }
+		(	("* @attribute")=> "* @attribute"
+			{ $setType(ATTR_START); }
+		|	(	{ LA(2) != '/' }? '*'	// '*' if not followed by '/' 
+			|	NEWLINE					// newlines
+			|	~('*'|'\n'|'\r')		// everything else
+			)*
+			ML_COMMENT_END
+			{ $setType(Token.SKIP); }
+		)
 	;
 
 //pre-processing directives
 PREPRO_DIRECTIVES
-	:	"#"
-		(~('\n'|'\r'))* ('\n'|'\r'('\n')?)
-		{$setType(Token.SKIP); newline();} //skip directives
+	:	"#" (~('\n'|'\r'))* ('\n'|'\r'('\n')?)
+		{ $setType(Token.SKIP); newline(); } //skip directives
 	;
 
 // character literals
