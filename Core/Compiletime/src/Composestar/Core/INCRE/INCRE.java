@@ -345,11 +345,8 @@ public class INCRE implements CTCommonModule
 				return ((ArrayList)dsObjectsOrdered.get(c.getName())).iterator();
 		}
 		
-		ArrayList list;
-		if(searchingHistory)
-			list = history.getListOfAllInstances(c);
-		else
-			list = currentRepository.getListOfAllInstances(c);
+		List list = (searchingHistory ? history.getListOfAllInstances(c)
+		                              : currentRepository.getListOfAllInstances(c));
 		
 		// sort the list
 		Collections.sort(list, new Comparator() { 
@@ -875,7 +872,7 @@ public class INCRE implements CTCommonModule
 	}
 
 	/**
-	 * Stores the current repository to a specified file. Uses objectoutputstream.
+	 * Stores the current repository to a specified file.
 	 */
 	public void storeHistory() throws ModuleException
 	{
@@ -893,10 +890,12 @@ public class INCRE implements CTCommonModule
 		if (!"true".equalsIgnoreCase(incre_enabled))
 			return;
 
+		// FIXME: this should really be done by DataStore itself.
+		ObjectOutputStream oos = null;
 		try {
 			FileOutputStream fos = new FileOutputStream(this.historyfile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos = new ObjectOutputStream(bos);
 
 			// write current date = last compilation date
 			oos.writeObject(new Date());
@@ -905,26 +904,35 @@ public class INCRE implements CTCommonModule
 			oos.writeObject(Configuration.instance());
 
 			// collect the objects
-			Object[] objects = ds.getAllObjects();
-			oos.writeInt(objects.length-1);
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME,objects.length-1+" objects to store");
-			int stored = 0;
-			for(int k=1;k<objects.length;k++)
+			int count = ds.size(), stored = 0;
+			oos.writeInt(count - 1);
+
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Up to " + count + " objects to store");
+			
+			Iterator it = ds.getIterator();
+			
+			// first item is skipped for some reason...
+			// FIXME: is this really correct? if so: explain why.
+			if (it.hasNext()) it.next();
+			
+			// write the rest
+			while (it.hasNext())
 			{
-				// write objects
-				if(objects[k]!=null)
+				Object item = it.next();
+				if (item != null)
 				{
-					oos.writeObject(objects[k]);
-					oos.flush();
+					oos.writeObject(item);
 					stored++;
 				}
 			}
-
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME,stored+" objects have been stored");
-			oos.close();
+			
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "" + stored + " objects have been stored");
 		}
 		catch (Exception e) {
 			throw new ModuleException("Error occured while creating history: "+e.toString(),MODULE_NAME);
+		}
+		finally {
+			FileUtils.close(oos);
 		}
 	}
 	
