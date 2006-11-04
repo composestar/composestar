@@ -904,7 +904,7 @@ public class INCRE implements CTCommonModule
 			oos.writeObject(Configuration.instance());
 
 			// collect the objects
-			int count = ds.size(), stored = 0;
+			int count = ds.map.size(), stored = 0;
 			oos.writeInt(count - 1);
 
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Up to " + count + " objects to store");
