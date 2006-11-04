@@ -7,7 +7,7 @@
 	<xsl:output method="xml" indent="yes"/>
 
 	<xsl:param name="basepath" />
-	<xsl:param name="composestarpath" select="'C:/Program Files/ComposeStar/'" />
+	<xsl:param name="composestarpath" select="'C:/Program Files/ComposeStar/'" /> <!-- must end with file separator -->
 	<xsl:param name="dotnetpath" select="'C:/WINDOWS/Microsoft.NET/Framework/v1.1.4322'" />
 	<xsl:param name="dotnetsdkpath" select="'C:/Program Files/Microsoft Visual Studio .NET 2003/SDK/v1.1/Bin/'" />
 	

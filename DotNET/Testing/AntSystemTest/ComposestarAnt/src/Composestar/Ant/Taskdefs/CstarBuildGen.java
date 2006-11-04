@@ -27,7 +27,7 @@ public final class CstarBuildGen extends TransformTask
 {
 	private final static String BUILD_CONFIGURATION_XML = "BuildConfiguration.xml";
 
-	private String m_composestarBase;
+	private File m_composestarBase;
 	private Map m_moduleSettings;
 	
 	public CstarBuildGen()
@@ -42,7 +42,7 @@ public final class CstarBuildGen extends TransformTask
 	 */
 	public void setComposestarBase(String path)
 	{
-		m_composestarBase = path + "/";
+		m_composestarBase = new File(path);
 	}
 
 	/**
@@ -109,9 +109,14 @@ public final class CstarBuildGen extends TransformTask
 	
 	private void setParameters(Transformer t)
 	{
+		// try to convince the processor to indent the generated xml
 		t.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
-		t.setParameter("composestarpath", m_composestarBase);
+		
+		// set composestarpath (forward slashes required)
+		String basePath = formatPathForXslt(m_composestarBase);
+		t.setParameter("composestarpath", basePath);
 
+		// set module settings
 		Iterator it = m_moduleSettings.entrySet().iterator();
 		while (it.hasNext())
 		{
@@ -120,6 +125,14 @@ public final class CstarBuildGen extends TransformTask
 			String value = (String)entry.getValue();
 			t.setParameter(key, value);
 		}
+	}
+	
+	private String formatPathForXslt(File file)
+	{
+		String path = file.getAbsolutePath();
+		path = path.replace('\\', '/');
+		if (! path.endsWith("/")) path += '/';
+		return path;
 	}
 	
 	protected File getOutputFile(File input)

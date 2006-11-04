@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +17,6 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Runs multiple tests
@@ -224,8 +225,8 @@ public class CstarTest extends BaseTask
 			}
 		}
 		finally {
-			FileUtils.close(expectedReader);
-			FileUtils.close(actualReader);
+			close(expectedReader);
+			close(actualReader);
 		}
 	}
 	
@@ -242,5 +243,11 @@ public class CstarTest extends BaseTask
 	private String quote(String line)
 	{
 		return (line == null ? "<EOF>" : "'" + line + "'");
+	}
+	
+	private void close(Reader r)
+	{
+		try { if (r != null) r.close(); }
+		catch (IOException e) {} // ignore
 	}
 }
