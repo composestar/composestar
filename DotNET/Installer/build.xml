@@ -25,6 +25,12 @@
 	
 	<target name="copy_files" depends="local_init">
 		<property name="destdir" value="${out.build}" />
+		
+		<javadoc destdir="${destdir}/documentation/MessageAPI" source="${build.java.version}">
+			<fileset dir="${build.core}/Runtime/src/Composestar/RuntimeCore/FLIRT/Reflection">
+				<include name="MessageInfo.java" />
+			</fileset>
+		</javadoc>
 	
 		<mkdir dir="${destdir}${file.separator}binaries"/>
 		<mkdir dir="${destdir}${file.separator}binaries${file.separator}prolog"/>

@@ -55,11 +55,12 @@ Name: core\addin; Description: VisualStudio AddIn; Flags: dontinheritcheck; Type
 Name: examples; Description: Examples; Types: full
 
 [Files]
-Source: src\*; DestDir: {app}; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: .svn; Components: core
-Source: build\*; DestDir: {app}; Flags: ignoreversion regserver regtypelib noregerror; Excludes: .svn; Components: core
-Source: build\binaries\*; DestDir: {app}\binaries; Flags: ignoreversion recursesubdirs createallsubdirs regserver regtypelib noregerror; Excludes: .svn; Components: core
-Source: build\ComposestarVSAddin\*; DestDir: {app}\ComposestarVSAddin; Flags: ignoreversion regserver regtypelib noregerror; Excludes: .svn; Components: core\addin
-Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: .svn,build.xml,TestCases; Components: examples
+Source: src\*; DestDir: {app}; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core
+Source: build\*; DestDir: {app}; Flags: ignoreversion; Excludes: .svn; Components: core
+Source: build\documentation\*; DestDir: {app}\documentation; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core
+Source: build\binaries\*; DestDir: {app}\binaries; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core; AfterInstall: RegAsm
+Source: build\ComposestarVSAddin\*; DestDir: {app}\ComposestarVSAddin; Flags: ignoreversion; Excludes: .svn; Components: core\addin; AfterInstall: RegAsm
+Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs; Excludes: .svn,build.xml,TestCases; Components: examples
 
 Source: vjssupuilib.exe; DestDir: {app}; Flags: ignoreversion deleteafterinstall
 Source: {#SPLASH_IMAGE}; DestDir: {tmp}; DestName: splash.bmp; Flags: ignoreversion dontcopy noencryption
@@ -96,7 +97,50 @@ Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddi
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\AddIns\ComposestarVSAddin.Connect; ValueType: string; ValueName: ComposestarPath; ValueData: {app}; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
 Root: HKLM; Subkey: SOFTWARE\Microsoft\VisualStudio\7.1\Languages\File Extensions\.cps; ValueData: {{B2F072B0-ABC1-11D0-9D62-00C04FD9DFD9}; ValueType: string; Flags: uninsdeletevalue uninsdeletekeyifempty noerror
 
+; Add a key so assemblies can be seen in VS .NET
+Root: HKLM; Subkey: "Software\Microsoft\.NETFramework\AssemblyFolders\{#SAFE_NAME}"; ValueType: string; ValueData: "{app}\binaries"; Flags: deletekey uninsdeletekey noerror
+
 [Code]
+procedure kwadd(lst: TStringList; s: String);
+var
+  i: integer;
+begin
+  for i := 0 to lst.count-1 do begin
+    if (CompareStr(lst[i], s) = 0) then exit;
+  end;
+  lst.add(s);
+end;
+
+var
+  registeredAssemblies: TStringList;
+
+procedure RegAsm();
+begin
+  if (CompareText(ExtractFileExt(CurrentFileName), '.dll') = 0) then begin
+    kwadd(registeredAssemblies, CurrentFileName);
+  end;
+end;
+
+procedure RealRegAsm(FileName: String);
+var
+  dummy: integer;
+  assembly: string;
+begin
+  assembly := ExpandConstant(FileName);
+  Log('RegAsm: '+assembly);
+  Exec('regasm', '"'+assembly+'" /codebase', '', SW_HIDE, ewWaitUntilTerminated, dummy);
+end;
+
+procedure UnRegAsm(FileName: String);
+var
+  dummy: integer;
+  assembly: string;
+begin
+  assembly := ExpandConstant(FileName);
+  Log('UnRegAsm: '+assembly);
+  Exec('regasm', '"'+assembly+'" /unregister', '', SW_HIDE, ewWaitUntilTerminated, dummy);
+end;
+
 function detectedDotNet(): Boolean;
 begin
   Result := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\.NETFramework\policy\v1.1');
@@ -179,20 +223,13 @@ end;
 
 function InitializeSetup(): Boolean;
 begin
+  registeredAssemblies := TStringList.Create;
+  registeredAssemblies.Duplicates := dupIgnore;
+  
   result := detectedDotNet() and detectedJava();
   if (result and not WizardSilent()) then begin
     splashScreen();
   end;
-end;
-
-procedure kwadd(lst: TStringList; s: String);
-var
-  i: integer;
-begin
-  for i := 0 to lst.count-1 do begin
-    if (CompareStr(lst[i], s) = 0) then exit;
-  end;
-  lst.add(s);
 end;
 
 procedure updateConfig();
@@ -263,25 +300,74 @@ begin
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
+var
+  data: String;
+  pg: TOutputProgressWizardPage;
+  i: integer;
 begin
-  if (CurStep = ssPostInstall) then updateConfig();
+  if (CurStep = ssInstall) then begin
+    if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\ComposeStar.NET', 'registeredAssemblies', data) then begin
+      registeredAssemblies.commatext := data;
+    end;
+  end
+  else if (CurStep = ssPostInstall) then begin
+    pg := CreateOutputProgressPage('Registrating .NET Assemblies', 'Please wait while the .NET assemblies are being registraded to the system.');
+    pg.show();
+    try
+      for i := 0 to registeredAssemblies.count-1 do begin
+        pg.SetText('Registrating .NET Assemblies...', ExpandConstant(registeredAssemblies[i]));
+        pg.SetProgress(i, registeredAssemblies.count-1);
+        RealRegAsm(registeredAssemblies[i]);
+      end;
+    finally
+      pg.hide();
+    end;
+  
+    updateConfig();
+  end;
+end;
+
+procedure RegisterPreviousData(PreviousDataKey: Integer);
+begin
+  try
+    RegWriteStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\ComposeStar.NET', 'registeredAssemblies', registeredAssemblies.commatext)
+  except
+  end;
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   cleandir: boolean;
   dir: String;
+  i: integer;
 begin
-  if (CurUninstallStep = usPostUninstall) then begin
-    if (UninstallSilent()) then begin
-      cleandir := true;
-    end
-    else begin
-      cleandir := SuppressibleMsgBox('Do you want to clean up the installation directory and delete all left over files?', mbConfirmation, MB_YESNO, IDYES) = IDYES;
+  if (CurUninstallStep = usUninstall) then begin
+    registeredAssemblies := TStringList.create;
+    if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\ComposeStar.NET', 'registeredAssemblies', dir) then begin
+      registeredAssemblies.commatext := dir;
+      for i := 0 to registeredAssemblies.count-1 do begin
+        UnRegAsm(registeredAssemblies[i]);
+      end;
+      
+      try
+        RegDeleteValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\ComposeStar.NET', 'registeredAssemblies');
+        RegDeleteKeyIfEmpty(HKEY_LOCAL_MACHINE, 'SOFTWARE\ComposeStar.NET');
+      except
+      end;
     end;
-    if (cleandir) then begin
-      dir := ExpandConstant('{app}');
-      DelTree(dir, true, true, true);
+  end
+  else if (CurUninstallStep = usPostUninstall) then begin
+    if (DirExists(ExpandConstant('{app}'))) then begin
+      if (UninstallSilent()) then begin
+        cleandir := true;
+      end
+      else begin
+        cleandir := SuppressibleMsgBox('Do you want to clean up the installation directory and delete all left over files?', mbConfirmation, MB_YESNO, IDYES) = IDYES;
+      end;
+      if (cleandir) then begin
+        dir := ExpandConstant('{app}');
+        DelTree(dir, true, true, true);
+      end;
     end;
   end;
 end;
