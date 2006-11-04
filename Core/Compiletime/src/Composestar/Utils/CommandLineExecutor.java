@@ -21,8 +21,13 @@ import java.util.List;
  * - redirection in windows.
  * 
  * Usage:
- *   CommandLineExecutor e = new CommandLineExecutor();
- *   e.exec("format c: /q");
+ *   List cmd = new ArrayList();
+ *   cmd.add("csc");
+ *   cmd.add("foo.cs");
+ *   
+ *   CommandLineExecutor cle = new CommandLineExecutor();
+ *   cle.exec(cmd);
+ *   
  *   System.out.println(e.outputNormal());
  */
 public class CommandLineExecutor
@@ -123,34 +128,33 @@ public class CommandLineExecutor
 		}
 		catch (Exception e) {
 			// TODO: New throw specific to project
-			e.printStackTrace();
 			return -1;
 		}
 	}
 	
 	/**
-	 * Returns the program output to STDOUT.
+	 * Returns the program output to STDOUT or null if no program was executed.
 	 */
 	public String outputNormal()
 	{
-		return outputGobbler.result();
+		return (outputGobbler == null ? null : outputGobbler.result());
 	}
 
 	/**
-	 * Returns the program output to STDERR.
+	 * Returns the program output to STDERR or null if no program was executed.
 	 */
 	public String outputError()
 	{
-		return errorGobbler.result();
+		return (errorGobbler == null ? null : errorGobbler.result());
 	}
 
 	/**
 	 * For testing purposes
-     */
+	 */
 	public static void main(String args[])
 	{
 		CommandLineExecutor e = new CommandLineExecutor();
-		e.exec(args[0]);
+		e.exec(args);
 		System.out.println(e.outputNormal());     
 	}
 }

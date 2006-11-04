@@ -25,13 +25,13 @@ public class MSAssembler implements Assembler
 		cmdList.add("/output=" + outputFile);
 		cmdList.add(inputFile);
 
-		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Command: " + StringUtils.join(cmdList));
+		debug("Command: " + StringUtils.join(cmdList));
 	
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
 		{
-			String stdout = cle.outputNormal();
-			throw new AssemblerException("There was a fatal assembler error! Output from ilasm:\n" + stdout);
+			debug("Output from ilasm:\n" + cle.outputNormal());
+			throw new AssemblerException("There was a fatal assembler error");
 		}
 	}
 
@@ -45,13 +45,18 @@ public class MSAssembler implements Assembler
 		cmdList.add("/out=" + outputFile);
 		cmdList.add(inputFile);
 
-		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Command: " + StringUtils.join(cmdList));
+		debug("Command: " + StringUtils.join(cmdList));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
 		{
-			String stdout = cle.outputNormal();
-			throw new AssemblerException("There was a fatal disassembler error! Output from ildasm:\n" + stdout);
+			debug("Output from ildasm:\n" + cle.outputNormal());
+			throw new AssemblerException("There was a fatal disassembler error");
 		}
+	}
+	
+	private void debug(String msg)
+	{
+		Debug.out(Debug.MODE_DEBUG, "ASTRA", msg);
 	}
 }

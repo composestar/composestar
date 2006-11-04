@@ -3,6 +3,9 @@ package Composestar.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Marcus Klimstra
+ */
 public class TokenReplacer
 {
 	private Map m_replacements;
