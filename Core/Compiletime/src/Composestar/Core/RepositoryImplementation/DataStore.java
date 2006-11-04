@@ -59,7 +59,18 @@ public class DataStore implements Serializable, Cloneable
 		}
 		return instance;
 	}
+	
+	/**
+	 * Needed for the Runtime: called by DotNETRepositoryDeserializer.
+	 */
+	public static void setInstance(DataStore ds)
+	{
+		instance = ds;
+	}
 
+	/**
+	 * Returns the number of objects in the datastore.
+	 */
 	public int size()
 	{
 		return map.size();
