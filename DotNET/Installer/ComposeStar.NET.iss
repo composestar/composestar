@@ -254,48 +254,50 @@ begin
     SaveStringToFile(ExpandConstant('{app}\PlatformConfigurations.xml'), cfg, false);
   end;
   
-  if IsAdminLoggedOn() then begin
-    keylist := TStringList.create();
-    RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\7.1', 'InstallDir', cfg);
-    keylist.LoadFromFile(cfg+'\usertype.dat');
+  if (IsAdminLoggedOn() and IsComponentSelected('core\addin')) then begin
+    if RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\7.1', 'InstallDir', cfg) then
+      keylist := TStringList.create();
+      if (FileExists(cfg+'\usertype.dat')) then begin
+        keylist.LoadFromFile(cfg+'\usertype.dat');
+      end;
 
-    kwadd(keylist, 'concern');
-    kwadd(keylist, 'filtermodule');
-    kwadd(keylist, 'inputfilters');
-    kwadd(keylist, 'outputfilters');
-    kwadd(keylist, 'internals');
-    kwadd(keylist, 'externals');
-    kwadd(keylist, 'conditions');
-    kwadd(keylist, 'superimposition');
-    kwadd(keylist, 'selectors');
-    kwadd(keylist, 'filtermodules');
-    kwadd(keylist, 'implementation');
-    kwadd(keylist, 'by');
-    kwadd(keylist, 'as');
-    kwadd(keylist, 'in');
+      kwadd(keylist, 'concern');
+      kwadd(keylist, 'filtermodule');
+      kwadd(keylist, 'inputfilters');
+      kwadd(keylist, 'outputfilters');
+      kwadd(keylist, 'internals');
+      kwadd(keylist, 'externals');
+      kwadd(keylist, 'conditions');
+      kwadd(keylist, 'superimposition');
+      kwadd(keylist, 'selectors');
+      kwadd(keylist, 'filtermodules');
+      kwadd(keylist, 'implementation');
+      kwadd(keylist, 'by');
+      kwadd(keylist, 'as');
+      kwadd(keylist, 'in');
 
-    kwadd(keylist, 'true');
-    kwadd(keylist, 'false');
-    kwadd(keylist, 'True');
-    kwadd(keylist, 'False');
-    kwadd(keylist, 'inner');
+      kwadd(keylist, 'true');
+      kwadd(keylist, 'false');
+      kwadd(keylist, 'True');
+      kwadd(keylist, 'False');
+      kwadd(keylist, 'inner');
 
-    kwadd(keylist, 'Dispatch');
-    kwadd(keylist, 'Send');
-    kwadd(keylist, 'Meta');
-    kwadd(keylist, 'Error');
-    kwadd(keylist, 'Prepend');
-    kwadd(keylist, 'Append');
+      kwadd(keylist, 'Dispatch');
+      kwadd(keylist, 'Send');
+      kwadd(keylist, 'Meta');
+      kwadd(keylist, 'Error');
+      kwadd(keylist, 'Prepend');
+      kwadd(keylist, 'Append');
 
-    kwadd(keylist, 'dispatch');
-    kwadd(keylist, 'send');
-    kwadd(keylist, 'meta');
-    kwadd(keylist, 'error');
-    kwadd(keylist, 'prepend');
-    kwadd(keylist, 'append');
+      kwadd(keylist, 'dispatch');
+      kwadd(keylist, 'send');
+      kwadd(keylist, 'meta');
+      kwadd(keylist, 'error');
+      kwadd(keylist, 'prepend');
+      kwadd(keylist, 'append');
 
-    keylist.SaveToFile(cfg+'\usertype.dat');
-    keylist.Free;
+      keylist.SaveToFile(cfg+'\usertype.dat');
+      keylist.Free;
   end;
 end;
 
