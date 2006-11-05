@@ -38,7 +38,7 @@ public class DataStore implements Serializable, Cloneable
 
 	private String filename = "ComposeStarDataStore.ser";
 
-	public final Map map;
+	public DataMap map;
 
 	/**
 	 * Creates the datastore.
