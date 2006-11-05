@@ -42,7 +42,7 @@
 		
 		<publishers>
 			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
-				xslfile="webapps\cruisecontrol\xsl\buildresults.xsl" 
+				xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt" 
 				mailhost="smtp.utwente.nl" 
 				reportsuccess="fixes" 
 				skipusers="true"
