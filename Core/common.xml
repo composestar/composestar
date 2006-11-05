@@ -17,6 +17,18 @@ Common routines. Always include this file in every build.xml file
 		<!-- all properties can be overridden in this file -->
 		<property file="${build.core.init}${file.separator}build.ini"/>
 		
+	
+		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version numbers -->
+		<property name="label" value="build.0"/>
+		
+		<!-- just the build number -->	
+		<taskdef name="extractBuildNumber" classname="Composestar.Ant.Taskdefs.BuildNumberExtractor"/>
+		<extractBuildNumber label="${label}" property="version.build" syntax="build.#"/>
+	
+		<!-- version numbers, used in installers e.a. Note: must be: [major].[minor].[release] -->
+		<property name="version.dotnet" value="0.6.1"/>
+		
+		
 		<!-- various config items -->
 		<property name="out.build" value="build"/>
 		<property name="out.dist"  value="dist"/>
@@ -25,16 +37,6 @@ Common routines. Always include this file in every build.xml file
 		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}ComposestarDotNET.jar"/>
 		<property name="out.jar.java"      value="${out.dist}${file.separator}ComposestarJava.jar"/>
 		<property name="out.jar.starlight" value="${out.dist}${file.separator}StarLight.jar"/>
-
-		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version number -->
-		<property name="label" value="build.0"/>
-		<!-- just the build number -->
-	
-		<taskdef name="extractBuildNumber" classname="Composestar.Ant.Taskdefs.BuildNumberExtractor"/>
-		<extractBuildNumber label="${label}" property="version.build" syntax="build.#"/>
-	
-		<!-- version numbers, used in installers e.a. Note: must be x.y.z -->
-		<property name="version.dotnet" value="0.6.0"/>
 		
 		<!-- options for javac -->
 		<property name="build.java.version" value="1.4"/>
