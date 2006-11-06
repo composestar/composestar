@@ -65,15 +65,27 @@ Common routines. Always include this file in every build.xml file
 		<available file="${build.java}${file.separator}build.xml"      property="available.java"/>
 		<available file="${build.c}${file.separator}build.xml"         property="available.c"/>
 		
-		<!-- resolve system variables -->		
-		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false">
+		<!-- resolve system variables -->	
+		<!-- Windows XP -->	
+		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" os="Windows XP">
 			<arg value="getsystemproperties"/>
 			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
 		</exec>
+		<!-- Windows 2003 -->
+		<exec executable="${build.core}${file.separator}Development${file.separator}AntHelper.exe" failifexecutionfails="false" os="Windows 2003">
+			<arg value="getsystemproperties"/>
+			<arg value="${build.core}${file.separator}Development${file.separator}system.properties"/>
+		</exec>
+		
 		<property file="${build.core}${file.separator}Development${file.separator}system.properties"/>
 		
 		<!-- location of the Compose* installation -->
-		<property name="composestar.installdir" value="C:${file.separator}Program Files${file.separator}ComposeStar"/>
+		<condition property="composestar.installdir" value="C:${file.separator}Program Files${file.separator}ComposeStar">
+			<os family="windows" />
+		</condition>
+		
+		<!-- final fallback -->
+		<property name="composestar.installdir" value="${user.home}${file.separator}ComposeStar"/>
 		
 		<!-- location of Eclipse pluginsfolder -->
 		<property name="eclipse.pluginsdir" value="${env.ECLIPSE_HOME}${file.separator}plugins"/>
