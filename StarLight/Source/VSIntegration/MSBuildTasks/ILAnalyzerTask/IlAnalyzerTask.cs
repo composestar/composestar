@@ -172,7 +172,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
             foreach (ITaskItem item in AssemblyFiles)
             {
                 // Skip composestar files
-                if (Path.GetFileNameWithoutExtension(item.ToString()).StartsWith("Composestar.StarLight"))
+                string filename = Path.GetFileNameWithoutExtension(item.ToString());
+                if (filename.StartsWith("Composestar.StarLight") && !filename.StartsWith("Composestar.StarLight.Filters"))
                     continue;
 
                 // We are only interested in assembly files.
@@ -253,7 +254,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     assembly = analyzer.ExtractAllTypes(item);
                     
-                    if (assembly != null )
+                    if (assembly != null && !item.StartsWith("Composestar.StarLight.Filters"))
                     {
                         // Create a new AssemblyConfig object
                         assConfig = new AssemblyConfig();

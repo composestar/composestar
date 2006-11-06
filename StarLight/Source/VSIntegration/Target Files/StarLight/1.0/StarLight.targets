@@ -21,7 +21,6 @@ Copyright (C) University of Twente, 2006
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.JavaServerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   
   <PropertyGroup>
     <StarLightFolder>StarLight</StarLightFolder>
