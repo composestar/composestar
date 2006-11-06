@@ -108,7 +108,7 @@ namespace Composestar.StarLight.Entities.Configuration
                 name = name.Replace("Version=", "");
                 name = name.Replace("Culture=", "");
                 name = name.Replace("PublicKeyToken=", ""); 
-                _serializedFilename = Path.Combine(objectFolder, string.Format("{0}.xml", name)); 
+                _serializedFilename = Path.Combine(objectFolder, string.Format("{0}.xml.gzip", name)); 
             } 
 
         } // GenerateSerializedFilename()

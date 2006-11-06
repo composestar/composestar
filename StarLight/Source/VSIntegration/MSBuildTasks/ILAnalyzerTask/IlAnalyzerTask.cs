@@ -24,6 +24,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// </summary>
     public class IlAnalyzerTask : Task
     {
+        private const string ComposeStarDlls = "Composestar.StarLight";
+        private const string ComposeStarFilterDll = "Composestar.StarLight.Filters";
 
         #region Properties for MSBuild
 
@@ -173,7 +175,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 // Skip composestar files
                 string filename = Path.GetFileNameWithoutExtension(item.ToString());
-                if (filename.StartsWith("Composestar.StarLight") && !filename.StartsWith("Composestar.StarLight.Filters"))
+                if (filename.StartsWith(ComposeStarDlls) && !filename.StartsWith(ComposeStarFilterDll))
                     continue;
 
                 // We are only interested in assembly files.
@@ -254,7 +256,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     assembly = analyzer.ExtractAllTypes(item);
                     
-                    if (assembly != null && !item.StartsWith("Composestar.StarLight.Filters"))
+                    if (assembly != null && !item.StartsWith(ComposeStarFilterDll))
                     {
                         // Create a new AssemblyConfig object
                         assConfig = new AssemblyConfig();

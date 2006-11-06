@@ -141,7 +141,7 @@ namespace Composestar.StarLight.ILWeaver
             if (targetAssembly == null)
                 throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
 
-            targetAssembly.MainModule.LoadSymbols();
+            //targetAssembly.MainModule.LoadSymbols();
 
             // Prepare the data for this assembly (precaching)
             WeaveSpecification weaveSpec;

@@ -24,6 +24,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     ///    {
     ///
     ///    } 
+    /// 
     /// }
     /// </code>
     /// </example> 
@@ -63,6 +64,23 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// This custom attribute must be applied to weaving strategies to enable the naming of those strategies.        
         /// </summary>
         /// <param name="weaveStrategyName">Name of the weave strategy.</param>
+        /// <example>
+        /// To use a weaving strategy, create a class which inherits from <see cref="T:FilterActionWeaveStrategy"/> and place this custom attribute to the top.     
+        /// <code>
+        /// [WeaveStrategyAttribute("AdviceAction")]
+        /// public class AdviceActionWeaveStrategy : FilterActionWeaveStrategy
+        /// {
+        ///                
+        ///    public override void Weave(ICecilInliningInstructionVisitor visitor, 
+        ///        FilterAction filterAction,
+        ///        MethodDefinition originalCall)
+        ///    {
+        ///
+        ///    } 
+        /// 
+        /// }
+        /// </code>
+        /// </example> 
         /// <exception cref="weaveStrategyName">Thrown when the <paramref name="weaveStrategyName"/> is <see langword="null"/> or empty.</exception>
         public WeaveStrategyAttribute(string weaveStrategyName)
         {

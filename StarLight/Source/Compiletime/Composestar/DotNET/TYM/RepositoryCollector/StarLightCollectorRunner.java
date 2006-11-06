@@ -1,6 +1,6 @@
 package Composestar.DotNET.TYM.RepositoryCollector;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.zip.*;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -208,7 +209,9 @@ public class StarLightCollectorRunner implements CollectorRunner
 			{
 				String name = assemblies.getAssemblyConfigArray(i).getSerializedFilename();
 				deserializeTimer.start();
-				doc = AssemblyDocument.Factory.parse(new File(name));
+				GZIPInputStream inputStream = new GZIPInputStream(new FileInputStream(name));
+				doc = AssemblyDocument.Factory.parse(inputStream);
+				inputStream.close(); 
 				deserializeTimer.stop();
 			}
 			catch (XmlException e)

@@ -100,7 +100,7 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Include" ItemName="TempBackupWeave"/>
     </CreateItem>
     <Delete Files="@(TempBackupWeave)"/>
-    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)/*.xml">
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)/*.xml;$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)/*.xml.gzip">
       <Output TaskParameter="Include" ItemName="TempXmlFiles"/>
     </CreateItem>
     <Delete Files="@(TempXmlFiles)"/>

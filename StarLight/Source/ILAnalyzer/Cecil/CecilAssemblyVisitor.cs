@@ -923,19 +923,25 @@ namespace Composestar.StarLight.ILAnalyzer
         {
             List<AttributeElement> ret = new List<AttributeElement>();
 
-            if (customAttributes == null && customAttributes.Count == 0)
+            if (customAttributes == null || customAttributes.Count == 0)
                 return ret;
 
             foreach (CustomAttribute  ca in customAttributes)
             {
                 AttributeElement ae = new AttributeElement();
+                if (ca.Constructor.DeclaringType == null)
+                    continue;
+ 
                 ae.AttributeType = ca.Constructor.DeclaringType.ToString();
 
                 for (int i = 0; i < ca.ConstructorParameters.Count; i++)
                 {
                     AttributeValueElement ave = new AttributeValueElement();
                     ave.Name = ca.Constructor.Parameters[i].Name;
-                    ave.Value = ca.ConstructorParameters[i].ToString(); 
+                    if (ca.ConstructorParameters[i] == null)
+                        ave.Value = null;
+                    else
+                        ave.Value = ca.ConstructorParameters[i].ToString(); 
                     ae.Values.Add(ave);  
                 }
 
@@ -943,7 +949,10 @@ namespace Composestar.StarLight.ILAnalyzer
                 {
                     AttributeValueElement ave = new AttributeValueElement();
                     ave.Name =Convert.ToString( propKey);
-                    ave.Value = ca.Properties[propKey].ToString();
+                    if (ca.Properties[propKey] == null)
+                        ave.Value = null;
+                    else 
+                        ave.Value = ca.Properties[propKey].ToString();
                     ae.Values.Add(ave);
                 }
 

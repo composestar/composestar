@@ -5,11 +5,14 @@
 package Composestar.DotNET.TYM.RepositoryEmitter;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.zip.*;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
@@ -253,16 +256,20 @@ public class StarLightEmitterRunner implements CTCommonModule
 				doc.setWeaveSpecification(weaveSpec);
 
 				String filename = FileUtils.removeExtension(config.getSerializedFilename());
-				filename = filename + "_weavespec.xml";
-				File file = new File(filename);
+				filename = filename + "_weavespec.xml.gzip";
+				GZIPOutputStream outputStream = null;
 				try
 				{
-					doc.save(file);
+					outputStream = new GZIPOutputStream(new FileOutputStream(filename));					
+					doc.save(outputStream);
+					outputStream.close();		
 				}
 				catch (IOException e)
 				{
 					throw new ModuleException("IOException while writing weavespecfile " + filename, "EMITTER");
 				}
+				
+				
 				config.setWeaveSpecificationFile(filename);
 			}
 		}

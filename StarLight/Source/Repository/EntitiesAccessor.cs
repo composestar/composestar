@@ -123,7 +123,7 @@ namespace Composestar.Repository
             {
                 if (File.Exists(filename))
                 {
-                    assemblyElement = ObjectXMLSerializer<AssemblyElement>.Load(filename, SerializedFormat.Document);
+                    assemblyElement = ObjectXMLSerializer<AssemblyElement>.Load(filename, SerializedFormat.DocumentCompressed);
                     _assemblyFileCache.Add(filename, assemblyElement);
                 } // if
                 else
@@ -149,7 +149,7 @@ namespace Composestar.Repository
             if (string.IsNullOrEmpty(filename))
                 throw new ArgumentNullException("filename");
 
-            ObjectXMLSerializer<AssemblyElement>.Save(assemblyElement, filename, SerializedFormat.Document);
+            ObjectXMLSerializer<AssemblyElement>.Save(assemblyElement, filename, SerializedFormat.DocumentCompressed);
 
             // Update or add to cache
             _assemblyFileCache[filename] = assemblyElement;
@@ -175,7 +175,7 @@ namespace Composestar.Repository
 
             if (File.Exists(filename))
             {
-                weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(filename, ExtraTypes);
+                weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(filename, SerializedFormat.DocumentCompressed, ExtraTypes);
             } // if
             else
             {
@@ -221,5 +221,26 @@ namespace Composestar.Repository
         }
 
         #endregion
+
+        /// <summary>
+        /// Formats the compressed filename.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        /// <returns>Returns the filename with a .gzip at the end.</returns>
+        /// <exception cref="T:System.ArgumentNullException">Thrown when the filename is null or empty.</exception>
+        private string FormatCompressedFilename(string filename)
+        {
+            if (string.IsNullOrEmpty(filename))
+                throw new ArgumentNullException("filename");
+
+            string gzipExtension = ".gzip";
+
+            if (filename.EndsWith(gzipExtension))
+                return filename;
+            else
+                return string.Concat(filename, gzipExtension);
+
+        }
+    
     }
 }
