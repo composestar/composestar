@@ -16,6 +16,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import Composestar.Core.CKRET.Constraint;
 import Composestar.Core.CKRET.Repository;
+import Composestar.Core.FIRE2.util.regex.PatternParseException;
 
 public class ConstraintsHandler extends DefaultHandler {
     
@@ -51,14 +52,30 @@ public class ConstraintsHandler extends DefaultHandler {
 			String resource = amap.getValue("resource");
 			String pattern = amap.getValue("pattern");
 			String message = amap.getValue("message");
-			repository.addConstraint(new Constraint(resource,pattern,message,Constraint.CONFLICT));
+			try
+			{
+				repository.addConstraint(new Constraint(resource,pattern,message,Constraint.CONFLICT));
+			}
+			catch (PatternParseException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else if( local_name.equalsIgnoreCase("require"))
 		{
 			String resource = amap.getValue("resource");
 			String pattern = amap.getValue("pattern");
 			String message = amap.getValue("message");
-			repository.addConstraint(new Constraint(resource,pattern,message,Constraint.REQUIREMENT));
+			try
+			{
+				repository.addConstraint(new Constraint(resource,pattern,message,Constraint.REQUIREMENT));
+			}
+			catch (PatternParseException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
     }
     

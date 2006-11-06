@@ -14,8 +14,6 @@ import java.io.FileWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -84,22 +82,23 @@ public class HTMLReporter implements Reporter
 		{
 			buffer.append("<table border=0 cellpadding=5 cellspacing=5 width=800>");
 
-			Map executionConflicts = analysis.executionConflicts();
-			Set entrySet = executionConflicts.entrySet();
+			List executionConflicts = analysis.executionConflicts();
 
-			for( Iterator it = entrySet.iterator(); it.hasNext(); )
+			for( Iterator it = executionConflicts.iterator(); it.hasNext(); )
 			{
 				buffer.append("<tr><td align=left valign=top><b>Actions:</b><BR>");
-				Entry entry = (Entry) it.next();
-				ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
-				List conflicts = (List) entry.getValue();
+				
+//				Entry entry = (Entry) it.next();
+//				ExecutionAnalysis ea = (ExecutionAnalysis) entry.getKey();
+//				List conflicts = (List) entry.getValue();
+				List conflicts = (List) it.next();
 
-				i = 0;
-				for( Iterator actionIterator = ea.getActions().iterator(); actionIterator.hasNext(); )
-				{
-					i++;
-					buffer.append("").append(i).append(". ").append(actionIterator.next().toString()).append("<BR>");
-				}
+//				i = 0;
+//				for( Iterator actionIterator = ea.getActions().iterator(); actionIterator.hasNext(); )
+//				{
+//					i++;
+//					buffer.append("").append(i).append(". ").append(actionIterator.next().toString()).append("<BR>");
+//				}
 
 				buffer.append("</td><td align=left valign=top><b>Conflicts</b>");
 
@@ -107,7 +106,7 @@ public class HTMLReporter implements Reporter
 				buffer.append("<tr><td><i>Resource:</i></td><td width=200><i>Sequence:</i></td><td width=150><i>Pattern:</i></td><td><i>Message:</i></td></tr>");
 				for( Iterator conflictIterator = conflicts.iterator(); conflictIterator.hasNext(); )
 				{
-					Conflict conflict = (Conflict)conflictIterator.next();
+					Conflict conflict = (Conflict) conflictIterator.next();
                     buffer.append("<tr><td>").append(conflict.getResource()).append("</td><td>").append(conflict.getSequence()).append("</td><td>").append(conflict.getExpr()).append("</td><td>").append(conflict.getMsg()).append("</td></tr>");
 				}
 				buffer.append("</table>");

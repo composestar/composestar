@@ -14,12 +14,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.FilterAction;
 import Composestar.Core.CKRET.Operation;
 import Composestar.Core.CKRET.Repository;
 
 public class ActionsHandler extends DefaultHandler {
-    FilterAction action;
+//    FilterAction action;
     private Repository repository;
     //private ActionResourceDescription ard;
     ConfigParser returnhandler;
@@ -50,15 +49,15 @@ public class ActionsHandler extends DefaultHandler {
     public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException {
     	if(local_name.equalsIgnoreCase("action"))
 		{
-			this.action = repository.getAction(amap.getValue("name"));
-			String endOfSet = amap.getValue("endofset");
-			if( "true".equals(endOfSet))
-				this.action.setEndOfSet();
+//			this.action = repository.getAction(amap.getValue("name"));
+//			String endOfSet = amap.getValue("endofset");
+//			if( "true".equals(endOfSet))
+//				this.action.setEndOfSet();
 		}
 		else if(local_name.equalsIgnoreCase("operation"))
 		{
 			Operation op = new Operation(amap.getValue("name"), amap.getValue("resource"));
-			this.action.addOperation(op);
+//			this.action.addOperation(op);
 		}
     }
     

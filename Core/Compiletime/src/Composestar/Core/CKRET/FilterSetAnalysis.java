@@ -10,18 +10,15 @@
 package Composestar.Core.CKRET;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
 /**
  *
@@ -34,7 +31,7 @@ public class FilterSetAnalysis implements Serializable {
 	private List filters;
 	private List executions;
 	
-	private Map conflictingExecutions;
+	private List conflictingExecutions;
 	
 
 	public FilterSetAnalysis(Concern concern, FilterModuleOrder order)
@@ -43,7 +40,7 @@ public class FilterSetAnalysis implements Serializable {
 		this.order = order;
 		//this.messages = new HashMap();
 		this.executions = new ArrayList();
-		this.conflictingExecutions = new HashMap();
+		this.conflictingExecutions = new ArrayList();
 	}
 
 	public List getFilters()
@@ -54,29 +51,12 @@ public class FilterSetAnalysis implements Serializable {
 	public void analyze()
 	{
 		this.filters = getFilterList(this.order.orderAsList());
-		int numFilters = filters.size();
 		
-		int numPaths = (int) StrictMath.pow(2,numFilters);
-		for( int i = 0; i < numPaths; i++ )
+		AbstractVM avm = new AbstractVM();
+		List conflicts = avm.analyze(concern, this.order);
+		if (!conflicts.isEmpty())
 		{
-			ExecutionAnalysis execution = new ExecutionAnalysis(concern, filters, i);
-			if( execution.process() )
-			{
-				if( !this.executions.contains(execution) )
-					this.executions.add(execution);
-			}
-			else
-			{
-				//skipping execution for it is not feasible
-				//System.err.println("Execution " + i + " has no end of filterset");
-			}
-		}
-		for( Iterator it = this.executions.iterator(); it.hasNext(); )
-		{
-			ExecutionAnalysis execution = (ExecutionAnalysis) it.next();
-			List conflicts = execution.analyze();
-			if(!conflicts.isEmpty() )
-				this.conflictingExecutions.put(execution, conflicts);
+			this.conflictingExecutions.add(conflicts);
 		}
 	}
 	
@@ -85,7 +65,7 @@ public class FilterSetAnalysis implements Serializable {
 		return this.conflictingExecutions.size();
 	}
 
-	public Map executionConflicts()
+	public List executionConflicts()
 	{
 		return this.conflictingExecutions;
 	}

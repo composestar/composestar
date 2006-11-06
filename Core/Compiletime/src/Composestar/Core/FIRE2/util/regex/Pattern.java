@@ -16,10 +16,12 @@ import java.util.Vector;
  */
 public class Pattern {
     private RegularMachine machine;
+    private String patternString;
     
     private Pattern( String pattern )
     throws PatternParseException
     {
+    	this.patternString = pattern;
         machine = Parser.parse( pattern );
     }
     
@@ -29,15 +31,35 @@ public class Pattern {
         return new Pattern( pattern );
     }
     
-    public RegularState getStartState(){
+    protected RegularState getStartState(){
         return machine.getStartState();
     }
     
-    public RegularState getEndState(){
+    protected RegularState getEndState(){
         return machine.getEndState();
     }
     
-    private static class Parser{
+    /**
+	 * @return the patternString
+	 */
+	public String getPatternString()
+	{
+		return patternString;
+	}
+	
+	
+    
+    /* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return patternString;
+	}
+
+
+
+	private static class Parser{
         public static RegularMachine parse( String pattern )
         throws PatternParseException
         {
@@ -296,9 +318,9 @@ public class Pattern {
             
             char c = pattern.charAt( pos );
             switch( c ){
-            case '(':
+            case '[':
                 return new Token( Token.LEFT_BRACKET, "" + c, pos, 1 );
-            case ')':
+            case ']':
                 return new Token( Token.RIGHT_BRACKET, "" + c, pos, 1 );
             case '|':
                 return new Token( Token.UNION_OPERATOR, "" + c, pos, 1 );
@@ -317,41 +339,41 @@ public class Pattern {
             int startPos = pos;
             char c = pattern.charAt( startPos );
             
-            if ( c == '\'' ){
+            if ( c == '(' ){
                 StringBuffer buffer = new StringBuffer();
                 startPos++;
                 while ( startPos < pattern.length() ){
                     c = pattern.charAt( startPos );
-                    if ( c == '\'' )
+                    if ( c == ')' )
                         break;
                     
-                    if ( c == '_'  ||  Character.isLetterOrDigit(c) ){
+                    if ( c == '.'  ||  Character.isLetterOrDigit(c) ){
                         buffer.append( c );
                     }
                     else{
                         throw new PatternParseException( "Unexpected character at" +
                         		" position " + startPos + 
-                        		". Expected underscore, letter, digit or apostrophe." );
+                        		". Expected dot, letter, digit or parenthesis." );
                     }
                     startPos++;
                 }
                 
-                if ( c != '\'' ){
+                if ( c != ')' ){
                     throw new PatternParseException( 
-                            "Unexpected end of pattern. Expected underscore, " +
-                            "letter, digit or apostrophe." );
+                            "Unexpected end of pattern. Expected dot, " +
+                            "letter, digit or parenthesis." );
                 }
                 
                 return new Token( Token.RESOURCE_OPERATION, buffer.toString(), pos,
                         buffer.length() + 2 );
             }
-            else if ( c == '_'  ||  Character.isLetterOrDigit(c) ){
+            else if ( c == '.'  ||  Character.isLetterOrDigit(c) ){
                 return new Token( Token.RESOURCE_OPERATION, "" + c, pos, 1 );
             }
             else{
                 throw new PatternParseException( "Unexpected characters at" +
                 		" position " + pos + 
-                		". Expected underscore, letter, digit or apostrophe." );
+                		". Expected dot, letter, digit or parenthesis. Found '" + c + "'" );
             }
         }
     }
@@ -490,4 +512,6 @@ public class Pattern {
             return startState;
         }
     }
+
+	
 }
