@@ -10,7 +10,7 @@ public class CpsAST extends CommonAST
 	public void initialize(Token tok)
 	{
 		super.initialize(tok);
-		if(tok != null)
+		if (tok != null)
 		{
 			line = tok.getLine();
 		}
@@ -19,7 +19,7 @@ public class CpsAST extends CommonAST
 	public void initialize(AST tok)
 	{
 		super.initialize(tok);
-		if(tok != null)
+		if (tok != null)
 		{
 			line = tok.getLine();
 		}
@@ -27,8 +27,9 @@ public class CpsAST extends CommonAST
 
 	public void initialize(int type, String txt)
 	{
-		super.initialize(type,txt);
+		super.initialize(type, txt);
 	}
+
 	public int getLine()
 	{
 		return line;

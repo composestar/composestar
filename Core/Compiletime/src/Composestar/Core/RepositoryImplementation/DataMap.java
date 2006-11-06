@@ -8,9 +8,10 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * The DataMap is in implementation of the java.util.Map interface that uses two 
- * public Vectors as storage, one for keys, and one for values. RepositoryEntities 
- * that need a map should used the DataMap since it can be serialized by CONE-XML.
+ * The DataMap is in implementation of the java.util.Map interface that uses two
+ * public Vectors as storage, one for keys, and one for values.
+ * RepositoryEntities that need a map should used the DataMap since it can be
+ * serialized by CONE-XML.
  * 
  * @author Tom Staijen
  * @version 0.9.0
@@ -20,6 +21,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 	private static final long serialVersionUID = -6486304623601718657L;
 
 	public Vector m_keys;
+
 	public Vector m_values;
 
 	public DataMap()
@@ -57,16 +59,16 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public boolean containsValue(Object value)
 	{
-		return m_values.contains(value);     
+		return m_values.contains(value);
 	}
 
-	public Object get(Object key) 
+	public Object get(Object key)
 	{
 		int index = m_keys.indexOf(key);
 		return index < 0 ? null : m_values.elementAt(index);
 	}
 
-	public Object put(Object key, Object value) 
+	public Object put(Object key, Object value)
 	{
 		int index = m_keys.indexOf(key);
 		if (index < 0)
@@ -149,14 +151,14 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 			Object value = m_values.elementAt(i);
 			if (value.getClass().equals(c) && value instanceof RepositoryEntity)
 			{
-				RepositoryEntity re = (RepositoryEntity)value;
+				RepositoryEntity re = (RepositoryEntity) value;
 				if (re.getDynObject("REFERENCED") == null)
 				{
 					removeKeys.addElement(key);
 				}
 			}
 		}
-		for (Enumeration e = removeKeys.elements(); e.hasMoreElements(); )
+		for (Enumeration e = removeKeys.elements(); e.hasMoreElements();)
 		{
 			Object key = e.nextElement();
 			this.remove(key);
@@ -168,7 +170,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		HashMap result = new HashMap();
 		for (int i = 0; i < m_keys.size(); i++)
 		{
-			result.put(m_keys.elementAt(i),m_values.elementAt(i));
+			result.put(m_keys.elementAt(i), m_values.elementAt(i));
 		}
 		return result;
 	}

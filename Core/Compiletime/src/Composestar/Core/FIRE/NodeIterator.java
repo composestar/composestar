@@ -9,7 +9,7 @@ package Composestar.Core.FIRE;
  * 
  * $Id: Iterator.java 2032 2006-10-12 15:08:13Z reddog33hummer $
  * 
-**/
+ **/
 
 import java.util.LinkedList;
 import java.util.Stack;
@@ -18,18 +18,22 @@ public abstract class NodeIterator implements Cloneable
 {
 	// (friend) datamembers
 	Node parent;
+
 	int currentChild;
 
 	// Store PathNodes on the stack.
 	Stack stack = new Stack();
+
 	class PathNode
 	{
 		public Node parent;
+
 		public int child;
 	}
 
-	// methods 
-	public NodeIterator() {}
+	// methods
+	public NodeIterator()
+	{}
 
 	public NodeIterator(Node _tree)
 	{
@@ -49,26 +53,29 @@ public abstract class NodeIterator implements Cloneable
 
 	protected void pop()
 	{
-		PathNode pn = (PathNode) stack.pop ();
+		PathNode pn = (PathNode) stack.pop();
 		parent = pn.parent;
 		currentChild = pn.child;
 	}
 
-
 	public abstract void first();
+
 	public abstract void next();
+
 	public abstract boolean isDone();
 
 	public abstract Node getNode();
+
 	public abstract int getDepth();
 
-	public String toString ()
+	public String toString()
 	{
-		return String.valueOf (stack.size());
+		return String.valueOf(stack.size());
 	}
 
-	public Object clone() throws CloneNotSupportedException {
-		try 
+	public Object clone() throws CloneNotSupportedException
+	{
+		try
 		{
 			NodeIterator i = (NodeIterator) super.clone();
 			i.stack = (Stack) stack.clone();
@@ -77,22 +84,23 @@ public abstract class NodeIterator implements Cloneable
 			i.currentChild = currentChild;
 
 			return i;
-		} 
+		}
 		catch (CloneNotSupportedException e)
 		{
 			return null;
 		}
 	}
 
-	public void skipTo (Node compareWith)
+	public void skipTo(Node compareWith)
 	{
 		next();
-		while (!isDone() && !getNode().subsetOfExpression(compareWith)) next();
+		while (!isDone() && !getNode().subsetOfExpression(compareWith))
+			next();
 	}
 
 	public LinkedList getPath()
 	{
-		LinkedList ll = new LinkedList ();
+		LinkedList ll = new LinkedList();
 
 		push();
 		for (int i = 0; i < stack.size(); i++)

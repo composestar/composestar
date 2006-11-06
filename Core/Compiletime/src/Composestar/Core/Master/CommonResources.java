@@ -16,13 +16,13 @@ import java.util.Properties;
 import Composestar.Core.RepositoryImplementation.DataMap;
 
 /**
- * This class holds the shared resources between the modules e.g the repository object.
- * TODO: Add hashmap for storing non-global stuff.
+ * This class holds the shared resources between the modules e.g the repository
+ * object. TODO: Add hashmap for storing non-global stuff.
  */
 public class CommonResources implements Serializable
 {
 	private static final long serialVersionUID = 2652039710117430543L;
-	
+
 	/**
 	 * Information about the Custom Filters that are used in this project.
 	 * FIXME: create a getter?
@@ -30,8 +30,8 @@ public class CommonResources implements Serializable
 	public Properties CustomFilters;
 
 	/**
-	 * Map holding all private resources.
-	 * FIXME: this field is private, so we can use a HashMap?
+	 * Map holding all private resources. FIXME: this field is private, so we
+	 * can use a HashMap?
 	 */
 	private DataMap resources;
 
@@ -52,10 +52,11 @@ public class CommonResources implements Serializable
 	 */
 	public void addResource(String key, Object object)
 	{
-	//	Debug.out(Debug.MODE_DEBUG,"RES","Added resource: " + key + " -> " + object.getClass());
+		// Debug.out(Debug.MODE_DEBUG,"RES","Added resource: " + key + " -> " +
+		// object.getClass());
 		resources.put(key, object);
 	}
-	
+
 	public void addBoolean(String key, boolean value)
 	{
 		resources.put(key, Boolean.valueOf(value));
@@ -65,12 +66,12 @@ public class CommonResources implements Serializable
 	 * Fetch a resource with a key.
 	 * 
 	 * @param key key for the object you want to retrieve.
-	 * @return An object pointer if an object with the specified key was found 
-	 * or null if the key is invalid.
+	 * @return An object pointer if an object with the specified key was found
+	 *         or null if the key is invalid.
 	 */
 	public Object getResource(String key)
 	{
-	//	Debug.out(Debug.MODE_DEBUG,"RES","Requested resource: " + key);
+		// Debug.out(Debug.MODE_DEBUG,"RES","Requested resource: " + key);
 
 		if (!resources.containsKey(key))
 		{
@@ -79,11 +80,12 @@ public class CommonResources implements Serializable
 
 		return resources.get(key);
 	}
-	
+
 	/**
 	 * Returns the resource with the specified key as a boolean.
+	 * 
 	 * @throws RuntimeException if there is no resource with the specified name,
-	 *         or if it is not a Boolean.
+	 *             or if it is not a Boolean.
 	 */
 	public boolean getBoolean(String key)
 	{
@@ -93,12 +95,12 @@ public class CommonResources implements Serializable
 		{
 			throw new RuntimeException("No resource for key '" + key + "'");
 		}
-		
-		if (! (resource instanceof Boolean))
+
+		if (!(resource instanceof Boolean))
 		{
 			throw new RuntimeException("Resource with key '" + key + "' is not a Boolean");
 		}
 
-		return ((Boolean)resource).booleanValue();
+		return ((Boolean) resource).booleanValue();
 	}
 }

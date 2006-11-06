@@ -6,35 +6,40 @@ package Composestar.Core.INLINE.model;
 
 import Composestar.Core.FIRE2.model.Message;
 
-public class FilterAction extends Instruction{
-    private String type;
-    private Message message;
+public class FilterAction extends Instruction
+{
+	private String type;
 
-    public FilterAction( String type, Message message ){
-        this.type = type;
-        this.message = message;
-    }
+	private Message message;
 
-    /**
-     * @return the message
-     */
-    public Message getMessage(){
-        return message;
-    }
+	public FilterAction(String type, Message message)
+	{
+		this.type = type;
+		this.message = message;
+	}
 
-    /**
-     * @return the type
-     */
-    public String getType(){
-        return type;
-    }
+	/**
+	 * @return the message
+	 */
+	public Message getMessage()
+	{
+		return message;
+	}
 
-    /**
-     * @see Composestar.Core.INLINE.model.Visitable#accept(Composestar.Core.INLINE.model.Visitor)
-     */
-    public Object accept(Visitor visitor){
-        return visitor.visitFilterAction( this );
-    }
+	/**
+	 * @return the type
+	 */
+	public String getType()
+	{
+		return type;
+	}
 
-    
+	/**
+	 * @see Composestar.Core.INLINE.model.Visitable#accept(Composestar.Core.INLINE.model.Visitor)
+	 */
+	public Object accept(Visitor visitor)
+	{
+		return visitor.visitFilterAction(this);
+	}
+
 }

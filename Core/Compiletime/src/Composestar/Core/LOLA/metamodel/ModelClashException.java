@@ -17,19 +17,20 @@ public class ModelClashException extends ModelException
 	 * 
 	 */
 	private static final long serialVersionUID = 393413282329393644L;
+
 	String model = "";
-	
+
 	public ModelClashException(String msg)
 	{
 		super(msg);
 	}
-	
+
 	public ModelClashException(String model, String msg)
 	{
 		this(msg);
 		this.model = model;
 	}
-	
+
 	public String getModel()
 	{
 		return this.model;

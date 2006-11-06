@@ -8,14 +8,20 @@ import java.util.Properties;
 public class Project implements Serializable
 {
 	private Properties properties;
-	//private String name;
-	//private String language;
-	//private String basePath;
+
+	// private String name;
+	// private String language;
+	// private String basePath;
 	private Language language;
+
 	private List sources;
+
 	private List dependencies;
+
 	private List typeSources;
+
 	private String compiledDummies;
+
 	private List compiledSources;
 
 	public Project()
@@ -27,32 +33,32 @@ public class Project implements Serializable
 		typeSources = new ArrayList();
 		compiledSources = new ArrayList();
 	}
-	
+
 	public void setName(String name)
 	{
 		properties.setProperty("name", name);
 	}
-	
+
 	public String getName()
 	{
 		return properties.getProperty("name");
 	}
-	
+
 	public void setLanguageName(String language)
 	{
 		properties.setProperty("language", language);
 	}
-	
+
 	public String getLanguageName()
 	{
 		return properties.getProperty("language");
 	}
-	
+
 	public void setBasePath(String basePath)
 	{
 		properties.setProperty("basePath", basePath);
 	}
-	
+
 	public String getBasePath()
 	{
 		return properties.getProperty("basePath");
@@ -60,7 +66,7 @@ public class Project implements Serializable
 
 	/**
 	 * @deprecated Use setName/setLanguageName/setBasePath.
-	 */ 
+	 */
 	public void addProperty(String key, String value)
 	{
 		properties.setProperty(key, value);
@@ -68,7 +74,7 @@ public class Project implements Serializable
 
 	/**
 	 * @deprecated Use getName/getLanguageName/getBasePath.
-	 */ 
+	 */
 	public String getProperty(String key)
 	{
 		return properties.getProperty(key);

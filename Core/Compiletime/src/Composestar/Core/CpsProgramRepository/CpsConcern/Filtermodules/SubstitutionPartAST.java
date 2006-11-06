@@ -9,13 +9,14 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class SubstitutionPartAST extends AbstractPatternAST
+{
 
-public class SubstitutionPartAST extends AbstractPatternAST {
-
-  /**
-   * @roseuid 401FAA6900AD
-   */
-  public SubstitutionPartAST() {
-    super();
-  }
+	/**
+	 * @roseuid 401FAA6900AD
+	 */
+	public SubstitutionPartAST()
+	{
+		super();
+	}
 }

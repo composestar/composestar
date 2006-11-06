@@ -15,9 +15,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
  * Name of 1 condition (leafs in the composite pattern tree): this is just a
  * wrapper for References.ConditionReference, necessary to deal with typing
  * (i.e. we must inherit from ConditionExpression, and
- * References.ConditionReference is in a Reference inheritance tree.
- * 
- * This class used to be called ConditionLiteral
+ * References.ConditionReference is in a Reference inheritance tree. This class
+ * used to be called ConditionLiteral
  */
 public class ConditionVariable extends ConditionExpression
 {
@@ -29,7 +28,6 @@ public class ConditionVariable extends ConditionExpression
 	}
 
 	/**
-	 * 
 	 * @return ConditionReference
 	 */
 	public ConditionReference getCondition()

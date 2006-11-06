@@ -12,43 +12,45 @@ import Composestar.Core.Master.Config.ConcernSource;
 public class ConcernSourcesHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
+
 	ProjectsHandler returnHandler;
-		
+
 	public ConcernSourcesHandler(XMLReader parser, ProjectsHandler documentHandler)
 	{
 		this.parser = parser;
 		this.returnHandler = documentHandler;
-	} 
-	
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
+	}
+
+	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if("ConcernSource".equals(raw_name))
+		if ("ConcernSource".equals(raw_name))
 		{
 			// in <concernsource>
 			ConcernSource concernsource = new ConcernSource();
-			if(amap.getValue("fileName")!=null){
+			if (amap.getValue("fileName") != null)
+			{
 				concernsource.setFileName(amap.getValue("fileName"));
 				Configuration.instance().getProjects().addConcernSource(concernsource);
 			}
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
+	public void endElement(String uri, String local_name, String raw_name) throws SAXException
 	{
-		if("ConcernSources".equals(raw_name))
+		if ("ConcernSources".equals(raw_name))
 		{
 			// end <concernsources>
-			parser.setContentHandler( returnHandler );
+			parser.setContentHandler(returnHandler);
 		}
 	}
 
-	public void startDocument() 
+	public void startDocument()
 	{
- 
+
 	}
 
-	public void endDocument() 
+	public void endDocument()
 	{
- 
+
 	}
 }

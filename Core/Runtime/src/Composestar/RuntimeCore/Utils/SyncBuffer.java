@@ -7,28 +7,27 @@ public class SyncBuffer
 	LinkedList queue = new LinkedList();
 
 	public SyncBuffer()
-	{
-	}
+	{}
 
-	public synchronized void produce( Object o )
+	public synchronized void produce(Object o)
 	{
 		this.queue.addLast(o);
 		this.notifyAll();
 	}
-	
+
 	public synchronized Object consume()
 	{
-		while( this.isEmpty() )
+		while (this.isEmpty())
 		{
 			try
 			{
 				wait();
 			}
-			catch(InterruptedException e)
+			catch (InterruptedException e)
 			{
-				//resume
+				// resume
 			}
-			catch( Exception e )
+			catch (Exception e)
 			{
 				e.printStackTrace();
 			}

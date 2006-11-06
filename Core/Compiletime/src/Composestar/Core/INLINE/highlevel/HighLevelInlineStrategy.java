@@ -9,17 +9,23 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.LAMA.MethodInfo;
 
-public interface HighLevelInlineStrategy {
-    public void startInline( FilterModule[] filterSet, MethodInfo method );
-    public void endInline();
-    
-    public void startFilterModule( FilterModule module );
-    public void endFilterModule();
-    
-    public void openBranchTrue( ConditionExpression condition );
-    public void closeBranchTrue();
-    public void openBranchFalse();
-    public void closeBranchFalse();
-    
-    public void generateAction( ExecutionState state );
+public interface HighLevelInlineStrategy
+{
+	public void startInline(FilterModule[] filterSet, MethodInfo method);
+
+	public void endInline();
+
+	public void startFilterModule(FilterModule module);
+
+	public void endFilterModule();
+
+	public void openBranchTrue(ConditionExpression condition);
+
+	public void closeBranchTrue();
+
+	public void openBranchFalse();
+
+	public void closeBranchFalse();
+
+	public void generateAction(ExecutionState state);
 }

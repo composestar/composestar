@@ -2,18 +2,18 @@ package Composestar.Core.FIRE;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * 
- * $Id$
- * 
-**/
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * Start.java 1515 2006-09-20 12:49:07Z reddog33hummer $
+ */
 
 public class Start extends FilterLeaf
 {
-	public String toString() { if (Debug.getMode() > 2) return "START()"; else return "start"; }
+	public String toString()
+	{
+		if (Debug.getMode() > 2) return "START()";
+		else return "start";
+	}
 
 	public StatusColumn calculateStatus(StatusColumn status, StateTable stateTable)
 	{
@@ -22,7 +22,7 @@ public class Start extends FilterLeaf
 	}
 
 	public ActionNode createNode()
-	{	
+	{
 		return new FilterActionNode("start");
 	}
 

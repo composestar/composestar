@@ -14,13 +14,15 @@ import Composestar.Core.RepositoryImplementation.*;
 /**
  * @modelguid {144B3D29-6C93-4822-B455-6EC9BB654195}
  */
-public class Implementation extends RepositoryEntity {
+public class Implementation extends RepositoryEntity
+{
 
-  /**
-   * @modelguid {591D90E1-4750-4FEE-9C45-07E8D979FE94}
-   * @roseuid 401FAA65025F
-   */
-  public Implementation() {
-    super();
-  }
+	/**
+	 * @modelguid {591D90E1-4750-4FEE-9C45-07E8D979FE94}
+	 * @roseuid 401FAA65025F
+	 */
+	public Implementation()
+	{
+		super();
+	}
 }

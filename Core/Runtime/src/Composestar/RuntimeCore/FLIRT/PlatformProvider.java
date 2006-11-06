@@ -7,5 +7,6 @@ import java.io.Serializable;
 public abstract class PlatformProvider implements Serializable
 {
 	public abstract void instantiatePlatform();
+
 	public abstract RepositoryDeserializer getRepositoryDeserializer();
 }

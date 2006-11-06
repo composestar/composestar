@@ -16,46 +16,51 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 /**
  * reference to a filtermodule
  */
-public class FilterModuleReference extends ConcernElementReference {
-  private FilterModule ref;
-  private Vector args;
+public class FilterModuleReference extends ConcernElementReference
+{
+	private FilterModule ref;
 
-  /**
-   * @roseuid 401FAA640376
-   */
-  public FilterModuleReference() {
-    super();
-    args = new Vector();
-  }
+	private Vector args;
 
+	/**
+	 * @roseuid 401FAA640376
+	 */
+	public FilterModuleReference()
+	{
+		super();
+		args = new Vector();
+	}
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule
-   *
-   * @roseuid 401FAA640377
-   */
-  public FilterModule getRef() {
-    return ref;
-  }
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule
+	 * @roseuid 401FAA640377
+	 */
+	public FilterModule getRef()
+	{
+		return ref;
+	}
 
+	/**
+	 * @param refValue
+	 * @roseuid 40503C2401EE
+	 */
+	public void setRef(FilterModule refValue)
+	{
+		this.ref = refValue;
+	}
 
-  /**
-   * @param refValue
-   * @roseuid 40503C2401EE
-   */
-  public void setRef(FilterModule refValue) {
-    this.ref = refValue;
-  }
-  
-  public void setArgs(Vector a){
-	  args = a;
-  }
-  
-  public Vector getArgs(){
-	  return args;
-  }
-  
-  public void addArg(Object o){
-	  args.add(o);
-  }
+	public void setArgs(Vector a)
+	{
+		args = a;
+	}
+
+	public Vector getArgs()
+	{
+		return args;
+	}
+
+	public void addArg(Object o)
+	{
+		args.add(o);
+	}
 }

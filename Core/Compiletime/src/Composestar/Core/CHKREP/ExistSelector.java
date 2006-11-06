@@ -7,44 +7,53 @@ import Composestar.Core.Exception.ModuleException;
 
 import java.util.*;
 
-public class ExistSelector implements BaseChecker {
+public class ExistSelector implements BaseChecker
+{
 	private DataStore ds;
-	
-	
-	public boolean performCheck() {
+
+	public boolean performCheck()
+	{
 		Iterator fmbi = ds.getAllInstancesOf(FilterModuleBinding.class);
 		boolean nonFatal = true;
-		
-		while(fmbi.hasNext()){
+
+		while (fmbi.hasNext())
+		{
 			FilterModuleBinding fmb = (FilterModuleBinding) fmbi.next();
 			String selector = fmb.getSelector().getName();
 			boolean exist = false;
-			
+
 			SuperImposition si = (SuperImposition) fmb.getParent();
 			Iterator sels = si.getSelectorIterator();
-			while(sels.hasNext()){
+			while (sels.hasNext())
+			{
 				SelectorDefinition sd = (SelectorDefinition) sels.next();
-				if(sd.getName().equals(selector)){
+				if (sd.getName().equals(selector))
+				{
 					exist = true;
-				}				
+				}
 			}
-			
-			if(!exist){
-				Debug.out(Debug.MODE_ERROR, "CHKREP", "Selector " + selector + " is used but not declared", fmb.getSelector().getDescriptionFileName(), fmb.getSelector().getDescriptionLineNumber());
+
+			if (!exist)
+			{
+				Debug.out(Debug.MODE_ERROR, "CHKREP", "Selector " + selector + " is used but not declared", fmb
+						.getSelector().getDescriptionFileName(), fmb.getSelector().getDescriptionLineNumber());
 				nonFatal = false;
 			}
 		}
 		return nonFatal;
 	}
 
-	public void check(DataStore newDs) throws ModuleException {
+	public void check(DataStore newDs) throws ModuleException
+	{
 		ds = newDs;
-		// REXREF does checks it as well, so this would be the second test and is therefore quite useless
-		boolean nonFatal = true; //performCheck();
-		
-		if(!nonFatal) {
-      throw new ModuleException("One or more Selectors in filtermodules are not declared", "CHKREP");
-    }
+		// REXREF does checks it as well, so this would be the second test and
+		// is therefore quite useless
+		boolean nonFatal = true; // performCheck();
+
+		if (!nonFatal)
+		{
+			throw new ModuleException("One or more Selectors in filtermodules are not declared", "CHKREP");
+		}
 	}
 
 }

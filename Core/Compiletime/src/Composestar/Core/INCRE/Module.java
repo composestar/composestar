@@ -11,22 +11,27 @@ import Composestar.Core.Master.CTCommonModule;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Utils.Debug;
 
-public class Module 
+public class Module
 {
 	private String name = "";
+
 	private String fulltype;
-	private String input;	
+
+	private String input;
+
 	private boolean enabled;
+
 	private boolean incremental;
+
 	private String summary = "";
 
 	/**
-	 * A map containing dependencies for the module. 
+	 * A map containing dependencies for the module.
 	 */
 	private Map deps = new LinkedHashMap();
 
 	/**
-	 * A map containing objects to be compared by MyComparator. 
+	 * A map containing objects to be compared by MyComparator.
 	 */
 	private Map comparableObjects = new HashMap();
 
@@ -55,17 +60,18 @@ public class Module
 		this.summary = s;
 	}
 
-	public void addDep(Dependency d) 
+	public void addDep(Dependency d)
 	{
 		String id = d.getName();
-		this.deps.put(id,d);
+		this.deps.put(id, d);
 	}
 
-	public void addComparableObject(String key, Object obj){
+	public void addComparableObject(String key, Object obj)
+	{
 		ArrayList list;
-		if(this.comparableObjects.containsKey(key))
+		if (this.comparableObjects.containsKey(key))
 		{
-			list = (ArrayList)comparableObjects.get(key);
+			list = (ArrayList) comparableObjects.get(key);
 		}
 		else
 		{
@@ -73,14 +79,15 @@ public class Module
 		}
 
 		list.add(obj);
-		this.comparableObjects.put(key,list);
+		this.comparableObjects.put(key, list);
 	}
 
-	public void removeComparableObject(String key, Object obj){
+	public void removeComparableObject(String key, Object obj)
+	{
 		ArrayList list;
-		if(this.comparableObjects.containsKey(key))
+		if (this.comparableObjects.containsKey(key))
 		{
-			list = (ArrayList)comparableObjects.get(key);
+			list = (ArrayList) comparableObjects.get(key);
 		}
 		else
 		{
@@ -88,44 +95,52 @@ public class Module
 		}
 
 		list.remove(obj);
-		this.comparableObjects.put(key,list);
+		this.comparableObjects.put(key, list);
 	}
 
-	public void addComparableObjects(HashMap map){
+	public void addComparableObjects(HashMap map)
+	{
 		Iterator keys = map.keySet().iterator();
-		while(keys.hasNext()){
-			String key = (String)keys.next();
-			HashMap tyminfo =  (HashMap)map.get(key);
+		while (keys.hasNext())
+		{
+			String key = (String) keys.next();
+			HashMap tyminfo = (HashMap) map.get(key);
 			Iterator objItr = tyminfo.values().iterator();
-			while(objItr.hasNext()){
+			while (objItr.hasNext())
+			{
 				Object obj = objItr.next();
-				addComparableObject(key,obj);
+				addComparableObject(key, obj);
 			}
 		}
 	}
 
-	public void removeComparableObjects(HashMap map){
+	public void removeComparableObjects(HashMap map)
+	{
 		Iterator keys = map.keySet().iterator();
-		while(keys.hasNext()){
-			String key = (String)keys.next();
-			HashMap tyminfo =  (HashMap)map.get(key);
+		while (keys.hasNext())
+		{
+			String key = (String) keys.next();
+			HashMap tyminfo = (HashMap) map.get(key);
 			Iterator objItr = tyminfo.values().iterator();
-			while(objItr.hasNext()){
+			while (objItr.hasNext())
+			{
 				Object obj = objItr.next();
-				removeComparableObject(key,obj);
+				removeComparableObject(key, obj);
 			}
 		}
 	}
 
-	public boolean hasComparableObjects(String key){
-		return comparableObjects.containsKey(key);	
+	public boolean hasComparableObjects(String key)
+	{
+		return comparableObjects.containsKey(key);
 	}
 
-	public ArrayList getComparableObjects(String key){
-		return (ArrayList)comparableObjects.get(key);	
+	public ArrayList getComparableObjects(String key)
+	{
+		return (ArrayList) comparableObjects.get(key);
 	}
 
-	public Iterator getDeps() 
+	public Iterator getDeps()
 	{
 		return deps.values().iterator();
 	}
@@ -146,61 +161,67 @@ public class Module
 	}
 
 	public void setIncremental(boolean b)
-	{ 
+	{
 		this.incremental = b;
 	}
 
 	/**
-	 * Creates an instance of a coreModule of type 'fulltype' and calls it run method
+	 * Creates an instance of a coreModule of type 'fulltype' and calls it run
+	 * method
+	 * 
 	 * @param String phase of execution
-     * @param resources
+	 * @param resources
 	 */
 	public void execute(CommonResources resources) throws ModuleException
 	{
 		if (enabled)
 		{
 			// module is enabled for the phase so continue
-			
+
 			if (summary.length() != 0)
 			{
 				Debug.out(Debug.MODE_CRUCIAL, this.name, summary);
 			}
 
-			try {
+			try
+			{
 				Class moduleClass = Class.forName(fulltype);
-				CTCommonModule module = (CTCommonModule)moduleClass.newInstance();
+				CTCommonModule module = (CTCommonModule) moduleClass.newInstance();
 
 				INCRETimer timer = INCRE.instance().getReporter().openProcess(name, name, INCRETimer.TYPE_ALL);
 				module.run(resources);
 				INCRE.instance().addModuleByName(this.name, module);
 				timer.stop();
 			}
-		/*
-		 	// these should not be catched; can cause more problems if you do.
-			catch (StackOverflowError e) {
-				throw new ModuleException("I need more stack!", "INCRE running " + this.name);
-			}
-			catch (OutOfMemoryError e) {
-				throw new ModuleException("I am using too much memory!", "INCRE running " + this.name);
-			}
-		*/
-			catch (ClassNotFoundException e) {
+			/*
+			 * // these should not be catched; can cause more problems if you
+			 * do. catch (StackOverflowError e) { throw new ModuleException("I
+			 * need more stack!", "INCRE running " + this.name); } catch
+			 * (OutOfMemoryError e) { throw new ModuleException("I am using too
+			 * much memory!", "INCRE running " + this.name); }
+			 */
+			catch (ClassNotFoundException e)
+			{
 				throw new ModuleException("Cannot find class '" + fulltype + "'", "INCRE running " + name);
 			}
-			catch (InstantiationException e) {
-				throw new ModuleException("Could not create an instance of class '" + fulltype + "': " + e.getMessage(), "INCRE running " + name);
+			catch (InstantiationException e)
+			{
+				throw new ModuleException(
+						"Could not create an instance of class '" + fulltype + "': " + e.getMessage(), "INCRE running "
+								+ name);
 			}
-			catch (IllegalAccessException e) {
-				throw new ModuleException("Could not create an instance of class '" + fulltype + "': " + e.getMessage(), "INCRE running " + name);
+			catch (IllegalAccessException e)
+			{
+				throw new ModuleException(
+						"Could not create an instance of class '" + fulltype + "': " + e.getMessage(), "INCRE running "
+								+ name);
 			}
-		/*
-		 	// the only other exception thrown is ModuleException,
-		 	// which we can just let fall through
-			catch (Exception e) {
-				Debug.out(Debug.MODE_DEBUG, "Master", Debug.stackTrace(e));
-				throw new ModuleException(e.toString(),"INCRE running " + name);
-			}
-		*/
+			/*
+			 * // the only other exception thrown is ModuleException, // which
+			 * we can just let fall through catch (Exception e) {
+			 * Debug.out(Debug.MODE_DEBUG, "Master", Debug.stackTrace(e)); throw
+			 * new ModuleException(e.toString(),"INCRE running " + name); }
+			 */
 		}
 	}
 }

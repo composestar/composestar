@@ -21,7 +21,7 @@ public class PathSettings implements Serializable
 	{
 		return paths.getProperty(key);
 	}
-	
+
 	public String getPath(String key, String def)
 	{
 		return paths.getProperty(key, def);

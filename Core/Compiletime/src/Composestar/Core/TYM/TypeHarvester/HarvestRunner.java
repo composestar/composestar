@@ -9,6 +9,7 @@ import Composestar.Core.Master.CTCommonModule;
 /**
  * This Module is responsible for running the .NET assembly harvester.
  */
-public interface HarvestRunner extends CTCommonModule {
-   
+public interface HarvestRunner extends CTCommonModule
+{
+
 }

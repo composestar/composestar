@@ -5,7 +5,9 @@ import java.util.Stack;
 public class ResponseBuffer
 {
 	Stack buffers;
+
 	SyncBuffer currentBuffer;
+
 	SyncBuffer firstBuffer;
 
 	public ResponseBuffer()
@@ -15,16 +17,16 @@ public class ResponseBuffer
 		this.firstBuffer = this.currentBuffer;
 	}
 
-	public void produceFirst( Object o )
+	public void produceFirst(Object o)
 	{
 		this.firstBuffer.produce(o);
 	}
 
-	public void produce( Object o )
+	public void produce(Object o)
 	{
 		this.currentBuffer.produce(o);
 	}
-	
+
 	public Object consume()
 	{
 		return this.currentBuffer.consume();

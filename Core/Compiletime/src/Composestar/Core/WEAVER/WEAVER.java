@@ -16,5 +16,5 @@ import Composestar.Core.Master.CommonResources;
 
 public interface WEAVER extends CTCommonModule
 {
-	void run(CommonResources resources) throws ModuleException;  
+	void run(CommonResources resources) throws ModuleException;
 }

@@ -23,7 +23,7 @@ public class SubstitutionEdge extends LambdaEdge
 
 	/**
 	 * @param inDestination
-     * @param inSubstitutionPart
+	 * @param inSubstitutionPart
 	 */
 	public SubstitutionEdge(Node inDestination, SubstitutionPart inSubstitutionPart)
 	{

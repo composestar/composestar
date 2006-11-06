@@ -9,7 +9,7 @@ package Composestar.Core.FIRE;
  * 
  * $Id$
  * 
-**/
+ **/
 
 import java.util.Stack;
 
@@ -32,7 +32,7 @@ public class ChildIterator extends NodeIterator
 		currentChild = 0;
 	}
 
-	public int size ()
+	public int size()
 	{
 		return parent.numberOfChildren();
 	}
@@ -49,14 +49,15 @@ public class ChildIterator extends NodeIterator
 
 	public boolean canStepInto()
 	{
-		return parent.getChild(currentChild).hasChildren ();
+		return parent.getChild(currentChild).hasChildren();
 	}
 
 	public void stepInto()
 	{
 		push();
 		parent = parent.getChild(currentChild);
-		currentChild = 0; // Cannot call first(), because this method is virtual. 
+		currentChild = 0; // Cannot call first(), because this method is
+							// virtual.
 		// And there is no way, to set it to non-virtual.
 	}
 
@@ -80,7 +81,7 @@ public class ChildIterator extends NodeIterator
 	{
 		return parent.getChild(currentChild);
 	}
-	
+
 	public int getDepth()
 	{
 		return stack.size();

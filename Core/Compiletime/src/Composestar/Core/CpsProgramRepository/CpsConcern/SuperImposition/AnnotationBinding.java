@@ -18,25 +18,26 @@ import java.util.Vector;
 
 public class AnnotationBinding extends Binding
 {
-  public Vector annotationList; // Vector of ConcernReference
+	public Vector annotationList; // Vector of ConcernReference
 
-  public AnnotationBinding()
-  {
-    super();
-    annotationList = new Vector();
-  }
+	public AnnotationBinding()
+	{
+		super();
+		annotationList = new Vector();
+	}
 
-  public boolean addAnnotation(ConcernReference annot)
-  {
-    annotationList.addElement(annot);
-    return true;
-  }
- 
-  /**
-   * @return Vector (.NET doesn't allow Collection) of ConcernReferences that (when resolved) should point to annotation classes
-   */
-  public Vector getAnnotations()
-  {
-    return annotationList;
-  }
+	public boolean addAnnotation(ConcernReference annot)
+	{
+		annotationList.addElement(annot);
+		return true;
+	}
+
+	/**
+	 * @return Vector (.NET doesn't allow Collection) of ConcernReferences that
+	 *         (when resolved) should point to annotation classes
+	 */
+	public Vector getAnnotations()
+	{
+		return annotationList;
+	}
 }

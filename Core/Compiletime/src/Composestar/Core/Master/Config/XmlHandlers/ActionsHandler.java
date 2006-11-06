@@ -12,20 +12,24 @@ import Composestar.Core.Master.Config.CompilerAction;
 public class ActionsHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
+
 	CompilerHandler returnHandler;
+
 	Language language;
-	
-	public ActionsHandler(Language lang, XMLReader parser,CompilerHandler returnHandler){
+
+	public ActionsHandler(Language lang, XMLReader parser, CompilerHandler returnHandler)
+	{
 		this.language = lang;
 		this.parser = parser;
 		this.returnHandler = returnHandler;
 	}
-	
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
+
+	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if("Action".equals(raw_name)){
-			// end <action> 
-			if(amap.getValue("name")!=null)
+		if ("Action".equals(raw_name))
+		{
+			// end <action>
+			if (amap.getValue("name") != null)
 			{
 				String name = amap.getValue("name");
 				String argument = amap.getValue("argument");
@@ -37,19 +41,18 @@ public class ActionsHandler extends DefaultHandler implements ContentHandler
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
+	public void endElement(String uri, String local_name, String raw_name) throws SAXException
 	{
-		if("Actions".equals(raw_name)){
+		if ("Actions".equals(raw_name))
+		{
 			// end <actions>
-			parser.setContentHandler( returnHandler );
+			parser.setContentHandler(returnHandler);
 		}
 	}
 
-	public void startDocument() 
-	{
-	}
+	public void startDocument()
+	{}
 
-	public void endDocument() 
-	{
-	}
+	public void endDocument()
+	{}
 }

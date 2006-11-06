@@ -8,22 +8,37 @@ public abstract class Invoker
 
 	public static Invoker getInstance()
 	{
-		if(instance == null)
+		if (instance == null)
 		{
-			Debug.out(Debug.MODE_ERROR,"Invoker","Invoker instance called without platform instanciation");
+			Debug.out(Debug.MODE_ERROR, "Invoker", "Invoker instance called without platform instanciation");
 		}
 		return instance;
 	}
 
-	public Object invoke(Object target, String selector, Object[] args) { return null; }
+	public Object invoke(Object target, String selector, Object[] args)
+	{
+		return null;
+	}
 
-    public Object invoke(String target, String selector, Object[] args) { return null; }
+	public Object invoke(String target, String selector, Object[] args)
+	{
+		return null;
+	}
 
-    public Object requestInstance(String target, Object[] args) { return null; }
+	public Object requestInstance(String target, Object[] args)
+	{
+		return null;
+	}
 
-    public Class getClass(String type) { return null; }
+	public Class getClass(String type)
+	{
+		return null;
+	}
 
-    public ArrayList getAttributesFor(Object target, String selector) { return null; }
+	public ArrayList getAttributesFor(Object target, String selector)
+	{
+		return null;
+	}
 
-    public abstract boolean objectHasMethod (Object inner, String m_selector, Dictionary context);
+	public abstract boolean objectHasMethod(Object inner, String m_selector, Dictionary context);
 }

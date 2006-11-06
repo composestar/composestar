@@ -28,7 +28,7 @@ public class MatchingEdge extends Edge
 
 	/**
 	 * @param inDestination
-     * @param inMatchingParts
+	 * @param inMatchingParts
 	 */
 	public MatchingEdge(Node inDestination, List inMatchingParts)
 	{

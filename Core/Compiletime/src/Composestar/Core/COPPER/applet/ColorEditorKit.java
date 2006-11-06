@@ -5,18 +5,18 @@ import javax.swing.text.*;
 public class ColorEditorKit extends DefaultEditorKit implements ViewFactory
 {
 	public ColorEditorKit()
-    {
-    	super();
+	{
+		super();
 	}
 
 	public ViewFactory getViewFactory()
-    {
+	{
 		return this;
 	}
 
 	/* Create Color Views */
-	public View create (Element e)
-    {
+	public View create(Element e)
+	{
 		return new ColorView(e);
 	}
 }

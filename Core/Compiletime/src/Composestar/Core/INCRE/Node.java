@@ -22,6 +22,6 @@ public abstract class Node implements Serializable
 
 	// Gathers the referenced object (reference) from the input object (obj)
 	abstract Object visit(Object obj) throws ModuleException;
-		 
+
 	abstract String getUniqueID(Object obj);
 }

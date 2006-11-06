@@ -9,13 +9,14 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class DisableOperator extends EnableOperatorType
+{
 
-public class DisableOperator extends EnableOperatorType {
-
-  /**
-   * @roseuid 404C4B6B01CB
-   */
-  public DisableOperator() {
-    super();
-  }
+	/**
+	 * @roseuid 404C4B6B01CB
+	 */
+	public DisableOperator()
+	{
+		super();
+	}
 }

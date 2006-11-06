@@ -8,10 +8,11 @@ public abstract class ObjectInterface
 	protected static final String INTERNAL_STING_VALUE = "Realvalue";
 
 	public static ObjectInterface getInstance()
+	{
+		if (instance == null)
 		{
-		if(instance == null)
-		{
-			Debug.out(Debug.MODE_ERROR,"ObjectInterface","Object Interface instance called without platform instanciation");
+			Debug.out(Debug.MODE_ERROR, "ObjectInterface",
+					"Object Interface instance called without platform instanciation");
 		}
 		return instance;
 	}
@@ -20,5 +21,5 @@ public abstract class ObjectInterface
 
 	public abstract String[] getFields(Object object);
 
-	public abstract Object getFieldValue(Object object,String name);
+	public abstract Object getFieldValue(Object object, String name);
 }

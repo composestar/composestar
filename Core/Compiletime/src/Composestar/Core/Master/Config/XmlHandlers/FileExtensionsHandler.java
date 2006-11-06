@@ -11,40 +11,46 @@ import Composestar.Core.Master.Config.Language;
 public class FileExtensionsHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
+
 	LanguageHandler returnHandler;
+
 	Language language;
-	
-	public FileExtensionsHandler(Language lang, XMLReader parser,LanguageHandler returnHandler){
+
+	public FileExtensionsHandler(Language lang, XMLReader parser, LanguageHandler returnHandler)
+	{
 		this.language = lang;
 		this.parser = parser;
 		this.returnHandler = returnHandler;
 	}
-	
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
+
+	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if("FileExtension".equals(raw_name)){
+		if ("FileExtension".equals(raw_name))
+		{
 			// in <fileextension>
-			if(amap.getValue("extension")!=null){
+			if (amap.getValue("extension") != null)
+			{
 				language.addExtension(amap.getValue("extension"));
 			}
 		}
 	}
 
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
+	public void endElement(String uri, String local_name, String raw_name) throws SAXException
 	{
-		if("FileExtensions".equals(raw_name)){
+		if ("FileExtensions".equals(raw_name))
+		{
 			// end <fileextensions>
-			parser.setContentHandler( returnHandler );
+			parser.setContentHandler(returnHandler);
 		}
 	}
 
-	public void startDocument() 
+	public void startDocument()
 	{
-		
+
 	}
 
-	public void endDocument() 
+	public void endDocument()
 	{
-			
+
 	}
 }

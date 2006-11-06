@@ -90,7 +90,7 @@ public class FilterElement extends ContextRepositoryEntity
 	{
 		filterElementAST.setEnableOperatorType(enableOperatorTypeValue);
 	}
-	
+
 	public MatchingPattern getMatchingPattern()
 	{
 		return matchingPattern;

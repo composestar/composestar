@@ -9,51 +9,57 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 /**
  * Summary description for Debug.
  */
-public class Debug 
+public class Debug
 {
 	public static final int MODE_ERROR = 0;
+
 	public static final int MODE_CRUCIAL = 1;
+
 	public static final int MODE_WARNING = 2;
+
 	public static final int MODE_INFORMATION = 3;
+
 	public static final int MODE_DEBUG = 4;
-	
+
 	public static final int MODE_DEFAULTMODE = MODE_INFORMATION;
-	
+
 	private static int currentMode = MODE_DEFAULTMODE;
+
 	private static int warnings = 0;
-    
+
 	/**
-	 * Public constructor needed because this class is
-	 * serialized into the repository for some reason.
+	 * Public constructor needed because this class is serialized into the
+	 * repository for some reason.
 	 */
-	public Debug() {}
-    
-	public static void setMode(int mode) 
+	public Debug()
+	{}
+
+	public static void setMode(int mode)
 	{
-		currentMode = mode;     
+		currentMode = mode;
 	}
-    
-	public static int getMode() 
+
+	public static int getMode()
 	{
-		return currentMode;     
+		return currentMode;
 	}
-	
+
 	public static void out(int mode, String module, String msg, String filename, int line)
 	{
-		if (currentMode >= mode) 
+		if (currentMode >= mode)
 		{
 			String modeDescription;
-    	
+
 			switch (mode)
 			{
 				case MODE_ERROR:
 					modeDescription = "error";
 					break;
-					
+
 				case MODE_CRUCIAL:
 					modeDescription = "crucial";
 					break;
-					
+
 				case MODE_WARNING:
 					warnings++;
 					modeDescription = "warning";
@@ -62,7 +68,7 @@ public class Debug
 				case MODE_INFORMATION:
 					modeDescription = "information";
 					break;
-					
+
 				case MODE_DEBUG:
 					modeDescription = "debug";
 					break;
@@ -79,24 +85,24 @@ public class Debug
 			System.out.println(module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg);
 		}
 	}
-	
+
 	public static void out(int mode, String module, String msg, String filename)
 	{
-		out(mode,module,msg,filename,0);
+		out(mode, module, msg, filename, 0);
 	}
-	
+
 	public static void out(int mode, String module, String msg, RepositoryEntity re)
 	{
 		String filename = re.getDescriptionFileName();
 		int linenumber = re.getDescriptionLineNumber();
-		out(mode,module,msg,filename,linenumber);
+		out(mode, module, msg, filename, linenumber);
 	}
-    
-	public static void out(int mode, String module, String msg) 
+
+	public static void out(int mode, String module, String msg)
 	{
-		out(mode,module,msg,"",0);
+		out(mode, module, msg, "", 0);
 	}
-	
+
 	public static void parseLog(String log)
 	{
 		StringTokenizer lineTok = new StringTokenizer(log, "\n");
@@ -104,7 +110,7 @@ public class Debug
 		{
 			String line = lineTok.nextToken();
 			String[] parts = StringUtils.split(line, '~');
-			
+
 			if (parts.length == 5)
 			{
 				String module = parts[0];
@@ -112,7 +118,7 @@ public class Debug
 				String filename = parts[2];
 				String linenum = parts[3];
 				String msg = parts[4];
-				
+
 				out(getModeLevel(mode), module, msg, filename, Integer.parseInt(linenum));
 			}
 			else
@@ -121,7 +127,7 @@ public class Debug
 			}
 		}
 	}
-	
+
 	private static int getModeLevel(String mode)
 	{
 		if ("error".equals(mode))
@@ -149,19 +155,19 @@ public class Debug
 			return MODE_CRUCIAL;
 		}
 	}
-    
-	public static void outWarnings() 
+
+	public static void outWarnings()
 	{
 		if (warnings > 0)
 		{
 			System.out.println("Warnings: " + warnings + '.');
 		}
 	}
-	
+
 	public static String stackTrace(Throwable t)
 	{
 		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);			
+		PrintWriter pw = new PrintWriter(sw);
 		t.printStackTrace(pw);
 		return sw.toString();
 	}

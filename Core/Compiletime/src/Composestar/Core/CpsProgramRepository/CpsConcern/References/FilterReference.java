@@ -18,52 +18,53 @@ import java.io.ObjectOutputStream;
 /**
  * reference to a in- or outputfilter
  */
-public class FilterReference extends FilterModuleElementReference 
+public class FilterReference extends FilterModuleElementReference
 {
-   private Filter ref;
+	private Filter ref;
 
+	/**
+	 * @roseuid 401FAA65018D
+	 */
+	public FilterReference()
+	{
+		super();
+	}
 
-  /**
-   * @roseuid 401FAA65018D
-   */
-  public FilterReference() {
-    super();
-  }
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
+	 * @roseuid 401FAA65018E
+	 */
+	public Filter getRef()
+	{
+		return ref;
+	}
 
-
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
-   *
-   * @roseuid 401FAA65018E
-   */
-  public Filter getRef() {
-    return ref;
-  }
-
-
-  /**
-   * @param refValue
-   * @roseuid 40503C8203D3
-   */
-  public void setRef(Filter refValue) {
-    this.ref = refValue;
-  }
+	/**
+	 * @param refValue
+	 * @roseuid 40503C8203D3
+	 */
+	public void setRef(Filter refValue)
+	{
+		this.ref = refValue;
+	}
 
 	/**
 	 * Custom deserialization of this object
-     * @param in
-     */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	 * 
+	 * @param in
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		// nothing yet
+	// nothing yet
 	}
-	
+
 	/**
 	 * Custom serialization of this object
-     * @param out
-     */
+	 * 
+	 * @param out
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		// nothing yet
+	// nothing yet
 	}
 }

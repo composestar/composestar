@@ -12,49 +12,51 @@ import Composestar.Core.Master.Config.Source;
 public class ProjectSourcesHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
+
 	ProjectHandler returnHandler;
+
 	Project project;
-	
+
 	public ProjectSourcesHandler(Project project, XMLReader parser, ProjectHandler documentHandler)
 	{
 		this.project = project;
 		this.parser = parser;
 		this.returnHandler = documentHandler;
-	} 
-	
-	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
+	}
+
+	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException
 	{
-		if("Source".equals(raw_name))
+		if ("Source".equals(raw_name))
 		{
 			// in <source>
 			Source s = new Source();
-			if(amap.getValue("fileName")!=null)
+			if (amap.getValue("fileName") != null)
 			{
 				s.setFileName(amap.getValue("fileName"));
 			}
-			//if(amap.getValue("fileName").equals("True"))
-			//	s.setIsExecutable(true);
-			
+			// if(amap.getValue("fileName").equals("True"))
+			// s.setIsExecutable(true);
+
 			project.addSource(s);
 		}
 	}
-	
-	public void endElement(String uri, String local_name, String raw_name) throws SAXException 
+
+	public void endElement(String uri, String local_name, String raw_name) throws SAXException
 	{
-		if("Sources".equals(raw_name))
+		if ("Sources".equals(raw_name))
 		{
 			// end <sources>
-			parser.setContentHandler( returnHandler );
+			parser.setContentHandler(returnHandler);
 		}
 	}
 
-	public void startDocument() 
+	public void startDocument()
 	{
- 
+
 	}
 
-	public void endDocument() 
+	public void endDocument()
 	{
- 
+
 	}
 }

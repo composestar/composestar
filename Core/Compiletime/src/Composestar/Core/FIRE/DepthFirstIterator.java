@@ -2,17 +2,12 @@ package Composestar.Core.FIRE;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * 
- * $Id$
- * 
-**/
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * DepthFirstIterator.java 2524 2006-11-04 16:12:21Z marcusk $
+ */
 
-
-public class DepthFirstIterator extends ChildIterator 
+public class DepthFirstIterator extends ChildIterator
 {
 	protected boolean done;
 
@@ -26,15 +21,15 @@ public class DepthFirstIterator extends ChildIterator
 		super(itr);
 	}
 
-
 	public void first()
 	{
 		done = false;
 
-		while (canStepBack()) super.stepBack();
+		while (canStepBack())
+			super.stepBack();
 		super.first();
 	}
-	
+
 	public void stepBack()
 	{
 		pop();

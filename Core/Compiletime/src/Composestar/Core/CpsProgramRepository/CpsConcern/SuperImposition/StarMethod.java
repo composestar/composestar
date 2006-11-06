@@ -14,69 +14,66 @@ import Composestar.Utils.*;
 
 import java.util.*;
 
-public class StarMethod extends FilterModuleElementReference {
+public class StarMethod extends FilterModuleElementReference
+{
 
-  /**
-   * contains a collection of methodreferences
-   */
-  public Vector methodSet;
+	/**
+	 * contains a collection of methodreferences
+	 */
+	public Vector methodSet;
 
+	/**
+	 * contains a collection of methodreferences
+	 * 
+	 * @roseuid 401FAA690018
+	 */
+	public StarMethod()
+	{
+		super();
+		methodSet = new Vector();
+	}
 
-  /**
-   * contains a collection of methodreferences
-   *
-   * @roseuid 401FAA690018
-   */
-  public StarMethod() {
-    super();
-    methodSet = new Vector();
-  }
+	/**
+	 * methodNameSet
+	 * 
+	 * @param m
+	 * @return boolean
+	 * @roseuid 401FAA690020
+	 */
+	public boolean addMethod(MethodReference m)
+	{
+		methodSet.addElement(m);
+		return true;
+	}
 
+	/**
+	 * @param index
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference
+	 * @roseuid 401FAA69002B
+	 */
+	public MethodReference removeMethod(int index)
+	{
+		Object o = methodSet.elementAt(index);
+		methodSet.removeElementAt(index);
+		return (MethodReference) o;
+	}
 
-  /**
-   * methodNameSet
-   *
-   * @param m
-   * @return boolean
-   *
-   * @roseuid 401FAA690020
-   */
-  public boolean addMethod(MethodReference m) {
-    methodSet.addElement(m);
-    return true;
-  }
+	/**
+	 * @param index
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference
+	 * @roseuid 401FAA69003F
+	 */
+	public MethodReference getMethod(int index)
+	{
+		return (MethodReference) methodSet.elementAt(index);
+	}
 
-
-  /**
-   * @param index
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference
-   *
-   * @roseuid 401FAA69002B
-   */
-  public MethodReference removeMethod(int index) {
-    Object o = methodSet.elementAt(index);
-    methodSet.removeElementAt(index);
-    return (MethodReference) o;
-  }
-
-
-  /**
-   * @param index
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference
-   *
-   * @roseuid 401FAA69003F
-   */
-  public MethodReference getMethod(int index) {
-    return (MethodReference) methodSet.elementAt(index);
-  }
-
-
-  /**
-   * @return java.util.Iterator
-   *
-   * @roseuid 401FAA690049
-   */
-  public Iterator getMethodIterator() {
-    return new CPSIterator(methodSet);
-  }
+	/**
+	 * @return java.util.Iterator
+	 * @roseuid 401FAA690049
+	 */
+	public Iterator getMethodIterator()
+	{
+		return new CPSIterator(methodSet);
+	}
 }

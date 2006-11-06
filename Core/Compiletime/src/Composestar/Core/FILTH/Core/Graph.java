@@ -1,4 +1,5 @@
 package Composestar.Core.FILTH.Core;
+
 /*
  * Created on 2-sep-2003
  *
@@ -14,19 +15,38 @@ package Composestar.Core.FILTH.Core;
  */
 import java.util.*;
 
-public class Graph {
+public class Graph
+{
 	private Node _root;
-	
-	private LinkedList nodes=new LinkedList();
-	private LinkedList edges=new LinkedList();
-	
-	public void setRoot(Node root){ _root=root; nodes.add(root); }
-	public Node getRoot(){ return _root; }
-	public LinkedList getNodes(){ return nodes; }
-	public LinkedList getEdges(){ return edges; }
-	
-	//public void addNode(Node node){ nodes.add(node);}
-	public void addEdge(Edge edge){ 
+
+	private LinkedList nodes = new LinkedList();
+
+	private LinkedList edges = new LinkedList();
+
+	public void setRoot(Node root)
+	{
+		_root = root;
+		nodes.add(root);
+	}
+
+	public Node getRoot()
+	{
+		return _root;
+	}
+
+	public LinkedList getNodes()
+	{
+		return nodes;
+	}
+
+	public LinkedList getEdges()
+	{
+		return edges;
+	}
+
+	// public void addNode(Node node){ nodes.add(node);}
+	public void addEdge(Edge edge)
+	{
 		/* adding the edge to the graph */
 		edges.add(edge);
 		/* adding the nodes of the edge to graph */
@@ -39,5 +59,5 @@ public class Graph {
 			nodes.add(edge.getRight());
 		}
 	}
-	
+
 }

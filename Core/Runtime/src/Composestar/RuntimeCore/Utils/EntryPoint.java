@@ -6,7 +6,9 @@ package Composestar.RuntimeCore.Utils;
 public class EntryPoint
 {
 	private String fileName = "";
-	public static final int UNDEFINED =-1;
+
+	public static final int UNDEFINED = -1;
+
 	private int lineNumber;
 
 	public EntryPoint(String fileName, int lineNumber)

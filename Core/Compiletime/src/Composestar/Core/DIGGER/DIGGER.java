@@ -36,11 +36,12 @@ import Composestar.Utils.Debug;
 public class DIGGER implements CTCommonModule
 {
 	public static final String MODULE_NAME = "DIGGER";
-	
+
 	/**
 	 * The key for the dispatch graph in repository
 	 */
 	public static final String DISPATCH_GRAPH_KEY = "DispatchGraph";
+
 	/**
 	 * The key used to store the concern nodes in the concerns
 	 */
@@ -61,14 +62,14 @@ public class DIGGER implements CTCommonModule
 					+ Configuration.instance().getPathSettings().getPath("Analysis", "analyses") + File.separator
 					+ "DispatchGraph.xml"));
 		}
-		
+
 		NOBBIN nobbin = new NOBBIN(graph);
 		nobbin.walk();
 	}
 
 	/**
-	 * Dig through the repository and process all concerns with a FilterModuleOrder
-	 * object
+	 * Dig through the repository and process all concerns with a
+	 * FilterModuleOrder object
 	 * 
 	 * @throws ModuleException
 	 */
@@ -126,5 +127,5 @@ public class DIGGER implements CTCommonModule
 			filterNode.processElements();
 			// digFilter(filter, filterNode);
 		}
-	}	
+	}
 }

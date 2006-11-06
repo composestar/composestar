@@ -24,48 +24,49 @@ import Composestar.Core.FIRE2.util.regex.Matcher;
 /**
  * 
  */
-public class AbstractVM {
+public class AbstractVM
+{
 
 	private Map resources;
 
 	public AbstractVM()
-	{
-	}
-	
+	{}
+
 	public List analyze(Concern concern, FilterModuleOrder filterModules)
 	{
 		FireModel fireModel = new FireModel(concern, filterModules, true);
-		
+
 		ExecutionModel execModel = fireModel.getExecutionModel();
-		
+
 		ResourceOperationLabeler labeler = new ResourceOperationLabeler();
-		
+
 		List conflicts = new ArrayList();
 
-		for( Iterator ci = Repository.instance().getConstraints().iterator(); ci.hasNext(); )
+		for (Iterator ci = Repository.instance().getConstraints().iterator(); ci.hasNext();)
 		{
 			Constraint constraint = (Constraint) ci.next();
-			
-			for( Iterator ri = ResourceHandler.getResources().iterator(); ri.hasNext(); )
+
+			for (Iterator ri = ResourceHandler.getResources().iterator(); ri.hasNext();)
 			{
 				Resource res = (Resource) ri.next();
-				if( constraint.getResource().equals("*") || constraint.getResource().equals(res.getName()))
+				if (constraint.getResource().equals("*") || constraint.getResource().equals(res.getName()))
 				{
 					labeler.setCurrentResource(res.getName());
 					Matcher matcher = new Matcher(constraint.getPattern(), execModel, labeler);
-					
-					if ( matcher.matches() ){
+
+					if (matcher.matches())
+					{
 						Conflict conflict = new Conflict();
 						conflict.setResource(res.getName());
 						conflict.setMsg(constraint.getMessage());
-//						conflict.setSequence(matcher.matchTrace());
+						// conflict.setSequence(matcher.matchTrace());
 						conflict.setExpr(constraint.getPattern().toString());
 						conflicts.add(conflict);
 					}
 				}
 			}
 		}
-		//System.err.println("AVM: done...");
+		// System.err.println("AVM: done...");
 		return conflicts;
 	}
 }

@@ -2,50 +2,37 @@ package Composestar.Core.FIRE;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * 
- * $Id$
- * 
-**/
-
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * SubstituteActionNode.java 1515 2006-09-20 12:49:07Z reddog33hummer $
+ */
 
 public class SubstituteActionNode extends ActionNode
 {
 	protected Symbol substitute = null;
 
-	public SubstituteActionNode (Symbol subst)
+	public SubstituteActionNode(Symbol subst)
 	{
 		substitute = subst;
 	}
 
-	public String toString ()
+	public String toString()
 	{
-		return "Substitute:" + ((substitute.getType()==1)?" target=":" selector=") + substitute;
+		return "Substitute:" + ((substitute.getType() == 1) ? " target=" : " selector=") + substitute;
 
 	}
 
-	protected boolean subsetOfSingle (Node rhs)
+	protected boolean subsetOfSingle(Node rhs)
 	{
-		return (super.subsetOfSingle(rhs) && 
-				rhs instanceof SubstituteActionNode &&
-                ((SubstituteActionNode) rhs).substitute.equals(substitute));
+		return (super.subsetOfSingle(rhs) && rhs instanceof SubstituteActionNode && ((SubstituteActionNode) rhs).substitute
+				.equals(substitute));
 
 		/*
-		if (super.compareSingle(rhs)) return true;
-
-		if (rhs instanceof SubstituteActionNode)
-		{
-			return (((SubstituteActionNode)rhs).substitute == substitute);
-		}
-
-		return false;
-
-		*/
+		 * if (super.compareSingle(rhs)) return true; if (rhs instanceof
+		 * SubstituteActionNode) { return
+		 * (((SubstituteActionNode)rhs).substitute == substitute); } return
+		 * false;
+		 */
 	}
-
-
 
 }

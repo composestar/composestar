@@ -8,29 +8,30 @@ package Composestar.Core.FILTH.Core;
  */
 
 /**
- * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author nagyist To change the template for this generated type comment go to
+ *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class SoftCondRule extends Rule {
+public class SoftCondRule extends Rule
+{
 
-	public SoftCondRule(Parameter left, Parameter right){
+	public SoftCondRule(Parameter left, Parameter right)
+	{
 		super(left, right);
-		identifier="cond_soft";
+		identifier = "cond_soft";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Rule#apply()
 	 */
-	public void apply() {
+	public void apply()
+	{
 
-		System.out.print(" *applying: SoftCond <"+_left + ',' +_right +">*\n");
-		if ( (_left.evaluate()!=null) &&
-			 (((Action)_left).isExecuted()) && 
-			 (!_left.evaluate().booleanValue()) )
+		System.out.print(" *applying: SoftCond <" + _left + ',' + _right + ">*\n");
+		if ((_left.evaluate() != null) && (((Action) _left).isExecuted()) && (!_left.evaluate().booleanValue()))
 		{
-			((Action)_right).setExecutable(false);
+			((Action) _right).setExecutable(false);
 		}
 
 	}

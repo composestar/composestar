@@ -9,36 +9,36 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class VoidFilterCompOper extends FilterCompOper
+{
 
-public class VoidFilterCompOper extends FilterCompOper {
+	/**
+	 * @roseuid 404C4B6B009F
+	 */
+	public VoidFilterCompOper()
+	{
+		super();
+	}
 
-  /**
-   * @roseuid 404C4B6B009F
-   */
-  public VoidFilterCompOper() {
-    super();
-  }
+	/**
+	 * raise exception (should not be invoked on this element)
+	 * 
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
+	 * @roseuid 402AA90E0222
+	 */
+	public Filter getRightArgument()
+	{
+		return null;
+	}
 
+	/**
+	 * raise exception (should not be invoked on this element)
+	 * 
+	 * @param filter
+	 * @roseuid 402AA91102D0
+	 */
+	public void setRightArgument(Filter filter)
+	{
 
-  /**
-   * raise exception (should not be invoked on this element)
-   *
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter
-   *
-   * @roseuid 402AA90E0222
-   */
-  public Filter getRightArgument() {
-    return null;
-  }
-
-
-  /**
-   * raise exception (should not be invoked on this element)
-   *
-   * @param filter
-   * @roseuid 402AA91102D0
-   */
-  public void setRightArgument(Filter filter) {
-
-  }
+	}
 }

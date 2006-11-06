@@ -9,7 +9,7 @@ package Composestar.Core.FIRE;
  * 
  * $Id$
  * 
-**/
+ **/
 
 import java.util.LinkedList;
 import java.util.Collections;
@@ -20,19 +20,25 @@ public abstract class Node implements Comparable, Cloneable
 {
 	// Datamembers
 	private LinkedList children = new LinkedList();
+
 	protected Node parent = null;
+
 	boolean perfectMatch = false;
+
 	boolean conditionCheck = true;
+
 	FilterReasoningEngine fireInfo = null;
+
 	protected int filterNumber = -2;
-	
-	public Object clone() throws CloneNotSupportedException {
-		try 
+
+	public Object clone() throws CloneNotSupportedException
+	{
+		try
 		{
 			Node n = (Node) super.clone();
 			n.children = (LinkedList) children.clone();
 			return n;
-		} 
+		}
 		catch (CloneNotSupportedException e)
 		{
 			return null;
@@ -40,35 +46,32 @@ public abstract class Node implements Comparable, Cloneable
 
 	}
 
-	public void addChild (Node childTree)
+	public void addChild(Node childTree)
 	{
-		/* add the children sorted*/
+		/* add the children sorted */
 		/*
-		int i = 0;
-		while (i < children.size() && compareTo(childTree) <= 0) i++;
-
-		children.add(i, childTree);
-		*/
+		 * int i = 0; while (i < children.size() && compareTo(childTree) <= 0)
+		 * i++; children.add(i, childTree);
+		 */
 		children.add(childTree);
 		childTree.parent = this;
 	}
 
 	// Add a child at the end of the path.
-	public void addChildAtPath (int index, Node newTree)
+	public void addChildAtPath(int index, Node newTree)
 	{
-		if (!hasChildren()) addChild (newTree);
-		else getChild(index).addChildAtPath (0, newTree);
+		if (!hasChildren()) addChild(newTree);
+		else getChild(index).addChildAtPath(0, newTree);
 	}
 
-	public void replaceChild (int index, Node newTree)
+	public void replaceChild(int index, Node newTree)
 	{
 		children.set(index, newTree);
 		newTree.parent = this;
 	}
 
-
 	// Except the parent.
-	public void removeVoidNodes ()
+	public void removeVoidNodes()
 	{
 		for (int i = 0; i < children.size(); i++)
 		{
@@ -89,27 +92,27 @@ public abstract class Node implements Comparable, Cloneable
 			subTree.removeVoidNodes();
 		}
 	}
-	
-	public Node getChild (int index)
+
+	public Node getChild(int index)
 	{
 		return (Node) children.get(index);
 	}
 
-	public void removeChild (int index)
+	public void removeChild(int index)
 	{
 		children.remove(index);
 	}
 
 	public int numberOfChildren()
 	{
-		return children.size(); 
+		return children.size();
 	}
 
-	public boolean hasChildren ()
+	public boolean hasChildren()
 	{
 		return (!children.isEmpty());
 	}
-	
+
 	// Root node returns null
 	public Node getParent()
 	{
@@ -120,24 +123,24 @@ public abstract class Node implements Comparable, Cloneable
 	{
 		return (parent == null);
 	}
-	
+
 	public void setFIREInfo(FilterReasoningEngine _fireInfo)
 	{
 		fireInfo = _fireInfo;
 	}
-	
+
 	public FilterReasoningEngine getFIREInfo()
 	{
 		return fireInfo;
 	}
-	
+
 	public int countAllNodes()
 	{
 		int total = 0;
 
-		if (hasChildren()) 
+		if (hasChildren())
 		{
-			total = children.size(); 
+			total = children.size();
 			for (int i = 0; i < children.size(); i++)
 			{
 				Node subTree = (Node) children.get(i);
@@ -152,14 +155,15 @@ public abstract class Node implements Comparable, Cloneable
 	{
 		try
 		{
-			Class [] parameterTypes = new Class[1];
+			Class[] parameterTypes = new Class[1];
 			parameterTypes[0] = Node.class;
 
-			Object [] parameterValues = new Object[1];
+			Object[] parameterValues = new Object[1];
 			parameterValues[0] = this;
 
 			return (NodeIterator) iteratorKind.getConstructor(parameterTypes).newInstance(parameterValues);
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 			System.exit(-1);
@@ -206,12 +210,13 @@ public abstract class Node implements Comparable, Cloneable
 		{
 			Node subNode = (Node) children.get(i);
 
-			if (subNode.cut(compareWith)) 
+			if (subNode.cut(compareWith))
 			{
 				removeChild(i);
-				// RemoveChild modifies the tree. The next branch becomes the current branch.
-				// Therefore redo the current i. 
-				i--; 
+				// RemoveChild modifies the tree. The next branch becomes the
+				// current branch.
+				// Therefore redo the current i.
+				i--;
 			}
 			else deleteNode = false;
 		}
@@ -241,11 +246,10 @@ public abstract class Node implements Comparable, Cloneable
 		}
 
 		for (int i = 0; i < children.size(); i++)
-		{ 
+		{
 			getChild(i).minimizeLossy();
 		}
 	}
-
 
 	public void minimize()
 	{
@@ -263,22 +267,21 @@ public abstract class Node implements Comparable, Cloneable
 
 	}
 
-	private void moveAllChildren (Node parentNode)
+	private void moveAllChildren(Node parentNode)
 	{
 		while (parentNode.numberOfChildren() > 0)
 		{
 			addChild(parentNode.getChild(0));
-			//children.add(parentNode.getChild(0));
+			// children.add(parentNode.getChild(0));
 			parentNode.removeChild(0);
 		}
 	}
 
+	protected abstract boolean subsetOfSingle(Node singleNode);
 
-	protected abstract boolean subsetOfSingle (Node singleNode);
-	
-	// Compare two trees. 
+	// Compare two trees.
 	// The children are not ordered yet.
-	public boolean subsetOf (Node node)
+	public boolean subsetOf(Node node)
 	{
 		if (!subsetOfSingle(node)) return false;
 		if (numberOfChildren() != node.numberOfChildren()) return false;
@@ -293,7 +296,7 @@ public abstract class Node implements Comparable, Cloneable
 
 	// compare two trees. The right tree is an expression.
 	// There is nothing more pleasant than a good recursive function.
-	public final boolean subsetOfExpression (Node rhs)
+	public final boolean subsetOfExpression(Node rhs)
 	{
 		// For the leafs:
 		if (!rhs.hasChildren()) return subsetOfSingle(rhs);
@@ -303,7 +306,7 @@ public abstract class Node implements Comparable, Cloneable
 		for (int i = 0; i < rhs.numberOfChildren(); i++)
 		{
 			// Parallel
-			result |= subsetOfExpression (rhs.getChild(i));
+			result |= subsetOfExpression(rhs.getChild(i));
 		}
 
 		// Serial
@@ -311,17 +314,17 @@ public abstract class Node implements Comparable, Cloneable
 	}
 
 	// interface from comparable
-	public int compareTo (Object rhs)
+	public int compareTo(Object rhs)
 	{
 		return toString().compareTo(rhs.toString());
 	}
 
-	public boolean equals (Object node)
+	public boolean equals(Object node)
 	{
-        return node instanceof Node && (subsetOf((Node) node) && ((Node) node).subsetOf(this));
-        }
+		return node instanceof Node && (subsetOf((Node) node) && ((Node) node).subsetOf(this));
+	}
 
-	public boolean equalsSingle (Node node)
+	public boolean equalsSingle(Node node)
 	{
 		return (subsetOfSingle(node) && node.subsetOfSingle(this));
 	}
@@ -336,16 +339,16 @@ public abstract class Node implements Comparable, Cloneable
 		String total = "";
 		DepthFirstIterator itr = (DepthFirstIterator) getIterator(DepthFirstIterator.class);
 
-		for (;!itr.isDone(); itr.next())
+		for (; !itr.isDone(); itr.next())
 		{
 			total += itr.getDepth() + " " + itr.getNode().toString() + ' ' + itr.getNode().getFilterNumber() + '\n';
 		}
 
 		return total;
-	}		
+	}
 
 	// Signature match overrides this method.
-	public void sort ()
+	public void sort()
 	{
 		Collections.sort(children);
 
@@ -354,96 +357,86 @@ public abstract class Node implements Comparable, Cloneable
 			getChild(i).sort();
 		}
 	}
-	
-		
+
 	public int exists(HashSet dependencies, ActionNode startWith, Node match, String concernName)
-	{	
+	{
 		int endStatus = FilterReasoningEngine.FALSE;
 		for (int i = 0; i < children.size(); i++)
 		{
 			Node currentChild = getChild(i);
-			
+
 			if (startWith.subsetOfSingle(currentChild))
-			{		
+			{
 				int status = currentChild.search(dependencies, match, startWith.getPreferedSelector(), concernName);
 
 				// Status TRUE is good, and return directly.
 				// Status UNKNOWN is better than false. Keep some faith.
-				if (status == FilterReasoningEngine.TRUE)	return status;
-				else if (status == FilterReasoningEngine.UNKNOWN) 
-					endStatus = FilterReasoningEngine.UNKNOWN;					
+				if (status == FilterReasoningEngine.TRUE) return status;
+				else if (status == FilterReasoningEngine.UNKNOWN) endStatus = FilterReasoningEngine.UNKNOWN;
 			}
 		}
-		
+
 		return endStatus;
 	}
-	
+
 	// SignatureAction reimplements this stuff.
-	public int search (HashSet dependencies, Node match, String selector, String concernName)
+	public int search(HashSet dependencies, Node match, String selector, String concernName)
 	{
-		// If we match, tell directly the good news. 
+		// If we match, tell directly the good news.
 		if (subsetOfExpression(match)) return FilterReasoningEngine.TRUE;
-		
+
 		// Think about the worst
 		int status = FilterReasoningEngine.FALSE;
 		for (int i = 0; i < numberOfChildren(); i++)
-		{		
+		{
 			// Maybe one of my children can say something
 			int localStatus = getChild(i).search(dependencies, match, selector, concernName);
 
-			// Yeah baby, don't search anymore, we got it. 
+			// Yeah baby, don't search anymore, we got it.
 			if (localStatus == FilterReasoningEngine.TRUE) return localStatus;
-			
-			// status can be UNKNOWN or FALSE. 
-			// Unknown is slightly better than FALSE. We are positive thinkers, keep up the faith.   
-			if (localStatus > status) status = localStatus;					
+
+			// status can be UNKNOWN or FALSE.
+			// Unknown is slightly better than FALSE. We are positive thinkers,
+			// keep up the faith.
+			if (localStatus > status) status = localStatus;
 		}
-		
-		// This time, the bad news travels not as fast as the good news.    
+
+		// This time, the bad news travels not as fast as the good news.
 		return status;
 	}
-	
-	public void setPerfectMatch (boolean set)
+
+	public void setPerfectMatch(boolean set)
 	{
 		perfectMatch = set;
 	}
-	
-	public boolean isPerfectMatch () 
+
+	public boolean isPerfectMatch()
 	{
 		return perfectMatch;
 	}
-	
+
 	// BADBAD I won't win a nobel price with this code.
-	public void setConditionCheck (boolean set)
+	public void setConditionCheck(boolean set)
 	{
 		conditionCheck = set;
 	}
-	
-	public boolean checkConditions () 
+
+	public boolean checkConditions()
 	{
 		return conditionCheck;
 	}
-	
+
 	/*
-	public boolean exists(Node startWith, Node match, boolean isFirst)
-	{
-	
-		return true;
-	}
-	*/
-	
+	 * public boolean exists(Node startWith, Node match, boolean isFirst) {
+	 * return true; }
+	 */
+
 	/*
-	public boolean updateSignatures()
-	{
-		boolean result = false;
-		for (int i = 0; i < numberOfChildren(); i++)
-		{
-			result |= getChild(i).updateSignatures();
-		}
-		return result;
-	}
-	*/
-			
+	 * public boolean updateSignatures() { boolean result = false; for (int i =
+	 * 0; i < numberOfChildren(); i++) { result |=
+	 * getChild(i).updateSignatures(); } return result; }
+	 */
+
 	public int parentUsesId()
 	{
 		int nrOfChildren = parent.numberOfChildren();
@@ -451,19 +444,17 @@ public abstract class Node implements Comparable, Cloneable
 		{
 			if (parent.getChild(i).equals(this)) return i;
 		}
-		
+
 		return -1;
 	}
-	
+
 	public void setFilterNumber(int number)
 	{
 		filterNumber = number;
 	}
-	
+
 	public int getFilterNumber()
 	{
 		return filterNumber;
 	}
 }
-
-

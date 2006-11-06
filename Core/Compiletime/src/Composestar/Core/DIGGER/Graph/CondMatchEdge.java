@@ -75,12 +75,12 @@ public class CondMatchEdge extends Edge
 	{
 		return matchingParts.iterator();
 	}
-	
+
 	public boolean getEnabler()
 	{
 		return enabler;
 	}
-	
+
 	public boolean getIsMessageList()
 	{
 		return isMessageList;
@@ -98,13 +98,13 @@ public class CondMatchEdge extends Edge
 		{
 			operator = " => ";
 		}
-		else 
+		else
 		{
 			operator = " ~> ";
 		}
 		return getExpressionAsString(expression) + operator + getMatchingPartsAsString();
 	}
-	
+
 	public String getConditionAsString()
 	{
 		return getExpressionAsString(expression);

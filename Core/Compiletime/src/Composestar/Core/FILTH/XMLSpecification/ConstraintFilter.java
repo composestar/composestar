@@ -1,4 +1,5 @@
 package Composestar.Core.FILTH.XMLSpecification;
+
 /*
  * Created on 15-mrt-2004
  *
@@ -24,93 +25,109 @@ import Composestar.Core.FILTH.Core.Parameter;
 import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 
-public class ConstraintFilter extends ArgumentFilter{
-	//private ArgumentFilter _af;
-    private String value;
-	
+public class ConstraintFilter extends ArgumentFilter
+{
+	// private ArgumentFilter _af;
+	private String value;
+
 	private Graph _graph;
-	
-	//public OrderFilter(ArgumentFilter af){ _af=af; }
-	
-	public ConstraintFilter( Graph g){ 
-		_graph=g;
+
+	// public OrderFilter(ArgumentFilter af){ _af=af; }
+
+	public ConstraintFilter(Graph g)
+	{
+		_graph = g;
 	}
-	public ConstraintFilter(XMLReader parent){  
-		super(parent); 
+
+	public ConstraintFilter(XMLReader parent)
+	{
+		super(parent);
 	}
+
 	/**
-	  * Filter the Namespace URI for start-element events.
-	  */
+	 * Filter the Namespace URI for start-element events.
+	 */
 
-	 public void 
-	 startElement (String uri, String localName, String qName,
-	   Attributes atts)
-	 throws SAXException{
-//		System.out.println(localName);
+	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException
+	{
+		// System.out.println(localName);
 
-	   if ("constraint".equals(localName)){
-		/* attrbutes for s */
-		if (atts != null) {
-            String type = atts.getQName(0);
-            value=atts.getValue(0);
+		if ("constraint".equals(localName))
+		{
+			/* attrbutes for s */
+			if (atts != null)
+			{
+				String type = atts.getQName(0);
+				value = atts.getValue(0);
+			}
+			// System.out.println("BEGIN ");
 		}
-//		System.out.println("BEGIN ");
-	   }
-	   super.startElement(uri, localName, qName, atts);
-	 }
+		super.startElement(uri, localName, qName, atts);
+	}
 
-
-	 /**
-	  * Filter the Namespace URI for end-element events.
-	  */
-	 public void
-	 endElement (String uri, String localName, String qName)
-	 throws SAXException{
+	/**
+	 * Filter the Namespace URI for end-element events.
+	 */
+	public void endElement(String uri, String localName, String qName) throws SAXException
+	{
 		Action l, r;
 		Node nl, nr;
-		
-		if ("constraint".equals(localName)){
-//			System.out.println(value + "END");
-			
 
-			nl=Action.lookupByName(_left,_graph);
-	
-			if (nl!=null){
-				l=(Action)nl.getElement();
-			}else{
-			/*	l=new Action(_left,new Boolean(true),true);
-				Action.insert(l,_graph);
-				System.out.println("Action "+l+" added"); */
-				l=null;	
-			}
-			
-			nr=Action.lookupByName(_right,_graph);
-			if (nr!=null){
-				r=(Action)nr.getElement();	
-			}else{
-			/*	r=new Action(_right,new Boolean(true),true);
-				Action.insert(r,_graph);
-				System.out.println("Action "+r+" added"); */
-				r=null;	
-			}
-			//System.out.println("l:"+l+" r:"+r);	
-			/* we add a rule only if both arguments are active */
-			if ((l!=null) && (r!=null))
+		if ("constraint".equals(localName))
+		{
+			// System.out.println(value + "END");
+
+			nl = Action.lookupByName(_left, _graph);
+
+			if (nl != null)
 			{
-				if ("pre_soft".equals(value)){
-					Rule _rule=new SoftPreRule(l, r);
+				l = (Action) nl.getElement();
+			}
+			else
+			{
+				/*
+				 * l=new Action(_left,new Boolean(true),true);
+				 * Action.insert(l,_graph); System.out.println("Action "+l+"
+				 * added");
+				 */
+				l = null;
+			}
+
+			nr = Action.lookupByName(_right, _graph);
+			if (nr != null)
+			{
+				r = (Action) nr.getElement();
+			}
+			else
+			{
+				/*
+				 * r=new Action(_right,new Boolean(true),true);
+				 * Action.insert(r,_graph); System.out.println("Action "+r+"
+				 * added");
+				 */
+				r = null;
+			}
+			// System.out.println("l:"+l+" r:"+r);
+			/* we add a rule only if both arguments are active */
+			if ((l != null) && (r != null))
+			{
+				if ("pre_soft".equals(value))
+				{
+					Rule _rule = new SoftPreRule(l, r);
 					_rule.insert(_graph);
 
-					//FILTHService.print("FILTH::adding rule> "+value+"( "+l+" , "+r+" )\n");
-					FILTHService.log.print("<li><i>"+value+"( "+l+" , "+r+")</i></li>\n");
+					// FILTHService.print("FILTH::adding rule> "+value+"( "+l+"
+					// , "+r+" )\n");
+					FILTHService.log.print("<li><i>" + value + "( " + l + " , " + r + ")</i></li>\n");
 				}
 			}
-			
-			//itt egy action-t letrehozni; elotte ellenorizni, hogy benne van-e a memoriaban; es felszurni a grafba
-			//ezek utan letrehozni a szabaly a constraint alapjan es azt is felvinni a grafba 
+
+			// itt egy action-t letrehozni; elotte ellenorizni, hogy benne van-e
+			// a memoriaban; es felszurni a grafba
+			// ezek utan letrehozni a szabaly a constraint alapjan es azt is
+			// felvinni a grafba
 		}
-	   super.endElement(uri, localName, qName);
-	 }
+		super.endElement(uri, localName, qName);
+	}
 
 }
-

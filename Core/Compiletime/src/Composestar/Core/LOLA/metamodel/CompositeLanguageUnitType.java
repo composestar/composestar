@@ -22,40 +22,38 @@ package Composestar.Core.LOLA.metamodel;
 import java.util.Collection;
 import java.util.Vector;
 
-
 public class CompositeLanguageUnitType extends LanguageUnitType
 {
-  Vector containedTypes;
-  
-  
-  public CompositeLanguageUnitType(Class impl, String type, boolean nameUnique,
-                                   LanguageUnitType type1, LanguageUnitType type2)
-  {
-    this(impl, type, nameUnique, null);
-    containedTypes = new Vector();
-    containedTypes.add(type1);
-    containedTypes.add(type2);
-  }
-  
-  public CompositeLanguageUnitType(Class impl,String type, boolean nameUnique, Vector containedTypes)
-  {
-    super(impl, type, nameUnique);
-    this.containedTypes = containedTypes;
-  }
-  
-  /**
-   * @return Returns the containedTypes.
-   */
-  public Collection getContainedTypes()
-  {
-    return containedTypes;
-  }
-  
-  /**
-   * @param containedTypes The containedTypes to set.
-   */
-  public void setContainedTypes(Vector containedTypes)
-  {
-    this.containedTypes = containedTypes;
-  }
+	Vector containedTypes;
+
+	public CompositeLanguageUnitType(Class impl, String type, boolean nameUnique, LanguageUnitType type1,
+			LanguageUnitType type2)
+	{
+		this(impl, type, nameUnique, null);
+		containedTypes = new Vector();
+		containedTypes.add(type1);
+		containedTypes.add(type2);
+	}
+
+	public CompositeLanguageUnitType(Class impl, String type, boolean nameUnique, Vector containedTypes)
+	{
+		super(impl, type, nameUnique);
+		this.containedTypes = containedTypes;
+	}
+
+	/**
+	 * @return Returns the containedTypes.
+	 */
+	public Collection getContainedTypes()
+	{
+		return containedTypes;
+	}
+
+	/**
+	 * @param containedTypes The containedTypes to set.
+	 */
+	public void setContainedTypes(Vector containedTypes)
+	{
+		this.containedTypes = containedTypes;
+	}
 }

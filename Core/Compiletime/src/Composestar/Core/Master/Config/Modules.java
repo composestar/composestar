@@ -15,7 +15,7 @@ public class Modules implements Serializable
 
 	public ModuleSettings getModule(String key)
 	{
-		return (ModuleSettings)modules.get(key);
+		return (ModuleSettings) modules.get(key);
 	}
 
 	public void addModule(String key, ModuleSettings m)

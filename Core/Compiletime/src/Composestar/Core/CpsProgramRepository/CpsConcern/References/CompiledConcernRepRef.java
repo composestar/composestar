@@ -11,33 +11,33 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
 import Composestar.Core.CpsProgramRepository.*;
 
-public class CompiledConcernRepRef extends ConcernElementReference {
-  //private PlatformRepresentation ref;
+public class CompiledConcernRepRef extends ConcernElementReference
+{
+	// private PlatformRepresentation ref;
 
+	/**
+	 * @roseuid 404C4B68009B
+	 */
+	public CompiledConcernRepRef()
+	{
 
-  /**
-   * @roseuid 404C4B68009B
-   */
-  public CompiledConcernRepRef() {
+	}
 
-  }
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.PlatformRepresentation
+	 * @roseuid 402CD8E0039F
+	 */
+	public PlatformRepresentation getRef()
+	{
+		return null;
+	}
 
+	/**
+	 * @param ref
+	 * @roseuid 40503C4F0181
+	 */
+	public void setRef(PlatformRepresentation ref)
+	{
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.PlatformRepresentation
-   *
-   * @roseuid 402CD8E0039F
-   */
-  public PlatformRepresentation getRef() {
-    return null;
-  }
-
-
-  /**
-   * @param ref
-   * @roseuid 40503C4F0181
-   */
-  public void setRef(PlatformRepresentation ref) {
-
-  }
+	}
 }

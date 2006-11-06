@@ -14,47 +14,51 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 /**
  * @author Michiel van Oudheusden
- *
  */
-public class ResourceUsage implements SerializableRepositoryEntity {
-	
+public class ResourceUsage implements SerializableRepositoryEntity
+{
+
 	public String ResourceName;
-	public String AccessType;       
+
+	public String AccessType;
+
 	public String AccessOccurence;
+
 	public Type Parent;
-	
+
 	public ResourceUsage()
 	{
-		
+
 	}
-	
-	public Type parent() 
+
+	public Type parent()
 	{
 		return Parent;
 	}
-	
-	public void setParent(Type parent) 
+
+	public void setParent(Type parent)
 	{
-	    Parent = parent;
+		Parent = parent;
 	}
-	
-		
+
 	/**
 	 * Custom deserialization of this object
-     * @param in
-     */
-	private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException
+	 * 
+	 * @param in
+	 */
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
 		ResourceName = in.readUTF();
-		Parent = (Type)in.readObject();
+		Parent = (Type) in.readObject();
 		AccessType = in.readUTF();
 		AccessOccurence = in.readUTF();
 	}
-	
+
 	/**
 	 * Custom serialization of this object
-     * @param out
-     */
+	 * 
+	 * @param out
+	 */
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
 		out.writeUTF(ResourceName);

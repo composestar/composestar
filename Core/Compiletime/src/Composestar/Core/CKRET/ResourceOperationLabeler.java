@@ -120,7 +120,7 @@ public class ResourceOperationLabeler implements Labeler
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				
+
 				return defaultSeq;
 			}
 		}
@@ -137,95 +137,60 @@ public class ResourceOperationLabeler implements Labeler
 	private LabelSequence getMetaLabels(ExecutionTransition transition) throws ModuleException
 	{
 		ExecutionState metaState = transition.getStartState();
-		
-		
+
 		Pattern grammer = Pattern.compile("[a-zA-Z]+\\.[a-zA-Z]+(,[a-zA-Z]+\\.[a-zA-Z]+)*");
-//		DataStore datastore = DataStore.instance();
-//		for (Iterator it = datastore.getAllInstancesOf(Filter.class); it.hasNext();)
-//		{
-//			Filter filter = (Filter) it.next();
-//			if (!filter.getFilterType().getType().equals(FilterType.META)) continue;
+		// DataStore datastore = DataStore.instance();
+		// for (Iterator it = datastore.getAllInstancesOf(Filter.class);
+		// it.hasNext();)
+		// {
+		// Filter filter = (Filter) it.next();
+		// if (!filter.getFilterType().getType().equals(FilterType.META))
+		// continue;
 
-			Concern target = null;
-//			SubstitutionPart sp = (SubstitutionPart) filter.getFilterElement(0).getMatchingPattern()
-//					.getSubstitutionParts().firstElement();
-			DeclaredObjectReference dor = (DeclaredObjectReference) metaState.getSubstitutionTarget().getRef();
-			Object o = dor.getRef();
-			if (o instanceof Internal)
-			{
-				target = ((Internal) o).getType().getRef();
-			}
-			else if (o instanceof External)
-			{
-				target = ((External) o).getType().getRef();
-			}
+		Concern target = null;
+		// SubstitutionPart sp = (SubstitutionPart)
+		// filter.getFilterElement(0).getMatchingPattern()
+		// .getSubstitutionParts().firstElement();
+		DeclaredObjectReference dor = (DeclaredObjectReference) metaState.getSubstitutionTarget().getRef();
+		Object o = dor.getRef();
+		if (o instanceof Internal)
+		{
+			target = ((Internal) o).getType().getRef();
+		}
+		else if (o instanceof External)
+		{
+			target = ((External) o).getType().getRef();
+		}
 
-			if (target != null)
+		if (target != null)
+		{
+			PlatformRepresentation pr = target.getPlatformRepresentation();
+			if (pr != null && pr instanceof Type)
 			{
-				PlatformRepresentation pr = target.getPlatformRepresentation();
-				if (pr != null && pr instanceof Type)
+				Type dnt = (Type) pr;
+				String selector = metaState.getSubstitutionSelector().getName();
+
+				String[] params = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
+				MethodInfo method = dnt.getMethod(selector, params);
+				if (method != null)
 				{
-					Type dnt = (Type) pr;
-					String selector = metaState.getSubstitutionSelector().getName();
-
-					String[] params = { "Composestar.RuntimeCore.FLIRT.Message.ReifiedMessage" };
-					MethodInfo method = dnt.getMethod(selector, params);
-					if (method != null)
+					List attributes = method.getAnnotations();
+					for (int i = 0; i < attributes.size(); i++)
 					{
-						List attributes = method.getAnnotations();
-						for (int i = 0; i < attributes.size(); i++)
+						Annotation dna = (Annotation) attributes.get(i);
+						if (dna.getType().fullName().startsWith("Composestar.")
+								&& dna.getType().fullName().endsWith("Semantics"))
 						{
-							Annotation dna = (Annotation) attributes.get(i);
-							if (dna.getType().fullName().startsWith("Composestar.")
-									&& dna.getType().fullName().endsWith("Semantics"))
+							// System.err.println(dna.getValue());
+							String spec = dna.getValue().replaceAll("\"", "");
+							if (!grammer.matcher(spec).matches())
 							{
-								// System.err.println(dna.getValue());
-								String spec = dna.getValue().replaceAll("\"", "");
-								if (!grammer.matcher(spec).matches())
-								{
-									MethodInfo dnmi = ((MethodInfo) dna.getTarget());
-									String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.name();
-									throw new ModuleException("Error in annotation semantics of method "
-											+ fullMethodName, "CKRET");
-								}
-								StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"", ""), ",");
-								List metaOperations = new ArrayList();
-
-								while (st.hasMoreTokens())
-								{
-									String token = st.nextToken();
-									StringTokenizer ost = new StringTokenizer(token, ".()");
-									// try
-									// {
-									String resource = ost.nextToken();
-									String operation = ost.nextToken();
-									if (ost.hasMoreTokens())
-									{
-										String argument = ost.nextToken();
-									}
-									metaOperations.add(new Operation(operation, resource));
-									// }
-									// catch(Exception e)
-									// {
-									// throw new ModuleException("CKRET","Error
-									// in annotation semantics of filter " +
-									// filter.getQualifiedName());
-									// }
-								}
-
-								// TODO: this overrides a previously found
-								// scenario for the same filter
-								// which should obviously never happen...
-//								this.metaSemantics.put(filter, metaOperations);
+								MethodInfo dnmi = ((MethodInfo) dna.getTarget());
+								String fullMethodName = dnmi.parent().m_fullName + '.' + dnmi.name();
+								throw new ModuleException("Error in annotation semantics of method " + fullMethodName,
+										"CKRET");
 							}
-						}
-						Iterator ReifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
-						while (ReifiedMessageBehaviour.hasNext())
-						{
-							String refMes = (String) (ReifiedMessageBehaviour.next());
-
-							StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
-
+							StringTokenizer st = new StringTokenizer(dna.getValue().replaceAll("\"", ""), ",");
 							List metaOperations = new ArrayList();
 
 							while (st.hasMoreTokens())
@@ -244,24 +209,61 @@ public class ResourceOperationLabeler implements Labeler
 								// }
 								// catch(Exception e)
 								// {
-								// throw new ModuleException("CKRET","Error in
-								// annotation semantics of filter " +
+								// throw new ModuleException("CKRET","Error
+								// in annotation semantics of filter " +
 								// filter.getQualifiedName());
 								// }
 							}
 
-							// TODO: this overrides a previously found scenario
-							// for the same filter
+							// TODO: this overrides a previously found
+							// scenario for the same filter
 							// which should obviously never happen...
-//							this.metaSemantics.put(filter, metaOperations);
+							// this.metaSemantics.put(filter, metaOperations);
 						}
+					}
+					Iterator ReifiedMessageBehaviour = method.getReifiedMessageBehavior().iterator();
+					while (ReifiedMessageBehaviour.hasNext())
+					{
+						String refMes = (String) (ReifiedMessageBehaviour.next());
+
+						StringTokenizer st = new StringTokenizer(refMes.replaceAll("\"", ""), ",");
+
+						List metaOperations = new ArrayList();
+
+						while (st.hasMoreTokens())
+						{
+							String token = st.nextToken();
+							StringTokenizer ost = new StringTokenizer(token, ".()");
+							// try
+							// {
+							String resource = ost.nextToken();
+							String operation = ost.nextToken();
+							if (ost.hasMoreTokens())
+							{
+								String argument = ost.nextToken();
+							}
+							metaOperations.add(new Operation(operation, resource));
+							// }
+							// catch(Exception e)
+							// {
+							// throw new ModuleException("CKRET","Error in
+							// annotation semantics of filter " +
+							// filter.getQualifiedName());
+							// }
+						}
+
+						// TODO: this overrides a previously found scenario
+						// for the same filter
+						// which should obviously never happen...
+						// this.metaSemantics.put(filter, metaOperations);
 					}
 				}
 			}
-			
-			//TODO
-			return defaultSeq;
-//		}
+		}
+
+		// TODO
+		return defaultSeq;
+		// }
 	}
 
 	private class LabelResourcePair

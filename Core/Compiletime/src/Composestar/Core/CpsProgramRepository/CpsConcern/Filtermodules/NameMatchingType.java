@@ -9,13 +9,14 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
+public class NameMatchingType extends MatchingType
+{
 
-public class NameMatchingType extends MatchingType {
-
-  /**
-   * @roseuid 404C4B6B0257
-   */
-  public NameMatchingType() {
-    super();
-  }
+	/**
+	 * @roseuid 404C4B6B0257
+	 */
+	public NameMatchingType()
+	{
+		super();
+	}
 }

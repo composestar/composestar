@@ -20,7 +20,7 @@ public class ThreadPool
 
 	private static ThreadPool getInstance()
 	{
-		if(instance == null)
+		if (instance == null)
 		{
 			instance = new ThreadPool();
 		}
@@ -34,12 +34,13 @@ public class ThreadPool
 
 	private synchronized ChildThread get()
 	{
-		if(pool.isEmpty())
+		if (pool.isEmpty())
 		{
-			if(protoType == null)
+			if (protoType == null)
 			{
-				Debug.out(Debug.MODE_ERROR,"ThreadPool","Prototype Thread not set for ThreadPool at platform instanciation");
-				//System.exit(-1);
+				Debug.out(Debug.MODE_ERROR, "ThreadPool",
+						"Prototype Thread not set for ThreadPool at platform instanciation");
+				// System.exit(-1);
 				throw new RuntimeException("Prototype Thread not set for ThreadPool at platform instanciation");
 			}
 			return protoType.createNew();
@@ -61,6 +62,7 @@ public class ThreadPool
 	{
 		getInstance().protoType = thread;
 	}
+
 	public static void returnChildThread(ChildThread returned)
 	{
 		getInstance().add(returned);

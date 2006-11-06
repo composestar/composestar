@@ -4,6 +4,7 @@
  */
 package Composestar.Core.INLINE.model;
 
-public interface Visitable{
-    public Object accept( Visitor visitor );
+public interface Visitable
+{
+	public Object accept(Visitor visitor);
 }

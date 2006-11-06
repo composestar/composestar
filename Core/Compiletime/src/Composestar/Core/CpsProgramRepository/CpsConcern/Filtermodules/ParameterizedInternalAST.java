@@ -2,30 +2,36 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
-public class ParameterizedInternalAST extends InternalAST {
-	public String parameter;	
-	
-	public ParameterizedInternalAST() {
-	    super();
-	  }
-	
-	public ParameterizedInternalAST(String aParameter) {
-	    super();
-	    parameter = aParameter;
-	  }
-	
-	public void setParameter(String aParameter){
+public class ParameterizedInternalAST extends InternalAST
+{
+	public String parameter;
+
+	public ParameterizedInternalAST()
+	{
+		super();
+	}
+
+	public ParameterizedInternalAST(String aParameter)
+	{
+		super();
 		parameter = aParameter;
 	}
-	
-	public String getParameter(){
+
+	public void setParameter(String aParameter)
+	{
+		parameter = aParameter;
+	}
+
+	public String getParameter()
+	{
 		return parameter;
 	}
 
 	/**
 	 * must not be called at all, because it is an AST class
 	 */
-	public ConcernReference getType() {
+	public ConcernReference getType()
+	{
 		return null;
 	}
 }

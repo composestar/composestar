@@ -16,101 +16,110 @@ import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.CPSIterator;
 
-public class MatchingPattern extends ContextRepositoryEntity {
-  public MatchingPatternAST mpa; 
-  
-  public Vector matchingParts;
-  public Vector substitutionParts;
+public class MatchingPattern extends ContextRepositoryEntity
+{
+	public MatchingPatternAST mpa;
 
+	public Vector matchingParts;
 
-  /**
-   * @roseuid 404C4B6B0167
-   * @depricated
-   */
-  public MatchingPattern() {
-    super();
-    matchingParts = new Vector();
-    substitutionParts = new Vector();
-  }
-  
-  public MatchingPattern(MatchingPatternAST mpAST){
-	  super();
-	  mpa = mpAST;
-	  matchingParts = new Vector();
-	  substitutionParts = new Vector();
-	  
-	  Iterator it = mpa.getMatchingPartsIterator();
-	  while(it.hasNext()){
-		  MatchingPart mp = new MatchingPart((MatchingPartAST) it.next());
-		  mp.setParent(this);
-		  matchingParts.add(mp);
-		  DataStore.instance().addObject(mp);
-	  }
-	  
-	  it = mpa.getSubstitutionPartsIterator();
-	  while(it.hasNext()){
-		  SubstitutionPart sp = new SubstitutionPart((SubstitutionPartAST) it.next());
-		  sp.setParent(this);
-		  substitutionParts.add(sp);
-		  DataStore.instance().addObject(sp);
-	  }
-  }
-  
-  public boolean getIsMessageList() {
-	  return mpa.getIsMessageList();
-  }
-  
-  public void setIsMessageList(boolean isML) {
-	  mpa.setIsMessageList(isML);
-  }
+	public Vector substitutionParts;
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart
-   *
-   * @roseuid 401FAA65006B
-   */
-  public Vector getMatchingParts() {
-    return matchingParts;
-  }
+	/**
+	 * @roseuid 404C4B6B0167
+	 * @depricated
+	 */
+	public MatchingPattern()
+	{
+		super();
+		matchingParts = new Vector();
+		substitutionParts = new Vector();
+	}
 
-  public Iterator getMatchingPartsIterator() {
-	return new CPSIterator( matchingParts );
-  }
+	public MatchingPattern(MatchingPatternAST mpAST)
+	{
+		super();
+		mpa = mpAST;
+		matchingParts = new Vector();
+		substitutionParts = new Vector();
 
+		Iterator it = mpa.getMatchingPartsIterator();
+		while (it.hasNext())
+		{
+			MatchingPart mp = new MatchingPart((MatchingPartAST) it.next());
+			mp.setParent(this);
+			matchingParts.add(mp);
+			DataStore.instance().addObject(mp);
+		}
 
-  /**
-   * @param matchingPartValue
-   * @roseuid 401FAA65007E
-   */
-  public void addMatchingPart(MatchingPart matchingPartValue) {
-	this.matchingParts.addElement( matchingPartValue );
-  }
+		it = mpa.getSubstitutionPartsIterator();
+		while (it.hasNext())
+		{
+			SubstitutionPart sp = new SubstitutionPart((SubstitutionPartAST) it.next());
+			sp.setParent(this);
+			substitutionParts.add(sp);
+			DataStore.instance().addObject(sp);
+		}
+	}
 
+	public boolean getIsMessageList()
+	{
+		return mpa.getIsMessageList();
+	}
 
-  /**
-   * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionP
-   *         art
-   *
-   * @roseuid 401FAA65008A
-   */
-  public Vector getSubstitutionParts() {
-	  return substitutionParts;
-  }
+	public void setIsMessageList(boolean isML)
+	{
+		mpa.setIsMessageList(isML);
+	}
 
-  public Iterator getSubstitutionPartsIterator() {
-	  return new CPSIterator( substitutionParts );
-  }
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart
+	 * @roseuid 401FAA65006B
+	 */
+	public Vector getMatchingParts()
+	{
+		return matchingParts;
+	}
 
+	public Iterator getMatchingPartsIterator()
+	{
+		return new CPSIterator(matchingParts);
+	}
 
-  /**
-   * @param substitutionPartValue
-   * @roseuid 401FAA65009D
-   */
-  public void addSubstitutionPart(SubstitutionPart substitutionPartValue) {
-	  this.substitutionParts.addElement( substitutionPartValue );
-  }
+	/**
+	 * @param matchingPartValue
+	 * @roseuid 401FAA65007E
+	 */
+	public void addMatchingPart(MatchingPart matchingPartValue)
+	{
+		this.matchingParts.addElement(matchingPartValue);
+	}
 
-public MatchingPatternAST getMpa() {
-	return mpa;
-}
+	/**
+	 * @return Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionP
+	 *         art
+	 * @roseuid 401FAA65008A
+	 */
+	public Vector getSubstitutionParts()
+	{
+		return substitutionParts;
+	}
+
+	public Iterator getSubstitutionPartsIterator()
+	{
+		return new CPSIterator(substitutionParts);
+	}
+
+	/**
+	 * @param substitutionPartValue
+	 * @roseuid 401FAA65009D
+	 */
+	public void addSubstitutionPart(SubstitutionPart substitutionPartValue)
+	{
+		this.substitutionParts.addElement(substitutionPartValue);
+	}
+
+	public MatchingPatternAST getMpa()
+	{
+		return mpa;
+	}
 }

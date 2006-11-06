@@ -15,12 +15,14 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.*;
  * this represents an expression that results in a value; the goal is that this
  * will be represented by OCL expressions as well.
  */
-public abstract class ValueExpression extends CpsConcern {
+public abstract class ValueExpression extends CpsConcern
+{
 
-  /**
-   * @roseuid 404C4B6B0302
-   */
-  public ValueExpression() {
-    super();
-  }
+	/**
+	 * @roseuid 404C4B6B0302
+	 */
+	public ValueExpression()
+	{
+		super();
+	}
 }

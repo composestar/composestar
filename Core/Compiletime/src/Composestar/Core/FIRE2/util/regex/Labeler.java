@@ -7,10 +7,9 @@ package Composestar.Core.FIRE2.util.regex;
 import Composestar.Core.FIRE2.model.ExecutionTransition;
 
 /**
- * 
- *
  * @author Arjan de Roo
  */
-public interface Labeler {
-    public LabelSequence getLabels( ExecutionTransition transition );
+public interface Labeler
+{
+	public LabelSequence getLabels(ExecutionTransition transition);
 }

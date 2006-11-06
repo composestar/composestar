@@ -3,19 +3,23 @@ package Composestar.Core.Master.Config;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CustomFilters implements Serializable{
+public class CustomFilters implements Serializable
+{
 
 	private ArrayList filters;
-	
-	public CustomFilters() {
+
+	public CustomFilters()
+	{
 		filters = new ArrayList();
 	}
-	
-	public void addCustomFilters(CustomFilter cf) {
+
+	public void addCustomFilters(CustomFilter cf)
+	{
 		filters.add(cf);
 	}
-	
-	public ArrayList getCustomFilters() {
+
+	public ArrayList getCustomFilters()
+	{
 		return filters;
 	}
 }

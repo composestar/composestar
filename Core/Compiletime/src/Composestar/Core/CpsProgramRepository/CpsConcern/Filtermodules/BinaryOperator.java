@@ -18,6 +18,7 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 public abstract class BinaryOperator extends ConditionExpression
 {
 	public ConditionExpression left;
+
 	public ConditionExpression right;
 
 	public BinaryOperator()

@@ -19,78 +19,82 @@ import java.util.List;
 public class FILTH implements CTCommonModule
 {
 	/**
-	 * Calculates orders of the superimposed filtermodules 
+	 * Calculates orders of the superimposed filtermodules
 	 */
-	public FILTH() 
+	public FILTH()
 	{
-     	/* empty constructor */
+	/* empty constructor */
 	}
-    
+
 	/**
 	 * 
 	 */
-	public void run(CommonResources resources) throws ModuleException 
+	public void run(CommonResources resources) throws ModuleException
 	{
 		/* get a INCRE instance */
 		INCRE incre = INCRE.instance();
-		
-		INCRETimer filthinit = incre.getReporter().openProcess("FILTH","Init FILTH service",INCRETimer.TYPE_NORMAL);
+
+		INCRETimer filthinit = incre.getReporter().openProcess("FILTH", "Init FILTH service", INCRETimer.TYPE_NORMAL);
 		/* first set the ordering spec file!!!!! */
-		resources.addResource("ConstraintFile","XMLTest.xml");
+		resources.addResource("ConstraintFile", "XMLTest.xml");
 		/* get a FILTHService instance */
 		FILTHService filthservice = FILTHService.getInstance(resources);
 		InnerDispatcher.getInnerDispatchReference();
 		filthinit.stop();
-		
+
 		Iterator conIter = DataStore.instance().getAllInstancesOf(Concern.class);
-		while( conIter.hasNext() )
-		{   
-			Concern c = (Concern)conIter.next();
- 
-			SIinfo sinfo = (SIinfo)c.getDynObject(SIinfo.DATAMAP_KEY);
-			if(sinfo != null)
+		while (conIter.hasNext())
+		{
+			Concern c = (Concern) conIter.next();
+
+			SIinfo sinfo = (SIinfo) c.getDynObject(SIinfo.DATAMAP_KEY);
+			if (sinfo != null)
 			{
 				List list;
-						
-				if(incre.isProcessedByModule(c,"FILTH"))
+
+				if (incre.isProcessedByModule(c, "FILTH"))
 				{
 					/* Copy FilterModuleOrders */
-					INCRETimer filthcopy = incre.getReporter().openProcess("FILTH",c.getUniqueID(),INCRETimer.TYPE_INCREMENTAL);
-					filthservice.copyOperation(c,incre);
-					list = (List)c.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
+					INCRETimer filthcopy = incre.getReporter().openProcess("FILTH", c.getUniqueID(),
+							INCRETimer.TYPE_INCREMENTAL);
+					filthservice.copyOperation(c, incre);
+					list = (List) c.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 					filthcopy.stop();
 
 				}
-				else 
+				else
 				{
 					/* Calculate FilterModuleOrders */
-					INCRETimer filthrun = incre.getReporter().openProcess("FILTH",c.getUniqueID(),INCRETimer.TYPE_NORMAL);
+					INCRETimer filthrun = incre.getReporter().openProcess("FILTH", c.getUniqueID(),
+							INCRETimer.TYPE_NORMAL);
 					list = filthservice.getMultipleOrder(c);
 					filthrun.stop();
 				}
-					
-				if(list.size() > 1)
+
+				if (list.size() > 1)
 				{
-					Debug.out(Debug.MODE_INFORMATION, "FILTH", "Encountered shared join point: "+c.getQualifiedName(),c.getDescriptionFileName());
-					FilterModuleOrder singleOrder = (FilterModuleOrder) c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-					String tmpstr="";
-					if(singleOrder!=null)
+					Debug.out(Debug.MODE_INFORMATION, "FILTH",
+							"Encountered shared join point: " + c.getQualifiedName(), c.getDescriptionFileName());
+					FilterModuleOrder singleOrder = (FilterModuleOrder) c
+							.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
+					String tmpstr = "";
+					if (singleOrder != null)
 					{
 						List tmplist = singleOrder.orderAsList();
-						for(int i=0; i<tmplist.size(); i++)
+						for (int i = 0; i < tmplist.size(); i++)
 						{
-							String fmr = (String)tmplist.get(i);
-							if(i != (tmplist.size()-1))
+							String fmr = (String) tmplist.get(i);
+							if (i != (tmplist.size() - 1))
 							{
-								tmpstr+=fmr+" --> ";
+								tmpstr += fmr + " --> ";
 							}
 							else
 							{
-								tmpstr+=fmr;
+								tmpstr += fmr;
 							}
 						}
 					}
-					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: "+tmpstr);
+					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: " + tmpstr);
 				}
 			}
 		}

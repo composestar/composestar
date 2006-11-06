@@ -10,21 +10,27 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
 import Composestar.Core.FIRE2.model.ExecutionState;
 import Composestar.Core.LAMA.MethodInfo;
 
-public interface LowLevelInlineStrategy {
-    public void startInline( FilterModule[] filterSet, MethodInfo method, String[] argReferences );
-    public void endInline();
+public interface LowLevelInlineStrategy
+{
+	public void startInline(FilterModule[] filterSet, MethodInfo method, String[] argReferences);
 
-    public void startFilter( Filter filter, int jumpLabel );
-    public void endFilter();
+	public void endInline();
 
-    public void evalCondExpr( ConditionExpression condition );
-    public void beginTrueBranch();
-    public void endTrueBranch();
+	public void startFilter(Filter filter, int jumpLabel);
 
-    public void beginFalseBranch();
-    public void endFalseBranch();
+	public void endFilter();
 
-    public void jump( int jumpLabel );
+	public void evalCondExpr(ConditionExpression condition);
 
-    public void generateAction( ExecutionState state );
+	public void beginTrueBranch();
+
+	public void endTrueBranch();
+
+	public void beginFalseBranch();
+
+	public void endFalseBranch();
+
+	public void jump(int jumpLabel);
+
+	public void generateAction(ExecutionState state);
 }

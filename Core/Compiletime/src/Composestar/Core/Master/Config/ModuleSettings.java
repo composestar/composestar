@@ -6,6 +6,7 @@ import java.util.Properties;
 public class ModuleSettings implements Serializable
 {
 	private String name;
+
 	private Properties properties;
 
 	public ModuleSettings()
@@ -17,7 +18,7 @@ public class ModuleSettings implements Serializable
 	{
 		this.name = name;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -29,7 +30,8 @@ public class ModuleSettings implements Serializable
 	}
 
 	/**
-	 * @deprecated Do not access this directly; use Configuration.getModuleProperty.
+	 * @deprecated Do not access this directly; use
+	 *             Configuration.getModuleProperty.
 	 */
 	public String getProperty(String key)
 	{
@@ -43,10 +45,11 @@ public class ModuleSettings implements Serializable
 	{
 		return properties.getProperty(key, def);
 	}
-	
+
 	public int getProperty(String key, int def)
 	{
-		try {
+		try
+		{
 			return Integer.parseInt(properties.getProperty(key, Integer.toString(def)));
 		}
 		catch (NumberFormatException e)
@@ -54,7 +57,7 @@ public class ModuleSettings implements Serializable
 			return def;
 		}
 	}
-	
+
 	public boolean getProperty(String key, boolean def)
 	{
 		return Boolean.valueOf(properties.getProperty(key, Boolean.toString(def))).booleanValue();

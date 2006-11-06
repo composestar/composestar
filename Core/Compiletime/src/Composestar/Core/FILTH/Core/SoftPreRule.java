@@ -1,4 +1,5 @@
 package Composestar.Core.FILTH.Core;
+
 /*
  * Created on 2-sep-2003
  *
@@ -14,13 +15,16 @@ package Composestar.Core.FILTH.Core;
  */
 import java.util.*;
 
-public class SoftPreRule extends Rule{
-	public SoftPreRule(Parameter left, Parameter right){
+public class SoftPreRule extends Rule
+{
+	public SoftPreRule(Parameter left, Parameter right)
+	{
 		super(left, right);
-		identifier="pre_soft";
+		identifier = "pre_soft";
 	}
-	
-	public void apply(){
+
+	public void apply()
+	{
 
 	}
 }

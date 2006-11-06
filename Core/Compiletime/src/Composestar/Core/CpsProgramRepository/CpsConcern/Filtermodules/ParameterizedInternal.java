@@ -4,53 +4,65 @@ import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
-public class ParameterizedInternal extends Internal {
+public class ParameterizedInternal extends Internal
+{
 	public String parameter;
+
 	public ParameterizedInternalAST pin_ast;
-	
-	public ParameterizedInternal() {
-	    super();
-	  }
-	
-	public ParameterizedInternal(ParameterizedInternalAST par_ast) {
-	    super();
-	    pin_ast = par_ast;
-	    name = pin_ast.getName();
-	    parameter = pin_ast.getParameter();
-	  }
-	
-	public void setParameter(String aParameter){
+
+	public ParameterizedInternal()
+	{
+		super();
+	}
+
+	public ParameterizedInternal(ParameterizedInternalAST par_ast)
+	{
+		super();
+		pin_ast = par_ast;
+		name = pin_ast.getName();
+		parameter = pin_ast.getParameter();
+	}
+
+	public void setParameter(String aParameter)
+	{
 		parameter = aParameter;
 	}
-	
-	public String getParameter(){
+
+	public String getParameter()
+	{
 		return parameter;
 	}
 
 	/**
 	 * gets the type from the parent fm
 	 */
-	public ConcernReference getType() {
+	public ConcernReference getType()
+	{
 		return type;
 	}
-	
-	public void setType(ConcernReference ref){
+
+	public void setType(ConcernReference ref)
+	{
 		type = ref;
 	}
 
-	public int getDescriptionLineNumber() {
+	public int getDescriptionLineNumber()
+	{
 		return pin_ast.getDescriptionLineNumber();
 	}
 
-	public void setDescriptionLineNumber(int newLineNumber) {
+	public void setDescriptionLineNumber(int newLineNumber)
+	{
 		pin_ast.setDescriptionLineNumber(newLineNumber);
 	}
 
-	public String getDescriptionFileName() {
+	public String getDescriptionFileName()
+	{
 		return pin_ast.getDescriptionFileName();
 	}
 
-	public void setDescriptionFileName(String newFileName) {
+	public void setDescriptionFileName(String newFileName)
+	{
 		pin_ast.setDescriptionFileName(newFileName);
 	}
 }

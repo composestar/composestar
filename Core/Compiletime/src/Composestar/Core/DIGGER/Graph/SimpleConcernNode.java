@@ -20,7 +20,7 @@ public class SimpleConcernNode extends AbstractConcernNode
 {
 	/**
 	 * @param inConcern
-     * @param inGraph
+	 * @param inGraph
 	 */
 	public SimpleConcernNode(Graph inGraph, Concern inConcern)
 	{

@@ -2,19 +2,15 @@ package Composestar.Core.FIRE;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- *
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * 
- * $Id$
- * 
-**/
-
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * PathIterator.java 2524 2006-11-04 16:12:21Z marcusk $
+ */
 
 public class PathIterator extends NodeIterator
 {
-	protected PathNode [] path = null;
+	protected PathNode[] path = null;
+
 	protected int childInArray = 0;
 
 	public PathIterator(NodeIterator itr)
@@ -23,7 +19,7 @@ public class PathIterator extends NodeIterator
 
 		path = new PathNode[itr.stack.size()];
 		itr.stack.copyInto(path);
-		
+
 		// The stack already contains the 'extra' voidNode.
 		parent = path[0].parent;
 		currentChild = path[0].child;
@@ -37,16 +33,16 @@ public class PathIterator extends NodeIterator
 		childInArray = 0;
 	}
 
-	public int size ()
+	public int size()
 	{
-		return path.length; 
+		return path.length;
 	}
 
 	public void next()
 	{
 		push();
 		childInArray++;
-	
+
 		if (!isDone())
 		{
 			PathNode pn = path[childInArray];
@@ -65,12 +61,10 @@ public class PathIterator extends NodeIterator
 		return (childInArray == size());
 	}
 
-
 	public Node getNode()
 	{
 		return parent.getChild(currentChild);
 	}
-
 
 	public int getDepth()
 	{
@@ -79,7 +73,8 @@ public class PathIterator extends NodeIterator
 
 	public void last()
 	{
-		while (hasNext()) next();
+		while (hasNext())
+			next();
 	}
 
 	public void previous()

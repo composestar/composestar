@@ -8,8 +8,6 @@ import Composestar.Core.LAMA.ProgramElement;
 
 /**
  * @author whavinga
- *
- *
  */
 public class ProgramElementReference extends Reference
 {
@@ -19,12 +17,12 @@ public class ProgramElementReference extends Reference
 	{
 		super();
 	}
-	
+
 	public ProgramElement getRef()
 	{
 		return this.reference;
 	}
-	
+
 	public void setRef(ProgramElement referencedProgElem)
 	{
 		this.reference = referencedProgElem;

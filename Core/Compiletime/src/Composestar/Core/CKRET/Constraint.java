@@ -12,24 +12,27 @@ package Composestar.Core.CKRET;
 import Composestar.Core.FIRE2.util.regex.Pattern;
 import Composestar.Core.FIRE2.util.regex.PatternParseException;
 
-
 /**
  * 
  */
-public class Constraint{
+public class Constraint
+{
 
 	public static final boolean CONFLICT = true;
+
 	public static final boolean REQUIREMENT = false;
-	
+
 	private boolean type;
-	
+
 	private String resource;
+
 	private Pattern pattern;
+
 	private String patternString;
+
 	private String message;
-	
-	public Constraint(String resource, String patternString, String message, boolean type)
-	throws PatternParseException
+
+	public Constraint(String resource, String patternString, String message, boolean type) throws PatternParseException
 	{
 		this.resource = resource;
 		this.patternString = patternString;
@@ -42,7 +45,7 @@ public class Constraint{
 	{
 		return pattern;
 	}
-	
+
 	public String getResource()
 	{
 		return this.resource;
@@ -53,12 +56,15 @@ public class Constraint{
 		return this.message;
 	}
 
-//	public boolean conflicts(String sequence)
-//	{
-//		//return this.pattern.matcher(sequence).matches();
-//		//System.err.println("Matching " + sequence + " against " + patternString );
-//		if( !type )
-//			System.out.println("Assertion: matching " + sequence + " with " + patternString );
-//		return (type? pattern.matcher(sequence).find(): !pattern.matcher(sequence).find());
-//	}
+	// public boolean conflicts(String sequence)
+	// {
+	// //return this.pattern.matcher(sequence).matches();
+	// //System.err.println("Matching " + sequence + " against " + patternString
+	// );
+	// if( !type )
+	// System.out.println("Assertion: matching " + sequence + " with " +
+	// patternString );
+	// return (type? pattern.matcher(sequence).find():
+	// !pattern.matcher(sequence).find());
+	// }
 }

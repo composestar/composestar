@@ -8,51 +8,57 @@ import Composestar.RuntimeCore.Utils.SyncBuffer;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
- * Copyright (C) 2003 University of Twente.
- * Licensed under LGPL v2.1 or (at your option) any later version.
- * [http://www.fsf.org/copyleft/lgpl.html]
- * $Id$
+ * Copyright (C) 2003 University of Twente. Licensed under LGPL v2.1 or (at your
+ * option) any later version. [http://www.fsf.org/copyleft/lgpl.html] $Id:
+ * ReifiedMessage.java 2287 2006-10-26 08:06:15Z marcusk $
  */
 public class ReifiedMessage implements ChildRunnable
 {
 	public static final int REIFIED = 0;
+
 	public static final int RESPONDED = 1;
+
 	public static final int PROCEEDED = 2;
+
 	public static final int FORKED = 3;
 
 	private int state = 0;
 
 	protected Object returnValue;
-    
+
 	private Message message;
+
 	private MessageList messagelist;
-    
+
 	private Object actObject;
+
 	private String actMethod;
+
 	private Object[] actArgs;
+
 	private SyncBuffer continueBuffer;
-	
+
 	// while this is true, when producing the continuebuffer
 	// the next filter should be evaluated..
 	// otherwise there should be a returnvalue
 	private boolean shouldContinue = true;
 
-	public ReifiedMessage(Message m) 
+	public ReifiedMessage(Message m)
 	{
-		this.message = m;     
+		this.message = m;
 	}
 
-	public ReifiedMessage( MessageList m )
+	public ReifiedMessage(MessageList m)
 	{
 		this.message = m.getOrgMessage();
 		this.messagelist = m;
 	}
-    
-	public void setActMethodInfo(Object act, String method, Object[] args) 
+
+	public void setActMethodInfo(Object act, String method, Object[] args)
 	{
 		this.actObject = act;
 		this.actMethod = method;
-		this.actArgs   = args;
+		this.actArgs = args;
 		this.continueBuffer = new SyncBuffer();
 	}
 
@@ -65,7 +71,7 @@ public class ReifiedMessage implements ChildRunnable
 	{
 		Invoker.getInstance().invoke(this.actObject, this.actMethod, this.actArgs);
 
-		switch(this.state)
+		switch (this.state)
 		{
 			case REIFIED:
 				resume();
@@ -82,33 +88,33 @@ public class ReifiedMessage implements ChildRunnable
 		}
 	}
 
-	public synchronized void resume() 
+	public synchronized void resume()
 	{
-		if( this.state == REIFIED )
+		if (this.state == REIFIED)
 		{
 			this.continueBuffer.produce(null);
 			this.state = FORKED;
 		}
-		else if( this.state == PROCEEDED )
+		else if (this.state == PROCEEDED)
 		{
 			message.getResponseBuffer().produce(this.getReturnValue());
 			this.state = FORKED;
 		}
 	}
-    
+
 	public boolean shouldContinue()
 	{
 		return this.shouldContinue;
 	}
 
-	public synchronized void reply() 
+	public synchronized void reply()
 	{
-		if( this.state == REIFIED )
+		if (this.state == REIFIED)
 		{
 			this.shouldContinue = false;
 			this.continueBuffer.produce(null);
 		}
-		else if( this.state == RESPONDED )
+		else if (this.state == RESPONDED)
 		{
 			this.shouldContinue = false;
 			this.continueBuffer.produce(null);
@@ -121,7 +127,7 @@ public class ReifiedMessage implements ChildRunnable
 		reply();
 	}
 
-	public void respond() 
+	public void respond()
 	{
 		respond(null);
 	}
@@ -130,10 +136,10 @@ public class ReifiedMessage implements ChildRunnable
 	{
 		this.message.getResponseBuffer().produceFirst(dummy);
 	}
-    
-	public synchronized void proceed() 
+
+	public synchronized void proceed()
 	{
-		if( this.state == REIFIED || this.state == RESPONDED )
+		if (this.state == REIFIED || this.state == RESPONDED)
 		{
 			// wrap the responsebuffer so a response
 			// will be set in a new buffer and not in the
@@ -141,7 +147,8 @@ public class ReifiedMessage implements ChildRunnable
 			this.message.getResponseBuffer().wrap();
 			// make the filterset continue...
 			this.continueBuffer.produce(null);
-			// the call below waits for a response being set in the wrapped message
+			// the call below waits for a response being set in the wrapped
+			// message
 			this.returnValue = this.message.getResponse();
 			// unwrap the responsebuffer
 			// another response will be set in the original buffer
@@ -153,54 +160,54 @@ public class ReifiedMessage implements ChildRunnable
 
 	public Object send(Object target)
 	{
-		ObjectManager om = ObjectManager.getObjectManagerFor(target,DataStore.instance());
-		Message m = new Message(this.message.getSelector(),this.message.getArguments());
+		ObjectManager om = ObjectManager.getObjectManagerFor(target, DataStore.instance());
+		Message m = new Message(this.message.getSelector(), this.message.getArguments());
 		m.setSender(this.message.getSender());
 		m.setServer(target);
 		m.setDirection(Message.INCOMING);
-		return om.deliverIncomingMessage(m.getSender(),target,m);
+		return om.deliverIncomingMessage(m.getSender(), target, m);
 	}
 
 	/**
 	 * @return int
 	 * @roseuid 40EA9F6F02AF
 	 */
-	public int getState() 
+	public int getState()
 	{
-		return this.state;     
-	}
-    
-	public String getSelector() 
-	{
-		return this.message.getSelector();     
-	}
-    
-	public void setSelector(String s) 
-	{
-		this.message.setSelector(s);     
-	}
-    
-	public Object getTarget() 
-	{
-		return this.message.getTarget();     
-	}
-    
-	public void setTarget(Object obj) 
-	{
-		this.message.setTarget(obj);     
+		return this.state;
 	}
 
-	public Object[] getArgs() 
+	public String getSelector()
 	{
-		return this.message.getArguments();     
+		return this.message.getSelector();
 	}
 
-	public void setArgs(Object[] args) 
+	public void setSelector(String s)
+	{
+		this.message.setSelector(s);
+	}
+
+	public Object getTarget()
+	{
+		return this.message.getTarget();
+	}
+
+	public void setTarget(Object obj)
+	{
+		this.message.setTarget(obj);
+	}
+
+	public Object[] getArgs()
+	{
+		return this.message.getArguments();
+	}
+
+	public void setArgs(Object[] args)
 	{
 		this.message.setArguments(args);
 	}
-    
-	public Object getArg(int index) 
+
+	public Object getArg(int index)
 	{
 		return this.getArgs()[index];
 	}
@@ -212,9 +219,9 @@ public class ReifiedMessage implements ChildRunnable
 		this.message.setArguments(args);
 	}
 
-	public Object getReturnValue() 
+	public Object getReturnValue()
 	{
-		return this.returnValue;     
+		return this.returnValue;
 	}
 
 	public void setReturnValue(Object retval)
@@ -227,8 +234,8 @@ public class ReifiedMessage implements ChildRunnable
 		return this.message.getSender();
 	}
 
-	public MessageList getMessageListCopy() 
+	public MessageList getMessageListCopy()
 	{
-		return new MessageList( messagelist );
+		return new MessageList(messagelist);
 	}
 }

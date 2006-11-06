@@ -11,7 +11,7 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 /**
  * The Not operator
- *
+ * 
  * @author Michiel Hendriks
  */
 public class Not extends UnaryOperator

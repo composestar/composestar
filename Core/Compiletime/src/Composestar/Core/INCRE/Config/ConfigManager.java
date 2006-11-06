@@ -9,17 +9,18 @@ import Composestar.Core.INCRE.Module;
 import Composestar.Utils.Debug;
 
 /**
- * Class responsible for parsing configuration files created for the incremental aspect.
+ * Class responsible for parsing configuration files created for the incremental
+ * aspect.
  */
 public class ConfigManager
 {
 	private INCREXMLParser xmlparser;
+
 	private XMLReader xmlreader;
 
 	/**
-	 * HashMap containing modules. 
-	 * The keys are the names of the modules. 
-	 * The values are the module objects.
+	 * HashMap containing modules. The keys are the names of the modules. The
+	 * values are the module objects.
 	 */
 	public Map modules = new LinkedHashMap();
 
@@ -33,7 +34,7 @@ public class ConfigManager
 	{
 		xmlreader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
 		xmlreader.setContentHandler(this.xmlparser);
-		
+
 		Debug.out(Debug.MODE_DEBUG, "INCRE", "Parsing configuration file '" + filename + "'...");
 		xmlreader.parse(filename);
 	}
