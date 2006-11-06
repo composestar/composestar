@@ -20,10 +20,10 @@ public class CSharpDummyEmitter implements DummyEmitter
 {
 	public void createDummy(Project project, Source source, String outputFilename) throws ModuleException
 	{
-		List sources = new ArrayList(); 
+		List sources = new ArrayList();
 		sources.add(source);
 
-		List outputFilenames = new ArrayList(); 
+		List outputFilenames = new ArrayList();
 		outputFilenames.add(outputFilename);
 
 		createDummies(project, sources, outputFilenames);
@@ -40,10 +40,10 @@ public class CSharpDummyEmitter implements DummyEmitter
 			Iterator outputIter = outputFilenames.iterator();
 			while (srcIter.hasNext())
 			{
-				Source source = (Source)srcIter.next();
+				Source source = (Source) srcIter.next();
 				String sourceFilename = source.getFileName();
-				String targetFilename = (String)outputIter.next();
-				
+				String targetFilename = (String) outputIter.next();
+
 				dg.addDummy(sourceFilename, targetFilename);
 			}
 
@@ -54,10 +54,10 @@ public class CSharpDummyEmitter implements DummyEmitter
 				Iterator it = pr.stdout.iterator();
 				while (it.hasNext())
 					Debug.out(Debug.MODE_DEBUG, "DUMMER", "  " + it.next());
-				
+
 				throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed.", "DUMMER");
 			}
-			
+
 			createTypeLocationMapping(project, pr.stdout);
 		}
 		catch (ProcessExecutionException e)
@@ -67,27 +67,28 @@ public class CSharpDummyEmitter implements DummyEmitter
 	}
 
 	/**
+	 * Parse output from CSharpDummyGen, if a line starts with the word
+	 * 'TypeLocation' the next 2 lines will contain the filename (full path) and
+	 * fully qualified name of a class that is defined in that file.
 	 * 
-	 * Parse output from CSharpDummyGen, if a line starts with the word 'TypeLocation' the next 2 lines
-	 * will contain the filename (full path) and fully qualified name of a class that is defined in that file.
-     * @param lines
-     * @param project
-     */
+	 * @param lines
+	 * @param project
+	 */
 	private void createTypeLocationMapping(Project project, List lines)
 	{
 		Iterator it = lines.iterator();
 		while (it.hasNext())
 		{
-			String line = (String)it.next();
+			String line = (String) it.next();
 			if (line.startsWith("TypeLocation"))
 			{
-				String filename = (String)it.next();
-				String classname = (String)it.next();
+				String filename = (String) it.next();
+				String classname = (String) it.next();
 				Debug.out(Debug.MODE_DEBUG, "DUMMER", "Defined mapping: " + filename + "=> " + classname);
 
 				TypeSource srcLocation = new TypeSource();
 				srcLocation.setFileName(filename);
-				srcLocation.setName(classname);				
+				srcLocation.setName(classname);
 
 				project.addTypeSource(srcLocation);
 			}
@@ -98,7 +99,9 @@ public class CSharpDummyEmitter implements DummyEmitter
 class ExternalCSharpDummyGenerator
 {
 	private PrintStream stdout;
+
 	private StreamGobbler stdin, stderr;
+
 	private Process process;
 
 	public ExternalCSharpDummyGenerator(String attributesFile) throws ProcessExecutionException
@@ -121,15 +124,14 @@ class ExternalCSharpDummyGenerator
 			throw new ProcessExecutionException("IOException: " + e.getMessage(), e);
 		}
 	}
-	
+
 	private String getExecutable() throws ProcessExecutionException
 	{
 		Configuration config = Configuration.instance();
 		String cps = config.getPathSettings().getPath("Composestar");
 		File exe = new File(cps, "binaries/CSharpDummyGenerator.exe");
-		if (! exe.exists())
-			throw new ProcessExecutionException("Executable does not exist: " + exe.getAbsolutePath());
-		
+		if (!exe.exists()) throw new ProcessExecutionException("Executable does not exist: " + exe.getAbsolutePath());
+
 		return exe.getAbsolutePath();
 	}
 
@@ -152,16 +154,18 @@ class ExternalCSharpDummyGenerator
 		catch (InterruptedException e)
 		{
 			throw new ProcessExecutionException("InterruptedException: " + e.getMessage(), e);
-		}		
+		}
 	}
 }
 
 class ProcessResult
 {
 	public final int code;
+
 	public final List stdout;
+
 	public final List stderr;
-	
+
 	public ProcessResult(int code, List stdout, List stderr)
 	{
 		this.code = code;
@@ -173,7 +177,7 @@ class ProcessResult
 class ProcessExecutionException extends Exception
 {
 	private static final long serialVersionUID = 3576560381216905720L;
-	
+
 	public ProcessExecutionException(String message)
 	{
 		super(message);

@@ -22,27 +22,28 @@ import Composestar.Utils.FileUtils;
 /**
  * Responsible for dissassembling an assembly, parsing the contents of its
  * dissassembled file and delegating the modification to it and finally
- * assemblying the output.
- * 
- * FIXME: something like AssemblyTransformer might be a more appropriate name?
+ * assemblying the output. FIXME: something like AssemblyTransformer might be a
+ * more appropriate name?
  */
 public class ILCodeParser extends TransformerBase
 {
 	private String assemblyName;
+
 	private Set linkedAssemblies;
+
 	private Map concerns;
 
 	public ILCodeParser()
 	{
 		super(null, null);
 		assemblyName = null;
-		linkedAssemblies = new HashSet(); 
+		linkedAssemblies = new HashSet();
 		concerns = new HashMap();
 	}
 
 	/**
 	 * Sets the name of the assembly to transform.
-     */
+	 */
 	public void setAssemblyName(String an)
 	{
 		assemblyName = an;
@@ -50,12 +51,12 @@ public class ILCodeParser extends TransformerBase
 
 	/**
 	 * Adds a concern to transform.
-     */
+	 */
 	public void addConcern(Concern concern)
 	{
 		if (concern.getPlatformRepresentation() != null)
 		{
-			String fullName = ((DotNETType)concern.getPlatformRepresentation()).fullName();
+			String fullName = ((DotNETType) concern.getPlatformRepresentation()).fullName();
 			concerns.put(fullName, new ConcernHolder(concern));
 		}
 
@@ -66,15 +67,15 @@ public class ILCodeParser extends TransformerBase
 		{
 			List methods = signature.getMethods(MethodWrapper.ADDED);
 			Iterator it = methods.iterator();
-	
-			while (it.hasNext()) 
+
+			while (it.hasNext())
 			{
-				DotNETMethodInfo methodInfo = (DotNETMethodInfo)it.next();
-	
+				DotNETMethodInfo methodInfo = (DotNETMethodInfo) it.next();
+
 				// fetch assembly name
-				DotNETType dnt = (DotNETType)methodInfo.parent();
+				DotNETType dnt = (DotNETType) methodInfo.parent();
 				String assemblyName = dnt.assemblyName();
-	
+
 				linkedAssemblies.add(assemblyName);
 			}
 		}
@@ -85,11 +86,11 @@ public class ILCodeParser extends TransformerBase
 	 */
 	public void run() throws ModifierException
 	{
-		if (assemblyName == null || "".equals(assemblyName)) 
-			return; // nothing to do
-		
-		Debug.out(Debug.MODE_DEBUG,"ASTRA","Running ASTRA Transformer");
-		
+		if (assemblyName == null || "".equals(assemblyName)) return; // nothing
+																		// to do
+
+		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Running ASTRA Transformer");
+
 		// il file before transformation
 		String preIlName = FileUtils.replaceExtension(assemblyName, "pre.il");
 
@@ -98,20 +99,24 @@ public class ILCodeParser extends TransformerBase
 
 		// disassemble
 		Assembler asm = new MSAssembler();
-		try {
+		try
+		{
 			asm.disassemble(assemblyName, preIlName);
 		}
-		catch (AssemblerException e) {
-			throw new ModifierException("Unable to disassemble '" + assemblyName + "' into '" + preIlName + "': " + e.getMessage());
+		catch (AssemblerException e)
+		{
+			throw new ModifierException("Unable to disassemble '" + assemblyName + "' into '" + preIlName + "': "
+					+ e.getMessage());
 		}
 
 		// remove the old .post.il file
-		if (! FileUtils.deleteIfExists(postIlName))
-			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + postIlName + "'");
+		if (!FileUtils.deleteIfExists(postIlName)) Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '"
+				+ postIlName + "'");
 
 		// open dissassembled file
 		BufferedReader in = null;
-		try {
+		try
+		{
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(preIlName)));
 			setIn(in);
 			openOut(postIlName);
@@ -119,40 +124,44 @@ public class ILCodeParser extends TransformerBase
 			// run main assembly transformation
 			dissect(preIlName);
 		}
-		catch (FileNotFoundException e) {
+		catch (FileNotFoundException e)
+		{
 			throw new ModifierException("Cannot open newly created il file " + preIlName);
 		}
-		finally {
+		finally
+		{
 			closeOut();
 			FileUtils.close(in);
 		}
 
 		// remove the old assembly
-		if (! FileUtils.delete(assemblyName))
-			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + assemblyName + "'");
-		
+		if (!FileUtils.delete(assemblyName)) Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + assemblyName
+				+ "'");
+
 		// remove the old pdb file
 		String pdb = FileUtils.replaceExtension(assemblyName, "pdb");
-		if (! FileUtils.delete(pdb))
-			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + pdb + "'");
+		if (!FileUtils.delete(pdb)) Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + pdb + "'");
 
 		// re-assemble
-		try {
+		try
+		{
 			asm.assemble(postIlName, assemblyName);
 		}
-		catch (AssemblerException e) {
+		catch (AssemblerException e)
+		{
 			throw new ModifierException(e.getMessage());
-		}		
+		}
 	}
 
 	/**
 	 * Opens an assembly and starts transforming it.
+	 * 
 	 * @param ilName Name of assembly to transform.
 	 */
 	private void dissect(String ilName) throws ModifierException
 	{
 		write("// Generated by Compose* ASTRA");
-		
+
 		String namespace = "";
 		String line;
 		while ((line = getLine()) != null)
@@ -174,9 +183,9 @@ public class ILCodeParser extends TransformerBase
 				Iterator it = linkedAssemblies.iterator();
 				while (it.hasNext())
 				{
-					String asm = (String)it.next();
-					Debug.out(Debug.MODE_DEBUG,"ASTRA","Adding reference to assembly" + asm);
-					
+					String asm = (String) it.next();
+					Debug.out(Debug.MODE_DEBUG, "ASTRA", "Adding reference to assembly" + asm);
+
 					write(" .assembly extern " + asm + '\n');
 					write("{\n\t.ver 0:0:0:0\n}\n");
 				}
@@ -193,11 +202,11 @@ public class ILCodeParser extends TransformerBase
 				// fetch last part (name).
 				String[] elems = line.split(" ");
 				String name = elems[elems.length - 1];
-				
-				ConcernHolder ch = (ConcernHolder)concerns.get(name);				
+
+				ConcernHolder ch = (ConcernHolder) concerns.get(name);
 				if (ch == null) // try FQN
-					ch = (ConcernHolder)concerns.get(namespace + '.' + name);
-				
+				ch = (ConcernHolder) concerns.get(namespace + '.' + name);
+
 				if (ch == null)
 				{
 					// if not present output complete class.
@@ -215,7 +224,7 @@ public class ILCodeParser extends TransformerBase
 						// print complete declaration
 						write(line);
 						printLine();
-						
+
 						// new handler
 						ClassModifier cm = new ClassModifier(this, ch.getConcern());
 						cm.run();
@@ -233,13 +242,14 @@ public class ILCodeParser extends TransformerBase
 				}
 			}
 			else // just write all other lines unchanged
-				write(line);
+			write(line);
 		}
 	}
 
 	private static class ConcernHolder
 	{
 		private boolean declared = false;
+
 		private Concern concern;
 
 		public ConcernHolder(Concern conc)

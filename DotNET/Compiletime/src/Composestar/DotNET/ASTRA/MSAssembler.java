@@ -11,9 +11,9 @@ import Composestar.Utils.StringUtils;
  * Implementation of the Assembler interface for Microsft ilasm and ildasm.
  */
 public class MSAssembler implements Assembler
-{    
+{
 	// FIXME: location should be configurable like with csc and vjc
-	private final static String s_basepath = ""; //"C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\";
+	private final static String s_basepath = ""; // "C:\\WINDOWS\\Microsoft.NET\\Framework\\v1.1.4322\\";
 
 	public void assemble(String inputFile, String outputFile) throws AssemblerException
 	{
@@ -26,7 +26,7 @@ public class MSAssembler implements Assembler
 		cmdList.add(inputFile);
 
 		debug("Command: " + StringUtils.join(cmdList));
-	
+
 		CommandLineExecutor cle = new CommandLineExecutor();
 		if (cle.exec(cmdList) != 0)
 		{
@@ -41,7 +41,7 @@ public class MSAssembler implements Assembler
 		cmdList.add(s_basepath + "ildasm");
 		cmdList.add("/linenum");
 		cmdList.add("/nobar");
-	//	cmdList.add("/raweh");	// for .NET 2
+		// cmdList.add("/raweh"); // for .NET 2
 		cmdList.add("/out=" + outputFile);
 		cmdList.add(inputFile);
 
@@ -54,7 +54,7 @@ public class MSAssembler implements Assembler
 			throw new AssemblerException("There was a fatal disassembler error");
 		}
 	}
-	
+
 	private void debug(String msg)
 	{
 		Debug.out(Debug.MODE_DEBUG, "ASTRA", msg);

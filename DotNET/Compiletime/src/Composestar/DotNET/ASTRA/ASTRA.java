@@ -12,22 +12,22 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
 /**
- * ASTRA applies the signature changes determined by SIGN to the dummies assembly.
+ * ASTRA applies the signature changes determined by SIGN to the dummies
+ * assembly.
  */
 public class ASTRA implements CTCommonModule
 {
 	public static final String MODULE_NAME = "ASTRA";
-	
+
 	public ASTRA()
-	{
-	}
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		// only run ASTRA when SIGN found ADDED or REMOVED methods
-		if (! resources.getBoolean("signaturesmodified"))
+		if (!resources.getBoolean("signaturesmodified"))
 		{
-			Debug.out(Debug.MODE_INFORMATION,MODULE_NAME,"No need to transform assemblies");
+			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "No need to transform assemblies");
 			return;
 		}
 
@@ -37,7 +37,7 @@ public class ASTRA implements CTCommonModule
 		Iterator iterator = ds.getAllInstancesOf(Concern.class);
 		while (iterator.hasNext())
 		{
-			Concern concern = (Concern)iterator.next();
+			Concern concern = (Concern) iterator.next();
 			codeParser.addConcern(concern);
 		}
 
@@ -46,21 +46,20 @@ public class ASTRA implements CTCommonModule
 			Configuration config = Configuration.instance();
 			List dummies = config.getProjects().getCompiledDummies();
 			Iterator dumIt = dummies.iterator();
-			while (dumIt.hasNext()) 
+			while (dumIt.hasNext())
 			{
-				String name = (String)dumIt.next();
+				String name = (String) dumIt.next();
 				codeParser.setAssemblyName(name);
 				codeParser.run();
 			}
 
-		/*	TODO: can this be removed?
-			String assemblies = config.getModuleSettings().getModule("ILICIT").getProperty("assemblies");
-			String[] assemblyArray = assemblies.split(",");
-			for( int i = 0; i < assemblyArray.length; i++ )
-			{
-				codeParser.setAssemblyName(assemblyArray[i]);
-				codeParser.run();
-			} */
+			/*
+			 * TODO: can this be removed? String assemblies =
+			 * config.getModuleSettings().getModule("ILICIT").getProperty("assemblies");
+			 * String[] assemblyArray = assemblies.split(","); for( int i = 0; i <
+			 * assemblyArray.length; i++ ) {
+			 * codeParser.setAssemblyName(assemblyArray[i]); codeParser.run(); }
+			 */
 		}
 		catch (ModifierException e)
 		{

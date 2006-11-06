@@ -7,8 +7,8 @@ public interface Assembler
 {
 	/**
 	 * @param inputFile File to assemble.
-	 * @param outputFile Filename  of the assembled  file.
-	 * @throws AssemblerException if there is an  error during assembling.
+	 * @param outputFile Filename of the assembled file.
+	 * @throws AssemblerException if there is an error during assembling.
 	 */
 	void assemble(String inputFile, String outputFile) throws AssemblerException;
 

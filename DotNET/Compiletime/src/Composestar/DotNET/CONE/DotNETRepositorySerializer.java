@@ -36,10 +36,10 @@ import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
 /**
- * This class creates a dump of the entire datastore. The dump is deserialized in .NET.
- * Serialization is based on the public fields of a class in the repository. 
- * Therefore, certain elements can be kept out of the dump by switching their 
- * accessiblility to private/protected.
+ * This class creates a dump of the entire datastore. The dump is deserialized
+ * in .NET. Serialization is based on the public fields of a class in the
+ * repository. Therefore, certain elements can be kept out of the dump by
+ * switching their accessiblility to private/protected.
  * 
  * @author Tom Staijen
  * @version 0.9.0
@@ -47,6 +47,7 @@ import Composestar.Utils.FileUtils;
 public class DotNETRepositorySerializer extends CONE implements RepositorySerializer
 {
 	private Hashtable orderedFieldInfo;
+
 	private PrintWriter out = null;
 
 	/**
@@ -55,9 +56,8 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 	 * @throws Composestar.core.Exception.ModuleException
 	 * @roseuid 40EBC2C5001B
 	 */
-	public DotNETRepositorySerializer() 
-	{		
-	}
+	public DotNETRepositorySerializer()
+	{}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
@@ -71,35 +71,36 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		Debug.out(Debug.MODE_DEBUG, "CONE-XML", "Writing repository to file '" + destination.getName() + "'...");
 
 		orderedFieldInfo = new Hashtable();
-		try {
+		try
+		{
 			out = new PrintWriter(new BufferedWriter(new FileWriter(destination)));
 			write(ds);
 		}
-		catch (IOException e) {
-			throw new ModuleException("Unable to open output file: repository.xml","CONE-XML");
+		catch (IOException e)
+		{
+			throw new ModuleException("Unable to open output file: repository.xml", "CONE-XML");
 		}
-		finally {
+		finally
+		{
 			FileUtils.close(out);
 		}
 	}
 
-	private void startElement(String name) 
+	private void startElement(String name)
 	{
-		//out.println("<"+ name + ">");
-		startElement(name, null );
+		// out.println("<"+ name + ">");
+		startElement(name, null);
 	}
 
-	private void startElement(String name, String attributes) 
+	private void startElement(String name, String attributes)
 	{
-		if (attributes != null)
-			out.print("<"+ name + ' ' + attributes + '>');
-		else
-			out.print("<"+ name + '>');
+		if (attributes != null) out.print("<" + name + ' ' + attributes + '>');
+		else out.print("<" + name + '>');
 	}
 
-	private void endElement(String name) 
+	private void endElement(String name)
 	{
-		out.println("</"+ name + ">");     
+		out.println("</" + name + ">");
 	}
 
 	private void fieldStartElement(Field field)
@@ -113,18 +114,18 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 	}
 
 	private void handleStringField(Field field, Object obj) throws IllegalAccessException
-	{ 
+	{
 		Object fieldValue = field.get(obj);
-		if (fieldValue != null) 
+		if (fieldValue != null)
 		{
 			fieldStartElement(field);
-			out.write(replaceSpecial((String)fieldValue));
+			out.write(replaceSpecial((String) fieldValue));
 			fieldEndElement(field);
 		}
 	}
 
 	private void handleIntField(Field field, Object obj) throws IllegalAccessException
-	{ 
+	{
 		fieldStartElement(field);
 		out.write("" + field.getInt(obj));
 		fieldEndElement(field);
@@ -160,8 +161,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	private void handleVectorField(Field field, Object obj, Vector vector) throws IllegalAccessException
 	{
-		if (vector.size() <= 0) 
-			return;
+		if (vector.size() <= 0) return;
 
 		fieldStartElement(field);
 		startElement("capacityIncrement");
@@ -171,30 +171,32 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 		out.write("" + vector.size());
 		endElement("elementCount");
-		
+
 		// start dumping the elements of the vector
 		startElement("elementData");
-		
+
 		Enumeration en = vector.elements();
-		while(  en.hasMoreElements()) 
+		while (en.hasMoreElements())
 		{
 			Object element = en.nextElement();
-			// we only dump Strings and SerializableRepositoryEntity's 
-			if( element instanceof String ) 
+			// we only dump Strings and SerializableRepositoryEntity's
+			if (element instanceof String)
 			{
-				// strings are dumped as PCDATA and we need to specify the type as xsd:string
+				// strings are dumped as PCDATA and we need to specify the type
+				// as xsd:string
 				startElement("anyType", "xsi:type=\"xsd:string\"");
-				out.write(replaceSpecial((String)element));
+				out.write(replaceSpecial((String) element));
 				endElement("anyType");
 			}
-			else if( element instanceof RepositoryEntity )
+			else if (element instanceof RepositoryEntity)
 			{
-				// any other object requires just to have it's fields dumped. again the type is specified
+				// any other object requires just to have it's fields dumped.
+				// again the type is specified
 				startElement("anyType", "xsi:type=\"" + getType(element) + "\"");
 				writeFields(element);
 				endElement("anyType");
-			} 
-			else 
+			}
+			else
 			{
 				startElement("anyType");
 				endElement("anyType");
@@ -204,35 +206,35 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		fieldEndElement(field);
 	}
 
-	private void writeFields(Object obj) 
+	private void writeFields(Object obj)
 	{
-		Class objClass = obj.getClass();    	
+		Class objClass = obj.getClass();
 
 		Vector fields = getOrderedOutputFields(objClass);
 		if (fields.size() == 0)
 		{
-			//System.out.println("Class with no fields: " + objClass);
+			// System.out.println("Class with no fields: " + objClass);
 			return;
 		}
-		
+
 		Enumeration e = fields.elements();
-		while (e.hasMoreElements()) 
+		while (e.hasMoreElements())
 		{
-			Field field = (Field)e.nextElement();
-			if( !Modifier.isStatic(field.getModifiers()) )
+			Field field = (Field) e.nextElement();
+			if (!Modifier.isStatic(field.getModifiers()))
 			{
 				try
 				{
 					Class type = field.getType();
-					if(int.class.equals(type))
+					if (int.class.equals(type))
 					{
 						handleIntField(field, obj);
 					}
-					else if(boolean.class.equals(type))
+					else if (boolean.class.equals(type))
 					{
-						handleBoolField(field,obj);
+						handleBoolField(field, obj);
 					}
-					else if(long.class.equals(type))
+					else if (long.class.equals(type))
 					{
 						handleLongField(field, obj);
 					}
@@ -240,7 +242,7 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 					{
 						handleByteField(field, obj);
 					}
-					else if(char.class.equals(type))
+					else if (char.class.equals(type))
 					{
 						handleCharField(field, obj);
 					}
@@ -251,96 +253,97 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 				}
 				catch (Exception ex)
 				{
-					System.err.println("CONE-XML Error: " + ex.getMessage() );
+					System.err.println("CONE-XML Error: " + ex.getMessage());
 				}
-			}     
+			}
 		}
 	}
 
 	private void handleObjectField(Field field, Object obj) throws IllegalAccessException
 	{
 		Object fieldValue = field.get(obj);
-		if(fieldValue instanceof String)
+		if (fieldValue instanceof String)
 		{
 			handleStringField(field, obj);
 		}
-		if(fieldValue instanceof Vector)
+		if (fieldValue instanceof Vector)
 		{
-			handleVectorField(field,obj, (Vector) fieldValue);
+			handleVectorField(field, obj, (Vector) fieldValue);
 		}
-		else if( fieldValue instanceof RepositoryEntity || fieldValue instanceof DataMap || fieldValue instanceof SerializableRepositoryEntity)
+		else if (fieldValue instanceof RepositoryEntity || fieldValue instanceof DataMap
+				|| fieldValue instanceof SerializableRepositoryEntity)
 		{
 			// just a regular object, which requires it's fields dumped
-			if( fieldValue != null )
+			if (fieldValue != null)
 			{
 				startElement(field.getName(), "xsi:type=\"" + getType(fieldValue) + "\"");
-				// dump the fields of the fieldValue object 
+				// dump the fields of the fieldValue object
 				writeFields(fieldValue);
 				fieldEndElement(field);
 			}
 		}
-		else if( fieldValue != null )
+		else if (fieldValue != null)
 		{
-			//System.out.println("[CONE/XML] Skipped " + fieldValue.getClass().getName() );
+			// System.out.println("[CONE/XML] Skipped " +
+			// fieldValue.getClass().getName() );
 		}
 
 	}
 
-	private Vector getOrderedOutputFields(Class c) 
+	private Vector getOrderedOutputFields(Class c)
 	{
-		// fields have been ordered before for class c, then fetch the ordered list
+		// fields have been ordered before for class c, then fetch the ordered
+		// list
 		// from the storage map
-		if( orderedFieldInfo.containsKey(c))
-			return (Vector) orderedFieldInfo.get(c);
+		if (orderedFieldInfo.containsKey(c)) return (Vector) orderedFieldInfo.get(c);
 
 		Vector fields = new Vector();
 		Stack stack = new Stack();
 		Class myClass = c;
-		while( !myClass.equals(Object.class) ) 
+		while (!myClass.equals(Object.class))
 		{
 			stack.push(myClass);
 			myClass = myClass.getSuperclass();
 		}
 
-
-		while( !stack.empty() ) 
+		while (!stack.empty())
 		{
 			myClass = (Class) stack.pop();
 			Field[] declaredFields = myClass.getDeclaredFields();
-			for( int i = 0; i < declaredFields.length; i++ ) 
+			for (int i = 0; i < declaredFields.length; i++)
 			{
 				int modifier = declaredFields[i].getModifiers();
 
-				if( Modifier.isPublic(modifier) ) 
+				if (Modifier.isPublic(modifier))
 				{
 					fields.add(declaredFields[i]);
 				}
 			}
 		}
 		orderedFieldInfo.put(c, fields);
-		return fields;     
+		return fields;
 	}
 
-	private String replaceSpecial(String orig) 
+	private String replaceSpecial(String orig)
 	{
-		String result = orig.replaceAll( "&", "&amp;" );
-		result = result.replaceAll( "<", "&lt;" );
-		result = result.replaceAll( ">", "&gt;" );
+		String result = orig.replaceAll("&", "&amp;");
+		result = result.replaceAll("<", "&lt;");
+		result = result.replaceAll(">", "&gt;");
 		return result;
 	}
 
-	private String getType(Object o) 
+	private String getType(Object o)
 	{
-		if (o instanceof String) 
+		if (o instanceof String)
 		{
 			return "xsd:string";
-		} 
-		else 
+		}
+		else
 		{
 			String type = o.getClass().getName();
 			type = type.substring(type.lastIndexOf(".") + 1);
 			return replaceSpecial(type);
-		}     
+		}
 	}
 
 	private void write(DataStore ds) throws ModuleException
@@ -352,28 +355,22 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		// check if all RepositoryEntities have a repositoryKey
 		// FIXME: will have to be moved to DataStore.
 		/*
-		Enumeration keys = ds.map.m_keys.elements();
-		while (keys.hasMoreElements()) 
-		{
-			String key = (String) keys.nextElement();
-			Object value = ds.getObjectByID(key);
-
-			if (!(value instanceof RepositoryEntity)) 
-			{
-				//not that bad, will be skipped in during serialization
-				//System.err.println("??? found a " + value.getClass().getName() );
-			} 
-			else if (key.compareTo(((RepositoryEntity) value).repositoryKey) != 0) 
-			{
-				// this is bad, the entity has another key then the datastore uses
-				// to reference the object
-				System.err.println("FATAL ERROR?!!!");
-				System.err.println("Key: " + key + " points to " + ((RepositoryEntity) value).repositoryKey);
-			}
-		}*/
+		 * Enumeration keys = ds.map.m_keys.elements(); while
+		 * (keys.hasMoreElements()) { String key = (String) keys.nextElement();
+		 * Object value = ds.getObjectByID(key); if (!(value instanceof
+		 * RepositoryEntity)) { //not that bad, will be skipped in during
+		 * serialization //System.err.println("??? found a " +
+		 * value.getClass().getName() ); } else if
+		 * (key.compareTo(((RepositoryEntity) value).repositoryKey) != 0) { //
+		 * this is bad, the entity has another key then the datastore uses // to
+		 * reference the object System.err.println("FATAL ERROR?!!!");
+		 * System.err.println("Key: " + key + " points to " +
+		 * ((RepositoryEntity) value).repositoryKey); } }
+		 */
 
 		out.println("<?xml version=\"1.0\"?>");
-		startElement("DataStore", "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+		startElement("DataStore",
+				"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
 		writeFields(ds);
 		endElement("DataStore");
 		out.flush();

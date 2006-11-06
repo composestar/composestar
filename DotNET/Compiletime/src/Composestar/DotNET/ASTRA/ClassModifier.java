@@ -14,8 +14,8 @@ import Composestar.DotNET.LAMA.DotNETType;
 import Composestar.Utils.Debug;
 
 /**
- * This class does the transformation of an actual class, physically present in an
- * IL file within .class definitions.
+ * This class does the transformation of an actual class, physically present in
+ * an IL file within .class definitions.
  */
 public class ClassModifier extends TransformerBase
 {
@@ -37,19 +37,14 @@ public class ClassModifier extends TransformerBase
 				// split into string until "cil managed"
 				String plines = fetchMethodInfo(line);
 				write(plines);
-				
+
 				transformSection(false); // don't eat
-			/*
-			 	// disabled method-removal code. see bug #1441793.
-				String name = fetchMethodName(plines);
-				if (keepMethod(name))
-				{
-					write(plines);
-					transformSection(false); // don't eat
-				}
-				else
-					transformSection(true); // do eat
-			*/
+				/*
+				 * // disabled method-removal code. see bug #1441793. String
+				 * name = fetchMethodName(plines); if (keepMethod(name)) {
+				 * write(plines); transformSection(false); // don't eat } else
+				 * transformSection(true); // do eat
+				 */
 			}
 			else if (line.matches("\\s*\\}.*")) // end of class
 			{
@@ -61,7 +56,7 @@ public class ClassModifier extends TransformerBase
 					Iterator it = added.iterator();
 					while (it.hasNext())
 					{
-						MethodInfo m = (MethodInfo)it.next();
+						MethodInfo m = (MethodInfo) it.next();
 						printMethod(m);
 					}
 				}
@@ -69,30 +64,30 @@ public class ClassModifier extends TransformerBase
 				return;
 			}
 			else // just write all other lines unchanged
-				write(line);
+			write(line);
 
 		} while ((line = getLine()) != null);
 	}
 
-//	disabled method-removal code. see bug #1441793.
-//	/**
-//	 * Checks if a method should be kept or if it should be removed.
-//	 * @return true keep, false remove
-//	 */
-//	private boolean keepMethod(String name) throws ModifierException
-//	{
-//		if (concern.getSignature().hasMethod(name))
-//		{
-//			int status = concern.getSignature().getMethodStatus(name);
-//			return status != MethodWrapper.REMOVED;
-//		}
-//		else
-//			return true;
-//	}
+	// disabled method-removal code. see bug #1441793.
+	// /**
+	// * Checks if a method should be kept or if it should be removed.
+	// * @return true keep, false remove
+	// */
+	// private boolean keepMethod(String name) throws ModifierException
+	// {
+	// if (concern.getSignature().hasMethod(name))
+	// {
+	// int status = concern.getSignature().getMethodStatus(name);
+	// return status != MethodWrapper.REMOVED;
+	// }
+	// else
+	// return true;
+	// }
 
 	/**
 	 * Parses input lines and transforms this into concrete method information.
-     */
+	 */
 	private String fetchMethodInfo(String line) throws ModifierException
 	{
 		String plines = line.trim();
@@ -131,52 +126,53 @@ public class ClassModifier extends TransformerBase
 		}
 	}
 
-//	/**
-//	 * Matches method info agains the ???
-//	 */
-//	private boolean matchMethod(MethodWrapper methodWrapper, String name, String returnType, String[] params)
-//	{
-//		// fetch .NET version
-//		MethodInfo minfo = methodWrapper.getMethodInfo();
-//		if (!minfo.name().equals(name)) return false;
-//		if (!minfo.returnType().name().equals(returnType)) return false;
-//
-//		// check params
-//		List paramList = minfo.getParameters();
-//		if (paramList.size() != params.length) return false;
-//		
-//		for (int i = 0; i < params.length; ++i)
-//		{
-//			if (!params[i].equals(((ParameterInfo) paramList.get(i)).parameterType().name()))
-//				return false;
-//		}
-//		
-//		return true; // amazing.. we got through     
-//	}
+	// /**
+	// * Matches method info agains the ???
+	// */
+	// private boolean matchMethod(MethodWrapper methodWrapper, String name,
+	// String returnType, String[] params)
+	// {
+	// // fetch .NET version
+	// MethodInfo minfo = methodWrapper.getMethodInfo();
+	// if (!minfo.name().equals(name)) return false;
+	// if (!minfo.returnType().name().equals(returnType)) return false;
+	//
+	// // check params
+	// List paramList = minfo.getParameters();
+	// if (paramList.size() != params.length) return false;
+	//		
+	// for (int i = 0; i < params.length; ++i)
+	// {
+	// if (!params[i].equals(((ParameterInfo)
+	// paramList.get(i)).parameterType().name()))
+	// return false;
+	// }
+	//		
+	// return true; // amazing.. we got through
+	// }
 
 	private void printMethod(MethodInfo mi) throws ModifierException
 	{
-		DotNETMethodInfo dnmi = (DotNETMethodInfo)mi;
+		DotNETMethodInfo dnmi = (DotNETMethodInfo) mi;
 		write(".method public hidebysig strict virtual");
 		writenn("instance ");
 
-		writenn(((DotNETType)dnmi.returnType()).ilType());
+		writenn(((DotNETType) dnmi.returnType()).ilType());
 		writenn(" " + mi.name() + "(");
 
 		Iterator it = mi.getParameters().iterator();
 		while (it.hasNext())
 		{
-			ParameterInfo param = (ParameterInfo)it.next();
+			ParameterInfo param = (ParameterInfo) it.next();
 			Type paramType = param.parameterType();
 			if (paramType != null)
 			{
-				String iltype = ((DotNETType)paramType).ilType();
+				String iltype = ((DotNETType) paramType).ilType();
 				writenn(iltype + " " + param.name());
 
 				if (it.hasNext()) writenn(", ");
 			}
-			else
-				Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.ParameterTypeString);
+			else Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.ParameterTypeString);
 		}
 
 		write(") cil managed\n"); // TODO: params
@@ -184,86 +180,35 @@ public class ClassModifier extends TransformerBase
 		printMethodBody(mi);
 		write("}");
 	}
-	
+
 	private void printMethodBody(MethodInfo mi) throws ModifierException
 	{
-		/*if (mi.returnType().name().equals("Void"))
-		{
-			write(".maxstack 0");
-			write("nop");
-			write("ret");
-		}
-		else if (mi.returnType().name().equals("Int8"))
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] int8 CS$00000003$00000000)");
-			write("ldc.i4.0");
-			write("stloc.0");
-			write("br.s");
-			write("ldloc.0");
-			write("ret");
-
-		}
-		else if (mi.returnType().name().equals("Int16"))
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] int16 CS$00000003$00000000)");
-			write("ldc.i4.0");
-			write("stloc.0");
-			write("br.s");
-			write("ldloc.0");
-			write("ret");
-		}
-		else if (mi.returnType().name().equals("Int32"))
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] int32 CS$00000003$00000000)");
-			write("ldc.i4.0");
-			write("stloc.0");
-			write("br.s");
-
-			write("ldloc.0");
-			write("ret");
-		}
-		else if (mi.returnType().name().equals("Int64"))
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] int64 CS$00000003$00000000)");
-			write("ldc.i4.0");
-			write("conv.i8");
-			write("stloc.0");
-			write("br.s");
-			write("ret");
-		}
-		else if (mi.returnType().name().equals("Char"))
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] char CS$00000003$00000000)");
-			write("ldc.i4.0");
-			write("stloc.0");
-			write("br.s");
-			write("ldloc.0");
-			write("ret");
-		}
-		else if (mi.returnType().name().equals("Boolean"))
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] bool CS$00000003$00000000)");
-			write("ldc.i4.0");
-			write("stloc.0");
-			write("br.s");
-			write("ldloc.0");
-			write("ret");
-		}
-		else // object
-		{
-			write(".maxstack 1");
-			write(".locals init ([0] " + mi.returnType().fullName() + " CS$00000003$00000000)");
-			write("ldnull");
-			write("stloc.0");
-			write("br.s");
-			write("ldloc.0");
-			write("ret");
-		}*/
+	/*
+	 * if (mi.returnType().name().equals("Void")) { write(".maxstack 0");
+	 * write("nop"); write("ret"); } else if
+	 * (mi.returnType().name().equals("Int8")) { write(".maxstack 1");
+	 * write(".locals init ([0] int8 CS$00000003$00000000)"); write("ldc.i4.0");
+	 * write("stloc.0"); write("br.s"); write("ldloc.0"); write("ret"); } else
+	 * if (mi.returnType().name().equals("Int16")) { write(".maxstack 1");
+	 * write(".locals init ([0] int16 CS$00000003$00000000)");
+	 * write("ldc.i4.0"); write("stloc.0"); write("br.s"); write("ldloc.0");
+	 * write("ret"); } else if (mi.returnType().name().equals("Int32")) {
+	 * write(".maxstack 1"); write(".locals init ([0] int32
+	 * CS$00000003$00000000)"); write("ldc.i4.0"); write("stloc.0");
+	 * write("br.s"); write("ldloc.0"); write("ret"); } else if
+	 * (mi.returnType().name().equals("Int64")) { write(".maxstack 1");
+	 * write(".locals init ([0] int64 CS$00000003$00000000)");
+	 * write("ldc.i4.0"); write("conv.i8"); write("stloc.0"); write("br.s");
+	 * write("ret"); } else if (mi.returnType().name().equals("Char")) {
+	 * write(".maxstack 1"); write(".locals init ([0] char
+	 * CS$00000003$00000000)"); write("ldc.i4.0"); write("stloc.0");
+	 * write("br.s"); write("ldloc.0"); write("ret"); } else if
+	 * (mi.returnType().name().equals("Boolean")) { write(".maxstack 1");
+	 * write(".locals init ([0] bool CS$00000003$00000000)"); write("ldc.i4.0");
+	 * write("stloc.0"); write("br.s"); write("ldloc.0"); write("ret"); } else //
+	 * object { write(".maxstack 1"); write(".locals init ([0] " +
+	 * mi.returnType().fullName() + " CS$00000003$00000000)"); write("ldnull");
+	 * write("stloc.0"); write("br.s"); write("ldloc.0"); write("ret"); }
+	 */
 	}
 }

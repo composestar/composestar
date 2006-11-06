@@ -18,9 +18,9 @@ import Composestar.Utils.StringUtils;
 public class VERIFY implements CTCommonModule
 {
 	public static final String MODULE_NAME = "VERIFY";
-	
+
 	private Configuration config;
-	
+
 	public VERIFY()
 	{
 		config = Configuration.instance();
@@ -29,21 +29,21 @@ public class VERIFY implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		List assemblies = new ArrayList();
-		
+
 		Projects solution = config.getProjects();
 		File outDir = new File(solution.getOutputPath());
-		
+
 		Iterator it = solution.getProjects().iterator();
 		while (it.hasNext())
 		{
-			Project project = (Project)it.next();
+			Project project = (Project) it.next();
 			File outFile = new File(outDir, project.getName() + ".exe");
 			assemblies.add(outFile.getAbsolutePath());
 		}
 
 		verify(assemblies);
 	}
-	
+
 	private void verify(List assemblies) throws ModuleException
 	{
 		CommandLineExecutor cle = new CommandLineExecutor();
@@ -51,11 +51,11 @@ public class VERIFY implements CTCommonModule
 		cmdList.add("peverify");
 		cmdList.add("/nologo");
 		cmdList.add("<assembly>");
-		
+
 		Iterator it = assemblies.iterator();
 		while (it.hasNext())
 		{
-			String asmPath = (String)it.next();
+			String asmPath = (String) it.next();
 			cmdList.set(2, asmPath);
 
 			debug("Command: " + StringUtils.join(cmdList));
@@ -64,10 +64,10 @@ public class VERIFY implements CTCommonModule
 			{
 				String stdout = cle.outputNormal();
 				debug(stdout);
-				
+
 				throw new ModuleException("Error verifying assembly '" + asmPath + "'", MODULE_NAME);
 			}
-		}		
+		}
 	}
 
 	private void debug(String msg)

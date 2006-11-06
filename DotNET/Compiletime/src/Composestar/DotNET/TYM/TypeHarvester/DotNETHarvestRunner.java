@@ -23,9 +23,11 @@ import Composestar.Utils.StringUtils;
 public class DotNETHarvestRunner implements HarvestRunner
 {
 	public static final String MODULE_NAME = "TYM";
-	
+
 	private INCRE incre;
+
 	private Configuration config;
+
 	private List skippedAssemblies;
 
 	public DotNETHarvestRunner()
@@ -33,17 +35,16 @@ public class DotNETHarvestRunner implements HarvestRunner
 		incre = INCRE.instance();
 		config = Configuration.instance();
 		skippedAssemblies = new ArrayList();
-	} 
+	}
 
 	public void run(CommonResources resources) throws ModuleException
 	{
 		resources.addResource("skippedAssemblies", skippedAssemblies);
 
 		List dummies = config.getProjects().getCompiledDummies();
-		List dependencies = config.getProjects().getDependencies();  
+		List dependencies = config.getProjects().getDependencies();
 
-		if (dummies.size() == 0)
-			throw new ModuleException("TYM TypeHarvester needs compiled dummies.", MODULE_NAME);
+		if (dummies.size() == 0) throw new ModuleException("TYM TypeHarvester needs compiled dummies.", MODULE_NAME);
 
 		List cmdItems = new ArrayList();
 		cmdItems.add(getExecutable());
@@ -52,86 +53,83 @@ public class DotNETHarvestRunner implements HarvestRunner
 		Iterator depIt = dependencies.iterator();
 		while (depIt.hasNext())
 		{
-			Dependency dependency = (Dependency)depIt.next();
-			String name = dependency.getFileName();			
+			Dependency dependency = (Dependency) depIt.next();
+			String name = dependency.getFileName();
 
-			if (! DotNETBACO.isSystemAssembly(name))
+			if (!DotNETBACO.isSystemAssembly(name))
 			{
-				name = checkDLL(name); // FIXME: checkDLL has unclear side-effect
+				name = checkDLL(name); // FIXME: checkDLL has unclear
+										// side-effect
 				cmdItems.add(name);
 			}
 		}
 
 		Iterator dumIt = dummies.iterator();
-		while (dumIt.hasNext()) 
+		while (dumIt.hasNext())
 		{
-			String name = (String)dumIt.next();
+			String name = (String) dumIt.next();
 			name = checkDLL(name); // FIXME: checkDLL has unclear side-effect
 			cmdItems.add(name);
 		}
 
-		// FIXME: clarify this TODO 
-		// TODO: (?) Add additional dll's (from compiled inner's) and list of classes that we still need (?)
+		// FIXME: clarify this TODO
+		// TODO: (?) Add additional dll's (from compiled inner's) and list of
+		// classes that we still need (?)
 
-		Debug.out(Debug.MODE_DEBUG,"TYM","Command for TYM Harvester: " + StringUtils.join(cmdItems));		
+		Debug.out(Debug.MODE_DEBUG, "TYM", "Command for TYM Harvester: " + StringUtils.join(cmdItems));
 
 		CommandLineExecutor cle = new CommandLineExecutor();
 		int result = cle.exec(cmdItems);
-		
+
 		Debug.parseLog(cle.outputNormal());
-		
-		if (result != 0)
-			throw new ModuleException("TypeHarvester failed", MODULE_NAME);
+
+		if (result != 0) throw new ModuleException("TypeHarvester failed", MODULE_NAME);
 	}
 
 	private String getExecutable() throws ModuleException
 	{
 		File cs = new File(config.getPathSettings().getPath("Composestar"));
 		File exe = new File(cs, "binaries/TypeHarvester.exe");
-		if (!exe.exists())
-			throw new ModuleException("TypeHarvester not found on it's expected location: " + exe, MODULE_NAME);
+		if (!exe.exists()) throw new ModuleException("TypeHarvester not found on it's expected location: " + exe,
+				MODULE_NAME);
 
 		return exe.getAbsolutePath();
 	}
-	
+
 	/**
-	 * FIXME: describe what this method really does, and rename it appropriately. 
-	 *        side-effect is currently unclear.
+	 * FIXME: describe what this method really does, and rename it
+	 * appropriately. side-effect is currently unclear.
 	 */
 	private String checkDLL(String dllName) throws ModuleException
 	{
-		if ("".equals(dllName))
-			throw new ModuleException("Invalid dll name: " + dllName, MODULE_NAME);
+		if ("".equals(dllName)) throw new ModuleException("Invalid dll name: " + dllName, MODULE_NAME);
 
 		if (incre.isProcessedByModule(dllName, "HARVESTER"))
 		{
 			skippedAssemblies.add(dllName);
 			return "!" + dllName;
 		}
-		else
-			return dllName;
+		else return dllName;
 	}
 
 	/**
-	 * Returns all assemblies indirectly used by the harvester to harvest all types from the specified assembly.
-	 * e.g: When the harvester loads assembly ComposestarRuntimeInterpreter.dll, 
-	 * it indirectly harvest types from other assemblies e.g ComposestarFilterDebugger.dll
-	 * 
-	 * Used by INCRE
+	 * Returns all assemblies indirectly used by the harvester to harvest all
+	 * types from the specified assembly. e.g: When the harvester loads assembly
+	 * ComposestarRuntimeInterpreter.dll, it indirectly harvest types from other
+	 * assemblies e.g ComposestarFilterDebugger.dll Used by INCRE
 	 */
 	public List externalAssemblies(String asm)
 	{
 		List externals = new ArrayList();
-		
+
 		Iterator typeIt = incre.getHistoryTypes().iterator();
 		while (typeIt.hasNext())
 		{
-			DotNETType type = (DotNETType)typeIt.next();
+			DotNETType type = (DotNETType) typeIt.next();
 			if (type.fromDLL.equalsIgnoreCase(asm))
 			{
 				String extAsm = type.Module.fullyQualifiedName();
-				if (!externals.contains(extAsm))
-					externals.add(extAsm);
+				if (!externals.contains(extAsm)) externals.add(extAsm);
 			}
 		}
 
@@ -139,29 +137,24 @@ public class DotNETHarvestRunner implements HarvestRunner
 	}
 
 	/**
-	 * Returns a list containing all assemblies harvested earlier
-	 * e.g input for harvester is "A.dll B.dll C.dll"
-	 * then the list returned is 
-	 * 		for input A.dll => []
-	 * 		for input B.dll => [A.dll]
-	 * 		for input C.dll => [A.dll,B.dll] 
-	 * 
+	 * Returns a list containing all assemblies harvested earlier e.g input for
+	 * harvester is "A.dll B.dll C.dll" then the list returned is for input
+	 * A.dll => [] for input B.dll => [A.dll] for input C.dll => [A.dll,B.dll]
 	 * Used by INCRE
 	 */
 	public List prevAssemblies(String asm)
 	{
 		List assemblies = new ArrayList();
-		
-		List dependencies = config.getProjects().getDependencies();  
-		Iterator depIt = dependencies.iterator();
-		while (depIt.hasNext()) 
-		{
-			Dependency dependency = (Dependency)depIt.next();
-			String name = dependency.getFileName();
-			if (name.equalsIgnoreCase(asm))
-				return assemblies;
 
-			if (! DotNETBACO.isSystemAssembly(name))
+		List dependencies = config.getProjects().getDependencies();
+		Iterator depIt = dependencies.iterator();
+		while (depIt.hasNext())
+		{
+			Dependency dependency = (Dependency) depIt.next();
+			String name = dependency.getFileName();
+			if (name.equalsIgnoreCase(asm)) return assemblies;
+
+			if (!DotNETBACO.isSystemAssembly(name))
 			{
 				assemblies.add(name);
 			}
@@ -169,9 +162,9 @@ public class DotNETHarvestRunner implements HarvestRunner
 
 		List dummies = config.getProjects().getCompiledDummies();
 		Iterator dumIt = dummies.iterator();
-		while (dumIt.hasNext()) 
+		while (dumIt.hasNext())
 		{
-			String name = (String)dumIt.next();
+			String name = (String) dumIt.next();
 			assemblies.add(name);
 		}
 
@@ -179,22 +172,16 @@ public class DotNETHarvestRunner implements HarvestRunner
 	}
 
 	/**
-	 * Returns a string of all assemblies harvested earlier
-	 * e.g input for harvester is "A.dll B.dll C.dll"
-	 * then return string for 
-	 * 		input A.dll => ""
-	 * 		input B.dll => "A.dll"
-	 * 		input C.dll => "A.dll B.dll" 
-	 * 
-	 * Used by INCRE
+	 * Returns a string of all assemblies harvested earlier e.g input for
+	 * harvester is "A.dll B.dll C.dll" then return string for input A.dll => ""
+	 * input B.dll => "A.dll" input C.dll => "A.dll B.dll" Used by INCRE
 	 */
 	public String prevInput(String asm)
 	{
 		String input = incre.getConfiguration("HarvesterInput");
 
 		int index = input.indexOf(asm);
-		if (index > 0)
-			return input.substring(0,index);
+		if (index > 0) return input.substring(0, index);
 
 		return "";
 	}

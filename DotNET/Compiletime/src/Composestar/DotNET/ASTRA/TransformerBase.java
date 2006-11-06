@@ -6,13 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Base class for assembly modifiers. It provides  the means necessary to read 
+ * Base class for assembly modifiers. It provides the means necessary to read
  * from and write to the asm fille.
  */
 abstract class TransformerBase
 {
 	private BufferedReader in;
+
 	private BufferedWriter out;
+
 	private TransformerBase parent;
 
 	protected TransformerBase(TransformerBase parent)
@@ -31,8 +33,9 @@ abstract class TransformerBase
 
 	/**
 	 * Sets the buffer to use as input for the transformation.
-     * @param in
-     */
+	 * 
+	 * @param in
+	 */
 	protected void setIn(BufferedReader in)
 	{
 		this.in = in;
@@ -40,8 +43,9 @@ abstract class TransformerBase
 
 	/**
 	 * Opens a file to write to.
-     * @param fileName
-     */
+	 * 
+	 * @param fileName
+	 */
 	protected void openOut(String fileName) throws ModifierException
 	{
 		try
@@ -71,7 +75,8 @@ abstract class TransformerBase
 	}
 
 	/**
-	 * Gets one line from the input buffer. 
+	 * Gets one line from the input buffer.
+	 * 
 	 * @throws ModifierException if there are no more lines (or not*).
 	 */
 	public String getLine() throws ModifierException
@@ -83,14 +88,18 @@ abstract class TransformerBase
 			String line;
 			do
 			{
-				if ((line = in.readLine()) == null)				
-					return null; // *throw new ModifierException( "TransformerBase::readLine() unexpected end of file." );
-				
-				if ("".equals(line.trim()))
-					line = null;
-			
+				if ((line = in.readLine()) == null) return null; // *throw
+																	// new
+																	// ModifierException(
+																	// "TransformerBase::readLine()
+																	// unexpected
+																	// end of
+																	// file." );
+
+				if ("".equals(line.trim())) line = null;
+
 			} while (line == null);
-			
+
 			return line;
 		}
 		catch (IOException e)
@@ -117,12 +126,14 @@ abstract class TransformerBase
 
 	/**
 	 * Outputs or discards a whole section from { to } including inner levels.
-     * @param eat
-     */
+	 * 
+	 * @param eat
+	 */
 	public void transformSection(boolean eat) throws ModifierException
 	{
-	//	if (!line.matches("^\\s*\\{"))
-	//	 	throw new ModifierException( "TransformerBase::readLine() Section must start with {" );		
+		// if (!line.matches("^\\s*\\{"))
+		// throw new ModifierException( "TransformerBase::readLine() Section
+		// must start with {" );
 
 		int level = 0;
 		do
@@ -142,8 +153,9 @@ abstract class TransformerBase
 
 	/**
 	 * Writes the specified string to the output stream and terminates the line.
-     * @param str
-     */
+	 * 
+	 * @param str
+	 */
 	public void write(String str) throws ModifierException
 	{
 		try
@@ -159,8 +171,9 @@ abstract class TransformerBase
 
 	/**
 	 * Writes the specified string to the output stream.
-     * @param str
-     */
+	 * 
+	 * @param str
+	 */
 	public void writenn(String str) throws ModifierException
 	{
 		try

@@ -37,31 +37,33 @@ import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
 
 /**
- * Main entry point for the CompileTime. The Master class holds coreModules
- * and executes them in the order they are added.
+ * Main entry point for the CompileTime. The Master class holds coreModules and
+ * executes them in the order they are added.
  */
 public class DotNETMaster extends Master
 {
 	private CommonResources resources;
+
 	private String configfile;
 
 	/**
 	 * Default ctor.
-     */
+	 */
 	public DotNETMaster(String configurationFile) throws ModuleException
 	{
 		configfile = configurationFile;
 
-		//  create the repository
+		// create the repository
 		DataStore ds = DataStore.instance();
 
 		resources = new CommonResources();
 		ds.addObject(RESOURCES_KEY, resources);
 
 		// load the project configuration file
-		try {
-			Debug.out(Debug.MODE_DEBUG,"Master","Reading build configuration from: " + configurationFile);
-			
+		try
+		{
+			Debug.out(Debug.MODE_DEBUG, "Master", "Reading build configuration from: " + configurationFile);
+
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
 			XMLReader parser = saxParser.getXMLReader();
@@ -70,8 +72,10 @@ public class DotNETMaster extends Master
 			parser.setContentHandler(handler);
 			parser.parse(new InputSource(configurationFile));
 		}
-		catch (Exception e) {
-			throw new ModuleException("An error occured while reading the build configuration file: "+configurationFile+", reason: "+e.getMessage(),"Master");
+		catch (Exception e)
+		{
+			throw new ModuleException("An error occured while reading the build configuration file: "
+					+ configurationFile + ", reason: " + e.getMessage(), "Master");
 		}
 
 		// Set debug level
@@ -81,19 +85,22 @@ public class DotNETMaster extends Master
 	/**
 	 * Calls run on all modules added to the master.
 	 */
-	public void run() 
+	public void run()
 	{
 		// This is the 'hardcoded' version
-		try {
-			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());			
+		try
+		{
+			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
 
 			// Apache XML driver is moved to a different package in Java 5
-			if (System.getProperty("java.version").substring(0, 3).equals("1.5")) {
-				System.setProperty("org.xml.sax.driver","com.sun.org.apache.xerces.internal.parsers.SAXParser");
+			if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
+			{
+				System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
 				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting SAXParser XML SAX Driver");
 			}
-			else {
-				System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");
+			else
+			{
+				System.setProperty("org.xml.sax.driver", "org.apache.crimson.parser.XMLReaderImpl");
 				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting XMLReaderImpl XML SAX Driver");
 			}
 
@@ -108,30 +115,32 @@ public class DotNETMaster extends Master
 			while (modulesIter.hasNext())
 			{
 				// execute enabled modules one by one
-				Module m = (Module)modulesIter.next();
+				Module m = (Module) modulesIter.next();
 				m.execute(resources);
 			}
 
 			incre.getReporter().close();
 			if (Debug.getMode() >= Debug.MODE_WARNING) Debug.outWarnings();
 		}
-		catch (ModuleException e) { // MasterStopException
+		catch (ModuleException e)
+		{ // MasterStopException
 			String error = e.getMessage();
-			if (error == null || "null".equals(error)) //great information
-				error = e.toString();
+			if (error == null || "null".equals(error)) // great information
+			error = e.toString();
 
-			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals(""))
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e.getErrorLocationLineNumber());
-			else
-				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals("")) Debug.out(
+					Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
+							.getErrorLocationLineNumber());
+			else Debug.out(Debug.MODE_ERROR, e.getModule(), error);
 
 			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
 			System.exit(1);
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			String error = e.getMessage();
-			if (error == null || "null".equals(error)) //great information
-				error = e.toString();
+			if (error == null || "null".equals(error)) // great information
+			error = e.toString();
 
 			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
 			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + Debug.stackTrace(e));
@@ -142,73 +151,79 @@ public class DotNETMaster extends Master
 	// not used
 	public void saveModifiedConfigurationKeys(CommonResources resources)
 	{
-		List builtAssemblies = (List)resources.getResource("BuiltAssemblies");
+		List builtAssemblies = (List) resources.getResource("BuiltAssemblies");
 		List configLines = new ArrayList();
 
-		try {
+		try
+		{
 			BufferedReader br = new BufferedReader(new FileReader(configfile));
 			String line = br.readLine();
 			while (line != null)
 			{
-				if (line.startsWith("BuiltAssemblies=")) 
+				if (line.startsWith("BuiltAssemblies="))
 				{
 					line = "BuiltAssemblies=" + builtAssemblies.size();
 					configLines.add(line);
-					for (int i=0; i < builtAssemblies.size(); i++)
+					for (int i = 0; i < builtAssemblies.size(); i++)
 					{
 						Object temp = builtAssemblies.get(i);
-						if(temp != null)
-							configLines.add("BuiltAssembly" + i + "=" + temp.toString());
+						if (temp != null) configLines.add("BuiltAssembly" + i + "=" + temp.toString());
 					}
 				}
-				else
-					configLines.add(line);
+				else configLines.add(line);
 
 				line = br.readLine();
 			}
-			br.close(); 
+			br.close();
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(configfile));
 			Iterator iterLines = configLines.iterator();
-			while (iterLines.hasNext()) {
-				line = (String)iterLines.next();
+			while (iterLines.hasNext())
+			{
+				line = (String) iterLines.next();
 				bw.write(line + "\n");
 			}
 			bw.close();
 		}
-		catch (IOException e) {
+		catch (IOException e)
+		{
 			Debug.out(Debug.MODE_WARNING, "Master", "Unable to update configuration file '" + configfile + "'!");
 		}
 	}
-	
+
 	/**
-	 * Compose* main function.
-	 * Creates the Master object. Adds the desired modules and then calls run on each
-	 * of them in the order that they where added.
-     * @param args
-     */
-	public static void main(String[] args) 
+	 * Compose* main function. Creates the Master object. Adds the desired
+	 * modules and then calls run on each of them in the order that they where
+	 * added.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args)
 	{
-		if (args.length == 0) {
+		if (args.length == 0)
+		{
 			System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
 			return;
 		}
 
-		if (args[0].equalsIgnoreCase("-v")) {
+		if (args[0].equalsIgnoreCase("-v"))
+		{
 			System.out.println(Version.getTitleString());
 			System.out.println(Version.getAuthorString());
 			System.exit(0);
 		}
 
-		try {
-			Debug.out(Debug.MODE_DEBUG,"Master","Invoking Master " + Version.getVersionString() +" now...");
+		try
+		{
+			Debug.out(Debug.MODE_DEBUG, "Master", "Invoking Master " + Version.getVersionString() + " now...");
 			Master master = new DotNETMaster(args[0]);
-			Debug.out(Debug.MODE_DEBUG,"Master","Master initialized.");
+			Debug.out(Debug.MODE_DEBUG, "Master", "Master initialized.");
 			master.run();
 		}
-		catch (ModuleException e) {
+		catch (ModuleException e)
+		{
 			System.out.println("Could not open configuration file '" + args[0] + "': " + e.getMessage());
-			System.exit(-1); // FIXME: are these errorlevels random? 
+			System.exit(-1); // FIXME: are these errorlevels random?
 		}
 	}
 }
