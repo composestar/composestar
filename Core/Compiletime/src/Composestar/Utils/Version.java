@@ -122,10 +122,22 @@ public class Version {
 								if (line.indexOf('=')+1 != line.length()) {
 									value = line.substring(line.indexOf('=') + 1, line.length());
 								}
-								if (key.equalsIgnoreCase("version.major")) versionMajor = value;
-								else if (key.equalsIgnoreCase("version.minor")) versionMinor = value;
-								else if (key.equalsIgnoreCase("version.build")) versionBuild = value;
-								else if (key.equalsIgnoreCase("version.revision")) versionRevision = value;
+								if (key.equalsIgnoreCase("version.major"))
+								{
+									versionMajor = value;
+								}
+								else if (key.equalsIgnoreCase("version.minor"))
+								{
+									versionMinor = value;
+								}
+								else if (key.equalsIgnoreCase("version.build"))
+								{
+									versionBuild = value;
+								}
+								else if (key.equalsIgnoreCase("version.revision"))
+								{
+									versionRevision = value;
+								}
 							}
 			    		}
 			    	}

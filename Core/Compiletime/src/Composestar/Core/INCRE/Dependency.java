@@ -6,8 +6,8 @@ public class Dependency
 {
 	protected String name;
 	protected Path mypath = new Path();
-	public boolean store = false;
-	public boolean lookup = false;
+	public boolean store;
+	public boolean lookup;
 	   
 	/**
 	 * @roseuid 42206A590280

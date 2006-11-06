@@ -54,7 +54,7 @@ public class CPSFileParser {
     try
 	{
 	    COPPER.setCpscontents("");
-	    d = new BufferedReader(new InputStreamReader((new FileInputStream(file))));
+	    d = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 	    try 
 	    {
 	        String line = d.readLine();

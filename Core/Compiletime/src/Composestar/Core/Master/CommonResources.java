@@ -73,7 +73,9 @@ public class CommonResources implements Serializable
 	//	Debug.out(Debug.MODE_DEBUG,"RES","Requested resource: " + key);
 
 		if (!resources.containsKey(key))
+		{
 			return null;
+		}
 
 		return resources.get(key);
 	}
@@ -88,10 +90,14 @@ public class CommonResources implements Serializable
 		Object resource = getResource(key);
 
 		if (resource == null)
+		{
 			throw new RuntimeException("No resource for key '" + key + "'");
+		}
 		
 		if (! (resource instanceof Boolean))
+		{
 			throw new RuntimeException("Resource with key '" + key + "' is not a Boolean");
+		}
 
 		return ((Boolean)resource).booleanValue();
 	}

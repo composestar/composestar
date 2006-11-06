@@ -52,6 +52,6 @@ public class ConcernElementReference extends Reference {
     }
     fname += concern;
     fname += '.' + name;
-    return (fname);
+    return fname;
   }
 }

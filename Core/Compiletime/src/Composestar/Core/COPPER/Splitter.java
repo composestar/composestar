@@ -12,7 +12,7 @@ public class Splitter {
   private String fm;
   private String fmelem;
   private int i, j;
-  private CpsRepositoryBuilder bui = null;   //reference to a builder class (so we can get to defaults)
+  private CpsRepositoryBuilder bui;   //reference to a builder class (so we can get to defaults)
 
 
   public Splitter() {
@@ -45,7 +45,10 @@ public class Splitter {
       default: //we have a.b.c.n
         concern = (String) in.elementAt(i - 1);
         for (j = 0; j <= i - 2; j++) { //now add the package
-          if (pack == null) pack = new Vector();  //only create pack if actually used
+          if (pack == null) 
+          {
+        	  pack = new Vector();  //only create pack if actually used
+          }
           pack.add(in.elementAt(j));
         }
         break;
@@ -71,7 +74,10 @@ public class Splitter {
         concernelem = (String) in.elementAt(i - 1);
         concern = (String) in.elementAt(i - 2);
         for (j = 0; j <= i - 3; j++) { //now add the package
-          if (pack == null) pack = new Vector();  //only create pack if actually used
+          if (pack == null)
+          {
+        	  pack = new Vector();  //only create pack if actually used
+          }
           pack.add(in.elementAt(j));
         }
         break;
@@ -85,7 +91,10 @@ public class Splitter {
     splitConcernElemReference(in);
 
     if (fillindefaults) {
-      if (concern == null) concern = bui.getCpsc();
+      if (concern == null) 
+      {
+    	  concern = bui.getCpsc();
+      }
     }
   }
 
@@ -114,7 +123,10 @@ public class Splitter {
         fm = (String) in.elementAt(i - 2);
         concern = (String) in.elementAt(i - 3);
         for (j = 0; j <= i - 4; j++) { //now add the package
-          if (pack == null) pack = new Vector();  //only create pack if actually used
+          if (pack == null)
+          {
+        	  pack = new Vector();  //only create pack if actually used
+          }
           pack.add(in.elementAt(j));
         }
         break;
@@ -128,8 +140,14 @@ public class Splitter {
     splitFmElemReference(in);
 
     if (fillindefaults) {
-      if (concern == null) concern = bui.getCpsc();
-      if (fm == null) fm = bui.getFm();
+      if (concern == null) 
+      {
+    	  concern = bui.getCpsc();
+      }
+      if (fm == null)
+      {
+    	  fm = bui.getFm();
+      }
     }
   }
 

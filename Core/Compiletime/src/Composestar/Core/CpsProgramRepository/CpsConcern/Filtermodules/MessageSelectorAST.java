@@ -70,7 +70,7 @@ public class MessageSelectorAST extends ContextRepositoryEntity {
    */
   public boolean addParameterType(ConcernReference type) {
     typeList.addElement(type);
-    return (true);
+    return true;
   }
 
 
@@ -84,7 +84,7 @@ public class MessageSelectorAST extends ContextRepositoryEntity {
   public ConcernReference removeParameterType(int index) {
     Object o = typeList.elementAt(index);
     typeList.removeElementAt(index);
-    return ((ConcernReference) o);
+    return (ConcernReference) o;
   }
 
 
@@ -96,7 +96,7 @@ public class MessageSelectorAST extends ContextRepositoryEntity {
    * @roseuid 401FAA68000C
    */
   public ConcernReference getParameterType(int index) {
-    return ((ConcernReference) typeList.elementAt(index));
+    return (ConcernReference) typeList.elementAt(index);
   }
 
 
@@ -107,6 +107,6 @@ public class MessageSelectorAST extends ContextRepositoryEntity {
    * @roseuid 401FAA680020
    */
   public Iterator getParameterTypeIterator() {
-    return (new CPSIterator(typeList));
+    return new CPSIterator(typeList);
   }
 }

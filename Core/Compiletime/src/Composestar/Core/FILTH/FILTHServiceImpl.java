@@ -47,7 +47,9 @@ public class FILTHServiceImpl extends FILTHService
 	{
 		FilterModuleOrder fo = (FilterModuleOrder)c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 		if (fo == null)
+		{
 			return new LinkedList();
+		}
 		
 		//getMultipleOrder(c);
 		// TODO: calling getMultipleOrder(c) generates lots of exceptions for CONE-IS (filenotfound & nullpointer)
@@ -144,7 +146,9 @@ public class FILTHServiceImpl extends FILTHService
 					fr = ((FilterModuleReference)j.next()); 				
 					//System.out.println("FILTH ordering>>>"+a+"::"+fr.getName() ); 
 					if (a.getName().equals(fr.getName()))
+					{
 						break;
+					}
 					
 				}				
 				anOrder.addLast(fr);	
@@ -164,7 +168,9 @@ public class FILTHServiceImpl extends FILTHService
 		{
 			FilterModuleReference fmr = (FilterModuleReference)j.next();
 			if(!(fmr.getRef().getQualifiedName().equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+			{
 				FILTHService.log.print("<li><i>"+fmr.getRef().getQualifiedName()+"</i></li>\n");
+			}
 		}
 		FILTHService.log.print("</ol>\n");
 		
@@ -177,7 +183,9 @@ public class FILTHServiceImpl extends FILTHService
 			for (Iterator j=((List)i.next()).iterator();j.hasNext();){
 				FilterModuleReference fmr = (FilterModuleReference)j.next();
 				if(!(fmr.getRef().getQualifiedName().equals("CpsDefaultInnerDispatchConcern.CpsDefaultInnerDispatchFilterModule")))
+				{
 					FILTHService.log.print("<li><i>"+fmr.getRef().getQualifiedName()+"</i></li>\n");
+				}
 			}
 			FILTHService.log.print("</ol>\n");
 			alt++;
@@ -202,7 +210,9 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.close();	
 		
 		if(alt > 2)
+		{
 			Debug.out(Debug.MODE_WARNING,"FILTH","Multple Filter Module orderings possible for concern " + c.getQualifiedName(),filename);
+		}
 
 		return forders; //arrange this according to the output required!!
 	

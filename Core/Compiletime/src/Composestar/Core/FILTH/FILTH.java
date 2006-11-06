@@ -81,9 +81,13 @@ public class FILTH implements CTCommonModule
 						{
 							String fmr = (String)tmplist.get(i);
 							if(i != (tmplist.size()-1))
+							{
 								tmpstr+=fmr+" --> ";
+							}
 							else
+							{
 								tmpstr+=fmr;
+							}
 						}
 					}
 					Debug.out(Debug.MODE_DEBUG, "FILTH", "Selecting filter module order: "+tmpstr);

@@ -21,21 +21,24 @@ import Composestar.Utils.FileUtils;
 public class TypeLocations
 {
 	private static TypeLocations instance;
-
-	public static TypeLocations instance()
-	{
-		if (instance == null)
-			instance = new TypeLocations(); 	
-
-		return instance;
-	}
-	
+		
 	private Set typeNames = new HashSet();			// all typenames
 	private Set assemblies = new HashSet();			// all assemblies
 	private Map typeToAssembly = new HashMap();		// typename -> assemblyname
 	private Map sourceToAssembly = new HashMap();	// sourcefile -> assemblyname
 	private Map typeToSource = new HashMap();		// typename -> sourcefile
+	
 
+	public static TypeLocations instance()
+	{
+		if (instance == null)
+		{
+			instance = new TypeLocations();
+		}
+
+		return instance;
+	}
+	
 	/**
 	 * Constructs the TypeLocation singleton based on data from Configuration.
 	 */
@@ -113,7 +116,9 @@ public class TypeLocations
 			String typeName = (String)entry.getKey();
 			String sourceFile = (String)entry.getValue();
 			if (sourceFile.equals(source))
+			{
 				types.add(typeName);
+			}
 		}
 		return types;
 	}

@@ -42,7 +42,7 @@ public class MethodBinding extends Binding {
    */
   public boolean addMethod(MethodReference m) {
     methodSet.addElement(m);
-    return (true);
+    return true;
   }
 
 
@@ -54,7 +54,7 @@ public class MethodBinding extends Binding {
    */
   public boolean addMethod(StarMethod m) {
     methodSet.addElement(m);
-    return (true);
+    return true;
   }
 
 
@@ -68,7 +68,7 @@ public class MethodBinding extends Binding {
   public Object removeMethod(int index) { //fixme: could be star or single object
     Object o = methodSet.elementAt(index);
     methodSet.removeElementAt(index);
-    return (o);
+    return o;
   }
 
 
@@ -80,7 +80,7 @@ public class MethodBinding extends Binding {
    * @roseuid 401FAA660231
    */
   public Object getMethod(int index) { //fixme: could be star or single object
-    return (methodSet.elementAt(index));
+    return methodSet.elementAt(index);
   }
 
 
@@ -91,7 +91,7 @@ public class MethodBinding extends Binding {
    * @roseuid 401FAA66023A
    */
   public Iterator getMethodIterator() {
-    return (new CPSIterator(methodSet));
+    return new CPSIterator(methodSet);
     //Vector tmpVector = new Vector();
     //tmpVector.add(methodSet);
     //tmpVector.add(starMethodSet);

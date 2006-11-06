@@ -52,20 +52,20 @@ import Composestar.Utils.StringUtils;
  */
 public class INCRE implements CTCommonModule 
 {    
-	private static INCRE s_instance = null;
+	private static INCRE s_instance;
 	private static final String MODULE_NAME = "INCRE";
 	
-	private boolean enabled = false;
+	private boolean enabled;
 	private Configuration config;
 	private DataStore currentRepository;
 
 	public DataStore history;
-	public boolean searchingHistory = false;
+	public boolean searchingHistory;
 	
 	private String historyfile = "";
-	private Date lastCompTime = null;
+	private Date lastCompTime;
 	private MyComparator comparator;
-	private ConfigManager configmanager = null;
+	private ConfigManager configmanager;
 	private INCREReporter reporter;
 	
 	// for optimalization purposes
@@ -100,7 +100,9 @@ public class INCRE implements CTCommonModule
 	public static INCRE instance()
 	{
 		if (s_instance == null) 
+		{
 			s_instance = new INCRE();
+		}
 
 		return s_instance;
 	} 
@@ -117,7 +119,9 @@ public class INCRE implements CTCommonModule
 
 		// non-incremental compilation so clean history
 		if (!this.enabled)
+		{
 			this.deleteHistory();
+		}
 
 		// time this initialization process	
 		INCRETimer increinit = this.getReporter().openProcess(MODULE_NAME,"",INCRETimer.TYPE_ALL);
@@ -161,11 +165,15 @@ public class INCRE implements CTCommonModule
 
 		File file = new File(projectBase, filename);
 		if (file.exists())
+		{
 			return file.getAbsolutePath();
+		}
 		
 		file = new File(cps, filename);
 		if (file.exists())
+		{
 			return file.getAbsolutePath();
+		}
 		
 		throw new ModuleException("No configuration file found with name " + filename,MODULE_NAME);
 	}
@@ -237,13 +245,17 @@ public class INCRE implements CTCommonModule
 		{
 			// if set before, return it
 			if (historyConcernsWithFMO != null)
+			{
 				return historyConcernsWithFMO;
+			}
 		}
 		else
 		{
 			// if set before, return it
 			if (currentConcernsWithFMO != null)
+			{
 				return currentConcernsWithFMO;
+			}
 		}
 		
 		ArrayList concerns = new ArrayList();
@@ -252,13 +264,19 @@ public class INCRE implements CTCommonModule
 		{
 			Concern c = (Concern)concernIt.next();
 			if (c.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null)
-				concerns.add(c);	
+			{
+				concerns.add(c);
+			}
 		}
 		
 		if (searchingHistory)
+		{
 			historyConcernsWithFMO = concerns;
-		else 
+		}
+		else
+		{
 			currentConcernsWithFMO = concerns;
+		}
 		
 		// sort concerns before returning
 		Collections.sort(concerns, new Comparator() { 
@@ -279,12 +297,16 @@ public class INCRE implements CTCommonModule
 		if(searchingHistory){
 			// if set before, return it
 			if(historyConcernsWithModifiedSignatures!=null)
+			{
 				return historyConcernsWithModifiedSignatures;
+			}
 		}
 		else {
 			// if set before, return it
 			if(currentConcernsWithModifiedSignatures!=null)
+			{
 				return currentConcernsWithModifiedSignatures;
+			}
 		}
 		
 		ArrayList concerns = new ArrayList();
@@ -300,9 +322,13 @@ public class INCRE implements CTCommonModule
 		}
 		
 		if(searchingHistory)
+		{
 			historyConcernsWithModifiedSignatures = concerns;
-		else 
+		}
+		else
+		{
 			currentConcernsWithModifiedSignatures = concerns;
+		}
 		
 		// sort concerns before returning
 		Collections.sort(concerns, new Comparator() { 
@@ -320,7 +346,9 @@ public class INCRE implements CTCommonModule
 	public ArrayList getHistoryTypes()
 	{
 		if(historyTypes!=null) /* set before */
+		{
 			return historyTypes;
+		}
 			
 		historyTypes = new ArrayList();
 		Iterator iterConcerns = history.getAllInstancesOf(PrimitiveConcern.class);
@@ -337,16 +365,27 @@ public class INCRE implements CTCommonModule
 		if(searchingHistory){
 			// if set before, return it
 			if(historyObjectsOrdered.containsKey(c.getName()))
+			{
 				return ((ArrayList)historyObjectsOrdered.get(c.getName())).iterator();
+			}
 		}
 		else {
 			// if set before, return it
 			if(dsObjectsOrdered.containsKey(c.getName()))
+			{
 				return ((ArrayList)dsObjectsOrdered.get(c.getName())).iterator();
+			}
 		}
 		
-		List list = (searchingHistory ? history.getListOfAllInstances(c)
-		                              : currentRepository.getListOfAllInstances(c));
+		List list;
+		if (searchingHistory)
+		{
+			list = history.getListOfAllInstances(c);
+		}
+		else 
+		{
+			list = currentRepository.getListOfAllInstances(c);
+		}
 		
 		// sort the list
 		Collections.sort(list, new Comparator() { 
@@ -370,9 +409,13 @@ public class INCRE implements CTCommonModule
 		
 		// add the ordered list to hashmap
 		if(searchingHistory)
+		{
 			historyObjectsOrdered.put(c.getName(),list);
+		}
 		else
+		{
 			dsObjectsOrdered.put(c.getName(),list);
+		}
 		
 		return list.iterator();
 	}
@@ -399,7 +442,9 @@ public class INCRE implements CTCommonModule
    				while (sources.hasNext()) {
    					Source historysource = (Source)sources.next();
    					if (s.getFileName().equals(historysource.getFileName()))
-   						return historysource;	
+   					{
+   						return historysource;
+   					}
    				}
    			}
    			
@@ -409,12 +454,16 @@ public class INCRE implements CTCommonModule
    				if(obj instanceof DeclaredRepositoryEntity){
    					DeclaredRepositoryEntity dre = (DeclaredRepositoryEntity)nextobject;
    					if(dre.getQualifiedName().equals(((DeclaredRepositoryEntity)obj).getQualifiedName()))
+   					{
    						return dre;
+   					}
    				}
    				else if(obj instanceof PredicateSelector){
    					PredicateSelector ps = (PredicateSelector)nextobject;
    					if(ps.getUniqueID().equals(((PredicateSelector)obj).getUniqueID()))
-   						return ps;				
+   					{
+   						return ps;
+   					}
    				}
    			}
    	       			
@@ -430,7 +479,9 @@ public class INCRE implements CTCommonModule
    public boolean isFileModified(String filename)
    {
    		if(filesCheckedOnTimeStamp.containsKey(filename))
-			return ((Boolean)filesCheckedOnTimeStamp.get(filename)).booleanValue();	
+   		{
+			return ((Boolean)filesCheckedOnTimeStamp.get(filename)).booleanValue();
+   		}
 		else { 
 			File f = new File(filename);  			
 			boolean modified = isFileModified(f);
@@ -453,7 +504,7 @@ public class INCRE implements CTCommonModule
 		}
 		boolean modified = true;
 		try {
-			modified= (file.lastModified() > lastCompTime.getTime());
+			modified = file.lastModified() > lastCompTime.getTime();
 		}
 		catch(Exception e){return modified;}
 		return modified;
@@ -469,7 +520,9 @@ public class INCRE implements CTCommonModule
 	public boolean isFileAdded(String filename,FileDependency fdep) throws ModuleException
 	{
 		if(filesCheckedOnProjectConfig.containsKey(filename)) // checked before
-  			return ((Boolean)filesCheckedOnProjectConfig.get(filename)).booleanValue();	
+		{
+  			return ((Boolean)filesCheckedOnProjectConfig.get(filename)).booleanValue();
+		}
 		
 		boolean isAdded = true;
 		String fixedFile = FileUtils.normalizeFilename(filename).toLowerCase();
@@ -496,7 +549,9 @@ public class INCRE implements CTCommonModule
 			// special case, never added to project configurations
 			// TODO: add to project configurations
 			if(fixedFile.indexOf("mscorlib.dll")>=0)
+			{
 				return false;
+			}
 			
 			if(fixedFile.indexOf("/gac/")>0){// Global Assembly Cache
 					fixedFile = fixedFile.substring(fixedFile.lastIndexOf('/')+1);
@@ -533,10 +588,14 @@ public class INCRE implements CTCommonModule
 		// file in old project configurations?
 		String searchStr = FileUtils.normalizeFilename(searchBuffer.toString()).toLowerCase();
 		if (searchStr.indexOf(fixedFile) != -1)
+		{
 			isAdded = false; // file not added to project
+		}
 		
 		if (isAdded)
+		{
 			Debug.out(Debug.MODE_DEBUG,MODULE_NAME,"File "+fixedFile+" added to project since last compilation run");
+		}
 				
 		this.filesCheckedOnProjectConfig.put(filename, Boolean.valueOf(isAdded));
 		return isAdded;
@@ -546,10 +605,13 @@ public class INCRE implements CTCommonModule
     */
 	public boolean isModuleInc(String name)
 	{
-		if (! enabled) return false;
+		if (! enabled)
+		{
+			return false;
+		}
 		
 		Module m = configmanager.getModuleByID(name);
-		return (m != null && m.isIncremental());
+		return (m != null) && m.isIncremental();
 	}
    
 	/**
@@ -636,7 +698,9 @@ public class INCRE implements CTCommonModule
 			String location = locations.getSourceByType(type.m_fullName);
 			if(location!=null){
 				if(location.equals(source))
+				{
 					return true;
+				}
 			}
 		}
 		else {
@@ -658,7 +722,9 @@ public class INCRE implements CTCommonModule
 		while(sourceItr.hasNext()){
 			String src = (String)sourceItr.next();
 			if(declaredInSource(c,src))
+			{
 				return true;
+			}
 		}
 		
 		return false;
@@ -697,17 +763,23 @@ public class INCRE implements CTCommonModule
 		INCRETimer overhead = getReporter().openProcess(modulename,"INCRE::isProcessedBy("+input+ ')',INCRETimer.TYPE_OVERHEAD);
 		
 	   	if(!isModuleInc(modulename))
+	   	{
 	   		return false;
+	   	}
 	   		 
 	   	Composestar.Core.INCRE.Module mod = configmanager.getModuleByID(modulename);
 		if (mod == null)
+		{
 			throw new ModuleException("INCRE cannot find module "+modulename+ '!', MODULE_NAME);
+		}
 
 		// *** Little verification of input object ***
 		try 
 		{
 			if (mod.getInput() == null || !Class.forName(mod.getInput()).isInstance(input))
+			{
 				throw new ModuleException("Wrong input for module "+mod.getName()+". "+input.getClass()+" is not an instance of "+mod.getInput(),MODULE_NAME);
+			}
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -784,7 +856,9 @@ public class INCRE implements CTCommonModule
 				{
 					// find object in history
 					if (historyobject == null)
+					{
 						historyobject = findHistoryObject(input);
+					}
 											
 					if (historyobject!=null)
 					{
@@ -798,7 +872,9 @@ public class INCRE implements CTCommonModule
 							
 						// add the result to comparator's map
 						if (dep.store && depofinputobject!=null)
+						{
 							comparator.addComparison(dep.getName()+depofinputobject.hashCode(),!modified);
+						}
 				
 						// stop calculation when object has been modified
 						if (modified) {
@@ -829,7 +905,10 @@ public class INCRE implements CTCommonModule
 	public void deleteHistory()
 	{
 		File f = new File(this.historyfile);
-		if (f.exists()) f.delete();
+		if (f.exists()) 
+		{
+			f.delete();
+		}
 	}
 
 	/**
@@ -888,7 +967,9 @@ public class INCRE implements CTCommonModule
 
 		String incre_enabled = "false";
 		if (!"true".equalsIgnoreCase(incre_enabled))
+		{
 			return;
+		}
 
 		// FIXME: this should really be done by DataStore itself.
 		ObjectOutputStream oos = null;
@@ -913,7 +994,10 @@ public class INCRE implements CTCommonModule
 			
 			// first item is skipped for some reason...
 			// FIXME: is this really correct? if so: explain why.
-			if (it.hasNext()) it.next();
+			if (it.hasNext())
+			{
+				it.next();
+			}
 			
 			// write the rest
 			while (it.hasNext())

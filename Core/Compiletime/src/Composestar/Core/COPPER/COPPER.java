@@ -36,11 +36,11 @@ import antlr.*;
 public class COPPER implements CTCommonModule
 {
   //global variables
-  private static String cpscontents = null; //contents of the cps file we're parsing
-  private static CpsParser parser = null;
-  private static CommonAST parseTree = null;
-  private static String embeddedSource = null; //string used to hold the source (if embedded)
-  private static boolean showtree = false; //show the parse tree?
+  private static String cpscontents; //contents of the cps file we're parsing
+  private static CpsParser parser;
+  private static CommonAST parseTree;
+  private static String embeddedSource; //string used to hold the source (if embedded)
+  private static boolean showtree; //show the parse tree?
   private static final int ALL_PHASES = 0;
   private static final int PARSE_PHASES = 1;
   
@@ -102,7 +102,9 @@ public class COPPER implements CTCommonModule
   	  			{
   	  				// remove dynamic object REFERENCED
   	  				if(entity.getDynObject("REFERENCED")!=null)
-  	  					entity.dynamicmap.remove("REFERENCED");	
+  	  				{
+  	  					entity.dynamicmap.remove("REFERENCED");
+  	  				}
   	  			}
 
   	  			if(obj instanceof Reference)
@@ -117,8 +119,7 @@ public class COPPER implements CTCommonModule
   	  				DeclaredObjectReference decl = (DeclaredObjectReference)obj;
   	  				if(decl.getDescriptionFileName()== null)
   	  				{
-  	  					if(decl.getName().equals("inner")){}
-  	  					else 
+  	  					if(!decl.getName().equals("inner")) 
   	  					{
   	  						DataStore.instance().addObject(obj);
   	  						entity.repositoryKey = entity.getUniqueID();
@@ -220,7 +221,7 @@ public class COPPER implements CTCommonModule
 		return showtree;
 	}
 	
-	public static void main(String args[])
+	public static void main(String[] args)
 	{
 	  	Debug.setMode(2);
 		System.out.println("Welcome to COPPER...");

@@ -7,7 +7,7 @@ import java.util.*;
 public class ColorView extends PlainView
 {
    Segment line ;
-   static public Hashtable keywords = null;
+   static public Hashtable keywords;
 
    public ColorView(Element e)
    {
@@ -52,7 +52,9 @@ public class ColorView extends PlainView
             		c = (Color)keywords.get(t);
             	}
             	if (c == null)
+            	{
     	   			c = Color.black;
+            	}
 
                 g.setColor(c);
 				line.count = t.length();

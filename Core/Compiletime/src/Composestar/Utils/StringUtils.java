@@ -15,14 +15,19 @@ public class StringUtils
 
 	public static String join(Collection parts, String glue)
 	{
-		if (parts.size() == 0) return "";
+		if (parts.size() == 0)
+		{
+			return "";
+		}
 
 		StringBuffer sb = new StringBuffer();
 		Iterator it = parts.iterator();
 		
 		sb.append(it.next());
 		while (it.hasNext())
+		{
 			sb.append(glue).append(it.next());
+		}
 		
 		return sb.toString();
 	}
@@ -40,14 +45,19 @@ public class StringUtils
 		
 		do {
 			int pos = whole.indexOf(delim, cur);
-			if (pos == -1) break;
+			if (pos == -1)
+			{
+				break;
+			}
 
 			parts.add(whole.substring(cur, pos));
 			cur = pos + 1;
 		} while (cur < length);
 		
 		if (cur < length)
+		{
 			parts.add(whole.substring(cur));
+		}
 		
 		String[] result = new String[parts.size()];
 		parts.toArray(result);

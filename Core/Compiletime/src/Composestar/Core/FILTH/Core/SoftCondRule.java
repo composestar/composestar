@@ -29,7 +29,9 @@ public class SoftCondRule extends Rule {
 		if ( (_left.evaluate()!=null) &&
 			 (((Action)_left).isExecuted()) && 
 			 (!_left.evaluate().booleanValue()) )
-						((Action)_right).setExecutable(false);	
+		{
+			((Action)_right).setExecutable(false);
+		}
 
 	}
 

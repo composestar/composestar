@@ -351,18 +351,24 @@ public class DoResolve {
       it4.next();
       j++;
     }
-    if (i != j) return (false); //not the same number of parameters
+    if (i != j)
+    {
+    	return false; //not the same number of parameters
+    }
 
     //start comparing
     for (; it.hasNext();) {
       l = (LabeledConcernReference) it.next();
       c = (ConcernReference) it2.next();
 
-      if (!l.getName().equals(c.getName())) return (false);
+      if (!l.getName().equals(c.getName()))
+      {
+    	  return false;
+      }
     }
 
     //ok, passed all the parameters
-    return (true);
+    return true;
   }
 
 
@@ -464,9 +470,13 @@ public class DoResolve {
 		              {
 		              		condition = (Condition) conditerator.next();
 		              		if ((ignoreCase) && (condition.getName().compareToIgnoreCase(ref.getName()) == 0))
+		              		{
 		              			found = true;
-		              		else if ((!ignoreCase) && (condition.getName().compareTo(ref.getName()) == 0)) 
+		              		}
+		              		else if ((!ignoreCase) && (condition.getName().compareTo(ref.getName()) == 0))
+		              		{
 		              			found = true;
+		              		}
 		              		if (found) 
 		              		{
 		              			ref.setRef(condition);

@@ -17,7 +17,7 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
  */
 public abstract class PlatformRepresentation  implements SerializableRepositoryEntity
 {
-	private Concern parent = null;
+	private Concern parent;
 
 	public void setParentConcern(Concern parent)
 	{

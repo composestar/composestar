@@ -27,7 +27,9 @@ public class FileUtils
 	public static String quote(String filename)
 	{
 		if (filename == null)
+		{
 			throw new IllegalArgumentException("filename cannot be null");
+		}
 		
 		return '"' + filename + '"';
 	}
@@ -38,19 +40,27 @@ public class FileUtils
 	public static String unquote(String filename)
 	{
 		if (filename == null)
+		{
 			throw new IllegalArgumentException("filename cannot be null");
+		}
 
 		filename = filename.trim();
 		
 		if ("".equals(filename) || "\"".equals(filename))
+		{
 			return "";
+		}
 		
 		if (filename.charAt(0) == '"')
+		{
 			filename = filename.substring(1);
+		}
 		
 		int end = filename.length() - 1;
 		if (filename.charAt(end) == '"')
+		{
 			filename = filename.substring(0, end);
+		}
 		
 		return filename;
 	}
@@ -100,7 +110,7 @@ public class FileUtils
 	public static boolean deleteIfExists(String filename)
 	{
 		File f = new File(filename);
-		return (f.exists() ? f.delete() : true);
+		return f.exists() ? f.delete() : true;
 	}
 
 	public static void copyFile(String dest, String source) throws IOException
@@ -115,7 +125,9 @@ public class FileUtils
 			byte[] buf = new byte[65536];
 			int len;
 			while ((len = is.read(buf)) > 0)
+			{
 				os.write(buf, 0, len);
+			}
 		}
 		finally {
 			close(is);
@@ -126,23 +138,32 @@ public class FileUtils
 	public static String removeExtension(String filename)
 	{
 		if (filename == null)
+		{
 			throw new IllegalArgumentException("filename can not be null");
+		}
 		
 		int lastdot = filename.lastIndexOf('.');
-		return (lastdot == -1 ? filename : filename.substring(0, lastdot));
+		return lastdot == -1 ? filename : filename.substring(0, lastdot);
 	}
 	
 	public static String replaceExtension(String filename, String newext)
 	{
 		if (filename == null)
+		{
 			throw new IllegalArgumentException("filename can not be null");
+		}
 		
 		if (newext == null)
+		{
 			throw new IllegalArgumentException("newext can not be null");
+		}
 		
 		StringBuffer sb = new StringBuffer(filename.length() + 16);
 		sb.append(removeExtension(filename));
-		if (! newext.startsWith(".")) sb.append(".");
+		if (! newext.startsWith("."))
+		{
+			sb.append(".");
+		}
 		sb.append(newext);
 		
 		return sb.toString();
@@ -165,8 +186,10 @@ public class FileUtils
 		throws Exception
 	{
 		if (!sourceName.startsWith(basePath))
+		{
 			throw new Exception("File + '" + sourceName
 					+ "' should be within the project basePath '" + basePath + "'");
+		}
 
 		return basePath + prefix + sourceName.substring(basePath.length());
 	}
@@ -197,9 +220,13 @@ public class FileUtils
 	{
 		int pathEnd = pathToFile.lastIndexOf('/');
 		if (pathEnd > 0)
+		{
 			return pathToFile.substring(0, pathEnd);
+		}
 		else
+		{
 			return pathToFile;
+		}
 	}
 
 	/**
@@ -247,7 +274,9 @@ public class FileUtils
 	{
 		try {
 			if (reader != null)
+			{
 				reader.close();
+			}
 		}
 		catch (IOException e) {
 			// this shouldnt happen
@@ -262,7 +291,9 @@ public class FileUtils
 	{
 		try {
 			if (writer != null)
+			{
 				writer.close();
+			}
 		}
 		catch (IOException e) {
 			// this shouldnt happen
@@ -277,7 +308,9 @@ public class FileUtils
 	{
 		try {
 			if (is != null)
+			{
 				is.close();
+			}
 		}
 		catch (IOException e) {
 			// this shouldnt happen
@@ -292,7 +325,9 @@ public class FileUtils
 	{
 		try {
 			if (os != null)
+			{
 				os.close();
+			}
 		}
 		catch (IOException e) {
 			// this shouldnt happen

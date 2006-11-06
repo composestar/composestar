@@ -8,9 +8,9 @@ import Composestar.Core.INCRE.*;
 
 public class PathHandler extends DefaultHandler 
 {
-	private ConfigManager configmanager = null;
-	private Dependency dep = null;
-	private DependencyHandler returnhandler = null;
+	private ConfigManager configmanager;
+	private Dependency dep;
+	private DependencyHandler returnhandler;
 
 	public PathHandler(ConfigManager cfg, Dependency dep, DependencyHandler returnhandler) 
 	{

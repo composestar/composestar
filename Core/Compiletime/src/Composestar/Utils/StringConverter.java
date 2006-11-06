@@ -21,7 +21,7 @@ public class StringConverter  implements Cloneable, Serializable {
             i = Integer.valueOf(value).intValue();
         }
         catch(Exception e) { i=defaultvalue; }
-        return(i);     
+        return i;     
     }
     
     /**
@@ -31,7 +31,7 @@ public class StringConverter  implements Cloneable, Serializable {
      * @roseuid 404DCD030066
      */
     public static String intToString(String value) {
-    	return(value + "");
+    	return value + "";
     }
     
     /**
@@ -56,7 +56,7 @@ public class StringConverter  implements Cloneable, Serializable {
                 e.printStackTrace();
             }
         }
-        return(list.iterator());     
+        return list.iterator();     
     }
     
     /**
@@ -67,7 +67,7 @@ public class StringConverter  implements Cloneable, Serializable {
      * @roseuid 404DCD0300E3
      */
     public static Iterator stringToIntList(String value) {
-    	return(StringConverter.stringToIntList(value,","));     
+    	return StringConverter.stringToIntList(value,",");     
     }
     
     /**
@@ -97,7 +97,7 @@ public class StringConverter  implements Cloneable, Serializable {
      * @roseuid 404DCD030160
      */
     public static String intListToString(int[] values) {
-    	return(StringConverter.intListToString(values,","));     
+    	return StringConverter.intListToString(values,",");     
     }
     
     /**
@@ -114,7 +114,7 @@ public class StringConverter  implements Cloneable, Serializable {
     	{
     			list.add(st.nextToken());
     	}
-    	return(list.iterator());     
+    	return list.iterator();     
     }
     
     /**
@@ -124,7 +124,7 @@ public class StringConverter  implements Cloneable, Serializable {
      * @roseuid 404DCD0301ED
      */
     public static Iterator stringToStringList(String value) {
-    	return(StringConverter.stringToStringList(value,","));     
+    	return StringConverter.stringToStringList(value,",");     
     }
     
     /**
@@ -155,6 +155,6 @@ public class StringConverter  implements Cloneable, Serializable {
      * @roseuid 404DCD03025A
      */
     public static String stringListToString(String[] values) {
-    	return(StringConverter.stringListToString(values,","));     
+    	return StringConverter.stringListToString(values,",");     
     }
 }

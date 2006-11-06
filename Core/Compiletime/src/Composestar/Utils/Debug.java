@@ -72,7 +72,10 @@ public class Debug
 					break;
 			}
 
-			if (filename == null) filename = "";
+			if (filename == null)
+			{
+				filename = "";
+			}
 			System.out.println(module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg);
 		}
 	}
@@ -113,30 +116,46 @@ public class Debug
 				out(getModeLevel(mode), module, msg, filename, Integer.parseInt(linenum));
 			}
 			else
+			{
 				Debug.out(Debug.MODE_ERROR, "DEBUG", "Wrong log line: '" + line + "'");
+			}
 		}
 	}
 	
 	private static int getModeLevel(String mode)
 	{
 		if ("error".equals(mode))
+		{
 			return MODE_ERROR;
+		}
 		else if ("crucial".equals(mode))
+		{
 			return MODE_CRUCIAL;
+		}
 		else if ("warning".equals(mode))
+		{
 			return MODE_WARNING;
+		}
 		else if ("information".equals(mode))
+		{
 			return MODE_INFORMATION;
+		}
 		else if ("debug".equals(mode))
+		{
 			return MODE_DEBUG;
+		}
 		else
+		{
 			return MODE_CRUCIAL;
+		}
 	}
     
 	public static void outWarnings() 
 	{
 		if (warnings > 0)
+		{
 			System.out.println("Warnings: " + warnings + '.');
+		}
 	}
 	
 	public static String stackTrace(Throwable t)

@@ -74,7 +74,9 @@ public class INCREReporter
 			while(timerItr.hasNext()){
 				INCRETimer timer = (INCRETimer)timerItr.next();
 				if(timer.getType()== type)
+				{
 					total += timer.getElapsed();
+				}
 			}
 		}
 		
@@ -104,7 +106,9 @@ public class INCREReporter
 		if(type == INCRETimer.TYPE_INCREMENTAL){
 			INCRE incre = INCRE.instance();
 			if(!incre.isModuleInc(name))
-				verifiedtype = INCRETimer.TYPE_NORMAL;		
+			{
+				verifiedtype = INCRETimer.TYPE_NORMAL;
+			}
 		}
 			
 		INCRETimer timer = new INCRETimer(name,description,verifiedtype);

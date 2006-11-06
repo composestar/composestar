@@ -63,7 +63,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 	public Object get(Object key) 
 	{
 		int index = m_keys.indexOf(key);
-		return (index < 0 ? null : m_values.elementAt(index));
+		return index < 0 ? null : m_values.elementAt(index);
 	}
 
 	public Object put(Object key, Object value) 
@@ -130,7 +130,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public String toString()
 	{
-		return (m_keys + " == " + m_values);
+		return m_keys + " == " + m_values;
 	}
 
 	public Object clone() throws CloneNotSupportedException
@@ -151,7 +151,9 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 			{
 				RepositoryEntity re = (RepositoryEntity)value;
 				if (re.getDynObject("REFERENCED") == null)
+				{
 					removeKeys.addElement(key);
+				}
 			}
 		}
 		for (Enumeration e = removeKeys.elements(); e.hasMoreElements(); )

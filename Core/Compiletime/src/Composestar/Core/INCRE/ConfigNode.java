@@ -25,7 +25,9 @@ public class ConfigNode extends Node
 				return "EMPTY_CONFIG"; 
 			}
 			else 
+			{
 				return config;
+			}
 					
 		}
 		catch(Exception excep){

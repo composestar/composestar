@@ -43,7 +43,7 @@ public class StarCondition extends FilterModuleElementReference {
    */
   public boolean addCondition(ConditionReference c) {
     conditionSet.addElement(c);
-    return (true);
+    return true;
   }
 
 
@@ -57,7 +57,7 @@ public class StarCondition extends FilterModuleElementReference {
   public ConditionReference removeCondition(int index) {
     Object o = conditionSet.elementAt(index);
     conditionSet.removeElementAt(index);
-    return ((ConditionReference) o);
+    return (ConditionReference) o;
   }
 
 
@@ -69,7 +69,7 @@ public class StarCondition extends FilterModuleElementReference {
    * @roseuid 401FAA680373
    */
   public ConditionReference getCondition(int index) {
-    return ((ConditionReference) conditionSet.elementAt(index));
+    return (ConditionReference) conditionSet.elementAt(index);
   }
 
 
@@ -79,6 +79,6 @@ public class StarCondition extends FilterModuleElementReference {
    * @roseuid 401FAA680387
    */
   public Iterator getConditionIterator() {
-    return (new CPSIterator(conditionSet));
+    return new CPSIterator(conditionSet);
   }
 }

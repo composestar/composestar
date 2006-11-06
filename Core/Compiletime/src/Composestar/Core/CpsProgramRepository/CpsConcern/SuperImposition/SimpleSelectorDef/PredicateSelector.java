@@ -96,18 +96,24 @@ public class PredicateSelector extends SimpleSelExpression
     Clause prologGoal=Clause.goalFromString(query);
     Vector answers = evaluateGoal(prologGoal, outputVar);
     if (PrologErrorState.SUCCESS != PrologErrorState.getCode())
+    {
       throw new ModuleException("During predicate evaluation: " + PrologErrorState.getMessage(), "LOLA", this);
+    }
     
     // Ensure that list of answers does not contain duplicates, the lame way....
     HashSet uniqAnswers = new HashSet();
     for (int i = 0; i < answers.size(); i++)
+    {
     	uniqAnswers.add(answers.elementAt(i));
+    }
     
     for (Iterator iter = uniqAnswers.iterator(); iter.hasNext();)
     {
 	  Object element = iter.next();
       if (!(element instanceof ProgramElement))
+      {
         Debug.out(Debug.MODE_WARNING, "LOLA", "Error: the output variable '" + outputVar + "' does not return (only) Language Units for this query:\n" + query, this);
+      }
       else
       {
     	  ProgramElement unit = (ProgramElement)element;
@@ -252,10 +258,14 @@ public class PredicateSelector extends SimpleSelExpression
     }
     
     if(answers.isEmpty())
+    {
     	toBeCheckedByINCRE = false; // no answers, do not skip this selector
+    }
     
     if (answers.size() >= 50000) // Arbitrary number...what would be reasonable to expect?
+    {
       Debug.out(Debug.MODE_WARNING, "LOLA", "Over 50k results; maybe this prolog expression generates infinite results:\n" + query, this);
+    }
     return answers;
  }
   
@@ -278,7 +288,9 @@ public class PredicateSelector extends SimpleSelExpression
     			}
     		}
     		else // relations cannot be found
+    		{
     			this.toBeCheckedByINCRE = false;
+    		}
   		}
   	}
   	catch(ModelClashException mce){
@@ -326,7 +338,9 @@ public class PredicateSelector extends SimpleSelExpression
   		
   		HashMap list = new HashMap();
 		if(this.TYMInfo.containsKey(key))
+		{
 			list = (HashMap)TYMInfo.get(key);
+		}
 				
 		list.put(method.getReference(),method);
 		this.TYMInfo.put(key,list);
@@ -457,7 +471,9 @@ public class PredicateSelector extends SimpleSelExpression
 				className = source.getClassName();
 			}
     		else if( impl instanceof CompiledImplementation )
+    		{
 				className = ((CompiledImplementation)impl).getClassName();
+    		}
 			
     		unit2 = (ProgramElement)typeMap.get(className);
   		}

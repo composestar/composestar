@@ -144,15 +144,25 @@ public class LangNamespace extends ProgramElement
   public UnitResult getUnitRelation(String argumentName)
   {
     if (argumentName.equals("ChildNamespaces"))
+    {
       return new UnitResult(childNamespaces);
+    }
     else if (argumentName.equals("ParentNamespace"))
+    {
       return new UnitResult(parentNamespace);
+    }
     else if (argumentName.equals("ChildClasses"))
+    {
       return new UnitResult(childClasses);
+    }
     else if (argumentName.equals("ChildInterfaces"))
+    {
       return new UnitResult(childInterfaces);
+    }
     else
+    {
       System.err.println("LangNamespace: unknown unit relation: " + argumentName);
+    }
     return null;
   }
 

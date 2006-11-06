@@ -42,7 +42,9 @@ public class InnerDispatcher {
 	public static FilterModuleReference getInnerDispatchReference()
 	{
 		if( innerDispatchReference == null )
+		{
 			innerDispatchReference = InnerDispatcher.createInnerDispatchReference();
+		}
 		return innerDispatchReference;
 	}
 	

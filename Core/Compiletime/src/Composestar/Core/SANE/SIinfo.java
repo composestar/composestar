@@ -73,7 +73,7 @@ public Vector theFmSIinfo = new Vector();
    * @roseuid 4053AD6703E0
    */
   public CpsConcern myConcern() {
-    return ((CpsConcern) this.getParent());
+    return (CpsConcern) this.getParent();
   }
 
 

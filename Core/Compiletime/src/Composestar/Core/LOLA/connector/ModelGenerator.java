@@ -50,9 +50,13 @@ public class ModelGenerator
     {
       LanguageUnitType type = (LanguageUnitType)types.next();
       if (type instanceof CompositeLanguageUnitType)
+      {
         output.println(genCompositeUnitTypePredicates((CompositeLanguageUnitType)type));
+      }
       else
+      {
         output.println(genUnitTypePredicates(type));
+      }
     }
     
     output.println("\n\n%% Definition of relations between language units\n");
@@ -62,9 +66,13 @@ public class ModelGenerator
     {
       RelationPredicate rel = (RelationPredicate)rels.next();
       if (rel instanceof CompositeRelationPredicate)
+      {
         output.println(genCompositeRelationPredicate((CompositeRelationPredicate)rel));
+      }
       else
+      {
         output.println(genRelationPredicate(rel));
+      }
     }
     
   }
@@ -82,10 +90,14 @@ public class ModelGenerator
     // Definition of isSomethingWithName(Unit, Name) predicate
       res.append("is").append(typeName).append("WithName(Unit, Name) :-\n  ");
     if (!type.isNameUnique()) // Since the name is not unique, we need to apply the Source->answer generator
+    {
       res.append("check_or_gen1(");
+    }
       res.append("isUnitNameBuiltin(Unit, Name, '").append(typeName).append("')");
     if (!type.isNameUnique())
+    {
       res.append(')');
+    }
     res.append(".\n\n");
     
     // Definition of isSomethingWithAttribute predicate (many-to-many relation)
@@ -137,7 +149,9 @@ public class ModelGenerator
     {
       res += i.next();
       if (i.hasNext()) // Only when there are more elements
+      {
         res += ", ";
+      }
     }
     return res;
   }
@@ -196,7 +210,9 @@ public class ModelGenerator
       res.append(rel.getPredicateName()).append("Builtin");
       res.append('(').append(commaSeparated(varList)).append(')');
     if (!(var1unique && var2unique)) // Some generator was included, so we have to add the closing ')'
+    {
       res.append(')');
+    }
     res.append(".\n\n");
     
     return res.toString();

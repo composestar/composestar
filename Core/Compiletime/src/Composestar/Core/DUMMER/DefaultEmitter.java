@@ -23,7 +23,9 @@ public class DefaultEmitter implements DummyEmitter
 	public void createDummies(Project project, List sources, List outputFilenames) throws ModuleException
 	{
 		if (sources.size() != outputFilenames.size())
+		{
 			throw new ModuleException("Lists of source- and outputfilenames do not have equal length!", "DUMMER");
+		}
 		
 		Iterator srcIter = sources.iterator();
 		Iterator outIter = outputFilenames.iterator();

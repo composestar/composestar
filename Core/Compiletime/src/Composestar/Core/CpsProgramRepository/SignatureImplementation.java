@@ -17,10 +17,10 @@ import Composestar.Core.RepositoryImplementation.*;
  */
 public class SignatureImplementation implements SerializableRepositoryEntity {
   public int RelationType;
-  public final static int NORMAL = 1;
-  public final static int ADDED = 2;
-  public final static int REMOVED = 4;
-  public final static int ALL = 255;
+  public static final int NORMAL = 1;
+  public static final int ADDED = 2;
+  public static final int REMOVED = 4;
+  public static final int ALL = 255;
   //private MethodInfo DotNETPresentation;
 
 

@@ -61,7 +61,7 @@ public class MethodReference extends FilterModuleElementReference {
    */
   public boolean addParameter(ConcernReference parameter) {
     parameterTypeList.addElement(parameter);
-    return (true);
+    return true;
   }
 
 
@@ -74,7 +74,7 @@ public class MethodReference extends FilterModuleElementReference {
   public ConcernReference removeParameter(int index) {
     Object o = parameterTypeList.elementAt(index);
     parameterTypeList.removeElementAt(index);
-    return ((ConcernReference) o);
+    return (ConcernReference) o;
   }
 
 
@@ -85,7 +85,7 @@ public class MethodReference extends FilterModuleElementReference {
    * @roseuid 40ADE346038F
    */
   public ConcernReference getParameter(int index) {
-    return ((ConcernReference) parameterTypeList.elementAt(index));
+    return (ConcernReference) parameterTypeList.elementAt(index);
   }
 
 
@@ -95,7 +95,7 @@ public class MethodReference extends FilterModuleElementReference {
    * @roseuid 40ADE35901C9
    */
   public Iterator getParameterIterator() {
-    return (new CPSIterator(parameterTypeList));
+    return new CPSIterator(parameterTypeList);
   }
 
 	/**

@@ -48,7 +48,7 @@ public class ConditionBinding extends Binding {
    */
   public boolean addCondition(ConditionReference c) {
     conditionSet.addElement(c);
-    return (true);
+    return true;
   }
 
 
@@ -60,7 +60,7 @@ public class ConditionBinding extends Binding {
    */
   public boolean addCondition(StarCondition c) {
     conditionSet.addElement(c);
-    return (true);
+    return true;
   }
 
 
@@ -74,7 +74,7 @@ public class ConditionBinding extends Binding {
   public Object removeCondition(int index) { //fixme: could be star or single object
     Object o = conditionSet.elementAt(index);
     conditionSet.removeElementAt(index);
-    return (o);
+    return o;
   }
 
 
@@ -86,7 +86,7 @@ public class ConditionBinding extends Binding {
    * @roseuid 401FAA58001C
    */
   public Object getCondition(int index) { //fixme: could be star or single object
-    return (conditionSet.elementAt(index));
+    return conditionSet.elementAt(index);
   }
 
 
@@ -97,7 +97,7 @@ public class ConditionBinding extends Binding {
    * @roseuid 401FAA58003A
    */
   public Iterator getConditionIterator() {
-    return (new CPSIterator(conditionSet));
+    return new CPSIterator(conditionSet);
   }
 
 

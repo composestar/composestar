@@ -55,7 +55,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    */
   public boolean addFilterModuleBinding(FilterModuleBinding filtermodule) {
     filterModules.addElement(filtermodule);
-    return (true);
+    return true;
   }
 
   public void addAnnotationBinding(AnnotationBinding annotBinding)
@@ -74,7 +74,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
   public FilterModuleBinding removeFilterModuleBinding(int index) {
     Object o = filterModules.elementAt(index);
     filterModules.removeElementAt(index);
-    return ((FilterModuleBinding) o);
+    return (FilterModuleBinding) o;
   }
 
 
@@ -87,7 +87,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA690161
    */
   public FilterModuleBinding getFilterModuleBinding(int index) {
-    return ((FilterModuleBinding) filterModules.elementAt(index));
+    return (FilterModuleBinding) filterModules.elementAt(index);
   }
 
 
@@ -98,7 +98,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA69016C
    */
   public Iterator getFilterModuleBindingIterator() {
-    return (new CPSIterator(filterModules));
+    return new CPSIterator(filterModules);
   }
 
   /**
@@ -120,7 +120,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    */
   public boolean addMethodBinding(MethodBinding mehod) {
     methods.addElement(mehod);
-    return (true);
+    return true;
   }
 
 
@@ -135,7 +135,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
   public MethodBinding removeMehodBinding(int index) {
     Object o = methods.elementAt(index);
     methods.removeElementAt(index);
-    return ((MethodBinding) o);
+    return (MethodBinding) o;
   }
 
 
@@ -148,7 +148,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA69019E
    */
   public MethodBinding getMethodBinding(int index) {
-    return ((MethodBinding) methods.elementAt(index));
+    return (MethodBinding) methods.elementAt(index);
   }
 
 
@@ -159,7 +159,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6901B2
    */
   public Iterator getMethodBindingIterator() {
-    return (new CPSIterator(methods));
+    return new CPSIterator(methods);
   }
 
 
@@ -174,7 +174,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    */
   public boolean addConditionBinding(ConditionBinding condition) {
     conditions.addElement(condition);
-    return (true);
+    return true;
   }
 
 
@@ -189,7 +189,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
   public ConditionBinding removeConditionBinding(int index) {
     Object o = conditions.elementAt(index);
     conditions.removeElementAt(index);
-    return ((ConditionBinding) o);
+    return (ConditionBinding) o;
   }
 
 
@@ -202,7 +202,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6901E4
    */
   public ConditionBinding getConditionBinding(int index) {
-    return ((ConditionBinding) conditions.elementAt(index));
+    return (ConditionBinding) conditions.elementAt(index);
   }
 
 
@@ -213,7 +213,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6901F8
    */
   public Iterator getConditionBindingIterator() {
-    return (new CPSIterator(conditions));
+    return new CPSIterator(conditions);
   }
 
 
@@ -228,7 +228,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    */
   public boolean addSelectorDefinition(SelectorDefinition selector) {
     selectors.addElement(selector);
-    return (true);
+    return true;
   }
 
 
@@ -243,7 +243,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
   public SelectorDefinition removeSelectorDefinition(int index) {
     Object o = selectors.elementAt(index);
     selectors.removeElementAt(index);
-    return ((SelectorDefinition) o);
+    return (SelectorDefinition) o;
   }
 
 
@@ -256,7 +256,7 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA690233
    */
   public SelectorDefinition getSelectorDefinition(int index) {
-    return ((SelectorDefinition) selectors.elementAt(index));
+    return (SelectorDefinition) selectors.elementAt(index);
   }
 
 
@@ -267,6 +267,6 @@ public class SuperImposition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA690247
    */
   public Iterator getSelectorIterator() {
-    return (new CPSIterator(selectors));
+    return new CPSIterator(selectors);
   }
 }

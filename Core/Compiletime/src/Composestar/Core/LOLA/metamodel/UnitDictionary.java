@@ -68,7 +68,7 @@ public class UnitDictionary
     if (null == langModel)
     {
       Debug.out(Debug.MODE_WARNING, "LOLA", "UnitDictionary: internal error; no language model has been set!");
-      throw new ModuleException("UnitDictionary needs a language model to function correctly!");
+      throw new ModuleException("UnitDictionary needs a language model to function correctly!", "LOLA");
     }
     try
     {
@@ -80,7 +80,9 @@ public class UnitDictionary
       
       // Step 1: Add the unit to the namebased index
       if (!unitsByName.containsKey(type)) // Might be the first unit of this type
-        unitsByName.put(type, new Hashtable()); // If yes, create the table for this type  	    
+      {
+        unitsByName.put(type, new Hashtable()); // If yes, create the table for this type
+      }
 
       Hashtable nameTypeTable = (Hashtable)unitsByName.get(type);
       if (unitInfo.isNameUnique()) // Unit has unique name; add it directly.
@@ -98,7 +100,9 @@ public class UnitDictionary
       else // The unit might not have a unique name
       { // If no other unit with this name exists yet, create a hashset of names
         if (!nameTypeTable.containsKey(name))
+        {
           nameTypeTable.put(name, new HashSet());
+        }
         
         // Add the unit with this name to the hashset, and the hashset to the nametable.
         HashSet nameSet = (HashSet)nameTypeTable.get(name);
@@ -109,7 +113,9 @@ public class UnitDictionary
       // Step 2: Add the unit to the index by type
       // First unit of this type? Create a hashtable to store units of this type.
       if (!unitsByType.containsKey(type))
+      {
         unitsByType.put(type, new HashSet());
+      }
       
       // Add the unit to the 'unitsByType' dictionary
       HashSet typeSet = (HashSet)unitsByType.get(type);
@@ -173,11 +179,17 @@ public class UnitDictionary
     {
       Object result = names.get(name);
       if (result instanceof ProgramElement)
+      {
         return new UnitResult((ProgramElement)result);
+      }
       else if (result instanceof HashSet)
+      {
         return new UnitResult((HashSet)result);
+      }
       else
+      {
         System.err.println("Internal error: wrong object type in UnitDictionary");
+      }
     }
     return null;
   }
@@ -200,9 +212,13 @@ public class UnitDictionary
       if (null != typeRes)
       {
         if (typeRes.isSingleValue())
+        {
           result.add(typeRes.singleValue());
+        }
         else
+        {
           result.addAll(typeRes.multiValue());
+        }
       }
     }
     return new UnitResult(result);
@@ -231,7 +247,9 @@ public class UnitDictionary
 
     Iterator types = unitsByType.values().iterator();
     while (types.hasNext())
+    {
       result.addAll((HashSet)types.next());
+    }
     
     return new UnitResult(result);
   }

@@ -32,7 +32,7 @@ public class CPSIterator implements Iterator {
      * @roseuid 40ADF32500A3
      */
     public boolean hasNext() {
-		return (index < v.size());     
+		return index < v.size();     
     }
     
     /**

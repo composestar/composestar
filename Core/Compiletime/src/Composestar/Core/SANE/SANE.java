@@ -140,8 +140,10 @@ public class SANE implements CTCommonModule
 						}
 					}
 					else
+					{
 						throw new ModuleException("Can superimpose filtermodules only on Concerns/Classes;\n" +
 								"make sure selector " + selRef.getQualifiedName() + " selects only elements of those types", MODULE_NAME);
+					}
 				} // for
 			} //for
 		} // if !=null

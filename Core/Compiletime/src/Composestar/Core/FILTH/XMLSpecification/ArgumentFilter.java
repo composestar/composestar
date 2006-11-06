@@ -16,14 +16,17 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
 public class ArgumentFilter extends XMLFilterImpl{
-	protected String _left, _right;
-	public String getLeft(){ return _left; }
-	public String getRight(){ return _right; }
+	protected String _left;
+	protected String _right;
 
-	private boolean sleft=false, sright=false;
+	private boolean sleft;
+	private boolean sright;
 
 	public ArgumentFilter(){}
 	public ArgumentFilter(XMLReader parent){  super(parent); }
+	
+	public String getLeft(){ return _left; }
+	public String getRight(){ return _right; }
 	
 	public void 
 	startElement (String uri, String localName, String qName,
@@ -58,9 +61,13 @@ public class ArgumentFilter extends XMLFilterImpl{
 		String s = new String(buf, offset, len);
 //		System.out.println("CHAR "+s+" "+sleft);
 		if (sleft && !sright)
+		{
 			_left=s;
+		}
 		if (sright && !sleft)
+		{
 			_right=s;
+		}
 		
 	}
 	

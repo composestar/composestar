@@ -82,7 +82,7 @@ public class ExistFilterModule implements BaseChecker {
 		boolean nonFatal = performCheck();
 		
 		if(!nonFatal) {
-      throw (new ModuleException("One or more FilterModules in filtermodules are not declared", "CHKREP") );
+      throw new ModuleException("One or more FilterModules in filtermodules are not declared", "CHKREP");
     }
 	}
 

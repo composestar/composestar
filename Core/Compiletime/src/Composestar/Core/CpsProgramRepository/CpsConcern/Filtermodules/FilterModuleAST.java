@@ -56,7 +56,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    */
   public boolean addCondition(Condition condition) {
     conditions.addElement(condition);
-    return (true);
+    return true;
   }
 
 
@@ -70,7 +70,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
   public Condition removeCondition(int index) {
     Object o = conditions.elementAt(index);
     conditions.removeElementAt(index);
-    return ((Condition) o);
+    return (Condition) o;
   }
 
 
@@ -82,7 +82,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640023
    */
   public Condition getCondition(int index) {
-    return ((Condition) conditions.elementAt(index));
+    return (Condition) conditions.elementAt(index);
   }
 
 
@@ -93,7 +93,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64002E
    */
   public Iterator getConditionIterator() {
-    return (new CPSIterator(conditions));
+    return new CPSIterator(conditions);
   }
 
 
@@ -126,7 +126,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
   public InternalAST removeInternal(int index) {
     Object o = internals.elementAt(index);
     internals.removeElementAt(index);
-    return ((InternalAST) o);
+    return (InternalAST) o;
   }
 
 
@@ -138,7 +138,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640073
    */
   public InternalAST getInternal(int index) {
-    return ((InternalAST) internals.elementAt(index));
+    return (InternalAST) internals.elementAt(index);
   }
 
 
@@ -149,7 +149,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64007E
    */
   public Iterator getInternalIterator() {
-    return (new CPSIterator(internals));
+    return new CPSIterator(internals);
   }
 
 
@@ -182,7 +182,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
   public External removeExternal(int index) {
     Object o = externals.elementAt(index);
     externals.removeElementAt(index);
-    return ((External) o);
+    return (External) o;
   }
 
 
@@ -194,7 +194,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6400B0
    */
   public External getExternal(int index) {
-    return ((External) externals.elementAt(index));
+    return (External) externals.elementAt(index);
   }
 
 
@@ -205,7 +205,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6400C4
    */
   public Iterator getExternalIterator() {
-    return (new CPSIterator(externals));
+    return new CPSIterator(externals);
   }
 
 
@@ -220,7 +220,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    */
   public boolean addMethod(Method method) {
     methods.addElement(method);
-    return (true);
+    return true;
   }
 
 
@@ -234,7 +234,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
   public Method removeMethod(int index) {
     Object o = methods.elementAt(index);
     methods.removeElementAt(index);
-    return ((Method) o);
+    return (Method) o;
   }
 
 
@@ -246,7 +246,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640109
    */
   public Method getMethod(int index) {
-    return ((Method) methods.elementAt(index));
+    return (Method) methods.elementAt(index);
   }
 
 
@@ -257,7 +257,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64011D
    */
   public Iterator getMethodIterator() {
-    return (new CPSIterator(methods));
+    return new CPSIterator(methods);
   }
 
 
@@ -290,7 +290,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
   public Filter removeInputFilter(int index) {
     Object o = inputFilters.elementAt(index);
     inputFilters.removeElementAt(index);
-    return ((Filter) o);
+    return (Filter) o;
   }
 
 
@@ -302,7 +302,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64014F
    */
   public Filter getInputFilter(int index) {
-    return ((Filter) inputFilters.elementAt(index));
+    return (Filter) inputFilters.elementAt(index);
   }
 
 
@@ -313,7 +313,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA640163
    */
   public Iterator getInputFilterIterator() {
-    return (new CPSIterator(inputFilters));
+    return new CPSIterator(inputFilters);
   }
 
 
@@ -345,7 +345,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
   public Filter removeOutputFilter(int index) {
     Object o = outputFilters.elementAt(index);
     outputFilters.removeElementAt(index);
-    return ((Filter) o);
+    return (Filter) o;
   }
 
 
@@ -357,7 +357,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA64019F
    */
   public FilterAST getOutputFilter(int index) {
-    return ((FilterAST) outputFilters.elementAt(index));
+    return (FilterAST) outputFilters.elementAt(index);
   }
 
 
@@ -368,20 +368,24 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6401B4
    */
   public Iterator getOutputFilterIterator() {
-    return (new CPSIterator(outputFilters));
+    return new CPSIterator(outputFilters);
   }
   
   /* Returns true when this identifier has not been used yet, within this filtermodule. */
   
   public boolean isIdentifierUnique(String identifier)
   { // Not sure if methods and conditions should also be included here? - WH
-	  Vector allIdentifiers[] = {internals, externals, inputFilters, outputFilters };
+	  Vector[] allIdentifiers = {internals, externals, inputFilters, outputFilters };
 	  
 	  for (int i = 0; i < allIdentifiers.length; i++)
 	  {
 		  for (int j = 0; j < allIdentifiers[i].size(); j++)
+		  {
 			  if (((DeclaredRepositoryEntity)allIdentifiers[i].elementAt(j)).getName().equals(identifier))
+			  {
 				  return false;
+			  }
+		  }
 	  }
 	  return true;
   }
@@ -417,7 +421,7 @@ public class FilterModuleAST extends DeclaredRepositoryEntity {
    * @return java.util.Iterator
    */
   public Iterator getParameterIterator() {
-	    return (new CPSIterator(parameters));
+	    return new CPSIterator(parameters);
 	  }
   
   public Vector getOutputFilters(){

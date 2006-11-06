@@ -146,13 +146,19 @@ public class SyntacticSugarExpander {
 					    {
 					    	//System.out.println("Impl is of type Source: "+((Source)concern.getImplementation()).getClassName());
 					    	Iterator it = StringConverter.stringToStringList(((Source)concern.getImplementation()).getClassName(),".");
-					    	while(it.hasNext()) vtemp.add(it.next());
+					    	while(it.hasNext()) 
+					    	{
+					    		vtemp.add(it.next());
+					    	}
 					    }
 					    else if(concern.getImplementation() instanceof CompiledImplementation)
 					    {
 					    	//System.out.println("Impl is of type CompiledImplementation: "+((CompiledImplementation)concern.getImplementation()).getClassName());
 					    	Iterator it = StringConverter.stringToStringList(((CompiledImplementation)concern.getImplementation()).getClassName(),".");
-					    	while(it.hasNext()) vtemp.add(it.next());
+					    	while(it.hasNext())
+					    	{
+					    		vtemp.add(it.next());
+					    	}
 						}
 					    else
 					    {

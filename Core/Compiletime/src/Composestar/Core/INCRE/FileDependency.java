@@ -27,7 +27,9 @@ public class FileDependency extends Dependency
 		Object dep = obj;
 					
 		if(!mypath.isEmpty())
+		{
 			dep = mypath.follow(obj);
+		}
 					
 		if(dep.getClass().equals(String.class))
 		{
@@ -35,9 +37,13 @@ public class FileDependency extends Dependency
 			files = new ArrayList(Arrays.asList(filename.split(",")));
 		}
 		else if(dep.getClass().equals(ArrayList.class))
+		{
 			return dep;
+		}
 		else if(dep!=null)
+		{
 			throw new ModuleException("Unknown filedependency found","INCRE");
+		}
 
 		return files;
 	}

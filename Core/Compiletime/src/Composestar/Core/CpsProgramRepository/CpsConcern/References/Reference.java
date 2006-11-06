@@ -114,7 +114,9 @@ public abstract class Reference extends RepositoryEntity {
    */
   public void setPackage(Vector packValue) {
     if( packValue == null )
+    {
     	packValue = new Vector();
+    }
     
     this.pack = packValue;
   }
@@ -126,7 +128,7 @@ public abstract class Reference extends RepositoryEntity {
       fname += pack.elementAt(i)+".";
     }
     fname += name;
-    return (fname);
+    return fname;
   }
 
 }

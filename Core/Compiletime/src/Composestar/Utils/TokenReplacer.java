@@ -29,24 +29,37 @@ public class TokenReplacer
 		while (pos < end)
 		{
 			int lcurly = s.indexOf('{', pos);			
-			if (lcurly == -1) break;
+			if (lcurly == -1)
+			{
+				break;
+			}
 
 			int rcurly = s.indexOf('}', lcurly);
-			if (rcurly == -1 || rcurly - lcurly < 1) { pos = lcurly; continue; }			
+			if (rcurly == -1 || rcurly - lcurly < 1) 
+			{
+				pos = lcurly; 
+				continue; 
+			}			
 			
 			String prefix = s.substring(pos, lcurly);
 			sb.append(prefix);
 
 			String token = s.substring(lcurly + 1, rcurly);
 			String replacement = getReplacement(token);			
-			if (replacement == null) { pos = lcurly; continue; }
+			if (replacement == null) 
+			{ 
+				pos = lcurly; 
+				continue; 
+			}
 			
 			sb.append(replacement);			
 			pos = rcurly + 1;
 		}
 		
 		if (end - pos > 0)
+		{
 			sb.append(s.substring(pos));
+		}
 		
 		return sb.toString();
 	}

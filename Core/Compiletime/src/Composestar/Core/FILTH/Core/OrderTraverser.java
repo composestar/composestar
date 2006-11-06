@@ -18,7 +18,9 @@ public class OrderTraverser {
 	public static LinkedList cloneLinkedList(LinkedList l){
 		LinkedList temp=new LinkedList();
 		for (Iterator i=l.iterator();i.hasNext();)
+		{
 			temp.add(i.next());
+		}
 		return temp;
 	}
 	
@@ -51,15 +53,19 @@ public class OrderTraverser {
 			/* when there is no node for expansion two situations are possible: */
 			/* when the set of available nodes is empty */
 			if (nodes.isEmpty())
+			{
 				/* we reached every node, the final order is ready */
 				return order;
+			}
 
 
 
 			LinkedList candidates=selectCandidates(nodes,order);
 
 			if (candidates==null)
+			{
 				exploreCycle(nodes, order);
+			}
 			
 			//System.out.println("<--- candidates begin --->");
 			//for (Iterator t=candidates.iterator();t.hasNext(); )
@@ -82,9 +88,13 @@ public class OrderTraverser {
 					LinkedList newNodes=OrderTraverser.cloneLinkedList(nodes);
 					LinkedList newOrder=OrderTraverser.cloneLinkedList(order);
 					if (c==0)
+					{
 						current=(Node)i.next();
+					}
 					else
-						multiOrder.add(takeOnePath((Node)i.next(),newNodes,newOrder,multiOrder));			
+					{
+						multiOrder.add(takeOnePath((Node)i.next(),newNodes,newOrder,multiOrder));
+					}
 				}
 			}			
 		
@@ -112,11 +122,15 @@ public class OrderTraverser {
 			}
 			/* if all the parents has already been traversed and parents are passed */
 			if (pc)
+			{
 				candidates.add(current);
+			}
 		}
 		/* if there is no candidate node return null */
 		if (candidates.isEmpty())
+		{
 			return null;
+		}
 		/* if there are more possible candidates are available select one randomly ~ non-determinism*/
 		return candidates;
 	}
@@ -185,7 +199,9 @@ public class OrderTraverser {
 		}
 		/* if there is no candidate node return null */
 		if (candidates.isEmpty())
+		{
 			return null;
+		}
 		/* if there are more possible candidates are available select one randomly ~ non-determinism*/
 		return (Node)candidates.get(new Random().nextInt(candidates.size()));
 	}
@@ -207,7 +223,9 @@ public class OrderTraverser {
 				aParent=currentEdge.getLeft();
 				/* we've found a node with a parent already passed */
 				if (used.contains(aParent))
+				{
 					start=currentEdge.getRight();
+				}
 			}
 			
 		}
@@ -274,8 +292,12 @@ public class OrderTraverser {
 		public boolean isInThePath(LinkedList path){
 			
 			for (Iterator i=path.iterator();i.hasNext();)
+			{
 				if ( ((Pair)i.next()).getNode().getElement().equals(this._node.getElement()) )
+				{
 					return true;
+				}
+			}
 			return false;
 		}
 	}
@@ -289,7 +311,9 @@ public class OrderTraverser {
 			e=(Edge)i.next();
 			//we don't extend the database with the edges to the root node and the node from which we come
 			if ( (!e.equals(exc)) && (!e.getLeft().getElement().equals("root")) ) //not the exception edge and the edges referring back to the root node
+			{
 				p.addEdge(e);
+			}
 
 		}
 		//db.addFirst(p);
@@ -303,7 +327,9 @@ public class OrderTraverser {
 			n=((Pair)i.next()).getNode();
 			//System.out.print(n.getElement()+" ");
 			if (stopPair.getNode().getElement().equals(n.getElement()))
+			{
 				break;
+			}
 		}
 		//System.out.println("\n<<cycle-end>>>");
 	}

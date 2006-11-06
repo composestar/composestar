@@ -100,7 +100,10 @@ public abstract class LOLA implements CTCommonModule
 		/* Initialize the prolog engine */
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Initializing the prolog interpreter");
 
-		if(!Init.startJinni()) return;
+		if(!Init.startJinni()) 
+		{
+			return;
+		}
 		Init.builtinDict=new Builtins();
 		ComposestarBuiltins.setUnitDictionary(unitDict);
 		Init.builtinDict.putAll(new ComposestarBuiltins(langModel));
@@ -108,14 +111,22 @@ public abstract class LOLA implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Consulting base predicate libraries");
 
 		if (Init.askJinni("reconsult('" + prologLibraryFilename + "')").equals("no"))
+		{
 			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog base library! Expected location: " + prologLibraryFilename);
+		}
 		if (Init.askJinni("reconsult('" + prologConnectorFilename + "')").equals("no"))
+		{
 			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog connector library! Expected location: " + prologConnectorFilename);
+		}
 		if (Init.askJinni("reconsult('" + generatedPredicatesFilename + "')").equals("no"))
+		{
 			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Could not load prolog language-mapping library! Expected location: " + generatedPredicatesFilename);
+		}
 
 		if (!Init.run(new String[]{}))
-			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", MODULE_NAME);    
+		{
+			throw new ModuleException("FATAL: Prolog interpreter could not be initialized!", MODULE_NAME);
+		}
 	}
 
 	/**
@@ -181,11 +192,15 @@ public abstract class LOLA implements CTCommonModule
 		}
 
 		if(incremental && !selectors.isEmpty()) 
+		{
 			selectors = splitSelectors(selectors); // which selectors to skip/process?
+		}
 
 		// initialize when we have one or more predicate selectors
 		if(selectors.isEmpty())
+		{
 			initialized = true;
+		}
 
 		/* Initialize this module (only on the first call) */
 		if (!initialized)
@@ -265,10 +280,14 @@ public abstract class LOLA implements CTCommonModule
 			if(copySel!=null){
 				// check query syntax
 				if(!(predSel.getQuery()).equals(copySel.getQuery()))
+				{
 					toBeMoved.add(predSel);
+				}
 			}
 			else
+			{
 				toBeMoved.add(predSel);
+			}
 		}
 		moveSelectors(toBeMoved,toBeSkipped,toBeProcessed);
 		step2.stop();
@@ -352,7 +371,9 @@ public abstract class LOLA implements CTCommonModule
 					}
 
 					if(restart)
+					{
 						break;
+					}
 				} // end selector iteration
 			}
 		} // end step 4
@@ -405,9 +426,13 @@ public abstract class LOLA implements CTCommonModule
 	public void moveSelector(PredicateSelector predSel,ArrayList from, ArrayList to){
 
 		if(!to.contains(predSel))
+		{
 			to.add(predSel);
+		}
 		if(from.contains(predSel))
+		{
 			from.remove(predSel);
+		}
 
 		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "[Moved] "+predSel.getQuery());
 	}

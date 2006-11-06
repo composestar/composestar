@@ -8,9 +8,9 @@ import Composestar.Core.INCRE.*;
 
 public class ComparisonsHandler extends DefaultHandler 
 {
-	private ConfigManager configmanager = null;
-	private Module module = null;
-	private DependencyHandler returnhandler = null;
+	private ConfigManager configmanager;
+	private Module module;
+	private DependencyHandler returnhandler;
 	
 
 	public ComparisonsHandler(ConfigManager cfg, Module module, DependencyHandler returnhandler) 

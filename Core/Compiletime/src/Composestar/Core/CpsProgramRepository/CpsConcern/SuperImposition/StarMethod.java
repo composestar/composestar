@@ -43,7 +43,7 @@ public class StarMethod extends FilterModuleElementReference {
    */
   public boolean addMethod(MethodReference m) {
     methodSet.addElement(m);
-    return (true);
+    return true;
   }
 
 
@@ -56,7 +56,7 @@ public class StarMethod extends FilterModuleElementReference {
   public MethodReference removeMethod(int index) {
     Object o = methodSet.elementAt(index);
     methodSet.removeElementAt(index);
-    return ((MethodReference) o);
+    return (MethodReference) o;
   }
 
 
@@ -67,7 +67,7 @@ public class StarMethod extends FilterModuleElementReference {
    * @roseuid 401FAA69003F
    */
   public MethodReference getMethod(int index) {
-    return ((MethodReference) methodSet.elementAt(index));
+    return (MethodReference) methodSet.elementAt(index);
   }
 
 
@@ -77,6 +77,6 @@ public class StarMethod extends FilterModuleElementReference {
    * @roseuid 401FAA690049
    */
   public Iterator getMethodIterator() {
-    return (new CPSIterator(methodSet));
+    return new CPSIterator(methodSet);
   }
 }

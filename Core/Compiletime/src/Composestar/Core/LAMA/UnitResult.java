@@ -51,11 +51,11 @@ public class UnitResult
 
 	public boolean isSingleValue()
 	{
-		return (singleRes != null);
+		return singleRes != null;
 	}
 
 	public boolean isMultiValue()
 	{
-		return (multiRes != null);
+		return multiRes != null;
 	}
 }

@@ -31,18 +31,6 @@ public abstract class EnableOperatorType extends ContextRepositoryEntity {
     super();
   }
 
-
-  /**
-   * inclusion or exclusion
-   *
-   * @modelguid {D0708A16-936B-41EA-8CC8-726FF95051FA}
-   * @roseuid 401FAA650101
-   */
-  public void FilterOperatorType() {
-
-  }
-
-
   /**
    * @return java.lang.String
    *

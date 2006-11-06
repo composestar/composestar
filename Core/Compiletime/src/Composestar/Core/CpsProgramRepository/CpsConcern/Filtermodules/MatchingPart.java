@@ -54,9 +54,6 @@ public class MatchingPart extends AbstractPattern {
     mpa.setMatchType(matchTypeValue);
   }
 
-public void Pattern() {
-	mpa.Pattern();
-}
 
 public MatchingPartAST getMpa() {
 	return mpa;

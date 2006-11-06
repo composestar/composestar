@@ -63,7 +63,9 @@ public class ComposestarBuiltins extends HashDict
     {
       RelationPredicate rp = (RelationPredicate)relIterator.next();
       if (!(rp instanceof CompositeRelationPredicate))
+      {
         register(new binaryRelationBuiltin(rp));
+      }
     }
     
     currentLangModel = langModel;
@@ -110,7 +112,9 @@ class isUnitTypeBuiltin extends FunBuiltin
     if (tUnit instanceof JavaObject) /* Easy case: the unit is specified */
     {
       if (!(tUnit.toObject() instanceof ProgramElement))
+      {
         return 0; // It's not even a language unit!
+      }
       // Check whether the unit is of the specified type; return true or false based on the result
       ProgramElement unit = (ProgramElement)tUnit.toObject();
       // add type information for incremental process
@@ -155,9 +159,13 @@ class UnitSource extends Source
   public Term getElement()
   {
     if (i.hasNext())
+    {
       return new JavaObject(i.next());
+    }
     else
+    {
       return null; /* End of list */
+    }
   }
 }
 
@@ -188,9 +196,13 @@ class StringSource extends Source
   public Term getElement()
   {
     if (i.hasNext())
+    {
       return new Const((String)i.next());
+    }
     else
+    {
       return null; /* End of list */
+    }
   }  
 }
 
@@ -247,7 +259,9 @@ class binaryRelationBuiltin extends FunBuiltin
   private ProgramElement termToUnit(Term t)
   {
     if (t.toObject() instanceof ProgramElement)
+    {
       return (ProgramElement)t.toObject();
+    }
    return null;
   }
   
@@ -300,11 +314,17 @@ class binaryRelationBuiltin extends FunBuiltin
   	  	
         // If one of the relations is unique, use that side (faster)
         if (relation1unique && (unit1.getUnitRelation(relation1).singleValue() != null))
+        {
           return (unit1.getUnitRelation(relation1).singleValue().equals(unit2) ? 1 : 0);
+        }
         else if (relation2unique && (unit2.getUnitRelation(relation2).singleValue() != null))
+        {
           return (unit2.getUnitRelation(relation2).singleValue().equals(unit1) ? 1 : 0);
+        }
         else // many-to-many relation, check whether unit1 contains unit2 in the relation set
+        {
           return (unit1.getUnitRelation(relation1).multiValue().contains(unit2) ? 1 : 0);
+        }
         
       }
       else
@@ -317,16 +337,24 @@ class binaryRelationBuiltin extends FunBuiltin
   	  	
       	UnitResult otherside = unit1.getUnitRelation(relation1);
         if (null == otherside)
+        {
           IO.errmes(this.name + ": Error: Relation type does not exist: " + relation1);
+        }
         else if (relation1unique && otherside.isSingleValue())
         {
           if (otherside.singleValue() != null)
+          {
             return putArg(arg1, new JavaObject(otherside.singleValue()), p);
+          }
         }
         else if (!relation1unique && otherside.isMultiValue())
+        {
           return putArg(arg1, new UnitSource(p, otherside.multiValue()), p);
+        }
         else
+        {
           IO.errmes(this.name + ": Error: Relation multiplicity violation.");
+        }
       }
     }
     else if (term2 instanceof JavaObject)// term1 is unbound, term2 is bound
@@ -345,19 +373,29 @@ class binaryRelationBuiltin extends FunBuiltin
 	  
       UnitResult otherside = unit2.getUnitRelation(relation2);
       if (null == otherside)
+      {
         IO.errmes(this.name + ": Error: Relation type does not exist: " + relation1);
+      }
       else if (relation2unique && otherside.isSingleValue())
       {
         if (otherside.singleValue() != null)
+        {
           return putArg(arg0, new JavaObject(otherside.singleValue()), p);
+        }
       }
       else if (!relation2unique && otherside.isMultiValue())
+      {
         return putArg(arg0, new UnitSource(p, otherside.multiValue()), p);
+      }
       else
+      {
         IO.errmes(this.name + ": Error: Relation multiplicity violation.");
+      }
     }
     else
+    {
       IO.errmes(this.name + ": At least one of the arguments must be bound!");
+    }
     // Both terms are unbound, no relations where found or an error was detected.
     // Default is to return 'fail'. Under normal circumstances this statement should not be
     // executed so you can set a breakpoint on it to warn you if it is reached ;)
@@ -395,7 +433,9 @@ class isUnitNameBuiltin extends FunBuiltin
       knownType = false; // Unit can be of any type; lookup will be slower
     }
     else
+    {
       type = ((Const)tType).name(); // Only look for units of this type
+    }
       
     Term tUnit = getArg(0);
     Term tName = getArg(1);
@@ -404,31 +444,47 @@ class isUnitNameBuiltin extends FunBuiltin
       String name = ((Const)tName).name();
       UnitResult result;
       if (knownType)
+      {
         result = ComposestarBuiltins.langUnits.getByName(name, type);
+      }
       else
+      {
         result = ComposestarBuiltins.langUnits.getByName(name);
+      }
       if (null == result)
+      {
         return 0; // No unit exists by this name
+      }
       if (tUnit instanceof JavaObject) // Unit is bound - check whether we have found the same unit
       {
       	// add type information for incremental process
         ComposestarBuiltins.currentSelector.addTYMInfo((ProgramElement)tUnit.toObject(),"getUnitName");
         
         if (result.isSingleValue())
+        {
           return (result.singleValue().equals(tUnit.toObject())) ? 1 : 0;
+        }
         else // Multiple values found
+        {
           return (result.multiValue().contains(tUnit.toObject())) ? 1 : 0;
+        }
       }
       else // Bind the uid to the unit found by name.
       {
       	// add type information for incremental process
         if(knownType)
+        {
         	ComposestarBuiltins.currentSelector.addTYMInfo(type,"getUnitName");
+        }
         
         if (result.isSingleValue())
+        {
           return putArg(0, new JavaObject(result.singleValue()), p);
+        }
         else
+        {
           return putArg(0, new UnitSource(p, result.multiValue()), p);
+        }
       }
     } 
     else
@@ -439,10 +495,14 @@ class isUnitNameBuiltin extends FunBuiltin
         return 0;
       }
       if (!(tUnit.toObject() instanceof ProgramElement))
+      {
         return 0; // Invalid object; not a Language Unit.
+      }
       ProgramElement unit = (ProgramElement)tUnit.toObject();
       if (knownType && !(unit.getUnitType().equals(type)))
+      {
         return 0; // It is a unit, but not of the specified type! So this predicate fails.
+      }
       
       // add type information for incremental process
       ComposestarBuiltins.currentSelector.addTYMInfo(unit,"getUnitName");
@@ -469,7 +529,9 @@ class hasAttributeBuiltin extends FunBuiltin
       knownType = false; // Unit can be of any type; lookup will be slower
     }
     else
+    {
       type = ((Const)tType).name(); // Only look for units of this type
+    }
       
     Term tUnit = getArg(0);
     Term tAttr = getArg(1);
@@ -478,18 +540,26 @@ class hasAttributeBuiltin extends FunBuiltin
       String attr = ((Const)tAttr).name();
       UnitResult result;
       if (knownType)
+      {
         result = ComposestarBuiltins.langUnits.getByType(type);
+      }
       else
+      {
         result = ComposestarBuiltins.langUnits.getAll();
+      }
       if (null == result)
+      {
         return 0; // No unit exists!?
+      }
       HashSet filtered = new HashSet();
       Iterator allIter = result.multiValue().iterator();
       while (allIter.hasNext())
       {
     	  ProgramElement unit = (ProgramElement)allIter.next();
         if (unit.hasUnitAttribute(attr))
+        {
           filtered.add(unit);
+        }
       }
       
       ArrayList params = new ArrayList();
@@ -522,10 +592,14 @@ class hasAttributeBuiltin extends FunBuiltin
         return 0;
       }
       if (!(tUnit.toObject() instanceof ProgramElement))
+      {
         return 0; // Invalid object; not a Language Unit.
+      }
       ProgramElement unit = (ProgramElement)tUnit.toObject();
       if (knownType && !(unit.getUnitType().equals(type)))
+      {
         return 0; // It is a unit, but not of the specified type! So this predicate fails.
+      }
       
       // Attribute unbound, unit bound, type bound
       // Add type information for incremental process
@@ -567,7 +641,9 @@ class matchPattern extends FunBuiltin
     	return (match.matches() ? 1 : 0);
     }
     else
+    {
       IO.errmes("matchPattern: both arguments should be bound!");
+    }
     return 0; /* Failed */
   }
 }

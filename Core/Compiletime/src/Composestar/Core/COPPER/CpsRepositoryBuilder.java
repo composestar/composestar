@@ -84,7 +84,7 @@ import antlr.SemanticException;
  */
 public class CpsRepositoryBuilder
 {
-  private DataStore ds = null;
+  private DataStore ds;
   private AnnotationBinding annotBinding;
   private ConditionBinding cb;
   private CpsConcern cpsc;
@@ -104,7 +104,7 @@ public class CpsRepositoryBuilder
   private SuperImposition si;
   private Target ta;
 
-  private int lineNumber = 0; // Sneaky default value
+  private int lineNumber; // Sneaky default value
 
   //special variables
   private ConditionExpression lastTouched;   //used to insert condition stuff in the right place
@@ -257,9 +257,13 @@ public class CpsRepositoryBuilder
     		in.setType(addConcernReference(idv));    //fixme: instead of recreating the concernreference here, we could just create it once and reuse for all internals
     		in.setParent(fm);
     		if (fm.addInternal(in) )
+    		{
     			this.addToRepository(in);
+    		}
     		else
+    		{
     			throw new SemanticException("Identifier not unique within filtermodule", in.getDescriptionFileName(), in.descriptionLineNumber, 0);
+    		}
     	}else{
     		ParameterizedInternalAST parin = new ParameterizedInternalAST();
     		parin.setDescriptionFileName(filename);
@@ -268,9 +272,13 @@ public class CpsRepositoryBuilder
     		parin.setParameter((String) idv.elementAt(0));
     		parin.setParent(fm);
     		if (fm.addInternal(parin) )
+    		{
     			this.addToRepository(parin);
+    		}
     		else
+    		{
     			throw new SemanticException("Identifier not unique within filtermodule", parin.getDescriptionFileName(), parin.descriptionLineNumber, 0);
+    		}
     	
     	}
     }
@@ -336,9 +344,13 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
 		//bla.toCharArray();
 		ex.setParent(fm);
 		if (fm.addExternal(ex))
+		{
 			this.addToRepository(ex);
+		}
 		else
+		{
     	  throw new SemanticException("Identifier not unique within filtermodule", ex.getDescriptionFileName(), ex.descriptionLineNumber, 0);
+		}
 	}
 }
 
@@ -348,7 +360,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   	
   	for (iterInternals = fm.getInternalIterator(); iterInternals.hasNext();) {
   		internal = (InternalAST)iterInternals.next();
-  		if (internal.getName().compareTo(name) == 0) return true;
+  		if (internal.getName().compareTo(name) == 0) 
+  		{
+  			return true;
+  		}
   	}
   	
   	return false;
@@ -360,7 +375,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   	
   	for (iterExternals = fm.getExternalIterator(); iterExternals.hasNext();) {
   		external = (External)iterExternals.next();
-  		if (external.getName().compareTo(name) == 0) return true;
+  		if (external.getName().compareTo(name) == 0) 
+  		{
+  			return true;
+  		}
   	}
   	
   	return false;
@@ -491,9 +509,13 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     inf.setTypeImplementation(addConcernReference(type));   // FIXME: we do the same thing twice here basically
     addFilterType((String) type.lastElement(), lineNumber);
     if (fm.addInputFilter(inf))
+    {
     	this.addToRepository(inf);
+    }
     else
+    {
     	throw new SemanticException("Identifier not unique within filtermodule", inf.getDescriptionFileName(), inf.descriptionLineNumber, 0);
+    }
   }
 
 
@@ -599,32 +621,6 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     fe.setConditionPart(fec);
     this.addToRepository(fec);
 
-    //fixme: conditions and filteroperator can be both null (if not specified); in that case, should we create objects?
-    /*
-    if (filterop2 != null) {  //conditions and filteroperator present
-      addFilterOperatorType(filterop2,lineNumber);
-      for (i = 0; i < condAll.size(); i++) {
-        //find the topmost object and attach it to the filterelement
-        tempce = (ConditionExpression) (condAll.elementAt(i));
-        if (tempce.getParent() == null) {
-          tempce.setParent(fe);
-          fe.setConditionPart(tempce);
-        }
-        this.addToRepository(tempce);  //add it to the real 'all' vector
-      }
-    } else {    //no conditions specified, defaults to 'true =>' we add this here //fixme: move to preprocessing?
-      addConditionTrue();
-      addFilterOperatorType("=>",lineNumber);
-      for (i = 0; i < condAll.size(); i++) {
-        tempce = (ConditionExpression) (condAll.elementAt(i));
-        if (tempce.getParent() == null) {
-          tempce.setParent(fe);
-          fe.setConditionPart(tempce);
-        }
-        this.addToRepository(tempce);  //add it to the real 'all' vector
-      }
-    }
-    */
     condAll.clear();  //clear the condition Vector for the next filterelement    
     lastTouched = null; //reset this for the next series
   }
@@ -988,7 +984,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
   public void addMatchingType(int matching) {
     if (matching == 0) {
       mt = new NameMatchingType();
-    } else if (matching == 1) mt = new SignatureMatchingType();
+    } else if (matching == 1) 
+    {
+    	mt = new SignatureMatchingType();
+    }
     mt.setParent(mp);
     this.addToRepository(mt);
   }
@@ -1070,7 +1069,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     s.setName(name);
     this.addToRepository(s);
     for (j = 0; j < typev.size(); j++)
+    {
       s.addParameterType(addConcernReference((Vector) typev.elementAt(j)));
+    }
 
     if (workingOnMatching) {
       mp.setSelector(s);
@@ -1101,7 +1102,9 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     s.setName(name);
     this.addToRepository(s);
     for (j = 0; j < typev.size(); j++)
+    {
       s.addParameterType(addConcernReference((Vector) typev.elementAt(j)));
+    }
 
     if (workingOnMatching) {
       mp.setSelector(s);
@@ -1130,9 +1133,13 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     of.setTypeImplementation(addConcernReference(type));
     addFilterType((String) type.lastElement(),lineNumber);
     if (fm.addOutputFilter(of))
+    {
     	this.addToRepository(of);
+    }
     else
+    {
     	throw new SemanticException("Identifier not unique within filtermodule", of.getDescriptionFileName(), of.descriptionLineNumber, 0);
+    }
   }
 
 
@@ -1464,7 +1471,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     cref.setPackage(pack);
     cref.setName(name);
     this.addToRepository(cref);
-    return (cref);
+    return cref;
   }
 
 
@@ -1480,7 +1487,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     cref.setPackage(split.getPack());
     cref.setName(split.getConcern());
     this.addToRepository(cref);
-    return (cref);
+    return cref;
   }
 
 
@@ -1498,7 +1505,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     lcref.setName(type);    //fixme: change to setType??
     lcref.setLabel(label);
     this.addToRepository(lcref);
-    return (lcref);
+    return lcref;
   }
 
 
@@ -1511,7 +1518,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
    */
   public LabeledConcernReference addLabeledConcernReference(String label, Vector pack) {
     split.splitConcernReference(pack);
-    return (addLabeledConcernReference(label, split.getPack(), split.getConcern()));
+    return addLabeledConcernReference(label, split.getPack(), split.getConcern());
   }
 
 
@@ -1559,7 +1566,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     sref.setConcern(cname);
     sref.setName(sname);
     this.addToRepository(sref);
-    return (sref);
+    return sref;
   }
 
 
@@ -1579,7 +1586,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     condref.setFilterModule(filterm);
     condref.setName(name);
     this.addToRepository(condref);
-    return (condref);
+    return condref;
   }
 
 
@@ -1607,7 +1614,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
       }
     }
     this.addToRepository(mref);
-    return (mref);
+    return mref;
   }
 
 
@@ -1627,7 +1634,7 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     doref.setFilterModule(filterm);
     doref.setName(name);
     this.addToRepository(doref);
-    return (doref);
+    return doref;
   }
 
 
@@ -1657,7 +1664,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     	temp=(FilterModule)it.next();
         Iterator it1 = temp.getInputFilterIterator();
         Iterator it2 = temp.getInputFilterIterator();
-        if (it2.hasNext()) it2.next(); //increase by 1, so it is one ahead of it
+        if (it2.hasNext()) 
+        {
+        	it2.next(); //increase by 1, so it is one ahead of it
+        }
         while (it1.hasNext()) {
           current = (Filter) it1.next();
           if (it2.hasNext()) {
@@ -1696,7 +1706,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     	temp=(FilterModule)it.next();
     	Iterator it1 = temp.getOutputFilterIterator();
         Iterator it2 = temp.getOutputFilterIterator();
-        if (it2.hasNext()) it2.next(); //increase by 1, so it is one ahead of it
+        if (it2.hasNext()) 
+        {
+        	it2.next(); //increase by 1, so it is one ahead of it
+        }
         while (it1.hasNext()) {
           current = (Filter) it1.next();
           if (it2.hasNext()) {
@@ -1735,7 +1748,10 @@ public void addExternals(Vector namev, Vector typev, Vector init, int type,int l
     	temp=(FilterAST)it.next();
     	Iterator it1 = temp.getFilterElementIterator();
         Iterator it2 = temp.getFilterElementIterator();
-        if (it2.hasNext()) it2.next(); //increase by 1, so it is one ahead of it
+        if (it2.hasNext()) 
+        {
+        	it2.next(); //increase by 1, so it is one ahead of it
+        }
         while (it1.hasNext()) {
           current = (FilterElementAST) it1.next();
           if (it2.hasNext()) {

@@ -27,6 +27,9 @@ public class HardPreRule extends Rule {
 		if (
                 !((Action) _left).isExecuted()
 			  )
-						((Action)_right).setExecutable(false);		}
+		{
+			((Action)_right).setExecutable(false);		
+		}
+	}
 
 }

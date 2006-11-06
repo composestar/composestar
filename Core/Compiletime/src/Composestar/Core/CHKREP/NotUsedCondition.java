@@ -43,7 +43,7 @@ public class NotUsedCondition implements BaseChecker {
 			while (ci.hasNext()){
 				Condition c = (Condition) ci.next(); 
 		
-				boolean used = (isUsedInFilters(c, fm.getInputFilterIterator()) || isUsedInFilters(c, fm.getOutputFilterIterator()));
+				boolean used = isUsedInFilters(c, fm.getInputFilterIterator()) || isUsedInFilters(c, fm.getOutputFilterIterator());
 			
 				if(!used){
 					Debug.out(Debug.MODE_WARNING, "CHKREP", "Condition " + c.getName() + " is declared, but never used", c.getDescriptionFileName(), c.getDescriptionLineNumber());
@@ -110,8 +110,8 @@ public class NotUsedCondition implements BaseChecker {
 		
 		// checks on a BinaryOperator
 		if(ce instanceof BinaryOperator){
-			used = (isUsedInConditionExpression(c, ((BinaryOperator) ce).getLeft()) 
-					|| isUsedInConditionExpression(c, ((BinaryOperator) ce).getRight()));
+			used = isUsedInConditionExpression(c, ((BinaryOperator) ce).getLeft()) 
+					|| isUsedInConditionExpression(c, ((BinaryOperator) ce).getRight());
 		}
 		
 		return used;

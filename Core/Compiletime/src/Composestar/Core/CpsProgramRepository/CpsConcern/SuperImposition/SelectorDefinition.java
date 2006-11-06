@@ -44,7 +44,7 @@ public class SelectorDefinition extends DeclaredRepositoryEntity {
    */
   public boolean addSelExpression(SimpleSelExpression selExpression) {
     selExpressionList.addElement(selExpression);
-    return (true);
+    return true;
   }
 
 
@@ -59,7 +59,7 @@ public class SelectorDefinition extends DeclaredRepositoryEntity {
   public SimpleSelExpression removeSelExpression(int index) {
     Object o = selExpressionList.elementAt(index);
     selExpressionList.removeElementAt(index);
-    return ((SimpleSelExpression) o);
+    return (SimpleSelExpression) o;
   }
 
 
@@ -72,7 +72,7 @@ public class SelectorDefinition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6800E8
    */
   public SimpleSelExpression getSelExpression(int index) {
-    return ((SimpleSelExpression) selExpressionList.elementAt(index));
+    return (SimpleSelExpression) selExpressionList.elementAt(index);
   }
 
 
@@ -83,7 +83,7 @@ public class SelectorDefinition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA6800FB
    */
   public Iterator getSelExpressionIterator() {
-    return (new CPSIterator(selExpressionList));
+    return new CPSIterator(selExpressionList);
   }
 
 
@@ -119,6 +119,6 @@ public class SelectorDefinition extends DeclaredRepositoryEntity {
       // result.addAll(((SimpleSelExpression) selExpIter.next()).interpret().elements()); GG
     }
     this.addDynObject("interpretation", result);
-    return (result);
+    return result;
   }
 }

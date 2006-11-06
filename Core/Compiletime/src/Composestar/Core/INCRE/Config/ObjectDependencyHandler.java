@@ -8,9 +8,9 @@ import Composestar.Core.INCRE.*;
 
 public class ObjectDependencyHandler extends DefaultHandler 
 {
-	private ConfigManager configmanager = null;
-	private ObjectDependency objdep = null;
-	private DependencyHandler returnhandler = null;
+	private ConfigManager configmanager;
+	private ObjectDependency objdep;
+	private DependencyHandler returnhandler;
 
 	public ObjectDependencyHandler(ConfigManager cfg, ObjectDependency objdep, DependencyHandler returnhandler) 
 	{

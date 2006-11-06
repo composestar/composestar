@@ -21,7 +21,7 @@ public class Condition extends DeclaredRepositoryEntity {
    * @modelguid {87B0B644-6B80-4544-8BCA-9E2AE2244340}
    */
   //public String name; // declared in parent class
-  public BooleanOclExpression OCL;
+  public BooleanOclExpression ocl;
   public Reference shortref;
   public FilterModuleElementReference longref;
 
@@ -53,7 +53,7 @@ public class Condition extends DeclaredRepositoryEntity {
    * @roseuid 401FAA57031E
    */
   public BooleanOclExpression getOCL() {
-    return OCL;
+    return ocl;
   }
 
 
@@ -62,8 +62,8 @@ public class Condition extends DeclaredRepositoryEntity {
    * @modelguid {3CC7CDC6-7FA8-4EA3-9DD6-82740C1E1411}
    * @roseuid 401FAA570327
    */
-  public void setOCL(BooleanOclExpression oCL) {
-    this.OCL = oCL;
+  public void setOCL(BooleanOclExpression inocl) {
+    this.ocl = inocl;
   }
 
 

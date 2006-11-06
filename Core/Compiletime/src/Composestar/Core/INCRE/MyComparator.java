@@ -21,7 +21,7 @@ public class MyComparator {
     public static HashMap comparisons = new HashMap();
     private String module;
 
-    public static int compare = 0;
+    public static int compare;
 
     public MyComparator(String module) {
         this.module = module;
@@ -35,7 +35,7 @@ public class MyComparator {
         comparisons.clear();
     }
 
-    public int duplicates = 0;
+    public int duplicates;
 
     /*
      * Compares two objects
@@ -74,7 +74,9 @@ public class MyComparator {
                 if (hasComparableObjects(a)) {
                     // compare all INCRE fields
                     if (!compareINCREfields(a, b))
+                    {
                         return false;
+                    }
                 } else {
                     //iterate over all public fields
                     Enumeration enumFields = getFields(a.getClass()).elements();
@@ -84,9 +86,11 @@ public class MyComparator {
                         try {
                             // only public fields are compared
                             if (!compare(field.get(a), field.get(b)))
+                            {
                                 return false;
+                            }
                         } catch (Exception excep) {
-                            throw new ModuleException("INCRE::MyComparator error: " + excep.getMessage());
+                            throw new ModuleException("MyComparator error: " + excep.getMessage(), "INCRE");
                         }
                     }
                 }
@@ -107,7 +111,9 @@ public class MyComparator {
      */
     public boolean compareAbstractLists(AbstractList a1, AbstractList a2) throws ModuleException {
         if (a1.size() != a2.size()) // compare sizes first
+        {
             return false;
+        }
         else {// compare all objects in the ArrayList
             for (int i = 0; i < a1.size(); i++) {
                 Object obj1 = a1.get(i);
@@ -131,7 +137,9 @@ public class MyComparator {
      */
     public boolean compareAbstractSets(AbstractSet s1, AbstractSet s2) throws ModuleException {
         if (s1.size() != s2.size()) // compare sizes first
+        {
             return false;
+        }
         else {// compare all objects in the HashSet
 
             Iterator iter1 = s1.iterator();
@@ -158,7 +166,9 @@ public class MyComparator {
     public Vector getFields(Class c) {
 
         if (myFields.containsKey(c))
+        {
             return (Vector) myFields.get(c);
+        }
 
         Vector fields = new Vector();
         Stack stack = new Stack();
@@ -178,7 +188,9 @@ public class MyComparator {
                     Field f = declaredFields[i];
                     // IMPORTANT: skip repositoryKey due to different hashcodes
                     if (!f.getName().equals("repositoryKey"))
+                    {
                         fields.add(f);
+                    }
                 }
             }
         }
@@ -211,7 +223,7 @@ public class MyComparator {
      * @return true if object is in map, false if not
      */
     public boolean comparisonMade(String id) {
-    	return (comparisons.containsKey(id));
+    	return comparisons.containsKey(id);
     }
 
     /*
@@ -274,19 +286,25 @@ public class MyComparator {
                     equal = getComparison(key);
                 } else {
                     if (key != null)// temporarily true to avoid infinite loops
+                    {
                         addComparison(key, true);
+                    }
 
                     equal = compare(fielda, fieldb);
 
                     if (key != null)// store result of comparison
+                    {
                         addComparison(key, equal);
+                    }
                 }
 
                 if (!equal) // stop comparison by returning false
+                {
                     return false;
+                }
             }
         } catch (Exception e) {
-        	throw new ModuleException("INCRE::MyComparator error: " + e.toString());
+        	throw new ModuleException("MyComparator error: " + e.toString(), "INCRE");
         }
 
         return true;

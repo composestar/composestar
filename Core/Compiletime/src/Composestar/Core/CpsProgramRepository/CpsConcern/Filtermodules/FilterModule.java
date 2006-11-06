@@ -154,7 +154,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
     public Internal removeInternal(int index) {
       Object o = internals.elementAt(index);
       internals.removeElementAt(index);
-      return ((Internal) o);
+      return (Internal) o;
     }
 
 
@@ -166,7 +166,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
      * @roseuid 401FAA640073
      */
     public Internal getInternal(int index) {
-      return ((Internal) internals.elementAt(index));
+      return (Internal) internals.elementAt(index);
     }
 
 
@@ -177,7 +177,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
      * @roseuid 401FAA64007E
      */
     public Iterator getInternalIterator() {
-      return (new CPSIterator(internals));
+      return new CPSIterator(internals);
     }
 
     /**
@@ -211,7 +211,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
      * @return java.util.Iterator
      */
     public Iterator getParameterIterator() {
-  	    return (new CPSIterator(parameters));
+  	    return new CPSIterator(parameters);
   	  }
     
    /*
@@ -478,7 +478,7 @@ public class FilterModule extends DeclaredRepositoryEntity {
    */
   public boolean addOutputFilter(Filter outputfilter) {
 	  outputFilters.add(outputfilter);
-	  return (true);
+	  return true;
   }
 
 
@@ -609,7 +609,7 @@ public void setUniqueNumber(int uniqueNumber) {
 }
 
 public String getName() {
-	return (name + '!' + uniqueNumber);
+	return name + '!' + uniqueNumber;
 }
 
 public String getOriginalName() {

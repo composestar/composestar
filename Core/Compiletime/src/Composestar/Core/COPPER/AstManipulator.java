@@ -17,8 +17,8 @@ import java.util.*;
 
 
 public class AstManipulator implements CpsTokenTypes {
-  private CommonAST astroot = null;
-  private PathHelper ph = null;
+  private CommonAST astroot;
+  private PathHelper ph;
   private boolean navigateError;      //error while navigating the tree
   private boolean adding;
 
@@ -29,8 +29,8 @@ public class AstManipulator implements CpsTokenTypes {
 
 
   //attach to an ast tree to modify
-  void attach(CommonAST _ast) {
-    astroot = _ast;
+  void attach(CommonAST ast) {
+    astroot = ast;
   }
 
 
@@ -53,10 +53,13 @@ public class AstManipulator implements CpsTokenTypes {
       } else {
         ast = navigateTo(piece, ast, path);
       }
-      if (ast == null) return (false);
+      if (ast == null) 
+      {
+    	  return false;
+      }
     }
 
-    return (true);
+    return true;
   }
 
 
@@ -81,11 +84,14 @@ public class AstManipulator implements CpsTokenTypes {
       } else {
         ast = navigateTo(piece, ast, path);
       }
-      if (ast == null) return (null);   //failed
+      if (ast == null) 
+      {
+    	  return null;   //failed
+      }
     }
 
     //gevonden
-    return (ast.getText());
+    return ast.getText();
   }
 
 
@@ -114,7 +120,7 @@ public class AstManipulator implements CpsTokenTypes {
           astback = ast;
           ast = navigateTo(piece, ast, path);
           if (navigateError) {
-            return (false);      //ambiguous path
+            return false;      //ambiguous path
           } else if (ast == null) {               //didn't work, so try to add
             ast = addTo(piece, astback, path);
           }
@@ -123,7 +129,7 @@ public class AstManipulator implements CpsTokenTypes {
     }
 
     //gevonden
-    return (true);
+    return true;
   }
 
 
@@ -145,7 +151,7 @@ public class AstManipulator implements CpsTokenTypes {
       insertChild(ast, Integer.parseInt(piece.getPosition()), astnew);
     }
 
-    return (astnew);
+    return astnew;
   }
 
 
@@ -189,7 +195,7 @@ public class AstManipulator implements CpsTokenTypes {
     } else {
       astnew.setType(NAME);                     //default
     }
-    return(astnew);
+    return astnew;
   }
 
 
@@ -220,9 +226,9 @@ public class AstManipulator implements CpsTokenTypes {
     String b = ast.getText();
 
     if (a.equals(b)) {
-      return (ast);
+      return ast;
     } else {
-      return (null);
+      return null;
     }
   }
 
@@ -232,9 +238,12 @@ public class AstManipulator implements CpsTokenTypes {
     AST correctast;
 
     children = getAllChildren(ast);
-    if (children == null) return (null);    //fixme: give error message?
+    if (children == null)
+    {
+    	return null;    //fixme: give error message?
+    }
     correctast = searchChildren(children, piece.getText(), piece.getPosition(), totalpath);
-    return (correctast);
+    return correctast;
   }
 
 
@@ -256,33 +265,39 @@ public class AstManipulator implements CpsTokenTypes {
       if ((counter > 1) && (position == null)) {   //meer dan 1 match en geen positie
         Debug.out(Debug.MODE_WARNING, "COPPER", "Ambiguous node " + text + " in path " + totalpath + ". Add position.");
         navigateError = true;
-        return (null);
+        return null;
       }
       if ((position != null) && (!"last".equals(position)) && (Integer.parseInt(position) > counter)) {       //positie die niet bestaat opgegeven
-        if (!adding) Debug.out(Debug.MODE_WARNING, "COPPER", "Invalid position specified in node " + text + " in path " + totalpath + '.');    //fixme: doens't matter for add
-        return (null);
+        if (!adding) 
+        {
+        	Debug.out(Debug.MODE_WARNING, "COPPER", "Invalid position specified in node " + text + " in path " + totalpath + '.');    //fixme: doens't matter for add
+        }
+        return null;
       }
 
       if (counter > -1) {                   //ok alles goed
         if (position == null) {        //geen positie en 1 element (> 1 geeft boven error)
-          return ((AST) children.elementAt(positions[0]));
+          return (AST) children.elementAt(positions[0]);
         } else if (position.equals("last")) {       //last
-          return ((AST) children.elementAt(positions[counter]));
+          return (AST) children.elementAt(positions[counter]);
         } else {                              //@num
-          return ((AST) children.elementAt(positions[Integer.parseInt(position)]));
+          return (AST) children.elementAt(positions[Integer.parseInt(position)]);
         }
       } else {
-        if (!adding) Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + '.');  //fixme: doesn't matter for add
-        return (null);
+        if (!adding) 
+        {
+        	Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + '.');  //fixme: doesn't matter for add
+        }
+        return null;
       }
     } else {                        //only position specified
       if (position == null) {
         Debug.out(Debug.MODE_WARNING, "COPPER", "No node specified in in path " + totalpath + '.');
-        return (null);
+        return null;
       } else if ("last".equals(position)) {       //last
-        return ((AST) children.lastElement());
+        return (AST) children.lastElement();
       } else {                                    //@num
-        return ((AST) children.elementAt(Integer.parseInt(position)));
+        return (AST) children.elementAt(Integer.parseInt(position));
       }
     }
   }
@@ -295,7 +310,10 @@ public class AstManipulator implements CpsTokenTypes {
 
     children = new Vector();
     count = ast.getNumberOfChildren();
-    if (count == 0) return (null);          //no children
+    if (count == 0) 
+    {
+    	return null;          //no children
+    }
     try {
       for (i = 0; i < count; i++) {
         if (i == 0) {
@@ -309,7 +327,7 @@ public class AstManipulator implements CpsTokenTypes {
     } catch (NullPointerException e) {
       Debug.out(Debug.MODE_WARNING, "COPPER", e.getMessage());
     }
-    return (children);
+    return children;
   }
 }
 

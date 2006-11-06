@@ -128,7 +128,9 @@ public abstract class BACO implements CTCommonModule
 		
 		// create the output dir if needed
 		if (!FileUtils.createFullPath(outputPath))
+		{
 			throw new ModuleException("Unable to create output directory: '" + outputPath + "'", MODULE_NAME);
+		}
 
 		// start the actual copying
 		Iterator filesIt = filesToCopy.iterator();
@@ -149,8 +151,14 @@ public abstract class BACO implements CTCommonModule
 		}
 		catch (IOException e) {
 			String msg = "Unable to copy '" + source + "' to '" + dest + "': " + e.getMessage();
-			if (fatal) throw new ModuleException(msg, MODULE_NAME);
-			else Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
+			if (fatal) 
+			{
+				throw new ModuleException(msg, MODULE_NAME);
+			}
+			else 
+			{
+				Debug.out(Debug.MODE_WARNING, MODULE_NAME, msg);
+			}
 		}
 	}
 

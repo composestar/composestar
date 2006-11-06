@@ -88,7 +88,7 @@ public class Filter extends DeclaredRepositoryEntity {
    */
   public boolean addFilterElement(FilterElement filterelement) {
 	filterElements.add(filterelement);
-    return (true);
+    return true;
   }
 
 
@@ -102,7 +102,7 @@ public class Filter extends DeclaredRepositoryEntity {
   public FilterElement removeFilterElement(int index) {
 	  Object o = filterElements.elementAt(index);
 	  filterElements.removeElementAt(index);
-	  return ((FilterElement) o);
+	  return (FilterElement) o;
   }
 
 
@@ -115,7 +115,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63013A
    */
   public FilterElement getFilterElement(int index) {
-	  return ((FilterElement) filterElements.elementAt(index));
+	  return (FilterElement) filterElements.elementAt(index);
   }
 
 
@@ -126,7 +126,7 @@ public class Filter extends DeclaredRepositoryEntity {
    * @roseuid 401FAA63014E
    */
   public Iterator getFilterElementIterator() {
-	  return (new CPSIterator(filterElements));
+	  return new CPSIterator(filterElements);
   }
 
 

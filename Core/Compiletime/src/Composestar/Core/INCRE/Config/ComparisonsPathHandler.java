@@ -11,10 +11,10 @@ import java.util.Iterator;
 
 public class ComparisonsPathHandler extends DefaultHandler 
 {
-	private ConfigManager configmanager = null;
-	private Module module = null;
+	private ConfigManager configmanager;
+	private Module module;
 	private String fullname = "";
-	private TypeHandler returnhandler = null;
+	private TypeHandler returnhandler;
 	private ArrayList nodes;
 
 	public ComparisonsPathHandler(ConfigManager cfg, Module module, String fullname, TypeHandler returnhandler) 

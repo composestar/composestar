@@ -20,7 +20,9 @@ public abstract class Rule {
 	public Rule(Parameter left, Parameter right){
 		_left=left; _right=right;
 		if (_right instanceof Action) //the second arg. must be action always...
+		{
 			((Action)_right).addRule(this);
+		}
 	}
 	
 	public String getIdentifier(){ return identifier; }

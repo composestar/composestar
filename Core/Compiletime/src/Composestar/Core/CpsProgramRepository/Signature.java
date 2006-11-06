@@ -26,14 +26,14 @@ public class Signature implements SerializableRepositoryEntity
 {
 	
   // Cannot use HashMap because these are not serialized.
-  public DataMap methodByKey = null;
-  public DataMap methodByName = null;
+  public DataMap methodByKey;
+  public DataMap methodByName;
   
-  public final static int RECALCMAXSIG = -1;
-  public final static int UNKNOWN = 0;
-  public final static int UNSOLVED = 1;
-  public final static int SOLVING = 2;
-  public final static int SOLVED = 3;
+  public static final int RECALCMAXSIG = -1;
+  public static final int UNKNOWN = 0;
+  public static final int UNSOLVED = 1;
+  public static final int SOLVING = 2;
+  public static final int SOLVED = 3;
   
   protected int status = Signature.UNKNOWN;
   
@@ -160,9 +160,13 @@ public class Signature implements SerializableRepositoryEntity
     	MethodInfo minfo = mw.getMethodInfo();
     	String key = getHashKey(minfo);
     	if(methodByKey.containsKey(key))
+    	{
     		methodByKey.remove(key);
+    	}
     	if(methodByName.containsKey(minfo.name()))
+    	{
     		methodByName.remove(minfo.name());
+    	}
      }
     
     public boolean hasMethod(MethodInfo dnmi)
@@ -179,7 +183,10 @@ public class Signature implements SerializableRepositoryEntity
     public int getMethodStatus(String name)
     {      	
     	MethodWrapper mw = (MethodWrapper) methodByName.get(name);
-    	if (mw == null) return MethodWrapper.REMOVED;
+    	if (mw == null) 
+    	{
+    		return MethodWrapper.REMOVED;
+    	}
     	
     	return mw.getRelationType(); 
     }
@@ -200,7 +207,9 @@ public class Signature implements SerializableRepositoryEntity
 		String key = methodInfo.name() + '%';
 		List parameter = methodInfo.getParameters();
 		for (int i = 0; i < parameter.size(); i++)
+		{
 			key += ((ParameterInfo) parameter.get(i)).ParameterTypeString + '%';
+		}
 		
 		key += methodInfo.returnType();
 		

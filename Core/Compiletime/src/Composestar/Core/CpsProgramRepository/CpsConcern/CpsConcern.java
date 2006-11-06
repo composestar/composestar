@@ -113,12 +113,12 @@ public class CpsConcern extends Concern
 	public boolean addFilterModule(FilterModule filtermodule) 
 	{
 		filterModules.addElement(filtermodule);
-		return (true);
+		return true;
 	}
 	
 	public boolean addFilterModuleAST(FilterModuleAST filtermodule){
 		filterModulesAST.addElement(filtermodule);
-		return (true);
+		return true;
 	}
 
 
@@ -133,7 +133,7 @@ public class CpsConcern extends Concern
 	{
 		Object o = filterModules.elementAt(index);
 		filterModules.removeElementAt(index);
-		return ((FilterModule) o);
+		return (FilterModule) o;
 	}
 
 
@@ -146,7 +146,7 @@ public class CpsConcern extends Concern
 	 */
 	public FilterModule getFilterModule(int index) 
 	{
-		return ((FilterModule) filterModules.elementAt(index));
+		return (FilterModule) filterModules.elementAt(index);
 	}
 
 
@@ -158,11 +158,11 @@ public class CpsConcern extends Concern
 	 */
 	public Iterator getFilterModuleIterator() 
 	{
-		return (new CPSIterator(filterModules));
+		return new CPSIterator(filterModules);
 	}
 
 	public Iterator getFilterModuleASTIterator(){
-		return (new CPSIterator(filterModulesAST));
+		return new CPSIterator(filterModulesAST);
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class CpsConcern extends Concern
 	 */
 	public Iterator getParameterIterator() 
 	{
-		return (new CPSIterator(formalParameters));
+		return new CPSIterator(formalParameters);
 	}
 
 
@@ -187,7 +187,7 @@ public class CpsConcern extends Concern
 	{
 		Object o = formalParameters.elementAt(index);
 		formalParameters.removeElementAt(index);
-		return ((LabeledConcernReference) o);
+		return (LabeledConcernReference) o;
 	}
 
 
@@ -200,7 +200,7 @@ public class CpsConcern extends Concern
 	public boolean addParameter(LabeledConcernReference parameter) 
 	{
 		formalParameters.addElement(parameter);
-		return (true);
+		return true;
 	}
 
 
@@ -213,7 +213,7 @@ public class CpsConcern extends Concern
 	 */
 	public LabeledConcernReference getParameter(int index) 
 	{
-		return ((LabeledConcernReference) formalParameters.elementAt(index));
+		return (LabeledConcernReference) formalParameters.elementAt(index);
 	}
   
 	public void setQualifiedName(String name)

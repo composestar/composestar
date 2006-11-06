@@ -75,7 +75,9 @@ public abstract class Type extends ProgramElement{
         {
         	MethodInfo mi = (MethodInfo)it.next();
             if (mi.name().equals(name) && mi.hasParameters(types))
+            {
                 return mi;
+            }
         }
         return null;
 	}    

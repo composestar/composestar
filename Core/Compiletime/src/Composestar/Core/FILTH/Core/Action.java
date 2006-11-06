@@ -20,7 +20,9 @@ public class Action implements Parameter{
 	public Action(String name, Boolean rvalue, boolean present){ 
 		_name = name; _rvalue = rvalue;
 		if (present)
+		{
 			this.setExecutable(true);
+		}
 	}
 	
 	private Boolean _rvalue;	
@@ -55,7 +57,9 @@ public class Action implements Parameter{
 		for (Iterator i=g.getNodes().iterator(); i.hasNext();){
 			current=(Node)i.next();
 			if (current.getElement().equals(a))
+			{
 				return current;
+			}
 		}
 		return null;		
 	}
@@ -66,17 +70,23 @@ public class Action implements Parameter{
 			current=(Node)i.next();
 			/* the root element is only a string, we skip it */
 			if (current.getElement() instanceof java.lang.String)
+			{
 				continue;
+			}
 			
 			if (((Action)current.getElement()).getName().equals(name))
+			{
 				return current;
+			}
 		}
 		return null;		
 	}
 		
 	public Boolean evaluate(){ 
 		if (this.isExecuted())
+		{
 			return getReturnValue();
+		}
 		return null; 
 	}
 	public void execute(){ 

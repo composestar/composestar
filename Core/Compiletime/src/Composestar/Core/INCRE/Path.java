@@ -47,7 +47,9 @@ public class Path
 			return nextobject;
 		}
 		else
+		{
 			return null;
+		}
 	}
 
 	public boolean isEmpty()

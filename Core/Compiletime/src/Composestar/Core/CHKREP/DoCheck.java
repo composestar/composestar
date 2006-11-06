@@ -17,7 +17,7 @@ import Composestar.Core.Exception.*;
  * Starts all the checks.
  */
 public class DoCheck {
-  public static DataStore ds = null; //the repository
+  public static DataStore ds; //the repository
   public static boolean debug = true; //display debugging information?
 
   /**

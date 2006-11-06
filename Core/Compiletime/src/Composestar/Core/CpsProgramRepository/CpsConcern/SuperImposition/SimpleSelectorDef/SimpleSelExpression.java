@@ -26,7 +26,7 @@ public abstract class SimpleSelExpression extends ContextRepositoryEntity {
   /**
    * @modelguid {A9D91007-91C9-401F-9F72-ECBE8283FC46}
    */
-  private ConcernReference ref = null;
+  private ConcernReference ref;
 
 
   /**

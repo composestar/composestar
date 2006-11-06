@@ -53,9 +53,13 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
     		if(fm.getName().equals(name)) break;
     	}
     	if(iter.hasNext())	
+    	{
     		return fm;
+    	}
     	else
-    		return null;     
+    	{
+    		return null;
+    	}
     }
     
     /**

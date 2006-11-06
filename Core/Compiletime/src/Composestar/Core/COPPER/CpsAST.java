@@ -5,7 +5,7 @@ import antlr.collections.*;
 
 public class CpsAST extends CommonAST
 {
-	protected int line = 0;
+	protected int line;
 
 	public void initialize(Token tok)
 	{

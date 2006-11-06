@@ -31,9 +31,13 @@ public class Graph {
 		edges.add(edge);
 		/* adding the nodes of the edge to graph */
 		if (!nodes.contains(edge.getLeft()))
+		{
 			nodes.add(edge.getLeft());
+		}
 		if (!nodes.contains(edge.getRight()))
+		{
 			nodes.add(edge.getRight());
+		}
 	}
 	
 }

@@ -72,7 +72,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   */
 	  public boolean addFilterElement(FilterElementAST filterelement) {
 	    filterElements.addElement(filterelement);
-	    return (true);
+	    return true;
 	  }
 
 
@@ -86,7 +86,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	  public FilterElement removeFilterElement(int index) {
 	    Object o = filterElements.elementAt(index);
 	    filterElements.removeElementAt(index);
-	    return ((FilterElement) o);
+	    return (FilterElement) o;
 	  }
 
 
@@ -98,7 +98,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   * @roseuid 401FAA63013A
 	   */
 	  public FilterElement getFilterElement(int index) {
-	    return ((FilterElement) filterElements.elementAt(index));
+	    return (FilterElement) filterElements.elementAt(index);
 	  }
 
 
@@ -109,7 +109,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   * @roseuid 401FAA63014E
 	   */
 	  public Iterator getFilterElementIterator() {
-	    return (new CPSIterator(filterElements));
+	    return new CPSIterator(filterElements);
 	  }
 
 
@@ -124,7 +124,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   */
 	  public boolean addParameter(String parameter) {
 	    parameters.addElement(parameter);
-	    return (true);
+	    return true;
 	  }
 
 
@@ -139,7 +139,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	  public String removeParameter(int index) {
 	    Object o = parameters.elementAt(index);
 	    parameters.removeElementAt(index);
-	    return ((String) o);
+	    return (String) o;
 	  }
 
 
@@ -152,7 +152,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   * @roseuid 401FAA630181
 	   */
 	  public String getParameter(int index) {
-	    return ((String) parameters.elementAt(index));
+	    return (String) parameters.elementAt(index);
 	  }
 
 
@@ -163,7 +163,7 @@ public class FilterAST extends DeclaredRepositoryEntity{
 	   * @roseuid 401FAA630195
 	   */
 	  public Iterator getParameterIterator() {
-	    return (new CPSIterator(parameters));
+	    return new CPSIterator(parameters);
 	  }
 
 

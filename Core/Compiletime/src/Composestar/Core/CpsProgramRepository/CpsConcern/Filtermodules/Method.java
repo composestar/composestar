@@ -72,7 +72,7 @@ public class Method extends DeclaredRepositoryEntity {
    */
   public boolean addParameter(LabeledConcernReference parameter) {
     formalParameters.addElement(parameter);
-    return (true);
+    return true;
   }
 
 
@@ -87,7 +87,7 @@ public class Method extends DeclaredRepositoryEntity {
   public LabeledConcernReference removeParameter(int index) {
     Object o = formalParameters.elementAt(index);
     formalParameters.elementAt(index);
-    return ((LabeledConcernReference) o);
+    return (LabeledConcernReference) o;
   }
 
 
@@ -100,7 +100,7 @@ public class Method extends DeclaredRepositoryEntity {
    * @roseuid 401FAA66013F
    */
   public LabeledConcernReference getParameter(int index) {
-    return ((LabeledConcernReference) formalParameters.elementAt(index));
+    return (LabeledConcernReference) formalParameters.elementAt(index);
   }
 
 
@@ -111,7 +111,7 @@ public class Method extends DeclaredRepositoryEntity {
    * @roseuid 401FAA660153
    */
   public Iterator getParameterIterator() {
-    return (new CPSIterator(formalParameters));
+    return new CPSIterator(formalParameters);
   }
 
 

@@ -46,7 +46,10 @@ public class INCREConfigurations
     	{
         	Dependency d = (Dependency)depIt.next();
         	deps.append(d.getFileName());
-        	if (depIt.hasNext()) deps.append(",");
+        	if (depIt.hasNext()) 
+        	{
+        		deps.append(",");
+        	}
     	}
 		props.setProperty("Dependencies", deps.toString());
 		
@@ -56,14 +59,19 @@ public class INCREConfigurations
 		while (dumIt.hasNext()) 
 		{
 			dummies.append(dumIt.next());
-			if (dumIt.hasNext()) dummies.append(",");
+			if (dumIt.hasNext())
+			{
+				dummies.append(",");
+			}
         }
 		props.setProperty("HarvesterInput", deps + "," + dummies);
 				
 		/* ApplicationStart */
 		String as = config.getProjects().getApplicationStart();
 		if (as != null && as.length() != 0)
+		{
 			props.setProperty("ApplicationStart", as);
+		}
 						
 		/* RunDebugLevel */
 		int rdl = config.getProjects().getRunDebugLevel();

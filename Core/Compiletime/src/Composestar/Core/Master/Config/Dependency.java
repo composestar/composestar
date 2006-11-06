@@ -23,7 +23,9 @@ public class Dependency implements Serializable
 	public boolean equals(Object o)
 	{
 		if (! (o instanceof Dependency))
+		{
 			return false;
+		}
 		
 		Dependency other = (Dependency)o;
 		return fileName.equals(other.fileName);

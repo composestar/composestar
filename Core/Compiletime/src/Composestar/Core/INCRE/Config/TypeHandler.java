@@ -8,10 +8,10 @@ import Composestar.Core.INCRE.*;
 
 public class TypeHandler extends DefaultHandler 
 {
-	private ConfigManager configmanager = null;
-	private Module module = null;
+	private ConfigManager configmanager;
+	private Module module;
 	private String fullname = "";
-	private ComparisonsHandler returnhandler = null;
+	private ComparisonsHandler returnhandler;
 	
 
 	public TypeHandler(ConfigManager cfg, Module module, String fullname, ComparisonsHandler returnhandler) 

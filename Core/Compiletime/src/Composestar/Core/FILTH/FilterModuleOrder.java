@@ -75,7 +75,9 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	public boolean equals(Object o)
 	{
 		if (! (o instanceof FilterModuleOrder))
+		{
 			return false;
+		}
 		
 		FilterModuleOrder other = (FilterModuleOrder)o;
 		return _order.equals(other._order);
@@ -89,7 +91,9 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		{
 			retval += (String) modules.get(i);
 			if( i < modules.size()-2 )
+			{
 				retval += " + ";
+			}
 		}
 		return retval;
 	}

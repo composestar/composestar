@@ -10,9 +10,9 @@ import Composestar.Core.INCRE.ObjectDependency;
 
 public class DependencyHandler extends DefaultHandler 
 {
-	private ConfigManager configmanager = null;
-	private Module module = null;
-	private ModulesHandler returnhandler = null;
+	private ConfigManager configmanager;
+	private Module module;
+	private ModulesHandler returnhandler;
 
 	public DependencyHandler(ConfigManager cfg, Module module, ModulesHandler returnhandler) 
 	{
@@ -33,7 +33,9 @@ public class DependencyHandler extends DefaultHandler
 				FileDependency fdep = new FileDependency(name);
 				
 				if(amap.getValue("isAdded")!=null)
+				{
 					fdep.setIsAdded(amap.getValue("isAdded").equalsIgnoreCase("true"));
+				}
 				
 				module.addDep(fdep);
 								
@@ -49,9 +51,13 @@ public class DependencyHandler extends DefaultHandler
 								
 				// add arguments store and lookup if available
 				if(amap.getValue("store")!=null)
+				{
 					objdep.store = amap.getValue("store").equals("true");
+				}
 				if(amap.getValue("lookup")!=null)
+				{
 					objdep.lookup = amap.getValue("lookup").equals("true");
+				}
 
 				// look further in the xml file, between <path> tags
 				PathHandler pathhandler = new PathHandler(configmanager,objdep,this);

@@ -42,7 +42,7 @@ public class FilterModuleBinding extends Binding {
    */
   public boolean addFilterModule(FilterModuleReference f) {
     filterModuleSet.addElement(f);
-    return (true);
+    return true;
   }
 
 
@@ -57,7 +57,7 @@ public class FilterModuleBinding extends Binding {
   public FilterModuleReference removeFilterModule(int index) {
     Object o = filterModuleSet.elementAt(index);
     filterModuleSet.removeElementAt(index);
-    return ((FilterModuleReference) o);
+    return (FilterModuleReference) o;
   }
 
 
@@ -70,7 +70,7 @@ public class FilterModuleBinding extends Binding {
    * @roseuid 401FAA64027D
    */
   public FilterModuleReference getFilterModule(int index) {
-    return ((FilterModuleReference) filterModuleSet.elementAt(index));
+    return (FilterModuleReference) filterModuleSet.elementAt(index);
   }
 
 
@@ -81,6 +81,6 @@ public class FilterModuleBinding extends Binding {
    * @roseuid 401FAA640291
    */
   public Iterator getFilterModuleIterator() {
-    return (new CPSIterator(filterModuleSet));
+    return new CPSIterator(filterModuleSet);
   }
 }

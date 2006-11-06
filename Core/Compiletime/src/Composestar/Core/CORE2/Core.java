@@ -35,7 +35,7 @@ import Composestar.Utils.Debug;
  * @author Arjan de Roo
  */
 public class Core implements CTCommonModule{
-    private final static String MODULE_NAME = "CORE";
+    public static final String MODULE_NAME = "CORE";
     
     
     public Core(){

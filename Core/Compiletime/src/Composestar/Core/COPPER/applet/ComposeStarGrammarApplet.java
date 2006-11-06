@@ -18,9 +18,9 @@ import Composestar.Core.COPPER.*;
 
 public class ComposeStarGrammarApplet extends JApplet implements ActionListener, KeyListener
 {
-	protected JButton button = null;
-	protected JEditorPane textpane = null;
-	protected JTextArea msgpane = null;
+	protected JButton button;
+	protected JEditorPane textpane;
+	protected JTextArea msgpane;
 	protected String src = "";
 	protected static int errline = -1; //michielh: why was this declared static?
     protected static final double RESIZEWEIGHT = 0.75;

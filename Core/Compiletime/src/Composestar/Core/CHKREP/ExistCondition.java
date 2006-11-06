@@ -53,7 +53,7 @@ public class ExistCondition implements BaseChecker {
 		boolean nonFatal = performCheck();
 		
 		if(!nonFatal) {
-      throw (new ModuleException("One or more Conditions in the input/outputfilters are not declared", "CHKREP") );
+      throw new ModuleException("One or more Conditions in the input/outputfilters are not declared", "CHKREP");
     }
 	}
 	
@@ -121,8 +121,8 @@ public class ExistCondition implements BaseChecker {
 		
 		// checks in BinaryOperators
 		if(ce instanceof BinaryOperator){
-			nonFatal = (checkConditionInConditionExpression(((BinaryOperator) ce).getLeft(), fm) 
-					&& checkConditionInConditionExpression(((BinaryOperator) ce).getRight(), fm));
+			nonFatal = checkConditionInConditionExpression(((BinaryOperator) ce).getLeft(), fm) 
+					&& checkConditionInConditionExpression(((BinaryOperator) ce).getRight(), fm);
 		}
 		
 		return nonFatal;

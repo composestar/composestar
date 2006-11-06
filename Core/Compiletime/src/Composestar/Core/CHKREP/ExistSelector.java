@@ -43,7 +43,7 @@ public class ExistSelector implements BaseChecker {
 		boolean nonFatal = true; //performCheck();
 		
 		if(!nonFatal) {
-      throw (new ModuleException("One or more Selectors in filtermodules are not declared", "CHKREP") );
+      throw new ModuleException("One or more Selectors in filtermodules are not declared", "CHKREP");
     }
 	}
 

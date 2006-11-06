@@ -40,10 +40,12 @@ public class ExecutionManager {
 			detectConflict(rules);
 			//step 2. detect conflicts, like skip-skip
 			for (Iterator i=rules.iterator(); i.hasNext(); )
+			{
 				if ( currentAction.isExecutable() ){
 					crule=(Rule)i.next();
 					crule.apply();
 				}
+			}
 			
 			//if the current action is still executable...
 			if ( currentAction.isExecutable() ){
@@ -105,7 +107,9 @@ public class ExecutionManager {
 		for (Iterator i=rules.iterator();i.hasNext(); ){
 			r=(Rule)i.next();
 			if (r.getIdentifier().startsWith("skip"))
+			{
 				crules.add(r);
+			}
 		}
 		/* evaluate the parameters of skip rules and their skipping value if there is a conflict*/
 		try{
@@ -130,7 +134,9 @@ public class ExecutionManager {
 						   		( ((r2.getLeft().evaluate()!=null) && (r2.getLeft().evaluate().booleanValue())) &&
 							 	((r1.getLeft().evaluate()==null) && (r1 instanceof SoftSkipRule))
 								)  )
+							{
 								throw new RuntimeException("Conflict between two skips");
+							}
 				     	
 				     	}
 					}

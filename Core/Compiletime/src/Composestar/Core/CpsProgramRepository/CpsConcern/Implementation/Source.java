@@ -106,7 +106,10 @@ public class Source extends Implementation {
 
 
   public void setClassName(Vector qualifiedClass) {
-    if (!qualifiedClass.isEmpty()) className = (String) qualifiedClass.elementAt(0);
+    if (!qualifiedClass.isEmpty())
+    {
+    	className = (String) qualifiedClass.elementAt(0);
+    }
     for (int i = 1; i < qualifiedClass.size(); i++) {
       className += '.' + (String) qualifiedClass.elementAt(i);
     }

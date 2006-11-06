@@ -33,15 +33,21 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 				String val = amap.getValue(i);
 				
 				if ("name".equals(key))
+				{
 					project.setName(val);
+				}
 				else if ("language".equals(key))
+				{
 					project.setLanguageName(val);
+				}
 				else if ("basePath".equals(key))
+				{
 					project.setBasePath(val);
+				}
 				else
 				{
 					Debug.out(Debug.MODE_WARNING, "MASTER", "Unknown attribute " + key + " in Project");
-					project.addProperty(key, val);
+					//project.addProperty(key, val);
 				}
 			}
 			

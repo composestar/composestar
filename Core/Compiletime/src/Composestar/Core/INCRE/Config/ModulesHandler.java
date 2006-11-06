@@ -23,15 +23,25 @@ public class ModulesHandler extends DefaultHandler
 			Module m = new Module(name);
 
 			if(amap.getValue("fulltype")!=null)
+			{
 				m.setFullType(amap.getValue("fulltype"));
+			}
 			if(amap.getValue("input")!=null)
+			{
 				m.setInput(amap.getValue("input"));
+			}
 			if(amap.getValue("summary")!=null)
+			{
 				m.setSummary(amap.getValue("summary"));
+			}
 			if(amap.getValue("incremental")!=null)
+			{
 				m.setIncremental(amap.getValue("incremental").equals("true"));
+			}
 			if(amap.getValue("enabled")!=null)
+			{
 				m.setEnabled(amap.getValue("enabled").equals("true"));
+			}
 
 			configmanager.addModule(name,m);
 

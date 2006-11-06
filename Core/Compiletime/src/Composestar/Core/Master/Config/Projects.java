@@ -112,7 +112,9 @@ public class Projects implements Serializable
 	{
 		List projects = (List)projectsByLanguage.get(language);
 		if (projects == null)
+		{
 			projectsByLanguage.put(language, projects = new ArrayList());
+		}
 
 		return projects;
 	}
@@ -125,7 +127,9 @@ public class Projects implements Serializable
 		{
 			Project p = (Project)projIt.next();
 			if (p.getCompiledDummies() != null)
+			{
 				compiledDummies.add(p.getCompiledDummies());
+			}
 		}
 		return compiledDummies;
 	}
@@ -138,7 +142,9 @@ public class Projects implements Serializable
 		{
 			Project p = (Project)projIt.next();
 			if (p.getCompiledSources() != null)
+			{
 				compiledSources.addAll(p.getCompiledSources());
+			}
 		}
 		return compiledSources;
 	}
@@ -156,7 +162,9 @@ public class Projects implements Serializable
 			{
 				Dependency dependency = (Dependency)depIt.next();
 				if (!dependencies.contains(dependency))
+				{
 					dependencies.add(dependency);
+				}
 			}
 		}
 		return dependencies;
@@ -201,7 +209,9 @@ public class Projects implements Serializable
 	public Source getSource(String fileName)
 	{
 		if (fileName == null)
+		{
 			throw new IllegalArgumentException("specified filename cannot be null");
+		}
 
 		// normalize specified filename
 		String nfn = FileUtils.normalizeFilename(fileName);
@@ -212,13 +222,19 @@ public class Projects implements Serializable
 		{
 			Source s = (Source)sourceIt.next();
 			String sfn = s.getFileName();
-			if (sfn == null) continue; // FIXME: can this even happen? if so: how should it be handled?
+			if (sfn == null)
+			{
+				continue; // FIXME: can this even happen? if so: how should it be handled?
+			}
 			
 			// normalize source filename
 			String nsfn = FileUtils.normalizeFilename(sfn);
 			
 			// compare specified and source
-			if (nfn.equals(nsfn)) return s;
+			if (nfn.equals(nsfn))
+			{
+				return s;
+			}
 		}
 
 		return null;

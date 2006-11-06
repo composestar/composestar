@@ -57,7 +57,7 @@ public class CompilerSettings implements Serializable
 			return (LangCompiler)myclass.newInstance();
 		}
 		catch (Exception e) {
-			throw new ModuleException("Error while creating compiler..");
+			throw new ModuleException("Error while creating compiler..", "Master");
 		}
 	}
 	

@@ -9,7 +9,7 @@ public class INCRETimer
    
     private String module;
     private String description;
-    private int type = 0;
+    private int type;
     private long startTime;
     private long elapsedTime;
 	

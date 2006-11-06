@@ -68,12 +68,18 @@ public class INCRETester
 			int count2 = 0;
 			Object obj = record2.instancesByType.get(type);
 			if(obj!=null)
+			{
 				count2 = ((Integer)obj).intValue();
+			}
 
 			if(count1!=count2)
+			{
 				openTag("tr bgcolor=#AA8888");
+			}
 			else
+			{
 				openTag("tr");
+			}
 			
 			createCell("["+count1+"] "+type.substring(type.lastIndexOf('.')+1));
 			createCell("["+count2+"] "+type.substring(type.lastIndexOf('.')+1));

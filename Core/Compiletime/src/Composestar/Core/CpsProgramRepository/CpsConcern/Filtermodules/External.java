@@ -49,7 +49,7 @@ public class External extends TypedDeclaration {
    */
   public boolean addValueExpression(ValueExpression valexp) {
     valueExpressions.addElement(valexp);
-    return (true);
+    return true;
   }
 
 
@@ -64,7 +64,7 @@ public class External extends TypedDeclaration {
   public ValueExpression removeValueExpression(int index) {
     Object o = valueExpressions.elementAt(index);
     valueExpressions.removeElementAt(index);
-    return ((ValueExpression) o);
+    return (ValueExpression) o;
   }
 
 
@@ -77,7 +77,7 @@ public class External extends TypedDeclaration {
    * @roseuid 401FAA6203D8
    */
   public ValueExpression getValueExpression(int index) {
-    return ((ValueExpression) valueExpressions.elementAt(index));
+    return (ValueExpression) valueExpressions.elementAt(index);
   }
 
 
@@ -88,7 +88,7 @@ public class External extends TypedDeclaration {
    * @roseuid 401FAA630004
    */
   public Iterator getValueExpressionIterator() {
-    return (new CPSIterator(valueExpressions));
+    return new CPSIterator(valueExpressions);
   }
 
 

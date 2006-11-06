@@ -38,7 +38,9 @@ public abstract class LanguageModel
   public LanguageUnitType getLanguageUnitType(String type) throws ModelClashException
   {
     if (null == languageUnitTypes.get(type))
+    {
       throw new ModelClashException("The type " + type + " is not a registered LanguageUnitType");
+    }
     return (LanguageUnitType)languageUnitTypes.get(type);		
   }
   
@@ -63,7 +65,9 @@ public abstract class LanguageModel
   public RelationPredicate getRelationPredicate(String relName) throws ModelClashException
   {
     if (null == relationPredicates.get(relName))
+    {
       throw new ModelClashException("The relation " + relName + " is not a registered relation predicate");
+    }
     return (RelationPredicate)relationPredicates.get(relName);
   }
   

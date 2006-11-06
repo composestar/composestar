@@ -23,7 +23,9 @@ public class UnitRegister implements SerializableRepositoryEntity
 	public static UnitRegister instance()
 	{
 		if (instance == null)
+		{
 			instance = new UnitRegister();
+		}
 		return instance;
 	}
 

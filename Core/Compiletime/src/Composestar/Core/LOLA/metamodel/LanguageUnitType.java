@@ -92,7 +92,9 @@ public class LanguageUnitType
 	public RelationType getRelationType(String relName) throws ModelClashException
 	{
 		if (null == relationTypes.get(relName))
+		{
 			throw new ModelClashException("Unit does not have the relation " + relName);
+		}
 		return (RelationType)relationTypes.get(relName);
 	}
 	

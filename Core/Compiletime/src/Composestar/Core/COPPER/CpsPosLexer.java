@@ -21,8 +21,8 @@ public class CpsPosLexer extends CpsLexer {
   protected int col = 1;
   protected int tokenStartCol = 1;
   protected int tokenStartLine = 1;
-  protected int tokenStartCharPos = 0; //byte position start at 0
-  protected int charPos = 0;
+  protected int tokenStartCharPos; //byte position start at 0
+  protected int charPos;
 
 
   /**
@@ -60,13 +60,13 @@ public class CpsPosLexer extends CpsLexer {
    * Consumes a character from the input
    */
   public void consume() throws CharStreamException {
-    {
+    
       super.consume();
       if (inputState.guessing == 0) {
         col++;
         charPos++;
       }
-    }
+    
   }
 
 

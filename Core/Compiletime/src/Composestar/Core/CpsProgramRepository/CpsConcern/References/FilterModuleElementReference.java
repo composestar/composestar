@@ -50,11 +50,26 @@ public class FilterModuleElementReference extends ConcernElementReference {
       fname += pack.elementAt(i);
       fname += ".";
     }
-    if(concern != null) fname += concern;
-    if(concern != null && filterModule != null) fname += "::";
-    if(filterModule != null) fname += filterModule;
-    if(filterModule != null && name != null) fname += ":";
-    if(name != null) fname += name;
-    return (fname);
+    if(concern != null) 
+    {
+    	fname += concern;
+    }
+    if(concern != null && filterModule != null)
+    {
+    	fname += "::";
+    }
+    if(filterModule != null)
+    {
+    	fname += filterModule;
+    }
+    if(filterModule != null && name != null)
+    {
+    	fname += ":";
+    }
+    if(name != null)
+    {
+    	fname += name;
+    }
+    return fname;
   }
 }

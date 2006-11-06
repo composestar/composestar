@@ -146,7 +146,7 @@ public final class INIFile
             }
             objSec = null;
         }
-        return (blnRet) ? Boolean.TRUE : Boolean.FALSE;
+        return blnRet ? Boolean.TRUE : Boolean.FALSE;
     }
 
     /**

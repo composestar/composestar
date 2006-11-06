@@ -48,6 +48,6 @@ public class SelClassAndSubClasses extends SimpleSelExpression
 	Vector v = new Vector();
 	ConcernReference rootClass = this.getRef();  
 	v.addElement(rootClass);
-	return(v);
+	return v;
   }
 }

@@ -47,7 +47,9 @@ public class MethodNode extends Node
 		catch(InvocationTargetException ex){
 			String error = ex.getCause().getMessage();
 			if(error==null)
+			{
 				error = ex.getCause().toString();
+			}
 			
 			throw new ModuleException(error, "INCRE");
 		}

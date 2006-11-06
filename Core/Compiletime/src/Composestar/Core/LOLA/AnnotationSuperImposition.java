@@ -110,7 +110,9 @@ public class AnnotationSuperImposition
 		/* Find out which predicate selector this binding belongs to */
 		SelectorDefinition selDef = annotBind.getSelector().getRef();
 		if (null == selDef) // The reference has not been resolved, i.e. the binding points to a non-existent selector
+		{
 	        throw new ModuleException("Annotation binding points to non-existent selector: " + annotBind.getSelector().getQualifiedName(), "LOLA", annotBind.getSelector());
+		}
 		
 		boolean foundSelector = false;
 		for (Iterator selectorIter = selectors.iterator(); selectorIter.hasNext();)
@@ -152,7 +154,9 @@ public class AnnotationSuperImposition
 			}
 		}
 		if (!foundSelector)
+		{
 	      throw new ModuleException("Can bind annotations only to predicate selector statements: " + selDef.getQualifiedName(), "LOLA", selDef);
+		}
 	}
   }
 
@@ -177,14 +181,18 @@ public class AnnotationSuperImposition
 	  	for (int action = 0; action < annotationActions.size(); action++)
 	  	{
 	  		if (myState.lastAction == action)
+	  		{
 	  			continue; // No point in executing the same action twice; it will have no effect
+	  		}
 
 	  		// Attach annotations based on the current state (e.g. this action and actions done by previous states in this run)
 	  		Set addedAnnots = setAnnotationState(myState, action);
 	  		
 	  		if (addedAnnots.isEmpty())
+	  		{
 	  			continue; // No annotation was attached (selectors empty?), so obviously nothing can have changed. Try next action.
 	  		              // Also in this case we don't have to bother with resetAnnotationState, because nothing was added.
+	  		}
 	  		
 	  		State tempState = new State();	  		
 	  		tempState.selectorResults = evaluateSelectors();
@@ -230,7 +238,9 @@ public class AnnotationSuperImposition
 						                + "orders of annotation superimposition. If you get this message, contact the Compose* developers", "LOLA");
 	  		}
 	  		else
+	  		{
 	  			endState = myState; // We found an endstate (need to save only 1, they all have to be equal anyway..)
+	  		}
 	  	}
 	  	currentState++; // Handle the next state in the queue
 	} // End of handling states
@@ -238,15 +248,19 @@ public class AnnotationSuperImposition
 	// Set the final state of annotations and selected elements according to the found endstate
 	setAnnotationState(endState, -1);
 	if (endState.lastAction != -1) // Only reevaluate if we added annotations at all
+	{
 		evaluateSelectors();
+	}
 	
 	// Give warnings when selectors (still) do not select anything
 	for (int i = 0; i < endState.selectorResults.size(); i++)
 	{
 		HashSet resultSet = (HashSet)endState.selectorResults.elementAt(i); 
 		if (resultSet.isEmpty())
+		{
 			//Debug.out(Debug.MODE_WARNING, "LOLA", "Selector does not match any program elements: " + ((Selector)selectors.elementAt(i)).name);
 			Debug.out(Debug.MODE_WARNING, "LOLA", "Selector does not match any program elements", ((Selector)selectors.elementAt(i)).predicate);
+		}
 		else
 		{
 			Iterator resultit = resultSet.iterator();
@@ -276,8 +290,12 @@ public class AnnotationSuperImposition
   public boolean isNewState(Vector allStates, Vector selectorResults) throws ModuleException
   {
 	for (int i = 0; i < allStates.size(); i++)
+	{
 		if (equalContents(selectorResults, ((State)allStates.elementAt(i)).selectorResults))
+		{
 			return false;
+		}
+	}
 	return true;
   }
   
@@ -304,11 +322,17 @@ public class AnnotationSuperImposition
   public boolean equalContents(Vector res1, Vector res2) throws ModuleException
   {
   	if (res1.size() != res2.size())
+  	{
   		throw new ModuleException("Internal error; selector resultsets differ in size", "LOLA");
+  	}
   	
   	for (int i = 0; i < res1.size(); i++)
+  	{
   		if (! res1.elementAt(i).equals(res2.elementAt(i)))
-  			return false;  		
+  		{
+  			return false;
+  		}
+  	}
   	return true;
   }
   
@@ -322,11 +346,17 @@ public class AnnotationSuperImposition
   public int subsetContents(Vector res1, Vector res2) throws ModuleException
   {
   	if (res1.size() != res2.size())
+  	{
   		throw new ModuleException("Internal error; selector resultsets differ in size", "LOLA");
+  	}
   	
   	for (int i = 0; i < res1.size(); i++)
+  	{
   		if (! ((Set)res2.elementAt(i)).containsAll(((Set)res1.elementAt(i))))
-  			return i;  		
+  		{
+  			return i;
+  		}
+  	}
   	return -1;  	
   }
   
@@ -376,7 +406,9 @@ public class AnnotationSuperImposition
 					removeMeLater.add(annotInst);
 				}
 				else // We don't attach the same annotation twice right now (!)
+				{
 					Debug.out(Debug.MODE_INFORMATION, "LOLA", "Not attaching '" + action.annotation.getUnitName() + "' to '" + elem.getUnitName() + "' a second time!");
+				}
 			}
   		}
   		currAction = currState.lastAction;

@@ -20,7 +20,9 @@ public class DynamicNode extends Node
 			return ((RepositoryEntity)obj).getDynObject(reference);
 		}
 		else 
+		{
 			return null;
+		}
 	}
 	
 	/**

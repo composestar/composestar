@@ -134,8 +134,10 @@ public class Run {
 		OrderTraverser ot=new OrderTraverser();
 		LinkedList order=ot.traverse(g);
 		for (Iterator i=order.iterator();i.hasNext();)
+		{
 			System.out.println(((Node)i.next()).getElement());
 		}
+	}
 
 
 	/* testing cond-cond */

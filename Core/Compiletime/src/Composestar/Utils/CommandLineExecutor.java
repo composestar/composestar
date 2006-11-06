@@ -137,7 +137,7 @@ public class CommandLineExecutor
 	 */
 	public String outputNormal()
 	{
-		return (outputGobbler == null ? null : outputGobbler.result());
+		return outputGobbler == null ? null : outputGobbler.result();
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class CommandLineExecutor
 	 */
 	public String outputError()
 	{
-		return (errorGobbler == null ? null : errorGobbler.result());
+		return errorGobbler == null ? null : errorGobbler.result();
 	}
 
 	/**

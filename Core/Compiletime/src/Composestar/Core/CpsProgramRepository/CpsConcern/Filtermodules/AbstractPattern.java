@@ -33,13 +33,6 @@ public abstract class AbstractPattern extends ContextRepositoryEntity {
     }
     
     /**
-     * @roseuid 401FAA67012C
-     */
-    public void Pattern() {
-     
-    }
-    
-    /**
      * @return 
      * Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target
      * @roseuid 401FAA670136

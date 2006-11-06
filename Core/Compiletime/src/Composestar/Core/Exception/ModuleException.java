@@ -70,7 +70,13 @@ public class ModuleException extends Exception
 
 	public String toString()
 	{
-		if (module != null) return module + " ERROR: " + getMessage();
-		else return "UNDEFINED-MODULE ERROR: " + getMessage();
+		if (module != null)
+		{
+			return module + " ERROR: " + getMessage();
+		}
+		else 
+		{
+			return "UNDEFINED-MODULE ERROR: " + getMessage();
+		}
 	}
 }

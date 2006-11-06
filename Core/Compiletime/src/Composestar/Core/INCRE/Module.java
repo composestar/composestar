@@ -16,8 +16,8 @@ public class Module
 	private String name = "";
 	private String fulltype;
 	private String input;	
-	private boolean enabled = false;
-	private boolean incremental = false;
+	private boolean enabled;
+	private boolean incremental;
 	private String summary = "";
 
 	/**
@@ -64,8 +64,13 @@ public class Module
 	public void addComparableObject(String key, Object obj){
 		ArrayList list;
 		if(this.comparableObjects.containsKey(key))
+		{
 			list = (ArrayList)comparableObjects.get(key);
-		else list = new ArrayList();
+		}
+		else
+		{
+			list = new ArrayList();
+		}
 
 		list.add(obj);
 		this.comparableObjects.put(key,list);
@@ -74,8 +79,13 @@ public class Module
 	public void removeComparableObject(String key, Object obj){
 		ArrayList list;
 		if(this.comparableObjects.containsKey(key))
+		{
 			list = (ArrayList)comparableObjects.get(key);
-		else list = new ArrayList();
+		}
+		else
+		{
+			list = new ArrayList();
+		}
 
 		list.remove(obj);
 		this.comparableObjects.put(key,list);
@@ -152,7 +162,9 @@ public class Module
 			// module is enabled for the phase so continue
 			
 			if (summary.length() != 0)
+			{
 				Debug.out(Debug.MODE_CRUCIAL, this.name, summary);
+			}
 
 			try {
 				Class moduleClass = Class.forName(fulltype);

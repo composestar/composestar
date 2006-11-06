@@ -99,7 +99,7 @@ public String name;
         out += '.' + (String) temp.elementAt(i);
       }
     }
-    return (out);
+    return out;
   }
   
   public String getUniqueID()

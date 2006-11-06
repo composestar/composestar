@@ -30,7 +30,7 @@ public class PathHelper {
 
 
   public int getNumberOfPieces() {
-    return (pieces.size());
+    return pieces.size();
   }
 
 
@@ -47,7 +47,7 @@ public class PathHelper {
     }
 
     curelement = 0;
-    return (true);
+    return true;
   }
 
 
@@ -60,7 +60,10 @@ public class PathHelper {
 
     //@(number | last)
     strTok = new StringTokenizer(pathpart, "@");
-    if (pathpart.startsWith("@")) HandlePosition(strTok.nextToken(), piece);
+    if (pathpart.startsWith("@")) 
+    {
+    	HandlePosition(strTok.nextToken(), piece);
+    }
 
     //name@ (number | last) [new]
     if (strTok.hasMoreTokens()) {       //name
@@ -73,7 +76,7 @@ public class PathHelper {
       }
     }
 
-    return (piece);
+    return piece;
   }
 
 

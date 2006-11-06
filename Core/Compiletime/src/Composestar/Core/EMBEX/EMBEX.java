@@ -48,7 +48,9 @@ public class EMBEX implements CTCommonModule
 		// fetch temppath
 		String basePath = ps.getPath("Base");
 		if (basePath == null || basePath.length() == 0) 
+		{
 			throw new ModuleException("Error in configuration file: no path Base", MODULE_NAME);
+		}
 
 		// create directory for embedded code
 		File embeddedDir = new File(basePath, "obj/embedded/");

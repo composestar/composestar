@@ -96,6 +96,7 @@ public class ConstraintFilter extends ArgumentFilter{
 			//System.out.println("l:"+l+" r:"+r);	
 			/* we add a rule only if both arguments are active */
 			if ((l!=null) && (r!=null))
+			{
 				if ("pre_soft".equals(value)){
 					Rule _rule=new SoftPreRule(l, r);
 					_rule.insert(_graph);
@@ -103,6 +104,7 @@ public class ConstraintFilter extends ArgumentFilter{
 					//FILTHService.print("FILTH::adding rule> "+value+"( "+l+" , "+r+" )\n");
 					FILTHService.log.print("<li><i>"+value+"( "+l+" , "+r+")</i></li>\n");
 				}
+			}
 			
 			//itt egy action-t letrehozni; elotte ellenorizni, hogy benne van-e a memoriaban; es felszurni a grafba
 			//ezek utan letrehozni a szabaly a constraint alapjan es azt is felvinni a grafba 

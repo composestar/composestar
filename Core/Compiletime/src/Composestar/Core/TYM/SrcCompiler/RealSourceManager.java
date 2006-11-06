@@ -94,7 +94,9 @@ public class RealSourceManager implements CTCommonModule
 		{
 			TypeSource ts = (TypeSource)tsIt.next();
 			if (ts.getName().equals(exec))
+			{
 				return ts.getFileName();
+			}
 		}
 		
 		throw new ModuleException("Source file for executable type '" + exec + "' unknown", "RECOMA");
@@ -138,7 +140,9 @@ public class RealSourceManager implements CTCommonModule
 		if (targetFile.length() == 0) // full namespace not found
 		{
 			if (!types.isEmpty())
+			{
 				targetFile = (String)types.get(0); // first type declared in sourcefile
+			}
 			else 
 			{
 				Debug.out(Debug.MODE_WARNING, "RECOMA",srcType+" is not a fully qualified target of source "+sourcePath);

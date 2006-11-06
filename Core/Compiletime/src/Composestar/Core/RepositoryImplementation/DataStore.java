@@ -271,7 +271,7 @@ public class DataStore implements Serializable, Cloneable
 			Object obj = ois.readObject();
 			ois.close();
 			if (DEBUG) Debug.out(Debug.MODE_INFORMATION,"DataStore","Done reading object '" + obj + "'.");
-			return (obj);
+			return obj;
 		}
 		catch (Exception e) {
 			if (DEBUG) {

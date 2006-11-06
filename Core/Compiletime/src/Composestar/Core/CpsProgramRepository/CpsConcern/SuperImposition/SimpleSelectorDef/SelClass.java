@@ -36,7 +36,7 @@ public class SelClass extends SimpleSelExpression {
   public Vector interpret() {
     Vector v = new Vector();
     v.add(this.getRef());
-    return(v);
+    return v;
 
   }
 }
