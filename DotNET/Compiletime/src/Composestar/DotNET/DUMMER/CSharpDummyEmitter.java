@@ -53,7 +53,9 @@ public class CSharpDummyEmitter implements DummyEmitter
 				Debug.out(Debug.MODE_DEBUG, "DUMMER", "CSharpDummyGenerator failed. Output follows:");
 				Iterator it = pr.stdout.iterator();
 				while (it.hasNext())
+				{
 					Debug.out(Debug.MODE_DEBUG, "DUMMER", "  " + it.next());
+				}
 
 				throw new ModuleException("Error creating dummies: CSharpDummyGenerator failed.", "DUMMER");
 			}
@@ -130,7 +132,10 @@ class ExternalCSharpDummyGenerator
 		Configuration config = Configuration.instance();
 		String cps = config.getPathSettings().getPath("Composestar");
 		File exe = new File(cps, "binaries/CSharpDummyGenerator.exe");
-		if (!exe.exists()) throw new ProcessExecutionException("Executable does not exist: " + exe.getAbsolutePath());
+		if (!exe.exists())
+		{
+			throw new ProcessExecutionException("Executable does not exist: " + exe.getAbsolutePath());
+		}
 
 		return exe.getAbsolutePath();
 	}

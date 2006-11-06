@@ -86,8 +86,11 @@ public class ILCodeParser extends TransformerBase
 	 */
 	public void run() throws ModifierException
 	{
-		if (assemblyName == null || "".equals(assemblyName)) return; // nothing
-																		// to do
+		if (assemblyName == null || "".equals(assemblyName))
+		{
+			return; // nothing
+			// to do
+		}
 
 		Debug.out(Debug.MODE_DEBUG, "ASTRA", "Running ASTRA Transformer");
 
@@ -110,8 +113,10 @@ public class ILCodeParser extends TransformerBase
 		}
 
 		// remove the old .post.il file
-		if (!FileUtils.deleteIfExists(postIlName)) Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '"
-				+ postIlName + "'");
+		if (!FileUtils.deleteIfExists(postIlName))
+		{
+			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + postIlName + "'");
+		}
 
 		// open dissassembled file
 		BufferedReader in = null;
@@ -135,12 +140,17 @@ public class ILCodeParser extends TransformerBase
 		}
 
 		// remove the old assembly
-		if (!FileUtils.delete(assemblyName)) Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + assemblyName
-				+ "'");
+		if (!FileUtils.delete(assemblyName))
+		{
+			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + assemblyName + "'");
+		}
 
 		// remove the old pdb file
 		String pdb = FileUtils.replaceExtension(assemblyName, "pdb");
-		if (!FileUtils.delete(pdb)) Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + pdb + "'");
+		if (!FileUtils.delete(pdb))
+		{
+			Debug.out(Debug.MODE_WARNING, "ASTRA", "Unable to delete '" + pdb + "'");
+		}
 
 		// re-assemble
 		try
@@ -204,8 +214,10 @@ public class ILCodeParser extends TransformerBase
 				String name = elems[elems.length - 1];
 
 				ConcernHolder ch = (ConcernHolder) concerns.get(name);
-				if (ch == null) // try FQN
-				ch = (ConcernHolder) concerns.get(namespace + '.' + name);
+				if (ch == null)
+				{
+					ch = (ConcernHolder) concerns.get(namespace + '.' + name);
+				}
 
 				if (ch == null)
 				{
@@ -241,8 +253,10 @@ public class ILCodeParser extends TransformerBase
 					}
 				}
 			}
-			else // just write all other lines unchanged
-			write(line);
+			else
+			{
+				write(line);
+			}
 		}
 	}
 

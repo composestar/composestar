@@ -81,22 +81,31 @@ abstract class TransformerBase
 	 */
 	public String getLine() throws ModifierException
 	{
-		if (parent != null) return parent.getLine();
+		if (parent != null)
+		{
+			return parent.getLine();
+		}
 
 		try
 		{
 			String line;
 			do
 			{
-				if ((line = in.readLine()) == null) return null; // *throw
-																	// new
-																	// ModifierException(
-																	// "TransformerBase::readLine()
-																	// unexpected
-																	// end of
-																	// file." );
+				if ((line = in.readLine()) == null)
+				{
+					return null; // *throw
+					// new
+					// ModifierException(
+					// "TransformerBase::readLine()
+					// unexpected
+					// end of
+					// file." );
+				}
 
-				if ("".equals(line.trim())) line = null;
+				if ("".equals(line.trim()))
+				{
+					line = null;
+				}
 
 			} while (line == null);
 
@@ -147,7 +156,10 @@ abstract class TransformerBase
 			{
 				level--;
 			}
-			if (!eat) write(line);
+			if (!eat)
+			{
+				write(line);
+			}
 		} while (level > 0);
 	}
 

@@ -47,13 +47,19 @@ public class DotNETCompiler implements LangCompiler
 		Configuration config = Configuration.instance();
 		Language lang = project.getLanguage();
 
-		if (lang == null) throw new CompilerException("Project has no language object");
+		if (lang == null)
+		{
+			throw new CompilerException("Project has no language object");
+		}
 
 		CompilerSettings cs = lang.getCompilerSettings();
 
 		// work out the libraries string
 		CompilerConverter compconv = cs.getCompilerConverter("libraryParam");
-		if (compconv == null) throw new CompilerException("Cannot obtain CompilerConverter");
+		if (compconv == null)
+		{
+			throw new CompilerException("Cannot obtain CompilerConverter");
+		}
 
 		String libs = "";
 		String clstring = compconv.getReplaceBy();
@@ -109,7 +115,10 @@ public class DotNETCompiler implements LangCompiler
 		// construct the command line
 		String an = (source.isExecutable() ? "CompileExecutable" : "CompileLibrary");
 		CompilerAction action = cs.getCompilerAction(an);
-		if (action == null) throw new CompilerException("Cannot obtain compileraction");
+		if (action == null)
+		{
+			throw new CompilerException("Cannot obtain compileraction");
+		}
 
 		String args = action.getArgument();
 		String command = cs.getProperty("executable") + " " + args;
@@ -144,13 +153,19 @@ public class DotNETCompiler implements LangCompiler
 	public void compileDummies(Project project) throws CompilerException
 	{
 		Language lang = project.getLanguage();
-		if (lang == null) throw new CompilerException("Project has no language object");
+		if (lang == null)
+		{
+			throw new CompilerException("Project has no language object");
+		}
 
 		CompilerSettings cs = lang.getCompilerSettings();
 
 		// generate and execute command
 		CompilerAction action = cs.getCompilerAction("CompileLibrary");
-		if (action == null) throw new CompilerException("Cannot obtain CompilerAction");
+		if (action == null)
+		{
+			throw new CompilerException("Cannot obtain CompilerAction");
+		}
 
 		// what's the target file?
 		String targetPath = getDummiesFilePath(project);
@@ -178,7 +193,10 @@ public class DotNETCompiler implements LangCompiler
 	{
 		if (result != 0) // there was an error
 		{
-			if (output.length() == 0) output = "Could not execute compiler. Make sure the .NET Framework folder is set in the path and restart Visual Studio.";
+			if (output.length() == 0)
+			{
+				output = "Could not execute compiler. Make sure the .NET Framework folder is set in the path and restart Visual Studio.";
+			}
 
 			StringTokenizer st = new StringTokenizer(output, "\n");
 			while (st.hasMoreTokens())
@@ -228,7 +246,10 @@ public class DotNETCompiler implements LangCompiler
 	private String getLibrariesString(Project p, CompilerSettings cs) throws CompilerException
 	{
 		CompilerConverter cc = cs.getCompilerConverter("libraryParam");
-		if (cc == null) throw new CompilerException("Cannot obtain compilerconverter");
+		if (cc == null)
+		{
+			throw new CompilerException("Cannot obtain compilerconverter");
+		}
 
 		StringBuffer sb = new StringBuffer();
 		TokenReplacer tr = new TokenReplacer();
@@ -307,7 +328,10 @@ public class DotNETCompiler implements LangCompiler
 		{
 			String ref = (String) refs.next();
 			String source = locations.getSourceByType(ref);
-			if (source != null) extSources.add(source);
+			if (source != null)
+			{
+				extSources.add(source);
+			}
 		}
 
 		incre.externalSourcesBySource.put(FileUtils.removeExtension(targetFile), extSources);

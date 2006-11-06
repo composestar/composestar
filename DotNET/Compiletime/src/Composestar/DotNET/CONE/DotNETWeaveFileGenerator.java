@@ -124,7 +124,10 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The entry assembly could not be reliably determined. Using '"
 					+ entryAssembly + "'.");
 		}
-		else Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolved '" + entryAssembly + "' as entry assembly.");
+		else
+		{
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Resolved '" + entryAssembly + "' as entry assembly.");
+		}
 
 		return entryAssembly;
 	}
@@ -160,11 +163,20 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 
 				// Do not add the dependency when it is a .NET assembly or a
 				// composestar assembly
-				if (DotNETBACO.isSystemAssembly(dep)) continue;
+				if (DotNETBACO.isSystemAssembly(dep))
+				{
+					continue;
+				}
 
-				if (dep.indexOf("ComposeStarRuntimeInterpreter") >= 0) continue;
+				if (dep.indexOf("ComposeStarRuntimeInterpreter") >= 0)
+				{
+					continue;
+				}
 
-				if (dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0) continue;
+				if (dep.indexOf("ComposeStarDotNETRuntimeInterpreter") >= 0)
+				{
+					continue;
+				}
 
 				String dllname = FileUtils.removeExtension(FileUtils.getFilenamePart(dep));
 				writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
@@ -181,8 +193,11 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			try
 			{
 				File file = new File(cfPath);
-				if (file == null) Debug.out(Debug.MODE_WARNING, MODULE_NAME,
-						"Cannot create file handle for referenced DLL '" + cfPath + "'.");
+				if (file == null)
+				{
+					Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Cannot create file handle for referenced DLL '"
+							+ cfPath + "'.");
+				}
 				else
 				{
 					if (file.exists() && file.isFile())
@@ -191,8 +206,11 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Adding DLL '" + dllname + "'.");
 						writeAssemblyDefinitionRecord(dllname, "0.0.0.0", entryAssembly);
 					}
-					else Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Referenced DLL '" + file.getAbsolutePath()
-							+ "' does not exist.");
+					else
+					{
+						Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Referenced DLL '" + file.getAbsolutePath()
+								+ "' does not exist.");
+					}
 				}
 			}
 			catch (Exception e)
@@ -342,7 +360,10 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			try
 			{
 				List list = filthservice.getOrder(c);
-				if (!list.isEmpty()) writeMethodInvocationRecord(c.getQualifiedName());
+				if (!list.isEmpty())
+				{
+					writeMethodInvocationRecord(c.getQualifiedName());
+				}
 			}
 			catch (Exception e)
 			{
@@ -417,10 +438,16 @@ public class DotNETWeaveFileGenerator implements WeaveFileGenerator
 			String assembly = typeLocations.getAssemblyByType(typeName);
 
 			String sourceFile = typeLocations.getSourceByType(typeName);
-			if (sourceFile == null) throw new RuntimeException("sourceFile for " + typeName + " is null");
+			if (sourceFile == null)
+			{
+				throw new RuntimeException("sourceFile for " + typeName + " is null");
+			}
 
 			Source source = projects.getSource(sourceFile);
-			if (source == null) throw new RuntimeException("Source for " + typeName + " is null");
+			if (source == null)
+			{
+				throw new RuntimeException("Source for " + typeName + " is null");
+			}
 
 			String projectName = source.getProject().getName();
 			String dummies = projectName + ".dummies";

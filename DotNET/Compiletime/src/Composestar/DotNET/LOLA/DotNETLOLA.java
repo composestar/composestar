@@ -1,11 +1,11 @@
 package Composestar.DotNET.LOLA;
 
-import Composestar.Core.LOLA.*;
+import java.util.ArrayList;
+
+import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
 import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.DotNET.LOLA.metamodel.*;
-
-import java.util.ArrayList;
+import Composestar.DotNET.LOLA.metamodel.DotNETLanguageModel;
 
 public class DotNETLOLA extends LOLA
 {

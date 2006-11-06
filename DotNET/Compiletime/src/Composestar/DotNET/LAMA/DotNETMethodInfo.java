@@ -10,15 +10,17 @@
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.UnitResult;
 
 /**
  * Corresponds to the MethodInfo class in the .NET framework. For more
@@ -386,7 +388,9 @@ public class DotNETMethodInfo extends MethodInfo
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
 		while (iter.hasNext())
+		{
 			result.add(iter.next());
+		}
 		return result;
 	}
 
@@ -397,22 +401,38 @@ public class DotNETMethodInfo extends MethodInfo
 	 */
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class")) return new UnitResult(Parent);
-		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface")) return new UnitResult(
-				Parent);
-		else if (argumentName.equals("ChildParameters")) return new UnitResult(toHashSet(Parameters));
-		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class")) return new UnitResult(
-				returnType());
-		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface")) return new UnitResult(
-				returnType());
-		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation")) return new UnitResult(
-				returnType());
+		if (argumentName.equals("ParentClass") && Parent.getUnitType().equals("Class"))
+		{
+			return new UnitResult(Parent);
+		}
+		else if (argumentName.equals("ParentInterface") && Parent.getUnitType().equals("Interface"))
+		{
+			return new UnitResult(Parent);
+		}
+		else if (argumentName.equals("ChildParameters"))
+		{
+			return new UnitResult(toHashSet(Parameters));
+		}
+		else if (argumentName.equals("ReturnClass") && returnType().getUnitType().equals("Class"))
+		{
+			return new UnitResult(returnType());
+		}
+		else if (argumentName.equals("ReturnInterface") && returnType().getUnitType().equals("Interface"))
+		{
+			return new UnitResult(returnType());
+		}
+		else if (argumentName.equals("ReturnAnnotation") && returnType().getUnitType().equals("Annotation"))
+		{
+			return new UnitResult(returnType());
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -437,13 +457,25 @@ public class DotNETMethodInfo extends MethodInfo
 	public Collection getUnitAttributes()
 	{
 		HashSet result = new HashSet();
-		if (isPublic()) result.add("public");
-		if (isPrivate()) result.add("private");
+		if (isPublic())
+		{
+			result.add("public");
+		}
+		if (isPrivate())
+		{
+			result.add("private");
+		}
 		/*
 		 * if (isProtected()) result.add("protected");
 		 */
-		if (isStatic()) result.add("static");
-		if (isFinal()) result.add("final");
+		if (isStatic())
+		{
+			result.add("static");
+		}
+		if (isFinal())
+		{
+			result.add("final");
+		}
 		return result;
 	}
 

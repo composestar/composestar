@@ -110,29 +110,36 @@ public class DotNETType extends Type
 
 	// private sets
 	private ProgramElement parentNS; // Added by the Language Model; this
-										// relation can be used in logic queries
+
+	// relation can be used in logic queries
 
 	private HashSet childTypes; // Added by the Language Model; this relation
-								// contains links to sub-types of this type.
+
+	// contains links to sub-types of this type.
 
 	private HashSet parameterTypes; // Added by the Language Model; this
-									// relation contains links to parameters of
-									// this type.
+
+	// relation contains links to parameters of
+	// this type.
 
 	private HashSet methodReturnTypes; // Added by the Language Model; this
-										// relation contains links to methods
-										// that return this type.
+
+	// relation contains links to methods
+	// that return this type.
 
 	private HashSet fieldTypes; // Added by the Language Model; this relation
-								// contains links to fields of this type.
+
+	// contains links to fields of this type.
 
 	private HashSet implementedBy; // Added by the Language Model; this
-									// relation exists for interfaces and points
-									// to the Types that implement this
-									// interface
+
+	// relation exists for interfaces and points
+	// to the Types that implement this
+	// interface
 
 	public String fromDLL; // Added by TypeHarvester and TypeCollector for
-							// incremental type collecting
+
+	// incremental type collecting
 
 	/**
 	 * @roseuid 4028E9FF026C
@@ -726,7 +733,10 @@ public class DotNETType extends Type
 			while (iter.hasNext())
 			{
 				DotNETType iface = (DotNETType) map.getType((String) iter.next());
-				if (null != iface) ImplementedInterfaces.add(iface);
+				if (null != iface)
+				{
+					ImplementedInterfaces.add(iface);
+				}
 			}
 		}
 		return ImplementedInterfaces;
@@ -744,14 +754,20 @@ public class DotNETType extends Type
 		if (st.hasMoreTokens())
 		{
 			if (st.countTokens() == 6) // Really ugly hack for this case:
-										// System.Int16[,] this throws of the
-										// assemblyname resulting in errors
-										// during assembly transformer
+			// System.Int16[,] this throws of the
+			// assemblyname resulting in errors
+			// during assembly transformer
 			{
 				st.nextToken();
 			}
-			if (st.hasMoreTokens()) st.nextToken();
-			if (st.hasMoreTokens()) name = st.nextToken();
+			if (st.hasMoreTokens())
+			{
+				st.nextToken();
+			}
+			if (st.hasMoreTokens())
+			{
+				name = st.nextToken();
+			}
 		}
 		return name;
 	}
@@ -762,7 +778,10 @@ public class DotNETType extends Type
 		{
 			return "[]";
 		}
-		else return "";
+		else
+		{
+			return "";
+		}
 	}
 
 	/**
@@ -780,26 +799,86 @@ public class DotNETType extends Type
 			fullName = fullName.substring(0, fullName.length() - 2);
 			arrayPart = "[]";
 		}
-		if (fullName.equals("System.Void")) return "void" + arrayPart;
-		else if (fullName.equals("System.Boolean")) return "bool" + arrayPart;
-		else if (fullName.equals("System.Char")) return "Char" + arrayPart;
-		else if (fullName.equals("System.SByte")) return "int8" + arrayPart;
-		else if (fullName.equals("System.Int16")) return "int16" + arrayPart;
-		else if (fullName.equals("System.Int32")) return "int32" + arrayPart;
-		else if (fullName.equals("System.64")) return "int64" + arrayPart;
-		else if (fullName.equals("System.IntPtr")) return "native int" + arrayPart;
-		else if (fullName.equals("System.Byte")) return "unsigned int8" + arrayPart;
-		else if (fullName.equals("System.UInt16")) return "unsigned int16" + arrayPart;
-		else if (fullName.equals("System.UInt32")) return "unsigned int32" + arrayPart;
-		else if (fullName.equals("System.UInt64")) return "unsigned int64" + arrayPart;
-		else if (fullName.equals("System.UIntPtr")) return "native unsigned int" + arrayPart;
-		else if (fullName.equals("System.Single")) return "Float32" + arrayPart;
-		else if (fullName.equals("System.Double")) return "Float64" + arrayPart;
-		else if (fullName.equals("System.Object")) return "object" + arrayPart;
-		else if (fullName.equals("System.IntPtr")) return "*" + arrayPart;
-		else if (fullName.equals("System.Array")) return "Array" + arrayPart;
-		else if (fullName.equals("System.String")) return "string" + arrayPart;
-		else return "class [" + this.assemblyName() + "]" + fullName + arrayPart;
+		if (fullName.equals("System.Void"))
+		{
+			return "void" + arrayPart;
+		}
+		else if (fullName.equals("System.Boolean"))
+		{
+			return "bool" + arrayPart;
+		}
+		else if (fullName.equals("System.Char"))
+		{
+			return "Char" + arrayPart;
+		}
+		else if (fullName.equals("System.SByte"))
+		{
+			return "int8" + arrayPart;
+		}
+		else if (fullName.equals("System.Int16"))
+		{
+			return "int16" + arrayPart;
+		}
+		else if (fullName.equals("System.Int32"))
+		{
+			return "int32" + arrayPart;
+		}
+		else if (fullName.equals("System.64"))
+		{
+			return "int64" + arrayPart;
+		}
+		else if (fullName.equals("System.IntPtr"))
+		{
+			return "native int" + arrayPart;
+		}
+		else if (fullName.equals("System.Byte"))
+		{
+			return "unsigned int8" + arrayPart;
+		}
+		else if (fullName.equals("System.UInt16"))
+		{
+			return "unsigned int16" + arrayPart;
+		}
+		else if (fullName.equals("System.UInt32"))
+		{
+			return "unsigned int32" + arrayPart;
+		}
+		else if (fullName.equals("System.UInt64"))
+		{
+			return "unsigned int64" + arrayPart;
+		}
+		else if (fullName.equals("System.UIntPtr"))
+		{
+			return "native unsigned int" + arrayPart;
+		}
+		else if (fullName.equals("System.Single"))
+		{
+			return "Float32" + arrayPart;
+		}
+		else if (fullName.equals("System.Double"))
+		{
+			return "Float64" + arrayPart;
+		}
+		else if (fullName.equals("System.Object"))
+		{
+			return "object" + arrayPart;
+		}
+		else if (fullName.equals("System.IntPtr"))
+		{
+			return "*" + arrayPart;
+		}
+		else if (fullName.equals("System.Array"))
+		{
+			return "Array" + arrayPart;
+		}
+		else if (fullName.equals("System.String"))
+		{
+			return "string" + arrayPart;
+		}
+		else
+		{
+			return "class [" + this.assemblyName() + "]" + fullName + arrayPart;
+		}
 	}
 
 	/***************************************************************************
@@ -813,7 +892,9 @@ public class DotNETType extends Type
 		HashSet result = new HashSet();
 		Iterator iter = c.iterator();
 		while (iter.hasNext())
+		{
 			result.add(iter.next());
+		}
 		return result;
 	}
 
@@ -826,36 +907,72 @@ public class DotNETType extends Type
 			Object obj = iter.next();
 			if (obj instanceof DotNETMethodInfo)
 			{
-				if (((DotNETMethodInfo) obj).isDeclaredHere()) out.add(obj);
+				if (((DotNETMethodInfo) obj).isDeclaredHere())
+				{
+					out.add(obj);
+				}
 			}
 			else if (obj instanceof DotNETFieldInfo)
 			{
-				if (((DotNETFieldInfo) obj).isDeclaredHere()) out.add(obj);
+				if (((DotNETFieldInfo) obj).isDeclaredHere())
+				{
+					out.add(obj);
+				}
 			}
-			else out.add(obj); // No filtering on other kinds of objects
+			else
+			{
+				out.add(obj); // No filtering on other kinds of objects
+			}
 		}
 		return out;
 	}
 
 	public UnitResult getUnitRelationForClass(String argumentName)
 	{
-		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
-		else if (argumentName.equals("ParentClass")) return new UnitResult(baseType()); // can
-																						// be
-																						// null!
-		else if (argumentName.equals("ChildClasses")) return new UnitResult(childTypes);
-		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(m_methods));
-		else if (argumentName.equals("ChildFields")) return new UnitResult(filterDeclaredHere(m_fields));
-		else if (argumentName.equals("ParameterClass")) return new UnitResult(parameterTypes);
-		else if (argumentName.equals("MethodReturnClass")) return new UnitResult(methodReturnTypes);
-		else if (argumentName.equals("FieldClass")) return new UnitResult(fieldTypes);
-		else if (argumentName.equals("Implements")) return new UnitResult(toHashSet(getImplementedInterfaces()));
+		if (argumentName.equals("ParentNamespace"))
+		{
+			return new UnitResult(parentNS);
+		}
+		else if (argumentName.equals("ParentClass"))
+		{
+			return new UnitResult(baseType()); // can
+		}
+		else if (argumentName.equals("ChildClasses"))
+		{
+			return new UnitResult(childTypes);
+		}
+		else if (argumentName.equals("ChildMethods"))
+		{
+			return new UnitResult(filterDeclaredHere(m_methods));
+		}
+		else if (argumentName.equals("ChildFields"))
+		{
+			return new UnitResult(filterDeclaredHere(m_fields));
+		}
+		else if (argumentName.equals("ParameterClass"))
+		{
+			return new UnitResult(parameterTypes);
+		}
+		else if (argumentName.equals("MethodReturnClass"))
+		{
+			return new UnitResult(methodReturnTypes);
+		}
+		else if (argumentName.equals("FieldClass"))
+		{
+			return new UnitResult(fieldTypes);
+		}
+		else if (argumentName.equals("Implements"))
+		{
+			return new UnitResult(toHashSet(getImplementedInterfaces()));
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -864,22 +981,46 @@ public class DotNETType extends Type
 
 	public UnitResult getUnitRelationForInterface(String argumentName)
 	{
-		if (argumentName.equals("ParentNamespace")) return new UnitResult(parentNS);
-		else if (argumentName.equals("ParentInterface")) return new UnitResult(baseType()); // can
-																							// be
-																							// null!
-		else if (argumentName.equals("ChildInterfaces")) return new UnitResult(childTypes);
-		else if (argumentName.equals("ChildMethods")) return new UnitResult(filterDeclaredHere(m_methods));
-		else if (argumentName.equals("ParameterInterface")) return new UnitResult(parameterTypes);
-		else if (argumentName.equals("MethodReturnInterface")) return new UnitResult(methodReturnTypes);
-		else if (argumentName.equals("FieldInterface")) return new UnitResult(fieldTypes);
-		else if (argumentName.equals("ImplementedBy")) return new UnitResult(implementedBy);
+		if (argumentName.equals("ParentNamespace"))
+		{
+			return new UnitResult(parentNS);
+		}
+		else if (argumentName.equals("ParentInterface"))
+		{
+			return new UnitResult(baseType()); // can
+		}
+		else if (argumentName.equals("ChildInterfaces"))
+		{
+			return new UnitResult(childTypes);
+		}
+		else if (argumentName.equals("ChildMethods"))
+		{
+			return new UnitResult(filterDeclaredHere(m_methods));
+		}
+		else if (argumentName.equals("ParameterInterface"))
+		{
+			return new UnitResult(parameterTypes);
+		}
+		else if (argumentName.equals("MethodReturnInterface"))
+		{
+			return new UnitResult(methodReturnTypes);
+		}
+		else if (argumentName.equals("FieldInterface"))
+		{
+			return new UnitResult(fieldTypes);
+		}
+		else if (argumentName.equals("ImplementedBy"))
+		{
+			return new UnitResult(implementedBy);
+		}
 		else if (argumentName.equals("Annotations"))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -901,28 +1042,67 @@ public class DotNETType extends Type
 			if (unit instanceof DotNETType)
 			{
 				DotNETType type = (DotNETType) unit;
-				if (type.isInterface()) resInterfaces.add(type);
-				else if (type.isClass()) resClasses.add(type);
+				if (type.isInterface())
+				{
+					resInterfaces.add(type);
+				}
+				else if (type.isClass())
+				{
+					resClasses.add(type);
+				}
 			}
-			else if (unit instanceof DotNETMethodInfo) resMethods.add(unit);
-			else if (unit instanceof FieldInfo) resFields.add(unit);
-			else if (unit instanceof ParameterInfo) resParameters.add(unit);
+			else if (unit instanceof DotNETMethodInfo)
+			{
+				resMethods.add(unit);
+			}
+			else if (unit instanceof FieldInfo)
+			{
+				resFields.add(unit);
+			}
+			else if (unit instanceof ParameterInfo)
+			{
+				resParameters.add(unit);
+			}
 		}
 
-		if (argumentName.equals("AttachedClasses")) return new UnitResult(resClasses);
-		else if (argumentName.equals("AttachedInterfaces")) return new UnitResult(resInterfaces);
-		else if (argumentName.equals("AttachedMethods")) return new UnitResult(resMethods);
-		else if (argumentName.equals("AttachedFields")) return new UnitResult(resFields);
-		else if (argumentName.equals("AttachedParameters")) return new UnitResult(resParameters);
+		if (argumentName.equals("AttachedClasses"))
+		{
+			return new UnitResult(resClasses);
+		}
+		else if (argumentName.equals("AttachedInterfaces"))
+		{
+			return new UnitResult(resInterfaces);
+		}
+		else if (argumentName.equals("AttachedMethods"))
+		{
+			return new UnitResult(resMethods);
+		}
+		else if (argumentName.equals("AttachedFields"))
+		{
+			return new UnitResult(resFields);
+		}
+		else if (argumentName.equals("AttachedParameters"))
+		{
+			return new UnitResult(resParameters);
+		}
 
 		return null;
 	}
 
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if (getUnitType().equals("Class")) return getUnitRelationForClass(argumentName);
-		else if (getUnitType().equals("Interface")) return getUnitRelationForInterface(argumentName);
-		else if (getUnitType().equals("Annotation")) return getUnitRelationForAnnotation(argumentName);
+		if (getUnitType().equals("Class"))
+		{
+			return getUnitRelationForClass(argumentName);
+		}
+		else if (getUnitType().equals("Interface"))
+		{
+			return getUnitRelationForInterface(argumentName);
+		}
+		else if (getUnitType().equals("Annotation"))
+		{
+			return getUnitRelationForAnnotation(argumentName);
+		}
 		return null; // Should never happen!
 	}
 
@@ -994,9 +1174,18 @@ public class DotNETType extends Type
 	 */
 	public String getUnitType()
 	{
-		if (isInterface()) return "Interface";
-		else if (isAttribute()) return "Annotation";
-		else return "Class";
+		if (isInterface())
+		{
+			return "Interface";
+		}
+		else if (isAttribute())
+		{
+			return "Annotation";
+		}
+		else
+		{
+			return "Class";
+		}
 	}
 
 	/** Stuff for annotations * */
@@ -1009,7 +1198,10 @@ public class DotNETType extends Type
 		while (baseType != null)
 		{
 			String unitName = baseType.getUnitName();
-			if ("System.Attribute".equals(unitName)) return true;
+			if ("System.Attribute".equals(unitName))
+			{
+				return true;
+			}
 
 			baseType = baseType.baseType();
 		}
@@ -1023,7 +1215,10 @@ public class DotNETType extends Type
 	public Collection getUnitAttributes()
 	{
 		HashSet result = new HashSet();
-		if (isPublic()) result.add("public");
+		if (isPublic())
+		{
+			result.add("public");
+		}
 		return result;
 	}
 
@@ -1041,7 +1236,10 @@ public class DotNETType extends Type
 		while (fiter.hasNext())
 		{
 			DotNETFieldInfo field = (DotNETFieldInfo) fiter.next();
-			if (null != field) UnitRegister.instance().registerLanguageUnit(field);
+			if (null != field)
+			{
+				UnitRegister.instance().registerLanguageUnit(field);
+			}
 		}
 
 		// register methods and its parameters
@@ -1049,13 +1247,19 @@ public class DotNETType extends Type
 		while (miter.hasNext())
 		{
 			DotNETMethodInfo method = (DotNETMethodInfo) miter.next();
-			if (null != method) UnitRegister.instance().registerLanguageUnit(method);
+			if (null != method)
+			{
+				UnitRegister.instance().registerLanguageUnit(method);
+			}
 
 			Iterator piter = method.getParameters().iterator();
 			while (piter.hasNext())
 			{
 				DotNETParameterInfo param = (DotNETParameterInfo) piter.next();
-				if (null != param) UnitRegister.instance().registerLanguageUnit(param);
+				if (null != param)
+				{
+					UnitRegister.instance().registerLanguageUnit(param);
+				}
 			}
 		}
 	}
@@ -1093,12 +1297,18 @@ public class DotNETType extends Type
 		theDotNETType = (DotNETType) in.readObject();
 		Assembly = (DotNETModule) in.readObject();
 		NameSpace = in.readUTF();
-		if (NameSpace.equals("")) NameSpace = null;
+		if (NameSpace.equals(""))
+		{
+			NameSpace = null;
+		}
 		AssemblyQualifiedName = in.readUTF();
 		Module = (DotNETModule) in.readObject();
 		UnderlyingTypeString = in.readUTF();
 		BaseTypeString = in.readUTF();
-		if (BaseTypeString.equals("")) BaseTypeString = null;
+		if (BaseTypeString.equals(""))
+		{
+			BaseTypeString = null;
+		}
 		fromDLL = in.readUTF();
 		annotationInstances = (ArrayList) in.readObject();
 	}
@@ -1135,14 +1345,26 @@ public class DotNETType extends Type
 		out.writeObject(ImplementedInterfaceNames);
 		out.writeObject(theDotNETType);
 		out.writeObject(Assembly);
-		if (NameSpace != null) out.writeUTF(NameSpace);
-		else out.writeUTF("");
+		if (NameSpace != null)
+		{
+			out.writeUTF(NameSpace);
+		}
+		else
+		{
+			out.writeUTF("");
+		}
 		out.writeUTF(AssemblyQualifiedName);
 		out.writeObject(Module);
 		out.writeUTF(UnderlyingTypeString);
 
-		if (BaseTypeString != null) out.writeUTF(BaseTypeString);
-		else out.writeUTF("");
+		if (BaseTypeString != null)
+		{
+			out.writeUTF(BaseTypeString);
+		}
+		else
+		{
+			out.writeUTF("");
+		}
 
 		out.writeUTF(fromDLL);
 		out.writeObject(annotationInstances);

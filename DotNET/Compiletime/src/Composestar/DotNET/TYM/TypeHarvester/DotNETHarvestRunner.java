@@ -44,7 +44,10 @@ public class DotNETHarvestRunner implements HarvestRunner
 		List dummies = config.getProjects().getCompiledDummies();
 		List dependencies = config.getProjects().getDependencies();
 
-		if (dummies.size() == 0) throw new ModuleException("TYM TypeHarvester needs compiled dummies.", MODULE_NAME);
+		if (dummies.size() == 0)
+		{
+			throw new ModuleException("TYM TypeHarvester needs compiled dummies.", MODULE_NAME);
+		}
 
 		List cmdItems = new ArrayList();
 		cmdItems.add(getExecutable());
@@ -59,7 +62,7 @@ public class DotNETHarvestRunner implements HarvestRunner
 			if (!DotNETBACO.isSystemAssembly(name))
 			{
 				name = checkDLL(name); // FIXME: checkDLL has unclear
-										// side-effect
+				// side-effect
 				cmdItems.add(name);
 			}
 		}
@@ -83,15 +86,20 @@ public class DotNETHarvestRunner implements HarvestRunner
 
 		Debug.parseLog(cle.outputNormal());
 
-		if (result != 0) throw new ModuleException("TypeHarvester failed", MODULE_NAME);
+		if (result != 0)
+		{
+			throw new ModuleException("TypeHarvester failed", MODULE_NAME);
+		}
 	}
 
 	private String getExecutable() throws ModuleException
 	{
 		File cs = new File(config.getPathSettings().getPath("Composestar"));
 		File exe = new File(cs, "binaries/TypeHarvester.exe");
-		if (!exe.exists()) throw new ModuleException("TypeHarvester not found on it's expected location: " + exe,
-				MODULE_NAME);
+		if (!exe.exists())
+		{
+			throw new ModuleException("TypeHarvester not found on it's expected location: " + exe, MODULE_NAME);
+		}
 
 		return exe.getAbsolutePath();
 	}
@@ -102,14 +110,20 @@ public class DotNETHarvestRunner implements HarvestRunner
 	 */
 	private String checkDLL(String dllName) throws ModuleException
 	{
-		if ("".equals(dllName)) throw new ModuleException("Invalid dll name: " + dllName, MODULE_NAME);
+		if ("".equals(dllName))
+		{
+			throw new ModuleException("Invalid dll name: " + dllName, MODULE_NAME);
+		}
 
 		if (incre.isProcessedByModule(dllName, "HARVESTER"))
 		{
 			skippedAssemblies.add(dllName);
 			return "!" + dllName;
 		}
-		else return dllName;
+		else
+		{
+			return dllName;
+		}
 	}
 
 	/**
@@ -129,7 +143,10 @@ public class DotNETHarvestRunner implements HarvestRunner
 			if (type.fromDLL.equalsIgnoreCase(asm))
 			{
 				String extAsm = type.Module.fullyQualifiedName();
-				if (!externals.contains(extAsm)) externals.add(extAsm);
+				if (!externals.contains(extAsm))
+				{
+					externals.add(extAsm);
+				}
 			}
 		}
 
@@ -152,7 +169,10 @@ public class DotNETHarvestRunner implements HarvestRunner
 		{
 			Dependency dependency = (Dependency) depIt.next();
 			String name = dependency.getFileName();
-			if (name.equalsIgnoreCase(asm)) return assemblies;
+			if (name.equalsIgnoreCase(asm))
+			{
+				return assemblies;
+			}
 
 			if (!DotNETBACO.isSystemAssembly(name))
 			{
@@ -181,7 +201,10 @@ public class DotNETHarvestRunner implements HarvestRunner
 		String input = incre.getConfiguration("HarvesterInput");
 
 		int index = input.indexOf(asm);
-		if (index > 0) return input.substring(0, index);
+		if (index > 0)
+		{
+			return input.substring(0, index);
+		}
 
 		return "";
 	}

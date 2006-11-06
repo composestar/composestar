@@ -94,8 +94,14 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	private void startElement(String name, String attributes)
 	{
-		if (attributes != null) out.print("<" + name + ' ' + attributes + '>');
-		else out.print("<" + name + '>');
+		if (attributes != null)
+		{
+			out.print("<" + name + ' ' + attributes + '>');
+		}
+		else
+		{
+			out.print("<" + name + '>');
+		}
 	}
 
 	private void endElement(String name)
@@ -161,7 +167,10 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 
 	private void handleVectorField(Field field, Object obj, Vector vector) throws IllegalAccessException
 	{
-		if (vector.size() <= 0) return;
+		if (vector.size() <= 0)
+		{
+			return;
+		}
 
 		fieldStartElement(field);
 		startElement("capacityIncrement");
@@ -295,7 +304,10 @@ public class DotNETRepositorySerializer extends CONE implements RepositorySerial
 		// fields have been ordered before for class c, then fetch the ordered
 		// list
 		// from the storage map
-		if (orderedFieldInfo.containsKey(c)) return (Vector) orderedFieldInfo.get(c);
+		if (orderedFieldInfo.containsKey(c))
+		{
+			return (Vector) orderedFieldInfo.get(c);
+		}
 
 		Vector fields = new Vector();
 		Stack stack = new Stack();

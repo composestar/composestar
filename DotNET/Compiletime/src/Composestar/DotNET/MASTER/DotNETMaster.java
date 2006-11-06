@@ -120,18 +120,28 @@ public class DotNETMaster extends Master
 			}
 
 			incre.getReporter().close();
-			if (Debug.getMode() >= Debug.MODE_WARNING) Debug.outWarnings();
+			if (Debug.getMode() >= Debug.MODE_WARNING)
+			{
+				Debug.outWarnings();
+			}
 		}
 		catch (ModuleException e)
 		{ // MasterStopException
 			String error = e.getMessage();
-			if (error == null || "null".equals(error)) // great information
-			error = e.toString();
+			if (error == null || "null".equals(error))
+			{
+				error = e.toString();
+			}
 
-			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals("")) Debug.out(
-					Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
-							.getErrorLocationLineNumber());
-			else Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+			if ((e.getErrorLocationFilename() != null) && !e.getErrorLocationFilename().equals(""))
+			{
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error, e.getErrorLocationFilename(), e
+						.getErrorLocationLineNumber());
+			}
+			else
+			{
+				Debug.out(Debug.MODE_ERROR, e.getModule(), error);
+			}
 
 			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
 			System.exit(1);
@@ -139,8 +149,10 @@ public class DotNETMaster extends Master
 		catch (Exception e)
 		{
 			String error = e.getMessage();
-			if (error == null || "null".equals(error)) // great information
-			error = e.toString();
+			if (error == null || "null".equals(error))
+			{
+				error = e.toString();
+			}
 
 			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
 			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + Debug.stackTrace(e));
@@ -167,10 +179,16 @@ public class DotNETMaster extends Master
 					for (int i = 0; i < builtAssemblies.size(); i++)
 					{
 						Object temp = builtAssemblies.get(i);
-						if (temp != null) configLines.add("BuiltAssembly" + i + "=" + temp.toString());
+						if (temp != null)
+						{
+							configLines.add("BuiltAssembly" + i + "=" + temp.toString());
+						}
 					}
 				}
-				else configLines.add(line);
+				else
+				{
+					configLines.add(line);
+				}
 
 				line = br.readLine();
 			}

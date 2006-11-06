@@ -12,10 +12,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import Composestar.DotNET.LAMA.*;
-import Composestar.Core.INCRE.MethodNode;
-import Composestar.Utils.Debug;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.MethodNode;
 import Composestar.Core.LAMA.LangNamespace;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
@@ -28,6 +26,11 @@ import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.RelationType;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
+import Composestar.DotNET.LAMA.DotNETFieldInfo;
+import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETParameterInfo;
+import Composestar.DotNET.LAMA.DotNETType;
+import Composestar.Utils.Debug;
 
 public class DotNETLanguageModel extends LanguageModel
 {
@@ -35,7 +38,10 @@ public class DotNETLanguageModel extends LanguageModel
 
 	public static DotNETLanguageModel instance()
 	{
-		if (null == instance) instance = new DotNETLanguageModel();
+		if (null == instance)
+		{
+			instance = new DotNETLanguageModel();
+		}
 		return instance;
 	}
 
@@ -363,18 +369,23 @@ public class DotNETLanguageModel extends LanguageModel
 			{
 				DotNETType concern = (DotNETType) classIter.next();
 				LangNamespace ns = rootNS;
-				if ((null != concern.namespace()) && (!concern.namespace().equals(""))) ns = findOrAddNamespace(
-						unitDict, rootNS, concern.namespace());
+				if ((null != concern.namespace()) && (!concern.namespace().equals("")))
+				{
+					ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
+				}
 				ns.addChildClass(concern);
 				concern.setParentNamespace(ns);
 
 				ProgramElement superType = concern.getUnitRelation("ParentClass").singleValue();
-				if (null != superType) // The concern has a registered
-										// superType
-				((DotNETType) superType).addChildType(concern); // So also add
-																// the link the
-																// other way
-																// round.
+				if (null != superType)
+				{
+					// superType
+					((DotNETType) superType).addChildType(concern); // So also
+																	// add
+					// the link the
+					// other way
+					// round.
+				}
 
 				Collection implementedInterfaces = concern.getUnitRelation("Implements").multiValue();
 				Iterator ifaceIter = implementedInterfaces.iterator();
@@ -396,18 +407,23 @@ public class DotNETLanguageModel extends LanguageModel
 			{
 				DotNETType concern = (DotNETType) ifaceIter.next();
 				LangNamespace ns = rootNS;
-				if (!(null == concern.namespace() || !concern.namespace().equals(""))) ns = findOrAddNamespace(
-						unitDict, rootNS, concern.namespace());
+				if (!(null == concern.namespace() || !concern.namespace().equals("")))
+				{
+					ns = findOrAddNamespace(unitDict, rootNS, concern.namespace());
+				}
 				ns.addChildInterface(concern);
 				concern.setParentNamespace(ns);
 
 				ProgramElement superType = concern.getUnitRelation("ParentInterface").singleValue();
-				if (null != superType) // The concern has a registered
-										// superType
-				((DotNETType) superType).addChildType(concern); // So also add
-																// the link the
-																// other way
-																// round.
+				if (null != superType)
+				{
+					// superType
+					((DotNETType) superType).addChildType(concern); // So also
+																	// add
+					// the link the
+					// other way
+					// round.
+				}
 			}
 		}
 
@@ -422,21 +438,23 @@ public class DotNETLanguageModel extends LanguageModel
 				if (param.parameterType() != null)
 				{
 					ProgramElement paramType = param.getUnitRelation(param.parameterType().getUnitType()).singleValue();
-					if ((null != paramType) && (paramType instanceof DotNETType)) // The
-																					// parameter
-																					// has
-																					// a
-																					// registered
-																					// Type
-					((DotNETType) paramType).addParameterType(param); // So
-																		// also
-																		// add
-																		// the
-																		// link
-																		// the
-																		// other
-																		// way
-																		// round.
+					if ((null != paramType) && (paramType instanceof DotNETType))
+					{
+						// parameter
+						// has
+						// a
+						// registered
+						// Type
+						((DotNETType) paramType).addParameterType(param); // So
+						// also
+						// add
+						// the
+						// link
+						// the
+						// other
+						// way
+						// round.
+					}
 				}
 			}
 		}
@@ -453,22 +471,24 @@ public class DotNETLanguageModel extends LanguageModel
 				{
 					ProgramElement methodReturnType = method.getUnitRelation(
 							"Return" + method.returnType().getUnitType()).singleValue();
-					if ((null != methodReturnType) && (methodReturnType instanceof DotNETType)) // The
-																								// method
-																								// has
-																								// a
-																								// registered
-																								// return
-																								// Type
-					((DotNETType) methodReturnType).addMethodReturnType(method); // So
-																					// also
-																					// add
-																					// the
-																					// link
-																					// the
-																					// other
-																					// way
-																					// round.
+					if ((null != methodReturnType) && (methodReturnType instanceof DotNETType))
+					{
+						// method
+						// has
+						// a
+						// registered
+						// return
+						// Type
+						((DotNETType) methodReturnType).addMethodReturnType(method); // So
+						// also
+						// add
+						// the
+						// link
+						// the
+						// other
+						// way
+						// round.
+					}
 				}
 			}
 		}
@@ -484,18 +504,21 @@ public class DotNETLanguageModel extends LanguageModel
 				if (null != field.fieldType())
 				{
 					ProgramElement fieldType = field.getUnitRelation(field.fieldType().getUnitType()).singleValue();
-					if ((null != fieldType) && (fieldType instanceof DotNETType)) // The
-																					// method
-																					// has
-																					// a
-																					// registered
-																					// return
-																					// Type
-					((DotNETType) fieldType).addFieldType(field); // So also
-																	// add the
-																	// link the
-																	// other way
-																	// round.
+					if ((null != fieldType) && (fieldType instanceof DotNETType))
+					{
+						// method
+						// has
+						// a
+						// registered
+						// return
+						// Type
+						((DotNETType) fieldType).addFieldType(field); // So
+																		// also
+						// add the
+						// link the
+						// other way
+						// round.
+					}
 				}
 			}
 		}
@@ -541,8 +564,8 @@ public class DotNETLanguageModel extends LanguageModel
 					{
 						DotNETParameterInfo paramInfo = (DotNETParameterInfo) paramsIter.next();
 						paramInfo.setParent(method); // Have to set this, so
-														// we can later skip
-														// this unit altogether
+						// we can later skip
+						// this unit altogether
 					}
 					// System.out.println("Excluding: " + method.getUnitName());
 				}
@@ -561,21 +584,28 @@ public class DotNETLanguageModel extends LanguageModel
 			if (unit instanceof DotNETFieldInfo)
 			{
 				DotNETFieldInfo field = (DotNETFieldInfo) unit;
-				if (field.isDeclaredHere()) dict.addLanguageUnit(unit);
+				if (field.isDeclaredHere())
+				{
+					dict.addLanguageUnit(unit);
+				}
 			}
 			else if (unit instanceof DotNETParameterInfo)
 			{
 				DotNETParameterInfo param = (DotNETParameterInfo) unit;
-				if ((null == param.getParent()) || ((DotNETMethodInfo) param.getParent()).isDeclaredHere()) dict
-						.addLanguageUnit(unit); // The parameter does not belong
-												// to an inherited method, so
-												// add it.
+				if ((null == param.getParent()) || ((DotNETMethodInfo) param.getParent()).isDeclaredHere())
+				{
+					dict.addLanguageUnit(unit); // The parameter does not belong
+					// to an inherited method, so
+					// add it.
+				}
 			}
-			else if (!(unit instanceof DotNETMethodInfo)) // Skip methods, add
-															// everything else
-															// that hasn't
-															// matched so far
-			dict.addLanguageUnit(unit);
+			else if (!(unit instanceof DotNETMethodInfo))
+			{
+				// everything else
+				// that hasn't
+				// matched so far
+				dict.addLanguageUnit(unit);
+			}
 		}
 	}
 
@@ -608,8 +638,10 @@ public class DotNETLanguageModel extends LanguageModel
 
 		try
 		{
-			if (from.equals(to)) // empty path
-			return relations;
+			if (from.equals(to))
+			{
+				return relations;
+			}
 			else if (from.equals(getLanguageUnitType("Class").getImplementingClass().getName()))
 			{
 				if (to.equals(getLanguageUnitType("Method").getImplementingClass().getName()))
@@ -682,7 +714,7 @@ public class DotNETLanguageModel extends LanguageModel
 		while (!lostMatch && !namespace.equals(currNS.getUnitName()))
 		{
 			lostMatch = true; // assume we are not going to find a child that
-								// matches
+			// matches
 			UnitResult children = currNS.getUnitRelation("ChildNamespaces");
 			Iterator childIter = children.multiValue().iterator();
 			while (childIter.hasNext())
@@ -711,7 +743,10 @@ public class DotNETLanguageModel extends LanguageModel
 					// While there are more parts, determine where this one
 					// ends, and add it to the dictionary.
 					int pos = nsToAdd.indexOf('.');
-					if (pos < 0) pos = nsToAdd.length();
+					if (pos < 0)
+					{
+						pos = nsToAdd.length();
+					}
 					while (pos > 0)
 					{
 						String subnsName = currNS.getUnitName() + (currNS.getUnitName().length() > 0 ? "." : "")
@@ -724,9 +759,15 @@ public class DotNETLanguageModel extends LanguageModel
 						{
 							nsToAdd = nsToAdd.substring(pos + 1);
 							pos = nsToAdd.indexOf('.');
-							if (pos < 0) pos = nsToAdd.length();
+							if (pos < 0)
+							{
+								pos = nsToAdd.length();
+							}
 						}
-						else pos = -1;
+						else
+						{
+							pos = -1;
+						}
 						currNS = subns;
 					}
 				}

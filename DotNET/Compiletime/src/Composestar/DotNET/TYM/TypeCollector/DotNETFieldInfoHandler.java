@@ -10,9 +10,14 @@
 
 package Composestar.DotNET.TYM.TypeCollector;
 
-import Composestar.DotNET.LAMA.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+
+import Composestar.DotNET.LAMA.DotNETFieldInfo;
 
 /**
  * @author havingaw Parses the FieldInfo XML element and stores the info in a
@@ -48,37 +53,63 @@ public class DotNETFieldInfoHandler extends DefaultHandler implements ContentHan
 	{
 		String charData = LastCharData.toString();
 		// <!ELEMENT FieldType (#PCDATA)>
-		if ("FieldType".equals(rawName)) FieldInfo.setFieldType(charData);
-		// <!ELEMENT IsAssembly (#PCDATA)>
-		else if ("IsAssembly".equals(rawName)) FieldInfo.setIsAssembly(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsFamily (#PCDATA)>
-		else if ("IsFamily".equals(rawName)) FieldInfo.setIsFamily(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsFamilyAndAssembly (#PCDATA)>
-		else if ("IsFamilyAndAssembly".equals(rawName)) FieldInfo.setIsFamilyAndAssembly(Boolean.valueOf(charData)
-				.booleanValue());
-		// <!ELEMENT IsFamilyOrAssembly (#PCDATA)>
-		else if ("IsFamilyOrAssembly".equals(rawName)) FieldInfo.setIsFamilyOrAssembly(Boolean.valueOf(charData)
-				.booleanValue());
-		// <!ELEMENT IsInitOnly (#PCDATA)>
-		else if ("IsInitOnly".equals(rawName)) FieldInfo.setIsInitOnly(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsLiteral (#PCDATA)>
-		else if ("IsLiteral".equals(rawName)) FieldInfo.setIsLiteral(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsPrivate (#PCDATA)>
-		else if ("IsPrivate".equals(rawName)) FieldInfo.setIsPrivate(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsPublic (#PCDATA)>
-		else if ("IsPublic".equals(rawName)) FieldInfo.setIsPublic(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsStatic (#PCDATA)>
-		else if ("IsStatic".equals(rawName)) FieldInfo.setIsStatic(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT IsDeclaredHere (#PCDATA)>
-		else if ("IsDeclaredHere".equals(rawName)) FieldInfo
-				.setIsDeclaredHere(Boolean.valueOf(charData).booleanValue());
-		// <!ELEMENT HashCode (#PCDATA)>
-		else if ("HashCode".equals(rawName)) FieldInfo.setHashCode(Integer.parseInt(charData));
-		// end of field
+		if ("FieldType".equals(rawName))
+		{
+			FieldInfo.setFieldType(charData);
+		}
+		else if ("IsAssembly".equals(rawName))
+		{
+			FieldInfo.setIsAssembly(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsFamily".equals(rawName))
+		{
+			FieldInfo.setIsFamily(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsFamilyAndAssembly".equals(rawName))
+		{
+			FieldInfo.setIsFamilyAndAssembly(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsFamilyOrAssembly".equals(rawName))
+		{
+			FieldInfo.setIsFamilyOrAssembly(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsInitOnly".equals(rawName))
+		{
+			FieldInfo.setIsInitOnly(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsLiteral".equals(rawName))
+		{
+			FieldInfo.setIsLiteral(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsPrivate".equals(rawName))
+		{
+			FieldInfo.setIsPrivate(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsPublic".equals(rawName))
+		{
+			FieldInfo.setIsPublic(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsStatic".equals(rawName))
+		{
+			FieldInfo.setIsStatic(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("IsDeclaredHere".equals(rawName))
+		{
+			FieldInfo.setIsDeclaredHere(Boolean.valueOf(charData).booleanValue());
+		}
+		else if ("HashCode".equals(rawName))
+		{
+			FieldInfo.setHashCode(Integer.parseInt(charData));
+		}
 		else if ("FieldInfo".equals(rawName))
-		// end of this element. Pass back control to old handler
-		Parser.setContentHandler(ReturnHandler);
-		else throw new SAXNotRecognizedException("Unknown type " + rawName + " in DotNETFieldInfoHandler.endElement");
+		{
+			// end of this element. Pass back control to old handler
+			Parser.setContentHandler(ReturnHandler);
+		}
+		else
+		{
+			throw new SAXNotRecognizedException("Unknown type " + rawName + " in DotNETFieldInfoHandler.endElement");
+		}
 	}
 
 	public void characters(char[] text, int start, int length) throws SAXException

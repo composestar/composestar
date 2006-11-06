@@ -111,7 +111,10 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 	private void AddSemTexInfo()
 	{
 		// Check if we have all the data, if not, quit the method
-		if (SemanticContainerName.length() == 0 || SemanticClassName.length() == 0 || SemanticMethodName.length() == 0) return;
+		if (SemanticContainerName.length() == 0 || SemanticClassName.length() == 0 || SemanticMethodName.length() == 0)
+		{
+			return;
+		}
 
 		// Get the MethodInfo from the repository
 		MethodInfo mi = getMethodLocation(SemanticMethodName, SemanticClassName);
@@ -159,7 +162,10 @@ public class SemanticContainerHandler extends DefaultHandler implements ContentH
 			while (i.hasNext())
 			{
 				MethodInfo method = (MethodInfo) i.next();
-				if (method.name().equals(methodName)) return method;
+				if (method.name().equals(methodName))
+				{
+					return method;
+				}
 			}
 		}
 		return null;

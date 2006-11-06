@@ -63,8 +63,10 @@ public class ClassModifier extends TransformerBase
 				write(line); // output final bracket
 				return;
 			}
-			else // just write all other lines unchanged
-			write(line);
+			else
+			{
+				write(line);
+			}
 
 		} while ((line = getLine()) != null);
 	}
@@ -107,11 +109,19 @@ public class ClassModifier extends TransformerBase
 		String[] elems = plines.split(" ");
 		int pos = 0;
 		while (pos < elems.length && !"instance".equals(elems[pos]))
+		{
 			++pos;
+		}
 
-		if (pos >= elems.length - 1) return "main";
+		if (pos >= elems.length - 1)
+		{
+			return "main";
+		}
 
-		if ("class".equals(elems[pos + 1])) ++pos; // ignore
+		if ("class".equals(elems[pos + 1]))
+		{
+			++pos; // ignore
+		}
 		// next is returntype
 		++pos;
 		// next is name
@@ -170,9 +180,15 @@ public class ClassModifier extends TransformerBase
 				String iltype = ((DotNETType) paramType).ilType();
 				writenn(iltype + " " + param.name());
 
-				if (it.hasNext()) writenn(", ");
+				if (it.hasNext())
+				{
+					writenn(", ");
+				}
 			}
-			else Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.ParameterTypeString);
+			else
+			{
+				Debug.out(Debug.MODE_WARNING, "ASTRA", "Unresolvable parameter type: " + param.ParameterTypeString);
+			}
 		}
 
 		write(") cil managed\n"); // TODO: params

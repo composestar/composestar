@@ -36,7 +36,10 @@ class PartialClassEmitter
 	private Namespace getNamespace(String name)
 	{
 		Namespace ns = (Namespace) m_namespaces.get(name);
-		if (ns == null) m_namespaces.put(name, ns = new Namespace(name));
+		if (ns == null)
+		{
+			m_namespaces.put(name, ns = new Namespace(name));
+		}
 
 		return ns;
 	}
@@ -44,7 +47,10 @@ class PartialClassEmitter
 	private ExpandedType getExpandedType(String tn)
 	{
 		ExpandedType et = (ExpandedType) m_types.get(tn);
-		if (et == null) m_types.put(tn, et = new ExpandedType(tn));
+		if (et == null)
+		{
+			m_types.put(tn, et = new ExpandedType(tn));
+		}
 
 		return et;
 	}
@@ -62,7 +68,10 @@ class PartialClassEmitter
 
 	public void emit() throws IOException
 	{
-		if (m_types.isEmpty()) return;
+		if (m_types.isEmpty())
+		{
+			return;
+		}
 
 		try
 		{

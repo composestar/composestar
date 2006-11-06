@@ -61,7 +61,10 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 					throw new ModuleException("Unable to collect attributes: " + e.getMessage(), MODULE_NAME);
 				}
 			}
-			else Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Attribute file not found: " + xmlFile);
+			else
+			{
+				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Attribute file not found: " + xmlFile);
+			}
 		}
 	}
 
@@ -123,7 +126,10 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			while (it.hasNext())
 			{
 				MethodInfo method = (MethodInfo) it.next();
-				if (method.name().equals(methodName)) return method;
+				if (method.name().equals(methodName))
+				{
+					return method;
+				}
 			}
 		}
 		return null;
@@ -143,7 +149,10 @@ public class AttributeCollector extends DefaultHandler implements CTCommonModule
 			while (it.hasNext())
 			{
 				FieldInfo field = (FieldInfo) it.next();
-				if (field.name().equals(fieldName)) return field;
+				if (field.name().equals(fieldName))
+				{
+					return field;
+				}
 			}
 		}
 		return null;

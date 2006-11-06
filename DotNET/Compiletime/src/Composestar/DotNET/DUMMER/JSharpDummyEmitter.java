@@ -198,7 +198,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 			while (packageIt.hasNext())
 			{
 				name += packageIt.next();
-				if (packageIt.hasNext()) name += ".";
+				if (packageIt.hasNext())
+				{
+					name += ".";
+				}
 			}
 		}
 		return name;
@@ -337,7 +340,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 
 		// Attributes
 		String locationPackage = getPackageName();
-		if (!locationPackage.equals("")) locationPackage += ".";
+		if (!locationPackage.equals(""))
+		{
+			locationPackage += ".";
+		}
 		this.attributeLocation = locationPackage + className + "." + methodName;
 		this.attributeTarget = "Method";
 		if (!this.attributeType.equals(""))
@@ -372,12 +378,30 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	private String getDefaultReturnValue(int tokentype)
 	{
 		if (tokentype == LITERAL_int || tokentype == LITERAL_short || tokentype == LITERAL_byte
-				|| tokentype == LITERAL_long) return "0";
-		else if (tokentype == LITERAL_float) return "0.0f";
-		else if (tokentype == LITERAL_double) return "0.0";
-		else if (tokentype == LITERAL_boolean) return "false";
-		else if (tokentype == LITERAL_char) return "' '";
-		else return "null";
+				|| tokentype == LITERAL_long)
+		{
+			return "0";
+		}
+		else if (tokentype == LITERAL_float)
+		{
+			return "0.0f";
+		}
+		else if (tokentype == LITERAL_double)
+		{
+			return "0.0";
+		}
+		else if (tokentype == LITERAL_boolean)
+		{
+			return "false";
+		}
+		else if (tokentype == LITERAL_char)
+		{
+			return "' '";
+		}
+		else
+		{
+			return "null";
+		}
 	}
 
 	private String name(AST ast)
@@ -619,7 +643,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 				// intercept package
 				this.packageDefinition = true;
 				AST packageAST = ast.getFirstChild();
-				if (!packageAST.getText().equals(".")) this.packageName = packageAST.getText();
+				if (!packageAST.getText().equals("."))
+				{
+					this.packageName = packageAST.getText();
+				}
 				visit(packageAST);
 				this.packageDefinition = false;
 
@@ -701,12 +728,24 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 				break;
 
 			case DOT:
-				if (this.packageDefinition && !child1.getText().equals(".")) this.packages.add(child1.getText());
-				if (this.attributeDefinition && !child1.getText().equals(".")) this.attributeType += child1.getText();
+				if (this.packageDefinition && !child1.getText().equals("."))
+				{
+					this.packages.add(child1.getText());
+				}
+				if (this.attributeDefinition && !child1.getText().equals("."))
+				{
+					this.attributeType += child1.getText();
+				}
 				visit(child1);
 				out(".");
-				if (this.packageDefinition) this.packages.add(child2.getText());
-				if (this.attributeDefinition) this.attributeType += "." + child2.getText();
+				if (this.packageDefinition)
+				{
+					this.packages.add(child2.getText());
+				}
+				if (this.attributeDefinition)
+				{
+					this.attributeType += "." + child2.getText();
+				}
 				visit(child2);
 				break;
 
@@ -1182,7 +1221,10 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 							out(separator.substring(0, separator.length() - 1));
 							newline();
 						}
-						else out(separator);
+						else
+						{
+							out(separator);
+						}
 					}
 				}
 				ret = true;
@@ -1198,9 +1240,15 @@ public class JSharpDummyEmitter extends DefaultEmitter implements JSharpTokenTyp
 	 */
 	private AST filterChildren(AST ast, String remove)
 	{
-		if (ast == null) throw new IllegalArgumentException("ast cannot be null");
+		if (ast == null)
+		{
+			throw new IllegalArgumentException("ast cannot be null");
+		}
 
-		if (remove == null) throw new IllegalArgumentException("remove cannot be null");
+		if (remove == null)
+		{
+			throw new IllegalArgumentException("remove cannot be null");
+		}
 
 		AST result = factory.create(ast.getType(), ast.getText());
 		AST child = ast.getFirstChild();

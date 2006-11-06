@@ -56,8 +56,10 @@ public class DotNETSemTexRunner implements CTCommonModule
 
 			CommandLineExecutor cle = new CommandLineExecutor();
 			int result = cle.exec(cmdList);
-			if (result != 0) throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(),
-					"SEMTEX");
+			if (result != 0)
+			{
+				throw new ModuleException("SemTex Analyzer failed with error: " + cle.outputError(), "SEMTEX");
+			}
 
 			Debug.out(Debug.MODE_DEBUG, "SEMTEX", "SemTex Analyzer completed.");
 		}
@@ -69,7 +71,10 @@ public class DotNETSemTexRunner implements CTCommonModule
 		String cpsPath = config.getPathSettings().getPath("Composestar");
 		File exe = new File(cpsPath, "binaries/SemanticExtractorConsole.exe");
 
-		if (exe.exists()) return exe.getAbsolutePath();
+		if (exe.exists())
+		{
+			return exe.getAbsolutePath();
+		}
 		else
 		{
 			Debug.out(Debug.MODE_WARNING, "SEMTEX", "SemTex Analyzer not found on it's expected location: " + exe

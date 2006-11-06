@@ -59,7 +59,10 @@ public class ILICIT implements WEAVER
 		String basePath = config.getPathSettings().getPath("Base");
 
 		File weaveDir = new File(basePath, "obj/weaver");
-		if (!weaveDir.exists()) weaveDir.mkdir();
+		if (!weaveDir.exists())
+		{
+			weaveDir.mkdir();
+		}
 
 		// determine the assemblies to weave
 		List toBeWoven = new ArrayList();
@@ -75,7 +78,10 @@ public class ILICIT implements WEAVER
 			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "To be woven file list: " + toBeWoven);
 			invokeWeaver(basePath, toBeWoven);
 		}
-		else Debug.out(Debug.MODE_WARNING, MODULE_NAME, "No files to weave");
+		else
+		{
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "No files to weave");
+		}
 	}
 
 	private void addBuiltAssemblies(File weaveDir, List compiledSources, List toBeWoven) throws ModuleException
@@ -166,10 +172,16 @@ public class ILICIT implements WEAVER
 
 		// verify libraries?
 		String va = config.getModuleProperty(MODULE_NAME, "verifyAssemblies", "false");
-		if ("true".equalsIgnoreCase(va)) cmdList.add("/verify");
+		if ("true".equalsIgnoreCase(va))
+		{
+			cmdList.add("/verify");
+		}
 
 		// if debugging supply the /debug switch
-		if (Debug.getMode() == Debug.MODE_DEBUG) cmdList.add("/debug");
+		if (Debug.getMode() == Debug.MODE_DEBUG)
+		{
+			cmdList.add("/debug");
+		}
 
 		// add weave specification
 		String weaveFile = basePath + "weavespec.xml";
@@ -200,7 +212,10 @@ public class ILICIT implements WEAVER
 		String cpsPath = config.getPathSettings().getPath("Composestar");
 		File exe = new File(cpsPath, "binaries/peweaver.exe");
 
-		if (!exe.exists()) throw new ModuleException("Unable to locate the executable '" + exe + "'!", MODULE_NAME);
+		if (!exe.exists())
+		{
+			throw new ModuleException("Unable to locate the executable '" + exe + "'!", MODULE_NAME);
+		}
 
 		return exe.getAbsolutePath();
 	}
@@ -214,7 +229,9 @@ public class ILICIT implements WEAVER
 
 			Iterator it = toBeWoven.iterator();
 			while (it.hasNext())
+			{
 				out.println((String) it.next());
+			}
 		}
 		catch (IOException e)
 		{
@@ -305,9 +322,9 @@ public class ILICIT implements WEAVER
 		List concernsWithFMO = incre.getConcernsWithFMO();
 		// remove the \\ :(
 		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-															// it have the
-															// double slashes in
-															// the first place?
+		// it have the
+		// double slashes in
+		// the first place?
 		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0, src);
 
@@ -342,9 +359,9 @@ public class ILICIT implements WEAVER
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
 		// remove the \\ :(
 		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-															// it have the
-															// double slashes in
-															// the first place?
+		// it have the
+		// double slashes in
+		// the first place?
 		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0, src);
 
@@ -380,7 +397,10 @@ public class ILICIT implements WEAVER
 
 					if (castConcern)
 					{
-						if (!list.contains(c.getQualifiedName())) list.add(c.getQualifiedName());
+						if (!list.contains(c.getQualifiedName()))
+						{
+							list.add(c.getQualifiedName());
+						}
 					}
 				}
 			}
@@ -401,9 +421,9 @@ public class ILICIT implements WEAVER
 		ArrayList result = new ArrayList();
 		// remove the \\ :(
 		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-															// it have the
-															// double slashes in
-															// the first place?
+		// it have the
+		// double slashes in
+		// the first place?
 		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0, src);
 
@@ -412,7 +432,10 @@ public class ILICIT implements WEAVER
 		{
 			CompiledImplementation ci = (CompiledImplementation) it.next();
 			String className = ci.getClassName();
-			if (className != null) result.add(className);
+			if (className != null)
+			{
+				result.add(className);
+			}
 		}
 
 		it = incre.getAllInstancesOfOrdered(CpsConcern.class);
@@ -458,9 +481,9 @@ public class ILICIT implements WEAVER
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
 		// remove the \\ :(
 		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-															// it have the
-															// double slashes in
-															// the first place?
+		// it have the
+		// double slashes in
+		// the first place?
 		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
 		sources.add(0, src);
 
@@ -479,7 +502,10 @@ public class ILICIT implements WEAVER
 					{
 						FilterModule fm = (FilterModule) ds.getObjectByID((String) iterFilterModules.next());
 
-						if (!fm.getOutputFilters().isEmpty()) concerns.add(c.getQualifiedName());
+						if (!fm.getOutputFilters().isEmpty())
+						{
+							concerns.add(c.getQualifiedName());
+						}
 					}
 				}
 			}

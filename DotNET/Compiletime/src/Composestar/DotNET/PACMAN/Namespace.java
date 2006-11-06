@@ -38,9 +38,15 @@ class Namespace
 
 	public boolean equals(Object o)
 	{
-		if (o == null) return false;
+		if (o == null)
+		{
+			return false;
+		}
 
-		if (!(o instanceof Namespace)) return false;
+		if (!(o instanceof Namespace))
+		{
+			return false;
+		}
 
 		Namespace other = (Namespace) o;
 		return m_name.equals(other.m_name);

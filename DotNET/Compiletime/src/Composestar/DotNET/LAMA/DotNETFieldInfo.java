@@ -10,16 +10,16 @@
 
 package Composestar.DotNET.LAMA;
 
-import Composestar.Core.LAMA.*;
-import Composestar.Core.LAMA.FieldInfo;
-
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.FieldInfo;
+import Composestar.Core.LAMA.UnitResult;
 
 /**
  * @author havingaw Contains the .Net reflection information of a Field See
@@ -43,7 +43,8 @@ public class DotNETFieldInfo extends FieldInfo
 	public boolean IsInitOnly; // Can only be set in body of constructor?
 
 	public boolean IsLiteral; // Written at compile time (i.e. cannot be
-								// changed)?
+
+	// changed)?
 
 	// public boolean IsNotSerialized; // Field has NotSerialized attribute?
 	// public boolean IsPinvokeImpl;
@@ -54,7 +55,8 @@ public class DotNETFieldInfo extends FieldInfo
 	public boolean IsStatic; // Static field ('global')?
 
 	public boolean IsDeclaredHere; // Declared in this Type, or inherited from
-									// parent type?
+
+	// parent type?
 
 	private DotNETType Parent; // Type that this field belongs to.
 
@@ -182,19 +184,30 @@ public class DotNETFieldInfo extends FieldInfo
 	 */
 	public UnitResult getUnitRelation(String argumentName)
 	{
-		if ("ParentType".equals(argumentName)) return new UnitResult(Parent);
-		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType())) return new UnitResult(
-				fieldType());
-		else if ("Interface".equals(argumentName) && "Interface".equals(fieldType().getUnitType())) return new UnitResult(
-				fieldType());
-		else if ("Annotation".equals(argumentName) && "Annotation".equals(fieldType().getUnitType())) return new UnitResult(
-				fieldType());
+		if ("ParentType".equals(argumentName))
+		{
+			return new UnitResult(Parent);
+		}
+		else if ("Class".equals(argumentName) && "Class".equals(fieldType().getUnitType()))
+		{
+			return new UnitResult(fieldType());
+		}
+		else if ("Interface".equals(argumentName) && "Interface".equals(fieldType().getUnitType()))
+		{
+			return new UnitResult(fieldType());
+		}
+		else if ("Annotation".equals(argumentName) && "Annotation".equals(fieldType().getUnitType()))
+		{
+			return new UnitResult(fieldType());
+		}
 		else if ("Annotations".equals(argumentName))
 		{
 			Iterator i = getAnnotations().iterator();
 			HashSet res = new HashSet();
 			while (i.hasNext())
+			{
 				res.add(((Annotation) i.next()).getType());
+			}
 			return new UnitResult(res);
 		}
 
@@ -209,10 +222,19 @@ public class DotNETFieldInfo extends FieldInfo
 	public Collection getUnitAttributes()
 	{
 		HashSet result = new HashSet();
-		if (isPublic()) result.add("public");
-		if (isPrivate()) result.add("private");
+		if (isPublic())
+		{
+			result.add("public");
+		}
+		if (isPrivate())
+		{
+			result.add("private");
+		}
 		// TODO: For some reasons, there is no 'protected' attr for fields?
-		if (isStatic()) result.add("static");
+		if (isStatic())
+		{
+			result.add("static");
+		}
 		return result;
 	}
 

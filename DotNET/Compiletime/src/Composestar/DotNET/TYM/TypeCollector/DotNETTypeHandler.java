@@ -10,10 +10,18 @@
 
 package Composestar.DotNET.TYM.TypeCollector;
 
-import Composestar.DotNET.LAMA.*;
-import Composestar.Core.LAMA.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+
+import Composestar.Core.LAMA.TypeMap;
+import Composestar.DotNET.LAMA.DotNETFieldInfo;
+import Composestar.DotNET.LAMA.DotNETMethodInfo;
+import Composestar.DotNET.LAMA.DotNETModule;
+import Composestar.DotNET.LAMA.DotNETType;
 
 /**
  * Toplevel Type handler. Handles all elements of Type except Methods.
