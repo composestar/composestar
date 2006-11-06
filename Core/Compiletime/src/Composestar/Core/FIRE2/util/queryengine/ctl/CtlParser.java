@@ -36,8 +36,14 @@ public class CtlParser
 			CtlFormula formula1 = parseLevel2(lexer);
 
 			Token token = lexer.peekNextToken();
-			if (token.getType() != Token.IMPLIES_OPERATOR) return formula1;
-			else lexer.nextToken();
+			if (token.getType() != Token.IMPLIES_OPERATOR)
+			{
+				return formula1;
+			}
+			else
+			{
+				lexer.nextToken();
+			}
 
 			CtlFormula formula2 = parseLevel1(lexer);
 
@@ -49,8 +55,14 @@ public class CtlParser
 			CtlFormula formula1 = parseLevel3(lexer);
 
 			Token token = lexer.peekNextToken();
-			if (token.getType() != Token.OR_OPERATOR) return formula1;
-			else lexer.nextToken();
+			if (token.getType() != Token.OR_OPERATOR)
+			{
+				return formula1;
+			}
+			else
+			{
+				lexer.nextToken();
+			}
 
 			CtlFormula formula2 = parseLevel2(lexer);
 
@@ -62,8 +74,14 @@ public class CtlParser
 			CtlFormula formula1 = parseLevel4(lexer);
 
 			Token token = lexer.peekNextToken();
-			if (token.getType() != Token.AND_OPERATOR) return formula1;
-			else lexer.nextToken();
+			if (token.getType() != Token.AND_OPERATOR)
+			{
+				return formula1;
+			}
+			else
+			{
+				lexer.nextToken();
+			}
 
 			CtlFormula formula2 = parseLevel3(lexer);
 
@@ -101,12 +119,18 @@ public class CtlParser
 							formula1 = parseLevel1(lexer);
 
 							token = lexer.nextToken();
-							if (token.getType() != Token.U_OPERATOR) throw new CtlParseException();
+							if (token.getType() != Token.U_OPERATOR)
+							{
+								throw new CtlParseException();
+							}
 
 							formula2 = parseLevel1(lexer);
 
 							token = lexer.nextToken();
-							if (token.getType() != Token.RIGHT_BOXBRACKET) throw new CtlParseException();
+							if (token.getType() != Token.RIGHT_BOXBRACKET)
+							{
+								throw new CtlParseException();
+							}
 
 							return new AU(formula1, formula2);
 						default:
@@ -135,12 +159,18 @@ public class CtlParser
 							formula1 = parseLevel1(lexer);
 
 							token = lexer.nextToken();
-							if (token.getType() != Token.U_OPERATOR) throw new CtlParseException();
+							if (token.getType() != Token.U_OPERATOR)
+							{
+								throw new CtlParseException();
+							}
 
 							formula2 = parseLevel1(lexer);
 
 							token = lexer.nextToken();
-							if (token.getType() != Token.RIGHT_BOXBRACKET) throw new CtlParseException();
+							if (token.getType() != Token.RIGHT_BOXBRACKET)
+							{
+								throw new CtlParseException();
+							}
 
 							return new EU(formula1, formula2);
 						default:
@@ -168,7 +198,10 @@ public class CtlParser
 					lexer.nextToken();
 					CtlFormula formula1 = parseLevel1(lexer);
 					token = lexer.nextToken();
-					if (token.getType() != Token.RIGHT_BRACKET) throw new CtlParseException();
+					if (token.getType() != Token.RIGHT_BRACKET)
+					{
+						throw new CtlParseException();
+					}
 
 					return formula1;
 				case Token.IDENTIFIER:
@@ -229,7 +262,10 @@ public class CtlParser
 
 		private Token getNextToken() throws CtlParseException
 		{
-			if (pos == pattern.length()) return new Token(Token.END_OF_PATTERN, "", pos, 0);
+			if (pos == pattern.length())
+			{
+				return new Token(Token.END_OF_PATTERN, "", pos, 0);
+			}
 
 			char c = getChar(pos);
 			char c2;
@@ -247,16 +283,34 @@ public class CtlParser
 					return new Token(Token.NOT_OPERATOR, "" + c, pos, 1);
 				case '&':
 					c2 = getChar(pos + 1);
-					if (c2 == '&') return new Token(Token.AND_OPERATOR, "&&", pos, 2);
-					else throw new CtlParseException();
+					if (c2 == '&')
+					{
+						return new Token(Token.AND_OPERATOR, "&&", pos, 2);
+					}
+					else
+					{
+						throw new CtlParseException();
+					}
 				case '|':
 					c2 = getChar(pos + 1);
-					if (c2 == '|') return new Token(Token.OR_OPERATOR, "||", pos, 2);
-					else throw new CtlParseException();
+					if (c2 == '|')
+					{
+						return new Token(Token.OR_OPERATOR, "||", pos, 2);
+					}
+					else
+					{
+						throw new CtlParseException();
+					}
 				case '-':
 					c2 = getChar(pos + 1);
-					if (c2 == '>') return new Token(Token.IMPLIES_OPERATOR, "->", pos, 2);
-					else throw new CtlParseException();
+					if (c2 == '>')
+					{
+						return new Token(Token.IMPLIES_OPERATOR, "->", pos, 2);
+					}
+					else
+					{
+						throw new CtlParseException();
+					}
 				case 'A':
 					return new Token(Token.A_OPERATOR, "" + c, pos, 1);
 				case 'E':
@@ -277,14 +331,23 @@ public class CtlParser
 						pos++;
 						return getNextToken();
 					}
-					else return getIdentifier();
+					else
+					{
+						return getIdentifier();
+					}
 			}
 		}
 
 		private char getChar(int position) throws CtlParseException
 		{
-			if (position == pattern.length()) throw new CtlParseException();
-			else return pattern.charAt(position);
+			if (position == pattern.length())
+			{
+				throw new CtlParseException();
+			}
+			else
+			{
+				return pattern.charAt(position);
+			}
 		}
 
 		private Token getIdentifier() throws CtlParseException
@@ -304,7 +367,10 @@ public class CtlParser
 					{
 						buffer.append(c);
 					}
-					else break;
+					else
+					{
+						break;
+					}
 
 					startPos++;
 				}

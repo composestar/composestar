@@ -18,6 +18,11 @@ import Composestar.Utils.CPSIterator;
 
 public class MatchingPattern extends ContextRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -84062663527092510L;
+
 	public MatchingPatternAST mpa;
 
 	public Vector matchingParts;

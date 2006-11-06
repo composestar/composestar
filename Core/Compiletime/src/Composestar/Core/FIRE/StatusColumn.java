@@ -70,7 +70,10 @@ public class StatusColumn extends Column implements Cloneable
 	{
 		for (int i = 0; i < length; i++)
 		{
-			if (getValue(i) == value) finished.setValue(i, true);
+			if (getValue(i) == value)
+			{
+				finished.setValue(i, true);
+			}
 		}
 	}
 

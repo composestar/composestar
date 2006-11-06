@@ -46,7 +46,10 @@ class Logic
 
 	private static int smallestColumn(Column lh, Column rh)
 	{
-		if (lh.length < rh.length) return lh.length;
+		if (lh.length < rh.length)
+		{
+			return lh.length;
+		}
 		return rh.length;
 	}
 
@@ -110,7 +113,10 @@ class Logic
 	{
 		for (int i = 0; i < lh.length; i++)
 		{
-			if (lh.getValue(i)) return false;
+			if (lh.getValue(i))
+			{
+				return false;
+			}
 		}
 
 		return true;

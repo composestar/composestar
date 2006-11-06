@@ -9,9 +9,9 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
-import Composestar.Core.Exception.*;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * Starts all the checks.

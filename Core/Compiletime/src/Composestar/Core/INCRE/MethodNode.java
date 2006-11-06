@@ -1,14 +1,19 @@
 package Composestar.Core.INCRE;
 
-import Composestar.Core.Exception.ModuleException;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import Composestar.Core.Exception.ModuleException;
 
 public class MethodNode extends Node
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2857249370031652021L;
+
 	private ArrayList parameters;
 
 	public MethodNode(String ref)

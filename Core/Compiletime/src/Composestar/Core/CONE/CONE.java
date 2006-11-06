@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CONE;
 
-import Composestar.Core.Master.*;
+import Composestar.Core.Master.CTCommonModule;
 
 public abstract class CONE implements CTCommonModule
 {

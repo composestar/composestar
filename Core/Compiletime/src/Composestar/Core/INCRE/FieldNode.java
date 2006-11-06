@@ -4,6 +4,11 @@ import java.lang.reflect.Field;
 
 public class FieldNode extends Node
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3220062124848983208L;
+
 	public FieldNode(String ref)
 	{
 		super(ref);

@@ -30,7 +30,10 @@ public class Substitute extends FilterLeaf
 	// TODO: implement
 	public StatusColumn calculateStatus(StatusColumn status, StateTable stateTable)
 	{
-		if (symbol.getName().equals("*")) return status;
+		if (symbol.getName().equals("*"))
+		{
+			return status;
+		}
 
 		// TODO Debug only.
 		stateTable.snapshot(status, this);

@@ -22,6 +22,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleR
 public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4642012441159613281L;
+
+	/**
 	 * The key used to store this variable in the concern's dynamicmap
 	 */
 	public static final String SINGLE_ORDER_KEY = "SingleOrder";

@@ -67,7 +67,10 @@ public class SymbolTable
 	 */
 	public static SymbolTable getInstance()
 	{
-		if (object == null) object = new SymbolTable();
+		if (object == null)
+		{
+			object = new SymbolTable();
+		}
 		return object;
 	}
 
@@ -80,7 +83,9 @@ public class SymbolTable
 
 		// reset the symbolCounter;
 		for (int i = 0; i < symbolCounter.length; i++)
+		{
 			symbolCounter[i] = 0;
+		}
 
 		allSymbols = null;
 		typeSymbols = null;
@@ -89,7 +94,10 @@ public class SymbolTable
 	public Symbol addSymbol(String name, int type)
 	{
 		// No way. We are already done().
-		if (allSymbols != null) return null;
+		if (allSymbols != null)
+		{
+			return null;
+		}
 
 		String key = getHashKey(name, type);
 		if (symbolMap.containsKey(key))
@@ -135,7 +143,10 @@ public class SymbolTable
 		{
 			typeSymbols[i] = getSymbolArray(i);
 
-			if (typeSymbols[i] != null) totalLength += typeSymbols[i].length;
+			if (typeSymbols[i] != null)
+			{
+				totalLength += typeSymbols[i].length;
+			}
 		}
 
 		allSymbols = getAllSymbolsArray();
@@ -164,7 +175,10 @@ public class SymbolTable
 	 */
 	public String toString()
 	{
-		if (allSymbols == null) return "Symbol table not done";
+		if (allSymbols == null)
+		{
+			return "Symbol table not done";
+		}
 
 		String out = "Symbol table\n-----------\n";
 
@@ -188,7 +202,10 @@ public class SymbolTable
 	 */
 	private Symbol[] getSymbolArray(int type)
 	{
-		if (symbolCounter[type] == 0) return null;
+		if (symbolCounter[type] == 0)
+		{
+			return null;
+		}
 
 		Symbol symbols[] = new Symbol[symbolCounter[type]];
 		int k = 0;
@@ -196,7 +213,10 @@ public class SymbolTable
 		Symbol[] allSymbols = getAllSymbolsArray();
 		for (int i = 0; i < allSymbols.length; i++)
 		{
-			if (allSymbols[i].getType() == type) symbols[k++] = allSymbols[i];
+			if (allSymbols[i].getType() == type)
+			{
+				symbols[k++] = allSymbols[i];
+			}
 		}
 
 		return symbols;
@@ -241,7 +261,10 @@ public class SymbolTable
 		int total = power2(totalSymbols(0));
 		for (int i = 1; i < totalTypes(); i++)
 		{
-			if (totalSymbols(i) != 0) total *= totalSymbols(i);
+			if (totalSymbols(i) != 0)
+			{
+				total *= totalSymbols(i);
+			}
 		}
 
 		columnLength = total;
@@ -277,7 +300,10 @@ public class SymbolTable
 				symbols[i].originalColumn = new Column(columnLength, trueBits, (symbols.length - 1), i);
 			}
 
-			if (totalSymbols(type) > 0) trueBits *= symbols.length;
+			if (totalSymbols(type) > 0)
+			{
+				trueBits *= symbols.length;
+			}
 		}
 	}
 

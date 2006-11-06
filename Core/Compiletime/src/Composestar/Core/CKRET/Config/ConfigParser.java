@@ -14,8 +14,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Utils.*;
 import Composestar.Core.CKRET.Repository;
+import Composestar.Utils.Debug;
 
 public class ConfigParser extends DefaultHandler
 {

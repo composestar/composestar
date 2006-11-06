@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class ConcernSource implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1046241361643868704L;
+
 	String fileName;
 
 	public ConcernSource()

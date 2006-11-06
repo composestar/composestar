@@ -20,6 +20,11 @@ import java.util.Hashtable;
 public class AnnotatedEdge extends DefaultEdge
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2512401433673944080L;
+
+	/**
 	 * Dictionary containing the annotations.
 	 */
 	private Dictionary annotations;

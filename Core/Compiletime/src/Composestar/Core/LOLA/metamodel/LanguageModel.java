@@ -19,12 +19,14 @@ import Composestar.Core.Exception.ModuleException;
 public abstract class LanguageModel
 {
 	protected Hashtable languageUnitTypes; // Hashtable of
-											// unitTypeName=>LanguageUnitType
+
+	// unitTypeName=>LanguageUnitType
 
 	// protected Hashtable languageUnitTypesByName; // Hashtable of
 	// typeName=>LanguageUnitType
 	protected Hashtable relationPredicates; // Hashtable of
-											// relPredName=>RelationPredicate
+
+	// relPredName=>RelationPredicate
 
 	public LanguageModel()
 	{

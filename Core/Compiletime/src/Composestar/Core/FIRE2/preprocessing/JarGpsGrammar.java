@@ -16,7 +16,6 @@ import groove.trans.view.RuleGraph;
 import groove.trans.view.RuleViewGrammar;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -69,9 +68,6 @@ public class JarGpsGrammar extends GpsGrammar
 			RuleGraph ruleGraph = (RuleGraph) ruleGraphEntry.getValue();
 			result.add(ruleGraph, (Integer) priorityMap.get(ruleName));
 		}
-		// determine the start graph file
-		File startGraphFile;
-
 		// get the start graph
 		Graph startGraph = null;
 
@@ -128,8 +124,10 @@ public class JarGpsGrammar extends GpsGrammar
 				StructuredRuleName extendedRulePath = new StructuredRuleName(rulePath, ruleName);
 
 				// check for overlapping rule and directory names
-				if (ruleGraphMap.containsKey(extendedRulePath)) throw new IOException(LOAD_ERROR
-						+ ": duplicate rule name \"" + extendedRulePath + '\"');
+				if (ruleGraphMap.containsKey(extendedRulePath))
+				{
+					throw new IOException(LOAD_ERROR + ": duplicate rule name \"" + extendedRulePath + '\"');
+				}
 				try
 				{
 					RuleGraph ruleGraph = createRuleGraph(innerLoader.unmarshal(relativeLocation + '/' + fileName),
@@ -199,7 +197,10 @@ public class JarGpsGrammar extends GpsGrammar
 			}
 
 			// now convert the gxl to an attribute graph
-			if (gxl.getGraphCount() != 1) throw new XmlException("Only one graph allowed in document");
+			if (gxl.getGraphCount() != 1)
+			{
+				throw new XmlException("Only one graph allowed in document");
+			}
 			// Get the first and only graph element
 			return gxl.getGraph(0);
 		}

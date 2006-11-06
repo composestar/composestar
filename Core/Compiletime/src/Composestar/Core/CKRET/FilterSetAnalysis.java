@@ -26,6 +26,11 @@ import Composestar.Core.RepositoryImplementation.DataStore;
 public class FilterSetAnalysis implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5154995474750593236L;
+
 	private Concern concern;
 
 	private FilterModuleOrder order;

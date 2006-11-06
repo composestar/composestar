@@ -9,7 +9,8 @@
  */
 package Composestar.Core.COPPER;
 
-import java.util.*;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class PathHelper
 {
@@ -90,7 +91,7 @@ public class PathHelper
 			if (temp.length() > 3)
 			{ // extra check
 				temp = temp.substring(0, temp.length() - 3); // (number |
-																// last)
+				// last)
 				piece.setPosition(temp);
 			}
 		}

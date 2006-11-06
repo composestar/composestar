@@ -45,7 +45,8 @@ public class DoResolve
 	private DataStore ds; // the datastore containing the objects
 
 	private boolean ignoreCase = true; // for stupid typing errors in
-										// concernspecifications
+
+	// concernspecifications
 
 	/**
 	 * Constructor
@@ -294,7 +295,10 @@ public class DoResolve
 								{
 									found = true;
 								}
-								else if ((!ignoreCase) && (temp2.getName().compareTo(ref.getName()) == 0)) found = true;
+								else if ((!ignoreCase) && (temp2.getName().compareTo(ref.getName()) == 0))
+								{
+									found = true;
+								}
 								if (found)
 								{
 									ref.setRef(temp2);
@@ -373,7 +377,10 @@ public class DoResolve
 												// resolved " + ref.getName());
 											}
 										}
-										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0)) found = true;
+										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0))
+										{
+											found = true;
+										}
 										// ok, name matches, now check
 										// parameters (types only)
 										// if (Main.debug)
@@ -496,7 +503,10 @@ public class DoResolve
 										{
 											found = true;
 										}
-										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0)) found = true;
+										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0))
+										{
+											found = true;
+										}
 										if (found)
 										{
 											ref.setRef(temp3);
@@ -514,7 +524,10 @@ public class DoResolve
 										{
 											found = true;
 										}
-										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0)) found = true;
+										else if ((!ignoreCase) && (temp3.getName().compareTo(ref.getName()) == 0))
+										{
+											found = true;
+										}
 										if (found)
 										{
 											ref.setRef(temp3);
@@ -641,7 +654,10 @@ public class DoResolve
 									{
 										found = true;
 									}
-									else if ((!ignoreCase) && (external.getName().compareTo(ref.getName()) == 0)) found = true;
+									else if ((!ignoreCase) && (external.getName().compareTo(ref.getName()) == 0))
+									{
+										found = true;
+									}
 									if (found)
 									{
 										ref.setRef(external);
@@ -655,9 +671,11 @@ public class DoResolve
 			}
 			if (!ref.getResolved())
 			{
-				if (!ref.getName().equals("*") && !ref.getName().equals("inner")) throw new ModuleException(
-						"DeclaredObjectReference '" + ref.getName()
-								+ "' cannot be resolved (are you referencing a non-existent object?)", "REXREF", ref);
+				if (!ref.getName().equals("*") && !ref.getName().equals("inner"))
+				{
+					throw new ModuleException("DeclaredObjectReference '" + ref.getName()
+							+ "' cannot be resolved (are you referencing a non-existent object?)", "REXREF", ref);
+				}
 			}
 		}
 	}

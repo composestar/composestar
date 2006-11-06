@@ -11,13 +11,29 @@ package Composestar.Core.FIRE;
  * 
  **/
 
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.DisableOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 import Composestar.Utils.Debug;
-import Composestar.Core.RepositoryImplementation.*;
 
 public class RepositoryPtrList extends TreeBuilder
 {
@@ -54,8 +70,14 @@ public class RepositoryPtrList extends TreeBuilder
 				return new MatchTrue();
 			}
 
-			if (conditionString.toLowerCase().equals("true")) return new MatchTrue();
-			if (conditionString.toLowerCase().equals("false")) return new MatchFalse();
+			if (conditionString.toLowerCase().equals("true"))
+			{
+				return new MatchTrue();
+			}
+			if (conditionString.toLowerCase().equals("false"))
+			{
+				return new MatchFalse();
+			}
 
 			return new Match((SymbolTable.getInstance()).addSymbol(conditionString, 0), filterNumber);
 		}
@@ -230,7 +252,10 @@ public class RepositoryPtrList extends TreeBuilder
 
 		Tand tand = new Tand();
 
-		if (fc != null) tand.addChild1(fc);
+		if (fc != null)
+		{
+			tand.addChild1(fc);
+		}
 
 		// TODO deprecated
 		Filter f = FilterFactory.getFilter(repositoryFilter.getFilterType().getType());
@@ -257,8 +282,14 @@ public class RepositoryPtrList extends TreeBuilder
 
 		if (f.getFilterType().getType().equals(FilterType.META))
 		{
-			if (iterator.hasNext()) return parseMultipleFilters(iterator);
-			else return null;
+			if (iterator.hasNext())
+			{
+				return parseMultipleFilters(iterator);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		FilterComponent fc1 = parseFilter(f);
@@ -267,7 +298,10 @@ public class RepositoryPtrList extends TreeBuilder
 			FilterComponent fc2 = parseMultipleFilters(iterator);
 
 			// null was returned if only Meta's were found
-			if (fc2 == null) return fc1;
+			if (fc2 == null)
+			{
+				return fc1;
+			}
 
 			Tand tand = new Tand();
 
@@ -311,7 +345,7 @@ public class RepositoryPtrList extends TreeBuilder
 		if (iterator.hasNext())
 		{
 			FilterComponent fc2 = parseMultipleFilterModules(iterator, fireInfo); // Recursion
-																					// rules
+			// rules
 			if (fc2 == null)
 			{
 				// fc2 has just meta filters

@@ -283,12 +283,18 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 	{
 		try
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tLooking for link '" + name + "'...");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tLooking for link '" + name + "'...");
+			}
 			String cname = this.getCondition(name);
 			Object returnvalue;
 			if (cname != null)
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound link '" + cname + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound link '" + cname + "'.");
+				}
 				String ctarget = cname.substring(0, cname.lastIndexOf('='));
 				String cselector = cname.substring(cname.lastIndexOf('=') + 1);
 
@@ -297,41 +303,59 @@ public class FilterModuleRuntime extends ReferenceEntityRuntime implements Inter
 				// Check to see if it is condition on inner!
 				if (ctarget.equals("inner"))
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is inner call: "
-							+ MessageInfo.getInner() + " == " + cselector);
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is inner call: "
+								+ MessageInfo.getInner() + " == " + cselector);
+					}
 					returnvalue = Invoker.getInstance().invoke(MessageInfo.getInner(), cselector, args);
 				}
 				else if (this.getInternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)) != null)
 				{ // It was an internal
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-							"\t\tCondition is internal call: "
-									+ this.getInternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)));
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is internal call: "
+								+ this.getInternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)));
+					}
 					returnvalue = Invoker.getInstance().invoke(
 							this.getInternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)), cselector, args);
 				}
 				else if (this.getExternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)) != null)
 				{ // It was an external
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-							"\t\tCondition is external call: "
-									+ this.getExternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)));
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is external call: "
+								+ this.getExternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)));
+					}
 					returnvalue = Invoker.getInstance().invoke(
 							this.getExternal(ctarget.substring(ctarget.lastIndexOf(':') + 1)), cselector, args);
 				}
 				else
 				{ // It was a static call
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is static call: "
-							+ ctarget + '.' + cselector);
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is static call: " + ctarget + '.'
+								+ cselector);
+					}
 					returnvalue = Invoker.getInstance().invoke(ctarget, cselector, args);
 				}
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "\t\tCondition returned '"
-						+ returnvalue.toString() + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_DEBUG, "FLIRT", "\t\tCondition returned '" + returnvalue.toString() + "'.");
+				}
 				if (returnvalue.toString().equalsIgnoreCase("true"))
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is true.");
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is true.");
+					}
 					return true;
 				}
 			}
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is false.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tCondition is false.");
+			}
 			return false;
 		}
 		catch (Exception e)

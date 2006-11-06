@@ -1,11 +1,13 @@
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-import Composestar.Core.Exception.ModuleException;
+import java.util.Iterator;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 public class ExistSelector implements BaseChecker
 {

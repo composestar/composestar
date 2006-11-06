@@ -9,11 +9,11 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.RepositoryImplementation.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 /**
  * This is used to refer to an internal or external variable; the name will be
@@ -22,6 +22,11 @@ import java.io.ObjectOutputStream;
  */
 public class DeclaredObjectReference extends FilterModuleElementReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2837147165031845744L;
+
 	private TypedDeclaration ref;
 
 	/**

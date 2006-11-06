@@ -4,6 +4,11 @@ import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 public class FilterModuleParameter extends DeclaredRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3840471205660574871L;
+
 	public Object value;
 
 	public FilterModuleParameterAST fmp_ast;

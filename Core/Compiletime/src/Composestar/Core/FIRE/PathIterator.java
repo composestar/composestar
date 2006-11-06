@@ -74,12 +74,17 @@ public class PathIterator extends NodeIterator
 	public void last()
 	{
 		while (hasNext())
+		{
 			next();
+		}
 	}
 
 	public void previous()
 	{
-		if (childInArray > 0) --childInArray;
+		if (childInArray > 0)
+		{
+			--childInArray;
+		}
 		pop();
 	}
 

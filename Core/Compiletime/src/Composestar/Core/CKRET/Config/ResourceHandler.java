@@ -9,13 +9,17 @@
  */
 package Composestar.Core.CKRET.Config;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.*;
-import java.util.*;
+import Composestar.Core.CKRET.Repository;
+import Composestar.Core.CKRET.Resource;
 import Composestar.Utils.StringConverter;
 
 public class ResourceHandler extends DefaultHandler

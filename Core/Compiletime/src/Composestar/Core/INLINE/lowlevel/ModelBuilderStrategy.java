@@ -316,7 +316,7 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 		}
 		else if (node.containsName(FlowChartNames.META_ACTION_NODE))
 		{// "before action" ) ){
-		// generateBeforeAction( state );
+			// generateBeforeAction( state );
 			generateAfterAction(state);
 		}
 		else if (node.containsName("AfterAction"))
@@ -498,11 +498,17 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		return new Message(dispTarget, dispSelector);
 	}
@@ -533,7 +539,6 @@ public class ModelBuilderStrategy implements LowLevelInlineStrategy
 	{
 		if (method == null)
 		{
-			int x = 9;
 		}
 		Integer id = (Integer) methodTable.get(method);
 		if (id == null)

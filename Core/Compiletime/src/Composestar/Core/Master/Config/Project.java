@@ -7,6 +7,11 @@ import java.util.Properties;
 
 public class Project implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8492654317711347755L;
+
 	private Properties properties;
 
 	// private String name;

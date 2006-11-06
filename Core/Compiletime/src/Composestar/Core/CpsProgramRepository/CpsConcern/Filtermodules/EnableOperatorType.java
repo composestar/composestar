@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * @modelguid {86ABF788-6260-4FAD-9691-88814BEEC0EF} This represents the '=>'

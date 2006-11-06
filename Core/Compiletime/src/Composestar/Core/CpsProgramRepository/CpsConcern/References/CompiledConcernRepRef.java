@@ -9,11 +9,16 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.*;
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 
 public class CompiledConcernRepRef extends ConcernElementReference
 {
 	// private PlatformRepresentation ref;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -458652981327439161L;
 
 	/**
 	 * @roseuid 404C4B68009B

@@ -14,7 +14,6 @@ import java.io.FileWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
@@ -58,10 +57,22 @@ public class HTMLReporter implements Reporter
 
 		boolean hasConflicts = (analysis.numConflictingExecutions() != 0);
 
-		if (selected && hasConflicts) buffer.append("<div class=\"red\">");
-		else if (selected) buffer.append("<div class=\"green\">");
-		else if (hasConflicts) buffer.append("<div class=\"filterorder\">");
-		else buffer.append("<div class=\"green\">");
+		if (selected && hasConflicts)
+		{
+			buffer.append("<div class=\"red\">");
+		}
+		else if (selected)
+		{
+			buffer.append("<div class=\"green\">");
+		}
+		else if (hasConflicts)
+		{
+			buffer.append("<div class=\"filterorder\">");
+		}
+		else
+		{
+			buffer.append("<div class=\"green\">");
+		}
 
 		buffer.append("<h3>").append(selected ? "Selected" : "Alternative").append(" filtermodule-order analysis<BR>")
 				.append(order.toString()).append("</h3>");

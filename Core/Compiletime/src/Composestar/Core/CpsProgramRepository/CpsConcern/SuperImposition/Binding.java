@@ -9,11 +9,16 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 public class Binding extends ContextRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6223274022819701514L;
+
 	public SelectorReference selector;
 
 	/**

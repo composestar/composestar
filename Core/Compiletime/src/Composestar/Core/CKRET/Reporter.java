@@ -9,8 +9,8 @@
  */
 package Composestar.Core.CKRET;
 
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.FILTH.FilterModuleOrder;
 
 /**
  * @author Administrator To change the template for this generated type comment

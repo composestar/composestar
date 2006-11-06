@@ -9,13 +9,18 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Implementation;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * @modelguid {144B3D29-6C93-4822-B455-6EC9BB654195}
  */
 public class Implementation extends RepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -112916073762474085L;
 
 	/**
 	 * @modelguid {591D90E1-4750-4FEE-9C45-07E8D979FE94}

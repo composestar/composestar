@@ -257,6 +257,11 @@ public class ExecutionModelExtractor
 
 	private static class BasicExecutionModel extends RepositoryEntity implements ExecutionModel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5744523627232722542L;
+
 		private Hashtable entranceStates;
 
 		private HashSet states;

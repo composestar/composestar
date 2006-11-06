@@ -9,8 +9,8 @@
  */
 package Composestar.Core.CpsProgramRepository;
 
+import Composestar.Core.LAMA.MethodInfo;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-import Composestar.Core.LAMA.*;
 
 /**
  * It used to Hold the relationship between a method and its implementation. It
@@ -18,6 +18,11 @@ import Composestar.Core.LAMA.*;
  */
 public class MethodWrapper implements SerializableRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3283145732364930465L;
+
 	public int RelationType;
 
 	public static final int NORMAL = 1;

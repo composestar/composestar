@@ -309,7 +309,10 @@ public class Pattern
 
 		private Token getNextToken() throws PatternParseException
 		{
-			if (pos == pattern.length()) return new Token(Token.END_OF_PATTERN, "", pos, 0);
+			if (pos == pattern.length())
+			{
+				return new Token(Token.END_OF_PATTERN, "", pos, 0);
+			}
 
 			char c = pattern.charAt(pos);
 			switch (c)
@@ -341,7 +344,10 @@ public class Pattern
 				while (startPos < pattern.length())
 				{
 					c = pattern.charAt(startPos);
-					if (c == ')') break;
+					if (c == ')')
+					{
+						break;
+					}
 
 					if (c == '.' || Character.isLetterOrDigit(c))
 					{

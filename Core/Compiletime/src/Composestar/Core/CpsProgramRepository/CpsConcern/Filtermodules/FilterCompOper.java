@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * the composition operator between two filters, currently this is always the

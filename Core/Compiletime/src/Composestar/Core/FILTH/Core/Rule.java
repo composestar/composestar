@@ -22,7 +22,7 @@ public abstract class Rule
 		_left = left;
 		_right = right;
 		if (_right instanceof Action) // the second arg. must be action
-										// always...
+		// always...
 		{
 			((Action) _right).addRule(this);
 		}

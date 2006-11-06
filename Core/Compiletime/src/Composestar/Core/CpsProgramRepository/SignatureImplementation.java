@@ -9,14 +9,19 @@
  */
 package Composestar.Core.CpsProgramRepository;
 
-import Composestar.Core.LAMA.*;
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 /**
  * Holds the relationship between a method and its implementation.
  */
 public class SignatureImplementation implements SerializableRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3321584582486823819L;
+
 	public int RelationType;
 
 	public static final int NORMAL = 1;

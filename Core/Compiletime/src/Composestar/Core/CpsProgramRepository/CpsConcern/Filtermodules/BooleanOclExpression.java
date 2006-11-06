@@ -9,13 +9,18 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * @modelguid {298702D8-779F-4FE0-B6A7-6417F2AEAAC1}
  */
 public class BooleanOclExpression extends ContextRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7632430596280498910L;
 
 	/**
 	 * @modelguid {ADCB919B-FD9B-4B52-9ABE-B132818A98DC}

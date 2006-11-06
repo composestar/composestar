@@ -1,6 +1,7 @@
 package Composestar.Utils;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * This class is implemented only for backward migration purposes to jdk 1.1.4.

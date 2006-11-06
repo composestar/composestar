@@ -4,11 +4,12 @@
 
 package Composestar.Core.SANE;
 
+import java.util.Iterator;
 import java.util.Vector;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
-import Composestar.Utils.*;
-import java.util.Iterator;
+import Composestar.Utils.CPSIterator;
 
 public class MethodSIinfo extends Composestar.Core.RepositoryImplementation.ContextRepositoryEntity implements
 		AbstractSIinfo

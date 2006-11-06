@@ -20,6 +20,11 @@ public class SelClass extends SimpleSelExpression
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4148589690692728971L;
+
+	/**
 	 * @modelguid {5ACC13A5-BB8B-4943-B5A2-DF4CB06E99FC}
 	 * @roseuid 401FAA670303
 	 */

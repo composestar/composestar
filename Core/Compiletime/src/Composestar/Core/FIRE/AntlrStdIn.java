@@ -11,8 +11,7 @@ package Composestar.Core.FIRE;
  * 
  **/
 
-import java.io.*;
-import antlr.CommonAST;
+import java.io.InputStream;
 
 public class AntlrStdIn extends TreeBuilder
 {

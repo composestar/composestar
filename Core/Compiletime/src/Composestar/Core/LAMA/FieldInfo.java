@@ -1,10 +1,10 @@
 package Composestar.Core.LAMA;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 public abstract class FieldInfo extends ProgramElement implements SerializableRepositoryEntity
 {

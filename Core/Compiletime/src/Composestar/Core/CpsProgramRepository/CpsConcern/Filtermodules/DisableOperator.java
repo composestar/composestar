@@ -13,6 +13,11 @@ public class DisableOperator extends EnableOperatorType
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2250244176752641976L;
+
+	/**
 	 * @roseuid 404C4B6B01CB
 	 */
 	public DisableOperator()

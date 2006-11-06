@@ -89,7 +89,10 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 	private boolean match(MessageList modml, Dictionary context)
 	{
 		MessageList ml = modml.getOriginalMessageList();
-		if (ml == null) ml = modml;
+		if (ml == null)
+		{
+			ml = modml;
+		}
 
 		ml.resetMatches();
 
@@ -100,9 +103,9 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		FilterAST astTemp = temp.getFilterAST();
 		String name = astTemp.getName();
 		if (name.equals("CpsDefaultInnerDispatchFilter")) // (
-															// ((Filter)this.theFilterElement.theFilter.getReference()).getFilterAST().getName().equals(
-															// "CpsDefaultInnerDispatchFilter"
-															// ) )
+		// ((Filter)this.theFilterElement.theFilter.getReference()).getFilterAST().getName().equals(
+		// "CpsDefaultInnerDispatchFilter"
+		// ) )
 		{
 			ml.matchAll();
 			return true;
@@ -128,7 +131,10 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 
 		if (ml.getMessages().size() != matchingParts.size())
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "No match: the number of messages differs");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_DEBUG, "FLIRT", "No match: the number of messages differs");
+			}
 			return false;
 		}
 
@@ -149,8 +155,14 @@ public class MatchingPatternRuntime extends ReferenceEntityRuntime implements In
 		for (int i = 0; i < substitutionParts.size(); i++)
 		{
 			Message m;
-			if (i == 0) m = ml.reduceToOne();
-			else m = ml.duplicateOne();
+			if (i == 0)
+			{
+				m = ml.reduceToOne();
+			}
+			else
+			{
+				m = ml.duplicateOne();
+			}
 
 			if (((SubstitutionPartRuntime) substitutionParts.get(i)).getReference() == null)
 			{

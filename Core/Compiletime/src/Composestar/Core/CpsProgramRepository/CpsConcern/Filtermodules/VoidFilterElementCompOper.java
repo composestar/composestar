@@ -16,6 +16,11 @@ public class VoidFilterElementCompOper extends FilterElementCompOper
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7341779162828357908L;
+
+	/**
 	 * @roseuid 404C4B6B00F9
 	 */
 	public VoidFilterElementCompOper()

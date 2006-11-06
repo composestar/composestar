@@ -25,8 +25,6 @@ public class ExecutionStateIterator implements Iterator
 
 	public ExecutionStateIterator(ExecutionModel model)
 	{
-		ExecutionModel model1 = model;
-
 		Enumeration enumer = model.getEntranceStates();
 		while (enumer.hasMoreElements())
 		{

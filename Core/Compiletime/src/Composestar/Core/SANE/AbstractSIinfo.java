@@ -4,9 +4,10 @@
 
 package Composestar.Core.SANE;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import java.util.Vector;
-import Composestar.Utils.*;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Utils.CPSIterator;
 
 public interface AbstractSIinfo
 {

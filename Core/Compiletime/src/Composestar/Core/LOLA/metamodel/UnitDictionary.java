@@ -11,10 +11,10 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import Composestar.Utils.*;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
+import Composestar.Utils.Debug;
 
 /**
  * @author havingaw Keeps a list of all registered Language Units that can be
@@ -84,20 +84,20 @@ public class UnitDictionary
 
 			// Step 1: Add the unit to the namebased index
 			if (!unitsByName.containsKey(type)) // Might be the first unit of
-												// this type
+			// this type
 			{
 				unitsByName.put(type, new Hashtable()); // If yes, create the
-														// table for this type
+				// table for this type
 			}
 
 			Hashtable nameTypeTable = (Hashtable) unitsByName.get(type);
 			if (unitInfo.isNameUnique()) // Unit has unique name; add it
-											// directly.
+			// directly.
 			{
 
 				if (nameTypeTable.containsKey(name)) // In this case the unit
-														// will *NOT* have been
-														// added anywhere!
+				// will *NOT* have been
+				// added anywhere!
 				{
 					Debug.out(Debug.MODE_WARNING, "LOLA", "Duplicate key for unit with unique name: " + name);
 					return;

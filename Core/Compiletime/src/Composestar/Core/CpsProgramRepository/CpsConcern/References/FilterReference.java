@@ -9,17 +9,22 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 
 /**
  * reference to a in- or outputfilter
  */
 public class FilterReference extends FilterModuleElementReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1395841459798706305L;
+
 	private Filter ref;
 
 	/**

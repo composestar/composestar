@@ -12,7 +12,6 @@ package Composestar.Core.RepositoryImplementation;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.Concern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 
 public class DeclaredRepositoryEntity extends ContextRepositoryEntity
 {
@@ -99,7 +98,7 @@ public class DeclaredRepositoryEntity extends ContextRepositoryEntity
 			if (i == temp.size() - 1)
 			{
 				out = (String) temp.elementAt(i); // do not add a dot for the
-													// first element
+				// first element
 			}
 			else
 			{

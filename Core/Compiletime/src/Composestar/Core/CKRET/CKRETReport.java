@@ -20,6 +20,11 @@ import Composestar.Core.FILTH.FilterModuleOrder;
  */
 public class CKRETReport implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6635419458687692484L;
+
 	private FilterModuleOrder order;
 
 	private FilterSetAnalysis analysis;

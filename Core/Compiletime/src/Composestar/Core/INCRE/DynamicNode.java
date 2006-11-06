@@ -4,6 +4,11 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 public class DynamicNode extends Node
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1031299707125956098L;
+
 	public DynamicNode(String ref)
 	{
 		super(ref);

@@ -21,7 +21,6 @@ import Composestar.Core.FILTH.FILTHService;
 import Composestar.Core.FILTH.Core.Action;
 import Composestar.Core.FILTH.Core.Graph;
 import Composestar.Core.FILTH.Core.Node;
-import Composestar.Core.FILTH.Core.Parameter;
 import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 

@@ -26,7 +26,9 @@ public class DepthFirstIterator extends ChildIterator
 		done = false;
 
 		while (canStepBack())
+		{
 			super.stepBack();
+		}
 		super.first();
 	}
 
@@ -38,15 +40,30 @@ public class DepthFirstIterator extends ChildIterator
 
 	public void nextHorizontal()
 	{
-		if (hasNext()) super.next();
-		else if (canStepBack()) stepBack();
-		else done = true;
+		if (hasNext())
+		{
+			super.next();
+		}
+		else if (canStepBack())
+		{
+			stepBack();
+		}
+		else
+		{
+			done = true;
+		}
 	}
 
 	public void next()
 	{
-		if (canStepInto()) stepInto();
-		else nextHorizontal();
+		if (canStepInto())
+		{
+			stepInto();
+		}
+		else
+		{
+			nextHorizontal();
+		}
 	}
 
 	public boolean isDone()

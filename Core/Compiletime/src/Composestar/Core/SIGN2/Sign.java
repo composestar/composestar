@@ -271,7 +271,10 @@ public class Sign implements CTCommonModule
 				// a meta
 				// filter and so the default methods must be added for the
 				// meta-dispatch
-				if (methods.length != 0) dispatch = true;
+				if (methods.length != 0)
+				{
+					dispatch = true;
+				}
 
 				for (int j = 0; j < methods.length; j++)
 				{
@@ -284,7 +287,10 @@ public class Sign implements CTCommonModule
 			}
 		}
 
-		if (dispatch || true) return changed;
+		if (dispatch || true)
+		{
+			return changed;
+		}
 
 		// do the same for metastates:
 		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
@@ -382,7 +388,10 @@ public class Sign implements CTCommonModule
 		// case 4:
 		else if (nameMatching && Message.checkEquals(state.getSubstitutionSelector(), Message.STAR_SELECTOR))
 		{
-			if (state.getTarget().getName().equals("inner")) return getInnerMethods(concern, state, distinguishable);
+			if (state.getTarget().getName().equals("inner"))
+			{
+				return getInnerMethods(concern, state, distinguishable);
+			}
 			else
 			{
 				return getTargetMethods(concern, state, distinguishable);
@@ -392,9 +401,14 @@ public class Sign implements CTCommonModule
 		// case 5 and 6
 		else if (!nameMatching)
 		{
-			if (signatureMatchingTarget.getName().equals("inner")) return getInnerMethods(concern, state,
-					distinguishable);
-			else return getTargetMethods(concern, state, signatureMatchingTarget, distinguishable);
+			if (signatureMatchingTarget.getName().equals("inner"))
+			{
+				return getInnerMethods(concern, state, distinguishable);
+			}
+			else
+			{
+				return getTargetMethods(concern, state, signatureMatchingTarget, distinguishable);
+			}
 		}
 		// case 1:
 		else
@@ -407,11 +421,17 @@ public class Sign implements CTCommonModule
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get dispatchtarget concern and methods:
 		String dispatchMethodName = dispSelector.getName();
@@ -449,11 +469,17 @@ public class Sign implements CTCommonModule
 
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get the targetconcern:
 		Concern targetConcern;
@@ -478,7 +504,10 @@ public class Sign implements CTCommonModule
 			MethodInfo method = (MethodInfo) methods.get(i);
 
 			// check not distinguishable:
-			if (distinguishable.contains(method.Name)) continue;
+			if (distinguishable.contains(method.Name))
+			{
+				continue;
+			}
 
 			// check dispatchselector in dispatchtarget:
 			MethodInfo targetMethod;
@@ -495,7 +524,10 @@ public class Sign implements CTCommonModule
 			{
 				// if inner, check inner methods:
 
-				if (containsMethod(methods, targetMethod)) result.addElement(method);
+				if (containsMethod(methods, targetMethod))
+				{
+					result.addElement(method);
+				}
 			}
 			else
 			{
@@ -503,7 +535,10 @@ public class Sign implements CTCommonModule
 				Signature targetSignature = getSignature(targetConcern);
 
 				// else check signature methods:
-				if (targetSignature.hasMethod(targetMethod)) result.addElement(method);
+				if (targetSignature.hasMethod(targetMethod))
+				{
+					result.addElement(method);
+				}
 			}
 		}
 
@@ -518,11 +553,17 @@ public class Sign implements CTCommonModule
 
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get the methods in the targetsignature:
 		DeclaredObjectReference ref = (DeclaredObjectReference) dispTarget.getRef();
@@ -536,7 +577,10 @@ public class Sign implements CTCommonModule
 		{
 			MethodInfo method = (MethodInfo) methods.get(i);
 
-			if (distinguishable.contains(method.Name)) continue;
+			if (distinguishable.contains(method.Name))
+			{
+				continue;
+			}
 
 			MethodInfo newMethod = method.getClone(method.Name, type);
 			result.addElement(newMethod);
@@ -551,11 +595,17 @@ public class Sign implements CTCommonModule
 
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get target signature or innermethods:
 		Concern targetConcern;
@@ -594,7 +644,10 @@ public class Sign implements CTCommonModule
 			MethodInfo method = (MethodInfo) methods.get(i);
 
 			// check not distinguishable:
-			if (distinguishable.contains(method.Name)) continue;
+			if (distinguishable.contains(method.Name))
+			{
+				continue;
+			}
 
 			// check dispatchselector in dispatchtarget:
 
@@ -614,12 +667,18 @@ public class Sign implements CTCommonModule
 			if (dispTarget.name.equals("inner"))
 			{
 				// if inner, check inner methods:
-				if (containsMethod(innerMethods, targetMethod)) result.addElement(method);
+				if (containsMethod(innerMethods, targetMethod))
+				{
+					result.addElement(method);
+				}
 			}
 			else
 			{
 				// else check signature methods:
-				if (targetSignature.hasMethod(targetMethod)) result.addElement(method);
+				if (targetSignature.hasMethod(targetMethod))
+				{
+					result.addElement(method);
+				}
 			}
 		}
 
@@ -686,7 +745,10 @@ public class Sign implements CTCommonModule
 		signature = getSignature(concern);
 
 		// don't do the check when the signature has the given selector:
-		if (signature.hasMethod(selector)) return;
+		if (signature.hasMethod(selector))
+		{
+			return;
+		}
 
 		CtlChecker checker = new CtlChecker(execModel, "isDispatch ||  isMeta", dictionary);
 		Enumeration enu = checker.matchingStates();
@@ -697,12 +759,17 @@ public class Sign implements CTCommonModule
 
 			// get the dispatch target:
 			Target dispTarget = state.getSubstitutionTarget();
-			if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+			if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+			{
+				dispTarget = state.getMessage().getTarget();
+			}
 
 			// get the dispatch selector:
 			MessageSelector dispSelector = state.getSubstitutionSelector();
-			if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage()
-					.getSelector();
+			if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+			{
+				dispSelector = state.getMessage().getSelector();
+			}
 
 			// get the dispatch target:
 			Concern targetConcern;
@@ -798,7 +865,10 @@ public class Sign implements CTCommonModule
 		{
 			state = (ExecutionState) enu.nextElement();
 			int result = resolveDispatchExistence(concern, methodInfo, state);
-			if (result == IN_SIGNATURE) return IN_SIGNATURE;
+			if (result == IN_SIGNATURE)
+			{
+				return IN_SIGNATURE;
+			}
 		}
 
 		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
@@ -808,7 +878,10 @@ public class Sign implements CTCommonModule
 		{
 			state = (ExecutionState) enu.nextElement();
 			int result = resolveMetaExistence(concern, methodInfo, state);
-			if (result == IN_SIGNATURE) return IN_SIGNATURE;
+			if (result == IN_SIGNATURE)
+			{
+				return IN_SIGNATURE;
+			}
 		}
 
 		// then check again with loose signature checks:
@@ -821,7 +894,10 @@ public class Sign implements CTCommonModule
 		{
 			state = (ExecutionState) enu.nextElement();
 			int result = resolveDispatchExistence(concern, methodInfo, state);
-			if (result != NOT_IN_SIGNATURE) return POSSIBLE;
+			if (result != NOT_IN_SIGNATURE)
+			{
+				return POSSIBLE;
+			}
 		}
 
 		checker = new CtlChecker(execModel, META_FORMULA, dictionary);
@@ -831,7 +907,10 @@ public class Sign implements CTCommonModule
 		{
 			state = (ExecutionState) enu.nextElement();
 			int result = resolveMetaExistence(concern, methodInfo, state);
-			if (result != NOT_IN_SIGNATURE) return POSSIBLE;
+			if (result != NOT_IN_SIGNATURE)
+			{
+				return POSSIBLE;
+			}
 		}
 
 		// else return not in signature:
@@ -842,11 +921,17 @@ public class Sign implements CTCommonModule
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get dispatchtarget concern and methods:
 		if (dispTarget.name.equals("inner"))
@@ -894,11 +979,17 @@ public class Sign implements CTCommonModule
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get dispatchtarget concern and methods:
 		if (dispTarget.name.equals("inner"))
@@ -906,7 +997,10 @@ public class Sign implements CTCommonModule
 			Type type = (Type) concern.getPlatformRepresentation();
 
 			MethodInfo m = type.getMethod(dispSelector.getName(), META_PARAMS);
-			if (m != null) return IN_SIGNATURE;
+			if (m != null)
+			{
+				return IN_SIGNATURE;
+			}
 		}
 		else
 		{
@@ -1002,11 +1096,17 @@ public class Sign implements CTCommonModule
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get dispatchtarget concern and methods:
 		if (dispTarget.name.equals("inner"))
@@ -1070,11 +1170,17 @@ public class Sign implements CTCommonModule
 	{
 		// get the dispatch target:
 		Target dispTarget = state.getSubstitutionTarget();
-		if (Message.checkEquals(dispTarget, Message.STAR_TARGET)) dispTarget = state.getMessage().getTarget();
+		if (Message.checkEquals(dispTarget, Message.STAR_TARGET))
+		{
+			dispTarget = state.getMessage().getTarget();
+		}
 
 		// get the dispatch selector:
 		MessageSelector dispSelector = state.getSubstitutionSelector();
-		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR)) dispSelector = state.getMessage().getSelector();
+		if (Message.checkEquals(dispSelector, Message.STAR_SELECTOR))
+		{
+			dispSelector = state.getMessage().getSelector();
+		}
 
 		// get dispatchtarget concern and methods:
 		// String dispatchMethodName = dispSelector.getName();
@@ -1089,14 +1195,14 @@ public class Sign implements CTCommonModule
 				Debug.out(Debug.MODE_WARNING, MODULE_NAME, "The methodcall to method '" + methodInfoString(method)
 						+ "' in concern '" + concern.name + "' might lead to a meta-call to an"
 						+ " unresolved meta-method '" + dispSelector.getName() // michielh:
-																				// this
-																				// used
-																				// to
-																				// be
-																				// "m.name()"
-																				// but
-																				// m is
-																				// null
+						// this
+						// used
+						// to
+						// be
+						// "m.name()"
+						// but
+						// m is
+						// null
 						+ "' in inner!", state.getFlowNode().getRepositoryLink());
 			}
 		}
@@ -1139,7 +1245,10 @@ public class Sign implements CTCommonModule
 	private LinkedList getMethodList(Concern c)
 	{
 		Type dt = (Type) c.getPlatformRepresentation();
-		if (dt == null) return new LinkedList();
+		if (dt == null)
+		{
+			return new LinkedList();
+		}
 
 		return new LinkedList(dt.getMethods());
 	}
@@ -1165,7 +1274,10 @@ public class Sign implements CTCommonModule
 		List parameters = info.getParameters();
 		for (int i = 0; i < parameters.size(); i++)
 		{
-			if (i > 0) buffer.append(", ");
+			if (i > 0)
+			{
+				buffer.append(", ");
+			}
 
 			ParameterInfo parameter = (ParameterInfo) parameters.get(i);
 			buffer.append(parameter.ParameterTypeString);
@@ -1240,12 +1352,24 @@ public class Sign implements CTCommonModule
 				while (mwIt.hasNext())
 				{
 					MethodWrapper mw = (MethodWrapper) mwIt.next();
-					if (mw.getRelationType() == MethodWrapper.REMOVED || mw.getRelationType() == MethodWrapper.ADDED) signaturesmodified = true;
+					if (mw.getRelationType() == MethodWrapper.REMOVED || mw.getRelationType() == MethodWrapper.ADDED)
+					{
+						signaturesmodified = true;
+					}
 
 					String relation = "?";
-					if (mw.getRelationType() == MethodWrapper.ADDED) relation = "added";
-					if (mw.getRelationType() == MethodWrapper.REMOVED) relation = "removed";
-					if (mw.getRelationType() == MethodWrapper.NORMAL) relation = "kept";
+					if (mw.getRelationType() == MethodWrapper.ADDED)
+					{
+						relation = "added";
+					}
+					if (mw.getRelationType() == MethodWrapper.REMOVED)
+					{
+						relation = "removed";
+					}
+					if (mw.getRelationType() == MethodWrapper.NORMAL)
+					{
+						relation = "kept";
+					}
 
 					// TODO: remove this, needed for demo!
 					if (!Configuration.instance().getPlatformName().equalsIgnoreCase("c"))
@@ -1277,7 +1401,10 @@ public class Sign implements CTCommonModule
 		while (iterator.hasNext())
 		{
 			MethodInfo containedMethod = (MethodInfo) iterator.next();
-			if (containedMethod.checkEquals(method)) return true;
+			if (containedMethod.checkEquals(method))
+			{
+				return true;
+			}
 		}
 
 		return false;

@@ -15,13 +15,16 @@ public abstract class Filter
 	public boolean acceptContinues = true; // Continue to next filter;
 
 	public boolean rejectContinues = false; // Stop with processing, when
-											// rejected.
+
+	// rejected.
 
 	public boolean acceptAction = false; // When accepted, add this to the
-											// state list?
+
+	// state list?
 
 	public boolean rejectAction = true; // When rejected, add this to the state
-										// list?
+
+	// list?
 
 	// public boolean doesMeta = false; // All conditions, targets, selectors
 	// are unknown?

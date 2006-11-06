@@ -11,6 +11,11 @@ public class PatternParseException extends Exception
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1422741759836668151L;
+
+	/**
 	 * @param message
 	 */
 	public PatternParseException(String message)

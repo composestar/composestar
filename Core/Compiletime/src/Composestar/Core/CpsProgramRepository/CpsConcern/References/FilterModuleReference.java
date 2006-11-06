@@ -18,6 +18,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
  */
 public class FilterModuleReference extends ConcernElementReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1890766280930938361L;
+
 	private FilterModule ref;
 
 	private Vector args;

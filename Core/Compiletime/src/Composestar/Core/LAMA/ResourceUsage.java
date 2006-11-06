@@ -18,6 +18,11 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 public class ResourceUsage implements SerializableRepositoryEntity
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4560235679437768784L;
+
 	public String ResourceName;
 
 	public String AccessType;

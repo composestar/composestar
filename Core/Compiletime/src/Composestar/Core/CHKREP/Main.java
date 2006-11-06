@@ -12,9 +12,10 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.Master.*;
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.Exception.*;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
  * Main class used to run the parser

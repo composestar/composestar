@@ -4,12 +4,13 @@
 
 package Composestar.Core.SANE;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
-import java.util.Vector;
-import Composestar.Utils.*;
-import java.util.Iterator;
+import Composestar.Utils.CPSIterator;
 
 /**
  * This represents one single possible set of filtermodules as they may be
@@ -57,7 +58,10 @@ public class FilterModSIinfo extends Composestar.Core.RepositoryImplementation.C
 		for (; iter.hasNext();)
 		{
 			fm = ((FilterModuleReference) iter.next()).getRef();
-			if (fm.getName().equals(name)) break;
+			if (fm.getName().equals(name))
+			{
+				break;
+			}
 		}
 		if (iter.hasNext())
 		{

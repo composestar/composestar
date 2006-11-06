@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.FLIRT.Actions;
 
+import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.FLIRT.Message.Message;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.MessageHandlingFacility;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.Invoker;
 
@@ -73,24 +73,35 @@ public class DispatchAction extends ComposeStarAction
 	 */
 	public Object execute()
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Dispatching in Multiple Dispatch mode");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Dispatching in Multiple Dispatch mode");
+		}
 		for (int i = 0; i < args.length; i++)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tWith argument[" + i + "] = "
-					+ args[i]);
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tWith argument[" + i + "] = " + args[i]);
+			}
 		}
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "ContinueMessage:\n"
-				+ continueMessage.toShortString());
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "ModifiedMessage:\n"
-				+ modifiedMessage.toShortString());
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_DEBUG, "FLIRT", "ContinueMessage:\n" + continueMessage.toShortString());
+		}
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_DEBUG, "FLIRT", "ModifiedMessage:\n" + modifiedMessage.toShortString());
+		}
 
 		// this.continueMessage.setTarget(modifiedMessage.getTarget());
 		// this.continueMessage.setSelector(modifiedMessage.getSelector());
 		this.continueMessage.replace(modifiedMessage);
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "ContinueMessage after replace:\n"
-				+ continueMessage.toShortString());
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_DEBUG, "FLIRT", "ContinueMessage after replace:\n" + continueMessage.toShortString());
+		}
 
 		Object returnValue = null;
 		java.util.Iterator ms = modifiedMessage.getIterator();
@@ -109,20 +120,27 @@ public class DispatchAction extends ComposeStarAction
 					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Selector: " + m.getSelector());
 				}
 
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Dispatching to inner: "
-						+ m.getTarget().getClass().getName() + "." + m.getSelector() + " ==> "
-						+ m.getTarget().getClass().toString());
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Dispatching to inner: "
+							+ m.getTarget().getClass().getName() + "." + m.getSelector() + " ==> "
+							+ m.getTarget().getClass().toString());
+				}
 				for (int i = 0; i < args.length; i++)
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tWith argument[" + i + "] = "
-							+ args[i]);
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tWith argument[" + i + "] = " + args[i]);
+					}
 				}
 				if (m.STATE == Message.MESSAGE_CONSTRUCTOR) // Found a
-															// constructor call!
+				// constructor call!
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-							"Encountered a constructor call, returning null: " + m.getTarget().getClass().getName()
-									+ "()");
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Encountered a constructor call, returning null: "
+								+ m.getTarget().getClass().getName() + "()");
+					}
 					return null;
 				}
 

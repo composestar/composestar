@@ -125,8 +125,14 @@ public class Main
 		String fileName = otherArgs[0];
 
 		// set verbose
-		if (isVerbose != null && isVerbose.booleanValue()) Debug.setMode(3);
-		else Debug.setMode(0);
+		if (isVerbose != null && isVerbose.booleanValue())
+		{
+			Debug.setMode(3);
+		}
+		else
+		{
+			Debug.setMode(0);
+		}
 
 		FilterReasoningEngine fire = null;
 

@@ -21,7 +21,6 @@ public class WaitAction extends ComposeStarAction
 	public WaitAction(FilterRuntime currentFilter, MessageList m)
 	{
 		super(m, true);
-		FilterRuntime currentFilter1 = currentFilter;
 		this.message = m;
 		this.continueMessage = m;
 	}

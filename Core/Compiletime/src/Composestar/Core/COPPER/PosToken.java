@@ -13,7 +13,7 @@
  */
 package Composestar.Core.COPPER;
 
-import antlr.*;
+import antlr.CommonToken;
 
 /**
  * Special token class to keep track of the position of tokens in the cps file

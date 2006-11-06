@@ -9,17 +9,24 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ExternalConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {891E164C-FC74-4E41-B203-ECA4B865B45B}
  */
 public class External extends TypedDeclaration
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4850955866709616974L;
 
 	/**
 	 * initialization expression (e.g. pack.concern.fm.internal / external)

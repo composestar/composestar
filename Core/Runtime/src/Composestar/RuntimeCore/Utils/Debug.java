@@ -26,7 +26,10 @@ public class Debug
 	public static void setMode(int mode)
 	{
 		currentMode = mode;
-		if (mode > 1) Debug.SHOULD_DEBUG = true;
+		if (mode > 1)
+		{
+			Debug.SHOULD_DEBUG = true;
+		}
 	}
 
 	/**

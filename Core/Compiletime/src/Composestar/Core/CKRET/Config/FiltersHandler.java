@@ -21,10 +21,6 @@ public class FiltersHandler extends DefaultHandler
 	// String filter = "";
 	// boolean accept = false;
 
-	private Repository repository;
-
-	// private FilterActionDescription fad;
-
 	public ConfigParser theCkretFilterXMLParser;
 
 	ConfigParser returnhandler;
@@ -42,7 +38,6 @@ public class FiltersHandler extends DefaultHandler
 	{
 		this.returnhandler = handler;
 		this.parser = parser;
-		this.repository = repository;
 
 	}
 

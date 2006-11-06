@@ -6,6 +6,11 @@ import java.util.Map;
 
 public class Modules implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4868992763327704934L;
+
 	private Map modules;
 
 	public Modules()

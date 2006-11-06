@@ -45,9 +45,12 @@ public class SubstitutionPartRuntime extends AbstractPatternRuntime
 	public boolean resolveSelector(Message m, Dictionary context)
 	{
 		// m.addFilterParameter("SubstitionSelector",m.getSelector());
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolve selector: "
-				+ ((MessageSelector) this.theSelectorRuntime.getReference()).getName());
-		// String message_selector = m.getSelector();
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolve selector: "
+					+ ((MessageSelector) this.theSelectorRuntime.getReference()).getName());
+			// String message_selector = m.getSelector();
+		}
 
 		String ct_selector = ((MessageSelector) this.theSelectorRuntime.getReference()).getName();
 		m.setSelector(ct_selector);
@@ -63,8 +66,11 @@ public class SubstitutionPartRuntime extends AbstractPatternRuntime
 	 */
 	public void resolveTarget(Dictionary internals, Dictionary externals, Message m, Dictionary context)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolve target: "
-				+ ((Target) this.theTargetRuntime.getReference()).getName());
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolve target: "
+					+ ((Target) this.theTargetRuntime.getReference()).getName());
+		}
 		String target = ((Target) this.theTargetRuntime.getReference()).getName();
 		m.setTarget(target);
 	}

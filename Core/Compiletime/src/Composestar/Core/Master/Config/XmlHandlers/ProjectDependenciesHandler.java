@@ -6,8 +6,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.Master.Config.Project;
 import Composestar.Core.Master.Config.Dependency;
+import Composestar.Core.Master.Config.Project;
 
 public class ProjectDependenciesHandler extends DefaultHandler implements ContentHandler
 {

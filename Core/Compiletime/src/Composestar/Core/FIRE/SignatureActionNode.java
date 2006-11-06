@@ -12,12 +12,14 @@ package Composestar.Core.FIRE;
  **/
 
 import java.util.HashSet;
-import Composestar.Core.LAMA.*;
-import Composestar.Core.RepositoryImplementation.DataStore;
+
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.MethodWrapper;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class SignatureActionNode extends ActionNode
 {
@@ -30,10 +32,19 @@ public class SignatureActionNode extends ActionNode
 
 	public Node getChild(boolean truthValue)
 	{
-		if (numberOfChildren() == 0) return null;
+		if (numberOfChildren() == 0)
+		{
+			return null;
+		}
 
-		if (truthValue || numberOfChildren() == 1) return getChild(0);
-		else return getChild(1);
+		if (truthValue || numberOfChildren() == 1)
+		{
+			return getChild(0);
+		}
+		else
+		{
+			return getChild(1);
+		}
 	}
 
 	public String toString()
@@ -103,7 +114,10 @@ public class SignatureActionNode extends ActionNode
 				int localResult = getChild(i).search(dependencies, match, selector, concernName);
 
 				// unknown => return.
-				if (localResult == FilterReasoningEngine.UNKNOWN) return localResult;
+				if (localResult == FilterReasoningEngine.UNKNOWN)
+				{
+					return localResult;
+				}
 
 				// true -> add dependency, return.
 				if (localResult == FilterReasoningEngine.TRUE)
@@ -154,7 +168,10 @@ public class SignatureActionNode extends ActionNode
 		// System.out.println ("Looking for signature: " + signature + " with
 		// selector: " + selector);
 
-		if (signature.getName().equals("*")) return FilterReasoningEngine.TRUE;
+		if (signature.getName().equals("*"))
+		{
+			return FilterReasoningEngine.TRUE;
+		}
 
 		Concern c = getDependentConcern(concernName);
 
@@ -167,7 +184,10 @@ public class SignatureActionNode extends ActionNode
 				for (java.util.Iterator i = type.getMethods().iterator(); i.hasNext();)
 				{
 					MethodInfo m = (MethodInfo) i.next();
-					if (m.name().equals(selector)) return FilterReasoningEngine.TRUE;
+					if (m.name().equals(selector))
+					{
+						return FilterReasoningEngine.TRUE;
+					}
 				}
 			}
 			return FilterReasoningEngine.FALSE;
@@ -182,9 +202,12 @@ public class SignatureActionNode extends ActionNode
 				case MethodWrapper.REMOVED:
 					return FilterReasoningEngine.FALSE;
 				case MethodWrapper.UNKNOWN:
-					if (c.getName().equals(concernName)) return FilterReasoningEngine.TRUE; // Checking
-																							// our
-																							// selves.
+					if (c.getName().equals(concernName))
+					{
+						return FilterReasoningEngine.TRUE; // Checking
+					}
+					// our
+					// selves.
 					return FilterReasoningEngine.UNKNOWN;
 
 				default:

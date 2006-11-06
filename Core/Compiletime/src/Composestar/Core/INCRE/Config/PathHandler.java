@@ -1,10 +1,14 @@
 package Composestar.Core.INCRE.Config;
 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.INCRE.*;
+import Composestar.Core.INCRE.ConfigNode;
+import Composestar.Core.INCRE.Dependency;
+import Composestar.Core.INCRE.DynamicNode;
+import Composestar.Core.INCRE.FieldNode;
+import Composestar.Core.INCRE.MethodNode;
 
 public class PathHandler extends DefaultHandler
 {

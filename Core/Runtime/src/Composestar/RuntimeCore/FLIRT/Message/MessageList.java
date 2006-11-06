@@ -415,8 +415,10 @@ public class MessageList
 		int firstmatch = getFirstMatchIndex();
 		int lastmatch = getLastMatchIndex();
 
-		if (firstmatch == -1 || lastmatch == -1) throw new Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException(
-				"There was no match");
+		if (firstmatch == -1 || lastmatch == -1)
+		{
+			throw new Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException("There was no match");
+		}
 
 		// if(Debug.SHOULD_DEBUG)
 		// Debug.out(Debug.MODE_DEBUG,"FLIRT","Firstmatch: " + firstmatch +
@@ -453,7 +455,10 @@ public class MessageList
 	{
 		for (int i = 0; i < messages.size(); i++)
 		{
-			if (((Message) messages.get(i)).isMatched()) return i;
+			if (((Message) messages.get(i)).isMatched())
+			{
+				return i;
+			}
 		}
 		return -1;
 	}
@@ -462,15 +467,24 @@ public class MessageList
 	{
 		for (int i = messages.size() - 1; i >= 0; i--)
 		{
-			if (((Message) messages.get(i)).isMatched()) return i;
+			if (((Message) messages.get(i)).isMatched())
+			{
+				return i;
+			}
 		}
 		return -1;
 	}
 
 	public Message getFirstMessage()
 	{
-		if (messages.isEmpty()) return null;
-		else return (Message) messages.get(0);
+		if (messages.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			return (Message) messages.get(0);
+		}
 	}
 
 	public boolean hasWildcards()
@@ -478,7 +492,10 @@ public class MessageList
 		for (int i = 0; i < messages.size(); i++)
 		{
 			Message m = (Message) messages.get(i);
-			if (m.getTarget().equals("*") || m.getSelector().equals("*")) return true;
+			if (m.getTarget().equals("*") || m.getSelector().equals("*"))
+			{
+				return true;
+			}
 		}
 		return false;
 	}

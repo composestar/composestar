@@ -9,12 +9,20 @@
  */
 package Composestar.Core.COPPER;
 
-import Composestar.Utils.*;
-import Composestar.Core.Exception.ModuleException;
-import antlr.*;
-import antlr.debug.misc.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 
-import java.io.*;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Utils.Debug;
+import antlr.ANTLRException;
+import antlr.CommonAST;
+import antlr.NoViableAltException;
+import antlr.NoViableAltForCharException;
+import antlr.RecognitionException;
+import antlr.debug.misc.ASTFrame;
 
 /**
  * Parses the cps file and builds the parse tree

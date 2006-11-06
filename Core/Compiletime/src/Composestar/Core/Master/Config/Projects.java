@@ -14,6 +14,11 @@ import Composestar.Utils.FileUtils;
 
 public class Projects implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4696163750932369815L;
+
 	private Properties properties;
 
 	private List allProjects;
@@ -231,7 +236,7 @@ public class Projects implements Serializable
 			if (sfn == null)
 			{
 				continue; // FIXME: can this even happen? if so: how should it
-							// be handled?
+				// be handled?
 			}
 
 			// normalize source filename

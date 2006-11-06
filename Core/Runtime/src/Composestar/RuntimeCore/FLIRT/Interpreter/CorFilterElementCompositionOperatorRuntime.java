@@ -42,8 +42,12 @@ public class CorFilterElementCompositionOperatorRuntime extends FilterElementCom
 	 */
 	public boolean interpret(MessageList m, Dictionary context)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-				"\t\tInterpreting CorFilterElementCompositionOperatorRuntime...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug
+					.out(Debug.MODE_INFORMATION, "FLIRT",
+							"\t\tInterpreting CorFilterElementCompositionOperatorRuntime...");
+		}
 		FilterElementRuntime left = this.previous;
 		FilterElementRuntime right = super.getRightArgument();
 		if (left.interpret(m, context)) // Left handside matches thus return OK
@@ -51,8 +55,8 @@ public class CorFilterElementCompositionOperatorRuntime extends FilterElementCom
 			return true;
 		}
 		else if (right.getNextFilterElementCompositionOperator().interpret(m, context)) // Right
-																						// handside
-																						// matches!
+		// handside
+		// matches!
 		{
 			return true;
 		}

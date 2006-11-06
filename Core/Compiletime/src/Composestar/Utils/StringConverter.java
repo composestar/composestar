@@ -1,7 +1,9 @@
 package Composestar.Utils;
 
-import java.util.*;
-import java.io.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 public class StringConverter implements Cloneable, Serializable
 {

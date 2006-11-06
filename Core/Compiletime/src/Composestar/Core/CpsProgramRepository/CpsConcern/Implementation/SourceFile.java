@@ -16,6 +16,11 @@ public class SourceFile extends Implementation
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1064681681786007517L;
+
+	/**
 	 * @modelguid {7E5D9CF8-CFC1-4215-BB26-EE6E2CA1307C}
 	 */
 	public String language;

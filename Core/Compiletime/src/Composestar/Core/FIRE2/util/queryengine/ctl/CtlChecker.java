@@ -285,7 +285,10 @@ public class CtlChecker
 			{
 				ExecutionState state = (ExecutionState) enumer.nextElement();
 
-				if (isSatisfied(state, formula, reversed)) continue;
+				if (isSatisfied(state, formula, reversed))
+				{
+					continue;
+				}
 
 				// check whether the current state satisfies subFormula2:
 				if (isSatisfied(state, formula.subFormula2, (Boolean) arg))
@@ -322,7 +325,10 @@ public class CtlChecker
 			while (states.hasMoreElements())
 			{
 				ExecutionState state = (ExecutionState) states.nextElement();
-				if (isSatisfied(state, formula, reversed)) continue;
+				if (isSatisfied(state, formula, reversed))
+				{
+					continue;
+				}
 
 				Enumeration nextStates = getNextStates(state, (Boolean) arg);
 				while (nextStates.hasMoreElements())
@@ -620,6 +626,11 @@ public class CtlChecker
 
 	private class ControlPanel extends JPanel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3216833486824998383L;
+
 		private JTree tree;
 
 		private boolean simplified;
@@ -635,8 +646,6 @@ public class CtlChecker
 
 		public void setViewer(Viewer viewer)
 		{
-			Viewer viewer1 = viewer;
-
 			tree.addTreeSelectionListener(new FormulaSelectionListener(viewer, simplified));
 		}
 
@@ -645,8 +654,14 @@ public class CtlChecker
 			TreeCreator creator = new TreeCreator();
 
 			TreeNode rootNode;
-			if (simplified) rootNode = (TreeNode) formula.visit(creator, null);
-			else rootNode = (TreeNode) origFormula.visit(creator, null);
+			if (simplified)
+			{
+				rootNode = (TreeNode) formula.visit(creator, null);
+			}
+			else
+			{
+				rootNode = (TreeNode) origFormula.visit(creator, null);
+			}
 
 			tree = new JTree(rootNode);
 
@@ -679,7 +694,10 @@ public class CtlChecker
 
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) formulas[formulas.length - 1];
 			CtlFormula formula = (CtlFormula) node.getUserObject();
-			if (!simplified) formula = (CtlFormula) simplifierMap.get(formula);
+			if (!simplified)
+			{
+				formula = (CtlFormula) simplifierMap.get(formula);
+			}
 
 			boolean reverse = false;
 			// dont check the last formula for reverse, because if it is
@@ -701,7 +719,10 @@ public class CtlChecker
 			while (states.hasMoreElements())
 			{
 				ExecutionState state = (ExecutionState) states.nextElement();
-				if (isSatisfied(state, formula, reversed)) v.add(state);
+				if (isSatisfied(state, formula, reversed))
+				{
+					v.add(state);
+				}
 			}
 
 			viewer.highlightNodes(v);

@@ -9,11 +9,11 @@
  */
 package Composestar.Core.COPPER;
 
-import Composestar.Utils.*;
-import antlr.*;
-import antlr.collections.*;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Utils.Debug;
+import antlr.CommonAST;
+import antlr.collections.AST;
 
 public class AstManipulator implements CpsTokenTypes
 {
@@ -55,8 +55,8 @@ public class AstManipulator implements CpsTokenTypes
 			if (i == 0)
 			{
 				ast = checkRoot(piece, ast); // first item in path is always
-												// root, no need to navigate,
-												// just check
+				// root, no need to navigate,
+				// just check
 			}
 			else
 			{
@@ -92,8 +92,8 @@ public class AstManipulator implements CpsTokenTypes
 			if (i == 0)
 			{
 				ast = checkRoot(piece, ast); // first item in path is always
-												// root, no need to navigate,
-												// just check
+				// root, no need to navigate,
+				// just check
 			}
 			else
 			{
@@ -124,7 +124,7 @@ public class AstManipulator implements CpsTokenTypes
 		Piece piece;
 
 		adding = true; // we're adding stuff, so don't display 'not found'
-						// errors
+		// errors
 		ast = astroot;
 		ph.splitPath(path);
 		for (i = 0; i < ph.getNumberOfPieces(); i++)
@@ -139,8 +139,8 @@ public class AstManipulator implements CpsTokenTypes
 				if (i == 0)
 				{
 					ast = checkRoot(piece, ast); // first item in path is
-													// always root, no need to
-													// navigate, just check
+					// always root, no need to
+					// navigate, just check
 				}
 				else
 				{
@@ -376,10 +376,10 @@ public class AstManipulator implements CpsTokenTypes
 				if (!adding)
 				{
 					Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + '.'); // fixme:
-																														// doesn't
-																														// matter
-																														// for
-																														// add
+					// doesn't
+					// matter
+					// for
+					// add
 				}
 				return null;
 			}
@@ -421,7 +421,7 @@ public class AstManipulator implements CpsTokenTypes
 				if (i == 0)
 				{
 					curast = ast.getFirstChild(); // alleen de 1e keer
-													// getchild gebruiken
+					// getchild gebruiken
 				}
 				else
 				{

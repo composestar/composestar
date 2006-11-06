@@ -9,14 +9,19 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
+
 public class SelectorReference extends ConcernElementReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2912163342445539118L;
+
 	private SelectorDefinition ref;
 
 	/**

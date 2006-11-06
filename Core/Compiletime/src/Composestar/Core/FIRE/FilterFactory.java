@@ -11,13 +11,34 @@ public class FilterFactory
 {
 	public static Filter getFilter(String name)
 	{
-		if (name.equals("Error")) return new ErrorFilter();
-		else if (name.equals("EOF")) return new EndOfFilter();
-		else if (name.equals("Meta")) return new MetaFilter();
-		else if (name.equals("Custom")) return new MetaFilter();
-		else if (name.equals("Dispatch")) return new DispatchFilter();
-		else if (name.equals("Prepend")) return new MetaFilter();
-		else if (name.equals("Append")) return new MetaFilter();
+		if (name.equals("Error"))
+		{
+			return new ErrorFilter();
+		}
+		else if (name.equals("EOF"))
+		{
+			return new EndOfFilter();
+		}
+		else if (name.equals("Meta"))
+		{
+			return new MetaFilter();
+		}
+		else if (name.equals("Custom"))
+		{
+			return new MetaFilter();
+		}
+		else if (name.equals("Dispatch"))
+		{
+			return new DispatchFilter();
+		}
+		else if (name.equals("Prepend"))
+		{
+			return new MetaFilter();
+		}
+		else if (name.equals("Append"))
+		{
+			return new MetaFilter();
+		}
 
 		return null;
 	}

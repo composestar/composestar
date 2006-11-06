@@ -11,8 +11,14 @@ public class Start extends FilterLeaf
 {
 	public String toString()
 	{
-		if (Debug.getMode() > 2) return "START()";
-		else return "start";
+		if (Debug.getMode() > 2)
+		{
+			return "START()";
+		}
+		else
+		{
+			return "start";
+		}
 	}
 
 	public StatusColumn calculateStatus(StatusColumn status, StateTable stateTable)

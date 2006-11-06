@@ -136,7 +136,7 @@ public class SANE implements CTCommonModule
 					{
 						siConcern = ((ConcernReference) aRef).getRef();
 						if (siConcern != null) // TODO: now exception
-												// generated!
+						// generated!
 						{
 							siInfo = (SIinfo) siConcern.getDynObject(SIinfo.DATAMAP_KEY);
 							// if this is not available yet, create it,

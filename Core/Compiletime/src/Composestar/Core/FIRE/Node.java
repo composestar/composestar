@@ -11,10 +11,9 @@ package Composestar.Core.FIRE;
  * 
  **/
 
-import java.util.LinkedList;
 import java.util.Collections;
-
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public abstract class Node implements Comparable, Cloneable
 {
@@ -60,8 +59,14 @@ public abstract class Node implements Comparable, Cloneable
 	// Add a child at the end of the path.
 	public void addChildAtPath(int index, Node newTree)
 	{
-		if (!hasChildren()) addChild(newTree);
-		else getChild(index).addChildAtPath(0, newTree);
+		if (!hasChildren())
+		{
+			addChild(newTree);
+		}
+		else
+		{
+			getChild(index).addChildAtPath(0, newTree);
+		}
 	}
 
 	public void replaceChild(int index, Node newTree)
@@ -218,7 +223,10 @@ public abstract class Node implements Comparable, Cloneable
 				// Therefore redo the current i.
 				i--;
 			}
-			else deleteNode = false;
+			else
+			{
+				deleteNode = false;
+			}
 		}
 
 		return !subsetOfExpression(compareWith) && deleteNode;
@@ -227,7 +235,10 @@ public abstract class Node implements Comparable, Cloneable
 	// Goes wrong by Signature match. But must be fixed in the future.
 	public void minimizeLossy()
 	{
-		if (!hasChildren()) return;
+		if (!hasChildren())
+		{
+			return;
+		}
 
 		for (int i = 0; i < children.size(); i++)
 		{
@@ -254,16 +265,28 @@ public abstract class Node implements Comparable, Cloneable
 	public void minimize()
 	{
 		for (int i = 0; i < children.size(); i++)
+		{
 			for (int k = 0; k < children.size(); k++)
+			{
 				if (i != k && getChild(i).subsetOf(getChild(k)))
 				{
 					removeChild(i);
-					if (k > 0) k--;
-					if (i > 0) i--;
+					if (k > 0)
+					{
+						k--;
+					}
+					if (i > 0)
+					{
+						i--;
+					}
 				}
+			}
+		}
 
 		for (int i = 0; i < children.size(); i++)
+		{
 			getChild(i).minimize();
+		}
 
 	}
 
@@ -283,12 +306,21 @@ public abstract class Node implements Comparable, Cloneable
 	// The children are not ordered yet.
 	public boolean subsetOf(Node node)
 	{
-		if (!subsetOfSingle(node)) return false;
-		if (numberOfChildren() != node.numberOfChildren()) return false;
+		if (!subsetOfSingle(node))
+		{
+			return false;
+		}
+		if (numberOfChildren() != node.numberOfChildren())
+		{
+			return false;
+		}
 
 		for (int i = 0; i < children.size(); i++)
 		{
-			if (!getChild(i).subsetOf(node.getChild(i))) return false;
+			if (!getChild(i).subsetOf(node.getChild(i)))
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -299,7 +331,10 @@ public abstract class Node implements Comparable, Cloneable
 	public final boolean subsetOfExpression(Node rhs)
 	{
 		// For the leafs:
-		if (!rhs.hasChildren()) return subsetOfSingle(rhs);
+		if (!rhs.hasChildren())
+		{
+			return subsetOfSingle(rhs);
+		}
 
 		// The composites:
 		boolean result = false;
@@ -371,8 +406,14 @@ public abstract class Node implements Comparable, Cloneable
 
 				// Status TRUE is good, and return directly.
 				// Status UNKNOWN is better than false. Keep some faith.
-				if (status == FilterReasoningEngine.TRUE) return status;
-				else if (status == FilterReasoningEngine.UNKNOWN) endStatus = FilterReasoningEngine.UNKNOWN;
+				if (status == FilterReasoningEngine.TRUE)
+				{
+					return status;
+				}
+				else if (status == FilterReasoningEngine.UNKNOWN)
+				{
+					endStatus = FilterReasoningEngine.UNKNOWN;
+				}
 			}
 		}
 
@@ -383,7 +424,10 @@ public abstract class Node implements Comparable, Cloneable
 	public int search(HashSet dependencies, Node match, String selector, String concernName)
 	{
 		// If we match, tell directly the good news.
-		if (subsetOfExpression(match)) return FilterReasoningEngine.TRUE;
+		if (subsetOfExpression(match))
+		{
+			return FilterReasoningEngine.TRUE;
+		}
 
 		// Think about the worst
 		int status = FilterReasoningEngine.FALSE;
@@ -393,12 +437,18 @@ public abstract class Node implements Comparable, Cloneable
 			int localStatus = getChild(i).search(dependencies, match, selector, concernName);
 
 			// Yeah baby, don't search anymore, we got it.
-			if (localStatus == FilterReasoningEngine.TRUE) return localStatus;
+			if (localStatus == FilterReasoningEngine.TRUE)
+			{
+				return localStatus;
+			}
 
 			// status can be UNKNOWN or FALSE.
 			// Unknown is slightly better than FALSE. We are positive thinkers,
 			// keep up the faith.
-			if (localStatus > status) status = localStatus;
+			if (localStatus > status)
+			{
+				status = localStatus;
+			}
 		}
 
 		// This time, the bad news travels not as fast as the good news.
@@ -442,7 +492,10 @@ public abstract class Node implements Comparable, Cloneable
 		int nrOfChildren = parent.numberOfChildren();
 		for (int i = 0; i < nrOfChildren; i++)
 		{
-			if (parent.getChild(i).equals(this)) return i;
+			if (parent.getChild(i).equals(this))
+			{
+				return i;
+			}
 		}
 
 		return -1;

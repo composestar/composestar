@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class CustomFilter implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5750706940042791837L;
+
 	private String filter = "";
 
 	private String library = "";

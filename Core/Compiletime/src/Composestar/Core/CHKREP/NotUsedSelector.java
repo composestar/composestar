@@ -9,13 +9,18 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-import Composestar.Core.Exception.ModuleException;
+import java.util.Iterator;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.SelectorReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.AnnotationBinding;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.ConditionBinding;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.MethodBinding;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * @author DoornenbalD Checks if a Selector which is declared in Selectors is

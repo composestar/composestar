@@ -16,6 +16,11 @@ public class CORfilterElementCompOper extends FilterElementCompOper
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8852892366560754263L;
+
+	/**
 	 * @roseuid 404C4B6A033C
 	 */
 	public CORfilterElementCompOper()

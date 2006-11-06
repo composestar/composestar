@@ -17,6 +17,11 @@ import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
  */
 public class Concern extends DeclaredRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4798144534959201842L;
+
 	public PlatformRepresentation platformRepr;
 
 	public Signature signature;

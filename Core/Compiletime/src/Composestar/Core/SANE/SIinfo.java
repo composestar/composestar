@@ -4,11 +4,10 @@ package Composestar.Core.SANE;
 
 import java.util.Vector;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
-import Composestar.Core.CpsProgramRepository.*;
-
-import Composestar.Utils.*;
+import Composestar.Utils.CPSIterator;
 
 /**
  * [this aggregate is necessary to enable the inclusion of alternatives]
@@ -57,7 +56,7 @@ public class SIinfo extends Composestar.Core.RepositoryImplementation.ContextRep
 	public void resolveSelectors(SelectorDefinition sel)
 	{
 		sel.interpret(); // because this method is now in the repository
-							// object.
+		// object.
 	}
 
 	/**

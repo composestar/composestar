@@ -9,14 +9,14 @@
  */
 package Composestar.Core.CpsProgramRepository;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-import Composestar.Core.RepositoryImplementation.DataMap;
-import Composestar.Core.LAMA.MethodInfo;
-import Composestar.Core.LAMA.ParameterInfo;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.RepositoryImplementation.DataMap;
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 /**
  * This class holds the methods forming the real signature of a concern. If a
@@ -24,6 +24,11 @@ import java.util.List;
  */
 public class Signature implements SerializableRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1592569654092179522L;
 
 	// Cannot use HashMap because these are not serialized.
 	public DataMap methodByKey;

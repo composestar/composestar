@@ -12,6 +12,7 @@ package Composestar.Core.FIRE;
  **/
 
 import java.util.HashMap;
+
 import Composestar.Utils.Debug;
 
 public class Symbol
@@ -64,9 +65,14 @@ public class Symbol
 				break;
 		}
 
-		if (Debug.getMode() > Debug.MODE_WARNING) return "Symbol: " + name + ' ' + typeStr
-				+ (column != null ? column.toString() : "");
-		else return name;
+		if (Debug.getMode() > Debug.MODE_WARNING)
+		{
+			return "Symbol: " + name + ' ' + typeStr + (column != null ? column.toString() : "");
+		}
+		else
+		{
+			return name;
+		}
 	}
 
 	public int getColumnLength()

@@ -1,9 +1,9 @@
 package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
+import java.util.Dictionary;
+
 import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-
-import java.util.Dictionary;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].

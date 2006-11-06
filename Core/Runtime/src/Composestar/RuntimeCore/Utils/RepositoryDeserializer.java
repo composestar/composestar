@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.Utils;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-
 import java.io.Serializable;
+
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 public abstract class RepositoryDeserializer implements Serializable
 {

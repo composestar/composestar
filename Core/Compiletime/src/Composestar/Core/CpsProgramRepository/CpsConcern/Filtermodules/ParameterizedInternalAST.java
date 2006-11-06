@@ -4,6 +4,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernRefere
 
 public class ParameterizedInternalAST extends InternalAST
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6521953901023131122L;
+
 	public String parameter;
 
 	public ParameterizedInternalAST()

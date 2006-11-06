@@ -30,7 +30,10 @@ public class TrueRuntime extends CondLiteralRuntime implements Interpretable
 	 */
 	public boolean interpret(MessageList m, Dictionary context)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\tInterpreting TrueRuntime...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\tInterpreting TrueRuntime...");
+		}
 		return true;
 	}
 }

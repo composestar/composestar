@@ -13,6 +13,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 public class ExternalConcernReference extends ConcernReference
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7204562444465232564L;
+
 	public String inittarget = "";
 
 	public String initselector = "";

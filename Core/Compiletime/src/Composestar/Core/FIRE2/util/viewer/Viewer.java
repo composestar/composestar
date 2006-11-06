@@ -18,6 +18,11 @@ import Composestar.Core.FIRE2.model.ExecutionModel;
 
 public class Viewer extends JFrame
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2886400275462603530L;
+
 	private ViewPanel viewPanel;
 
 	private JPanel controlPanel;

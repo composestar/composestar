@@ -146,7 +146,7 @@ public class RealSourceManager implements CTCommonModule
 			if (!types.isEmpty())
 			{
 				targetFile = (String) types.get(0); // first type declared in
-													// sourcefile
+				// sourcefile
 			}
 			else
 			{

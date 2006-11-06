@@ -12,7 +12,6 @@ package Composestar.Core.CKRET;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import Composestar.Core.CKRET.Config.ResourceHandler;
 import Composestar.Core.CpsProgramRepository.Concern;
@@ -26,8 +25,6 @@ import Composestar.Core.FIRE2.util.regex.Matcher;
  */
 public class AbstractVM
 {
-
-	private Map resources;
 
 	public AbstractVM()
 	{}

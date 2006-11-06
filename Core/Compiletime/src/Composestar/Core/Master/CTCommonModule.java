@@ -10,7 +10,7 @@
 
 package Composestar.Core.Master;
 
-import Composestar.Core.Exception.*;
+import Composestar.Core.Exception.ModuleException;
 
 /**
  * Interface defining the run method for any modules that should be called from

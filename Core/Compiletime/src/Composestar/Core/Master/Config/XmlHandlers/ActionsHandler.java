@@ -6,8 +6,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.Master.Config.Language;
 import Composestar.Core.Master.Config.CompilerAction;
+import Composestar.Core.Master.Config.Language;
 
 public class ActionsHandler extends DefaultHandler implements ContentHandler
 {

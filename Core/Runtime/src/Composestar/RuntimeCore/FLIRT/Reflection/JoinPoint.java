@@ -1,6 +1,10 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 public class JoinPoint
 {

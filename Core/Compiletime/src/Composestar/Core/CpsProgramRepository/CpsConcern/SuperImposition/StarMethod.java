@@ -9,13 +9,20 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference;
+import Composestar.Utils.CPSIterator;
 
 public class StarMethod extends FilterModuleElementReference
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8845115159529931618L;
 
 	/**
 	 * contains a collection of methodreferences

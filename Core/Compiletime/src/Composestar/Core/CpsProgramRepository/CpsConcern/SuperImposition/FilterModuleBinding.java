@@ -9,16 +9,22 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {96208145-32E1-4DF1-9960-F87525EAD5D1}
  */
 public class FilterModuleBinding extends Binding
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 298685754111384645L;
+
 	public Vector filterModuleSet;
 
 	/**

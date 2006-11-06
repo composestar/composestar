@@ -9,13 +9,20 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
+import Composestar.Utils.CPSIterator;
 
 public class StarCondition extends FilterModuleElementReference
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2232982213062637706L;
 
 	/**
 	 * contains conditionReferences

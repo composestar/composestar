@@ -2,6 +2,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class ParameterizedMessageSelector extends MessageSelector
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5466576548506059667L;
+
 	public String parameter;
 
 	/**

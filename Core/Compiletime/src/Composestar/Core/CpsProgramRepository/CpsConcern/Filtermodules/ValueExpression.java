@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 
 /**
  * this represents an expression that results in a value; the goal is that this

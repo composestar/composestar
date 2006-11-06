@@ -81,7 +81,10 @@ public class ActionNode extends Node implements Cloneable
 
 	public void addCondition(Symbol s)
 	{
-		if (!conditions.contains(s)) conditions.add(s);
+		if (!conditions.contains(s))
+		{
+			conditions.add(s);
+		}
 	}
 
 	public void addCondition(String str)
@@ -179,25 +182,43 @@ public class ActionNode extends Node implements Cloneable
 
 			if (isPerfectMatch())
 			{
-				if (act.getTarget() != null && !act.getTarget().equals(getTarget())) return false;
-				if (act.getSelector() != null && !act.getSelector().equals(getSelector())) return false;
+				if (act.getTarget() != null && !act.getTarget().equals(getTarget()))
+				{
+					return false;
+				}
+				if (act.getSelector() != null && !act.getSelector().equals(getSelector()))
+				{
+					return false;
+				}
 			}
 			else
 			{
 				if (act.getTarget() != null && !act.getTarget().getName().equals("*")
-						&& !act.getTarget().equals(getTarget())) return false;
+						&& !act.getTarget().equals(getTarget()))
+				{
+					return false;
+				}
 				if (act.getSelector() != null && !act.getSelector().getName().equals("*")
-						&& !act.getSelector().equals(getSelector())) return false;
+						&& !act.getSelector().equals(getSelector()))
+				{
+					return false;
+				}
 			}
 
 			// Lazy way to fix it
 			if (checkConditions() && !act.conditions.isEmpty())
 			{
-				if (act.conditions.size() != conditions.size()) return false;
+				if (act.conditions.size() != conditions.size())
+				{
+					return false;
+				}
 
 				for (int i = 0; i < act.conditions.size(); i++)
 				{
-					if (!conditions.contains(act.conditions.get(i))) return false;
+					if (!conditions.contains(act.conditions.get(i)))
+					{
+						return false;
+					}
 				}
 			}
 

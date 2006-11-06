@@ -12,8 +12,8 @@ package Composestar.Core.CKRET;
 import java.util.HashMap;
 import java.util.Map;
 
-import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.FILTH.FilterModuleOrder;
 
 /**
  * @author Administrator To change the template for this generated type comment
@@ -55,8 +55,14 @@ public class ConcernAnalysis
 				break;
 
 			case CKRET.PROGRESSIVE:
-				if (oa.numConflictingExecutions() == 0) CKRET.getReporter().reportOrder(order, oa, isSelected, false);
-				else CKRET.getReporter().reportOrder(order, oa, false, false);
+				if (oa.numConflictingExecutions() == 0)
+				{
+					CKRET.getReporter().reportOrder(order, oa, isSelected, false);
+				}
+				else
+				{
+					CKRET.getReporter().reportOrder(order, oa, false, false);
+				}
 				break;
 		}
 

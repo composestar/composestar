@@ -9,14 +9,20 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
 
 /**
  * @modelguid {BBEF58A4-13F3-4D33-8CAA-F77A11B5E453}
  */
 public class Condition extends DeclaredRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4642502845696125975L;
 
 	/**
 	 * @modelguid {87B0B644-6B80-4544-8BCA-9E2AE2244340}

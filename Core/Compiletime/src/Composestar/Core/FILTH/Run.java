@@ -13,14 +13,30 @@ package Composestar.Core.FILTH;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-import java.util.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import java.io.FileReader;
+import java.util.Iterator;
+import java.util.LinkedList;
 
-import Composestar.Core.FILTH.Core.*;
-import Composestar.Core.FILTH.XMLSpecification.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.io.*;
+import Composestar.Core.FILTH.Core.Action;
+import Composestar.Core.FILTH.Core.ExecutionManager;
+import Composestar.Core.FILTH.Core.False;
+import Composestar.Core.FILTH.Core.Graph;
+import Composestar.Core.FILTH.Core.HardCondRule;
+import Composestar.Core.FILTH.Core.HardPreRule;
+import Composestar.Core.FILTH.Core.HardSkipRule;
+import Composestar.Core.FILTH.Core.IncludeRule;
+import Composestar.Core.FILTH.Core.Node;
+import Composestar.Core.FILTH.Core.OrderTraverser;
+import Composestar.Core.FILTH.Core.Rule;
+import Composestar.Core.FILTH.Core.SoftCondRule;
+import Composestar.Core.FILTH.Core.SoftPreRule;
+import Composestar.Core.FILTH.Core.SoftSkipRule;
+import Composestar.Core.FILTH.Core.True;
+import Composestar.Core.FILTH.XMLSpecification.ConstraintFilter;
 
 public class Run
 {

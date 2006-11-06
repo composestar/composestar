@@ -19,6 +19,11 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class FirePreprocessingResult extends RepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4193686682386435353L;
+
 	private FlowModel flowModelInputFilters;
 
 	private ExecutionModel executionModelInputFilters;

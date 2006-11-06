@@ -9,9 +9,9 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-
 import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
 /**
  * klasse en subklassen
@@ -20,6 +20,11 @@ import java.util.Vector;
  */
 public class SelClassAndSubClasses extends SimpleSelExpression
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4202049114188448909L;
 
 	/**
 	 * @modelguid {18775506-0682-492E-AA1D-51D40CB5CD03}

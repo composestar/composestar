@@ -13,7 +13,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.CompiledImplementation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Source;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;

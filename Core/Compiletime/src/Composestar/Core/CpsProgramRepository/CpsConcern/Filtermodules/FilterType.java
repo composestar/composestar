@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.CpsProgramRepository.*;
+import Composestar.Core.CpsProgramRepository.Concern;
 
 /**
  * @modelguid {FAFD0EAB-6BB2-4634-835C-74619506D1A1} This is a wrapper for the
@@ -25,6 +25,11 @@ import Composestar.Core.CpsProgramRepository.*;
  */
 public class FilterType extends Concern
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7876700154644254076L;
+
 	public String type;
 
 	public static final String WAIT = "Wait";

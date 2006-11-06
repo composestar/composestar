@@ -76,7 +76,10 @@ public class Matcher
 		while (!unvisitedStates.empty())
 		{
 			CombinedState state = (CombinedState) unvisitedStates.pop();
-			if (process(state)) return true;
+			if (process(state))
+			{
+				return true;
+			}
 		}
 
 		return false;
@@ -106,8 +109,14 @@ public class Matcher
 			if (regularTransition.isEmpty())
 			{
 				newState = new CombinedState(state.executionState, regularTransition.getEndState(), state);
-				if (isEndState(newState)) return true;
-				else addState(newState);
+				if (isEndState(newState))
+				{
+					return true;
+				}
+				else
+				{
+					addState(newState);
+				}
 			}
 		}
 
@@ -122,8 +131,14 @@ public class Matcher
 			{
 				newState = new CombinedState(executionTransition.getEndState(), state.regularState, state,
 						executionTransition);
-				if (isEndState(newState)) return true;
-				else addState(newState);
+				if (isEndState(newState))
+				{
+					return true;
+				}
+				else
+				{
+					addState(newState);
+				}
 			}
 			else
 			{
@@ -132,8 +147,14 @@ public class Matcher
 				{
 					newState = new CombinedState(executionTransition.getEndState(), nextStates[i], state,
 							executionTransition);
-					if (isEndState(newState)) return true;
-					else addState(newState);
+					if (isEndState(newState))
+					{
+						return true;
+					}
+					else
+					{
+						addState(newState);
+					}
 				}
 			}
 		}
@@ -298,7 +319,10 @@ public class Matcher
 
 		public boolean equals(Object obj)
 		{
-			if (!(obj instanceof CombinedState)) return false;
+			if (!(obj instanceof CombinedState))
+			{
+				return false;
+			}
 
 			CombinedState state = (CombinedState) obj;
 

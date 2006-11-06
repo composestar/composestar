@@ -19,9 +19,6 @@ import Composestar.Core.CKRET.Repository;
 
 public class ActionsHandler extends DefaultHandler
 {
-	// FilterAction action;
-	private Repository repository;
-
 	// private ActionResourceDescription ard;
 	ConfigParser returnhandler;
 
@@ -38,7 +35,6 @@ public class ActionsHandler extends DefaultHandler
 	{
 		this.returnhandler = handler;
 		this.parser = parser;
-		this.repository = repository;
 
 	}
 

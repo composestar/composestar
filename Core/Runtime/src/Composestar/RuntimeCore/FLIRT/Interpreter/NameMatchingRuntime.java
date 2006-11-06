@@ -33,8 +33,10 @@ public class NameMatchingRuntime extends MatchingTypeRuntime
 	public boolean interpret(Message m, Dictionary context)
 	{
 		// TODO WM: Iterate over messages or at least over internals/externals
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-				"\t\t\tInterpreting NAME MatchingPartRuntime...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\tInterpreting NAME MatchingPartRuntime...");
+		}
 		resolveTarget(m.getInternals(), m.getExternals(), m, context);
 		return resolveSelector(m, context);
 	}
@@ -48,22 +50,33 @@ public class NameMatchingRuntime extends MatchingTypeRuntime
 	public boolean resolveSelector(Message m, Dictionary context)
 	{
 		String ct_selector = ((MessageSelector) this.parentMatchingPart.theSelectorRuntime.getReference()).getName();
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving selector '" + ct_selector
-				+ "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving selector '" + ct_selector + "'...");
+		}
 		String message_selector = m.getSelector();
 
 		Object target = context.get("target");
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tTarget: " + target);
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tTarget: " + target);
+		}
 
 		if (ct_selector.equals("*")) // *.*
 		{
 			// fixme Olaf:Shouldn't [dontcare.*] be [*.*]?
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '[dontcare.*]'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '[dontcare.*]'.");
+			}
 			return true;
 		}
 
 		// *.something, match to the current
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '[dontcare.something]'.");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '[dontcare.something]'.");
+		}
 		return message_selector.equals(ct_selector);
 	}
 
@@ -77,22 +90,32 @@ public class NameMatchingRuntime extends MatchingTypeRuntime
 	public void resolveTarget(Dictionary internals, Dictionary externals, Message m, Dictionary context)
 	{
 		String target = ((Target) this.parentMatchingPart.theTargetRuntime.getReference()).getName();
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving target '" + target
-				+ "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving target '" + target + "'...");
+		}
 
 		if (target.equals("*"))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*'.");
+			}
 		}
 		else if (target.equalsIgnoreCase("inner"))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'inner'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'inner'.");
+			}
 			context.put("target", m.getInner());
 		}
 		else if (target.equals(m.getTarget().getClass().getName()))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound target '"
-					+ m.getTarget().getClass() + "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound target '" + m.getTarget().getClass() + "'.");
+			}
 			context.put("target", m.getTarget());
 		}
 	}

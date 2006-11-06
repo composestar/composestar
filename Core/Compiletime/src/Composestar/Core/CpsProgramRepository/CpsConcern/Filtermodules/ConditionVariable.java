@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
 
 /**
  * Name of 1 condition (leafs in the composite pattern tree): this is just a
@@ -20,6 +20,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
  */
 public class ConditionVariable extends ConditionExpression
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3303327628885059583L;
+
 	public ConditionReference condition;
 
 	public ConditionVariable()

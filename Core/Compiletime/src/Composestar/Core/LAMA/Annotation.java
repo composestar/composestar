@@ -16,7 +16,8 @@ public class Annotation implements Serializable
 	public ProgramElement m_target;
 
 	public boolean m_isSuperImposed; // Set to true if this annotation was
-										// superimposed by Compose*
+
+	// superimposed by Compose*
 
 	// This info can be used by the weaver (?) to write the new annos
 	// back into the assembly.

@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import Composestar.Utils.Debug;
 
@@ -45,7 +44,10 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public DataStore()
 	{
-		if (DEBUG) Debug.out(Debug.MODE_INFORMATION, "DataStore", "Creating Datastore...");
+		if (DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "DataStore", "Creating Datastore...");
+		}
 		map = new DataMap();
 	}
 
@@ -82,7 +84,7 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public Iterator keys()
 	{
-		return ((DataMap) map).m_keys.iterator();
+		return (map).m_keys.iterator();
 	}
 
 	/**
@@ -128,8 +130,11 @@ public class DataStore implements Serializable, Cloneable
 			else
 			{
 				// OOPS this is very bad!!!
-				if (DEBUG) Debug.out(Debug.MODE_WARNING, "DataStore", "Overwriting existing object '" + old
-						+ "' with id '" + id + "' with new object '" + obj + "'...");
+				if (DEBUG)
+				{
+					Debug.out(Debug.MODE_WARNING, "DataStore", "Overwriting existing object '" + old + "' with id '"
+							+ id + "' with new object '" + obj + "'...");
+				}
 				map.put(id, obj);
 			}
 		}
@@ -171,8 +176,10 @@ public class DataStore implements Serializable, Cloneable
 	 */
 	public Object removeObject(String id)
 	{
-		if (DEBUG) Debug.out(Debug.MODE_INFORMATION, "DataStore", "Removing object from datastore with id '" + id
-				+ "'.");
+		if (DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "DataStore", "Removing object from datastore with id '" + id + "'.");
+		}
 		return map.remove(id);
 	}
 
@@ -232,7 +239,7 @@ public class DataStore implements Serializable, Cloneable
 
 	public void excludeUnreferenced(Class c)
 	{
-		((DataMap) map).excludeUnreferenced(c);
+		(map).excludeUnreferenced(c);
 		/*
 		 * List removeKeys = new ArrayList(); Iterator it =
 		 * map.entrySet().iterator(); while (it.hasNext()) { Map.Entry entry =
@@ -255,8 +262,10 @@ public class DataStore implements Serializable, Cloneable
 	{
 		try
 		{
-			if (DEBUG) Debug
-					.out(Debug.MODE_INFORMATION, "DataStore", "Reading object from file '" + filename + "'... ");
+			if (DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Reading object from file '" + filename + "'... ");
+			}
 			FileInputStream fis;
 			if (filename == null)
 			{
@@ -269,7 +278,10 @@ public class DataStore implements Serializable, Cloneable
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Object obj = ois.readObject();
 			ois.close();
-			if (DEBUG) Debug.out(Debug.MODE_INFORMATION, "DataStore", "Done reading object '" + obj + "'.");
+			if (DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Done reading object '" + obj + "'.");
+			}
 			return obj;
 		}
 		catch (Exception e)
@@ -294,8 +306,11 @@ public class DataStore implements Serializable, Cloneable
 	{
 		try
 		{
-			if (DEBUG) Debug.out(Debug.MODE_INFORMATION, "DataStore", "Writing object '" + obj + "' to file '"
-					+ filename + "'...");
+			if (DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Writing object '" + obj + "' to file '" + filename
+						+ "'...");
+			}
 			FileOutputStream fos;
 			if (filename == null)
 			{
@@ -309,7 +324,10 @@ public class DataStore implements Serializable, Cloneable
 			oos.writeObject(obj);
 			oos.flush();
 			oos.close();
-			if (DEBUG) Debug.out(Debug.MODE_INFORMATION, "DataStore", "Done writing object '" + obj + "'.");
+			if (DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "DataStore", "Done writing object '" + obj + "'.");
+			}
 			return true;
 		}
 		catch (Exception e)

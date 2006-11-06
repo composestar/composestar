@@ -120,15 +120,23 @@ public class ObjectManager implements ChildRunnable
 
 		// find the concern
 		theObject = o;
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "ObjectManager created for object of type '"
-				+ o.getClass().getName() + "'.");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "ObjectManager created for object of type '"
+					+ o.getClass().getName() + "'.");
+		}
 		Concern concern = (Concern) store.getObjectByID(o.getClass().getName());
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Checking concern '" + concern + "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Checking concern '" + concern + "'...");
+		}
 
 		if (concern != null)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Found concern for '"
-					+ concern.getQualifiedName() + "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Found concern for '" + concern.getQualifiedName() + "'.");
+			}
 
 			// Try to fetch the order for this concern from the repository
 			if (concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY) != null
@@ -137,8 +145,10 @@ public class ObjectManager implements ChildRunnable
 				// For each order add the filtermodule to this object manager
 				FilterModuleOrder fmo = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
 				Vector order = fmo._order;
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting " + order.size()
-						+ " orderings.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting " + order.size() + " orderings.");
+				}
 				for (int i = 0; i < order.size(); i++)
 				{
 					// The linking does not work with deserializing therefore we
@@ -172,14 +182,20 @@ public class ObjectManager implements ChildRunnable
 							e.printStackTrace();
 							fmruntime = rootfmruntime;
 						}
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT",
-								"Comparing sizes of externals after cloning: " + rootfmruntime.getExternals().size()
-										+ " = " + fmruntime.getExternals().size());
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_DEBUG, "FLIRT", "Comparing sizes of externals after cloning: "
+									+ rootfmruntime.getExternals().size() + " = " + fmruntime.getExternals().size());
+						}
 
 						fmruntime.setObjectManager(this);
 
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-								"Found FilterModuleRuntime '" + fmruntime + "'.");
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug
+									.out(Debug.MODE_INFORMATION, "FLIRT", "Found FilterModuleRuntime '" + fmruntime
+											+ "'.");
+						}
 						// Add the filtermodule to this objectmanager
 						this.addFilterModule(fmruntime);
 
@@ -207,8 +223,11 @@ public class ObjectManager implements ChildRunnable
 					else
 					{
 						// Is this error or information?
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR, "FLIRT",
-								"No FilterModuleRuntime found for '" + filtermodulename + "'.");
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_ERROR, "FLIRT", "No FilterModuleRuntime found for '"
+									+ filtermodulename + "'.");
+						}
 					}
 				}
 			}
@@ -222,8 +241,11 @@ public class ObjectManager implements ChildRunnable
 	private void addInternals(Concern concern, FilterModuleRuntime fmruntime, FilterModule filtermodule)
 	{
 		// Add the internals
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking for internals of filtermodule '"
-				+ filtermodule + "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking for internals of filtermodule '" + filtermodule
+					+ "'...");
+		}
 		Iterator internalIterator = filtermodule.getInternalIterator();
 		while (internalIterator.hasNext())
 		{
@@ -239,16 +261,22 @@ public class ObjectManager implements ChildRunnable
 			 * catch(Exception exp) { throw new
 			 * InternalNotFoundException(internaltype,internalname,concern.getName()); }
 			 */
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound internal '" + internalname
-					+ "' of type '" + internaltype + "' inside object '" + internalobject + "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound internal '" + internalname + "' of type '"
+						+ internaltype + "' inside object '" + internalobject + "'.");
+			}
 			fmruntime.addInternal(internalname, internalobject);
 		}
 	}
 
 	private void addExternals(Concern concern, FilterModuleRuntime fmruntime, FilterModule filtermodule)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking for externals of filtermodule '"
-				+ filtermodule + "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking for externals of filtermodule '" + filtermodule
+					+ "'...");
+		}
 
 		Iterator externalIterator = filtermodule.getExternalIterator();
 		while (externalIterator.hasNext())
@@ -260,8 +288,12 @@ public class ObjectManager implements ChildRunnable
 
 			if (external.shortinit != null)
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound short external '"
-						+ external.shortinit.getName() + "' of type '" + external.shortinit.getQualifiedName() + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound short external '"
+							+ external.shortinit.getName() + "' of type '" + external.shortinit.getQualifiedName()
+							+ "'.");
+				}
 				String extarget = external.getShortinit().getInitTarget();
 				String exselector = external.getShortinit().getInitSelector();
 				if (Debug.SHOULD_DEBUG)
@@ -276,14 +308,19 @@ public class ObjectManager implements ChildRunnable
 				}
 				catch (Exception exp)
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR, "FLIRT", "Failed to invoke '" + extarget + '.'
-							+ exselector + "'.");
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_ERROR, "FLIRT", "Failed to invoke '" + extarget + '.' + exselector + "'.");
+					}
 					throw new ExternalNotFoundException(externaltype, externalname, concern.getName());
 				}
 				if (externalobject != null)
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tLocated external '"
-							+ externalobject.getClass().getName() + "'.");
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tLocated external '"
+								+ externalobject.getClass().getName() + "'.");
+					}
 					fmruntime.addExternal(externalname, externalobject);
 				}
 
@@ -291,30 +328,41 @@ public class ObjectManager implements ChildRunnable
 			else if (external.longinit != null)
 			{
 				// TODO resolve the long external jump
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound long external '"
-						+ external.longinit.getName() + "' of type '" + external.longinit.getQualifiedName() + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound long external '" + external.longinit.getName()
+							+ "' of type '" + external.longinit.getQualifiedName() + "'.");
+				}
 				throw new ComposestarRuntimeException("The use of external references is not supported.");
 			}
 			else
 			{
 				// fixme Is this mode error?
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR, "FLIRT", "\tOops bad external!!");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_ERROR, "FLIRT", "\tOops bad external!!");
+				}
 			}
 		}
 	}
 
 	private void addConditions(Concern concern, FilterModuleRuntime fmruntime, FilterModule filtermodule)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking for conditions of filtermodule '"
-				+ filtermodule + "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking for conditions of filtermodule '" + filtermodule
+					+ "'...");
+		}
 		Iterator conditionIterator = filtermodule.getConditionIterator();
 		while (conditionIterator.hasNext())
 		{
 			Condition condition = (Condition) conditionIterator.next();
 			String conditionname = condition.getName();
 
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound condition '" + conditionname
-					+ "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound condition '" + conditionname + "'.");
+			}
 
 			if (condition.getShortref() != null)
 			{ // Condition to internal/external or static call
@@ -340,8 +388,10 @@ public class ObjectManager implements ChildRunnable
 			{ // Condition to other filtermodule
 				// TODO: Resolve the references to the referred conditions in
 				// other concerns/filtermodules
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_ERROR, "FLIRT", "Found long conditionref '"
-						+ condition.getLongref() + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_ERROR, "FLIRT", "Found long conditionref '" + condition.getLongref() + "'.");
+				}
 				throw new ComposestarRuntimeException("The use of condition references is not supported.");
 			}
 		}
@@ -373,8 +423,11 @@ public class ObjectManager implements ChildRunnable
 	 */
 	public static ObjectManager getObjectManagerFor(Object o, DataStore store)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-				"Getting object manager for object of type '" + o.getClass().getName() + "'.");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object manager for object of type '"
+					+ o.getClass().getName() + "'.");
+		}
 
 		ObjectManager obj = (ObjectManager) GlobalObjectManager.getObjectManagerFor(o);
 		if (obj == null)
@@ -408,10 +461,16 @@ public class ObjectManager implements ChildRunnable
 	{
 		if (Debug.SHOULD_DEBUG)
 		{
-			if (sender != null) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "INCOMING message '" + msg.getSelector()
-					+ "' from caller '" + sender.getClass() + "' for target '" + receiver.getClass() + "'.");
-			else Debug.out(Debug.MODE_INFORMATION, "FLIRT", "INCOMING message '" + msg.getSelector() + "' for target '"
-					+ receiver.getClass() + "'.");
+			if (sender != null)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "INCOMING message '" + msg.getSelector() + "' from caller '"
+						+ sender.getClass() + "' for target '" + receiver.getClass() + "'.");
+			}
+			else
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "INCOMING message '" + msg.getSelector() + "' for target '"
+						+ receiver.getClass() + "'.");
+			}
 		}
 
 		// Message m = new Message(msg);
@@ -444,10 +503,16 @@ public class ObjectManager implements ChildRunnable
 	{
 		if (Debug.SHOULD_DEBUG)
 		{
-			if (sender != null) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "OUTGOING message '" + msg.getSelector()
-					+ "' from caller '" + sender.getClass() + "' for target '" + receiver.getClass() + "'.");
-			else Debug.out(Debug.MODE_INFORMATION, "FLIRT", "OUTGOING message '" + msg.getSelector() + "' for target '"
-					+ receiver.getClass() + "'.");
+			if (sender != null)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "OUTGOING message '" + msg.getSelector() + "' from caller '"
+						+ sender.getClass() + "' for target '" + receiver.getClass() + "'.");
+			}
+			else
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "OUTGOING message '" + msg.getSelector() + "' for target '"
+						+ receiver.getClass() + "'.");
+			}
 		}
 
 		Message m = new Message(msg);
@@ -463,9 +528,15 @@ public class ObjectManager implements ChildRunnable
 		// read the response from the responsebuffer...
 		Object reply = m.getResponse();
 
-		if (reply instanceof MessageList) reply = ((MessageList) reply).getMessageAfterOutputFilter();
+		if (reply instanceof MessageList)
+		{
+			reply = ((MessageList) reply).getMessageAfterOutputFilter();
+		}
 
-		if (reply instanceof Message) ((Message) reply).setDirection(Message.INCOMING);
+		if (reply instanceof Message)
+		{
+			((Message) reply).setDirection(Message.INCOMING);
+		}
 
 		return reply;
 	}
@@ -490,16 +561,21 @@ public class ObjectManager implements ChildRunnable
 		MessageList aMessage = new MessageList(aSingleMessage);
 		// try
 		// {
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Number of filtermodules is "
-				+ filterModules.size() + '.');
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Number of filtermodules is " + filterModules.size() + '.');
+		}
 		// Test each filter, in the filterModules list.
 		for (int i = 0; i < filterModules.size(); i++)
 		{
 			// Get the filtermodule
 			FilterModuleRuntime fm = (FilterModuleRuntime) filterModules.get(i);
 
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "Message is "
-					+ (aMessage.getDirection() == Message.INCOMING ? "INCOMING" : "OUTGOING") + '.');
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_DEBUG, "FLIRT", "Message is "
+						+ (aMessage.getDirection() == Message.INCOMING ? "INCOMING" : "OUTGOING") + '.');
+			}
 
 			filterList = (aMessage.getDirection() == Message.INCOMING ? fm.getInputFilters() : fm.getOutputFilters());
 
@@ -514,8 +590,10 @@ public class ObjectManager implements ChildRunnable
 			// return aMessage;
 			// }
 
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tNumber of filters is "
-					+ filterList.size() + '.');
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tNumber of filters is " + filterList.size() + '.');
+			}
 
 			// Get the policy, for now this returns a MetaPolicy!
 			FilterPolicy fp = FilterPolicy.getPolicy();
@@ -536,12 +614,17 @@ public class ObjectManager implements ChildRunnable
 			wasAccepted = wasAccepted || per.wasAccepted();
 		}
 
-		if (aMessage.getDirection() == Message.OUTGOING) return aMessage;
+		if (aMessage.getDirection() == Message.OUTGOING)
+		{
+			return aMessage;
+		}
 
 		if (filterModules.isEmpty())
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-					"No filtermodules, returning DefaultDispatchToInnerAction");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "No filtermodules, returning DefaultDispatchToInnerAction");
+			}
 			// return Invoker.getInstance().invoke(aMessage.getTarget(),
 			// aMessage.getSelector(), aMessage.getArguments());
 			return new DispatchToInnerAction(aMessage, true, aMessage.getFirstMessage().getTarget(), aMessage

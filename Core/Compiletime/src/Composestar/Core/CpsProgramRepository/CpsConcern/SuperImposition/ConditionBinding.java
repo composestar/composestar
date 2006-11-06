@@ -9,16 +9,22 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConditionReference;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {0BCB4921-FE88-4B0F-AB82-7D9BBACFC29B}
  */
 public class ConditionBinding extends Binding
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 951789324095547800L;
 
 	/**
 	 * ConditionReferences and StarConditions

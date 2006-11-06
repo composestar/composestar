@@ -130,8 +130,14 @@ public class FireModel
 
 	private Vector getOutTransitions(ExtendedExecutionState state)
 	{
-		if (state.getStateType() == ExecutionState.EXIT_STATE) return getOutTransitionsCrossLayer(state);
-		else return getOutTransitionsCurrentLayer(state);
+		if (state.getStateType() == ExecutionState.EXIT_STATE)
+		{
+			return getOutTransitionsCrossLayer(state);
+		}
+		else
+		{
+			return getOutTransitionsCurrentLayer(state);
+		}
 	}
 
 	private Vector getOutTransitionsCurrentLayer(ExtendedExecutionState state)
@@ -153,7 +159,10 @@ public class FireModel
 					Vector v = new Vector();
 					baseEnum = v.elements();
 				}
-				else baseEnum = baseState.getOutTransitions();
+				else
+				{
+					baseEnum = baseState.getOutTransitions();
+				}
 			}
 			else if (result == SIGNATURE_MATCH_TRUE)
 			{
@@ -202,8 +211,6 @@ public class FireModel
 
 	private Vector getOutTransitionsCrossLayer(ExtendedExecutionState startState)
 	{
-		Message m;
-		ExecutionState returnState;
 		int layer = startState.layer;
 
 		if (layer == executionModels.length - 1)
@@ -234,47 +241,73 @@ public class FireModel
 		if (signatureCheck != NO_SIGNATURE_CHECK
 				&& state.getFlowNode().containsName(FlowChartNames.SIGNATURE_MATCHING_NODE))
 		{
-			boolean flowTrue = false;
-			boolean flowFalse = false;
-
 			MatchingPart matchingPart = (MatchingPart) state.getFlowNode().getRepositoryLink();
 
 			// get the matching target:
 			Target matchTarget = matchingPart.getTarget();
-			if (Message.checkEquals(matchTarget, Message.STAR_TARGET)) matchTarget = state.getMessage().getTarget();
+			if (Message.checkEquals(matchTarget, Message.STAR_TARGET))
+			{
+				matchTarget = state.getMessage().getTarget();
+			}
 
 			// get the matching selector:
 			MessageSelector matchSelector = matchingPart.getSelector();
-			if (Message.checkEquals(matchSelector, Message.STAR_SELECTOR)) matchSelector = state.getMessage()
-					.getSelector();
+			if (Message.checkEquals(matchSelector, Message.STAR_SELECTOR))
+			{
+				matchSelector = state.getMessage().getSelector();
+			}
 
 			if (matchTarget.name.equals("inner"))
 			{
 				List methods;
 				Type matchType = (Type) concern.getPlatformRepresentation();
-				if (matchType == null) methods = new LinkedList();
-				else methods = matchType.getMethods();
+				if (matchType == null)
+				{
+					methods = new LinkedList();
+				}
+				else
+				{
+					methods = matchType.getMethods();
+				}
 
 				MethodInfo matchMethodInfo = methodInfo.getClone(matchSelector.getName(), matchType);
 
-				if (containsMethod(methods, matchMethodInfo)) return SIGNATURE_MATCH_TRUE;
-				else return SIGNATURE_MATCH_FALSE;
+				if (containsMethod(methods, matchMethodInfo))
+				{
+					return SIGNATURE_MATCH_TRUE;
+				}
+				else
+				{
+					return SIGNATURE_MATCH_FALSE;
+				}
 			}
 			else
 			{
 				DeclaredObjectReference ref = (DeclaredObjectReference) matchTarget.getRef();
 				Concern matchConcern = ref.getRef().getType().getRef();
 				Signature signature = matchConcern.getSignature();
-				if (signature == null) signature = new Signature();
+				if (signature == null)
+				{
+					signature = new Signature();
+				}
 				Type matchType = (Type) matchConcern.getPlatformRepresentation();
 				MethodInfo matchMethodInfo = methodInfo.getClone(matchSelector.getName(), matchType);
 
-				if (!signature.hasMethod(matchMethodInfo)) return SIGNATURE_MATCH_FALSE;
+				if (!signature.hasMethod(matchMethodInfo))
+				{
+					return SIGNATURE_MATCH_FALSE;
+				}
 				else
 				{
 					MethodWrapper wrapper = signature.getMethodWrapper(matchMethodInfo);
-					if (wrapper.RelationType == MethodWrapper.UNKNOWN) return SIGNATURE_MATCH_UNKNOWN;
-					else return SIGNATURE_MATCH_TRUE;
+					if (wrapper.RelationType == MethodWrapper.UNKNOWN)
+					{
+						return SIGNATURE_MATCH_UNKNOWN;
+					}
+					else
+					{
+						return SIGNATURE_MATCH_TRUE;
+					}
 				}
 			}
 		}
@@ -291,7 +324,10 @@ public class FireModel
 		while (iterator.hasNext())
 		{
 			MethodInfo containedMethod = (MethodInfo) iterator.next();
-			if (containedMethod.checkEquals(method)) return true;
+			if (containedMethod.checkEquals(method))
+			{
+				return true;
+			}
 		}
 
 		return false;

@@ -1,9 +1,9 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import Composestar.RuntimeCore.Utils.Debug;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import Composestar.RuntimeCore.Utils.Debug;
 
 public class GlobalObjectManager
 {
@@ -16,8 +16,10 @@ public class GlobalObjectManager
 	 */
 	public static Object getObjectManagerFor(Object key)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object with key '" + key.hashCode()
-				+ "'.");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting object with key '" + key.hashCode() + "'.");
+		}
 		// if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Currently
 		// " + objectmanagers.size() + " objectmanager(s) allocated.");
 		// if(Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG,"FLIRT","Getting
@@ -40,11 +42,13 @@ public class GlobalObjectManager
 	{
 		// Do not store the object managers for framework classes
 		if ((key.getClass() == null) || // Fixed crash: namespace can be null
-										// (when class is in default namespace)!
+				// (when class is in default namespace)!
 				(!(key.getClass().getName().startsWith("java.") || key.getClass().getName().startsWith("System."))))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Storing '" + obj + "' with key '"
-					+ key.hashCode() + "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Storing '" + obj + "' with key '" + key.hashCode() + "'.");
+			}
 			// if(Debug.SHOULD_DEBUG)
 			// Debug.out(Debug.MODE_DEBUG,"FLIRT","Storing objectmanager for
 			// object '" + ((ObjectManager)obj).theObject + "' with key '" +

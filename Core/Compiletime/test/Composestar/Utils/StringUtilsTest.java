@@ -42,14 +42,20 @@ public class StringUtilsTest extends TestCase
 	{
 		int el = expected.length;
 		int al = actual.length;
-		if (el != al) throw new ComparisonFailure("Array lengths do not match.", "" + el, "" + al);
+		if (el != al)
+		{
+			throw new ComparisonFailure("Array lengths do not match.", "" + el, "" + al);
+		}
 
 		for (int i = 0; i < el; i++)
 		{
 			Object e = expected[i];
 			Object a = actual[i];
-			if (!e.equals(a)) throw new ComparisonFailure("Array elements at index " + i + " do not match.", e
-					.toString(), a.toString());
+			if (!e.equals(a))
+			{
+				throw new ComparisonFailure("Array elements at index " + i + " do not match.", e.toString(), a
+						.toString());
+			}
 		}
 	}
 

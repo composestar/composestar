@@ -9,8 +9,8 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleElementReference;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * should be either a declared (in the scope) object or a pseudo variable
@@ -19,6 +19,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
  */
 public class Target extends ContextRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4238743031003419298L;
 
 	/**
 	 * fixme: same information twice, name kept for compatibility, should only

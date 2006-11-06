@@ -13,7 +13,10 @@ package Composestar.Core.FILTH.Core;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Random;
 
 public class OrderTraverser
 {
@@ -231,7 +234,10 @@ public class OrderTraverser
 			 * if all the parents has already been traversed and parents are
 			 * passed
 			 */
-			if (pc) candidates.add(current);
+			if (pc)
+			{
+				candidates.add(current);
+			}
 		}
 		/* if there is no candidate node return null */
 		if (candidates.isEmpty())
@@ -272,7 +278,10 @@ public class OrderTraverser
 
 		}
 
-		if (start == null) throw new RuntimeException("error: there is no starting node for the cycle");
+		if (start == null)
+		{
+			throw new RuntimeException("error: there is no starting node for the cycle");
+		}
 
 		/*
 		 * let's go back from the starting node till we reach a node that
@@ -314,7 +323,10 @@ public class OrderTraverser
 				// go back in the database to the previous root
 				current = (Pair) cycle.getFirst();
 			}
-			else cycle.addFirst(current);
+			else
+			{
+				cycle.addFirst(current);
+			}
 
 		}
 	}
@@ -378,18 +390,18 @@ public class OrderTraverser
 			// we don't extend the database with the edges to the root node and
 			// the node from which we come
 			if ((!e.equals(exc)) && (!e.getLeft().getElement().equals("root"))) // not
-																				// the
-																				// exception
-																				// edge
-																				// and
-																				// the
-																				// edges
-																				// referring
-																				// back
-																				// to
-																				// the
-																				// root
-																				// node
+			// the
+			// exception
+			// edge
+			// and
+			// the
+			// edges
+			// referring
+			// back
+			// to
+			// the
+			// root
+			// node
 			{
 				p.addEdge(e);
 			}

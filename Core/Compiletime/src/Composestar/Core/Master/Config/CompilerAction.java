@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class CompilerAction implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 879078266731356034L;
+
 	private String name;
 
 	private String argument;

@@ -26,11 +26,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import Composestar.Core.LAMA.*;
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
@@ -38,6 +33,13 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.Annotati
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SelectorDefinition;
 import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.LAMA.Annotation;
+import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 public class AnnotationSuperImposition
 {
@@ -113,7 +115,7 @@ public class AnnotationSuperImposition
 			/* Find out which predicate selector this binding belongs to */
 			SelectorDefinition selDef = annotBind.getSelector().getRef();
 			if (null == selDef) // The reference has not been resolved, i.e. the
-								// binding points to a non-existent selector
+			// binding points to a non-existent selector
 			{
 				throw new ModuleException("Annotation binding points to non-existent selector: "
 						+ annotBind.getSelector().getQualifiedName(), "LOLA", annotBind.getSelector());
@@ -136,7 +138,7 @@ public class AnnotationSuperImposition
 							Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
 									+ " referenced in annotation binding does not exist; skipping", annotRef);
 							continue; // Just skip, or should this be a fatal
-										// error?
+							// error?
 						}
 						PlatformRepresentation annotConcern = annotRef.getRef().getPlatformRepresentation();
 						if (null == annotConcern || !(annotConcern instanceof Type))
@@ -144,7 +146,7 @@ public class AnnotationSuperImposition
 							Debug.out(Debug.MODE_WARNING, "LOLA", "Annotation class " + annotRef.getQualifiedName()
 									+ " referenced in annotation binding or is not a .NET class!", annotRef);
 							continue; // Just skip, or should this be a fatal
-										// error?
+							// error?
 						}
 						Type annotation = (Type) annotRef.getRef().getPlatformRepresentation();
 
@@ -153,7 +155,7 @@ public class AnnotationSuperImposition
 							Debug.out(Debug.MODE_WARNING, "LOLA", annotRef.getQualifiedName()
 									+ " is not an annotation type! (make sure it extends System.Attribute)", annotRef);
 							continue; // Just skip, or should this be a fatal
-										// error?
+							// error?
 						}
 
 						AnnotationAction act = new AnnotationAction();
@@ -196,7 +198,7 @@ public class AnnotationSuperImposition
 				if (myState.lastAction == action)
 				{
 					continue; // No point in executing the same action twice;
-								// it will have no effect
+					// it will have no effect
 				}
 
 				// Attach annotations based on the current state (e.g. this
@@ -206,8 +208,8 @@ public class AnnotationSuperImposition
 				if (addedAnnots.isEmpty())
 				{
 					continue; // No annotation was attached (selectors
-								// empty?), so obviously nothing can have
-								// changed. Try next action.
+					// empty?), so obviously nothing can have
+					// changed. Try next action.
 					// Also in this case we don't have to bother with
 					// resetAnnotationState, because nothing was added.
 				}
@@ -254,7 +256,7 @@ public class AnnotationSuperImposition
 						tempState.lastAction = action;
 						tempState.prevState = myState;
 						states.add(tempState); // Add this new state to the
-												// queue, to be handled later!
+						// queue, to be handled later!
 					}
 				}
 			}
@@ -264,17 +266,17 @@ public class AnnotationSuperImposition
 				// this is an endstate.
 				if (null != endState && // The first endState found is always OK
 						!equalContents(endState.selectorResults, myState.selectorResults)) // but
-																							// if
-																							// we
-																							// find
-																							// a
-																							// 2nd
-																							// one,
-																							// it
-																							// has
-																							// to
-																							// be
-																							// equal!
+				// if
+				// we
+				// find
+				// a
+				// 2nd
+				// one,
+				// it
+				// has
+				// to
+				// be
+				// equal!
 				{ // This shouldn't happen using the current algorithm, but we
 					// didn't formally proof it so just to be sure...
 					throw new ModuleException(
@@ -285,8 +287,8 @@ public class AnnotationSuperImposition
 				else
 				{
 					endState = myState; // We found an endstate (need to save
-										// only 1, they all have to be equal
-										// anyway..)
+					// only 1, they all have to be equal
+					// anyway..)
 				}
 			}
 			currentState++; // Handle the next state in the queue
@@ -296,7 +298,7 @@ public class AnnotationSuperImposition
 		// the found endstate
 		setAnnotationState(endState, -1);
 		if (endState.lastAction != -1) // Only reevaluate if we added
-										// annotations at all
+		// annotations at all
 		{
 			evaluateSelectors();
 		}
@@ -445,7 +447,7 @@ public class AnnotationSuperImposition
 		while (null != currState)
 		{ // Attach the annotations specified by the current action
 			if (currAction != -1) // Skip first iteration in case of action ==
-									// -1
+			// -1
 			{
 				AnnotationAction action = (AnnotationAction) annotationActions.elementAt(currAction);
 				Set attachTo = (Set) currState.selectorResults.elementAt(action.selector.posInResultVector);
@@ -472,9 +474,9 @@ public class AnnotationSuperImposition
 								+ "' to program element '" + elem.toString());
 
 						Annotation annotInst = new Annotation(true); // true
-																		// =
-																		// SuperImposed
-																		// annotation
+						// =
+						// SuperImposed
+						// annotation
 						annotInst.register(action.annotation, elem);
 						removeMeLater.add(annotInst);
 					}
@@ -488,7 +490,7 @@ public class AnnotationSuperImposition
 			}
 			currAction = currState.lastAction;
 			currState = currState.prevState; // Will become null when we have
-												// passed the root node
+			// passed the root node
 		}
 
 		return removeMeLater;
@@ -514,20 +516,21 @@ public class AnnotationSuperImposition
 		public String name; // Name of this selector
 
 		public int posInResultVector; // this selectors position in the
-										// State.selectorResult
+		// State.selectorResult
 	}
 
 	private class State
 	{
 		public Vector selectorResults; // Vector of sets -
-										// selectorResults[selectorIndex]
-										// returns set of selected program
-										// elements
+
+		// selectorResults[selectorIndex]
+		// returns set of selected program
+		// elements
 
 		public int lastAction; // points to element in annotationActions vector
 
 		public State prevState; // points to previous state; executing
-								// last_action brought us into this state
+		// last_action brought us into this state
 	}
 
 	private class AnnotationAction

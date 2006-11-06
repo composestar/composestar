@@ -50,7 +50,9 @@ public class Column implements Cloneable
 
 		boolean[] col = new boolean[size];
 		for (int i = 0; i < size; i++)
+		{
 			col[i] = setBoolean;
+		}
 		colList.add(col);
 	}
 
@@ -68,7 +70,9 @@ public class Column implements Cloneable
 		length += b.length;
 		boolean[] col = new boolean[b.length];
 		for (int i = 0; i < b.length; i++)
+		{
 			col[i] = b.getValue(i);
+		}
 		colList.add(col);
 	}
 
@@ -124,14 +128,18 @@ public class Column implements Cloneable
 		// Finish this table.
 		boolean[] col = (boolean[]) colList.get(table);
 		for (int k = index; k < col.length; k++)
+		{
 			col[k] = value;
+		}
 
 		// and the rest.
 		for (int i = table + 1; i < colList.size(); i++)
 		{
 			col = (boolean[]) colList.get(i);
 			for (int k = 0; k < col.length; k++)
+			{
 				col[k] = value;
+			}
 		}
 	}
 
@@ -198,7 +206,9 @@ public class Column implements Cloneable
 			boolean[] col = (boolean[]) colList.get(k);
 
 			for (int i = 0; i < col.length; i++)
+			{
 				str += (col[i] ? " 1" : " 0");
+			}
 		}
 
 		str += " ]";
@@ -237,7 +247,10 @@ public class Column implements Cloneable
 		for (int i = 0; i < colList.size(); i++)
 		{
 			totalLength += ((boolean[]) colList.get(i)).length;
-			if (totalLength > row) return i;
+			if (totalLength > row)
+			{
+				return i;
+			}
 		}
 
 		return -1;

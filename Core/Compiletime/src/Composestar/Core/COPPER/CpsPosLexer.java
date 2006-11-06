@@ -9,9 +9,12 @@
  */
 package Composestar.Core.COPPER;
 
-import antlr.*;
+import java.io.InputStream;
+import java.io.Reader;
 
-import java.io.*;
+import antlr.CharStreamException;
+import antlr.InputBuffer;
+import antlr.Token;
 
 /**
  * Special versions of the CpsLexer which allows you to determine the starting

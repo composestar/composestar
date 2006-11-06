@@ -6,6 +6,11 @@ import java.util.ArrayList;
 public class BuiltLibraries implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2556429479287190711L;
+
 	private ArrayList builtassemblies;
 
 	public BuiltLibraries()

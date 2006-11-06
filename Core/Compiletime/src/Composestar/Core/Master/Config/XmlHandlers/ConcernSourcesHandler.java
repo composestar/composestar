@@ -6,8 +6,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Configuration;
 
 public class ConcernSourcesHandler extends DefaultHandler implements ContentHandler
 {

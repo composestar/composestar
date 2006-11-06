@@ -95,7 +95,9 @@ public abstract class NodeIterator implements Cloneable
 	{
 		next();
 		while (!isDone() && !getNode().subsetOfExpression(compareWith))
+		{
 			next();
+		}
 	}
 
 	public LinkedList getPath()

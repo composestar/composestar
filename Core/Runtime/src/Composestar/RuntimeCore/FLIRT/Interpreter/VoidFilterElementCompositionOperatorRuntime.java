@@ -42,8 +42,11 @@ public class VoidFilterElementCompositionOperatorRuntime extends FilterElementCo
 	 */
 	public boolean interpret(MessageList m, Dictionary context)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-				"\t\tInterpreting VoidFilterElementCompositionOperatorRuntime...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+					"\t\tInterpreting VoidFilterElementCompositionOperatorRuntime...");
+		}
 		// Last element so we only need to interpret the left side!
 		return this.previous.interpret(m, context);
 	}

@@ -9,16 +9,22 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {45C1BA7F-52B3-49C6-9330-77B3065146D5}
  */
 public class SuperImposition extends DeclaredRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2244055769354841823L;
 
 	/**
 	 * stores filtermodule bindings

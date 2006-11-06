@@ -10,12 +10,17 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 import java.util.Vector;
-import Composestar.Utils.*;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 public class MatchingPatternAST extends ContextRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2971508659284806511L;
 
 	public Vector matchingParts;
 

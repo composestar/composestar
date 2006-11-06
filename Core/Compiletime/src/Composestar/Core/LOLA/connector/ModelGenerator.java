@@ -11,7 +11,6 @@
  */
 package Composestar.Core.LOLA.connector;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collection;
@@ -90,7 +89,7 @@ public class ModelGenerator
 		// Definition of isSomethingWithName(Unit, Name) predicate
 		res.append("is").append(typeName).append("WithName(Unit, Name) :-\n  ");
 		if (!type.isNameUnique()) // Since the name is not unique, we need to
-									// apply the Source->answer generator
+		// apply the Source->answer generator
 		{
 			res.append("check_or_gen1(");
 		}
@@ -210,7 +209,7 @@ public class ModelGenerator
 		{
 			res.append("check_or_gen1("); // It is a (1,*)-relation
 			Collections.reverse(varList); // Reverse the order of var1,var2 in
-											// the call to the builtin (!)
+			// the call to the builtin (!)
 			/*
 			 * The builtin binaryRelation will change the arguments back to the
 			 * original order. This reduces the number of cases we have to
@@ -223,7 +222,7 @@ public class ModelGenerator
 		res.append(rel.getPredicateName()).append("Builtin");
 		res.append('(').append(commaSeparated(varList)).append(')');
 		if (!(var1unique && var2unique)) // Some generator was included, so
-											// we have to add the closing ')'
+		// we have to add the closing ')'
 		{
 			res.append(')');
 		}

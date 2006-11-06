@@ -24,6 +24,11 @@ import Composestar.Core.FIRE2.model.FlowNode;
 
 public class ViewPanel extends JPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5738123083267682871L;
+
 	private LinkedList unProcessed;
 
 	private HashMap nodeMap;
@@ -121,7 +126,10 @@ public class ViewPanel extends JPanel
 
 	private String getLabel(ExecutionState state)
 	{
-		if (state == null) return "";
+		if (state == null)
+		{
+			return "";
+		}
 
 		FlowNode node = state.getFlowNode();
 		String currentLabel = "";
@@ -216,7 +224,10 @@ public class ViewPanel extends JPanel
 
 		node.xPos = xOffset + MARGIN + RADIUS;
 
-		if (node.primaryEdges.length == 0) return 2 * (MARGIN + RADIUS);
+		if (node.primaryEdges.length == 0)
+		{
+			return 2 * (MARGIN + RADIUS);
+		}
 
 		int width = 0;
 		int newYOffset = yOffset + 2 * (MARGIN + RADIUS);
@@ -259,7 +270,10 @@ public class ViewPanel extends JPanel
 		FontMetrics metrics = g.getFontMetrics();
 		String label = getLabel(node.state);
 		int width = metrics.stringWidth(label);
-		if (width > 2 * RADIUS) width = 2 * RADIUS;
+		if (width > 2 * RADIUS)
+		{
+			width = 2 * RADIUS;
+		}
 		g.drawString(label, node.xPos - width / 2, node.yPos);
 
 		// paint edges:
@@ -286,8 +300,8 @@ public class ViewPanel extends JPanel
 
 		double l = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 
-		int deltaX = (int) ((double) RADIUS / l * (double) xDiff);
-		int deltaY = (int) ((double) RADIUS / l * (double) yDiff);
+		int deltaX = (int) (RADIUS / l * xDiff);
+		int deltaY = (int) (RADIUS / l * yDiff);
 
 		int x1 = edge.startNode.xPos + deltaX;
 		int x2 = edge.endNode.xPos - deltaX;
@@ -298,11 +312,11 @@ public class ViewPanel extends JPanel
 		g.drawLine(x1, y1, x2, y2);
 
 		// paint head:
-		int deltaXH1 = (int) ((double) ARROW_HEAD_XOFFSET / l * (double) xDiff);
-		int deltaYH1 = (int) ((double) ARROW_HEAD_XOFFSET / l * (double) yDiff);
+		int deltaXH1 = (int) (ARROW_HEAD_XOFFSET / l * xDiff);
+		int deltaYH1 = (int) (ARROW_HEAD_XOFFSET / l * yDiff);
 
-		int deltaXH2 = (int) ((double) -ARROW_HEAD_YOFFSET / l * (double) yDiff);
-		int deltaYH2 = (int) ((double) ARROW_HEAD_YOFFSET / l * (double) xDiff);
+		int deltaXH2 = (int) (-ARROW_HEAD_YOFFSET / l * yDiff);
+		int deltaYH2 = (int) (ARROW_HEAD_YOFFSET / l * xDiff);
 
 		int xh1 = x2 + deltaXH1 + deltaXH2;
 		int yh1 = y2 + deltaYH1 + deltaYH2;
@@ -331,8 +345,6 @@ public class ViewPanel extends JPanel
 		private int xPos;
 
 		private int yPos;
-
-		private boolean visible;
 
 		private boolean highlighted;
 

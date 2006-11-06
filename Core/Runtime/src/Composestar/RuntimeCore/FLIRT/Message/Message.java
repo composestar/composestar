@@ -1,12 +1,13 @@
 package Composestar.RuntimeCore.FLIRT.Message;
 
-import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchAction;
 import Composestar.RuntimeCore.FLIRT.Actions.DispatchToInnerAction;
 import Composestar.RuntimeCore.FLIRT.Actions.ErrorAction;
+import Composestar.RuntimeCore.FLIRT.Actions.SendAction;
 import Composestar.RuntimeCore.Utils.ResponseBuffer;
-
-import java.util.*;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -47,14 +48,26 @@ public class Message
 
 	public int getDirection()
 	{
-		if (messageList != null) return messageList.getDirection();
-		else return this.direction;
+		if (messageList != null)
+		{
+			return messageList.getDirection();
+		}
+		else
+		{
+			return this.direction;
+		}
 	}
 
 	public void setDirection(int direction)
 	{
-		if (messageList != null) messageList.setDirection(direction);
-		else this.direction = direction;
+		if (messageList != null)
+		{
+			messageList.setDirection(direction);
+		}
+		else
+		{
+			this.direction = direction;
+		}
 	}
 
 	/**
@@ -107,60 +120,69 @@ public class Message
 	public int STATE = 0;
 
 	public static final int MESSAGE_NONSTATIC_NONSTATIC_VOID = 1; // A message
-																	// from non
-																	// static to
-																	// a non
-																	// static
-																	// method
+
+	// from non
+	// static to
+	// a non
+	// static
+	// method
 
 	public static final int MESSAGE_NONSTATIC_NONSTATIC_RETURN = 2; // A message
-																	// from non
-																	// static to
-																	// a non
-																	// static
-																	// method
-																	// with
-																	// return
+
+	// from non
+	// static to
+	// a non
+	// static
+	// method
+	// with
+	// return
 
 	public static final int MESSAGE_STATIC_NONSTATIC_VOID = 3; // A message
-																// from static
-																// to a non
-																// static method
+
+	// from static
+	// to a non
+	// static method
 
 	public static final int MESSAGE_STATIC_NONSTATIC_RETURN = 4; // A message
-																	// from
-																	// static to
-																	// a non
-																	// static
-																	// method
-																	// with
-																	// return
+
+	// from
+	// static to
+	// a non
+	// static
+	// method
+	// with
+	// return
 
 	public static final int MESSAGE_NONSTATIC_STATIC_VOID = 5; // A message
-																// from non
-																// static to a
-																// static method
+
+	// from non
+	// static to a
+	// static method
 
 	public static final int MESSAGE_NONSTATIC_STATIC_RETURN = 6; // A message
-																	// from non
-																	// static to
-																	// a static
-																	// method
-																	// with
-																	// return
+
+	// from non
+	// static to
+	// a static
+	// method
+	// with
+	// return
 
 	public static final int MESSAGE_STATIC_STATIC_VOID = 7; // A message from
-															// static to a
-															// static method
+
+	// static to a
+	// static method
 
 	public static final int MESSAGE_STATIC_STATIC_RETURN = 8; // A message
-																// from static
-																// to a static
-																// method with
-																// return
+
+	// from static
+	// to a static
+	// method with
+	// return
 
 	public static final int MESSAGE_CONSTRUCTOR = 9; // A construction
-														// message
+
+	// message
 
 	/**
 	 * Construts a message with arguments
@@ -235,8 +257,14 @@ public class Message
 	 */
 	public Object getInner()
 	{
-		if (messageList != null) return messageList.getInner();
-		else return inner;
+		if (messageList != null)
+		{
+			return messageList.getInner();
+		}
+		else
+		{
+			return inner;
+		}
 	}
 
 	/**
@@ -247,8 +275,14 @@ public class Message
 	 */
 	public void setInner(Object inner)
 	{
-		if (messageList != null) messageList.setInner(inner);
-		else this.inner = inner;
+		if (messageList != null)
+		{
+			messageList.setInner(inner);
+		}
+		else
+		{
+			this.inner = inner;
+		}
 	}
 
 	/**
@@ -282,14 +316,26 @@ public class Message
 	 */
 	public Object[] getArguments()
 	{
-		if (messageList != null) return messageList.getArguments();
-		else return args;
+		if (messageList != null)
+		{
+			return messageList.getArguments();
+		}
+		else
+		{
+			return args;
+		}
 	}
 
 	public void setArguments(Object[] args)
 	{
-		if (messageList != null) messageList.setArguments(args);
-		else this.args = args;
+		if (messageList != null)
+		{
+			messageList.setArguments(args);
+		}
+		else
+		{
+			this.args = args;
+		}
 	}
 
 	/**
@@ -301,8 +347,14 @@ public class Message
 	 */
 	public void addFilterParameter(String messageElement, String identifier)
 	{
-		if (messageList != null) messageList.getFilterParameters().put(messageElement, identifier);
-		else filterParams.put(messageElement, identifier);
+		if (messageList != null)
+		{
+			messageList.getFilterParameters().put(messageElement, identifier);
+		}
+		else
+		{
+			filterParams.put(messageElement, identifier);
+		}
 	}
 
 	/**
@@ -314,20 +366,38 @@ public class Message
 	 */
 	public String getFilterParameter(String messageElement)
 	{
-		if (messageList != null) return messageList.getFilterParameter(messageElement);
-		else return (String) filterParams.get(messageElement);
+		if (messageList != null)
+		{
+			return messageList.getFilterParameter(messageElement);
+		}
+		else
+		{
+			return (String) filterParams.get(messageElement);
+		}
 	}
 
 	public Dictionary getFilterParameters()
 	{
-		if (messageList != null) return messageList.getFilterParameters();
-		else return this.filterParams;
+		if (messageList != null)
+		{
+			return messageList.getFilterParameters();
+		}
+		else
+		{
+			return this.filterParams;
+		}
 	}
 
 	public void setFilterParameters(Dictionary d)
 	{
-		if (messageList != null) messageList.setFilterParameters(d);
-		else filterParams = d;
+		if (messageList != null)
+		{
+			messageList.setFilterParameters(d);
+		}
+		else
+		{
+			filterParams = d;
+		}
 	}
 
 	/**
@@ -339,8 +409,14 @@ public class Message
 	 */
 	public Object getInternal(String name)
 	{
-		if (messageList != null) return messageList.getInternal(name);
-		else return internals.get(name);
+		if (messageList != null)
+		{
+			return messageList.getInternal(name);
+		}
+		else
+		{
+			return internals.get(name);
+		}
 	}
 
 	/**
@@ -351,8 +427,14 @@ public class Message
 	 */
 	public Dictionary getInternals()
 	{
-		if (messageList != null) return messageList.getInternals();
-		else return internals;
+		if (messageList != null)
+		{
+			return messageList.getInternals();
+		}
+		else
+		{
+			return internals;
+		}
 	}
 
 	/**
@@ -363,8 +445,14 @@ public class Message
 	 */
 	public void setInternals(Dictionary internals)
 	{
-		if (messageList != null) messageList.setInternals(internals);
-		else this.internals = internals;
+		if (messageList != null)
+		{
+			messageList.setInternals(internals);
+		}
+		else
+		{
+			this.internals = internals;
+		}
 	}
 
 	/**
@@ -376,8 +464,14 @@ public class Message
 	 */
 	public Object getExternal(String name)
 	{
-		if (messageList != null) return messageList.getExternal(name);
-		else return externals.get(name);
+		if (messageList != null)
+		{
+			return messageList.getExternal(name);
+		}
+		else
+		{
+			return externals.get(name);
+		}
 	}
 
 	/**
@@ -388,8 +482,14 @@ public class Message
 	 */
 	public Dictionary getExternals()
 	{
-		if (messageList != null) return messageList.getExternals();
-		else return this.externals;
+		if (messageList != null)
+		{
+			return messageList.getExternals();
+		}
+		else
+		{
+			return this.externals;
+		}
 	}
 
 	/**
@@ -401,8 +501,14 @@ public class Message
 	 */
 	public void setExternals(Dictionary externals)
 	{
-		if (messageList != null) messageList.setExternals(externals);
-		else this.externals = externals;
+		if (messageList != null)
+		{
+			messageList.setExternals(externals);
+		}
+		else
+		{
+			this.externals = externals;
+		}
 	}
 
 	/**
@@ -411,8 +517,14 @@ public class Message
 	 */
 	public Object getSender()
 	{
-		if (messageList != null) return messageList.getSender();
-		else return this.sender;
+		if (messageList != null)
+		{
+			return messageList.getSender();
+		}
+		else
+		{
+			return this.sender;
+		}
 	}
 
 	/**
@@ -421,20 +533,38 @@ public class Message
 	 */
 	public void setSender(Object obj)
 	{
-		if (messageList != null) messageList.setSender(obj);
-		else this.sender = obj;
+		if (messageList != null)
+		{
+			messageList.setSender(obj);
+		}
+		else
+		{
+			this.sender = obj;
+		}
 	}
 
 	public void setServer(Object server)
 	{
-		if (messageList != null) messageList.setServer(server);
-		else this.server = server;
+		if (messageList != null)
+		{
+			messageList.setServer(server);
+		}
+		else
+		{
+			this.server = server;
+		}
 	}
 
 	public Object getServer()
 	{
-		if (messageList != null) return messageList.getServer();
-		else return this.server;
+		if (messageList != null)
+		{
+			return messageList.getServer();
+		}
+		else
+		{
+			return this.server;
+		}
 	}
 
 	public void setTarget(Object target)
@@ -462,10 +592,22 @@ public class Message
 	{
 		Object response = this.getResponseBuffer().consume();
 
-		if (response instanceof DispatchAction) response = ((DispatchAction) response).execute();
-		else if (response instanceof DispatchToInnerAction) response = ((DispatchToInnerAction) response).execute();
-		else if (response instanceof SendAction) response = ((SendAction) response).execute();
-		else if (response instanceof ErrorAction) response = ((ErrorAction) response).execute();
+		if (response instanceof DispatchAction)
+		{
+			response = ((DispatchAction) response).execute();
+		}
+		else if (response instanceof DispatchToInnerAction)
+		{
+			response = ((DispatchToInnerAction) response).execute();
+		}
+		else if (response instanceof SendAction)
+		{
+			response = ((SendAction) response).execute();
+		}
+		else if (response instanceof ErrorAction)
+		{
+			response = ((ErrorAction) response).execute();
+		}
 
 		return response;
 	}

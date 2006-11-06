@@ -9,9 +9,9 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Implementation;
 
-import Composestar.Core.CpsProgramRepository.*;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
 
 /**
  * @modelguid {10359D51-3F2F-4373-AA93-EFAF9599E301} this is nothing but a
@@ -19,6 +19,11 @@ import java.util.*;
  */
 public class CompiledImplementation extends Implementation
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1307122468820927617L;
+
 	public PlatformRepresentation reference;
 
 	public String name;

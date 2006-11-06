@@ -5,15 +5,15 @@ import java.lang.reflect.Modifier;
 import java.util.AbstractList;
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.util.Stack;
+import java.util.Vector;
 
-import Composestar.Utils.*;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Utils.Debug;
 
 public class MyComparator
 {

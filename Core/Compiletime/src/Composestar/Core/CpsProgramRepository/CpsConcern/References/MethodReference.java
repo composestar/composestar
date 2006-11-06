@@ -9,19 +9,25 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Utils.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Method;
+import Composestar.Utils.CPSIterator;
 
 /**
  * reference to a method
  */
 public class MethodReference extends FilterModuleElementReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1502343124123806850L;
+
 	private Method ref;
 
 	public Vector parameterTypeList;

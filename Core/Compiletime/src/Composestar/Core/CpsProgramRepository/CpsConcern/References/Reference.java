@@ -9,9 +9,9 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
-import Composestar.Core.RepositoryImplementation.*;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 
 /**
  * identifiers that are references; in principle, these will be resolved by

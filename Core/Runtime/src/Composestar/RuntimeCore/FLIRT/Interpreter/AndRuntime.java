@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-
 import java.util.Dictionary;
+
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].

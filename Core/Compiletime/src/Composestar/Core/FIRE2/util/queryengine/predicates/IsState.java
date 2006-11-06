@@ -23,8 +23,14 @@ public class IsState extends Predicate
 
 	public boolean isTrue(ExecutionState state)
 	{
-		if (state == null) return this.state == null;
-		else return state.equals(this.state);
+		if (state == null)
+		{
+			return this.state == null;
+		}
+		else
+		{
+			return state.equals(this.state);
+		}
 	}
 
 	public String toString()

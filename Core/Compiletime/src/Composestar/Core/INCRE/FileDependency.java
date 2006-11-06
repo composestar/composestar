@@ -1,9 +1,9 @@
 package Composestar.Core.INCRE;
 
-import Composestar.Core.Exception.ModuleException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import Composestar.Core.Exception.ModuleException;
 
 public class FileDependency extends Dependency
 {

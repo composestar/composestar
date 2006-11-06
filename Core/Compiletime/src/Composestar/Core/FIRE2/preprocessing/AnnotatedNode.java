@@ -19,6 +19,11 @@ import java.util.Hashtable;
 public class AnnotatedNode extends DefaultNode
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4652113596047195818L;
+
+	/**
 	 * Dictionary containing the annotations.
 	 */
 	private Dictionary annotations;

@@ -96,7 +96,10 @@ public class CKRET implements CTCommonModule
 			String basedir = ps.getPath("Base");
 
 			File file = new File(basedir, "analyses");
-			if (!file.exists()) file.mkdir();
+			if (!file.exists())
+			{
+				file.mkdir();
+			}
 
 			if (file.isDirectory())
 			{
@@ -277,7 +280,10 @@ public class CKRET implements CTCommonModule
 		{
 			Concern concern = (Concern) iterConcerns.next();
 			Type type = (Type) concern.getPlatformRepresentation();
-			if (type == null) continue;
+			if (type == null)
+			{
+				continue;
+			}
 			// iterate over methods
 			Iterator methods = type.getMethods().iterator();
 			while (methods.hasNext())
@@ -288,7 +294,10 @@ public class CKRET implements CTCommonModule
 				while (annotations.hasNext())
 				{
 					Annotation anno = (Annotation) annotations.next();
-					if (anno.getType().getUnitName().endsWith("Semantics")) annos.add(anno);
+					if (anno.getType().getUnitName().endsWith("Semantics"))
+					{
+						annos.add(anno);
+					}
 				}
 			}
 		}

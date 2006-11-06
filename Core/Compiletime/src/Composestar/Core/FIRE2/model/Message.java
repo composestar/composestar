@@ -126,7 +126,10 @@ public class Message
 	 */
 	public boolean equals(Object obj)
 	{
-		if (obj == null || !(obj instanceof Message)) return false;
+		if (obj == null || !(obj instanceof Message))
+		{
+			return false;
+		}
 		Message m = (Message) obj;
 
 		return checkEquals(m.selector, selector) && checkEquals(m.target, target);

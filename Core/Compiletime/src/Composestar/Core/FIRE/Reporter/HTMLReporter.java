@@ -37,7 +37,10 @@ public class HTMLReporter extends Reporter
 		buffer = "";
 		buffer += getHeader();
 
-		if (tables == null) return;
+		if (tables == null)
+		{
+			return;
+		}
 
 		for (int t = 0; t < tables.size(); t++)
 		{

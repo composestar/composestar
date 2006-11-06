@@ -63,7 +63,7 @@ public class DummyManager implements CTCommonModule
 						sourceFile.getAbsolutePath());
 				String targetPath = FileUtils.getDirectoryPart(target);
 				FileUtils.createFullPath(targetPath); // Make sure the
-														// directory exists
+				// directory exists
 
 				File dummyFile = new File(target);
 				String absolutePath = dummyFile.getAbsolutePath();

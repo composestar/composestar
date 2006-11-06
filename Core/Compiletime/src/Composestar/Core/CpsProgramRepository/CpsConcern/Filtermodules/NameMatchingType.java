@@ -13,6 +13,11 @@ public class NameMatchingType extends MatchingType
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6299095010692930312L;
+
+	/**
 	 * @roseuid 404C4B6B0257
 	 */
 	public NameMatchingType()

@@ -19,6 +19,11 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
  */
 public class ModuleException extends Exception
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 28750835698180954L;
+
 	private String module;
 
 	private String errorLocationFilename;

@@ -5,6 +5,11 @@ import java.util.Properties;
 
 public class Configuration implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8812125434498730547L;
+
 	private static Configuration s_instance;
 
 	private Properties properties;

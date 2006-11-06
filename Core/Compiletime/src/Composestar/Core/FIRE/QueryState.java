@@ -11,7 +11,7 @@ package Composestar.Core.FIRE;
  *
  **/
 
-import java.util.*;
+import java.util.LinkedList;
 
 public class QueryState
 {
@@ -63,7 +63,10 @@ public class QueryState
 
 	public void addCondition(Symbol s)
 	{
-		if (!conditions.contains(s)) conditions.add(s);
+		if (!conditions.contains(s))
+		{
+			conditions.add(s);
+		}
 	}
 
 	public void addCondition(String str)

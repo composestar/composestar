@@ -29,7 +29,6 @@ public class StateTable
 		fireInfo = _fireInfo;
 
 		allSymbols = _allSymbols;
-		Symbol[] conditionSymbols = _conditionSymbols;
 		int columnLength = allSymbols[0].getColumnLength();
 		addElements(columnLength);
 	}
@@ -122,11 +121,20 @@ public class StateTable
 					// TODO: Inefficient
 					for (int s = 0; s < allSymbols.length; s++)
 					{
-						if (allSymbols[s].column.getValue(k)) node.addSymbol(allSymbols[s]);
+						if (allSymbols[s].column.getValue(k))
+						{
+							node.addSymbol(allSymbols[s]);
+						}
 					}
 
-					if (tree.getChild(i) instanceof VoidNode) tree.replaceChild(i, node);
-					else tree.addChildAtPath(i, node);
+					if (tree.getChild(i) instanceof VoidNode)
+					{
+						tree.replaceChild(i, node);
+					}
+					else
+					{
+						tree.addChildAtPath(i, node);
+					}
 				}
 				k++;
 			}
@@ -160,7 +168,10 @@ public class StateTable
 		for (int i = 0; i < statesList.size(); i++)
 		{
 			totalLength += ((Node) statesList.get(i)).numberOfChildren();
-			if (totalLength > row) return i;
+			if (totalLength > row)
+			{
+				return i;
+			}
 		}
 
 		return -1;

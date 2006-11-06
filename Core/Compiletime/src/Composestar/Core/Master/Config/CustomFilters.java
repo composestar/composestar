@@ -6,6 +6,11 @@ import java.util.ArrayList;
 public class CustomFilters implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3968104066872916800L;
+
 	private ArrayList filters;
 
 	public CustomFilters()

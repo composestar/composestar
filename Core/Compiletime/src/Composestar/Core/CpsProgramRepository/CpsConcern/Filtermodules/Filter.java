@@ -9,17 +9,24 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {EF28A1E2-BD65-444F-810F-8B5D590B28AA}
  */
 public class Filter extends DeclaredRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6486690993687288235L;
 
 	/**
 	 * extra, reference to type

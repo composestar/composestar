@@ -1,7 +1,10 @@
 package Composestar.Utils;
 
-import java.util.*;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.Serializable;
+import java.util.Properties;
+
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class PropertyManager implements Cloneable, Serializable

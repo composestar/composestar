@@ -9,14 +9,16 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern;
 
-import Composestar.Core.CpsProgramRepository.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModuleAST;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Implementation.Implementation;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.LabeledConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SuperImposition;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {4B0A4EA3-A27B-4E40-8E3A-F80F4CEDA7A1} we can reason about the
@@ -24,6 +26,11 @@ import java.util.*;
  */
 public class CpsConcern extends Concern
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7396365167133765237L;
 
 	/**
 	 * @modelguid {7B45ADC0-2321-4502-B567-C0D90391CAD2}

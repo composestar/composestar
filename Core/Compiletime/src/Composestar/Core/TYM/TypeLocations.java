@@ -29,7 +29,8 @@ public class TypeLocations
 	private Map typeToAssembly = new HashMap(); // typename -> assemblyname
 
 	private Map sourceToAssembly = new HashMap(); // sourcefile ->
-													// assemblyname
+
+	// assemblyname
 
 	private Map typeToSource = new HashMap(); // typename -> sourcefile
 

@@ -17,10 +17,16 @@ public class CastingFacility
 	public synchronized static Object handleCast(Object from, String to)
 	{
 		// no need to convert null
-		if (from == null) return null;
+		if (from == null)
+		{
+			return null;
+		}
 
 		// a null typename is wrong though
-		if (to == null) throw new IllegalArgumentException("to cannot be null");
+		if (to == null)
+		{
+			throw new IllegalArgumentException("to cannot be null");
+		}
 
 		// remove assembly name
 		int bracket = to.indexOf(']');
@@ -32,13 +38,18 @@ public class CastingFacility
 		ObjectManager om = (ObjectManager) GlobalObjectManager.getObjectManagerFor(from);
 		if (om == null)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "No object manager found for '" + from
-					+ "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "No object manager found for '" + from + "'.");
+			}
 		}
 		else
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Found an object manager for '"
-					+ from.getClass().getName() + "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Found an object manager for '" + from.getClass().getName()
+						+ "'.");
+			}
 
 			java.util.ArrayList filterModules = om.getFilterModules();
 			for (int i = 0; i < filterModules.size(); i++)
@@ -51,15 +62,21 @@ public class CastingFacility
 				while (internalObjects.hasMoreElements())
 				{
 					Object internal = internalObjects.nextElement();
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Checking internal: "
-							+ internal.getClass().getName());
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Checking internal: "
+								+ internal.getClass().getName());
+					}
 
 					if (internal.getClass().getName().equals(to))
 					{
 						// This should be the match and return the correct
 						// internal object
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-								"Found internal object of type to return for casting: " + internal);
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+									"Found internal object of type to return for casting: " + internal);
+						}
 						return internal;
 					}
 				}
@@ -76,8 +93,10 @@ public class CastingFacility
 			while (i.hasNext())
 			{
 				FilterModuleRuntime fmr = (FilterModuleRuntime) i.next();
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting FilterModuleRuntime: "
-						+ fmr);
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting FilterModuleRuntime: " + fmr);
+				}
 
 				java.util.Hashtable internals = (java.util.Hashtable) fmr.getInternals();
 				java.util.Enumeration internalObjects = internals.elements();
@@ -86,8 +105,11 @@ public class CastingFacility
 				{
 					Object internal = internalObjects.nextElement();
 
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting internal '"
-							+ internal + "' of '" + fmr + "'.");
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Inspecting internal '" + internal + "' of '" + fmr
+								+ "'.");
+					}
 
 					// FIXME: identical hashCode does not guarantee equality
 					if (internal.hashCode() == from.hashCode())
@@ -95,24 +117,33 @@ public class CastingFacility
 						// This should be the match and return the correct
 						// parent concern object
 						Object obj = fmr.getObjectManager().theObject;
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-								"Found managed object for given internal to return for casting: "
-										+ obj.getClass().getName() + ", key " + obj.hashCode());
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+									"Found managed object for given internal to return for casting: "
+											+ obj.getClass().getName() + ", key " + obj.hashCode());
+						}
 						return obj;
 					}
 				}
 			}
 		}
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "No internal object found for casting: "
-				+ from.getClass().getName() + " -> " + to);
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "No internal object found for casting: "
+					+ from.getClass().getName() + " -> " + to);
+		}
 		return from;
 	}
 
 	public synchronized static Object handleInheritedCall(Object target)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Object under investigation: " + target
-				+ " (type: " + target.getClass().getName() + ").");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Object under investigation: " + target + " (type: "
+					+ target.getClass().getName() + ").");
+		}
 
 		// TODO: wtf is this all about? The code isn't even relevant for the
 		// noted example

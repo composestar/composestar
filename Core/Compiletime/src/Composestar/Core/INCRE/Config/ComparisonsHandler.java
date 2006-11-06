@@ -1,10 +1,10 @@
 package Composestar.Core.INCRE.Config;
 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.INCRE.*;
+import Composestar.Core.INCRE.Module;
 
 public class ComparisonsHandler extends DefaultHandler
 {

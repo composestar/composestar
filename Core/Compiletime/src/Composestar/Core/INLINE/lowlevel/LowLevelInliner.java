@@ -71,7 +71,10 @@ public class LowLevelInliner
 
 		Enumeration filterElements = filterBlock.filterElements.elements();
 
-		if (filterElements.hasMoreElements()) inlineFilterElements(filterElements);
+		if (filterElements.hasMoreElements())
+		{
+			inlineFilterElements(filterElements);
+		}
 
 		strategy.endFilter();
 	}
@@ -221,7 +224,6 @@ public class LowLevelInliner
 
 	private void identifyFilterElementBlocks(ExecutionState filterState, FilterBlock filterBlock)
 	{
-		ExecutionState nextFilterState = null;
 		ExecutionState nextState = getNextState(filterState);
 		Vector result = new Vector();
 

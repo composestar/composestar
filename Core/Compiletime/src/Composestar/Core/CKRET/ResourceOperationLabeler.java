@@ -129,8 +129,14 @@ public class ResourceOperationLabeler implements Labeler
 			LabelSequence seq = (LabelSequence) operationTable.get(new LabelResourcePair(transition.getLabel(),
 					currentResource));
 
-			if (seq == null) return defaultSeq;
-			else return seq;
+			if (seq == null)
+			{
+				return defaultSeq;
+			}
+			else
+			{
+				return seq;
+			}
 		}
 	}
 
@@ -280,7 +286,10 @@ public class ResourceOperationLabeler implements Labeler
 
 		public boolean equals(Object obj)
 		{
-			if (!(obj instanceof LabelResourcePair)) return false;
+			if (!(obj instanceof LabelResourcePair))
+			{
+				return false;
+			}
 
 			LabelResourcePair pair = (LabelResourcePair) obj;
 

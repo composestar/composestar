@@ -9,10 +9,7 @@
  */
 package Composestar.Core.COPPER;
 
-import java.io.*;
-
-import Composestar.Utils.*;
-import antlr.ANTLRException;
+import Composestar.Utils.Debug;
 
 /**
  * Extracts embedded source
@@ -29,7 +26,7 @@ public class SourceExtractor
 			if (endpos > 0)
 			{
 				endpos = b.lastIndexOf('}', endpos - 1); // Closing tag
-															// implementation by
+				// implementation by
 			}
 			if (endpos <= 0)
 			{

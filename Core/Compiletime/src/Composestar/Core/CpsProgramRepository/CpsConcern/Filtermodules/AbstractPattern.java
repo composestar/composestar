@@ -9,7 +9,7 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 public abstract class AbstractPattern extends ContextRepositoryEntity
 {

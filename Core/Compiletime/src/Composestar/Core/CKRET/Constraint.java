@@ -22,23 +22,17 @@ public class Constraint
 
 	public static final boolean REQUIREMENT = false;
 
-	private boolean type;
-
 	private String resource;
 
 	private Pattern pattern;
-
-	private String patternString;
 
 	private String message;
 
 	public Constraint(String resource, String patternString, String message, boolean type) throws PatternParseException
 	{
 		this.resource = resource;
-		this.patternString = patternString;
 		this.pattern = Pattern.compile(patternString);
 		this.message = message;
-		this.type = type;
 	}
 
 	public Pattern getPattern()

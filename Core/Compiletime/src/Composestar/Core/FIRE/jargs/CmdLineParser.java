@@ -2,10 +2,10 @@ package Composestar.Core.FIRE.jargs;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Hashtable;
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Vector;
 
 /**
  * Largely GNU-compatible command-line options parser. Has short (-v) and
@@ -38,6 +38,11 @@ public class CmdLineParser
 	 */
 	public static class UnknownOptionException extends OptionException
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2115668096567852547L;
+
 		UnknownOptionException(String optionName)
 		{
 			super("unknown option '" + optionName + '\'');
@@ -62,6 +67,11 @@ public class CmdLineParser
 	 */
 	public static class IllegalOptionValueException extends OptionException
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2451763454182773619L;
+
 		public IllegalOptionValueException(Option opt, String value)
 		{
 			super("illegal value '" + value + "' for option -" + opt.shortForm() + "/--" + opt.longForm());
@@ -98,7 +108,10 @@ public class CmdLineParser
 
 		protected Option(char shortForm, String longForm, boolean wantsValue)
 		{
-			if (longForm == null) throw new IllegalArgumentException("null arg forms not allowed");
+			if (longForm == null)
+			{
+				throw new IllegalArgumentException("null arg forms not allowed");
+			}
 			this.shortForm = new String(new char[] { shortForm });
 			this.longForm = longForm;
 			this.wantsValue = wantsValue;

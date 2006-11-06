@@ -59,7 +59,10 @@ public class FilterRuntime extends ReferenceEntityRuntime implements Interpretab
 	{
 		if (!this.filterElements.isEmpty())
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tInterpreting FilterRuntime...");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tInterpreting FilterRuntime...");
+			}
 			// Get the first element and call it's operator to interpret this
 			// message.
 			FilterElementRuntime fer = (FilterElementRuntime) this.filterElements.get(0);

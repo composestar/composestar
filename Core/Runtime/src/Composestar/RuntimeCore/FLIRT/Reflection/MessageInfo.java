@@ -1,16 +1,18 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
-import Composestar.RuntimeCore.FLIRT.Message.*;
-import Composestar.RuntimeCore.Utils.*;
 import java.util.HashMap;
+
+import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.Utils.ChildThread;
+import Composestar.RuntimeCore.Utils.ThreadPool;
 
 /**
  * <pre>
- *  This file is part of Composestar project [http://composestar.sf.net].
- *  Copyright (C) 2003 University of Twente.
- *  Licensed under LGPL v2.1 or (at your option) any later version.
- *  [http://www.fsf.org/copyleft/lgpl.html]
- *  $Id$
+ *   This file is part of Composestar project [http://composestar.sf.net].
+ *   Copyright (C) 2003 University of Twente.
+ *   Licensed under LGPL v2.1 or (at your option) any later version.
+ *   [http://www.fsf.org/copyleft/lgpl.html]
+ *   $Id$
  * </pre>
  * 
  * MessageInfo provides an interface to access reflective information about the
@@ -27,19 +29,19 @@ import java.util.HashMap;
  * code shows a simple example of the use of MessageInfo:
  * 
  * <pre>
- * 
- *    ...
- *    void foo(){
- *       Bar bar=null;
- * 
- *       Object sender = Composestar.Runtime.FLIRT.message.MessageInfo.getMessageInfo().getSender();
- * 
- *       if (sender instanceof Bar)
- *          bar=(Bar)sender;
- * 		...
- *       
- *    }
  *  
+ *     ...
+ *     void foo(){
+ *        Bar bar=null;
+ *  
+ *        Object sender = Composestar.Runtime.FLIRT.message.MessageInfo.getMessageInfo().getSender();
+ *  
+ *        if (sender instanceof Bar)
+ *           bar=(Bar)sender;
+ *  		...
+ *        
+ *     }
+ *   
  * </pre>
  */
 

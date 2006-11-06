@@ -12,7 +12,6 @@ package Composestar.Core.FIRE;
  **/
 import java.util.HashMap;
 import java.util.LinkedList;
-import Composestar.Utils.Debug;
 
 public class FilterReasoningEngine
 {
@@ -129,7 +128,10 @@ public class FilterReasoningEngine
 
 		while (!dfi.isDone())
 		{
-			if (!dfi.getNode().hasChildren()) ll.add(dfi.getNode());
+			if (!dfi.getNode().hasChildren())
+			{
+				ll.add(dfi.getNode());
+			}
 
 			dfi.next();
 		}
@@ -160,7 +162,10 @@ public class FilterReasoningEngine
 			String key = (String) itr.next();
 			Symbol s = (Symbol) concernSymbols.get(key);
 
-			if (s != null && s.getName().equals(symbolName)) return key;
+			if (s != null && s.getName().equals(symbolName))
+			{
+				return key;
+			}
 		}
 
 		return null;

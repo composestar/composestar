@@ -9,8 +9,8 @@
  */
 package Composestar.Core.RepositoryImplementation;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 
 /**
  * This defines a declaration of an entity, together with its type (e.g.

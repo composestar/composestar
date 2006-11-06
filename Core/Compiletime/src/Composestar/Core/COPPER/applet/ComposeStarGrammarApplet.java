@@ -1,23 +1,33 @@
 package Composestar.Core.COPPER.applet;
 
-import java.awt.event.*;
-import java.awt.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import antlr.*;
+import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 
-import Composestar.Core.COPPER.*;
+import Composestar.Core.COPPER.CpsParser;
+import Composestar.Core.COPPER.CpsPosLexer;
+import antlr.ANTLRException;
 
 public class ComposeStarGrammarApplet extends JApplet implements ActionListener, KeyListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5255074200151125654L;
+
 	protected JButton button;
 
 	protected JEditorPane textpane;
@@ -27,7 +37,8 @@ public class ComposeStarGrammarApplet extends JApplet implements ActionListener,
 	protected String src = "";
 
 	protected static int errline = -1; // michielh: why was this declared
-										// static?
+
+	// static?
 
 	protected static final double RESIZEWEIGHT = 0.75;
 

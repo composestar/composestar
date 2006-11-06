@@ -15,19 +15,22 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import Composestar.Core.INCRE.INCRE;
-import Composestar.Core.INCRE.INCRETimer;
-import Composestar.Core.Master.*;
-import Composestar.Core.Master.Config.ConcernSource;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
-import Composestar.Core.Exception.*;
-import antlr.*;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
+import Composestar.Core.Master.CTCommonModule;
+import Composestar.Core.Master.CommonResources;
+import Composestar.Core.Master.Config.ConcernSource;
+import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
+import Composestar.Utils.Debug;
+import antlr.CommonAST;
+import antlr.RecognitionException;
 
 /**
  * Main class used to run the parser
@@ -36,14 +39,16 @@ public class COPPER implements CTCommonModule
 {
 	// global variables
 	private static String cpscontents; // contents of the cps file we're
-										// parsing
+
+	// parsing
 
 	private static CpsParser parser;
 
 	private static CommonAST parseTree;
 
 	private static String embeddedSource; // string used to hold the source
-											// (if embedded)
+
+	// (if embedded)
 
 	private static boolean showtree; // show the parse tree?
 

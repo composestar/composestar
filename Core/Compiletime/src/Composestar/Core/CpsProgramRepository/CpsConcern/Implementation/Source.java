@@ -9,13 +9,18 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Implementation;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  * @modelguid {ED820E47-7CAC-4364-A69D-8081EE7C219F}
  */
 public class Source extends Implementation
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3940707016510175491L;
 
 	/**
 	 * @modelguid {B0CD8BE6-72C8-4ABB-BFB8-4A2F704062CD}

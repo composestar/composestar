@@ -111,19 +111,31 @@ public abstract class ExecutionState
 
 	public boolean equals(Object obj)
 	{
-		if (!(obj instanceof ExecutionState)) return false;
+		if (!(obj instanceof ExecutionState))
+		{
+			return false;
+		}
 
 		ExecutionState state = (ExecutionState) obj;
-		if (this.flowNode != state.flowNode) return false;
+		if (this.flowNode != state.flowNode)
+		{
+			return false;
+		}
 
-		if (!Message.checkEquals(this.substitutionTarget, state.substitutionTarget)) return false;
+		if (!Message.checkEquals(this.substitutionTarget, state.substitutionTarget))
+		{
+			return false;
+		}
 
 		if (!Message.checkEquals(this.substitutionSelector, state.substitutionSelector))
 		{
 			return false;
 		}
 
-		if (!this.message.equals(state.message)) return false;
+		if (!this.message.equals(state.message))
+		{
+			return false;
+		}
 
 		// other fields not important for comparison
 

@@ -1,8 +1,8 @@
 package Composestar.RuntimeCore.FLIRT;
 
-import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
-
 import java.io.Serializable;
+
+import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
 public abstract class PlatformProvider implements Serializable
 {

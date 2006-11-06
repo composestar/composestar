@@ -1,11 +1,11 @@
 package Composestar.RuntimeCore.FLIRT.Filtertypes;
 
-import Composestar.RuntimeCore.FLIRT.Message.MessageList;
-import Composestar.RuntimeCore.FLIRT.Message.Message;
-import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
-import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
-
 import java.util.Dictionary;
+
+import Composestar.RuntimeCore.FLIRT.Actions.ComposeStarAction;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 
 /**
  * This file is part of Composestar project [http://composestar.sf.net].
@@ -92,8 +92,11 @@ public abstract class FilterTypeRuntime
 		java.util.LinkedList org = originalMessages.getMessages();
 		java.util.LinkedList mod = modifiedMessages.getMessages();
 
-		if (org.size() != mod.size() && modifiedMessages.hasWildcards()) throw new Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException(
-				"Ambiguous wildcards in selector");
+		if (org.size() != mod.size() && modifiedMessages.hasWildcards())
+		{
+			throw new Composestar.RuntimeCore.FLIRT.Exception.ComposestarRuntimeException(
+					"Ambiguous wildcards in selector");
+		}
 
 		if (modifiedMessages.hasWildcards())
 		{

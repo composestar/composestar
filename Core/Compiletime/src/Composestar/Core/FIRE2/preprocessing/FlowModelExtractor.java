@@ -122,13 +122,15 @@ public class FlowModelExtractor
 	{
 		BasicFlowNode node = (BasicFlowNode) graphNode.getAnnotation(FLOW_NODE_ANNOTATION);
 
-		if (node != null) return node;
+		if (node != null)
+		{
+			return node;
+		}
 
 		RepositoryEntity entity = (RepositoryEntity) graphNode.getAnnotation("repositoryLink");
 
 		Collection col = graph.edgeSet(graphNode);
 		Iterator iter = col.iterator();
-		int type = 0;
 		HashSet names = new HashSet();
 		String label;
 		while (iter.hasNext())
@@ -152,6 +154,11 @@ public class FlowModelExtractor
 
 	private static class BasicFlowModel extends RepositoryEntity implements FlowModel
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8015349976168852314L;
+
 		private FlowNode startNode;
 
 		private FlowNode endNode;

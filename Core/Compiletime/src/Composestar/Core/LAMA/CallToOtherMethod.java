@@ -18,6 +18,11 @@ import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 public class CallToOtherMethod implements SerializableRepositoryEntity
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1718642064472551590L;
+
 	public String OperationName;
 
 	public MethodInfo calledMethod;

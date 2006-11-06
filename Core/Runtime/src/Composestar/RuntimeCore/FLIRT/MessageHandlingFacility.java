@@ -49,10 +49,10 @@ public abstract class MessageHandlingFacility
 	{
 		String shortname = createdObject.getClass().getName();
 		shortname = shortname.substring(shortname.lastIndexOf(".") + 1); // get
-																			// the
-																			// class
-																			// name
-																			// only
+		// the
+		// class
+		// name
+		// only
 		Message msg = new Message(shortname /* createdObject.GetType().get_Name() */, args);
 		msg.setSender(creator);
 		msg.setTarget(createdObject);
@@ -75,10 +75,15 @@ public abstract class MessageHandlingFacility
 
 	private static void handleInstanceCreation(Message message, Object creator, Object createdObject, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("instance creation", creator.toString(), createdObject
-				.getClass().getName(), message.getSelector(), args);
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "\tMap: "
-				+ RepositoryLinker.filterModuleReferenceMap);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("instance creation", creator.toString(), createdObject.getClass().getName(), message
+					.getSelector(), args);
+		}
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_DEBUG, "FLIRT", "\tMap: " + RepositoryLinker.filterModuleReferenceMap);
+		}
 
 		HashMap mapping = new HashMap();
 
@@ -148,20 +153,28 @@ public abstract class MessageHandlingFacility
 
 		if (cpsConcern != null)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound CPS concern '" + cpsConcern
-					+ "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tFound CPS concern '" + cpsConcern + "'.");
+			}
 			Iterator paramIterator = cpsConcern.getParameterIterator();
 			int i = 0;
 			while (paramIterator.hasNext())
 			{
 				LabeledConcernReference lcr = (LabeledConcernReference) paramIterator.next();
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tProcessing argument " + i
-						+ " of " + args.length + "...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tProcessing argument " + i + " of " + args.length
+							+ "...");
+				}
 				if (i < args.length)
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tChecking argument["
-							+ args[i].getClass().getName().equals(lcr.getQualifiedName()) + "]: "
-							+ args[i].getClass().getName() + " == " + lcr.getQualifiedName());
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tChecking argument["
+								+ args[i].getClass().getName().equals(lcr.getQualifiedName()) + "]: "
+								+ args[i].getClass().getName() + " == " + lcr.getQualifiedName());
+					}
 					if (args[i].getClass().getName().equals(lcr.getQualifiedName()))
 					{
 						if (Debug.SHOULD_DEBUG)
@@ -185,19 +198,27 @@ public abstract class MessageHandlingFacility
 				}
 				i++;
 			}
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", "\tConstructor map: " + mapping);
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_DEBUG, "FLIRT", "\tConstructor map: " + mapping);
+			}
 			Iterator fmIterator = cpsConcern.getFilterModuleIterator();
 			while (fmIterator.hasNext())
 			{
 				FilterModule exfm = (FilterModule) fmIterator.next();
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tFound external filtermodule '"
-						+ cpsConcern.getName() + "." + exfm.getName() + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tFound external filtermodule '"
+							+ cpsConcern.getName() + "." + exfm.getName() + "'.");
+				}
 				FilterModuleRuntime exfmr = (FilterModuleRuntime) RepositoryLinker.filterModuleReferenceMap
 						.get(cpsConcern.getName() + "." + exfm.getName());
 				if (exfmr != null)
 				{
-					if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-							"\t\tFound FilterModuleRuntime '" + exfmr + "'.");
+					if (Debug.SHOULD_DEBUG)
+					{
+						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tFound FilterModuleRuntime '" + exfmr + "'.");
+					}
 					/*
 					 * Iterator keys = mapping.keySet().iterator();
 					 * while(keys.hasNext()) { String key = (String)keys.next();
@@ -210,8 +231,10 @@ public abstract class MessageHandlingFacility
 					while (entries.hasNext())
 					{
 						Entry entry = (Entry) entries.next();
-						if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tAdding external '"
-								+ entry.getKey() + "'.");
+						if (Debug.SHOULD_DEBUG)
+						{
+							Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tAdding external '" + entry.getKey() + "'.");
+						}
 						exfmr.addExternal((String) entry.getKey(), entry.getValue());
 					}
 				}
@@ -230,13 +253,19 @@ public abstract class MessageHandlingFacility
 
 		// Update the message!!!
 		MessageInfoProxy.updateMessage(message);
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 	}
 
 	private static void handleConstructorCall(Object creator, Object createdObject, Message msg)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming constructor message", creator.getClass().getName(),
-				msg.getTarget().getClass().toString(), msg.getSelector(), EmptyObjectArray);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming constructor message", creator.getClass().getName(), msg.getTarget()
+					.getClass().toString(), msg.getSelector(), EmptyObjectArray);
+		}
 
 		// First check do the output filters
 		// ObjectManager om = ObjectManager.getObjectManagerFor(creator,
@@ -253,16 +282,25 @@ public abstract class MessageHandlingFacility
 		}
 		catch (ErrorFilterException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			}
 			throw new ErrorFilterException(e);
 		}
 		catch (ComposestarRuntimeException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			}
 			throw new ComposestarRuntimeException(e);
 		}
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 	}
 
 	/**
@@ -276,8 +314,11 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(Object caller, Object target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> non static return message", caller
-				.getClass().getName(), target.getClass().toString(), selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming non static -> non static return message", caller.getClass().getName(),
+					target.getClass().toString(), selector, args);
+		}
 		Message msg = new Message(selector, args);
 		msg.setSender(caller);
 		msg.setServer(target);
@@ -287,49 +328,77 @@ public abstract class MessageHandlingFacility
 
 		try
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> OUTGOING: " + msg);
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> OUTGOING: " + msg);
+			}
 			if (ObjectManager.hasFilterModules(caller, datastore))
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"Filtermodule(s) present at caller, delivering message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"Filtermodule(s) present at caller, delivering message...");
+				}
 				om = ObjectManager.getObjectManagerFor(caller, datastore);
 				msg = (Message) om.deliverOutgoingMessage(caller, target, msg);
 			}
 			else
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"No filtermodules present at caller, sending message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug
+							.out(Debug.MODE_INFORMATION, "FLIRT",
+									"No filtermodules present at caller, sending message...");
+				}
 				msg.setDirection(Message.INCOMING);
 				msg.setTarget(target);
 			}
 
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> INCOMING: " + msg);
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> INCOMING: " + msg);
+			}
 			if (ObjectManager.hasFilterModules(msg.getTarget(), datastore))
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"Filtermodule(s) present at target, delivering message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"Filtermodule(s) present at target, delivering message...");
+				}
 				om = ObjectManager.getObjectManagerFor(msg.getTarget(), datastore);
 				returnvalue = om.deliverIncomingMessage(caller, msg.getTarget(), msg);
 			}
 			else
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"No filtermodules present at target, invoking message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"No filtermodules present at target, invoking message...");
+				}
 				returnvalue = Invoker.getInstance().invoke(msg.getTarget(), msg.getSelector(), msg.getArguments());
 			}
 		}
 		catch (ErrorFilterException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			}
 			throw new ErrorFilterException(e);
 		}
 		catch (ComposestarRuntimeException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			}
 			throw new ComposestarRuntimeException(e);
 		}
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 		return returnvalue;
 	}
 
@@ -344,8 +413,11 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(Object caller, Object target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> non static void message", caller
-				.getClass().getName(), target.getClass().toString(), selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming non static -> non static void message", caller.getClass().getName(),
+					target.getClass().toString(), selector, args);
+		}
 
 		Message msg = new Message(selector, args);
 		msg.setSender(caller);
@@ -353,52 +425,80 @@ public abstract class MessageHandlingFacility
 		msg.STATE = Message.MESSAGE_NONSTATIC_NONSTATIC_VOID;
 		ObjectManager om;
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> OUTGOING: " + msg);
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> OUTGOING: " + msg);
+		}
 
 		try
 		{
 			if (ObjectManager.hasFilterModules(caller, datastore))
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"Filtermodule(s) present at caller, delivering message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"Filtermodule(s) present at caller, delivering message...");
+				}
 				om = ObjectManager.getObjectManagerFor(caller, datastore);
 				msg = (Message) om.deliverOutgoingMessage(caller, target, msg);
 			}
 			else
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"No filtermodules present at caller, sending message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug
+							.out(Debug.MODE_INFORMATION, "FLIRT",
+									"No filtermodules present at caller, sending message...");
+				}
 				msg.setDirection(Message.INCOMING);
 				msg.setTarget(target);
 			}
 
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> INCOMING: " + msg);
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_DEBUG, "FLIRT", ">>> INCOMING: " + msg);
+			}
 			if (ObjectManager.hasFilterModules(msg.getTarget(), datastore))
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"Filtermodule(s) present at target, delivering message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"Filtermodule(s) present at target, delivering message...");
+				}
 				om = ObjectManager.getObjectManagerFor(msg.getTarget(), datastore);
 				om.deliverIncomingMessage(caller, msg.getTarget(), msg);
 			}
 			else
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"No filtermodules present at target, invoking message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"No filtermodules present at target, invoking message...");
+				}
 				Invoker.getInstance().invoke(msg.getTarget(), msg.getSelector(), msg.getArguments());
 			}
 		}
 		catch (ErrorFilterException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			}
 			throw new ErrorFilterException(e);
 		}
 		catch (ComposestarRuntimeException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			}
 			throw new ComposestarRuntimeException(e);
 		}
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 	}
 
 	/**
@@ -412,8 +512,11 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(String staticcaller, Object target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static return message", staticcaller,
-				target.getClass().getName(), selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming static -> non static return message", staticcaller, target.getClass()
+					.getName(), selector, args);
+		}
 		Message msg = new Message(selector, args);
 		msg.setSender(staticcaller);
 		msg.setServer(target);
@@ -425,30 +528,45 @@ public abstract class MessageHandlingFacility
 		{
 			if (ObjectManager.hasFilterModules(target, datastore))
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"Filtermodule(s) present at target, delivering message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"Filtermodule(s) present at target, delivering message...");
+				}
 				ObjectManager om = ObjectManager.getObjectManagerFor(target, datastore);
 				returnvalue = om.deliverIncomingMessage(staticcaller.getClass().getName(), target, msg);
 			}
 			else
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"No filtermodules present at target, invoking message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"No filtermodules present at target, invoking message...");
+				}
 				returnvalue = Invoker.getInstance().invoke(target, selector, args);
 			}
 		}
 		catch (ErrorFilterException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			}
 			throw new ErrorFilterException(e);
 		}
 		catch (ComposestarRuntimeException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			}
 			throw new ComposestarRuntimeException(e);
 		}
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 		return returnvalue;
 	}
 
@@ -464,15 +582,21 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(String staticcaller, Object target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> non static void message", staticcaller,
-				target.getClass().getName(), selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming static -> non static void message", staticcaller, target.getClass()
+					.getName(), selector, args);
+		}
 
 		try
 		{
 			if (ObjectManager.hasFilterModules(target, datastore))
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"Filtermodule(s) present at target, delivering message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"Filtermodule(s) present at target, delivering message...");
+				}
 				Message msg = new Message(selector, args);
 				msg.setSender(staticcaller);
 				msg.setServer(target);
@@ -483,23 +607,35 @@ public abstract class MessageHandlingFacility
 			}
 			else
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"No filtermodules present at target, invoking message...");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+							"No filtermodules present at target, invoking message...");
+				}
 				Invoker.getInstance().invoke(target, selector, args);
 			}
 		}
 		catch (ErrorFilterException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Rethrowing ErrorFilterException");
+			}
 			throw new ErrorFilterException(e);
 		}
 		catch (ComposestarRuntimeException e)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_WARNING, "FLIRT", "Rethrowing ComposestarRuntimeException");
+			}
 			throw new ComposestarRuntimeException(e);
 		}
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 	}
 
 	/**
@@ -513,14 +649,23 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(Object caller, String target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static return message", caller
-				.getClass().getName(), target, selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming non static -> static return message", caller.getClass().getName(), target,
+					selector, args);
+		}
 		Object returnvalue;
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		}
 		returnvalue = Invoker.getInstance().invoke(target, selector, args);
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 		return returnvalue;
 	}
 
@@ -535,13 +680,22 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(Object caller, String target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming non static -> static void message", caller.getClass()
-				.getName(), target, selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming non static -> static void message", caller.getClass().getName(), target,
+					selector, args);
+		}
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		}
 		Invoker.getInstance().invoke(target, selector, args);
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 	}
 
 	/**
@@ -555,14 +709,22 @@ public abstract class MessageHandlingFacility
 	 */
 	public static Object handleReturnMethodCall(String staticcaller, String target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> static return message", staticcaller,
-				target, selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming static -> static return message", staticcaller, target, selector, args);
+		}
 
 		Object returnvalue;
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		}
 		returnvalue = Invoker.getInstance().invoke(target, selector, args);
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 		return returnvalue;
 	}
 
@@ -578,13 +740,21 @@ public abstract class MessageHandlingFacility
 	 */
 	public static void handleVoidMethodCall(String staticcaller, String target, String selector, Object[] args)
 	{
-		if (Debug.SHOULD_DEBUG) logIncomingMethodStart("incoming static -> static void message", staticcaller, target,
-				selector, args);
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodStart("incoming static -> static void message", staticcaller, target, selector, args);
+		}
 
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Invoking message...");
+		}
 		Invoker.getInstance().invoke(target, selector, args);
 
-		if (Debug.SHOULD_DEBUG) logIncomingMethodEnd();
+		if (Debug.SHOULD_DEBUG)
+		{
+			logIncomingMethodEnd();
+		}
 	}
 
 	private static void logIncomingMethodStart(String mdefinition, String caller, String target, String selector,
@@ -643,7 +813,10 @@ public abstract class MessageHandlingFacility
 
 		RepositoryDeserializer rd = provider.getRepositoryDeserializer();
 		datastore = rd.deserialize(filename);
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Linking compile time structure...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Linking compile time structure...");
+		}
 		try
 		{
 			RepositoryLinker rl = new RepositoryLinker(datastore);
@@ -651,7 +824,10 @@ public abstract class MessageHandlingFacility
 		}
 		catch (Exception e)
 		{
-			if (Debug.getMode() > 1) e.printStackTrace();
+			if (Debug.getMode() > 1)
+			{
+				e.printStackTrace();
+			}
 			Debug.out(Debug.MODE_ERROR, "FLIRT", "Unable to link the Compile time to the Runtime shadow structure!");
 			Debug.out(Debug.MODE_ERROR, "FLIRT", "Exiting...");
 			System.exit(-1);

@@ -9,8 +9,8 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
@@ -30,18 +30,24 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernRefere
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ProgramElementReference;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.Exception.ModuleException;
-import Composestar.Core.LAMA.*;
-import Composestar.Core.LOLA.connector.ComposestarBuiltins;
-import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.INCRE.MethodNode;
+import Composestar.Core.LAMA.ProgramElement;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.LAMA.TypeMap;
+import Composestar.Core.LOLA.connector.ComposestarBuiltins;
+import Composestar.Core.LOLA.metamodel.ModelClashException;
 import Composestar.Core.RepositoryImplementation.DataStore;
-
-import Composestar.Utils.*;
+import Composestar.Utils.Debug;
 
 public class PredicateSelector extends SimpleSelExpression
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5921852132415178944L;
+
 	String outputVar;
 
 	String query;
@@ -53,10 +59,12 @@ public class PredicateSelector extends SimpleSelExpression
 	boolean toBeCheckedByINCRE; // whether INCRE needs to check this
 
 	HashMap TYMInfo; // contains TYM information extracted while executing
-						// query
+
+	// query
 
 	HashSet annotations; // contains the names of annotations extracted while
-							// executing query
+
+	// executing query
 
 	public PredicateSelector(String outputVar, String query)
 	{
@@ -298,7 +306,7 @@ public class PredicateSelector extends SimpleSelExpression
 		}
 
 		if (answers.size() >= 50000) // Arbitrary number...what would be
-										// reasonable to expect?
+		// reasonable to expect?
 		{
 			Debug.out(Debug.MODE_WARNING, "LOLA",
 					"Over 50k results; maybe this prolog expression generates infinite results:\n" + query, this);

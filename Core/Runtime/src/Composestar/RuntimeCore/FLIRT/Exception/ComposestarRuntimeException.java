@@ -67,8 +67,14 @@ public class ComposestarRuntimeException extends RuntimeException
 	 */
 	public Throwable initCause(Throwable cause)
 	{
-		if (cause.equals(this)) throw new IllegalArgumentException();
-		if (!this.cause.equals(this)) throw new IllegalStateException();
+		if (cause.equals(this))
+		{
+			throw new IllegalArgumentException();
+		}
+		if (!this.cause.equals(this))
+		{
+			throw new IllegalStateException();
+		}
 		this.cause = cause;
 		return this;
 	}

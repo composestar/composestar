@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class CompilerConverter implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2071985122483867847L;
+
 	private String name;
 
 	private String expression;

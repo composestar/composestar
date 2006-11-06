@@ -13,6 +13,11 @@ import java.io.Serializable;
 
 public class Conflict implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7017897791526259274L;
+
 	private String resource = "";
 
 	private String sequence = "";

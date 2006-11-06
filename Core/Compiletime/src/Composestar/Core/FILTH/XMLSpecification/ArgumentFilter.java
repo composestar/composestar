@@ -13,8 +13,10 @@ package Composestar.Core.FILTH.XMLSpecification;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 public class ArgumentFilter extends XMLFilterImpl
 {

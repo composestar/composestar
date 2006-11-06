@@ -22,13 +22,13 @@ import tarau.jinni.JavaObject;
 import tarau.jinni.Prog;
 import tarau.jinni.Source;
 import tarau.jinni.Term;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 import Composestar.Core.LAMA.ProgramElement;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.metamodel.CompositeRelationPredicate;
 import Composestar.Core.LOLA.metamodel.LanguageModel;
 import Composestar.Core.LOLA.metamodel.RelationPredicate;
 import Composestar.Core.LOLA.metamodel.UnitDictionary;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.PredicateSelector;
 
 /**
  * @author havingaw This class implements builtin predicates used by the
@@ -36,6 +36,11 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSe
  */
 public class ComposestarBuiltins extends HashDict
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8404927622993344626L;
+
 	/* Public for convenience - should be readable by builtin-classes */
 	public static UnitDictionary langUnits;
 
@@ -368,7 +373,7 @@ class binaryRelationBuiltin extends FunBuiltin
 			}
 		}
 		else if (term2 instanceof JavaObject)// term1 is unbound, term2 is
-												// bound
+		// bound
 		{
 			if (null == termToUnit(term2))
 			{
@@ -443,10 +448,10 @@ class isUnitNameBuiltin extends FunBuiltin
 		if (!(tType instanceof Const))
 		{
 			ComposestarBuiltins.currentSelector.setToBeCheckedByINCRE(false);// too
-																				// many
-																				// cases
+			// many
+			// cases
 			knownType = false; // Unit can be of any type; lookup will be
-								// slower
+			// slower
 		}
 		else
 		{
@@ -472,7 +477,7 @@ class isUnitNameBuiltin extends FunBuiltin
 				return 0; // No unit exists by this name
 			}
 			if (tUnit instanceof JavaObject) // Unit is bound - check whether
-												// we have found the same unit
+			// we have found the same unit
 			{
 				// add type information for incremental process
 				ComposestarBuiltins.currentSelector.addTYMInfo((ProgramElement) tUnit.toObject(), "getUnitName");
@@ -521,16 +526,16 @@ class isUnitNameBuiltin extends FunBuiltin
 			if (knownType && !(unit.getUnitType().equals(type)))
 			{
 				return 0; // It is a unit, but not of the specified type! So
-							// this predicate fails.
+				// this predicate fails.
 			}
 
 			// add type information for incremental process
 			ComposestarBuiltins.currentSelector.addTYMInfo(unit, "getUnitName");
 
 			return putArg(1, new Const(unit.getUnitName()), p); // we found the
-																// unit and
-																// return its
-																// name
+			// unit and
+			// return its
+			// name
 		}
 	}
 }
@@ -550,10 +555,10 @@ class hasAttributeBuiltin extends FunBuiltin
 		if (!(tType instanceof Const))
 		{
 			ComposestarBuiltins.currentSelector.setToBeCheckedByINCRE(false);// too
-																				// many
-																				// cases
+			// many
+			// cases
 			knownType = false; // Unit can be of any type; lookup will be
-								// slower
+			// slower
 		}
 		else
 		{
@@ -563,7 +568,7 @@ class hasAttributeBuiltin extends FunBuiltin
 		Term tUnit = getArg(0);
 		Term tAttr = getArg(1);
 		if (tAttr instanceof Const) // Attribute is bound - lookup units with
-									// this attr
+		// this attr
 		{
 			String attr = ((Const) tAttr).name();
 			UnitResult result;
@@ -632,19 +637,19 @@ class hasAttributeBuiltin extends FunBuiltin
 			if (knownType && !(unit.getUnitType().equals(type)))
 			{
 				return 0; // It is a unit, but not of the specified type! So
-							// this predicate fails.
+				// this predicate fails.
 			}
 
 			// Attribute unbound, unit bound, type bound
 			// Add type information for incremental process
 			ComposestarBuiltins.currentSelector.addTYMInfo(unit, "getUnitAttributes");
 			return putArg(1, new StringSource(p, unit.getUnitAttributes()), p); // we
-																				// found
-																				// the
-																				// unit,
-																				// return
-																				// its
-																				// attributes
+			// found
+			// the
+			// unit,
+			// return
+			// its
+			// attributes
 		}
 	}
 }

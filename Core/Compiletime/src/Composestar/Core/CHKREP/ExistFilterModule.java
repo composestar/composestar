@@ -8,15 +8,15 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
-import Composestar.Core.Exception.ModuleException;
+import java.util.Iterator;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.FilterModuleBinding;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * @author DoornenbalD ExistFiltermodule checks whether the filtermodules used

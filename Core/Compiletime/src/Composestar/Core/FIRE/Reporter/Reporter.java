@@ -29,8 +29,9 @@ public class Reporter
 	protected String buffer = "";
 
 	protected LinkedList stateStringList = new LinkedList(); // Remember the
-																// previous two
-																// strings.
+
+	// previous two
+	// strings.
 
 	protected String currentStateString = "";
 
@@ -159,7 +160,10 @@ public class Reporter
 	{
 		buffer = "";
 
-		if (tables == null) return;
+		if (tables == null)
+		{
+			return;
+		}
 
 		for (int t = 0; t < tables.size(); t++)
 		{

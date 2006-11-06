@@ -17,10 +17,12 @@ public class LanguageUnitType
 	private String type; // Unit type
 
 	private boolean nameUnique; // Whether the name of this kind of unit should
-								// be unique
+
+	// be unique
 
 	private Hashtable relationTypes;// Specs of relations that this type of unit
-									// can have to other units
+
+	// can have to other units
 
 	public LanguageUnitType(/* String predicateName, */Class impl, String type, boolean nameUnique)
 	{

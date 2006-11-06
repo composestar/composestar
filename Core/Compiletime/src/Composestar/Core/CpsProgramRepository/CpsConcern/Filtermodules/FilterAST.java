@@ -20,6 +20,11 @@ public class FilterAST extends DeclaredRepositoryEntity
 {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2302850129520568577L;
+
+	/**
 	 * extra, reference to type
 	 */
 	public ConcernReference typeImplementation;

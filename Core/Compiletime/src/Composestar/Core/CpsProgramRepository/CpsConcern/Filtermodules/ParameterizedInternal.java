@@ -1,11 +1,14 @@
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import java.util.Vector;
-
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
 public class ParameterizedInternal extends Internal
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2786468861419775999L;
+
 	public String parameter;
 
 	public ParameterizedInternalAST pin_ast;

@@ -1,11 +1,11 @@
 package Composestar.Core.LAMA;
 
-import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import Composestar.Core.CpsProgramRepository.PlatformRepresentation;
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 public abstract class ProgramElement extends PlatformRepresentation implements SerializableRepositoryEntity
 {

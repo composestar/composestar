@@ -161,8 +161,8 @@ public class INCRE implements CTCommonModule
 			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
 					INCRETimer.TYPE_OVERHEAD);
 			this.enabled = this.loadHistory(historyfile); // shut down INCRE
-															// in case loading
-															// fails
+			// in case loading
+			// fails
 			loadhistory.stop();
 		}
 
@@ -580,7 +580,7 @@ public class INCRE implements CTCommonModule
 	public boolean isFileAdded(String filename, FileDependency fdep) throws ModuleException
 	{
 		if (filesCheckedOnProjectConfig.containsKey(filename)) // checked
-																// before
+		// before
 		{
 			return ((Boolean) filesCheckedOnProjectConfig.get(filename)).booleanValue();
 		}
@@ -597,7 +597,7 @@ public class INCRE implements CTCommonModule
 		{
 			// TODO: use configurable SupportedLanguages (xml)
 			searchBuffer.append(this.projectSources);// look in project
-														// sources
+			// sources
 		}
 		else if (fixedFile.endsWith(".cps"))
 		{
@@ -930,7 +930,7 @@ public class INCRE implements CTCommonModule
 							Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Found modified dependency [module=" + modulename
 									+ ",dep=" + dep.getName() + ",input=" + input + ']');
 							return false; // file added to project thus
-											// modified!
+							// modified!
 						}
 						if (isFileModified(currentFile))
 						{

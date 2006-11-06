@@ -16,6 +16,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
  */
 public class Not extends UnaryOperator
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3703389311192256887L;
+
 	public Not()
 	{
 		super();

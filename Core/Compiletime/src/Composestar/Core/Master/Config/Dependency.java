@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class Dependency implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -710749427319025140L;
+
 	String fileName;
 
 	public Dependency()

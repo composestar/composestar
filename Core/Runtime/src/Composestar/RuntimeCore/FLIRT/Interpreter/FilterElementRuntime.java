@@ -1,7 +1,5 @@
 package Composestar.RuntimeCore.FLIRT.Interpreter;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Dictionary;
 
 import Composestar.RuntimeCore.FLIRT.Message.MessageList;
@@ -56,8 +54,10 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
 	 */
 	public boolean interpret(MessageList m, Dictionary context)
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-				"\t\tInterpreting FilterElementCompositionOperatorRuntime...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\tInterpreting FilterElementCompositionOperatorRuntime...");
+		}
 		boolean returnvalue = true;
 		if (this.conditionpart.interpret(m, context))
 		{
@@ -71,8 +71,10 @@ public class FilterElementRuntime extends ReferenceEntityRuntime implements Inte
 			 * (MatchingPatternRuntime)this.matchingPatterns.get(i); matches =
 			 * matches || mpr.interpret(m, context); }
 			 */
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-					"\t\t\tCondition OK, checking pattern...");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\tCondition OK, checking pattern...");
+			}
 
 			returnvalue = matchingPattern.interpret(m, context);
 

@@ -19,6 +19,11 @@ import java.io.Serializable;
 public class Operation implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1402987412844825501L;
+
 	private String name;
 
 	private String resource;

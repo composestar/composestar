@@ -9,6 +9,11 @@ import Composestar.Core.Exception.ModuleException;
 
 public class CompilerSettings implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1834476176562717483L;
+
 	private Properties properties;
 
 	private HashMap compilerActions;

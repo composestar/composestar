@@ -9,13 +9,20 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Core.Exception.ModuleException;
+import java.util.Iterator;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Internal;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * Test whether all the internals are used. Generates warnings and does not quit

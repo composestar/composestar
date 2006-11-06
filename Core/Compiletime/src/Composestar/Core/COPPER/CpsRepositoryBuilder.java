@@ -126,18 +126,21 @@ public class CpsRepositoryBuilder
 
 	// special variables
 	private ConditionExpression lastTouched; // used to insert condition
-												// stuff in the right place
+
+	// stuff in the right place
 
 	// points to the last condition object we modified
 	private Vector condAll; // temporary vector used to store conditionparts
 
 	private boolean parsingInput = true; // whether we're parsing an input-
-											// or outputfilter (needed because
-											// of generalfilter)
+
+	// or outputfilter (needed because
+	// of generalfilter)
 
 	private boolean workingOnMatching = true; // whether we're busy creating
-												// the matching or substitution
-												// part in a messagepatternset
+
+	// the matching or substitution
+	// part in a messagepatternset
 
 	private Splitter split;
 
@@ -146,7 +149,8 @@ public class CpsRepositoryBuilder
 	public static final int MESSAGEP = 99;
 
 	private String filename = ""; // Filename of file currently being parsed,
-									// for reference in case of parsing errors.
+
+	// for reference in case of parsing errors.
 
 	/**
 	 * Constructor
@@ -302,12 +306,12 @@ public class CpsRepositoryBuilder
 				in.setDescriptionLineNumber(lineNumber);
 				in.setName((String) namev.elementAt(j));
 				in.setType(addConcernReference(idv)); // fixme: instead of
-														// recreating the
-														// concernreference
-														// here, we could just
-														// create it once and
-														// reuse for all
-														// internals
+				// recreating the
+				// concernreference
+				// here, we could just
+				// create it once and
+				// reuse for all
+				// internals
 				in.setParent(fm);
 				if (fm.addInternal(in))
 				{
@@ -589,10 +593,10 @@ public class CpsRepositoryBuilder
 		inf.setDescriptionFileName(filename);
 		inf.setDescriptionLineNumber(lineNumber);
 		inf.setTypeImplementation(addConcernReference(type)); // FIXME: we do
-																// the same
-																// thing twice
-																// here
-																// basically
+		// the same
+		// thing twice
+		// here
+		// basically
 		addFilterType((String) type.lastElement(), lineNumber);
 		if (fm.addInputFilter(inf))
 		{
@@ -735,7 +739,7 @@ public class CpsRepositoryBuilder
 		this.addToRepository(fec);
 
 		condAll.clear(); // clear the condition Vector for the next
-							// filterelement
+		// filterelement
 		lastTouched = null; // reset this for the next series
 	}
 
@@ -801,7 +805,7 @@ public class CpsRepositoryBuilder
 		{ // we are adding this up the tree
 			and.setLeft(lastTouched);
 			lastTouched.setParent(and); // we could not add this before, and dit
-										// not exist yet
+			// not exist yet
 		}
 		lastTouched = and;
 		condAll.add(and);
@@ -819,7 +823,7 @@ public class CpsRepositoryBuilder
 		{ // we are adding this up the tree
 			or.setLeft(lastTouched);
 			lastTouched.setParent(or); // we could not add this before, and dit
-										// not exist yet
+			// not exist yet
 		}
 		lastTouched = or;
 		condAll.add(or);
@@ -990,7 +994,7 @@ public class CpsRepositoryBuilder
 		{
 			// throw new ModuleException("no comma");
 			Debug.out(Debug.MODE_WARNING, "COPPER", "no comma"); // fixme:
-																	// exception
+			// exception
 		}
 	}
 
@@ -1022,7 +1026,7 @@ public class CpsRepositoryBuilder
 		else
 		{
 			Debug.out(Debug.MODE_WARNING, "COPPER", "no semicolon"); // fixme:
-																		// exception
+			// exception
 		}
 	}
 
@@ -1406,7 +1410,7 @@ public class CpsRepositoryBuilder
 			SelClass sc = new SelClass();
 			sc.setClass(addConcernReference(name));
 			sc.setClassName((String) name.lastElement()); // fixme: should be
-															// removed (double)
+			// removed (double)
 			// sc.setClassName(name);
 			sc.setParent(sd);
 			sd.addSelExpression(sc);
@@ -1417,9 +1421,9 @@ public class CpsRepositoryBuilder
 			SelClassAndSubClasses scasc = new SelClassAndSubClasses();
 			scasc.setClass(addConcernReference(name));
 			scasc.setClassName((String) name.lastElement()); // fixme: should
-																// be removed
-																// removed
-																// (double)
+			// be removed
+			// removed
+			// (double)
 			// scasc.setClassName(name);
 			scasc.setParent(sd);
 			sd.addSelExpression(scasc);
@@ -1476,7 +1480,7 @@ public class CpsRepositoryBuilder
 		{ // all conditions in a filtermodule
 			StarCondition starc = new StarCondition();
 			name.add("*"); // just add a star here so the splitting will be
-							// performed correctly
+			// performed correctly
 			split.splitFmElemReference(name, true);
 			starc.setPackage(split.getPack());
 			starc.setConcern(split.getConcern());
@@ -1524,7 +1528,7 @@ public class CpsRepositoryBuilder
 		{ // all method in a filtermodule
 			StarMethod starm = new StarMethod();
 			name.add("*"); // just add a star here so the splitting will be
-							// performed correctly
+			// performed correctly
 			split.splitFmElemReference(name, true);
 			starm.setPackage(split.getPack());
 			starm.setConcern(split.getConcern());
@@ -1768,7 +1772,6 @@ public class CpsRepositoryBuilder
 	// Main.all.add(fmeref);
 	// return(fmeref);
 	// }
-
 	/**
 	 * Creates a new reference to a selector; will be resolved in REXREF
 	 * 
@@ -2016,7 +2019,7 @@ public class CpsRepositoryBuilder
 				if (it2.hasNext())
 				{
 					next = (FilterElementAST) it2.next(); // check for next
-															// filter
+					// filter
 				}
 				else
 				{
@@ -2030,8 +2033,8 @@ public class CpsRepositoryBuilder
 				else
 				{
 					current.getRightOperator().setRightArgument(null); // nothing
-																		// after
-																		// this
+					// after
+					// this
 				}
 			}
 		}

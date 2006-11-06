@@ -550,8 +550,14 @@ public class GrooveASTBuilder
 
 		// selector:
 		MessageSelector selector;
-		if (substitutionPart == null) selector = Message.STAR_SELECTOR;
-		else selector = substitutionPart.selector;
+		if (substitutionPart == null)
+		{
+			selector = Message.STAR_SELECTOR;
+		}
+		else
+		{
+			selector = substitutionPart.selector;
+		}
 		Node selectorNode = (Node) selectorTable.get(selector.getName());
 		if (selectorNode == null)
 		{
@@ -563,8 +569,14 @@ public class GrooveASTBuilder
 
 		// target:
 		Target target;
-		if (substitutionPart == null) target = Message.STAR_TARGET;
-		else target = substitutionPart.getTarget();
+		if (substitutionPart == null)
+		{
+			target = Message.STAR_TARGET;
+		}
+		else
+		{
+			target = substitutionPart.getTarget();
+		}
 		Node targetNode = (Node) targetTable.get(target.name);
 		if (targetNode == null)
 		{

@@ -1,8 +1,14 @@
 package Composestar.Core.COPPER.applet;
 
-import javax.swing.text.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+
+import javax.swing.text.Element;
+import javax.swing.text.PlainView;
+import javax.swing.text.Segment;
+import javax.swing.text.Utilities;
 
 public class ColorView extends PlainView
 {

@@ -9,11 +9,11 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
 
 /**
  * @modelguid {3DA7D7CD-878F-4446-8F14-10A874370B7B}

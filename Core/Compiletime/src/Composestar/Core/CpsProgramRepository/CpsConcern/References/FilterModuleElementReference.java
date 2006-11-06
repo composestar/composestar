@@ -11,6 +11,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
 public class FilterModuleElementReference extends ConcernElementReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7205526499024369080L;
+
 	public String filterModule;
 
 	/**

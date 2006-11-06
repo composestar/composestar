@@ -1,8 +1,8 @@
 package Composestar.Core.LAMA;
 
-import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-
 import java.util.HashSet;
+
+import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
 
 /**
  * Contains a set of registered program elements. Separated from UnitDictionary

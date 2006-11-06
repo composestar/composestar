@@ -62,23 +62,31 @@ public class DispatchToInnerAction extends ComposeStarAction
 	 */
 	public Object execute()
 	{
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Dispatching to inner: " + target.getClass()
-				+ "." + selector + " ==> " + target.getClass());
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Dispatching to inner: " + target.getClass() + "." + selector
+					+ " ==> " + target.getClass());
+		}
 		for (int i = 0; i < args.length; i++)
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tWith argument[" + i + "] = "
-					+ args[i]);
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\tWith argument[" + i + "] = " + args[i]);
+			}
 		}
 		// if(this.continueMessage.STATE == MessageList.MESSAGE_CONSTRUCTOR) //
 		// Found a constructor call!
 		// TODO do something sensible here
 		if (this.continueMessage.getOrgMessage().STATE == Message.MESSAGE_CONSTRUCTOR) // Found
-																						// a
-																						// constructor
-																						// call!
+		// a
+		// constructor
+		// call!
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-					"Encountered a constructor call, returning null: " + target.getClass() + "()");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Encountered a constructor call, returning null: "
+						+ target.getClass() + "()");
+			}
 			return null;
 		}
 

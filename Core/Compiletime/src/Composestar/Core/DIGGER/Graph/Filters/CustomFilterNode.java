@@ -11,8 +11,8 @@
 package Composestar.Core.DIGGER.Graph.Filters;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
-import Composestar.Core.DIGGER.Graph.Graph;
 import Composestar.Core.DIGGER.Graph.FilterNode;
+import Composestar.Core.DIGGER.Graph.Graph;
 
 /**
  * Filter Node for custom filters

@@ -222,7 +222,7 @@ public abstract class LOLA implements CTCommonModule
 		if (incremental && !selectors.isEmpty())
 		{
 			selectors = splitSelectors(selectors); // which selectors to
-													// skip/process?
+			// skip/process?
 		}
 
 		// initialize when we have one or more predicate selectors
@@ -351,7 +351,10 @@ public abstract class LOLA implements CTCommonModule
 			PredicateSelector predSel = (PredicateSelector) predicateIterStep3.next();
 			lola.addComparableObjects(predSel.getTYMInfo());
 			comparator.clearComparisons();
-			if (!comparator.compare(currentTYM, historyTYM)) toBeMoved.add(predSel);
+			if (!comparator.compare(currentTYM, historyTYM))
+			{
+				toBeMoved.add(predSel);
+			}
 			lola.removeComparableObjects(predSel.getTYMInfo());
 		}
 		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);

@@ -1,13 +1,13 @@
 package Composestar.Core.FITER;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.LAMA.ProgramElement;
-import Composestar.Core.LAMA.Type;
-import Composestar.Core.LAMA.TypeMap;
 import Composestar.Core.LAMA.UnitResult;
 import Composestar.Core.LOLA.LOLA;
 import Composestar.Core.Master.CTCommonModule;

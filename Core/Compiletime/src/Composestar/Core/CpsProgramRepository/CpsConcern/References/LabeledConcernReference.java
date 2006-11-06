@@ -11,6 +11,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 
 public class LabeledConcernReference extends ConcernReference
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4201764624433761774L;
+
 	public String label;
 
 	/**

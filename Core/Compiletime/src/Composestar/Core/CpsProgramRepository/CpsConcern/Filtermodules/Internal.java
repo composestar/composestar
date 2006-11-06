@@ -9,11 +9,11 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 /**
  * extra klasse toegevoegd, niet in rose
@@ -22,6 +22,11 @@ import java.util.*;
  */
 public class Internal extends TypedDeclaration
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5047706173440900206L;
+
 	public Vector valueExpressions;
 
 	public InternalAST internal_ast;

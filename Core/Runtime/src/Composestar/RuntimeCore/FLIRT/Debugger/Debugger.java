@@ -23,7 +23,10 @@ public abstract class Debugger
 
 	public static Debugger getInstance()
 	{
-		if (instance == null) instance = new Ignore();
+		if (instance == null)
+		{
+			instance = new Ignore();
+		}
 		return instance;
 	}
 

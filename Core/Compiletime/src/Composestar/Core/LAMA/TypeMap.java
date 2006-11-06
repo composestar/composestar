@@ -9,10 +9,10 @@
  */
 package Composestar.Core.LAMA;
 
+import java.util.Collection;
+
 import Composestar.Core.RepositoryImplementation.DataMap;
 import Composestar.Core.RepositoryImplementation.SerializableRepositoryEntity;
-
-import java.util.Collection;
 
 /**
  * TypeMap holds all the Types. It is used by the various classes to resolve
@@ -20,6 +20,11 @@ import java.util.Collection;
  */
 public class TypeMap implements SerializableRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3742264878434693439L;
+
 	private DataMap Types;
 
 	private static TypeMap Instance;

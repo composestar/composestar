@@ -23,7 +23,10 @@ public class Debug
 
 	public static void out(int mode, String strOut)
 	{
-		if (currentMode >= mode) System.out.println(strOut);
+		if (currentMode >= mode)
+		{
+			System.out.println(strOut);
+		}
 	}
 
 	/*
@@ -34,9 +37,7 @@ public class Debug
 
 	public Debug(int mode, String action)
 	{
-		int modeUsed = mode;
-		String currentAction = action;
 
-		// Debug.out (modeUsed, currentAction + " start");
+	// Debug.out (modeUsed, currentAction + " start");
 	}
 }

@@ -9,8 +9,8 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.Exception.*;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.RepositoryImplementation.DataStore;
 
 public class DoubleNames implements BaseChecker
 {

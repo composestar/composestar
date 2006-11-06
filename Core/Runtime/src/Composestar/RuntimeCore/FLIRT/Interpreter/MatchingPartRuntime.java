@@ -52,23 +52,33 @@ public class MatchingPartRuntime extends AbstractPatternRuntime
 		// TODO WM: iterate here? nah
 		String message_selector = m.getSelector();
 		String ct_selector = ((MessageSelector) this.theSelectorRuntime.getReference()).getName();
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving selector '" + ct_selector
-				+ "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving selector '" + ct_selector + "'...");
+		}
 
 		Object target = context.get("target");
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tSelector target is '" + target
-				+ "'.");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tSelector target is '" + target + "'.");
+		}
 		if (target == null) // target was *
 		{
 			if (ct_selector.equals("*")) // *.*
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*.*'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*.*'.");
+				}
 				return true;
 			}
 			else
 			// *.something, match to the current
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*.something'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*.something'.");
+				}
 				return message_selector.equals(ct_selector);
 			}
 		}
@@ -77,14 +87,19 @@ public class MatchingPartRuntime extends AbstractPatternRuntime
 		{
 			if (ct_selector.equals("*")) // something.*
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'something.*'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'something.*'.");
+				}
 				return true;
 			}
 			else
 			// something.something, match to the current
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT",
-						"\t\t\t\tFound 'something.something'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'something.something'.");
+				}
 				return message_selector.equals(ct_selector);
 			}
 		}
@@ -100,21 +115,31 @@ public class MatchingPartRuntime extends AbstractPatternRuntime
 	public void resolveTarget(Dictionary internals, Dictionary externals, Message m, Dictionary context)
 	{
 		String target = ((Target) this.theTargetRuntime.getReference()).getName();
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving target '" + target
-				+ "'...");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tResolving target '" + target + "'...");
+		}
 		if (target.equals("*"))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound '*'.");
+			}
 		}
 		else if (target.equalsIgnoreCase("inner"))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'inner'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound 'inner'.");
+			}
 			context.put("target", m.getInner());
 		}
 		else if (target.equals(m.getTarget().getClass().getName()))
 		{
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound target '"
-					+ m.getTarget().getClass() + "'.");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "FLIRT", "\t\t\t\tFound target '" + m.getTarget().getClass() + "'.");
+			}
 			context.put("target", m.getTarget());
 		}
 	}

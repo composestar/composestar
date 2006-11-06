@@ -57,7 +57,7 @@ public class ChildIterator extends NodeIterator
 		push();
 		parent = parent.getChild(currentChild);
 		currentChild = 0; // Cannot call first(), because this method is
-							// virtual.
+		// virtual.
 		// And there is no way, to set it to non-virtual.
 	}
 

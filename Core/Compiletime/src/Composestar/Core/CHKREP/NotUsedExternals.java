@@ -9,13 +9,20 @@
  */
 package Composestar.Core.CHKREP;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
-import Composestar.Utils.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
+import java.util.Iterator;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.External;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.References.Reference;
 import Composestar.Core.Exception.ModuleException;
-
-import java.util.*;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
 
 /**
  * @author DoornenbalD Checks on not used Externals.

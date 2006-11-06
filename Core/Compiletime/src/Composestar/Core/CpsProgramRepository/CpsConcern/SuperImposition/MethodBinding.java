@@ -9,16 +9,22 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.MethodReference;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {9DCCFBCE-0F73-4C3D-BD81-99CCF4C9EF9B}
  */
 public class MethodBinding extends Binding
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3261110884394154857L;
+
 	public Vector methodSet;
 
 	/**

@@ -41,8 +41,8 @@ public class NOBBIN
 		signatures = new HashMap();
 		graph = inGraph;
 		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", 5); // just
-																									// a
-																									// number
+		// a
+		// number
 	}
 
 	/**

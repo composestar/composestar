@@ -9,11 +9,13 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.*;
-import Composestar.Utils.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.SimpleSelectorDef.SimpleSelExpression;
+import Composestar.Core.RepositoryImplementation.DeclaredRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {AE646A8D-63B9-4526-B3B7-9402D9AF580F} Definition of the Selector
@@ -21,6 +23,11 @@ import java.util.*;
  */
 public class SelectorDefinition extends DeclaredRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8636845317655529305L;
+
 	public Vector selExpressionList;
 
 	/**

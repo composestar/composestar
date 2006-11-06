@@ -180,7 +180,6 @@ public class ModelBuilder implements CTCommonModule
 	private void processCall(CallToOtherMethod call)
 	{
 		Block callBlock = new Block();
-		Target target;
 		Branch currentBranch = null;
 
 		// retrieve target methodinfo:

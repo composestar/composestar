@@ -9,10 +9,11 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
+import Composestar.Utils.CPSIterator;
 
 /**
  * extra klasse toegevoegd, niet in rose
@@ -21,6 +22,11 @@ import java.util.*;
  */
 public class InternalAST extends TypedDeclaration
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7886002774701960062L;
+
 	public Vector valueExpressions;
 
 	/**

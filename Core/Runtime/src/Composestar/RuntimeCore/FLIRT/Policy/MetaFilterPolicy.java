@@ -112,8 +112,11 @@ class MetaFilterPolicy extends FilterPolicy
 			if (csa instanceof DispatchAction || csa instanceof DispatchToInnerAction || csa instanceof SendAction
 					|| csa instanceof ErrorAction)
 			{
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "FLIRT", "End of filterset, returning '"
-						+ csa.getClass().getName() + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "End of filterset, returning '"
+							+ csa.getClass().getName() + "'.");
+				}
 				return new PolicyExecutionResult(true, false, csa);
 			}
 

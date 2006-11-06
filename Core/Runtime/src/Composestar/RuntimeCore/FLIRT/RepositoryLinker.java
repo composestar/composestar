@@ -8,15 +8,71 @@
  */
 package Composestar.RuntimeCore.FLIRT;
 
-import Composestar.Core.RepositoryImplementation.DataStore;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
+
 import Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.*;
-import Composestar.RuntimeCore.FLIRT.Interpreter.*;
-import Composestar.RuntimeCore.FLIRT.Filtertypes.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.BinaryOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionVariable;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.EnableOperatorType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.False;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterCompOper;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElement;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterElementCompOper;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModule;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPattern;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MessageSelector;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Not;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Or;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Target;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.True;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.UnaryOperator;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterCompOper;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.VoidFilterElementCompOper;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterFactory;
+import Composestar.RuntimeCore.FLIRT.Filtertypes.FilterTypeRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.AndRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.BinaryOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.ConditionExpressionRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.ConditionVariableRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.CorFilterElementCompositionOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.DisableOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.EnableOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.EnableOperatorTypeRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FalseRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterCompositionOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterElementCompositionOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterElementRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterModuleRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.FilterRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.MatchingPartRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.MatchingPatternRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.MatchingTypeRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.NameMatchingRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.NotRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.OrRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.SelectorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.SeqFilterCompositionOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.SignatureMatchingRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.SubstitutionPartRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.TargetRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.TrueRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.UnaryOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.VoidFilterCompositionOperatorRuntime;
+import Composestar.RuntimeCore.FLIRT.Interpreter.VoidFilterElementCompositionOperatorRuntime;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.Utils.CPSIterator;
-
-import java.util.*;
 
 public class RepositoryLinker
 {
@@ -46,8 +102,11 @@ public class RepositoryLinker
 				String fullname = cc.getName();
 				FilterModule fm = (FilterModule) filterModuleIter.next();
 				fullname = fullname + '.' + fm.getName();
-				if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "Repository Linker", "Adding filtermodule '"
-						+ fm.getName() + "' from '" + fm + "'.");
+				if (Debug.SHOULD_DEBUG)
+				{
+					Debug.out(Debug.MODE_INFORMATION, "Repository Linker", "Adding filtermodule '" + fm.getName()
+							+ "' from '" + fm + "'.");
+				}
 				RepositoryLinker.filterModuleReferenceMap.put(fullname, linkFilterModule(fm));
 			}
 		}
@@ -66,14 +125,21 @@ public class RepositoryLinker
 		// iterate over all filters and link them
 		Iterator filterIter = filterModule.getInputFilterIterator();
 		while (filterIter.hasNext())
+		{
 			linkFilter((Filter) filterIter.next(), filterModuleRuntime, true);
+		}
 		filterIter = filterModule.getOutputFilterIterator();
 		while (filterIter.hasNext())
+		{
 			linkFilter((Filter) filterIter.next(), filterModuleRuntime, false);
+		}
 
 		filterModule.addDynObject("RuntimeReference", filterModuleRuntime);
-		if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "Repository Linker", "Linking '" + filterModule
-				+ "' with '" + filterModuleRuntime + "'.");
+		if (Debug.SHOULD_DEBUG)
+		{
+			Debug.out(Debug.MODE_INFORMATION, "Repository Linker", "Linking '" + filterModule + "' with '"
+					+ filterModuleRuntime + "'.");
+		}
 
 		return filterModuleRuntime;
 	}
@@ -87,8 +153,14 @@ public class RepositoryLinker
 		// and add the runtime input filter to the runtime filtermodule
 		filterRuntime = new FilterRuntime();
 		filterRuntime.setReference(filter);
-		if (input) filterModuleRuntime.addInputFilter(filterRuntime);
-		else filterModuleRuntime.addOutputFilter(filterRuntime);
+		if (input)
+		{
+			filterModuleRuntime.addInputFilter(filterRuntime);
+		}
+		else
+		{
+			filterModuleRuntime.addOutputFilter(filterRuntime);
+		}
 
 		// Set the previous element so that the linking occurs ok
 		this.previous_fr = filterRuntime;
@@ -116,9 +188,14 @@ public class RepositoryLinker
 		// compiletime
 		// filter composition operator to it, and add the runtime right argument
 		// to the runtime filter
-		if (filterCompOper instanceof VoidFilterCompOper) filterCompositionOperatorRuntime = new VoidFilterCompositionOperatorRuntime(
-				this.previous_fr);
-		else filterCompositionOperatorRuntime = new SeqFilterCompositionOperatorRuntime(this.previous_fr);
+		if (filterCompOper instanceof VoidFilterCompOper)
+		{
+			filterCompositionOperatorRuntime = new VoidFilterCompositionOperatorRuntime(this.previous_fr);
+		}
+		else
+		{
+			filterCompositionOperatorRuntime = new SeqFilterCompositionOperatorRuntime(this.previous_fr);
+		}
 		filterCompositionOperatorRuntime.setReference(filterCompOper);
 		filterRuntime.rightArgument = filterCompositionOperatorRuntime;
 		filterCompositionOperatorRuntime.rightOperator = filterRuntime;
@@ -130,9 +207,12 @@ public class RepositoryLinker
 		FilterFactory filter = FilterFactory.getInstance();
 		FilterTypeRuntime filterTypeRuntime = filter.getFilterTypeFor(filterType);
 
-		if (filterTypeRuntime == null) throw new Exception(
-				"Unexpected filter type encountered at runtime. Edit RepositoryLinker class to include this new type: "
-						+ filterType);
+		if (filterTypeRuntime == null)
+		{
+			throw new Exception(
+					"Unexpected filter type encountered at runtime. Edit RepositoryLinker class to include this new type: "
+							+ filterType);
+		}
 
 		filterRuntime.theFilterTypeRuntime = filterTypeRuntime;
 	}
@@ -180,10 +260,16 @@ public class RepositoryLinker
 		// filter element composition operator to it, and add the runtime filter
 		// element composition operator
 		// to the runtime filter element.
-		if (rightOperator instanceof VoidFilterElementCompOper) filterElementCompositionOperatorRuntime = new VoidFilterElementCompositionOperatorRuntime(
-				filterElementRuntime);
-		else filterElementCompositionOperatorRuntime = new CorFilterElementCompositionOperatorRuntime(
-				filterElementRuntime);
+		if (rightOperator instanceof VoidFilterElementCompOper)
+		{
+			filterElementCompositionOperatorRuntime = new VoidFilterElementCompositionOperatorRuntime(
+					filterElementRuntime);
+		}
+		else
+		{
+			filterElementCompositionOperatorRuntime = new CorFilterElementCompositionOperatorRuntime(
+					filterElementRuntime);
+		}
 
 		filterElementCompositionOperatorRuntime.setReference(rightOperator);
 		filterElementRuntime.rightOperator = filterElementCompositionOperatorRuntime;
@@ -216,8 +302,10 @@ public class RepositoryLinker
 		else
 		{ // If no substitution part was found will create it based on the
 			// matching part so <inner.*> == <inner.*>inner.*
-			if (Debug.SHOULD_DEBUG) Debug.out(Debug.MODE_INFORMATION, "Repository Linker",
-					"Creating substitution part...");
+			if (Debug.SHOULD_DEBUG)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "Repository Linker", "Creating substitution part...");
+			}
 			Vector matchparts = matchingPattern.getMatchingParts();
 			Vector subparts = new Vector();
 			for (int i = 0; i < matchparts.size(); i++)
@@ -269,8 +357,14 @@ public class RepositoryLinker
 		// compiletime
 		// matching type to it, and add the runtime matching type to the runtime
 		// matching part
-		if (matchingType instanceof SignatureMatchingType) matchingTypeRuntime = new SignatureMatchingRuntime();
-		else matchingTypeRuntime = new NameMatchingRuntime();
+		if (matchingType instanceof SignatureMatchingType)
+		{
+			matchingTypeRuntime = new SignatureMatchingRuntime();
+		}
+		else
+		{
+			matchingTypeRuntime = new NameMatchingRuntime();
+		}
 		matchingTypeRuntime.setReference(matchingType);
 		matchingPartRuntime.theMatchingTypeRuntime = matchingTypeRuntime;
 		matchingPartRuntime.theMatchingTypeRuntime.parentMatchingPart = matchingPartRuntime;
@@ -361,8 +455,14 @@ public class RepositoryLinker
 		// link the compiletime
 		// runtime enable opeator type to it, and add the runtime runtime enable
 		// opeator type to the runtime matching filter element
-		if (enableOperatorType instanceof EnableOperator) enableOperatorTypeRuntime = new EnableOperatorRuntime();
-		else enableOperatorTypeRuntime = new DisableOperatorRuntime();
+		if (enableOperatorType instanceof EnableOperator)
+		{
+			enableOperatorTypeRuntime = new EnableOperatorRuntime();
+		}
+		else
+		{
+			enableOperatorTypeRuntime = new DisableOperatorRuntime();
+		}
 		enableOperatorTypeRuntime.setReference(enableOperatorType);
 		filterElementRuntime.setEnableOperatorTypeRuntime(enableOperatorTypeRuntime);
 	}

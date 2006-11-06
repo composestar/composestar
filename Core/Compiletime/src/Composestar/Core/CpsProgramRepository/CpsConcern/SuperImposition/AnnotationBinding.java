@@ -12,12 +12,17 @@
 
 package Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition;
 
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
-
 import java.util.Vector;
+
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
 
 public class AnnotationBinding extends Binding
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3277653416800288682L;
+
 	public Vector annotationList; // Vector of ConcernReference
 
 	public AnnotationBinding()

@@ -1,6 +1,7 @@
 package Composestar.RuntimeCore.FLIRT.Reflection;
 
-import Composestar.RuntimeCore.FLIRT.Message.*;
+import Composestar.RuntimeCore.FLIRT.Message.Message;
+import Composestar.RuntimeCore.FLIRT.Message.MessageList;
 import Composestar.RuntimeCore.Utils.ChildThread;
 
 public class MessageInfoProxy

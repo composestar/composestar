@@ -5,6 +5,11 @@ import java.util.Properties;
 
 public class ModuleSettings implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7909382618910056237L;
+
 	private String name;
 
 	private Properties properties;

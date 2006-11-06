@@ -59,8 +59,6 @@ public class HighLevelInliner
 
 	public void inline(ExecutionModel model, FilterModule[] modules, MethodInfo method)
 	{
-		ExecutionModel currentModel = model;
-
 		try
 		{
 			Vector blocks = identifyFilterModuleBlocks(model);
@@ -104,7 +102,10 @@ public class HighLevelInliner
 	{
 		Enumeration filterElements = filterBlock.filterElements.elements();
 
-		if (filterElements.hasMoreElements()) inlineFilterElements(filterElements);
+		if (filterElements.hasMoreElements())
+		{
+			inlineFilterElements(filterElements);
+		}
 	}
 
 	private void inlineFilterElements(Enumeration filterElements)
@@ -199,7 +200,10 @@ public class HighLevelInliner
 		Vector result = new Vector();
 
 		Enumeration enumer = model.getEntranceStates();
-		if (!enumer.hasMoreElements()) return result;
+		if (!enumer.hasMoreElements())
+		{
+			return result;
+		}
 
 		ExecutionState fmState = (ExecutionState) enumer.nextElement();
 		while (fmState != null)
@@ -279,7 +283,10 @@ public class HighLevelInliner
 				ExecutionState state = getNextState(block.flowTrueExitState);
 				if (isFilter.isTrue(state) || isFilterModule.isTrue(state))
 				{
-					if (nextFilterState != null && nextFilterState != state) throw new InlineException();
+					if (nextFilterState != null && nextFilterState != state)
+					{
+						throw new InlineException();
+					}
 
 					nextFilterState = state;
 				}
@@ -300,13 +307,19 @@ public class HighLevelInliner
 				ExecutionState state = getNextState(block.flowFalseExitState);
 				if (isFilter.isTrue(state) || isFilterModule.isTrue(state))
 				{
-					if (nextFilterState != null && nextFilterState != state) throw new InlineException();
+					if (nextFilterState != null && nextFilterState != state)
+					{
+						throw new InlineException();
+					}
 					nextFilterState = state;
 				}
 				else if (isEnd.isTrue(state))
 				{
 					ExecutionState state2 = getNextState(state);
-					if (nextFilterState != null && nextFilterState != state2) throw new InlineException();
+					if (nextFilterState != null && nextFilterState != state2)
+					{
+						throw new InlineException();
+					}
 
 					nextFilterState = state2;
 				}
@@ -582,7 +595,10 @@ public class HighLevelInliner
 			for (int i = backwardStateVector.size() - 1; i >= 0; i--)
 			{
 				state = (ExecutionState) backwardStateVector.elementAt(i);
-				if (state.getFlowNode().containsName(FlowChartNames.ACTION_NODE)) inlineState(state);
+				if (state.getFlowNode().containsName(FlowChartNames.ACTION_NODE))
+				{
+					inlineState(state);
+				}
 			}
 
 			strategy.endInline();
@@ -600,16 +616,27 @@ public class HighLevelInliner
 
 			ConditionExpression expr = (ConditionExpression) conditionTable.get(state);
 
-			if (expr != null) strategy.openBranchTrue(expr);
+			if (expr != null)
+			{
+				strategy.openBranchTrue(expr);
+			}
 
 			strategy.generateAction(state);
 
-			if (expr != null) strategy.closeBranchTrue();
+			if (expr != null)
+			{
+				strategy.closeBranchTrue();
+			}
 		}
 	}
 
 	private class InlineException extends RuntimeException
 	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -761683949137294910L;
 
 		/**
 		 * 

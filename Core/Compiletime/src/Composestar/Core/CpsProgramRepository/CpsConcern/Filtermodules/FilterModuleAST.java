@@ -20,6 +20,11 @@ import Composestar.Utils.CPSIterator;
  */
 public class FilterModuleAST extends DeclaredRepositoryEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1367274558403122165L;
+
 	public Vector parameters;
 
 	public Vector conditions;

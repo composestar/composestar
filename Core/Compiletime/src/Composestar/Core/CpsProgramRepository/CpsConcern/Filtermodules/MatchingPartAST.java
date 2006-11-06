@@ -11,6 +11,11 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
 public class MatchingPartAST extends AbstractPatternAST
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7064979206296470126L;
+
 	public MatchingType matchType;
 
 	/**

@@ -9,11 +9,12 @@
  */
 package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 
-import Composestar.Core.RepositoryImplementation.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.References.*;
-import Composestar.Utils.*;
+import java.util.Iterator;
+import java.util.Vector;
 
-import java.util.*;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.RepositoryImplementation.ContextRepositoryEntity;
+import Composestar.Utils.CPSIterator;
 
 /**
  * @modelguid {F5586509-49A4-471C-90EA-2C66B42B702A} the message selector as
@@ -23,6 +24,11 @@ import java.util.*;
  */
 public class MessageSelectorAST extends ContextRepositoryEntity
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4560974741705816846L;
 
 	/**
 	 * @modelguid {CA61B6DA-3A70-4676-BE31-559D50E68699}
