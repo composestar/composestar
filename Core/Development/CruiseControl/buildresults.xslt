@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-	<xsl:output method="html"/>  
+
+	<xsl:output method="html" />  
 	
 	<xsl:template match="/cruisecontrol">
 	<html>
@@ -88,6 +89,10 @@
 			background: #eee;
 			border: 1px solid #ddd;
 		}
+		
+		.withws {
+		  white-space: pre;
+		}
 		</style>
 	</head>
 	<body>
@@ -118,7 +123,7 @@
 		<dt class="key">Last change</dt>
 		<dd>
 		by <em><xsl:value-of select="modifications/modification[position()=last()]/user" /></em> on <xsl:value-of select="modifications/modification[position()=last()]/date" />:<br />
-		<xsl:value-of select="modifications/modification[position()=last()]/comment" />
+		<span class="withws"><xsl:value-of select="modifications/modification[position()=last()]/comment" /></span>
 		</dd>
 	</dl>
 	
@@ -229,11 +234,34 @@
 			<td class="asis"><xsl:value-of select="$revid" /></td>
 			<td nowrap="nowrap"><xsl:value-of select="//modification[revision=$revid]/user" /></td>	
 			<td nowrap="nowrap"><xsl:value-of select="//modification[revision=$revid]/date" /></td>		
-			<td colspan="2"><xsl:value-of select="//modification[revision=$revid]/comment" /></td>
+			<td colspan="2" class="withws"><xsl:value-of select="//modification[revision=$revid]/comment" /></td>
 		</tr>
-		<xsl:for-each select="//modification[revision=$revid]">
+		
+		<xsl:call-template name="svn-revision-mods">
+			<xsl:with-param name="mods" select="//modification[revision=$revid]" />
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="svn-revision-mods">
+		<xsl:param name="mods" />
+		
+		<xsl:for-each select="$mods[position() &lt; 50]">
 			<xsl:apply-templates select="." mode="svn" />		
 		</xsl:for-each>
+		
+		<xsl:if test="count($mods[position() &gt; 50]) &gt; 50">
+			<tr>
+				<td colspan="2"></td>
+				<td colspan="2">
+				<xsl:value-of select="count($mods[position() &gt; 50])" /> more...
+				<dl>
+					<dt>Total additions:</dt><dd><xsl:value-of select="count($mods[file/@action = 'added'])" /></dd>
+					<dt>Total modifications:</dt><dd><xsl:value-of select="count($mods[file/@action = 'modified'])" /></dd>
+					<dt>Total deletions:</dt><dd><xsl:value-of select="count($mods[file/@action = 'deleted'])" /></dd>
+				</dl>  
+				</td>
+			</tr>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="modification" mode="svn">
