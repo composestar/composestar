@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build">
 
-	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
+	<condition property="build.core" value="${basedir}/../Core">
 		<and>
 			<not>
 				<isset property="build.core" />
 			</not>
-			<available file="${basedir}${file.separator}..${file.separator}Core${file.separator}common.xml" />
+			<available file="${basedir}/../Core/common.xml" />
 		</and>
 	</condition>
-	<import file="${build.core}${file.separator}common.xml" />
+	<import file="${build.core}/common.xml" />
 
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
@@ -20,8 +20,8 @@
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 		<ant target="clean" dir="Source/Compiletime" />
-    <ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
-    <ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
+		<ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
+		<ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
 	
 	<target name="build" description="Build the StarLight implementation of Compose*">

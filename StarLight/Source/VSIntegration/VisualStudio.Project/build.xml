@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight/Project" default="build">
-	
-	<condition property="build.core" value="${basedir}${file.separator}..">
+
+	<condition property="build.core" value="${basedir}/../../../..">
 		<and>
 			<not>
-				<isset property="build.core" />
+				<isset property="build.core"/>
 			</not>
-			<available file="${basedir}${file.separator}..${file.separator}common.xml" />
+			<available file="${basedir}/../../../../common.xml" />
 		</and>
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-  <property name="VSIntegration.dir" location=""/>
-
-  <echo>Processing: ${ant.project.name} ...</echo>
-	
+	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* StarLight Project and Language integration. Generates the MSBuild tasks.</description>
 
+	<property name="VSIntegration.dir" location=""/>
+
 	<target name="clean" depends="init" description="Clean compile results">
-    <antcall target="clean_msbuild"/>
+		<antcall target="clean_msbuild"/>
 	</target>
-  
-  <target name="clean_msbuild" if="available.msbuild">
-    <msbuild solution="${VSIntegration.dir}\StarLight.VisualStudio.Project.csproj" target="clean"/>    
-  </target>
-  
+
+	<target name="clean_msbuild" if="available.msbuild">
+		<msbuild solution="${VSIntegration.dir}\StarLight.VisualStudio.Project.csproj" target="clean"/>
+	</target>
+
 	<target name="build" depends="init,compile" description="Compile the VSIntegration code" />
-		
+
 	<target name="compile" depends="init">
-    <msbuild solution="${VSIntegration.dir}\StarLight.VisualStudio.Project.csproj" target="build" config="release" />
+		<msbuild solution="${VSIntegration.dir}\StarLight.VisualStudio.Project.csproj" target="build" config="release" />
 	</target>
-	
-	
+
+
 </project>
