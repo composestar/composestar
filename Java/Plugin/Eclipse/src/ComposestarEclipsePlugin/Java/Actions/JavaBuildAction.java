@@ -256,19 +256,6 @@ public class JavaBuildAction extends BuildAction implements IWorkbenchWindowActi
 	}
 
 	/**
-	 * Sets selected projects manually.
-	 * <p>
-	 * E.g. this is used by TestBuild for running this action in headless mode.
-	 * 
-	 * @see TestBuild
-	 * @param jp list of projects
-	 */
-	public void setSelectedProjects(IProject[] jp)
-	{
-		this.selectedProjects = jp;
-	}
-
-	/**
 	 * Adds the sources to a project configuration.
 	 * <p>
 	 * The implementation uses the class Sources to find the sources.
