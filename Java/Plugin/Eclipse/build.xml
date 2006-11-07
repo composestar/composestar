@@ -88,10 +88,14 @@
 			</fileset>
 		</copy>
 		
-		<!-- PlatformConfigurations ?? -->
+		<!-- Compose* Java Compiletime  -->
+		<copy todir="${eclipse.pluginsdir}${file.separator}ComposestarEclipsePlugin/binaries">
+			<fileset dir="../../Compiletime/dist/"/>
+		</copy>
+	
 	</target>
 	
-		<!-- clean core -->
+	<!-- clean core -->
 	<target name="install_core">
 		<ant target="install" dir="${build.core}${file.separator}Plugin${file.separator}Eclipse" />
 	</target>
