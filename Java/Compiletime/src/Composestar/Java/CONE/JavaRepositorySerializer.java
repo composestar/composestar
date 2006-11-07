@@ -45,18 +45,17 @@ public class JavaRepositorySerializer implements RepositorySerializer
 
 			// collect the objects
 			Iterator it = ds.getIterator();
-			
-			// first item is skipped for some reason...
-			// FIXME: is this really correct? if so: explain why.
-			if (it.hasNext()) it.next();
-			
-			// write the rest
+
+			// write the objects
 			while (it.hasNext())
 			{
 				Object item = it.next();
-				if (item != null) oos.writeObject(item);
+				if (item != null)
+				{
+					oos.writeObject(item);
+				}
 			}
-			
+
 			Debug.out(Debug.MODE_DEBUG, "CONE", "repository has been serialized");
 		}
 		catch (StackOverflowError ex)
@@ -67,7 +66,8 @@ public class JavaRepositorySerializer implements RepositorySerializer
 		{
 			throw new ModuleException("Error occured while serializing repository: " + e.toString(), "CONE");
 		}
-		finally {
+		finally
+		{
 			FileUtils.close(oos);
 		}
 	}
