@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ContextInfo Diagram.cd" />
-    <None Include="ContextInfoKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

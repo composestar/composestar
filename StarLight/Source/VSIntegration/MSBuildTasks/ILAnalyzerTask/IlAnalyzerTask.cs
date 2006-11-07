@@ -25,7 +25,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     public class IlAnalyzerTask : Task
     {
         private const string ComposeStarDlls = "Composestar.StarLight";
-        private const string ComposeStarFilterDll = "Composestar.StarLight.Filters";
+        private const string ComposeStarFilterDll = "Composestar.StarLight.Filters,Composestar.StarLight.CustomFilters";
 
         #region Properties for MSBuild
 
@@ -169,13 +169,27 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             #region Find the assemblies to analyze
 
+            // Create list of composestar filters which should be analyzed
+            string[] filterFiles = ComposeStarFilterDll.Split(',');
+
             // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
             List<String> assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
             {
                 // Skip composestar files
                 string filename = Path.GetFileNameWithoutExtension(item.ToString());
-                if (filename.StartsWith(ComposeStarDlls) && !filename.StartsWith(ComposeStarFilterDll))
+
+                bool isFilterFile = false;
+                for (int i = 0; i < filterFiles.Length; i++)
+                {
+                    if (filename.StartsWith(filterFiles[i]))
+                    {
+                        isFilterFile = true;
+                        break;
+                    }
+                }
+
+                if (filename.StartsWith(ComposeStarDlls) && !isFilterFile)
                     continue;
 
                 // We are only interested in assembly files.
@@ -255,8 +269,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     sw.Start();
 
                     assembly = analyzer.ExtractAllTypes(item);
-                    
-                    if (assembly != null && !item.StartsWith(ComposeStarFilterDll))
+
+                    bool isFilterFile = false;
+                    for (int i = 0; i < filterFiles.Length; i++)
+                    {
+                        if ((Path.GetFileName(item)).StartsWith(filterFiles[i]))
+                        {
+                            isFilterFile = true;
+                            break;
+                        }
+                    }
+
+                    if (assembly != null && !isFilterFile)
                     {
                         // Create a new AssemblyConfig object
                         assConfig = new AssemblyConfig();
