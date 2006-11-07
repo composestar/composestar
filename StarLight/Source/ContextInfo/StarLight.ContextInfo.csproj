@@ -10,7 +10,7 @@
     <RootNamespace>Composestar.StarLight.ContextInfo</RootNamespace>
     <AssemblyName>Composestar.StarLight.ContextInfo</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>starlight.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\starlight.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +51,6 @@
   <ItemGroup>
     <None Include="ContextInfo Diagram.cd" />
     <None Include="ContextInfoKey.snk" />
-    <None Include="starlight.snk" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
