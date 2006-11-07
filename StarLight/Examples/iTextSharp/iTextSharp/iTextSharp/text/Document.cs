@@ -100,7 +100,7 @@ namespace iTextSharp.text {
     public class Document : IDocListener {
 
         // membervariables
-
+        
         ///<summary> This constant may only be changed by Paulo Soares and/or Bruno Lowagie. </summary>
         private const string ITEXT_VERSION = "iTextSharp 3.1.5 (based on iText 1.4.5)";
 

@@ -19,7 +19,7 @@ namespace iTextSharp.tutorial.Chap01
 			try 
 			{
 				// we create a reader for a certain document
-				PdfReader reader = new PdfReader("Chap0703.pdf");
+				PdfReader reader = new PdfReader("Chap0107.pdf");
 				// we retrieve the total number of pages
 				int n = reader.NumberOfPages;
 				// we retrieve the size of the first page

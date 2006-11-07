@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTextSharp", "iTextSharp\iT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTextSharp.Tutorial", "iTextSharp.Tutorial\iTextSharp.Tutorial.csproj", "{13E8BC6B-54E6-46CE-94D2-342F7CCCBFA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilterTypes", "..\FilterTypes\FilterTypes\FilterTypes.csproj", "{015C33A1-B6A8-4DFA-9BAF-29744096E160}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomFilters", "..\CustomFilters\CustomFilters\CustomFilters.csproj", "{015C33A1-B6A8-4DFA-9BAF-29744096E160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

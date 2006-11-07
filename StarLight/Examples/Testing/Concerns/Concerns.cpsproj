@@ -24,19 +24,13 @@
     <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
-      <HintPath>..\..\..\..\..\Program Files\ComposeStar\StarLight 0.1\CoreElements\Composestar.StarLight.ContextInfo.dll</HintPath>
+      <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Composestar.StarLight.Filters, Version=1.0.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.Filters</Name>
       <AssemblyName>Composestar.StarLight.Filters.dll</AssemblyName>
-      <HintPath>..\..\..\..\..\Program Files\ComposeStar\StarLight 0.1\CoreElements\Composestar.StarLight.Filters.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FilterTypes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <Name>FilterTypes</Name>
-      <AssemblyName>FilterTypes.dll</AssemblyName>
-      <HintPath>..\..\FilterTypes\FilterTypes\bin\Debug\FilterTypes.dll</HintPath>
+      <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.Filters.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
@@ -47,6 +41,11 @@
     <None Include="TypeTestsConcern.cps" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CustomFilters\CustomFilters\CustomFilters.csproj">
+      <Name>CustomFilters</Name>
+      <Project>{015c33a1-b6a8-4dfa-9baf-29744096e160}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\BasicTests\BasicTests.csproj">
       <Name>BasicTests</Name>
       <Project>{c155ca4c-c982-41a9-b205-10344d86e54e}</Project>

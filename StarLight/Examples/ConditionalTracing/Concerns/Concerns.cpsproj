@@ -21,7 +21,7 @@
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Composestar.StarLight.ContextInfo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=22a32669ad0d0ef3">
       <Name>Composestar.StarLight.ContextInfo</Name>
       <AssemblyName>Composestar.StarLight.ContextInfo.dll</AssemblyName>
       <HintPath>C:\Program Files\MSBuild\StarLight\0.1\Composestar.StarLight.ContextInfo.dll</HintPath>
@@ -33,8 +33,8 @@
     <Concern Include="Trace.cps" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FilterTypes\FilterTypes\FilterTypes.csproj">
-      <Name>FilterTypes</Name>
+    <ProjectReference Include="..\..\CustomFilters\CustomFilters\CustomFilters.csproj">
+      <Name>CustomFilters</Name>
       <Project>{015c33a1-b6a8-4dfa-9baf-29744096e160}</Project>
       <Private>True</Private>
     </ProjectReference>
