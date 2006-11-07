@@ -414,7 +414,7 @@ namespace Mono.Cecil {
 				asm.Name, asm.Culture, asm.Version);
 			asmRef.PublicKeyToken = asm.PublicKeyToken;
 			asmRef.HashAlgorithm = asm.HashAlgorithm;
-			asmRef.Flags = asm.Flags;
+			asmRef.Flags = AssemblyFlags.SideBySideCompatible; // modified to support references to signed assemblies
 			m_module.AssemblyReferences.Add (asmRef);
 			m_asmCache [asm.FullName] = asmRef;
 			return asmRef;
