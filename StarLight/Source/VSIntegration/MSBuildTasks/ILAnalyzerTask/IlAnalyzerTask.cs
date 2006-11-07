@@ -22,7 +22,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// <summary>
     /// MSBuild tasks to start the analyzer.
     /// </summary>
-    public class IlAnalyzerTask : Task
+    [LoadInSeparateAppDomain()]
+    public class IlAnalyzerTask : AppDomainIsolatedTask 
     {
         private const string ComposeStarDlls = "Composestar.StarLight";
         private const string ComposeStarFilterDll = "Composestar.StarLight.Filters,Composestar.StarLight.CustomFilters";

@@ -120,11 +120,13 @@ namespace Composestar.StarLight.Utilities
                     }
                 }
             }
-     
+          
             if (name.Name == "mscorlib")
                 return GetCorlib(name);
             else if (IsInGac(name))
                 return AssemblyFactory.GetAssembly(GetFromGac(name));
+            else if (IsInGac32(name))
+                return AssemblyFactory.GetAssembly(GetFromGac32(name));
 
             return null;
 

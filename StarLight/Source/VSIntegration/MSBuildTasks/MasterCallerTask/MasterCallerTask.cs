@@ -16,7 +16,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// <summary>
     /// Calls the Master to perform the actual analyzing of concerns by composestar.
     /// </summary>
-    public class MasterCallerTask : Task
+    [LoadInSeparateAppDomain()]
+    public class MasterCallerTask : AppDomainIsolatedTask 
     {
         
         #region Constructor

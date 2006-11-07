@@ -336,11 +336,10 @@ namespace Composestar.StarLight.ILWeaver
             {
                 String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
                                 
-                // TODO this only works for types in the mscorlib. Other types cannot be resolved without an assemblyname.
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
                 if (internalTypeRef == null) 
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, internalTypeString + " (step 2)"));
-
+                
                 internalAttrs = Mono.Cecil.FieldAttributes.Private;
 
                 internalTypeRef = targetAssembly.MainModule.Import(internalTypeRef);
@@ -376,7 +375,7 @@ namespace Composestar.StarLight.ILWeaver
                                 // Create instructions
                                 IList<Instruction> instructions = new List<Instruction>();
                                 instructions.Add(worker.Create(OpCodes.Ldarg_0));
-                                instructions.Add(worker.Create(OpCodes.Newobj, internalConstructor));
+                                instructions.Add(worker.Create(OpCodes.Newobj, targetAssembly.MainModule.Import(internalConstructor)));
                                 instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
                                 // Add the instructions

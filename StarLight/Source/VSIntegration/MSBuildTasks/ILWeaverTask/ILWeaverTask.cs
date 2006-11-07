@@ -21,7 +21,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// <summary>
     /// Responsible for the actual weaving of the aspects. Calls the weaving library to perform weaving at IL level.
     /// </summary>
-    public class ILWeaverTask : Task
+    [LoadInSeparateAppDomain()]
+    public class ILWeaverTask : AppDomainIsolatedTask 
     {
         private const string ContextInfoFileName = "Composestar.StarLight.ContextInfo.dll";
 
