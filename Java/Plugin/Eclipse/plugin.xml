@@ -2,6 +2,9 @@
 <?eclipse version="3.1"?>
 <plugin>
 
+	--------------------------------------------------
+							UI
+	--------------------------------------------------
   	<extension point="org.eclipse.ui.preferencePages">
  		<page
  			id="composestareclipseplugin.ui.preferencepage"
@@ -31,6 +34,13 @@
        		path="additions">
        		<separator name="slot1"/>
        	</menu>
+       	<action
+            label="Run"
+            menubarPath="cstarpopup/slot1" 
+            class="ComposestarEclipsePlugin.Java.Actions.JavaRunAction"
+            enablesFor="1"
+            id="composestar.run">
+        </action>
         <action
             label="Build"
             menubarPath="cstarpopup/slot1" 
@@ -40,7 +50,10 @@
         </action>
       </objectContribution>
     </extension>
-     
+    
+    -------------------------------------------------
+					Headless Mode
+	------------------------------------------------- 
     <extension
         id="testbuild"
         point="org.eclipse.core.runtime.applications">
@@ -50,4 +63,13 @@
       	</application>
    	</extension>
 
+	<extension
+        id="testrun"
+        point="org.eclipse.core.runtime.applications">
+      	<application> 
+         	<run class="ComposestarEclipsePlugin.Java.Actions.TestRun"> 
+         	</run> 
+      	</application>
+   	</extension>
+   	
 </plugin>
