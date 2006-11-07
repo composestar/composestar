@@ -13,23 +13,22 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 	{
 
 		DataStore ds = DataStore.instance();
+		
+		ObjectInputStream ois = null;
 		try
 		{
 			FileInputStream fis = new FileInputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(fis);
-			ObjectInputStream ois = new ObjectInputStream(bis);
+			ois = new ObjectInputStream(bis);
 
-			int numberofobjects = ois.readInt();
-
-			for (int i = 0; i < numberofobjects; i++)
+			while(true)
 			{
 				ds.addObject(ois.readObject());
 			}
-			ois.close();
 		}
 		catch (EOFException eof)
 		{
-			Debug.out(Debug.MODE_ERROR,"Util","End of file Exception: " + eof.toString());
+			// no need to print something, EOFException will always happen.
 		}
 		catch (FileNotFoundException fne)
 		{
@@ -38,6 +37,20 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 		catch (Exception ex)
 		{
 			Debug.out(Debug.MODE_ERROR,"Util","Exception while deserializing repository: " + ex.getMessage());
+		}
+		finally
+		{
+			try 
+			{
+				if (ois != null)
+				{
+					ois.close();
+				}
+			}
+			catch (IOException e) 
+			{
+				throw new RuntimeException("Unable to close stream: " + e.getMessage());
+			}
 		}
 
 		RepositoryFixer.fixRepository(ds);
