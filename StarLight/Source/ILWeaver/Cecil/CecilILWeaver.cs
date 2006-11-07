@@ -103,45 +103,13 @@ namespace Composestar.StarLight.ILWeaver
 
             // Load the file
             AssemblyDefinition targetAssembly;
+            ISymbolReader pdbReader = null;
 
-            try
-            {
-                byte[] binaryFile;
-                FileStream fileStream = null;
-                try
-                {
-                    fileStream = new FileStream(_configuration.InputImagePath, FileMode.Open);
-                    binaryFile = CecilUtilities.ReadFileStream(fileStream, -1);
+            targetAssembly = LoadAssembly(ref pdbReader);
 
-                } // try
-                catch (Exception ex)
-                {
-                    throw new ILWeaverException(String.Format(Properties.Resources.CouldNotLoadAssembly, _configuration.InputImagePath, ex.Message), ex); 
-
-                } // catch
-                finally
-                {
-                    if (fileStream != null) fileStream.Close();
-
-                } // finally
-
-                // We use a byte array to read the file, so we can close it after reading and can write to it again.  
-                // HACK We cannot use the byte array if we want to use debugging. The PdbReader must know the filename.
-                //targetAssembly = AssemblyFactory.GetAssembly(binaryFile);
-                targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
-                binaryFile = null;
-                 
-            }
-            catch (EndOfStreamException)
-            {
-                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, _configuration.InputImagePath));
-            }
-
-            // Check if the _targetAssemblyDefinition is still available
+            // Check if the _targetAssemblyDefinition is available
             if (targetAssembly == null)
-                throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);
-
-            //targetAssembly.MainModule.LoadSymbols();
+                throw new ArgumentNullException(Properties.Resources.AssemblyNotOpen);                  
 
             // Prepare the data for this assembly (precaching)
             WeaveSpecification weaveSpec;
@@ -221,22 +189,12 @@ namespace Composestar.StarLight.ILWeaver
                 swType.Reset();
 
             } // foreach  (typeElement)
-  
+
             // Save the modified assembly only if it is changed.
             if (_weaveStats.InputFiltersAdded > 0 || _weaveStats.OutputFiltersAdded > 0 || _weaveStats.InternalsAdded > 0 || _weaveStats.ExternalsAdded > 0)
-            {   
-                //targetAssembly.MainModule.SaveSymbols(); 
-  
-                try
-                {                                       
-                      AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
-                } // try
-                catch (Exception ex)
-                {
-                    throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
-                } // catch
-
-               } // if
+            {
+                SaveAssembly(targetAssembly, pdbReader);
+            } // if
 
             // Stop timing
             sw.Stop();
@@ -246,6 +204,102 @@ namespace Composestar.StarLight.ILWeaver
             return _weaveStats;  
         }
 
+        #region Loading and Saving of assembly
+
+        /// <summary>
+        /// Loads the assembly.
+        /// </summary>
+        /// <param name="pdbReader">The PDB reader.</param>
+        /// <returns>Returns an assembly definition.</returns>
+        private AssemblyDefinition LoadAssembly(ref ISymbolReader pdbReader)
+        {
+            AssemblyDefinition targetAssembly;
+            try
+            {
+                byte[] binaryFile;
+                FileStream fileStream = null;
+                try
+                {
+                    fileStream = new FileStream(_configuration.InputImagePath, FileMode.Open);
+                    binaryFile = CecilUtilities.ReadFileStream(fileStream, -1);
+
+                } // try
+                catch (Exception ex)
+                {
+                    throw new ILWeaverException(String.Format(Properties.Resources.CouldNotLoadAssembly, _configuration.InputImagePath, ex.Message), ex);
+
+                } // catch
+                finally
+                {
+                    if (fileStream != null) fileStream.Close();
+
+                } // finally
+
+                // We use a byte array to read the file, so we can close it after reading and can write to it again.
+                // targetAssembly = AssemblyFactory.GetAssembly(_configuration.InputImagePath);
+
+                targetAssembly = AssemblyFactory.GetAssembly(binaryFile);
+
+                // Get the pdb
+                if (File.Exists(_configuration.DebugImagePath))
+                {
+                    pdbReader = new PdbFactory().CreateReader(targetAssembly.MainModule, _configuration.InputImagePath);
+                    targetAssembly.MainModule.LoadSymbols(pdbReader);
+                }
+
+                binaryFile = null;
+
+            }
+            catch (EndOfStreamException)
+            {
+                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, _configuration.InputImagePath));
+            }
+
+            return targetAssembly;
+        }
+
+        /// <summary>
+        /// Saves the assembly and debug file.
+        /// </summary>
+        /// <param name="targetAssembly">The target assembly.</param>
+        /// <param name="pdbReader">The PDB reader.</param>
+        private void SaveAssembly(AssemblyDefinition targetAssembly, ISymbolReader pdbReader)
+        {
+            // Save debug
+            try
+            {
+                // Disabled for now. Saving raises an exception.
+                if (false && File.Exists(_configuration.DebugImagePath))
+                {
+                    if (pdbReader != null)
+                    {
+                        pdbReader.Dispose();
+                        pdbReader = null;
+                    }
+                    Console.WriteLine("Delete pdb file manually");
+                    Console.ReadLine(); 
+
+                    ISymbolWriter pdbWriter = new PdbFactory().CreateWriter(targetAssembly.MainModule, _configuration.InputImagePath);
+                    targetAssembly.MainModule.SaveSymbols(pdbWriter);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSavePdb, _configuration.DebugImagePath), _configuration.OutputImagePath, ex);
+            }
+
+            try
+            {
+                AssemblyFactory.SaveAssembly(targetAssembly, _configuration.OutputImagePath);
+            } // try
+            catch (Exception ex)
+            {
+                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
+            } // catch
+        }
+
+
+        #endregion
         /// <summary>
         /// Weaves the internals.
         /// </summary>
@@ -504,6 +558,16 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
+
+            //Console.WriteLine("Method {0}", method.ToString());
+
+            //foreach (Instruction instruct in method.Body.Instructions)
+            //{
+            //    if (instruct.SequencePoint != null)
+            //        Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", instruct.SequencePoint.StartLine, instruct.SequencePoint.StartColumn, instruct.SequencePoint.EndLine, instruct.SequencePoint.EndColumn, Path.GetFileName (instruct.SequencePoint.Document.Url), instruct.OpCode.ToString());
+    
+            //}
+            //Console.WriteLine("");
             
             // Add filters using the visitor
             CecilInliningInstructionVisitor visitor = new CecilInliningInstructionVisitor();
@@ -547,6 +611,16 @@ namespace Composestar.StarLight.ILWeaver
             // What follows are the original instructions
             //
 
+
+            //Console.WriteLine("New sequence points for Method {0}", method.ToString());
+
+            //foreach (Instruction instruct in method.Body.Instructions)
+            //{
+            //    if (instruct.SequencePoint != null)
+            //        Console.WriteLine(" {5}: {0}:{1}-{2}:{3}:{4} ", instruct.SequencePoint.StartLine, instruct.SequencePoint.StartColumn, instruct.SequencePoint.EndLine, instruct.SequencePoint.EndColumn, Path.GetFileName(instruct.SequencePoint.Document.Url), instruct.OpCode.ToString());
+
+            //}
+            //Console.WriteLine("");
         }
 
         /// <summary>

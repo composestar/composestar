@@ -199,4 +199,7 @@
   <data name="WeaveStrategyNotUnique" xml:space="preserve">
     <value>The weaving strategy '{0}' is already in the list of strategies. make sure you have unique weaving strategy names.</value>
   </data>
+  <data name="CouldNotSavePdb" xml:space="preserve">
+    <value>Could not write the debug information to file '{0}'. Check if the file is not in use and has the correct access permissions. See the inner exception for more information.</value>
+  </data>
 </root>

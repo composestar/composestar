@@ -154,6 +154,20 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
+        /// Gets the debug image path.
+        /// </summary>
+        /// <value>The debug image path.</value>
+        public string DebugImagePath
+        {
+            get { 
+                if (string.IsNullOrEmpty(_inputImagePath))
+                    return "";
+                else 
+                    return string.Concat(_inputImagePath.Substring(0, _inputImagePath.LastIndexOf(".")), ".pdb");
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether to delay signing the output.
         /// </summary>
         /// <value><c>true</c> if [delay sign output]; otherwise, <c>false</c>.</value>

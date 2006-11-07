@@ -160,6 +160,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not write the debug information to file &apos;{0}&apos;. Check if the file is not in use and has the correct access permissions. See the inner exception for more information..
+        /// </summary>
+        internal static string CouldNotSavePdb {
+            get {
+                return ResourceManager.GetString("CouldNotSavePdb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The field {0} could not be found..
         /// </summary>
         internal static string FieldNotFound {

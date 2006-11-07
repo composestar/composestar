@@ -484,7 +484,7 @@ namespace Composestar.Repository
             Stream compressStream = null;
 
             if (isolatedStorageFolder == null)
-                compressStream = new BufferedStream(new GZipStream(new FileStream(path, FileMode.CreateNew), CompressionMode.Compress));
+                compressStream = new BufferedStream(new GZipStream(new FileStream(path, FileMode.Create), CompressionMode.Compress));
             else
                 compressStream = new BufferedStream(new GZipStream(new IsolatedStorageFileStream(path, FileMode.OpenOrCreate, isolatedStorageFolder), CompressionMode.Compress));
 
