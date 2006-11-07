@@ -54,9 +54,16 @@
 			<property key="config_loc" value="${bin.checkstyle}" />
 			<FileSet dir="${build.core}${file.separator}Compiletime${file.separator}src">
 				<include name="**/*.java" />
+				
+				<exclude name="Composestar/Core/COPPER/CpsLexer.java" />
+				<exclude name="Composestar/Core/COPPER/CpsParser.java" />
+				<exclude name="Composestar/Core/COPPER/CpsTokenTypes.java" />
+				<exclude name="Composestar/Core/COPPER/CpsTreeWalker.java" />
+				<exclude name="Composestar/Core/COPPER/CpsTreeWalkerTokenTypes.java" />
 			</FileSet>
 			<FileSet dir="${build.core}${file.separator}Runtime${file.separator}src">
 				<include name="**/*.java" />
+				<exclude name="Composestar/RuntimeCore/CODER/BreakPoint/Parsers/*/*.java" />
 			</FileSet>
 		</checkstyle>
 		<xslt in="${build.core}${file.separator}checkstyle-result.xml" out="${build.core}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />

@@ -2,6 +2,9 @@ package Composestar.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -31,7 +34,44 @@ public class Version
 	 */
 	public static String getVersionString()
 	{
-		return "version " + instance.props.getProperty("version", "0.0.0.0");
+		return "version " + getVersion();
+	}
+	
+	/**
+	 * Return just the version quad
+	 * @return
+	 */
+	public static String getVersion()
+	{
+		return instance.props.getProperty("version", "0.0.0.0");
+	}
+	
+	/**
+	 * Return just the build number. This is only non-zero for builds
+	 * produced by the continuous integration server.
+	 * 
+	 * @return
+	 */
+	public static int getBuild()
+	{
+		return Integer.parseInt(instance.props.getProperty("build", "0"));
+	}
+
+	/**
+	 * Get the compilation date
+	 */
+	public static Date getCompileDate()
+	{
+		try
+		{
+			// note: this must match the format used by the ant script
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+			return sdf.parse(instance.props.getProperty("compiledate", ""));
+		}
+		catch (ParseException e)
+		{
+			return new Date(0);
+		}
 	}
 
 	/**
@@ -39,7 +79,7 @@ public class Version
 	 */
 	public static String getTitleString()
 	{
-		return instance.props.getProperty("title", "Composestar Compile-Time") + " " + getVersionString();
+		return instance.props.getProperty("title", "Composestar Compile-Time");
 	}
 
 	/**
