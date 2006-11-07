@@ -96,4 +96,18 @@ public class Action
 			selectedProjects = extractProjects(((IStructuredSelection) selection).toArray());
 		}
 	}
+	
+	/**
+	 * Sets selected projects manually.
+	 * <p>
+	 * E.g. this is used by TestBuild and TestRun for running action in headless mode.
+	 * 
+	 * @see TestBuild
+	 * @see TestRun
+	 * @param jp list of projects
+	 */
+	public void setSelectedProjects(IProject[] jp)
+	{
+		this.selectedProjects = jp;
+	}
 }
