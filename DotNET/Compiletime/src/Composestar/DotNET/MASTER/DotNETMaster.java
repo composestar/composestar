@@ -90,7 +90,7 @@ public class DotNETMaster extends Master
 		// This is the 'hardcoded' version
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
+			//Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
 
 			// Apache XML driver is moved to a different package in Java 5
 			if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
@@ -226,16 +226,17 @@ public class DotNETMaster extends Master
 
 		if (args[0].equalsIgnoreCase("-v"))
 		{
-			System.out.println(Version.getTitleString());
+			System.out.println(Version.getTitleString()+" "+Version.getVersionString());
 			System.out.println(Version.getAuthorString());
+			System.out.println("Compiled on "+Version.getCompileDate().toString());
 			System.exit(0);
 		}
 
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, "Master", "Invoking Master " + Version.getVersionString() + " now...");
 			Master master = new DotNETMaster(args[0]);
-			Debug.out(Debug.MODE_DEBUG, "Master", "Master initialized.");
+			Debug.out(Debug.MODE_DEBUG, "Master", Version.getTitleString() + " " + Version.getVersionString());
+			Debug.out(Debug.MODE_DEBUG, "Master", "Compiled on "+Version.getCompileDate().toString());
 			master.run();
 		}
 		catch (ModuleException e)

@@ -72,6 +72,10 @@
 			<property key="config_loc" value="${bin.checkstyle}" />
 			<FileSet dir="${build.dotnet}${file.separator}Compiletime${file.separator}src">
 				<include name="**/*.java" />
+				
+				<exclude name="Composestar/DotNET/DUMMER/JSharpLexer.java" />
+				<exclude name="Composestar/DotNET/DUMMER/JSharpRecognizer.java" />
+				<exclude name="Composestar/DotNET/DUMMER/JSharpTokenTypes.java" />
 			</FileSet>
 		</checkstyle>
 		<xslt in="${build.dotnet}${file.separator}checkstyle-result.xml" out="${build.dotnet}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
