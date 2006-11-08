@@ -1,25 +1,28 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
 /**
- * This class contains version and authorship information. It contains only
- * static data elements and basically just a central place to put this kind of
- * information so it can be updated easily for each release. <p/> Version
- * numbers used here are broken into 4 parts: major, minor, build, and revision,
- * and are written as v<major>.<minor>.<build>.<revision> (e.g. v0.1.4.a).
- * Major numbers will change at the time of major reworking of some part of the
- * system. Minor numbers for each public release or change big enough to cause
- * incompatibilities. Build numbers for each different build sequence and
- * finally revision letter will be incremented for small bug fixes and changes
- * that probably wouldn't be noticed by a user.
+ * This class contains version information that can be used for whatever
+ * purpose. The data is read from the version.properties file included with the
+ * JAR. This version.properties file is written/updated by the ANT build system.
  */
-
 public class Version
 {
 	/**
@@ -27,6 +30,14 @@ public class Version
 	 */
 	private static final Version instance = new Version();
 
+	/**
+	 * Cache of the compile date value
+	 */
+	private Date compileDate;
+
+	/**
+	 * Properties instance
+	 */
 	private Properties props = new Properties();
 
 	/**
@@ -36,25 +47,26 @@ public class Version
 	{
 		return "version " + getVersion();
 	}
-	
+
 	/**
 	 * Return just the version quad
+	 * 
 	 * @return
 	 */
 	public static String getVersion()
 	{
 		return instance.props.getProperty("version", "0.0.0.0");
 	}
-	
+
 	/**
-	 * Return just the build number. This is only non-zero for builds
-	 * produced by the continuous integration server.
+	 * Return just the build number. This is only non-zero for builds produced
+	 * by the continuous integration server.
 	 * 
 	 * @return
 	 */
 	public static int getBuild()
 	{
-		return Integer.parseInt(instance.props.getProperty("build", "0"));
+		return Integer.parseInt(instance.props.getProperty("version.build", "0"));
 	}
 
 	/**
@@ -62,45 +74,77 @@ public class Version
 	 */
 	public static Date getCompileDate()
 	{
+		if (instance.compileDate != null) return instance.compileDate;
 		try
 		{
 			// note: this must match the format used by the ant script
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-			return sdf.parse(instance.props.getProperty("compiledate", ""));
+			instance.compileDate = sdf.parse(instance.props.getProperty("version.compiledate", ""));
 		}
 		catch (ParseException e)
 		{
-			return new Date(0);
+			instance.compileDate = new Date(0);
 		}
+		return instance.compileDate;
 	}
 
 	/**
 	 * Full title of the system
 	 */
-	public static String getTitleString()
+	public static String getTitle()
 	{
-		return instance.props.getProperty("title", "Composestar Compile-Time");
+		return instance.props.getProperty("application.title", "Composestar Compile-Time");
 	}
 
 	/**
 	 * Name of the author
 	 */
-	public static String getAuthorString()
+	public static String getAuthor()
 	{
-		return instance.props.getProperty("author", "Developed by the Compose* team; University of Twente");
+		return instance.props.getProperty("application.author", "the Compose* team; University of Twente");
 	}
 
 	/**
-	 * The command name normally used to invoke this program
+	 * Website URL
 	 */
-	public final static String getProgramName()
+	public static String getWebsite()
 	{
-		return "Composestar.Core.Master.Master";
+		return instance.props.getProperty("application.website", "http://composestar.sourceforge.net");
+	}
+
+	/**
+	 * Return the license stub
+	 * 
+	 * @return
+	 */
+	public static String getLicenseStub()
+	{
+		Calendar c = Calendar.getInstance();
+		c.setTime(getCompileDate());
+		return "Copyright (C) 2003-" + c.get(Calendar.YEAR) + " " + getAuthor() + ".\n"
+				+ "This program is distributed in the hope that it will be useful,\n"
+				+ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+				+ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\n"
+				+ "Lesser General Public License for more details.";
+	}
+
+	/**
+	 * Prints a version report to the provided print stream. This can be used
+	 * when the program is executed with the --version argument
+	 */
+	public static void reportVersion(PrintStream os)
+	{
+		os.println(Version.getTitle()+" "+Version.getVersion());
+		os.println("Developed by "+Version.getAuthor());
+		os.println(Version.getWebsite());
+		os.println("Compiled on "+Version.getCompileDate().toString());
+		os.println("");
+		os.println(Version.getLicenseStub());
 	}
 
 	private Version()
 	{
-		InputStream is = this.getClass().getResourceAsStream("/Composestar/version.properties");
+		InputStream is = this.getClass().getResourceAsStream("/version.properties");
 		if (is != null)
 		{
 			try
