@@ -133,6 +133,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to parse the Weave Debug level &apos;{0}&apos;. Make sure you entered a correct debug level (None, Statistics, Detailed)..
+        /// </summary>
+        internal static string CouldNotParseWeaveDebugLevel {
+            get {
+                return ResourceManager.GetString("CouldNotParseWeaveDebugLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to read the requested registry values. Make sure the registry contains the correct settings by running the setup application..
         /// </summary>
         internal static string CouldNotReadRegistryValues {
@@ -426,6 +435,15 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         internal static string WeavingFile {
             get {
                 return ResourceManager.GetString("WeavingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weaving instructions log file saved to &apos;{0}&apos;..
+        /// </summary>
+        internal static string WeavingInstructionsLogSaved {
+            get {
+                return ResourceManager.GetString("WeavingInstructionsLogSaved", resourceCulture);
             }
         }
         

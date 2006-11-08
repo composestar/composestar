@@ -410,7 +410,7 @@ This target will be called whenever the Clean target is invoked.
   <Target
        Name="ILWeaverRunner">
     <Message Text="Performing IL weaving." />
-    <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" ConcernsDirty="$(ConcernsDirty)" />
+    <ILWeaverTask RepositoryFilename="$(RepositoryFilename)" WeaveDebug="$(WeaveDebugLevel)" BinFolder="$(ProjectDir)$(OutDir)" ConcernsDirty="$(ConcernsDirty)" />
   </Target>
 
   <Target Name ="ILVerifyRunner" Condition="'$(VerifyIL)'=='True' And ('$(ConcernsDirty)' != 'False' Or '$(AssembliesDirty)' != 'False')">

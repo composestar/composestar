@@ -13,6 +13,25 @@ namespace Composestar.StarLight.ILWeaver
     public sealed class CecilWeaverConfiguration
     {
 
+        /// <summary>
+        /// Indicated the level of debug information collected by the weaver.
+        /// </summary>
+        public enum WeaveDebug
+        {
+            /// <summary>
+            /// No debugging is collected.
+            /// </summary>
+            None,
+            /// <summary>
+            /// Weave statistics are collected.
+            /// </summary>
+            Statistics,
+            /// <summary>
+            /// Weave statistics and detailed information is collected.
+            /// </summary>
+            Detailed
+        }
+
         readonly bool _delaySignOutput;
         readonly string _outputImageSNK;
         readonly bool _shouldSignOutput;
@@ -21,6 +40,8 @@ namespace Composestar.StarLight.ILWeaver
         private string _binfolder;
         private AssemblyConfig _assemblyConfig;
         private ConfigurationContainer _weaveConfiguration;
+
+        private WeaveDebug _weaveDebugLevel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
@@ -61,7 +82,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="assemblyConfig">The assembly config.</param>
         /// <param name="weaveConfiguration">The weave configuration.</param>
-        public CecilWeaverConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
+        public CecilWeaverConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration, WeaveDebug weaveDebug)
         {
             if (assemblyConfig == null)
                 throw new ArgumentNullException("AssemblyConfig");
@@ -77,6 +98,18 @@ namespace Composestar.StarLight.ILWeaver
             _outputImagePath = assemblyConfig.Filename;
             _inputImagePath = assemblyConfig.Filename;
             _delaySignOutput = false;
+            _weaveDebugLevel = weaveDebug;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CecilWeaverConfiguration"/> class.
+        /// </summary>
+        /// <param name="assemblyConfig">The assembly config.</param>
+        /// <param name="weaveConfiguration">The weave configuration.</param>
+        public CecilWeaverConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
+            : this(assemblyConfig, weaveConfiguration, WeaveDebug.Statistics)
+        {
+           
         }
 
         /// <summary>
@@ -85,7 +118,26 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The output image SNK.</value>
         public string OutputImageSNK
         {
-            get { return _outputImageSNK; }
+            get 
+            {
+                return _outputImageSNK; 
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the weave debug level.
+        /// </summary>
+        /// <value>The weave debug level.</value>
+        public WeaveDebug WeaveDebugLevel
+        {
+            get
+            {
+                return _weaveDebugLevel;
+            }
+            set
+            {
+                _weaveDebugLevel = value;
+            }
         }
 
         /// <summary>
@@ -95,7 +147,10 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>Configuration container</returns>
         public ConfigurationContainer WeaveConfiguration
         {
-            get { return _weaveConfiguration; } // get
+            get 
+            { 
+                return _weaveConfiguration; 
+            }
         } // WeaveConfiguration
 
         /// <summary>
@@ -132,7 +187,10 @@ namespace Composestar.StarLight.ILWeaver
         /// <value><c>true</c> if should sign output; otherwise, <c>false</c>.</value>
         public bool ShouldSignOutput
         {
-            get { return _shouldSignOutput; }
+            get 
+            { 
+                return _shouldSignOutput;
+            }
         }
 
         /// <summary>
@@ -141,7 +199,10 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The output image path.</value>
         public string OutputImagePath
         {
-            get { return _outputImagePath; }
+            get 
+            { 
+                return _outputImagePath;
+            }
         }
 
         /// <summary>
@@ -150,7 +211,10 @@ namespace Composestar.StarLight.ILWeaver
         /// <value>The input image path.</value>
         public string InputImagePath
         {
-            get { return _inputImagePath; }
+            get
+            { 
+                return _inputImagePath;
+            }
         }
 
         /// <summary>
@@ -173,7 +237,10 @@ namespace Composestar.StarLight.ILWeaver
         /// <value><c>true</c> if [delay sign output]; otherwise, <c>false</c>.</value>
         public bool DelaySignOutput
         {
-            get { return _delaySignOutput; }
+            get 
+            { 
+                return _delaySignOutput; 
+            }
         }
 
         /// <summary>

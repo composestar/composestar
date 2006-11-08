@@ -167,9 +167,12 @@ namespace Composestar.StarLight.ILWeaver
                         WeaveMethod(targetAssembly, method, weaveMethod, weaveType);
  
                         // Update stats
-                        _weaveStats.MethodsProcessed++;  
-                        _weaveStats.TotalMethodWeaveTime = _weaveStats.TotalMethodWeaveTime.Add(swMethod.Elapsed);
-                        _weaveStats.MaxWeaveTimePerMethod = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerMethod.Ticks, swMethod.Elapsed.Ticks));
+                        if (_configuration.WeaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
+                        {
+                            _weaveStats.MethodsProcessed++;
+                            _weaveStats.TotalMethodWeaveTime = _weaveStats.TotalMethodWeaveTime.Add(swMethod.Elapsed);
+                            _weaveStats.MaxWeaveTimePerMethod = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerMethod.Ticks, swMethod.Elapsed.Ticks));
+                        }
 
                         swMethod.Reset(); 
 
@@ -183,9 +186,12 @@ namespace Composestar.StarLight.ILWeaver
                 swType.Stop();
 
                 // Update stats
-                _weaveStats.TypesProcessed++;
-                _weaveStats.TotalTypeWeaveTime = _weaveStats.TotalTypeWeaveTime.Add(swType.Elapsed);
-                _weaveStats.MaxWeaveTimePerType = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerType.Ticks, swType.Elapsed.Ticks));
+                if (_configuration.WeaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
+                {
+                    _weaveStats.TypesProcessed++;
+                    _weaveStats.TotalTypeWeaveTime = _weaveStats.TotalTypeWeaveTime.Add(swType.Elapsed);
+                    _weaveStats.MaxWeaveTimePerType = TimeSpan.FromTicks(Math.Max(_weaveStats.MaxWeaveTimePerType.Ticks, swType.Elapsed.Ticks));
+                }
                 swType.Reset();
 
             } // foreach  (typeElement)
@@ -198,9 +204,12 @@ namespace Composestar.StarLight.ILWeaver
 
             // Stop timing
             sw.Stop();
-           
-            _weaveStats.TotalWeaveTime = sw.Elapsed;
-             
+
+            if (_configuration.WeaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
+            {
+                _weaveStats.TotalWeaveTime = sw.Elapsed;
+            }
+
             return _weaveStats;  
         }
 
@@ -380,6 +389,10 @@ namespace Composestar.StarLight.ILWeaver
 
                                 // Add the instructions
                                 int noi = InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+
+
+                                // Log
+                                StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
                             }
                         }
                     }
@@ -471,6 +484,9 @@ namespace Composestar.StarLight.ILWeaver
 
                             // Add the instructions
                             int noi = InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+
+                            // Log
+                            StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString()); 
                         }
                     }
                 }
@@ -602,6 +618,9 @@ namespace Composestar.StarLight.ILWeaver
                 int instructionsCount = 0;
                 instructionsCount += InsertBeforeInstructionList(ref worker, ins, visitor.Instructions);
                 
+                // Log
+                StoreInstructionLog(visitor.Instructions, "Input filters for {0}", method.ToString());
+
                 // Increase the number of inputfilters added
                 _weaveStats.InputFiltersAdded++;
             }
@@ -706,6 +725,9 @@ namespace Composestar.StarLight.ILWeaver
                         int instructionsCount = 0;
                         // Add the instructions
                         instructionsCount += ReplaceAndInsertInstructionList(ref worker, instruction, visitor.Instructions);
+
+                        // Log
+                        StoreInstructionLog(visitor.Instructions, "Output filters({2}) for {0} call {1}", method.ToString(), md.ToString(), _weaveStats.OutputFiltersAdded);
 
                         // Increase the number of outputfilters added
                         _weaveStats.OutputFiltersAdded++;
@@ -833,6 +855,39 @@ namespace Composestar.StarLight.ILWeaver
                     instruction.OpCode == OpCodes.Calli |
                     instruction.OpCode == OpCodes.Callvirt);
         }
+
+
+         /// <summary>
+         /// Stores the instruction log.
+         /// </summary>
+         /// <param name="instructions">The instructions.</param>
+         /// <param name="caption">The caption.</param>
+         /// <param name="arguments">The arguments.</param>
+         private void StoreInstructionLog(IList<Instruction> instructions, string caption, params object[] arguments)
+         {
+             StoreInstructionLog(instructions, String.Format(caption, arguments)); 
+         }
+
+        /// <summary>
+        /// Stores the instruction log.
+        /// </summary>
+        /// <param name="instructions">The instructions.</param>
+        /// <param name="caption">The caption.</param>
+        private void StoreInstructionLog(IList<Instruction> instructions, string caption)
+        {
+            if (_configuration.WeaveDebugLevel == CecilWeaverConfiguration.WeaveDebug.Detailed)
+            {
+                List<String> formattedList = new List<string>();
+                foreach (Instruction instruction in instructions)
+                {
+                    formattedList.Add(CecilFormatter.FormatInstruction(instruction));
+                }
+
+                // Add the log
+                _weaveStats.InstructionsLog.Add(caption, formattedList);               
+            }
+        }
+
         #endregion
 
     }

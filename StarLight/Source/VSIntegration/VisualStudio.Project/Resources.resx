@@ -153,6 +153,12 @@
   <data name="DebugLevelDescription" xml:space="preserve">
     <value>Debug level used by the Composestar Java part.</value>
   </data>
+  <data name="WeaveDebugLevel" xml:space="preserve">
+    <value>Weave Debug level</value>
+  </data>
+  <data name="WeaveDebugLevelDescription" xml:space="preserve">
+    <value>Debug level used by the StarLight weaver.</value>
+  </data>
   <data name="VerifyIL" xml:space="preserve">
     <value>Verify IL</value>
   </data>

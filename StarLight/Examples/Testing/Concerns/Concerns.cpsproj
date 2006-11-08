@@ -12,12 +12,14 @@
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Debug\</OutputPath>
     <DebugLevel>4</DebugLevel>
+    <WeaveDebugLevel>Detailed</WeaveDebugLevel>
     <VerifyIL>True</VerifyIL>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>
     <OutputPath>bin\Release\</OutputPath>
     <DebugLevel>1</DebugLevel>
+    <WeaveDebugLevel>Statistics</WeaveDebugLevel>
     <VerifyIL>False</VerifyIL>
   </PropertyGroup>
   <ItemGroup>

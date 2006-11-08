@@ -250,4 +250,10 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
   <data name="UsingBackupWeaveFile" xml:space="preserve">
     <value>File '{0}' does not require IL weaving, using backup file.</value>
   </data>
+  <data name="CouldNotParseWeaveDebugLevel" xml:space="preserve">
+    <value>Unable to parse the Weave Debug level '{0}'. Make sure you entered a correct debug level (None, Statistics, Detailed).</value>
+  </data>
+  <data name="WeavingInstructionsLogSaved" xml:space="preserve">
+    <value>Weaving instructions log file saved to '{0}'.</value>
+  </data>
 </root>

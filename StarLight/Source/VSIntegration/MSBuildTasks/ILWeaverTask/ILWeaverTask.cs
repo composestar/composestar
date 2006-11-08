@@ -60,8 +60,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
             get { return _concernsDirty; }
             set { _concernsDirty = value; }
         }
-	
 
+        private string _weaveDebug = "none";
+
+        /// <summary>
+        /// Gets or sets the weave debug.
+        /// </summary>
+        /// <value>The weave debug.</value>
+        public string WeaveDebug
+        {
+            get { return _weaveDebug; }
+            set { _weaveDebug = value; }
+        }
+	
         #endregion
 
         #region ctor
@@ -90,6 +101,23 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // Get the configuration container
             ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
+            // Set the weave debug level
+            CecilWeaverConfiguration.WeaveDebug weaveDebugLevel;
+            if (string.IsNullOrEmpty(_weaveDebug))
+                weaveDebugLevel = CecilWeaverConfiguration.WeaveDebug.None;
+            else
+            {
+                try
+                {
+                    weaveDebugLevel = (CecilWeaverConfiguration.WeaveDebug) CecilWeaverConfiguration.WeaveDebug.Parse(typeof(CecilWeaverConfiguration.WeaveDebug), _weaveDebug, true);             
+                }
+                catch (Exception)
+                {
+                    Log.LogErrorFromResources("CouldNotParseWeaveDebugLevel", _weaveDebug);
+                    return false;
+                }                
+            }
+            
             try
             {
                 // For each assembly in the config
@@ -127,7 +155,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogMessageFromResources("WeavingFile", assembly.Filename);
 
                     // Preparing config
-                    CecilWeaverConfiguration configuration = CecilWeaverConfiguration.CreateDefaultConfiguration(assembly, configContainer);
+                    CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly, configContainer, weaveDebugLevel);
 
                     if (!String.IsNullOrEmpty(BinFolder))
                     {
@@ -144,14 +172,39 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                         // Show information about weaving
                         Log.LogMessageFromResources("WeavingCompleted", weaveStats.TotalWeaveTime.TotalSeconds);
-                        Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
+                        switch (configuration.WeaveDebugLevel)
+                        {
+                            case CecilWeaverConfiguration.WeaveDebug.None:
+                                break;
+                            case CecilWeaverConfiguration.WeaveDebug.Statistics:
+                                Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
                                                                     weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
-                                                                    weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds, 
+                                                                    weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds,
                                                                     weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
-                                                                    assembly.Filename, 
-                                                                    weaveStats.InternalsAdded, weaveStats.ExternalsAdded, 
-                                                                    weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded, 
+                                                                    assembly.Filename,
+                                                                    weaveStats.InternalsAdded, weaveStats.ExternalsAdded,
+                                                                    weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded,
                                                                     weaveStats.TotalWeaveTime.TotalSeconds); 
+                                break;
+                            case CecilWeaverConfiguration.WeaveDebug.Detailed:
+                                Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
+                                                                    weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
+                                                                    weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds,
+                                                                    weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
+                                                                    assembly.Filename,
+                                                                    weaveStats.InternalsAdded, weaveStats.ExternalsAdded,
+                                                                    weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded,
+                                                                    weaveStats.TotalWeaveTime.TotalSeconds); 
+                        
+                                // Save instruction log
+                                string logFilename = assembly.Filename + ".weavelog.txt";
+                                weaveStats.SaveInstructionsLog(logFilename);
+                                Log.LogMessageFromResources("WeavingInstructionsLogSaved", logFilename); 
+                                break;
+                            default:
+                                break;
+                        }                        
+
                     }
                     catch (ILWeaverException ex)
                     {

@@ -22,6 +22,25 @@ namespace Composestar.StarLight.VisualStudio.Project
         Debug = 4
     }
 
+    /// <summary>
+    /// Indicated the level of debug information collected by the weaver.
+    /// </summary>
+    public enum WeaveDebug
+    {
+        /// <summary>
+        /// No debugging is collected.
+        /// </summary>
+        None,
+        /// <summary>
+        /// Weave statistics are collected.
+        /// </summary>
+        Statistics,
+        /// <summary>
+        /// Weave statistics and detailed information is collected.
+        /// </summary>
+        Detailed
+    }
+
     [ComVisible(true), Guid("9CD2405A-8FB1-4433-A61D-6E81CB33E7F8")]
     public class ComposeStarBuildPropertyPage : SettingsPage
     {
@@ -29,11 +48,13 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal enum ConfigurationPropertyPageTag
         {
             DebugLevel,
+            WeaveDebugLevel,
             VerifyIL,
         }
         
         #region fields
         private DebugLevel debugLevel = DebugLevel.Information;
+        private WeaveDebug weaveDebugLevel = WeaveDebug.None;
         private bool verifyIL = true;
         #endregion
 
@@ -68,11 +89,23 @@ namespace Composestar.StarLight.VisualStudio.Project
 
             string dlevel = this.GetConfigProperty(ConfigurationPropertyPageTag.DebugLevel.ToString());
 
-            if (dlevel != null && dlevel.Length > 0)
+            if (!String.IsNullOrEmpty(dlevel))
             {
                 try
                 {
                     this.debugLevel = (DebugLevel)Enum.Parse(typeof(DebugLevel), dlevel);
+                }
+                catch
+                { } //Should only fail if project file is corrupt
+            }
+
+            string wlevel = this.GetConfigProperty(ConfigurationPropertyPageTag.WeaveDebugLevel.ToString());
+
+            if (!string.IsNullOrEmpty(wlevel))
+            {
+                try
+                {
+                    this.weaveDebugLevel = (WeaveDebug)Enum.Parse(typeof(WeaveDebug), wlevel);
                 }
                 catch
                 { } //Should only fail if project file is corrupt
@@ -96,6 +129,7 @@ namespace Composestar.StarLight.VisualStudio.Project
             }
 
             SetConfigProperty(ConfigurationPropertyPageTag.DebugLevel.ToString(), ((int)this.debugLevel).ToString() );
+            SetConfigProperty(ConfigurationPropertyPageTag.WeaveDebugLevel.ToString(), this.weaveDebugLevel.ToString());
             SetConfigProperty(ConfigurationPropertyPageTag.VerifyIL.ToString(), verifyIL.ToString() );
 
             this.IsDirty = false;
@@ -106,6 +140,15 @@ namespace Composestar.StarLight.VisualStudio.Project
 
         #region exposed properties
 
+        /// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.OutputType"]/*' />
+        [SRCategoryAttribute(SR.Application)]
+        [LocDisplayName(SR.WeaveDebugLevel)]
+        [SRDescriptionAttribute(SR.WeaveDebugLevelDescription)]
+        public WeaveDebug WeaveDebugLevel
+        {
+            get { return this.weaveDebugLevel ; }
+            set { this.weaveDebugLevel = value; this.IsDirty = true; }
+        }
 
         /// <include file='doc\PropertyPages.uex' path='docs/doc[@for="GeneralPropertyPage.OutputType"]/*' />
         [SRCategoryAttribute(SR.Application)]

@@ -74,6 +74,8 @@ namespace Composestar.StarLight.VisualStudio.Project
         internal const string OutputTypeDescription = "OutputTypeDescription";
         internal const string DebugLevel = "DebugLevel";
         internal const string DebugLevelDescription = "DebugLevelDescription";
+        internal const string WeaveDebugLevel = "WeaveDebugLevel";
+        internal const string WeaveDebugLevelDescription = "WeaveDebugLevelDescription";
         internal const string VerifyIL = "VerifyIL";
         internal const string VerifyILDescription = "VerifyILDescription";
         internal const string GeneralCaption = "GeneralCaption";

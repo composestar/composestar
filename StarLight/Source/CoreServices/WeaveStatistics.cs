@@ -22,6 +22,49 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         private TimeSpan _totalMethodWeaveTime = TimeSpan.Zero;
         private TimeSpan _maxWeaveTimePerType = TimeSpan.Zero;
 
+        private Dictionary<string, List<String>> _instructionsLog = new Dictionary<string, List<string>>();
+
+        /// <summary>
+        /// Gets or sets the instructions log.
+        /// </summary>
+        /// <value>The instructions log.</value>
+        public Dictionary<string, List<String>> InstructionsLog
+        {
+            get
+            {
+                return _instructionsLog;
+            }
+            set
+            {
+                _instructionsLog = value;
+            }
+        }
+
+        /// <summary>
+        /// Saves the instructions log to file.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        public void SaveInstructionsLog(string filename)
+        {
+            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(@filename, false))
+            {
+                sw.WriteLine("Weaver Instructions Log File");
+                sw.WriteLine("Created at {0} on {1} by {2}\\{3}.", DateTime.Now.ToString(), Environment.MachineName, Environment.UserDomainName, Environment.UserName);
+                sw.WriteLine();
+
+                foreach (String caption in InstructionsLog.Keys)
+                {
+                    sw.WriteLine("{0}", caption);
+                    foreach (String instruction in InstructionsLog[caption])
+                    {
+                        sw.WriteLine("\t{0}", instruction); 
+                    }
+                    sw.WriteLine();
+                }
+                sw.WriteLine();
+            }
+        }
+
         /// <summary>
         /// Gets or sets the internals added.
         /// </summary>
