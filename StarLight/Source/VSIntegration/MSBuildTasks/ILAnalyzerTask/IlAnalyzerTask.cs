@@ -374,6 +374,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 configuration.DoFieldAnalysis = false;
                 configuration.DoMethodCallAnalysis = false;
                 configuration.ExtractUnresolvedOnly = true;
+                configuration.BinFolder = BinFolder;  
 
                 // Store before reinit
                 List<string> tempUnresolvedTypes = analyzer.UnresolvedTypes;

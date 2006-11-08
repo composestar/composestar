@@ -177,29 +177,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
                             case CecilWeaverConfiguration.WeaveDebug.None:
                                 break;
                             case CecilWeaverConfiguration.WeaveDebug.Statistics:
-                                Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
-                                                                    weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
-                                                                    weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds,
-                                                                    weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
-                                                                    assembly.Filename,
-                                                                    weaveStats.InternalsAdded, weaveStats.ExternalsAdded,
-                                                                    weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded,
-                                                                    weaveStats.TotalWeaveTime.TotalSeconds); 
+                                ShowWeavingStats(assembly, weaveStats);
                                 break;
                             case CecilWeaverConfiguration.WeaveDebug.Detailed:
-                                Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
-                                                                    weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
-                                                                    weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds,
-                                                                    weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
-                                                                    assembly.Filename,
-                                                                    weaveStats.InternalsAdded, weaveStats.ExternalsAdded,
-                                                                    weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded,
-                                                                    weaveStats.TotalWeaveTime.TotalSeconds); 
-                        
+                                ShowWeavingStats(assembly, weaveStats);
+
                                 // Save instruction log
                                 string logFilename = assembly.Filename + ".weavelog.txt";
+                                string timingFilename = assembly.Filename + ".weavetiming.txt";
+                                
                                 weaveStats.SaveInstructionsLog(logFilename);
-                                Log.LogMessageFromResources("WeavingInstructionsLogSaved", logFilename); 
+                                weaveStats.SaveTimingLog(timingFilename);
+  
+                                Log.LogMessageFromResources("WeavingInstructionsLogSaved", logFilename);
+                                Log.LogMessageFromResources("WeavingTimingLogSaved", timingFilename); 
                                 break;
                             default:
                                 break;
@@ -233,6 +224,22 @@ namespace Composestar.StarLight.MSBuild.Tasks
             return !Log.HasLoggedErrors;
         }
 
+        /// <summary>
+        /// Shows the weaving statistics.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="weaveStats">The weave stats.</param>
+        private void ShowWeavingStats(AssemblyConfig assembly, WeaveStatistics weaveStats)
+        {
+            Log.LogMessageFromResources("WeavingStats", weaveStats.AverageWeaveTimePerMethod.TotalSeconds, weaveStats.AverageWeaveTimePerType.TotalSeconds,
+                                                                                weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
+                                                                                weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds,
+                                                                                weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
+                                                                                assembly.Filename,
+                                                                                weaveStats.InternalsAdded, weaveStats.ExternalsAdded,
+                                                                                weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded,
+                                                                                weaveStats.TotalWeaveTime.TotalSeconds);
+        }
         /// <summary>
         /// Creates the services container.
         /// </summary>

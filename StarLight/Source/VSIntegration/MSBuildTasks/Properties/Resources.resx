@@ -256,4 +256,7 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
   <data name="WeavingInstructionsLogSaved" xml:space="preserve">
     <value>Weaving instructions log file saved to '{0}'.</value>
   </data>
+  <data name="WeavingTimingLogSaved" xml:space="preserve">
+    <value>Weaving timing log file saved to '{0}'.</value>
+  </data>
 </root>

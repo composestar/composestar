@@ -24,6 +24,49 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
 
         private Dictionary<string, List<String>> _instructionsLog = new Dictionary<string, List<string>>();
 
+        private Queue<String> _timing = new Queue<String>();
+
+        /// <summary>
+        /// Gets or sets the timing stack.
+        /// </summary>
+        /// <value>The timing stack.</value>
+        public Queue<String> TimingStack
+        {
+            get
+            {
+                return _timing;
+            }
+            set
+            {
+                _timing = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Saves the timing log.
+        /// </summary>
+        /// <param name="filename">The filename.</param>
+        public void SaveTimingLog(string filename)
+        {
+            Queue<string> times = new Queue<string>(_timing);
+
+            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(@filename, false))
+            {
+                sw.WriteLine("Weaver Timing Log File");
+                sw.WriteLine("Created at {0} on {1} by {2}\\{3}.", DateTime.Now.ToString(), Environment.MachineName, Environment.UserDomainName, Environment.UserName);
+                sw.WriteLine();
+                
+                sw.WriteLine("\"description\", milliseconds");
+
+                while (times.Count > 0)
+                {
+                    string item = times.Dequeue();
+                    string[] itemSplitted = item.Split('^');
+                    sw.WriteLine("\"{0}\",{1}", itemSplitted[0], itemSplitted[1]);     
+                }
+            }
+        }
         /// <summary>
         /// Gets or sets the instructions log.
         /// </summary>

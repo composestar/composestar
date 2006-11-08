@@ -468,5 +468,14 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
                 return ResourceManager.GetString("WeavingStats", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weaving timing log file saved to &apos;{0}&apos;..
+        /// </summary>
+        internal static string WeavingTimingLogSaved {
+            get {
+                return ResourceManager.GetString("WeavingTimingLogSaved", resourceCulture);
+            }
+        }
     }
 }

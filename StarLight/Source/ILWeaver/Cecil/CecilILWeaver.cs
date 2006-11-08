@@ -101,11 +101,17 @@ namespace Composestar.StarLight.ILWeaver
  
             sw.Start();
 
+            StoreTimeStamp(sw.Elapsed, "Starting weaver"); 
+
             // Load the file
             AssemblyDefinition targetAssembly;
             ISymbolReader pdbReader = null;
 
+            StoreTimeStamp(sw.Elapsed, "Loading assembly"); 
+            
             targetAssembly = LoadAssembly(ref pdbReader);
+
+            StoreTimeStamp(sw.Elapsed, "Loaded assembly"); 
 
             // Check if the _targetAssemblyDefinition is available
             if (targetAssembly == null)
@@ -113,13 +119,15 @@ namespace Composestar.StarLight.ILWeaver
 
             // Prepare the data for this assembly (precaching)
             WeaveSpecification weaveSpec;
-
+            
             // Get the weave specification
+            StoreTimeStamp(sw.Elapsed, "Loading weave specification"); 
             weaveSpec = _entitiesAccessor.LoadWeaveSpecification(_configuration.AssemblyConfiguration.WeaveSpecificationFile);
 
             if (weaveSpec == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.WeavingSpecNotFound, _configuration.AssemblyConfiguration.WeaveSpecificationFile, _configuration.AssemblyConfiguration.Name));
-         
+            StoreTimeStamp(sw.Elapsed, "Loaded weave specification"); 
+
             // If empty, we can quit
             if (weaveSpec.WeaveTypes.Count == 0)
             {
@@ -134,19 +142,23 @@ namespace Composestar.StarLight.ILWeaver
             // Get only the types we have info for
             foreach (WeaveType weaveType in weaveSpec.WeaveTypes)
             {
+                StoreTimeStamp(sw.Elapsed, "Retrieving type '{0}'", weaveType.Name); 
+
                 TypeDefinition type = targetAssembly.MainModule.Types[weaveType.Name];
                 if (type == null)
                     continue;
 
                 _typeChanged = false;
 
-                swType.Start(); 
-
+                swType.Start();
+                
                 // Get and add the externals for this type
+                StoreTimeStamp(sw.Elapsed, "Externals for type '{0}'", weaveType.Name); 
                 if (weaveType.Externals.Count > 0)
                     WeaveExternals(targetAssembly, type, weaveType);
-
+                
                 // Get and add the internals for this type
+                StoreTimeStamp(sw.Elapsed, "Internals for type '{0}'", weaveType.Name); 
                 if (weaveType.Internals.Count > 0)
                     WeaveInternals(targetAssembly, type, weaveType);
 
@@ -154,7 +166,8 @@ namespace Composestar.StarLight.ILWeaver
                 {
                     // Loop through all the methods
                     foreach (MethodDefinition method in type.Methods)
-                    {                         
+                    {
+                        StoreTimeStamp(sw.Elapsed, "Retrieving method '{0}'", method.ToString()); 
                         // Get the methodinfo based on the signature
                         WeaveMethod weaveMethod = GetMethodFromList(weaveType.Methods, method.ToString());
 
@@ -164,6 +177,7 @@ namespace Composestar.StarLight.ILWeaver
                         
                         swMethod.Start();
 
+                        StoreTimeStamp(sw.Elapsed, "Weaving method '{0}'", method.ToString());                        
                         WeaveMethod(targetAssembly, method, weaveMethod, weaveType);
  
                         // Update stats
@@ -180,8 +194,12 @@ namespace Composestar.StarLight.ILWeaver
                 } // if
 
                 // Import the changed type into the AssemblyDefinition
-                if (_typeChanged) 
+                if (_typeChanged)
+                {
+                    StoreTimeStamp(sw.Elapsed, "Importing type '{0}' into assembly", weaveType.Name); 
+                       
                     targetAssembly.MainModule.Import(type);
+                }
 
                 swType.Stop();
 
@@ -199,12 +217,15 @@ namespace Composestar.StarLight.ILWeaver
             // Save the modified assembly only if it is changed.
             if (_weaveStats.InputFiltersAdded > 0 || _weaveStats.OutputFiltersAdded > 0 || _weaveStats.InternalsAdded > 0 || _weaveStats.ExternalsAdded > 0)
             {
+                StoreTimeStamp(sw.Elapsed, "Saving assembly");                        
                 SaveAssembly(targetAssembly, pdbReader);
+                StoreTimeStamp(sw.Elapsed, "Saved assembly");                        
             } // if
 
             // Stop timing
             sw.Stop();
 
+            StoreTimeStamp(sw.Elapsed, "Weaving completed");                        
             _weaveStats.TotalWeaveTime = sw.Elapsed;
             
             return _weaveStats;  
@@ -885,6 +906,21 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
+        /// <summary>
+        /// Stores the time stamp.
+        /// </summary>
+        /// <param name="ts">The timestamp.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="arguments">The arguments.</param>
+        private void StoreTimeStamp(TimeSpan ts, string caption, params Object[] arguments)
+        {
+            if (_configuration.WeaveDebugLevel == CecilWeaverConfiguration.WeaveDebug.Detailed)
+            {
+                string item = String.Format(caption, arguments);
+                item = String.Format("{0}^{1}", item, ts.Ticks); 
+                _weaveStats.TimingStack.Enqueue(item);   
+            }
+        }
         #endregion
 
     }
