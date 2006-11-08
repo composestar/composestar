@@ -79,8 +79,13 @@ public class AIController extends Controller implements Tickable
 	 */
 	public boolean isSmart()
 	{
+		//TODO: deadlock!!!!
+		return false;
+		/*
 		Ghost g = (Ghost) pawn;
 		if (g == null) return false;
-		return g.getId() == 0; // only Blinky is smart
+		int id = g.getId();
+		return id == 0; // only Blinky is smart		
+		*/
 	}
 }

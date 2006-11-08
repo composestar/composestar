@@ -32,6 +32,9 @@ public abstract class Pawn extends GameElement
 	 * Number of lives left
 	 */
 	protected int lives = 1;
+
+	protected float respawnDelay;
+	protected float defaultRespawnDelay;
 	
 	/**
 	 * cells per second
@@ -62,11 +65,23 @@ public abstract class Pawn extends GameElement
 	{
 		if (lives > 0) 
 		{
-			restart();
+			delayedRestart();
 		}
 		else 
 		{
 			reset();
+		}
+	}
+
+	public void delayedRestart()
+	{
+		if (defaultRespawnDelay > 0)
+		{
+			respawnDelay = defaultRespawnDelay;
+		}
+		else 
+		{
+			restart();
 		}
 	}
 
@@ -115,7 +130,15 @@ public abstract class Pawn extends GameElement
 
 	public void tick(float delta)
 	{
-		if ((speed > 0) && (controller != null)) move(delta);
+		if (respawnDelay > 0)
+		{
+			respawnDelay -= delta;
+			if (respawnDelay < 0) restart();
+		}
+		else if ((speed > 0) && (controller != null))
+		{
+			move(delta);
+		}
 	}
 
 	/**

@@ -1,16 +1,11 @@
-/*
-TODO:
-	- add pickup sound
-	- add levelup bonus changes
-*/
-concern BonusConern in PacmanTwo
+concern BonusConcern in PacmanTwo
 {
 	filtermodule BonusManager
 	{
 		externals
 			bm: PacmanTwo.Bonus.Bonus = PacmanTwo.Bonus.Bonus.instance();
 		inputfilters
-			startBonus : Meta = { [*.startGame] bm.startGame };
+			startBonus : Meta = { [*.startNewGame] bm.startGame };
 			tick : Meta = { [*.tick] bm.tick }
 	}
 
@@ -30,15 +25,13 @@ concern BonusConern in PacmanTwo
 			touched : Meta = { [*.createViews] bm.createViews }
 	}
 	
-	/*
 	filtermodule LevelUp
 	{
 		externals
 			bm: PacmanTwo.Bonus.Bonus = PacmanTwo.Bonus.Bonus.instance();
 		inputfilters
-			lvlup : Meta = { [*.increaseLevelx] bm.levelUp }
+			lvlup : Meta = { [*.increaseLevel] bm.levelUp }
 	}
-	*/
 
 	filtermodule BonusPickupSound
 	{
@@ -60,7 +53,7 @@ concern BonusConern in PacmanTwo
 			game <- BonusManager;
 			pacman <- TouchBonus;
 			viewport <- RegisterBonusView;
-			//levelgen <- LevelUp;
+			levelgen <- LevelUp;
 			bonus <- BonusPickupSound;
 	}
 }

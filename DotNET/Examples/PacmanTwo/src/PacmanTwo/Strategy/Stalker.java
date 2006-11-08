@@ -37,6 +37,11 @@ public class Stalker extends Strategy
 		// Note: this makes the assumption a player and only a player controlls a pacman
 		Pacman pm = (Pacman) game.getPlayer(ghost.getId() % game.getPlayerCount()).getPawn();
 
+		if (pm == null)
+		{
+			return RandomMovement.getNextMove(pawn, level);
+		}
+
 		int gX = pawn.getCellX();
 		int gY = pawn.getCellY();
 		int pX = pm.getCellX();

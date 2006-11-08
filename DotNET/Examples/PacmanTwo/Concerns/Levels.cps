@@ -1,5 +1,6 @@
 concern Levels in PacmanTwo
 {
+	/*
 	filtermodule createLevel
 	{
 		internals
@@ -7,12 +8,12 @@ concern Levels in PacmanTwo
 		inputfilters
 			newmaze : Meta = { [*.getNewMaze] levelgen.getNewMaze }
 	}
+	*/
 	
 	/*
 	 * This is an alternate filter module that has the same effect.
-	 * Should work, but doesn't.
-	 */
-	/*
+	 * Should work, but doesn't. Multiple Messages is more or less broken
+	 */	
 	filtermodule createLevelAlt
 	{
 		internals
@@ -20,17 +21,18 @@ concern Levels in PacmanTwo
 		conditions
 			useAltLevel : levelgen.useAltLevel();
 		inputfilters
-			inclvl : Prepend = { [*.getNewMaze] levelgen.increaseLevel };
+			//inclvl : Prepend = { [*.getNewMaze] levelgen.increaseLevel }; // doens't work
+			inclvl : Meta = { [*.getNewMaze] levelgen.increaseLevelM };
 			newmaze : Dispatch = { useAltLevel => [*.getNewMaze] levelgen.getAlternateLevel }
 	}
-	*/
+	
 
 	superimposition
 	{
 		selectors
 			lvl = { C | isClassWithName(C, 'PacmanTwo.Level') };
 		filtermodules
-			lvl <- createLevel;
+			lvl <- createLevelAlt;
 	}
 
 	implementation in JSharp by LevelGenerator as "LevelGenerator.java"
@@ -44,12 +46,14 @@ public class LevelGenerator
 {
 	protected int currentLevel = 0;
 
+	/*
 	public void getNewMaze(ReifiedMessage rm)
 	{
-		currentLevel++;
+		increaseLevel();
 		rm.proceed();
 		if (currentLevel % 2 == 0) rm.setReturnValue((Object) getAlternateLevel());
 	}
+	*/
 	
 	public int getCurrentLevel()
 	{
@@ -58,12 +62,17 @@ public class LevelGenerator
 	
 	public boolean useAltLevel()
 	{	// because increasing isn't done after the variable is checked
-		return (currentLevel % 2 != 0);
+		return (currentLevel % 2 != 1);
 	}
 	
 	public void increaseLevel()
 	{
 		currentLevel++;
+	}
+
+	public void increaseLevelM(Object o)
+	{
+		increaseLevel();
 	}
 
 	protected short[][] getAlternateLevel()

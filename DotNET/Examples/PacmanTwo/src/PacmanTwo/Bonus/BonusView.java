@@ -51,7 +51,18 @@ public class BonusView extends PacmanTwo.GUI.ImageView
 	 */
 	public Image getImage(BonusPickup pickup) 
 	{
-		//TODO: different images for each pickup
-		return images[0];
+		switch (pickup.getBonusType())
+		{
+			case Bonus.BONUS_STRAWBERRY:
+				return images[1];
+
+			case Bonus.BONUS_ORANGE:
+				return images[2];
+
+			case Bonus.BONUS_CHERRY:
+			default:
+				return images[0];
+		}
+		
 	}
 }

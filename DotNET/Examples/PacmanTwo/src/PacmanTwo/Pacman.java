@@ -30,6 +30,7 @@ public class Pacman extends Pawn
 	{
 		super(X, Y);
 		lives = 3;
+		defaultRespawnDelay = 3;
 	}
 
 	public void tick(float delta)

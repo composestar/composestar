@@ -18,6 +18,7 @@ import PacmanTwo.Game;
 import PacmanTwo.GameElement;
 import PacmanTwo.Scoring.Score;
 import PacmanTwo.GUI.Viewport;
+import PacmanTwo.ConcernImplementations.LevelGenerator;
 
 /**
  * Adds and manages bonus pickups.
@@ -91,25 +92,15 @@ public class Bonus
 			BonusPickup b = (BonusPickup) ge;
 			Score score = Score.instance();
 			score.addScore(b.getBonusType());
-			System.out.println("Bonus picked up "+b.getBonusType());
 			b.died();
-			beep( 4000, 50 );
+			beep( 2000, 75 );
 			beep( 1000, 75 );
-			beep( 4000, 50 );
+			beep( 2000, 75 );
 
 			bonusPickups++;
 			activeBonus = null;
 			reset();
 		}
-	}
-
-	/**
-	 * Play a sound
-	 */
-	public boolean beep(int freq, int dur)
-	{
-		// will be handled by the Sounds implementation
-		return false;
 	}
 
 	/**
@@ -125,7 +116,8 @@ public class Bonus
 	public void levelUp(ReifiedMessage rm)
 	{
 		rm.proceed();
-		// ...
+		LevelGenerator lg = (LevelGenerator) rm.getSender();
+		setBonusType(lg.getCurrentLevel());
 	}
 
 	public void reset()
@@ -181,4 +173,11 @@ public class Bonus
 				break;
 		}
 	}
+
+	
+	/*
+	 * Dummy
+	 */
+	public boolean beep(int freq, int dur) { return false; }
+
 }
