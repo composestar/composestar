@@ -25,13 +25,13 @@
                         <code><span style="color: blue">using</span> Composestar.StarLight.Filters.FilterTypes;<br />
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterTypeAttribute</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterTypeAttribute</span>(<span
                                 style="color: maroon">"Tracing"</span>, <span style="color: maroon">"TracingInAction"</span>,
-                            <span style="color: aqua">FilterAction</span>.ContinueAction,<br />
+                            <span style="color: #2b91af">FilterAction</span>.ContinueAction,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"TracingOutAction"</span>,
-                            <span style="color: aqua">FilterAction</span>.ContinueAction)]<br />
+                            <span style="color: #2b91af">FilterAction</span>.ContinueAction)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                class</span> <span style="color: aqua">TracingFilterType</span> : <span style="color: aqua">
+                                class</span> <span style="color: #2b91af">TracingFilterType</span> : <span style="color: #2b91af">
                                     FilterType </span>
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -56,38 +56,38 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterActionAttribute</span>(<span
-                                style="color: maroon">"TracingInAction"</span>, <span style="color: aqua">FilterActionAttribute</span>.<span
-                                    style="color: aqua">FilterFlowBehaviour</span>.Continue,<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">FilterActionAttribute</span>.<span
-                                style="color: aqua">MessageSubstitutionBehaviour</span>.Original)]<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: aqua">
-                                TracingInAction</span> : <span style="color: aqua">FilterAction<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
+                                style="color: maroon">"TracingInAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: #2b91af">
+                                TracingInAction</span> : <span style="color: #2b91af">FilterAction<br />
                                 </span>&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public override
-                                void</span> Execute(<span style="color: aqua">JoinPointContext</span> context)<br />
+                                void</span> Execute(<span style="color: #2b91af">JoinPointContext</span> context)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context == <span style="color: blue">null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">"TracingIN:
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">"TracingIN:
                                     Context not set!"</span>);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">return</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">String</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">String</span>
                             sender = <span style="color: maroon">"unknown"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context.Sender != <span style="color: blue">null</span>) sender = context.Sender.GetType().FullName;<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">String</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">String</span>
                             target = <span style="color: maroon">"unknown"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context.StartTarget != <span style="color: blue">null</span>) target = context.StartTarget.GetType().FullName;<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">Console</span>.WriteLine(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">Console</span>.WriteLine(<span
                                 style="color: maroon">"TracingIN: Sender={0}, Target={1}, Selector={2}"</span>,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender, target, context.StartSelector);<br />
                             <br />
@@ -99,23 +99,23 @@
                             i <= context.ArgumentCount; i++)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">ArgumentInfo</span> argumentInfo = context.GetArgumentInfo(i);<br />
+                                style="color: #2b91af">ArgumentInfo</span> argumentInfo = context.GetArgumentInfo(i);<br />
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">string</span> argdirection = <span style="color: maroon">"-"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: blue">if</span> ((argumentInfo.Attributes &amp; <span style="color: aqua">
-                                    ArgumentAttributes</span>.In) == <span style="color: aqua">ArgumentAttributes</span>.In)<br />
+                                style="color: blue">if</span> ((argumentInfo.Attributes &amp; <span style="color: #2b91af">
+                                    ArgumentAttributes</span>.In) == <span style="color: #2b91af">ArgumentAttributes</span>.In)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argdirection
                             = <span style="color: maroon">"input"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: blue">if</span> ((argumentInfo.Attributes &amp; <span style="color: aqua">
-                                    ArgumentAttributes</span>.Out) == <span style="color: aqua">ArgumentAttributes</span>.Out)<br />
+                                style="color: blue">if</span> ((argumentInfo.Attributes &amp; <span style="color: #2b91af">
+                                    ArgumentAttributes</span>.Out) == <span style="color: #2b91af">ArgumentAttributes</span>.Out)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argdirection
                             = <span style="color: maroon">"output"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: blue">if</span> ((argumentInfo.Attributes &amp; <span style="color: aqua">
-                                    ArgumentAttributes</span>.Optional) == <span style="color: aqua">ArgumentAttributes</span>.Optional)<br />
+                                style="color: blue">if</span> ((argumentInfo.Attributes &amp; <span style="color: #2b91af">
+                                    ArgumentAttributes</span>.Optional) == <span style="color: #2b91af">ArgumentAttributes</span>.Optional)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argdirection
                             = <span style="color: maroon">"optional"</span>;<br />
                             <br />
@@ -123,14 +123,14 @@
                                 style="color: blue">if</span> (argumentInfo.Value == <span style="color: blue">null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" argument
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" argument
                                     {0} ({2}) -> {1} = null"</span>,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i, context.GetArgumentType(i), argdirection);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">continue</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">String</span> argvalue;<br />
+                                style="color: #2b91af">String</span> argvalue;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">try</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -138,13 +138,13 @@
                             = argumentInfo.Value.ToString();<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: blue">catch</span> (<span style="color: aqua">Exception</span>)<br />
+                                style="color: blue">catch</span> (<span style="color: #2b91af">Exception</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argvalue
                             = <span style="color: maroon">"&lt;exception&gt;"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: aqua">
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #2b91af">
                                 Console</span>.WriteLine(<span style="color: maroon">" argument {0} ({3}) -> {1} = {2}"</span>,<br />
                             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i,
                             context.GetArgumentType(i).FullName, argvalue, argdirection);<br />
@@ -171,22 +171,22 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterActionAttribute</span>(<span
-                                style="color: maroon">"TracingOutAction"</span>, <span style="color: aqua">FilterActionAttribute</span>.<span
-                                    style="color: aqua">FilterFlowBehaviour</span>.Continue,<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">FilterActionAttribute</span>.<span
-                                style="color: aqua">MessageSubstitutionBehaviour</span>.Original)]<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: aqua">
-                                TracingOutAction</span> : <span style="color: aqua">FilterAction</span><br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
+                                style="color: maroon">"TracingOutAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: #2b91af">
+                                TracingOutAction</span> : <span style="color: #2b91af">FilterAction</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public override
-                                void</span> Execute(<span style="color: aqua">JoinPointContext</span> context)<br />
+                                void</span> Execute(<span style="color: #2b91af">JoinPointContext</span> context)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context == <span style="color: blue">null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">"OUT Tracing:
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">"OUT Tracing:
                                     Context not set!"</span>);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">return</span>;<br />
@@ -194,17 +194,17 @@
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: green">//
                                 Sender, Target, Methodname<br />
-                            </span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: aqua">String</span>
+                            </span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: #2b91af">String</span>
                             sender = <span style="color: maroon">"unknown"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context.Sender != <span style="color: blue">null</span>) sender = context.Sender.GetType().FullName;<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">String</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">String</span>
                             target = <span style="color: maroon">"unknown"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context.StartTarget != <span style="color: blue">null</span>) target = context.StartTarget.GetType().FullName;<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">Console</span>.WriteLine(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">Console</span>.WriteLine(<span
                                 style="color: maroon">"OUT Tracing: Sender={0}, Target={1}, MethodName={2} "</span>,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender,
                             target, context.StartSelector);<br />
@@ -219,7 +219,7 @@
                             i <= context.ArgumentCount; i++)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">ArgumentInfo</span> argumentInfo = context.GetArgumentInfo(i);<br />
+                                style="color: #2b91af">ArgumentInfo</span> argumentInfo = context.GetArgumentInfo(i);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">if</span> (argumentInfo.IsOut())<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -227,7 +227,7 @@
                                 style="color: blue">if</span> (argumentInfo.Value == <span style="color: blue">null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" argument
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" argument
                                     {0} (out) -&gt; {1} = null"</span>,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i,
                             context.GetArgumentType(i));<br />
@@ -236,7 +236,7 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">String</span> argvalue;<br />
+                                style="color: #2b91af">String</span> argvalue;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">try</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -244,14 +244,14 @@
                             = argumentInfo.Value.ToString();<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: blue">catch</span>(<span style="color: aqua">Exception</span>)<br />
+                                style="color: blue">catch</span>(<span style="color: #2b91af">Exception</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argvalue
                             = <span style="color: maroon">"&lt;exception&gt;"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" argument
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" argument
                                     {0} (out) -&gt; {1} = {2}"</span>,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i,
                             context.GetArgumentType(i).FullName, argvalue);<br />
@@ -268,7 +268,7 @@
                                 style="color: blue">if</span> (context.ReturnType == <span style="color: blue">null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" return type
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" return type
                                     = null"</span>);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
@@ -276,7 +276,7 @@
                                     null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" return type
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" return type
                                     = {0}, return value = null"</span>, context.ReturnType.FullName);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
@@ -284,14 +284,14 @@
                                     "ToString"</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" return type
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" return type
                                     = {0}, return value = "</span>, context.ReturnType.FullName);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">else</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">String</span> returnValue;<br />
+                                style="color: #2b91af">String</span> returnValue;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
                                 style="color: blue">try</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -299,14 +299,14 @@
                             = context.ReturnValue.ToString();<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: blue">catch</span> (<span style="color: aqua">Exception</span>)<br />
+                                style="color: blue">catch</span> (<span style="color: #2b91af">Exception</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returnValue
                             = <span style="color: maroon">"&lt;exception&gt;"</span>;&nbsp;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">" return type
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">" return type
                                     = {0}, return value = (1)"</span>,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;context.ReturnType.FullName,
                             returnValue);<br />
@@ -324,8 +324,8 @@
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">do_trace</span> : <span style="color: aqua">
-                                Tracing</span> = { <span style="color: aqua">True</span> => [*.*] }; </code>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">do_trace</span> : <span style="color: #2b91af">
+                                Tracing</span> = { <span style="color: #2b91af">True</span> => [*.*] }; </code>
                     </td>
                 </tr>
             </table>

@@ -26,13 +26,13 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterTypeAttribute</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterTypeAttribute</span>(<span
                                 style="color: maroon">"Empty"</span>, <span style="color: maroon">"StartEmptyAction"</span>,
-                            <span style="color: aqua">FilterAction</span>.ContinueAction,<br />
+                            <span style="color: #2b91af">FilterAction</span>.ContinueAction,<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"StopEmptyAction"</span>,
-                            <span style="color: aqua">FilterAction</span>.ContinueAction)]<br />
+                            <span style="color: #2b91af">FilterAction</span>.ContinueAction)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                class</span> <span style="color: aqua">EmptyFilterType</span> : <span style="color: aqua">
+                                class</span> <span style="color: #2b91af">EmptyFilterType</span> : <span style="color: #2b91af">
                                     FilterType </span>
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -50,18 +50,18 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterActionAttribute</span>(<span
-                                style="color: maroon">"StartEmptyAction"</span>, <span style="color: aqua">FilterActionAttribute</span>.<span
-                                    style="color: aqua">FilterFlowBehaviour</span>.Continue,<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">FilterActionAttribute</span>.<span
-                                style="color: aqua">MessageSubstitutionBehaviour</span>.Original)]<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
+                                style="color: maroon">"StartEmptyAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                class</span> <span style="color: aqua">StartEmptyAction</span> : <span style="color: aqua">
+                                class</span> <span style="color: #2b91af">StartEmptyAction</span> : <span style="color: #2b91af">
                                     FilterAction</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span>
                             <span style="color: blue">override</span> <span style="color: blue">void</span>
-                            Execute(<span style="color: aqua">JoinPointContext</span> context)<br />
+                            Execute(<span style="color: #2b91af">JoinPointContext</span> context)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;}<br />
@@ -78,18 +78,18 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterActionAttribute</span>(<span
-                                style="color: maroon">"StopEmptyAction"</span>, <span style="color: aqua">FilterActionAttribute</span>.<span
-                                    style="color: aqua">FilterFlowBehaviour</span>.Continue,<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">FilterActionAttribute</span>.<span
-                                style="color: aqua">MessageSubstitutionBehaviour</span>.Original)]<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
+                                style="color: maroon">"StopEmptyAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                class</span> <span style="color: aqua">StopEmptyAction</span> : <span style="color: aqua">
+                                class</span> <span style="color: #2b91af">StopEmptyAction</span> : <span style="color: #2b91af">
                                     FilterAction</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span>
                             <span style="color: blue">override</span> <span style="color: blue">void</span>
-                            Execute(<span style="color: aqua">JoinPointContext</span> context)<br />
+                            Execute(<span style="color: #2b91af">JoinPointContext</span> context)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;}<br />
@@ -103,8 +103,8 @@
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua"> do_nothing</span> : <span style="color: aqua">
-                                Empty</span> = { <span style="color: aqua">True</span> => [*.*]
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af"> do_nothing</span> : <span style="color: #2b91af">
+                                Empty</span> = { <span style="color: #2b91af">True</span> => [*.*]
                             }; </code>
                     </td>
                 </tr>

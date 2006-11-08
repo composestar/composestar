@@ -5,7 +5,10 @@
           <Component Id='ChmCoreElements' Guid ='6AAF80CD-3FD9-47fa-909F-7EE2322A6F6E'>
             <File Id='StarLightCoreElementschm' Name='chm' LongName='ComposeStarStarLight.chm' DiskId='1'
                          Source='../../documentation/ComposeStarStarLight.chm'>
-            </File>           
+            </File>
+            <File Id='Arm' Name='arm' LongName='ARM.pdf' DiskId='1'
+                         Source='../../documentation/arm.pdf'>
+            </File>
           </Component>     
     </DirectoryRef>
   </Fragment>

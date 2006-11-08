@@ -27,15 +27,15 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterTypeAttribute</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterTypeAttribute</span>(<span
                                 style="color: maroon">"Profiling"</span>, <span style="color: blue">typeof</span>(<span
-                                    style="color: aqua">StartTimerAction</span>), <span style="color: blue">typeof</span>(<span
-                                        style="color: aqua">ContinueAction</span>),<br />
+                                    style="color: #2b91af">StartTimerAction</span>), <span style="color: blue">typeof</span>(<span
+                                        style="color: #2b91af">ContinueAction</span>),<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">typeof</span>(<span
-                                style="color: aqua">StopTimerAction</span>), <span style="color: blue">typeof</span>(<span
-                                    style="color: aqua">ContinueAction</span>))]<br />
+                                style="color: #2b91af">StopTimerAction</span>), <span style="color: blue">typeof</span>(<span
+                                    style="color: #2b91af">ContinueAction</span>))]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                class</span> <span style="color: aqua">ProfilingFilterType</span> : <span style="color: aqua">
+                                class</span> <span style="color: #2b91af">ProfilingFilterType</span> : <span style="color: #2b91af">
                                     FilterType </span>
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -61,23 +61,23 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterActionAttribute</span>(<span
-                                style="color: maroon">"StartTimerAction"</span>, <span style="color: aqua">FilterActionAttribute</span>.<span
-                                    style="color: aqua">FilterFlowBehaviour</span>.Continue,<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">FilterActionAttribute</span>.<span
-                                style="color: aqua">MessageSubstitutionBehaviour</span>.Original)]<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
+                                style="color: maroon">"StartTimerAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public</span> <span style="color: blue">
-                                class</span> <span style="color: aqua">StartTimerAction</span> : <span style="color: aqua">
+                                class</span> <span style="color: #2b91af">StartTimerAction</span> : <span style="color: #2b91af">
                                     FilterAction</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">DllImport</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">DllImport</span>(<span
                                 style="color: maroon">"Kernel32.dll"</span>)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">private static
                                 extern bool</span> QueryPerformanceCounter(<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">out</span>
                             <span style="color: blue">long</span> lpPerformanceCount);<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">DllImport</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">DllImport</span>(<span
                                 style="color: maroon">"Kernel32.dll"</span>)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">private static
                                 extern bool</span> QueryPerformanceFrequency(<br />
@@ -85,7 +85,7 @@
                             <span style="color: blue">long</span> lpFrequency);<br />
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public override
-                                void</span> Execute(<span style="color: aqua">JoinPointContext</span> context)<br />
+                                void</span> Execute(<span style="color: #2b91af">JoinPointContext</span> context)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">long</span>
                             starttime = 0;<br />
@@ -97,7 +97,7 @@
                                 false</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;starttime
-                            = <span style="color: aqua">DateTime</span>.Now.Ticks;<br />
+                            = <span style="color: #2b91af">DateTime</span>.Now.Ticks;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">else</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -132,28 +132,28 @@
                             <br />
                             <span style="color: blue">namespace</span> FilterTypes<br />
                             {<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">FilterActionAttribute</span>(<span
-                                style="color: maroon">"StopTimerAction"</span>, <span style="color: aqua">FilterActionAttribute</span>.<span
-                                    style="color: aqua">FilterFlowBehaviour</span>.Continue,<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">FilterActionAttribute</span>.<span
-                                style="color: aqua">MessageSubstitutionBehaviour</span>.Original)]<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: aqua">
-                                StopTimerAction</span> : <span style="color: aqua">FilterAction</span><br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">FilterActionAttribute</span>(<span
+                                style="color: maroon">"StopTimerAction"</span>, <span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                    style="color: #2b91af">FilterFlowBehaviour</span>.Continue,<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">FilterActionAttribute</span>.<span
+                                style="color: #2b91af">MessageSubstitutionBehaviour</span>.Original)]<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public class</span> <span style="color: #2b91af">
+                                StopTimerAction</span> : <span style="color: #2b91af">FilterAction</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">DllImport</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">DllImport</span>(<span
                                 style="color: maroon">"Kernel32.dll"</span>)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">private static
                                 extern bool</span> QueryPerformanceCounter(<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">out</span>
                             <span style="color: blue">long</span> lpPerformanceCount);<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: aqua">DllImport</span>(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color: #2b91af">DllImport</span>(<span
                                 style="color: maroon">"Kernel32.dll"</span>)]<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">private static
                                 extern bool</span> QueryPerformanceFrequency(<br />
                             <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">public override
-                                void</span> Execute(<span style="color: aqua">JoinPointContext</span> context)<br />
+                                void</span> Execute(<span style="color: #2b91af">JoinPointContext</span> context)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">long</span>
                             stoptime = 0;<br />
@@ -169,7 +169,7 @@
                             (freq == 0)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stoptime
-                            = <span style="color: aqua">DateTime</span>.Now.Ticks;<br />
+                            = <span style="color: #2b91af">DateTime</span>.Now.Ticks;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">else</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
@@ -181,7 +181,7 @@
                             (context == <span style="color: blue">null</span>)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">Console</span>.WriteLine(<span style="color: maroon">"StopTimer:
+                                style="color: #2b91af">Console</span>.WriteLine(<span style="color: maroon">"StopTimer:
                                     Context not set!"</span>);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
@@ -195,7 +195,7 @@
                             (freq == 0)<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                style="color: aqua">TimeSpan</span> executeTimeSpan = new <span style="color: aqua">
+                                style="color: #2b91af">TimeSpan</span> executeTimeSpan = new <span style="color: #2b91af">
                                     TimeSpan</span>(stoptime - starttime);<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;executetime
                             = (<span style="color: blue">double</span>)executeTimeSpan.Milliseconds;<br />
@@ -207,17 +207,17 @@
                             / 1000;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">String</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">String</span>
                             sender = <span style="color: maroon">"unknown"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (context.Sender
                             != <span style="color: blue">null</span>) sender = context.Sender.GetType().FullName;<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">String</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">String</span>
                             target = <span style="color: maroon">"unknown"</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (context.StartTarget
                             != <span style="color: blue">null</span>) target = context.StartTarget.GetType().FullName;<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">String</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">String</span>
                             args = <span style="color: maroon">""</span>;<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span>
                             (context.ArgumentCount > 0)<br />
@@ -240,7 +240,7 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
                             <br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">Console</span>.WriteLine(<span
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">Console</span>.WriteLine(<span
                                 style="color: maroon">"The execution of message: {0}.{1}({2}) took {3:0.0000} msec."</span><br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;target,
                             context.StartSelector, args, executetime);<br />
@@ -256,8 +256,8 @@
                 <tr>
                     <td>
                         <code><span style="color: blue">inputfilters</span><br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: aqua">do_timing</span> : <span style="color: aqua">
-                                Profiling</span> = { <span style="color: aqua">True</span> => [*.*] }; </code>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2b91af">do_timing</span> : <span style="color: #2b91af">
+                                Profiling</span> = { <span style="color: #2b91af">True</span> => [*.*] }; </code>
                     </td>
                 </tr>
             </table>
