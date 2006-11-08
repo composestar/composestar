@@ -34,7 +34,7 @@ concern AnotherFilterTestsConcern in BasicTests
 			baseClass <- OutsideTripFM;
 	}
 
-	implementation in CSharp by BasicTests.Visitor as "Visitor.cps"
+	implementation in CSharp by BasicTests.Visitor as "Visitor.cs"
 	{
 using System;
 
