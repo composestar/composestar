@@ -1,3 +1,5 @@
+#region Using Directives
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -16,6 +18,8 @@ using Composestar.StarLight.Entities.Configuration;
 using Composestar.Repository;
 using Composestar.StarLight.CoreServices.Exceptions;
 
+#endregion
+
 namespace Composestar.StarLight.MSBuild.Tasks
 {
 
@@ -25,14 +29,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
     [LoadInSeparateAppDomain()]
     public class IlAnalyzerTask : AppDomainIsolatedTask
     {
+
+        // The analyzer removes the Composestar.StarLight dlls from the list
         private const string ComposeStarDlls = "Composestar.StarLight";
+        // Except the dlls listed below
         private const string ComposeStarFilterDll = "Composestar.StarLight.Filters;Composestar.StarLight.CustomFilters";
 
-        ConfigurationContainer configContainer;
-        List<FilterActionElement> filterActions;
-        List<FilterTypeElement> filterTypes;
-        List<AssemblyConfig> assembliesInConfig;
-        List<AssemblyConfig> assembliesToStore;
+        private ConfigurationContainer configContainer;
+        private List<FilterActionElement> filterActions;
+        private List<FilterTypeElement> filterTypes;
+        private List<AssemblyConfig> assembliesInConfig;
+        private List<AssemblyConfig> assembliesToStore;
 
         #region Properties for MSBuild
 
@@ -170,6 +177,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         {
             // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
             assemblyFileList = new List<string>();
+
             foreach (ITaskItem item in AssemblyFiles)
             {
                 // Skip composestar files
@@ -179,7 +187,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     continue;
 
                 // We are only interested in assembly files.
-                string extension = Path.GetExtension(item.ToString()).ToLower();
+                string extension = Path.GetExtension(filename).ToLower();
                 if (extension.Equals(".dll") || extension.Equals(".exe"))
                 {
                     assemblyFileList.Add(item.ToString());
@@ -187,6 +195,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Create a list of all the referenced assemblies, which are not copied local for complete analysis
+            // We cannot weave on these files, so we only use them for lookup of base types etc.
             refAssemblies = new Dictionary<string, string>();
 
             foreach (ITaskItem item in ReferencedAssemblies)
@@ -399,8 +408,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                                 return ac.Filename.Equals(item);
                             });
 
-                            // If a source assembly has changed, then new unresolved types may be introduced
-                            // So we must rescan the library
+                            // If a source assembly has changed, then new unresolved types can be introduced
+                            // So we must rescan the library based on the value of assemblyChanged
                             // TODO can this be optimized?
                             if (!assemblyChanged && assConfig != null && File.Exists(assConfig.SerializedFilename))
                             {
@@ -537,15 +546,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
         }
 
         /// <summary>
-        /// Adds all unresolved types.
+        /// Adds all unresolved types from the concern files to the analyzer.
         /// </summary>
         /// <param name="analyzer">The analyzer.</param>
         private void AddAllUnresolvedTypes(IILAnalyzer analyzer)
         {
-            Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", ReferencedTypes.Length);
-            foreach (ITaskItem item in ReferencedTypes)
+            if (ReferencedTypes.Length > 0)
             {
-                analyzer.UnresolvedTypes.Add(item.ToString());
+                Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", ReferencedTypes.Length);
+                foreach (ITaskItem item in ReferencedTypes)
+                {
+                    analyzer.UnresolvedTypes.Add(item.ToString());
+                }
             }
         }
 
@@ -559,6 +571,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
+            // Show start text
             Log.LogMessageFromResources("AnalyzerStartText");
 
             //
