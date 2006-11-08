@@ -15,7 +15,7 @@
 
 	<target name="init_local" depends="init">
 		<taskdef name="cstarComp"     classname="Composestar.Ant.Taskdefs.Java.CstarComp"/>
-		<!-- <taskdef name="cstarTest"     classname="Composestar.Ant.Taskdefs.Java.CstarTest"/> -->
+		<taskdef name="cstarTest"     classname="Composestar.Ant.Taskdefs.Java.CstarTest"/>
 	</target>
 
 	<target name="clean" depends="init">
@@ -43,26 +43,28 @@
 	
 	<target name="build"/>
 
-	<target name="test" depends="test_comp" description="Execute the Java system test."/>
-	
-	<!-- compiles projects -->
+	<target name="test" depends="test_comp,test_exec" description="Execute the Java system test."/>
 
+	
+	<!-- compile projects -->
 	<target name="test_comp" depends="init_local">
 		<cstarComp workspace="${build.java}/Examples" eclipseHome="${env.ECLIPSE_HOME}" application="ComposestarEclipsePlugin.testbuild">
 			<DirSet dir="${build.java}/Examples">
-				<include name="Pacman"/>
+				<include name="Pacman"/> 
 				<exclude name="**/.svn/"/>
 				<exclude name="**/.metadata/"/>
 			</DirSet>
 		</cstarComp>
 	</target>
 
-	<!-- executes tests -->
 	
+	<!-- execute tests -->
 	<target name="test_exec" depends="init_local">
-		<cstarTest>
-			<FileSet dir="${build.java}/Examples">
-			</FileSet>
+		<cstarTest workspace="${build.java}/Examples" eclipseHome="${env.ECLIPSE_HOME}" application="ComposestarEclipsePlugin.testrun">
+			<DirSet dir="${build.java}/Examples">
+				<exclude name="**/.svn/"/>
+				<exclude name="**/.metadata/"/>
+			</DirSet>
 		</cstarTest>
 	</target>
 
