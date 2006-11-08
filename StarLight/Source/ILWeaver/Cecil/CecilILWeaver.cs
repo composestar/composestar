@@ -452,11 +452,7 @@ namespace Composestar.StarLight.ILWeaver
             Mono.Cecil.FieldAttributes externalAttrs;
 
             foreach (External external in weaveType.Externals)
-            {
-                //TypeElement externalTypeElement = _entitiesAccessor.GetTypeElement(external.Type);
-                //if (externalTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type + " (step 1)"));
-
-
+            {             
                 externalTypeRef = CecilUtilities.ResolveType(external.Type, external.Assembly, "");
                 if (externalTypeRef == null) 
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type));
@@ -475,9 +471,6 @@ namespace Composestar.StarLight.ILWeaver
                 _weaveStats.ExternalsAdded++;
 
                 // Get the method referenced by the external
-                //TypeElement initTypeElement = _entitiesAccessor.GetTypeElement(String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target));
-                //if (initTypeElement == null) throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target)));
-
                 MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target), external.Assembly, "");
                 if (initMethodDef == null) 
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound, external.Reference.Selector, external.Reference.Target, external.Assembly));
@@ -917,7 +910,7 @@ namespace Composestar.StarLight.ILWeaver
             if (_configuration.WeaveDebugLevel == CecilWeaverConfiguration.WeaveDebug.Detailed)
             {
                 string item = String.Format(caption, arguments);
-                item = String.Format("{0}^{1}", item, ts.Ticks); 
+                item = String.Format("{0}^{1}", item, ts.TotalMilliseconds); 
                 _weaveStats.TimingStack.Enqueue(item);   
             }
         }

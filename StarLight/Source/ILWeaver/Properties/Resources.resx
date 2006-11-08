@@ -208,4 +208,7 @@
   <data name="StaticReferenceInternalExternal" xml:space="preserve">
     <value>Trying to reference an internal or external from the static method named '{0}'  in type '{1}'</value>
   </data>
+  <data name="NoWeavingStrategiesFound" xml:space="preserve">
+    <value>The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the buildin weaving strategies assembly is located in the WeaveStrategiesFolder '{0}'.</value>
+  </data>
 </root>

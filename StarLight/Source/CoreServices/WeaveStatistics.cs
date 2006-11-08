@@ -57,16 +57,17 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
                 sw.WriteLine("Created at {0} on {1} by {2}\\{3}.", DateTime.Now.ToString(), Environment.MachineName, Environment.UserDomainName, Environment.UserName);
                 sw.WriteLine();
                 
-                sw.WriteLine("\"description\", milliseconds");
+                sw.WriteLine("\"description\"{0}milliseconds", "\t" );
 
                 while (times.Count > 0)
                 {
                     string item = times.Dequeue();
                     string[] itemSplitted = item.Split('^');
-                    sw.WriteLine("\"{0}\",{1}", itemSplitted[0], itemSplitted[1]);     
+                    sw.WriteLine("\"{0}\"{2}{1}", itemSplitted[0], itemSplitted[1], "\t");     
                 }
             }
         }
+
         /// <summary>
         /// Gets or sets the instructions log.
         /// </summary>

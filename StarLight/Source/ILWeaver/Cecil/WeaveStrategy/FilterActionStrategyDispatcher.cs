@@ -28,9 +28,9 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
     /// </summary>
     public sealed class FilterActionStrategyDispatcher
     {
-        private static Dictionary<string, FilterActionWeaveStrategy> strategyMapping;
-        private static FilterActionWeaveStrategy defaultStrategy = new DefaultWeaveStrategy();
-        private static object lockObject = new Object();
+        private static Dictionary<string, FilterActionWeaveStrategy> _strategyMapping;
+        private static FilterActionWeaveStrategy _defaultStrategy = new DefaultWeaveStrategy();
+        private static object _lockObject = new Object();
 
         /// <summary>
         /// Gets the filter action weave strategy.
@@ -42,21 +42,21 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
             if (string.IsNullOrEmpty(filterAction))
                 throw new ArgumentNullException("filterAction");
 
-            if (strategyMapping == null)
+            if (_strategyMapping == null)
             {
-                lock (lockObject)
+                lock (_lockObject)
                 {
-                    if (strategyMapping == null)
+                    if (_strategyMapping == null)
                         CreateStrategyMapping();
-                } // lock
+                } 
             }
 
             FilterActionWeaveStrategy strategy;
 
-            if (strategyMapping.TryGetValue(filterAction, out strategy))
+            if (_strategyMapping.TryGetValue(filterAction, out strategy))
                 return strategy;
             else
-                return defaultStrategy;
+                return _defaultStrategy;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
         /// <remarks>Uses reflection to look for weaving strategies.</remarks> 
         private static void CreateStrategyMapping()
         {
-            strategyMapping = new Dictionary<string, FilterActionWeaveStrategy>();
+            _strategyMapping = new Dictionary<string, FilterActionWeaveStrategy>();
 
             string strategiesPath = GetWeaveStrategiesLocation();
 
@@ -88,15 +88,15 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
                         WeaveStrategyAttribute[] wsas = (WeaveStrategyAttribute[])t.GetCustomAttributes(typeof(WeaveStrategyAttribute), true);
                         if (wsas.Length > 0)
                         {
-                            // dynamically load thisclass
+                            // dynamically load this class
                             FilterActionWeaveStrategy strategy = (FilterActionWeaveStrategy)Activator.CreateInstance(t);
                             foreach (WeaveStrategyAttribute wsa in wsas)
                             {
                                 // Check if we already have this strategy
-                                if (strategyMapping.ContainsKey(wsa.WeavingStrategyName))
+                                if (_strategyMapping.ContainsKey(wsa.WeavingStrategyName))
                                     throw new ILWeaverException(String.Format(Properties.Resources.WeaveStrategyNotUnique, wsa.WeavingStrategyName));
                                 else
-                                    strategyMapping.Add(wsa.WeavingStrategyName, strategy);
+                                    _strategyMapping.Add(wsa.WeavingStrategyName, strategy);
                             } // foreach  (wsa)
                         } // if
                         else
@@ -106,7 +106,14 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
                     } // if
                 } // foreach 
             } // foreach 
-            
+
+            if (_strategyMapping.Count == 0)
+            {
+                // We did not find any strategies. Although this is possible (only default strategy), we still require the dispatch, 
+                // advice, error and so on strategies.
+                throw new ILWeaverException(String.Format(Properties.Resources.NoWeavingStrategiesFound, strategiesPath)); 
+            }
+
         }
 
         /// <summary>
@@ -130,7 +137,7 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
                 return string.Empty;
             }
 
-        } // GetWeaveStrategiesLocation()
+        } 
 
     }
 }

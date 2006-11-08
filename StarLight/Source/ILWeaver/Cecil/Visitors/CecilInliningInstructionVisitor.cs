@@ -45,17 +45,19 @@ namespace Composestar.StarLight.ILWeaver
         #endregion
 
         #region Private variables
-        private IList<Instruction> m_Instructions = new List<Instruction>();
-        private CilWorker m_Worker;
-        private int m_NumberOfBranches = 0;
-        private MethodDefinition m_Method;
-        private MethodDefinition called_Method;
-        private AssemblyDefinition m_TargetAssemblyDefinition;
-        private FilterTypes m_FilterType;
-        private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
-        private IEntitiesAccessor m_entitiesAccessor;
+        
+        private IList<Instruction> _instructions = new List<Instruction>();
+        private CilWorker _worker;
+        private int _numberOfBranches = 0;
+        private MethodDefinition _method;
+        private MethodDefinition _calledMethod;
+        private AssemblyDefinition _targetAssemblyDefinition;
+        private FilterTypes _filterType;
+        private Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
+        private IEntitiesAccessor _entitiesAccessor;
         private ConfigurationContainer _weaveConfiguration;
         private WeaveType _weaveType;
+        
         #endregion
              
         #region Properties
@@ -84,11 +86,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return m_FilterType;
+                return _filterType;
             }
             set
             {
-                m_FilterType = value;
+                _filterType = value;
             }
         }
         
@@ -100,11 +102,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return m_entitiesAccessor;
+                return _entitiesAccessor;
             }
             set
             {
-                m_entitiesAccessor = value;
+                _entitiesAccessor = value;
             }
         }
 
@@ -132,11 +134,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return m_TargetAssemblyDefinition;
+                return _targetAssemblyDefinition;
             }
             set
             {
-                m_TargetAssemblyDefinition = value;
+                _targetAssemblyDefinition = value;
             }
         }
 
@@ -148,11 +150,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return m_Method;
+                return _method;
             }
             set
             {
-                m_Method = value;
+                _method = value;
             }
         }
 
@@ -165,11 +167,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return called_Method;
+                return _calledMethod;
             }
             set
             {
-                called_Method = value;
+                _calledMethod = value;
             }
         }
 
@@ -181,11 +183,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return m_Worker;
+                return _worker;
             }
             set
             {
-                m_Worker = value;
+                _worker = value;
             }
         }
 
@@ -197,11 +199,11 @@ namespace Composestar.StarLight.ILWeaver
         {
             get
             {
-                return m_Instructions;
+                return _instructions;
             }
             set
             {
-                m_Instructions = value;
+                _instructions = value;
             }
         }
         #endregion
@@ -271,10 +273,10 @@ namespace Composestar.StarLight.ILWeaver
                 return null;
 
             Instruction jumpNopInstruction;
-            if (!m_JumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
+            if (!_jumpInstructions.TryGetValue(labelId, out jumpNopInstruction))
             {
                 jumpNopInstruction = Worker.Create(OpCodes.Nop);
-                m_JumpInstructions.Add(labelId, jumpNopInstruction);
+                _jumpInstructions.Add(labelId, jumpNopInstruction);
             }
 
             return jumpNopInstruction;
@@ -584,8 +586,8 @@ namespace Composestar.StarLight.ILWeaver
             ((Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitable)branch.ConditionExpression).Accept(conditionsVisitor);
                         
             // Add branch code
-            branch.Label = BranchLabelOffSet + m_NumberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-            m_NumberOfBranches = m_NumberOfBranches + 2;
+            branch.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            _numberOfBranches = _numberOfBranches + 2;
             Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(branch.Label)));
         }
 
@@ -637,8 +639,8 @@ namespace Composestar.StarLight.ILWeaver
         public void VisitWhile(While whileInstr)
         {
             // Create a start label
-            whileInstr.Label = BranchLabelOffSet + m_NumberOfBranches;
-            m_NumberOfBranches = m_NumberOfBranches + 2;
+            whileInstr.Label = BranchLabelOffSet + _numberOfBranches;
+            _numberOfBranches = _numberOfBranches + 2;
             Instructions.Add(GetJumpLabel(whileInstr.Label));
 
             // Context instruction
@@ -705,8 +707,8 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
 
             // Jump to the end
-            switchInstr.Label = BranchLabelOffSet + m_NumberOfBranches;   // TODO check the correctness of this constructions (Michiel)
-            m_NumberOfBranches = m_NumberOfBranches + 1;
+            switchInstr.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            _numberOfBranches = _numberOfBranches + 1;
             Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));
         }
 

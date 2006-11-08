@@ -260,6 +260,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the buildin weaving strategies assembly is located in the WeaveStrategiesFolder &apos;{0}&apos;..
+        /// </summary>
+        internal static string NoWeavingStrategiesFound {
+            get {
+                return ResourceManager.GetString("NoWeavingStrategiesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The config collection did not contain a valid filename to the repository file..
         /// </summary>
         internal static string RepositoryFilenameNotSpecified {
