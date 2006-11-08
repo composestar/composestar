@@ -15,10 +15,24 @@
     </table>
     <div id="mainSection">
         <div id="mainBody">
-            <h1 class="heading">Referencing basecode assemblies</h1>
-            <p>The concerns specified in the concern project (<i>Concerns</i> node in the Solution Explorer example) are only imposed on assemblies/projects referenced in the concern project.</p>
-            <p><b>Note: </b>Concerns are only imposed on referenced assemblies that have their <i>Copy Local</i> attribute set to <i>True</i>.</p>
-            <img src="images\solution_explorer.png" border=1 />
+            <h1 class="heading">
+                Referencing basecode assemblies</h1>
+            <p>
+                The concerns specified in the concern project (<i>Concerns</i> node in the Solution
+                Explorer example) are only imposed on assemblies/projects referenced in the concern
+                project.</p>
+            <img src="images\solution_explorer.png" border="1" />
+            <p>
+                Use the <i>Add Reference...</i> option in the <i>Project</i> menu item to display
+                the <b>Add Reference</b> dialog. Select either assembly files or project files to
+                add to the concern project.</p>
+            <p>
+                When you build the concern project, all the referenced assemblies are copied to
+                the output folder and are used for weaving. Referenced project are build first and
+                referenced assemblies in a referenced project are also copied and weaved upon.</p>
+            <p>
+                <b>Note: </b>Concerns are only imposed on referenced assemblies that have their
+                <i>Copy Local</i> attribute set to <i>True</i>.</p>
 </body>
 </html>
 <!-- @SortOrder 3 -->

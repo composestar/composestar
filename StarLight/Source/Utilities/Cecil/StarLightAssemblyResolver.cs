@@ -25,7 +25,7 @@ namespace Composestar.StarLight.Utilities
 
         #region Private variables
 
-        private Dictionary<string, AssemblyDefinition> m_cache;
+        private Dictionary<string, AssemblyDefinition> _cache;
         private string _binFolder;
 
         #endregion
@@ -39,7 +39,7 @@ namespace Composestar.StarLight.Utilities
         public StarLightAssemblyResolver(string binFolder)
         {
             _binFolder = binFolder;
-            m_cache = new Dictionary<string, AssemblyDefinition>();
+            _cache = new Dictionary<string, AssemblyDefinition>();
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace Composestar.StarLight.Utilities
         /// <param name="fullName">The full name of an assembly.</param>
         /// <example>
         /// <code>
-        /// StarLightAssemblyResolver assemblyResolver = new StarLightAssemblyResolver("c:\project\bin");
+        /// StarLightAssemblyResolver assemblyResolver = new StarLightAssemblyResolver(@"c:\project\bin");
         /// String assemblyName = "assembly.dll";
         /// AssemblyDefinition ad = assemblyResolver.Resolve(assemblyName);
         /// </code>
@@ -67,9 +67,7 @@ namespace Composestar.StarLight.Utilities
             AssemblyNameReference assemblyNameReferenceParsed;
 
             try
-            {
-                fullName = fullName.Replace(", PublicKeyToken=null", "");
-
+            {              
                 assemblyNameReferenceParsed = AssemblyNameReference.Parse(fullName);
             }
             catch (ArgumentException)
@@ -89,11 +87,11 @@ namespace Composestar.StarLight.Utilities
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
             AssemblyDefinition asm;
-            if (!m_cache.TryGetValue(name.FullName, out asm))
+            if (!_cache.TryGetValue(name.FullName, out asm))
             {
                 asm = ResolveInternal(name);
                 if (asm != null)
-                    m_cache[name.FullName] = asm;
+                    _cache[name.FullName] = asm;
             }
 
             return asm;

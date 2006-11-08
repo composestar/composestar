@@ -19,30 +19,113 @@
                 Concern project properties</h1>
             <p>
                 The concern project properties are divided into <i>general</i> and <i>build</i>
-                property groups.</p>
+                property groups. The general settings apply to the complete project, while the build
+                settings are only used in the specified configuration. For example, you can run
+                the IL Verifier in <i>Debug</i> mode, and disable the verifier in <i>release</i>
+                mode.</p>
             <h3 class="subHeading">
                 General project properties</h3>
-                <ul>
-                    <li>Assembly Name, name of the assembly (only used if the concern project contains CSharp,
-                        JSharp, or VB.NET code)</li>
-                    <li>Default Namespace, default namespace used for newly created items</li>
-                    <li>Output Type (Console Application, Class Library, Windows Application), output type
-                        of the concern project if it contains code</li>
-                    <li>Repository filename, name of the xml file the StarLight compilation information
-                        is stored in</li>
-                </ul>
-                <br />
-                <img src="images\project_properties_general.png" /><br />
-                <h3 class="subHeading">
-                    Build project properties</h3>
-                    <ul>
-                        <li>Debug level (Error, Crucial, Warning, Information, Debug), debug level of the StarLight
-                            compiler</li>
-                        <li>Verify IL (True, False), true if the assemblies should be verified using the PeVerify
-                            tool (SDK required) after weaving, false otherwise</li>
-                    </ul>
-                    <br />
-                    <img src="images\project_properties_build.png" />
+            <table class="members" id="tasks">
+                <tr>
+                    <th class="nameColumn">
+                        Setting</th>
+                    <th class="descriptionColumn">
+                        Description</th>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Assembly Name</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Name of the assembly to be created if the concern project contains CSharp, JSharp,
+                            or VB.NET code.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Default Namespace</span></b></td>
+                    <td>
+                        <div class="summary">
+                            The default namespace used for newly created items.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Output Type</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Specifies the output type of the concern project if it contains code. Select from
+                            Console Application, Class Library, Windows Application.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Repository filename</span></b></td>
+                    <td>
+                        <div class="summary">
+                            The name of the xml file the StarLight compilation information is stored in.
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <img src="images\project_properties_general.png" /><br />
+            <h3 class="subHeading">
+                Build project properties</h3>
+            <table class="members" id="Table1">
+                <tr>
+                    <th class="nameColumn">
+                        Setting</th>
+                    <th class="descriptionColumn">
+                        Description</th>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Debug level</span></b></td>
+                    <td>
+                        <div class="summary">
+                            The debug level of the StarLight Java part. Can be one of the following choices;
+                            Error, Crucial, Warning, Information, Debug.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Verify IL</span></b></td>
+                    <td>
+                        <div class="summary">
+                            True if the assemblies should be verified using the PeVerify tool (SDK required)
+                            after weaving, false otherwise
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b><span class="nolink">Weave Debug Level</span></b></td>
+                    <td>
+                        <div class="summary">
+                            Specifies the debug level of the weaver. Set it to None to disable debugging. The
+                            Statistics settings shows the number of weaved filters, internals and externals,
+                            and some timing information. The Detailed setting logs all the injected IL code
+                            and has extensive timing information. The results are store in the output folder
+                            in the {assemblyname}.weavelog.txt and {assemblyname}.weavetiming.txt files. The
+                            timing file can, for instance, be imported into Microsoft Excel so you can plot
+                            the amount of time each weave actions takes.
+                            <br />
+                            <br />
+                            You can also change the WeaveDebugLevel for a single run by specifying the property.
+                            For instance:
+                            <div class="code">
+                                <pre>MSBuild Tracing.cpsproj /p:WeaveDebugLevel=Detailed</pre>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <img src="images\project_properties_build.png" />
         </div>
     </div>
 </html>

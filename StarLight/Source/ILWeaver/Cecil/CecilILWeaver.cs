@@ -298,14 +298,12 @@ namespace Composestar.StarLight.ILWeaver
                 // Disabled for now. Saving raises an exception.
                 if (false && File.Exists(_configuration.DebugImagePath))
                 {
-                    if (pdbReader != null)
-                    {
-                        pdbReader.Dispose();
-                        pdbReader = null;
-                    }
-                    Console.WriteLine("Delete pdb file manually");
-                    Console.ReadLine(); 
-
+                    //if (pdbReader != null)
+                    //{
+                    //    pdbReader.Dispose();
+                    //    pdbReader = null;
+                    //}
+                    
                     ISymbolWriter pdbWriter = new PdbFactory().CreateWriter(targetAssembly.MainModule, _configuration.InputImagePath);
                     targetAssembly.MainModule.SaveSymbols(pdbWriter);
                 }
