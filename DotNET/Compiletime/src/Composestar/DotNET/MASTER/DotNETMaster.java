@@ -62,7 +62,7 @@ public class DotNETMaster extends Master
 		// load the project configuration file
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, "Master", "Reading build configuration from: " + configurationFile);
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configurationFile);
 
 			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 			SAXParser saxParser = saxParserFactory.newSAXParser();
@@ -75,7 +75,7 @@ public class DotNETMaster extends Master
 		catch (Exception e)
 		{
 			throw new ModuleException("An error occured while reading the build configuration file: "
-					+ configurationFile + ", reason: " + e.getMessage(), "Master");
+					+ configurationFile + ", reason: " + e.getMessage(), MODULE_NAME);
 		}
 
 		// Set debug level
@@ -90,21 +90,21 @@ public class DotNETMaster extends Master
 		// This is the 'hardcoded' version
 		try
 		{
-			//Debug.out(Debug.MODE_DEBUG, "Master", "Composestar compile-time " + Version.getVersionString());
+			//Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Composestar compile-time " + Version.getVersionString());
 
 			// Apache XML driver is moved to a different package in Java 5
 			if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
 			{
 				System.setProperty("org.xml.sax.driver", "com.sun.org.apache.xerces.internal.parsers.SAXParser");
-				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting SAXParser XML SAX Driver");
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting SAXParser XML SAX Driver");
 			}
 			else
 			{
 				System.setProperty("org.xml.sax.driver", "org.apache.crimson.parser.XMLReaderImpl");
-				Debug.out(Debug.MODE_DEBUG, "Master", "Selecting XMLReaderImpl XML SAX Driver");
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Selecting XMLReaderImpl XML SAX Driver");
 			}
 
-			Debug.out(Debug.MODE_DEBUG, "Master", "Creating datastore...");
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Creating datastore...");
 			DataStore.instance();
 
 			// initialize INCRE
@@ -154,8 +154,8 @@ public class DotNETMaster extends Master
 				error = e.toString();
 			}
 
-			Debug.out(Debug.MODE_ERROR, "Master", "Internal compiler error: " + error);
-			Debug.out(Debug.MODE_ERROR, "Master", "StackTrace: " + Debug.stackTrace(e));
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
+			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
 			System.exit(2);
 		}
 	}
@@ -205,7 +205,7 @@ public class DotNETMaster extends Master
 		}
 		catch (IOException e)
 		{
-			Debug.out(Debug.MODE_WARNING, "Master", "Unable to update configuration file '" + configfile + "'!");
+			Debug.out(Debug.MODE_WARNING, MODULE_NAME, "Unable to update configuration file '" + configfile + "'!");
 		}
 	}
 
@@ -220,23 +220,21 @@ public class DotNETMaster extends Master
 	{
 		if (args.length == 0)
 		{
-			System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
+			System.out.println("Usage: java -jar ComposestarDotNET.jar <config file>");
 			return;
 		}
 
-		if (args[0].equalsIgnoreCase("-v"))
+		if (args[0].equalsIgnoreCase("-V") || args[0].equalsIgnoreCase("--version"))
 		{
-			System.out.println(Version.getTitleString()+" "+Version.getVersionString());
-			System.out.println(Version.getAuthorString());
-			System.out.println("Compiled on "+Version.getCompileDate().toString());
-			System.exit(0);
+			Version.reportVersion(System.out);
+			return;
 		}
 
 		try
 		{
 			Master master = new DotNETMaster(args[0]);
-			Debug.out(Debug.MODE_DEBUG, "Master", Version.getTitleString() + " " + Version.getVersionString());
-			Debug.out(Debug.MODE_DEBUG, "Master", "Compiled on "+Version.getCompileDate().toString());
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
 			master.run();
 		}
 		catch (ModuleException e)
