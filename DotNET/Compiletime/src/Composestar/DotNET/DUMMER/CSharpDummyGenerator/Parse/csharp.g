@@ -25,7 +25,7 @@ options
 	k = 2;                           	// two token lookahead
 	defaultErrorHandler = true;     	// Don't generate parser error handlers
 	buildAST = true;   
- 	exportVocab=CSharp;
+	exportVocab = CSharp;
 }
 
 tokens 
@@ -2600,7 +2600,3 @@ PP_ELSE_SECTION:
 //		)*
 //	{return s;}
 //	;
-	
-	
-	
-	

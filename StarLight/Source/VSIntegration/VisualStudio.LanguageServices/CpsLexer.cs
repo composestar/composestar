@@ -11,7 +11,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 		private int m_pos;
 		private int m_end;
 
-		private IDictionary<String,TokenKind> m_keywords;
+		private IDictionary<string, TokenKind> m_keywords;
 
 		public CpsLexer(String source, int offset)
 		{
@@ -23,9 +23,10 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			m_keywords = CreateKeywords();
 		}
 
-		private IDictionary<String, TokenKind> CreateKeywords()
+		private IDictionary<string, TokenKind> CreateKeywords()
 		{
 			IDictionary<String, TokenKind> keywords = new Dictionary<String, TokenKind>();
+
 			keywords["concern"] = TokenKind.Keyword;
 			keywords["in"] = TokenKind.Keyword;
 			keywords["filtermodules"] = TokenKind.Keyword;
@@ -46,10 +47,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			keywords["implementation"] = TokenKind.Keyword;
 			keywords["by"] = TokenKind.Keyword;
 			keywords["as"] = TokenKind.Keyword;
+
 			keywords["Dispatch"] = TokenKind.FilterType;
 			keywords["Send"] = TokenKind.FilterType;
 			keywords["Error"] = TokenKind.FilterType;
-			keywords["Meta"] = TokenKind.FilterType;
+			keywords["Before"] = TokenKind.FilterType;
+			keywords["After"] = TokenKind.FilterType;
+
 			return keywords;
 		}
 
@@ -59,7 +63,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
 			Token result = new Token();
 			result.Start = m_pos;
-			
+
 			int ch1 = PeekChar(1);
 			int ch2 = PeekChar(2);
 
@@ -99,7 +103,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			{
 				result.Kind = TokenKind.Operator;
 			}
-            else if (TryRead("=>") || TryRead("~>"))
+			else if (TryRead("=>") || TryRead("~>"))
 			{
 				result.Kind = TokenKind.ConditionOperator;
 			}
@@ -109,15 +113,15 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 				Advance();
 				result.Kind = TokenKind.Operator;
 			}
-            else if (TryRead("{"))
-                result.Kind = TokenKind.LeftParenthesis;
-            else if (TryRead("}"))
-                result.Kind = TokenKind.RightParenthesis;
-            else if (TryRead(","))
-                result.Kind = TokenKind.Comma;
-            else if (TryRead("."))
-                result.Kind = TokenKind.Dot;
-            else
+			else if (TryRead("{"))
+				result.Kind = TokenKind.LeftParenthesis;
+			else if (TryRead("}"))
+				result.Kind = TokenKind.RightParenthesis;
+			else if (TryRead(","))
+				result.Kind = TokenKind.Comma;
+			else if (TryRead("."))
+				result.Kind = TokenKind.Dot;
+			else
 				Advance();
 
 			result.End = m_pos - 1;
@@ -128,13 +132,13 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 		{
 			switch (ch1)
 			{
+			//	case '|': // conflicts with PrologExpression
 				case '&':
-				case ':':				
+				case ':':
 				case '#':
 				case '(':
 				case '[':
 				case '!':
-			//	case '|': // conflicts with PrologExpression
 				case '>':
 				case ')':
 				case ']':
@@ -164,7 +168,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 			while (!EOF())
 			{
 				char ch = (char)PeekChar(1);
-				if (! Char.IsWhiteSpace(ch))
+				if (!Char.IsWhiteSpace(ch))
 					break;
 				Advance();
 			}
@@ -189,7 +193,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 
 			return ReadBlockCommentEnd();
 		}
-        
+
 		private TokenKind ReadBlockCommentEnd()
 		{
 			while (!EOF())
@@ -352,10 +356,10 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices
 		Identifier,
 		Keyword,
 		FilterType,
-        ConditionOperator,
-        LeftParenthesis,
-        RightParenthesis,
-        Comma,
-        Dot,
+		ConditionOperator,
+		LeftParenthesis,
+		RightParenthesis,
+		Comma,
+		Dot,
 	}
 }

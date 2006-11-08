@@ -31,7 +31,7 @@ namespace DDW.CSharpUI
 
 			try 
 			{	
-				string input = "";
+				string input;
 				while ((input = Console.ReadLine()) != null)
 				{
 					currentFilename = input;

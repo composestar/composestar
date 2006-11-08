@@ -64,7 +64,7 @@
 	</target>
 
 	<target name="jar">
-		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="composestar/MANIFEST.MF"/>
+		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="Composestar/MANIFEST.MF"/>
 	</target>
 	
 	<taskdef name="xmlbean"
