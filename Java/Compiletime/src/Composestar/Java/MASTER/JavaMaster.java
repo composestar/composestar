@@ -9,8 +9,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import Composestar.Utils.Debug;
-import Composestar.Utils.Version;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
@@ -19,6 +17,8 @@ import Composestar.Core.Master.Master;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Utils.Debug;
+import Composestar.Utils.Version;
 
 /**
  * Main entry point for the CompileTime. The Master class holds Modules and
@@ -80,11 +80,6 @@ public class JavaMaster extends Master
 		{
 			Debug.setMode(1);
 		}
-
-		// just added this for testing
-		// fixme:we need to iterate over all the cps files specified in the
-		// configuration
-		// resources.addResource("CpsIterator",Configuration.instance().projects.getConcernSources().iterator());
 	}
 
 	/**
@@ -99,32 +94,28 @@ public class JavaMaster extends Master
 
 		if (args.length == 0)
 		{
-			System.out.println("Usage: java " + Version.getProgramName() + " <config file>");
+			System.out.println("Usage: java -jar ComposestarJava.jar <config file>");
 			return;
 		}
-		Master master = null;
-
-		if (args[0].equalsIgnoreCase("-v"))
+		
+		if (args[0].equalsIgnoreCase("-V") || args[0].equalsIgnoreCase("--version"))
 		{
-			System.out.println(Version.getTitleString());
-			System.out.println(Version.getAuthorString());
-			System.exit(0);
+			Version.reportVersion(System.out);
+			return;
 		}
 
 		try
 		{
-			Debug.out(Debug.MODE_DEBUG, "Master", "Invoking Master " + Version.getVersionString() + " now...");
-			master = new JavaMaster(args[0]);
-			Debug.out(Debug.MODE_DEBUG, "Master", "Master initialized.");
+			Master master = new JavaMaster(args[0]);
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
+			master.run();
 		}
 		catch (ModuleException e)
 		{
-			System.out.println("Could not open configuration file: " + args[0]);
-			System.out.println("Exiting...");
-			System.exit(-1);
+			System.out.println("Could not open configuration file '" + args[0] + "': " + e.getMessage());
+			System.exit(-1); 
 		}
-
-		master.run();
 	}
 
 	/**
