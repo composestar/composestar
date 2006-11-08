@@ -18,6 +18,7 @@ public class JavaChildThread implements ChildThread, Runnable
 	public JavaChildThread()
 	{
 		thisThread = new java.lang.Thread(this);
+		thisThread.setDaemon(true);
 		addChildThread(thisThread, this);
 		thisThread.start();
 	}
@@ -115,9 +116,7 @@ public class JavaChildThread implements ChildThread, Runnable
 
 	public void run()
 	{
-		thisThread = java.lang.Thread.currentThread();
-		while (true) // We are a deamon thread so we will be killed
-						// automatically
+		while (true) // We are a deamon thread so we will be killed automatically
 		{
 			while (running == null)
 			{
@@ -136,7 +135,6 @@ public class JavaChildThread implements ChildThread, Runnable
 			running = null;
 			ThreadPool.returnChildThread(this);
 		}
-
 	}
 
 	public void setRunnable(ChildRunnable run)
