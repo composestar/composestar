@@ -51,6 +51,8 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
                 sw.WriteLine("Weaver Instructions Log File");
                 sw.WriteLine("Created at {0} on {1} by {2}\\{3}.", DateTime.Now.ToString(), Environment.MachineName, Environment.UserDomainName, Environment.UserName);
                 sw.WriteLine();
+                sw.WriteLine("(instruction labels are not yet set and thus are not correctly displayed here.)");
+                sw.WriteLine();
 
                 foreach (String caption in InstructionsLog.Keys)
                 {
