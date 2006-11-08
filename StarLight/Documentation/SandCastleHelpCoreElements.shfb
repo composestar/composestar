@@ -39,6 +39,8 @@ The FilterContext is used internally by the StarLight compiler to include runtim
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\MSBuild\*.*" destPath="MSBuild\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\Filters\*.*" destPath="Filters\" />
         <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\Weaving\*.*" destPath="Weaving\" />
+        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\Annotated Reference Manual\*.*" destPath="Annotated Reference Manual\" />
+        <contentItem sourcePath="C:\ComposeStar\StarLight\Documentation\HTML\images\get_adobe_reader.gif" destPath="images\" />
     </additionalContent>
     <contentPlacement>AboveNamespaces</contentPlacement>
     <dependencies>
