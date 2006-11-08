@@ -187,7 +187,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     continue;
 
                 // We are only interested in assembly files.
-                string extension = Path.GetExtension(filename).ToLower();
+                string extension = Path.GetExtension(item.ToString()).ToLower();
                 if (extension.Equals(".dll") || extension.Equals(".exe"))
                 {
                     assemblyFileList.Add(item.ToString());
