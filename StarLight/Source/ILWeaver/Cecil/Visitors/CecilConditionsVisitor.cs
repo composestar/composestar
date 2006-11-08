@@ -43,6 +43,7 @@ namespace Composestar.StarLight.ILWeaver
         private int m_NumberOfBranches = 0;
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
         private CecilInliningInstructionVisitor _visitor;
+        private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
         #endregion
 
         #region Properties
@@ -229,14 +230,43 @@ namespace Composestar.StarLight.ILWeaver
             Condition con = GetConditionByName(conditionLiteral.Name);
             if (con == null)
                 throw new ILWeaverException(String.Format(Properties.Resources.ConditionNotFound, conditionLiteral.Name));
-                       
+
+            // Get the parenttype
+            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(_visitor.Method.DeclaringType);
+
+            // Get the method
             MethodReference method;
+            FieldDefinition target = null;
             if (con.Reference.Target.Equals(Reference.InnerTarget) ||
                 con.Reference.Target.Equals(Reference.SelfTarget))
             {
                 method = CecilUtilities.ResolveMethod(
                     con.Reference.Selector, WeaveType.Name,
                     con.Reference.Assembly, "");
+            }
+            else if(isInternal(con.Reference.Target) || isExternal(con.Reference.Target))
+            {
+                if(!Method.HasThis)
+                {
+                    throw new ILWeaverException(String.Format(Properties.Resources.StaticReferenceInternalExternal, 
+                        Method.Name, Method.DeclaringType.FullName));
+                }
+
+                target = parentType.Fields.GetField(con.Reference.Target);
+                
+                TypeDefinition fieldType = CecilUtilities.ResolveTypeDefinition(target.FieldType);
+                MethodDefinition md = CecilUtilities.ResolveMethod(fieldType, con.Reference.Selector, new Type[0]);
+
+                // If method with no parameters cannot be found, try to find method with JPC context as parameter
+                if(md == null)
+                {
+                    md = CecilUtilities.ResolveMethod(fieldType, con.Reference.Selector, m_JpcTypes);
+                }
+
+                if(md == null)
+                    throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound2, con.Reference.Selector, con.Reference.Target, fieldType.FullName));
+
+                method = _visitor.TargetAssemblyDefinition.MainModule.Import(md);
             }
             else
             {
@@ -275,6 +305,15 @@ namespace Composestar.StarLight.ILWeaver
                 // Load the this pointer
                 Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
             }
+            // internal/external and not static:
+            else if(target != null  &&  method.HasThis)
+            {
+                // Load the this pointer
+                Instructions.Add(Worker.Create(OpCodes.Ldarg, Method.This));
+
+                // Load the field
+                Instructions.Add(Worker.Create(OpCodes.Ldfld, target));
+            }
             //else do nothing, because of static call
 
             // Check if we have to add the JPC
@@ -290,6 +329,33 @@ namespace Composestar.StarLight.ILWeaver
             // Create a call instruction
             Instructions.Add(Worker.Create(OpCodes.Call, TargetAssemblyDefinition.MainModule.Import(method)));
 
+        }
+
+        private bool isInternal(string target)
+        {
+            foreach(Internal i in _visitor.WeaveType.Internals)
+            {
+                if(i.Name.Equals(target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        
+        private bool isExternal(string target)
+        {
+            foreach(External e in _visitor.WeaveType.Externals)
+            {
+                if(e.Name.Equals(target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion

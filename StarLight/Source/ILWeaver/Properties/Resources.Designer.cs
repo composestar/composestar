@@ -233,6 +233,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not create a method reference for method named &apos;{0}&apos; in internal/external &apos;{1}&apos; of type &apos;{2}&apos;..
+        /// </summary>
+        internal static string MethodNotFound2 {
+            get {
+                return ResourceManager.GetString("MethodNotFound2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find method with signature &apos;{0}&apos; in the cache..
         /// </summary>
         internal static string MethodSignatureNotFound {
@@ -265,6 +274,15 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         internal static string SNKFileNotFound {
             get {
                 return ResourceManager.GetString("SNKFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trying to reference an internal or external from the static method named &apos;{0}&apos;  in type &apos;{1}&apos;.
+        /// </summary>
+        internal static string StaticReferenceInternalExternal {
+            get {
+                return ResourceManager.GetString("StaticReferenceInternalExternal", resourceCulture);
             }
         }
         

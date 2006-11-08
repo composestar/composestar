@@ -202,4 +202,10 @@
   <data name="CouldNotSavePdb" xml:space="preserve">
     <value>Could not write the debug information to file '{0}'. Check if the file is not in use and has the correct access permissions. See the inner exception for more information.</value>
   </data>
+  <data name="MethodNotFound2" xml:space="preserve">
+    <value>Could not create a method reference for method named '{0}' in internal/external '{1}' of type '{2}'.</value>
+  </data>
+  <data name="StaticReferenceInternalExternal" xml:space="preserve">
+    <value>Trying to reference an internal or external from the static method named '{0}'  in type '{1}'</value>
+  </data>
 </root>
