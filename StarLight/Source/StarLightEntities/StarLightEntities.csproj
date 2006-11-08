@@ -49,7 +49,6 @@
     <Compile Include="LanguageModel\ParameterOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LanguageModel\TypeElement.cs" />
-    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="WeaveSpec\WeaveMethod.cs" />
     <Compile Include="WeaveSpec\External.cs" />
     <Compile Include="WeaveSpec\Internal.cs" />

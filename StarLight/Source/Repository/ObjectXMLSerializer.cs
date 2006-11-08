@@ -390,6 +390,12 @@ namespace Composestar.Repository
 
         #region Private
 
+        /// <summary>
+        /// Creates the file stream.
+        /// </summary>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
         private static FileStream CreateFileStream(IsolatedStorageFile isolatedStorageFolder, string path)
         {
             FileStream fileStream = null;
@@ -402,6 +408,12 @@ namespace Composestar.Repository
             return fileStream;
         }
 
+        /// <summary>
+        /// Loads from binary format.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <returns></returns>
         private static T LoadFromBinaryFormat(string path, IsolatedStorageFile isolatedStorageFolder)
         {
             T serializableObject = null;
@@ -415,6 +427,13 @@ namespace Composestar.Repository
             return serializableObject;
         }
 
+        /// <summary>
+        /// Loads from document format.
+        /// </summary>
+        /// <param name="extraTypes">The extra types.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <returns></returns>
         private static T LoadFromDocumentFormat(System.Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder)
         {
             T serializableObject = null;
@@ -429,6 +448,13 @@ namespace Composestar.Repository
             return serializableObject;
         }
 
+        /// <summary>
+        /// Loads from document compressed format.
+        /// </summary>
+        /// <param name="extraTypes">The extra types.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <returns></returns>
         private static T LoadFromDocumentCompressedFormat(System.Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder)
         {
             T serializableObject = null;
@@ -437,12 +463,17 @@ namespace Composestar.Repository
             {
                 XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
                 serializableObject = xmlSerializer.Deserialize(compressReader) as T;
-
             }
 
             return serializableObject;
         }
 
+        /// <summary>
+        /// Creates the compression reader.
+        /// </summary>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
         private static Stream CreateCompressionReader(IsolatedStorageFile isolatedStorageFolder, string path)
         {
             Stream compressStream = null;
@@ -455,6 +486,12 @@ namespace Composestar.Repository
             return compressStream;
         }
 
+        /// <summary>
+        /// Creates the text reader.
+        /// </summary>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
         private static TextReader CreateTextReader(IsolatedStorageFile isolatedStorageFolder, string path)
         {
             TextReader textReader = null;
@@ -467,6 +504,12 @@ namespace Composestar.Repository
             return textReader;
         }
 
+        /// <summary>
+        /// Creates the text writer.
+        /// </summary>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
         private static TextWriter CreateTextWriter(IsolatedStorageFile isolatedStorageFolder, string path)
         {
             TextWriter textWriter = null;
@@ -479,6 +522,12 @@ namespace Composestar.Repository
             return textWriter;
         }
 
+        /// <summary>
+        /// Creates the compression writer.
+        /// </summary>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
         private static Stream CreateCompressionWriter(IsolatedStorageFile isolatedStorageFolder, string path)
         {
             Stream compressStream = null;
@@ -491,6 +540,11 @@ namespace Composestar.Repository
             return compressStream;
         }
 
+        /// <summary>
+        /// Creates the XML serializer.
+        /// </summary>
+        /// <param name="extraTypes">The extra types.</param>
+        /// <returns></returns>
         private static XmlSerializer CreateXmlSerializer(System.Type[] extraTypes)
         {
             Type objectType = typeof(T);
@@ -505,6 +559,13 @@ namespace Composestar.Repository
             return xmlSerializer;
         }
 
+        /// <summary>
+        /// Saves to document format.
+        /// </summary>
+        /// <param name="serializableObject">The serializable object.</param>
+        /// <param name="extraTypes">The extra types.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
         private static void SaveToDocumentFormat(T serializableObject, System.Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder)
         {
             using (TextWriter textWriter = CreateTextWriter(isolatedStorageFolder, path))
@@ -514,6 +575,13 @@ namespace Composestar.Repository
             }
         }
 
+        /// <summary>
+        /// Saves to document compressed format.
+        /// </summary>
+        /// <param name="serializableObject">The serializable object.</param>
+        /// <param name="extraTypes">The extra types.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
         private static void SaveToDocumentCompressedFormat(T serializableObject, System.Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder)
         {
             using (Stream compressStream = CreateCompressionWriter(isolatedStorageFolder, path))
@@ -523,6 +591,12 @@ namespace Composestar.Repository
             }
         }
 
+        /// <summary>
+        /// Saves to binary format.
+        /// </summary>
+        /// <param name="serializableObject">The serializable object.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="isolatedStorageFolder">The isolated storage folder.</param>
         private static void SaveToBinaryFormat(T serializableObject, string path, IsolatedStorageFile isolatedStorageFolder)
         {
             using (FileStream fileStream = CreateFileStream(isolatedStorageFolder, path))

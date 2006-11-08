@@ -111,6 +111,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// </returns>
         public override bool Execute()
         {
+
+            throw new NotImplementedException("Not implemented");
                JavaServer.Instance.StartServer();
                return true;
         } 

@@ -85,6 +85,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
 
+            UInt16 filesVerified = 0;
+
             // Execute PEVerify for each file
             foreach (AssemblyConfig assembly in configContainer.Assemblies)
             {
@@ -114,6 +116,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                             ParseOutput(process.StandardOutput.ReadLine(), assembly.Filename);
                         }
                     }
+                    filesVerified++;
 
                 }
                 catch (Win32Exception exception)
@@ -144,7 +147,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             sw.Stop();
 
-            Log.LogMessageFromResources("VerificationCompleted", configContainer.Assemblies.Count, sw.Elapsed.TotalSeconds);
+            Log.LogMessageFromResources("VerificationCompleted", filesVerified, sw.Elapsed.TotalSeconds);
 
             return !Log.HasLoggedErrors;
 

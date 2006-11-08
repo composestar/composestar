@@ -23,10 +23,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// MSBuild tasks to start the analyzer.
     /// </summary>
     [LoadInSeparateAppDomain()]
-    public class IlAnalyzerTask : AppDomainIsolatedTask 
+    public class IlAnalyzerTask : AppDomainIsolatedTask
     {
         private const string ComposeStarDlls = "Composestar.StarLight";
-        private const string ComposeStarFilterDll = "Composestar.StarLight.Filters,Composestar.StarLight.CustomFilters";
+        private const string ComposeStarFilterDll = "Composestar.StarLight.Filters;Composestar.StarLight.CustomFilters";
+
+        ConfigurationContainer configContainer;
+        List<FilterActionElement> filterActions;
+        List<FilterTypeElement> filterTypes;
+        List<AssemblyConfig> assembliesInConfig;
+        List<AssemblyConfig> assembliesToStore;
 
         #region Properties for MSBuild
 
@@ -117,7 +123,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             get { return _assembliesDirty; }
             set { _assembliesDirty = value; }
         }
-	
+
         #endregion
 
         #region ctor
@@ -133,64 +139,43 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         #endregion
 
+        #region Supporting functions
+
         /// <summary>
-        /// When overridden in a derived class, executes the task.
+        /// Determines whether the specified filename is a filter file.
         /// </summary>
+        /// <param name="filename">The filename.</param>
         /// <returns>
-        /// true if the task successfully executed; otherwise, false.
+        /// 	<c>true</c> if the specified filename is a filter file; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Execute()
-        {                   
-            Log.LogMessageFromResources("AnalyzerStartText");
+        private bool IsFilterFile(string filename)
+        {           
+            foreach (String filterFile in ComposeStarFilterDll.Split(';'))
+            {
+                if (filename.StartsWith(filterFile))
+                {
+                    return true;
+                }
+            }
 
-            #region Setup of configuration, analyzer and lists
+            return false;
+        }
 
-            IILAnalyzer analyzer = null;
-            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
-            IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
-            Boolean assemblyChanged = false;
-
-            // Set configuration settings
-            configuration.BinFolder = BinFolder;
-			configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
-
-            // Create a list to store the retrieved assemblies in            
-            List<AssemblyElement> assemblies = new List<AssemblyElement>();
-
-            // Create a list to store the FilterTypes in
-            List<FilterTypeElement> filterTypes = new List<FilterTypeElement>();
-
-            // Create a list to store the FilterActions in
-            List<FilterActionElement> filterActions = new List<FilterActionElement>();
-
-            // Create the analyzer using the object builder
-            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
-          
-            #endregion
-
-            #region Find the assemblies to analyze
-
-            // Create list of composestar filters which should be analyzed
-            string[] filterFiles = ComposeStarFilterDll.Split(',');
-
+        /// <summary>
+        /// Finds the assemblies to analyze.
+        /// </summary>
+        /// <param name="assemblyFileList">The assembly file list.</param>
+        /// <param name="refAssemblies">The ref assemblies.</param>
+        private void FindAssembliesToAnalyze(out List<String> assemblyFileList, out Dictionary<String, String> refAssemblies)
+        {
             // Create a list of all the referenced assemblies (complete list is supplied by the msbuild file)
-            List<String> assemblyFileList = new List<string>();
+            assemblyFileList = new List<string>();
             foreach (ITaskItem item in AssemblyFiles)
             {
                 // Skip composestar files
                 string filename = Path.GetFileNameWithoutExtension(item.ToString());
 
-                bool isFilterFile = false;
-                for (int i = 0; i < filterFiles.Length; i++)
-                {
-                    if (filename.StartsWith(filterFiles[i]))
-                    {
-                        isFilterFile = true;
-                        break;
-                    }
-                }
-
-                if (filename.StartsWith(ComposeStarDlls) && !isFilterFile)
+                if (filename.StartsWith(ComposeStarDlls) && !IsFilterFile(filename))
                     continue;
 
                 // We are only interested in assembly files.
@@ -202,7 +187,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             }
 
             // Create a list of all the referenced assemblies, which are not copied local for complete analysis
-            Dictionary<String, String> refAssemblies = new Dictionary<string, string>();
+            refAssemblies = new Dictionary<string, string>();
 
             foreach (ITaskItem item in ReferencedAssemblies)
             {
@@ -211,28 +196,19 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     refAssemblies.Add(item.GetMetadata("FusionName"), item.GetMetadata("Identity"));
                 }
             }
+         
+        }
 
-            // Get the configuration
-            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
-
-            filterActions = configContainer.FilterActions;
-            filterTypes = configContainer.FilterTypes;  
-
-            // Get the assemblies in the config file
-            List<AssemblyConfig> assembliesInConfig = configContainer.Assemblies;
-
-            List<AssemblyConfig> assembliesToStore = new List<AssemblyConfig>();
-
-            // Add all the unresolved types (used in the concern files) to the analyser
-            Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", ReferencedTypes.Length);
-            foreach (ITaskItem item in ReferencedTypes)
-            {
-                analyzer.UnresolvedTypes.Add(item.ToString());
-            }
-          
-            #endregion
-
-            #region Analyze the assemblies in the output folder
+        /// <summary>
+        /// Analyzes all assemblies in output folder.
+        /// </summary>
+        /// <param name="analyzer">The analyzer.</param>
+        /// <param name="assemblies">The assemblies.</param>
+        /// <param name="assemblyFileList">The assembly file list.</param>
+        /// <returns><see langword="true"/> when one or more assemblies are changed.</returns>
+        private bool AnalyzeAllAssembliesInOutputFolder(IILAnalyzer analyzer, List<AssemblyElement> assemblies, List<String> assemblyFileList)
+        {
+            Boolean assemblyChanged = false;
 
             // Analyze all assemblies in the output folder
             foreach (String item in assemblyFileList)
@@ -255,6 +231,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                             // Assembly has not been modified, skipping analysis
                             Log.LogMessageFromResources("AssemblyNotModified", assConfig.Name);
 
+                            // We still have to store this assembly, but we do not analyze it
                             assembliesToStore.Add(assConfig);
                             continue;
                         } // if
@@ -271,17 +248,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     assembly = analyzer.ExtractAllTypes(item);
 
-                    bool isFilterFile = false;
-                    for (int i = 0; i < filterFiles.Length; i++)
-                    {
-                        if ((Path.GetFileName(item)).StartsWith(filterFiles[i]))
-                        {
-                            isFilterFile = true;
-                            break;
-                        }
-                    }
-
-                    if (assembly != null && !isFilterFile)
+                    if (assembly != null && !IsFilterFile(Path.GetFileName(item)))
                     {
                         // Create a new AssemblyConfig object
                         assConfig = new AssemblyConfig();
@@ -305,7 +272,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     Log.LogMessageFromResources("AssemblyAnalyzed", assembly.Types.Count, analyzer.UnresolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
 
-                    sw.Reset();                    
+                    sw.Reset();
 
                 }
                 catch (ILAnalyzerException ex)
@@ -325,7 +292,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     Log.LogErrorFromException(ex, false);
                 }
 
-            }         
+            }
 
             if (analyzer.FilterTypes.Count > 0 && analyzer.FilterActions.Count > 0)
             {
@@ -366,16 +333,20 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 Log.LogMessageFromResources("FiltersAnalyzed", analyzer.FilterTypes.Count, analyzer.FilterActions.Count);
             }
 
-            #endregion
+            return assemblyChanged;
+        }
 
-            List<string> tempUnresolvedTypes = analyzer.UnresolvedTypes;
-          
-            #region Analyze the assemblies referenced to this project or subprojects.            
-
-            //
-            // Analyze all referenced assemblies
-            //
-
+        /// <summary>
+        /// Analyzes the referenced assemblies.
+        /// </summary>
+        /// <param name="analyzer">The analyzer.</param>
+        /// <param name="entitiesAccessor">The entities accessor.</param>
+        /// <param name="assemblyChanged">if set to <c>true</c> one or more assemblies are changed.</param>
+        /// <param name="refAssemblies">The ref assemblies.</param>
+        /// <param name="assemblies">The assemblies.</param>
+        /// <param name="assemblyFileList">The assembly file list.</param>
+        private void AnalyzeReferencedAssemblies(IILAnalyzer analyzer, IEntitiesAccessor entitiesAccessor, bool assemblyChanged, Dictionary<String, String> refAssemblies, List<AssemblyElement> assemblies, List<String> assemblyFileList)
+        {
             // Only if we have unresolved types
             if (analyzer.UnresolvedTypes.Count > 0)
             {
@@ -387,10 +358,16 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 // The previous step could introduce new assemblies. So add those to the list
                 assemblyFileList.AddRange(analyzer.ResolveAssemblyLocations());
 
+                // Create new config
+                CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
+
                 // Disable some options
                 configuration.DoFieldAnalysis = false;
                 configuration.DoMethodCallAnalysis = false;
                 configuration.ExtractUnresolvedOnly = true;
+
+                // Store before reinit
+                List<string> tempUnresolvedTypes = analyzer.UnresolvedTypes;
 
                 // Create the analyzer using the object builder
                 analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
@@ -403,7 +380,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     if (!assemblyFileList.Contains(al))
                         assemblyFileList.Add(al);
-                } // foreach 
+                } // foreach
 
                 // Try to resolve all the references.
                 do
@@ -515,11 +492,18 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 }
                 while (analyzer.UnresolvedTypes.Count > 0 && assemblyFileList.Count > 0);
             } // if
-            #endregion
-            
-            #region Store the found assemblies in the configuration container
 
-            // Storing types 
+        }
+
+        /// <summary>
+        /// Stores the assemblies to the configuration container and, when needed, to assemblyElements on disk.
+        /// </summary>
+        /// <param name="analyzer">The analyzer.</param>
+        /// <param name="entitiesAccessor">The entities accessor.</param>
+        /// <param name="assemblies">The assemblies.</param>
+        private void StoreAssemblies(IILAnalyzer analyzer, IEntitiesAccessor entitiesAccessor, List<AssemblyElement> assemblies)
+        {
+            // Storing types
             if (assemblies.Count > 0 && !Log.HasLoggedErrors)
             {
                 Stopwatch sw = new Stopwatch();
@@ -547,16 +531,96 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer);
 
                 sw.Stop();
-                     
 
                 Log.LogMessageFromResources("StoreInDatabaseCompleted", assemblies.Count, analyzer.ResolvedAssemblies.Count, sw.Elapsed.TotalSeconds);
             }
+        }
 
-            #endregion
-                      
+        /// <summary>
+        /// Adds all unresolved types.
+        /// </summary>
+        /// <param name="analyzer">The analyzer.</param>
+        private void AddAllUnresolvedTypes(IILAnalyzer analyzer)
+        {
+            Log.LogMessageFromResources(MessageImportance.Low, "NumberOfReferencesToResolve", ReferencedTypes.Length);
+            foreach (ITaskItem item in ReferencedTypes)
+            {
+                analyzer.UnresolvedTypes.Add(item.ToString());
+            }
+        }
+
+        #endregion
+             
+        /// <summary>
+        /// When overridden in a derived class, executes the task.
+        /// </summary>
+        /// <returns>
+        /// true if the task successfully executed; otherwise, false.
+        /// </returns>
+        public override bool Execute()
+        {
+            Log.LogMessageFromResources("AnalyzerStartText");
+
+            //
+            // Setup of configuration, analyzer and lists
+            //
+            IILAnalyzer analyzer = null;
+            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
+            IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
+            Boolean assemblyChanged = false;
+
+            // Set configuration settings
+            configuration.BinFolder = BinFolder;
+            configuration.DoMethodCallAnalysis = DoMethodCallAnalysis;
+
+            // Create a list to store the retrieved assemblies in            
+            List<AssemblyElement> assemblies = new List<AssemblyElement>();
+
+            // Create the analyzer using the object builder
+            analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
+
+            // Get the configuration
+            configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+
+            filterActions = configContainer.FilterActions;
+            filterTypes = configContainer.FilterTypes;
+
+            // Get the assemblies in the config file
+            assembliesInConfig = configContainer.Assemblies;
+
+            // Create a new list to store all the assemblies we have to save
+            assembliesToStore = new List<AssemblyConfig>();
+
+            //
+            // Find the assemblies to analyze
+            //
+            List<String> assemblyFileList;
+            Dictionary<String, String> refAssemblies;
+
+            // Get the lists of the assemblies we have to analyze
+            FindAssembliesToAnalyze(out assemblyFileList, out refAssemblies);
+
+            // Add all the unresolved types (used in the concern files) to the analyser
+            AddAllUnresolvedTypes(analyzer);
+
+            //
+            // Analyze the assemblies in the output folder
+            //
+            assemblyChanged = AnalyzeAllAssembliesInOutputFolder(analyzer, assemblies, assemblyFileList);
+      
+            //
+            // Analyze the assemblies referenced to this project or subprojects
+            //
+            AnalyzeReferencedAssemblies(analyzer, entitiesAccessor, assemblyChanged, refAssemblies, assemblies, assemblyFileList);
+
+            //
+            // Store the found assemblies in the configuration container
+            //
+            StoreAssemblies(analyzer, entitiesAccessor, assemblies);
+
             // Close the analyzer
             analyzer.Close();
-      
+
             return !Log.HasLoggedErrors;
         }
 

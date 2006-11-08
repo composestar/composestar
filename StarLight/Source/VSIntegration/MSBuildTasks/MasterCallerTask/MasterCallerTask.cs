@@ -102,7 +102,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             Debug = 4
         }
         #endregion
-
+    
         /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
@@ -126,23 +126,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 return !Log.HasLoggedErrors;
             }
 
-            Log.LogMessageFromResources("MasterStartText");           
-           
-            RegistrySettings rs = new RegistrySettings();
-            if (!rs.ReadSettings())
-            {
-                Log.LogErrorFromResources("CouldNotReadRegistryValues");                 
-                return false;
-            }
+            Log.LogMessageFromResources("MasterStartText");
+
+            // Get registry settings
+            RegistrySettings rs = GetRegistrySettings();
+            if (rs == null)
+                return !Log.HasLoggedErrors; 
 
             // Place debuglevel
-            Log.LogMessageFromResources("StoreDebugLevel", DebugLevel);             
+            Log.LogMessageFromResources("StoreDebugLevel", DebugLevel);
 
             // Set the Common Configuration
-             short debugLevelValue;
-             if (!short.TryParse(DebugLevel, out debugLevelValue))
+            short debugLevelValue;
+            if (!short.TryParse(DebugLevel, out debugLevelValue))
             {
-                Log.LogErrorFromResources("CouldNotConvertDebugLevel", DebugLevel); 
+                Log.LogErrorFromResources("CouldNotConvertDebugLevel", DebugLevel);
                 return false;
             }
 
@@ -223,6 +221,21 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 if (sw.IsRunning) sw.Stop();
             }
 
+        }
+
+        /// <summary>
+        /// Gets the registry settings.
+        /// </summary>
+        /// <returns></returns>
+        private RegistrySettings GetRegistrySettings()
+        {
+            RegistrySettings rs = new RegistrySettings();
+            if (!rs.ReadSettings())
+            {
+                Log.LogErrorFromResources("CouldNotReadRegistryValues");
+                return null;
+            }
+            return rs;
         }
 
         #region Parse Master Output and Logger helper functions
