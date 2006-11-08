@@ -205,11 +205,8 @@ namespace Composestar.StarLight.ILWeaver
             // Stop timing
             sw.Stop();
 
-            if (_configuration.WeaveDebugLevel != CecilWeaverConfiguration.WeaveDebug.None)
-            {
-                _weaveStats.TotalWeaveTime = sw.Elapsed;
-            }
-
+            _weaveStats.TotalWeaveTime = sw.Elapsed;
+            
             return _weaveStats;  
         }
 
