@@ -35,6 +35,12 @@ public class CastingFacility
 			to = to.substring(bracket + 1);
 		}
 
+		// cast to type of itself is always safe, really it is
+		if (from.getClass().getName().equals(to))
+		{
+			return from;
+		}
+
 		ObjectManager om = (ObjectManager) GlobalObjectManager.getObjectManagerFor(from);
 		if (om == null)
 		{
@@ -117,13 +123,22 @@ public class CastingFacility
 						// This should be the match and return the correct
 						// parent concern object
 						Object obj = fmr.getObjectManager().theObject;
-						if (Debug.SHOULD_DEBUG)
-						{
-							Debug.out(Debug.MODE_INFORMATION, "FLIRT",
+
+						//mh: also check if the types match, otherwise it's not the designed cast 
+						//	(e.g. for the multiple inheritance hack)
+						//  this change (prefixed with //!) isnt safe because it doesn't check subclasses
+						//  and break a couple of classes
+
+						//!if (obj.getClass().getName().equals(to))
+						//!{
+							if (Debug.SHOULD_DEBUG)
+							{
+								Debug.out(Debug.MODE_INFORMATION, "FLIRT",
 									"Found managed object for given internal to return for casting: "
-											+ obj.getClass().getName() + ", key " + obj.hashCode());
-						}
-						return obj;
+									+ obj.getClass().getName() + ", key " + obj.hashCode());
+							}
+							return obj;
+						//!}
 					}
 				}
 			}
