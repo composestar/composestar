@@ -137,7 +137,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     {
                         Log.LogMessageFromResources("SkippedWeavingFile", assembly.Filename);
                         continue; 
-                    } // if
+                    }
 
                     // Check for modification
                     if (!ConcernsDirty && File.GetLastWriteTime(assembly.Filename).Ticks <= assembly.Timestamp)
@@ -218,7 +218,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 // Close the weaver, so it closes the database, performs cleanups etc
                 if (weaver != null)
-                    weaver.Close();
+                    weaver.Dispose();
             }
 
             return !Log.HasLoggedErrors;

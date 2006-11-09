@@ -747,11 +747,10 @@ namespace Composestar.StarLight.ILWeaver
         }
 
         /// <summary>
-        /// Closes this instance.
+        /// Cleans up any resources associated with this instance.
         /// </summary>
-        void IILWeaver.Close()
+        public void Dispose()
         {
-            
         }
 
         #region Helper functions

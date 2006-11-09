@@ -10,7 +10,7 @@ namespace Composestar.StarLight.CoreServices
     /// <summary>
     /// Interface for the IL weaver
     /// </summary>
-    public interface IILWeaver 
+    public interface IILWeaver : IDisposable
     {
         /// <summary>
         /// Does the actual weaving.
@@ -18,8 +18,8 @@ namespace Composestar.StarLight.CoreServices
         WeaveStatistics DoWeave();
       
         /// <summary>
-        /// Closes this instance.
+        /// Cleans up any resources associated with this instance.
         /// </summary>
-        void Close();
+        void Dispose();
     }
 }
