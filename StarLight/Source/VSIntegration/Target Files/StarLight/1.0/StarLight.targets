@@ -17,18 +17,18 @@ Copyright (C) University of Twente, 2006
 
   <!--Reference the assembly where our tasks are defined-->
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
-  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask"    AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.DummiesTask"      AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask"   AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
 
   <PropertyGroup>
     <StarLightFolder>StarLight</StarLightFolder>
     <DefaultLanguageSourceExtension>.cps</DefaultLanguageSourceExtension>
     <Language>StarLight</Language>
     <!-- Provide a facility to override UseHostCompilerIfAvailable-->
-    <UseHostCompilerIfAvailable
-  Condition="'$(UseHostCompilerIfAvailable)' == ''">
+    <UseHostCompilerIfAvailable Condition="'$(UseHostCompilerIfAvailable)' == ''">
       false
     </UseHostCompilerIfAvailable>
   </PropertyGroup>
@@ -51,8 +51,8 @@ Copyright (C) University of Twente, 2006
   <Target
       Name="Weave"
       Condition=" '$(_InvalidConfigurationWarning)' != 'true' "
-    Outputs="$(TargetPath)"  
-    DependsOnTargets="$(WeaveDependsOn)">
+      Outputs="$(TargetPath)"  
+      DependsOnTargets="$(WeaveDependsOn)">
   </Target>
   <!--
     ============================================================
@@ -229,7 +229,8 @@ This target will be called whenever the Clean target is invoked.
       CreateStarLightFolder;
       BuildOnlySettings;
       PrepareForBuild;
-      ResolveReferences;      
+      ResolveReferences;
+      GenerateDummies;
       CpsParserRunner;
       GetTargetPath;
       CopyFilesToOutputDirectory;
@@ -272,7 +273,6 @@ This target will be called whenever the Clean target is invoked.
             _CheckForCompileOutputs;
             _SGenCheckForOutputs">
 
-    <Message Importance="High" Text="$(MSBuildProjectName) -&gt; @(MainAssembly->'%(FullPath)')" />
     <!-- Copy the build product (.dll or .exe). But only when we have a CodeLanguage -->
     <Copy
         SourceFiles="@(IntermediateAssembly)"
@@ -374,9 +374,14 @@ This target will be called whenever the Clean target is invoked.
     <Delete Files="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError="true" />
   </Target>
 
+  <!-- GenerateDummies target -->
+  <Target Name="GenerateDummies">
+    <Message Text="Generating dummies." />
+    <DummiesTask Sources="@(Compile->'%(FullPath)')"/>
+  </Target>
+
   <!--CpsParserRunner target -->
-  <Target
-       Name="CpsParserRunner">
+  <Target Name="CpsParserRunner">
     <Message Text="Collecting and parsing concern files." />
     <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
       <Output TaskParameter="ReferencedTypes" ItemName="ReferencedTypes"/>
@@ -386,8 +391,7 @@ This target will be called whenever the Clean target is invoked.
   </Target>
 
   <!--ILAnalyzerRunner target -->
-  <Target
-       Name="ILAnalyzerRunner">
+  <Target Name="ILAnalyzerRunner">
     <Message Text="Collecting and analyzing assemblies." />
 
     <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" 
@@ -416,6 +420,5 @@ This target will be called whenever the Clean target is invoked.
     <Message Text ="Verifying generated IL code." />
     <ILVerifyTask RepositoryFilename="$(RepositoryFilename)" />
   </Target>
-
 
 </Project>
