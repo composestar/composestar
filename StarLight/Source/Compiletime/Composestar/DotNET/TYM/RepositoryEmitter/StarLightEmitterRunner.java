@@ -4,15 +4,15 @@
  */
 package Composestar.DotNET.TYM.RepositoryEmitter;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
-import java.util.zip.*;
+import java.util.zip.GZIPOutputStream;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.And;
@@ -69,9 +69,7 @@ import composestar.dotNET.tym.entities.WeaveType;
 
 public class StarLightEmitterRunner implements CTCommonModule
 {
-	private Vector callsToOtherMethods = new Vector();
-
-	private Hashtable weaveSpecs = new Hashtable();
+	private Map weaveSpecs = new HashMap();
 
 	public void run(CommonResources resources) throws ModuleException
 	{
@@ -726,8 +724,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 
 		private composestar.dotNET.tym.entities.ContextExpression.Enum getContextExpression(ContextExpression expression)
 		{
-			composestar.dotNET.tym.entities.ContextExpression weaveExpression = composestar.dotNET.tym.entities.ContextExpression.Factory
-					.newInstance();
+			composestar.dotNET.tym.entities.ContextExpression weaveExpression 
+				= composestar.dotNET.tym.entities.ContextExpression.Factory.newInstance();
 
 			switch (expression.getType())
 			{
