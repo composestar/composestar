@@ -56,6 +56,7 @@
     </None>
     <Compile Include="CpsParserTask\BuilderConfigurator.cs" />
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
+    <Compile Include="DummiesTask\DummiesTask.cs" />
     <Compile Include="ILAnalyzerTask\BuilderConfigurator.cs" />
     <Compile Include="ILAnalyzerTask\ILAnalyzerTask.cs" />
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
@@ -112,13 +113,25 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
+  <PropertyGroup>
+    <DeployDestination>$(MSBuildExtensionsPath)\StarLight\0.1\</DeployDestination>
+  </PropertyGroup>
+  <ItemGroup>
+    <DeployToMSBuild Include="..\Target Files\StarLight\1.0\StarLight.targets">
+      <Visible>false</Visible>
+    </DeployToMSBuild>
+  </ItemGroup>
   <Target Name="AfterBuild">
+    <Message Text="Deploying..." />
+    <MakeDir Directories="$(DeployDestination)" Condition="!Exists($(DeployDestination))" />
+    <CreateItem Include="$(OutputPath)\*.dll" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployToMSBuild" />
+    </CreateItem>
+    <CreateItem Include="$(OutputPath)\*.pdb" AdditionalMetadata="Visible=false">
+      <Output TaskParameter="Include" ItemName="DeployToMSBuild" />
+    </CreateItem>
+    <Copy SourceFiles="%(DeployToMSBuild.Identity)" DestinationFolder="$(DeployDestination)" SkipUnchangedFiles="true" />
   </Target>
-  -->
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
