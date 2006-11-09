@@ -35,6 +35,7 @@ Common routines. Always include this file in every build.xml file
 		<!-- various config items -->
 		<property name="out.build" value="build"/>
 		<property name="out.dist"  value="dist"/>
+		<property name="out.qa"  value="qa"/>
 		
 		<property name="out.jar.core"      value="${out.dist}${file.separator}ComposestarCORE.jar"/>
 		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}ComposestarDotNET.jar"/>

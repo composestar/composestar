@@ -53,7 +53,7 @@
 			</htmlemail>
 			<onsuccess>
 				<antpublisher 
-					target="installer" 
+					target="integration_publish" 
 					buildfile="${composestar.path}\Core\Development\build_total.xml" 
 					uselogger="true" 
 					anthome="${composestar.ant}" 
@@ -63,6 +63,26 @@
 				<artifactspublisher
 					dir="${composestar.path}/DotNET/Installer/dist"
 					dest="artifacts/${project.name}/"
+				/>
+				<artifactspublisher
+					dir="${composestar.path}/Core/qa"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_core"
+				/>
+				<artifactspublisher
+					dir="${composestar.path}/DotNET/qa"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_dotnet"
+				/>
+					
+				<!-- clean up old artifacts, e.a. -->			
+				<antpublisher 
+					target="onsuccess" 
+					buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml" 
+					uselogger="true" 
+					anthome="${composestar.ant}" 
+					antWorkingDir="${composestar.path}" 
+					usedebug="false" 
 				/>
 			</onsuccess>
 		</publishers>

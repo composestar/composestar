@@ -193,6 +193,11 @@
 		<antcall target="required" />
 	</target>
 	
+	<target name="integration_publish">
+		<antcall target="installer" />
+		<antcall target="qa" />
+	</target>
+	
 	<target name="nightlybuild" description="Execute the nightly build">
 		<tstamp />
 		<echo>

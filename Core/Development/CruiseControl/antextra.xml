@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CruiseControl/Extras">
+	<description>Extra tasks for cruise control</description>
+	
+	<!-- register environment variables -->
+	<property environment="env"/>
+	
+	<target name="onsuccess" depends="clean-artifacts" />
+	
+	<target name="clean-artifacts" description="cleans the artifacts directory" if="env.CCDIR">
+		<tstamp>
+			<!-- delete artifacts from the last 5 days -->
+			<format property="time.lastweek" offset="-5" unit="day" pattern="MM/dd/yyyy hh:mm aa" />
+		</tstamp>
+		<delete includeemptydirs="true">
+			<fileset dir="${env.CCDIR}/artifacts/${projectname}">
+				<date datetime="${time.lastweek}" when="before" />
+			</fileset>
+		</delete>
+		<mkdir dir="${env.CCDIR}/artifacts/${projectname}" />	
+	</target>
+
+</project>
