@@ -86,5 +86,14 @@ namespace Composestar.StarLight.Weaving.Properties {
                 return ResourceManager.GetString("FieldNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve method {0} {1}..
+        /// </summary>
+        internal static string MethodNotFound {
+            get {
+                return ResourceManager.GetString("MethodNotFound", resourceCulture);
+            }
+        }
     }
 }

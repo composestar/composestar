@@ -259,7 +259,4 @@ Weaved in {13:0.0000} sec.: {9} internal(s), {10} external(s)
   <data name="WeavingTimingLogSaved" xml:space="preserve">
     <value>Weaving timing log file saved to '{0}'.</value>
   </data>
-  <data name="MethodNotFound" xml:space="preserve">
-    <value>Unable to resolve method {0} {1}.</value>
-  </data>
 </root>
