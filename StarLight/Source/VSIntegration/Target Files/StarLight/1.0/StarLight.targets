@@ -358,14 +358,13 @@ This target will be called whenever the Clean target is invoked.
     <MakeDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)" />
   </Target>
 
-  <ItemGroup>
-    <BackupFiles
-      Include="$(OutDir)*.exe;$(OutDir)*.dll" 
-      Exclude="$(OutDir)Composestar.StarLight*.*" />
-  </ItemGroup>
-
   <Target Name ="BackupFiles">
     <Message Text="Creating backup of already weaved files." />
+    <CreateItem
+      Include="$(OutDir)*.exe;$(OutDir)*.dll" 
+      Exclude="$(OutDir)Composestar.StarLight*.*">
+      <Output TaskParameter="Include" ItemName="BackupFiles"/>
+    </CreateItem>
     <Copy SourceFiles="@(BackupFiles)"
     DestinationFiles="@(BackupFiles->'$(OutDir)%(RecursiveDir)%(Filename)%(Extension).weaved')" ContinueOnError ="true" />
   </Target>
