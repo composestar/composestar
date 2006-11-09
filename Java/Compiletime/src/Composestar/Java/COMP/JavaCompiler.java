@@ -50,11 +50,11 @@ public class JavaCompiler implements LangCompiler
 		Iterator deps = p.getDependencies().iterator();
 		while (deps.hasNext())
 		{
-			options = options + ";" + "\"" + ((Dependency) deps.next()).getFileName() + "\"";
+			options = options + ";" + FileUtils.quote(((Dependency)deps.next()).getFileName());
 		}
 
 		// add destination directory
-		String buildPath = p.getProperty("buildPath");
+		String buildPath = p.getBasePath() + "obj/";
 		options = options + " -d " + FileUtils.quote(buildPath);
 
 		// create file containing all sources
@@ -136,7 +136,8 @@ public class JavaCompiler implements LangCompiler
 		}
 
 		// create file containing all dummies
-		String target = p.getProperty("buildPath") + "dummies.txt";
+		String buildPath = p.getBasePath() + "obj/";
+		String target = buildPath + "dummies.txt";
 		String argfiles = "@dummies.txt";
 		createFile(p, true, target);
 
@@ -155,7 +156,7 @@ public class JavaCompiler implements LangCompiler
 
 		// compile
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
-		int result = cmdExec.exec("call " + command, new File(p.getProperty("buildPath")));
+		int result = cmdExec.exec("call " + command, new File(buildPath));
 		compilerOutput = cmdExec.outputError();
 
 		if (result != 0)
@@ -202,7 +203,7 @@ public class JavaCompiler implements LangCompiler
 		while (sourceIt.hasNext())
 		{
 			Source source = (Source) sourceIt.next();
-			String dummyfile = FileUtils.fixFilename(source.getDummy());
+			String dummyfile = FileUtils.normalizeFilename(source.getDummy());
 			String classPath = dummyfile.substring(dummyfile.indexOf(dummyPath) + dummyPath.length());
 			classPath = classPath.replaceAll(FileUtils.getFilenamePart(dummyfile), "*.class");
 			classpaths.add(classPath);
@@ -217,7 +218,7 @@ public class JavaCompiler implements LangCompiler
 		}
 
 		File targetDir = new File(targetPath);
-		String name = p.getProperty("name") + ".dummies.jar";
+		String name = p.getName() + ".dummies.jar";
 		String compiledUnit = targetPath + name;
 
 		command = p.getLanguage().getCompilerSettings().getCompilerAction("CreateJar").getArgument();
@@ -274,7 +275,7 @@ public class JavaCompiler implements LangCompiler
 			Source s = (Source) sourceIt.next();
 			if (dummies)
 			{
-				sourcefiles.append("\"" + FileUtils.fixFilename(s.getDummy()) + "\"");
+				sourcefiles.append("\"" + FileUtils.normalizeFilename(s.getDummy()) + "\"");
 			}
 			else
 			{
