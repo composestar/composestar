@@ -183,10 +183,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
             try
             {
                 process.Start();
-                while (!process.HasExited)
-                {            
-                    ParseMasterOutput(process.StandardOutput.ReadLine());                    
+
+                StreamReader outputReader = process.StandardOutput;
+                while (!outputReader.EndOfStream)
+                {
+                    ParseMasterOutput(outputReader.ReadLine());                    
                 }
+                
+                process.WaitForExit();
                 if (process.ExitCode == 0)
                 {
                     sw.Stop();

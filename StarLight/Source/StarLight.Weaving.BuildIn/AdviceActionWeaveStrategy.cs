@@ -128,22 +128,23 @@ namespace Composestar.StarLight.Weaving.Strategies
             else
             {
                 FieldDefinition target = parentType.Fields.GetField(filterAction.SubstitutionTarget);
-                if(target == null)
+                if (target == null)
                 {
+                    // FIXME: shouldn't this be TargetNotFound instead of FieldNotFound?
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
                         Properties.Resources.FieldNotFound, filterAction.SubstitutionTarget));
                 }
 
-                MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, 
+                MethodDefinition method = CecilUtilities.ResolveMethod(target.FieldType, 
                     filterAction.SubstitutionSelector, m_JpcTypes);
 
-                if (md == null)
+                if (method == null)
                 {
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
                         Properties.Resources.MethodNotFound, target.FieldType, filterAction.SubstitutionSelector));
                 }
 
-                return visitor.TargetAssemblyDefinition.MainModule.Import(md);
+                return visitor.TargetAssemblyDefinition.MainModule.Import(method);
             }
         }
     }
