@@ -46,6 +46,65 @@ public class Stalker extends Strategy
 		int gY = pawn.getCellY();
 		int pX = pm.getCellX();
 		int pY = pm.getCellY();
+
+		// for each dir assign a number, highest is the best
+		// (e.g. needs to decrease that distance the most)
+		int[] dirs = new int[4];
+
+		// if can move then assing:
+		//		distance * isCloserToPacman
+		// else MaxInt
+		if (level.canMove(Direction.RIGHT, gX, gY))
+		{
+			dirs[Direction.RIGHT] = Math.abs(gX - pX);
+			if (gX > pX) dirs[Direction.RIGHT] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.RIGHT] = Integer.MIN_VALUE;
+		}
+		if (level.canMove(Direction.LEFT, gX, gY))
+		{
+			dirs[Direction.LEFT] = Math.abs(gX - pX);
+			if (gX < pX) dirs[Direction.LEFT] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.LEFT] = Integer.MIN_VALUE;
+		}
+
+		if (level.canMove(Direction.UP, gX, gY))
+		{
+			dirs[Direction.UP] = Math.abs(gY - pY);
+			if (gY < pY) dirs[Direction.UP] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.UP] = Integer.MIN_VALUE;
+		}
+		if (level.canMove(Direction.DOWN, gX, gY))
+		{
+			dirs[Direction.DOWN] = Math.abs(gY - pY);
+			if (gY > pY) dirs[Direction.DOWN] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.DOWN] = Integer.MIN_VALUE;
+		}
+
+		int bestDir = Direction.NONE;
+		int bestVal = Integer.MIN_VALUE;
+		for (int i = 0; i < dirs.length; i++)
+		{
+			if (dirs[i] > bestVal)
+			{
+				bestVal = dirs[i];
+				bestDir = i;
+			}
+		}
+		return bestDir;
+
+		/*
 		
 		if (Math.abs(gX - pX) > Math.abs(gY - pY)) // try to decrease X dist
 		{
@@ -87,5 +146,6 @@ public class Stalker extends Strategy
 		}
 		return Direction.NONE;
 		//return RandomMovement.getNextMove(pawn, level);
+		*/
 	}
 }

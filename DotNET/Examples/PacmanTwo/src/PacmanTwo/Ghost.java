@@ -57,7 +57,7 @@ public class Ghost extends Pawn
 	protected boolean doTouchingCheck(GameElement ge)
 	{
 		// only check against pacman
-		return (ge instanceof Pacman);
+		return (ge instanceof Pacman) && (!((Pacman) ge).isDead());
 	}
 
 	protected void touch(GameElement ge)

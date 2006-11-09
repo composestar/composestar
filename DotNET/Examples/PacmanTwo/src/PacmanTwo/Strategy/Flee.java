@@ -48,45 +48,63 @@ public class Flee extends Strategy
 		int pX = pm.getCellX();
 		int pY = pm.getCellY();
 
-		if (Math.abs(gX - pX) < Math.abs(gY - pY)) // try to increase X dist
+		// for each dir assign a number, lowest is the best
+		// (e.g. needs to increase that distance the most)
+		int[] dirs = new int[4];
+
+		// if can move then assing:
+		//		distance * isCloserToPacman
+		// else MaxInt
+		if (level.canMove(Direction.RIGHT, gX, gY))
 		{
-			if (gX > pX) // pacman is to the left, move right
+			dirs[Direction.RIGHT] = Math.abs(gX - pX);
+			// pacman is to the left, decrease the score to the right
+			if (gX > pX) dirs[Direction.RIGHT] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.RIGHT] = Integer.MAX_VALUE;
+		}
+		if (level.canMove(Direction.LEFT, gX, gY))
+		{
+			dirs[Direction.LEFT] = Math.abs(gX - pX);
+			if (gX > pX) dirs[Direction.LEFT] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.LEFT] = Integer.MAX_VALUE;
+		}
+
+		if (level.canMove(Direction.UP, gX, gY))
+		{
+			dirs[Direction.UP] = Math.abs(gY - pY);
+			if (gY < pY) dirs[Direction.UP] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.UP] = Integer.MAX_VALUE;
+		}
+		if (level.canMove(Direction.DOWN, gX, gY))
+		{
+			dirs[Direction.DOWN] = Math.abs(gY - pY);
+			// pacman is to the top, decrease the score to the bottom
+			if (gY > pY) dirs[Direction.DOWN] *= -1;
+		}
+		else 
+		{
+			dirs[Direction.DOWN] = Integer.MAX_VALUE;
+		}
+
+		int bestDir = Direction.NONE;
+		int bestVal = Integer.MAX_VALUE;
+		for (int i = 0; i < dirs.length; i++)
+		{
+			if (dirs[i] < bestVal)
 			{
-				if (level.canMove(Direction.RIGHT, gX, gY)) return Direction.RIGHT;
-			}
-			else
-			{
-				if (level.canMove(Direction.LEFT, gX, gY)) return Direction.LEFT;
-			}
-			if (gY > pY) // pacman is to the top, move to bottom
-			{
-				if (level.canMove(Direction.DOWN, gX, gY)) return Direction.DOWN;
-			}
-			else 
-			{
-				if (level.canMove(Direction.UP, gX, gY)) return Direction.UP;	
+				bestVal = dirs[i];
+				bestDir = i;
 			}
 		}
-		else // try to increase Y dist
-		{
-			if (gY > pY) // pacman is to the top, move to bottom
-			{
-				if (level.canMove(Direction.DOWN, gX, gY)) return Direction.DOWN;
-			}
-			else 
-			{
-				if (level.canMove(Direction.UP, gX, gY)) return Direction.UP;	
-			}
-			if (gX > pX) // pacman is to the left, move right
-			{
-				if (level.canMove(Direction.RIGHT, gX, gY)) return Direction.RIGHT;
-			}
-			else
-			{
-				if (level.canMove(Direction.LEFT, gX, gY)) return Direction.LEFT;
-			}
-		}
-		return Direction.NONE;
-		//return RandomMovement.getNextMove(pawn, level); // scared shitless
+		return bestDir;
 	}
 }

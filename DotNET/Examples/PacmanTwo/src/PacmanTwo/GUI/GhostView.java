@@ -46,6 +46,8 @@ public class GhostView extends ImageView
 		int margin = (MazeCell.SIZE-images[0].getWidth(viewport))/2;
 		Ghost gh = (Ghost) ge;
 
+		if (gh.isDead()) return;
+
 		Image img;
 		if (Game.instance().getEvilPacman() != null)
 		{

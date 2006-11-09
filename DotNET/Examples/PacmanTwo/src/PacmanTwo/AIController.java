@@ -24,6 +24,11 @@ public class AIController extends Controller implements Tickable
 	protected java.util.Random random;
 
 	protected Game game;
+	protected boolean smart;
+	/**
+	 * This makes the ghost chase you even more agressively, but FPS will suffer
+	 */
+	protected boolean verySmart = false;
 
 	public AIController()
 	{
@@ -56,6 +61,15 @@ public class AIController extends Controller implements Tickable
 		game.removeTickElement(this);
 	}
 
+	public void setPawn(Pawn inval)
+	{
+		//super.setPawn(inval); // <-- not allowed for now because of a runtime issue
+		pawn = inval;
+		Ghost g = (Ghost) inval;
+		if (g == null) return;
+		smart = g.getId() == 0; // only Blinky is smart
+	}
+
 	public int getDirection()
 	{
 		return direction;
@@ -79,13 +93,17 @@ public class AIController extends Controller implements Tickable
 	 */
 	public boolean isSmart()
 	{
-		//TODO: deadlock!!!!
-		return false;
+		return smart;
 		/*
 		Ghost g = (Ghost) pawn;
 		if (g == null) return false;
 		int id = g.getId();
 		return id == 0; // only Blinky is smart		
 		*/
+	}
+
+	public boolean isVerySmart()
+	{
+		return smart && verySmart;
 	}
 }

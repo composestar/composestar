@@ -18,10 +18,9 @@ concern DynamicStrategy in PacmanTwo
 		conditions
 			isEvil : game.hasEvilPacman();
 			isSmart : inner.isSmart();
-		/*
+			isVerySmart : inner.isVerySmart();
 		inputfilters
-			smarty : Dispatch = { isSmart => [*.ponder] inner.getNextMove }
-		*/
+			smarty : Dispatch = { isVerySmart => [*.ponder] inner.getNextMove }
 		outputfilters
 			setstrat : Send = { 
 				!isEvil & isSmart => [*.doGetNextMove] stalker.getNextMoveNS ,

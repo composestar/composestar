@@ -42,6 +42,9 @@ public class PacmanView extends ImageView
 	{
 		int margin = (MazeCell.SIZE-images[0].getWidth(viewport))/2;
 		Pacman pm = (Pacman) ge;
+
+		if (pm.isDead()) return;
+
 		g.drawImage(getImage(pm, delta), margin + (int) Math.round(pm.getX()*MazeCell.SIZE), margin + (int) Math.round(pm.getY()*MazeCell.SIZE), viewport);
 	}
 

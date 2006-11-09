@@ -35,6 +35,7 @@ public abstract class Pawn extends GameElement
 
 	protected float respawnDelay;
 	protected float defaultRespawnDelay;
+	protected boolean dead;
 	
 	/**
 	 * cells per second
@@ -63,6 +64,7 @@ public abstract class Pawn extends GameElement
 
 	public void died()
 	{
+		dead = true;
 		if (lives > 0) 
 		{
 			delayedRestart();
@@ -90,6 +92,7 @@ public abstract class Pawn extends GameElement
 	 */
 	public void restart()
 	{
+		dead = false;
 		direction = Direction.LEFT;
 		lives--;
 		dx = 0;
@@ -105,6 +108,13 @@ public abstract class Pawn extends GameElement
 	public boolean isHuman()
 	{
 		return (controller != null) && controller.isHumanControlled();
+	}
+
+	/**
+	 */
+	public boolean isDead()
+	{
+		return dead;
 	}
 
 	/**
@@ -135,7 +145,7 @@ public abstract class Pawn extends GameElement
 			respawnDelay -= delta;
 			if (respawnDelay < 0) restart();
 		}
-		else if ((speed > 0) && (controller != null))
+		else if ((speed > 0) && (controller != null) && !dead)
 		{
 			move(delta);
 		}
@@ -329,7 +339,7 @@ public abstract class Pawn extends GameElement
 
 	protected boolean doTouchingCheck(GameElement ge)
 	{
-		return (ge != this);
+		return (ge != this) && (!(ge instanceof Pawn) || ((Pawn) ge).isDead());
 	}
 
 	/**
