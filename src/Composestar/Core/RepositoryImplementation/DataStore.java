@@ -187,42 +187,40 @@ public class DataStore implements Serializable, Cloneable
 	 * @param id  String The ID of the Object, needed for further reference.
 	 * @param obj Object The Object to be stored.
 	 * @return String  The id of the stored object.
-	 *
-	 * @modelguid {604AB3CA-7D86-4EF7-B974-6995377AA3DD}
-	 * @roseuid 401FAA620233
 	 */
-	public String addObject(String id, Object obj) {
+	public String addObject(String id, Object obj)
+	{
+//		if (obj instanceof ConcernReference)
+//		{
+//			ConcernReference cref = (ConcernReference)obj;
+//			Debug.out(Debug.MODE_DEBUG,"DataStore","Adding object '" + id + "' to map with id '" + cref.getName()+"'.");
+//		}
 
-		/*if (obj instanceof ConcernReference)
-	  {
-	  		ConcernReference cref = (ConcernReference)obj;
-	  		Debug.out(Debug.MODE_DEBUG,"DataStore","Adding object '" + id + "' to map with id '" + cref.getName()+"'.");
-	  }*/
-		// Some thing with an already present id is added :(
-		if(map.get(id) != null)
+		Object old = map.get(id);
+		if (old != null)
 		{
-			if(map.get(id) instanceof Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)
+			if (old instanceof Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)
 			{
-				if(obj instanceof Composestar.Core.CpsProgramRepository.PrimitiveConcern)
+				if (obj instanceof Composestar.Core.CpsProgramRepository.PrimitiveConcern)
 				{
-					Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern cpsconcern = (Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)map.get(id);
+					Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern cpsconcern = (Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)old;
 					cpsconcern.addDynObject("IMPLEMENTATION",obj);
 					map.put(id,cpsconcern);
 				}
 			}
-			else if(map.get(id) instanceof Composestar.Core.CpsProgramRepository.PrimitiveConcern)
+			else if (old instanceof Composestar.Core.CpsProgramRepository.PrimitiveConcern)
 			{
-				if(obj instanceof Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)
+				if (obj instanceof Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)
 				{
 					Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern cpsconcern = (Composestar.Core.CpsProgramRepository.CpsConcern.CpsConcern)obj;
-					cpsconcern.addDynObject("IMPLEMENTATION",map.get(id));
+					cpsconcern.addDynObject("IMPLEMENTATION",old);
 					map.put(id,cpsconcern);
 				}
 			}
 			else
 			{
 				// OOPS this is very bad!!!
-				if (DEBUG) Debug.out(Debug.MODE_WARNING,"DataStore","Overwriting existing object '" + map.get(id) + "' with id '" + id + "' with new object '" + obj + "'...");
+				if (DEBUG) Debug.out(Debug.MODE_WARNING,"DataStore","Overwriting existing object '" + old + "' with id '" + id + "' with new object '" + obj + "'...");
 				map.put(id, obj);
 			}
 		}

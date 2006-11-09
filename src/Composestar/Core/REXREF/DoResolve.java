@@ -96,9 +96,10 @@ public class DoResolve {
       ConcernReference ref = (ConcernReference) it.next();
 
       // fetch the Concern with the same name as the reference references to
-      Concern concern = (Concern)ds.getObjectByID(ref.getQualifiedName());
+      String qname = ref.getQualifiedName();
+      Concern concern = (Concern)ds.getObjectByID(qname);
       if (concern == null) {
-        throw new ModuleException("ConcernReference '" + ref.getQualifiedName() + "' cannot be resolved (are you referencing a non-existent concern or is the startup object incorrect?)", "REXREF", ref);
+        throw new ModuleException("ConcernReference '" + qname + "' cannot be resolved (are you referencing a non-existent concern or is the startup object incorrect?)", "REXREF", ref);
       }
 
       ref.setRef(concern);
