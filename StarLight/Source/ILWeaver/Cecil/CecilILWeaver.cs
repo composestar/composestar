@@ -295,17 +295,15 @@ namespace Composestar.StarLight.ILWeaver
             // Save debug
             try
             {
-                // Disabled for now. Saving raises an exception.
-                if (false && File.Exists(_configuration.DebugImagePath))
+                if (File.Exists(_configuration.DebugImagePath))
                 {
-                    //if (pdbReader != null)
-                    //{
-                    //    pdbReader.Dispose();
-                    //    pdbReader = null;
-                    //}
-                    
-                    ISymbolWriter pdbWriter = new PdbFactory().CreateWriter(targetAssembly.MainModule, _configuration.InputImagePath);
-                    targetAssembly.MainModule.SaveSymbols(pdbWriter);
+                    if (pdbReader != null)
+                    {
+                        pdbReader.Dispose();
+                        pdbReader = null;
+                    }
+
+                    targetAssembly.MainModule.SaveSymbols(Path.GetDirectoryName(_configuration.InputImagePath));
                 }
             }
             catch (Exception ex)
@@ -582,7 +580,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // Getting the first instruction of the current method
             Instruction ins = method.Body.Instructions[0];
-
+ 
             //Console.WriteLine("Method {0}", method.ToString());
 
             //foreach (Instruction instruct in method.Body.Instructions)
@@ -619,10 +617,6 @@ namespace Composestar.StarLight.ILWeaver
             // Only add instructions if we have instructions
             if (visitor.Instructions.Count > 0)
             {
-                // Update the sequence point. Our instruction is now placed at the top. 
-                // This should have the same sequence as the previous first instruction.
-                visitor.Instructions[0].SequencePoint = ins.SequencePoint;
- 
                 // Add the instructions
                 int instructionsCount = 0;
                 instructionsCount += InsertBeforeInstructionList(ref worker, ins, visitor.Instructions);
