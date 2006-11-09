@@ -215,7 +215,7 @@ namespace Composestar.Repository
             if (string.IsNullOrEmpty(filename))
                 throw new ArgumentNullException("filename");
 
-            ObjectXMLSerializer<WeaveSpecification>.Save(weaveSpecification, filename, SerializedFormat.Document);
+            ObjectXMLSerializer<WeaveSpecification>.Save(weaveSpecification, filename, SerializedFormat.DocumentCompressed);
 
             return true;
         }

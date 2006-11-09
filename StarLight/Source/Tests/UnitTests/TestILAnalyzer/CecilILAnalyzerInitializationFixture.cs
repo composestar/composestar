@@ -10,7 +10,7 @@ using Microsoft.Practices.ObjectBuilder;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions; 
 using Composestar.StarLight.ILAnalyzer;
-using Composestar.Repository.LanguageModel;
+using Composestar.Repository;
   
 using TestILAnalyzer.DIConfiguration;
 using TestILAnalyzer.Mocks;
@@ -45,7 +45,9 @@ namespace Composestar.StarLight.ILAnalyzer.Tests
 
 
         [TestMethod]
+#if !NUNIT
         [DeploymentItem("TestTarget.exe")]
+#endif
         public void CanCreateAnalyzerThroughDIHelper()
         {
             CecilILAnalyzer analyzer = DIHelper.CreateObject<CecilILAnalyzer>(svcContainer);
@@ -65,7 +67,9 @@ namespace Composestar.StarLight.ILAnalyzer.Tests
        
         [TestMethod]
         [ExpectedException(typeof(BadImageFormatException))]
+#if !NUNIT
         [DeploymentItem("InvalidImage.exe")]
+#endif
         public void InitializeThrowsBadImageExceptionOnInvalidInputImage()
         {
             CecilAnalyzerConfiguration configuration = CecilAnalyzerConfiguration.CreateDefaultConfiguration(string.Empty);

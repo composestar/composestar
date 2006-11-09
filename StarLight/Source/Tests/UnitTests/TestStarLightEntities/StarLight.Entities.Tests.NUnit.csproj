@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{97BF42F8-5CFF-44F6-8A6B-04E36FE47800}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>TestStarLightEntities</RootNamespace>
+    <AssemblyName>TestStarLightEntities</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NUNIT</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\WINDOWS\assembly\GAC_MSIL\Microsoft.VisualStudio.QualityTools.UnitTestFramework\8.0.0.0__b03f5f7f11d50a3a\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AndFixture.cs" />
+    <Compile Include="AssemblyConfigFixture.cs" />
+    <Compile Include="AssemblyElementFixture.cs" />
+    <Compile Include="BlockFixture.cs" />
+    <Compile Include="BranchFixture.cs" />
+    <Compile Include="CallElementFixture.cs" />
+    <Compile Include="CaseFixture.cs" />
+    <Compile Include="ConcernElementFixture.cs" />
+    <Compile Include="ConditionExpressionFixture.cs" />
+    <Compile Include="ConditionFixture.cs" />
+    <Compile Include="ConditionLiteralFixture.cs" />
+    <Compile Include="ConfigurationFixture.cs" />
+    <Compile Include="ContextInstructionFixture.cs" />
+    <Compile Include="ExternalFixture.cs" />
+    <Compile Include="FalseFixture.cs" />
+    <Compile Include="FieldElementFixture.cs" />
+    <Compile Include="FilterActionElementFixture.cs" />
+    <Compile Include="FilterActionFixture.cs" />
+    <Compile Include="FilterTypeElementFixture.cs" />
+    <Compile Include="InlineInstructionFixture.cs" />
+    <Compile Include="InternalFixture.cs" />
+    <Compile Include="JumpFixture.cs" />
+    <Compile Include="LabelFixture.cs" />
+    <Compile Include="MethodBodyFixture.cs" />
+    <Compile Include="MethodElementFixture.cs" />
+    <Compile Include="NotFixture.cs" />
+    <Compile Include="OrFixture.cs" />
+    <Compile Include="ParameterElementFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceFixture.cs" />
+    <Compile Include="SerializableDictionaryFixture.cs" />
+    <Compile Include="SwitchFixture.cs" />
+    <Compile Include="TrueFixture.cs" />
+    <Compile Include="TypeElementFixture.cs" />
+    <Compile Include="WeaveCallFixture.cs" />
+    <Compile Include="WeaveMethodFixture.cs" />
+    <Compile Include="WeaveSpecificationFixture.cs" />
+    <Compile Include="WeaveTypeFixture.cs" />
+    <Compile Include="WhileFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\StarLightEntities\StarLightEntities.csproj">
+      <Project>{8E92B6F7-3D6E-4B01-B465-7B600E4E2FF9}</Project>
+      <Name>StarLightEntities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+</Project>

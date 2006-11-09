@@ -66,7 +66,9 @@ namespace Composestar.StarLight.ILAnalyzer.Tests
         /// Test target must return assembly
         /// </summary>
         [TestMethod]
+#if !NUNIT
         [DeploymentItem(TestInputImage)]
+#endif        
         public void TestTargetMustReturnCorrectAssembly()
         {
             // set up model 
