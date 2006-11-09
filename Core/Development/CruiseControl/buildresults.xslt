@@ -231,7 +231,7 @@
 	<xsl:template name="svn-revision">
 		<xsl:param name="revid" />
 		<tr class="svn_revision">
-			<td class="asis"><xsl:value-of select="$revid" /></td>
+			<td class="asis"><a href="http://composestar.svn.sourceforge.net/viewvc/composestar?view=rev&amp;revision={$revid}"><xsl:value-of select="$revid" /></a></td>
 			<td nowrap="nowrap"><xsl:value-of select="//modification[revision=$revid]/user" /></td>	
 			<td nowrap="nowrap"><xsl:value-of select="//modification[revision=$revid]/date" /></td>		
 			<td colspan="2" class="withws"><xsl:value-of select="//modification[revision=$revid]/comment" /></td>
