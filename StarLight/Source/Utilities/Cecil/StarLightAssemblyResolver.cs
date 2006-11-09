@@ -38,6 +38,9 @@ namespace Composestar.StarLight.Utilities
         /// <param name="binFolder">The search folder containing the assemblies.</param>
         public StarLightAssemblyResolver(string binFolder)
         {
+            if (binFolder == null)
+                throw new ArgumentNullException("binFolder");
+
             _binFolder = binFolder;
             _cache = new Dictionary<string, AssemblyDefinition>();
         }
