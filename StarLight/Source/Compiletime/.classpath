@@ -3,6 +3,8 @@
 	<classpathentry excluding="AssemblyInfo.*" kind="src" path=""/>
 	<classpathentry kind="src" path="/ComposeStar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/ComposeStar/StarLight/Libraries/db4o/db4o-5.7-java1.2.jar"/>
+	<classpathentry kind="lib" path="lib/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="lib/xbean.jar"/>
+	<classpathentry kind="lib" path="lib/xmltypes.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
