@@ -120,7 +120,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         private MethodReference GetMethodToCall(ICecilInliningInstructionVisitor visitor,
             FilterAction filterAction, TypeDefinition parentType)
         {
-            if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
+            if (filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
                 filterAction.SubstitutionTarget.Equals(FilterAction.SelfTarget))
             {
                 return CecilUtilities.ResolveMethod(parentType, filterAction.SubstitutionSelector, m_JpcTypes);
@@ -136,6 +136,12 @@ namespace Composestar.StarLight.Weaving.Strategies
 
                 MethodDefinition md = CecilUtilities.ResolveMethod(target.FieldType, 
                     filterAction.SubstitutionSelector, m_JpcTypes);
+
+                if (md == null)
+                {
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+                        Properties.Resources.MethodNotFound, target.FieldType, filterAction.SubstitutionSelector));
+                }
 
                 return visitor.TargetAssemblyDefinition.MainModule.Import(md);
             }
