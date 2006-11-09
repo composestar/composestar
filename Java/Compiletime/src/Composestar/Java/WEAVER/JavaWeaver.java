@@ -75,7 +75,7 @@ public class JavaWeaver implements WEAVER
 				dependency = ((Dependency) depsIt.next()).getFileName();
 				c.addClasspath(dependency);
 			}
-			c.addClasspath(p.getProperty("buildPath"));
+			c.addClasspath(p.getBasePath() + "obj/");
 
 			// weave
 			c.weave(p);
