@@ -139,6 +139,7 @@ namespace Mono.Cecil.Pdb {
 		public void Dispose ()
 		{
 			m_reader = null;
+            System.GC.Collect();
 		}
 	}
 }
