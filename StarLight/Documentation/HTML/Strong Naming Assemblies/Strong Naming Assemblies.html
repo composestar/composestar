@@ -1,0 +1,72 @@
+<html>
+<head>
+    <title>Strong Naming Assemblies</title>
+    <link href="..\styles.css" type="text/css" rel="STYLESHEET">
+    <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
+</head>
+<body topmargin="0" leftmargin="0">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%" class="TopHeaderRepeatSmall">
+                &nbsp;</td>
+            <td align="right">
+                <img src="images/logo_top_small.png" title="ComposeStar StarLight" /></td>
+        </tr>
+    </table>
+    <div id="mainSection">
+        <div id="mainBody">
+            <h1 class="heading">
+                Strong Naming Assemblies
+            </h1>
+            <p>
+                Microsoft's Strong Naming facilities let you, at build time, or shortly after, sign
+                assemblies. This has several consequences:
+                <ul>
+                    <li>Assemblies can verify that libraries are signed by the appropriate vendor. Even
+                        more important you can verify the assembly you are using is exactly the one you
+                        think you are using and that it's not a different version and that it hasn't been
+                        tampered with.</li>
+                    <li>Some degree of temperproofing. All strong named assemblies have the signature and
+                        associated public key tacked on to the end of the assembly and the .NET runtime
+                        will validate that these match. There are ways around this but it raises the bar.</li>
+                    <li>Libraries can even verify that callers are signed by a particular key. So vendors
+                        can build libraries that can only be used by their applications.</li></ul>
+            </p>
+            <p>
+                When an assembly is strongly named the process is something like this:<ul>
+                    <li>A unique hash is generated for the assembly based on the file contents</li>
+                    <li>The unique hash is signed using the supplied key file</li>
+                    <li>The signature + public key are appended to the assembly</li></ul>
+                Now when loading a strongly named assembly the .NET runtime checks the signature
+                on the assembly using the public key that is embedded in the assembly. Assuming
+                the signature and public key are left intact, any tampering to the assembly will
+                become evident. However, one can simple tamper with the assembly and resign using
+                a new key and attach that in place of the existing.
+            </p>
+            <p>
+                As weaving an assembly changes the file contents, the unique hash of a strong named
+                assembly will no longer be valid. The previously strong named assembly has changed
+                to a delay-signed assembly. As long as we have access to the keyfile we can re-sign
+                the assembly after weaving. Re-signing can be done with the <i>SN utility</i>, which
+                ships with the .NET Framework.
+                <br />
+                Example: <code>sn -R myassembly.dll mykey.snk</code>
+            </p>
+            <p>
+                Integration of the re-signing of assemblies into the msbuild files can be done by
+                overriding the <i>AfterWeave</i> target:
+                <br />
+                <code><span style="color: blue">&lt;</span><span style="color: maroon">Target</span>
+                    <span style="color: red">Name</span><span style="color: blue">="AfterWeave"&gt;<br />
+                    </span>&nbsp; &nbsp; <span style="color: blue">&lt;</span><span style="color: maroon">Exec</span>
+                    <span style="color: red">Command</span><span style="color: blue">="sn -R $(OutDir)myassembly.dll
+                        mykey.snk" /&gt;</span>
+                    <br />
+                    <span style="color: blue">&lt;/<span style="color: maroon">Target</span>&gt;</span>
+                </code>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+<!-- @SortOrder 6 -->
