@@ -392,13 +392,26 @@ This target will be called whenever the Clean target is invoked.
 
   <!--ILAnalyzerRunner target -->
   <Target Name="ILAnalyzerRunner">
-    <Message Text="Collecting and analyzing assemblies." />
+    <Message Text="Collecting and analyzing assemblies."/>
 
-    <IlAnalyzerTask ReferencedAssemblies="@(ReferencePath)" ReferencedTypes="@(ReferencedTypes)" 
-        AssemblyFiles="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')" 
-        RepositoryFilename="$(RepositoryFilename)" BinFolder="$(ProjectDir)$(OutDir)" DoMethodCallAnalysis="$(HasOutputFilters)"
-        IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)">
-      <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty" />
+    <!-- was: @(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)') -->
+    <CreateItem Include="@(ReferenceCopyLocalPaths)">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
+    </CreateItem>
+
+    <CreateItem Include="@(MainAssembly)" Condition=" '$(CodeLanguage)' != '' ">
+      <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
+    </CreateItem>
+
+    <IlAnalyzerTask
+      ReferencedAssemblies="@(ReferencePath)"
+      ReferencedTypes="@(ReferencedTypes)"
+      AssemblyFiles="@(WeavableAssemblyFiles)"
+      RepositoryFilename="$(RepositoryFilename)"
+      BinFolder="$(ProjectDir)$(OutDir)"
+      DoMethodCallAnalysis="$(HasOutputFilters)"
+      IntermediateOutputPath="$(ProjectDir)$(BaseIntermediateOutputPath)$(StarLightFolder)">
+      <Output TaskParameter="AssembliesDirty" PropertyName="AssembliesDirty"/>
     </IlAnalyzerTask>
   </Target>
 

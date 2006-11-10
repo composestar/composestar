@@ -41,8 +41,6 @@ public class PathFinder
 	 */
 	public void initialize(JoinPointContext jpc)
 	{
-		System.out.println("jpc=" + jpc);
-		
 		Level level = (Level)jpc.get_Sender();		
 		System.out.println("level=" + level);
 		
@@ -50,7 +48,7 @@ public class PathFinder
 	}
 
 	/**
-	 * Returns and sorted array of directions, sorted on the fastes path
+	 * Returns a sorted array of directions, sorted on the fastest path
 	 */
 	public static int getDirectionTo(int fromX, int fromY, int toX, int toY)
 	{
@@ -59,7 +57,6 @@ public class PathFinder
 
 	protected int internalGetDirectionTo(int fromX, int fromY, int toX, int toY)
 	{
-		
 		return 0;
 	}
 }
