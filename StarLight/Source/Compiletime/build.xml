@@ -19,7 +19,7 @@
 		<delete dir="${out.build}"/>
 		<delete dir="${out.dist}"/>
 		<delete>
-			<fileset dir="Composestar">
+			<fileset dir="src/Composestar">
 				<include name="**/*.class"/>
 			</fileset>
 		</delete>
@@ -31,7 +31,7 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init_local,build_xmltypes,compile_java,jar,compile_starlight" description="Build the StarLight compiletime"/>
+	<target name="build" depends="init_local,build_xmltypes,compile_starlight_java,jar" description="Build the StarLight compiletime"/>
 	
 	<target name="antlr">
 		<!--
@@ -42,7 +42,7 @@
 	</target>
 	
 	<target name="create_xsd">
-		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build"/>
+		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="release" />
 		<exec executable="xsd.exe" dir="..\StarLightEntities\bin\debug">
 			<arg line="Composestar.StarLight.Entities.dll" />
 			<arg line="/outputdir:../../obj" />
@@ -53,18 +53,15 @@
 		<xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="lib/xmltypes.jar" classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 	</target>
 	
-	<target name="compile_java">
-		<javac srcdir="Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
+	<target name="compile_starlight_java">
+		<javac srcdir="src/Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
+			<exclude name="**/_svn" />
 		</javac>
 	</target>
 			
-	<target name="compile_starlight">
-		<!-- ??? -->
-	</target>
-
 	<target name="jar">
-		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="Composestar/MANIFEST.MF"/>
+		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="src/Composestar/MANIFEST.MF"/>
 	</target>
 	
 	<taskdef name="xmlbean"

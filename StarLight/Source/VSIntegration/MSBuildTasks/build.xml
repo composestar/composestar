@@ -10,8 +10,7 @@
 		</and>
 	</condition>
 	<import file="${build.core}/common.xml" />
-
-	<property name="MSBuildTasks.dir" location=""/>
+	
 
 	<echo>Processing: ${ant.project.name} ...</echo>
 

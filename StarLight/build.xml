@@ -9,6 +9,11 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
+	<property name="out.qa.starlight"  value="Source${file.separator}Compiletime${file.separator}qa"/>
+  <property name="out.fxcop.starlight" value="Source${file.separator}qa" /> 
+
+	<property name="MSBuildTasks.dir" location="Source${file.separator}VSIntegration${file.separator}MSBuildTasks"/>
+	
 	<echo>Processing: ${ant.project.name} ...</echo>
 	
 	<description>
@@ -17,9 +22,16 @@
 	</description>
 
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
+	  <delete dir="${out.qa.starlight}" />
+	  <delete dir="${out.fxcop.starlight}" />
 		<ant target="clean" dir="Source/Compiletime" />
+		<ant target="clean" dir="Source/StarLight.Weaving.BuildIn" />
 		<ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
 		<ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
+	</target>
+	
+	<target name="build_compiletime" description="Build the StarLight Java Compile time implementation of Compose*">
+		<ant target="build" dir="Source/Compiletime" />
 	</target>
 	
 	<target name="build" description="Build the StarLight implementation of Compose*">
@@ -30,5 +42,53 @@
 	</target>
 
 	<target name="install" depends="build" description="Install the StarLight implementation of Compose*"/>
+	
+	<target name="init_qa" depends="init">
+		<mkdir dir="${out.qa.starlight}" />
+	</target>
+	
+	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
+		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa.starlight}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
+			<class location="${build.starlight}${file.separator}source${file.separator}Compiletime${file.separator}${out.build}" />
+			<sourcePath path="${build.starlight}${file.separator}source${file.separator}Compiletime${file.separator}src" />
+			<auxClasspath refid="lib.core" />
+			<auxClasspath>
+				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
+				<pathelement path="${build.starlight}${file.separator}libraries${file.separator}xmltypes.jar" />
+			</auxClasspath>
+		</findbugs>
+		<xslt in="${out.qa.starlight}${file.separator}findbugs-result.xml" out="${out.qa.starlight}${file.separator}findbugs-result.html" style="${findbugs.style}" />
+	</target>
+	
+	<target name="checkstyle" depends="init_qa" description="Run CheckStyle code proof reading">
+		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.starlight">
+			<formatter type="xml" toFile="${out.qa.starlight}${file.separator}checkstyle-result.xml" />
+			<property key="config_loc" value="${bin.checkstyle}" />
+			<FileSet dir="${build.starlight}${file.separator}source${file.separator}Compiletime${file.separator}src">
+				<include name="**/*.java" />
+				
+				<exclude name="Composestar/DotNET/DUMMER/JSharpLexer.java" />
+				<exclude name="Composestar/DotNET/DUMMER/JSharpRecognizer.java" />
+				<exclude name="Composestar/DotNET/DUMMER/JSharpTokenTypes.java" />
+			</FileSet>
+		</checkstyle>
+		<xslt in="${out.qa.starlight}${file.separator}checkstyle-result.xml" out="${out.qa.starlight}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
+	</target>
+	
+	<target name="build_codeanalysis" description="Build .net projects for code analysis">
+	  <msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="Debug" />
+	</target>
+	
+	<target name="fxcop_init" >
+	    <mkdir dir="${out.fxcop.starlight}" />           
+	</target>
+	
+	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">	
+      <fileset id="fxcop.src" dir="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug">
+        <include name="**/*.dll"/>
+        <exclude name="Mono*.*" />
+      </fileset>  
+  	<fxcop reportfile="${fxcopresults}${file.separator}fxcop.html" files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug\ComposeStar.StarLight.ContextInfo.Dll"/>
+	</target>
 	
 </project>
