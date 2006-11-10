@@ -71,9 +71,13 @@
 	<!-- install tasks -->
 	
 	<target name="install" depends="init" description="Copy the resulting binaries to the installation directory.">
-		<ant target="install" dir="${build.core}" />
+		<antcall target="install_core" />
 		<antcall target="install_dotnet" />
 		<antcall target="install_java" />	
+	</target>
+
+	<target name="install_core">
+		<ant target="install" dir="${build.core}" />		
 	</target>
 	
 	<target name="install_dotnet" if="enabled.dotnet">
@@ -85,6 +89,7 @@
 	</target>
 	
 	<!-- publish tasks -->
+	
 	<target name="publish">
 		<antcall target="publish_dotnet"/>
 	</target>
@@ -151,7 +156,8 @@
 	</target>
 
 	<!-- tests -->
-	<target name="test" depends="init" description="Execute system tests.">
+	
+	<target name="test" description="Execute system tests.">
 		<antcall target="test_core" />
 		<antcall target="test_dotnet" />
 		<antcall target="test_java" />
@@ -196,10 +202,10 @@
 	
 	<!-- do everything -->
 	<!-- note: "install" should imply "build" -->
-	<target name="install_test" depends="install,test"   description="Install and test the whole system"/>
+	<target name="install_test"   depends="install,test" description="Install and test the whole system"/>
 	<target name="required" depends="clean,install,test" description="Perform the required actions before allowing a commit." />	
-	<target name="cleaninstall" depends="clean,install"  description="Clean, compile, and then install" />
-	<target name="all" depends="clean,install,test,qa"   description="Recompile, install and test the whole system." />	
+	<target name="cleaninstall"  depends="clean,install" description="Clean, compile, and then install" />
+	<target name="all"   depends="clean,install,test,qa" description="Recompile, install and test the whole system." />	
 	
 	<target name="integration">
 		<antcall target="svn-update-all" />
@@ -236,18 +242,18 @@ If the build failed the cause will be listed at the end of the report.
 				<antMenuItem name="Build">
 					<antMenuItem name="Build all"   target="build"/>
 					<antMenuItem name="Rebuild all" target="rebuild"/>
-					<antMenuItem name="Core"        target="core"/>
+					<antMenuItem name="Core"        target="build_core"/>
 					<!-- unfortunately these ifs don't seem to work very well -->
-					<antMenuItem name="DotNET"      target="dotnet"    if="enabled.dotnet"/>
-					<antMenuItem name="StarLight"   target="starlight" if="enabled.starlight"/>
-					<antMenuItem name="Java"        target="java"      if="enabled.java"/>
+					<antMenuItem name="DotNET"      target="build_dotnet"    if="enabled.dotnet"/>
+					<antMenuItem name="StarLight"   target="build_starlight" if="enabled.starlight"/>
+					<antMenuItem name="Java"        target="build_java"      if="enabled.java"/>
 				<!--
-					<antMenuItem name="C"           target="c"         if="enabled.c"/>
+					<antMenuItem name="C"           target="build_c"         if="enabled.c"/>
 				-->
 				</antMenuItem>
 				<antMenuItem name="Plugin">
-					<antMenuItem name="DotNET" target="plugin_dotnet"  if="enabled.dotnet"/>
-					<antMenuItem name="Java"   target="plugin_java"    if="enabled.java"/>
+					<antMenuItem name="DotNET" target="plugin_dotnet" if="enabled.dotnet"/>
+					<antMenuItem name="Java"   target="plugin_java"   if="enabled.java"/>
 				</antMenuItem>
 				<antMenuItem name="Install">
 					<antMenuItem name="Install"   target="install"/>

@@ -3,9 +3,7 @@
 
 	<condition property="build.core" value="${basedir}/../Core">
 		<and>
-			<not>
-				<isset property="build.core" />
-			</not>
+			<not><isset property="build.core"/></not>
 			<available file="${basedir}/../Core/common.xml" />
 		</and>
 	</condition>
@@ -30,5 +28,5 @@
 		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" />
 		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
-
+	
 </project>
