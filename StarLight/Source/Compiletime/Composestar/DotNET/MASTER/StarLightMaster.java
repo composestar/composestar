@@ -166,7 +166,12 @@ public class StarLightMaster extends Master
 		}
 		Configuration.instance().getPathSettings().addPath("Composestar", configContainer.getInstallFolder() + "\\" );
 
-
+		// Enable INCRE
+		ModuleSettings increSettings = new ModuleSettings();
+		increSettings.setName("INCRE");
+		increSettings.addProperty("enabled", "true");
+		Configuration.instance().getModuleSettings().addModule("INCRE", increSettings);
+		
 		// Set FILTH input file
 		ModuleSettings filthSettings = new ModuleSettings();
 		filthSettings.setName("FILTH");
@@ -215,6 +220,8 @@ public class StarLightMaster extends Master
 				m.execute(resources);
 				Debug.out(Debug.MODE_DEBUG, "INCRE", m.getName() + " executed in " + incre.getReporter().getTotalForModule(m.getName(), INCRETimer.TYPE_ALL) + " ms");
 			}
+			
+			incre.storeHistory();
 
 			// Shutdown
 			shutdown();
@@ -244,7 +251,7 @@ public class StarLightMaster extends Master
 
 
 	private void shutdown() throws IOException
-	{
+	{		
 		//write config file:
 		File file = new File(configFileName);
 		configDocument.save(file);
