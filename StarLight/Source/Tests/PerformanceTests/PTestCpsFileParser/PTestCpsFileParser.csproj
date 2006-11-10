@@ -30,11 +30,10 @@
   <ItemGroup>
     <Reference Include="NTime.Framework, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Libraries\NTime\NTime.Framework.dll</HintPath>
+      <HintPath>..\..\..\..\..\Core\Development\NTime\NTime.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.configuration" /> 
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
