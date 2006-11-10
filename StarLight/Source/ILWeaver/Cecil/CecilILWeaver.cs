@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis; 
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -18,8 +19,6 @@ using Mono.Cecil.Pdb;
 using Composestar.StarLight.Entities.WeaveSpec;
 using Composestar.StarLight.Entities.WeaveSpec.Instructions;
 using Composestar.StarLight.Entities.LanguageModel; 
-
-using Composestar.Repository;
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
@@ -36,7 +35,7 @@ namespace Composestar.StarLight.ILWeaver
     /// <summary>
     /// Cecil implementation of the IL Weaver.
     /// </summary>
-    public class CecilILWeaver : IILWeaver
+    public sealed class CecilILWeaver : IILWeaver
     {
 
         #region Private variables
@@ -125,7 +124,11 @@ namespace Composestar.StarLight.ILWeaver
             weaveSpec = _entitiesAccessor.LoadWeaveSpecification(_configuration.AssemblyConfiguration.WeaveSpecificationFile);
 
             if (weaveSpec == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.WeavingSpecNotFound, _configuration.AssemblyConfiguration.WeaveSpecificationFile, _configuration.AssemblyConfiguration.Name));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.WeavingSpecNotFound, 
+                    _configuration.AssemblyConfiguration.WeaveSpecificationFile, 
+                    _configuration.AssemblyConfiguration.Name));
+
             StoreTimeStamp(sw.Elapsed, "Loaded weave specification"); 
 
             // If empty, we can quit
@@ -253,7 +256,10 @@ namespace Composestar.StarLight.ILWeaver
                 } // try
                 catch (Exception ex)
                 {
-                    throw new ILWeaverException(String.Format(Properties.Resources.CouldNotLoadAssembly, _configuration.InputImagePath, ex.Message), ex);
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                        Properties.Resources.CouldNotLoadAssembly, 
+                        _configuration.InputImagePath, ex.Message),
+                        ex);
 
                 } // catch
                 finally
@@ -279,7 +285,9 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (EndOfStreamException)
             {
-                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, _configuration.InputImagePath));
+                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, 
+                    Properties.Resources.ImageIsBad,
+                    _configuration.InputImagePath));
             }
 
             return targetAssembly;
@@ -308,7 +316,9 @@ namespace Composestar.StarLight.ILWeaver
             }
             catch (Exception ex)
             {
-                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSavePdb, _configuration.DebugImagePath), _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.CouldNotSavePdb, _configuration.DebugImagePath), 
+                    _configuration.OutputImagePath, ex);
             }
 
             try
@@ -317,7 +327,9 @@ namespace Composestar.StarLight.ILWeaver
             } // try
             catch (Exception ex)
             {
-                throw new ILWeaverException(String.Format(Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath), _configuration.OutputImagePath, ex);
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.CouldNotSaveAssembly, _configuration.OutputImagePath),
+                    _configuration.OutputImagePath, ex);
             } // catch
         }
 
@@ -357,7 +369,7 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (Internal inter in weaveType.Internals)
             {
-                String internalTypeString = String.Format("{0}.{1}", inter.NameSpace, inter.Type);
+                String internalTypeString = String.Format(CultureInfo.InvariantCulture,  "{0}.{1}", inter.NameSpace, inter.Type);
                                 
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
                 if (internalTypeRef == null) 
@@ -402,9 +414,8 @@ namespace Composestar.StarLight.ILWeaver
                                 instructions.Add(worker.Create(OpCodes.Stfld, internalDef));
 
                                 // Add the instructions
-                                int noi = InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
-
-
+                                InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+                                
                                 // Log
                                 StoreInstructionLog(instructions, "Internal code added to {0} for internal {1}", constructor.ToString(), internalDef.ToString());
                             }
@@ -451,7 +462,8 @@ namespace Composestar.StarLight.ILWeaver
             {             
                 externalTypeRef = CecilUtilities.ResolveType(external.Type, external.Assembly, "");
                 if (externalTypeRef == null) 
-                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, external.Type));
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+                        Properties.Resources.TypeNotFound, external.Type));
 
                 externalAttrs = Mono.Cecil.FieldAttributes.Private;
 
@@ -467,9 +479,16 @@ namespace Composestar.StarLight.ILWeaver
                 _weaveStats.ExternalsAdded++;
 
                 // Get the method referenced by the external
-                MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, String.Format("{0}.{1}", external.Reference.NameSpace, external.Reference.Target), external.Assembly, "");
+                MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, 
+                    String.Format(CultureInfo.InvariantCulture, "{0}.{1}", external.Reference.NameSpace, external.Reference.Target),
+                    external.Assembly, "");
+
                 if (initMethodDef == null) 
-                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound, external.Reference.Selector, external.Reference.Target, external.Assembly));
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+                        Properties.Resources.MethodNotFound, 
+                        external.Reference.Selector, 
+                        external.Reference.Target, 
+                        external.Assembly));
 
                 MethodReference initMethodRef = targetAssembly.MainModule.Import(initMethodDef);
 
@@ -490,7 +509,7 @@ namespace Composestar.StarLight.ILWeaver
                             instructions.Add(worker.Create(OpCodes.Stfld, externalDef));
 
                             // Add the instructions
-                            int noi = InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
+                            InsertBeforeInstructionList(ref worker, constructor.Body.Instructions[0], instructions);
 
                             // Log
                             StoreInstructionLog(instructions, "External code added to {0} for external {1}", constructor.ToString(), externalDef.ToString()); 
@@ -738,14 +757,42 @@ namespace Composestar.StarLight.ILWeaver
                 }
 
             }
-        }
+        }        
+       
+        #region IDisposable
 
         /// <summary>
         /// Cleans up any resources associated with this instance.
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);  // Finalization is now unnecessary
         }
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">if set to <c>true</c> then the managed resources are disposed.</param>
+        [SuppressMessage("Microsoft.Design", "CA1063")]
+        public void Dispose(bool disposing)
+        {
+            if (!m_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                }
+
+                // Dispose unmanaged resources
+            }
+
+            m_disposed = true;
+        }
+
+        private bool m_disposed;
+
+        #endregion
 
         #region Helper functions
              
@@ -756,7 +803,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="startInstruction">The start instruction.</param>
         /// <param name="instructionsToAdd">The instructions to add.</param>
         /// <returns></returns>
-        private int InsertBeforeInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+        private static int InsertBeforeInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
         {
             foreach (Instruction instr in instructionsToAdd)
             {
@@ -773,7 +820,8 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="startInstruction">The start instruction.</param>
         /// <param name="instructionsToAdd">The instructions to add.</param>
         /// <returns>The number of instructions inserted.</returns>
-        private int InsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification="Might be used in the future.")]
+        private static int InsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
         {
             foreach (Instruction instr in instructionsToAdd)
             {
@@ -791,7 +839,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="startInstruction">The start instruction.</param>
         /// <param name="instructionsToAdd">The instructions to add.</param>
         /// <returns></returns>
-        private int ReplaceAndInsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
+        private static int ReplaceAndInsertInstructionList(ref CilWorker worker, Instruction startInstruction, IList<Instruction> instructionsToAdd)
         {
             bool first = true;
             foreach (Instruction instr in instructionsToAdd)
@@ -817,7 +865,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="list">The list.</param>
         /// <param name="signature">The signature.</param>
         /// <returns></returns>
-        private WeaveMethod GetMethodFromList(List<WeaveMethod> list, String signature)
+        private static WeaveMethod GetMethodFromList(List<WeaveMethod> list, String signature)
         {
             foreach (WeaveMethod method in list)
             {
@@ -833,7 +881,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="weaveCalls">Weave calls</param>
         /// <param name="callSignature">Call signature</param>
         /// <returns>Inline instruction</returns>
-        private InlineInstruction GetOutputFilterForCall(List<WeaveCall> weaveCalls, string callSignature)
+        private static InlineInstruction GetOutputFilterForCall(List<WeaveCall> weaveCalls, string callSignature)
         {
             foreach (WeaveCall wc in weaveCalls)
             {
@@ -851,7 +899,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>
         /// 	<c>true</c> if the specified instruction is a method call instruction; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsCallInstruction(Instruction instruction)
+        private static bool IsCallInstruction(Instruction instruction)
         {
             return (instruction.OpCode == OpCodes.Call |
                     instruction.OpCode == OpCodes.Calli |
@@ -867,7 +915,7 @@ namespace Composestar.StarLight.ILWeaver
          /// <param name="arguments">The arguments.</param>
          private void StoreInstructionLog(IList<Instruction> instructions, string caption, params object[] arguments)
          {
-             StoreInstructionLog(instructions, String.Format(caption, arguments)); 
+             StoreInstructionLog(instructions, String.Format(CultureInfo.CurrentCulture, caption, arguments)); 
          }
 
         /// <summary>
@@ -900,8 +948,8 @@ namespace Composestar.StarLight.ILWeaver
         {
             if (_configuration.WeaveDebugLevel == CecilWeaverConfiguration.WeaveDebug.Detailed)
             {
-                string item = String.Format(caption, arguments);
-                item = String.Format("{0}^{1}", item, ts.TotalMilliseconds); 
+                string item = String.Format(CultureInfo.CurrentCulture, caption, arguments);
+                item = String.Format(CultureInfo.CurrentCulture, "{0}^{1}", item, ts.TotalMilliseconds); 
                 _weaveStats.TimingStack.Enqueue(item);   
             }
         }

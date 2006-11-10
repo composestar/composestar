@@ -64,7 +64,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             WeaveStrategyUtilities.SetJoinPointContext(visitor, methodReference, filterAction);
 
             // Do the advice-call
-            CallAdvice(visitor, filterAction, parentType, methodToCall, jpcVar);
+            AdviceActionWeaveStrategy.CallAdvice(visitor, filterAction, parentType, methodToCall, jpcVar);
 
             // Add nop to enable debugging
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Nop));
@@ -73,11 +73,12 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <summary>
         /// Weaves the call to the advice.
         /// </summary>
+        /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filteraction.</param>
         /// <param name="parentType">The type containing the original method.</param>
         /// <param name="methodToCall">The advice method.</param>
         /// <param name="jpcVar">The local variable containing the JoinPointContext.</param>
-        private void CallAdvice(ICecilInliningInstructionVisitor visitor,
+        private static void CallAdvice(ICecilInliningInstructionVisitor visitor,
             FilterAction filterAction, TypeDefinition parentType, MethodReference methodToCall,
             VariableDefinition jpcVar)
         {
@@ -110,13 +111,16 @@ namespace Composestar.StarLight.Weaving.Strategies
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodToCall));
 
         }
-          
+
         /// <summary>
         /// Returns the MethodReference to the advice method.
         /// </summary>
+        /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filteraction.</param>
         /// <param name="parentType">The type containing the original method.</param>
-        /// <returns>The MethodReference to the advice method.</returns>
+        /// <returns>
+        /// The MethodReference to the advice method.
+        /// </returns>
         private MethodReference GetMethodToCall(ICecilInliningInstructionVisitor visitor,
             FilterAction filterAction, TypeDefinition parentType)
         {

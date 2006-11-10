@@ -56,16 +56,25 @@ import Composestar.DotNET.MASTER.StarLightMaster;
 import Composestar.Utils.Debug;
 import Composestar.Utils.FileUtils;
 
+import composestar.dotNET.tym.entities.AndCondition;
 import composestar.dotNET.tym.entities.ArrayOfAssemblyConfig;
 import composestar.dotNET.tym.entities.AssemblyConfig;
+import composestar.dotNET.tym.entities.CaseInstruction;
 import composestar.dotNET.tym.entities.ContextType;
+import composestar.dotNET.tym.entities.FalseCondition;
 import composestar.dotNET.tym.entities.InlineInstruction;
+import composestar.dotNET.tym.entities.JumpInstruction;
+import composestar.dotNET.tym.entities.NotCondition;
+import composestar.dotNET.tym.entities.OrCondition;
 import composestar.dotNET.tym.entities.Reference;
+import composestar.dotNET.tym.entities.SwitchInstruction;
+import composestar.dotNET.tym.entities.TrueCondition;
 import composestar.dotNET.tym.entities.WeaveCall;
 import composestar.dotNET.tym.entities.WeaveMethod;
 import composestar.dotNET.tym.entities.WeaveSpecification;
 import composestar.dotNET.tym.entities.WeaveSpecificationDocument;
 import composestar.dotNET.tym.entities.WeaveType;
+import composestar.dotNET.tym.entities.WhileInstruction;
 
 public class StarLightEmitterRunner implements CTCommonModule
 {
@@ -590,7 +599,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitJump(Jump jump)
 		{
-			composestar.dotNET.tym.entities.Jump weaveJump = composestar.dotNET.tym.entities.Jump.Factory.newInstance();
+			JumpInstruction weaveJump = JumpInstruction.Factory.newInstance();
 
 			setLabel(jump, weaveJump);
 
@@ -604,7 +613,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitCase(Case caseInstruction)
 		{
-			composestar.dotNET.tym.entities.Case weaveCase = composestar.dotNET.tym.entities.Case.Factory.newInstance();
+			CaseInstruction weaveCase = CaseInstruction.Factory.newInstance();
 
 			setLabel(caseInstruction, weaveCase);
 
@@ -621,7 +630,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitSwitch(Switch switchInstruction)
 		{
-			composestar.dotNET.tym.entities.Switch weaveSwitch = composestar.dotNET.tym.entities.Switch.Factory
+			SwitchInstruction weaveSwitch = SwitchInstruction.Factory
 					.newInstance();
 			weaveSwitch.addNewCases();
 
@@ -635,9 +644,8 @@ public class StarLightEmitterRunner implements CTCommonModule
 			{
 				weaveCases.add(cases[i].accept(this));
 			}
-			weaveSwitch.getCases().setCaseArray(
-					(composestar.dotNET.tym.entities.Case[]) weaveCases
-							.toArray(new composestar.dotNET.tym.entities.Case[0]));
+			weaveSwitch.getCases().setCaseInstructionArray(
+					(CaseInstruction[]) weaveCases.toArray(new CaseInstruction[0]));
 
 			return weaveSwitch;
 		}
@@ -647,8 +655,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 		 */
 		public Object visitWhile(While whileInstruction)
 		{
-			composestar.dotNET.tym.entities.While weaveWhile = composestar.dotNET.tym.entities.While.Factory
-					.newInstance();
+			WhileInstruction weaveWhile = WhileInstruction.Factory.newInstance();
 			
 			setLabel(whileInstruction, weaveWhile);
 
@@ -667,7 +674,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			{
 				And and = (And) expression;
 
-				composestar.dotNET.tym.entities.And weaveAnd = composestar.dotNET.tym.entities.And.Factory
+				AndCondition weaveAnd = AndCondition.Factory
 						.newInstance();
 
 				weaveAnd.setLeft(translateConditionExpression(and.getLeft()));
@@ -679,7 +686,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			{
 				Or or = (Or) expression;
 
-				composestar.dotNET.tym.entities.Or weaveOr = composestar.dotNET.tym.entities.Or.Factory.newInstance();
+				OrCondition weaveOr = OrCondition.Factory.newInstance();
 
 				weaveOr.setLeft(translateConditionExpression(or.getLeft()));
 				weaveOr.setRight(translateConditionExpression(or.getRight()));
@@ -690,7 +697,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 			{
 				Not not = (Not) expression;
 
-				composestar.dotNET.tym.entities.Not weaveNot = composestar.dotNET.tym.entities.Not.Factory
+				NotCondition weaveNot = NotCondition.Factory
 						.newInstance();
 
 				weaveNot.setOperand(translateConditionExpression(not.getOperand()));
@@ -710,11 +717,11 @@ public class StarLightEmitterRunner implements CTCommonModule
 			}
 			else if (expression instanceof True)
 			{
-				return composestar.dotNET.tym.entities.True.Factory.newInstance();
+				return TrueCondition.Factory.newInstance();
 			}
 			else if (expression instanceof False)
 			{
-				return composestar.dotNET.tym.entities.False.Factory.newInstance();
+				return FalseCondition.Factory.newInstance();
 			}
 			else
 			{

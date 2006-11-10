@@ -22,8 +22,16 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// <summary>
     /// Utilities for specific weaving tasks like creating JoinPointContext objects and reading those objects.
     /// </summary>
-    public partial class WeaveStrategyUtilities
+    public sealed partial class WeaveStrategyUtilities
     {
+
+        /// <summary>
+        /// Disable creating of this class.
+        /// </summary>
+        private WeaveStrategyUtilities()
+        {
+
+        }
 
         /// <summary>
         /// Sets the current selector and target in the JoinPointContext. Note that these might be different
@@ -32,6 +40,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor</param>
         /// <param name="originalCall">The original call</param>
         /// <param name="filterAction">The filterAction</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Performance", "CA1801:AvoidUnusedParameters", Justification="May be needed in the future.")]
         public static void SetJoinPointContext(
             ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, FilterAction filterAction)

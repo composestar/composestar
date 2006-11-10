@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            And target = new And();
+            AndCondition target = new AndCondition();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            And target = new And();
+            AndCondition target = new AndCondition();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -102,7 +102,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void BranchIdTest()
         {
-            And target = new And();
+            AndCondition target = new AndCondition();
 
             int val = 0; // TODO: Assign to an appropriate value for the property
 
@@ -120,7 +120,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void LeftTest()
         {
-            And target = new And();
+            AndCondition target = new AndCondition();
 
             ConditionExpression val = null; // TODO: Assign to an appropriate value for the property
 
@@ -138,7 +138,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void RightTest()
         {
-            And target = new And();
+            AndCondition target = new AndCondition();
 
             ConditionExpression val = null; // TODO: Assign to an appropriate value for the property
 

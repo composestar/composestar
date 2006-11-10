@@ -102,9 +102,5 @@ namespace Composestar.StarLight.ILAnalyzer
             return new CecilAnalyzerConfiguration(repositoryFilename);
         }
 
-        internal void RuntimeValidate()
-        {
-
-        }
     }
 }

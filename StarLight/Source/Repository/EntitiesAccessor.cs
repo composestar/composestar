@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Threading;
+using System.Diagnostics.CodeAnalysis;  
  
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.Entities.Concerns;
@@ -23,11 +24,11 @@ namespace Composestar.Repository
     {
 
         #region Singleton Instance
-
         private static readonly EntitiesAccessor m_Instance = new EntitiesAccessor();
 
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Needed for singleton.", Scope = "Member", Target = "Composestar.Repository.EntitiesAccessor..cctor()")]
         static EntitiesAccessor()
         {
           
@@ -185,7 +186,7 @@ namespace Composestar.Repository
             return weaveSpecification;
         }
 
-        private Type[] _extraTypes = null;
+        private Type[] _extraTypes;
 
         /// <summary>
         /// Extra types
@@ -195,8 +196,8 @@ namespace Composestar.Repository
             get
             {
                 if (_extraTypes == null)
-                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(Case), typeof(Jump), typeof(Switch), typeof(While), typeof(ContextInstruction),
-                    typeof(And), typeof(ConditionExpression), typeof(ConditionLiteral), typeof(False), typeof(Not), typeof(Or), typeof(True) };
+                    _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(CaseInstruction), typeof(JumpInstruction), typeof(SwitchInstruction), typeof(WhileInstruction), typeof(ContextInstruction),
+                    typeof(AndCondition), typeof(ConditionExpression), typeof(ConditionLiteral), typeof(FalseCondition), typeof(NotCondition), typeof(OrCondition), typeof(TrueCondition) };
                 return _extraTypes; 
             } // return
         } // ExtraTypes
@@ -220,27 +221,7 @@ namespace Composestar.Repository
             return true;
         }
 
-        #endregion
-
-        /// <summary>
-        /// Formats the compressed filename.
-        /// </summary>
-        /// <param name="filename">The filename.</param>
-        /// <returns>Returns the filename with a .gzip at the end.</returns>
-        /// <exception cref="T:System.ArgumentNullException">Thrown when the filename is null or empty.</exception>
-        private string FormatCompressedFilename(string filename)
-        {
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
-
-            string gzipExtension = ".gzip";
-
-            if (filename.EndsWith(gzipExtension))
-                return filename;
-            else
-                return string.Concat(filename, gzipExtension);
-
-        }
+        #endregion            
     
     }
 }

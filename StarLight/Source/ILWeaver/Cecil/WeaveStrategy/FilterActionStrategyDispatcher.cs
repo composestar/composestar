@@ -5,6 +5,9 @@ using System.Text;
 using System.Security.Permissions;
 using System.IO;
 using System.Reflection;
+using System.Globalization;
+using System.Diagnostics.CodeAnalysis; 
+   
 using Microsoft.Win32;
 
 using Mono.Cecil;
@@ -28,6 +31,11 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
     /// </summary>
     public sealed class FilterActionStrategyDispatcher
     {
+        private FilterActionStrategyDispatcher()
+        {
+
+        }
+
         private static Dictionary<string, FilterActionWeaveStrategy> _strategyMapping;
         private static FilterActionWeaveStrategy _defaultStrategy = new DefaultWeaveStrategy();
         private static object _lockObject = new Object();
@@ -77,7 +85,6 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
 
             foreach (string filename in dir)
             {
-                string dll = Path.GetFileNameWithoutExtension(filename);
                 assembly = Assembly.LoadFrom(filename);
                   
                 Type[] types = assembly.GetTypes();
@@ -94,14 +101,16 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
                             {
                                 // Check if we already have this strategy
                                 if (_strategyMapping.ContainsKey(wsa.WeavingStrategyName))
-                                    throw new ILWeaverException(String.Format(Properties.Resources.WeaveStrategyNotUnique, wsa.WeavingStrategyName));
+                                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                                        Properties.Resources.WeaveStrategyNotUnique, wsa.WeavingStrategyName));
                                 else
                                     _strategyMapping.Add(wsa.WeavingStrategyName, strategy);
                             } // foreach  (wsa)
                         } // if
                         else
                         {
-                            throw new ILWeaverException(string.Format(Properties.Resources.WeaveStrategyAttributeNotFound, t.FullName, typeof(FilterActionWeaveStrategy).Name, typeof(WeaveStrategyAttribute).FullName));
+                            throw new ILWeaverException(string.Format(CultureInfo.CurrentCulture,
+                                Properties.Resources.WeaveStrategyAttributeNotFound, t.FullName, typeof(FilterActionWeaveStrategy).Name, typeof(WeaveStrategyAttribute).FullName));
                         } // else
                     } // if
                 } // foreach 
@@ -111,7 +120,8 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
             {
                 // We did not find any strategies. Although this is possible (only default strategy), we still require the dispatch, 
                 // advice, error and so on strategies.
-                throw new ILWeaverException(String.Format(Properties.Resources.NoWeavingStrategiesFound, strategiesPath)); 
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.NoWeavingStrategiesFound, strategiesPath)); 
             }
 
         }
@@ -120,12 +130,11 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
         /// Get weave strategies location
         /// </summary>
         /// <returns>String</returns>
+        [RegistryPermissionAttribute(System.Security.Permissions.SecurityAction.Demand,
+            Read = "HKEY_LOCAL_MACHINE\\Software\\Composestar\\StarLight")]
         private static string GetWeaveStrategiesLocation()
         {
-            // Retrieve the settings from the registry
-            RegistryPermission keyPermissions = new RegistryPermission(
-               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\Software\Composestar\StarLight");
-
+            
             RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
 
             if (regKey != null)

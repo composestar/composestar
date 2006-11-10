@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
- 
+using System.Diagnostics.CodeAnalysis;
+    
 namespace Composestar.StarLight.Entities.WeaveSpec
 {
     /// <summary>
@@ -11,6 +12,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
     /// </summary>
     [Serializable]
     [XmlRoot("Internal", Namespace = "Entities.TYM.DotNET.Composestar")]
+    [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces", Justification = "It is an internal, use the full namespace to eliminate conflicts with System.EnterrpiseServices.Internal.")]
     public class Internal
     {
         private string _name;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Globalization; 
 using Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor;
 #endregion
 
@@ -26,7 +27,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// <summary>
         /// Create inline instruction
         /// </summary>
-        public InlineInstruction()
+        protected InlineInstruction()
         {
 
         } // InlineInstruction()
@@ -35,7 +36,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Create inline instruction
         /// </summary>
         /// <param name="label">Label</param>
-        public InlineInstruction(int label)
+        protected InlineInstruction(int label)
         {
             _label = label;
         } // InlineInstruction(label)
@@ -64,13 +65,22 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// <param name="visitor">The visitor.</param>
         public void Accept(IVisitor visitor)
         {
-            visitor.VisitInlineInstruction(this);
-        } // Accept(visitor)
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
 
-        public override string ToString()
-        {
-            return string.Format("Label {0}:\n", _label.ToString());
+            visitor.VisitInlineInstruction(this);
         }
 
-    } // class InlineInstruction
-} // namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
+        /// <summary>
+        /// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+        /// </returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "Label {0}:\n", _label.ToString(CultureInfo.CurrentCulture));
+        }
+
+    } 
+} 

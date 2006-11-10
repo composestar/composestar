@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            While target = new While();
+            WhileInstruction target = new WhileInstruction();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ExpressionTest()
         {
-            While target = new While();
+            WhileInstruction target = new WhileInstruction();
 
             ContextExpression val = ContextExpression.HasMoreActions; // TODO: Assign to an appropriate value for the property
 
@@ -108,7 +108,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void InstructionsTest()
         {
-            While target = new While();
+            WhileInstruction target = new WhileInstruction();
 
             Block val = null; // TODO: Assign to an appropriate value for the property
 
@@ -126,7 +126,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            While target = new While();
+            WhileInstruction target = new WhileInstruction();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -142,7 +142,7 @@ namespace TestStarLightEntities
 
             Block instructions = null; // TODO: Initialize to an appropriate value
 
-            While target = new While(expression, instructions);
+            WhileInstruction target = new WhileInstruction(expression, instructions);
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");

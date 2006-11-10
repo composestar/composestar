@@ -170,6 +170,7 @@ namespace Composestar.StarLight.ContextInfo
             /// Gets or sets the method id.
             /// </summary>
             /// <value>The method id.</value>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             internal int MethodId
             {
                 get { return _methodId; }
@@ -182,6 +183,7 @@ namespace Composestar.StarLight.ContextInfo
             /// Gets or sets the instance.
             /// </summary>
             /// <value>The instance.</value>            
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             internal object Instance
             {
                 get { return _instance; }

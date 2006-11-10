@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;  
 using System.ComponentModel;
 #endregion
 
@@ -291,6 +292,8 @@ namespace Composestar.StarLight.ContextInfo
         /// </code>
         /// </example>
         [MethodImpl(MethodImplOptions.Synchronized)]
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", 
+            Justification="Use the GetArgumentValue method. The weaver could not easily determine if it had to inject a generic or non generic version of the GetArgumentValue method. So by using the word Generic in the method name, it is possible. If the weaver can detect the difference between generics and non generic methods, we can change the name of this method the <T>GetArgumentValue.")]
         public T GetGenericArgumentValue<T>(short ordinal)
         {
             ArgumentInfo ai;
@@ -539,6 +542,7 @@ namespace Composestar.StarLight.ContextInfo
         /// <exception cref="ArgumentNullException">
         /// Thrown when the <paramref name="key"/> is empty or <see langword="null"/>.
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification="Use the GetProperty method.")]
         public T GetGenericProperty<T>(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -663,7 +667,7 @@ namespace Composestar.StarLight.ContextInfo
     /// Argument attributes. This is a <see cref="T:System.FlagsAttribute" /> enumeration so multiple options are possible.
     /// </summary>
     [Flags]
-    public enum ArgumentAttributes : short
+    public enum ArgumentAttributes : int
     {
         /// <summary>
         /// Argument is an input argument.

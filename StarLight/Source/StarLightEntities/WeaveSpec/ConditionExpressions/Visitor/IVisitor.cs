@@ -17,13 +17,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor
         /// Visits the AND left part.
         /// </summary>
         /// <param name="and">The and.</param>
-        void VisitAndLeft(And and);
+        void VisitAndLeft(AndCondition and);
         
         /// <summary>
         /// Visits the AND right part.
         /// </summary>
         /// <param name="and">The and.</param>
-        void VisitAndRight(And and);
+        void VisitAndRight(AndCondition and);
 
         /// <summary>
         /// Visits the condition literal.
@@ -35,31 +35,31 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor
         /// Visits the false.
         /// </summary>
         /// <param name="falseObject">The false object.</param>
-        void VisitFalse(False falseObject);
+        void VisitFalse(FalseCondition falseObject);
         
         /// <summary>
         /// Visits the true.
         /// </summary>
         /// <param name="trueObject">The true object.</param>
-        void VisitTrue(True trueObject);
+        void VisitTrue(TrueCondition trueObject);
         
         /// <summary>
         /// Visits the not.
         /// </summary>
         /// <param name="not">The not.</param>
-        void VisitNot(Not not);
+        void VisitNot(NotCondition not);
         
         /// <summary>
         /// Visits the OR left part.
         /// </summary>
         /// <param name="or">The or.</param>
-        void VisitOrLeft(Or or);
+        void VisitOrLeft(OrCondition or);
 
         /// <summary>
         /// Visits the OR right part.
         /// </summary>
         /// <param name="or">The or.</param>
-        void VisitOrRight(Or or);
+        void VisitOrRight(OrCondition or);
 
     } // IVisitor
 } 

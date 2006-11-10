@@ -233,7 +233,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// Creates the services container.
         /// </summary>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer(CpsParserConfiguration configuration)
+        internal static IServiceProvider CreateContainer(CpsParserConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(CpsParserConfiguration), configuration);

@@ -48,7 +48,7 @@ namespace Composestar.StarLight.ILWeaver
         
         private IList<Instruction> _instructions = new List<Instruction>();
         private CilWorker _worker;
-        private int _numberOfBranches = 0;
+        private int _numberOfBranches;
         private MethodDefinition _method;
         private MethodDefinition _calledMethod;
         private AssemblyDefinition _targetAssemblyDefinition;
@@ -246,7 +246,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </summary>
         /// <param name="attrMono">The attr mono.</param>
         /// <returns></returns>
-        private ArgumentAttributes ConvertAttributes(Mono.Cecil.ParameterAttributes attrMono)
+        private static ArgumentAttributes ConvertAttributes(Mono.Cecil.ParameterAttributes attrMono)
         {
             ArgumentAttributes attr = ArgumentAttributes.In;
 
@@ -300,6 +300,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns>Returns the variable as a <see cref="T:Mono.Cecil.VariableDefinition"></see>.</returns>
         public VariableDefinition CreateLocalVariable(TypeReference type)
         {
+            if (type == null)
+                throw new ArgumentNullException("type"); 
+
             VariableDefinition var = new VariableDefinition(type);
             var.Name = type.ToString();
             Method.Body.InitLocals = true; 
@@ -312,25 +315,9 @@ namespace Composestar.StarLight.ILWeaver
 
         // Because we need local vars to store the object and type of arguments in, we have to add these local vars.
         // But only once, so these functions make sure we only have one of this variables
-        private VariableDefinition m_ObjectLocal;
-        private VariableDefinition m_TypeLocal;
         private VariableDefinition m_JpcLocal;  
         private VariableDefinition m_ActionStoreLocal;
-
-        /// <summary>
-        /// Creates the object ordinal.
-        /// </summary>
-        /// <returns></returns>
-        private VariableDefinition CreateObjectLocal()
-        {
-            if (m_ObjectLocal == null)
-            {
-                m_ObjectLocal = CreateLocalVariable(typeof(Object));
-            }
-
-            return m_ObjectLocal;
-        }
-
+           
         /// <summary>
         /// Creates the action store local.
         /// </summary>
@@ -344,21 +331,7 @@ namespace Composestar.StarLight.ILWeaver
 
             return m_ActionStoreLocal;
         }
-
-        /// <summary>
-        /// Creates the type ordinal.
-        /// </summary>
-        /// <returns></returns>
-        private VariableDefinition CreateTypeLocal()
-        {
-            if (m_TypeLocal == null)
-            {
-                m_TypeLocal = CreateLocalVariable(typeof(System.Type));
-            }
-
-            return m_TypeLocal;
-        }
-
+        
         /// <summary>
         /// Creates the join point context variable.
         /// </summary>
@@ -371,20 +344,7 @@ namespace Composestar.StarLight.ILWeaver
 
             return m_JpcLocal;
         }
-
-        
-
-        /// <summary>
-        /// Adds an instruction list to the Instructions list.
-        /// </summary>
-        /// <param name="instructions">The instructions.</param>
-        private void AddInstructionList(IList<Instruction> instructions)
-        {
-            foreach (Instruction instruction in instructions)
-            {
-                Instructions.Add(instruction);
-            }
-        }
+    
         #endregion
 
         #region Inlining Instructions Visitor Handlers
@@ -514,6 +474,9 @@ namespace Composestar.StarLight.ILWeaver
         /// <param name="filterAction">The filter action.</param>
         public void VisitFilterAction(FilterAction filterAction)
         {
+            if (filterAction == null)
+                throw new ArgumentNullException("filterAction"); 
+
             FilterActionWeaveStrategy strategy = FilterActionStrategyDispatcher.GetFilterActionWeaveStrategy(filterAction.Type);
 
             strategy.Weave(this, filterAction, CalledMethod);
@@ -523,7 +486,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Add a jump to another block
         /// </summary>
         /// <param name="jump"></param>
-        public void VisitJumpInstruction(Jump jump)
+        public void VisitJumpInstruction(JumpInstruction jump)
         {
             Instruction jumpToInstruction = GetJumpLabel(jump.Target);
             if (jumpToInstruction == null)
@@ -636,7 +599,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="whileInstr"></param>
-        public void VisitWhile(While whileInstr)
+        public void VisitWhile(WhileInstruction whileInstr)
         {
             // Create a start label
             whileInstr.Label = BranchLabelOffSet + _numberOfBranches;
@@ -670,7 +633,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="whileInstr">The while instruction.</param>
-        public void VisitWhileEnd(While whileInstr)
+        public void VisitWhileEnd(WhileInstruction whileInstr)
         {
             // Add the branch back to condition part
             Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(whileInstr.Label)));
@@ -690,7 +653,7 @@ namespace Composestar.StarLight.ILWeaver
         /// 
         /// </summary>
         /// <param name="switchInstr"></param>
-        public void VisitSwitch(Switch switchInstr)
+        public void VisitSwitch(SwitchInstruction switchInstr)
         {
 
             // Context instruction
@@ -698,7 +661,7 @@ namespace Composestar.StarLight.ILWeaver
 
             // The labels to jump to
             List<Instruction> caseLabels = new List<Instruction>();
-            foreach (Case caseElement in switchInstr.Cases)
+            foreach (CaseInstruction caseElement in switchInstr.Cases)
             {
                 caseLabels.Add(GetJumpLabel(caseElement.CheckConstant + 10000));
             }
@@ -716,7 +679,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Visits the switch end.
         /// </summary>
         /// <param name="switchInstr">The switch instr.</param>
-        public void VisitSwitchEnd(Switch switchInstr)
+        public void VisitSwitchEnd(SwitchInstruction switchInstr)
         {
             // Emit a label to jump to.
             Instructions.Add(GetJumpLabel(switchInstr.Label));
@@ -729,7 +692,7 @@ namespace Composestar.StarLight.ILWeaver
         /// 
         /// </summary>
         /// <param name="caseInstr"></param>
-        public void VisitCase(Case caseInstr)
+        public void VisitCase(CaseInstruction caseInstr)
         {
             // Add the label
             Instructions.Add(GetJumpLabel(caseInstr.CheckConstant + 10000));
@@ -739,7 +702,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Visits the case end.
         /// </summary>
         /// <param name="switchInstr">The switch instr.</param>
-        public void VisitCaseEnd(Switch switchInstr)
+        public void VisitCaseEnd(SwitchInstruction switchInstr)
         {
             // Add a jump to the end of the switch
             Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));

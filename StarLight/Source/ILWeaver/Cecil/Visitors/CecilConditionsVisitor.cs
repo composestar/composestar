@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
+ 
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
@@ -40,7 +42,7 @@ namespace Composestar.StarLight.ILWeaver
         #endregion
 
         #region Private variables
-        private int m_NumberOfBranches = 0;
+        private int m_NumberOfBranches;
         private Dictionary<int, Instruction> m_JumpInstructions = new Dictionary<int, Instruction>();
         private CecilInliningInstructionVisitor _visitor;
         private Type[] m_JpcTypes = new Type[1] { typeof(JoinPointContext) };
@@ -101,6 +103,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Weave configuration
         /// </summary>
         /// <returns>Configuration container</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private ConfigurationContainer WeaveConfiguration
         {
             get
@@ -229,7 +232,7 @@ namespace Composestar.StarLight.ILWeaver
                         
             Condition con = GetConditionByName(conditionLiteral.Name);
             if (con == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.ConditionNotFound, conditionLiteral.Name));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ConditionNotFound, conditionLiteral.Name));
 
             // Get the parenttype
             TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(_visitor.Method.DeclaringType);
@@ -248,8 +251,10 @@ namespace Composestar.StarLight.ILWeaver
             {
                 if(!Method.HasThis)
                 {
-                    throw new ILWeaverException(String.Format(Properties.Resources.StaticReferenceInternalExternal, 
-                        Method.Name, Method.DeclaringType.FullName));
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+                        Properties.Resources.StaticReferenceInternalExternal, 
+                        Method.Name, 
+                        Method.DeclaringType.FullName));
                 }
 
                 target = parentType.Fields.GetField(con.Reference.Target);
@@ -264,7 +269,7 @@ namespace Composestar.StarLight.ILWeaver
                 }
 
                 if(md == null)
-                    throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound2, con.Reference.Selector, con.Reference.Target, fieldType.FullName));
+                    throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.MethodNotFound2, con.Reference.Selector, con.Reference.Target, fieldType.FullName));
 
                 method = _visitor.TargetAssemblyDefinition.MainModule.Import(md);
             }
@@ -277,7 +282,11 @@ namespace Composestar.StarLight.ILWeaver
             }
 
             if (method == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.MethodNotFound, con.Reference.Selector, con.Reference.Fullname, con.Reference.Assembly));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
+                    Properties.Resources.MethodNotFound, 
+                    con.Reference.Selector, 
+                    con.Reference.Fullname, 
+                    con.Reference.Assembly));
 
 
             if (con.Reference.Target.Equals(Reference.InnerTarget) ||
@@ -369,7 +378,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Generate a 0, a false value.
         /// </remarks> 
         /// <param name="f">The f.</param>
-        public void VisitFalse(False falseCondition)
+        public void VisitFalse(FalseCondition falseObject)
         {
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4_0));
         }
@@ -381,7 +390,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Generate a 1, a true value
         /// </remarks> 
         /// <param name="t">The t.</param>
-        public void VisitTrue(True trueCondition)
+        public void VisitTrue(TrueCondition trueObject)
         {
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4_1));
         }
@@ -402,7 +411,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="not">The not.</param>
-        public void VisitNot(Not not)
+        public void VisitNot(NotCondition not)
         {
             Instructions.Add(Worker.Create(OpCodes.Ldc_I4_0));
             Instructions.Add(Worker.Create(OpCodes.Ceq));
@@ -427,7 +436,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks>         
         /// <param name="or">The or.</param>
-        public void VisitOrLeft(Or or)
+        public void VisitOrLeft(OrCondition or)
         {
             or.BranchId = BranchLabelOffSet + m_NumberOfBranches;
             m_NumberOfBranches = m_NumberOfBranches + 2;
@@ -445,7 +454,7 @@ namespace Composestar.StarLight.ILWeaver
         /// L_000c: stloc.2 // result
         /// </code>
         /// <param name="or">The or.</param>
-        public void VisitOrRight(Or or)
+        public void VisitOrRight(OrCondition or)
         {
             Instructions.Add(Worker.Create(OpCodes.Br_S, GetJumpLabel(or.BranchId + 1)));
             Instructions.Add(GetJumpLabel(or.BranchId));
@@ -472,7 +481,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="and">The and.</param>
-        public void VisitAndLeft(And and)
+        public void VisitAndLeft(AndCondition and)
         {
             and.BranchId = BranchLabelOffSet + m_NumberOfBranches;
             m_NumberOfBranches = m_NumberOfBranches + 2;
@@ -494,7 +503,7 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="and">The and.</param>
-        public void VisitAndRight(And and)
+        public void VisitAndRight(AndCondition and)
         {
             Instructions.Add(Worker.Create(OpCodes.Br_S, GetJumpLabel(and.BranchId + 1)));
             Instructions.Add(GetJumpLabel(and.BranchId));

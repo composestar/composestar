@@ -14,13 +14,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
     /// </summary>
     [Serializable]
     [XmlRoot("And", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class And : ConditionExpression, IVisitable
+    public class AndCondition : ConditionExpression, IVisitable
     {
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:And"/> class.
         /// </summary>
-        public And()
+        public AndCondition()
         {
 
         } // And()
@@ -81,6 +81,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
         /// <param name="visitor">The visitor.</param>
         public void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor"); 
+
             ((IVisitable)_left).Accept(visitor);
             visitor.VisitAndLeft(this);
             ((IVisitable)_right).Accept(visitor);

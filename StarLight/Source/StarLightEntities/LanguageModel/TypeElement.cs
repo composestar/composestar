@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Globalization; 
 
 namespace Composestar.StarLight.Entities.LanguageModel
 {
@@ -43,7 +44,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         [XmlIgnore]
         public string FullName
         {
-            get { return string.Format("{0}.{1}", _namespace, _name); } // get
+            get { return string.Format(CultureInfo.CurrentCulture, "{0}.{1}", _namespace, _name); } // get
         }
 
 
@@ -216,6 +217,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// <value>The methods.</value>
         [XmlArray("Methods")]
         [XmlArrayItem("Method")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<MethodElement> Methods
         {
             get { return _methods; }
@@ -230,6 +232,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// <value>The fields.</value>
         [XmlArray("Fields")]
         [XmlArrayItem("Field")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<FieldElement> Fields
         {
             get { return _fields; }
@@ -260,6 +263,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// <value>The attributes.</value>
         [XmlArray("Attributes")]
         [XmlArrayItem("Attribute")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<AttributeElement> Attributes
         {
             get

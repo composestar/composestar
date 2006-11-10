@@ -14,14 +14,14 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     /// </summary>
     [Serializable]
     [XmlRoot("Jump", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class Jump : InlineInstruction, IVisitable
+    public class JumpInstruction : InlineInstruction, IVisitable
     {
         private int _target;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Jump"/> class.
         /// </summary>
-        public Jump()
+        public JumpInstruction()
         {
 
         }
@@ -30,7 +30,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Initializes a new instance of the <see cref="T:Jump"/> class.
         /// </summary>
         /// <param name="target">The target.</param>
-        public Jump(int target)
+        public JumpInstruction(int target)
         {
             _target = target;
         } // Jump(target)
@@ -50,11 +50,14 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Accepts the specified visitor.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
-        public void Accept(IVisitor visitor)
+        public new void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             base.Accept(visitor);
             visitor.VisitJumpInstruction(this);
-        } // Accept(visitor)
+        } 
 
-    } // class Jump
+    } 
 }

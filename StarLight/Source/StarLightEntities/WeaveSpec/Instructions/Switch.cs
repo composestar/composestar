@@ -14,16 +14,16 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     /// </summary>
     [Serializable]
     [XmlRoot("Switch", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class Switch : InlineInstruction, IVisitable
+    public class SwitchInstruction : InlineInstruction, IVisitable
     {
 
         private ContextExpression _expression;
-        private List<Case> _cases = new List<Case>();
+        private List<CaseInstruction> _cases = new List<CaseInstruction>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Switch"/> class.
         /// </summary>
-        public Switch()
+        public SwitchInstruction()
         {
 
         } // Switch()
@@ -32,7 +32,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Initializes a new instance of the <see cref="T:Switch"/> class.
         /// </summary>
         /// <param name="expression">The expression.</param>
-        public Switch(ContextExpression expression)
+        public SwitchInstruction(ContextExpression expression)
         {
             _expression = expression;
         } // Switch(expression)
@@ -52,22 +52,25 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Gets or sets the cases.
         /// </summary>
         /// <value>The cases.</value>
-        public List<Case> Cases
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        public List<CaseInstruction> Cases
         {
-            get { return _cases; } // get
-            set { _cases = value; } // set
+            get { return _cases; } // get    
         } // Cases
 
         /// <summary>
         /// Accepts the specified visitor.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
-        public void Accept(IVisitor visitor)
+        public new void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             base.Accept(visitor);
             visitor.VisitSwitch(this);
 
-            foreach (Case caseItem in _cases)
+            foreach (CaseInstruction caseItem in _cases)
             {
                 caseItem.Accept(visitor);
                 visitor.VisitCaseEnd(this);

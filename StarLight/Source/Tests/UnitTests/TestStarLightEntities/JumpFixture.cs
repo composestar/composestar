@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            Jump target = new Jump();
+            JumpInstruction target = new JumpInstruction();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            Jump target = new Jump();
+            JumpInstruction target = new JumpInstruction();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -104,7 +104,7 @@ namespace TestStarLightEntities
         {
             int target_target1 = 0; // TODO: Initialize to an appropriate value
 
-            Jump target2 = new Jump(target_target1);
+            JumpInstruction target2 = new JumpInstruction(target_target1);
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -116,7 +116,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void TargetTest()
         {
-            Jump target = new Jump();
+            JumpInstruction target = new JumpInstruction();
 
             int val = 0; // TODO: Assign to an appropriate value for the property
 

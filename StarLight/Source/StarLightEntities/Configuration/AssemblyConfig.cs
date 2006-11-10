@@ -5,7 +5,8 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-
+using System.Globalization;
+ 
 using Composestar.StarLight.Entities.LanguageModel;  
 #endregion
 
@@ -108,7 +109,7 @@ namespace Composestar.StarLight.Entities.Configuration
                 name = name.Replace("Version=", "");
                 name = name.Replace("Culture=", "");
                 name = name.Replace("PublicKeyToken=", ""); 
-                _serializedFilename = Path.Combine(objectFolder, string.Format("{0}.xml.gzip", name)); 
+                _serializedFilename = Path.Combine(objectFolder, string.Format(CultureInfo.CurrentCulture, "{0}.xml.gzip", name)); 
             } 
 
         } // GenerateSerializedFilename()

@@ -32,7 +32,8 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// <value>The instructions.</value>
         [XmlArray("Instructions")]
         [XmlArrayItem("Instruction")]
-        public List<InlineInstruction> Instructions
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+         public List<InlineInstruction> Instructions
         {
             get
             {
@@ -48,7 +49,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Accepts the specified visitor.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
-        public void Accept(IVisitor visitor)
+        public new void Accept(IVisitor visitor)
         {
             base.Accept(visitor);
 

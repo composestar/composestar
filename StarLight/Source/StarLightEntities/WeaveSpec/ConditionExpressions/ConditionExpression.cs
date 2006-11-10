@@ -20,11 +20,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
     [XmlRoot("ConditionExpression", Namespace = "Entities.TYM.DotNET.Composestar")]
     public abstract class ConditionExpression
     {
-        public ConditionExpression()
+        protected ConditionExpression()
         {
 
-        } // ConditionExpression()
+        } 
 
-    } // class ConditionExpression
+    } 
 
-} // namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpression
+} 

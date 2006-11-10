@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            False target = new False();
+            FalseCondition target = new FalseCondition();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            False target = new False();
+            FalseCondition target = new FalseCondition();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");

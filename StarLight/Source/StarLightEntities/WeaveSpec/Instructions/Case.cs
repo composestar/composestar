@@ -18,7 +18,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     /// </summary>
     [Serializable]
     [XmlRoot("Case", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class Case : InlineInstruction, IVisitable
+    public class CaseInstruction : InlineInstruction, IVisitable
     {
 
         private int _checkConstant;
@@ -27,7 +27,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Case"/> class.
         /// </summary>
-        public Case()
+        public CaseInstruction()
         {
 
         }
@@ -37,7 +37,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// </summary>
         /// <param name="checkConstant">The check constant.</param>
         /// <param name="instructions">The instructions.</param>
-        public Case(int checkConstant, Block instructions)
+        public CaseInstruction(int checkConstant, Block instructions)
         {
             _checkConstant = checkConstant;
             _instructions = instructions;
@@ -80,8 +80,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Accepts the specified visitor.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
-        public void Accept(IVisitor visitor)
+        public new void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             base.Accept(visitor);
             visitor.VisitCase(this);
             if (_instructions != null)

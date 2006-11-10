@@ -25,6 +25,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// </summary>
         [XmlArray("Types")]
         [XmlArrayItem("Type")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<TypeElement> Types
         {
             get { return _types; }

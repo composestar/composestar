@@ -50,7 +50,6 @@
     <Compile Include="Services\IILAnalyzer.cs" />
     <Compile Include="Services\IILWeaver.cs" />
     <Compile Include="Services\IEntitiesAccessor.cs" />
-    <Compile Include="Services\IRepositoryContainer.cs" />
     <Compile Include="WeaveStatistics.cs" />
   </ItemGroup>
   <ItemGroup>

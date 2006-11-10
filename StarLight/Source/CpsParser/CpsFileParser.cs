@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;  
 using System.IO;
 using System.Text;
 
@@ -39,16 +40,15 @@ namespace Composestar.StarLight.CpsParser
             get { return _configuration.Filename; }
         }
 
-        private List<String> types = new List<string>();
+        private IList<String> types = new List<string>();
 
         /// <summary>
         /// Gets or sets the referenced types.
         /// </summary>
         /// <value>The referenced types.</value>
-        public List<String> ReferencedTypes
+        public ReadOnlyCollection<String> ReferencedTypes
         {
-            get { return types; }
-            set { types = value; }
+            get { return new ReadOnlyCollection<string>(types); }          
         }
 
         private bool _hasOutputFilters = false;

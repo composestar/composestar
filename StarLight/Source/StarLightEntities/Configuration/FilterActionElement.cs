@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using System.Xml.Serialization; 
-
+using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
+  
 namespace Composestar.StarLight.Entities.Configuration
 {
     [Serializable]
@@ -24,6 +25,7 @@ namespace Composestar.StarLight.Entities.Configuration
         /// </summary>
         /// <value><c>true</c> if the weaver has to create a JPC; otherwise, <c>false</c>.</value>
         [XmlAttribute]
+        [SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]   
         public bool CreateJPC
         {
             get { return _createJPC; }

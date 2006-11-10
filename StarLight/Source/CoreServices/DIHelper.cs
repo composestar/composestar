@@ -18,6 +18,7 @@ namespace Composestar.StarLight.CoreServices
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004")]
         public static TServiceType CreateObject<TServiceType>(IServiceProvider serviceProvider)
         {
             IBuilderConfigurator<BuilderStage> configurator = (IBuilderConfigurator<BuilderStage>) serviceProvider.GetService(typeof(IBuilderConfigurator<BuilderStage>));
@@ -112,6 +113,8 @@ namespace Composestar.StarLight.CoreServices
             /// </summary>
             /// <param name="key">The key.</param>
             /// <returns></returns>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800")]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822")]
             private Type GetTypeFromKey(object key)
             {
                 DependencyResolutionLocatorKey locationKey = key as DependencyResolutionLocatorKey;

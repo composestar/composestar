@@ -1,6 +1,8 @@
 using System;
-using System.Security.Permissions;  
-
+using System.Security.Permissions;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Permissions;
+    
 using Microsoft.Win32;
 
 namespace Composestar.StarLight.MSBuild.Tasks
@@ -41,6 +43,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// Gets or sets the JVM options.
         /// </summary>
         /// <value>The JVM options.</value>
+        [SuppressMessage("Microsoft.Naming", "CA1705", Justification="Java Virtual Machine") ]
         public String JVMOptions
         {
             get { return jvmOptions; }
@@ -75,12 +78,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Reads the settings.
         /// </summary>
+        [RegistryPermissionAttribute(System.Security.Permissions.SecurityAction.Demand,
+              Read = "HKEY_LOCAL_MACHINE\\Software\\Composestar\\StarLight")]
         public bool ReadSettings()
         {
-            // Retrieve the settings from the registry
-            RegistryPermission keyPermissions = new RegistryPermission(
-               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\Software\Composestar\StarLight");
-
+          
             RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"Software\Composestar\StarLight");
 
             if (regKey != null)
@@ -109,13 +111,11 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// Gets the NETSDK location.
         /// </summary>
         /// <returns></returns>
-        public static string GetNETSDKLocation()
+        [SuppressMessage("Microsoft.Naming", "CA1705")]
+        [RegistryPermissionAttribute(System.Security.Permissions.SecurityAction.Demand,
+          Read = "HKEY_LOCAL_MACHINE\\Software\\Composestar\\StarLight")]
+        public static string RetrieveNetSDKLocation()
         {
-
-             // Retrieve the settings from the registry
-            RegistryPermission keyPermissions = new RegistryPermission(
-               RegistryPermissionAccess.Read, @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework");
-
             RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
 
             if (regKey != null)

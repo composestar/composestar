@@ -28,13 +28,14 @@ using System.IO;
 using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-
+using System.Globalization;
+ 
 namespace Composestar.StarLight.Utilities
 {
 	/// <summary>
     /// Utility to format Cecil IL constructions to a textual representation.
 	/// </summary>
-	public class CecilFormatter 
+	public sealed class CecilFormatter 
     {
 
         /// <summary>
@@ -44,9 +45,11 @@ namespace Composestar.StarLight.Utilities
         /// <returns>A formatted instruction.</returns>
 		public static string FormatInstruction (Instruction instruction)
 		{
-			StringWriter writer = new StringWriter ();
-			WriteInstruction (writer, instruction);
-			return writer.ToString ();
+            using (StringWriter writer = new StringWriter(CultureInfo.CurrentCulture))
+            {
+                WriteInstruction(writer, instruction);
+                return writer.ToString();
+            }
 		}
 
         /// <summary>
@@ -56,9 +59,14 @@ namespace Composestar.StarLight.Utilities
         /// <returns>A formatted method body.</returns>
 		public static string FormatMethodBody (MethodDefinition method)
 		{
-			StringWriter writer = new StringWriter ();
-			WriteMethodBody (writer, method);
-			return writer.ToString ();
+            if (method == null)
+                throw new ArgumentNullException("method");
+
+            using (StringWriter writer = new StringWriter(CultureInfo.CurrentCulture))
+            {
+                WriteMethodBody(writer, method);
+                return writer.ToString();
+            }
 		}
 
         /// <summary>
@@ -68,6 +76,13 @@ namespace Composestar.StarLight.Utilities
         /// <param name="method">The method.</param>
 		public static void WriteMethodBody (TextWriter writer, MethodDefinition method)
 		{
+            if (writer == null)
+                throw new ArgumentNullException("writer");
+
+            if (method == null)
+                throw new ArgumentNullException("method");
+
+
 			writer.WriteLine (method.ToString ());
 			foreach (Instruction instruction in method.Body.Instructions) {
 				writer.Write ('\t');
@@ -83,6 +98,12 @@ namespace Composestar.StarLight.Utilities
         /// <param name="instruction">The instruction.</param>
 		public static void WriteInstruction (TextWriter writer, Instruction instruction)
 		{
+            if (writer == null)
+                throw new ArgumentNullException("writer");
+
+            if (instruction == null)
+                throw new ArgumentNullException("instruction");
+
 			writer.Write (FormatLabel (instruction.Offset));
 			writer.Write (": ");
 			writer.Write (instruction.OpCode.Name);
@@ -99,7 +120,7 @@ namespace Composestar.StarLight.Utilities
         /// <returns>A formatted IL label.</returns>
 		private static string FormatLabel (int offset)
 		{
-			string label = "000" + offset.ToString ("x");
+			string label = "000" + offset.ToString ("x", CultureInfo.CurrentCulture);
 			return "IL_" + label.Substring (label.Length - 4);
 		}
 
@@ -122,7 +143,7 @@ namespace Composestar.StarLight.Utilities
             VariableReference variableRef = operand as VariableReference;
             if (null != variableRef)
             {
-                writer.Write(variableRef.Index.ToString());
+                writer.Write(variableRef.Index.ToString(CultureInfo.CurrentCulture));
                 return;
             }
 
@@ -149,6 +170,9 @@ namespace Composestar.StarLight.Utilities
         /// <returns></returns>
 		public static string ToInvariantCultureString (object value)
 		{
+            if (value == null)
+                throw new ArgumentNullException("value"); 
+
 			IConvertible convertible = value as IConvertible;
 			return (null != convertible)
 				? convertible.ToString (System.Globalization.CultureInfo.InvariantCulture)

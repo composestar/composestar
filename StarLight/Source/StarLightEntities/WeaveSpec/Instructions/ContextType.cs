@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-
+using System.Diagnostics.CodeAnalysis ;
+ 
 namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
 {
     /// <summary>
@@ -40,10 +41,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// <summary>
         /// Create a JoinPointContext object.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
         CreateJPC = 30,
         /// <summary>
         /// Restore a JoinPointContext object.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
         RestoreJPC = 31,
         /// <summary>
         /// Emit a return statement.

@@ -21,6 +21,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     public enum ContextExpression
     {
         /// <summary>
+        /// None
+        /// </summary>
+        None = 0,
+        /// <summary>
         /// Checks if there are more actions in the action store.
         /// </summary>
         HasMoreActions = 22,

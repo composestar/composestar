@@ -1,16 +1,18 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
+using System;
+using System.Diagnostics.CodeAnalysis;
+ 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Composestar.StarLight.Entities.LanguageModel")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Composestar.StarLight.Entities")]
+[assembly: AssemblyDescription("Entities used by StarLight.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Composestar.StarLight.Entities.LanguageModel")]
-[assembly: AssemblyCopyright("Copyright ©  2006 University of Twente")]
+[assembly: AssemblyCompany("University of Twente")]
+[assembly: AssemblyProduct("ComposeStar StarLight")]
+[assembly: AssemblyCopyright("Copyright © 2006 University of Twente")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,3 +35,9 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: CLSCompliant(true)]
+
+// Globale FXCop suppressions
+[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Entities.Concerns")]
+[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor")]
+[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor")]

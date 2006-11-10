@@ -17,6 +17,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
 
         [XmlArray("Calls")]
         [XmlArrayItem("Call")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<CallElement> Calls
         {
             get { return _calls; }

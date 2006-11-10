@@ -187,10 +187,10 @@ namespace Composestar.StarLight.Filters.FilterTypes
  
             _name = name;
             
-            _acceptCallAction = GetNameOfFilterAction(acceptCallAction);
-            _rejectCallAction = GetNameOfFilterAction(rejectCallAction);
-            _acceptReturnAction = GetNameOfFilterAction(acceptReturnAction);
-            _rejectReturnAction = GetNameOfFilterAction(rejectReturnAction);
+            _acceptCallAction = FilterTypeAttribute.GetNameOfFilterAction(acceptCallAction);
+            _rejectCallAction = FilterTypeAttribute.GetNameOfFilterAction(rejectCallAction);
+            _acceptReturnAction = FilterTypeAttribute.GetNameOfFilterAction(acceptReturnAction);
+            _rejectReturnAction = FilterTypeAttribute.GetNameOfFilterAction(rejectReturnAction);
         }
         #endregion
 
@@ -199,7 +199,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// </summary>
         /// <param name="filterAction">The filter action.</param>
         /// <returns></returns>
-        private string GetNameOfFilterAction(Type filterAction)
+        private static string GetNameOfFilterAction(Type filterAction)
         {
             FilterActionAttribute[] fac = (FilterActionAttribute[]) filterAction.GetCustomAttributes(typeof(FilterActionAttribute), true);
 

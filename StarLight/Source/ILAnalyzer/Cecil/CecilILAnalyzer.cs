@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Collections.ObjectModel; 
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -16,7 +17,6 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
-using Composestar.Repository;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
@@ -36,16 +36,13 @@ namespace Composestar.StarLight.ILAnalyzer
 
         #region Private Variables
       
-        private TimeSpan _lastDuration = TimeSpan.Zero;
-        private List<String> _resolvedAssemblies = new List<String>();
-        private List<String> _unresolvedAssemblies = new List<String>();
-        private List<String> _resolvedTypes = new List<String>();
+        private IList<String> _resolvedAssemblies = new List<String>();
+        private IList<String> _unresolvedAssemblies = new List<String>();
+        private IList<String> _resolvedTypes = new List<String>();
         private List<String> _unresolvedTypes = new List<String>();
-        private List<String> _cachedTypes = new List<String>();
+        private IList<String> _cachedTypes = new List<String>();
 
         private CecilAnalyzerConfiguration _configuration;
-        private IEntitiesAccessor _entitiesAccessor;
-
         private StarLightAssemblyResolver _dar;
  
         private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
@@ -69,8 +66,7 @@ namespace Composestar.StarLight.ILAnalyzer
             #endregion
 
             _configuration = configuration;
-            _entitiesAccessor = entitiesAccessor;
-
+  
         }
 
         #endregion
@@ -81,7 +77,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the resolved types.
         /// </summary>
         /// <value>The resolved types.</value>
-        public List<String> ResolvedTypes
+        public IList<String> ResolvedTypes
         {
             get
             {
@@ -133,7 +129,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets the unresolved assemblies.
         /// </summary>
         /// <value>The unresolved assemblies.</value>
-        public List<String> UnresolvedAssemblies
+        public IList<String> UnresolvedAssemblies
         {
             get { return _unresolvedAssemblies; }
         }
@@ -142,7 +138,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets the resolved assemblies.
         /// </summary>
         /// <value>The resolved assemblies.</value>
-        public List<String> ResolvedAssemblies
+        public IList<String> ResolvedAssemblies
         {
             get { return _resolvedAssemblies; }
         }
@@ -151,7 +147,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets the cached types.
         /// </summary>
         /// <value>The cached types.</value>
-        public List<String> CachedTypes
+        public IList<String> CachedTypes
         {
             get { return _cachedTypes; }
         }
@@ -160,11 +156,11 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets all encountered FilterTypes
         /// </summary>
         /// <value></value>
-        public List<FilterTypeElement> FilterTypes
+        public ReadOnlyCollection<FilterTypeElement> FilterTypes
         {
             get
             {
-                return _filterTypes;
+                return new ReadOnlyCollection<FilterTypeElement>(_filterTypes);
             }
         }
 
@@ -172,11 +168,11 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets all encountered FilterActions
         /// </summary>
         /// <value></value>
-        public List<FilterActionElement> FilterActions
+        public ReadOnlyCollection<FilterActionElement> FilterActions
         {
             get
             {
-                return _filterActions;
+                return new ReadOnlyCollection<FilterActionElement>(_filterActions);
             }
         }
 
@@ -240,8 +236,7 @@ namespace Composestar.StarLight.ILAnalyzer
                      
             // Stop the timer
             sw.Stop();
-            _lastDuration = sw.Elapsed;
-
+      
             // Return the result
             return result;
         }
@@ -250,9 +245,9 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Resolve assembly locations
         /// </summary>
         /// <returns>List</returns>
-        public List<String> ResolveAssemblyLocations()
+        public IList<String> ResolveAssemblyLocations()
         {
-            List<string> ret = new List<string>();
+            IList<string> ret = new List<string>();
 
             // Go through each assembly name
             foreach (String assemblyName in _unresolvedAssemblies)
@@ -267,31 +262,56 @@ namespace Composestar.StarLight.ILAnalyzer
                     } // if
                     else
                     {
-                        throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
+                        throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName);
                     } // else
                 } // try
                 catch (Exception ex)
                 {
-                    throw new ILAnalyzerException(String.Format(Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
+                    throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.UnableToResolveAssembly, assemblyName), assemblyName, ex);
                 } // catch
             } // foreach  (assemblyName)
-
-
+            
             return ret;
         } // ResolveAssemblyLocations()
-          
-        
-        /// <summary>
-        /// Closes this instance. Cleanup any used resources.
-        /// </summary>
-        public void Close()
-        {
-            if (_dar != null)
-                _dar = null;
-        }
-       
-  
+            
         #endregion
+
+        #region IDisposable
+
+        /// <summary>
+        /// Cleans up any resources associated with this instance.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);  // Finalization is now unnecessary
+        }
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">if set to <c>true</c> then the managed resources are disposed.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!m_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    if (_dar != null)
+                        _dar = null;
+                }
+
+                // Dispose unmanaged resources
+            }
+
+            m_disposed = true;
+        }
+
+        private bool m_disposed;
+
+   #endregion
+
 
         /// <summary>
         /// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.

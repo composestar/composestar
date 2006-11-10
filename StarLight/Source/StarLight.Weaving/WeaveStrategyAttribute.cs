@@ -29,6 +29,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// </code>
     /// </example> 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019", Justification="WeaveStrategyName is read only property accessor")]
     public sealed class WeaveStrategyAttribute : Attribute
     {
 
@@ -37,7 +38,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <summary>
         /// The name of the weaving strategy
         /// </summary>
-        private string _name;
+        private string _weaveStrategyName;
 
         #endregion
 
@@ -51,7 +52,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         {
             get
             {
-                return _name;
+                return _weaveStrategyName;
             }
         }
 
@@ -81,13 +82,13 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// }
         /// </code>
         /// </example> 
-        /// <exception cref="weaveStrategyName">Thrown when the <paramref name="weaveStrategyName"/> is <see langword="null"/> or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="weaveStrategyName"/> is <see langword="null"/> or empty.</exception>
         public WeaveStrategyAttribute(string weaveStrategyName)
         {
             if (string.IsNullOrEmpty(weaveStrategyName))
                 throw new ArgumentNullException("weaveStrategyName");
 
-            _name = weaveStrategyName;
+            _weaveStrategyName = weaveStrategyName;
 
         }
 

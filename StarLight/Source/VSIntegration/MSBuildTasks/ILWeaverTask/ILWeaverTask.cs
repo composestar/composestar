@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.ComponentModel.Design;
+using System.Globalization;
+using System.Diagnostics.CodeAnalysis;  
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -111,7 +113,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     weaveDebugLevel = (CecilWeaverConfiguration.WeaveDebug) CecilWeaverConfiguration.WeaveDebug.Parse(typeof(CecilWeaverConfiguration.WeaveDebug), _weaveDebug, true);             
                 }
-                catch (Exception)
+                catch (ArgumentException)
                 {
                     Log.LogErrorFromResources("CouldNotParseWeaveDebugLevel", _weaveDebug);
                     return false;
@@ -143,7 +145,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     if (!ConcernsDirty && File.GetLastWriteTime(assembly.Filename).Ticks <= assembly.Timestamp)
                     {
                         // we beter copy the backuped file
-                        String backupWeavefile = string.Format("{0}.weaved", assembly.Filename);
+                        String backupWeavefile = string.Format(CultureInfo.InvariantCulture, "{0}.weaved", assembly.Filename);
                         if (File.Exists(backupWeavefile))
                         {
                             File.Copy(backupWeavefile, assembly.Filename, true);
@@ -246,7 +248,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <param name="languageModel">The language model.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilWeaverConfiguration configuration)
+        internal static IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilWeaverConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);

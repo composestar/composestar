@@ -32,9 +32,6 @@ namespace Composestar.StarLight.ILWeaver
             Detailed
         }
 
-        readonly bool _delaySignOutput;
-        readonly string _outputImageSNK;
-        readonly bool _shouldSignOutput;
         readonly string _outputImagePath;
         readonly string _inputImagePath;
         private string _binfolder;
@@ -47,34 +44,22 @@ namespace Composestar.StarLight.ILWeaver
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
         /// </summary>
         /// <param name="outputImagePath">The output image path.</param>
-        /// <param name="shouldSignOutput">if set to <c>true</c> [should sign output].</param>
-        /// <param name="outputImageSNK">The output image SNK.</param>
         /// <param name="inputImagePath">The input image path.</param>
-        /// <param name="delaySignOutput">if set to <c>true</c> [delay sign output].</param>
         /// <param name="assemblyConfig">The assembly config.</param>
         /// <param name="weaveConfiguration">The weave configuration.</param>
-        public CecilWeaverConfiguration(string outputImagePath, bool shouldSignOutput, string outputImageSNK, string inputImagePath, bool delaySignOutput, AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
+        public CecilWeaverConfiguration(string outputImagePath, string inputImagePath, AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration)
         {
             if (assemblyConfig == null)
-                throw new ArgumentNullException("AssemblyConfig"); 
-
-            if (shouldSignOutput && string.IsNullOrEmpty(outputImageSNK)) 
-                throw new ArgumentException(Resources.NoSNKSpecified, "outputImageSNK");
-
-            if (delaySignOutput && !shouldSignOutput)
-                throw new ArgumentException(Resources.CannotDelaySignWithoutSigning, "delaySignOutput");
-
+                throw new ArgumentNullException("assemblyConfig"); 
+                     
             if (string.IsNullOrEmpty(inputImagePath))
                 throw new ArgumentNullException("inputImagePath");
 
             _binfolder = System.IO.Path.GetDirectoryName(inputImagePath); 
-            _outputImageSNK = outputImageSNK;
-            _assemblyConfig = assemblyConfig; 
-            _shouldSignOutput = shouldSignOutput;
-            _outputImagePath = outputImagePath;
+              _assemblyConfig = assemblyConfig; 
+             _outputImagePath = outputImagePath;
             _inputImagePath = inputImagePath;
-            _delaySignOutput = delaySignOutput;
-            _weaveConfiguration = weaveConfiguration;
+               _weaveConfiguration = weaveConfiguration;
         }
 
         /// <summary>
@@ -85,19 +70,16 @@ namespace Composestar.StarLight.ILWeaver
         public CecilWeaverConfiguration(AssemblyConfig assemblyConfig, ConfigurationContainer weaveConfiguration, WeaveDebug weaveDebug)
         {
             if (assemblyConfig == null)
-                throw new ArgumentNullException("AssemblyConfig");
+                throw new ArgumentNullException("assemblyConfig");
 
             if (weaveConfiguration == null)
                 throw new ArgumentNullException("weaveConfiguration");
 
             _weaveConfiguration = weaveConfiguration;
             _binfolder = System.IO.Path.GetDirectoryName(assemblyConfig.Filename);
-            _outputImageSNK = string.Empty;
             _assemblyConfig = assemblyConfig;
-            _shouldSignOutput = false;
             _outputImagePath = assemblyConfig.Filename;
             _inputImagePath = assemblyConfig.Filename;
-            _delaySignOutput = false;
             _weaveDebugLevel = weaveDebug;
         }
 
@@ -112,18 +94,7 @@ namespace Composestar.StarLight.ILWeaver
            
         }
 
-        /// <summary>
-        /// Gets the output image SNK.
-        /// </summary>
-        /// <value>The output image SNK.</value>
-        public string OutputImageSNK
-        {
-            get 
-            {
-                return _outputImageSNK; 
-            }
-        }
-
+      
         /// <summary>
         /// Gets or sets the weave debug level.
         /// </summary>
@@ -181,19 +152,7 @@ namespace Composestar.StarLight.ILWeaver
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the output should be signed.
-        /// </summary>
-        /// <value><c>true</c> if should sign output; otherwise, <c>false</c>.</value>
-        public bool ShouldSignOutput
-        {
-            get 
-            { 
-                return _shouldSignOutput;
-            }
-        }
-
-        /// <summary>
+               /// <summary>
         /// Gets the output image path.
         /// </summary>
         /// <value>The output image path.</value>
@@ -230,18 +189,7 @@ namespace Composestar.StarLight.ILWeaver
                     return string.Concat(_inputImagePath.Substring(0, _inputImagePath.LastIndexOf(".")), ".pdb");
             }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether to delay signing the output.
-        /// </summary>
-        /// <value><c>true</c> if [delay sign output]; otherwise, <c>false</c>.</value>
-        public bool DelaySignOutput
-        {
-            get 
-            { 
-                return _delaySignOutput; 
-            }
-        }
+               
 
         /// <summary>
         /// Creates the default configuration.
@@ -250,7 +198,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath)
         {
-            return new CecilWeaverConfiguration(inputImagePath, false, string.Empty, inputImagePath, false, null, null);
+            return new CecilWeaverConfiguration(inputImagePath,  inputImagePath, null, null);
         }
 
         /// <summary>
@@ -261,7 +209,7 @@ namespace Composestar.StarLight.ILWeaver
         /// <returns></returns>
         public static CecilWeaverConfiguration CreateDefaultConfiguration(string inputImagePath, string outputImagePath)
         {
-            return new CecilWeaverConfiguration(outputImagePath, false, string.Empty, inputImagePath, false, null, null);
+            return new CecilWeaverConfiguration(outputImagePath, inputImagePath, null, null);
         }
 
         /// <summary>
@@ -274,10 +222,6 @@ namespace Composestar.StarLight.ILWeaver
         {
             return new CecilWeaverConfiguration(assemblyConfig, weaveConfiguration);
         }
-
-        internal void RuntimeValidate()
-        {
-
-        }
+           
     }
 }

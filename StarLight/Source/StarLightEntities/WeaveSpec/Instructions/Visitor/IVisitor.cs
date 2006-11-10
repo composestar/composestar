@@ -18,17 +18,17 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
         void VisitReturnAction(ContextInstruction contextInstruction);
 
         void VisitFilterAction(FilterAction filterAction);
-        void VisitJumpInstruction(Jump jump);
+        void VisitJumpInstruction(JumpInstruction jump);
 
         void VisitInlineInstruction(InlineInstruction inlineInstruction);
 
-        void VisitWhile(While whileInstr);
-        void VisitWhileEnd(While whileInstr);
+        void VisitWhile(WhileInstruction whileInstr);
+        void VisitWhileEnd(WhileInstruction whileInstr);
 
-        void VisitSwitch(Switch switchInstr);
-        void VisitCase(Case caseInstr);
-        void VisitCaseEnd(Switch switchInstr);
-        void VisitSwitchEnd(Switch switchInstr);
+        void VisitSwitch(SwitchInstruction switchInstr);
+        void VisitCase(CaseInstruction caseInstr);
+        void VisitCaseEnd(SwitchInstruction switchInstr);
+        void VisitSwitchEnd(SwitchInstruction switchInstr);
 
         void VisitCreateActionStore(ContextInstruction contextInstruction);
         void VisitStoreAction(ContextInstruction contextInstruction);

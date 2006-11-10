@@ -9,14 +9,14 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Security.Policy;  //for evidence object
-
+using System.Diagnostics.CodeAnalysis;
+ 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 using Mono.Cecil.Signatures;
 
-using Composestar.Repository;
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
@@ -44,21 +44,21 @@ namespace Composestar.StarLight.ILAnalyzer
         private AssemblyElement _assemblyElement = new AssemblyElement();
         private AssemblyDefinition _assembly;
 
-        private List<String> _resolvedAssemblies = new List<String>();
-        private List<String> _unresolvedAssemblies = new List<String>();
-        private List<String> _cachedTypes = new List<String>();
-        private List<String> _resolvedTypes = new List<String>();
+        private IList<String> _resolvedAssemblies = new List<String>();
+        private IList<String> _unresolvedAssemblies = new List<String>();
+        private IList<String> _cachedTypes = new List<String>();
+        private IList<String> _resolvedTypes = new List<String>();
         private List<String> _unresolvedTypes = new List<String>();
 
-        private bool _saveType = false;
-        private bool _saveInnerType = false;
+        private bool _saveType;
+        private bool _saveInnerType;
         private bool _processMethodBody = true;
-        private bool _processAttributes = false;
+        private bool _processAttributes;
         private bool _includeFields = true;
         private bool _extractUnresolvedOnly;
 
-        private List<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
-        private List<FilterActionElement> _filterActions = new List<FilterActionElement>();
+        private IList<FilterTypeElement> _filterTypes = new List<FilterTypeElement>();
+        private IList<FilterActionElement> _filterActions = new List<FilterActionElement>();
 
         private TypeElement _currentType;
         #endregion
@@ -87,7 +87,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the resolved types.
         /// </summary>
         /// <value>The resolved types.</value>
-        public List<String> ResolvedTypes
+        public IList<String> ResolvedTypes
         {
             get
             {
@@ -119,7 +119,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the filter actions.
         /// </summary>
         /// <value>The filter actions.</value>
-        public List<FilterActionElement> FilterActions
+        public IList<FilterActionElement> FilterActions
         {
             get
             {
@@ -131,7 +131,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the filter types.
         /// </summary>
         /// <value>The filter types.</value>
-        public List<FilterTypeElement> FilterTypes
+        public IList<FilterTypeElement> FilterTypes
         {
             get
             {
@@ -223,7 +223,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the cached types.
         /// </summary>
         /// <value>The cached types.</value>
-        public List<String> CachedTypes
+        public IList<String> CachedTypes
         {
             get
             {
@@ -239,7 +239,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the unresolved assemblies.
         /// </summary>
         /// <value>The unresolved assemblies.</value>
-        public List<String> UnresolvedAssemblies
+        public IList<String> UnresolvedAssemblies
         {
             get
             {
@@ -255,7 +255,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the resolved assemblies.
         /// </summary>
         /// <value>The resolved assemblies.</value>
-        public List<String> ResolvedAssemblies
+        public IList<String> ResolvedAssemblies
         {
             get
             {
@@ -272,9 +272,7 @@ namespace Composestar.StarLight.ILAnalyzer
         #region Filter Type Naming
 
         private string _filterTypeName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterType).FullName;
-        private string _filterTypeAnnotationName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterTypeAttribute).FullName;
         private string _filterActionName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterAction).FullName;
-        private string _filterActionAnnotationName = typeof(Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute).FullName;
 
         #endregion
 
@@ -375,7 +373,7 @@ namespace Composestar.StarLight.ILAnalyzer
                 if (string.IsNullOrEmpty(typeElement.ImplementedInterfaces))
                     typeElement.ImplementedInterfaces = interfaceDef.FullName;
                 else
-                    typeElement.ImplementedInterfaces = String.Format("{0};{1}", typeElement.ImplementedInterfaces, interfaceDef.FullName);
+                    typeElement.ImplementedInterfaces = String.Format(CultureInfo.CurrentCulture,  "{0};{1}", typeElement.ImplementedInterfaces, interfaceDef.FullName);
             }
 
             // Basetype
@@ -405,7 +403,7 @@ namespace Composestar.StarLight.ILAnalyzer
             if (!ExtractUnresolvedOnly || (ExtractUnresolvedOnly && _unresolvedTypes.Contains(CreateTypeName(type))))
             {
                 // Get custom attributes
-                typeElement.Attributes.AddRange(VisitCustomAttributes(type.CustomAttributes));
+                typeElement.Attributes.AddRange(ExtractCustomAttributes(type.CustomAttributes));
                 
                 _currentType = typeElement;
                 // Visit methods
@@ -511,7 +509,7 @@ namespace Composestar.StarLight.ILAnalyzer
             }
 
             // Custom attributes
-            me.Attributes.AddRange(VisitCustomAttributes(method.CustomAttributes));
+            me.Attributes.AddRange(ExtractCustomAttributes(method.CustomAttributes));
 
             // Add to the type
             _currentType.Methods.Add(me);
@@ -568,14 +566,14 @@ namespace Composestar.StarLight.ILAnalyzer
             
             if (assembly == null)
             {
-                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
+                throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture,  Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
             } // if
 
             Type refType = assembly.GetType(type.FullName);
            
             if (refType == null)
             {
-                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
+                throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
             } // if
 
             FilterActionAttribute[] faas = (FilterActionAttribute[])refType.GetCustomAttributes(typeof(FilterActionAttribute), true);
@@ -623,57 +621,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
                 _filterActions.Add(faEl);
             } // ExtractFilterAction(type)
-
-            //IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(refType);
-            //foreach (CustomAttributeData cad in attributes)
-            //{
-            //    if (!cad.ToString().Contains("Composestar.StarLight.Filters.FilterTypes.FilterActionAttribute")) continue;
-
-            //    FilterActionElement faEl = new FilterActionElement();
-
-            //    faEl.FullName = type.FullName;
-            //    faEl.Name = ((string)cad.ConstructorArguments[0].Value);
-            //    faEl.Assembly = type.Module.Assembly.Name.ToString();
- 
-            //    switch ((FilterActionAttribute.FilterFlowBehaviour)cad.ConstructorArguments[1].Value)
-            //    {
-            //        case FilterActionAttribute.FilterFlowBehaviour.Continue:
-            //            faEl.FlowBehavior = FilterActionElement.FlowContinue;
-            //            break;
-            //        case FilterActionAttribute.FilterFlowBehaviour.Exit:
-            //            faEl.FlowBehavior = FilterActionElement.FlowExit;
-            //            break;
-            //        case FilterActionAttribute.FilterFlowBehaviour.Return:
-            //            faEl.FlowBehavior = FilterActionElement.FlowReturn;
-            //            break;
-            //        default:
-            //            faEl.FlowBehavior = FilterActionElement.FlowContinue;
-            //            break;
-            //    } // switch
-
-            //    switch ((FilterActionAttribute.MessageSubstitutionBehaviour)cad.ConstructorArguments[2].Value)
-            //    {
-            //        case FilterActionAttribute.MessageSubstitutionBehaviour.Original:
-            //            faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
-            //            break;
-            //        case FilterActionAttribute.MessageSubstitutionBehaviour.Substituted:
-            //            faEl.MessageChangeBehavior = FilterActionElement.MessageSubstituted;
-            //            break;
-            //        case FilterActionAttribute.MessageSubstitutionBehaviour.Any:
-            //            faEl.MessageChangeBehavior = FilterActionElement.MessageAny;
-            //            break;
-            //        default:
-            //            faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
-            //            break;
-            //    } // switch
-
-            //    // CreateJPC
-            //    if (cad.ConstructorArguments[3] != null)
-            //        faEl.CreateJPC = (bool)cad.ConstructorArguments[3].Value;
-
-            //    _filterActions.Add(faEl);
-            //}
-
+                      
             type = null;
             assembly = null;
 
@@ -703,12 +651,14 @@ namespace Composestar.StarLight.ILAnalyzer
             return Assembly.ReflectionOnlyLoad(args.Name);
         }
 
-        private bool _reflectionAssemblySetup = false;
+        private bool _reflectionAssemblySetup;
 
         /// <summary>
         /// Setups the reflection assembly.
         /// </summary>
         /// <param name="rootPath">The root path.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", Target="assmContext" )]
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", Target="assmFilters")]
         private void SetupReflectionAssembly(string rootPath)
         {
             if (_reflectionAssemblySetup) return;
@@ -748,14 +698,14 @@ namespace Composestar.StarLight.ILAnalyzer
 
             if (assembly == null)
             {
-                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
+                throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindAssembly, type.Module.Image.FileInformation.FullName));
             } // if
 
             Type refType = assembly.GetType(type.FullName);
 
             if (refType == null)
             {
-                throw new ILAnalyzerException(String.Format(Properties.Resources.CouldNotFindType, type.FullName));
+                throw new ILAnalyzerException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotFindType, type.FullName));
             } // if
 
             FilterTypeAttribute[] ftas = (FilterTypeAttribute[]) refType.GetCustomAttributes(typeof(FilterTypeAttribute), true);
@@ -919,7 +869,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="customAttributes">The custom attributes.</param>
         /// <returns></returns>
-        private List<AttributeElement> VisitCustomAttributes(CustomAttributeCollection customAttributes)
+        private static List<AttributeElement> ExtractCustomAttributes(CustomAttributeCollection customAttributes)
         {
             List<AttributeElement> ret = new List<AttributeElement>();
 
@@ -948,10 +898,10 @@ namespace Composestar.StarLight.ILAnalyzer
                 foreach (object propKey in ca.Properties.Keys)
                 {
                     AttributeValueElement ave = new AttributeValueElement();
-                    ave.Name =Convert.ToString( propKey);
+                    ave.Name = Convert.ToString(propKey, CultureInfo.InvariantCulture);
                     if (ca.Properties[propKey] == null)
                         ave.Value = null;
-                    else 
+                    else
                         ave.Value = ca.Properties[propKey].ToString();
                     ae.Values.Add(ave);
                 }
@@ -967,11 +917,12 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        private string CreateTypeName(TypeReference type)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        private static string CreateTypeName(TypeReference type)
         {
             String typeName = type.FullName;
 
-            if (typeName.Contains("`")) typeName = String.Format("{0}.{1}", type.Namespace, type.Name);
+            if (typeName.Contains("`")) typeName = String.Format(CultureInfo.CurrentCulture, "{0}.{1}", type.Namespace, type.Name);
             if (typeName.EndsWith("&")) typeName = typeName.Substring(0, typeName.Length - 1);
             if (typeName.EndsWith("**")) typeName = typeName.Substring(0, typeName.Length - 2);
             if (typeName.EndsWith("*")) typeName = typeName.Substring(0, typeName.Length - 1);
@@ -988,9 +939,10 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        private string CreateTypeAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        private static string CreateTypeAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
         {
-            return String.Format("{0}, {1}", CreateTypeName(type), CreateAFQN(targetAssemblyDefinition, type));
+            return String.Format(CultureInfo.CurrentCulture, "{0}, {1}", CreateTypeName(type), CreateAFQN(targetAssemblyDefinition, type));
         }
 
         /// <summary>
@@ -999,7 +951,8 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <param name="targetAssemblyDefinition">The target assembly definition.</param>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        private String CreateAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        private static String CreateAFQN(AssemblyDefinition targetAssemblyDefinition, TypeReference type)
         {
             if (targetAssemblyDefinition == null)
                 throw new ArgumentNullException("targetAssemblyDefinition");

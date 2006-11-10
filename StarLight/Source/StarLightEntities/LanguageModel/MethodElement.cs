@@ -125,6 +125,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// <value>The parameters.</value>
         [XmlArray("Parameters") ]
         [XmlArrayItem("Parameter") ]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<ParameterElement> Parameters
         {
             get { return _parameters; }
@@ -203,6 +204,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// <value>The attributes.</value>
         [XmlArray("Attributes")]
         [XmlArrayItem("Attribute")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<AttributeElement> Attributes
         {
             get

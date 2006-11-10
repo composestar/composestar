@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            Or target = new Or();
+            OrCondition target = new OrCondition();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void BranchIdTest()
         {
-            Or target = new Or();
+            OrCondition target = new OrCondition();
 
             int val = 0; // TODO: Assign to an appropriate value for the property
 
@@ -108,7 +108,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void LeftTest()
         {
-            Or target = new Or();
+            OrCondition target = new OrCondition();
 
             ConditionExpression val = null; // TODO: Assign to an appropriate value for the property
 
@@ -126,7 +126,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            Or target = new Or();
+            OrCondition target = new OrCondition();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -138,7 +138,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void RightTest()
         {
-            Or target = new Or();
+            OrCondition target = new OrCondition();
 
             ConditionExpression val = null; // TODO: Assign to an appropriate value for the property
 

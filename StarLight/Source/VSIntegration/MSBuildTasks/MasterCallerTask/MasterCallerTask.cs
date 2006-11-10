@@ -2,7 +2,8 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.ComponentModel;
-
+using System.Diagnostics.CodeAnalysis;
+  
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -86,7 +87,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         #region Declarations
         private const string JavaExecutable = "java.exe";
         
-        private bool BuildErrorsEncountered = false;
+        private bool BuildErrorsEncountered;
         private DebugMode CurrentDebugMode;
    
         private const int ErrorFileNotFound = 2;
@@ -172,7 +173,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             else
                 process.StartInfo.FileName = JavaExecutable; // In path
             
-            process.StartInfo.Arguments = String.Format("{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
+            process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
             Log.LogMessageFromResources("JavaStartMessage", process.StartInfo.Arguments ) ;
             
             process.StartInfo.CreateNoWindow = true;
@@ -268,7 +269,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     mode = (DebugMode)DebugMode.Parse(typeof(DebugMode), warninglevel, true);
                 }
-                catch (Exception)
+                catch (ArgumentException)
                 {
                     mode = DebugMode.Warning;
                 }
@@ -276,11 +277,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 int linenumber = 0;
                 try
                 {
-                    linenumber = Convert.ToInt32(parsed[3]);
+                    linenumber = Convert.ToInt32(line, CultureInfo.CurrentCulture);
                 }
-                catch (Exception) { linenumber = 0; }
+                catch (ArgumentException)
+                { 
+                    linenumber = 0; 
+                }
 
-                if (this.BuildErrorsEncountered && message.Equals(""))
+                if (this.BuildErrorsEncountered && String.IsNullOrEmpty(message))
                 {
                     this.BuildErrorsEncountered = false;
                 }
@@ -301,7 +305,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         string rest = msg.Substring(file.Length + 1 + comError.Length);
                         int lineRecoma = 0;
 
-                        lineRecoma = int.Parse((rest.Substring(0, rest.IndexOf(","))));
+                        lineRecoma = int.Parse((rest.Substring(0, rest.IndexOf(","))), CultureInfo.CurrentCulture);
 
                         rest = rest.Substring(rest.IndexOf(")") + 2).TrimStart();
                         DebugMode dm;
@@ -311,7 +315,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                             dm = DebugMode.Error;
                         this.LogMessage(dm, "RECOMA", rest, file, lineRecoma);
                     }
-                    catch (Exception)
+                    catch (ArgumentException)
                     {
                         Log.LogError(msg);
                     }
@@ -324,17 +328,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
             {
                 this.LogMessage(message);
             }
-        }
-
-        /// <summary>
-        /// Log the message.
-        /// </summary>
-        /// <param name="debugMode">Debugmode to use.</param>
-        /// <param name="module">Module creating this log message.</param>
-        /// <param name="message">The logmessage</param>
-        private void LogMessage(DebugMode debugMode, string module, string message)
-        {
-            this.LogMessage(debugMode, module, message, "", 0);
         }
 
         private void LogMessage(DebugMode debugMode, string module, string message, string filename, int line)
@@ -367,16 +360,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Log the message with the current debugmode.
-        /// </summary>
-        /// <param name="module">Module creating this log message.</param>
-        /// <param name="message">The logmessage</param>
-        private void LogMessage(string module, string message)
-        {
-            LogMessage(this.CurrentDebugMode, module, message);
         }
 
         /// <summary>

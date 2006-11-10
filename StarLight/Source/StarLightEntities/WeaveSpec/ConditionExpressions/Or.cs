@@ -14,12 +14,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
     /// </summary>
     [Serializable]
     [XmlRoot("Or", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class Or : ConditionExpression, IVisitable
+    public class OrCondition : ConditionExpression, IVisitable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Or"/> class.
         /// </summary>
-        public Or()
+        public OrCondition()
         {
 
         } // Or()
@@ -87,11 +87,14 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
         /// <param name="visitor">The visitor.</param>
         public void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             ((IVisitable)_left).Accept(visitor);
             visitor.VisitOrLeft(this);
             ((IVisitable)_right).Accept(visitor);
             visitor.VisitOrRight(this);
         } // Accept(visitor)
 
-    } // class Or
+    } 
 }

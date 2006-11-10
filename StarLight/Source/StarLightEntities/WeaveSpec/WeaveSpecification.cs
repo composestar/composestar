@@ -35,6 +35,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// <value>The weave types.</value>
         [XmlArray("WeaveTypes") ]
         [XmlArrayItem("WeaveType") ]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<WeaveType> WeaveTypes
         {
             get { return _weaveTypes; }

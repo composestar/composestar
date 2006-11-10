@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections.ObjectModel;
+  
 using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.Configuration;
   
@@ -10,40 +12,45 @@ namespace Composestar.StarLight.CoreServices
     /// <summary>
     /// Interface for the IL analyzer
     /// </summary>
-    public interface IILAnalyzer
+    public interface IILAnalyzer :  IDisposable 
     {
 
         /// <summary>
         /// Gets the unresolved assemblies.
         /// </summary>
         /// <value>The unresolved assemblies.</value>
-        List<string> UnresolvedAssemblies { get; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002")]
+        IList<string> UnresolvedAssemblies { get; }
 
         /// <summary>
         /// Gets the resolved assemblies.
         /// </summary>
         /// <value>The resolved assemblies.</value>
-        List<string> ResolvedAssemblies { get; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002")]
+        IList<string> ResolvedAssemblies { get; }
         
         /// <summary>
         /// Gets or sets the unresolved types.
         /// </summary>
         /// <value>The unresolved types.</value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227")]
         List<string> UnresolvedTypes { get; set; }
         
         /// <summary>
         /// Gets the resolved types.
         /// </summary>
         /// <value>The resolved types.</value>
-        List<string> ResolvedTypes { get; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002")]
+        IList<string> ResolvedTypes { get; }
 
         /// <summary>
         /// Resolves the assembly locations.
         /// </summary>
         /// <returns></returns>
-        List<String> ResolveAssemblyLocations();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002")]
+        IList<String> ResolveAssemblyLocations();
 
-             /// <summary>
+        /// <summary>
         /// Extracts all types.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -53,16 +60,12 @@ namespace Composestar.StarLight.CoreServices
         /// <summary>
         /// Gets all encountered FilterTypes
         /// </summary>
-        List<FilterTypeElement> FilterTypes { get; }
+        ReadOnlyCollection<FilterTypeElement> FilterTypes { get; }
         
         /// <summary>
         /// Gets all encountered FilterActions
         /// </summary>
-        List<FilterActionElement> FilterActions { get; }
-        
-        /// <summary>
-        /// Closes this instance. Cleanup any used resources.
-        /// </summary>
-        void Close();
+        ReadOnlyCollection<FilterActionElement> FilterActions { get; }
+              
     }
 }

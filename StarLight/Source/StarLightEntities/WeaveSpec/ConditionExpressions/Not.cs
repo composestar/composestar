@@ -14,12 +14,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
     /// </summary>
     [Serializable]
     [XmlRoot("Not", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class Not : ConditionExpression, IVisitable
+    public class NotCondition : ConditionExpression, IVisitable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Not"/> class.
         /// </summary>
-        public Not()
+        public NotCondition()
         {
         } // Not()
 
@@ -48,6 +48,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
         /// <param name="visitor">The visitor.</param>
         public void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             if (_operand != null)
             {
                 ((IVisitable)_operand).Accept(visitor);

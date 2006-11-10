@@ -52,10 +52,6 @@ namespace Composestar.StarLight.Filters.FilterTypes
             {
                 return _createJPC;
             }
-            set
-            {
-                _createJPC = value;
-            }
         }
 
         /// <summary>
@@ -97,37 +93,37 @@ namespace Composestar.StarLight.Filters.FilterTypes
         #endregion
 
         #region ctor
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterActionAnnotation"/> class describing a FilterAction.
         /// </summary>
-        /// <param name="name">The unique name of the filter action.</param>
+        /// <param name="actionName">Name of the action.</param>
         /// <param name="flowBehaviour">The flow behaviour of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
         /// <param name="substitutionBehaviour">The substitution behaviour of the filter action.</param>
-        /// <remarks>Place this attribute only at classes inheriting the <see cref="T:FilterType"></see> base class since the filter action must implement the <c>Execute</c> method.</remarks> 
+        /// <remarks>Place this attribute only at classes inheriting the <see cref="T:FilterType"></see> base class since the filter action must implement the <c>Execute</c> method.</remarks>
         /// <example>
         /// Place this custom attribute on classes inheriting <see cref="T:FilterAction"></see> like in the following example.
         /// <code>
         /// [FilterActionAttribute("TracingInAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
         /// public class TracingInAction : FilterAction
         /// {
-        ///    public override void Execute(JoinPointContext context)
-        ///    {
-        ///    }
+        /// public override void Execute(JoinPointContext context)
+        /// {
+        /// }
         /// }
         /// </code>
-        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>. 
+        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>.
         /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation.
-        /// </example> 
+        /// </example>
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
         /// </exception>
-        public FilterActionAttribute(string name, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour)
+        public FilterActionAttribute(string actionName, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
-             
-            _actionName = name;
+            if (string.IsNullOrEmpty(actionName))
+                throw new ArgumentNullException("actionName");
+
+            _actionName = actionName;
             _flowBehaviour = flowBehaviour;
             _substitutionBehaviour = substitutionBehaviour;
 
@@ -136,7 +132,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// <summary>
         /// Initializes a new instance of the <see cref="T:FilterActionAnnotation"/> class describing a FilterAction.
         /// </summary>
-        /// <param name="name">The unique name of the filter action.</param>
+        /// <param name="actionName">The unique name of the filter action.</param>
         /// <param name="flowBehaviour">The flow behaviour of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
         /// <param name="substitutionBehaviour">The substitution behaviour of the filter action.</param>
         /// <param name="createJoinPointContext">if set to <c>true</c>, the weaver injects a join point context object to be used in the <c>Execute</c> method. 
@@ -161,12 +157,12 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
         /// </exception>
-        public FilterActionAttribute(string name, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour, bool createJoinPointContext)
+        public FilterActionAttribute(string actionName, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour, bool createJoinPointContext)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
+            if (string.IsNullOrEmpty(actionName))
+                throw new ArgumentNullException("actionName");
 
-            _actionName = name;
+            _actionName = actionName;
             _flowBehaviour = flowBehaviour;
             _substitutionBehaviour = substitutionBehaviour;
             _createJPC = createJoinPointContext;
@@ -279,10 +275,6 @@ namespace Composestar.StarLight.Filters.FilterTypes
             {
                 return _spec;
             }
-            set
-            {
-                _spec = value;
-            }
         }
 
         #endregion
@@ -300,9 +292,11 @@ namespace Composestar.StarLight.Filters.FilterTypes
 
         #endregion
 
+        /*
         /// <summary>
         /// Parses the specification.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private void ParseSpecification()
         {
             //// Input: target.write(foo)& selector.write(foo)
@@ -335,7 +329,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
             //    }
             //}
         }
-
+        */
     }
 
     #endregion

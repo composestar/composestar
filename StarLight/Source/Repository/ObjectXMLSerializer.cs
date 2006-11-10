@@ -4,8 +4,9 @@ using System.Runtime.Serialization.Formatters.Binary; // For serialization of an
 using System.IO;				 // For reading/writing data to an XML file.
 using System.IO.IsolatedStorage; // For accessing user isolated data.
 using System.Collections.Generic;
-using System.IO.Compression;
-
+using System.IO.Compression;   // Compression support
+using System.Diagnostics.CodeAnalysis;  // Code analysis support
+  
 namespace Composestar.Repository
 {
     /// <summary>
@@ -31,10 +32,8 @@ namespace Composestar.Repository
 
     /// <summary>
     /// Facade to XML serialization and deserialization of strongly typed objects to/from an XML file.
-    /// 
-    /// <seealso cref="http://samples.gotdotnet.com/">XML Serialization</seealso>
-    /// <seealso cref="http://samples.gotdotnet.com/QuickStart/howto/default.aspx?url=/quickstart/howto/doc/xmlserialization/rwobjfromxml.aspx">GotDotNet</seealso>
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
     public static class ObjectXMLSerializer<T> where T : class // Specify that T must be a class.
     {
         #region Load methods
@@ -49,6 +48,7 @@ namespace Composestar.Repository
         /// </example>
         /// <param name="path">Path of the file to load the object from.</param>
         /// <returns>Object loaded from an XML file in Document format.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]        
         public static T Load(string path)
         {
             T serializableObject = LoadFromDocumentFormat(null, path, null);
@@ -66,6 +66,7 @@ namespace Composestar.Repository
         /// <param name="path">Path of the file to load the object from.</param>
         /// <param name="serializedFormat">XML serialized format used to load the object.</param>
         /// <returns>Object loaded from an XML file using the specified serialized format.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static T Load(string path, SerializedFormat serializedFormat)
         {
             T serializableObject = null;
@@ -103,6 +104,7 @@ namespace Composestar.Repository
         /// serializableObject = ObjectXMLSerializer&lt;SerializableObject&gt;.Load(@"C:\XMLObjects.xml", SerializedFormat.Document, new Type[] { typeof(MyCustomType) });
         /// </code>
         /// </example>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static T Load(string path, SerializedFormat serializedFormat, System.Type[] extraTypes)
         {
             T serializableObject = null;
@@ -137,6 +139,7 @@ namespace Composestar.Repository
         /// <param name="path">Path of the file to load the object from.</param>
         /// <param name="extraTypes">Extra data types to enable deserialization of custom types within the object.</param>
         /// <returns>Object loaded from an XML file in Document format.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static T Load(string path, System.Type[] extraTypes)
         {
             T serializableObject = LoadFromDocumentFormat(extraTypes, path, null);
@@ -154,6 +157,7 @@ namespace Composestar.Repository
         /// <param name="fileName">Name of the file in the isolated storage area to load the object from.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to load the object from.</param>
         /// <returns>Object loaded from an XML file in Document format located in a specified isolated storage area.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory)
         {
             T serializableObject = LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
@@ -172,6 +176,7 @@ namespace Composestar.Repository
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to load the object from.</param>
         /// <param name="serializedFormat">XML serialized format used to load the object.</param>        
         /// <returns>Object loaded from an XML file located in a specified isolated storage area, using a specified serialized format.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory, SerializedFormat serializedFormat)
         {
             T serializableObject = null;
@@ -198,23 +203,26 @@ namespace Composestar.Repository
         /// <summary>
         /// Loads an object from an XML file in Document format, located in a specified isolated storage area, and supplying extra data types to enable deserialization of custom types within the object.
         /// </summary>
-        /// <example>
-        /// <code>
-        /// serializableObject = ObjectXMLSerializer&lt;SerializableObject&gt;.Load("XMLObjects.xml", IsolatedStorageFile.GetUserStoreForAssembly(), new Type[] { typeof(MyCustomType) });
-        /// </code>
-        /// </example>		
         /// <param name="fileName">Name of the file in the isolated storage area to load the object from.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to load the object from.</param>
-        /// <param name="extraTypes">Extra data types to enable deserialization of custom types within the object.</param>
-        /// <returns>Object loaded from an XML file located in a specified isolated storage area, using a specified serialized format.</returns>
+        /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
+        /// <returns>
+        /// Object loaded from an XML file located in a specified isolated storage area, using a specified serialized format.
+        /// </returns>
+        /// <example>
+        /// 	<code>
+        /// serializableObject = ObjectXMLSerializer&lt;SerializableObject&gt;.Load("XMLObjects.xml", IsolatedStorageFile.GetUserStoreForAssembly(), new Type[] { typeof(MyCustomType) });
+        /// </code>
+        /// </example>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
         public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory, System.Type[] extraTypes)
         {
-            T serializableObject = LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
+            T serializableObject = LoadFromDocumentFormat(extraTypes, fileName, isolatedStorageDirectory);
             return serializableObject;
         }
 
         #endregion
-
+        
         #region Save methods
 
         /// <summary>
@@ -229,6 +237,7 @@ namespace Composestar.Repository
         /// </example>
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="path">Path of the file to save the object to.</param>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static void Save(T serializableObject, string path)
         {
             SaveToDocumentFormat(serializableObject, null, path, null);
@@ -247,6 +256,7 @@ namespace Composestar.Repository
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="path">Path of the file to save the object to.</param>
         /// <param name="serializedFormat">XML serialized format used to save the object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static void Save(T serializableObject, string path, SerializedFormat serializedFormat)
         {
             switch (serializedFormat)
@@ -279,6 +289,7 @@ namespace Composestar.Repository
         /// ObjectXMLSerializer&lt;SerializableObject&gt;.Save(serializableObject, @"C:\XMLObjects.xml", SerializedFormat.Binary, new Type[] { typeof(MyCustomType) });
         /// </code>
         /// </example>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static void Save(T serializableObject, string path, SerializedFormat serializedFormat, System.Type[] extraTypes)
         {
             switch (serializedFormat)
@@ -311,6 +322,7 @@ namespace Composestar.Repository
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="path">Path of the file to save the object to.</param>
         /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static void Save(T serializableObject, string path, System.Type[] extraTypes)
         {
             SaveToDocumentFormat(serializableObject, extraTypes, path, null);
@@ -329,6 +341,7 @@ namespace Composestar.Repository
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="fileName">Name of the file in the isolated storage area to save the object to.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory)
         {
             SaveToDocumentFormat(serializableObject, null, fileName, isolatedStorageDirectory);
@@ -348,6 +361,7 @@ namespace Composestar.Repository
         /// <param name="fileName">Name of the file in the isolated storage area to save the object to.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
         /// <param name="serializedFormat">XML serialized format used to save the object.</param>        
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]  
         public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory, SerializedFormat serializedFormat)
         {
             switch (serializedFormat)
@@ -370,20 +384,20 @@ namespace Composestar.Repository
         /// <summary>
         /// Saves an object to an XML file in Document format, located in a specified isolated storage area, and supplying extra data types to enable serialization of custom types within the object.
         /// </summary>
-        /// <example>
-        /// <code>
-        /// SerializableObject serializableObject = new SerializableObject();
-        /// 
-        /// ObjectXMLSerializer&lt;SerializableObject&gt;.Save(serializableObject, "XMLObjects.xml", IsolatedStorageFile.GetUserStoreForAssembly(), new Type[] { typeof(MyCustomType) });
-        /// </code>
-        /// </example>		
         /// <param name="serializableObject">Serializable object to be saved to file.</param>
         /// <param name="fileName">Name of the file in the isolated storage area to save the object to.</param>
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
         /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
+        /// <example>
+        /// 	<code>
+        /// SerializableObject serializableObject = new SerializableObject();
+        /// ObjectXMLSerializer&lt;SerializableObject&gt;.Save(serializableObject, "XMLObjects.xml", IsolatedStorageFile.GetUserStoreForAssembly(), new Type[] { typeof(MyCustomType) });
+        /// </code>
+        /// </example>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")] 
         public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory, System.Type[] extraTypes)
         {
-            SaveToDocumentFormat(serializableObject, null, fileName, isolatedStorageDirectory);
+            SaveToDocumentFormat(serializableObject, extraTypes, fileName, isolatedStorageDirectory);
         }
 
         #endregion

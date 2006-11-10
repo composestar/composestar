@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Globalization;
+using System.Diagnostics.CodeAnalysis;  
 
 using Mono.Cecil;
 using Mono.Cecil.Binary;
@@ -28,9 +29,9 @@ namespace Composestar.StarLight.Utilities
     /// <summary>
     /// Contains functions used by the Cecil visitors, strategies, and weaver. 
     /// </summary>
-    public partial class CecilUtilities
+    public sealed partial class CecilUtilities
     {
-
+        
         #region Constants
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         public const string VoidType = "System.Void";
 
-        private static object lockObject = new object();
+        private static object lockObject;
 
         #endregion
 
@@ -55,13 +56,20 @@ namespace Composestar.StarLight.Utilities
 
         #region Constructor
 
+        private CecilUtilities()
+        {
+
+        }
+
         /// <summary>
         /// Initializes the <see cref="T:CecilUtilities"/> class.
         /// </summary>
         static CecilUtilities()
         {
+            lockObject = new object();
+
             AddDefaultMethodsToCache();
-            AddDefaultTypesToCache();
+            AddDefaultTypesToCache();                        
         }
 
         #endregion
@@ -122,6 +130,9 @@ namespace Composestar.StarLight.Utilities
         /// <returns></returns>
         public static MethodReference CreateMethodReference(AssemblyDefinition assemblyDefinition, MethodBase methodBase)
         {
+            if (assemblyDefinition == null)
+                throw new ArgumentNullException("assemblyDefinition");
+ 
             return assemblyDefinition.MainModule.Import(methodBase);
         }
 
@@ -149,7 +160,8 @@ namespace Composestar.StarLight.Utilities
             if (_methodSignaturesCache.TryGetValue(methodDefinitionType, out mb))
                 return CreateMethodReference(assemblyDefinition, mb);
             else
-                throw new ILWeaverException(String.Format(Properties.Resources.MethodSignatureNotFound, methodDefinitionType));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.MethodSignatureNotFound, methodDefinitionType));
         }
 
         /// <summary>
@@ -217,6 +229,9 @@ namespace Composestar.StarLight.Utilities
         /// <returns></returns>
         public static TypeReference CreateTypeReference(AssemblyDefinition assemblyDefinition, Type type)
         {
+            if (assemblyDefinition == null)
+                throw new ArgumentNullException("assemblyDefinition"); 
+
             return assemblyDefinition.MainModule.Import(type);
         }
 
@@ -233,7 +248,7 @@ namespace Composestar.StarLight.Utilities
             if (_typesSignaturesCache.TryGetValue(typeName, out type))
                 return CreateTypeReference(assemblyDefinition, type);
             else
-                throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, typeName));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, typeName));
         }
 
 
@@ -663,7 +678,7 @@ namespace Composestar.StarLight.Utilities
         /// <returns>A formatted cache key to be used as a unique identifier for the types in the cache.</returns>
         private static string CreateTypeCacheKey(string typeName, string assemblyName)
         {
-            return String.Format("{1}, {0}", assemblyName, typeName);                       
+            return String.Format(CultureInfo.CurrentCulture,  "{1}, {0}", assemblyName, typeName);                       
         }
 
         /// <summary>
@@ -704,6 +719,9 @@ namespace Composestar.StarLight.Utilities
         /// <returns>A formatted signature of a method.</returns>
         public static String MethodSignature(MethodDefinition method)
         {
+            if (method == null)
+                throw new ArgumentNullException("method"); 
+            
             return method.ToString();
         }
 
@@ -718,6 +736,9 @@ namespace Composestar.StarLight.Utilities
         /// thrown if any of the underlying IO calls fail.</exception>
         public static byte[] ReadFileStream(Stream stream, int initialLength)
         {
+            if (stream == null)
+                throw new ArgumentNullException("stream"); 
+
             // If we've been passed an unhelpful initial length, just
             // use 32K.
             if (initialLength < 1)

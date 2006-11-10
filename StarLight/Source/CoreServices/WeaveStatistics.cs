@@ -9,12 +9,12 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
     /// </summary>
     public class WeaveStatistics
     {
-        private uint _internalsAdded = 0;
-        private uint _externalsAdded = 0;
-        private uint _outputFiltersAdded = 0;
-        private uint _inputFiltersAdded = 0;
-        private uint _typesProcessed = 0;
-        private uint _methodsProcessed = 0;
+        private int _internalsAdded;
+        private int _externalsAdded;
+        private int _outputFiltersAdded;
+        private int _inputFiltersAdded;
+        private int _typesProcessed;
+        private int _methodsProcessed;
 
         private TimeSpan _maxWeaveTimePerMethod = TimeSpan.Zero;
         private TimeSpan _totalTypeWeaveTime = TimeSpan.Zero;
@@ -36,12 +36,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
             {
                 return _timing;
             }
-            set
-            {
-                _timing = value;
-            }
         }
-
 
         /// <summary>
         /// Saves the timing log.
@@ -72,15 +67,12 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the instructions log.
         /// </summary>
         /// <value>The instructions log.</value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006")]
         public Dictionary<string, List<String>> InstructionsLog
         {
             get
             {
                 return _instructionsLog;
-            }
-            set
-            {
-                _instructionsLog = value;
             }
         }
 
@@ -115,7 +107,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the internals added.
         /// </summary>
         /// <value>The internals added.</value>
-        public uint InternalsAdded
+        public int InternalsAdded
         {
             get { return _internalsAdded; }
             set { _internalsAdded = value; }
@@ -125,7 +117,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the externals added.
         /// </summary>
         /// <value>The externals added.</value>
-        public uint ExternalsAdded
+        public int ExternalsAdded
         {
             get { return _externalsAdded; }
             set { _externalsAdded = value; }
@@ -135,7 +127,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the output filters added.
         /// </summary>
         /// <value>The output filters added.</value>
-        public uint OutputFiltersAdded
+        public int OutputFiltersAdded
         {
             get { return _outputFiltersAdded; }
             set { _outputFiltersAdded = value; }
@@ -145,7 +137,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the input filters added.
         /// </summary>
         /// <value>The input filters added.</value>
-        public uint InputFiltersAdded
+        public int InputFiltersAdded
         {
             get { return _inputFiltersAdded; }
             set { _inputFiltersAdded = value; }
@@ -156,7 +148,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the types processed.
         /// </summary>
         /// <value>The types processed.</value>
-        public uint TypesProcessed
+        public int TypesProcessed
         {
             get { return _typesProcessed; }
             set { _typesProcessed = value; }
@@ -166,7 +158,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// Gets or sets the methods processed.
         /// </summary>
         /// <value>The methods processed.</value>
-        public uint MethodsProcessed
+        public int MethodsProcessed
         {
             get { return _methodsProcessed; }
             set { _methodsProcessed = value; }

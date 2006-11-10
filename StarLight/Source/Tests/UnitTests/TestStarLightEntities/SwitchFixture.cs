@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            Switch target = new Switch();
+            SwitchInstruction target = new SwitchInstruction();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,9 +90,9 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void CasesTest()
         {
-            Switch target = new Switch();
+            SwitchInstruction target = new SwitchInstruction();
 
-            System.Collections.Generic.List<Composestar.StarLight.Entities.WeaveSpec.Instructions.Case> val = null; // TODO: Assign to an appropriate value for the property
+            System.Collections.Generic.List<Composestar.StarLight.Entities.WeaveSpec.Instructions.CaseInstruction> val = null; // TODO: Assign to an appropriate value for the property
 
             target.Cases = val;
 
@@ -108,7 +108,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ExpressionTest()
         {
-            Switch target = new Switch();
+            SwitchInstruction target = new SwitchInstruction();
 
             ContextExpression val = ContextExpression.HasMoreActions; // TODO: Assign to an appropriate value for the property
 
@@ -126,7 +126,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            Switch target = new Switch();
+            SwitchInstruction target = new SwitchInstruction();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -140,7 +140,7 @@ namespace TestStarLightEntities
         {
             ContextExpression expression = ContextExpression.HasMoreActions; // TODO: Initialize to an appropriate value
 
-            Switch target = new Switch(expression);
+            SwitchInstruction target = new SwitchInstruction(expression);
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");

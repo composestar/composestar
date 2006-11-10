@@ -38,7 +38,7 @@ namespace Composestar.StarLight.Utilities
         /// <param name="binFolder">The search folder containing the assemblies.</param>
         public StarLightAssemblyResolver(string binFolder)
         {
-            if (binFolder == null)
+            if (String.IsNullOrEmpty(binFolder))
                 throw new ArgumentNullException("binFolder");
 
             _binFolder = binFolder;
@@ -124,11 +124,11 @@ namespace Composestar.StarLight.Utilities
           
             if (name.Name == "mscorlib")
                 return GetCorlib(name);
-            else if (IsInGac(name))
-                return AssemblyFactory.GetAssembly(GetFromGac(name));
-            else if (IsInGac32(name))
-                return AssemblyFactory.GetAssembly(GetFromGac32(name));
 
+            AssemblyDefinition asm = GetAssemblyInGac(name);
+            if (asm != null)
+                return asm;
+            
             return null;
 
         }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;   
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -27,7 +29,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
     /// MSBuild tasks to start the analyzer.
     /// </summary>
     [LoadInSeparateAppDomain()]
-    public class IlAnalyzerTask : AppDomainIsolatedTask
+    public class ILAnalyzerTask : AppDomainIsolatedTask
     {
 
         // The analyzer removes the Composestar.StarLight dlls from the list
@@ -138,7 +140,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AnalyzerTask"/> class.
         /// </summary>
-        public IlAnalyzerTask()
+        public ILAnalyzerTask()
             : base(Properties.Resources.ResourceManager)
         {
 
@@ -155,7 +157,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <returns>
         /// 	<c>true</c> if the specified filename is a filter file; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsFilterFile(string filename)
+        private static bool IsFilterFile(string filename)
         {           
             foreach (String filterFile in ComposeStarFilterDll.Split(';'))
             {
@@ -187,7 +189,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     continue;
 
                 // We are only interested in assembly files.
-                string extension = Path.GetExtension(item.ToString()).ToLower();
+                string extension = Path.GetExtension(item.ToString()).ToLower(CultureInfo.InvariantCulture);
                 if (extension.Equals(".dll") || extension.Equals(".exe"))
                 {
                     assemblyFileList.Add(item.ToString());
@@ -633,7 +635,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             StoreAssemblies(analyzer, entitiesAccessor, assemblies);
 
             // Close the analyzer
-            analyzer.Close();
+            analyzer.Dispose();
 
             return !Log.HasLoggedErrors;
         }
@@ -644,7 +646,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
         /// <param name="languageModel">The language model.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        internal IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilAnalyzerConfiguration configuration)
+        internal static IServiceProvider CreateContainer(IEntitiesAccessor languageModel, CecilAnalyzerConfiguration configuration)
         {
             ServiceContainer serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(IEntitiesAccessor), languageModel);

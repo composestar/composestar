@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            Not target = new Not();
+            NotCondition target = new NotCondition();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            Not target = new Not();
+            NotCondition target = new NotCondition();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -102,7 +102,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void OperandTest()
         {
-            Not target = new Not();
+            NotCondition target = new NotCondition();
 
             ConditionExpression val = null; // TODO: Assign to an appropriate value for the property
 

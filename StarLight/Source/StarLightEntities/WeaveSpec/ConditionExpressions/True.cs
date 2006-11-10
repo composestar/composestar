@@ -14,12 +14,12 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
     /// </summary>
     [Serializable]
     [XmlRoot("True", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class True : ConditionExpression, IVisitable
+    public class TrueCondition : ConditionExpression, IVisitable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:True"/> class.
         /// </summary>
-        public True()
+        public TrueCondition()
         {
 
         } // True()
@@ -30,6 +30,9 @@ namespace Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions
         /// <param name="visitor">The visitor.</param>
         public void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             visitor.VisitTrue(this);
         } // Accept(visitor)
 

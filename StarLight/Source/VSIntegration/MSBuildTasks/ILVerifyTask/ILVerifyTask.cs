@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -62,7 +63,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             sw.Start();
 
             // Get the location of PEVerify
-            PEVerifyLocation = RegistrySettings.GetNETSDKLocation();
+            PEVerifyLocation = RegistrySettings.RetrieveNetSDKLocation();
 
             if (String.IsNullOrEmpty(PEVerifyLocation) || !File.Exists(Path.Combine(PEVerifyLocation, PEVerifyExecutable)))
             {
@@ -98,7 +99,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
  
                     Log.LogMessageFromResources("VerifyingAssembly", assembly.Filename);
 
-                    process.StartInfo.Arguments = String.Format("{0} /IL /MD /NOLOGO", assembly.Filename);
+                    process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} /IL /MD /NOLOGO", assembly.Filename);
 
                     process.Start();
                     while (!process.HasExited)
@@ -173,7 +174,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     Log.LogErrorFromResources("VerificationError", filename, mes, method, offset);
                 }
-                catch (Exception)
+                catch (ArgumentException)
                 {
                     Log.LogError(message);
                 }

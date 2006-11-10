@@ -50,6 +50,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// <value>The calls to weave.</value>
         [XmlArray("WeaveCalls")]
         [XmlArrayItem("WeaveCall")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<WeaveCall> Calls
         {
             get { return _weaveCalls; }

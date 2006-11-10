@@ -35,6 +35,7 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// <value>The values.</value>
         [XmlArray("Values")]
         [XmlArrayItem("Value")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<AttributeValueElement> Values
         {
             get { return _values; }

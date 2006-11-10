@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 using Composestar.StarLight.Entities.Concerns;
 using Composestar.StarLight.Entities.LanguageModel;
 
@@ -22,7 +23,8 @@ namespace Composestar.StarLight.Entities.Configuration
         /// </summary>
         /// <value>The concerns.</value>
         [XmlArray("Concerns")]
-        [XmlArrayItem("Concern")] 
+        [XmlArrayItem("Concern")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<ConcernElement> Concerns
         {
             get { return _concerns; }
@@ -48,6 +50,7 @@ namespace Composestar.StarLight.Entities.Configuration
         /// </summary>
         /// <value>The specification FILTH.</value>
         [XmlAttribute]
+        [SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
         public string SpecificationFILTH
         {
             get { return _specificationFILTH; }
@@ -88,6 +91,7 @@ namespace Composestar.StarLight.Entities.Configuration
         /// <value>The assemblies.</value>
         [XmlArray("Assemblies")]
         [XmlArrayItem("AssemblyConfig")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<AssemblyConfig> Assemblies
         {
             get { return _assemblies; }
@@ -102,6 +106,7 @@ namespace Composestar.StarLight.Entities.Configuration
         /// <value>The filter types.</value>
         [XmlArray("FilterTypes")]
         [XmlArrayItem("FilterType")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<FilterTypeElement> FilterTypes
         {
             get
@@ -122,6 +127,7 @@ namespace Composestar.StarLight.Entities.Configuration
         /// <value>The filter actions.</value>
         [XmlArray("FilterActions")]
         [XmlArrayItem("FilterAction")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<FilterActionElement> FilterActions
         {
             get

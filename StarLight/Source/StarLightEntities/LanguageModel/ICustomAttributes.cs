@@ -21,7 +21,8 @@ namespace Composestar.StarLight.Entities.LanguageModel
         /// Gets or sets the attributes.
         /// </summary>
         /// <value>The attributes.</value>
-        List<AttributeElement> Attributes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        List<AttributeElement> Attributes { get; }
 
     }
 }

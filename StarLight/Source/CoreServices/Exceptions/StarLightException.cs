@@ -41,7 +41,7 @@ namespace Composestar.StarLight.CoreServices.Exceptions
         /// </summary>
         /// <param name="info">The info.</param>
         /// <param name="streamContext">The stream context.</param>
-        public StarLightException(SerializationInfo info,StreamingContext streamContext) : base(info, streamContext ) 
+        protected StarLightException(SerializationInfo info,StreamingContext streamContext) : base(info, streamContext ) 
         {
 
         }

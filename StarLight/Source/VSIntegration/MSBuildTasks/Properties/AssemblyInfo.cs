@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Permissions;
+ 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -9,8 +12,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("MSBuild tasks for the StarLight project files.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("University of Twente")]
-[assembly: AssemblyProduct("Composestar.StarLight.MSBuild.Tasks")]
-[assembly: AssemblyCopyright("Copyright ©  2006")]
+[assembly: AssemblyProduct("Composestar StarLight")]
+[assembly: AssemblyCopyright("Copyright © 2006 University of Twente")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,3 +36,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("0.1.0.0")]
 [assembly: AssemblyFileVersion("0.1.0.0")]
+
+// Needed for registry access, unmanaged code call
+[assembly: SecurityPermissionAttribute(SecurityAction.RequestMinimum, Flags = SecurityPermissionFlag.UnmanagedCode)]
+ 
+[assembly: CLSCompliant(true)]

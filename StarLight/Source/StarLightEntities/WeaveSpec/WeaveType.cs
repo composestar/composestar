@@ -35,6 +35,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// <value>The internals.</value>
         [XmlArray("Internals")]
         [XmlArrayItem("Internal")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<Internal> Internals
         {
             get { return _internals; }
@@ -61,6 +62,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// <value>The externals.</value>
         [XmlArray("Externals")]
         [XmlArrayItem("External")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<External> Externals
         {
             get { return _externals; }
@@ -87,6 +89,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// <value>The conditions.</value>
         [XmlArray("Conditions")]
         [XmlArrayItem("Condition")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<Condition> Conditions
         {
             get { return _conditions; }
@@ -112,10 +115,10 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// Gets or sets the methods with instructions to weave.
         /// </summary>
         /// <value>The methods.</value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<WeaveMethod> Methods
         {
-            get { return _methods; }
-            set { _methods = value; }
+            get { return _methods; }           
         }
 
         /// <summary>

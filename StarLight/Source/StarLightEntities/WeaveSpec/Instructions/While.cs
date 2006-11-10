@@ -14,7 +14,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
     /// </summary>
     [Serializable]
     [XmlRoot("While", Namespace = "Entities.TYM.DotNET.Composestar")]
-    public class While : InlineInstruction, IVisitable 
+    public class WhileInstruction : InlineInstruction, IVisitable 
     {
 
         private ContextExpression _expression;
@@ -23,7 +23,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// <summary>
         /// Initializes a new instance of the <see cref="T:While"/> class.
         /// </summary>
-        public While()
+        public WhileInstruction()
         {
 
         } // While()
@@ -33,7 +33,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <param name="instructions">The instructions.</param>
-        public While(ContextExpression expression, Block instructions)
+        public WhileInstruction(ContextExpression expression, Block instructions)
         {
             _expression = expression;
             _instructions = instructions;
@@ -63,8 +63,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions
         /// Accepts the specified visitor.
         /// </summary>
         /// <param name="visitor">The visitor.</param>
-        public void Accept(IVisitor visitor)
+        public new void Accept(IVisitor visitor)
         {
+            if (visitor == null)
+                throw new ArgumentNullException("visitor");
+
             base.Accept(visitor);
             int label = this.Label; // FIXME nice way to restore label after visitor has changed it
             visitor.VisitWhile(this);

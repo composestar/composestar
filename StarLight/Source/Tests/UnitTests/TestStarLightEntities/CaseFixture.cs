@@ -75,7 +75,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void AcceptTest()
         {
-            Case target = new Case();
+            CaseInstruction target = new CaseInstruction();
 
             IVisitor visitor = null; // TODO: Initialize to an appropriate value
 
@@ -90,7 +90,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void ConstructorTest()
         {
-            Case target = new Case();
+            CaseInstruction target = new CaseInstruction();
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -106,7 +106,7 @@ namespace TestStarLightEntities
 
             Block instructions = null; // TODO: Initialize to an appropriate value
 
-            Case target = new Case(checkConstant, instructions);
+            CaseInstruction target = new CaseInstruction(checkConstant, instructions);
 
             // TODO: Implement code to verify target
             Assert.Inconclusive("TODO: Implement code to verify target");
@@ -118,7 +118,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void CheckConstantTest()
         {
-            Case target = new Case();
+            CaseInstruction target = new CaseInstruction();
 
             int val = 0; // TODO: Assign to an appropriate value for the property
 
@@ -136,7 +136,7 @@ namespace TestStarLightEntities
         [TestMethod()]
         public void InstructionsTest()
         {
-            Case target = new Case();
+            CaseInstruction target = new CaseInstruction();
 
             Block val = null; // TODO: Assign to an appropriate value for the property
 

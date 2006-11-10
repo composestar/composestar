@@ -5,7 +5,9 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-
+using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
+   
 using Composestar.StarLight.Entities.LanguageModel;  
 #endregion
 
@@ -60,7 +62,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         {
             get
             {
-                return string.Format("{0}.{1}", _nameSpace, _target);
+                return string.Format(CultureInfo.CurrentCulture, "{0}.{1}", _nameSpace, _target);
             } // get
         } // Fullname
 

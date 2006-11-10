@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;  
 using System.Text;
 
 namespace Composestar.StarLight.CoreServices
@@ -13,7 +14,7 @@ namespace Composestar.StarLight.CoreServices
         /// Gets the referenced types.
         /// </summary>
         /// <value>The referenced types.</value>
-        List<String> ReferencedTypes { get; }
+        ReadOnlyCollection<String> ReferencedTypes { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has output filters.

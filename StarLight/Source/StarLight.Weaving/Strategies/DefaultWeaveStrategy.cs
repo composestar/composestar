@@ -36,7 +36,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="elements">Elements</param>
         /// <param name="fullname">The fullname.</param>
         /// <returns>Filter action element</returns>
-        private FilterActionElement GetFilterActionElement(List<FilterActionElement> elements, string fullname)
+        private static FilterActionElement GetFilterActionElement(List<FilterActionElement> elements, string fullname)
         {
             foreach (FilterActionElement fae in elements)
             {
@@ -45,7 +45,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             }
 
             return null;
-        } // GetFilterActionElement(elements, name)
+        } 
 
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace Composestar.StarLight.Weaving.Strategies
 
             // Create FilterAction object:
             FilterActionElement filterActionElement;
-            filterActionElement = GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
+            filterActionElement = DefaultWeaveStrategy.GetFilterActionElement(visitor.WeaveConfiguration.FilterActions, filterAction.FullName);
 
             if (filterActionElement == null)
-                throw new ILWeaverException(string.Format(Properties.Resources.CouldNotResolveFilterAction, filterAction.FullName)); 
+                throw new ILWeaverException(string.Format(CultureInfo.CurrentCulture, Properties.Resources.CouldNotResolveFilterAction, filterAction.FullName)); 
 
             // Get JoinPointContext
             VariableDefinition jpcVar = null;
@@ -75,7 +75,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         
             // Get the methodReference
             MethodReference methodReference = (MethodReference) originalCall;
-            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
+            // TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(methodReference.DeclaringType);
 
             // Set JoinPointContext
             if (filterActionElement.CreateJPC)
@@ -88,7 +88,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             MethodReference constructor = typeDef.Constructors.GetConstructor(false, new Type[0]);
 
             if (constructor == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.TypeNotFound, filterAction.FullName));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.TypeNotFound, filterAction.FullName));
 
             constructor = visitor.TargetAssemblyDefinition.MainModule.Import(constructor);
             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Newobj, constructor));
@@ -98,7 +98,7 @@ namespace Composestar.StarLight.Weaving.Strategies
 
             // Check for null value
             if (methodToCall == null)
-                throw new ILWeaverException(String.Format(Properties.Resources.AdviceMethodNotFound, "Execute", filterAction.FullName));
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.AdviceMethodNotFound, "Execute", filterAction.FullName));
             
             methodToCall = visitor.TargetAssemblyDefinition.MainModule.Import(methodToCall);
 
