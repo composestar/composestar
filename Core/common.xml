@@ -237,9 +237,9 @@ Common routines. Always include this file in every build.xml file
 		
 		<path id="lib.starlight">
 			<path refid="lib.core"/>
-			<fileset dir="${build.core}${file.separator}Compiletime" includes="${out.jar.core}"/>
-			<fileset dir="${build.starlight}${file.separator}Libraries" includes="*/*.jar"/>
-			<fileset dir="${build.starlight}${file.separator}Libraries" includes="*.jar" />
+			<fileset dir="${build.core}/Compiletime"    includes="${out.jar.core}"/>
+			<fileset dir="${build.starlight}/Libraries" includes="**/*.jar"/>
+			<fileset dir="${build.starlight}/Source/Compiletime/lib" includes="*.jar" />
 		</path>
 		
 		<!-- eclipse libraries -->
