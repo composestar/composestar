@@ -67,7 +67,6 @@
   <!-- Import the CSharp targets -->
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!--Import the StarLight targets-->
-  <Import Project="$(MSBuildExtensionsPath)\StarLight\0.1\StarLight.targets" />
   <Target Name="AfterWeave">
     <Message Text="Re-signing the iTextSharp assembly." />
     <Exec Command="sn -R $(OutDir)iTextSharp.dll ..\iTextSharp\itextsharp.snk" />
