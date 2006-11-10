@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/DotNET/Installer" default="installer">
+<project name="ComposeStar/DotNET/Installer" default="publish">
 
 	<condition property="build.core" value="..${file.separator}..${file.separator}Core">
 		<and>
@@ -120,13 +120,13 @@
 		</svn>		
 	</target>
 	
-	<target name="installer" depends="local_init,copy_files" if="available.innosetup" description="build the DotNET installer">	
+	<target name="publish" depends="local_init,copy_files" if="available.innosetup" description="build the DotNET installer">	
 		<exec executable="${bin.innosetup}" >
 			<arg value="ComposeStar.NET.iss" />
-			<arg value="/q}" />
+			<arg value="/q" />
 			<arg value="/dVERSION=${version.dotnet}" />
 			<arg value="/dBUILD=${version.build}" />
-		</exec>		
+		</exec>
 		<checksum file="${out.dist}${file.separator}ComposeStar.NET_${version.dotnet}.exe" forceOverwrite="yes"/>		
 	</target>
 </project>

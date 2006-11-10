@@ -15,8 +15,7 @@ Common routines. Always include this file in every build.xml file
 
 		<!-- load build.ini (if available) -->
 		<!-- all properties can be overridden in this file -->
-		<property file="${build.core.init}${file.separator}build.ini"/>
-		
+		<property file="${build.core.init}/build.ini"/>
 	
 		<!-- build label, passed by CruiseControl as "build.<number>", could be used in the version numbers -->
 		<property name="label" value="build.0"/>
@@ -26,16 +25,15 @@ Common routines. Always include this file in every build.xml file
 		<extractBuildNumber label="${label}" property="version.build" syntax="build.#"/>
 	
 		<!-- version numbers, used in installers e.a. Note: must be: [major].[minor].[release] -->
-		<property name="version.core"	value="0.6.1"/>
+		<property name="version.core"   value="0.6.1"/>
 		<property name="version.dotnet" value="${version.core}"/>
-		<property name="version.java"	value="${version.core}"/>
-		<property name="version.c"		value="${version.core}"/>
-		
+		<property name="version.java"   value="${version.core}"/>
+		<property name="version.c"      value="${version.core}"/>
 		
 		<!-- various config items -->
 		<property name="out.build" value="build"/>
 		<property name="out.dist"  value="dist"/>
-		<property name="out.qa"  value="qa"/>
+		<property name="out.qa"    value="qa"/>
 		
 		<property name="out.jar.core"      value="${out.dist}${file.separator}ComposestarCORE.jar"/>
 		<property name="out.jar.dotnet"    value="${out.dist}${file.separator}ComposestarDotNET.jar"/>
@@ -58,16 +56,51 @@ Common routines. Always include this file in every build.xml file
 		<dirname property="build.root" file="${build.core}"/>
 		
 		<!-- set platform paths -->
-		<property name="build.dotnet" value="${build.root}${file.separator}DotNET"/>
+		<property name="build.dotnet"    value="${build.root}${file.separator}DotNET"/>
 		<property name="build.starlight" value="${build.root}${file.separator}StarLight"/>
-		<property name="build.java" value="${build.root}${file.separator}Java"/>
-		<property name="build.c" value="${build.root}${file.separator}C"/>
+		<property name="build.java"      value="${build.root}${file.separator}Java"/>
+		<property name="build.c"         value="${build.root}${file.separator}C"/>
 		
 		<!-- check which platforms are available -->
 		<available file="${build.dotnet}${file.separator}build.xml"    property="available.dotnet"/>
 		<available file="${build.starlight}${file.separator}build.xml" property="available.starlight"/>
 		<available file="${build.java}${file.separator}build.xml"      property="available.java"/>
 		<available file="${build.c}${file.separator}build.xml"         property="available.c"/>
+
+		<!-- set default values of ignore properties for all platforms -->
+		<property name="ignore.dotnet"    value="false"/>
+		<property name="ignore.starlight" value="false"/>
+		<property name="ignore.java"      value="false"/>
+		<property name="ignore.c"         value="false"/>
+
+		<!-- set the enabled properties for all platforms based on available and ignore -->
+		<condition property="enabled.dotnet" value="true">
+			<and>
+				<istrue  value="${available.dotnet}"/>
+				<isfalse value="${ignore.dotnet}"/>
+			</and>
+		</condition>
+
+		<condition property="enabled.starlight" value="true">
+			<and>
+				<istrue  value="${available.starlight}"/>
+				<isfalse value="${ignore.starlight}"/>
+			</and>
+		</condition>
+
+		<condition property="enabled.java" value="true">
+			<and>
+				<istrue  value="${available.java}"/>
+				<isfalse value="${ignore.java}"/>
+			</and>
+		</condition>
+
+		<condition property="enabled.c" value="true">
+			<and>
+				<istrue  value="${available.c}"/>
+				<isfalse value="${ignore.c}"/>
+			</and>
+		</condition>
 		
 		<!-- resolve system variables -->	
 		<!-- Windows XP -->	
@@ -282,6 +315,32 @@ Common routines. Always include this file in every build.xml file
 		<svn>
 			<update dir="${basedir}" />
 		</svn>
+	</target>
+
+	<target name="report" depends="init" description="Report on the status of each platform">
+		
+		<condition property="status.dotnet" value="enabled" else="disabled">
+			<isset property="enabled.dotnet"/>
+		</condition>
+
+		<condition property="status.starlight" value="enabled" else="disabled">
+			<isset property="enabled.starlight"/>
+		</condition>
+
+		<condition property="status.java" value="enabled" else="disabled">
+			<isset property="enabled.java"/>
+		</condition>
+
+		<condition property="status.c" value="enabled" else="disabled">
+			<isset property="enabled.c"/>
+		</condition>
+
+		<echo message="Status of Compose* ports:"/>
+		<echo message="  DotNET:    ${status.dotnet}"/>
+		<echo message="  StarLight: ${status.starlight}"/>
+		<echo message="  Java:      ${status.java}"/>
+		<echo message="  C:         ${status.c}"/>		
+
 	</target>
 
 </project>
