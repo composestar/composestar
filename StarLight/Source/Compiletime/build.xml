@@ -31,7 +31,7 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init_local,build_xmltypes,compile_java,jar,compile_starlight" description="compile the StarLight compiletime"/>
+	<target name="build" depends="init_local,build_xmltypes,compile_java,jar,compile_starlight" description="Build the StarLight compiletime"/>
 	
 	<target name="antlr">
 		<!--
@@ -50,17 +50,17 @@
 	</target>
 	
 	<target name="build_xmltypes" depends="create_xsd">
-		<xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="../../Libraries/xmltypes.jar" classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
+		<xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="lib/xmltypes.jar" classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 	</target>
 	
 	<target name="compile_java">
-		<javac srcdir="Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.debug}">
+		<javac srcdir="Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
 		</javac>
 	</target>
 			
 	<target name="compile_starlight">
-		
+		<!-- ??? -->
 	</target>
 
 	<target name="jar">

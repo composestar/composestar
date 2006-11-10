@@ -70,24 +70,34 @@
 
 	<!-- install tasks -->
 	
-	<target name="install" depends="init" description="Copy the resulting binaries to the installation directory.">
+	<target name="install" description="Copy the resulting binaries to the installation directory.">
 		<antcall target="install_core" />
 		<antcall target="install_dotnet" />
+		<antcall target="install_starlight" />
 		<antcall target="install_java" />	
+		<antcall target="install_c" />	
 	</target>
 
-	<target name="install_core">
+	<target name="install_core" depends="init">
 		<ant target="install" dir="${build.core}" />		
 	</target>
 	
-	<target name="install_dotnet" if="enabled.dotnet">
+	<target name="install_dotnet" depends="init" if="enabled.dotnet">
 		<ant target="install" dir="${build.dotnet}" />
 	</target>
 
-	<target name="install_java" if="enabled.java">
+	<target name="install_starlight" depends="init" if="enabled.starlight">
+		<ant target="install" dir="${build.starlight}" />
+	</target>
+
+	<target name="install_java" depends="init" if="enabled.java">
 		<ant target="install" dir="${build.java}" />
 	</target>
 	
+	<target name="install_c" depends="init" if="enabled.c">
+		<ant target="install" dir="${build.c}" />
+	</target>
+
 	<!-- publish tasks -->
 	
 	<target name="publish">

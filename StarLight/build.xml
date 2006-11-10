@@ -28,5 +28,7 @@
 		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" />
 		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
+
+	<target name="install" depends="build" description="Install the StarLight implementation of Compose*"/>
 	
 </project>
