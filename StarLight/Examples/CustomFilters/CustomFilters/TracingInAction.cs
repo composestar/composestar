@@ -9,8 +9,8 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace CustomFilters
 {
-    [FilterActionAttribute("TracingInAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute("TracingInAction", FilterActionAttribute.FilterFlowBehavior.Continue,
+       FilterActionAttribute.MessageSubstitutionBehavior.Original)]
     public sealed class TracingInAction : FilterAction
     {
         public override void Execute(JoinPointContext context)

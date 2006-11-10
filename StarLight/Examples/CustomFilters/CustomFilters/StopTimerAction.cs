@@ -10,8 +10,8 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace CustomFilters
 {
-    [FilterActionAttribute("StopTimerAction", FilterActionAttribute.FilterFlowBehaviour.Continue,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute("StopTimerAction", FilterActionAttribute.FilterFlowBehavior.Continue,
+       FilterActionAttribute.MessageSubstitutionBehavior.Original)]
     public class StopTimerAction : FilterAction
     {
         [DllImport("Kernel32.dll")]

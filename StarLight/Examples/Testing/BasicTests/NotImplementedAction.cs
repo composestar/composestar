@@ -7,7 +7,7 @@ using Composestar.StarLight.Filters.FilterTypes;
 
 namespace BasicTests
 {
-    [FilterActionAttribute("NotImplementedAction", FilterActionAttribute.FilterFlowBehaviour.Exit, FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute("NotImplementedAction", FilterActionAttribute.FilterFlowBehavior.Exit, FilterActionAttribute.MessageSubstitutionBehavior.Original)]
     public class NotImplementedAction : FilterAction
     {
         public override void Execute(JoinPointContext context)
