@@ -879,14 +879,9 @@ public class INCRE implements CTCommonModule
 		Debug.out(Debug.MODE_DEBUG, "INCRE","Comparator made "+comparator.getCompare()+" comparisons");
 
 		DataStore ds = DataStore.instance();
-		Configuration config = Configuration.instance();
 		
-		ModuleSettings m = config.getModuleSettings("INCRE");
-		if (m != null) {
-			//incre_enabled = m.getProperty("enabled");
-		}
+		String incre_enabled = Configuration.instance().getModuleProperty("INCRE", "enabled", "false");
 
-		String incre_enabled = "false";
 		if (!"true".equalsIgnoreCase(incre_enabled))
 			return;
 

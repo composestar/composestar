@@ -22,7 +22,7 @@ public class FieldNode extends Node
 			return publicfield.get(obj);
 		}
 		catch(Exception excep){
-            excep.printStackTrace();
+            //excep.printStackTrace();
         }
 	
 		try { 

@@ -153,8 +153,18 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 		 map.m_values = new Vector();
 		 return map;
 	*/
-		 // the code above is wrong, so throw an exception instead
-		 throw new CloneNotSupportedException();
+		 DataMap dmap = (DataMap)super.clone();
+		 
+		 dmap.map = new HashMap(map.size());
+		
+		 Iterator keyIterator = keySet().iterator();
+		 while(keyIterator.hasNext())
+		 {
+			String key = (String) keyIterator.next();
+			dmap.put(key, map.get(key));
+		 }
+			
+		 return dmap;
 	 }
 
 	 /**
