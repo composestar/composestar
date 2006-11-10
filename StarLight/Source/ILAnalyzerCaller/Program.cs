@@ -355,7 +355,7 @@ namespace Composestar.StarLight.ILAnalyzerCaller
             }
             finally
             {
-                analyzer.Close();
+                analyzer.Dispose();
             }
 
             return result;

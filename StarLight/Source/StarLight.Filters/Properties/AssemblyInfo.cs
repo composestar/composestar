@@ -2,7 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System;
-
+using System.Diagnostics.CodeAnalysis;
+ 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -35,3 +36,9 @@ using System;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: CLSCompliant(true)]
+
+
+[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.BuildIn", MessageId = "StarLight")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.BuildIn", MessageId = "Composestar")]
+[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.FilterTypes", MessageId = "StarLight")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Composestar.StarLight.Filters.FilterTypes", MessageId = "Composestar")]

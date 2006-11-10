@@ -9,11 +9,11 @@ namespace Composestar.StarLight.Filters.BuildIn
     /// <summary>
     /// Implements a call to an advice.
     /// </summary>
-    [FilterActionAttribute(FilterAction.AdviceAction, FilterActionAttribute.FilterFlowBehaviour.Continue, FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute(FilterAction.AdviceAction, FilterActionAttribute.FilterFlowBehavior.Continue, FilterActionAttribute.MessageSubstitutionBehavior.Original)]
     public class AdviceAction : FilterAction
     {
         /// <summary>
-        /// Implements the behaviour of the FilterAction.
+        /// Implements the behavior of the FilterAction.
         /// </summary>
         /// <param name="context">Context information</param>
         public override void Execute(JoinPointContext context)

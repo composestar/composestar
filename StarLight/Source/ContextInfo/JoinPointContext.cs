@@ -293,7 +293,7 @@ namespace Composestar.StarLight.ContextInfo
         /// </example>
         [MethodImpl(MethodImplOptions.Synchronized)]
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", 
-            Justification="Use the GetArgumentValue method. The weaver could not easily determine if it had to inject a generic or non generic version of the GetArgumentValue method. So by using the word Generic in the method name, it is possible. If the weaver can detect the difference between generics and non generic methods, we can change the name of this method the <T>GetArgumentValue.")]
+            Justification="Use the GetArgumentValue method. The weaver could not easily determine if it had to inject a generic or non generic version of the GetArgumentValue method. So by using the word Generic in the method name, it is possible. If the weaver can detect the difference between generics and non generic methods, we can change the name of this method the <T>GetArgumentValue.")]        
         public T GetGenericArgumentValue<T>(short ordinal)
         {
             ArgumentInfo ai;

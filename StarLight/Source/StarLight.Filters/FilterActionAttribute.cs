@@ -11,7 +11,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// <example>
     /// Place this custom attribute on classes inheriting <see cref="T:FilterAction"></see> like in the following example.
     /// <code>
-    /// [FilterActionAttribute("TracingInAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
+    /// [FilterActionAttribute("TracingInAction", FilterFlowBehavior.Continue, MessageSubstitutionBehavior.Original)]
     /// public class TracingInAction : FilterAction
     /// {
     ///    public override void Execute(JoinPointContext context)
@@ -19,7 +19,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
     ///    }
     /// }
     /// </code>
-    /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>. 
+    /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behavior is <c>continue</c> and the message substitution behavior is <c>original</c>. 
     /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation (not shown here).
     /// </example> 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
@@ -29,8 +29,8 @@ namespace Composestar.StarLight.Filters.FilterTypes
         #region Private Variables
 
         private string _actionName;
-        private FilterFlowBehaviour _flowBehaviour;
-        private MessageSubstitutionBehaviour _substitutionBehaviour;
+        private FilterFlowBehavior _flowBehavior;
+        private MessageSubstitutionBehavior _substitutionBehavior;
         private bool _createJPC = true;
 
         #endregion
@@ -55,26 +55,26 @@ namespace Composestar.StarLight.Filters.FilterTypes
         }
 
         /// <summary>
-        /// Gets or sets the flow behaviour.
+        /// Gets or sets the flow behavior.
         /// </summary>
-        /// <value>The flow behaviour.</value>
-        public FilterFlowBehaviour FlowBehaviour
+        /// <value>The flow behavior.</value>
+        public FilterFlowBehavior FlowBehavior
         {
             get
             {
-                return _flowBehaviour;
+                return _flowBehavior;
             }          
         }
 
         /// <summary>
-        /// Gets or sets the substitution behaviour.
+        /// Gets or sets the substitution behavior.
         /// </summary>
-        /// <value>The substitution behaviour.</value>
-        public MessageSubstitutionBehaviour SubstitutionBehaviour
+        /// <value>The substitution behavior.</value>
+        public MessageSubstitutionBehavior SubstitutionBehavior
         {
             get
             {
-                return _substitutionBehaviour;
+                return _substitutionBehavior;
             }          
         }
 
@@ -98,13 +98,13 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// Initializes a new instance of the <see cref="T:FilterActionAnnotation"/> class describing a FilterAction.
         /// </summary>
         /// <param name="actionName">Name of the action.</param>
-        /// <param name="flowBehaviour">The flow behaviour of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
-        /// <param name="substitutionBehaviour">The substitution behaviour of the filter action.</param>
+        /// <param name="flowBehavior">The flow behavior of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
+        /// <param name="substitutionBehavior">The substitution behavior of the filter action.</param>
         /// <remarks>Place this attribute only at classes inheriting the <see cref="T:FilterType"></see> base class since the filter action must implement the <c>Execute</c> method.</remarks>
         /// <example>
         /// Place this custom attribute on classes inheriting <see cref="T:FilterAction"></see> like in the following example.
         /// <code>
-        /// [FilterActionAttribute("TracingInAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
+        /// [FilterActionAttribute("TracingInAction", FilterFlowBehavior.Continue, MessageSubstitutionBehavior.Original)]
         /// public class TracingInAction : FilterAction
         /// {
         /// public override void Execute(JoinPointContext context)
@@ -112,20 +112,20 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// }
         /// }
         /// </code>
-        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>.
+        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behavior is <c>continue</c> and the message substitution behavior is <c>original</c>.
         /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. In this case, it will perform some sort of tracing operation.
         /// </example>
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
         /// </exception>
-        public FilterActionAttribute(string actionName, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour)
+        public FilterActionAttribute(string actionName, FilterFlowBehavior flowBehavior, MessageSubstitutionBehavior substitutionBehavior)
         {
             if (string.IsNullOrEmpty(actionName))
                 throw new ArgumentNullException("actionName");
 
             _actionName = actionName;
-            _flowBehaviour = flowBehaviour;
-            _substitutionBehaviour = substitutionBehaviour;
+            _flowBehavior = flowBehavior;
+            _substitutionBehavior = substitutionBehavior;
 
         }
 
@@ -133,15 +133,15 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// Initializes a new instance of the <see cref="T:FilterActionAnnotation"/> class describing a FilterAction.
         /// </summary>
         /// <param name="actionName">The unique name of the filter action.</param>
-        /// <param name="flowBehaviour">The flow behaviour of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
-        /// <param name="substitutionBehaviour">The substitution behaviour of the filter action.</param>
+        /// <param name="flowBehavior">The flow behavior of the filter action indicating how a certain FilterAction influences the flow through the filterset.</param>
+        /// <param name="substitutionBehavior">The substitution behavior of the filter action.</param>
         /// <param name="createJoinPointContext">if set to <c>true</c>, the weaver injects a join point context object to be used in the <c>Execute</c> method. 
         /// When <c>false</c>, this step will be skipped and a null reference is placed instead of a Join Point Context.</param>
         /// <remarks>Place this attribute only at classes inheriting the <see cref="T:FilterType"></see> base class since the filter action must implement the <c>Execute</c> method.</remarks>
         /// <example>
         /// Place this custom attribute on classes inheriting <see cref="T:FilterAction"></see> like in the following example.
         /// <code>
-        /// [FilterActionAttribute("TracingInAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original, false)]
+        /// [FilterActionAttribute("TracingInAction", FilterFlowBehavior.Continue, MessageSubstitutionBehavior.Original, false)]
         /// public class TracingInAction : FilterAction
         /// {
         ///    public override void Execute(JoinPointContext context)
@@ -150,28 +150,28 @@ namespace Composestar.StarLight.Filters.FilterTypes
         ///    }
         /// }
         /// </code>
-        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behaviour is <c>continue</c> and the message substitution behaviour is <c>original</c>.
+        /// In this example, the name of the filter action is <c>TracingInAction</c>, the flow behavior is <c>continue</c> and the message substitution behavior is <c>original</c>.
         /// The <c>TracingInAction</c> class implements the <c>Execute</c> function with a custom implementation of the filter action. 
         /// In this case, it can not use the JoinPointContext because the Attribute indicates that a JoinPointContext is not needed for this filter action.
         /// </example>
         /// <exception cref="ArgumentNullException">
         /// If the <paramref name="name"/> is <see langword="null"></see> or empty, this exception is thrown.
         /// </exception>
-        public FilterActionAttribute(string actionName, FilterFlowBehaviour flowBehaviour, MessageSubstitutionBehaviour substitutionBehaviour, bool createJoinPointContext)
+        public FilterActionAttribute(string actionName, FilterFlowBehavior flowBehavior, MessageSubstitutionBehavior substitutionBehavior, bool createJoinPointContext)
         {
             if (string.IsNullOrEmpty(actionName))
                 throw new ArgumentNullException("actionName");
 
             _actionName = actionName;
-            _flowBehaviour = flowBehaviour;
-            _substitutionBehaviour = substitutionBehaviour;
+            _flowBehavior = flowBehavior;
+            _substitutionBehavior = substitutionBehavior;
             _createJPC = createJoinPointContext;
 
         }
 
         #endregion
 
-        #region FilterFlowBehaviour Enum
+        #region FilterFlowBehavior Enum
 
         /// <summary>
         /// Enumeration to indicate how a certain FilterAction influences the flow through the 
@@ -188,7 +188,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// </list>
         /// </para>
         /// </remarks>         
-        public enum FilterFlowBehaviour
+        public enum FilterFlowBehavior
         {
             /// <summary>
             /// To indicate that flow continues to the next filter.
@@ -208,7 +208,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
 
         #endregion
 
-        #region MessageSubstitutionBehaviour Enum
+        #region MessageSubstitutionBehavior Enum
 
         /// <summary>
         /// Enumeration to indicate how the action changes the message.        
@@ -224,7 +224,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
         /// </list>
         /// </para>  
         /// </remarks> 
-        public enum MessageSubstitutionBehaviour
+        public enum MessageSubstitutionBehavior
         {
             /// <summary>
             /// The message is not changed.

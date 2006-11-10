@@ -10,12 +10,12 @@ namespace Composestar.StarLight.Filters.BuildIn
     /// <summary>
     /// The continue action simply performs no operation.
     /// </summary>
-    [FilterActionAttribute(FilterAction.ContinueAction, FilterActionAttribute.FilterFlowBehaviour.Continue,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute(FilterAction.ContinueAction, FilterActionAttribute.FilterFlowBehavior.Continue,
+       FilterActionAttribute.MessageSubstitutionBehavior.Original)]
     public class ContinueAction : FilterAction
     {
         /// <summary>
-        /// Implements the behaviour of the FilterAction.
+        /// Implements the behavior of the FilterAction.
         /// </summary>
         /// <param name="context">Context information</param>
         public override void Execute(JoinPointContext context)

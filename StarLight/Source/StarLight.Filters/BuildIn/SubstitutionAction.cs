@@ -9,12 +9,12 @@ namespace Composestar.StarLight.Filters.BuildIn
     /// <summary>
     /// Substitution action.
     /// </summary>
-    [FilterActionAttribute(FilterAction.SubstitutionAction, FilterActionAttribute.FilterFlowBehaviour.Continue,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Substituted)]
+    [FilterActionAttribute(FilterAction.SubstitutionAction, FilterActionAttribute.FilterFlowBehavior.Continue,
+       FilterActionAttribute.MessageSubstitutionBehavior.Substituted)]
     public class SubstitutionAction : FilterAction
     {
         /// <summary>
-        /// Implements the behaviour of the FilterAction.
+        /// Implements the behavior of the FilterAction.
         /// </summary>
         /// <param name="context">Context information</param>
         public override void Execute(JoinPointContext context)

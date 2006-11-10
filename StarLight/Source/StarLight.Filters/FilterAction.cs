@@ -9,7 +9,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
 {
     /// <summary>
     /// The base class of every FilterAction. Each subclass should be annotated with the FilterActionAnnotation
-    /// custom attribute, to provide information to the StarLight compiler about the behaviour of this action concerning
+    /// custom attribute, to provide information to the StarLight compiler about the behavior of this action concerning
     /// the message in the filterset.
     /// </summary>
     /// <example>
@@ -19,7 +19,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
     /// <para>
     /// The following code shows a <i>StartTimerAction</i>, which will start a timer and place the timer values in the context properties of the <see cref="T:JoinPointContext"></see> parameter.</para>
     /// <code>
-    /// [FilterActionAttribute("StartTimerAction", FilterFlowBehaviour.Continue, MessageSubstitutionBehaviour.Original)]
+    /// [FilterActionAttribute("StartTimerAction", FilterFlowBehavior.Continue, MessageSubstitutionBehavior.Original)]
     /// public class StartTimerAction : FilterAction
     /// {
     ///     [DllImport("Kernel32.dll")]
@@ -65,7 +65,7 @@ namespace Composestar.StarLight.Filters.FilterTypes
     public abstract class FilterAction
     {
         /// <summary>
-        /// Implements the behaviour of the FilterAction. You must override this method and supply your own filteraction implementation.
+        /// Implements the behavior of the FilterAction. You must override this method and supply your own filteraction implementation.
         /// </summary>
         /// <param name="context">Join Point Context information.</param>
         /// <remarks>If the developer has set the CreateJoinPointContext to <see langword="false"/> 

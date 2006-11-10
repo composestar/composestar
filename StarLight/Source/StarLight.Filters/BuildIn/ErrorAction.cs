@@ -9,12 +9,12 @@ namespace Composestar.StarLight.Filters.BuildIn
     /// <summary>
     /// Generates an exception.
     /// </summary>
-    [FilterActionAttribute(FilterAction.ErrorAction, FilterActionAttribute.FilterFlowBehaviour.Exit,
-       FilterActionAttribute.MessageSubstitutionBehaviour.Original)]
+    [FilterActionAttribute(FilterAction.ErrorAction, FilterActionAttribute.FilterFlowBehavior.Exit,
+       FilterActionAttribute.MessageSubstitutionBehavior.Original)]
     public class ErrorAction : FilterAction
     {
         /// <summary>
-        /// Implements the behaviour of the FilterAction.
+        /// Implements the behavior of the FilterAction.
         /// </summary>
         /// <param name="context">Context information</param>
         public override void Execute(JoinPointContext context)

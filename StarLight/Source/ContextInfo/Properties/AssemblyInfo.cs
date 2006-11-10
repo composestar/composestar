@@ -41,3 +41,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
 
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.ContextInfo")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Composestar.StarLight.ContextInfo", MessageId = "Composestar")]
+[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "namespace", Target = "Composestar.StarLight.ContextInfo", MessageId = "StarLight")]

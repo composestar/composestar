@@ -585,15 +585,15 @@ namespace Composestar.StarLight.ILAnalyzer
                 faEl.Name = faa.ActionName;
                 faEl.Assembly = type.Module.Assembly.Name.ToString();
 
-                switch (faa.FlowBehaviour)
+                switch (faa.FlowBehavior)
                 {
-                    case FilterActionAttribute.FilterFlowBehaviour.Continue:
+                    case FilterActionAttribute.FilterFlowBehavior.Continue:
                         faEl.FlowBehavior = FilterActionElement.FlowContinue;
                         break;
-                    case FilterActionAttribute.FilterFlowBehaviour.Exit:
+                    case FilterActionAttribute.FilterFlowBehavior.Exit:
                         faEl.FlowBehavior = FilterActionElement.FlowExit;
                         break;
-                    case FilterActionAttribute.FilterFlowBehaviour.Return:
+                    case FilterActionAttribute.FilterFlowBehavior.Return:
                         faEl.FlowBehavior = FilterActionElement.FlowReturn;
                         break;
                     default:
@@ -601,15 +601,15 @@ namespace Composestar.StarLight.ILAnalyzer
                         break;
                 } // switch
 
-                switch (faa.SubstitutionBehaviour )
+                switch (faa.SubstitutionBehavior )
                 {
-                    case FilterActionAttribute.MessageSubstitutionBehaviour.Original:
+                    case FilterActionAttribute.MessageSubstitutionBehavior.Original:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageOriginal;
                         break;
-                    case FilterActionAttribute.MessageSubstitutionBehaviour.Substituted:
+                    case FilterActionAttribute.MessageSubstitutionBehavior.Substituted:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageSubstituted;
                         break;
-                    case FilterActionAttribute.MessageSubstitutionBehaviour.Any:
+                    case FilterActionAttribute.MessageSubstitutionBehavior.Any:
                         faEl.MessageChangeBehavior = FilterActionElement.MessageAny;
                         break;
                     default:
