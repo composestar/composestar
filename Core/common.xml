@@ -198,10 +198,12 @@ Common routines. Always include this file in every build.xml file
 			<sequential>
 				<echo message="Running FxCop" level="info"/>
 				<exec executable="${bin.fxcop}" failonerror="false">
-					<arg value="/f:@{files}"/>
+					<arg value="/f:@{files}"/>					
 					<arg value="/o:@{reportfile}"/>			
 				<!--	<arg value="/sf" />		-->
 					<arg value="/q" />
+					<arg value="/summary" />
+					<arg value="/outxsl:${build.core}${file.separator}Development${file.separator}fxcop${file.separator}xml${file.separator}FxCopRichConsoleOutput.xsl"/>
 				</exec>
 			</sequential>
 

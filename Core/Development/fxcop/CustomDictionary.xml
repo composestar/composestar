@@ -3,9 +3,11 @@
  <Words>
   <Unrecognized>
    <Word>cb</Word>
+   <Word>StarLight</Word>  
   </Unrecognized>
   <Recognized>
    <Word>contravariant</Word>
+   <Word>Composestar</Word>
   </Recognized>
   <Deprecated>
     <!-- Be sure to pascal-case deprecated terms and preferred alternates     -->
