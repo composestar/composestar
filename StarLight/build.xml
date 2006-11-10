@@ -9,8 +9,8 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-	<property name="out.qa.starlight"  value="Source${file.separator}Compiletime${file.separator}qa"/>
-  <property name="out.fxcop.starlight" value="Source${file.separator}qa" /> 
+	<property name="out.qa.starlight"  value="QualityAssurance"/>
+  <property name="out.fxcop.starlight" value="QualityAssurance" /> 
 
 	<property name="MSBuildTasks.dir" location="Source${file.separator}VSIntegration${file.separator}MSBuildTasks"/>
 	
@@ -83,12 +83,9 @@
 	    <mkdir dir="${out.fxcop.starlight}" />           
 	</target>
 	
-	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">	
-      <fileset id="fxcop.src" dir="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug">
-        <include name="**/*.dll"/>
-        <exclude name="Mono*.*" />
-      </fileset>  
-  	<fxcop reportfile="${out.fxcop.starlight}${file.separator}fxcop.html" files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug\ComposeStar.StarLight.ContextInfo.Dll"/>
+	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">	      
+      <fxcop reportfile="${out.fxcop.starlight}${file.separator}fxcop.txt" 
+   				   files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug${file.separator}Composestar*.dll"/>
 	</target>
 	
 </project>
