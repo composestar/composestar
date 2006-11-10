@@ -56,8 +56,10 @@ namespace Mono.Cecil {
 #if !CF_1_0 && !CF_2_0
 			if (name.Name == "mscorlib")
 				return GetCorlib (name);
-			else if (IsInGac (name))
-				return AssemblyFactory.GetAssembly (GetFromGac (name));
+
+			AssemblyDefinition asm = GetAssemblyInGac (name);
+			if (asm != null)
+				return asm;
 #endif
 
 			throw new FileNotFoundException ("Could not resolve: " + name);
@@ -101,37 +103,30 @@ namespace Mono.Cecil {
 			return typeof (object).Assembly.GetType ("System.MonoType", false) != null;
 		}
 
-		public static bool IsInGac (AssemblyNameReference reference)
+		public static AssemblyDefinition GetAssemblyInGac (AssemblyNameReference reference)
 		{
 			if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
-				return false;
+				return null;
 
-			return File.Exists (GetFromGac (reference));
+			string currentGac = GetCurrentGacPath ();
+			if (OnMono ()) {
+				string s = GetAssemblyFile (reference, currentGac);
+				if (File.Exists (s))
+					return AssemblyFactory.GetAssembly (s);
+			} else {
+				string [] gacs = new string [] {"GAC_MSIL", "GAC_32", "GAC"};
+				for (int i = 0; i < gacs.Length; i++) {
+					string gac = Path.Combine (Directory.GetParent (currentGac).FullName, gacs [i]);
+					string asm = GetAssemblyFile (reference, gac);
+					if (Directory.Exists (gac) && File.Exists (asm))
+						return AssemblyFactory.GetAssembly (asm);
+				}
+			}
+
+			return null;
 		}
 
-        public static bool IsInGac32(AssemblyNameReference reference)
-        {
-            if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
-                return false;
-
-            return File.Exists(GetFromGac32(reference));
-        }
-
-        public static string GetFromGac32(AssemblyNameReference reference)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(reference.Version);
-            sb.Append("__");
-            for (int i = 0; i < reference.PublicKeyToken.Length; i++)
-                sb.Append(reference.PublicKeyToken[i].ToString("x2"));
-
-            return Path.Combine(
-                Path.Combine(
-                    Path.Combine(GetGacPath().Replace("GAC_MSIL", "GAC_32"), reference.Name), sb.ToString()),
-                    string.Concat(reference.Name, ".dll"));
-        }
-
-		public static string GetFromGac (AssemblyNameReference reference)
+		static string GetAssemblyFile (AssemblyNameReference reference, string gac)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (reference.Version);
@@ -141,11 +136,11 @@ namespace Mono.Cecil {
 
 			return Path.Combine (
 				Path.Combine (
-					Path.Combine (GetGacPath (), reference.Name), sb.ToString ()),
+					Path.Combine (gac, reference.Name), sb.ToString ()),
 					string.Concat (reference.Name, ".dll"));
 		}
 
-		static string GetGacPath ()
+		static string GetCurrentGacPath ()
 		{
 			return Directory.GetParent (
 				Directory.GetParent (
