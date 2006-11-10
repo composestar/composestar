@@ -73,7 +73,7 @@ concern Sounds in PacmanTwo
 			{		
 				if(soundOn) 
 				{
-					if (jpc.get_Target() instanceof Pacman)
+					if (jpc.get_CurrentTarget() instanceof Pacman)
 					{
 						beep( 700, 110 );
 						beep( 400, 110 );

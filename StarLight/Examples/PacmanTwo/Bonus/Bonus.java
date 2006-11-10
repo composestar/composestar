@@ -68,7 +68,10 @@ public class Bonus
 	{		
 		if (bonusPickups >= 2) return; // max of 2 pickups per level
 
-		float delta = (float)((System.Single)jpc.GetArgumentValue((short)0));
+		Object arg0 = jpc.GetArgumentValue((short)0);
+		System.out.println("Bonus.tick: arg0=" + arg0);
+
+		float delta = (float)((System.Single)arg0);
 		timeTillBonus -= delta;
 		
 		if ((activeBonus == null) && (timeTillBonus < 0))

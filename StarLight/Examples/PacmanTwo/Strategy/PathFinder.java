@@ -41,9 +41,7 @@ public class PathFinder
 	 */
 	public void initialize(JoinPointContext jpc)
 	{
-		Level level = (Level)jpc.get_Sender();		
-		System.out.println("level=" + level);
-		
+		Level level = (Level)jpc.get_CurrentTarget();
 		maze = level.getMaze();
 	}
 
