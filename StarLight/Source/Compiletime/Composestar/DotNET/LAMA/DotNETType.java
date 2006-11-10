@@ -926,20 +926,34 @@ public class DotNETType extends Type {
 		out.writeObject(ImplementedInterfaceNames);
 		out.writeObject(theDotNETType);
 		out.writeObject(Assembly);
+		
 		if(NameSpace!=null)
 			out.writeUTF(NameSpace);
 		else
 			out.writeUTF("");
-		out.writeUTF(AssemblyQualifiedName);
+		
+		if(AssemblyQualifiedName!=null)
+			out.writeUTF(AssemblyQualifiedName);
+		else
+			out.writeUTF("");
+		
 		out.writeObject(Module);
-		out.writeUTF(UnderlyingTypeString);
+		
+		if(UnderlyingTypeString!=null)
+			out.writeUTF(UnderlyingTypeString);
+		else
+			out.writeUTF("");
 			
 		if(BaseTypeString!=null)
 			out.writeUTF(BaseTypeString);
 		else
 			out.writeUTF("");
 
-		out.writeUTF(fromDLL);
+		if(fromDLL!=null)
+			out.writeUTF(fromDLL);
+		else
+			out.writeUTF("");
+		
 		out.writeObject(annotationInstances);
 	}
 }
