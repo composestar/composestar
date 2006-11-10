@@ -29,6 +29,7 @@ Common routines. Always include this file in every build.xml file
 		<property name="version.dotnet" value="${version.core}"/>
 		<property name="version.java"   value="${version.core}"/>
 		<property name="version.c"      value="${version.core}"/>
+		<property name="version.starlight" value="0.1.0"/>
 		
 		<!-- various config items -->
 		<property name="out.build" value="build"/>
@@ -147,7 +148,7 @@ Common routines. Always include this file in every build.xml file
 			<attribute name="solution"/>
 			<attribute name="config" default="Release"/>
 			<attribute name="target" default="rebuild"/>
-			
+					
 			<sequential>
 				<exec executable="msbuild" failonerror="true">
 					<arg value="@{solution}"/>
@@ -180,6 +181,31 @@ Common routines. Always include this file in every build.xml file
 		<condition property="bin.devenv" value="C:${file.separator}Program Files${file.separator}Microsoft Visual Studio .NET 2003${file.separator}Common7${file.separator}IDE${file.separator}devenv.com" else="devenv.com">
 			<not><isset property="available.devenv.path"/></not>
 		</condition>
+		
+		<!-- FxCop -->
+		<available file="FxCopCmd.exe" filepath="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}" property="available.fxcop"/>
+		<available file="FxCopCmd.exe" filepath="${env.PATH}" property="available.fxcop.path"/>				
+		<condition property="bin.fxcop" value="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}FxCopCmd.exe" else="FxCopCmd.exe">
+			<not><isset property="available.fxcop.path"/></not>
+		</condition>
+		
+		<!-- FxCop macro -->
+		<macrodef name="fxcop">
+			
+			<attribute name="files"/>
+			<attribute name="reportfile"/>
+								
+			<sequential>
+				<echo message="Running FxCop" level="info"/>
+				<exec executable="${bin.fxcop}" failonerror="false">
+					<arg value="/f:@{files}"/>
+					<arg value="/o:@{reportfile}"/>			
+				<!--	<arg value="/sf" />		-->
+					<arg value="/q" />
+				</exec>
+			</sequential>
+
+		</macrodef>
 		
 		<macrodef name="devenv">
 			<attribute name="solution"/>

@@ -38,7 +38,7 @@
 		<ant target="clean" dir="${build.c}" />
 	</target>
 	
-	<!-- build tasks -->
+	<!-- build tasks -->	
 	
 	<target name="build" description="Builds all available and enabled parts of the Compose* project">
 		<antcall target="build_core" />
@@ -58,6 +58,22 @@
 	
 	<target name="build_starlight" depends="build_core" if="enabled.starlight" description="Build Compose* StarLight">
 		<ant target="build" dir="${build.starlight}" />
+	</target>
+	
+	<target name="build_starlight_compiletime" depends="build_core" if="enabled.starlight" description="Build Compose* StarLight Compiletime">
+		<ant target="build" dir="${build.starlight}${file.separator}source${file.separator}compiletime" />
+	</target>
+	
+  <target name="build_starlight_msbuild"  if="enabled.starlight" description="Build Compose* StarLight MSBuild tasks">
+		<ant target="build" dir="${build.starlight}${file.separator}source${file.separator}vsintegration${file.separator}msbuildtasks" />
+	</target>
+	
+	<target name="build_starlight_vs"  if="enabled.starlight" description="Build Compose* StarLight VS Integration">
+		<ant target="build" dir="${build.starlight}${file.separator}source${file.separator}vsintegration${file.separator}VisualStudio.Project" />
+	</target>
+	
+	<target name="build_starlight_ws"  if="enabled.starlight" description="Build Compose* StarLight WeaveStrategy">
+		<ant target="build" dir="${build.starlight}${file.separator}Source${file.separator}StarLight.Weaving.BuildIn" />
 	</target>
 	
 	<target name="build_java" depends="build_core" if="enabled.java" description="Build the Java port">
@@ -102,10 +118,15 @@
 	
 	<target name="publish">
 		<antcall target="publish_dotnet"/>
+		<antcall target="publish_starlight"/>
 	</target>
 	
 	<target name="publish_dotnet" depends="init,build_dotnet" if="enabled.dotnet" description="Create installer for Compose* .NET">
 		<ant target="publish" dir="${build.dotnet}/Installer"/>
+	</target>		
+	
+	<target name="publish_starlight" depends="init,build_starlight" if="enabled.starlight" description="Create installer for Compose* StarLight">
+		<ant target="publish" dir="${build.starlight}/Setup"/>
 	</target>		
 	
 	<!-- uninstall tasks -->
@@ -136,11 +157,27 @@
 	
 	<!-- QA tasks -->
 	<target name="qa" depends="findbugs,checkstyle" description="Execute Quality Assurance tasks" />
-	
+
+	<target name="qa_starlight" description="Execute Quality Assurance tasks">
+		<antcall target="fxcop_starlight" />
+		<antcall target="findbugs_starlight" />
+		<antcall target="checkstyle_starlight" />
+	</target>
+
+  <!-- execute FXCop tools -->
+  <target name="fxcop" depends="init" description="Analyse the .net code using FxCop.">
+		<antcall target="fxcop_starlight" />
+	</target>
+
+  <target name="fxcop_starlight" depends="init" if="enabled.starlight">
+		<ant target="fxcop" dir="${build.starlight}" />
+	</target>
+
 	<!-- execute the findbugs tool -->
 	<target name="findbugs" depends="init" description="Analyse the compiled Java code for possible bugs.">
 		<antcall target="findbugs_core" />
 		<antcall target="findbugs_dotnet" />
+		<antcall target="findbugs_starlight" />
 	</target>
 	
 	<target name="findbugs_core" depends="init">
@@ -151,10 +188,15 @@
 		<ant target="findbugs" dir="${build.dotnet}" />
 	</target>
 	
-	<!-- execute the findbugs tool -->
+	<target name="findbugs_starlight" depends="init" if="enabled.starlight">
+		<ant target="findbugs" dir="${build.starlight}" />
+	</target>
+	
+	<!-- execute the checkstyle tool -->
 	<target name="checkstyle" depends="init" description="Run CheckStyle source code proof reader.">
 		<antcall target="checkstyle_core" />
 		<antcall target="checkstyle_dotnet" />
+		<antcall target="checkstyle_starlight" />
 	</target>
 	
 	<target name="checkstyle_core" depends="init">
@@ -163,6 +205,10 @@
 	
 	<target name="checkstyle_dotnet" depends="init" if="enabled.dotnet">
 		<ant target="checkstyle" dir="${build.dotnet}" />
+	</target>
+	
+	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
+		<ant target="checkstyle" dir="${build.starlight}" />
 	</target>
 
 	<!-- tests -->
@@ -272,6 +318,7 @@ If the build failed the cause will be listed at the end of the report.
 				<antMenuItem name="Publish">
 					<antMenuItem name="All"    target="publish"/>
 					<antMenuItem name="DotNET" target="publish_dotnet" if="enabled.dotnet"/>
+					<antMenuItem name="StarLight" target="publish_starlight" if="enabled.starlight"/>
 				</antMenuItem>
 				<antMenuItem name="Run tests"   target="test"/>
 				<antMenuItem name="QA">
@@ -279,8 +326,36 @@ If the build failed the cause will be listed at the end of the report.
 					<antMenuItem name="FindBugs"       target="findbugs"/>
 					<antMenuItem name="CheckStyle"     target="checkstyle"/>
 				</antMenuItem>
+				<antMenuItem name="Ports specific">
+					<antMenuItem name="StarLight"  if="enabled.starlight" >			
+						<antMenuItem name="Clean"  target="clean_starlight"/>		
+						<antMenuItem name="Build">
+							<antMenuItem name="Build all"   target="build_starlight"/>
+							<antMenuItem name="Rebuild all" target="rebuild_starlight"/>
+							<antMenuItem name="Core"        target="build_core"/>
+							<antMenuItem name="Compiletime" target="build_starlight_compiletime"/>
+							<antMenuItem name="MSBuildTasks" target="build_starlight_msbuild"/>
+							<antMenuItem name="VSIntegration" target="build_starlight_vs"/>
+							<antMenuItem name="WeaveStrategy" target="build_starlight_ws"/>
+						</antMenuItem>			
+						<antMenuItem name="Install">
+							<antMenuItem name="Install"   target="install_starlight"/>
+							<antMenuItem name="Uninstall" target="uninstall_starlight"/>
+						</antMenuItem>
+						<antMenuItem name="Publish">
+							<antMenuItem name="StarLight" target="publish_starlight" if="enabled.starlight"/>
+						</antMenuItem>
+						<antMenuItem name="Run tests"   target="test"/>
+						<antMenuItem name="QA">
+							<antMenuItem name="All QA targets" target="qa_starlight"/>
+							<antMenuItem name="FxCop"          target="fxcop_starlight"/>
+							<antMenuItem name="FindBugs"       target="findbugs_starlight"/>
+							<antMenuItem name="CheckStyle"     target="checkstyle_starlight"/>
+						</antMenuItem>
+				</antMenuItem>
+			</antMenuItem>		
 			</antMenuItem>
-					
+											
 			<link label="Rebuild" target="rebuild"/>
 			<link label="Clean install" target="cleaninstall"/>			
 			<link label="Install &amp; test" target="install_test"/>			
