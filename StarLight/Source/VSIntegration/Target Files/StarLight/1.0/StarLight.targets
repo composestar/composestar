@@ -95,7 +95,7 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="Include" ItemName="TempRepository"/>
     </CreateItem>
     <Delete Files="@(TempRepository)"/>
-    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)INCRE.*">
+    <CreateItem Include="$(ProjectDir)$(BaseIntermediateOutputPath)INCRE.*;$(ProjectDir)$(BaseIntermediateOutputPath)history.dat">
       <Output TaskParameter="Include" ItemName="TempIncre"/>
     </CreateItem>
     <Delete Files="@(TempIncre)"/>
