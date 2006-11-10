@@ -88,7 +88,7 @@
         <include name="**/*.dll"/>
         <exclude name="Mono*.*" />
       </fileset>  
-  	<fxcop reportfile="${fxcopresults}${file.separator}fxcop.html" files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug\ComposeStar.StarLight.ContextInfo.Dll"/>
+  	<fxcop reportfile="${out.fxcop.starlight}${file.separator}fxcop.html" files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug\ComposeStar.StarLight.ContextInfo.Dll"/>
 	</target>
 	
 </project>
