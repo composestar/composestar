@@ -40,6 +40,7 @@ namespace Composestar.StarLight.Utilities.Interfaces
     /// <summary>
     /// Interface for the Cecil inlining instructions.
     /// </summary>
+    [CLSCompliant(false)]
     public interface ICecilInliningInstructionVisitor
     {
         /// <summary>
@@ -47,6 +48,7 @@ namespace Composestar.StarLight.Utilities.Interfaces
         /// </summary>
         /// <param name="type">The type of the variable to create.</param>
         /// <returns>Returns the variable as a <see cref="T:Mono.Cecil.VariableDefinition"></see>.</returns>
+        [CLSCompliant(false)]
         VariableDefinition CreateLocalVariable(Type type);
 
          /// <summary>
@@ -54,12 +56,14 @@ namespace Composestar.StarLight.Utilities.Interfaces
         /// </summary>
         /// <param name="type">The typereference to create.</param>
         /// <returns>Returns the variable as a <see cref="T:Mono.Cecil.VariableDefinition"></see>.</returns>
+        [CLSCompliant(false)]
         VariableDefinition CreateLocalVariable(TypeReference type);
 
         /// <summary>
         /// Creates the join point context variable.
         /// </summary>
         /// <returns>Returns the <see cref="T:Composestar.StarLight.ContextInfo.JoinPointContext"></see> as a <see cref="T:Mono.Cecil.VariableDefinition"></see>.</returns>
+        [CLSCompliant(false)]
         VariableDefinition CreateJoinPointContextLocal();
 
         /// <summary>
@@ -86,22 +90,26 @@ namespace Composestar.StarLight.Utilities.Interfaces
         /// Gets or sets the target assembly definition.
         /// </summary>
         /// <value>The target assembly definition.</value>
+        [CLSCompliant(false)]
         AssemblyDefinition TargetAssemblyDefinition { get;set;}
         /// <summary>
         /// Gets or sets the containing method.
         /// </summary>
         /// <value>The method.</value>
+        [CLSCompliant(false)]
         MethodDefinition Method { get;set;}
         /// <summary>
         /// Gets or sets the called method. For inputfilters this is the containing method.
         /// For outputfilters this is the method to which the outgoing call is targeted
         /// </summary>
         /// <value>The method.</value>
+        [CLSCompliant(false)]
         MethodDefinition CalledMethod { get;set;}
         /// <summary>
         /// Gets or sets the worker.
         /// </summary>
         /// <value>The worker.</value>
+        [CLSCompliant(false)]
         CilWorker Worker { get;set;}
         /// <summary>
         /// Gets or sets the instructions.

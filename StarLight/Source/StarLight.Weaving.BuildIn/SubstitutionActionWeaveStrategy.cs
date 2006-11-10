@@ -18,6 +18,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// Has only filterbehaviour (empty execute method); substitutes the message with the substitutionmessage and continues. 
     /// </summary>
     [WeaveStrategyAttribute("SubstitutionAction")]
+    [CLSCompliant(false)]
     public class SubstitutionActionWeaveStrategy : FilterActionWeaveStrategy
     {
 

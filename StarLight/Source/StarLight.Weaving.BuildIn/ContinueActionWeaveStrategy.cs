@@ -18,6 +18,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// A continue action does not perform any operation. It will simple skip to the next filter.
     /// </summary>
     [WeaveStrategyAttribute("ContinueAction")]
+    [CLSCompliant(false)]
     public class ContinueActionWeaveStrategy : FilterActionWeaveStrategy
     {
    

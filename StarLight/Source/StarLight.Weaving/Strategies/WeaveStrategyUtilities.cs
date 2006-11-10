@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-
+using System.Diagnostics.CodeAnalysis;
+  
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -40,7 +41,8 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor</param>
         /// <param name="originalCall">The original call</param>
         /// <param name="filterAction">The filterAction</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Performance", "CA1801:AvoidUnusedParameters", Justification="May be needed in the future.")]
+        [SuppressMessage ("Microsoft.Performance", "CA1801:AvoidUnusedParameters", Justification="May be needed in the future.")]
+        [CLSCompliant(false)]
         public static void SetJoinPointContext(
             ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, FilterAction filterAction)
@@ -146,6 +148,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor.</param>
         /// <param name="originalMethod">The original method.</param>
         /// <param name="jpcVar">The Join Point Context variable.</param>
+        [CLSCompliant(false)]
         public static void LoadArguments(ICecilInliningInstructionVisitor visitor,
             MethodReference originalMethod, VariableDefinition jpcVar)
         {
@@ -293,6 +296,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor.</param>
         /// <param name="originalMethod">The original method.</param>
         /// <param name="jpcVar">The Join Point Context variable.</param>
+        [CLSCompliant(false)]
         public static void RestoreArguments(ICecilInliningInstructionVisitor visitor,
             MethodReference originalMethod, VariableDefinition jpcVar)
         {
@@ -342,6 +346,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor.</param>
         /// <param name="originalCall">The original call.</param>
         /// <param name="jpcVar">The Join Point variable.</param>
+        [CLSCompliant(false)]
         public static void StoreReturnValue(ICecilInliningInstructionVisitor visitor,
             MethodReference originalCall, VariableDefinition jpcVar)
         {
@@ -374,6 +379,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// </summary>
         /// <param name="visitor">The visitor</param>
         /// <param name="jpcVar">The JoinPointContext VariableDefinition</param>
+        [CLSCompliant(false)]
         public static void LoadSelfObject(ICecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
         {
             if(visitor.FilterType == FilterTypes.InputFilter)

@@ -99,6 +99,7 @@ namespace Composestar.StarLight.Utilities
         /// <remarks>Use this resolver to retrieve assemblies based on their name. It will first look in the folder specified by the BinFolder, the subfolders and finally the GAC.
         /// Set the <see cref="P:Composestar.StarLight.Utilities.CecilUtilities.BinFolder"></see> first to a location where all the binaries can be found.</remarks> 
         /// <value>The assembly resolver.</value>
+        [CLSCompliant(false)]
         public static StarLightAssemblyResolver AssemblyResolver
         {
             get
@@ -128,6 +129,7 @@ namespace Composestar.StarLight.Utilities
         /// <param name="assemblyDefinition">The assembly definition to input the method into.</param>
         /// <param name="methodBase">The method information to import.</param>
         /// <returns></returns>
+        [CLSCompliant(false)]
         public static MethodReference CreateMethodReference(AssemblyDefinition assemblyDefinition, MethodBase methodBase)
         {
             if (assemblyDefinition == null)
@@ -154,6 +156,7 @@ namespace Composestar.StarLight.Utilities
         /// </code>
         /// </example>
         /// <exception cref="Composestar.StarLight.CoreServices.Exceptions.ILWeaverException">Thrown when the cached method definition could not be found.</exception>
+        [CLSCompliant(false)]
         public static MethodReference CreateMethodReference(AssemblyDefinition assemblyDefinition, CachedMethodDefinition methodDefinitionType)
         {
             MethodBase mb = null;
@@ -227,6 +230,7 @@ namespace Composestar.StarLight.Utilities
         /// <param name="assemblyDefinition">The assembly definition.</param>
         /// <param name="type">The type to create a <see cref="T:Mono.Cecil.TypeReference"/> for.</param>
         /// <returns></returns>
+        [CLSCompliant(false)]
         public static TypeReference CreateTypeReference(AssemblyDefinition assemblyDefinition, Type type)
         {
             if (assemblyDefinition == null)
@@ -242,6 +246,7 @@ namespace Composestar.StarLight.Utilities
         /// <param name="typeName">Name of the type.</param>
         /// <returns>A <see cref="T:Mono.Cecil.TypeReference"></see> based on the supplied <paramref name="typeName"/>.</returns>
         /// <exception cref="Composestar.StarLight.CoreServices.Exceptions.ILWeaverException">Thrown when the cached type definition could not be found.</exception>
+        [CLSCompliant(false)]
         public static TypeReference CreateTypeReference(AssemblyDefinition assemblyDefinition, CachedTypeDefinition typeName)
         {
             Type type = null;
@@ -287,6 +292,7 @@ namespace Composestar.StarLight.Utilities
         /// </example>
         /// <returns>A <see cref="T:Mono.Cecil.TypeReference"></see> or <see langword="null"></see> when the type could not be found.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="typeRef"/> is <see langword="null"></see>.</exception>
+        [CLSCompliant(false)]
         public static TypeDefinition ResolveTypeDefinition(TypeReference typeRef)
         {
 
@@ -347,6 +353,7 @@ namespace Composestar.StarLight.Utilities
         /// </example>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="typeName"/> is <see langword="null"></see> or empty.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="assemblyName"/> is <see langword="null"></see> or empty.</exception>
+        [CLSCompliant(false)]
         public static TypeReference ResolveType(string typeName, string assemblyName, string assemblyFile)
         {
 
@@ -428,6 +435,7 @@ namespace Composestar.StarLight.Utilities
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="methodName"/> is <see langword="null"></see> or empty.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="typeName"/> is <see langword="null"></see> or empty.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="assemblyName"/> is <see langword="null"></see> or empty.</exception>
+        [CLSCompliant(false)]
         public static MethodReference ResolveMethod(string methodName, Type[] parameters, string typeName, string assemblyName, string assemblyFile)
         {
             if (string.IsNullOrEmpty(methodName))
@@ -516,6 +524,7 @@ namespace Composestar.StarLight.Utilities
         /// <remarks>
         /// <para>This function uses an internal cache to store already retrieved methods for quick lookup.</para>
         /// <note>You cannot select the parameters with this function. Use the <see cref="M:ResolveMethod(string, Type[], string, string, string)"></see> for this.</note></remarks>
+        [CLSCompliant(false)]
         public static MethodReference ResolveMethod(string methodName, string typeName, string assemblyName, string assemblyFile)
         {
             return ResolveMethod(methodName, null, typeName, assemblyName, assemblyFile);
@@ -538,6 +547,7 @@ namespace Composestar.StarLight.Utilities
         /// <remarks>
         /// <para>This function uses an internal cache to store already retrieved methods for quick lookup.</para>
         /// <note>You cannot select the parameters with this function. Use the <see cref="M:ResolveMethod(string, Type[], string, string, string)"></see> for this.</note></remarks>
+        [CLSCompliant(false)]
         public static MethodReference ResolveMethod(string methodName, string typeName, string assemblyName)
         {
             return ResolveMethod(methodName, typeName, assemblyName, string.Empty);
@@ -565,6 +575,7 @@ namespace Composestar.StarLight.Utilities
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parentType"/> is <see langword="null"></see>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="methodName"/> is <see langword="null"></see> or empty.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="exampleMethod"/> is <see langword="null"></see>.</exception>
+        [CLSCompliant(false)]
         public static MethodDefinition ResolveMethod(TypeDefinition parentType, string methodName,
             MethodDefinition exampleMethod)
         {
@@ -600,6 +611,7 @@ namespace Composestar.StarLight.Utilities
         /// </example>  
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parentTypeRef"/> is <see langword="null"></see>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="methodName"/> is <see langword="null"></see> or empty.</exception>
+        [CLSCompliant(false)]
         public static MethodDefinition ResolveMethod(TypeReference parentTypeRef, string methodName, Type[] parameterTypes)
         {
             if (parentTypeRef == null)
@@ -656,6 +668,7 @@ namespace Composestar.StarLight.Utilities
         /// <param name="reference">The MethodReference of which the MethodDefinition needs to be resolved.</param>
         /// <returns>The resolved MethodDefinition.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="reference"/> is <see langword="null"></see>.</exception>
+        [CLSCompliant(false)]
         public static MethodDefinition ResolveMethodDefinition(MethodReference reference)
         {
             if (reference == null)
@@ -717,6 +730,7 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>A formatted signature of a method.</returns>
+        [CLSCompliant(false)]
         public static String MethodSignature(MethodDefinition method)
         {
             if (method == null)

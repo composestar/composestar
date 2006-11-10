@@ -45,6 +45,7 @@ namespace Composestar.StarLight.ILWeaver.WeaveStrategy
         /// </summary>
         /// <param name="filterAction">The filter action.</param>
         /// <returns></returns>
+        [CLSCompliant(false)]
         public static FilterActionWeaveStrategy GetFilterActionWeaveStrategy(string filterAction)
         {
             if (string.IsNullOrEmpty(filterAction))

@@ -43,7 +43,8 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="instruction">The instruction.</param>
         /// <returns>A formatted instruction.</returns>
-		public static string FormatInstruction (Instruction instruction)
+        [CLSCompliant(false)]
+        public static string FormatInstruction (Instruction instruction)
 		{
             using (StringWriter writer = new StringWriter(CultureInfo.CurrentCulture))
             {
@@ -57,7 +58,8 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns>A formatted method body.</returns>
-		public static string FormatMethodBody (MethodDefinition method)
+        [CLSCompliant(false)]
+        public static string FormatMethodBody (MethodDefinition method)
 		{
             if (method == null)
                 throw new ArgumentNullException("method");
@@ -74,7 +76,8 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="method">The method.</param>
-		public static void WriteMethodBody (TextWriter writer, MethodDefinition method)
+        [CLSCompliant(false)]
+        public static void WriteMethodBody (TextWriter writer, MethodDefinition method)
 		{
             if (writer == null)
                 throw new ArgumentNullException("writer");
@@ -96,7 +99,8 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="instruction">The instruction.</param>
-		public static void WriteInstruction (TextWriter writer, Instruction instruction)
+        [CLSCompliant(false)]
+        public static void WriteInstruction (TextWriter writer, Instruction instruction)
 		{
             if (writer == null)
                 throw new ArgumentNullException("writer");
@@ -205,7 +209,8 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A formatted type reference.</returns>
-		public static string FormatTypeReference (TypeReference type)
+        [CLSCompliant(false)]
+        public static string FormatTypeReference (TypeReference type)
 		{
 			string typeName = type.FullName;
 			switch (typeName) {

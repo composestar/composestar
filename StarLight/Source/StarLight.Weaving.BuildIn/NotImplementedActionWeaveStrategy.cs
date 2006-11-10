@@ -13,6 +13,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// Strategy to create the NotImplementedAction. This action injects <see cref="T:System.NotImplementedException">NotImplementedExceptions</see> into the code.
     /// </summary>
     [WeaveStrategyAttribute("NotImplementedAction")]
+    [CLSCompliant(false)]
     public class NotImplementedActionWeaveStrategy : FilterActionWeaveStrategy
     {
 

@@ -29,6 +29,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     [WeaveStrategyAttribute("AdviceAction")]
     [WeaveStrategyAttribute("BeforeAction")]
     [WeaveStrategyAttribute("AfterAction")]
+    [CLSCompliant(false)]
     public class AdviceActionWeaveStrategy : FilterActionWeaveStrategy
     {
 

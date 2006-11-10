@@ -20,6 +20,7 @@ namespace Composestar.StarLight.Utilities
     /// It will try to lookup assemblies on their assembly name of assembly definition.
     /// </summary>
     /// <remarks>This class holds an internal cache for the found assemblies.</remarks>
+    [CLSCompliant(false)]
     public class StarLightAssemblyResolver : BaseAssemblyResolver
     {
 
@@ -62,6 +63,7 @@ namespace Composestar.StarLight.Utilities
         /// </example>
         /// <remarks>This functions will parse the <paramref name="fullName"/> to create an <see cref="T:Mono.Cecil.AssemblyNameReference"/>.</remarks>
         /// <returns>Return an <see cref="T:Mono.Cecil.AssemblyDefinition"></see> or <see langword="null"/> when the assembly could not be found.</returns>
+        [CLSCompliant(false)]
         public override AssemblyDefinition Resolve(string fullName)
         {
             if (String.IsNullOrEmpty(fullName))
@@ -87,6 +89,7 @@ namespace Composestar.StarLight.Utilities
         /// </summary>
         /// <param name="name">The name and details of the assembly.</param>
         /// <returns>Return an <see cref="T:Mono.Cecil.AssemblyDefinition"></see> or <see langword="null"/> when the assembly could not be found.</returns>
+        [CLSCompliant(false)]
         public override AssemblyDefinition Resolve(AssemblyNameReference name)
         {
             AssemblyDefinition asm;

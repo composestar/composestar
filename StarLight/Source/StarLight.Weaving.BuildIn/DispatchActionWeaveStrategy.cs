@@ -22,6 +22,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// Dispatches to the substitution-message and returns afterwards. 
     /// </summary>
     [WeaveStrategyAttribute("DispatchAction")]
+    [CLSCompliant(false)]
     public class DispatchActionWeaveStrategy : FilterActionWeaveStrategy
     {
        

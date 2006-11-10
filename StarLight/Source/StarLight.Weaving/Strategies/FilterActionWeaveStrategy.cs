@@ -18,6 +18,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// <summary>
     /// Base class of the filter action weave strategies.
     /// </summary>
+    [CLSCompliant(false)]
     public abstract class FilterActionWeaveStrategy
     {
          
@@ -26,10 +27,9 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filter action.</param>
-        /// <param name="originalCall">The original call.</param>
+        /// <param name="originalCall">The original call.</param>       
         public abstract void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall);
-
        
     }
 }

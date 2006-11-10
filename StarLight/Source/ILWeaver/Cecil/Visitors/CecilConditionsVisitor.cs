@@ -205,6 +205,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Initializes a new instance of the <see cref="T:CecilConditionsVisitor"/> class.
         /// </summary>
         /// <param name="visitor">The parent visitor.</param>
+        [CLSCompliant(false)]
         public CecilConditionsVisitor(CecilInliningInstructionVisitor visitor)
         {
             if (visitor == null)

@@ -199,8 +199,8 @@ namespace Composestar.Repository
                     _extraTypes = new Type[] { typeof(FilterAction), typeof(Block), typeof(Branch), typeof(CaseInstruction), typeof(JumpInstruction), typeof(SwitchInstruction), typeof(WhileInstruction), typeof(ContextInstruction),
                     typeof(AndCondition), typeof(ConditionExpression), typeof(ConditionLiteral), typeof(FalseCondition), typeof(NotCondition), typeof(OrCondition), typeof(TrueCondition) };
                 return _extraTypes; 
-            } // return
-        } // ExtraTypes
+            } 
+        } 
 
         /// <summary>
         /// Saves the weave specification.

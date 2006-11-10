@@ -20,6 +20,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// Basically, it injects an <c>exception throw</c> statement into the instruction code.
     /// </summary>
     [WeaveStrategyAttribute("ErrorAction")]
+    [CLSCompliant(false)]
     public class ErrorActionWeaveStrategy : FilterActionWeaveStrategy
     {
 

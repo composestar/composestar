@@ -30,6 +30,7 @@ namespace Composestar.StarLight.ILAnalyzer
     /// <summary>
     /// Visitor to visit all the relevant assembly items and returns an <see cref="AssemblyElement"></see>.
     /// </summary>
+    [CLSCompliant(false)]
     public class CecilAssemblyVisitor : BaseReflectionVisitor
     {
 
@@ -334,6 +335,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Visits the type definition.
         /// </summary>
         /// <param name="type">The type.</param>
+        [CLSCompliant(false)]
         public override void VisitTypeDefinition(TypeDefinition type)
         {
             // Create a new typeElement
@@ -433,6 +435,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Visits the method definition.
         /// </summary>
         /// <param name="method">The method.</param>
+        [CLSCompliant(false)]
         public override void VisitMethodDefinition(MethodDefinition method)
         {
 
@@ -521,6 +524,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Visits the field definition.
         /// </summary>
         /// <param name="field">The field.</param>
+        [CLSCompliant(false)]
         public override void VisitFieldDefinition(FieldDefinition field)
         {
             if (!_includeFields) return;
@@ -538,11 +542,7 @@ namespace Composestar.StarLight.ILAnalyzer
 
             _currentType.Fields.Add(fe);
         }
-
-        public override void VisitCustomAttribute(CustomAttribute customAttr)
-        {
-        }
-
+           
         #endregion
 
         #region Filter Actions

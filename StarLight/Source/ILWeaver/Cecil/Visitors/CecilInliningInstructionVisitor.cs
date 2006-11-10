@@ -34,6 +34,7 @@ namespace Composestar.StarLight.ILWeaver
     /// <remarks>
     /// This visitor can also add types and local variables to the method.
     /// </remarks> 
+    [CLSCompliant(false)]
     public class CecilInliningInstructionVisitor : IVisitor, ICecilInliningInstructionVisitor
     {
 

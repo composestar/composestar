@@ -27,6 +27,7 @@ namespace Composestar.StarLight.Weaving.Strategies
     /// If more flexibility is needed, then create a custom weave strategy.
     /// </summary>
     [WeaveStrategyAttribute("Default")]
+    [CLSCompliant(false)]
     public class DefaultWeaveStrategy : FilterActionWeaveStrategy
     {
         
@@ -55,6 +56,7 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// <param name="visitor">The visitor.</param>
         /// <param name="filterAction">The filter action.</param>
         /// <param name="originalCall">The original call.</param>
+        [CLSCompliant(false)]
         public override void Weave(ICecilInliningInstructionVisitor visitor, FilterAction filterAction,
             MethodDefinition originalCall)
         {
