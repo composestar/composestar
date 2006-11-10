@@ -202,7 +202,7 @@ public class FILTHServiceImpl extends FILTHService
 		FILTHService.log.close();	
 		
 		if(alt > 2)
-			Debug.out(Debug.MODE_WARNING,"FILTH","Multple Filter Module orderings possible for concern " + c.getQualifiedName(),filename);
+			Debug.out(Debug.MODE_WARNING,"FILTH","Multiple Filter Module orderings possible for concern " + c.getQualifiedName(),filename);
 
 		return forders; //arrange this according to the output required!!
 	
