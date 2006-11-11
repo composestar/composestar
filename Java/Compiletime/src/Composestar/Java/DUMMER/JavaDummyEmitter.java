@@ -663,10 +663,13 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case EXTENDS_CLAUSE:
+				
 				if (hasChildren(ast))
 				{
 					out("extends ");
-					visitChildren(ast, ", ");
+					visit(getChild(ast, IDENT));
+					visit(getChild(ast, TYPE_ARGS));
+					visitChildren(ast, "", DOT);
 					out(" ");
 				}
 				break;
@@ -1144,5 +1147,35 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 			child = child.getNextSibling();
 		}
 		return ret;
+	}
+	
+	/**
+	 * For testing.
+	 */
+	public static void main(String[] args)
+	{
+		if (args.length != 1)
+		{
+			System.out.println("Usage: JavaDummyEmitter <filename>");
+			System.exit(-1);
+		}
+
+		try
+		{
+			File input = new File(args[0]);
+
+			File dummyDir = new File(input.getParent(), "dummies");
+			File output = new File(dummyDir, input.getName());
+
+			Source source = new Source();
+			source.setFileName(input.getAbsolutePath());
+
+			JavaDummyEmitter jde = new JavaDummyEmitter();
+			jde.createDummy(null, source, output.getAbsolutePath());
+		}
+		catch (Throwable e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
