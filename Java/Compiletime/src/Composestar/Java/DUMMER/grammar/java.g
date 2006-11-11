@@ -583,7 +583,7 @@ classDefinition![AST modifiers]
 							   modifiers,IDENT,tp,sc,ic,cb);}
 	;
 
-superClassClause!
+superClassClause
 	:	( "extends" classOrInterfaceType[false] )?
 		{#superClassClause = #(#[EXTENDS_CLAUSE,"EXTENDS_CLAUSE"],
 			#superClassClause);}
