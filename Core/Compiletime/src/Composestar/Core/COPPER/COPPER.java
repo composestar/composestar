@@ -98,12 +98,13 @@ public class COPPER implements CTCommonModule
 	public void copyOperation(String filename) throws ModuleException
 	{
 		INCRE inc = INCRE.instance();
-
-		/* collect and iterate over all objects from previous compilation runs */
+		
+		// collect and iterate over all objects from previous compilation runs
 		Iterator it = inc.history.getIterator();
 		while (it.hasNext())
 		{
 			Object obj = it.next();
+			
 			if (obj instanceof RepositoryEntity)
 			{
 				// COPPER only adds RepositoryEntities
@@ -151,7 +152,6 @@ public class COPPER implements CTCommonModule
 						try
 						{
 							CpsConcern cpsclone = (CpsConcern) cps.clone();
-
 							DataStore.instance().addObject(cpsclone.getQualifiedName(), cpsclone);
 						}
 						catch (CloneNotSupportedException e)

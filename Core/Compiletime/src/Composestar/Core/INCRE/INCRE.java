@@ -1,13 +1,10 @@
 package Composestar.Core.INCRE;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +30,6 @@ import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.ConcernSource;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Core.Master.Config.Dependency;
-import Composestar.Core.Master.Config.ModuleSettings;
 import Composestar.Core.Master.Config.PathSettings;
 import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
@@ -54,23 +50,25 @@ public class INCRE implements CTCommonModule
 {
 	private static INCRE s_instance;
 
-	private static final String MODULE_NAME = "INCRE";
+	private static final String HISTORY_FILENAME = "history.dat";
+	
+	public static final String MODULE_NAME = "INCRE";
 
-	private boolean enabled;
+	public boolean enabled;
 
 	private Configuration config;
 
 	private DataStore currentRepository;
 
 	public DataStore history;
-
+	
+	public String historyfile = "";
+	
+	private Date lastCompTime;
+	
 	public boolean searchingHistory;
 
-	private String historyfile = "";
-
-	private Date lastCompTime;
-
-	private MyComparator comparator;
+	public MyComparator comparator;
 
 	private ConfigManager configmanager;
 
@@ -130,17 +128,16 @@ public class INCRE implements CTCommonModule
 	public void run(CommonResources resources) throws ModuleException
 	{
 		PathSettings ps = config.getPathSettings();
-
-		this.historyfile = ps.getPath("Base") + "history.dat";
-
-		// check if incremental compilation is enabled
+		historyfile = ps.getPath("Base") + HISTORY_FILENAME;
+		
+		// check whether incremental compilation is enabled
 		String enabled = config.getModuleProperty(MODULE_NAME, "enabled", "false");
 		this.enabled = "true".equalsIgnoreCase(enabled);
 
 		// non-incremental compilation so clean history
 		if (!this.enabled)
 		{
-			this.deleteHistory();
+			deleteHistory();
 		}
 
 		// time this initialization process
@@ -160,7 +157,7 @@ public class INCRE implements CTCommonModule
 			// time the loading process
 			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
 					INCRETimer.TYPE_OVERHEAD);
-			this.enabled = this.loadHistory(historyfile); // shut down INCRE
+			this.enabled = loadHistory(); // shut down INCRE
 			// in case loading
 			// fails
 			loadhistory.stop();
@@ -703,7 +700,8 @@ public class INCRE implements CTCommonModule
 	 * from unmodified libraries/sources are excluded If this information is not
 	 * available then the primitive concern is included
 	 * 
-	 * @param ds Datastore to search
+	 * @param ds
+	 *            Datastore to search
 	 * @return
 	 */
 	public ArrayList getAllModifiedPrimitiveConcerns(DataStore ds) throws ModuleException
@@ -765,8 +763,10 @@ public class INCRE implements CTCommonModule
 	/**
 	 * Returns true if concern is possible declared in a sourcefile
 	 * 
-	 * @param c - The concern possible declared in sourcefile
-	 * @param src - Fullpath of sourcefile
+	 * @param c -
+	 *            The concern possible declared in sourcefile
+	 * @param src -
+	 *            Fullpath of sourcefile
 	 * @param source
 	 */
 	public boolean declaredInSource(Concern c, String source)
@@ -788,6 +788,9 @@ public class INCRE implements CTCommonModule
 			String location = locations.getSourceByType(type.m_fullName);
 			if (location != null)
 			{
+				location = FileUtils.normalizeFilename(location);
+				source = FileUtils.normalizeFilename(source);
+								
 				if (location.equals(source))
 				{
 					return true;
@@ -806,8 +809,10 @@ public class INCRE implements CTCommonModule
 	/**
 	 * Returns true if concern is possible declared in one of the source files
 	 * 
-	 * @param c - The concern possible declared in sourcefile
-	 * @param sources - Fullpath of sourcefile
+	 * @param c -
+	 *            The concern possible declared in sourcefile
+	 * @param sources -
+	 *            Fullpath of sourcefile
 	 */
 	public boolean declaredInSources(Concern c, ArrayList sources)
 	{
@@ -1018,33 +1023,32 @@ public class INCRE implements CTCommonModule
 			f.delete();
 		}
 	}
-
+	
 	/**
-	 * Loads the history repository specified by the filename. Uses
-	 * objectinputstream.
-	 * 
-	 * @param filename
+	 * Reads a written repository from disk
 	 */
-	public boolean loadHistory(String filename) throws ModuleException
+	public boolean loadHistory() throws ModuleException
 	{
 		try
 		{
-			FileInputStream fis = new FileInputStream(filename);
+			INCRE incre = INCRE.instance();
+			
+			FileInputStream fis = new FileInputStream(historyfile);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			ObjectInputStream ois = new ObjectInputStream(bis);
-			history = new DataStore();
+			incre.history = new DataStore();
 
 			// read last compilation date
-			this.lastCompTime = (Date) ois.readObject();
+			lastCompTime = (Date) ois.readObject();
 			Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Loading history (" + lastCompTime.toString() + ")...");
 
 			// read project configurations
-			configurations.historyconfig = (Configuration) ois.readObject();
+			incre.configurations.historyconfig = (Configuration) ois.readObject();
 
 			int numberofobjects = ois.readInt();
 			for (int i = 0; i < numberofobjects; i++)
 			{
-				history.addObject(ois.readObject());
+				incre.history.addObject(ois.readObject());
 			}
 
 			ois.close();
@@ -1061,81 +1065,7 @@ public class INCRE implements CTCommonModule
 			return false;
 		}
 	}
-
-	/**
-	 * Stores the current repository to a specified file.
-	 */
-	public void storeHistory() throws ModuleException
-	{
-		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Comparator made " + comparator.getCompare() + " comparisons");
-
-		DataStore ds = DataStore.instance();
-		Configuration config = Configuration.instance();
-
-		ModuleSettings m = config.getModuleSettings(MODULE_NAME);
-		if (m != null)
-		{
-			// incre_enabled = m.getProperty("enabled");
-		}
-
-		String incre_enabled = "false";
-		if (!"true".equalsIgnoreCase(incre_enabled))
-		{
-			return;
-		}
-
-		// FIXME: this should really be done by DataStore itself.
-		ObjectOutputStream oos = null;
-		try
-		{
-			FileOutputStream fos = new FileOutputStream(this.historyfile);
-			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			oos = new ObjectOutputStream(bos);
-
-			// write current date = last compilation date
-			oos.writeObject(new Date());
-
-			// write project configurations
-			oos.writeObject(Configuration.instance());
-
-			// collect the objects
-			int count = ds.size(), stored = 0;
-			oos.writeInt(count - 1);
-
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Up to " + count + " objects to store");
-
-			Iterator it = ds.getIterator();
-
-			// first item is skipped for some reason...
-			// FIXME: is this really correct? if so: explain why.
-			if (it.hasNext())
-			{
-				it.next();
-			}
-
-			// write the rest
-			while (it.hasNext())
-			{
-				Object item = it.next();
-				if (item != null)
-				{
-					oos.writeObject(item);
-					stored++;
-				}
-			}
-
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "" + stored + " objects have been stored");
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("Error occured while creating history: " + e.toString(), MODULE_NAME);
-		}
-		finally
-		{
-			FileUtils.close(oos);
-		}
-	}
-
+	
 	public void addModuleByName(String name, CTCommonModule module)
 	{
 		this.modulesByName.put(name, module);

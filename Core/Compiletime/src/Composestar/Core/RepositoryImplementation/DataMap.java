@@ -137,7 +137,10 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		throw new CloneNotSupportedException();
+		// shallow copy
+		DataMap dmap = new DataMap(this);
+				
+		return dmap;
 	}
 
 	public void excludeUnreferenced(Class c)
