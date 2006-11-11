@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import Composestar.Core.FILTH.FilterModuleOrder;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Config.Configuration;
+import Composestar.Core.Master.Config.Source;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Core.WEAVER.WEAVER;
 import Composestar.Utils.CommandLineExecutor;
@@ -320,13 +322,11 @@ public class ILICIT implements WEAVER
 		INCRE incre = INCRE.instance();
 		List concerns = new ArrayList();
 		List concernsWithFMO = incre.getConcernsWithFMO();
-		// remove the \\ :(
-		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-		// it have the
-		// double slashes in
-		// the first place?
-		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
-		sources.add(0, src);
+		
+		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
+		String target = FileUtils.removeExtension(orig.getTarget());
+		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		sources.add(0, orig.getFileName());
 
 		if (!concernsWithFMO.isEmpty())
 		{
@@ -357,13 +357,11 @@ public class ILICIT implements WEAVER
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		// remove the \\ :(
-		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-		// it have the
-		// double slashes in
-		// the first place?
-		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
-		sources.add(0, src);
+				
+		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
+		String target = FileUtils.removeExtension(orig.getTarget());
+		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		sources.add(0, orig.getFileName());
 
 		if (!concernsWithFMO.isEmpty())
 		{
@@ -419,13 +417,11 @@ public class ILICIT implements WEAVER
 	{
 		INCRE incre = INCRE.instance();
 		ArrayList result = new ArrayList();
-		// remove the \\ :(
-		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-		// it have the
-		// double slashes in
-		// the first place?
-		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
-		sources.add(0, src);
+		
+		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
+		String target = FileUtils.removeExtension(orig.getTarget());
+		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		sources.add(0, orig.getFileName());
 
 		Iterator it = incre.getAllInstancesOfOrdered(CompiledImplementation.class);
 		while (it.hasNext())
@@ -479,13 +475,11 @@ public class ILICIT implements WEAVER
 		INCRE incre = INCRE.instance();
 		DataStore ds = incre.getCurrentRepository();
 		ArrayList concernsWithFMO = incre.getConcernsWithFMO();
-		// remove the \\ :(
-		String srcFile = src.replaceAll("\\\\\\\\", "/"); // FIXME: why does
-		// it have the
-		// double slashes in
-		// the first place?
-		ArrayList sources = (ArrayList) incre.externalSourcesBySource.get(FileUtils.removeExtension(srcFile));
-		sources.add(0, src);
+		
+		Source orig = Configuration.instance().getProjects().getSourceOfBinary(src);
+		String target = FileUtils.removeExtension(orig.getTarget());
+		ArrayList sources = new ArrayList((Collection)incre.externalSourcesBySource.get(orig));
+		sources.add(0, orig.getFileName());
 
 		if (!concernsWithFMO.isEmpty())
 		{

@@ -15,25 +15,25 @@
 	<module name="DUMMER" fulltype="Composestar.Core.DUMMER.DummyManager" enabled="true" incremental="false" summary="Generating dummy sources...">
 		<dependencies></dependencies>	
 	</module>
-	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="true" summary="Harvesting type information...">
+	<module name="HARVESTER" fulltype="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner" input="java.lang.String" enabled="true" incremental="false" summary="Harvesting type information...">
 		<dependencies>
 			<dependency type="FILE" name="assembly"></dependency>
+			<dependency type="OBJECT" name="previousinput">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevInput"></node>
+				</path>
+			</dependency>	
+			<dependency type="FILE" name="previousassemblies">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevAssemblies"></node>
+				</path>
+			</dependency>
+			<dependency type="FILE" name="externalassemblies" isAdded="false">
+				<path>
+					<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.externalAssemblies"></node>
+				</path>
+			</dependency>
 		</dependencies>	
-		<dependency type="OBJECT" name="previousinput">
-			<path>
-				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevInput"></node>
-			</path>
-		</dependency>	
-		<dependency type="FILE" name="previousassemblies">
-			<path>
-				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.prevAssemblies"></node>
-			</path>
-		</dependency>
-		<dependency type="FILE" name="externalassemblies" isAdded="false">
-			<path>
-				<node type="METHOD" nodevalue="Composestar.DotNET.TYM.TypeHarvester.DotNETHarvestRunner.externalAssemblies"></node>
-			</path>
-		</dependency>
 	</module>
 	<module name="COLLECTOR" fulltype="Composestar.DotNET.TYM.TypeCollector.DotNETCollectorRunner" enabled="true" incremental="false" summary="Collecting type information...">
 		<dependencies></dependencies>		
@@ -122,7 +122,7 @@
 		</dependencies>
 		<comparisons>
 			<type fullname="Composestar.Core.CpsProgramRepository.Signature">
-				<field name="methodByKey"></field>
+				<field name="methodByName"></field>
 			</type>
 			<type fullname="Composestar.Core.CpsProgramRepository.MethodWrapper">
 				<field name="RelationType"></field>
@@ -134,9 +134,7 @@
 	</module>	
 	<module name="ILICIT" fulltype="Composestar.DotNET.ILICIT.ILICIT" input="java.lang.String" enabled="true" incremental="true" summary="Weaving assemblies...">
 		<dependencies>
-			<dependencies>
-				<dependency type="FILE" name="assembly" isAdded="false"></dependency>
-			</dependencies>
+			<dependency type="FILE" name="assembly" isAdded="false"></dependency>
 			<dependency type="OBJECT" name="ApplicationInfo" store="true" lookup="true">
 				<path>
 					<node type="CONFIG" nodevalue="ApplicationStart"></node>
@@ -186,9 +184,9 @@
 					<node type="CONFIG" nodevalue="CKRETConfigFile"></node>
 				</path>
 			</dependency>
-			<dependency type="OBJECT" name="CKRETMode" store="true" lookup="true">
+			<dependency type="OBJECT" name="SECRETMode" store="true" lookup="true">
 				<path>
-					<node type="CONFIG" nodevalue="CKRETMode"></node>
+					<node type="CONFIG" nodevalue="SECRETMode"></node>
 				</path>
 			</dependency>
 			<dependency type="OBJECT" name="semantics" store="true" lookup="true">
@@ -259,6 +257,9 @@
 				<field name="Name"></field>
 			</type>
 		</comparisons>
+	</module>
+	<module name="INCRESerializer" fulltype="Composestar.Core.INCRE.INCRESerializer" enabled="true" incremental="false" summary="Serializing repository for incremental compilation...">
+		<dependencies></dependencies>	
 	</module>
 	<module name="CONE-XML" fulltype="Composestar.DotNET.CONE.DotNETRepositorySerializer" enabled="true" incremental="false" summary="Serializing repository...">
 		<dependencies></dependencies>	

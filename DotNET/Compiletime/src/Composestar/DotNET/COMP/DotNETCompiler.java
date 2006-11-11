@@ -274,9 +274,9 @@ public class DotNETCompiler implements LangCompiler
 
 	/**
 	 * Returns a list containing the filenames of all externally linked sources
-	 * Used indirectly by INCRE
+	 * Used by INCRE
 	 */
-	private List externalSources(Source src) throws ModuleException
+	public List externalSources(Source src) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
 		ArrayList extSources = new ArrayList();
@@ -287,7 +287,7 @@ public class DotNETCompiler implements LangCompiler
 		PathSettings ps = Configuration.instance().getPathSettings();
 		String targetFile = ps.getPath("Base") + "obj/" + src.getTarget();
 		String ilFile = ps.getPath("Base") + "obj/Weaver/" + src.getTarget();
-
+		
 		String ext = (src.isExecutable() ? ".exe" : ".dll");
 		ilFile = ilFile.replaceAll(ext, ".il");
 
@@ -334,18 +334,20 @@ public class DotNETCompiler implements LangCompiler
 			}
 		}
 
-		incre.externalSourcesBySource.put(FileUtils.removeExtension(targetFile), extSources);
+		incre.externalSourcesBySource.put(src, extSources);
 		return extSources;
 	}
 
 	/**
 	 * Returns a list containing modified signatures (signatures with
 	 * ADDED/REMOVED methodwrappers) of concerns extracted from external linked
-	 * source files Used by INCRE
+	 * source files 
+	 * Used by INCRE
 	 */
 	public ArrayList fullSignatures(Source src) throws ModuleException
 	{
 		INCRE incre = INCRE.instance();
+		ArrayList extSources = new ArrayList();
 		ArrayList signatures = new ArrayList();
 		ArrayList concernsToCheck;
 		HashSet concernsCheckedByKey = new HashSet();
@@ -353,49 +355,28 @@ public class DotNETCompiler implements LangCompiler
 		String buildPath = Configuration.instance().getPathSettings().getPath("Base") + "obj/";
 		concernsToCheck = incre.getConcernsWithModifiedSignature();
 
-		/*
-		 * add full signatures of src When compiling a source the compiler does
-		 * not use the modified signature from its dummy source
-		 */
-		Iterator concerns = concernsToCheck.iterator();
-		while (concerns.hasNext())
+		if(!concernsToCheck.isEmpty())
 		{
-			Concern c = (Concern) concerns.next();
-			if (incre.declaredInSource(c, src.getFileName()))
-			{
-				signatures.add(c.getSignature());
-				concernsCheckedByKey.add(c.getQualifiedName());
-			}
-		}
-
-		if (!concernsToCheck.isEmpty())
-		{
-			/* add full signatures of external linked sources */
-			// String target =
-			// buildPath+createTargetFile(src.getFileName(),false);
+			// add full signatures of external linked sources
 			String target = buildPath + src.getTarget();
-			List extSources = (List) incre.externalSourcesBySource.get(FileUtils.removeExtension(target));
-
-			if (extSources == null)
+			extSources = (ArrayList)incre.externalSourcesBySource.get(src);
+			
+			if(extSources == null)
 			{
-				extSources = this.externalSources(src);
+				extSources = (ArrayList)externalSources(src);
 			}
-
-			Iterator externals = extSources.iterator();
-			while (externals.hasNext())
+		
+			Iterator conIter = concernsToCheck.iterator();
+			while ( conIter.hasNext() )
 			{
-				String external = (String) externals.next();
-				Iterator conIter = concernsToCheck.iterator();
-				while (conIter.hasNext())
+				Concern c = (Concern)conIter.next();
+				
+				if(incre.declaredInSources(c,extSources))
 				{
-					Concern c = (Concern) conIter.next();
-					if (incre.declaredInSource(c, external))
+					if(!concernsCheckedByKey.contains(c.getQualifiedName()))
 					{
-						if (!concernsCheckedByKey.contains(c.getQualifiedName()))
-						{
-							signatures.add(c.getSignature());
-							concernsCheckedByKey.add(c.getQualifiedName());
-						}
+						signatures.add(c.getSignature());
+						concernsCheckedByKey.add(c.getQualifiedName());
 					}
 				}
 			}
