@@ -118,6 +118,9 @@
 		<svn>
 			<export srcPath="${build.dotnet}${file.separator}Examples" destPath="${destdir}${file.separator}examplesDotNET"/>
 		</svn>		
+		
+		<!-- ARM -->
+		<get src="http://janus.cs.utwente.nl/twiki/pub/Composer/AnnotatedReferenceManual/ARM.pdf" dest="${destdir}/documentation/ARM.pdf" />
 	</target>
 	
 	<target name="publish" depends="local_init,copy_files" if="available.innosetup" description="build the DotNET installer">	

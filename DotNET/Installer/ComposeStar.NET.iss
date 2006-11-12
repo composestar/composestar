@@ -52,12 +52,13 @@ Name: english; MessagesFile: compiler:Default.isl
 [Components]
 Name: core; Description: {#NAME}; Flags: fixed; Types: full compact custom
 Name: core\addin; Description: VisualStudio AddIn; Flags: dontinheritcheck; Types: full compact
+Name: docs; Description: Documentation; Types: full
 Name: examples; Description: Examples; Types: full
 
 [Files]
 Source: src\*; DestDir: {app}; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core
 Source: build\*; DestDir: {app}; Flags: ignoreversion; Excludes: .svn; Components: core
-Source: build\documentation\*; DestDir: {app}\documentation; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core
+Source: build\documentation\*; DestDir: {app}\documentation; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: docs
 Source: build\binaries\*; DestDir: {app}\binaries; Flags: ignoreversion recursesubdirs; Excludes: .svn; Components: core; AfterInstall: RegAsm
 Source: build\ComposestarVSAddin\*; DestDir: {app}\ComposestarVSAddin; Flags: ignoreversion; Excludes: .svn; Components: core\addin; AfterInstall: RegAsm
 Source: build\examplesDotNET\*; DestDir: {app}\examplesDotNET; Flags: ignoreversion recursesubdirs; Excludes: .svn,build.xml,TestCases; Components: examples
@@ -70,7 +71,8 @@ Filename: {app}\{#SAFE_NAME} Homepage.url; Section: InternetShortcut; Key: URL; 
 
 [Icons]
 Name: {group}\{cm:ProgramOnTheWeb,{#SAFE_NAME}}; Filename: {app}\{#SAFE_NAME} Homepage.url
-Name: {group}\Documentation; Filename: {app}\documentation\MessageAPI\index.html; WorkingDir: {app}\documentation\
+Name: {group}\Annotated Reference Manual; Filename: {app}\documentation\ARM.pdf; WorkingDir: {app}\documentation\; Components: docs
+Name: {group}\MessageAPI Documentation; Filename: {app}\documentation\MessageAPI\index.html; WorkingDir: {app}\documentation\; Components: docs
 Name: {group}\{cm:UninstallProgram,{#SAFE_NAME}}; Filename: {uninstallexe}
 
 [Run]
