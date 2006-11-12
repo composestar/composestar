@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: XmlExporter.java,v 1.8 2006/10/12 11:59:54 elmuerte Exp $
+ * $Id$
  */
 package Composestar.Core.DIGGER;
 

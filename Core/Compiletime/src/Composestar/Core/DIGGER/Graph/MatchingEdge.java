@@ -5,7 +5,7 @@
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  *
- * $Id: MatchingEdge.java,v 1.5 2006/10/05 12:19:15 elmuerte Exp $
+ * $Id$
  */
 package Composestar.Core.DIGGER.Graph;
 
