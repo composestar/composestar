@@ -344,6 +344,17 @@ Common routines. Always include this file in every build.xml file
 			<update dir="${basedir}" />
 		</svn>
 	</target>
+	
+	<target name="svn-fix-keywords" depends="init" description="Set the appropiate svn:keywords">
+		<svn>
+			<keywordsadd keywords="HeadURL Id LastChangedBy LastChangedDate LastChangedRevision">
+				<fileset dir="${basedir}">
+					<include name="**/*.java" />
+					<include name="**/*.cs" />
+				</fileset>				
+			</keywordsadd>
+		</svn>
+	</target>
 
 	<target name="report" depends="init" description="Report on the status of each platform">
 		
