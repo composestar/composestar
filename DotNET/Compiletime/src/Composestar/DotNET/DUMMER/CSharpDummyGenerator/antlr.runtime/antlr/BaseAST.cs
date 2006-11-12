@@ -13,7 +13,7 @@ namespace antlr
 	* Project led by Terence Parr at http://www.jGuru.com
 	* Software rights: http://www.antlr.org/RIGHTS.html
 	*
-	* $Id: $
+	* $Id$
 	*/
 	
 	//

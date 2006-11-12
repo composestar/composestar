@@ -4,7 +4,7 @@ package antlr;
  * Project led by Terence Parr at http://www.cs.usfca.edu
  * Software rights: http://www.antlr.org/license.html
  *
- * $Id: GrammarElement.java 1518 2006-09-20 13:13:30Z reddog33hummer $
+ * $Id$
  */
 
 /**A GrammarElement is a generic node in our

@@ -10,7 +10,7 @@ package antlr;
  *
  * @author David Wagner (JPL/Caltech) 8-12-00
  *
- * $Id: NameSpace.java 1518 2006-09-20 13:13:30Z reddog33hummer $
+ * $Id$
  */
 
 import java.util.Vector;

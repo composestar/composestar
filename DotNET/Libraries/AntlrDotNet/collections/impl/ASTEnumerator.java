@@ -4,7 +4,7 @@ package antlr.collections.impl;
  * Project led by Terence Parr at http://www.cs.usfca.edu
  * Software rights: http://www.antlr.org/license.html
  *
- * $Id: ASTEnumerator.java 1518 2006-09-20 13:13:30Z reddog33hummer $
+ * $Id$
  */
 
 import antlr.collections.impl.Vector;
