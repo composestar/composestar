@@ -351,6 +351,7 @@ Common routines. Always include this file in every build.xml file
 				<fileset dir="${basedir}">
 					<include name="**/*.java" />
 					<include name="**/*.cs" />
+					<include name="**/*.jsl" />
 				</fileset>				
 			</keywordsadd>
 		</svn>
