@@ -195,10 +195,17 @@
 	
 	<h2>Changes</h2>
 	<table id="changes">
+
+	<!-- print each revision -->
 	<xsl:call-template name="svn-revisions">
-		<xsl:with-param name="prev" select="0" />
-		<xsl:with-param name="list" select="modifications/modification[@type='svn']/revision" />
+		<xsl:with-param name="from">
+			<xsl:value-of select="modifications/modification[@type = 'svn' and position() = 1]/revision" />
+		</xsl:with-param>
+		<xsl:with-param name="to">
+			<xsl:value-of select="modifications/modification[@type = 'svn' and position() = last()]/revision" />
+		</xsl:with-param>
 	</xsl:call-template>
+	
 	</table>
 	
 	</body>
@@ -210,22 +217,22 @@
 	</xsl:template>
 	
 	<xsl:template name="svn-revisions">
-		<xsl:param name="prev" />
-		<xsl:param name="list" />
-		<xsl:if test="count($list) &gt; 0">
-			<xsl:variable name="curr" select="$list[position()=1]" />
-			
-			<xsl:if test="$prev != $curr">
-				<xsl:call-template name="svn-revision">
-					<xsl:with-param name="revid" select="$curr" />
-				</xsl:call-template>
-			</xsl:if>
-			
-			<xsl:call-template name="svn-revisions">
-				<xsl:with-param name="prev" select="$curr" />
-				<xsl:with-param name="list" select="$list[position() &gt; 1]" />
+		<xsl:param name="from" />
+		<xsl:param name="to" />
+		
+		<!-- test if this revision exist -->
+		<xsl:if test="//modification[revision=$from]">
+			<xsl:call-template name="svn-revision">
+				<xsl:with-param name="revid" select="$from" />
 			</xsl:call-template>
-		</xsl:if>	
+		</xsl:if>
+		
+		<xsl:if test="$from &lt;= $to">
+			<xsl:call-template name="svn-revisions">
+				<xsl:with-param name="from"><xsl:value-of select="$from + 1" /></xsl:with-param>
+				<xsl:with-param name="to"><xsl:value-of select="$to" /></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template name="svn-revision">

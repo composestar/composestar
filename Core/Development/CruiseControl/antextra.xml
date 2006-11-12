@@ -9,8 +9,8 @@
 	
 	<target name="clean-artifacts" description="cleans the artifacts directory" if="env.CCDIR">
 		<tstamp>
-			<!-- delete artifacts from the last 5 days -->
-			<format property="time.lastweek" offset="-5" unit="day" pattern="MM/dd/yyyy hh:mm aa" />
+			<!-- delete artifacts from the last 3 days -->
+			<format property="time.lastweek" offset="-3" unit="day" pattern="MM/dd/yyyy hh:mm aa" />
 		</tstamp>
 		<delete includeemptydirs="true">
 			<fileset dir="${env.CCDIR}/artifacts/${projectname}">
