@@ -120,7 +120,10 @@
 		</svn>		
 		
 		<!-- ARM -->
-		<get src="http://janus.cs.utwente.nl/twiki/pub/Composer/AnnotatedReferenceManual/ARM.pdf" dest="${destdir}/documentation/ARM.pdf" />
+		<svn>
+			<export srcUrl="https://svn.sourceforge.net/svnroot/composestar/documentation/ARM/ARM.pdf" destPath="${destdir}/documentation/" />
+		</svn>
+		<!-- <get src="http://janus.cs.utwente.nl/twiki/pub/Composer/AnnotatedReferenceManual/ARM.pdf" dest="${destdir}/documentation/ARM.pdf" /> -->
 	</target>
 	
 	<target name="publish" depends="local_init,copy_files" if="available.innosetup" description="build the DotNET installer">	
