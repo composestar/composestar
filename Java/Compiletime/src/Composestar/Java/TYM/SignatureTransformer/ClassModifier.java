@@ -67,7 +67,7 @@ public class ClassModifier
 			{
 				returnClass = findClass(m.ReturnTypeString);
 			}
-			String methodName = m.theMethod.getName();
+			String methodName = m.name();
 			CtClass[] parameters = new CtClass[m.Parameters.size()];
 			if (m.Parameters.size() > 0)
 			{
@@ -152,6 +152,7 @@ public class ClassModifier
 		// make adjustments
 		Concern concern = c.getConcern();
 		Signature signature = concern.getSignature();
+		
 		if (signature != null)
 		{
 			List methods = signature.getMethods(MethodWrapper.ADDED);
