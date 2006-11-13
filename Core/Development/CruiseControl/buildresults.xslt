@@ -3,213 +3,253 @@
 
 	<xsl:output method="html" />  
 	
+	<xsl:param name="buildresultsurl" select="false()" />
+	<xsl:param name="standalonehtml" select="false()" />
+	
 	<xsl:template match="/cruisecontrol">
-	<html>
-	<head>
-		<title>Build report of <xsl:value-of select="info/property[@name='projectname']/@value" /> on <xsl:value-of select="info/property[@name='builddate']/@value" />
-		<xsl:if test="build/@error">
-			<xsl:text> [FAILED]</xsl:text>
-		</xsl:if>
-		</title>
+		<xsl:choose>
+			<xsl:when test="$standalonehtml">
+				<xsl:call-template name="standalonehtml" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="htmlbodyonly" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="css">
 		<style type="text/css">
-		BODY {
-			font-family: sans-serif;
-			color: black;
-			background: white;
-		}
-		
-		H1 {
-			margin: 0;
-			background-color: navy;
-			color: white;
-			padding: 4px;
-			text-transform: capitalize;
-		}
-		
-		H2 {
-			border-bottom: 3px solid navy;
-		}
-		
-		H3 {
-			border-bottom: 1px solid navy;
-		}
-		
-		DD.error {
-			color: red;
-			font-weight: bold;
-		}
-		
-		P.error, PRE.error {
-			background: #faa;
-			border: 1px solid #f77;
-		}
-		
-		.asis {
-			font-family: monospace;
-		}
-		
-		TABLE {
-			width: 100%;
-		}				
-		
-		DT {
-			font-weight: bold;
-			font-size: 85%;
-		}
-		
-		.added {
-			background: #9f9;
-		}
-		
-		.modified {
-			background: #ff9;
-		}
-		
-		.deleted {
-			text-decoration: line-through; 
-			background: #f99;
-		}
-		
-		TABLE#changes {
-			border-collapse: collapse;
-			border: 2px outset gray;			
-		}
-		
-		.svn_revision {
-			border-top: 1px solid black;
-			border-bottom: 1px solid silver;
-		}
-		
-		TD {
-			vertical-align: top;
-		}
-		
-		PRE {
-			overflow: auto;
-			background: #eee;
-			border: 1px solid #ddd;
-		}
-		
-		.withws {
-		  white-space: pre;
-		}
+			DIV#report {
+				font-family: sans-serif;
+				color: black;
+				background: white;
+			}
+			
+			H1 {
+				margin: 0;
+				background-color: navy;
+				color: white;
+				padding: 4px;
+				text-transform: capitalize;
+			}
+			
+			H2 {
+				border-bottom: 3px solid navy;
+			}
+			
+			H3 {
+				border-bottom: 1px solid navy;
+			}
+			
+			DD.error {
+				color: red;
+				font-weight: bold;
+			}
+			
+			P.error, PRE.error {
+				background: #faa;
+				border: 1px solid #f77;
+			}
+			
+			.asis {
+				font-family: monospace;
+			}
+			
+			TABLE {
+				width: 100%;
+			}				
+			
+			DT {
+				font-weight: bold;
+				font-size: 85%;
+			}
+			
+			.added {
+				background: #9f9;
+			}
+			
+			.modified {
+				background: #ff9;
+			}
+			
+			.deleted {
+				text-decoration: line-through; 
+				background: #f99;
+			}
+			
+			TABLE#changes {
+				border-collapse: collapse;
+				border: 2px outset gray;			
+			}
+			
+			.svn_revision {
+				border-top: 1px solid black;
+				border-bottom: 1px solid silver;
+			}
+			
+			TD {
+				vertical-align: top;
+			}
+			
+			PRE {
+				overflow: auto;
+				background: #eee;
+				border: 1px solid #ddd;
+			}
+			
+			.withws {
+			white-space: pre;
+			}
 		</style>
-	</head>
-	<body>
+	</xsl:template>
 	
-	<h1><xsl:value-of select="info/property[@name='projectname']/@value" /> build report</h1>
-	<h2>Overview</h2>
+	<xsl:template name="standalonehtml">
+		<html>
+		<head>
+			<title>Build report of <xsl:value-of select="info/property[@name='projectname']/@value" /> on <xsl:value-of select="info/property[@name='builddate']/@value" />
+			<xsl:if test="build/@error">
+				<xsl:text> [FAILED]</xsl:text>
+			</xsl:if>
+			</title>
+			<xsl:call-template name="css" />
+		</head>
+		<body>
+			<xsl:call-template name="htmlbody" />
+		</body>
+		</html>
+	</xsl:template>
 	
-	<dl>
-		<dt class="key">Build date</dt>
-		<dd>
-		<xsl:call-template name="format-ts">
-			<xsl:with-param name="ts" select="info/property[@name='cctimestamp']/@value" />
+	<xsl:template name="htmlbodyonly">
+		<xsl:call-template name="css" />
+		<xsl:call-template name="htmlbody" />
+	</xsl:template>
+	
+	<xsl:template name="htmlbody">
+		<div id="report">
+		
+		<h1><xsl:value-of select="info/property[@name='projectname']/@value" /> build report</h1>
+		<h2>Overview</h2>
+		
+		<dl>
+			<dt class="key">Build date</dt>
+			<dd>
+			<xsl:variable name="builddate">
+				<xsl:call-template name="format-ts">
+					<xsl:with-param name="ts" select="info/property[@name='cctimestamp']/@value" />
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$buildresultsurl">
+					<xsl:variable name="logfile" select="substring-before(info/property[@name='logfile']/@value, '.')" />
+					<a href="{$buildresultsurl}?log={$logfile}"><xsl:value-of select="$builddate" /></a>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$builddate" />
+				</xsl:otherwise>
+			</xsl:choose>
+			</dd>
+
+			<dt class="key">Successful</dt>
+			<xsl:choose>
+				<xsl:when test="build/@error"><dd class="error"><xsl:text>false</xsl:text></dd></xsl:when>
+				<xsl:otherwise><dd><xsl:text>true</xsl:text></dd></xsl:otherwise>
+			</xsl:choose>
+			
+			<dt class="key">Label</dt>
+			<dd><xsl:value-of select="info/property[@name='label']/@value" /></dd>
+
+			<dt class="key">Duration</dt>
+			<dd><xsl:value-of select="build/@time" /></dd>
+			
+			<dt class="key">Last change</dt>
+			<dd>
+			by <em><xsl:value-of select="modifications/modification[position()=last()]/user" /></em> on <xsl:value-of select="modifications/modification[position()=last()]/date" />:<br />
+			<span class="withws"><xsl:value-of select="modifications/modification[position()=last()]/comment" /></span>
+			</dd>
+		</dl>
+		
+		<xsl:if test="build/@error">
+		<h3>Error message</h3>
+		<p class="asis error"><xsl:value-of select="build/@error" /></p>
+		
+		<h3>Task trace</h3>
+		<pre>
+		<xsl:call-template name="trace">
+			<xsl:with-param name="elm" select="descendant::task[position()=last()]" />
 		</xsl:call-template>
-		</dd>
-
-		<dt class="key">Successful</dt>
-		<xsl:choose>
-			<xsl:when test="build/@error"><dd class="error"><xsl:text>false</xsl:text></dd></xsl:when>
-			<xsl:otherwise><dd><xsl:text>true</xsl:text></dd></xsl:otherwise>
-		</xsl:choose>
-		
-		<dt class="key">Label</dt>
-		<dd><xsl:value-of select="info/property[@name='label']/@value" /></dd>
-
-		<dt class="key">Duration</dt>
-		<dd><xsl:value-of select="build/@time" /></dd>
-		
-		<dt class="key">Last change</dt>
-		<dd>
-		by <em><xsl:value-of select="modifications/modification[position()=last()]/user" /></em> on <xsl:value-of select="modifications/modification[position()=last()]/date" />:<br />
-		<span class="withws"><xsl:value-of select="modifications/modification[position()=last()]/comment" /></span>
-		</dd>
-	</dl>
-	
-	<xsl:if test="build/@error">
-	<h3>Error message</h3>
-	<p class="asis error"><xsl:value-of select="build/@error" /></p>
-	
-	<h3>Task trace</h3>
-	<pre>
-	<xsl:call-template name="trace">
-		<xsl:with-param name="elm" select="descendant::task[position()=last()]" />
-	</xsl:call-template>
-	</pre>
-		
-	<h3>Message of the last task</h3>
-	<pre style="max-height: 200px;">
-		<xsl:apply-templates select="descendant::task[position()=last()]/message" />
-	</pre>
-	</xsl:if>
-	
-	<h2>Previous build</h2>
-
-	<dl>
-		<dt class="key">Date</dt>
-		<dd>
-		<xsl:call-template name="format-ts">
-			<xsl:with-param name="ts" select="info/property[@name='lastbuild']/@value" />
-		</xsl:call-template>
-		</dd>
-
-		<dt class="key">Successful</dt>
-		<xsl:choose>
-			<xsl:when test="info/property[@name='lastbuildsuccessful']/@value = 'false'"><dd class="error"><xsl:text>false</xsl:text></dd></xsl:when>
-			<xsl:otherwise><dd><xsl:text>true</xsl:text></dd></xsl:otherwise>
-		</xsl:choose>
-		
-		<dt class="key">Last successful build</dt>
-		<dd>
-		<xsl:call-template name="format-ts">
-			<xsl:with-param name="ts" select="info/property[@name='lastsuccessfulbuild']/@value" />
-		</xsl:call-template>
-		</dd>
-	</dl>
-	
-	<xsl:variable name="buildErrors">
-		<xsl:value-of select="count(build/target//message[@priority='error'])" />
-	</xsl:variable>
-	
-	<xsl:variable name="buildWarnings">
-		<xsl:value-of select="count(build/target//message[@priority='warn'])" />
-	</xsl:variable>
-	
-	<xsl:if test="$buildErrors + $buildWarnings &gt; 0">
-		<h2>Build output</h2>
-		<xsl:if test="$buildErrors &gt; 0">
-			<h3>Errors (<xsl:value-of select="$buildErrors" />)</h3>
-			<pre class="error">
-			<xsl:apply-templates select="build/target//message[@priority='error']" />
-			</pre>
+		</pre>
+			
+		<h3>Message of the last task</h3>
+		<pre style="max-height: 200px;">
+			<xsl:apply-templates select="descendant::task[position()=last()]/message" />
+		</pre>
 		</xsl:if>
 		
-		<xsl:if test="$buildWarnings &gt; 0">
-			<h3>Warnings (<xsl:value-of select="$buildWarnings" />)</h3>
-			<pre>
-			<xsl:apply-templates select="build/target//message[@priority='warn']" />
-			</pre>
-		</xsl:if>
-	</xsl:if>
-	
-	<h2>Changes</h2>
-	<table id="changes">
+		<h2>Previous build</h2>
 
-	<!-- print each revision -->
-	<xsl:call-template name="svn-revisions">
-		<xsl:with-param name="from">
-			<xsl:value-of select="modifications/modification[@type = 'svn' and position() = 1]/revision" />
-		</xsl:with-param>
-		<xsl:with-param name="to">
-			<xsl:value-of select="modifications/modification[@type = 'svn' and position() = last()]/revision" />
-		</xsl:with-param>
-	</xsl:call-template>
-	
-	</table>
-	
-	</body>
-	</html>
+		<dl>
+			<dt class="key">Date</dt>
+			<dd>
+			<xsl:call-template name="format-ts">
+				<xsl:with-param name="ts" select="info/property[@name='lastbuild']/@value" />
+			</xsl:call-template>
+			</dd>
+
+			<dt class="key">Successful</dt>
+			<xsl:choose>
+				<xsl:when test="info/property[@name='lastbuildsuccessful']/@value = 'false'"><dd class="error"><xsl:text>false</xsl:text></dd></xsl:when>
+				<xsl:otherwise><dd><xsl:text>true</xsl:text></dd></xsl:otherwise>
+			</xsl:choose>
+			
+			<dt class="key">Last successful build</dt>
+			<dd>
+			<xsl:call-template name="format-ts">
+				<xsl:with-param name="ts" select="info/property[@name='lastsuccessfulbuild']/@value" />
+			</xsl:call-template>
+			</dd>
+		</dl>
+		
+		<xsl:variable name="buildErrors">
+			<xsl:value-of select="count(build/target//message[@priority='error'])" />
+		</xsl:variable>
+		
+		<xsl:variable name="buildWarnings">
+			<xsl:value-of select="count(build/target//message[@priority='warn'])" />
+		</xsl:variable>
+		
+		<xsl:if test="$buildErrors + $buildWarnings &gt; 0">
+			<h2>Build output</h2>
+			<xsl:if test="$buildErrors &gt; 0">
+				<h3>Errors (<xsl:value-of select="$buildErrors" />)</h3>
+				<pre class="error">
+				<xsl:apply-templates select="build/target//message[@priority='error']" />
+				</pre>
+			</xsl:if>
+			
+			<xsl:if test="$buildWarnings &gt; 0">
+				<h3>Warnings (<xsl:value-of select="$buildWarnings" />)</h3>
+				<pre>
+				<xsl:apply-templates select="build/target//message[@priority='warn']" />
+				</pre>
+			</xsl:if>
+		</xsl:if>
+		
+		<h2>Changes</h2>
+		<table id="changes">
+
+		<!-- print each revision -->
+		<xsl:call-template name="svn-revisions">
+			<xsl:with-param name="from">
+				<xsl:value-of select="modifications/modification[@type = 'svn' and position() = 1]/revision" />
+			</xsl:with-param>
+			<xsl:with-param name="to">
+				<xsl:value-of select="modifications/modification[@type = 'svn' and position() = last()]/revision" />
+			</xsl:with-param>
+		</xsl:call-template>
+		
+		</table>
+		</div>
+		
 	</xsl:template>
 	
 	<xsl:template match="message">

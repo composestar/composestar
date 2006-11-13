@@ -50,6 +50,9 @@
 				returnaddress="elmuerte@users.sourceforge.net"
 			>
 				<always address="composestar-developers@lists.sourceforge.net" />
+				
+				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
+				<parameter name="standalonehtml" value="1" />
 			</htmlemail>
 			<onsuccess>
 				<antpublisher 
