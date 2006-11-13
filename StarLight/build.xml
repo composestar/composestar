@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build">
 
 	<condition property="build.core" value="${basedir}/../Core">
@@ -24,6 +24,8 @@
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
 	  <delete dir="${out.qa.starlight}" />
 	  <delete dir="${out.fxcop.starlight}" />
+	  <delete file="Documentation\ComposeStar-StarLight.chm" />
+	  <delete file="Documentation\LastBuild.log" />
 		<ant target="clean" dir="Source/Compiletime" />
 		<ant target="clean" dir="Source/StarLight.Weaving.BuildIn" />
 		<ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
@@ -86,6 +88,26 @@
 	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">	      
       <fxcop reportfile="${out.fxcop.starlight}${file.separator}fxcop.txt" 
    				   files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug${file.separator}Composestar*.dll"/>
+	</target>
+	
+	<target name="documentation" description="Create StarLight documentation">
+	  <!-- Build dependencies -->
+	  <msbuild solution="Libraries\cecil\Mono.Cecil.csproj" target="build" config="release" />
+		<msbuild solution="Source\CoreServices\StarLight.CoreServices.csproj" target="build" config="release" />
+		<msbuild solution="Source\Repository\DataStoreContainer.csproj" target="build" config="release" />
+		<msbuild solution="Source\StarLightEntities\StarLightEntities.csproj" target="build" config="release" />
+	
+		<!-- Build assemblies -->
+		<msbuild solution="Source\ContextInfo\StarLight.ContextInfo.csproj" target="build" config="release" />
+		<msbuild solution="Source\StarLight.Filters\StarLight.Filters.csproj" target="build" config="release" />
+		<msbuild solution="Source\StarLight.Weaving\StarLight.Weaving.csproj" target="build" config="release" />
+		<msbuild solution="Source\Utilities\Cecil\CecilUtilities.csproj" target="build" config="release" />
+	
+		<!-- Run Sandcastle -->
+		<exec dir="${build.starlight}${file.separator}documentation" executable="${bin.sandcastle}">
+			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb"/>
+		</exec>
+
 	</target>
 	
 </project>
