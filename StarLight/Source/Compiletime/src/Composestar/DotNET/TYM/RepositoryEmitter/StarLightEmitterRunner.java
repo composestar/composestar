@@ -154,7 +154,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 								namespace.append(".");
 							}
 						}
-						storedInternal.setNameSpace(namespace.toString());
+						storedInternal.setNamespace(namespace.toString());
 
 						// typename:
 						storedInternal.setType(internal.getType().getName());
@@ -330,7 +330,7 @@ public class StarLightEmitterRunner implements CTCommonModule
 				namespace.append('.');
 			}
 		}
-		storedRef.setNameSpace(namespace.toString());
+		storedRef.setNamespace(namespace.toString());
 
 		// selector:
 		storedRef.setSelector(selector);
