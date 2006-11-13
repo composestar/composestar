@@ -330,33 +330,33 @@ public class OrderTraverser
 	/* ====== Pair: An Entity of the database for detecting cycles ======= */
 	public class Pair
 	{
-		private Node _node;
+		private Node node;
 
-		private LinkedList _edges = new LinkedList();
+		private LinkedList edges = new LinkedList();
 
-		public Pair(Node node)
+		public Pair(Node innode)
 		{
-			_node = node;
+			node = innode;
 		}
 
 		public void addEdge(Edge e)
 		{
-			_edges.add(e);
+			edges.add(e);
 		}
 
 		public Edge removeAnEdge()
 		{
 			Edge deleted = null;
-			if (_edges.size() != 0)
+			if (edges.size() != 0)
 			{
-				deleted = (Edge) _edges.removeFirst();
+				deleted = (Edge) edges.removeFirst();
 			}
 			return deleted;
 		}
 
 		public Node getNode()
 		{
-			return _node;
+			return node;
 		}
 
 		public boolean isInThePath(LinkedList path)
@@ -364,7 +364,7 @@ public class OrderTraverser
 
 			for (Iterator i = path.iterator(); i.hasNext();)
 			{
-				if (((Pair) i.next()).getNode().getElement().equals(this._node.getElement()))
+				if (((Pair) i.next()).getNode().getElement().equals(this.node.getElement()))
 				{
 					return true;
 				}

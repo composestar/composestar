@@ -40,7 +40,7 @@ import Composestar.Utils.Debug;
 
 public class FILTHServiceImpl extends FILTHService
 {
-	private String _specfile;
+	private String specfile;
 
 	protected FILTHServiceImpl(CommonResources cr)
 	{}
@@ -158,7 +158,7 @@ public class FILTHServiceImpl extends FILTHService
 
 				for (Iterator j = modulrefs.iterator(); j.hasNext();)
 				{
-					fr = ((FilterModuleReference) j.next());
+					fr = (FilterModuleReference) j.next();
 					// System.out.println("FILTH
 					// ordering>>>"+a+"::"+fr.getName() );
 					if (a.getName().equals(fr.getName()))
@@ -284,34 +284,34 @@ public class FILTHServiceImpl extends FILTHService
 			of.setParent(xr);
 
 			Configuration config = Configuration.instance();
-			_specfile = config.getModuleProperty("FILTH", "input", null);
+			specfile = config.getModuleProperty("FILTH", "input", null);
 
-			if (_specfile != null)
+			if (specfile != null)
 			{
 				// System.out.println(_specfile);
-				File file = new File(_specfile);
+				File file = new File(specfile);
 				if (file != null && file.exists() && file.canRead())
 				{
-					FileReader fr = new FileReader(_specfile);
+					FileReader fr = new FileReader(specfile);
 					of.parse(new InputSource(fr));
 				}
 				else
 				{
 					Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification ("
-							+ _specfile + ").", c.getName());
+							+ specfile + ").", c.getName());
 				}
 			}
 		}
 		catch (SAXException se)
 		{
-			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: " + _specfile + ", message: "
+			Debug.out(Debug.MODE_WARNING, "FILTH", "Problems parsing file: " + specfile + ", message: "
 					+ se.getMessage());
 			se.printStackTrace();
 		}
 		catch (Exception ioe)
 		{
 			Debug.out(Debug.MODE_WARNING, "FILTH", "Could not read/find Filter Module Order specification ("
-					+ _specfile + ").", c.getName());
+					+ specfile + ").", c.getName());
 		}
 	}
 

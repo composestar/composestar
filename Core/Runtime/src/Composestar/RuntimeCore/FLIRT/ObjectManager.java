@@ -2,7 +2,7 @@ package Composestar.RuntimeCore.FLIRT;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Condition;
@@ -144,7 +144,7 @@ public class ObjectManager implements ChildRunnable
 			{
 				// For each order add the filtermodule to this object manager
 				FilterModuleOrder fmo = (FilterModuleOrder) concern.getDynObject(FilterModuleOrder.SINGLE_ORDER_KEY);
-				Vector order = fmo._order;
+				List order = fmo.orderAsList();
 				if (Debug.SHOULD_DEBUG)
 				{
 					Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Getting " + order.size() + " orderings.");
@@ -153,7 +153,7 @@ public class ObjectManager implements ChildRunnable
 				{
 					// The linking does not work with deserializing therefore we
 					// need to get it from the map.
-					String filtermodulename = (String) order.elementAt(i);
+					String filtermodulename = (String) order.get(i);
 					if (Debug.SHOULD_DEBUG)
 					{
 						Debug.out(Debug.MODE_INFORMATION, "FLIRT", "Looking up filtermodule '" + filtermodulename

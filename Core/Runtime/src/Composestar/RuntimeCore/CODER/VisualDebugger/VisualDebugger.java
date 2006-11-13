@@ -24,7 +24,7 @@ import java.util.Dictionary;
 public class VisualDebugger extends DebuggerProvider{
 
     public VisualDebugger(Visualizer visualizer) {
-        Visualizer filterscreen = visualizer;
+        //Visualizer filterscreen = visualizer;
     }
 
 	public void executeEvent(int eventType, FilterRuntime currentFilter, MessageList messageList, JoinPoint point) 

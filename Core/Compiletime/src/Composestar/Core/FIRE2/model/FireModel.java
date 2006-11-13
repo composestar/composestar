@@ -57,13 +57,13 @@ public class FireModel
 	public FireModel(Concern concern, FilterModuleOrder order, boolean inputFilters)
 	{
 		this.concern = concern;
-
-		Vector v = order._order;
+		
+		List v = order.orderAsList();
 
 		FilterModule[] modules = new FilterModule[v.size()];
 		for (int i = 0; i < v.size(); i++)
 		{
-			String ref = (String) v.elementAt(i);
+			String ref = (String) v.get(i);
 
 			modules[i] = (FilterModule) DataStore.instance().getObjectByID(ref);
 		}

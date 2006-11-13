@@ -111,8 +111,8 @@ public class ConstraintFilter extends ArgumentFilter
 			{
 				if ("pre_soft".equals(value))
 				{
-					Rule _rule = new SoftPreRule(l, r);
-					_rule.insert(graph);
+					Rule rule = new SoftPreRule(l, r);
+					rule.insert(graph);
 
 					// FILTHService.print("FILTH::adding rule> "+value+"( "+l+"
 					// , "+r+" )\n");

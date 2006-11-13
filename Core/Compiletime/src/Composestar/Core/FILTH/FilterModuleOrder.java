@@ -38,11 +38,11 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 	 */
 	public static final String ALL_ORDERS_KEY = "FilterModuleOrders";
 
-	public Vector _order;
+	public Vector order;
 
 	public FilterModuleOrder()
 	{
-		_order = new Vector();
+		order = new Vector();
 
 	}
 
@@ -51,31 +51,31 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		super(parent);
 	}
 
-	public FilterModuleOrder(LinkedList order)
+	public FilterModuleOrder(LinkedList inOrder)
 	{
-		_order = new Vector();
-		int size = order.size();
+		order = new Vector();
+		int size = inOrder.size();
 		for (int i = 0; i < size; i++)
 		{
-			FilterModuleReference fmr = (FilterModuleReference) order.get(i);
-			_order.addElement(fmr.getRef().getQualifiedName());
+			FilterModuleReference fmr = (FilterModuleReference) inOrder.get(i);
+			order.addElement(fmr.getRef().getQualifiedName());
 			// _order.addElement(order.get(i));
 		}
 	}
 
 	public void addFilterModule(FilterModuleReference fmr)
 	{
-		_order.addElement(fmr.getQualifiedName());
+		order.addElement(fmr.getQualifiedName());
 	}
 
 	public List orderAsList()
 	{
-		return _order;
+		return order;
 	}
 
 	public Iterator order()
 	{
-		return _order.iterator();
+		return order.iterator();
 	}
 
 	public boolean equals(Object o)
@@ -86,7 +86,7 @@ public class FilterModuleOrder extends Composestar.Core.RepositoryImplementation
 		}
 
 		FilterModuleOrder other = (FilterModuleOrder) o;
-		return _order.equals(other._order);
+		return order.equals(other.order);
 	}
 
 	public String toString()

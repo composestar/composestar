@@ -23,9 +23,9 @@ public class Action implements Parameter
 
 	private boolean present;
 
-	private boolean executed = false;
+	private boolean executed;
 
-	private boolean executable = false;
+	private boolean executable;
 
 	protected LinkedList rules = new LinkedList();
 

@@ -33,13 +33,15 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.References.FilterModuleR
 import Composestar.Core.RepositoryImplementation.DataStore;
 
 /**
- * @author Staijen To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author Staijen
  */
 public class InnerDispatcher
 {
 
 	private static FilterModuleReference innerDispatchReference;
+
+	private InnerDispatcher()
+	{}
 
 	public static FilterModuleReference getInnerDispatchReference()
 	{

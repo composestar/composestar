@@ -1,13 +1,13 @@
 package Composestar.Utils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-public class StringConverter implements Cloneable, Serializable
+public class StringConverter
 {
-	static final long serialVersionUID = -8091413342863554190L;
+	private StringConverter()
+	{}
 
 	/**
 	 * Converts a String to an int. If the value is not an int the default value

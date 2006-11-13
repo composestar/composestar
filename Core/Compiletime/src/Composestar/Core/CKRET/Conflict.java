@@ -26,9 +26,9 @@ public class Conflict implements Serializable
 
 	private String expr = "";
 
-	public void setResource(String resource)
+	public void setResource(String inresource)
 	{
-		this.resource = resource;
+		resource = inresource;
 	}
 
 	public String getResource()

@@ -73,7 +73,7 @@ public class ArgumentFilter extends XMLFilterImpl
 		super.endElement(uri, localName, qName);
 	}
 
-	public void characters(char buf[], int offset, int len) throws SAXException
+	public void characters(char[] buf, int offset, int len) throws SAXException
 	{
 		String s = new String(buf, offset, len);
 		// System.out.println("CHAR "+s+" "+sleft);

@@ -46,7 +46,8 @@ public class ModuleException extends Exception
 		// this.errorLocation = errorLocation;
 	}
 
-	public ModuleException(String message, String inmodule, String inerrorLocationFilename, int inerrorLocationLineNumber)
+	public ModuleException(String message, String inmodule, String inerrorLocationFilename,
+			int inerrorLocationLineNumber)
 	{
 		this(message, inmodule);
 		errorLocationFilename = inerrorLocationFilename;
