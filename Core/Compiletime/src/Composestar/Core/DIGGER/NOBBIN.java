@@ -108,9 +108,15 @@ public class NOBBIN
 				if (e instanceof CondMatchEdge)
 				{
 					CondMatchEdge cme = (CondMatchEdge) e;
-					if (!msg.matches(cme)) continue;
+					if (!msg.matches(cme)) 
+					{
+						continue;
+					}
 					int expr = cme.getExpression().simulateResult();
-					if (expr == ConditionExpression.RESULT_FALSE) continue;
+					if (expr == ConditionExpression.RESULT_FALSE)
+					{
+						continue;
+					}
 					msg.setCertenty(expr);
 					walk(e.getDestination(), msg, curDepth);
 					break; // don't try any other edges

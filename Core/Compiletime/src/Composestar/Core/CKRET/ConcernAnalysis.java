@@ -26,10 +26,10 @@ public class ConcernAnalysis
 
 	private Map orders;
 
-	public ConcernAnalysis(Concern concern)
+	public ConcernAnalysis(Concern inconcern)
 	{
-		this.concern = concern;
-		this.orders = new HashMap();
+		concern = inconcern;
+		orders = new HashMap();
 	}
 
 	public Concern getConcern()
@@ -66,7 +66,7 @@ public class ConcernAnalysis
 				break;
 		}
 
-		return (oa.numConflictingExecutions() == 0);
+		return oa.numConflictingExecutions() == 0;
 	}
 
 }

@@ -45,9 +45,9 @@ public class CKRET implements CTCommonModule
 
 	public static final int NORMAL = 0;
 
-	protected static int MODE = 0;
-
 	public static final String[] MODES = { "NORMAL", "REDUNDANT", "PROGRESSIVE" };
+
+	protected static int mode;	
 
 	private static Reporter reporter;
 
@@ -55,7 +55,7 @@ public class CKRET implements CTCommonModule
 
 	public static int getMode()
 	{
-		return MODE;
+		return mode;
 	}
 
 	public void run(CommonResources resources) throws ModuleException
@@ -78,15 +78,15 @@ public class CKRET implements CTCommonModule
 		}
 
 		// fetch the ckret runmode
-		int mode = config.getModuleProperty("SECRET", "mode", MODE);
-		if (mode >= 0 && mode <= 2)
+		int new_mode = config.getModuleProperty("SECRET", "mode", mode);
+		if (new_mode >= 0 && new_mode <= 2)
 		{
-			Debug.out(Debug.MODE_INFORMATION, "CKRET", "CKRET mode set to " + MODES[mode]);
-			MODE = mode;
+			Debug.out(Debug.MODE_INFORMATION, "CKRET", "CKRET mode set to " + MODES[new_mode]);
+			mode = new_mode;
 		}
 		else
 		{
-			Debug.out(Debug.MODE_WARNING, "CKRET", "Unknown CKRET mode: " + mode + ", CKRET will run in " + MODES[MODE]
+			Debug.out(Debug.MODE_WARNING, "CKRET", "Unknown CKRET mode: " + new_mode + ", CKRET will run in " + MODES[mode]
 					+ " mode");
 		}
 
@@ -158,7 +158,7 @@ public class CKRET implements CTCommonModule
 			ConcernAnalysis ca = new ConcernAnalysis(concern);
 			List fmolist = (List) concern.getDynObject(FilterModuleOrder.ALL_ORDERS_KEY);
 
-			switch (CKRET.MODE)
+			switch (CKRET.mode)
 			{
 				case NORMAL: // NORMAL
 					if (!ca.checkOrder(singleOrder, true))

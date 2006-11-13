@@ -13,21 +13,19 @@ import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.FILTH.FilterModuleOrder;
 
 /**
- * @author Administrator To change the template for this generated type comment
- *         go to Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and
- *         Comments
+ * 
  */
 public interface Reporter
 {
 
-	public void open();
+	void open();
 
-	public void close();
+	void close();
 
-	public void openConcern(Concern concern);
+	void openConcern(Concern concern);
 
-	public void closeConcern();
+	void closeConcern();
 
-	public void reportOrder(FilterModuleOrder order, FilterSetAnalysis analysis, boolean selected, boolean incremental);
+	void reportOrder(FilterModuleOrder order, FilterSetAnalysis analysis, boolean selected, boolean incremental);
 
 }

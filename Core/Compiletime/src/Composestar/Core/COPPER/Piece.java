@@ -29,9 +29,9 @@ public class Piece
 		return text;
 	}
 
-	public void setText(String text)
+	public void setText(String intext)
 	{
-		this.text = text;
+		text = intext;
 	}
 
 	public String getPosition()
@@ -39,9 +39,9 @@ public class Piece
 		return position;
 	}
 
-	public void setPosition(String position)
+	public void setPosition(String inposition)
 	{
-		this.position = position;
+		position = inposition;
 	}
 
 	public boolean isCreateNew()
@@ -49,8 +49,8 @@ public class Piece
 		return createNew;
 	}
 
-	public void setCreateNew(boolean createNew)
+	public void setCreateNew(boolean increateNew)
 	{
-		this.createNew = createNew;
+		createNew = increateNew;
 	}
 }

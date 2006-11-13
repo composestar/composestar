@@ -41,13 +41,13 @@ public class FilterSetAnalysis implements Serializable
 
 	private List conflictingExecutions;
 
-	public FilterSetAnalysis(Concern concern, FilterModuleOrder order)
+	public FilterSetAnalysis(Concern inconcern, FilterModuleOrder inorder)
 	{
-		this.concern = concern;
-		this.order = order;
-		// this.messages = new HashMap();
-		this.executions = new ArrayList();
-		this.conflictingExecutions = new ArrayList();
+		concern = inconcern;
+		order = inorder;
+		// messages = new HashMap();
+		executions = new ArrayList();
+		conflictingExecutions = new ArrayList();
 	}
 
 	public List getFilters()

@@ -34,11 +34,11 @@ public class ConstraintsHandler extends DefaultHandler
 	 * @roseuid 405026C7011E
 	 * @param repository
 	 */
-	public ConstraintsHandler(ConfigParser handler, XMLReader parser, Repository repository)
+	public ConstraintsHandler(ConfigParser handler, XMLReader inparser, Repository inrepository)
 	{
-		this.returnhandler = handler;
-		this.parser = parser;
-		this.repository = repository;
+		returnhandler = handler;
+		parser = inparser;
+		repository = inrepository;
 	}
 
 	/**

@@ -28,10 +28,10 @@ public class Operation implements Serializable
 
 	private String resource;
 
-	public Operation(String name, String resource)
+	public Operation(String inname, String inresource)
 	{
-		this.name = name;
-		this.resource = resource;
+		name = inname;
+		resource = inresource;
 	}
 
 	public String getResource()

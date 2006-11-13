@@ -20,11 +20,11 @@ import Composestar.Utils.Debug;
 public class ConfigParser extends DefaultHandler
 {
 	// boolean inDocument = false;
-	private Repository repository = null;
+	private Repository repository;
 
 	public FiltersHandler theCkretFiltersXMLHandler;
 
-	XMLReader parser = null;
+	XMLReader parser;
 
 	/**
 	 * @param filename
@@ -32,11 +32,11 @@ public class ConfigParser extends DefaultHandler
 	 * @roseuid 405026C60063
 	 * @param repository
 	 */
-	public void parse(String filename, Repository repository)
+	public void parse(String filename, Repository inrepository)
 	{
 		try
 		{
-			this.repository = repository;
+			repository = inrepository;
 			/*
 			 * Now handled in Master
 			 * System.setProperty("org.xml.sax.driver","org.apache.crimson.parser.XMLReaderImpl");

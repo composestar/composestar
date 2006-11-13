@@ -1,17 +1,16 @@
-package Composestar.Core.FILTH.XMLSpecification;
-
 /*
- * Created on 15-mrt-2004
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
+package Composestar.Core.FILTH.XMLSpecification;
 
 /**
  * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -20,9 +19,9 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 public class ArgumentFilter extends XMLFilterImpl
 {
-	protected String _left;
+	protected String left;
 
-	protected String _right;
+	protected String right;
 
 	private boolean sleft;
 
@@ -38,12 +37,12 @@ public class ArgumentFilter extends XMLFilterImpl
 
 	public String getLeft()
 	{
-		return _left;
+		return left;
 	}
 
 	public String getRight()
 	{
-		return _right;
+		return right;
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException
@@ -80,11 +79,11 @@ public class ArgumentFilter extends XMLFilterImpl
 		// System.out.println("CHAR "+s+" "+sleft);
 		if (sleft && !sright)
 		{
-			_left = s;
+			left = s;
 		}
 		if (sright && !sleft)
 		{
-			_right = s;
+			right = s;
 		}
 
 	}

@@ -1,45 +1,44 @@
-package Composestar.Core.FILTH.Core;
-
 /*
- * Created on 9-sep-2003
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2006 University of Twente.
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
  */
+package Composestar.Core.FILTH.Core;
 
 /**
  * @author nagyist
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class ExecutionManager
 {
-	LinkedList _order;
+	LinkedList order;
 
-	Graph _graph;
+	Graph graph;
 
-	public ExecutionManager(LinkedList order, Graph g)
+	public ExecutionManager(LinkedList inorder, Graph g)
 	{
-		_order = order;
-		_graph = g;
+		order = inorder;
+		graph = g;
 	}
 
 	public void execute()
 	{
-		_order.removeFirst();// be careful the root is the first!
+		order.removeFirst();// be careful the root is the first!
 
 		Node currentNode;
 		Action currentAction;
 		LinkedList rules;
 		Rule crule;
 
-		while (!_order.isEmpty())
+		while (!order.isEmpty())
 		{
-			currentNode = (Node) _order.getFirst();
+			currentNode = (Node) order.getFirst();
 			currentAction = (Action) currentNode.getElement();
 
 			// get all of its rules and apply them
@@ -66,7 +65,7 @@ public class ExecutionManager
 			}// else
 			// System.out.println("NOT executed>> "+currentAction);
 
-			_order.removeFirst();
+			order.removeFirst();
 			// if the execution is not executable, go on the nexr action in the
 			// order
 

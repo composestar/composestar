@@ -250,7 +250,7 @@ public class COPPER implements CTCommonModule
 
 	public static void main(String[] args)
 	{
-		Debug.setMode(2);
+		Debug.setMode(Debug.MODE_WARNING);
 		System.out.println("Welcome to COPPER...");
 		COPPER copper = new COPPER();
 		ArrayList cpsfiles = new ArrayList();
@@ -271,7 +271,7 @@ public class COPPER implements CTCommonModule
 			}
 			else if (args[i].equals("--debug") || args[i].equals("-d"))
 			{
-				Debug.setMode(3);
+				Debug.setMode(Debug.MODE_INFORMATION);
 			}
 			else if (args[i].startsWith("@"))
 			{

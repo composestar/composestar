@@ -375,11 +375,8 @@ public class AstManipulator implements CpsTokenTypes
 			{
 				if (!adding)
 				{
-					Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + '.'); // fixme:
-					// doesn't
-					// matter
-					// for
-					// add
+					// fixme: doesn't matter for add
+					Debug.out(Debug.MODE_WARNING, "COPPER", "Node " + text + " not found in path " + totalpath + '.');
 				}
 				return null;
 			}

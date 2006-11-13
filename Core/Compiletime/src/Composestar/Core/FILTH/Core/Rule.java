@@ -1,30 +1,31 @@
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003-2006 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 package Composestar.Core.FILTH.Core;
 
-/*
- * Created on 2-sep-2003
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-
 /**
- * @author nagyist To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @author nagyist
  */
 public abstract class Rule
 {
 	protected String identifier;
 
-	protected Parameter _left, _right;
+	protected Parameter left, right;
 
-	public Rule(Parameter left, Parameter right)
+	public Rule(Parameter inleft, Parameter inright)
 	{
-		_left = left;
-		_right = right;
-		if (_right instanceof Action) // the second arg. must be action
+		left = inleft;
+		right = inright;
+		if (right instanceof Action) // the second arg. must be action
 		// always...
 		{
-			((Action) _right).addRule(this);
+			((Action) right).addRule(this);
 		}
 	}
 
@@ -35,12 +36,12 @@ public abstract class Rule
 
 	public Parameter getLeft()
 	{
-		return _left;
+		return left;
 	}
 
 	public Parameter getRight()
 	{
-		return _right;
+		return right;
 	}
 
 	public void insert(Graph g)

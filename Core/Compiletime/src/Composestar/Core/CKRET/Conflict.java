@@ -36,9 +36,9 @@ public class Conflict implements Serializable
 		return resource;
 	}
 
-	public void setSequence(String sequence)
+	public void setSequence(String insequence)
 	{
-		this.sequence = sequence;
+		sequence = insequence;
 	}
 
 	public String getSequence()
@@ -46,9 +46,9 @@ public class Conflict implements Serializable
 		return sequence;
 	}
 
-	public void setMsg(String msg)
+	public void setMsg(String inmsg)
 	{
-		this.msg = msg;
+		msg = inmsg;
 	}
 
 	public String getMsg()
@@ -56,9 +56,9 @@ public class Conflict implements Serializable
 		return msg;
 	}
 
-	public void setExpr(String expr)
+	public void setExpr(String inexpr)
 	{
-		this.expr = expr;
+		expr = inexpr;
 	}
 
 	public String getExpr()

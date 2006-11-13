@@ -20,9 +20,9 @@ import antlr.CommonToken;
  */
 public class PosToken extends CommonToken
 {
-	int col = 0;
+	int col;
 
-	int bytePos = 0;
+	int bytePos;
 
 	/**
 	 * Constructor

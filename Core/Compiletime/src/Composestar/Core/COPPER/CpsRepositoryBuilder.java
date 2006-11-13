@@ -122,15 +122,7 @@ public class CpsRepositoryBuilder
 
 	private Target ta;
 
-	private int lineNumber; // Sneaky default value
-
-	// special variables
-	private ConditionExpression lastTouched; // used to insert condition
-
 	// stuff in the right place
-
-	// points to the last condition object we modified
-	private Vector condAll; // temporary vector used to store conditionparts
 
 	private boolean parsingInput = true; // whether we're parsing an input-
 
@@ -157,7 +149,6 @@ public class CpsRepositoryBuilder
 	 */
 	public CpsRepositoryBuilder()
 	{
-		condAll = new Vector();
 		// SelectorDefinition concernSelf = null;
 		namespace = null;
 		split = new Splitter();
@@ -737,10 +728,6 @@ public class CpsRepositoryBuilder
 		fec.setParent(fe);
 		fe.setConditionPart(fec);
 		this.addToRepository(fec);
-
-		condAll.clear(); // clear the condition Vector for the next
-		// filterelement
-		lastTouched = null; // reset this for the next series
 	}
 
 	public ConditionExpression addAnd(ConditionExpression lhs, ConditionExpression rhs)
@@ -791,146 +778,6 @@ public class CpsRepositoryBuilder
 							.getFmelem()));
 			return cv;
 		}
-	}
-
-	/**
-	 * Adds an And object (can be present in an FilterElement)
-	 * 
-	 * @deprecated
-	 */
-	public void addAnd()
-	{
-		And and = new And();
-		if (lastTouched != null)
-		{ // we are adding this up the tree
-			and.setLeft(lastTouched);
-			lastTouched.setParent(and); // we could not add this before, and dit
-			// not exist yet
-		}
-		lastTouched = and;
-		condAll.add(and);
-	}
-
-	/**
-	 * Adds an Or object (can be present in an FilterElement)
-	 * 
-	 * @deprecated
-	 */
-	public void addOr()
-	{
-		Or or = new Or();
-		if (lastTouched != null)
-		{ // we are adding this up the tree
-			or.setLeft(lastTouched);
-			lastTouched.setParent(or); // we could not add this before, and dit
-			// not exist yet
-		}
-		lastTouched = or;
-		condAll.add(or);
-	}
-
-	/**
-	 * Adds an Not object
-	 * 
-	 * @param condname Name of the literal to apply not to
-	 * @deprecated
-	 */
-	public void addNot(Vector condname)
-	{
-		Not not = new Not();
-		if (lastTouched != null)
-		{ // means we're the right part of the branch, don't adjust
-			// lastTouched
-			if (lastTouched instanceof BinaryOperator)
-			{
-				((BinaryOperator) lastTouched).setRight(not);
-				not.setParent(lastTouched);
-			}
-		}
-		else
-		{ // we're the left part, so change lastTouched
-			lastTouched = not;
-		}
-		condAll.add(not);
-
-		// now add the literal
-		addConditionLiteral(condname, not);
-	}
-
-	/**
-	 * Adds a literal or variable (i.e. a condition name)
-	 * 
-	 * @param condname Name of the condition (may include package + concern +
-	 *            fm)
-	 * @param override If called from Not, this points to the Not object to
-	 *            attach this condition to; if null, then just add using the
-	 *            default algoritm
-	 * @deprecated
-	 */
-	public void addConditionLiteral(Vector condname, ConditionExpression override)
-	{
-
-		ConditionExpression ce;
-
-		// special case if "true" or "false" are specified
-		if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("true"))
-		{
-			ce = new True();
-		}
-		else if (condname.size() == 1 && ((String) condname.elementAt(0)).equalsIgnoreCase("false"))
-		{
-			ce = new False();
-		}
-		else
-		{
-			ce = new ConditionVariable();
-			split.splitFmElemReference(condname, true);
-			((ConditionVariable) ce).setCondition(addConditionReference(split.getPack(), split.getConcern(), split
-					.getFm(), split.getFmelem()));
-		}
-
-		if (override != null)
-		{ // we're adding under a not
-			((Not) override).setOperand(ce);
-			ce.setParent(override);
-		}
-		else if (lastTouched != null)
-		{ // means we're the right part of the branch
-			if (lastTouched instanceof BinaryOperator)
-			{
-				((BinaryOperator) lastTouched).setRight(ce);
-				ce.setParent(lastTouched);
-			}
-			else if (lastTouched instanceof UnaryOperator)
-			{
-				((UnaryOperator) lastTouched).setOperand(ce);
-				ce.setParent(lastTouched);
-			}
-		}
-		else
-		{
-			// if this is null, the parent has nog yet been created, so we're on
-			// the left side of the branch
-			lastTouched = ce;
-		}
-		condAll.add(ce);
-
-		// cp.setParent(fe);
-		// fe.setConditionPart(cp); ;
-		// Main.all.add(cp);
-	}
-
-	/**
-	 * Adds a True (happens when you do not specify any condition in
-	 * FilterElement; i.e. always true)
-	 * 
-	 * @deprecated
-	 */
-	public void addConditionTrue()
-	{
-		True true_ = new True();
-		lastTouched = true_;
-		condAll.add(true_);
 	}
 
 	/**
@@ -1366,8 +1213,8 @@ public class CpsRepositoryBuilder
 		// concernSelf.addSelExpression(concernSelfSelClass);
 		// don't add this to the repository, unless needed
 
-		// fixme
-		addSelectorDefinition("self", lineNumber);
+		// FIXME:
+		addSelectorDefinition("self", 0);
 		// addSelectorExpression(1, cpsc.getName());
 		Vector vtemp = new Vector();
 		// vtemp.add(cpsc.getName());
@@ -1656,11 +1503,11 @@ public class CpsRepositoryBuilder
 	 *            compiler)
 	 * @param filename Name of the file containing the source
 	 */
-	public void addSourceFile(String lang, String filename)
+	public void addSourceFile(String lang, String srcfilename)
 	{
 		SourceFile srcf = new SourceFile();
 		srcf.setLanguage(lang);
-		srcf.setSourceFile(filename);
+		srcf.setSourceFile(srcfilename);
 		cpsc.setImplementation(srcf);
 		this.addToRepository(srcf);
 	}
@@ -1674,13 +1521,13 @@ public class CpsRepositoryBuilder
 	 * @param line
 	 * @param className
 	 */
-	public void addEmbeddedSource(String lang, Vector className, String filename, int line)
+	public void addEmbeddedSource(String lang, Vector className, String srcfilename, int line)
 	{
 		Source src = new Source();
 		src.setLanguage(lang);
 		src.setClassName(className);
-		src.setSourceFile(filename);
-		src.setDescriptionFileName(this.filename);
+		src.setSourceFile(srcfilename);
+		src.setDescriptionFileName(filename);
 		src.setDescriptionLineNumber(line);
 		src.setSource(COPPER.getEmbeddedSource()); // add the extracted source
 		cpsc.setImplementation(src);
@@ -2032,9 +1879,8 @@ public class CpsRepositoryBuilder
 				}
 				else
 				{
-					current.getRightOperator().setRightArgument(null); // nothing
-					// after
-					// this
+					current.getRightOperator().setRightArgument(null); 
+					// nothing after this
 				}
 			}
 		}
@@ -2052,8 +1898,8 @@ public class CpsRepositoryBuilder
 		return cpsc.getName();
 	}
 
-	public void setFilename(String filename)
+	public void setFilename(String infilename)
 	{
-		this.filename = filename;
+		filename = infilename;
 	}
 }

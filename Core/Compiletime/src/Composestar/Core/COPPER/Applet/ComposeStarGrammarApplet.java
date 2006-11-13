@@ -1,4 +1,4 @@
-package Composestar.Core.COPPER.applet;
+package Composestar.Core.COPPER.Applet;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

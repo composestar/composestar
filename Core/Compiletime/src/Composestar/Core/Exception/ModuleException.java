@@ -30,27 +30,27 @@ public class ModuleException extends Exception
 
 	private int errorLocationLineNumber;
 
-	public ModuleException(String message, String module)
+	public ModuleException(String message, String inmodule)
 	{
 		super(message);
-		this.module = module;
-		this.errorLocationLineNumber = 0;
-		this.errorLocationFilename = "";
+		module = inmodule;
+		errorLocationLineNumber = 0;
+		errorLocationFilename = "";
 	}
 
-	public ModuleException(String message, String module, RepositoryEntity errorLocation)
+	public ModuleException(String message, String inmodule, RepositoryEntity errorLocation)
 	{
-		this(message, module);
-		this.errorLocationFilename = errorLocation.getDescriptionFileName();
-		this.errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
+		this(message, inmodule);
+		errorLocationFilename = errorLocation.getDescriptionFileName();
+		errorLocationLineNumber = errorLocation.getDescriptionLineNumber();
 		// this.errorLocation = errorLocation;
 	}
 
-	public ModuleException(String message, String module, String errorLocationFilename, int errorLocationLineNumber)
+	public ModuleException(String message, String inmodule, String inerrorLocationFilename, int inerrorLocationLineNumber)
 	{
-		this(message, module);
-		this.errorLocationFilename = errorLocationFilename;
-		this.errorLocationLineNumber = errorLocationLineNumber;
+		this(message, inmodule);
+		errorLocationFilename = inerrorLocationFilename;
+		errorLocationLineNumber = inerrorLocationLineNumber;
 	}
 
 	/**
