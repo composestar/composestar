@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
 Common routines. Always include this file in every build.xml file
@@ -188,7 +188,10 @@ Common routines. Always include this file in every build.xml file
 		<condition property="bin.fxcop" value="${build.core}${file.separator}Development${file.separator}fxcop${file.separator}FxCopCmd.exe" else="FxCopCmd.exe">
 			<not><isset property="available.fxcop.path"/></not>
 		</condition>
-		
+
+		<!-- Sandcastle -->
+		<property name="bin.sandcastle" value="${build.core}${file.separator}Development${file.separator}Sandcastle${file.separator}Help File Builder${file.separator}SandcastleBuilderConsole.exe"/>
+
 		<!-- FxCop macro -->
 		<macrodef name="fxcop">
 			
