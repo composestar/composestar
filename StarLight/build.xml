@@ -9,21 +9,19 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-	<property name="out.qa.starlight"  value="QualityAssurance"/>
-  <property name="out.fxcop.starlight" value="QualityAssurance" /> 
-
-	<property name="MSBuildTasks.dir" location="Source${file.separator}VSIntegration${file.separator}MSBuildTasks"/>
-	
 	<echo>Processing: ${ant.project.name} ...</echo>
-	
-	<description>
-	The Compose* StarLight
-	The StarLight implementation of Compose*
-	</description>
+	<description>The StarLight implementation of Compose*</description>
 
+	<property name="out.qa.starlight"    value="QualityAssurance"/>
+	<property name="out.fxcop.starlight" value="QualityAssurance" /> 
+
+	<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks"/>
+
+	<!-- clean -->
+	
 	<target name="clean" depends="init" description="Cleanup the result of compilations">
-	  <delete dir="${out.qa.starlight}" />
-	  <delete dir="${out.fxcop.starlight}" />
+		<delete dir="${out.qa.starlight}" />
+		<delete dir="${out.fxcop.starlight}" />
 	  <delete file="Documentation\ComposeStar-StarLight.chm" />
 	  <delete file="Documentation\LastBuild.log" />
 		<ant target="clean" dir="Source/Compiletime" />
@@ -31,64 +29,91 @@
 		<ant target="clean" dir="Source/VSIntegration/MSBuildTasks" />
 		<ant target="clean" dir="Source/VSIntegration/VisualStudio.Project" />
 	</target>
-	
-	<target name="build_compiletime" description="Build the StarLight Java Compile time implementation of Compose*">
-		<ant target="build" dir="Source/Compiletime" />
-	</target>
+
+	<!-- build -->
 	
 	<target name="build" description="Build the StarLight implementation of Compose*">
-		<ant target="build" dir="Source/Compiletime" />
-		<ant target="build" dir="Source/StarLight.Weaving.BuildIn" />
-		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" />
-		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
+		<antcall target="build_compiletime"/>
+		<antcall target="build_msbuild"/>
+		<antcall target="build_vs"/>
+		<antcall target="build_ws"/>
 	</target>
 
-	<target name="install" depends="build" description="Install the StarLight implementation of Compose*"/>
+	<target name="build_compiletime" description="Build Compose* StarLight Compiletime">
+		<ant target="build" dir="Source/Compiletime" />
+	</target>
+	
+	<target name="build_msbuild" description="Build Compose* StarLight MSBuild tasks">
+		<ant target="build" dir="Source/VSIntegration/MSBuildTasks" />
+	</target>
+	
+	<target name="build_vs" description="Build Compose* StarLight VS Integration">
+		<ant target="build" dir="Source/VSIntegration/VisualStudio.Project" />
+	</target>
+	
+	<target name="build_ws" description="Build Compose* StarLight WeaveStrategy">
+		<ant target="build" dir="Source/StarLight.Weaving.BuildIn" />
+	</target>
+
+	<!-- install -->
+
+	<target name="install" depends="build" description="Install the StarLight implementation of Compose*">
+		<!-- todo -->
+	</target>
+
+	<!-- publish -->
+
+	<target name="publish" depends="build" description="Create the StarLight installer">
+		<ant target="publish" dir="${build.starlight}/Setup"/>
+	</target>
+
+	<!-- QA -->
 	
 	<target name="init_qa" depends="init">
 		<mkdir dir="${out.qa.starlight}" />
 	</target>
 	
 	<target name="findbugs" depends="init_qa" description="Execute FindBugs">
-		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa.starlight}${file.separator}findbugs-result.xml" excludeFilter="${bin.findbugs}${file.separator}exclude.xml" jvmargs="${findbugs.jvmargs}">
-			<class location="${build.starlight}${file.separator}source${file.separator}Compiletime${file.separator}${out.build}" />
-			<sourcePath path="${build.starlight}${file.separator}source${file.separator}Compiletime${file.separator}src" />
+		<findbugs home="${bin.findbugs}" output="xml:withMessages" effort="${findbugs.effort}" reportLevel="${findbugs.reportLevel}" outputFile="${out.qa.starlight}/findbugs-result.xml" excludeFilter="${bin.findbugs}/exclude.xml" jvmargs="${findbugs.jvmargs}">
+			<class location="${build.starlight}/source/Compiletime/${out.build}" />
+			<sourcePath path="${build.starlight}/source/Compiletime/src" />
 			<auxClasspath refid="lib.core" />
 			<auxClasspath>
-				<pathelement path="${build.core}${file.separator}Compiletime${file.separator}${out.jar.core}" />
-				<pathelement path="${build.starlight}${file.separator}libraries${file.separator}xmltypes.jar" />
+				<pathelement path="${build.core}/Compiletime/${out.jar.core}" />
+				<pathelement path="${build.starlight}/libraries/xmltypes.jar" />
 			</auxClasspath>
 		</findbugs>
-		<xslt in="${out.qa.starlight}${file.separator}findbugs-result.xml" out="${out.qa.starlight}${file.separator}findbugs-result.html" style="${findbugs.style}" />
+		<xslt in="${out.qa.starlight}/findbugs-result.xml" out="${out.qa.starlight}/findbugs-result.html" style="${findbugs.style}" />
 	</target>
 	
 	<target name="checkstyle" depends="init_qa" description="Run CheckStyle code proof reading">
-		<checkstyle config="${bin.checkstyle}${file.separator}star_checks.xml" failOnViolation="false" classpathref="lib.starlight">
-			<formatter type="xml" toFile="${out.qa.starlight}${file.separator}checkstyle-result.xml" />
+		<checkstyle config="${bin.checkstyle}/star_checks.xml" failOnViolation="false" classpathref="lib.starlight">
+			<formatter type="xml" toFile="${out.qa.starlight}/checkstyle-result.xml" />
 			<property key="config_loc" value="${bin.checkstyle}" />
-			<FileSet dir="${build.starlight}${file.separator}source${file.separator}Compiletime${file.separator}src">
+			<FileSet dir="${build.starlight}/source/Compiletime/src">
 				<include name="**/*.java" />
-				
 				<exclude name="Composestar/DotNET/DUMMER/JSharpLexer.java" />
 				<exclude name="Composestar/DotNET/DUMMER/JSharpRecognizer.java" />
 				<exclude name="Composestar/DotNET/DUMMER/JSharpTokenTypes.java" />
 			</FileSet>
 		</checkstyle>
-		<xslt in="${out.qa.starlight}${file.separator}checkstyle-result.xml" out="${out.qa.starlight}${file.separator}checkstyle-result.html" style="${checkstyle.style}" />
+		<xslt in="${out.qa.starlight}/checkstyle-result.xml" out="${out.qa.starlight}/checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
 	
 	<target name="build_codeanalysis" description="Build .net projects for code analysis">
-	  <msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="Debug" />
+		<msbuild solution="${MSBuildTasks.dir}/StarLight.MSBuild.Tasks.csproj" target="build" config="Debug" />
 	</target>
 	
 	<target name="fxcop_init" >
-	    <mkdir dir="${out.fxcop.starlight}" />           
+		<mkdir dir="${out.fxcop.starlight}" />           
 	</target>
 	
-	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">	      
-      <fxcop reportfile="${out.fxcop.starlight}${file.separator}fxcop.txt" 
-   				   files="${MSBuildTasks.dir}${file.separator}Bin${file.separator}Debug${file.separator}Composestar*.dll"/>
+	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">
+		<fxcop reportfile="${out.fxcop.starlight}/fxcop.txt"
+		       files="${MSBuildTasks.dir}/Bin/Debug/Composestar*.dll"/>
 	</target>
+
+	<!-- documentation -->
 	
 	<target name="documentation" description="Create StarLight documentation">
 	  <!-- Build dependencies -->
@@ -109,5 +134,46 @@
 		</exec>
 
 	</target>
-	
+
+	<!-- fancy menu -->
+
+	<target name="select" depends="init">	
+		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
+		<antmenu image="${basedir}/logo.gif" title="Compose* Build">
+		
+			<antMenuItem name="StarLight" >
+				<antMenuItem name="Clean"  target="clean"/>
+				<antMenuItem name="Build">
+					<antMenuItem name="Build all"     target="build"/>
+					<antMenuItem name="Rebuild all"   target="rebuild"/>
+					<antMenuItem name="Core"          target="build_core"/>
+					<antMenuItem name="Compiletime"   target="build_compiletime"/>
+					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
+					<antMenuItem name="VSIntegration" target="build_vs"/>
+					<antMenuItem name="WeaveStrategy" target="build_ws"/>
+				</antMenuItem>
+				<antMenuItem name="Install">
+					<antMenuItem name="Install"       target="install_starlight"/>
+					<antMenuItem name="Uninstall"     target="uninstall_starlight"/>
+				</antMenuItem>
+				<antMenuItem name="Publish">
+					<antMenuItem name="StarLight"     target="publish_starlight"/>
+				</antMenuItem>
+				<antMenuItem name="Run tests"       target="test"/>
+				<antMenuItem name="QA">
+					<antMenuItem name="All"           target="qa_starlight"/>
+					<antMenuItem name="FxCop"         target="fxcop_starlight"/>
+					<antMenuItem name="FindBugs"      target="findbugs_starlight"/>
+					<antMenuItem name="CheckStyle"    target="checkstyle_starlight"/>
+				</antMenuItem>
+			</antMenuItem>
+			
+			<link label="Rebuild" target="rebuild"/>
+			<link label="Clean install" target="cleaninstall"/>
+			<separator/>
+			<link label="Cancel" target="cancel"/>
+		
+		</antmenu>
+	</target>
+
 </project>
