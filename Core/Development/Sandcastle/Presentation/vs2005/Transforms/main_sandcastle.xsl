@@ -320,6 +320,37 @@
     </span>
   </xsl:template>
 
+  <xsl:template match="list[@type='definition']">
+    <table>    
+      <xsl:for-each select="*">
+        <tr>
+          <td colspan="2">
+            <xsl:apply-templates select="term" />
+          </td>          
+        </tr>
+        <tr>
+          <td width="20px"></td>
+          <td>
+            <xsl:apply-templates select="description" />
+          </td>
+        </tr>
+      </xsl:for-each>
+    </table>
+  </xsl:template>
+
+  <xsl:template match="term">
+       <xsl:value-of select="." />
+  </xsl:template>
+
+  <xsl:template match="note">
+    <p><strong>Note</strong> <xsl:value-of select="." />
+    </p>    
+  </xsl:template>
+
+  <xsl:template match="description">
+      <xsl:value-of select="." />
+  </xsl:template>
+
 	<!-- pass through html tags -->
 
 	<xsl:template match="p|ol|ul|li|dl|dt|dd|table|tr|th|td|a|img|b|i|strong|em|del|sub|sup">
