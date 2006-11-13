@@ -60,22 +60,6 @@
 		<ant target="build" dir="${build.starlight}" />
 	</target>
 	
-	<target name="build_starlight_compiletime" depends="build_core" if="enabled.starlight" description="Build Compose* StarLight Compiletime">
-		<ant target="build" dir="${build.starlight}${file.separator}source${file.separator}compiletime" />
-	</target>
-	
-  <target name="build_starlight_msbuild"  if="enabled.starlight" description="Build Compose* StarLight MSBuild tasks">
-		<ant target="build" dir="${build.starlight}${file.separator}source${file.separator}vsintegration${file.separator}msbuildtasks" />
-	</target>
-	
-	<target name="build_starlight_vs"  if="enabled.starlight" description="Build Compose* StarLight VS Integration">
-		<ant target="build" dir="${build.starlight}${file.separator}source${file.separator}vsintegration${file.separator}VisualStudio.Project" />
-	</target>
-	
-	<target name="build_starlight_ws"  if="enabled.starlight" description="Build Compose* StarLight WeaveStrategy">
-		<ant target="build" dir="${build.starlight}${file.separator}Source${file.separator}StarLight.Weaving.BuildIn" />
-	</target>
-	
 	<target name="build_java" depends="build_core" if="enabled.java" description="Build the Java port">
 		<ant target="build" dir="${build.java}" />
 	</target>
@@ -120,14 +104,14 @@
 		<antcall target="publish_dotnet"/>
 		<antcall target="publish_starlight"/>
 	</target>
-	
+
 	<target name="publish_dotnet" depends="init,build_dotnet" if="enabled.dotnet" description="Create installer for Compose* .NET">
 		<ant target="publish" dir="${build.dotnet}/Installer"/>
-	</target>		
+	</target>
 	
 	<target name="publish_starlight" depends="init,build_starlight" if="enabled.starlight" description="Create installer for Compose* StarLight">
 		<ant target="publish" dir="${build.starlight}/Setup"/>
-	</target>		
+	</target>
 	
 	<!-- uninstall tasks -->
 	
@@ -330,47 +314,15 @@ If the build failed the cause will be listed at the end of the report.
 					<antMenuItem name="FindBugs"       target="findbugs"/>
 					<antMenuItem name="CheckStyle"     target="checkstyle"/>
 				</antMenuItem>
-				<antMenuItem name="Ports specific">
-					<antMenuItem name="StarLight"  if="enabled.starlight" >			
-						<antMenuItem name="Clean"  target="clean_starlight"/>		
-						<antMenuItem name="Build">
-							<antMenuItem name="Build all"   target="build_starlight"/>
-							<antMenuItem name="Rebuild all" target="rebuild_starlight"/>
-							<antMenuItem name="Core"        target="build_core"/>
-							<antMenuItem name="Compiletime" target="build_starlight_compiletime"/>
-							<antMenuItem name="MSBuildTasks" target="build_starlight_msbuild"/>
-							<antMenuItem name="VSIntegration" target="build_starlight_vs"/>
-							<antMenuItem name="WeaveStrategy" target="build_starlight_ws"/>
-						</antMenuItem>			
-						<antMenuItem name="Install">
-							<antMenuItem name="Install"   target="install_starlight"/>
-							<antMenuItem name="Uninstall" target="uninstall_starlight"/>
-						</antMenuItem>
-						<antMenuItem name="Publish">
-							<antMenuItem name="StarLight" target="publish_starlight" if="enabled.starlight"/>
-						</antMenuItem>
-						<antMenuItem name="Run tests"   target="test"/>
-						<antMenuItem name="QA">
-							<antMenuItem name="All QA targets" target="qa_starlight"/>
-							<antMenuItem name="FxCop"          target="fxcop_starlight"/>
-							<antMenuItem name="FindBugs"       target="findbugs_starlight"/>
-							<antMenuItem name="CheckStyle"     target="checkstyle_starlight"/>
-						</antMenuItem>
-						<antMenuItem name="Documentation">
-							<antMenuItem name="StarLight Documentation" target="documentation_starlight"/>
-						</antMenuItem>
-				</antMenuItem>
-			</antMenuItem>		
 			</antMenuItem>
-											
+			
 			<link label="Rebuild" target="rebuild"/>
 			<link label="Clean install" target="cleaninstall"/>			
 			<link label="Install &amp; test" target="install_test"/>			
 			<link label="Clean, build, install &amp; test" target="required"/>
-			
 			<separator/>
-			
 			<link label="Cancel" target="cancel"/>
+			
 		</antmenu>
 	</target>
 </project>
