@@ -57,11 +57,6 @@ public class JavaCompiler implements LangCompiler
 		String buildPath = p.getBasePath() + "obj/";
 		options = options + " -d " + FileUtils.quote(buildPath);
 
-		// create file containing all sources
-		String target = buildPath + "sources.txt";
-		String argfiles = "@sources.txt";
-		createFile(p, false, target);
-
 		// create command
 		CompilerAction action = lang.getCompilerSettings().getCompilerAction("Compile");
 		if (action == null)
@@ -72,10 +67,19 @@ public class JavaCompiler implements LangCompiler
 		command = action.getArgument();
 		command = lang.getCompilerSettings().getProperty("executable") + " " + command;
 		command = command.replaceAll("\\{OPTIONS\\}", options);
-		command = command.replaceAll("\\{SOURCES\\}", argfiles);
-
-		Debug.out(Debug.MODE_DEBUG, "RECOMA", "command for compiling sources: " + command);
-
+		
+		Iterator sourceIt = p.getSources().iterator();
+		while (sourceIt.hasNext())
+		{
+			compileSource( command, ((Source)sourceIt.next()).getFileName(), buildPath );
+		}
+	}
+	
+	private void compileSource(String command, String source, String buildPath) throws CompilerException
+	{
+		
+		command = command.replaceAll("\\{SOURCES\\}", FileUtils.quote(source));
+				
 		// compile
 		CommandLineExecutor cmdExec = new CommandLineExecutor();
 		int result = cmdExec.exec("call " + command, new File(buildPath));
@@ -101,7 +105,6 @@ public class JavaCompiler implements LangCompiler
 			}
 		}
 	}
-
 	/**
 	 * Compiles the dummy sources of a project.
 	 * 
