@@ -135,7 +135,9 @@
 		</exec>
 		
 	</target>
-
+	
+	<!-- QA tasks -->
+	
 	<target name="qa_starlight" description="Execute Quality Assurance tasks">
 		<antcall target="fxcop_starlight" />
 		<antcall target="findbugs_starlight" />
@@ -154,6 +156,19 @@
 		<ant target="checkstyle" dir="${build.starlight}" />
 	</target>
 
+  <!-- Installer -->
+
+	<target name="build_installer" description="Create the WIX installer for StarLight">
+				<ant target="build" dir="${build.starlight}${file.separator}Setup" />
+	</target>
+
+	<target name="install_starlight" description="Run the StarLight installer">
+				
+	</target>
+	
+	<target name="uninstall_starlight" description="Run the StarLight installer to uninstall">
+			
+	</target>
 
 	<!-- fancy menu -->
 
@@ -167,18 +182,21 @@
 					<antMenuItem name="Build all"     target="build"/>
 					<antMenuItem name="Rebuild all"   target="rebuild"/>
 					<antMenuItem name="Core"          target="build_core"/>
+				
 					<antMenuItem name="Compiletime"   target="build_compiletime"/>
 					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
 					<antMenuItem name="VSIntegration" target="build_vs"/>
 					<antMenuItem name="WeaveStrategy" target="build_ws"/>
+					<antMenuItem name="Installer" target="build_installer"/>
 				</antMenuItem>
-				<antMenuItem name="Install">
+				<antMenuItem name="Deployment">
+					<antMenuItem name="Deploy"       target="deploy_starlight"/>
 					<antMenuItem name="Install"       target="install_starlight"/>
 					<antMenuItem name="Uninstall"     target="uninstall_starlight"/>
 				</antMenuItem>
-				<antMenuItem name="Publish">
-					<antMenuItem name="StarLight"     target="publish_starlight"/>
-				</antMenuItem>
+			<!--	<antMenuItem name="Publish">
+					<antMenuItem name="Create Installer" target="build_installer"/>
+				</antMenuItem> -->
 				<antMenuItem name="Run tests"><!-- todo -->
 					<antMenuItem name="All"           target="test"/>
 					<antMenuItem name="NUnit"         target="test_nunit"/>
