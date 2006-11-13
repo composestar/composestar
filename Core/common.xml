@@ -46,6 +46,11 @@ Common routines. Always include this file in every build.xml file
 		<property name="build.debug"        value="true"/>
 		<property name="build.deprecation"  value="false"/>
 
+		<!-- options for msbuild -->
+		<condition property="msbuild.config" value="debug" else="release">
+			<istrue value="${build.debug}"/>
+		</condition>
+
 		<!-- register environment variables -->
 		<property environment="env"/>
 		<property name="env.PATH" value="${env.Path}"/>

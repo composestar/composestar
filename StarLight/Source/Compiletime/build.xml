@@ -42,10 +42,10 @@
 	</target>
 	
 	<target name="create_xsd">
-		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="release" />
+		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
 		<exec executable="xsd.exe" dir="..\StarLightEntities\bin\debug">
-			<arg line="Composestar.StarLight.Entities.dll" />
-			<arg line="/outputdir:../../obj" />
+			<arg line="Composestar.StarLight.Entities.dll"/>
+			<arg line="/outputdir:../../obj"/>
 		</exec>
 	</target>
 	

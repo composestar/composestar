@@ -14,21 +14,12 @@
 	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* StarLight Project and Language integration. Generates the MSBuild tasks.</description>
 
-	<property name="VSIntegration.dir" location=""/>
-
 	<target name="clean" depends="init" description="Clean compile results">
-		<antcall target="clean_msbuild"/>
+		<msbuild solution="StarLight.VisualStudio.Project.csproj" target="clean" config="${msbuild.config}"/>
 	</target>
 
-	<target name="clean_msbuild" if="available.msbuild">
-		<msbuild solution="${VSIntegration.dir}\StarLight.VisualStudio.Project.csproj" target="clean"/>
+	<target name="build" depends="init" description="Build the VSIntegration project">
+		<msbuild solution="StarLight.VisualStudio.Project.csproj" target="build" config="${msbuild.config}"/>
 	</target>
-
-	<target name="build" depends="init,compile" description="Compile the VSIntegration code" />
-
-	<target name="compile" depends="init">
-		<msbuild solution="${VSIntegration.dir}\StarLight.VisualStudio.Project.csproj" target="build" config="release" />
-	</target>
-
 
 </project>
