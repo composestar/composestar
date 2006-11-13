@@ -21,7 +21,7 @@ namespace AntHelper
 			}
 			else if (args[0].Equals("getsystemproperties"))
 			{
-                return getSystemProperties(args);
+				return getSystemProperties(args);
 			}
 			else if (args[0].Equals("lookupAssembly"))
 			{
@@ -73,7 +73,7 @@ namespace AntHelper
 			}
 			else
 			{
-				writer.WriteLine("# Unable to retrieve the Compose* install directory");
+				writer.WriteLine("# Unable to retrieve the StarLight install directory");
 			}
 		}
 
