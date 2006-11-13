@@ -16,7 +16,7 @@ namespace Composestar.StarLight.ILAnalyzer
     public sealed class CecilAnalyzerConfiguration
     {
               
-        private readonly string _repositoryFilename;
+        private readonly string _repositoryFileName;
         private bool _doFieldAnalysis = true;
         private bool _doMethodCallAnalysis = true;
         private bool _extractUnresolvedOnly;
@@ -25,21 +25,20 @@ namespace Composestar.StarLight.ILAnalyzer
         /// <summary>
         /// Initializes a new instance of the <see cref="T:WeaverConfiguration"/> class.
         /// </summary>
-        /// <param name="filename">The filename.</param>
-        /// <param name="repositoryFilename">The repository filename.</param>
-        public CecilAnalyzerConfiguration( string repositoryFilename)
+        /// <param name="repositoryFileName">Name of the repository file.</param>
+        public CecilAnalyzerConfiguration( string repositoryFileName)
         {
             
-             _repositoryFilename = repositoryFilename;
+             _repositoryFileName = repositoryFileName;
         }
 
         /// <summary>
         /// Gets the repository filename.
         /// </summary>
         /// <value>The repository filename.</value>
-        public string RepositoryFilename
+        public string RepositoryFileName
         {
-            get { return _repositoryFilename; }
+            get { return _repositoryFileName; }
         }
 
         /// <summary>
@@ -97,9 +96,9 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="repositoryFilename">The repository filename.</param>
         /// <returns></returns>
-        public static CecilAnalyzerConfiguration CreateDefaultConfiguration(string repositoryFilename)
+        public static CecilAnalyzerConfiguration CreateDefaultConfiguration(string repositoryFileName)
         {
-            return new CecilAnalyzerConfiguration(repositoryFilename);
+            return new CecilAnalyzerConfiguration(repositoryFileName);
         }
 
     }

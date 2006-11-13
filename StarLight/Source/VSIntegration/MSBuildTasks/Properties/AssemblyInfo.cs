@@ -41,3 +41,6 @@ using System.Security.Permissions;
 [assembly: SecurityPermissionAttribute(SecurityAction.RequestMinimum, Flags = SecurityPermissionFlag.UnmanagedCode)]
  
 [assembly: CLSCompliant(true)]
+
+
+[module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", Scope = "resource", Target = "Composestar.StarLight.MSBuild.Tasks.Properties.Resources.resources", MessageId = "avg")]

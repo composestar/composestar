@@ -11,7 +11,7 @@ namespace Composestar.StarLight.CoreServices.Exceptions
     [Serializable()]
     public sealed class ILWeaverException : StarLightException, ISerializable
     {
-        private readonly string _filename;
+        private readonly string _fileName;
 
         #region ctor
 
@@ -33,7 +33,7 @@ namespace Composestar.StarLight.CoreServices.Exceptions
             if (serializationInformation == null)
                 throw new ArgumentNullException("serializationInformation");
 
-            _filename = serializationInformation.GetString("ILWeaverException._filename");
+            _fileName = serializationInformation.GetString("ILWeaverException._fileName");
         }
 
         /// <summary>
@@ -59,32 +59,33 @@ namespace Composestar.StarLight.CoreServices.Exceptions
         /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <param name="filename">The filename.</param>
-        public ILWeaverException(string message, string filename)
+        /// <param name="fileName">The fileName.</param>
+        public ILWeaverException(string message, string fileName)
             : base(message)
         {
-            _filename = filename;
+            _fileName = fileName;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ILWeaverException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="inner">The inner.</param>
-        public ILWeaverException(string message, string filename, Exception inner)
+        public ILWeaverException(string message, string fileName, Exception inner)
             : base(message, inner)
         {
-            _filename = filename;
+            _fileName = fileName;
         }
 
+
         /// <summary>
-        /// Gets the filename.
+        /// Gets the name of the file.
         /// </summary>
-        /// <value>The filename.</value>
-        public string Filename
+        /// <value>The name of the file.</value>
+        public string FileName
         {
-            get { return _filename; }
+            get { return _fileName; }
         }
         #endregion
 
@@ -103,7 +104,7 @@ namespace Composestar.StarLight.CoreServices.Exceptions
             if (info == null)
                 throw new ArgumentNullException("info");
  
-            info.AddValue("ILWeaverException._filename", _filename);
+            info.AddValue("ILWeaverException._fileName", _fileName);
             base.GetObjectData(info, context);
         }
 

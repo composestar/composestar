@@ -41,12 +41,12 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// <summary>
         /// Saves the timing log.
         /// </summary>
-        /// <param name="filename">The filename.</param>
-        public void SaveTimingLog(string filename)
+        /// <param name="fileName">The fileName.</param>
+        public void SaveTimingLog(string fileName)
         {
             Queue<string> times = new Queue<string>(_timing);
 
-            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(@filename, false))
+            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(@fileName, false))
             {
                 sw.WriteLine("Weaver Timing Log File");
                 sw.WriteLine("Created at {0} on {1} by {2}\\{3}.", DateTime.Now.ToString(), Environment.MachineName, Environment.UserDomainName, Environment.UserName);
@@ -79,10 +79,10 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         /// <summary>
         /// Saves the instructions log to file.
         /// </summary>
-        /// <param name="filename">The filename.</param>
-        public void SaveInstructionsLog(string filename)
+        /// <param name="fileName">The fileName.</param>
+        public void SaveInstructionsLog(string fileName)
         {
-            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(@filename, false))
+            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(@fileName, false))
             {
                 sw.WriteLine("Weaver Instructions Log File");
                 sw.WriteLine("Created at {0} on {1} by {2}\\{3}.", DateTime.Now.ToString(), Environment.MachineName, Environment.UserDomainName, Environment.UserName);

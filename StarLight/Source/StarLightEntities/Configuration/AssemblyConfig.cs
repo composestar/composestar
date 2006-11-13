@@ -45,35 +45,35 @@ namespace Composestar.StarLight.Entities.Configuration
             set { _timestamp = value; }
         }
 
-        private string _filename;
+        private string _fileName;
 
         /// <summary>
         /// Gets or sets the filename.
         /// </summary>
         /// <value>The filename.</value>
-        [XmlAttribute ]
-        public string Filename
+        [XmlAttribute("Filename")]        
+        public string FileName
         {
-            get { return _filename; }
-            set { _filename = value; }
+            get { return _fileName; }
+            set { _fileName = value; }
         }
 
-        private string _serializedFilename = string.Empty;
+        private string _serializedFileName = string.Empty;
 
         /// <summary>
         /// Gets or sets the serialized filename.
         /// </summary>
         /// <value>The serialized filename.</value>
-        [XmlAttribute]
-        public string SerializedFilename
+        [XmlAttribute("SerializedFilename")]
+        public string SerializedFileName
         {
             get
             {
-                return _serializedFilename;
+                return _serializedFileName;
             }
             set
             {
-                _serializedFilename = value;
+                _serializedFileName = value;
             }
         }
 
@@ -99,7 +99,7 @@ namespace Composestar.StarLight.Entities.Configuration
         /// <summary>
         /// Generate a serialized filename to be used to store the file.
         /// </summary>
-        public void GenerateSerializedFilename(string objectFolder)
+        public void GenerateSerializedFileName(string objectFolder)
         {
             if (_assembly != null)
             {
@@ -109,7 +109,7 @@ namespace Composestar.StarLight.Entities.Configuration
                 name = name.Replace("Version=", "");
                 name = name.Replace("Culture=", "");
                 name = name.Replace("PublicKeyToken=", ""); 
-                _serializedFilename = Path.Combine(objectFolder, string.Format(CultureInfo.CurrentCulture, "{0}.xml.gzip", name)); 
+                _serializedFileName = Path.Combine(objectFolder, string.Format(CultureInfo.CurrentCulture, "{0}.xml.gzip", name)); 
             } 
 
         } // GenerateSerializedFilename()

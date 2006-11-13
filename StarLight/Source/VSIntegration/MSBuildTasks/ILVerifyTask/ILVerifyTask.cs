@@ -25,13 +25,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
         private const int ErrorAccessDenied = 5;
 
         #region Properties for MSBuild
-        private string _repositoryFilename;
+        private string _repositoryFileName;
 
         [Required()]
-        public string RepositoryFilename
+        public string RepositoryFileName
         {
-            get { return _repositoryFilename; }
-            set { _repositoryFilename = value; }
+            get { return _repositoryFileName; }
+            set { _repositoryFileName = value; }
         }
         #endregion
 
@@ -84,7 +84,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
 
-            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
 
             UInt16 filesVerified = 0;
 
@@ -97,9 +97,9 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     if (assembly.IsReference || String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
                         continue;
  
-                    Log.LogMessageFromResources("VerifyingAssembly", assembly.Filename);
+                    Log.LogMessageFromResources("VerifyingAssembly", assembly.FileName);
 
-                    process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} /IL /MD /NOLOGO", assembly.Filename);
+                    process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} /IL /MD /NOLOGO", assembly.FileName);
 
                     process.Start();
                     while (!process.HasExited)
@@ -108,13 +108,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     }
                     if (process.ExitCode == 0)
                     {
-                        Log.LogMessageFromResources("VerifySuccess", assembly.Filename);
+                        Log.LogMessageFromResources("VerifySuccess", assembly.FileName);
                     }
                     else
                     {
                         while (!process.StandardOutput.EndOfStream)
                         {
-                            ParseOutput(process.StandardOutput.ReadLine(), assembly.Filename);
+                            ParseOutput(process.StandardOutput.ReadLine(), assembly.FileName);
                         }
                     }
                     filesVerified++;

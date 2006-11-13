@@ -49,7 +49,7 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// 	<c>true</c> if this instance has exterals; otherwise, <c>false</c>.
         /// </value>
         [XmlIgnore]
-        public bool HasExterals
+        public bool HasExternals
         {
             get { return Externals.Count > 0; }
         }

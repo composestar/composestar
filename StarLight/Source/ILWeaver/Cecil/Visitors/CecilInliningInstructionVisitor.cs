@@ -53,7 +53,7 @@ namespace Composestar.StarLight.ILWeaver
         private MethodDefinition _method;
         private MethodDefinition _calledMethod;
         private AssemblyDefinition _targetAssemblyDefinition;
-        private FilterTypes _filterType;
+        private FilterType _filterType;
         private Dictionary<int, Instruction> _jumpInstructions = new Dictionary<int, Instruction>();
         private IEntitiesAccessor _entitiesAccessor;
         private ConfigurationContainer _weaveConfiguration;
@@ -83,7 +83,7 @@ namespace Composestar.StarLight.ILWeaver
         /// Gets or sets the type of the filter.
         /// </summary>
         /// <value>The type of the filter.</value>
-        public FilterTypes FilterType
+        public FilterType FilterType
         {
             get
             {
@@ -600,18 +600,18 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="whileInstr"></param>
-        public void VisitWhile(WhileInstruction whileInstr)
+        public void VisitWhile(WhileInstruction whileInstruction)
         {
             // Create a start label
-            whileInstr.Label = BranchLabelOffSet + _numberOfBranches;
+            whileInstruction.Label = BranchLabelOffSet + _numberOfBranches;
             _numberOfBranches = _numberOfBranches + 2;
-            Instructions.Add(GetJumpLabel(whileInstr.Label));
+            Instructions.Add(GetJumpLabel(whileInstruction.Label));
 
             // Context instruction
-            CreateContextExpression(whileInstr.Expression);
+            CreateContextExpression(whileInstruction.Expression);
 
             // Add branch code
-            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(whileInstr.Label + 1)));
+            Instructions.Add(Worker.Create(OpCodes.Brfalse, GetJumpLabel(whileInstruction.Label + 1)));
         }
 
         /// <summary>
@@ -634,16 +634,16 @@ namespace Composestar.StarLight.ILWeaver
         /// </code>
         /// </remarks> 
         /// <param name="whileInstr">The while instruction.</param>
-        public void VisitWhileEnd(WhileInstruction whileInstr)
+        public void VisitWhileEnd(WhileInstruction whileInstruction)
         {
             // Add the branch back to condition part
-            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(whileInstr.Label)));
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(whileInstruction.Label)));
 
             // Place the end label
-            Instructions.Add(GetJumpLabel(whileInstr.Label + 1));
+            Instructions.Add(GetJumpLabel(whileInstruction.Label + 1));
 
             // Reset label
-            whileInstr.Label = -1;
+            whileInstruction.Label = -1;
         }
 
         #endregion
@@ -654,15 +654,15 @@ namespace Composestar.StarLight.ILWeaver
         /// 
         /// </summary>
         /// <param name="switchInstr"></param>
-        public void VisitSwitch(SwitchInstruction switchInstr)
+        public void VisitSwitch(SwitchInstruction switchInstruction)
         {
 
             // Context instruction
-            CreateContextExpression(switchInstr.Expression);
+            CreateContextExpression(switchInstruction.Expression);
 
             // The labels to jump to
             List<Instruction> caseLabels = new List<Instruction>();
-            foreach (CaseInstruction caseElement in switchInstr.Cases)
+            foreach (CaseInstruction caseElement in switchInstruction.Cases)
             {
                 caseLabels.Add(GetJumpLabel(caseElement.CheckConstant + 10000));
             }
@@ -671,42 +671,42 @@ namespace Composestar.StarLight.ILWeaver
             Instructions.Add(Worker.Create(OpCodes.Switch, caseLabels.ToArray()));
 
             // Jump to the end
-            switchInstr.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
+            switchInstruction.Label = BranchLabelOffSet + _numberOfBranches;   // TODO check the correctness of this constructions (Michiel)
             _numberOfBranches = _numberOfBranches + 1;
-            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstruction.Label)));
         }
 
         /// <summary>
         /// Visits the switch end.
         /// </summary>
         /// <param name="switchInstr">The switch instr.</param>
-        public void VisitSwitchEnd(SwitchInstruction switchInstr)
+        public void VisitSwitchEnd(SwitchInstruction switchInstruction)
         {
             // Emit a label to jump to.
-            Instructions.Add(GetJumpLabel(switchInstr.Label));
+            Instructions.Add(GetJumpLabel(switchInstruction.Label));
 
             // Reset label
-            switchInstr.Label = -1;
+            switchInstruction.Label = -1;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="caseInstr"></param>
-        public void VisitCase(CaseInstruction caseInstr)
+        public void VisitCase(CaseInstruction caseInstruction)
         {
             // Add the label
-            Instructions.Add(GetJumpLabel(caseInstr.CheckConstant + 10000));
+            Instructions.Add(GetJumpLabel(caseInstruction.CheckConstant + 10000));
         }
 
         /// <summary>
         /// Visits the case end.
         /// </summary>
         /// <param name="switchInstr">The switch instr.</param>
-        public void VisitCaseEnd(SwitchInstruction switchInstr)
+        public void VisitCaseEnd(SwitchInstruction switchInstruction)
         {
             // Add a jump to the end of the switch
-            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstr.Label)));
+            Instructions.Add(Worker.Create(OpCodes.Br, GetJumpLabel(switchInstruction.Label)));
         }
 
         #endregion
@@ -799,7 +799,7 @@ namespace Composestar.StarLight.ILWeaver
             //
             // Store sender (only for outputfilters)
             //
-            if(FilterType == FilterTypes.OutputFilter  &&  Method.HasThis)
+            if(FilterType == FilterType.OutputFilter  &&  Method.HasThis)
             {
                 // Load joinpointcontext object
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -830,9 +830,9 @@ namespace Composestar.StarLight.ILWeaver
             //
             switch (FilterType)
             {
-                case FilterTypes.None:
+                case FilterType.None:
                     break;
-                case FilterTypes.InputFilter:
+                case FilterType.InputFilter:
                     foreach(ParameterDefinition param in CalledMethod.Parameters)
                     {
                         if((param.Attributes & Mono.Cecil.ParameterAttributes.Out) != Mono.Cecil.ParameterAttributes.Out)
@@ -879,7 +879,7 @@ namespace Composestar.StarLight.ILWeaver
 
                     }
                     break;
-                case FilterTypes.OutputFilter:
+                case FilterType.OutputFilter:
                     ParameterDefinitionCollection parameters = CalledMethod.Parameters;
                     int count = parameters.Count;
 
@@ -927,7 +927,7 @@ namespace Composestar.StarLight.ILWeaver
             // Set the target
             //
 
-            if(FilterType == FilterTypes.InputFilter)
+            if(FilterType == FilterType.InputFilter)
             {
                 // Load the joinpointcontext object
                 Instructions.Add(Worker.Create(OpCodes.Ldloc, jpcVar));
@@ -981,9 +981,9 @@ namespace Composestar.StarLight.ILWeaver
             //
             switch(FilterType)
             {
-                case FilterTypes.None:
+                case FilterType.None:
                     break;
-                case FilterTypes.InputFilter:
+                case FilterType.InputFilter:
                     foreach(ParameterDefinition param in CalledMethod.Parameters)
                     {
                         if(param.ParameterType.FullName.EndsWith("&"))
@@ -1022,7 +1022,7 @@ namespace Composestar.StarLight.ILWeaver
 
                     }
                     break;
-                case FilterTypes.OutputFilter:
+                case FilterType.OutputFilter:
                     //TODO
                     break;
                 default:

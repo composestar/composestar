@@ -41,3 +41,4 @@ using System.Diagnostics.CodeAnalysis;
 // Globale FXCop suppressions
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.CoreServices.Exceptions")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.CoreServices.ILWeaver")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "type", Target = "Composestar.StarLight.CoreServices.ObjectBuilderConfiguratorBase", MessageId = "Configurator")]

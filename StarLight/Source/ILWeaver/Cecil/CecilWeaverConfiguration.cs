@@ -76,10 +76,10 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ArgumentNullException("weaveConfiguration");
 
             _weaveConfiguration = weaveConfiguration;
-            _binfolder = System.IO.Path.GetDirectoryName(assemblyConfig.Filename);
+            _binfolder = System.IO.Path.GetDirectoryName(assemblyConfig.FileName);
             _assemblyConfig = assemblyConfig;
-            _outputImagePath = assemblyConfig.Filename;
-            _inputImagePath = assemblyConfig.Filename;
+            _outputImagePath = assemblyConfig.FileName;
+            _inputImagePath = assemblyConfig.FileName;
             _weaveDebugLevel = weaveDebug;
         }
 

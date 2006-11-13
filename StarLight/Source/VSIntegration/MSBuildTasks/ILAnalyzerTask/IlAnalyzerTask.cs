@@ -61,17 +61,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
             set { _assemblyFiles = value; }
         }
 
-        private string _repositoryFilename;
+        private string _repositoryFileName;
 
         /// <summary>
         /// Gets or sets the repository filename.
         /// </summary>
         /// <value>The repository filename.</value>
         [Required()]
-        public string RepositoryFilename
+        public string RepositoryFileName
         {
-            get { return _repositoryFilename; }
-            set { _repositoryFilename = value; }
+            get { return _repositoryFileName; }
+            set { _repositoryFileName = value; }
         }
 
         [Required()]
@@ -231,10 +231,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                     assConfig = assembliesInConfig.Find(delegate(AssemblyConfig ac)
                     {
-                        return ac.Filename.Equals(item);
+                        return ac.FileName.Equals(item);
                     });
 
-                    if (assConfig != null && File.Exists(assConfig.SerializedFilename))
+                    if (assConfig != null && File.Exists(assConfig.SerializedFileName))
                     {
                         // Already in the config. Check the last modification date.
                         if (assConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
@@ -264,13 +264,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         // Create a new AssemblyConfig object
                         assConfig = new AssemblyConfig();
 
-                        assConfig.Filename = item;
+                        assConfig.FileName = item;
                         assConfig.Name = assembly.Name;
                         assConfig.Timestamp = File.GetLastWriteTime(item).Ticks;
                         assConfig.Assembly = assembly;
 
                         // Generate a unique filename
-                        assConfig.GenerateSerializedFilename(IntermediateOutputPath);
+                        assConfig.GenerateSerializedFileName(IntermediateOutputPath);
 
                         assemblyChanged = true;
                         _assembliesDirty = true;
@@ -370,7 +370,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 assemblyFileList.AddRange(analyzer.ResolveAssemblyLocations());
 
                 // Create new config
-                CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
+                CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFileName);
 
                 // Disable some options
                 configuration.DoFieldAnalysis = false;
@@ -408,13 +408,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                             assConfig = assembliesInConfig.Find(delegate(AssemblyConfig ac)
                             {
-                                return ac.Filename.Equals(item);
+                                return ac.FileName.Equals(item);
                             });
 
                             // If a source assembly has changed, then new unresolved types can be introduced
                             // So we must rescan the library based on the value of assemblyChanged
                             // TODO can this be optimized?
-                            if (!assemblyChanged && assConfig != null && File.Exists(assConfig.SerializedFilename))
+                            if (!assemblyChanged && assConfig != null && File.Exists(assConfig.SerializedFileName))
                             {
                                 // Already in the config. Check the last modification date.
                                 if (assConfig.Timestamp == File.GetLastWriteTime(item).Ticks)
@@ -443,14 +443,14 @@ namespace Composestar.StarLight.MSBuild.Tasks
                                 // Create a new AssemblyConfig object
                                 assConfig = new AssemblyConfig();
 
-                                assConfig.Filename = item;
+                                assConfig.FileName = item;
                                 assConfig.Name = assembly.Name;
                                 assConfig.Timestamp = File.GetLastWriteTime(item).Ticks;
                                 assConfig.Assembly = assembly;
                                 assConfig.IsReference = true;
 
                                 // Generate a unique filename
-                                assConfig.GenerateSerializedFilename(IntermediateOutputPath);
+                                assConfig.GenerateSerializedFileName(IntermediateOutputPath);
 
                                 assembliesToStore.Add(assConfig);
                                 assemblies.Add(assembly);
@@ -528,7 +528,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     // save each assembly if needed (there must be an assemblyElement)
                     if (assembly.Assembly != null)
-                        entitiesAccessor.SaveAssemblyElement(assembly.SerializedFilename, assembly.Assembly);
+                        entitiesAccessor.SaveAssemblyElement(assembly.SerializedFileName, assembly.Assembly);
 
                 }
 
@@ -540,7 +540,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 configContainer.FilterActions = filterActions;
 
                 // Save the config
-                entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer);
+                entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
 
                 sw.Stop();
 
@@ -581,7 +581,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             // Setup of configuration, analyzer and lists
             //
             IILAnalyzer analyzer = null;
-            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFilename);
+            CecilAnalyzerConfiguration configuration = new CecilAnalyzerConfiguration(RepositoryFileName);
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
             Boolean assemblyChanged = false;
 
@@ -596,7 +596,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             analyzer = DIHelper.CreateObject<CecilILAnalyzer>(CreateContainer(entitiesAccessor, configuration));
 
             // Get the configuration
-            configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+            configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
 
             filterActions = configContainer.FilterActions;
             filterTypes = configContainer.FilterTypes;

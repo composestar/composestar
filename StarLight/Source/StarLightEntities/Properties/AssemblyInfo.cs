@@ -41,3 +41,7 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Entities.Concerns")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor")]
+
+[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "member", Target = "Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitor.VisitOrRight(Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.OrCondition):System.Void", MessageId = "VisitOr")]
+[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "member", Target = "Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.Visitor.IVisitor.VisitOrLeft(Composestar.StarLight.Entities.WeaveSpec.ConditionExpressions.OrCondition):System.Void", MessageId = "VisitOr")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Composestar.StarLight.Entities.LanguageModel.ParameterOptions.RetVal", MessageId = "Val")]

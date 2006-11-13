@@ -124,7 +124,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to convert the debuglevel &apos;{0}&apos; to an integer value..
+        ///   Looks up a localized string similar to Unable to convert the debug level &apos;{0}&apos; to an integer value..
         /// </summary>
         internal static string CouldNotConvertDebugLevel {
             get {
@@ -151,7 +151,7 @@ namespace Composestar.StarLight.MSBuild.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An exception occured while executing Java. The message is &apos;{0}&apos;..
+        ///   Looks up a localized string similar to An exception occurred while executing Java. The message is &apos;{0}&apos;..
         /// </summary>
         internal static string ExecutionException {
             get {

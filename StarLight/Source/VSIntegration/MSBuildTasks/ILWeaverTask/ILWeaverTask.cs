@@ -30,13 +30,13 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         #region Properties for MSBuild
 
-        private string _repositoryFilename;
+        private string _repositoryFileName;
 
         [Required()]
-        public string RepositoryFilename
+        public string RepositoryFileName
         {
-            get { return _repositoryFilename; }
-            set { _repositoryFilename = value; }
+            get { return _repositoryFileName; }
+            set { _repositoryFileName = value; }
         }
 
         private string _binFolder;
@@ -101,7 +101,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 
             // Get the configuration container
-            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
 
             // Set the weave debug level
             CecilWeaverConfiguration.WeaveDebug weaveDebugLevel;
@@ -127,7 +127,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
 
                     // Exclude StarLight ContextInfo assembly from the weaving process
-                    if (assembly.Filename.EndsWith(ContextInfoFileName)) 
+                    if (assembly.FileName.EndsWith(ContextInfoFileName)) 
                         continue;
 
                     // Exclude references
@@ -137,24 +137,24 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     // If there is no weaving spec file, then skip
                     if (String.IsNullOrEmpty(assembly.WeaveSpecificationFile))
                     {
-                        Log.LogMessageFromResources("SkippedWeavingFile", assembly.Filename);
+                        Log.LogMessageFromResources("SkippedWeavingFile", assembly.FileName);
                         continue; 
                     }
 
                     // Check for modification
-                    if (!ConcernsDirty && File.GetLastWriteTime(assembly.Filename).Ticks <= assembly.Timestamp)
+                    if (!ConcernsDirty && File.GetLastWriteTime(assembly.FileName).Ticks <= assembly.Timestamp)
                     {
                         // we beter copy the backuped file
-                        String backupWeavefile = string.Format(CultureInfo.InvariantCulture, "{0}.weaved", assembly.Filename);
+                        String backupWeavefile = string.Format(CultureInfo.InvariantCulture, "{0}.weaved", assembly.FileName);
                         if (File.Exists(backupWeavefile))
                         {
-                            File.Copy(backupWeavefile, assembly.Filename, true);
-                            Log.LogMessageFromResources("UsingBackupWeaveFile", assembly.Filename);
+                            File.Copy(backupWeavefile, assembly.FileName, true);
+                            Log.LogMessageFromResources("UsingBackupWeaveFile", assembly.FileName);
                             continue; 
                         }
                     }
 
-                    Log.LogMessageFromResources("WeavingFile", assembly.Filename);
+                    Log.LogMessageFromResources("WeavingFile", assembly.FileName);
 
                     // Preparing config
                     CecilWeaverConfiguration configuration = new CecilWeaverConfiguration(assembly, configContainer, weaveDebugLevel);
@@ -185,8 +185,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                                 ShowWeavingStats(assembly, weaveStats);
 
                                 // Save instruction log
-                                string logFilename = assembly.Filename + ".weavelog.txt";
-                                string timingFilename = assembly.Filename + ".weavetiming.txt";
+                                string logFilename = assembly.FileName + ".weavelog.txt";
+                                string timingFilename = assembly.FileName + ".weavetiming.txt";
                                 
                                 weaveStats.SaveInstructionsLog(logFilename);
                                 weaveStats.SaveTimingLog(timingFilename);
@@ -237,7 +237,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
                                                                                 weaveStats.MaxWeaveTimePerMethod.TotalSeconds, weaveStats.MaxWeaveTimePerType.TotalSeconds,
                                                                                 weaveStats.TotalMethodWeaveTime.TotalSeconds, weaveStats.TotalTypeWeaveTime.TotalSeconds,
                                                                                 weaveStats.MethodsProcessed, weaveStats.TypesProcessed,
-                                                                                assembly.Filename,
+                                                                                assembly.FileName,
                                                                                 weaveStats.InternalsAdded, weaveStats.ExternalsAdded,
                                                                                 weaveStats.InputFiltersAdded, weaveStats.OutputFiltersAdded,
                                                                                 weaveStats.TotalWeaveTime.TotalSeconds);

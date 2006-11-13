@@ -278,7 +278,7 @@ namespace Composestar.StarLight.ILWeaver
             {
                 method = CecilUtilities.ResolveMethod(
                     con.Reference.Selector,
-                    (con.Reference.NameSpace.Length > 0 ? con.Reference.NameSpace + "." : "") + con.Reference.Target,
+                    (con.Reference.Namespace.Length > 0 ? con.Reference.Namespace + "." : "") + con.Reference.Target,
                     con.Reference.Assembly, "");
             }
 
@@ -286,7 +286,7 @@ namespace Composestar.StarLight.ILWeaver
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture, 
                     Properties.Resources.MethodNotFound, 
                     con.Reference.Selector, 
-                    con.Reference.Fullname, 
+                    con.Reference.FullName, 
                     con.Reference.Assembly));
 
 

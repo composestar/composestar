@@ -31,17 +31,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         #region Properties
 
-        private string _repositoryFilename;
+        private string _repositoryFileName;
 
         /// <summary>
         /// Gets or sets the repository filename.
         /// </summary>
         /// <value>The repository filename.</value>
         [Required()]
-        public string RepositoryFilename
+        public string RepositoryFileName
         {
-            get { return _repositoryFilename; }
-            set { _repositoryFilename = value; }
+            get { return _repositoryFileName; }
+            set { _repositoryFileName = value; }
         }
 
         private ITaskItem[] _concernFiles;
@@ -116,10 +116,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
             sw.Start();
 
             // Open DB
-            Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
+            Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
             IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance;
 
-            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);
+            ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);
 
             if (configContainer.Concerns.Count == 0)
             {
@@ -160,7 +160,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             configContainer.SpecificationFILTH = filthFile;
             
             // Save common config
-            entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer);
+            entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer);
                                                                  
             // Start java                  
             System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -173,7 +173,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
             else
                 process.StartInfo.FileName = JavaExecutable; // In path
             
-            process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFilename);
+            process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} -cp \"{1}\" {2} \"{3}\"", rs.JVMOptions, rs.ClassPath, rs.MainClass, RepositoryFileName);
             Log.LogMessageFromResources("JavaStartMessage", process.StartInfo.Arguments ) ;
             
             process.StartInfo.CreateNoWindow = true;

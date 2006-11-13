@@ -22,13 +22,13 @@ namespace Composestar.StarLight.Entities.WeaveSpec.Instructions.Visitor
 
         void VisitInlineInstruction(InlineInstruction inlineInstruction);
 
-        void VisitWhile(WhileInstruction whileInstr);
-        void VisitWhileEnd(WhileInstruction whileInstr);
+        void VisitWhile(WhileInstruction whileInstruction);
+        void VisitWhileEnd(WhileInstruction whileInstruction);
 
-        void VisitSwitch(SwitchInstruction switchInstr);
-        void VisitCase(CaseInstruction caseInstr);
-        void VisitCaseEnd(SwitchInstruction switchInstr);
-        void VisitSwitchEnd(SwitchInstruction switchInstr);
+        void VisitSwitch(SwitchInstruction switchInstruction);
+        void VisitCase(CaseInstruction caseInstruction);
+        void VisitCaseEnd(SwitchInstruction switchInstruction);
+        void VisitSwitchEnd(SwitchInstruction switchInstruction);
 
         void VisitCreateActionStore(ContextInstruction contextInstruction);
         void VisitStoreAction(ContextInstruction contextInstruction);

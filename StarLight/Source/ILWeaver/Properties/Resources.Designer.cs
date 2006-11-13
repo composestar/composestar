@@ -70,7 +70,7 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not find the assembly named &apos;{0}&apos; in the database. The file is not analyzed and cannot be processed bij the weaver..
+        ///   Looks up a localized string similar to Could not find the assembly named &apos;{0}&apos; in the database. The file is not analyzed and cannot be processed by the weaver..
         /// </summary>
         internal static string AssemblyElementNotFound {
             get {
@@ -88,16 +88,7 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid configuration. Cannot specify delaysign without shouldSign set to true.
-        /// </summary>
-        internal static string CannotDelaySignWithoutSigning {
-            get {
-                return ResourceManager.GetString("CannotDelaySignWithoutSigning", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details..
+        ///   Looks up a localized string similar to An exception occurred during the creation of IL instructions by the Cecil visitor. See the inner exception for more details..
         /// </summary>
         internal static string CecilVisitorRaisedException {
             get {
@@ -251,16 +242,7 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid configuration. No Strong Name Key file specified..
-        /// </summary>
-        internal static string NoSNKSpecified {
-            get {
-                return ResourceManager.GetString("NoSNKSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the buildin weaving strategies assembly is located in the WeaveStrategiesFolder &apos;{0}&apos;..
+        ///   Looks up a localized string similar to The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the build-in weaving strategies assembly is located in the WeaveStrategiesFolder &apos;{0}&apos;..
         /// </summary>
         internal static string NoWeavingStrategiesFound {
             get {
@@ -274,15 +256,6 @@ namespace Composestar.StarLight.ILWeaver.Properties {
         internal static string RepositoryFilenameNotSpecified {
             get {
                 return ResourceManager.GetString("RepositoryFilenameNotSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to find Strong Name Key file at {0}..
-        /// </summary>
-        internal static string SNKFileNotFound {
-            get {
-                return ResourceManager.GetString("SNKFileNotFound", resourceCulture);
             }
         }
         

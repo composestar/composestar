@@ -2,7 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System;
-
+using System.Diagnostics.CodeAnalysis;
+  
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -36,3 +37,8 @@ using System;
 [assembly: AssemblyFileVersion("0.1.0.0")]
 
 [assembly: CLSCompliant(true)]
+
+// Suppress fxcop warnings
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "type", Target = "Composestar.StarLight.CpsParser.CpsLexer", MessageId = "Lexer")]
+[module: SuppressMessage("Microsoft.Naming", "CA1705:LongAcronymsShouldBePascalCased")]
+[module: SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]

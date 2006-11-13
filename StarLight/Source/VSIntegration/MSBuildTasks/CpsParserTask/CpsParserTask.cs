@@ -39,17 +39,17 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
         #region Properties
 
-        private string _repositoryFilename;
+        private string _repositoryFileName;
 
         /// <summary>
         /// Gets or sets the repository filename.
         /// </summary>
         /// <value>The repository filename.</value>
         [Required()]
-        public string RepositoryFilename
+        public string RepositoryFileName
         {
-            get { return _repositoryFilename; }
-            set { _repositoryFilename = value; }
+            get { return _repositoryFileName; }
+            set { _repositoryFileName = value; }
         }
 
         private ITaskItem[] _concernFiles;
@@ -121,10 +121,10 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 ICpsParser cfp = null;
                 
                 // Open DB
-                Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFilename);
+                Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
                 IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
 
-                ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFilename);               
+                ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);               
 
                 // Create a list with all current concerns
                 List<ConcernElement> concernsInConfig = configContainer.Concerns;   
@@ -213,7 +213,7 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
                 // Save the configContainer
                 configContainer.Concerns = concernsToAdd;  
-                entitiesAccessor.SaveConfiguration(RepositoryFilename, configContainer); 
+                entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer); 
                 
             }
             catch (CpsParserException ex)

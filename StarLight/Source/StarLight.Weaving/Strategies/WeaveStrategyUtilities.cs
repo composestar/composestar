@@ -147,17 +147,17 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         /// <param name="originalMethod">The original method.</param>
-        /// <param name="jpcVar">The Join Point Context variable.</param>
+        /// <param name="joinPointContextVariable">The join point context variable.</param>
         [CLSCompliant(false)]
         public static void LoadArguments(ICecilInliningInstructionVisitor visitor,
-            MethodReference originalMethod, VariableDefinition jpcVar)
+            MethodReference originalMethod, VariableDefinition joinPointContextVariable)
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
             {
                 //check for reference:
                 if(param.ParameterType.FullName.EndsWith("&"))
                 {
-                    if(visitor.FilterType == FilterTypes.InputFilter)
+                    if(visitor.FilterType == FilterType.InputFilter)
                     {
                         // For out parameters that are value type, check whether a value was set
                         if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) == Mono.Cecil.ParameterAttributes.Out &&
@@ -171,7 +171,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
 
                             // Load jpc
-                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                             // Load the ordinal
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
@@ -237,7 +237,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Dup));
 
                             // Load jpc
-                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                             // Load the ordinal
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
@@ -267,7 +267,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                 else //not a reference parameter
                 {
                     // Load jpc
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                     // Load the ordinal
                     visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
@@ -295,17 +295,17 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         /// <param name="originalMethod">The original method.</param>
-        /// <param name="jpcVar">The Join Point Context variable.</param>
+        /// <param name="joinPointContextVariable">The join point context variable.</param>
         [CLSCompliant(false)]
         public static void RestoreArguments(ICecilInliningInstructionVisitor visitor,
-            MethodReference originalMethod, VariableDefinition jpcVar)
+            MethodReference originalMethod, VariableDefinition joinPointContextVariable)
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
             {
                 //check for reference:
                 if(param.ParameterType.FullName.EndsWith("&"))
                 {
-                    if(visitor.FilterType == FilterTypes.InputFilter)
+                    if(visitor.FilterType == FilterType.InputFilter)
                     {
 
                         //
@@ -313,7 +313,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                         //
 
                         // Load jpc
-                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                         // Load ordinal
                         visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
@@ -345,10 +345,10 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// </summary>
         /// <param name="visitor">The visitor.</param>
         /// <param name="originalCall">The original call.</param>
-        /// <param name="jpcVar">The Join Point variable.</param>
+        /// <param name="joinPointContextVariable">The join point context variable.</param>
         [CLSCompliant(false)]
         public static void StoreReturnValue(ICecilInliningInstructionVisitor visitor,
-            MethodReference originalCall, VariableDefinition jpcVar)
+            MethodReference originalCall, VariableDefinition joinPointContextVariable)
         {
             // Store returnvalue
             if(!originalCall.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
@@ -360,7 +360,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                 }
 
                 // Load jpc
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                 // Call set_ReturnValue in JoinPointContext
                 visitor.Instructions.Add(visitor.Worker.Create(
@@ -378,11 +378,11 @@ namespace Composestar.StarLight.Weaving.Strategies
         /// JoinPointContext object.
         /// </summary>
         /// <param name="visitor">The visitor</param>
-        /// <param name="jpcVar">The JoinPointContext VariableDefinition</param>
+        /// <param name="joinPointContextVariable">The join point context variable.</param>
         [CLSCompliant(false)]
-        public static void LoadSelfObject(ICecilInliningInstructionVisitor visitor, VariableDefinition jpcVar)
+        public static void LoadSelfObject(ICecilInliningInstructionVisitor visitor, VariableDefinition joinPointContextVariable)
         {
-            if(visitor.FilterType == FilterTypes.InputFilter)
+            if(visitor.FilterType == FilterType.InputFilter)
             {
                 // Load this
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, visitor.Method.This));
@@ -390,7 +390,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             else
             {
                 // Load JoinPointContext
-                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, jpcVar));
+                visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                 // Call get_StartTarget in JoinPointContext
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, 

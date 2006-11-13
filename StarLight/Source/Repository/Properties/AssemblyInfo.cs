@@ -36,3 +36,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: CLSCompliant(true)]
 
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.Repository")]
+[module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", Scope = "resource", Target = "Composestar.Repository.Properties.Resources.resources", MessageId = "filename")]

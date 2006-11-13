@@ -27,17 +27,17 @@ namespace Composestar.StarLight.CoreServices
         /// <summary>
         /// Loads the configuration.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <returns></returns>
-        ConfigurationContainer LoadConfiguration(string filename);
+        ConfigurationContainer LoadConfiguration(string fileName);
 
         /// <summary>
         /// Saves the configuration.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="configContainer">The config container.</param>
         /// <returns></returns>
-        bool SaveConfiguration(string filename, ConfigurationContainer configContainer);
+        bool SaveConfiguration(string fileName, ConfigurationContainer configContainer);
 
     } // IConfigurationAccessors
 
@@ -50,17 +50,17 @@ namespace Composestar.StarLight.CoreServices
         /// <summary>
         /// Loads the assembly element.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <returns></returns>
-        AssemblyElement LoadAssemblyElement(string filename);
+        AssemblyElement LoadAssemblyElement(string fileName);
 
         /// <summary>
         /// Saves the assembly element.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="assemblyElement">The assembly element.</param>
         /// <returns></returns>
-        bool SaveAssemblyElement(string filename, AssemblyElement assemblyElement);
+        bool SaveAssemblyElement(string fileName, AssemblyElement assemblyElement);
 
     } // IAssemblyAccessors
 
@@ -72,17 +72,17 @@ namespace Composestar.StarLight.CoreServices
         /// <summary>
         /// Loads the weave specification.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <returns></returns>
-        WeaveSpecification LoadWeaveSpecification(string filename);
+        WeaveSpecification LoadWeaveSpecification(string fileName);
 
         /// <summary>
         /// Saves the weave specification.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="weaveSpecification">The weave specification.</param>
         /// <returns></returns>
-        bool SaveWeaveSpecification(string filename, WeaveSpecification weaveSpecification);
+        bool SaveWeaveSpecification(string fileName, WeaveSpecification weaveSpecification);
 
     } // IWeaveSpecAccessors
 

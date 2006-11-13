@@ -63,18 +63,18 @@ namespace Composestar.Repository
         /// <summary>
         /// Loads the configuration.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <returns></returns>
-        public ConfigurationContainer LoadConfiguration(string filename)
+        public ConfigurationContainer LoadConfiguration(string fileName)
         {
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("fileName");
 
             ConfigurationContainer configContainer;
 
-            if (File.Exists(filename))
+            if (File.Exists(fileName))
             {
-                configContainer = ObjectXMLSerializer<ConfigurationContainer>.Load(filename, SerializedFormat.Document);
+                configContainer = ObjectXMLSerializer<ConfigurationContainer>.Load(fileName, SerializedFormat.Document);
             } // if
             else
             {
@@ -89,18 +89,18 @@ namespace Composestar.Repository
         /// <summary>
         /// Saves the configuration.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="configContainer">The config container.</param>
         /// <returns></returns>
-        public bool SaveConfiguration(string filename, ConfigurationContainer configContainer)
+        public bool SaveConfiguration(string fileName, ConfigurationContainer configContainer)
         {
             if (configContainer == null)
                 throw new ArgumentNullException("configContainer");
 
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("fileName");
 
-            ObjectXMLSerializer<ConfigurationContainer>.Save(configContainer, filename, SerializedFormat.Document);
+            ObjectXMLSerializer<ConfigurationContainer>.Save(configContainer, fileName, SerializedFormat.Document);
 
             return true;
         }
@@ -112,24 +112,24 @@ namespace Composestar.Repository
         /// <summary>
         /// Loads the assembly element.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <returns></returns>
-        public AssemblyElement LoadAssemblyElement(string filename)
+        public AssemblyElement LoadAssemblyElement(string fileName)
         {
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("fileName");
 
             AssemblyElement assemblyElement;
-            if (!_assemblyFileCache.TryGetValue(filename, out assemblyElement))
+            if (!_assemblyFileCache.TryGetValue(fileName, out assemblyElement))
             {
-                if (File.Exists(filename))
+                if (File.Exists(fileName))
                 {
-                    assemblyElement = ObjectXMLSerializer<AssemblyElement>.Load(filename, SerializedFormat.DocumentCompressed);
-                    _assemblyFileCache.Add(filename, assemblyElement);
+                    assemblyElement = ObjectXMLSerializer<AssemblyElement>.Load(fileName, SerializedFormat.DocumentCompressed);
+                    _assemblyFileCache.Add(fileName, assemblyElement);
                 } // if
                 else
                 {
-                    throw new FileNotFoundException(filename);
+                    throw new FileNotFoundException(fileName);
                 } // else
             } // if
 
@@ -139,21 +139,21 @@ namespace Composestar.Repository
         /// <summary>
         /// Saves the assembly element.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="assemblyElement">The assembly element.</param>
         /// <returns></returns>
-        public bool SaveAssemblyElement(string filename, AssemblyElement assemblyElement)
+        public bool SaveAssemblyElement(string fileName, AssemblyElement assemblyElement)
         {
             if (assemblyElement == null)
                 throw new ArgumentNullException("assemblyElement");
 
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("fileName");
 
-            ObjectXMLSerializer<AssemblyElement>.Save(assemblyElement, filename, SerializedFormat.DocumentCompressed);
+            ObjectXMLSerializer<AssemblyElement>.Save(assemblyElement, fileName, SerializedFormat.DocumentCompressed);
 
             // Update or add to cache
-            _assemblyFileCache[filename] = assemblyElement;
+            _assemblyFileCache[fileName] = assemblyElement;
 
             return true;
         }
@@ -165,18 +165,18 @@ namespace Composestar.Repository
         /// <summary>
         /// Loads the weave specification.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <returns>A <see cref="T:WeaveSpecification"></see> object or <see langword="null" /> if the file could not be found.</returns>
-        public WeaveSpecification LoadWeaveSpecification(string filename)
+        public WeaveSpecification LoadWeaveSpecification(string fileName)
         {
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("fileName");
 
             WeaveSpecification weaveSpecification;
 
-            if (File.Exists(filename))
+            if (File.Exists(fileName))
             {
-                weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(filename, SerializedFormat.DocumentCompressed, ExtraTypes);
+                weaveSpecification = ObjectXMLSerializer<WeaveSpecification>.Load(fileName, SerializedFormat.DocumentCompressed, ExtraTypes);
             } // if
             else
             {
@@ -205,18 +205,18 @@ namespace Composestar.Repository
         /// <summary>
         /// Saves the weave specification.
         /// </summary>
-        /// <param name="filename">The filename.</param>
+        /// <param name="fileName">The fileName.</param>
         /// <param name="weaveSpecification">The weave specification.</param>
         /// <returns></returns>
-        public bool SaveWeaveSpecification(string filename, WeaveSpecification weaveSpecification)
+        public bool SaveWeaveSpecification(string fileName, WeaveSpecification weaveSpecification)
         {
             if (weaveSpecification == null)
                 throw new ArgumentNullException("weaveSpecification");
 
-            if (string.IsNullOrEmpty(filename))
-                throw new ArgumentNullException("filename");
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentNullException("fileName");
 
-            ObjectXMLSerializer<WeaveSpecification>.Save(weaveSpecification, filename, SerializedFormat.DocumentCompressed);
+            ObjectXMLSerializer<WeaveSpecification>.Save(weaveSpecification, fileName, SerializedFormat.DocumentCompressed);
 
             return true;
         }

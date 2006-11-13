@@ -104,6 +104,7 @@ namespace Composestar.StarLight.ILAnalyzer
         /// Gets or sets the unresolved types.
         /// </summary>
         /// <value>The unresolved types.</value>
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         public List<String> UnresolvedTypes
         {
             get
@@ -284,24 +285,24 @@ namespace Composestar.StarLight.ILAnalyzer
         /// </summary>
         /// <param name="assemblyFilename">The assembly filename.</param>
         /// <returns></returns>
-        public AssemblyElement Analyze(string assemblyFilename)
+        public AssemblyElement Analyze(string assemblyFileName)
         {
 
             try
             {
                 // Load assembly for processing by Mono.Cecil
-                _assembly = AssemblyFactory.GetAssembly(assemblyFilename);
+                _assembly = AssemblyFactory.GetAssembly(assemblyFileName);
             }
             catch (EndOfStreamException)
             {
-                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, assemblyFilename));
+                throw new BadImageFormatException(String.Format(CultureInfo.CurrentCulture, Properties.Resources.ImageIsBad, assemblyFileName));
             }
 
             AddResolvedAssemblyList(_assembly.Name.ToString());
    
             // Fill the assemblyElement values
             _assemblyElement.Name = _assembly.Name.ToString();
-            _assemblyElement.FileName = assemblyFilename;
+            _assemblyElement.FileName = assemblyFileName;
 
             // Get all the types defined in the main module. Typically you won't need
             // to worry that your assembly contains more than one module

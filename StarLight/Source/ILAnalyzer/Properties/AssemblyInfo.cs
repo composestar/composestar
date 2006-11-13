@@ -38,3 +38,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: CLSCompliant(true)]
 
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.ILAnalyzer")]
+[module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", Scope = "resource", Target = "Composestar.StarLight.ILAnalyzer.Properties.Resources.resources", MessageId = "filename")]

@@ -43,3 +43,4 @@ using System.Security.Permissions;
 [assembly: CLSCompliant(true)]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.ILWeaver")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.ILWeaver.WeaveStrategy")]
+[module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", Scope = "resource", Target = "Composestar.StarLight.ILWeaver.Properties.Resources.resources", MessageId = "filename")]

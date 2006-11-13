@@ -37,19 +37,19 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// </summary>
         /// <value>The name space.</value>
         [XmlAttribute]
-        public String NameSpace
+        public String Namespace
         {
             get
             {
-                return _nameSpace;
+                return _namespace;
             } // get
             set
             {
-                _nameSpace = value;
+                _namespace = value;
             } // set
         } // NameSpace
 
-        private String _nameSpace;
+        private String _namespace;
 
 
         /// <summary>
@@ -58,11 +58,11 @@ namespace Composestar.StarLight.Entities.WeaveSpec
         /// <value>The fullname.</value>
         /// <returns>String</returns>
         [XmlIgnore]
-        public string Fullname
+        public string FullName
         {
             get
             {
-                return string.Format(CultureInfo.CurrentCulture, "{0}.{1}", _nameSpace, _target);
+                return string.Format(CultureInfo.CurrentCulture, "{0}.{1}", _namespace, _target);
             } // get
         } // Fullname
 

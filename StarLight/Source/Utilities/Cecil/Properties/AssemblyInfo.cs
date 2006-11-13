@@ -37,4 +37,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: AssemblyFileVersion("0.1.0.0")]
 [assembly: CLSCompliant(true)]
 
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "type", Target = "Composestar.StarLight.Utilities.Interfaces.ICecilInliningInstructionVisitor", MessageId = "Inlining")]
 [module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Composestar.StarLight.Utilities.Interfaces")]

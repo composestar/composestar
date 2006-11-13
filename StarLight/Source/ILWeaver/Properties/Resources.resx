@@ -138,20 +138,14 @@
   <data name="ImageIsBad" xml:space="preserve">
     <value>The format of binary image {0} is invalid.</value>
   </data>
-  <data name="NoSNKSpecified" xml:space="preserve">
-    <value>Invalid configuration. No Strong Name Key file specified.</value>
-  </data>
   <data name="RepositoryFilenameNotSpecified" xml:space="preserve">
     <value>The config collection did not contain a valid filename to the repository file.</value>
-  </data>
-  <data name="SNKFileNotFound" xml:space="preserve">
-    <value>Failed to find Strong Name Key file at {0}.</value>
   </data>
   <data name="TypeNotFound" xml:space="preserve">
     <value>The type {0} could not be found.</value>
   </data>
   <data name="CecilVisitorRaisedException" xml:space="preserve">
-    <value>An exception occured during the creation of IL instructions by the Cecil visitor. See the inner exception for more details.</value>
+    <value>An exception occurred during the creation of IL instructions by the Cecil visitor. See the inner exception for more details.</value>
   </data>
   <data name="CannotDelaySignWithoutSigning" xml:space="preserve">
     <value>Invalid configuration. Cannot specify delaysign without shouldSign set to true</value>
@@ -176,7 +170,7 @@
     <value>Could not find method named '{0}(JoinpointContext)' in type '{1}'</value>
   </data>
   <data name="AssemblyElementNotFound" xml:space="preserve">
-    <value>Could not find the assembly named '{0}' in the database. The file is not analyzed and cannot be processed bij the weaver.</value>
+    <value>Could not find the assembly named '{0}' in the database. The file is not analyzed and cannot be processed by the weaver.</value>
   </data>
   <data name="CouldNotLoadAssembly" xml:space="preserve">
     <value>Unable to open assembly '{0}' due to the following error: {1}</value>
@@ -209,6 +203,6 @@
     <value>Trying to reference an internal or external from the static method named '{0}'  in type '{1}'</value>
   </data>
   <data name="NoWeavingStrategiesFound" xml:space="preserve">
-    <value>The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the buildin weaving strategies assembly is located in the WeaveStrategiesFolder '{0}'.</value>
+    <value>The weaver could not find any weaving strategies. At least the default strategies (like dispatch, advice, error, and so on) are expected. Make sure the build-in weaving strategies assembly is located in the WeaveStrategiesFolder '{0}'.</value>
   </data>
 </root>

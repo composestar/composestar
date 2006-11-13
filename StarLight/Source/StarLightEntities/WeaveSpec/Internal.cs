@@ -28,17 +28,17 @@ namespace Composestar.StarLight.Entities.WeaveSpec
             set { _name = value; }
         }
 
-        private string _nameSpace;
+        private string _namespace;
 
         /// <summary>
         /// Gets or sets the name space.
         /// </summary>
         /// <value>The name space.</value>
         [XmlAttribute]
-        public string NameSpace
+        public string Namespace
         {
-            get { return _nameSpace; }
-            set { _nameSpace = value; }
+            get { return _namespace; }
+            set { _namespace = value; }
         }
 
         private String _type;

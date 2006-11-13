@@ -19,7 +19,7 @@ namespace Composestar.StarLight.Utilities.Interfaces
     /// <summary>
     /// Possible filter types this visitor can generate code for.
     /// </summary>
-    public enum FilterTypes
+    public enum FilterType
     {
         /// <summary>
         /// Default none.
@@ -75,7 +75,7 @@ namespace Composestar.StarLight.Utilities.Interfaces
         /// Gets or sets the type of the filter.
         /// </summary>
         /// <value>The type of the filter.</value>
-        FilterTypes FilterType { get;set;}
+        FilterType FilterType { get;set;}
         /// <summary>
         /// Gets or sets the entities accessor.
         /// </summary>

@@ -47,10 +47,10 @@ namespace Composestar.StarLight.Utilities
 
         private static string _binFolder;
         private static StarLightAssemblyResolver _resolver;
-        private static Dictionary<string, MethodDefinition> _methodsCache = new Dictionary<string, MethodDefinition>();
-        private static Dictionary<string, TypeDefinition> _typesCache = new Dictionary<string, TypeDefinition>();
-        private static Dictionary<CachedMethodDefinition, MethodBase> _methodSignaturesCache = new Dictionary<CachedMethodDefinition, MethodBase>();
-        private static Dictionary<CachedTypeDefinition, Type> _typesSignaturesCache = new Dictionary<CachedTypeDefinition, Type>();
+        private static Dictionary<string, MethodDefinition> _methodsCache;
+        private static Dictionary<string, TypeDefinition> _typesCache;
+        private static Dictionary<CachedMethodDefinition, MethodBase> _methodSignaturesCache;
+        private static Dictionary<CachedTypeDefinition, Type> _typesSignaturesCache;
 
         #endregion
 
@@ -64,9 +64,15 @@ namespace Composestar.StarLight.Utilities
         /// <summary>
         /// Initializes the <see cref="T:CecilUtilities"/> class.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static CecilUtilities()
         {
             lockObject = new object();
+
+            _methodsCache = new Dictionary<string, MethodDefinition>();
+            _typesCache = new Dictionary<string, TypeDefinition>();
+            _methodSignaturesCache = new Dictionary<CachedMethodDefinition, MethodBase>();
+            _typesSignaturesCache = new Dictionary<CachedTypeDefinition, Type>();
 
             AddDefaultMethodsToCache();
             AddDefaultTypesToCache();                        
@@ -577,7 +583,7 @@ namespace Composestar.StarLight.Utilities
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="exampleMethod"/> is <see langword="null"></see>.</exception>
         [CLSCompliant(false)]
         public static MethodDefinition ResolveMethod(TypeDefinition parentType, string methodName,
-            MethodDefinition exampleMethod)
+            MethodReference exampleMethod)
         {
 
             if (parentType == null)

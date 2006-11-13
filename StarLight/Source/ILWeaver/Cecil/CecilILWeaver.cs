@@ -369,7 +369,7 @@ namespace Composestar.StarLight.ILWeaver
 
             foreach (Internal inter in weaveType.Internals)
             {
-                String internalTypeString = String.Format(CultureInfo.InvariantCulture,  "{0}.{1}", inter.NameSpace, inter.Type);
+                String internalTypeString = String.Format(CultureInfo.InvariantCulture,  "{0}.{1}", inter.Namespace, inter.Type);
                                 
                 internalTypeRef = CecilUtilities.ResolveType(internalTypeString, inter.Assembly, "");
                 if (internalTypeRef == null) 
@@ -480,7 +480,7 @@ namespace Composestar.StarLight.ILWeaver
 
                 // Get the method referenced by the external
                 MethodDefinition initMethodDef = (MethodDefinition)CecilUtilities.ResolveMethod(external.Reference.Selector, 
-                    String.Format(CultureInfo.InvariantCulture, "{0}.{1}", external.Reference.NameSpace, external.Reference.Target),
+                    String.Format(CultureInfo.InvariantCulture, "{0}.{1}", external.Reference.Namespace, external.Reference.Target),
                     external.Assembly, "");
 
                 if (initMethodDef == null) 
@@ -615,7 +615,7 @@ namespace Composestar.StarLight.ILWeaver
             visitor.Method = method;
             visitor.CalledMethod = method;
             visitor.Worker = worker;
-            visitor.FilterType = FilterTypes.InputFilter;
+            visitor.FilterType = FilterType.InputFilter;
             visitor.TargetAssemblyDefinition = targetAssembly;
             visitor.EntitiesAccessor = _entitiesAccessor;
             visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
@@ -720,7 +720,7 @@ namespace Composestar.StarLight.ILWeaver
                     visitor.Method = method;
                     visitor.CalledMethod = md;
                     visitor.Worker = worker;
-                    visitor.FilterType = FilterTypes.OutputFilter;
+                    visitor.FilterType = FilterType.OutputFilter;
                     visitor.TargetAssemblyDefinition = targetAssembly;
                     visitor.WeaveConfiguration = _configuration.WeaveConfiguration;
                     visitor.WeaveType = weaveType;
