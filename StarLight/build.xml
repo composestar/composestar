@@ -13,7 +13,7 @@
 	<description>The StarLight implementation of Compose*</description>
 
 	<property name="out.qa.starlight"    value="QualityAssurance"/>
-	<property name="out.fxcop.starlight" value="QualityAssurance" /> 
+	<property name="out.fxcop.starlight" value="QualityAssurance"/>
 
 	<property name="MSBuildTasks.dir" location="Source/VSIntegration/MSBuildTasks"/>
 
@@ -105,7 +105,7 @@
 	</target>
 	
 	<target name="fxcop_init" >
-		<mkdir dir="${out.fxcop.starlight}" />           
+		<mkdir dir="${out.fxcop.starlight}" />
 	</target>
 	
 	<target name="fxcop" depends="build_codeanalysis,fxcop_init" description="Build all the outputs and run fxcop">
@@ -175,6 +175,7 @@
 				</antMenuItem>
 			</antMenuItem>
 			
+			<link label="Build" target="build"/>
 			<link label="Rebuild" target="rebuild"/>
 			<link label="Clean install" target="cleaninstall"/>
 			<separator/>

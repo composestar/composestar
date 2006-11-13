@@ -137,7 +137,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
                         Log.LogErrorFromResources("PEVerifyExecutionException", exception.ToString());
                         return false;
                     }
-
                 }
                 catch (InvalidOperationException ex)
                 {
@@ -147,11 +146,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
                 {
                     Log.LogErrorFromException(ex, true);
                 }
-                catch (ObjectDisposedException ex)
-                {
-                    Log.LogErrorFromException(ex, true);
-                }
-
             }
 
             sw.Stop();
