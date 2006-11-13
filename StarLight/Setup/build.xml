@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/StarLight/Setup" default="setup">
+<project name="ComposeStar/StarLight/Setup" default="build" xmlns:dn="antlib:org.apache.ant.dotnet">
 	
 	<condition property="build.core" value="${basedir}${file.separator}..">
 		<and>
@@ -11,21 +11,81 @@
 	</condition>
 	<import file="${build.core}/common.xml" />
 
-  <property name="MSBuildTasks.dir" location=""/>
-
+  <property name="MSBuildTasks.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}MSBuildTasks"/>
+  <property name="VSProject.dir" location="..${file.separator}Source${file.separator}VSIntegration${file.separator}VisualStudio.Project"/>
+  <property name="WeaveStrategy.dir" location="..${file.separator}Source${file.separator}StarLight.Weaving.BuildIn"/>
+  <property name="wixsource.path" value="${build.starlight}${file.separator}Setup${file.separator}WixStarLight${file.separator}"/>
+  <property name="msi.file" value="${build.starlight}${file.separator}Setup${file.separator}Releases${file.separator}StarLight.msi"/>
+  <property name="wixtemp.path" value="${build.starlight}${file.separator}Setup${file.separator}"/>
+   
   <echo>Processing: ${ant.project.name} ...</echo>
 	
 	<description>The Compose* StarLight Setup build. Generates the MSI installer.</description>
-
+ 
 	<target name="clean" depends="init" description="Clean compile results">
-
+		 <echo>Cleaning WIX object files</echo>
+     <delete>
+     		<fileset dir="." includes="**/*.wixobj"/>
+     </delete>     
 	</target>
    
-	<target name="setup" depends="init,compile" description="Compile the installer files" />
+	<target name="build" depends="init,clean,compile_sources" description="Compile the installer files" >
+	    <echo>Building MSI file using WIX</echo>
+			<echo>Running Candle for preprocessing</echo>
+	    <exec executable="${path.wix}candle.exe" failonerror="true">
+	        <arg value="-I${wixsource.path}"/>	        
+					<arg value="-dVariablesFile=${wixsource.path}Variables.wxi"/>
+					<arg value="${wixsource.path}WixStarLight.wxs"/>
+					<arg value="${wixsource.path}WixProlog.wxs"/> 
+					<arg value="${wixsource.path}WixDocuments.wxs"/> 
+					<arg value="${wixsource.path}WixXmlBeans.wxs"/> 
+					<arg value="${wixsource.path}WixGroove.wxs"/> 
+					<arg value="${wixsource.path}WixAntlr.wxs"/> 
+					<arg value="${wixsource.path}MSBuild.wxs"/> 
+					<arg value="${wixsource.path}VSIntegration.wxs"/>
+					<arg value="${wixsource.path}CoreElements.wxs"/>										
+					<arg value="-nologo" />
+			</exec>
+			<echo>Running Light for MSI generation to ${msi.file}</echo>
+	    <exec executable="${path.wix}light.exe" failonerror="true">					
+					<arg value="-out"/>
+					<arg value="${msi.file}"/>
+					<arg value="-b ${wixtemp.path}"/>
+					<arg value="WixStarLight.wixobj"/>
+					<arg value="WixProlog.wixobj"/> 
+					<arg value="WixDocuments.wixobj"/> 
+					<arg value="WixXmlBeans.wixobj"/> 
+					<arg value="WixGroove.wixobj"/> 
+					<arg value="WixAntlr.wixobj"/> 
+					<arg value="MSBuild.wixobj"/> 
+					<arg value="VSIntegration.wixobj"/>
+					<arg value="CoreElements.wixobj"/>	
+					<arg value="${wixsource.path}wixui.wixlib"/>
+					<arg value="-loc ${wixsource.path}WixUI_en-us.wxl"/>		
+					<arg value="-nologo" />	
+			</exec>	  			
+			<antcall target="clean"/> 
+	</target>
 		
-	<target name="compile" depends="init">
-    <msbuild solution="${MSBuildTasks.dir}\StarLight.MSBuild.Tasks.csproj" target="build" config="release" />
+	<target name="compile_sources" depends="init">
+	  <echo>Compiling .NET sources in release mode</echo>
+  	<msbuild solution="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj" target="build" config="release" />
+    <msbuild solution="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj" target="build" config="release" />
+    <msbuild solution="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuildIn.csproj" target="build" config="release" /> 
+	<!--  <dn:msbuild buildfile="${MSBuildTasks.dir}${file.separator}StarLight.MSBuild.Tasks.csproj">
+        <dn:target name="build"/>        
+        <dn:property name="Configuration" value="Release"/>
+    </dn:msbuild>
+    <dn:msbuild buildfile="${VSProject.dir}${file.separator}StarLight.VisualStudio.Project.csproj">
+        <dn:target name="build"/>        
+        <dn:property name="Configuration" value="Release"/>
+    </dn:msbuild>   
+    <dn:msbuild buildfile="${WeaveStrategy.dir}${file.separator}StarLight.Weaving.BuildIn.csproj">
+        <dn:target name="build"/>        
+        <dn:property name="Configuration" value="Release"/>
+    </dn:msbuild>     -->
 	</target>
 	
 	
 </project>
+

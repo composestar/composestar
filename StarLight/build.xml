@@ -168,7 +168,7 @@
 
   <!-- Installer -->
 
-	<target name="build_installer" description="Create the WIX installer for StarLight">
+	<target name="build_installer" depends="build_compiletime" description="Create the WIX installer for StarLight">
 				<ant target="build" dir="${build.starlight}${file.separator}Setup" />
 	</target>
 
