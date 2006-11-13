@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar" default="build">
 
 	<import file="../common.xml"/>
@@ -210,9 +210,13 @@
 	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
 		<ant target="checkstyle" dir="${build.starlight}" />
 	</target>
-
-	<!-- tests -->
 	
+	<!-- documentation -->
+	<target name="documentation_starlight" description="Create the StarLight documentation." depends="init" if="enabled.starlight">
+		<ant target="documentation" dir="${build.starlight}" />
+	</target>
+
+	<!-- tests -->	
 	<target name="test" description="Execute system tests.">
 		<antcall target="test_core" />
 		<antcall target="test_dotnet" />
@@ -351,6 +355,9 @@ If the build failed the cause will be listed at the end of the report.
 							<antMenuItem name="FxCop"          target="fxcop_starlight"/>
 							<antMenuItem name="FindBugs"       target="findbugs_starlight"/>
 							<antMenuItem name="CheckStyle"     target="checkstyle_starlight"/>
+						</antMenuItem>
+						<antMenuItem name="Documentation">
+							<antMenuItem name="StarLight Documentation" target="documentation_starlight"/>
 						</antMenuItem>
 				</antMenuItem>
 			</antMenuItem>		
