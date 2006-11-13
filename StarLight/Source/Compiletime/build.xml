@@ -31,7 +31,7 @@
 		<mkdir dir="${out.dist}"/>
 	</target>
 	
-	<target name="build" depends="init_local,build_xmltypes,compile_starlight_java,jar" description="Build the StarLight compiletime"/>
+	<target name="build" depends="init_local,compile_starlight_java,jar" description="Build the StarLight compiletime"/>
 	
 	<target name="antlr">
 		<!--
@@ -53,7 +53,7 @@
 		<xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="lib/xmltypes.jar" classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 	</target>
 	
-	<target name="compile_starlight_java">
+	<target name="compile_starlight_java" depends="build_xmltypes">
 		<javac srcdir="src/Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
 			<exclude name="**/_svn" />
