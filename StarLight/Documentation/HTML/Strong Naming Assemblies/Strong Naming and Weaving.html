@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>Strong Naming and Weaving</title>
+    <link href="..\styles.css" type="text/css" rel="STYLESHEET">
+    <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
+</head>
+<body topmargin="0" leftmargin="0">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%" class="TopHeaderRepeatSmall">
+                &nbsp;</td>
+            <td align="right">
+                <img src="images/logo_top_small.png" title="ComposeStar StarLight" /></td>
+        </tr>
+    </table>
+    <div id="mainSection">
+        <div id="mainBody">
+            <h1 class="heading">
+                Strong Naming and Weaving
+            </h1>
+            <p>
+                As weaving an assembly changes the file contents, the unique hash of a strong named
+                assembly will no longer be valid. The previously strong named assembly has changed
+                to a delay-signed assembly. As long as we have access to the keyfile we can re-sign
+                the assembly after weaving. Re-signing can be done with the <i>SN utility</i>, which
+                ships with the .NET Framework.
+                <br />
+                Example: <code>sn -R myassembly.dll mykey.snk</code>
+            </p>
+            <p>
+                Integration of the re-signing of assemblies into the msbuild files can be done by
+                overriding the <i>AfterWeave</i> target:
+                <br />
+                <code><span style="color: blue">&lt;</span><span style="color: maroon">Target</span>
+                    <span style="color: red">Name</span><span style="color: blue">="AfterWeave"&gt;<br />
+                    </span>&nbsp; &nbsp; <span style="color: blue">&lt;</span><span style="color: maroon">Exec</span>
+                    <span style="color: red">Command</span><span style="color: blue">="sn -R $(OutDir)myassembly.dll
+                        mykey.snk" /&gt;</span>
+                    <br />
+                    <span style="color: blue">&lt;/<span style="color: maroon">Target</span>&gt;</span>
+                </code>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+<!-- @SortOrder 2 -->
