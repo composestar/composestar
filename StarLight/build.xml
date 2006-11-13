@@ -116,8 +116,9 @@
 	<!-- documentation -->
 	
 	<target name="documentation" description="Create StarLight documentation">
-	  <!-- Build dependencies -->
-	  <msbuild solution="Libraries\cecil\Mono.Cecil.csproj" target="build" config="release" />
+		
+		<!-- Build dependencies -->
+		<msbuild solution="Libraries\cecil\Mono.Cecil.csproj" target="build" config="release" />
 		<msbuild solution="Source\CoreServices\StarLight.CoreServices.csproj" target="build" config="release" />
 		<msbuild solution="Source\Repository\DataStoreContainer.csproj" target="build" config="release" />
 		<msbuild solution="Source\StarLightEntities\StarLightEntities.csproj" target="build" config="release" />
@@ -132,7 +133,7 @@
 		<exec dir="${build.starlight}${file.separator}documentation" executable="${bin.sandcastle}">
 			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb"/>
 		</exec>
-
+		
 	</target>
 
 	<!-- fancy menu -->
@@ -159,12 +160,18 @@
 				<antMenuItem name="Publish">
 					<antMenuItem name="StarLight"     target="publish_starlight"/>
 				</antMenuItem>
-				<antMenuItem name="Run tests"       target="test"/>
+				<antMenuItem name="Run tests"><!-- todo -->
+					<antMenuItem name="All"           target="test"/>
+					<antMenuItem name="NUnit"         target="test_nunit"/>
+				</antMenuItem>
 				<antMenuItem name="QA">
 					<antMenuItem name="All"           target="qa_starlight"/>
 					<antMenuItem name="FxCop"         target="fxcop_starlight"/>
 					<antMenuItem name="FindBugs"      target="findbugs_starlight"/>
 					<antMenuItem name="CheckStyle"    target="checkstyle_starlight"/>
+				</antMenuItem>
+				<antMenuItem name="Docs">
+					<antMenuItem name="StarLight"     target="documentation_starlight"/>
 				</antMenuItem>
 			</antMenuItem>
 			
