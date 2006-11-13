@@ -115,8 +115,17 @@
 
 	<!-- documentation -->
 	
-	<target name="documentation" description="Create StarLight documentation">
-		
+	<target name="documentation.init" unless="available.hhc">
+		<!-- 
+			Output a warning if the hhc executable is not found in the 'C:\Program Files\HTML Help Workshop' folder,
+			it might be found by Sandcastle in an other folder however, so no fail...
+		 -->
+		<echo level="warning">HTML Help Compiler (hhc.exe) not found, CHM file may not be created!</echo>
+	</target>
+	
+	<target name="documentation.build">
+		<echo level="info">Building assembly and documentation files...</echo>
+				
 		<!-- Build dependencies -->
 		<msbuild solution="Libraries\cecil\Mono.Cecil.csproj" target="build" config="release" />
 		<msbuild solution="Source\CoreServices\StarLight.CoreServices.csproj" target="build" config="release" />
@@ -128,12 +137,13 @@
 		<msbuild solution="Source\StarLight.Filters\StarLight.Filters.csproj" target="build" config="release" />
 		<msbuild solution="Source\StarLight.Weaving\StarLight.Weaving.csproj" target="build" config="release" />
 		<msbuild solution="Source\Utilities\Cecil\CecilUtilities.csproj" target="build" config="release" />
+	</target>	
 	
+	<target name="documentation" description="Create StarLight documentation" depends="documentation.init,documentation.build">
 		<!-- Run Sandcastle -->
 		<exec dir="${build.starlight}${file.separator}documentation" executable="${bin.sandcastle}">
 			<arg value="${build.starlight}${file.separator}documentation${file.separator}SandcastleHelpStarLight.shfb"/>
-		</exec>
-		
+		</exec>		
 	</target>
 	
 	<!-- QA tasks -->
@@ -208,7 +218,7 @@
 					<antMenuItem name="CheckStyle"    target="checkstyle_starlight"/>
 				</antMenuItem>
 				<antMenuItem name="Docs">
-					<antMenuItem name="StarLight"     target="documentation_starlight"/>
+					<antMenuItem name="StarLight"     target="documentation"/>
 				</antMenuItem>
 			</antMenuItem>
 			
@@ -216,6 +226,7 @@
 			<link label="Rebuild" target="rebuild"/>
 			<link label="Clean install" target="cleaninstall"/>
 			<link label="Quality Assurance" target="qa_starlight"/>
+			<link label="Documentation" target="documentation"/>
 			<separator/>
 			<link label="Cancel" target="cancel"/>
 		
