@@ -405,11 +405,11 @@ namespace Composestar.StarLight.VisualStudio.Project
         {
             if (null != Site)
             {
-                IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
-                if (null != libraryManager)
-                {
-                    libraryManager.UnregisterHierarchy(this.InteropSafeHierarchy);
-                }
+                //IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
+                //if (null != libraryManager)
+                //{
+                //    libraryManager.UnregisterHierarchy(this.InteropSafeHierarchy);
+                //}
             }
 
             return base.Close();
@@ -427,11 +427,11 @@ namespace Composestar.StarLight.VisualStudio.Project
             this.OleServiceProvider.AddService(typeof(SVSMDCodeDomProvider), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
             this.OleServiceProvider.AddService(typeof(System.CodeDom.Compiler.CodeDomProvider), new OleServiceProvider.ServiceCreatorCallback(this.CreateServices), false);
 
-            IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
-            if (null != libraryManager)
-            {
-                libraryManager.RegisterHierarchy(this.InteropSafeHierarchy);
-            }
+            //IComposeStarLibraryManager libraryManager = Site.GetService(typeof(IComposeStarLibraryManager)) as IComposeStarLibraryManager;
+            //if (null != libraryManager)
+            //{
+            //    libraryManager.RegisterHierarchy(this.InteropSafeHierarchy);
+            //}
         }
         /// <summary>
         /// Overriding to provide project general property page

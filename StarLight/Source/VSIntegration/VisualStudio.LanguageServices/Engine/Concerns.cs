@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Diagnostics;
 using System.IO;
-
+using Composestar.StarLight.VisualStudio.Babel;   
 using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine {
@@ -65,7 +65,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine {
         }
 
         private void AddBuiltins(List<Declaration> attributes)    {
-           attributes.Add(new Declaration("IsClassWithName") );
+           
  
         }
 
@@ -160,13 +160,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine {
             LoadBuiltins();
         }
 
-        public Concern AnalyzeConcern(ComposeStarSink sink, string name, string text)
-        {
-            Concern module = Analyzer.Analyze(this, sink, name, text);
-            concerns[name] = module;
-            return module;
-        }
-
+    
 
         private void LoadTypes(Assembly assembly) {
             Type[] types = assembly.GetExportedTypes();

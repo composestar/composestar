@@ -41,31 +41,29 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComposeStarColorizer.cs" />
     <Compile Include="ComposeStarLangServ.cs" />
-    <Compile Include="ComposeStarScanner.cs" />
-    <Compile Include="CpsLexer.cs" />
-    <Compile Include="Declaration.cs" />
-    <Compile Include="Engine\Analyzer.cs" />
-    <Compile Include="Engine\Concerns.cs" />
-    <Compile Include="HierarchyListener.cs" />
-    <Compile Include="Library.cs" />
-    <Compile Include="LibraryNode.cs" />
+    <Compile Include="Generated\ErrorHandler.cs" />
+    <Compile Include="Generated\LexDefs.cs" />
+    <Compile Include="ManagedBabel\AuthoringScope.cs" />
+    <Compile Include="ManagedBabel\Configuration.cs" />
+    <Compile Include="ManagedBabel\Declaration.cs" />
+    <Compile Include="ManagedBabel\Declarations.cs" />
+    <Compile Include="ManagedBabel\IASTResolver.cs" />
+    <Compile Include="ManagedBabel\IScanner.cs" />
+    <Compile Include="ManagedBabel\LanguageService.cs" />
+    <Compile Include="ManagedBabel\LineScanner.cs" />
+    <Compile Include="ManagedBabel\Method.cs" />
+    <Compile Include="ManagedBabel\Methods.cs" />
+    <Compile Include="ManagedBabel\Package.cs" />
+    <Compile Include="ManagedBabel\Parser.cs" />
+    <Compile Include="ManagedBabel\ParserStack.cs" />
+    <Compile Include="ManagedBabel\Rule.cs" />
+    <Compile Include="ManagedBabel\ShiftReduceParser.cs" />
+    <Compile Include="ManagedBabel\Source.cs" />
+    <Compile Include="ManagedBabel\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ComposeStarPackage.cs" />
     <Compile Include="ComposeStarConstants.cs" />
-    <Compile Include="ComposeStarSource.cs" />
-    <Compile Include="ComposeStarDeclarations.cs" />
-    <Compile Include="ComposeStarColorableItem.cs" />
-    <Compile Include="ComposeStarSink.cs" />
-    <Compile Include="ComposeStarScope.cs" />
-    <Compile Include="ComposeStarMethods.cs" />
-    <Compile Include="ComposeStarViewFilter.cs" />
-    <Compile Include="ProvideIntellisenseProvider.cs" />
-    <Compile Include="ComposeStarIntellisenseProvider.cs" />
-    <Compile Include="ComposeStarLibraryManager.cs" />
-    <Compile Include="ComposeStarLibraryNode.cs" />
-    <Compile Include="ComposeStarConcernId.cs" />
     <Compile Include="RegisterSnippetsAttribute.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -73,7 +71,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SnippetsEnumerator.cs" />
-    <Compile Include="TextLineEventListener.cs" />
+    <Compile Include="UserSupplied\Configuration.cs" />
+    <Compile Include="UserSupplied\Resolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -97,8 +96,22 @@
     <None Include="starlight.snk" />
   </ItemGroup>
   <ItemGroup>
+    <MPLexCompile Include="Generated\lexer.lex">
+      <FrameFile>mplex.frame</FrameFile>
+    </MPLexCompile>
+    <MPPGCompile Include="Generated\parser.y" />
+  </ItemGroup>
+  <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
+  <PropertyGroup>
+    <TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>
+    <RegisterOutputPackage>true</RegisterOutputPackage>
+    <RegisterWithCodebase>true</RegisterWithCodebase>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManagedBabelPath>ManagedBabel</ManagedBabelPath>
+  </PropertyGroup>
   <PropertyGroup>
     <TargetRegistryRoot>Software\Microsoft\VisualStudio\8.0Exp</TargetRegistryRoot>
     <RegisterOutputPackage>true</RegisterOutputPackage>

@@ -16,7 +16,7 @@ namespace Composestar.StarLight.VisualStudio.LanguageServices.Engine
           
         }
 
-        public static Concern Analyze(Concerns concerns, ComposeStarSink sink, string name, string text)
+        public static Concern Analyze(Concerns concerns, string name, string text)
         {
             //CompilerContext context = new CompilerContext(sink);
             //Parser parser = Parser.FromString(context, name, text);
