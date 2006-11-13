@@ -13,6 +13,7 @@ package Composestar.Core.DIGGER;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
 import Composestar.Core.DIGGER.Graph.CondMatchEdge;
@@ -48,8 +49,7 @@ public class NOBBIN
 	public NOBBIN(Graph inGraph)
 	{
 		graph = inGraph;
-		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", 5);
-		// just a number
+		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", maxDepth);
 	}
 
 	/**
@@ -85,59 +85,21 @@ public class NOBBIN
 		 * Creating new messages on the fly.
 		 */
 
-		walk(concernNode.getOutputFilters(), null, 0);
-		walk(concernNode.getInputFilters(), null, 0);
-
-		// Node n = concernNode.getOutputFilters();
-		// while (n != null)
-		// {
-		// Debug.out(Debug.MODE_DEBUG, "Walking node " + n.getLabel(),
-		// DIGGER.MODULE_NAME);
-		// Iterator edges = n.getOutgoingEdges();
-		// n = null;
-		// while (edges.hasNext())
-		// {
-		// Edge e = (Edge) edges.next();
-		// if (e instanceof CondMatchEdge)
-		// {
-		// Message msg = gen.create((CondMatchEdge) e);
-		// walk(e.getDestination(), msg);
-		// }
-		// else if (e instanceof LambdaEdge)
-		// {
-		// n = e.getDestination();
-		// }
-		// }
-		// }
-		//		
-		// n = concernNode.getInputFilters();
-		// while (n != null)
-		// {
-		// Debug.out(Debug.MODE_DEBUG, "Walking node " + n.getLabel(),
-		// DIGGER.MODULE_NAME);
-		// Iterator edges = n.getOutgoingEdges();
-		// n = null;
-		// while (edges.hasNext())
-		// {
-		// Edge e = (Edge) edges.next();
-		// if (e instanceof CondMatchEdge)
-		// {
-		// Message msg = gen.create((CondMatchEdge) e);
-		// walk(e.getDestination(), msg);
-		// }
-		// else if (e instanceof LambdaEdge)
-		// {
-		// n = e.getDestination();
-		// }
-		// }
-		// }
+		//walk(concernNode.getOutputFilters(), null, 0);
+		
+		List messages = gen.create(concernNode);
+		Iterator it = messages.iterator();
+		while (it.hasNext())
+		{
+			walk(concernNode.getInputFilters(), (Message) it.next(), 0);
+		}
 	}
 
 	public void walk(Node node, Message msg, int curDepth) throws ModuleException
 	{
 		while (node != null)
 		{
-			Debug.out(Debug.MODE_DEBUG, "Walking node " + node.getLabel(), DIGGER.MODULE_NAME);
+			Debug.out(Debug.MODE_DEBUG, "Walking node " + node.getLabel()+" at depth "+curDepth, DIGGER.MODULE_NAME);
 			Iterator edges = node.getOutgoingEdges();
 			node = null;
 			while (edges.hasNext())
@@ -146,22 +108,19 @@ public class NOBBIN
 				if (e instanceof CondMatchEdge)
 				{
 					CondMatchEdge cme = (CondMatchEdge) e;
-					if (msg != null)
-					{
-						if (!msg.matches(cme)) continue;
-
-						walk(e.getDestination(), msg, curDepth);
-					}
-					else
-					{
-						List messages = gen.create(cme);
-
-					}
+					if (!msg.matches(cme)) continue;
+					int expr = cme.getExpression().simulateResult();
+					if (expr == ConditionExpression.RESULT_FALSE) continue;
+					msg.setCertenty(expr);
+					walk(e.getDestination(), msg, curDepth);
+					break; // don't try any other edges
 				}
 				else if (e instanceof SubstitutionEdge)
 				{
+					// subsitue a message
 					Message newMsg = gen.xform(msg, (SubstitutionEdge) e);
 					walk(e.getDestination(), newMsg, curDepth++);
+					break;
 				}
 				else if (e instanceof LambdaEdge)
 				{

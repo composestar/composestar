@@ -20,4 +20,9 @@ public class False extends CondLiteral
 	{
 		super();
 	}
+	
+	public int simulateResult()
+	{
+		return RESULT_FALSE;
+	}
 }

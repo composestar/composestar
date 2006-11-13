@@ -20,4 +20,15 @@ public class Or extends BinaryOperator
 	{
 		super();
 	}
+	
+	public int simulateResult()
+	{
+		int resl = left.simulateResult();
+		if (resl == RESULT_TRUE) return RESULT_TRUE;
+		int resr = right.simulateResult();
+		if (resr == RESULT_TRUE) return RESULT_TRUE;
+		
+		if (resl == RESULT_FALSE && resl==RESULT_FALSE) return RESULT_FALSE;		
+		return resl+resr;
+	}
 }
