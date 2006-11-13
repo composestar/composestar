@@ -179,6 +179,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "Concerns\Levels.cps"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Concerns\Scoring.cps"
                     BuildAction = "None"
                 />
