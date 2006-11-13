@@ -200,6 +200,10 @@ Common routines. Always include this file in every build.xml file
 		<!-- Sandcastle -->
 		<property name="bin.sandcastle" value="${build.core}${file.separator}Development${file.separator}Sandcastle${file.separator}Help File Builder${file.separator}SandcastleBuilderConsole.exe"/>
 
+		<!-- WIX -->
+		<property name="path.wix" value="${build.core}${file.separator}Development${file.separator}Wix${file.separator}"/>
+
+
 		<!-- FxCop macro -->
 		<macrodef name="fxcop">
 			
