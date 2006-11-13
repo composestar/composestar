@@ -8,6 +8,9 @@
   <Recognized>
    <Word>contravariant</Word>
    <Word>Composestar</Word>
+   <Word>compiletime</Word>
+   <Word>Visitable</Word>
+   <Word>Inlining</Word>
   </Recognized>
   <Deprecated>
     <!-- Be sure to pascal-case deprecated terms and preferred alternates     -->
