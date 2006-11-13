@@ -136,11 +136,30 @@
 		
 	</target>
 
+	<target name="qa_starlight" description="Execute Quality Assurance tasks">
+		<antcall target="fxcop_starlight" />
+		<antcall target="findbugs_starlight" />
+		<antcall target="checkstyle_starlight" />
+	</target>
+	
+	<target name="fxcop_starlight" depends="init" if="enabled.starlight">
+		<ant target="fxcop" dir="${build.starlight}" />
+	</target>
+	
+	<target name="findbugs_starlight" depends="init" if="enabled.starlight">
+		<ant target="findbugs" dir="${build.starlight}" />
+	</target>
+
+	<target name="checkstyle_starlight" depends="init" if="enabled.starlight">
+		<ant target="checkstyle" dir="${build.starlight}" />
+	</target>
+
+
 	<!-- fancy menu -->
 
 	<target name="select" depends="init">	
 		<taskdef resource="com/sardak/antform/taskdefs.properties" classpath="${basedir}/Ant/lib/antform.jar"/>
-		<antmenu image="${basedir}/logo.gif" title="Compose* Build">
+		<antmenu image="images${file.separator}logos${file.separator}logofull.png">
 		
 			<antMenuItem name="StarLight" >
 				<antMenuItem name="Clean"  target="clean"/>
@@ -178,6 +197,7 @@
 			<link label="Build" target="build"/>
 			<link label="Rebuild" target="rebuild"/>
 			<link label="Clean install" target="cleaninstall"/>
+			<link label="Quality Assurance" target="qa_starlight"/>
 			<separator/>
 			<link label="Cancel" target="cancel"/>
 		
