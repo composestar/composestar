@@ -79,10 +79,11 @@ namespace Composestar.StarLight.CoreServices.Exceptions
             _fileName = fileName;
         }
 
+
         /// <summary>
-        /// Gets the fileName.
+        /// Gets the name of the file.
         /// </summary>
-        /// <value>The fileName.</value>
+        /// <value>The name of the file.</value>
         public string FileName
         {
             get { return _fileName; }

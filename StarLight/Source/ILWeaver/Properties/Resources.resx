@@ -147,9 +147,6 @@
   <data name="CecilVisitorRaisedException" xml:space="preserve">
     <value>An exception occurred during the creation of IL instructions by the Cecil visitor. See the inner exception for more details.</value>
   </data>
-  <data name="CannotDelaySignWithoutSigning" xml:space="preserve">
-    <value>Invalid configuration. Cannot specify delaysign without shouldSign set to true</value>
-  </data>
   <data name="InputImageNotFound" xml:space="preserve">
     <value>The input image {0} could not be found.
 </value>

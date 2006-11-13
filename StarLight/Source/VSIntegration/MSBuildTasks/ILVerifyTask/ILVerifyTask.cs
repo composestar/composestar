@@ -139,7 +139,15 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     }
 
                 }
-                catch (Exception ex)
+                catch (InvalidOperationException ex)
+                {
+                    Log.LogErrorFromException(ex, true);
+                }
+                catch (ArgumentException ex)
+                {
+                    Log.LogErrorFromException(ex, true);
+                }
+                catch (ObjectDisposedException ex)
                 {
                     Log.LogErrorFromException(ex, true);
                 }
