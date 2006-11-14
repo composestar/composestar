@@ -3,9 +3,7 @@
 
 	<condition property="build.core" value="${basedir}/../../../..">
 		<and>
-			<not>
-				<isset property="build.core"/>
-			</not>
+			<not><isset property="build.core"/></not>
 			<available file="${basedir}/../../../../common.xml" />
 		</and>
 	</condition>
@@ -14,12 +12,18 @@
 	<echo>Processing: ${ant.project.name} ...</echo>
 	<description>The Compose* StarLight Project and Language integration. Generates the MSBuild tasks.</description>
 
+	<property name="buildfile" value="StarLight.VisualStudio.Project.csproj"/>
+
 	<target name="clean" depends="init" description="Clean compile results">
-		<msbuild solution="StarLight.VisualStudio.Project.csproj" target="clean" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
 	</target>
 
 	<target name="build" depends="init" description="Build the VSIntegration project">
-		<msbuild solution="StarLight.VisualStudio.Project.csproj" target="build" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}"/>
+	</target>
+
+	<target name="deploy" depends="init" description="Deploy the VSIntegration project">
+		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
 	</target>
 
 </project>

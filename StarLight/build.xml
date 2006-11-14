@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<project name="ComposeStar/StarLight" default="build">
+<project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet">
 
 	<condition property="build.core" value="${basedir}/../Core">
 		<and>
@@ -55,16 +55,29 @@
 		<ant target="build" dir="Source/StarLight.Weaving.BuildIn" />
 	</target>
 
-	<!-- install -->
+	<!-- deploy -->
 
-	<target name="install" depends="build" description="Install the StarLight implementation of Compose*">
-		<!-- todo -->
+	<target name="deploy" depends="build" description="Deploy the StarLight implementation of Compose*">
+		<antcall target="deploy_compiletime"/>
+		<antcall target="deploy_msbuild"/>
+		<antcall target="deploy_vs"/>
+		<antcall target="deploy_ws"/>
 	</target>
 
-	<!-- publish -->
-
-	<target name="publish" depends="build" description="Create the StarLight installer">
-		<ant target="publish" dir="${build.starlight}/Setup"/>
+	<target name="deploy_compiletime" description="Deploy Compose* StarLight Compiletime">
+		<ant target="deploy" dir="Source/Compiletime" />
+	</target>
+	
+	<target name="deploy_msbuild" description="Deploy Compose* StarLight MSBuild tasks">
+		<ant target="deploy" dir="Source/VSIntegration/MSBuildTasks" />
+	</target>
+	
+	<target name="deploy_vs" description="Deploy Compose* StarLight VS Integration">
+		<ant target="deploy" dir="Source/VSIntegration/VisualStudio.Project" />
+	</target>
+	
+	<target name="deploy_ws" description="Deploy Compose* StarLight WeaveStrategy">
+		<ant target="deploy" dir="Source/StarLight.Weaving.BuildIn" />
 	</target>
 
 	<!-- QA -->
@@ -119,7 +132,7 @@
 		<!-- 
 			Output a warning if the hhc executable is not found in the 'C:\Program Files\HTML Help Workshop' folder,
 			it might be found by Sandcastle in an other folder however, so no fail...
-		 -->
+		-->
 		<echo level="warning">HTML Help Compiler (hhc.exe) not found, CHM file may not be created!</echo>
 	</target>
 	
@@ -166,18 +179,18 @@
 		<ant target="checkstyle" dir="${build.starlight}" />
 	</target>
 
-  <!-- Installer -->
+	<!-- Installer -->
 
 	<target name="build_installer" depends="build_compiletime" description="Create the WIX installer for StarLight">
-				<ant target="build" dir="${build.starlight}${file.separator}Setup" />
+		<ant target="build" dir="${build.starlight}${file.separator}Setup" />
 	</target>
 
 	<target name="install_starlight" description="Run the StarLight installer">
-				
+		<!-- todo -->
 	</target>
 	
 	<target name="uninstall_starlight" description="Run the StarLight installer to uninstall">
-			
+		<!-- todo -->
 	</target>
 
 	<!-- fancy menu -->
@@ -192,21 +205,22 @@
 					<antMenuItem name="Build all"     target="build"/>
 					<antMenuItem name="Rebuild all"   target="rebuild"/>
 					<antMenuItem name="Core"          target="build_core"/>
-				
 					<antMenuItem name="Compiletime"   target="build_compiletime"/>
 					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
 					<antMenuItem name="VSIntegration" target="build_vs"/>
 					<antMenuItem name="WeaveStrategy" target="build_ws"/>
-					<antMenuItem name="Installer" target="build_installer"/>
+					<antMenuItem name="Installer"     target="build_installer"/>
 				</antMenuItem>
 				<antMenuItem name="Deployment">
-					<antMenuItem name="Deploy"       target="deploy_starlight"/>
+					<antMenuItem name="Deploy"        target="deploy"/>
 					<antMenuItem name="Install"       target="install_starlight"/>
 					<antMenuItem name="Uninstall"     target="uninstall_starlight"/>
 				</antMenuItem>
-			<!--	<antMenuItem name="Publish">
+				<!--
+				<antMenuItem name="Publish">
 					<antMenuItem name="Create Installer" target="build_installer"/>
-				</antMenuItem> -->
+				</antMenuItem>
+				-->
 				<antMenuItem name="Run tests"><!-- todo -->
 					<antMenuItem name="All"           target="test"/>
 					<antMenuItem name="NUnit"         target="test_nunit"/>

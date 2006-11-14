@@ -124,7 +124,7 @@
       <Visible>false</Visible>
     </DeployFiles>
   </ItemGroup>
-  <Target Name="AfterBuild" Condition="$(Deploy)">
+  <Target Name="Deploy" DependsOnTargets="Build">
     <Message Text="Deploying..." />
     <CreateItem Include="$(OutputPath)\*.dll" AdditionalMetadata="Visible=false">
       <Output TaskParameter="Include" ItemName="DeployFiles" />

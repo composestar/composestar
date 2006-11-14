@@ -13,6 +13,8 @@
 	<echo>Processing: ${ant.project.name} ...</echo>	
 	<description>The Compose* StarLight Compiletime</description>
 
+	<!-- clean -->
+
 	<target name="clean" depends="init" description="clean the compilation results">
 		
 		<!-- Java build files -->
@@ -30,6 +32,8 @@
 		<mkdir dir="${out.build}"/>
 		<mkdir dir="${out.dist}"/>
 	</target>
+
+	<!-- build -->
 	
 	<target name="build" depends="init_local,compile_starlight_java,jar" description="Build the StarLight compiletime"/>
 	
@@ -50,6 +54,10 @@
 	</target>
 	
 	<target name="build_xmltypes" depends="create_xsd">
+		<taskdef name="xmlbean"
+		         classname="org.apache.xmlbeans.impl.tool.XMLBean"
+		         classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
+
 		<xmlbean schema="../StarLightEntities/obj/schema0.xsd" destfile="lib/xmltypes.jar" classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 	</target>
 	
@@ -63,9 +71,11 @@
 	<target name="jar">
 		<jar destfile="${out.jar.starlight}" basedir="${out.build}" manifest="src/Composestar/MANIFEST.MF"/>
 	</target>
-	
-	<taskdef name="xmlbean"
-		classname="org.apache.xmlbeans.impl.tool.XMLBean"
-		classpath="../../Libraries/xmlbeans/xbean.jar:../../Libraries/xmlbeans/jsr173_1.0_api.jar" />
 
+	<!-- deploy -->
+
+	<target name="deploy" description="Deploy the StarLight compiletime">
+		<!-- todo -->
+	</target>
+	
 </project>

@@ -8,18 +8,22 @@
 		</and>
 	</condition>
 	<import file="${build.core}/common.xml" />
-	
 
 	<echo>Processing: ${ant.project.name} ...</echo>
-
 	<description>The Compose* StarLight MSBuild Tasks. Generates the MSBuild tasks.</description>
 
+	<property name="buildfile" value="StarLight.MSBuild.Tasks.csproj"/>
+
 	<target name="clean" depends="init" description="Clean compile results">
-		<msbuild solution="StarLight.MSBuild.Tasks.csproj" target="clean" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
 	</target>
 
 	<target name="build" depends="init" description="Build the Tasks project">
-		<msbuild solution="StarLight.MSBuild.Tasks.csproj" target="build" config="${msbuild.config}" />
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}" />
+	</target>
+
+	<target name="deploy" depends="init" description="Deploy the Tasks project">
+		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}" />
 	</target>
 
 </project>

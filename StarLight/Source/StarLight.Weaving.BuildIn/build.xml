@@ -10,16 +10,20 @@
 	<import file="${build.core}/common.xml"/>
 
 	<echo>Processing: ${ant.project.name} ...</echo>
-	<description>The Compose* StarLight Building Strategies.</description>
+	<description>The Compose* StarLight Weaving Strategies.</description>
 
-	<property name="BuildInWeaveStrategies.dir" location=""/>
+	<property name="buildfile" value="StarLight.Weaving.BuildIn.csproj"/>
 
 	<target name="clean" depends="init" description="Clean compile results">
-		<msbuild solution="StarLight.Weaving.BuildIn.csproj" target="clean" config="${msbuild.config}"/>
+		<msbuild solution="${buildfile}" target="clean" config="${msbuild.config}"/>
 	</target>
 
-	<target name="build" depends="init" description="Compile the Weaving Strategies code">
-		<msbuild solution="StarLight.Weaving.BuildIn.csproj" target="build" config="${msbuild.config}"/>
+	<target name="build" depends="init" description="Build the Weaving Strategies">
+		<msbuild solution="${buildfile}" target="build" config="${msbuild.config}"/>
+	</target>
+
+	<target name="deploy" depends="init" description="Deploy the Weaving Strategies">
+		<msbuild solution="${buildfile}" target="deploy" config="${msbuild.config}"/>
 	</target>
 
 </project>
