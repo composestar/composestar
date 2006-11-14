@@ -18,10 +18,7 @@ public class ScoreView
 
 	public void renderScore(JoinPointContext jpc)
 	{
-		Object arg0 = jpc.GetArgumentValue((short)0);
-		System.out.println("ScoreView.renderScore: arg0=" + arg0);
-
-		Graphics g = (Graphics)arg0;
+		Graphics g = (Graphics)jpc.GetArgumentValue((short)1);
 		g.setColor(Color.YELLOW);
 		g.drawString("Score:", 492, 40);
 		g.drawString(""+score.getScore(), 492, 50);
