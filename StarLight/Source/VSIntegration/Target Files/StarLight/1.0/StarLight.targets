@@ -395,7 +395,7 @@ This target will be called whenever the Clean target is invoked.
     <Message Text="Collecting and analyzing assemblies."/>
 
     <!-- was: @(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)') -->
-    <CreateItem Include="@(ReferenceCopyLocalPaths)">
+    <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
       <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
     </CreateItem>
 

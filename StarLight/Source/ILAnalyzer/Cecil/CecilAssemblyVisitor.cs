@@ -671,9 +671,9 @@ namespace Composestar.StarLight.ILAnalyzer
 
             // We have to inject the ContextInfo into the domain, or we cannot find the specific type.
             Assembly assmContext =
-                Assembly.ReflectionOnlyLoadFrom(Path.Combine(rootPath, "Composestar.StarLight.ContextInfo.dll"));
+                Assembly.LoadFile(Path.Combine(rootPath, "Composestar.StarLight.ContextInfo.dll"));
             Assembly assmFilters =
-              Assembly.ReflectionOnlyLoadFrom(Path.Combine(rootPath, "Composestar.StarLight.Filters.dll"));
+              Assembly.LoadFile(Path.Combine(rootPath, "Composestar.StarLight.Filters.dll"));
 
             _reflectionAssemblySetup = true;
 
