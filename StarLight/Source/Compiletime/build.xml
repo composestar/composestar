@@ -29,6 +29,7 @@
 	</target>
 	
 	<target name="init_local" depends="init">
+		<property name="core.jar"      location="${build.core}/Compiletime/${out.jar.core}"/>
 		<property name="starlight.jar" location="${out.jar.starlight}"/>
 		<property name="xmltypes.jar"  location="lib/xmltypes.jar"/>
 		<mkdir dir="${out.build}"/>
@@ -37,7 +38,11 @@
 
 	<!-- build -->
 
-	<target name="build" depends="init_local,compile,jar" description="Build the StarLight compiletime"/>
+	<target name="build" depends="init_local,build_core,compile,jar" description="Build the StarLight compiletime"/>
+
+	<target name="build_core" depends="init">
+		<ant target="build" dir="${build.core}/Compiletime"/>
+	</target>
 	
 	<target name="antlr">
 		<!--
@@ -74,18 +79,18 @@
 		<javac srcdir="src/Composestar" destdir="${out.build}" classpathref="lib.starlight" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
 			<exclude name="**/_svn" />
-			<exclude name="**/.svn" />
 		</javac>
 	</target>
-			
+	
 	<target name="jar">
 		<jar destfile="${starlight.jar}" basedir="${out.build}" manifest="src/Composestar/MANIFEST.MF"/>
 	</target>
 
 	<!-- deploy -->
 
-	<target name="deploy" depends="build"  description="Deploy the StarLight compiletime">
+	<target name="deploy" depends="build" description="Deploy the StarLight compiletime">
 		<copy todir="${starlight.installdir}\Compiletime">
+			<fileset file="${core.jar}"/>
 			<fileset file="${starlight.jar}"/>
 			<fileset file="${xmltypes.jar}"/>
 		</copy>

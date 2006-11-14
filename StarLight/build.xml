@@ -43,7 +43,8 @@
 		<antcall target="build_ws"/>
 	</target>
 
-	<target name="build_compiletime" description="Build Compose* StarLight Compiletime">
+	<target name="build_compiletime" depends="init" description="Build Compose* StarLight Compiletime">
+		<ant target="build" dir="${build.core}/Compiletime"/>
 		<ant target="build" dir="Source/Compiletime" />
 	</target>
 	
@@ -61,7 +62,7 @@
 
 	<!-- deploy -->
 
-	<target name="deploy" depends="build" description="Deploy the StarLight implementation of Compose*">
+	<target name="deploy" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime"/>
 		<antcall target="deploy_msbuild"/>
 		<antcall target="deploy_vs"/>
@@ -255,7 +256,6 @@
 				<antMenuItem name="Build">
 					<antMenuItem name="Build all"     target="build"/>
 					<antMenuItem name="Rebuild all"   target="rebuild"/>
-					<antMenuItem name="Core"          target="build_core"/>
 					<antMenuItem name="Compiletime"   target="build_compiletime"/>
 					<antMenuItem name="MSBuildTasks"  target="build_msbuild"/>
 					<antMenuItem name="VSIntegration" target="build_vs"/>
