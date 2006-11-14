@@ -1,9 +1,11 @@
 package Composestar.Java.WEAVER;
 
-import javassist.CtClass;
 import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
 import javassist.Modifier;
 import javassist.NotFoundException;
+import javassist.bytecode.Descriptor;
 import javassist.expr.ExprEditor;
 import javassist.expr.Cast;
 import javassist.expr.ConstructorCall;
@@ -14,7 +16,15 @@ import javassist.expr.MethodCall;
 import javassist.expr.NewArray;
 import javassist.expr.NewExpr;
 
-import Composestar.Core.Exception.ModuleException;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+
+import Composestar.Core.CpsProgramRepository.Concern;
+import Composestar.Core.CpsProgramRepository.Signature;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.ParameterInfo;
+import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Java.LAMA.JavaMethodInfo;
 import Composestar.Utils.Debug;
 
 /**
@@ -27,9 +37,11 @@ import Composestar.Utils.Debug;
 public class MethodBodyTransformer extends ExprEditor
 {
 
-	public MethodBodyTransformer()
+	private ClassPool classpool;
+	
+	public MethodBodyTransformer(ClassPool classpool)
 	{
-
+		this.classpool = classpool;
 	}
 
 	/**
@@ -94,10 +106,12 @@ public class MethodBodyTransformer extends ExprEditor
 		try
 		{
 			String classname = m.getClassName();
-						
+				
 			if (hd.isMethodInterception(classname))
 			{
-				if (m.getMethod().getReturnType() == CtClass.voidType)
+				String signature = m.getSignature();
+				CtClass returnType = Descriptor.getReturnType(signature, classpool);
+				if (returnType == CtClass.voidType)
 				{
 					this.replaceVoidMethodCall(m);
 				}
@@ -109,7 +123,7 @@ public class MethodBodyTransformer extends ExprEditor
 		}
 		catch (NotFoundException nfe)
 		{
-			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Method not found: " + nfe.getMessage());
+			Debug.out(Debug.MODE_DEBUG, "WEAVER", "Method not found: " + nfe.getMessage()+ " "+m.getSignature());
 		}
 	}
 
@@ -157,15 +171,14 @@ public class MethodBodyTransformer extends ExprEditor
 	{
 		int mod = m.where().getModifiers();
 		boolean isStaticCaller = Modifier.isStatic(mod);
-		mod = m.getMethod().getModifiers();
-		boolean isStaticTarget = Modifier.isStatic(mod);
+		boolean isStaticTarget = isStaticTarget(m);
 
 		if (isStaticCaller && isStaticTarget)
 		{
 			// static caller, static target
 			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(" + '"'
 					+ m.where().getDeclaringClass().getName() + '"' + "," + '"'
-					+ m.getMethod().getDeclaringClass().getName() + '"' + "," + '"' + m.getMethodName() + '"'
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"'
 					+ ",$args);");
 		}
 		else if (isStaticCaller && !isStaticTarget)
@@ -179,7 +192,7 @@ public class MethodBodyTransformer extends ExprEditor
 		{
 			// non-static caller, static target
 			m.replace("Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleVoidMethodCall(this," + '"' 
-					+ m.getMethod().getDeclaringClass().getName()+ '"' + "," + '"' + m.getMethodName() + '"'
+					+ m.getClassName()+ '"' + "," + '"' + m.getMethodName() + '"'
 					+ ",$args);");
 		}
 		else
@@ -200,15 +213,14 @@ public class MethodBodyTransformer extends ExprEditor
 	{
 		int mod = m.where().getModifiers();
 		boolean isStaticCaller = Modifier.isStatic(mod);
-		mod = m.getMethod().getModifiers();
-		boolean isStaticTarget = Modifier.isStatic(mod);
+		boolean isStaticTarget = isStaticTarget(m);
 
 		if (isStaticCaller && isStaticTarget)
 		{
 			// static caller, static target
 			m.replace("$_ = ($r)" + "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall("
 					+ '"' + m.where().getDeclaringClass().getName() + '"' + "," + '"'
-					+ m.getMethod().getDeclaringClass().getName() + '"' + "," + '"' + m.getMethodName() + '"'
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"'
 					+ ",$args);");
 		}
 		else if (isStaticCaller && !isStaticTarget)
@@ -223,7 +235,7 @@ public class MethodBodyTransformer extends ExprEditor
 			// non-static caller, static target
 			m.replace("$_ = ($r)"
 					+ "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this," + '"'
-					+ m.getMethod().getDeclaringClass().getName() + '"' + "," + '"' + m.getMethodName() + '"'
+					+ m.getClassName() + '"' + "," + '"' + m.getMethodName() + '"'
 					+ ",$args);");
 		}
 		else
@@ -233,5 +245,88 @@ public class MethodBodyTransformer extends ExprEditor
 					+ "Composestar.RuntimeCore.FLIRT.MessageHandlingFacility.handleReturnMethodCall(this,$0," + '"'
 					+ m.getMethodName() + '"' + ",$args);");
 		}
+	}
+	
+	/**
+	 * Helper Method.
+	 */
+	private boolean isStaticTarget(MethodCall m)
+	{
+		// first try: bytecode search
+		try 
+		{
+			int mod = m.getMethod().getModifiers();
+			return Modifier.isStatic(mod);
+		}
+		catch(NotFoundException nfe)
+		{
+			// no method declaration found in bytecode.
+		}
+		
+		// second try: lookup in concern's Signature (it could be added by SIGN)
+		DataStore d = DataStore.instance();
+		Concern c = (Concern)d.getObjectByID(m.getClassName());
+		if(c != null)
+		{
+			Signature s = c.getSignature();
+			Iterator methods = s.getMethods().iterator();
+			if(methods.hasNext())
+			{
+				JavaMethodInfo method = (JavaMethodInfo)methods.next();
+				if(method.name().equals(m.getMethodName()))
+				{
+					// equal parameters?
+					if(equalParameters(m,method))
+					{
+						// is static?
+						Method theMethod = method.theMethod;
+						int mod = theMethod.getModifiers();
+						return Modifier.isStatic(mod);
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Helper Method.
+	 */
+	private boolean equalParameters(MethodCall m, MethodInfo method)
+	{
+		try 
+		{
+			// retrieve parameters from methodcall
+			String signature = m.getSignature();
+			CtClass[] parameterTypes = Descriptor.getParameterTypes(signature, classpool);
+			String[] types = new String[parameterTypes.length]; 
+		
+			for(int i=0; i<parameterTypes.length; i++)
+			{
+				types[i] = parameterTypes[i].getName();
+			}
+			
+			// return false if number of parameters are not the same.
+			if(types.length != method.getParameters().size())
+			{
+				return false;
+			}
+			
+			// equal parameters?
+			Object[] params = method.getParameters().toArray();
+			for(int j=0; j<params.length; j++)
+			{
+				if(!((ParameterInfo)params[j]).getParameterTypeString().equals(types[j]))
+				{
+					return false;
+				}
+			}
+		}
+		catch(NotFoundException nfe)
+		{
+			// should not happen!
+			Debug.out(Debug.MODE_ERROR, "WEAVER", "NotFoundException: " + nfe.getMessage());
+		}
+		return true;
 	}
 }

@@ -112,7 +112,7 @@ public class ClassWeaver
 			try
 			{
 				CtClass clazz = classpool.get(name);
-				clazz.instrument(new MethodBodyTransformer());
+				clazz.instrument(new MethodBodyTransformer(classpool));
 				clazz.writeFile(outputDir);
 				weavedClasses.add(getOutputFile(outputDir,clazz));
 			}
