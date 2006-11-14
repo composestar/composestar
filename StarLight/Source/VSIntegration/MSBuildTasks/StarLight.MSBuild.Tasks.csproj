@@ -49,6 +49,8 @@
       <HintPath>..\..\..\Libraries\Microsoft\Microsoft.Practices.ObjectBuilder.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Target Files\StarLight\1.0\StarLight.targets">
@@ -57,6 +59,7 @@
     <Compile Include="CpsParserTask\BuilderConfigurator.cs" />
     <Compile Include="CpsParserTask\CpsParserTask.cs" />
     <Compile Include="DummiesTask\DummiesTask.cs" />
+    <Compile Include="ExbedTask\ExbedTask.cs" />
     <Compile Include="ILAnalyzerTask\BuilderConfigurator.cs" />
     <Compile Include="ILAnalyzerTask\ILAnalyzerTask.cs" />
     <Compile Include="ILVerifyTask\ILVerifyTask.cs" />
@@ -112,11 +115,9 @@
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
-
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-
-	<PropertyGroup>
-		<Deploy>true</Deploy>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <Deploy>true</Deploy>
     <DeployDestination>$(MSBuildExtensionsPath)\StarLight\0.1\</DeployDestination>
   </PropertyGroup>
   <ItemGroup>
@@ -134,5 +135,4 @@
     </CreateItem>
     <Copy SourceFiles="%(DeployFiles.Identity)" DestinationFolder="$(DeployDestination)" SkipUnchangedFiles="true" />
   </Target>
-
 </Project>

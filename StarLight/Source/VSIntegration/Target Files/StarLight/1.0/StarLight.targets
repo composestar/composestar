@@ -19,6 +19,7 @@ Copyright (C) University of Twente, 2006
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.MasterCallerTask" AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.CpsParserTask"    AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.DummiesTask"      AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
+  <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ExbedTask"        AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILAnalyzerTask"   AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILWeaverTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
   <UsingTask TaskName="Composestar.StarLight.MSBuild.Tasks.ILVerifyTask"     AssemblyFile="Composestar.StarLight.MSBuild.Tasks.dll" />
@@ -199,6 +200,7 @@ This target will be called whenever the Clean target is invoked.
       ResolveReferences;
       PrepareResources;
       ResolveKeySource;
+      ExtractCode;
       Compile;
       GenerateSerializationAssemblies;
       CreateSatelliteAssemblies;
@@ -342,7 +344,7 @@ This target will be called whenever the Clean target is invoked.
     <!-- 
         Copy COM reference wrappers, isolated COM references, COM references included by 
         native (manifest) references, native (manifest) reference files themselves. 
-        -->
+    -->
     <Copy
         SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
         DestinationFolder="$(OutDir)"
@@ -380,7 +382,7 @@ This target will be called whenever the Clean target is invoked.
     <DummiesTask Sources="@(Compile->'%(FullPath)')"/>
   </Target>
 
-  <!--CpsParserRunner target -->
+  <!-- CpsParserRunner target -->
   <Target Name="CpsParserRunner">
     <Message Text="Collecting and parsing concern files." />
     <CpsParserTask ConcernFiles="@(Concern->'%(FullPath)')" RepositoryFilename="$(RepositoryFilename)">
@@ -389,12 +391,19 @@ This target will be called whenever the Clean target is invoked.
       <Output TaskParameter="ConcernsDirty" PropertyName="ConcernsDirty"/>
     </CpsParserTask>
   </Target>
+  
+  <!-- ExtractCode target -->
+  <Target Name="ExtractCode">
+    <Message Text="Extracting embedded code." />
+    <ExbedTask ConcernFiles="@(Concern->'%(FullPath)')">
+      <Output TaskParameter="ExtraSources" ItemName="Compile"/>
+    </ExbedTask>
+  </Target>
 
   <!--ILAnalyzerRunner target -->
   <Target Name="ILAnalyzerRunner">
     <Message Text="Collecting and analyzing assemblies."/>
 
-    <!-- was: @(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)') -->
     <CreateItem Include="@(ReferenceCopyLocalPaths->'$(OutDir)%(DestinationSubDirectory)%(Filename)%(Extension)')">
       <Output TaskParameter="Include" ItemName="WeavableAssemblyFiles"/>
     </CreateItem>
