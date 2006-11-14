@@ -65,7 +65,7 @@ public class Bonus
 	 * Perform tick
 	 */
 	public void tick(JoinPointContext jpc)
-	{		
+	{
 		if (bonusPickups >= 2) return; // max of 2 pickups per level
 
 		Object arg0 = jpc.GetArgumentValue((short)0);
