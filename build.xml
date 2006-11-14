@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/Core/Compiletime" default="build">
 	
-	<condition property="build.core" value="..">
-		<and>
-			<not><isset property="build.core"/></not>
-			<available file="../common.xml"/>
-		</and>
-	</condition>
-	<import file="${build.core}/common.xml"/>
+	<import file="../common.xml"/>
 	
 	<echo>Processing: ${ant.project.name} ...</echo>
-	
 	<description>The Compose* Core Compiletime. This is the core of the Compose* compiler.</description>
 
 	<target name="clean" depends="init" description="Clean compile results">
@@ -33,7 +26,7 @@
 				<include name="CpsLexer.java"/>
 				<include name="CpsParser.java"/>
 				<include name="CpsTokenTypes.*"/>
-				<include name="CpsTreeWalker.java"/>				
+				<include name="CpsTreeWalker.java"/>
 				<include name="CpsTreeWalkerTokenTypes.*"/>
 				<include name="*.smap"/>
 			</fileset>
@@ -58,9 +51,8 @@
 	</target>
 	
 	<target name="compile" depends="local_init,antlr">
-		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="1.4" target="1.4" debug="${build.debug}" deprecation="${build.deprecation}">
+		<javac srcdir="src" destdir="${out.build}" classpathref="lib.core" source="${build.java.version}" target="${build.java.version}" debug="${build.debug}" deprecation="${build.deprecation}">
 			<exclude name="**/AssemblyInfo.java"/>
-			<!--<exclude name="Composestar/Core/FIRE/*"/>-->			
 		</javac>
 	</target>
 	
@@ -82,8 +74,8 @@
 
 		<copy todir="${composestar.installdir}/Binaries">
 			<fileset dir="${out.dist}"/>
+			<fileset file="binaries/antlr/antlr.jar"/>
 		</copy>
-		<copy file="binaries/antlr/antlr.jar" todir="${composestar.installdir}/Binaries"/>
 
 		<copy todir="${composestar.installdir}/Binaries/prolog">
 			<fileset dir="binaries/prolog">
