@@ -69,15 +69,8 @@ public class RepositoryFixer
 				Debug.out(Debug.MODE_DEBUG, "FLIRT", "Fixing '" + fields[i].getName() + "' of type '"
 						+ child.getClass().getName() + "'.");
 
-				if (child instanceof ConcernReference || child instanceof FilterCompOper)
-				{
-					// skipping
-				}
-				else
-				{
-					Object temp = fixEntity((RepositoryEntity) child, ds);
-					fields[i].set(o, temp);
-				}
+				Object temp = fixEntity((RepositoryEntity) child, ds);
+				fields[i].set(o, temp);
 			}
 			else if (child instanceof Vector)
 			{
@@ -124,14 +117,7 @@ public class RepositoryFixer
 			Object o = e.nextElement();
 			if (o instanceof DeclaredRepositoryEntity)
 			{
-				if (o instanceof ConcernReference || o instanceof FilterCompOper)
-				{
-					// skipping
-				}
-				else
-				{
-					returnVector.addElement(fixEntity((DeclaredRepositoryEntity) o, ds));
-				}
+				returnVector.addElement(fixEntity((DeclaredRepositoryEntity) o, ds));
 			}
 			else returnVector.addElement(o);
 		}

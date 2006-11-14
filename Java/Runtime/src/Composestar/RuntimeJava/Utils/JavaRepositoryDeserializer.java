@@ -1,6 +1,7 @@
 package Composestar.RuntimeJava.Utils;
 
 import Composestar.Core.RepositoryImplementation.DataStore;
+import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 import Composestar.RuntimeCore.Utils.Debug;
 import Composestar.RuntimeCore.Utils.RepositoryDeserializer;
 
@@ -23,7 +24,15 @@ public class JavaRepositoryDeserializer extends RepositoryDeserializer
 
 			while(true)
 			{
-				ds.addObject(ois.readObject());
+				Object o = ois.readObject();
+				if(o instanceof RepositoryEntity)
+				{
+					ds.addObject(((RepositoryEntity)o).repositoryKey,o);
+				}
+				else
+				{
+					ds.addObject(o);
+				}
 			}
 		}
 		catch (EOFException eof)
