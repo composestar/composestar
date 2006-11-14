@@ -203,6 +203,11 @@ Common routines. Always include this file in every build.xml file
 		<!-- WIX -->
 		<property name="path.wix" value="${build.core}${file.separator}Development${file.separator}Wix${file.separator}"/>
 
+		<!-- NUnit -->
+		<property name="path.nunit" value="${build.core}${file.separator}Development${file.separator}NUnit${file.separator}"/>
+
+		<!-- NTime -->
+		<property name="path.ntime" value="${build.core}${file.separator}Development${file.separator}NTime${file.separator}"/>
 
 		<!-- FxCop macro -->
 		<macrodef name="fxcop">
