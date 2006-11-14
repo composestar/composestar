@@ -28,53 +28,58 @@ namespace BasicTests
 			report("func3");
 		}
 
-        public String func4(int number)
-        {
-            report("func4: " + number);
-            String s = "" + number;
+		public String func4(int number)
+		{
+			report("func4: " + number);
+			String s = "" + number;
 
-            if (s == null)
-            {
-                s = "";
-            }
+			if (s == null)
+			{
+				s = "";
+			}
 
-            Type type = typeof(System.Buffer);
+			Type type = typeof(System.Buffer);
 
-            return s;
-        }
+			return s;
+		}
 
 
-        public void func5(int number)
-        {
-            while (number > 0)
-            {
-                switch (number)
-                {
-                    case 10:
-                        Console.WriteLine("10");
-                        break;
-                    case 15:
-                        Console.WriteLine("15");
-                        break;
-                    case 456:
-                        Console.WriteLine("456");
-                        break;
-                    case 97638:
-                        Console.WriteLine("97638");
-                        break;
-                }
+		public void func5(int number)
+		{
+			while (number > 0)
+			{
+				switch (number)
+				{
+					case 10:
+						Console.WriteLine("10");
+						break;
+					case 15:
+						Console.WriteLine("15");
+						break;
+					case 456:
+						Console.WriteLine("456");
+						break;
+					case 97638:
+						Console.WriteLine("97638");
+						break;
+				}
 
-                number--;
-            }
-        }
+				number--;
+			}
+		}
 
-        public void func6()
-        {
-            Console.WriteLine("func4 returns: " + func4(1));
-            Console.WriteLine("second call to func4 returns: " + func4(2));
-            Console.WriteLine("third call to func4 returns: " + func4(3));
-            Console.WriteLine("fourth call to func4 returns: " + func4(4));
-        }
+		public void func6()
+		{
+			Console.WriteLine("func4 returns: " + func4(1));
+			Console.WriteLine("second call to func4 returns: " + func4(2));
+			Console.WriteLine("third call to func4 returns: " + func4(3));
+			Console.WriteLine("fourth call to func4 returns: " + func4(4));
+		}
+
+		public void func7(string s)
+		{
+			report("func7: s='" + s + "'");
+		}
 
 		public void askForHelp()
 		{

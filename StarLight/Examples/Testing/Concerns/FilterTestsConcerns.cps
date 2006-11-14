@@ -12,15 +12,17 @@ concern FilterTestsConcern in BasicTests
 		conditions
 			doError : inner.getProduceError();
 		inputfilters
-			//produceerrordisp : Dispatch = { True => [*.getProduceError] };
-			logging : Logging = { True => [*.*] };
-			profiling: Profiling = { True => [*.*] };
-			makeError : NotImplemented = {  doError ~> [*.makeError], !doError => [*.*] };
-			//makeError : Error = {  doError ~> [*.makeError], !doError => [*.*] };
-			aftertest : After = { True => [*.func4] myExternal.after };
-			test1 : Dispatch = { True => [*.func1] myExternal.externalMe };
-			test2 : Dispatch = { True => [*.func2] myInternal.internalMe };
-			test3 : Dispatch = { True => [*.func3] inner.func1 }
+			logging		: Logging = { True => [*.*] };
+			profiling	: Profiling = { True => [*.*] };
+			error1		: NotImplemented = { doError ~> [*.makeError], !doError => [*.*] };
+			//error2	: Dispatch = { True => [*.getProduceError] };
+			//error3	: Error = { doError ~> [*.makeError], !doError => [*.*] };
+			before1	: Before = { True => [*.func4] myExternal.before };
+			before2		: Before = { True => [*.func7] myExternal.before };
+			after1		: After =  { True => [*.func4] myExternal.after };
+			dispatch1	: Dispatch = { True => [*.func1] myExternal.externalMe };
+			dispatch2	: Dispatch = { True => [*.func2] myInternal.internalMe };
+			dispatch3	: Dispatch = { True => [*.func3] inner.func1 }
 		outputfilters
 			aftertest2 : After = { True => [*.func4] myExternal.after2 }
 	}

@@ -20,28 +20,29 @@ namespace BasicTests
 
 			FilterTests filtTests = new FilterTests();
 			filtTests.func1();
-            filtTests.func2();
-            filtTests.func3();
-            Console.Out.WriteLine( filtTests.func4(3) );
-            filtTests.func6();
+			filtTests.func2();
+			filtTests.func3();
+			Console.Out.WriteLine( filtTests.func4(3) );
+			filtTests.func6();
+			filtTests.func7("foo");
 
 			filtTests.askForHelp();
 			filtTests.doStuff();
 
 			filtTests.makeError();
 			filtTests.setProduceError(true);
-            try
-            {
-                filtTests.makeError();
-            }
-            catch (NotImplementedException)
-            {
-                Console.Out.WriteLine("A NotImplementedException was raised.");
-            } 
-            catch (Exception)
-            {
-                Console.Out.WriteLine("An exception was raised.");
-            }
+			try
+			{
+				filtTests.makeError();
+			}
+			catch (NotImplementedException)
+			{
+				Console.Out.WriteLine("A NotImplementedException was raised.");
+			} 
+			catch (Exception)
+			{
+				Console.Out.WriteLine("An exception was raised.");
+			}
 			filtTests.setProduceError(false);
 
 			filtTests.makeTrip();

@@ -23,40 +23,45 @@ namespace BasicTests
 			report("externalMe");
 		}
 
-        public void before(JoinPointContext context)
-        {
-            report("before " + context.StartSelector);
+		public void before(JoinPointContext context)
+		{
+			report("before " + context.StartSelector);
 
-            if (context.StartSelector.Equals("func4"))
-            {
-                Int32 arg = (Int32) context.GetArgumentValue(0);
-                arg = arg + 1;
-                context.AddArgument(0, context.GetArgumentType(0), arg);
-            }
-        }
+			if (context.StartSelector.Equals("func4"))
+			{
+				int arg = (int) context.GetArgumentValue(1);
+				arg = arg + 1;
+				context.AddArgument(0, context.GetArgumentType(1), arg);
+			}
+			else if (context.StartSelector.Equals("func7"))
+			{
+				string arg = (string)context.GetArgumentValue(1);
+				Console.WriteLine("\targ=" + (arg == null ? "null" : "'" + arg + "'"));
+			}
+		}
 
-        public void after(JoinPointContext context)
-        {
-            report("after " + context.StartSelector);
+		public void after(JoinPointContext context)
+		{
+			report("after " + context.StartSelector);
 
-            if (context.StartSelector.Equals("func4"))
-            {
-                String ret = (String)context.ReturnValue;
-                ret = ret + " #After#";
-                context.ReturnValue = ret;
-            }
-        }
+			if (context.StartSelector.Equals("func4"))
+			{
+				String ret = (String)context.ReturnValue;
+				ret = ret + " #After#";
+				context.ReturnValue = ret;
+			}
+		}
 
-        public void after2(JoinPointContext context)
-        {
-            report("after2 " + context.StartSelector);
+		public void after2(JoinPointContext context)
+		{
+			report("after2 " + context.StartSelector);
 
-            if (context.StartSelector.Equals("func4"))
-            {
-                String ret = (String)context.ReturnValue;
-                ret = ret + " #After2#";
-                context.ReturnValue = ret;
-            }
-        }
+			if (context.StartSelector.Equals("func4"))
+			{
+				String ret = (String)context.ReturnValue;
+				ret = ret + " #After2#";
+				context.ReturnValue = ret;
+			}
+		}
 	}
 }
