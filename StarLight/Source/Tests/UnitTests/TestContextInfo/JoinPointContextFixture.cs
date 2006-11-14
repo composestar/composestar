@@ -15,7 +15,7 @@ using System.Text;
 using System.Collections.Generic;
 #endregion
 
-namespace Composestar.StarLight.ContextInfo.Tests
+namespace Composestar.StarLight.ContextInfo.UnitTests
 {
     /// <summary>
     ///This is a test class for Composestar.StarLight.ContextInfo.JoinPointContext and is intended

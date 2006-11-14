@@ -5,7 +5,7 @@ concern Platypus in PlatypusExample
 		internals
 			m : PlatypusExample.Mammal;
 			b : PlatypusExample.Bird;
-		inputfilters
+		outputfilters
 			eat : Dispatch = { [*.eat] m.eat };
 			hungry : Dispatch = { [*.isHungry] m.isHungry }
 	}

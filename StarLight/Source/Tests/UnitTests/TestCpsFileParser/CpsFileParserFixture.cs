@@ -87,7 +87,7 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void ConstructorTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration("test.cps");
+            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("test.cps"));
 
             CpsFileParser target = new CpsFileParser(configuration);
 
@@ -115,10 +115,10 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
 #endif
 
         [TestMethod()]
-        [ExpectedException(typeof(System.IO.FileNotFoundException)) ]
+        [ExpectedException(typeof(Composestar.StarLight.CoreServices.Exceptions.CpsParserException)) ]
         public void InvalidConcernFileTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration("Concerns\\invalid_concern.cps");
+            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("invalid_concern.cps"));
 
             CpsFileParser target = new CpsFileParser(configuration);
 
@@ -133,7 +133,7 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void HasNoOutputFiltersTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration("Concerns\\Platypus.cps");
+            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("Logging.cps"));
 
             CpsFileParser target = new CpsFileParser(configuration);
 
@@ -148,7 +148,7 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void HasOutputFiltersTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration("Concerns\\ParserTesting.cps");
+            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("platypus.cps"));
 
             CpsFileParser target = new CpsFileParser(configuration);
 
@@ -163,7 +163,7 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void ReferencedTypesCountTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration("Concerns\\ParserTesting.cps");
+            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("law.cps"));
 
             CpsFileParser target = new CpsFileParser(configuration);
 
@@ -179,7 +179,7 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         [TestMethod()]
         public void ReferencedTypesTest()
         {
-            CpsParserConfiguration configuration = new CpsParserConfiguration("Concerns\\Simple.cps");
+            CpsParserConfiguration configuration = new CpsParserConfiguration(base.GetPathToConcern("bulkupdates.cps"));
 
             CpsFileParser target = new CpsFileParser(configuration);
 

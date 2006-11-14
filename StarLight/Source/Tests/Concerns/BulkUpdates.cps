@@ -1,7 +1,6 @@
 concern BulkUpdates in ExampleAOP {
 	filtermodule BulkUpdate {
-		internals
-			bulk: ExampleAOP.BulkUpdater;
+	
 		inputfilters
 			addproducts: Dispatch = {[*.AddProducts] bulk.AddProducts};
 			removeproducts: Dispatch = {[*.RemoveProducts] bulk.RemoveProducts}

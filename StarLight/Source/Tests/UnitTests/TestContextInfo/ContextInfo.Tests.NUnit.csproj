@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A5619D31-2996-4312-A7BA-0AF687445C23}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TestContextInfo</RootNamespace>
-    <AssemblyName>TestContextInfo</AssemblyName>
+    <RootNamespace>Composestar.StarLight.ContextInfo.UnitTests</RootNamespace>
+    <AssemblyName>Composestar.StarLight.ContextInfo.UnitTests</AssemblyName>
     <WarningLevel>4</WarningLevel>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>

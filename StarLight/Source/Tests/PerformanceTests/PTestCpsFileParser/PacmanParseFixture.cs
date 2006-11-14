@@ -21,28 +21,28 @@ namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
 
         #region Pacman concerns
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_Pacman_DynamicStrategy()
+        public void ParsePacmanDynamicStrategy()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\DynamicStrategy.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_Pacman_Levels()
+        public void ParsePacmanLevels()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\Levels.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_Pacman_Scoring()
+        public void ParsePacmanScoring()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\Scoring.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_Pacman_Sound()
+        public void ParsePacmanSound()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "Pacman\\concerns\\Sound.cps");
             cfp.Parse();

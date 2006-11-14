@@ -21,21 +21,21 @@ namespace Composestar.StarLight.CpsParser.Tests.PerformanceTests
 
         #region iTextSharp concerns
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_iTextSharp_PdfDocumentConcern()
+        public void ParseiTextSharpPdfDocumentConcern()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "iTextSharp\\iTextSharp.Concerns\\PdfDocumentConcern.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_iTextSharp_PhraseConcern()
+        public void ParseiTextSharpPhraseConcern()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "iTextSharp\\iTextSharp.Concerns\\PhraseConcern.cps");
             cfp.Parse();
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Parse_iTextSharp_TrackAndTrace()
+        public void ParseiTextSharpTrackAndTrace()
         {
             CpsFileParser cfp = CreateParser(ExamplePath + "iTextSharp\\iTextSharp.Concerns\\TrackAndTrace.cps");
             cfp.Parse();

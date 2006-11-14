@@ -27,23 +27,23 @@ namespace Composestar.Repository.Tests.PerformanceTests
         }
 
         [TimerDurationTest(50, Unit = TimePeriod.Millisecond)]
-        public void Save_TinyLanguageModel()
+        public void SaveTinyLanguageModel()
         {
             foreach (AssemblyConfig assembly in tinyModel.GetLanguageModel())
             {
                 if (assembly.Assembly != null)
-                    entitiesAccessor.SaveAssemblyElement(assembly.SerializedFilename, assembly.Assembly);
+                    entitiesAccessor.SaveAssemblyElement(assembly.SerializedFileName, assembly.Assembly);
 
             }
         }
 
         [TimerDurationTest(30, Unit = TimePeriod.Second)]
-        public void Save_BigLanguageModel()
+        public void SaveBigLanguageModel()
         {
             foreach (AssemblyConfig assembly in bigModel.GetLanguageModel())
             {
                 if (assembly.Assembly != null)
-                    entitiesAccessor.SaveAssemblyElement(assembly.SerializedFilename, assembly.Assembly);
+                    entitiesAccessor.SaveAssemblyElement(assembly.SerializedFileName, assembly.Assembly);
 
             }
         }

@@ -26,7 +26,7 @@ namespace Composestar.StarLight.TestMocks.LanguageModel
                 //ac.Filename = String.Format("AssemblyFile_{0}", i);
                 ac.Timestamp = DateTime.Now.Ticks;
                 ac.Assembly = ae;
-                ac.GenerateSerializedFilename("");                
+                ac.GenerateSerializedFileName("");                
                 model.Add(ac);
 
                 i++;

@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Text;
 using System.Collections.Generic;
+using System.IO;
 
 #if !NUNIT
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,6 +48,18 @@ namespace Composestar.StarLight.CpsParser.Tests.UnitTests
         //
         #endregion
 
-
+        /// <summary>
+        /// Gets the path to concern.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        internal string GetPathToConcern(string fileName)
+        {
+#if !UNIT
+            return string.Format(@"..\..\..\..\Concerns\{0}", fileName);
+#else
+            return string.Format("../../../Concerns/{0}", fileName);
+#endif
+        }
     }
 }

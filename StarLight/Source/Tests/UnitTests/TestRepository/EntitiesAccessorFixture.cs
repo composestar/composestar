@@ -21,7 +21,7 @@ using Composestar.StarLight.Entities.LanguageModel;
 using Composestar.StarLight.Entities.WeaveSpec;
 #endregion
 
-namespace Composestar.Repository.Tests
+namespace Composestar.Repository.UnitTests
 {
 
     /// <summary>
@@ -31,27 +31,6 @@ namespace Composestar.Repository.Tests
     [TestClass()]
     public class EntitiesAccessorFixture
     {
-
-#if !NUNIT
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-#endif
 
         #region Additional test attributes
         // 
