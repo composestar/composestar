@@ -68,7 +68,7 @@ public class Bonus
 	{
 		if (bonusPickups >= 2) return; // max of 2 pickups per level
 
-		Object arg = jpc.GetArgumentValue((short)1);
+		Object arg = jpc.GetArgumentValue((short)0);
 		float delta = (float)((System.Single)arg);
 		timeTillBonus -= delta;
 		
@@ -83,7 +83,7 @@ public class Bonus
 	 */
 	public void pacmanTouch(JoinPointContext jpc)
 	{
-		GameElement ge = (GameElement)jpc.GetArgumentValue((short)1);
+		GameElement ge = (GameElement)jpc.GetArgumentValue((short)0);
 		if (ge instanceof BonusPickup)
 		{
 			BonusPickup b = (BonusPickup) ge;
