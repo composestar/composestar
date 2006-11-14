@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;  
 using System.IO;
 using System.Text;
+using System.Globalization; 
 
 using Composestar.StarLight.CoreServices;
 using Composestar.StarLight.CoreServices.Exceptions;
@@ -97,11 +98,13 @@ namespace Composestar.StarLight.CpsParser
             }
             catch (IOException ex)
             {
-                throw new CpsParserException(String.Format(Properties.Resources.ConcernNotFound, FileName), FileName, ex);
+                throw new CpsParserException(String.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.ConcernNotFound, FileName), FileName, ex);
             }
             catch (antlr.ANTLRException ex)
             {
-                throw new CpsParserException(String.Format(Properties.Resources.UnableToParseConcern, FileName, ex.Message), FileName, ex);
+                throw new CpsParserException(String.Format(CultureInfo.CurrentCulture, 
+                    Properties.Resources.UnableToParseConcern, FileName, ex.Message), FileName, ex);
             }
             finally 
             {
@@ -120,8 +123,10 @@ namespace Composestar.StarLight.CpsParser
         private String Walk(antlr.collections.AST tree, bool doType, String parsingType)
         {
             // Add the value of a name token to the parsingType string, seperate parts with a dot
-            if (parsingType != null && parsingType != String.Empty) parsingType = parsingType + ".";
-            if (parsingType != null) parsingType = parsingType + tree.getText();
+            if (!string.IsNullOrEmpty(parsingType)) 
+                parsingType = parsingType + ".";
+            if (parsingType != null) 
+                parsingType = parsingType + tree.getText();
 
             // We are only interested in the type nodes contained in ithe definition of internals and externals
             if (tree.Type == CpsTokenTypes.INTERNAL_ || tree.Type == CpsTokenTypes.EXTERNAL_)
@@ -156,7 +161,8 @@ namespace Composestar.StarLight.CpsParser
             
             // Iterate over the next sibling of the input parameter 'tree'
             antlr.collections.AST sib = tree.getNextSibling();
-            if (sib != null) parsingType = Walk(sib, doType, parsingType);
+            if (sib != null) 
+                parsingType = Walk(sib, doType, parsingType);
             
             return parsingType;
         }
