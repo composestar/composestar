@@ -61,6 +61,11 @@ public class Message
 		return concernNode;
 	}
 	
+	public void setConcernNode(AbstractConcernNode innode)
+	{
+		concernNode = innode;		
+	}
+	
 	public String getSelector()
 	{
 		return selector;
@@ -94,8 +99,10 @@ public class Message
 			Iterator it = edge.getMatchingParts();
 			while (it.hasNext())
 			{
+				// TODO: take into account the type of selector (name vs sign)
 				MatchingPart mp = (MatchingPart) it.next();
-				if (mp.getSelector().equals(selector) || mp.getSelector().equals("*"))
+				String mpselector = mp.getSelector().getName();
+				if (mpselector.equals(selector) || mpselector.equals("*"))
 				{
 					res = true;
 					break;
@@ -114,5 +121,10 @@ public class Message
 		{
 			return !res;
 		}
+	}
+	
+	public String toString()
+	{
+		return concernNode.getLabel()+"->"+selector;
 	}
 }

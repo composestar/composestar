@@ -30,8 +30,8 @@ import Composestar.Utils.Debug;
 
 /**
  * A NOBBIN will walk the paths created by DIGGER in order to produce a set of
- * resulting messages for an incomming message. The goal is to figure out the actual
- * destination of a message through all concerns.
+ * resulting messages for an incomming message. The goal is to figure out the
+ * actual destination of a message through all concerns.
  * 
  * @author Michiel Hendriks
  */
@@ -85,21 +85,32 @@ public class NOBBIN
 		 * Creating new messages on the fly.
 		 */
 
-		//walk(concernNode.getOutputFilters(), null, 0);
-		
+		// walk(concernNode.getOutputFilters(), null, 0);
 		List messages = gen.create(concernNode);
 		Iterator it = messages.iterator();
 		while (it.hasNext())
 		{
-			walk(concernNode.getInputFilters(), (Message) it.next(), 0);
+			Message inMsg = (Message) it.next();
+			Message outMsg = walk(concernNode.getInputFilters(), inMsg, 0);
+			if (outMsg != null)
+			{
+				Debug.out(Debug.MODE_DEBUG, inMsg + " resulted in " + outMsg, DIGGER.MODULE_NAME);
+			}
 		}
 	}
 
-	public void walk(Node node, Message msg, int curDepth) throws ModuleException
+	public Message walk(Node node, Message msg, int curDepth) throws ModuleException
 	{
 		while (node != null)
 		{
-			Debug.out(Debug.MODE_DEBUG, "Walking node " + node.getLabel()+" at depth "+curDepth, DIGGER.MODULE_NAME);
+			if (curDepth >= maxDepth)
+			{
+				Debug.out(Debug.MODE_INFORMATION, "Reached maximum walking at " + node + " (label:" + node.getLabel()
+						+ ") at depth " + curDepth, DIGGER.MODULE_NAME);
+				return msg;
+			}
+			Debug.out(Debug.MODE_DEBUG, "Walking node " + node + " (label:" + node.getLabel() + ") at depth "
+					+ curDepth, DIGGER.MODULE_NAME);
 			Iterator edges = node.getOutgoingEdges();
 			node = null;
 			while (edges.hasNext())
@@ -108,7 +119,7 @@ public class NOBBIN
 				if (e instanceof CondMatchEdge)
 				{
 					CondMatchEdge cme = (CondMatchEdge) e;
-					if (!msg.matches(cme)) 
+					if (!msg.matches(cme))
 					{
 						continue;
 					}
@@ -118,14 +129,17 @@ public class NOBBIN
 						continue;
 					}
 					msg.setCertenty(expr);
-					walk(e.getDestination(), msg, curDepth);
-					break; // don't try any other edges
+					node = e.getDestination();
+					break;
 				}
 				else if (e instanceof SubstitutionEdge)
 				{
 					// subsitue a message
-					Message newMsg = gen.xform(msg, (SubstitutionEdge) e);
-					walk(e.getDestination(), newMsg, curDepth++);
+					node = e.getDestination();
+					curDepth++;
+					msg = gen.xform(msg, (SubstitutionEdge) e);
+					// TODO: can result in duplicate messages in case of `inner
+					// node` of the default dispatch
 					break;
 				}
 				else if (e instanceof LambdaEdge)
@@ -134,5 +148,6 @@ public class NOBBIN
 				}
 			}
 		}
+		return msg;
 	}
 }

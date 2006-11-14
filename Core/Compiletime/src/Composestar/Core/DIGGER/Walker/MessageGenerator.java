@@ -14,11 +14,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SubstitutionPart;
+import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
 import Composestar.Core.DIGGER.Graph.CondMatchEdge;
 import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
 
 /**
  * Creates and manages messages for certain concerns + selectors.
@@ -63,7 +67,15 @@ public class MessageGenerator
 	public List create(ConcernNode concernNode)
 	{
 		List lst = new ArrayList();
-		
+		Concern concern = concernNode.getConcern();
+		Type type = (Type) concern.platformRepr;
+		Iterator it = type.getMethods().iterator();
+		while (it.hasNext())
+		{
+			MethodInfo mi = (MethodInfo) it.next();
+			Message msg = new Message(concernNode, mi.name());
+			lst.add(msg);
+		}
 		return lst;
 	}
 	
@@ -78,7 +90,15 @@ public class MessageGenerator
 	{
 		Message msg = new Message(base);
 		SubstitutionPart sp = edge.getSubstitutionPart();
-		msg.setSelector(sp.getSelector().toString());
+		String sel = sp.getSelector().getName().toString();
+		if (edge.getDestination() instanceof AbstractConcernNode)
+		{
+			msg.setConcernNode((AbstractConcernNode) edge.getDestination());
+		}
+		if (!sel.equals("*"))
+		{
+			msg.setSelector(sel);
+		}
 		return msg;
 	}
 }
