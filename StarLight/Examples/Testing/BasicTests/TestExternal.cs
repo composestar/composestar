@@ -35,7 +35,7 @@ namespace BasicTests
 			}
 			else if (context.StartSelector.Equals("func7"))
 			{
-				string arg = (string)context.GetArgumentValue(1);
+				string arg = (string)context.GetArgumentValue(0);
 				Console.WriteLine("\targ=" + (arg == null ? "null" : "'" + arg + "'"));
 			}
 		}
