@@ -331,7 +331,7 @@ namespace Composestar.StarLight.ILAnalyzer
         #endregion
 
         #region Visitor Implementation
-
+ 
         /// <summary>
         /// Visits the type definition.
         /// </summary>
@@ -352,7 +352,7 @@ namespace Composestar.StarLight.ILAnalyzer
             if (string.IsNullOrEmpty(type.Namespace))
             {
                 if (type.DeclaringType != null)
-                   typeElement.Namespace = string.Concat(type.DeclaringType.FullName, "/");
+                   typeElement.Namespace = string.Concat(type.DeclaringType.FullName, "+");
                 
             } 
             else
