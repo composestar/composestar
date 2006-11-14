@@ -29,9 +29,9 @@ namespace BasicTests
 
 			if (context.StartSelector.Equals("func4"))
 			{
-				int arg = (int) context.GetArgumentValue(1);
+				int arg = (int) context.GetArgumentValue(0);
 				arg = arg + 1;
-				context.AddArgument(0, context.GetArgumentType(1), arg);
+				context.AddArgument(0, context.GetArgumentType(0), arg);
 			}
 			else if (context.StartSelector.Equals("func7"))
 			{

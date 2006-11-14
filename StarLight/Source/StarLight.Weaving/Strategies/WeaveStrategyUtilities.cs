@@ -154,11 +154,15 @@ namespace Composestar.StarLight.Weaving.Strategies
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
             {
+                int ordinal = param.Sequence - (originalMethod.HasThis ? 1 : 0);
+     
                 //check for reference:
                 if(param.ParameterType.FullName.EndsWith("&"))
                 {
+                  
                     if(visitor.FilterType == FilterType.InputFilter)
                     {
+                        
                         // For out parameters that are value type, check whether a value was set
                         if ((param.Attributes & Mono.Cecil.ParameterAttributes.Out) == Mono.Cecil.ParameterAttributes.Out &&
                             param.ParameterType.IsValueType)
@@ -166,7 +170,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                             //
                             // Store value from joinpointcontext into out
                             //
-
+                                                 
                             // Load param
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
 
@@ -174,7 +178,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                             // Load the ordinal
-                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, ordinal));
 
                             // Call the GetArgumentValue(int16) function                    
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
@@ -238,9 +242,9 @@ namespace Composestar.StarLight.Weaving.Strategies
 
                             // Load jpc
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
-
+                          
                             // Load the ordinal
-                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+                            visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, ordinal));
 
                             // Call the GetArgumentValue(int16) function                    
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
@@ -267,10 +271,10 @@ namespace Composestar.StarLight.Weaving.Strategies
                 else //not a reference parameter
                 {
                     // Load jpc
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
+                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));                    
 
                     // Load the ordinal
-                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+                    visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, ordinal));
 
                     // Call the GetArgumentValue(int16) function                    
                     visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt,
@@ -302,6 +306,8 @@ namespace Composestar.StarLight.Weaving.Strategies
         {
             foreach(ParameterDefinition param in originalMethod.Parameters)
             {
+                int ordinal = param.Sequence - (originalMethod.HasThis ? 1 : 0);
+
                 //check for reference:
                 if(param.ParameterType.FullName.EndsWith("&"))
                 {
@@ -316,7 +322,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                         visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldloc, joinPointContextVariable));
 
                         // Load ordinal
-                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, param.Sequence));
+                        visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldc_I4, ordinal));
 
                         // Load param
                         visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldarg, param));
