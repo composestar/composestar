@@ -112,28 +112,27 @@
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+
+	<PropertyGroup>
+		<Deploy>true</Deploy>
     <DeployDestination>$(MSBuildExtensionsPath)\StarLight\0.1\</DeployDestination>
   </PropertyGroup>
   <ItemGroup>
-    <DeployToMSBuild Include="..\Target Files\StarLight\1.0\StarLight.targets">
+    <DeployFiles Include="..\Target Files\StarLight\1.0\StarLight.targets">
       <Visible>false</Visible>
-    </DeployToMSBuild>
+    </DeployFiles>
   </ItemGroup>
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition="$(Deploy)">
     <Message Text="Deploying..." />
-    <MakeDir Directories="$(DeployDestination)" Condition="!Exists($(DeployDestination))" />
     <CreateItem Include="$(OutputPath)\*.dll" AdditionalMetadata="Visible=false">
-      <Output TaskParameter="Include" ItemName="DeployToMSBuild" />
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
     </CreateItem>
     <CreateItem Include="$(OutputPath)\*.pdb" AdditionalMetadata="Visible=false">
-      <Output TaskParameter="Include" ItemName="DeployToMSBuild" />
+      <Output TaskParameter="Include" ItemName="DeployFiles" />
     </CreateItem>
-    <Copy SourceFiles="%(DeployToMSBuild.Identity)" DestinationFolder="$(DeployDestination)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="%(DeployFiles.Identity)" DestinationFolder="$(DeployDestination)" SkipUnchangedFiles="true" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+
 </Project>
