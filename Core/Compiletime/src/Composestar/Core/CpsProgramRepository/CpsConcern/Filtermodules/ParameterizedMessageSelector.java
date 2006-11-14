@@ -27,9 +27,9 @@ public class ParameterizedMessageSelector extends MessageSelector
 		return parameter;
 	}
 
-	public void setParameter(String parameter)
+	public void setParameter(String inParameter)
 	{
-		this.parameter = parameter;
+		parameter = inParameter;
 	}
 
 	public boolean isList()

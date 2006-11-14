@@ -46,6 +46,7 @@ import java.util.Set;
  * @author Prasad P. Khandekar
  * @version 1.0
  * @since 1.0
+ * @deprecated
  */
 public final class INIFile
 {

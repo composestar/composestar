@@ -23,7 +23,7 @@ import java.util.Properties;
  * purpose. The data is read from the version.properties file included with the
  * JAR. This version.properties file is written/updated by the ANT build system.
  */
-public class Version
+public final class Version
 {
 	/**
 	 * The private singleton instance
@@ -74,7 +74,10 @@ public class Version
 	 */
 	public static Date getCompileDate()
 	{
-		if (instance.compileDate != null) return instance.compileDate;
+		if (instance.compileDate != null)
+		{
+			return instance.compileDate;
+		}
 		try
 		{
 			// note: this must match the format used by the ant script

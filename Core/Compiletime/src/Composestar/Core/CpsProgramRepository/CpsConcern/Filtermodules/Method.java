@@ -35,7 +35,7 @@ public class Method extends DeclaredRepositoryEntity
 
 	public Vector formalParameters;
 
-	public Object PlatformRepresentation;
+	public Object platformRepresentation;
 
 	/**
 	 * @modelguid {01338DEC-2CD8-43AF-B575-167DBF710759}

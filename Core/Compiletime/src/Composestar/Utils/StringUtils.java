@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class StringUtils
+public final class StringUtils
 {
 	/**
 	 * Public constructor needed because this class is serialized into the

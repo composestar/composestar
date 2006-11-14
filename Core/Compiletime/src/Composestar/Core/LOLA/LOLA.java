@@ -349,13 +349,13 @@ public abstract class LOLA implements CTCommonModule
 		{
 			// check TYM information
 			PredicateSelector predSel = (PredicateSelector) predicateIterStep3.next();
-			lola.addComparableObjects(predSel.getTYMInfo());
+			lola.addComparableObjects(predSel.getTymInfo());
 			comparator.clearComparisons();
 			if (!comparator.compare(currentTYM, historyTYM))
 			{
 				toBeMoved.add(predSel);
 			}
-			lola.removeComparableObjects(predSel.getTYMInfo());
+			lola.removeComparableObjects(predSel.getTymInfo());
 		}
 		moveSelectors(toBeMoved, toBeSkipped, toBeProcessed);
 		step3.stop();

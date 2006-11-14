@@ -625,7 +625,7 @@ public class DoResolve
 						for (Iterator fmit = cpsconcern.getFilterModuleIterator(); fmit.hasNext() && !found;)
 						{
 							FilterModule fm = (FilterModule) fmit.next();
-							if (fm.getFm_ast().getName().compareTo(ref.getFilterModule()) == 0)
+							if (fm.getFmAst().getName().compareTo(ref.getFilterModule()) == 0)
 							{
 								// ok, found
 								// now see if an internal matches

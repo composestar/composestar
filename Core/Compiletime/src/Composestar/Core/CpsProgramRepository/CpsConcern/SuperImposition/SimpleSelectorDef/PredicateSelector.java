@@ -58,7 +58,7 @@ public class PredicateSelector extends SimpleSelExpression
 
 	boolean toBeCheckedByINCRE; // whether INCRE needs to check this
 
-	HashMap TYMInfo; // contains TYM information extracted while executing
+	HashMap tymInfo; // contains TYM information extracted while executing
 
 	// query
 
@@ -66,17 +66,17 @@ public class PredicateSelector extends SimpleSelExpression
 
 	// executing query
 
-	public PredicateSelector(String outputVar, String query)
+	public PredicateSelector(String inOutputVar, String inQuery)
 	{
 		super();
-		this.outputVar = outputVar;
-		this.query = query;
+		outputVar = inOutputVar;
+		query = inQuery;
 		selectedUnitRefs = new Vector();
 		selectedUnits = new HashSet();
 		toBeCheckedByINCRE = false;
-		TYMInfo = new HashMap();
+		tymInfo = new HashMap();
 		annotations = new HashSet();
-		Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating a predicate selector(" + outputVar + ", " + query + ')');
+		Debug.out(Debug.MODE_DEBUG, "LOLA", "Creating a predicate selector(" + inOutputVar + ", " + inQuery + ')');
 	}
 
 	public PredicateSelector()
@@ -161,11 +161,11 @@ public class PredicateSelector extends SimpleSelExpression
 	}
 
 	/**
-	 * @param outputVar The outputVar to set.
+	 * @param inOutputVar The outputVar to set.
 	 */
-	public void setOutputVar(String outputVar)
+	public void setOutputVar(String inOutputVar)
 	{
-		this.outputVar = outputVar;
+		outputVar = inOutputVar;
 	}
 
 	/**
@@ -178,11 +178,11 @@ public class PredicateSelector extends SimpleSelExpression
 
 	/**
 	 * @param predicate The query to set.
-	 * @param query
+	 * @param inQuery
 	 */
-	public void setQuery(String query)
+	public void setQuery(String inQuery)
 	{
-		this.query = query;
+		query = inQuery;
 	}
 
 	/**
@@ -208,9 +208,9 @@ public class PredicateSelector extends SimpleSelExpression
 		return this.toBeCheckedByINCRE;
 	}
 
-	public HashMap getTYMInfo()
+	public HashMap getTymInfo()
 	{
-		return this.TYMInfo;
+		return this.tymInfo;
 	}
 
 	public HashSet getAnnotations()
@@ -219,17 +219,17 @@ public class PredicateSelector extends SimpleSelExpression
 	}
 
 	/**
-	 * @param Goal - a predicate to be evaluated (containing answerVar as an
+	 * @param goal - a predicate to be evaluated (containing answerVar as an
 	 *            unbound variable)
 	 * @param answerVar - the result variable that you're interested in, should
 	 *            become bound to JavaObject(s)!
 	 * @return A vector of values found for the answerVar (containing the real
 	 *         java Objects, e.g. dereferenced JavaObjects)
 	 */
-	private Vector evaluateGoal(Clause Goal, String answerVar) throws ModuleException
+	private Vector evaluateGoal(Clause goal, String answerVar) throws ModuleException
 	{
-		Clause NamedGoal = Goal.cnumbervars(false);
-		Term Names = NamedGoal.getHead();
+		Clause namedGoal = goal.cnumbervars(false);
+		Term names = namedGoal.getHead();
 		Vector answers = new Vector();
 		int answerVarPos = -1;
 
@@ -237,11 +237,11 @@ public class PredicateSelector extends SimpleSelExpression
 		// expression
 		// Names should be a prolog Term containing a list of the variables that
 		// occur in Goal
-		if (Names instanceof Fun)
+		if (names instanceof Fun)
 		{
-			for (int j = 0; j < Names.getArity(); j++)
+			for (int j = 0; j < names.getArity(); j++)
 			{
-				if (answerVar.equals(((Fun) Names).getArg(j).toString()))
+				if (answerVar.equals(((Fun) names).getArg(j).toString()))
 				{ // We found our answervariable, which is cool
 					answerVarPos = j;
 					break;
@@ -254,7 +254,7 @@ public class PredicateSelector extends SimpleSelExpression
 		// not convert the predicate into a clause because it contains a syntax
 		// error.
 		{
-			Term errorTerm = NamedGoal.getBody();
+			Term errorTerm = namedGoal.getBody();
 			if (errorTerm instanceof Fun)
 			{
 				Fun errorFun = (Fun) errorTerm;
@@ -281,9 +281,9 @@ public class PredicateSelector extends SimpleSelExpression
 
 		// Execute the prolog query and collect the results
 		toBeCheckedByINCRE = true; // a valid query at this point
-		Prog E = new Prog(Goal, null);
+		Prog e = new Prog(goal, null);
 
-		Term r = Prog.ask_engine(E);
+		Term r = Prog.ask_engine(e);
 		while (r != null)
 		{ // While there are answers
 			Fun varBindings = (Fun) r.numbervars();
@@ -297,7 +297,7 @@ public class PredicateSelector extends SimpleSelExpression
 				Debug.out(Debug.MODE_ERROR, "LOLA", "Internal error: Query should, but did not return a java object!",
 						this);
 			}
-			r = Prog.ask_engine(E);
+			r = Prog.ask_engine(e);
 		}
 
 		if (answers.isEmpty())
@@ -305,8 +305,8 @@ public class PredicateSelector extends SimpleSelExpression
 			toBeCheckedByINCRE = false; // no answers, do not skip this selector
 		}
 
-		if (answers.size() >= 50000) // Arbitrary number...what would be
-		// reasonable to expect?
+		// TODO:Arbitrary number...what would be reasonable to expect?
+		if (answers.size() >= 50000)
 		{
 			Debug.out(Debug.MODE_WARNING, "LOLA",
 					"Over 50k results; maybe this prolog expression generates infinite results:\n" + query, this);
@@ -319,7 +319,7 @@ public class PredicateSelector extends SimpleSelExpression
 
 		// look at current type info and search for relations.
 		// Correct the 'dead links' to those relations
-		Iterator typesItr = TYMInfo.keySet().iterator();
+		Iterator typesItr = tymInfo.keySet().iterator();
 		try
 		{
 			String classType = ComposestarBuiltins.currentLangModel.getLanguageUnitType("Class").getImplementingClass()
@@ -383,13 +383,13 @@ public class PredicateSelector extends SimpleSelExpression
 	{
 
 		HashMap list = new HashMap();
-		if (this.TYMInfo.containsKey(key))
+		if (this.tymInfo.containsKey(key))
 		{
-			list = (HashMap) TYMInfo.get(key);
+			list = (HashMap) tymInfo.get(key);
 		}
 
 		list.put(method.getReference(), method);
-		this.TYMInfo.put(key, list);
+		this.tymInfo.put(key, list);
 	}
 
 	/**

@@ -17,7 +17,7 @@ import java.io.Writer;
  * Contains utility methods that have to do with file handling; e.g. converting
  * backslashes in filenames to slashes
  */
-public class FileUtils
+public final class FileUtils
 {
 	private FileUtils()
 	{}
@@ -110,7 +110,14 @@ public class FileUtils
 	public static boolean deleteIfExists(String filename)
 	{
 		File f = new File(filename);
-		return f.exists() ? f.delete() : true;
+		if (f.exists())
+		{
+			return f.delete();
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	public static void copyFile(String dest, String source) throws IOException
@@ -145,7 +152,14 @@ public class FileUtils
 		}
 
 		int lastdot = filename.lastIndexOf('.');
-		return lastdot == -1 ? filename : filename.substring(0, lastdot);
+		if (lastdot == -1)
+		{
+			return filename;
+		}
+		else
+		{
+			return filename.substring(0, lastdot);
+		}
 	}
 
 	public static String replaceExtension(String filename, String newext)
@@ -160,7 +174,7 @@ public class FileUtils
 			throw new IllegalArgumentException("newext can not be null");
 		}
 
-		StringBuffer sb = new StringBuffer(filename.length() + 16);
+		StringBuffer sb = new StringBuffer(filename.length() + newext.length());
 		sb.append(removeExtension(filename));
 		if (!newext.startsWith("."))
 		{

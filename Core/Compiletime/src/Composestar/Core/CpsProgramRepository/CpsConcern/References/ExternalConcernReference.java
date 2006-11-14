@@ -22,23 +22,23 @@ public class ExternalConcernReference extends ConcernReference
 
 	public String initselector = "";
 
-	public void setInitTarget(String inittarget)
+	public void setInitTarget(String inIinittarget)
 	{
-		this.inittarget = inittarget;
+		inittarget = inIinittarget;
 	}
 
 	public String getInitTarget()
 	{
-		return this.inittarget;
+		return inittarget;
 	}
 
-	public void setInitSelector(String initselector)
+	public void setInitSelector(String inInitselector)
 	{
-		this.initselector = initselector;
+		initselector = inInitselector;
 	}
 
 	public String getInitSelector()
 	{
-		return this.initselector;
+		return initselector;
 	}
 }

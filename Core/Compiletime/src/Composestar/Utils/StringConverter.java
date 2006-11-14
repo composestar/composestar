@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-public class StringConverter
+public final class StringConverter
 {
 	private StringConverter()
 	{}

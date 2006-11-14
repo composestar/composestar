@@ -19,13 +19,13 @@ public abstract class PlatformRepresentation implements SerializableRepositoryEn
 {
 	private Concern parent;
 
-	public void setParentConcern(Concern parent)
+	public void setParentConcern(Concern inParent)
 	{
-		this.parent = parent;
+		parent = inParent;
 	}
 
 	public Concern getParentConcern()
 	{
-		return this.parent;
+		return parent;
 	}
 }

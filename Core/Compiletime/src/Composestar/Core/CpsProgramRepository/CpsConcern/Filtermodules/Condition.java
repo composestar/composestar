@@ -48,9 +48,9 @@ public class Condition extends DeclaredRepositoryEntity
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(String inname)
 	{
-		this.name = name;
+		name = inname;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class Condition extends DeclaredRepositoryEntity
 	 */
 	public void setOCL(BooleanOclExpression inocl)
 	{
-		this.ocl = inocl;
+		ocl = inocl;
 	}
 
 	public Reference getShortref()
@@ -79,14 +79,14 @@ public class Condition extends DeclaredRepositoryEntity
 		return shortref;
 	}
 
-	public void setShortref(Reference shortref)
+	public void setShortref(Reference inshortref)
 	{
-		this.shortref = shortref;
+		shortref = inshortref;
 	}
 
-	public void setLongref(FilterModuleElementReference longref)
+	public void setLongref(FilterModuleElementReference inlongref)
 	{
-		this.longref = longref;
+		longref = inlongref;
 	}
 
 	public FilterModuleElementReference getLongref()

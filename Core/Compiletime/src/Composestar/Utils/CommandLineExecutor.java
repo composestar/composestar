@@ -134,7 +134,14 @@ public class CommandLineExecutor
 	 */
 	public String outputNormal()
 	{
-		return outputGobbler == null ? null : outputGobbler.result();
+		if (outputGobbler == null)
+		{
+			return null;
+		}
+		else
+		{
+			return outputGobbler.result();
+		}
 	}
 
 	/**
@@ -142,13 +149,20 @@ public class CommandLineExecutor
 	 */
 	public String outputError()
 	{
-		return errorGobbler == null ? null : errorGobbler.result();
+		if (errorGobbler == null)
+		{
+			return null;
+		}
+		else
+		{
+			return errorGobbler.result();
+		}
 	}
 
 	/**
 	 * For testing purposes
 	 */
-	public static void main(String args[])
+	public static void main(String[] args)
 	{
 		CommandLineExecutor e = new CommandLineExecutor();
 		e.exec(args);

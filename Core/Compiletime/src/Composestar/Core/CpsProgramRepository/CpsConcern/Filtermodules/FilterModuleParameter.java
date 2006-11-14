@@ -11,7 +11,7 @@ public class FilterModuleParameter extends DeclaredRepositoryEntity
 
 	public Object value;
 
-	public FilterModuleParameterAST fmp_ast;
+	public FilterModuleParameterAST fmpAst;
 
 	public int uniqueNumber;
 
@@ -24,8 +24,8 @@ public class FilterModuleParameter extends DeclaredRepositoryEntity
 	public FilterModuleParameter(FilterModuleParameterAST fmp, Object aValue, int number)
 	{
 		super();
-		fmp_ast = fmp;
-		name = fmp_ast.getName();
+		fmpAst = fmp;
+		name = fmpAst.getName();
 		value = ((FilterModuleParameter) aValue).getValue();
 		uniqueNumber = number;
 	}
@@ -45,8 +45,8 @@ public class FilterModuleParameter extends DeclaredRepositoryEntity
 		return uniqueNumber;
 	}
 
-	public void setUniqueNumber(int uniqueNumber)
+	public void setUniqueNumber(int inUniqueNumber)
 	{
-		this.uniqueNumber = uniqueNumber;
+		uniqueNumber = inUniqueNumber;
 	}
 }

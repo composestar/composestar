@@ -180,12 +180,12 @@ public class Signature implements SerializableRepositoryEntity
 	public boolean hasMethod(MethodInfo dnmi)
 	{
 		String key = getHashKey(dnmi);
-		return (methodByKey.containsKey(key));
+		return methodByKey.containsKey(key);
 	}
 
 	public boolean hasMethod(String methodName)
 	{
-		return (methodByName.containsKey(methodName));
+		return methodByName.containsKey(methodName);
 	}
 
 	public int getMethodStatus(String name)
@@ -222,9 +222,9 @@ public class Signature implements SerializableRepositoryEntity
 		return key;
 	}
 
-	public void setStatus(int _status)
+	public void setStatus(int instatus)
 	{
-		status = _status;
+		status = instatus;
 	}
 
 	public int getStatus()

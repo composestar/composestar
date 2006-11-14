@@ -29,7 +29,7 @@ public class Internal extends TypedDeclaration
 
 	public Vector valueExpressions;
 
-	public InternalAST internal_ast;
+	public InternalAST internalAst;
 
 	/**
 	 * @modelguid {5C63E872-AABD-4585-89FE-4B87E692DB03}
@@ -45,8 +45,8 @@ public class Internal extends TypedDeclaration
 	{
 		super();
 		valueExpressions = new Vector();
-		internal_ast = parentInternal;
-		name = internal_ast.getName();
+		internalAst = parentInternal;
+		name = internalAst.getName();
 		type = parentInternal.getType();
 	}
 
@@ -60,7 +60,7 @@ public class Internal extends TypedDeclaration
 	 */
 	public boolean addValueExpression(ValueExpression valexp)
 	{
-		return internal_ast.addValueExpression(valexp);
+		return internalAst.addValueExpression(valexp);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class Internal extends TypedDeclaration
 	 */
 	public ValueExpression removeValueExpression(int index)
 	{
-		return internal_ast.removeValueExpression(index);
+		return internalAst.removeValueExpression(index);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class Internal extends TypedDeclaration
 	 */
 	public ValueExpression getValueExpression(int index)
 	{
-		return internal_ast.getValueExpression(index);
+		return internalAst.getValueExpression(index);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Internal extends TypedDeclaration
 	 */
 	public Iterator getValueExpressionIterator()
 	{
-		return internal_ast.getValueExpressionIterator();
+		return internalAst.getValueExpressionIterator();
 	}
 
 	public ConcernReference getType()
@@ -114,42 +114,42 @@ public class Internal extends TypedDeclaration
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		return internal_ast.clone();
+		return internalAst.clone();
 	}
 
 	public int getDescriptionLineNumber()
 	{
-		return internal_ast.getDescriptionLineNumber();
+		return internalAst.getDescriptionLineNumber();
 	}
 
 	public void setDescriptionLineNumber(int newLineNumber)
 	{
-		internal_ast.setDescriptionLineNumber(newLineNumber);
+		internalAst.setDescriptionLineNumber(newLineNumber);
 	}
 
 	public String getDescriptionFileName()
 	{
-		return internal_ast.getDescriptionFileName();
+		return internalAst.getDescriptionFileName();
 	}
 
 	public void setDescriptionFileName(String newFileName)
 	{
-		internal_ast.setDescriptionFileName(newFileName);
+		internalAst.setDescriptionFileName(newFileName);
 	}
 
 	public void addDynObject(String key, Object obj)
 	{
-		internal_ast.addDynObject(key, obj);
+		internalAst.addDynObject(key, obj);
 	}
 
 	public Object getDynObject(String key)
 	{
-		return internal_ast.getDynObject(key);
+		return internalAst.getDynObject(key);
 	}
 
 	public Iterator getDynIterator()
 	{
-		return internal_ast.getDynIterator();
+		return internalAst.getDynIterator();
 	}
 
 	public String getName()

@@ -7,6 +7,9 @@ import java.util.Properties;
 
 import Composestar.Core.RepositoryImplementation.DataStore;
 
+/**
+ * @deprecated
+ */
 public class PropertyManager implements Cloneable, Serializable
 {
 	static final long serialVersionUID = 4343139487235166396L;
@@ -18,36 +21,36 @@ public class PropertyManager implements Cloneable, Serializable
 	/**
 	 * Creates a new PropertyManager with the given filename.
 	 * 
-	 * @param ds DataStore The repository
-	 * @param filename String The name of the file
+	 * @param inds DataStore The repository
+	 * @param infilename String The name of the file
 	 * @roseuid 404DCD010103
 	 */
-	public PropertyManager(DataStore ds, String filename)
+	public PropertyManager(DataStore inds, String infilename)
 	{
-		this.ds = ds;
-		this.filename = filename;
+		ds = inds;
+		filename = infilename;
 	}
 
 	/**
 	 * Creates a new PropertyManager with the default filename.
 	 * 
-	 * @param ds DataStore The repository
+	 * @param inds DataStore The repository
 	 * @roseuid 404DCD0100D4
 	 */
-	public PropertyManager(DataStore ds)
+	public PropertyManager(DataStore inds)
 	{
-		this.ds = ds;
+		ds = inds;
 	}
 
 	/**
 	 * Sets the filename to the given filename.
 	 * 
-	 * @param filename String The name of the file
+	 * @param infilename String The name of the file
 	 * @roseuid 404DCD010151
 	 */
-	public void setFilename(String filename)
+	public void setFilename(String infilename)
 	{
-		this.filename = filename;
+		filename = infilename;
 	}
 
 	/**
@@ -58,7 +61,7 @@ public class PropertyManager implements Cloneable, Serializable
 	 */
 	public String getFilename()
 	{
-		return this.filename;
+		return filename;
 	}
 
 	/**
@@ -69,7 +72,7 @@ public class PropertyManager implements Cloneable, Serializable
 	 */
 	public void load()
 	{
-		this.load("config", this.filename);
+		load("config", filename);
 	}
 
 	/**
@@ -77,16 +80,16 @@ public class PropertyManager implements Cloneable, Serializable
 	 * 
 	 * @param keyname String The name of the key used to store this in the
 	 *            repository.
-	 * @param filename String The file to load from.
+	 * @param infilename String The file to load from.
 	 * @param keyname
 	 * @roseuid 404DCD0101DD
 	 */
-	public void load(String keyname, String filename)
+	public void load(String keyname, String infilename)
 	{
 		try
 		{
 			Properties props = new Properties();
-			props.load(new FileInputStream(filename));
+			props.load(new FileInputStream(infilename));
 			ds.addObject(keyname, props);
 		}
 		catch (Exception e)
@@ -104,22 +107,22 @@ public class PropertyManager implements Cloneable, Serializable
 	 */
 	public void store(Properties properties, String header)
 	{
-		this.store(properties, this.filename, header);
+		store(properties, this.filename, header);
 	}
 
 	/**
 	 * Stores the properties in the given filename.
 	 * 
 	 * @param properties Properties The properties to store.
-	 * @param filename String The file to store the info.
+	 * @param infilename String The file to store the info.
 	 * @param header String The header of file to store to.
 	 * @roseuid 404DCD010299
 	 */
-	public void store(Properties properties, String filename, String header)
+	public void store(Properties properties, String infilename, String header)
 	{
 		try
 		{
-			properties.store(new FileOutputStream(filename), header);
+			properties.store(new FileOutputStream(infilename), header);
 		}
 		catch (Exception e)
 		{

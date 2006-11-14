@@ -300,7 +300,7 @@ public class FireModel
 				else
 				{
 					MethodWrapper wrapper = signature.getMethodWrapper(matchMethodInfo);
-					if (wrapper.RelationType == MethodWrapper.UNKNOWN)
+					if (wrapper.relationType == MethodWrapper.UNKNOWN)
 					{
 						return SIGNATURE_MATCH_UNKNOWN;
 					}

@@ -29,10 +29,11 @@ public class Action implements Parameter
 
 	protected LinkedList rules = new LinkedList();
 
-	public Action(String inname, Boolean inrvalue, boolean present)
+	public Action(String inname, Boolean inrvalue, boolean inpresent)
 	{
 		name = inname;
 		rvalue = inrvalue;
+		present = inpresent;
 		if (present)
 		{
 			this.setExecutable(true);

@@ -9,7 +9,7 @@ import Composestar.Core.RepositoryImplementation.RepositoryEntity;
 /**
  * Summary description for Debug.
  */
-public class Debug
+public final class Debug
 {
 	public static final int MODE_ERROR = 0;
 
@@ -25,7 +25,7 @@ public class Debug
 
 	private static int currentMode = MODE_DEFAULTMODE;
 
-	private static int warnings = 0;
+	private static int warnings;
 
 	/**
 	 * Public constructor needed because this class is serialized into the

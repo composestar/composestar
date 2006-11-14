@@ -22,9 +22,9 @@ public class ParameterizedMessageSelectorAST extends MessageSelectorAST
 		return parameter;
 	}
 
-	public void setParameter(String parameter)
+	public void setParameter(String inParameter)
 	{
-		this.parameter = parameter;
+		parameter = inParameter;
 	}
 
 	public boolean isList()
