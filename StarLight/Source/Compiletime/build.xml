@@ -13,6 +13,9 @@
 	<echo>Processing: ${ant.project.name} ...</echo>	
 	<description>The Compose* StarLight Compiletime</description>
 
+	<!-- default path to xsd.exe (can be overridden in build.ini) -->
+	<property name="xsd.exe" value="xsd.exe"/>
+
 	<!-- clean -->
 
 	<target name="clean" depends="init" description="clean the compilation results">
@@ -54,7 +57,7 @@
 	
 	<target name="create_xsd">
 		<msbuild solution="..\StarLightEntities\StarLightEntities.csproj" target="build" config="${msbuild.config}"/>
-		<exec executable="Source\Compiletime\xsd.exe" dir="..\StarLightEntities\bin\debug">
+		<exec executable="${xsd.exe}" dir="..\StarLightEntities\bin\debug">
 			<arg line="Composestar.StarLight.Entities.dll"/>
 			<arg line="/outputdir:../../obj"/>
 		</exec>
@@ -65,7 +68,7 @@
 		<path id="lib.xmlbeans">
 			<pathelement path="../../Libraries/xmlbeans/xbean.jar"/>
 			<pathelement path="../../Libraries/xmlbeans/jsr173_1.0_api.jar"/>
-		</path>		
+		</path>
 
 		<taskdef name="xmlbean"
 		         classname="org.apache.xmlbeans.impl.tool.XMLBean"
