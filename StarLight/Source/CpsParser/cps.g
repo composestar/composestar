@@ -1,10 +1,22 @@
+///////////////////////////////////////////////////////////////////////////
+// Parser for Cps files
+///////////////////////////////////////////////////////////////////////////
+
 header {
-
+/*
+ * This file is part of Composestar project [http://composestar.sf.net].
+ * Copyright (C) 2003 University of Twente.
+ *
+ * Licensed under LGPL v2.1 or (at your option) any later version.
+ * [http://www.fsf.org/copyleft/lgpl.html]
+ *
+ * $Id$
+ */
 }
-options {
-    language  = "CSharp";
-    namespace = "Composestar.CpsParser";          // encapsulate code in this namespace
 
+options {
+        language  = "CSharp";
+        namespace = "Composestar.CpsParser";
 }
 
 class CpsParser extends Parser;
