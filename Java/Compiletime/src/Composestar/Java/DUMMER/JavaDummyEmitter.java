@@ -43,6 +43,8 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 	private ArrayList packages = new ArrayList();
 
 	private boolean packageDefinition = false;
+	
+	private ASTFactory factory = new ASTFactory();
 
 	/**
 	 * Constructor
@@ -156,6 +158,32 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 		tabs--;
 		out("}");
 	}
+
+	/** 
+	* Returns a copy of an AST without nodes that have the specified text. 
+	*/ 
+	private AST filterChildren(AST ast, String remove) 
+	{ 
+		if (ast == null) 
+		throw new IllegalArgumentException("ast cannot be null"); 
+	
+	    if (remove == null) 
+	    throw new IllegalArgumentException("remove cannot be null"); 
+	    
+	    AST result = factory.create(ast.getType(), ast.getText()); 
+	    AST child = ast.getFirstChild(); 
+	    while (child != null) 
+	    { 
+	    	String text = child.getText(); 
+	        if (! remove.equals(text)) 
+	        { 
+	        	AST clone = factory.create(child); 
+	            result.addChild(clone); 
+	        } 
+	        child = child.getNextSibling(); 
+	    } 
+	    return result; 
+	} 
 
 	/**
 	 * Find a child of the given AST that has the given type.
@@ -740,11 +768,20 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				break;
 
 			case VARIABLE_DEF:
-				visit(getChild(ast, MODIFIERS));
+				AST assign = getChild(ast, ASSIGN); 
+				AST mods = getChild(ast, MODIFIERS); 
+				
+				// remove the final modifier from uninitialized variable declarations 
+				if (assign == null) 
+				{ 
+				mods = filterChildren(mods, "final"); 
+				} 
+				
+				visit(mods); 
 				visit(getChild(ast, TYPE));
 				out(" ");
 				visit(getChild(ast, IDENT));
-				visit(getChild(ast, ASSIGN));
+				visit(assign);
 				printSemi(parent);
 				if (parent != null && parent.getType() == OBJBLOCK)
 				{
@@ -883,7 +920,7 @@ public class JavaDummyEmitter extends DefaultEmitter implements DummyEmitter, Ja
 				// skip TYPE_ARGS
 				visit(child2);
 				if (child3.getType() != ARRAY_DECLARATOR) out("(");
-				visit(child3);
+				visit(getChild(ast,ELIST));
 				if (child3.getType() != ARRAY_DECLARATOR) out(")");
 				break;
 
