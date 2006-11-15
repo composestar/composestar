@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet">
 
 	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
@@ -120,7 +120,7 @@
 		<xslt in="${out.qa.starlight}/checkstyle-result.xml" out="${out.qa.starlight}/checkstyle-result.html" style="${checkstyle.style}" />
 	</target>
 
-	<target name="build_codeanalysis" description="Build .net projects for code analysis">
+	<target name="build_codeanalysis" depends="init" description="Build .net projects for code analysis">
 		<msbuild solution="${MSBuildTasks.dir}/StarLight.MSBuild.Tasks.csproj" target="build" config="Debug" />
 	</target>
 
