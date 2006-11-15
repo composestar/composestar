@@ -42,7 +42,7 @@ namespace CustomFilters
                     {
                         if (argumentInfo.Value == null)
                         {
-                            TraceBuffer.WriteLine("  argument {0} (out) -> {1} = null", i, context.GetArgumentType(i));
+                            TraceBuffer.WriteLine("  argument {0} (out) -> {1} = null", i, context.GetArgumentValue(i).GetType().FullName);
                             continue;
                         }
 
@@ -54,7 +54,7 @@ namespace CustomFilters
                         catch(Exception){
                             argvalue = "<exception>";
                         }
-                        TraceBuffer.WriteLine("  argument {0} (out) -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue);
+                        TraceBuffer.WriteLine("  argument {0} (out) -> {1} = {2}", i, context.GetArgumentValue(i).GetType().FullName, argvalue);
                     }
                 }
             }

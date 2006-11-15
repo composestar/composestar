@@ -46,7 +46,7 @@ namespace CustomFilters
                     
                     if (argumentInfo.Value == null)
                     {
-                        TraceBuffer.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentType(i), argdirection);
+                        TraceBuffer.WriteLine("  argument {0} ({2}) -> {1} = null", i, context.GetArgumentValue(i), argdirection);
                         continue;
                     }
                     String argvalue;
@@ -58,7 +58,7 @@ namespace CustomFilters
                     {
                         argvalue = "<exception>";
                     }
-                    TraceBuffer.WriteLine("  argument {0} ({3}) -> {1} = {2}", i, context.GetArgumentType(i).FullName, argvalue, argdirection);
+                    TraceBuffer.WriteLine("  argument {0} ({3}) -> {1} = {2}", i, context.GetArgumentValue(i).GetType().FullName, argvalue, argdirection);
                 }
             }
 

@@ -69,10 +69,10 @@ namespace CustomFilters
             {
                 for (short i = 1; i <= context.ArgumentCount; i++)
                 {
-                    if (context.GetArgumentType(i) != null)
+                    if (context.GetArgumentValue(i) != null)
                     {
                         if (args != "") args = args + ",";
-                        args = args + context.GetArgumentType(i).GetType().FullName;
+                        args = args + context.GetArgumentValue(i).GetType().FullName;
                     }
                 }
             }

@@ -202,7 +202,6 @@ namespace Composestar.StarLight.Utilities
                             new Type[] { 
                             typeof(object), 
                             typeof(Int16), 
-                            typeof(System.Type), 
                             typeof(ArgumentAttributes),
                             typeof(JoinPointContext) 
                         }));
