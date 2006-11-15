@@ -115,7 +115,8 @@
 		<!-- wait 5 minutes after the last commit before continuing -->
 		<modificationset quietperiod="300">			
 			<!-- note: svn action needs svn commandline client in the path  -->
-			<svn LocalWorkingCopy="${starlight.path}" property="composestar.modified" />
+			<svn LocalWorkingCopy="${starlight.path}\Core" property="composestar.modified" />
+			<svn LocalWorkingCopy="${starlight.path}\Starlight" property="composestar.modified" />
 		</modificationset>
 		
 		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
