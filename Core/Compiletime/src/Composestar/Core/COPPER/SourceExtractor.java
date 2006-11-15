@@ -9,6 +9,7 @@
  */
 package Composestar.Core.COPPER;
 
+import Composestar.Core.Exception.ModuleException;
 import Composestar.Utils.Debug;
 
 /**
@@ -16,44 +17,30 @@ import Composestar.Utils.Debug;
  */
 public class SourceExtractor
 {
+	public static final String MODULE_NAME = "COPPER";
 
-	public void extractSource()
+	public void extractSource() throws ModuleException
 	{
 		if (COPPER.getParser().sourceIncluded)
 		{
 			String b = COPPER.getCpscontents();
-			int endpos = b.lastIndexOf('}'); // Closing tag cps
+
+			// find second-last index of '}'
+			int endpos = b.lastIndexOf('}'); // Closing tag of concern
 			if (endpos > 0)
 			{
-				endpos = b.lastIndexOf('}', endpos - 1); // Closing tag
-				// implementation by
+				endpos = b.lastIndexOf('}', endpos - 1); // Closing tag of implementation by
 			}
+
 			if (endpos <= 0)
 			{
-				Debug.out(Debug.MODE_WARNING, "COPPER",
-						"Expecting closing '}' at end of cps file and after embedded source");
-				Debug.out(Debug.MODE_WARNING, "COPPER", "Ignoring embedded source");
-				return;
+				throw new ModuleException("Expecting closing '}' at end of cps file and after embedded source", MODULE_NAME);
 			}
-			COPPER.setEmbeddedSource(b.substring(COPPER.getParser().startPos, endpos));
-			Debug.out(Debug.MODE_DEBUG, "COPPER", COPPER.getEmbeddedSource());
+
+			String es = b.substring(COPPER.getParser().startPos, endpos);
+			COPPER.setEmbeddedSource(es);
+			
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, es);
 		}
 	}
-
-	/**
-	 * Gets the position of where the embedded source ends. This is done by
-	 * reversing the cps file and using a special parser to find 'the beginning
-	 * of the end'. The starting position is already known from the regular
-	 * parsing.
-	 */
-	/*
-	 * private int getEndPos(String b) { CpsSrcPosLexer srclexer; CpsSrcParser
-	 * srcparser; try { // We are parsing backwards so reverse! b.reverse(); //
-	 * Create parser and lexer srclexer = new CpsSrcPosLexer(new
-	 * StringReader(b.toString())); srcparser = new CpsSrcParser(srclexer); //
-	 * Start parsing with the src method srcparser.src(); // Reversed code is
-	 * not so nice, so reverse it back :) b.reverse(); return
-	 * (srcparser.endPos); } catch (ANTLRException e) { e.printStackTrace();
-	 * return (-1); } return b.lastIndexOf("}"); }
-	 */
 }

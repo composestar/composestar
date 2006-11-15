@@ -85,7 +85,6 @@ tokens {
     public int startPos = 0;                      //starting position of embedded source (in bytes)
     public String sourceLang = null;              //source language
     public String sourceFile = null;              //source filename
-    public int skipsize = 0;                      //how much to skip at the end when using an embedded implementation
 }
 
 concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"! namespace)? concernBlock;

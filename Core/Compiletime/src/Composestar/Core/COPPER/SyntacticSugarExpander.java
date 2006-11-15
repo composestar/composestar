@@ -30,41 +30,6 @@ import Composestar.Utils.StringConverter;
  */
 public class SyntacticSugarExpander
 {
-	AstManipulator am;
-
-	/*
-	 * deprecated private void AddDefault() { String concernName; String fmName;
-	 * concernName = am.getValue("concern\\@0"); fmName = concernName +
-	 * "_interface"; am.add("concern\\filtermodule\\" + fmName);
-	 * am.add("concern\\filtermodule\\inputfilters\\inputfilter\\disp");
-	 * am.add("concern\\filtermodule\\inputfilters\\inputfilter\\type\\Dispatch");
-	 * am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\[");
-	 * //name matching //fixme: should be signature!
-	 * am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\selector\\inner");
-	 * am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\target\\*");
-	 * am.add("concern\\filtermodule\\inputfilters\\inputfilter\\;"); //si on
-	 * self toevoegen
-	 * am.add("concern\\superimposition\\filtermodules\\filtermodule@lastnew\\self");
-	 * //maak een nieuwe
-	 * am.add("concern\\superimposition\\filtermodules\\filtermodule@last\\filtermodule
-	 * set\\filtermodule element\\" + fmName); //fmname staat nu al goed }
-	 */
-
-	/*
-	 * deprecated private void ExpandOnSelf() { String fmName; boolean check =
-	 * true; int i = 0; while(check) { check =
-	 * am.checkifExists("concern\\filtermodule@" + i); if (!check) break; fmName =
-	 * am.getValue("concern\\filtermodule@" + i + "\\@0"); //get the name check =
-	 * am.checkifExists("concern\\filtermodule@" + i + "\\@1"); if (!check)
-	 * break; //fixme: don't show error msg if
-	 * ("on".equals(am.getValue("concern\\filtermodule@" + i + "\\@1"))) { //we
-	 * have "on self"
-	 * am.add("concern\\superimposition\\filtermodule@lastnew\\self"); //maak
-	 * een nieuwe
-	 * am.add("concern\\superimposition\\filtermodule@last\\filtermodule
-	 * set\\filtermodule element\\" + fmName); } i++; } }
-	 */
-
 	/**
 	 * Starts expanding
 	 */
@@ -72,25 +37,7 @@ public class SyntacticSugarExpander
 	{
 		resolveEmptySuperImposition();
 		addVoidOperator();
-
-		/*
-		 * ASTFrame frame; am = new AstManipulator();
-		 * am.attach(COPPER.getParseTree()); // ExpandOnSelf(); //fixme: add
-		 * checks to make sure this is not inserted unneccesary // AddDefault(); //
-		 * AddSelfReference(); if (COPPER.isShowtree()) { frame = new
-		 * ASTFrame("The tree (Syntactic Sugar)", COPPER.getParseTree());
-		 * frame.setSize(800, 600); frame.setVisible(true); }
-		 */
 	}
-
-	/*
-	 * deprecated private void AddSelfReference() { String concernName;
-	 * concernName = am.getValue("concern\\@0");
-	 * am.add("concern\\superimposition\\selectors\\selector@lastnew\\self");
-	 * am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\=");
-	 * am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\" +
-	 * concernName); }
-	 */
 
 	public void resolveEmptySuperImposition()
 	{
@@ -196,4 +143,53 @@ public class SyntacticSugarExpander
 			}
 		}
 	}
+
+//	private AstManipulator am;
+
+//	private void AddDefault()
+//	{
+//		String concernName;
+//		String fmName;
+//		concernName = am.getValue("concern\\@0");
+//		fmName = concernName + "_interface";
+//		am.add("concern\\filtermodule\\" + fmName);
+//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\disp");
+//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\type\\Dispatch");
+//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\[");
+//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\selector\\inner");
+//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\filterelements\\filterelement\\objectset\\object\\target\\*");
+//		am.add("concern\\filtermodule\\inputfilters\\inputfilter\\;");
+//		am.add("concern\\superimposition\\filtermodules\\filtermodule@lastnew\\self");
+//		am.add("concern\\superimposition\\filtermodules\\filtermodule@last\\filtermoduleset\\filtermodule element\\" + fmName);
+//	}
+
+//	private void ExpandOnSelf()
+//	{
+//		String fmName;
+//		boolean check = true;
+//		int i = 0;
+//		while (check)
+//		{
+//			check = am.checkifExists("concern\\filtermodule@" + i);
+//			if (!check) break;
+//			fmName = am.getValue("concern\\filtermodule@" + i + "\\@0");
+//			check = am.checkifExists("concern\\filtermodule@" + i + "\\@1");
+//			if (!check) break;
+//			if ("on".equals(am.getValue("concern\\filtermodule@" + i + "\\@1")))
+//			{
+//				am.add("concern\\superimposition\\filtermodule@lastnew\\self");
+//				am.add("concern\\superimposition\\filtermodule@last\\filtermoduleset\\filtermodule element\\" + fmName);
+//			}
+//			i++;
+//		}
+//	}
+	 
+//	private void AddSelfReference()
+//	{
+//		String concernName;
+//		concernName = am.getValue("concern\\@0");
+//		am.add("concern\\superimposition\\selectors\\selector@lastnew\\self");
+//		am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\=");
+//		am.add("concern\\superimposition\\selectors\\selector@last\\selectorsexpression\\" + concernName);
+//	}
 }
