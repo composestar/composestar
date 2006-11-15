@@ -25,11 +25,12 @@ options {
         buildAST = true;
         exportVocab = Cps;
         k = 1;
-	ASTLabelType = "CpsAST";  
-	defaultErrorHandler = false;
+        ASTLabelType = "CpsAST";  
+        defaultErrorHandler = false;
 }
 
-tokens {                                //extra tokens used in constructing the tree
+//extra tokens used in constructing the tree
+tokens {
         ANDEXPR_;
         ANNOTELEM_;
         ANNOTSET_;
@@ -80,11 +81,11 @@ tokens {                                //extra tokens used in constructing the 
         PROLOG_EXPRESSION;
 }
 {
-  public boolean sourceIncluded = false;        //source included in Cps file?
-  public int startPos = 0;                      //starting position of embedded source (in bytes)
-  public String sourceLang = null;              //source language
-  public String sourceFile = null;              //source filename
-  public int skipsize = 0;                      //how much to skip at the end when using an embedded implementation
+    public boolean sourceIncluded = false;        //source included in Cps file?
+    public int startPos = 0;                      //starting position of embedded source (in bytes)
+    public String sourceLang = null;              //source language
+    public String sourceFile = null;              //source filename
+    public int skipsize = 0;                      //how much to skip at the end when using an embedded implementation
 }
 
 concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"! namespace)? concernBlock;
@@ -97,12 +98,12 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
 
   namespace : NAME (DOT! NAME)*;
 
-  concernBlock : LCURLY! (filterModule)* (superImposition)? concernEnd;   																																	
+  concernBlock : LCURLY! (filterModule)* (superImposition)? concernEnd;
 
 //don't bother parsing the closing end / curly if implementation is used
 //(because of possible embedded source code, which stops the parsing at that point)
   concernEnd : (implementation) => (implementation)
-                    | RCURLY!;
+             | RCURLY!;
 
   //////////////////////////////////////////////////////////////////////////
   filterModule : "filtermodule"^ NAME (filterModuleParameters)? LCURLY! (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)? RCURLY!;
@@ -139,29 +140,29 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
       externalReferance : EQUALS! concernReference LPARENTHESIS! RPARENTHESIS!;
 
         //stuff that is reused in the definitions of references
-        fqnDCNameCName 	: NAME (DOT! NAME)* DOUBLE_COLON! NAME COLON! NAME;       //n.n.n.n::n:n
-        fqnDCName 	: NAME (DOT! NAME)* DOUBLE_COLON! NAME;                   //n.n.n::n
-        fqn 		: NAME (DOT! NAME)*;                                      //n.n.n Fully Qualified Name
-        nameCName 	: NAME COLON! NAME;                                       //n:n 
-        fqnDCNameCStar 	: NAME (DOT! NAME)* DOUBLE_COLON! NAME COLON! STAR;       //n.n.n.n::n:*
-        nameCStar 	: NAME COLON! STAR;                                       //n:*
+        fqnDCNameCName : NAME (DOT! NAME)* DOUBLE_COLON! NAME COLON! NAME;        //n.n.n.n::n:n
+        fqnDCName      : NAME (DOT! NAME)* DOUBLE_COLON! NAME;                    //n.n.n::n
+        fqn            : NAME (DOT! NAME)*;                                       //n.n.n Fully Qualified Name
+        nameCName      : NAME COLON! NAME;                                        //n:n 
+        fqnDCNameCStar : NAME (DOT! NAME)* DOUBLE_COLON! NAME COLON! STAR;        //n.n.n.n::n:*
+        nameCStar      : NAME COLON! STAR;                                        //n:*
 
 
         //real definitions
-        concernReference : fqn;                 																	//n.n.n
+        concernReference : fqn;                                                   //n.n.n
         concernElemReference : (((NAME|DOT)* DOUBLE_COLON) => fqnDCName           //n.n.n.n::n
                                 | NAME);                                          //n
 
         fmElemReference : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCName           //n.n.n.n::n:n
-                          |((NAME|DOT)* COLON) => nameCName                      	//n:n
+                          |((NAME|DOT)* COLON) => nameCName                       //n:n
                            | NAME);                                               //n  //fixme: don't allow this for bindings
 
         fmElemReferenceCond : (((NAME|COLON)* DOUBLE_COLON) => fqnDCNameCName     //n.n.n.n::n:n
-                            |  (NAME COLON) => nameCName                  	  //n:n
-                            | 	NAME);                                            //n  //fixme: don't allow this for bindings
+                            |  (NAME COLON) => nameCName                          //n:n
+                            |   NAME);                                            //n  //fixme: don't allow this for bindings
                             
         fmElemReferenceStar : (((NAME|DOT)* DOUBLE_COLON) => fqnDCNameCStar       //n.n.n.n::n:*
-                               | nameCStar);                     									//n:*
+                               | nameCStar);                                      //n:*
                                
     /*---------------------------------------------------------------------------*/
     conditions : "conditions"^ (singleCondition)* ;
@@ -179,9 +180,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
         { #singleInputFilter = #([IFILTER_, "inputfilter"], #singleInputFilter );} ;
 
           actualParameters : NAME (COMMA! NAME)*
-  	  { #actualParameters = #([APS_, "actual parameters"], #actualParameters);} ;
+          { #actualParameters = #([APS_, "actual parameters"], #actualParameters);} ;
 
-    	  filterElements : filterElement (COMMA filterElement)*
+          filterElements : filterElement (COMMA filterElement)*
           { #filterElements = #([FILTERSET_, "filterelements"], #filterElements);} ;
 
             //filterElement : (((~(FILTER_OP|SEMICOLON))* FILTER_OP) => orExpr FILTER_OP messagePatternSet // overuse of SEMICOLON?
@@ -189,20 +190,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                           | messagePatternSet)
                           { #filterElement = #([FILTERELEM_, "filterelement"], #filterElement);} ;
 
-// old --
-/*
-              orExpr : andExpr (OR andExpr)*
-                     { #orExpr = #([OREXPR_, "orExpression"], #orExpr);};
-
-                andExpr : notExpr (AND notExpr)*
-                        { #andExpr = #([ANDEXPR_, "andExpression"], #andExpr);};
-
-                  //changed it from fmElemReferenceCond to NAME, since reuse must be done in the conditions block
-                  notExpr : (NOT)? ( NAME )
-                          { #notExpr = #([NOTEXPR_, "notExpression"], #notExpr);};
-*/
-// -- old                          
-// new --
               orExpr : andExpr (OR^ orExpr)?;
                      
                 andExpr : unaryExpr (AND^ andExpr)?;
@@ -212,7 +199,7 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                     operandExpr : LPARENTHESIS! orExpr RPARENTHESIS!
                                 | NAME // name is either a literal or identifier
                                 ;
-// -- new
+
               messagePatternSet : messagePattern
                                 { #messagePatternSet = #([MPSET_, "messagePatternSet"], #messagePatternSet);} ;
 
@@ -220,9 +207,9 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                                  { #messagePattern = #([MP_, "messagePattern"], #messagePattern);} ;
                 
                  matchingPart : (
-                 				  // matching list
-                 				  LCURLY! singleTargetSelector (COMMA! singleTargetSelector)* RCURLY!
-                 				  // matching sequence for multiple message
+                                  // matching list
+                                  LCURLY! singleTargetSelector (COMMA! singleTargetSelector)* RCURLY!
+                                  // matching sequence for multiple message
                                 | HASH LPARENTHESIS! singleTargetSelector (SEMICOLON singleTargetSelector)* RPARENTHESIS!
                                   // normal
                                 | singleTargetSelector
@@ -241,7 +228,6 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                    singleTargetSelector : (
                                           LSQUARE targetSelector RSQUARE!          // name
                                         | LANGLE targetSelector RANGLE!            // signature
-                                        //| SINGLEQUOTE targetSelector SINGLEQUOTE!  // name
                                         | targetSelector
                                         ) ;
                   
@@ -283,26 +269,24 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
         { #oldSelExpression = #([SELEXP_, "selectorexpression"], #oldSelExpression);} ;
         
 
-	   predSelExpression : NAME OR! prologExpression RCURLY!;
-	  
-	     prologExpression 
-	     { StringBuffer sb = new StringBuffer(); }
-	     :	(	x:~(RCURLY)
-	     		{ sb.append(x.getText()); }
-	     	)*
-	     	{ #prologExpression = #([PROLOG_EXPRESSION, sb.toString()]); }
-	     ;
-	                     
-	   
+       predSelExpression : NAME OR! prologExpression RCURLY!;
+      
+         prologExpression 
+         { StringBuffer sb = new StringBuffer(); }
+         :   (   x:~(RCURLY)
+                 { sb.append(x.getText()); }
+             )*
+             { #prologExpression = #([PROLOG_EXPRESSION, sb.toString()]); }
+         ;
 
     /*---------------------------------------------------------------------------*/
     commonBindingPart : selectorRef weaveOperation;
     
-       	conditionRef : fmElemReference;
+        conditionRef : fmElemReference;
   
-      	selectorRef : concernElemReference;
+        selectorRef : concernElemReference;
 
-      	weaveOperation : ARROW_LEFT!;
+        weaveOperation : ARROW_LEFT!;
 
     /*---------------------------------------------------------------------------*/
     filtermoduleBind : "filtermodules"^ (singleFmBind)* ;
@@ -315,17 +299,19 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
                           { #filterModuleSet = #([FMSET_, "filtermodule set"], #filterModuleSet);} ;
 
           filterModuleElement : concernElemReference (fmBindingArguments)?
-          					 { #filterModuleElement = #([FMELEM_, "filtermodule element"], #filterModuleElement);} ;
+                              { #filterModuleElement = #([FMELEM_, "filtermodule element"], #filterModuleElement);} ;
+
           fmBindingArguments : LPARENTHESIS! (argument (COMMA! argument)*)? RPARENTHESIS!
-          				     {#fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
+                             {#fmBindingArguments = #([DECLAREDARGUMENT_, "declaredargument"], #fmBindingArguments);};
+
           argument : fqn
-          		   {#argument = #([ARGUMENT_, "argument"], #argument);}
-          		    | LCURLY! fqn (COMMA! fqn)* RCURLY!
-          		   {#argument = #([ARGUMENT_, "argument"], #argument);};
+                     {#argument = #([ARGUMENT_, "argument"], #argument);}
+                   | LCURLY! fqn (COMMA! fqn)* RCURLY!
+                     {#argument = #([ARGUMENT_, "argument"], #argument);};
 
     /*---------------------------------------------------------------------------*/
-	annotationBind : "annotations"^ (singleAnnotBind)* ;
-	
+    annotationBind : "annotations"^ (singleAnnotBind)* ;
+
       singleAnnotBind : selectorRef ARROW_LEFT! annotationSet SEMICOLON!
                    { #singleAnnotBind = #([ANNOT_, "annotation"], #singleAnnotBind);} ;
 
@@ -355,9 +341,8 @@ concern : "concern"^ NAME (LPARENTHESIS! formalParameters RPARENTHESIS!)? ("in"!
   //////////////////////////////////////////////////////////////////////////
   implementation : "implementation"^ implementationInner;
 
-	implementationInner : "in"! l2:NAME "by"! fqn "as"! f2:FILENAME lcurly:LCURLY! { sourceLang=l2.getText(); sourceFile=f2.getText(); sourceIncluded=true; if(lcurly != null) startPos=((PosToken)lcurly).getBytePos() + 1;}
-                      	| "by"! fqn SEMICOLON;   //assemblyname
-
+    implementationInner : "in"! l2:NAME "by"! fqn "as"! f2:FILENAME lcurly:LCURLY! { sourceLang=l2.getText(); sourceFile=f2.getText(); sourceIncluded=true; if(lcurly != null) startPos=((PosToken)lcurly).getBytePos() + 1;}
+                        | "by"! fqn SEMICOLON;   //assemblyname
 
 ///////////////////////////////////////////////////////////////////////////
 // Lexer for Cps files
@@ -390,7 +375,7 @@ RPARENTHESIS            : ')';
 RSQUARE                 : ']' ;
 SEMICOLON               : ';' ;
 STAR                    : '*' ;
-QUESTIONMARK			: '?';
+QUESTIONMARK            : '?';
 
 protected DIGIT         : '0'..'9' ;
 protected FILE_SPECIAL  : '\\' | '/' | COLON!| ' ' | DOT;     //special items only allowed in filenames
@@ -404,33 +389,24 @@ protected QUOTE         : '"';
 protected SINGLEQUOTE   : '\'';
 
 // used for prolog expressions
-PROLOG_STRING			: SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
+PROLOG_STRING           : SINGLEQUOTE ( ~('\'') )* SINGLEQUOTE;
 
 protected COMMENTITEMS  : NEWLINE COMMENTITEMS
-				  | ("*/") => "*/"
-				  | (~ ('\n'|'\r')) COMMENTITEMS;
+                        | ("*/") => "*/"
+                        | (~ ('\n'|'\r')) COMMENTITEMS;
 
 COMMENT                 : ("//" (~('\n'|'\r'))*
-			        | "/*" COMMENTITEMS) { $setType(Token.SKIP); };
+                        | "/*" COMMENTITEMS) { $setType(Token.SKIP); };
 
 FILENAME                : (QUOTE (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE) => QUOTE! (LETTER | DIGIT | SPECIAL | FILE_SPECIAL)+ QUOTE! //fixme: also allow paths?
                           | QUOTE {$setType(QUOTE);};
 
 NAME                    : (LETTER | SPECIAL) (LETTER | DIGIT | SPECIAL)*;
 
-PARAMETERLIST_NAME		: QUESTIONMARK QUESTIONMARK NAME;
+PARAMETERLIST_NAME      : QUESTIONMARK QUESTIONMARK NAME;
 
 PARAMETER_NAME          : QUESTIONMARK NAME;
 
 // NEWLINE and WS.... you can combine those
 WS                      : (NEWLINE) => NEWLINE { /*newline();*/ $setType(Token.SKIP);}
-                          | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
-
-/*
-PROLOG_EXPRESSION       :   '|' (PROLOG_SUB_EXPRESSION)* RCURLY!;
-
-protected PROLOG_SUB_EXPRESSION : (~ ('{'|'}'|'\n'|'\r'))
-					| (LCURLY (PROLOG_SUB_EXPRESSION)* RCURLY)
-					| NEWLINE
-					;
-*/
+                        | (' ' | '\t' | '\f') { $setType(Token.SKIP); } ;
