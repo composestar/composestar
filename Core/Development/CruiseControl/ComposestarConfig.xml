@@ -91,7 +91,8 @@
 		</publishers>
 	
 	</project>
-  <project name="starlight" buildafterfailed="false">
+
+	<project name="starlight" buildafterfailed="false">
 		
 		<!-- set this to the location of the starlight root -->
 		<!-- 
@@ -100,6 +101,10 @@
 		-->
 		<property name="starlight.path" value="c:\starlight" />
 		
+		<!-- set this to the location of the composestar root -->
+		<property name="composestar.path" value="c:\composestar" />
+	
+
 		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
 		
 		<listeners>
