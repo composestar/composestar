@@ -10,7 +10,9 @@
 
 package Composestar.Core.DIGGER;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.ConcernNode;
@@ -32,8 +34,11 @@ public class NOBBIN
 	 */
 	protected int maxDepth;
 	
+	protected Map signatures;
+	
 	public NOBBIN(Graph inGraph)
 	{
+		signatures = new HashMap();
 		graph = inGraph;
 		maxDepth = Configuration.instance().getModuleProperty(DIGGER.MODULE_NAME, "maxdepth", 5); // just a number
 	}
@@ -64,6 +69,6 @@ public class NOBBIN
 	 */
 	public void walk(ConcernNode concernNode) throws ModuleException
 	{
-		//concernNode.
+		
 	}
 }

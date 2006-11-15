@@ -32,7 +32,7 @@ public class ActionsHandler extends DefaultHandler implements ContentHandler
 				CompilerAction action = new CompilerAction();
 				action.setName(name);
 				action.setArgument(argument);
-				language.compilerSettings.addCompilerAction(action);
+				language.getCompilerSettings().addCompilerAction(action);
 			}
 		}
 	}
@@ -47,11 +47,9 @@ public class ActionsHandler extends DefaultHandler implements ContentHandler
 
 	public void startDocument() 
 	{
-		
 	}
 
 	public void endDocument() 
 	{
-			
 	}
 }

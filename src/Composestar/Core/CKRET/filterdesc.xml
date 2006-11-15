@@ -56,8 +56,8 @@
 	</actions>
 	
 	<constraints>
-	  	<conflict pattern="[(return)(reply)]+(.*)(error)" resource="message" message="Message is returned before it could error.."/>
-		<conflict pattern="(discard)[(read)(write)]+" resource="args" message="Discarded resources should not be read or written."/>
+		<conflict pattern="[(return)(reply)][(return)(reply)]*.*(error)" resource="message" message="Message is returned before it could error.."/>
+		<conflict pattern="(discard)[(read)(write)][(read)(write)]*" resource="args" message="Discarded resources should not be read or written."/>
 		<conflict pattern="(read)(decrypt)" resource="args" message="Arguments should be decrypted before logging!" />
 		<conflict pattern="(encrypt)(read)" resource="args" message="Arguments should be encrypted after logging!" />
 	</constraints>

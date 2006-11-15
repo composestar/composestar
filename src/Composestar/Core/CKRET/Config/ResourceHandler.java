@@ -22,6 +22,7 @@ public class ResourceHandler extends DefaultHandler {
     //String filter = "";
     //boolean accept = false;
 
+	private static List resources = new ArrayList();
 
     public ConfigParser theCkretFilterXMLParser;
     ConfigParser returnhandler;
@@ -41,6 +42,10 @@ public class ResourceHandler extends DefaultHandler {
 
     }
     
+    public static List getResources(){
+    	return resources;
+    }
+    
     /**
      * @param uri
      * @param local_name
@@ -54,6 +59,7 @@ public class ResourceHandler extends DefaultHandler {
     	if(local_name.equalsIgnoreCase("resource"))
 		{
     		resource = new Resource(amap.getValue("name"));
+    		resources.add(resource);
     		Iterator it = StringConverter.stringToStringList(amap.getValue("alphabet"),",");
     		while(it.hasNext())
     		{

@@ -170,7 +170,7 @@ public class DataMap implements Map, SerializableRepositoryEntity, Cloneable
 	 /**
 	  * For converting
 	  */
-	 public HashMap getHashMap()
+	 public HashMap toHashMap()
 	 {
 		 return map;
 	 }

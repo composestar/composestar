@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import Composestar.Core.CKRET.Config.ConfigParser;
-import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.Master.Config.Configuration;
@@ -34,7 +33,6 @@ public class Repository {
 
 	public static final String CKRET_CONFIG = "filterdesc.xml";
 
-	private Map actions;
 	private Map filters;
 	
 	private List constraints;
@@ -50,7 +48,6 @@ public class Repository {
 
 	private Repository()
 	{
-		actions = new HashMap();
 		filters = new HashMap();
 		constraints = new ArrayList();
 	}
@@ -67,8 +64,6 @@ public class Repository {
 	
 	protected void init() throws ModuleException
 	{
-		actions.put("meta", new MetaFilterAction());
-				
 		//CommonResources resources = (CommonResources) DataStore.instance().getObjectByID(Master.RESOURCES_KEY);
 		String tempFolder = Configuration.instance().getPathSettings().getPath("Base");
 		String ckretconfigfile = tempFolder + CKRET_CONFIG;
@@ -88,42 +83,4 @@ public class Repository {
 		parser.parse(ckretconfigfile, this);
 		     
 	}
-	
-	public FilterAction getAction(String name)
-	{
-		FilterAction action = (FilterAction) actions.get(name);
-		if( action == null )
-		{
-			action = new FilterAction(name);
-			actions.put(name, action);
-		}
-		return action;
-	}
-	
-	public FilterActionDescription getDescription(String type)
-	{
-		FilterActionDescription fad = (FilterActionDescription) filters.get(type);
-		if( fad == null )
-		{
-			fad = new FilterActionDescription(type);
-			filters.put(type, fad);
-		}
-		return fad;
-	}
-	
-	/**
-	 * Todo make this dynamic (xml) or have FIRE pass the FilterActions
-	 * @param filter
-	 * @param accept
-	 * @return
-	 */
-	public static FilterAction getAction(Filter filter, boolean accept)
-	{
-		String type = filter.getFilterType().getType();
-		if(type.equalsIgnoreCase("Custom"))
-			type = filter.getFilterType().getType();
-		Repository repository = Repository.instance;
-		return repository.getAction(repository.getDescription(type).getAction(accept));
-	}
-	
 }

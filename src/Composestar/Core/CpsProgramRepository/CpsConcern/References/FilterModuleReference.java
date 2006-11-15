@@ -17,8 +17,8 @@ import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.FilterModu
  * reference to a filtermodule
  */
 public class FilterModuleReference extends ConcernElementReference {
-  public FilterModule ref;
-  public Vector args;
+  private FilterModule ref;
+  private Vector args;
 
   /**
    * @roseuid 401FAA640376

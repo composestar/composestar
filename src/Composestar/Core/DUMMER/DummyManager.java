@@ -79,7 +79,7 @@ public class DummyManager implements CTCommonModule
 
 		// compile dummies
 		try {
-			LangCompiler comp = project.getLanguage().compilerSettings.getCompiler();
+			LangCompiler comp = project.getLanguage().getCompilerSettings().getCompiler();
 			comp.compileDummies(project);
 		}
 		catch (CompilerException e) {

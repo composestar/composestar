@@ -3,6 +3,9 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules;
 public class ParameterizedMessageSelector extends MessageSelector {
 	public String parameter;
 	
+	/**
+	 * @deprecated
+	 */
 	public ParameterizedMessageSelector() {
 		super();
 	}

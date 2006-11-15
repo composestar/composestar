@@ -7,14 +7,14 @@ package Composestar.Core.FIRE;
  * Licensed under LGPL v2.1 or (at your option) any later version.
  * [http://www.fsf.org/copyleft/lgpl.html]
  * 
- * $Id$
+ * $Id: Iterator.java 2032 2006-10-12 15:08:13Z reddog33hummer $
  * 
 **/
 
 import java.util.LinkedList;
 import java.util.Stack;
 
-public abstract class Iterator implements Cloneable
+public abstract class NodeIterator implements Cloneable
 {
 	// (friend) datamembers
 	Node parent;
@@ -29,9 +29,9 @@ public abstract class Iterator implements Cloneable
 	}
 
 	// methods 
-	public Iterator() {}
+	public NodeIterator() {}
 
-	public Iterator(Node _tree)
+	public NodeIterator(Node _tree)
 	{
 		parent = new VoidNode();
 		parent.addChild(_tree);
@@ -70,7 +70,7 @@ public abstract class Iterator implements Cloneable
 	public Object clone() throws CloneNotSupportedException {
 		try 
 		{
-			Iterator i = (Iterator) super.clone();
+			NodeIterator i = (NodeIterator) super.clone();
 			i.stack = (Stack) stack.clone();
 
 			i.parent = parent;

@@ -9,7 +9,7 @@ public class Source implements Serializable
 	private boolean isExecutable = false;
 	private String fileName;
 	private String dummy;
-	private String compiledSource;
+//	private String compiledSource;
 	private String target;
 	private Project project;
 	
@@ -31,7 +31,7 @@ public class Source implements Serializable
 	public void setIsExecutable(boolean isexe) {
 		this.isExecutable = isexe;
 	}
-	
+	/*
 	public void setCompiledSource(String fileName) {
 		this.compiledSource = fileName;
 	}
@@ -39,7 +39,7 @@ public class Source implements Serializable
 	public String getCompiledSource() {
 		return compiledSource;
 	}
-	
+	*/
 	public void setDummy(String filename) {
 		this.dummy = filename;
 	}

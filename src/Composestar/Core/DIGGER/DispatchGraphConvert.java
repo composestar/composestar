@@ -48,6 +48,12 @@ public class DispatchGraphConvert
 	 */
 	public static final int FORMAT_GRAPHML = 2;
 
+	/**
+	 * Produces a GXL file
+	 * http://www.gupro.de/GXL
+	 */
+	public static final int FORMAT_GXL = 3;
+
 	protected InputStream is;
 
 	protected OutputStream os;
@@ -99,6 +105,10 @@ public class DispatchGraphConvert
 		{
 			format = FORMAT_GRAPHML;
 		}
+		else if (inFormat.equals("gxl"))
+		{
+			format = FORMAT_GXL;
+		}
 		else
 		{
 			format = FORMAT_CUSTOM;
@@ -121,6 +131,8 @@ public class DispatchGraphConvert
 				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphVizDot.xslt";
 			case FORMAT_GRAPHML:
 				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GraphML.xslt";
+			case FORMAT_GXL:
+				return DispatchGraphConvert.class.getResource(XSLT_PATH) + "GXL.xslt";
 			case FORMAT_CUSTOM:
 				if ((customXslt != null) && (customXslt.exists()))
 				{

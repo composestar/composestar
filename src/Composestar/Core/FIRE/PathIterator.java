@@ -12,12 +12,12 @@ package Composestar.Core.FIRE;
 **/
 
 
-public class PathIterator extends Iterator
+public class PathIterator extends NodeIterator
 {
 	protected PathNode [] path = null;
 	protected int childInArray = 0;
 
-	public PathIterator(Iterator itr)
+	public PathIterator(NodeIterator itr)
 	{
 		itr.push(); // OOoooh I modify the original.
 

@@ -55,6 +55,11 @@ public class CommonResources implements Serializable
 	//	Debug.out(Debug.MODE_DEBUG,"RES","Added resource: " + key + " -> " + object.getClass());
 		resources.put(key, object);
 	}
+	
+	public void addBoolean(String key, boolean value)
+	{
+		resources.put(key, Boolean.valueOf(value));
+	}
 
 	/**
 	 * Fetch a resource with a key.

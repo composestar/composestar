@@ -160,6 +160,7 @@ public class Module
 
 				INCRETimer timer = INCRE.instance().getReporter().openProcess(name, name, INCRETimer.TYPE_ALL);
 				module.run(resources);
+				INCRE.instance().addModuleByName(this.name, module);
 				timer.stop();
 			}
 		/*

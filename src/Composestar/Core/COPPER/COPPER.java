@@ -89,10 +89,10 @@ public class COPPER implements CTCommonModule
   	  INCRE inc = INCRE.instance();
 	   
   	  /* collect and iterate over all objects from previous compilation runs */
-  	  Object[] objects = inc.history.getAllObjects();
-  	  for(int i=0;i<objects.length;i++)
+  	  Iterator it = inc.history.getIterator();
+  	  while (it.hasNext())
   	  {
-  	  	  Object obj = objects[i];
+  	  	  Object obj = it.next();
   	  	  if(obj instanceof RepositoryEntity)
   	  	  {
   	  	  		// COPPER only adds RepositoryEntities

@@ -56,16 +56,13 @@ public class NotUsedExternals implements BaseChecker {
 					Iterator fei = inputFilter.getFilterElementIterator();
 					while(fei.hasNext()){
 						FilterElement fe = (FilterElement) fei.next();
-						Iterator mpi = fe.getMatchingPatternIterator();
-						while(mpi.hasNext()){
-							MatchingPattern mp = (MatchingPattern) mpi.next();
-							Iterator spi = mp.getSubstitutionPartsIterator();
-							while( spi.hasNext() ) {
-								SubstitutionPart sp = (SubstitutionPart) spi.next();
-								if(!(sp == null)){
-									if (externalID.equals(sp.getTarget().getName())){
-										isExternalUsed = true;
-									}
+						MatchingPattern mp = fe.getMatchingPattern();
+						Iterator spi = mp.getSubstitutionPartsIterator();
+						while( spi.hasNext() ) {
+							SubstitutionPart sp = (SubstitutionPart) spi.next();
+							if(!(sp == null)){
+								if (externalID.equals(sp.getTarget().getName())){
+									isExternalUsed = true;
 								}
 							}
 						}
@@ -81,30 +78,26 @@ public class NotUsedExternals implements BaseChecker {
 					Iterator fei = outputFilter.getFilterElementIterator();
 					while(fei.hasNext()){
 						FilterElement fe = (FilterElement) fei.next();
-						Iterator mpi = fe.getMatchingPatternIterator();
-						while(mpi.hasNext()){
-							MatchingPattern mp = (MatchingPattern) mpi.next();
-							//Check whether the internal show up as matching target or substitution target (maybe the if statement is too long)
-							Iterator spi = mp.getSubstitutionPartsIterator();
-							while( spi.hasNext() ) {
-								SubstitutionPart sp = (SubstitutionPart) spi.next();
-								if(!(sp == null)){
-									if (externalID.equals(sp.getTarget().getName())){
-										isExternalUsed = true;
-									}
+						MatchingPattern mp = fe.getMatchingPattern();
+						//Check whether the internal show up as matching target or substitution target (maybe the if statement is too long)
+						Iterator spi = mp.getSubstitutionPartsIterator();
+						while( spi.hasNext() ) {
+							SubstitutionPart sp = (SubstitutionPart) spi.next();
+							if(!(sp == null)){
+								if (externalID.equals(sp.getTarget().getName())){
+									isExternalUsed = true;
 								}
 							}
-							
-							Iterator matchpi = mp.getMatchingPartsIterator();
-							while( matchpi.hasNext() ) {
-								MatchingPart matchp = (MatchingPart) matchpi.next();
-								if(!(matchp == null)){
-									if (externalID.equals(matchp.getTarget().getName())){
-										isExternalUsed = true;
-									}
+						}
+						
+						Iterator matchpi = mp.getMatchingPartsIterator();
+						while( matchpi.hasNext() ) {
+							MatchingPart matchp = (MatchingPart) matchpi.next();
+							if(!(matchp == null)){
+								if (externalID.equals(matchp.getTarget().getName())){
+									isExternalUsed = true;
 								}
 							}
-							
 						}
 					}
 				}

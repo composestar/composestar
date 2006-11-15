@@ -12,7 +12,7 @@ package Composestar.Core.CpsProgramRepository.CpsConcern.References;
 import Composestar.Core.CpsProgramRepository.*;
 
 public class CompiledConcernRepRef extends ConcernElementReference {
-  private PlatformRepresentation ref;
+  //private PlatformRepresentation ref;
 
 
   /**

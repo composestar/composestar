@@ -105,35 +105,37 @@ public class Preprocessor implements CTCommonModule{
         
         //build AST:
         Graph grooveAstIF = buildAst( module, true );
-        Graph grooveAstOF = buildAst( module, false );
+//        Graph grooveAstOF = buildAst( module, false );
         
         
         //generate flow model:
         Graph grooveFlowModelIF = generateFlow( grooveAstIF );
-        Graph grooveFlowModelOF = generateFlow( grooveAstOF );
+//        Graph grooveFlowModelOF = generateFlow( grooveAstOF );
         
         
         
         //extract flowmodel:
         FlowModel flowModelIF = extractFlowModel( grooveFlowModelIF );
-        FlowModel flowModelOF = extractFlowModel( grooveFlowModelOF );
+//        FlowModel flowModelOF = extractFlowModel( grooveFlowModelOF );
         
         //Simulate execution:
         GTS stateSpaceIF = execute( grooveFlowModelIF );
-        GTS stateSpaceOF = execute( grooveFlowModelOF );
+//        GTS stateSpaceOF = execute( grooveFlowModelOF );
         
         
         //extract statespace:
         ExecutionModel executionModelIF = extractExecutionModel( 
                 stateSpaceIF, flowModelIF );
-        ExecutionModel executionModelOF = extractExecutionModel( 
-                stateSpaceOF, flowModelOF );
+//        ExecutionModel executionModelOF = extractExecutionModel( 
+//                stateSpaceOF, flowModelOF );
         
         
         
         //store result:
+//        FirePreprocessingResult result = 
+//            new FirePreprocessingResult( flowModelIF, executionModelIF, flowModelOF, executionModelOF );
         FirePreprocessingResult result = 
-            new FirePreprocessingResult( flowModelIF, executionModelIF, flowModelOF, executionModelOF );
+            new FirePreprocessingResult( flowModelIF, executionModelIF, null, null );
         module.dynamicmap.put( RESULT_ID, result );
     }
     

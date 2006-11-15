@@ -21,7 +21,7 @@ public class DepthFirstIterator extends ChildIterator
 		super(_node);
 	}
 
-	public DepthFirstIterator(Iterator itr)
+	public DepthFirstIterator(NodeIterator itr)
 	{
 		super(itr);
 	}

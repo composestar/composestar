@@ -14,7 +14,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import Composestar.Core.CKRET.FilterActionDescription;
 import Composestar.Core.CKRET.Repository;
 
 public class FiltersHandler extends DefaultHandler {
@@ -23,7 +22,7 @@ public class FiltersHandler extends DefaultHandler {
     
     private Repository repository;
     
-    private FilterActionDescription fad;
+//    private FilterActionDescription fad;
     
     public ConfigParser theCkretFilterXMLParser;
     ConfigParser returnhandler;
@@ -56,17 +55,17 @@ public class FiltersHandler extends DefaultHandler {
 		{
     		String type = amap.getValue("type");
     		//System.err.println("Reading filter " + type);
-    		fad = repository.getDescription(type);
+//    		fad = repository.getDescription(type);
 		}
 		else if(local_name.equalsIgnoreCase("accept"))
 		{
 			//System.err.println("Accept action for " + fad.getFilterType() + " is " + amap.getValue("action"));
-			fad.setAction(amap.getValue("action"), true);
+//			fad.setAction(amap.getValue("action"), true);
 		
 		}
 		else if(local_name.equalsIgnoreCase("reject"))
 		{
-			fad.setAction(amap.getValue("action"), false);
+//			fad.setAction(amap.getValue("action"), false);
 			//System.err.println("Reject action for " + fad.getFilterType() + " is " + amap.getValue("action"));
 		}
     }

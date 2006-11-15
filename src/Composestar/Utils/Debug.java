@@ -72,13 +72,14 @@ public class Debug
 					break;
 			}
 
-			System.out.println(module+ '~' +modeDescription+ '~' +filename+ '~' +line+ '~' +msg);
+			if (filename == null) filename = "";
+			System.out.println(module + '~' + modeDescription + '~' + filename + '~' + line + '~' + msg);
 		}
 	}
 	
 	public static void out(int mode, String module, String msg, String filename)
 	{
-		out(mode,module,msg,filename,0);		
+		out(mode,module,msg,filename,0);
 	}
 	
 	public static void out(int mode, String module, String msg, RepositoryEntity re)

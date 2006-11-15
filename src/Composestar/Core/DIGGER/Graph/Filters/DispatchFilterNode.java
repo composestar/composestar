@@ -10,6 +10,7 @@
 package Composestar.Core.DIGGER.Graph.Filters;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.Filter;
+import Composestar.Core.DIGGER.DIGGER;
 import Composestar.Core.DIGGER.Graph.FilterChainNode;
 import Composestar.Core.DIGGER.Graph.FilterNode;
 import Composestar.Core.DIGGER.Graph.Graph;
@@ -31,7 +32,7 @@ public class DispatchFilterNode extends FilterNode
 	{
 		if (inDirection != FilterChainNode.INPUT)
 		{
-			throw new ModuleException("Dispatch Filter may only have direction == input");
+			throw new ModuleException("Dispatch Filter may only have direction == input", DIGGER.MODULE_NAME);
 		}
 		else
 		{

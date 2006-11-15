@@ -159,7 +159,7 @@ public class DoResolve {
         		ParameterizedInternal pi = (ParameterizedInternal) o; 
         		Vector pack = (Vector)fm.getParameter(pi.getParameter()).getValue();
         		ConcernReference cref = new ConcernReference();
-        		ds.removeObject(cref);
+        		//ds.removeObject(cref); // FIXME: removeObject isn't implemented
         		Splitter split = new Splitter(); 
         		split.splitConcernReference(pack);
         	    cref.setPackage(split.getPack());
@@ -611,17 +611,13 @@ public class DoResolve {
 			      ds.addObject(copy);
 			      
 			      // setting the selector
-			      Iterator mpi  = copy.getMatchingPatternIterator();
-			      while(mpi.hasNext())
-			      {
-			    	  MatchingPattern mp2 = (MatchingPattern) mpi.next();
-			    	  Iterator match = mp2.getMatchingPartsIterator();
-			    	  while(match.hasNext())
-			    	  {
-			    		  MatchingPart matchpart = (MatchingPart) match.next();
-			    		  matchpart.getSelector().setName((String)sel.next());
-			    	  }
-			      }
+		    	  MatchingPattern mp2 = copy.getMatchingPattern();
+		    	  Iterator match = mp2.getMatchingPartsIterator();
+		    	  while(match.hasNext())
+		    	  {
+		    		  MatchingPart matchpart = (MatchingPart) match.next();
+		    		  matchpart.getSelector().setName((String)sel.next());
+		    	  }
 			      
 			      // this for gettign , , between them
 			      fe = copy;

@@ -25,7 +25,7 @@ import Composestar.Core.FILTH.Core.Rule;
 import Composestar.Core.FILTH.Core.SoftPreRule;
 
 public class ConstraintFilter extends ArgumentFilter{
-	private ArgumentFilter _af;
+	//private ArgumentFilter _af;
     private String value;
 	
 	private Graph _graph;

@@ -14,11 +14,12 @@ public class LanguageHandler extends DefaultHandler implements ContentHandler
 	PlatformHandler returnHandler;
 	Language language;
 	
-	public LanguageHandler(Language lang, XMLReader parser,PlatformHandler returnHandler){
+	public LanguageHandler(Language lang, XMLReader parser, PlatformHandler returnHandler)
+	{
 		this.language = lang;
 		this.parser = parser;
 		this.returnHandler = returnHandler;
-	} 
+	}
 	
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException 
 	{
@@ -27,8 +28,8 @@ public class LanguageHandler extends DefaultHandler implements ContentHandler
 			for(int i=0;i<amap.getLength();i++){
 				String key = amap.getQName(i);
 				String val = amap.getValue(key);
-				language.compilerSettings.addProperty(key,val);
-			}			
+				language.getCompilerSettings().addProperty(key,val);
+			}
 			
 			// look further
 			CompilerHandler comphandler = new CompilerHandler(language,parser,this);
@@ -59,11 +60,9 @@ public class LanguageHandler extends DefaultHandler implements ContentHandler
 
 	public void startDocument() 
 	{
-		
 	}
 
 	public void endDocument() 
 	{
-			
 	}
 }

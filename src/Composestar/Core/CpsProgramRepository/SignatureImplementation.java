@@ -21,7 +21,7 @@ public class SignatureImplementation implements SerializableRepositoryEntity {
   public final static int ADDED = 2;
   public final static int REMOVED = 4;
   public final static int ALL = 255;
-  private MethodInfo DotNETPresentation;
+  //private MethodInfo DotNETPresentation;
 
 
   /**

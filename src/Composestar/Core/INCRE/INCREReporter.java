@@ -14,7 +14,7 @@ public class INCREReporter
 	private BufferedWriter writer, writer2;
 	private StringBuffer buffer, buffer2;
 	private String cssFile;
-	private String reportFile;
+	//private String reportFile;
 	private LinkedHashMap timings;
 	private long timeStart, timeEnd, totalElapsed;
 	 

@@ -148,7 +148,7 @@ public abstract class Node implements Comparable, Cloneable
 		return total;
 	}
 
-	public Iterator getIterator(Class iteratorKind)
+	public NodeIterator getIterator(Class iteratorKind)
 	{
 		try
 		{
@@ -158,7 +158,7 @@ public abstract class Node implements Comparable, Cloneable
 			Object [] parameterValues = new Object[1];
 			parameterValues[0] = this;
 
-			return (Iterator) iteratorKind.getConstructor(parameterTypes).newInstance(parameterValues);
+			return (NodeIterator) iteratorKind.getConstructor(parameterTypes).newInstance(parameterValues);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -167,34 +167,34 @@ public abstract class Node implements Comparable, Cloneable
 		return null;
 	}
 
-	public int countAllNodes(Iterator itr)
+	public int countAllNodes(NodeIterator itr)
 	{
 		return getSubTree(itr).countAllNodes();
 	}
 
 	// Iterator moves to the next element.
-	public void remove(Iterator itr)
+	public void remove(NodeIterator itr)
 	{
 		itr.parent.removeChild(itr.currentChild);
 	}
 
-	public void append(Iterator itr, Node subTree)
+	public void append(NodeIterator itr, Node subTree)
 	{
 		itr.parent.getChild(itr.currentChild).addChild(subTree);
 	}
 
-	public int numberOfChildren(Iterator itr)
+	public int numberOfChildren(NodeIterator itr)
 	{
 		return itr.parent.getChild(itr.currentChild).numberOfChildren();
 	}
 
-	public boolean hasChildren(Iterator itr)
+	public boolean hasChildren(NodeIterator itr)
 	{
 		return itr.parent.getChild(itr.currentChild).hasChildren();
 	}
 
-	// Deprecated
-	public Node getSubTree (Iterator itr)
+	/** @deprecated */
+	public Node getSubTree(NodeIterator itr)
 	{
 		return itr.parent.getChild(itr.currentChild);
 	}
@@ -216,9 +216,8 @@ public abstract class Node implements Comparable, Cloneable
 			else deleteNode = false;
 		}
 
-        return !subsetOfExpression(compareWith) && deleteNode;
-
-		}
+		return !subsetOfExpression(compareWith) && deleteNode;
+	}
 
 	// Goes wrong by Signature match. But must be fixed in the future.
 	public void minimizeLossy()
@@ -465,9 +464,6 @@ public abstract class Node implements Comparable, Cloneable
 	{
 		return filterNumber;
 	}
-
-
-	
 }
 
 
