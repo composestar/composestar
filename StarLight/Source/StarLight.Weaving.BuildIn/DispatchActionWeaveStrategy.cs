@@ -81,6 +81,17 @@ namespace Composestar.StarLight.Weaving.Strategies
                 return;
             }
 
+            // Generic arguments
+            if (originalCall.GenericParameters.Count > 0)
+            {
+                GenericInstanceMethod gim = new GenericInstanceMethod(methodReference);
+                foreach (GenericParameter gp in originalCall.GenericParameters)
+                {
+                    gim.GenericArguments.Add(gp);    
+                }
+
+                methodReference = gim;
+            }
 
             // Place the arguments on the stack first
 
@@ -128,6 +139,8 @@ namespace Composestar.StarLight.Weaving.Strategies
 
             //Restore arguments:
             WeaveStrategyUtilities.RestoreArguments(visitor, originalCall, jpcVar);
-        }
+        }        
+
     }
+
 }

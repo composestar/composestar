@@ -252,7 +252,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                                     CachedMethodDefinition.JoinPointContextGetArgumentValue)));
 
                             // If valuetype unbox, else cast
-                            if(param.ParameterType.IsValueType)
+                            if(param.ParameterType.IsValueType || param.ParameterType is GenericParameter)
                             {
                                 // Unbox value
                                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
@@ -282,7 +282,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                             CachedMethodDefinition.JoinPointContextGetArgumentValue)));
 
                     // Check if parameter is value type, then unbox
-                    if(param.ParameterType.IsValueType)
+                    if (param.ParameterType.IsValueType || param.ParameterType is GenericParameter)
                     {
                         visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
                     }
@@ -331,7 +331,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                         visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Ldobj, param.ParameterType));
 
                         // If valuetype, box
-                        if(param.ParameterType.IsValueType)
+                        if (param.ParameterType.IsValueType || param.ParameterType is GenericParameter)
                         {
                             visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Box, param.ParameterType));
                         }

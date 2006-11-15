@@ -402,13 +402,8 @@ namespace Composestar.StarLight.ContextInfo
             }
             set
             {
-                if (_returnValue == null)
-                    throw new ArgumentNullException("returnType");
-                else
-                {
-                    _returnValue = value;
-                    _hasReturnValueSet = true;
-                } // else
+                _returnValue = value;
+                _hasReturnValueSet = true;
             }
         }
 

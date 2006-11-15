@@ -847,7 +847,7 @@ namespace Composestar.StarLight.ILWeaver
                             }
 
                             // Check if parameter is value type, then box
-                            if(param.ParameterType.IsValueType)
+                            if (param.ParameterType.IsValueType || param.ParameterType is GenericParameter)
                             {
                                 Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
                             }
@@ -899,7 +899,7 @@ namespace Composestar.StarLight.ILWeaver
                         }
 
                         // Check if parameter is value type, then box
-                        if (param.ParameterType.IsValueType)
+                        if (param.ParameterType.IsValueType || param.ParameterType is GenericParameter)
                         {
                             Instructions.Add(Worker.Create(OpCodes.Box, param.ParameterType));
                         }
@@ -1009,7 +1009,7 @@ namespace Composestar.StarLight.ILWeaver
                             Instructions.Add(Worker.Create(OpCodes.Call, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetArgumentValue)));
 
                             // Check if returnvalue is value type, then unbox, else cast
-                            if(param.ParameterType.IsValueType)
+                            if (param.ParameterType.IsValueType || param.ParameterType is GenericParameter)
                             {
                                 Instructions.Add(Worker.Create(OpCodes.Unbox_Any, param.ParameterType));
                             }
