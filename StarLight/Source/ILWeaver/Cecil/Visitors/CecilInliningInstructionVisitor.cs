@@ -1042,9 +1042,6 @@ namespace Composestar.StarLight.ILWeaver
                 // Get returnvalue
                 Instructions.Add(Worker.Create(OpCodes.Callvirt, CecilUtilities.CreateMethodReference(TargetAssemblyDefinition, CachedMethodDefinition.JoinPointContextGetReturnValue)));
                  
-                
-
-
                 // Check if returnvalue is value type, then unbox, else cast
                 if (CalledMethod.ReturnType.ReturnType.IsValueType || CalledMethod.ReturnType.ReturnType is GenericParameter)
                 {

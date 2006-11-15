@@ -102,10 +102,8 @@ namespace Composestar.StarLight.MSBuild.Tasks
                     process.StartInfo.Arguments = String.Format(CultureInfo.InvariantCulture,  "{0} /IL /MD /NOLOGO", assembly.FileName);
 
                     process.Start();
-                    while (!process.HasExited)
-                    {
-
-                    }
+                 
+                    process.WaitForExit(8000);
                     if (process.ExitCode == 0)
                     {
                         Log.LogMessageFromResources("VerifySuccess", assembly.FileName);

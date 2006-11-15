@@ -81,7 +81,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                 return;
             }
 
-            // Generic arguments
+            // Generic arguments; add the generic parameters as generic argument to a GenericInstanceMethod
             if (originalCall.GenericParameters.Count > 0)
             {
                 GenericInstanceMethod gim = new GenericInstanceMethod(methodReference);
