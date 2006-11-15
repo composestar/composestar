@@ -18,6 +18,13 @@ namespace BasicTests
 
 			Console.Out.WriteLine("");
 
+            CustomAttributes ca = new CustomAttributes();
+            Console.Out.WriteLine("Default value for CustomAttributes.MyProperty is '{0}', default value is correct? {1}", ca.MyProperty, ca.MyProperty == MyEnumeration.Gigabytes);
+            ca.MyProperty = MyEnumeration.Kilobytes;
+            Console.Out.WriteLine("Value for CustomAttributes.MyProperty set to '"+MyEnumeration.Kilobytes+"', value now is '{0}' (check passed: {1})", ca.MyProperty, ca.MyProperty == MyEnumeration.Kilobytes);
+
+            Console.Out.WriteLine("");
+
 			FilterTests filtTests = new FilterTests();
 			filtTests.func1();
 			filtTests.func2();
@@ -25,6 +32,7 @@ namespace BasicTests
 			Console.Out.WriteLine( filtTests.func4(3) );
 			filtTests.func6();
 			filtTests.func7("foo");
+            filtTests.func8("generic argument");
 
 			filtTests.askForHelp();
 			filtTests.doStuff();

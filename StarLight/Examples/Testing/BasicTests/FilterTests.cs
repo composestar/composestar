@@ -1,5 +1,6 @@
 #region Using directives
 using System;
+using System.Collections.Generic;
 #endregion
 
 namespace BasicTests
@@ -80,6 +81,11 @@ namespace BasicTests
 		{
 			report("func7: s='" + s + "'");
 		}
+
+        public void func8<T>(T value)
+        {
+            report("func8: generic.ToString() = '" + value.ToString() + "'");
+        }
 
 		public void askForHelp()
 		{
