@@ -78,7 +78,8 @@ namespace Composestar.StarLight.Weaving.Strategies
 
             if(methodReference == null)
             {
-                return;
+                throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
+                                            Properties.Resources.MethodNotFound, parentType.ToString(), filterAction.SubstitutionSelector));
             }
 
             // Generic arguments; add the generic parameters as generic argument to a GenericInstanceMethod
