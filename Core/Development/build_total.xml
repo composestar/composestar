@@ -256,6 +256,17 @@
 		<antcall target="required" />
 	</target>
 	
+	<target name="integration_starlight">
+	  <property name="build.integration.core" value="c:\starlight\core" />
+	  <property name="build.integration.starlight" value="c:\starlight\starlight" />
+		<ant target="svn-update" dir="${build.integration.core}" />
+		<ant target="svn-update" dir="${build.integration.starlight}" />
+		<antcall target="build" dir="${build.integration.starlight}\Source\VSIntegration\MSBuildTasks" />
+		<antcall target="fxcop" dir="${build.integration.starlight}" />
+		<antcall target="findbugs" dir="${build.integration.starlight}" />
+		<antcall target="checkstyle" dir="${build.integration.starlight}" />
+	</target>
+	
 	<target name="integration_publish">
 		<antcall target="publish" />
 		<antcall target="qa" />

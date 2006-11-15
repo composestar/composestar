@@ -91,5 +91,89 @@
 		</publishers>
 	
 	</project>
+  <project name="starlight" buildafterfailed="false">
+		
+		<!-- set this to the location of the starlight root -->
+		<!-- 
+		     Because starlight is using a branch for its core, it needs a seperate folder 
+		     When the branch has been merged back, then the composestar folder can be used. 		
+		-->
+		<property name="starlight.path" value="c:\starlight" />
+		
+		<property name="composestar.ant" value="${composestar.path}\Core\Development\Ant" />
+		
+		<listeners>
+			<!-- used by the reporting interface -->
+			<currentbuildstatuslistener file="logs/${project.name}/status.txt"/>
+		</listeners>
 
+		<!-- wait 5 minutes after the last commit before continuing -->
+		<modificationset quietperiod="300">			
+			<!-- note: svn action needs svn commandline client in the path  -->
+			<svn LocalWorkingCopy="${starlight.path}" property="composestar.modified" />
+		</modificationset>
+		
+		<!-- waits 5 (default) minutes before trying another build (only if files have changed) -->
+		<schedule>
+			<ant 
+				target="integration_starlight" 
+				buildfile="${starlight.path}\Core\Development\build_total.xml" 
+				uselogger="true" 
+				anthome="${composestar.ant}" 
+				antWorkingDir="${composestar.path}" 
+				usedebug="false" 
+			/>
+		</schedule>
+		
+		<log>
+			<delete every="1" unit="MONTH" ignoreSuffix="false" />
+		</log>
+		
+		<publishers>
+			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
+				xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt" 
+				mailhost="smtp.utwente.nl" 
+				reportsuccess="fixes" 
+				skipusers="true"
+				returnname="Continuous Integration Server"
+				returnaddress="mivano@users.sourceforge.net"
+			>
+				<always address="composestar-starlight@lists.sourceforge.net" />
+				
+				<parameter name="buildresultsurl" value="http://${cchost}:8080/buildresults/${project.name}" />
+				<parameter name="standalonehtml" value="1" />
+			</htmlemail>
+			<onsuccess>
+				<antpublisher 
+					target="integration_publish" 
+					buildfile="${composestar.path}\Core\Development\build_total.xml" 
+					uselogger="true" 
+					anthome="${composestar.ant}" 
+					antWorkingDir="${composestar.path}" 
+					usedebug="false" 
+				/>			
+				<artifactspublisher
+					dir="${starlight.path}/Core/qa"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_core"
+				/>
+				<artifactspublisher
+					dir="${starlight.path}/Starlight/QualityAssurance"
+					dest="artifacts/${project.name}/"
+					subdirectory="qa_starlight"
+				/>
+					
+				<!-- clean up old artifacts, e.a. -->			
+				<antpublisher 
+					target="onsuccess" 
+					buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml" 
+					uselogger="true" 
+					anthome="${composestar.ant}" 
+					antWorkingDir="${composestar.path}" 
+					usedebug="false" 
+				/>
+			</onsuccess>
+		</publishers>
+	
+	</project>
 </cruisecontrol>
