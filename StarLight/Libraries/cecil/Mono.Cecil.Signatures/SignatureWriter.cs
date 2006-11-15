@@ -366,7 +366,7 @@ namespace Mono.Cecil.Signatures {
 
 			writer.Write (ca.NumNamed);
 
-			for (int i = 0; i < ca.NumNamed; i++)
+			for (int i = ca.NumNamed-1; i >=0; i--)
 				Write (ca.NamedArgs [i], writer);
 		}
 
@@ -391,26 +391,34 @@ namespace Mono.Cecil.Signatures {
 			if (na.FixedArg.SzArray)
 				writer.Write ((byte) ElementType.SzArray);
 
-			writer.Write ((byte) na.FieldOrPropType);
-
-			if (na.FieldOrPropType == ElementType.Enum)
+            if (na.FieldOrPropType == ElementType.Class)
+                writer.Write((byte)ElementType.Boxed); // Enum support, mark the FieldOrPropType of the NamedArg as boxed
+            else
+                writer.Write((byte)na.FieldOrPropType);
+            
+  			if (na.FieldOrPropType == ElementType.Enum)
 				Write (na.FixedArg.Elems [0].ElemType.FullName);
 
-			Write (na.FieldOrPropName);
-
+            Write (na.FieldOrPropName);
+            
 			Write (na.FixedArg, writer);
 		}
 
 		void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
 		{
-			if (elem.String)
-				elem.FieldOrPropType = ElementType.String;
-			else if (elem.Type)
-				elem.FieldOrPropType = ElementType.Type;
-			else if (elem.BoxedValueType)
-				Write (elem.FieldOrPropType);
-
-			switch (elem.FieldOrPropType) {
+            if (elem.String)
+                elem.FieldOrPropType = ElementType.String;
+            else if (elem.Type)
+                elem.FieldOrPropType = ElementType.Type;
+            else if (elem.BoxedValueType)
+                Write(elem.FieldOrPropType);
+            else if (elem.Enum)
+            {         
+                Write(ElementType.Enum);  // Write the FieldOrPropType of the Elem as enum
+                Write(elem.ElemType.FullName);   // Write the FullName of the Enum type
+            }
+            
+            switch (elem.FieldOrPropType) {
 			case ElementType.Boolean :
 				writer.Write ((byte) ((bool) elem.Value ? 1 : 0));
 				break;

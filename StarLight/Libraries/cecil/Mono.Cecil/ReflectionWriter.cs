@@ -1270,10 +1270,13 @@ namespace Mono.Cecil {
 			elem.ElemType = type;
 			elem.FieldOrPropType = GetCorrespondingType (type.FullName);
 
-			if (elem.FieldOrPropType == ElementType.Class)
-				throw new NotImplementedException ("Writing enums");
+            
+            //if (elem.FieldOrPropType == ElementType.Class)
+            //{
+                //throw new NotImplementedException ("Writing enums; enum type is "+type.FullName+", enum value is "+value.ToString());
+            //}
 
-			switch (elem.FieldOrPropType) {
+            switch (elem.FieldOrPropType) {
 			case ElementType.Boolean :
 			case ElementType.Char :
 			case ElementType.R4 :
@@ -1302,6 +1305,14 @@ namespace Mono.Cecil {
 					elem.FieldOrPropType = GetCorrespondingType (
 						GetObjectTypeName (value));
 				break;
+            case ElementType.Class:
+                // Handle enums
+                elem.Enum = true;
+
+                // Get the underlying type of the enum (int16, uint16, int32, uint32, etc)
+                elem.FieldOrPropType = GetCorrespondingType(
+                    GetObjectTypeName(value));
+                break;
 			}
 
 			return elem;
