@@ -10,7 +10,9 @@
 
 package Composestar.Core.DIGGER.Walker;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
@@ -34,8 +36,7 @@ public class Message
 	 * messages. But can be set in a later stage when this message is
 	 * encountered again.
 	 */
-	//TODO: should be a list, a message can come from multiple points
-	protected Message originator;
+	protected List messageTrace;
 
 	/**
 	 * Indication of the certenty of the message. < 0 message will probably
@@ -44,16 +45,25 @@ public class Message
 	 */
 	protected int certenty;
 	
+	/**
+	 * If true this message is recursive
+	 */
+	protected boolean recursive;
+	
 	public Message(AbstractConcernNode inConcernNode, String inSelector)
 	{
 		concernNode = inConcernNode;
 		selector = inSelector;
+		messageTrace = new ArrayList();
 	}
 	
 	public Message(Message base)
 	{
 		concernNode = base.getConcernNode();
 		selector = base.getSelector();
+		certenty = base.getCertenty();
+		messageTrace = new ArrayList();
+		messageTrace.addAll(base.getMessageTrace());
 	}
 	
 	public AbstractConcernNode getConcernNode()
@@ -84,6 +94,26 @@ public class Message
 	public int getCertenty()
 	{
 		return certenty;
+	}
+		
+	public List getMessageTrace()
+	{
+		return messageTrace;
+	}
+	
+	public void addTrace(Message msg)
+	{
+		messageTrace.add(msg);
+	}
+	
+	public boolean isRecursive()
+	{
+		return recursive;
+	}
+	
+	public void setRecursive(boolean inval)
+	{
+		recursive = inval;
 	}
 	
 	/**
@@ -123,8 +153,24 @@ public class Message
 		}
 	}
 	
+	public void checkRecursion()
+	{
+		if (recursive) return;
+		// TODO: easier to check if the same message is listed
+		Iterator it = messageTrace.iterator();
+		while (it.hasNext())
+		{
+			Message msg = (Message) it.next();
+			if ((msg.getConcernNode() == concernNode) && (msg.getSelector().equals(selector)))
+			{
+				recursive = true;
+				return;
+			}
+		}
+	}
+	
 	public String toString()
 	{
-		return concernNode.getLabel()+"->"+selector;
+		return concernNode.getLabel()+"->"+selector+" ["+certenty+"]";
 	}
 }

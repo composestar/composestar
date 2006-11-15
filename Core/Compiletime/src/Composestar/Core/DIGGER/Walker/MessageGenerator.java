@@ -89,15 +89,20 @@ public class MessageGenerator
 	public Message xform(Message base, SubstitutionEdge edge)
 	{
 		Message msg = new Message(base);
+		msg.addTrace(base);
 		SubstitutionPart sp = edge.getSubstitutionPart();
 		String sel = sp.getSelector().getName().toString();
-		if (edge.getDestination() instanceof AbstractConcernNode)
-		{
-			msg.setConcernNode((AbstractConcernNode) edge.getDestination());
-		}
 		if (!sel.equals("*"))
 		{
 			msg.setSelector(sel);
+		}
+//		TODO: take care about error node and inner nodes
+		if (edge.getDestination() instanceof AbstractConcernNode)
+		{
+			msg.setConcernNode((AbstractConcernNode) edge.getDestination());
+			
+			// only check for recursion when the new destination is a concern node
+			msg.checkRecursion();
 		}
 		return msg;
 	}

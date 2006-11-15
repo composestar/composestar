@@ -10,6 +10,7 @@
 
 package Composestar.Core.DIGGER;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +26,8 @@ import Composestar.Core.DIGGER.Graph.SubstitutionEdge;
 import Composestar.Core.DIGGER.Walker.Message;
 import Composestar.Core.DIGGER.Walker.MessageGenerator;
 import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.INCRE.INCRE;
+import Composestar.Core.INCRE.INCRETimer;
 import Composestar.Core.Master.Config.Configuration;
 import Composestar.Utils.Debug;
 
@@ -37,6 +40,8 @@ import Composestar.Utils.Debug;
  */
 public class NOBBIN
 {
+	public static final String MODULE_NAME = "NOBBIN";
+
 	protected Graph graph;
 
 	/**
@@ -59,6 +64,8 @@ public class NOBBIN
 	 */
 	public void walk() throws ModuleException
 	{
+		INCRETimer filthinit = INCRE.instance().getReporter().openProcess(DIGGER.MODULE_NAME, "Walking dispatch graph",
+				INCRETimer.TYPE_NORMAL);
 		Iterator concerns = graph.getConcernNodes();
 		while (concerns.hasNext())
 		{
@@ -68,6 +75,7 @@ public class NOBBIN
 				walk((ConcernNode) concernNode);
 			}
 		}
+		filthinit.stop();
 	}
 
 	/**
@@ -78,7 +86,10 @@ public class NOBBIN
 	 */
 	public void walk(ConcernNode concernNode) throws ModuleException
 	{
-		Debug.out(Debug.MODE_DEBUG, "Walking concern " + concernNode.getLabel(), DIGGER.MODULE_NAME);
+		if (Debug.willLog(Debug.MODE_DEBUG))
+		{
+			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Walking concern " + concernNode.getLabel());
+		}
 		/*
 		 * Walk through the graph from the concernNode and spawn a new Message
 		 * for each FilterElement then walk the whole graph using that message.
@@ -91,27 +102,41 @@ public class NOBBIN
 		while (it.hasNext())
 		{
 			Message inMsg = (Message) it.next();
-			Message outMsg = walk(concernNode.getInputFilters(), inMsg, 0);
-			if (outMsg != null)
+			List outMsgs = walk(concernNode.getInputFilters(), inMsg, 0);
+			if (outMsgs.size() > 0)
 			{
-				Debug.out(Debug.MODE_DEBUG, inMsg + " resulted in " + outMsg, DIGGER.MODULE_NAME);
+				if (Debug.willLog(Debug.MODE_DEBUG))
+				{
+					Debug.out(Debug.MODE_DEBUG, MODULE_NAME, inMsg + " resulted in:");
+					Iterator msgit = outMsgs.iterator();
+					while (msgit.hasNext())
+					{
+						Debug.out(Debug.MODE_DEBUG, MODULE_NAME, ": " + ((Message) msgit.next()));
+					}
+				}
 			}
 		}
 	}
 
-	public Message walk(Node node, Message msg, int curDepth) throws ModuleException
+	public List walk(Node node, Message msg, int curDepth) throws ModuleException
 	{
+		List result = new ArrayList();
 		while (node != null)
 		{
 			if (curDepth >= maxDepth)
 			{
-				Debug.out(Debug.MODE_INFORMATION, "Reached maximum walking at " + node + " (label:" + node.getLabel()
-						+ ") at depth " + curDepth, DIGGER.MODULE_NAME);
-				return msg;
+				Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, "Reached maximum walking at " + node + " (label:"
+						+ node.getLabel() + ") at depth " + curDepth);
+				break;
 			}
-			Debug.out(Debug.MODE_DEBUG, "Walking node " + node + " (label:" + node.getLabel() + ") at depth "
-					+ curDepth, DIGGER.MODULE_NAME);
+
+			if (Debug.willLog(Debug.MODE_DEBUG) && false)
+			{
+				Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Walking node " + node + " (label:" + node.getLabel()
+						+ ") at depth " + curDepth);
+			}
 			Iterator edges = node.getOutgoingEdges();
+			Node origNode = node;
 			node = null;
 			while (edges.hasNext())
 			{
@@ -119,25 +144,50 @@ public class NOBBIN
 				if (e instanceof CondMatchEdge)
 				{
 					CondMatchEdge cme = (CondMatchEdge) e;
-					if (!msg.matches(cme))
-					{
-						continue;
-					}
 					int expr = cme.getExpression().simulateResult();
 					if (expr == ConditionExpression.RESULT_FALSE)
 					{
+						// will never be run
 						continue;
 					}
-					msg.setCertenty(expr);
-					node = e.getDestination();
-					break;
+					if (!msg.matches(cme))
+					{
+						// doesn't match
+						continue;
+					}
+					if (expr > ConditionExpression.RESULT_TRUE)
+					{
+						// branch
+						Message newMsg = new Message(msg);
+						newMsg.setCertenty(expr);
+						result.addAll(walk(e.getDestination(), newMsg, curDepth));
+						continue;
+					}
+					else
+					{
+						msg.setCertenty(expr);
+						node = e.getDestination();
+						break;
+					}
 				}
 				else if (e instanceof SubstitutionEdge)
 				{
+					msg = gen.xform(msg, (SubstitutionEdge) e);
+					if (msg.isRecursive())
+					{
+						if (msg.getCertenty() == ConditionExpression.RESULT_TRUE)
+						{
+							Debug.out(Debug.MODE_ERROR, MODULE_NAME, origNode+"... is infinite recursive");
+						}
+						else
+						{
+							Debug.out(Debug.MODE_WARNING, MODULE_NAME, origNode+"... might be infinite recursive");
+						}
+						break;
+					}
 					// subsitue a message
 					node = e.getDestination();
 					curDepth++;
-					msg = gen.xform(msg, (SubstitutionEdge) e);
 					// TODO: can result in duplicate messages in case of `inner
 					// node` of the default dispatch
 					break;
@@ -148,6 +198,7 @@ public class NOBBIN
 				}
 			}
 		}
-		return msg;
+		if (msg != null) result.add(msg);
+		return result;
 	}
 }
