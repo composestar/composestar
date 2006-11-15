@@ -360,7 +360,7 @@ namespace Composestar.StarLight.Weaving.Strategies
             if(!originalCall.ReturnType.ReturnType.FullName.Equals(CecilUtilities.VoidType))
             {
                 // Check if returnvalue is value type, then box
-                if(originalCall.ReturnType.ReturnType.IsValueType)
+                if(originalCall.ReturnType.ReturnType.IsValueType || originalCall.ReturnType.ReturnType is GenericParameter)
                 {
                     visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Box, originalCall.ReturnType.ReturnType));
                 }

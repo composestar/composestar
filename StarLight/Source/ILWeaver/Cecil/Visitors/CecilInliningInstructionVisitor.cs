@@ -1046,7 +1046,7 @@ namespace Composestar.StarLight.ILWeaver
 
 
                 // Check if returnvalue is value type, then unbox, else cast
-                if(CalledMethod.ReturnType.ReturnType.IsValueType)
+                if (CalledMethod.ReturnType.ReturnType.IsValueType || CalledMethod.ReturnType.ReturnType is GenericParameter)
                 {
                     Instructions.Add(Worker.Create(OpCodes.Unbox_Any, CalledMethod.ReturnType.ReturnType));
                 }
