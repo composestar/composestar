@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>Debug woven files</title>
+    <link href="Styles\presentation.css" type="text/css" rel="STYLESHEET">
+    <link href="..\..\styles.css" type="text/css" rel="STYLESHEET">
+</head>
+<body topmargin="0" leftmargin="0">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="100%" class="TopHeaderRepeatSmall">
+                &nbsp;</td>
+            <td align="right">
+                <img src="images/logo_top_small.png" title="ComposeStar StarLight" /></td>
+        </tr>
+    </table>
+    <div id="mainSection">
+        <div id="mainBody">
+            <h1 class="heading">
+                Debugging of woven files</h1>
+            <p>
+                The StarLight IL weaver updates existing debug files (PDB) by rewriting the sequence
+                points and documents from the original debug file and hides the injected code. Debugging
+                the woven code is no different then debugging your original program because the
+                extra added filter code is hidden for the debugger.</p>
+            <p>
+                The woven file and new PDB file are located in the <i>bin</i> folder of your concerns
+                project. There are a number of ways to use debugging:
+            </p>
+            <ul>
+                <li>Copy the woven assembly and PDB file to the output folder of your original project.
+                    You can do this manually or use a <a href="../../MSBuild/ExtendingMSBuild.html">postbuild
+                        target</a> like the <i>AfterWeave</i>. In this MSBuild target, use a copy task
+                    to copy the woven files and PDB back to your project folder.</li>
+                <li>In the properties of your source project, select the <i>Debug</i> tab and select
+                    the option <i>Start external program</i>. Browse for the executable in the concern
+                    project output folder.</li>
+                <li>Attach the Visual Studio debugger to an instance of the application. Start the woven
+                    application, select <i>Debug</i>,<i>Attach to Process...</i> from the menu and pick
+                    your running application from the list.</li>
+                <li>Use the <i>CORDBG</i> located in the .NET SDK folder or the <i>DbgCLR</i> for a
+                    GUI version of the debugger.</li>
+            </ul>
+            <p>
+            <strong>Note:</strong>&nbsp;the debugger will skip filter code, meaning a number of actions can occur which cannot be seen in the debugger.</p>
+        </div>
+    </div>
+</body>
+</html>
+<!-- @SortOrder 2 -->
