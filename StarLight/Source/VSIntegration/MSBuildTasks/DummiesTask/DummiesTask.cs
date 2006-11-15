@@ -26,7 +26,6 @@ namespace Composestar.StarLight.MSBuild.Tasks
 
 		public override bool Execute()
 		{
-			Log.LogMessage("m_sources={0}", m_sources);
 			foreach (ITaskItem source in m_sources)
 			{
 				Log.LogMessage("-{0}", source.ToString());

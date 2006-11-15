@@ -20,226 +20,215 @@ using Composestar.Repository;
 
 namespace Composestar.StarLight.MSBuild.Tasks
 {
-    /// <summary>
-    /// Task to parse the Cps files.
-    /// </summary>
-    public class CpsParserTask : Task
-    {
+	/// <summary>
+	/// Task to parse the Cps files.
+	/// </summary>
+	public class CpsParserTask : Task
+	{
+		private string _repositoryFileName;
+		private ITaskItem[] _concernFiles;
+		private ITaskItem[] _referencedTypes;
+		private bool _hasOutputFilters;
+		private bool _concernsDirty;
 
-        #region Constructor
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:CpsParserTask"/> class.
-        /// </summary>
-        public CpsParserTask() : base(Properties.Resources.ResourceManager)
-        {
+		#region Constructor
 
-        }
-        #endregion
+		/// <summary>
+		/// Initializes a new instance of the <see cref="T:CpsParserTask"/> class.
+		/// </summary>
+		public CpsParserTask() : base(Properties.Resources.ResourceManager)
+		{
+		}
+		#endregion
 
-        #region Properties
+		#region Properties
 
-        private string _repositoryFileName;
+		/// <summary>
+		/// Gets or sets the repository filename.
+		/// </summary>
+		/// <value>The repository filename.</value>
+		[Required()]
+		public string RepositoryFileName
+		{
+			get { return _repositoryFileName; }
+			set { _repositoryFileName = value; }
+		}
 
-        /// <summary>
-        /// Gets or sets the repository filename.
-        /// </summary>
-        /// <value>The repository filename.</value>
-        [Required()]
-        public string RepositoryFileName
-        {
-            get { return _repositoryFileName; }
-            set { _repositoryFileName = value; }
-        }
+		/// <summary>
+		/// Gets or sets the concern files.
+		/// </summary>
+		/// <value>The concern files.</value>
+		[Required()]
+		public ITaskItem[] ConcernFiles
+		{
+			get { return _concernFiles; }
+			set { _concernFiles = value; }
+		}
 
-        private ITaskItem[] _concernFiles;
+		/// <summary>
+		/// Gets or sets the referenced types.
+		/// </summary>
+		/// <value>The referenced types.</value>
+		[Output()]
+		public ITaskItem[] ReferencedTypes
+		{
+			get { return _referencedTypes; }
+			set { _referencedTypes = value; }
+		}
 
-        /// <summary>
-        /// Gets or sets the concern files.
-        /// </summary>
-        /// <value>The concern files.</value>
-        [Required()]
-        public ITaskItem[] ConcernFiles
-        {
-            get { return _concernFiles; }
-            set { _concernFiles = value; }
-        }
+		[Output()]
+		public bool HasOutputFilters
+		{
+			get { return _hasOutputFilters; }
+			set { _hasOutputFilters = value; }
+		}
 
-        private ITaskItem[] _referencedTypes;
-
-        /// <summary>
-        /// Gets or sets the referenced types.
-        /// </summary>
-        /// <value>The referenced types.</value>
-        [Output()]
-        public ITaskItem[] ReferencedTypes
-        {
-            get { return _referencedTypes; }
-            set { _referencedTypes = value; }
-        }
-
-        private bool _hasOutputFilters;
-
-        [Output()]
-        public bool HasOutputFilters
-        {
-            get { return _hasOutputFilters; }
-            set { _hasOutputFilters = value; }
-        }
-
-        private bool _concernsDirty;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether oen or more concern files are changed.
-        /// </summary>
-        /// <value><c>true</c> if concerns dirty; otherwise, <c>false</c>.</value>
-        [Output]
-        public bool ConcernsDirty
-        {
-            get { return _concernsDirty; }
-            set { _concernsDirty = value; }
-        }
+		/// <summary>
+		/// Gets or sets a value indicating whether oen or more concern files are changed.
+		/// </summary>
+		/// <value><c>true</c> if concerns dirty; otherwise, <c>false</c>.</value>
+		[Output]
+		public bool ConcernsDirty
+		{
+			get { return _concernsDirty; }
+			set { _concernsDirty = value; }
+		}
 	
+		#endregion
 
-        #endregion
+		/// <summary>
+		/// When overridden in a derived class, executes the task.
+		/// </summary>
+		/// <returns>
+		/// true if the task successfully executed; otherwise, false.
+		/// </returns>
+		public override bool Execute()
+		{
+			List<string> refTypes = new List<string>();
+			Stopwatch sw = new Stopwatch();
 
-        /// <summary>
-        /// When overridden in a derived class, executes the task.
-        /// </summary>
-        /// <returns>
-        /// true if the task successfully executed; otherwise, false.
-        /// </returns>
-        public override bool Execute()
-        {
-            List<string> refTypes = new List<string>();
-            Stopwatch sw = new Stopwatch();                        
-       
-            try
-            {
-                sw.Start();
+			try
+			{
+				sw.Start();
 
-                ICpsParser cfp = null;
-                
-                // Open DB
-                Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
-                IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
+				// Open DB
+				Log.LogMessageFromResources(MessageImportance.Low, "OpenDatabase", RepositoryFileName);
+				IEntitiesAccessor entitiesAccessor = EntitiesAccessor.Instance; 
 
-                ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);               
+				ConfigurationContainer configContainer = entitiesAccessor.LoadConfiguration(RepositoryFileName);               
 
-                // Create a list with all current concerns
-                List<ConcernElement> concernsInConfig = configContainer.Concerns;   
-                
-                // Create a list with the new concerns
-                List<ConcernElement> concernsToAdd = new List<ConcernElement>(); 
+				// Create a list with all current concerns
+				List<ConcernElement> concernsInConfig = configContainer.Concerns;   
+				
+				// Create a list with the new concerns
+				List<ConcernElement> concernsToAdd = new List<ConcernElement>(); 
 
-                // Parse all concern files and add to the database
-                foreach (ITaskItem item in ConcernFiles)
-                {
-                    String concernFile = item.ToString();
-                    string path = Path.GetDirectoryName(concernFile);
-                    string filename = Path.GetFileName(concernFile);
-                
-                    // Find the concernElement
-                    ConcernElement ce = null;
-                    
-                    ce = concernsInConfig.Find(delegate(ConcernElement  conElem)
-                    {
-                        return conElem.FullPath.Equals(Path.Combine(path, filename) );
-                    });
+				// Parse all concern files and add to the database
+				foreach (ITaskItem item in ConcernFiles)
+				{
+					String concernFile = item.ToString();
+					string path = Path.GetDirectoryName(concernFile);
+					string filename = Path.GetFileName(concernFile);
+					string fullPath = Path.Combine(path, filename);
+				
+					// Find the concernElement
+					ConcernElement ce = concernsInConfig.Find(delegate(ConcernElement e)
+					{
+						return e.FullPath.Equals(fullPath);
+					});
 
-                    bool newConcern = false;
+					bool newConcern = false;
+					if (ce == null)
+					{
+						// create a new ConcernElement
+						ce = new ConcernElement();
+						ce.PathName = path;
+						ce.FileName = filename;
+						ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks;
+						ConcernsDirty = true;
+						newConcern = true;
+					}
 
-                    if (ce == null)
-                    {
-                        // create a new ConcernElement
-                        ce = new ConcernElement();
-                        ce.PathName = path;
-                        ce.FileName = filename;
-                        ce.Timestamp = File.GetLastWriteTime(concernFile).Ticks;
-                        ConcernsDirty = true;
-                        newConcern = true;
-                    }
+					// Do a time check
+					if (newConcern || File.GetLastWriteTime(concernFile).Ticks > ce.Timestamp)
+					{
+						Log.LogMessageFromResources("ParsingConcernFile", concernFile);
 
-                    // Do a time check
-                    if (newConcern || File.GetLastWriteTime(concernFile).Ticks > ce.Timestamp)
-                    {
-                        Log.LogMessageFromResources("ParsingConcernFile", concernFile);
+						// File is changed, we might not have the correct data
+						CpsParserConfiguration config = CpsParserConfiguration.CreateDefaultConfiguration(concernFile);
+						ICpsParser parser = DIHelper.CreateObject<CpsFileParser>(CreateContainer(config));
 
-                        // File is changed, we might not have the correct data
-                        CpsParserConfiguration config = CpsParserConfiguration.CreateDefaultConfiguration(concernFile);
-                        cfp = DIHelper.CreateObject<CpsFileParser>(CreateContainer(config));
+						// Parse the concern file
+						parser.Parse();
 
-                        // Parse the concern file
-                        cfp.Parse();
+						// indicate if there are any outputfilters
+						ce.HasOutputFilters = parser.HasOutputFilters;
 
-                        // indicate if there are any outputfilters
-                        ce.HasOutputFilters = cfp.HasOutputFilters;
+						// indicate if there is embedded code
+						ce.HasEmbeddedCode = parser.HasEmbeddedCode;
 
-                        // Add the referenced types
-                        // TODO Should we also save this info in the ConcernElement?
-                        // Or is the assembly analyzed in a earlier, non-incremental, run?
-                        refTypes.AddRange(cfp.ReferencedTypes);
+						// Add the referenced types
+						// TODO Should we also save this info in the ConcernElement?
+						// Or is the assembly analyzed in a earlier, non-incremental, run?
+						refTypes.AddRange(parser.ReferencedTypes);
 
-                        // Indicate that the concerns are most likely dirty
-                        ConcernsDirty = true;
-                    }
-                    else
-                    {
-                        Log.LogMessageFromResources("AddingConcernFile", concernFile);
-                    }
+						// Indicate that the concerns are most likely dirty
+						ConcernsDirty = true;
+					}
+					else
+					{
+						Log.LogMessageFromResources("AddingConcernFile", concernFile);
+					}
 
-                    // If this concern has output filters, then enable (do not override a previously set true value)
-                    HasOutputFilters = HasOutputFilters | ce.HasOutputFilters;            
+					// If this concern has output filters, then enable (do not override a previously set true value)
+					HasOutputFilters |= ce.HasOutputFilters;            
 
-                    concernsToAdd.Add(ce);
-                }
+					concernsToAdd.Add(ce);
+				}
 
-                sw.Stop();
+				sw.Stop();
 
-                Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
+				Log.LogMessageFromResources("FoundReferenceType", refTypes.Count, ConcernFiles.Length, sw.Elapsed.TotalSeconds);
 
-                // Pass all the referenced types back to msbuild
-                if (refTypes != null && refTypes.Count > 0)
-                {
-                    int index = 0;
-                    ReferencedTypes = new ITaskItem[refTypes.Count];
-                    foreach (String type in refTypes)
-                    {
-                        ReferencedTypes[index] = new TaskItem(type);
-                        index++;
-                    } // foreach  (type)
+				// Pass all the referenced types back to msbuild
+				if (refTypes != null && refTypes.Count > 0)
+				{
+					int index = 0;
+					ReferencedTypes = new ITaskItem[refTypes.Count];
+					foreach (String type in refTypes)
+					{
+						ReferencedTypes[index] = new TaskItem(type);
+						index++;
+					}
+				}
 
-                } // foreach  (item)
+				// Save the configContainer
+				configContainer.Concerns = concernsToAdd;  
+				entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer); 
+			}
+			catch (CpsParserException ex)
+			{
+				Log.LogErrorFromException(ex, false);
+			}
+			catch (System.IO.FileNotFoundException ex)
+			{
+				Log.LogErrorFromException(ex, false);
+			}
+				
+			return !Log.HasLoggedErrors;
+		} // Execute()
 
-                // Save the configContainer
-                configContainer.Concerns = concernsToAdd;  
-                entitiesAccessor.SaveConfiguration(RepositoryFileName, configContainer); 
-                
-            }
-            catch (CpsParserException ex)
-            {
-                Log.LogErrorFromException(ex, false);
-            }
-            catch (System.IO.FileNotFoundException ex)
-            {
-                Log.LogErrorFromException(ex, false);
-            }
-                
-            return !Log.HasLoggedErrors;
+		/// <summary>
+		/// Creates the services container.
+		/// </summary>
+		/// <returns></returns>
+		internal static IServiceProvider CreateContainer(CpsParserConfiguration configuration)
+		{
+			ServiceContainer serviceContainer = new ServiceContainer();
+			serviceContainer.AddService(typeof(CpsParserConfiguration), configuration);
+			serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new CpsParserBuilderConfigurator());
 
-        } // Execute()
-
-        /// <summary>
-        /// Creates the services container.
-        /// </summary>
-        /// <returns></returns>
-        internal static IServiceProvider CreateContainer(CpsParserConfiguration configuration)
-        {
-            ServiceContainer serviceContainer = new ServiceContainer();
-            serviceContainer.AddService(typeof(CpsParserConfiguration), configuration);
-            serviceContainer.AddService(typeof(IBuilderConfigurator<BuilderStage>), new CpsParserBuilderConfigurator());
-
-            return serviceContainer;
-        }
-    }
+			return serviceContainer;
+		}
+	}
 }
