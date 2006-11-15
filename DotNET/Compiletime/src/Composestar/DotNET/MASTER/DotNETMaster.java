@@ -19,19 +19,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
 import Composestar.Core.Exception.ModuleException;
 import Composestar.Core.INCRE.INCRE;
 import Composestar.Core.INCRE.Module;
 import Composestar.Core.Master.CommonResources;
 import Composestar.Core.Master.Master;
-import Composestar.Core.Master.Config.Configuration;
-import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 import Composestar.Utils.Version;
@@ -42,44 +34,9 @@ import Composestar.Utils.Version;
  */
 public class DotNETMaster extends Master
 {
-	private CommonResources resources;
-
-	private String configfile;
-
-	/**
-	 * Default ctor.
-	 */
-	public DotNETMaster(String configurationFile) throws ModuleException
+	public DotNETMaster(String[] args)
 	{
-		configfile = configurationFile;
-
-		// create the repository
-		DataStore ds = DataStore.instance();
-
-		resources = new CommonResources();
-		ds.addObject(RESOURCES_KEY, resources);
-
-		// load the project configuration file
-		try
-		{
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Reading build configuration from: " + configurationFile);
-
-			SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-			SAXParser saxParser = saxParserFactory.newSAXParser();
-			XMLReader parser = saxParser.getXMLReader();
-
-			BuildConfigHandler handler = new BuildConfigHandler(parser);
-			parser.setContentHandler(handler);
-			parser.parse(new InputSource(configurationFile));
-		}
-		catch (Exception e)
-		{
-			throw new ModuleException("An error occured while reading the build configuration file: "
-					+ configurationFile + ", reason: " + e.getMessage(), MODULE_NAME);
-		}
-
-		// Set debug level
-		Debug.setMode(Configuration.instance().getBuildDebugLevel());
+		super(args);
 	}
 
 	/**
@@ -90,8 +47,8 @@ public class DotNETMaster extends Master
 		// This is the 'hardcoded' version
 		try
 		{
-			//Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Composestar compile-time " + Version.getVersionString());
-
+			long beginTime = System.currentTimeMillis();
+			
 			// Apache XML driver is moved to a different package in Java 5
 			if (System.getProperty("java.version").substring(0, 3).equals("1.5"))
 			{
@@ -120,9 +77,13 @@ public class DotNETMaster extends Master
 			}
 
 			incre.getReporter().close();
-			if (Debug.getMode() >= Debug.MODE_WARNING)
+			if (Debug.willLog(Debug.MODE_WARNING))
 			{
 				Debug.outWarnings();
+			}
+			if (Debug.willLog(Debug.MODE_DEBUG))
+			{
+				System.out.println("Total time: "+(System.currentTimeMillis()-beginTime)+"ms");
 			}
 		}
 		catch (ModuleException e)
@@ -144,7 +105,7 @@ public class DotNETMaster extends Master
 			}
 
 			Debug.out(Debug.MODE_DEBUG, e.getModule(), "StackTrace: " + Debug.stackTrace(e));
-			System.exit(1);
+			System.exit(ECOMPILE);
 		}
 		catch (Exception e)
 		{
@@ -156,7 +117,7 @@ public class DotNETMaster extends Master
 
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "Internal compiler error: " + error);
 			Debug.out(Debug.MODE_ERROR, MODULE_NAME, "StackTrace: " + Debug.stackTrace(e));
-			System.exit(2);
+			System.exit(EFAIL);
 		}
 	}
 
@@ -224,23 +185,24 @@ public class DotNETMaster extends Master
 			return;
 		}
 
-		if (args[0].equalsIgnoreCase("-V") || args[0].equalsIgnoreCase("--version"))
+		if (args[0].equals("-V") || args[0].equals("--version"))
 		{
 			Version.reportVersion(System.out);
 			return;
 		}
-
+		
+		Master master = new DotNETMaster(args);
 		try
 		{
-			Master master = new DotNETMaster(args[0]);
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
-			Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
-			master.run();
+			master.loadConfiguration();
 		}
-		catch (ModuleException e)
+		catch (Exception e)
 		{
-			System.out.println("Could not open configuration file '" + args[0] + "': " + e.getMessage());
-			System.exit(-1); // FIXME: are these errorlevels random?
+			System.out.println(e.getMessage());
+			System.exit(ECONFIG);
 		}
+		Debug.out(Debug.MODE_INFORMATION, MODULE_NAME, Version.getTitle() + " " + Version.getVersionString());
+		Debug.out(Debug.MODE_DEBUG, MODULE_NAME, "Compiled on "+Version.getCompileDate().toString());
+		master.run();
 	}
 }
