@@ -263,6 +263,7 @@
 		<antcall target="svn-update-starlight" />
 		<ant target="build_msbuild" dir="${build.starlight}" />
 		<ant target="build_ws" dir="${build.starlight}" />		
+		<ant target="test" dir="${build.starlight}" />
 		<ant target="fxcop" dir="${build.starlight}" />
 		<ant target="findbugs" dir="${build.starlight}" />
 		<ant target="checkstyle" dir="${build.starlight}" />
