@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="LoggingAction.cs" />
     <Compile Include="LoggingFilterType.cs" />
+    <Compile Include="StaticFilterTests.cs" />
     <Compile Include="TestExternal.cs">
       <SubType>Code</SubType>
     </Compile>

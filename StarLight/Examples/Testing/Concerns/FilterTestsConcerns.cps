@@ -1,6 +1,6 @@
 concern FilterTestsConcern in BasicTests
 {
-	filtermodule FM2
+	filtermodule FM1
 	{
 		internals
 			myInternal : BasicTests.TestInternal;
@@ -24,14 +24,22 @@ concern FilterTestsConcern in BasicTests
 			dispatch2	: Dispatch = { True => [*.func2] myInternal.internalMe };
 			dispatch3	: Dispatch = { True => [*.func3] inner.func1 }
 		outputfilters
-			aftertest2 : After = { True => [*.func4] myExternal.after2 }
+			aftertest2  : After = { True => [*.func4] myExternal.after2 }
+	}
+	
+	filtermodule FM2
+	{
+		inputfilters
+			logging     : Logging = { True => [*.*] }
 	}
 
 	superimposition
 	{
 		selectors
 			baseClass = { C | isClassWithName(C, 'BasicTests.FilterTests') };
-		filtermodules
-			baseClass <- FM2;
+			baseStaticClass = { C | isClass(C), isClassWithName(C, P), matchPattern(P, 'BasicTests.StaticFilterTests.*') };
+ 		filtermodules
+			baseClass <- FM1;
+			baseStaticClass <- FM2;
 	}
 }

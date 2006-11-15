@@ -32,7 +32,8 @@ namespace BasicTests
 			Console.Out.WriteLine( filtTests.func4(3) );
 			filtTests.func6();
 			filtTests.func7("foo");
-            filtTests.func8("generic argument");
+            filtTests.func8("non-static generic method");
+            StaticFilterTests<string>.func1("static generic method");
 
 			filtTests.askForHelp();
 			filtTests.doStuff();

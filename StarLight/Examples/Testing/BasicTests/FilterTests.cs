@@ -82,9 +82,11 @@ namespace BasicTests
 			report("func7: s='" + s + "'");
 		}
 
-        public void func8<T>(T value)
+        public T func8<T>(T value)
         {
             report("func8: generic.ToString() = '" + value.ToString() + "'");
+
+            return value;
         }
 
 		public void askForHelp()
