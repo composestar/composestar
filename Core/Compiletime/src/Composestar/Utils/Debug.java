@@ -43,6 +43,16 @@ public final class Debug
 	{
 		return currentMode;
 	}
+	
+	/**
+	 * Return true if this message will be logged with Debug.out(...) is called
+	 * @param mode
+	 * @return
+	 */
+	public static boolean willLog(int mode)
+	{
+		return currentMode >= mode;
+	}
 
 	public static void out(int mode, String module, String msg, String filename, int line)
 	{
