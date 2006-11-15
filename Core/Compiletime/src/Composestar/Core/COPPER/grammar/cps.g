@@ -25,7 +25,7 @@ options {
         buildAST = true;
         exportVocab = Cps;
         k = 1;
-        ASTLabelType = "CpsAST";  
+        ASTLabelType = "CpsAST";
         defaultErrorHandler = false;
 }
 

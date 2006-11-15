@@ -18,9 +18,6 @@ header {
 package Composestar.Core.COPPER;
 
 import java.util.Vector;
-import Composestar.Core.Exception.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.*;
-import Composestar.Core.CpsProgramRepository.CpsConcern.SuperImposition.*;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.ConditionExpression;
 }
 
@@ -28,7 +25,7 @@ class CpsTreeWalker extends TreeParser;
 options {
         importVocab = Cps;
         defaultErrorHandler = false;
-        	ASTLabelType = "CpsAST";  
+        ASTLabelType = "CpsAST";
 }
 {
   public String cur_fm = new String();
@@ -40,19 +37,18 @@ options {
   public Vector typev2 = new Vector();    //temp vector for types of 2nd selector
   public Vector temptypes = new Vector(); //temp vector for types (including full package names)
   public Vector tempnames = new Vector(); //temp vector for names (including full packages)
-  public Vector arg = new Vector(); 	  //temp string for argument name
+  public Vector arg = new Vector();       //temp string for argument name
   public int t=0;                         //flag for selectorexpression
   public int matching=0;                  //flag for name / signature matching (0=signature, 1=name)
   public Vector typel = new Vector();     //temp vector for type list (in methods)
-  public String target;   // temp string for target name
-  public String selector; // temp string for selector name
-  public int paratype=0; 						// flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
+  public String target;                   //temp string for target name
+  public String selector;                 //temp string for selector name
+  public int paratype=0;                  //flag for parameter type (0 = error, 1 =no parameter, 2 = parameter, 3 = parameterlist)
   
   public CpsRepositoryBuilder getRepositoryBuilder()
   {
     return this.b;
   }
-  
 }
 
 concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalParameters)? (namespace {b.finalizeNamespace();})? (filterModule)* (superImposition)? (implementation)? {b.finish();});
@@ -62,25 +58,23 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
     formalParameterDef : #(FPMDEF_ (n:NAME {namev.add(n.getText());} )* type);
 
     namespace : (ns:NAME{b.addToNamespace(ns.getText());})+;
-    //namespace : (n:NAME{})+;
-
 
   //////////////////////////////////////////////////////////////////////////
     filterModule : #("filtermodule" f:NAME ("on")? {b.addFilterModule(f.getText(),f.getLine());} (filterModuleParameters)? (internals)? (externals)? (conditions)? (inputFilters)? (outputFilters)?);       //fixme: include arguments? (not really used)
-        
-    filterModuleParameters :  #(FILTERMODULEPARAMETERS_ {parameterv.clear();} filterModuleParameterSet {b.addFilterModuleParameters(parameterv, 0);}); 
+
+    filterModuleParameters :  #(FILTERMODULEPARAMETERS_ {parameterv.clear();} filterModuleParameterSet {b.addFilterModuleParameters(parameterv, 0);});
     filterModuleParameterSet : #(DECLAREDPARAMETER_ (p:PARAMETER_NAME {parameterv.add(p.getText());} | p2:PARAMETERLIST_NAME {parameterv.add(p2.getText());})+ );
-  	parameter : #(PARAMETER_ p:PARAMETER_NAME {parameterv.add(p.getText());} );
-  	parameterlist : #(PARAMETERLIST_ p:PARAMETERLIST_NAME {parameterv.add(p.getText());} );    
+    parameter : #(PARAMETER_ p:PARAMETER_NAME {parameterv.add(p.getText());} );
+    parameterlist : #(PARAMETERLIST_ p:PARAMETERLIST_NAME {parameterv.add(p.getText());} );
 
     /*---------------------------------------------------------------------------*/
     internals : #("internals" (singleInternal)*);
 
      singleInternal : #(INTERNAL_ {namev.clear();} n:variableSet {typev.clear(); parameterv.clear();} (type {b.addInternals(namev, typev, n.getFirstChild().getLine(), false);}
-											|parameter {b.addInternals(namev, parameterv, n.getFirstChild().getLine(), true);}));
-			
+                    | parameter {b.addInternals(namev, parameterv, n.getFirstChild().getLine(), true);}));
+
         variableSet : #(VAR_ (n:NAME {namev.add(n.getText());})+ );
-        
+
         type : #(TYPE_ (t:NAME {typev.add(t.getText());} )+);
 
     /*---------------------------------------------------------------------------*/
@@ -88,7 +82,6 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
       singleExternal : #(EXTERNAL_ {namev.clear();} n:variableSet {typev.clear();} type {tempnames.clear();} {s = null;} (s:EQUALS)? (n2:NAME {tempnames.add(n2.getText());} )*  
       {b.addExternals(namev, typev, tempnames, s == null ? 0 : 1, n.getFirstChild().getLine()); });
-     
 
     /*---------------------------------------------------------------------------*/
     conditions : #("conditions" (singleCondition)*);
@@ -115,38 +108,31 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
                                else b.addFilterElement(null,0,fec);
                              } messagePatternSet);
 
-// old --
-/*
-              orExpr : #(OREXPR_ andExpr (OR { b.addOr(); } andExpr)*);
+              orExpr returns [ConditionExpression r=null]
+              { ConditionExpression lhs, rhs; }
+              :   #(OR lhs=orExpr rhs=orExpr)
+                  { r = b.addOr(lhs, rhs); }
+              |   r=andExpr
+              ;
 
-                andExpr : #(ANDEXPR_ notExpr (AND { b.addAnd(); } notExpr)*);
+              andExpr returns [ConditionExpression r=null]
+              { ConditionExpression lhs, rhs; }
+              :   #(AND lhs=orExpr rhs=orExpr)
+                  { r = b.addAnd(lhs, rhs); }
+              |   r=unaryExpr
+              ;
 
-                  notExpr : #(NOTEXPR_ {namev.clear(); n = null; } (n:NOT)? (na:NAME {namev.add(na.getText());} )+ { if(n!=null) b.addNot(namev); else b.addConditionLiteral(namev, null); } );
-*/
-// -- old
-// new --
-              orExpr returns [ConditionExpression expr=null]
-                     {ConditionExpression lhs, rhs;}
-                     : #(OR lhs=orExpr rhs=orExpr {expr = b.addOr(lhs, rhs);} )
-                     | expr=andExpr
-              		 ;
-              
-              	andExpr returns [ConditionExpression expr=null]
-                        {ConditionExpression lhs, rhs;}
-              	        : #(AND lhs=orExpr rhs=orExpr {expr = b.addAnd(lhs, rhs);} )
-              	        | expr=unaryExpr
-              	        ;
-              	
-              	  unaryExpr returns [ConditionExpression expr=null]
-                            {ConditionExpression oper;}              	  
-              	            : #(n:NOT oper=orExpr {expr = b.addNot(oper);} )
-              	  			| expr=operandExpr
-              	  			;
-              	  
-              	    operandExpr returns [ConditionExpression expr=null]
-              	                : na:NAME {expr = b.addConditionOperand(na.getText());}
-              	                ;
-// -- new           
+              unaryExpr returns [ConditionExpression r=null]
+              { ConditionExpression e; }
+              :   #(NOT e=orExpr)
+                  { r = b.addNot(e); }
+              |   r=operandExpr
+              ;
+
+              operandExpr returns [ConditionExpression r=null]
+              :   na:NAME
+                  { r = b.addConditionOperand(na.getText()); }
+              ;
 
               messagePatternSet : #(MPSET_ messagePattern);
 
@@ -158,31 +144,32 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
                                   );
                 
                 matchingPart : #(MPART_ {h = null;} (h:HASH)? singleTargetSelector ((SEMICOLON | COMMA) singleTargetSelector)* )
-                			{ b.setMessagePatternList(h != null); };
-                substitutionPart : #(SPART_ {h = null;} (h:HASH)? targetSelector2 (SEMICOLON targetSelector2)* )
-                			{ b.setMessagePatternList(h != null); };
+                             { b.setMessagePatternList(h != null); };
                 
-                singleTargetSelector : 
-                					{ matching = 1; target = null; selector = null; typev.clear(); paratype= 0; }
-                                    (
-                                        LSQUARE {matching=0;}
-                                      | LANGLE {matching=1;}
-                                      | SINGLEQUOTE {matching=0;}
+                substitutionPart : #(SPART_ {h = null;} (h:HASH)? targetSelector2 (SEMICOLON targetSelector2)* )
+                                 { b.setMessagePatternList(h != null); };
+                
+                singleTargetSelector :
+                                    { matching = 1; target = null; selector = null; typev.clear(); paratype= 0; }
+                                    ( LSQUARE {matching=0;}
+                                    | LANGLE {matching=1;}
                                     )?
                                     targetSelector
                                     { b.addMatchingPart( target, selector, typev, matching, paratype, 0 );}
                                     ;
 
-                  targetSelector : (target)? {parameterv.clear();} (selector {paratype=1;}
+                  targetSelector : (target)? {parameterv.clear();} 
+                                   ( selector {paratype=1;}
                                    | parameter {selector = (String) parameterv.get(0); paratype=2;}
-                                   | parameterlist {selector = (String) parameterv.get(0); paratype=3;});
+                                   | parameterlist {selector = (String) parameterv.get(0); paratype=3;}
+                                   );
 
                   targetSelector2 : { target = null; selector=null; typev2.clear(); }
                                     (target)? selector2                //extra rule to distinguish between selector matching / substitution part
                                     { b.addSubstitutionPart( target, selector, typev2, 0 ); }
                                     ;
                                     
-					selector : #(SELEC_ (((n:NAME { selector=n.getText(); typev.clear();} (type3)*)) | (STAR { selector="*"; } )));
+                    selector : #(SELEC_ (((n:NAME { selector=n.getText(); typev.clear();} (type3)*)) | (STAR { selector="*"; } )));
 
                     type3 : #(TYPE_ {temptypes = new Vector();} (t:NAME {temptypes.add(t.getText());} )+ {typev.add(temptypes);});   //extra rule
 
@@ -198,7 +185,6 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
       generalFilter2: singleOutputFilter ( (s:SEMICOLON {b.addFilterCompOper(s.getText(),s.getLine());})? singleOutputFilter)* ;
 
         singleOutputFilter : #(OFILTER_ n:NAME {typev.clear();} type {b.addOutputFilter(n.getText(), typev,n.getLine());} (actualParameters)? (filterElements)? );
-
 
   /////////////////////////////////////////////////////////////////////////
   superImposition : #("superimposition" {b.addSuperImposition();} (selectorDef)? (filtermoduleBind)? (annotationBind)? (constraints)?);
@@ -222,7 +208,7 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
         filterModuleSet : #(FMSET_ (#(FMELEM_ {namev.clear();} {parameterv.clear();} filterModuleElement))+);
 
-		filterModuleElement : (n:NAME {namev.add(n.getText());})+ (fmBindingArguments)? { b.addFilterModuleName(namev, parameterv, n.getLine()); } ;
+        filterModuleElement : (n:NAME {namev.add(n.getText());})+ (fmBindingArguments)? { b.addFilterModuleName(namev, parameterv, n.getLine()); } ;
         fmBindingArguments : #(DECLAREDARGUMENT_ {parameterv.clear();arg = new Vector();} (argument {parameterv.add(arg); arg = new Vector();})* );
           argument : #(ARGUMENT_ (n:NAME {arg.add(n.getText());})*) ;
              
@@ -250,8 +236,6 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 
         preHardConstraint : #("prehard" filterModuleRef (COMMA filterModuleRef)*);
 
-
-
   //////////////////////////////////////////////////////////////////////////
 //  implementation : #("implementation" (f:FILENAME | (n:NAME f2:FILENAME (sem:SEMICOLON)?))
 //                      {      if(f!=null && n==null) b.addCompiledImplementation(f.getText(),f.getLine());
@@ -259,10 +243,10 @@ concern : #("concern" c:NAME {b.addConcern(c.getText(),c.getLine());} (formalPar
 //                        else if(n!=null && f2!=null && sem!=null) b.addSource(n.getText(), f2.getText(),n.getLine());} );
 
   implementation : #("implementation" {namev.clear();} implementationInner);
-		    
-  implementationInner : ((NAME)+ FILENAME) => (n:NAME (n2:NAME {namev.add(n2.getText());})+ f:FILENAME 
-  			{ b.addEmbeddedSource(n.getText(), namev, f.getText(),n.getLine()); } )
-  		      | ((n3:NAME {namev.add(n3.getText());} )+
-  		        { b.addCompiledImplementation(namev); } )
-  		      ;
 
+  implementationInner
+  :   ((NAME)+ FILENAME) => (n:NAME (n2:NAME {namev.add(n2.getText());})+ f:FILENAME 
+      { b.addEmbeddedSource(n.getText(), namev, f.getText(),n.getLine()); } )
+  |   ((n3:NAME {namev.add(n3.getText());} )+
+      { b.addCompiledImplementation(namev); } )
+  ;
