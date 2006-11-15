@@ -137,7 +137,7 @@
 		
 		<publishers>
 			<htmlemail buildresultsurl="http://${cchost}:8080/buildresults/${project.name}" 
-				xslfile="${composestar.path}\Core\Development\CruiseControl\buildresults.xslt" 
+				xslfile="${starlight.path}\Core\Development\CruiseControl\buildresults.xslt" 
 				mailhost="smtp.utwente.nl" 
 				reportsuccess="fixes" 
 				skipusers="true"
@@ -152,7 +152,7 @@
 			<onsuccess>
 				<antpublisher 
 					target="integration_publish" 
-					buildfile="${composestar.path}\Core\Development\build_total.xml" 
+					buildfile="${starlight.path}\Core\Development\build_total.xml" 
 					uselogger="true" 
 					anthome="${composestar.ant}" 
 					antWorkingDir="${composestar.path}" 
@@ -172,7 +172,7 @@
 				<!-- clean up old artifacts, e.a. -->			
 				<antpublisher 
 					target="onsuccess" 
-					buildfile="${composestar.path}\Core\Development\CruiseControl\antextra.xml" 
+					buildfile="${starlight.path}\Core\Development\CruiseControl\antextra.xml" 
 					uselogger="true" 
 					anthome="${composestar.ant}" 
 					antWorkingDir="${composestar.path}" 
