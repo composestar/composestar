@@ -1,4 +1,4 @@
-﻿ml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project name="ComposeStar/StarLight" default="build" xmlns:dn="antlib:org.apache.ant.dotnet">
 
 	<condition property="build.core" value="${basedir}${file.separator}..${file.separator}Core">
@@ -128,8 +128,8 @@
 		<mkdir dir="${out.fxcop.starlight}" />
 	</target>
 
-	<target name="fxcop" depends="build_codeanalysis,fxcop_init" failonerror="false" description="Build all the outputs and run fxcop">
-		<fxcop reportfile="${out.fxcop.starlight}/fxcop.txt"
+	<target name="fxcop" depends="build_codeanalysis,fxcop_init"  description="Build all the outputs and run fxcop">
+		<fxcop reportfile="${out.fxcop.starlight}/fxcop.txt" failonerror="false"
 		       files="${MSBuildTasks.dir}/Bin/Debug/Composestar*.dll"/>
 	</target>
 
