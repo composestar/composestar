@@ -261,7 +261,8 @@
 	  <property name="build.integration.starlight" value="c:\starlight\starlight" />
 		<ant target="svn-update" dir="${build.integration.core}" />
 		<ant target="svn-update" dir="${build.integration.starlight}" />
-		<ant target="build" dir="${build.integration.starlight}\Source\VSIntegration\MSBuildTasks" />
+		<ant target="build_msbuild" dir="${build.integration.starlight}" />
+		<ant target="build_ws" dir="${build.integration.starlight}" />		
 		<ant target="fxcop" dir="${build.integration.starlight}" />
 		<ant target="findbugs" dir="${build.integration.starlight}" />
 		<ant target="checkstyle" dir="${build.integration.starlight}" />
