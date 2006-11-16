@@ -24,14 +24,6 @@
 		<condition property="test.mode.2005">
 			<equals arg1="${test.mode}" arg2="VS2005"/>
 		</condition>
-
-		<!--
-		<taskdef name="cstarConvert"  classname="Composestar.Ant.Taskdefs.CstarConvert"/>
-		<taskdef name="cstarBuildGen" classname="Composestar.Ant.Taskdefs.CstarBuildGen"/>
-		<taskdef name="cstarComp"     classname="Composestar.Ant.Taskdefs.CstarComp"/>
-		<taskdef name="cstarTest"     classname="Composestar.Ant.Taskdefs.CstarTest"/>
-		<taskdef name="msbatchbuild"  classname="Composestar.Ant.Taskdefs.MSBatchBuild"/>
-		-->
 	</target>
 
 	<target name="clean" depends="init">
