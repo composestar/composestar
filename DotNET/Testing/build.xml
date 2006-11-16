@@ -1,4 +1,4 @@
-<project name="Composestar/DotNET/testing" default="test">
+<project name="Composestar/DotNET/testing" default="test" xmlns:cs="antlib:Composestar">
 
 	<description>
 	Run the Compose* SystemTest for DotNET
@@ -25,11 +25,13 @@
 			<equals arg1="${test.mode}" arg2="VS2005"/>
 		</condition>
 
+		<!--
 		<taskdef name="cstarConvert"  classname="Composestar.Ant.Taskdefs.CstarConvert"/>
 		<taskdef name="cstarBuildGen" classname="Composestar.Ant.Taskdefs.CstarBuildGen"/>
 		<taskdef name="cstarComp"     classname="Composestar.Ant.Taskdefs.CstarComp"/>
 		<taskdef name="cstarTest"     classname="Composestar.Ant.Taskdefs.CstarTest"/>
 		<taskdef name="msbatchbuild"  classname="Composestar.Ant.Taskdefs.MSBatchBuild"/>
+		-->
 	</target>
 
 	<target name="clean" depends="init">
@@ -76,7 +78,7 @@
 	</target>
 
 	<target name="test_bgen_2003" depends="init_local" if="test.mode.2003">
-		<cstarBuildGen composestarBase="${composestar.installdir}"
+		<cs:dn_bgen composestarBase="${composestar.installdir}"
 		               antHelperPath="${build.core}/Development"		          
 		               xslt="${basedir}/AntSystemTest/genBuildConfig.xslt">
 			<FileSet dir="${build.dotnet}/Examples">
@@ -91,11 +93,11 @@
 			<Modules>
 				<INCRE config="${INCRE.config}"/>
 			</Modules>
-		</cstarBuildGen>
+		</cs:dn_bgen>
 	</target>
 	
 	<target name="test_bgen_2005" depends="init_local,test_convert" if="test.mode.2005">
-		<msbatchbuild>
+		<cs:dn_msbatch>
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.cpsproj"/>
 				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
@@ -104,13 +106,13 @@
 				<exclude name="Jukebox/jukeboxframe/*"/>
 				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
-		</msbatchbuild>
+		</cs:dn_msbatch>
 	</target>
 
 	<!-- compiles projects (requires BuildConfiguration.xml to be present) -->
 
 	<target name="test_comp" depends="init_local,test_bgen">
-		<cstarComp composestarBase="${composestar.installdir}">
+		<cs:dn_comp composestarBase="${composestar.installdir}">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/BuildConfiguration.xml"/>
 				<exclude name="AOSD2006Demo/EncryptionFilter/*"/>
@@ -120,13 +122,13 @@
 				<exclude name="Jukebox/jukeboxframe/*"/>
 				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
-		</cstarComp>
+		</cs:dn_comp>
 	</target>
 
 	<!-- executes tests -->
 	
 	<target name="test_exec" depends="init_local">
-		<cstarTest>
+		<cs:test>
 			<FileSet dir="${build.dotnet}/Examples">
 				<!--
 				<include name="SecretAOSDExample/bin/SecretAOSDExample.MainRunner.exe"/>
@@ -157,13 +159,13 @@
 				<include name="TestCases/SECRETTesting/bin/SECRETTesting.MainRunner.exe"/>
 				<include name="TestCases/ErrorFilterTest/bin/ErrorFilterTest.MainClass.exe"/>
 			</FileSet>
-		</cstarTest>
+		</cs:test>
 	</target>
 
 	<!-- generates VS2005 project files based on the VS2003 versions -->
 	
 	<target name="test_convert" depends="init_local" if="test.mode.2005">
-		<cstarConvert xslt="${basedir}/AntSystemTest/genCpsProject.xslt">
+		<cs:dn_convert xslt="${basedir}/AntSystemTest/genCpsProject.xslt">
 			<FileSet dir="${build.dotnet}/Examples">
 				<include name="**/*.vjsproj"/>
 				<include name="**/*.csproj"/>
@@ -173,7 +175,7 @@
 				<exclude name="Jukebox/jukeboxframe/*"/>
 				<exclude name="Rot13/Rot13Filter/*"/>
 			</FileSet>
-		</cstarConvert>
+		</cs:dn_convert>
 	</target>
 
 </project>
