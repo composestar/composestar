@@ -34,7 +34,7 @@
 	<target name="build" depends="init_local">
 		<mkdir dir="${tasks.build}"/>
 		<mkdir dir="${tasks.dist}"/>
-		<javac srcdir="${tasks.src}" destdir="${tasks.build}" classpath="${ant.jar}"/>
+		<javac srcdir="${tasks.src}" destdir="${tasks.build}" classpath="${ant.jar}" source="1.4" target="1.4" />
 		<copy todir="${tasks.build}">
 			<fileset dir="${tasks.src}">
 				<include name="Composestar/antlib.xml" />
