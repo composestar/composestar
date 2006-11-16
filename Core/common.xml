@@ -21,7 +21,6 @@ Common routines. Always include this file in every build.xml file
 		<property name="label" value="build.0"/>
 		
 		<!-- just the build number -->	
-		<!--<taskdef name="extractBuildNumber" classname="Composestar.Ant.Taskdefs.BuildNumberExtractor"/>-->
 		<cs:extractBuildNumber label="${label}" property="version.build" syntax="build.#"/>
 	
 		<!-- version numbers, used in installers e.a. Note: must be: [major].[minor].[release] -->
