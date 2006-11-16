@@ -1,4 +1,4 @@
-package Composestar.Ant.Taskdefs;
+package Composestar.Ant.Taskdefs.DotNet;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
+
+import Composestar.Ant.Taskdefs.BaseTask;
 
 /**
 * @author Marcus Klimstra
