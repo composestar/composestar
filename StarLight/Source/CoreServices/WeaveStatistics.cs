@@ -9,6 +9,9 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
     /// </summary>
     public class WeaveStatistics
     {
+
+        #region Private Variables
+
         private int _internalsAdded;
         private int _externalsAdded;
         private int _outputFiltersAdded;
@@ -25,6 +28,8 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
         private Dictionary<string, List<String>> _instructionsLog = new Dictionary<string, List<string>>();
 
         private Queue<String> _timing = new Queue<String>();
+
+        #endregion
 
         /// <summary>
         /// Gets or sets the timing stack.
@@ -164,7 +169,6 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
             set { _methodsProcessed = value; }
         }
 
-
         /// <summary>
         /// Gets or sets the total weave time.
         /// </summary>
@@ -227,8 +231,8 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
                     return TimeSpan.FromTicks(TotalTypeWeaveTime.Ticks / TypesProcessed);
                 else
                     return TimeSpan.Zero; 
-            } // get
-        } // AverageWeaveTimePerType
+            } 
+        } 
 
         /// <summary>
         /// Average weave time per method
@@ -242,9 +246,7 @@ namespace Composestar.StarLight.CoreServices.ILWeaver
                     return TimeSpan.FromTicks(TotalMethodWeaveTime.Ticks / MethodsProcessed);
                 else
                     return TimeSpan.Zero;  
-            } // get
-        } // AverageWeaveTimePerMethod
-
-        
+            } 
+        } 
     }
 }
