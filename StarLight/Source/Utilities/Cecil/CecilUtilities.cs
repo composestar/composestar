@@ -600,6 +600,48 @@ namespace Composestar.StarLight.Utilities
         }
 
         /// <summary>
+        /// Resolves the method using its type parent type reference and an example method.
+        /// </summary>
+        /// <param name="parentTypeReference">The typereference containing the method.</param>
+        /// <param name="methodName">The name of the method.</param>
+        /// <param name="exampleMethod">Example method containing the same parametertypes and returntype of the
+        /// wanted method.</param>
+        /// <returns>
+        /// The to be resolved method, or <see langword="null"/> if such method does not exist.
+        /// </returns>
+        /// <remarks>
+        /// <note>This function does not offer caching.</note>
+        /// </remarks> 
+        /// <example>
+        /// <code>
+        /// MethodDefinition methodDef = CecilUtilities.ResolveMethod(parentType,
+        ///                filterAction.SubstitutionSelector, originalCall);
+        /// </code>
+        /// </example> 
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parentTypeReference"/> is <see langword="null"></see>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="methodName"/> is <see langword="null"></see> or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="exampleMethod"/> is <see langword="null"></see>.</exception>
+        [CLSCompliant(false)]
+        public static MethodDefinition ResolveMethod(TypeReference parentTypeReference, string methodName, MethodReference exampleMethod)
+        {
+
+            if (parentTypeReference == null)
+                throw new ArgumentNullException("parentTypeReference");
+
+            if (exampleMethod == null)
+                throw new ArgumentNullException("exampleMethod");
+
+            if (string.IsNullOrEmpty(methodName))
+                throw new ArgumentNullException("methodName");
+
+            TypeDefinition parentTypeDef = ResolveTypeDefinition(parentTypeReference);
+
+            MethodDefinition md = parentTypeDef.Methods.GetMethod(methodName, exampleMethod.Parameters);
+
+            return md;
+        }
+
+        /// <summary>
         /// Resolves the method using the parent type, methodname and a list of parameters.
         /// </summary>
         /// <param name="parentTypeRef">The parent type reference.</param>

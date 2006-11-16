@@ -39,12 +39,24 @@ namespace Composestar.StarLight.Weaving.Strategies
             VariableDefinition jpcVar = visitor.CreateJoinPointContextLocal();
 
             FieldDefinition target = null;
-            // Self call
-
+         
             // Get the methodReference
             MethodReference methodReference = null;
 
-            TypeDefinition parentType = CecilUtilities.ResolveTypeDefinition(visitor.Method.DeclaringType);
+            TypeDefinition parentTypeDefinition = (TypeDefinition)(visitor.Method.DeclaringType);
+            TypeReference parentTypeReference = visitor.Method.DeclaringType;
+
+            if (parentTypeReference.GenericParameters.Count > 0)
+            {
+                GenericInstanceType git = new GenericInstanceType(visitor.Method.DeclaringType);
+
+                foreach (GenericParameter gp in originalCall.DeclaringType.GenericParameters)
+                {
+                    git.GenericArguments.Add(gp);
+                }
+               
+                parentTypeReference = git; 
+            }
 
             // Get the called method
             if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) ||
@@ -52,17 +64,49 @@ namespace Composestar.StarLight.Weaving.Strategies
             {
                 if(filterAction.SubstitutionSelector.Equals(originalCall.Name))
                 {
-                    methodReference = originalCall;
+                    if (parentTypeReference is GenericInstanceType)
+                    {
+                        methodReference = new MethodReference(originalCall.Name,
+                            parentTypeReference, originalCall.ReturnType.ReturnType,
+                            originalCall.HasThis, originalCall.ExplicitThis,
+                            originalCall.CallingConvention);
+
+                        foreach (ParameterDefinition param in originalCall.Parameters)
+                        {
+                            methodReference.Parameters.Add(param);
+                        }
+
+                        // TODO MethodReferences with GenericClasses
+                        /* The problem:
+                         *
+                         * class<T> Test 
+                         * {
+                         *    void Func(T a)
+                         *    {
+                         *       // inner call
+                         *       Test<T>.Func(a);
+                         *    } 
+                         * }
+                         * 
+                         * Resolving Test<T> to a GenericInstanceType is no problem
+                         * The methodReference must use the GenericInstanceType as its base type
+                         * Creating a new MethodReference makes this possible, but Cecil does not output the information
+                         * 
+                         */
+                    }
+                    else
+                        methodReference = originalCall;                     
                 }
                 else
                 {
-                    methodReference = CecilUtilities.ResolveMethod(parentType,
+                    methodReference = CecilUtilities.ResolveMethod(parentTypeDefinition,
                         filterAction.SubstitutionSelector, originalCall);
+                    
                 }
             }
             else
             {
-                target = parentType.Fields.GetField(filterAction.SubstitutionTarget);
+                target = parentTypeDefinition.Fields.GetField(filterAction.SubstitutionTarget);
                 if(target == null)
                 {
                     throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
@@ -79,18 +123,18 @@ namespace Composestar.StarLight.Weaving.Strategies
             if(methodReference == null)
             {
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
-                                            Properties.Resources.MethodNotFound, parentType.ToString(), filterAction.SubstitutionSelector));
+                                            Properties.Resources.MethodNotFound, parentTypeReference.ToString(), filterAction.SubstitutionSelector));
             }
 
             // Generic arguments; add the generic parameters as generic argument to a GenericInstanceMethod
-            if (originalCall.GenericParameters.Count > 0)
+            if (originalCall.GenericParameters.Count > 0)   
             {
-                GenericInstanceMethod gim = new GenericInstanceMethod(methodReference);
+                // Original call has generics, so add to the new memberreference
+                GenericInstanceMethod gim = new GenericInstanceMethod(methodReference);                
                 foreach (GenericParameter gp in originalCall.GenericParameters)
                 {
                     gim.GenericArguments.Add(gp);    
                 }
-
                 methodReference = gim;
             }
 
@@ -118,27 +162,27 @@ namespace Composestar.StarLight.Weaving.Strategies
             if(filterAction.SubstitutionTarget.Equals(FilterAction.InnerTarget) &&
                 filterAction.SubstitutionSelector.Equals(originalCall.Name))
             {
-                //Because it is an inner call targeting the method itself, we must call the method
-                //in the class itself. Therefore we do a Call instead of a Callvirt, to prevent that
-                //the call is dispatched to an overriding method in a subclass.
+                // Because it is an inner call targeting the method itself, we must call the method
+                // in the class itself. Therefore we do a Call instead of a Callvirt, to prevent that
+                // the call is dispatched to an overriding method in a subclass.
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
             }
             else if(visitor.CalledMethod.HasThis)
             {
-                //Because we dispatch to another method than the original called method, we do a Callvirt
-                //so that an overriding method in a subclass may be called.
+                // Because we dispatch to another method than the original called method, we do a Callvirt
+                // so that an overriding method in a subclass may be called.
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Callvirt, methodReference));
             }
             else
             {
-                //static method cannot be called with Callvirt.
+                // static method cannot be called with Callvirt.
                 visitor.Instructions.Add(visitor.Worker.Create(OpCodes.Call, methodReference));
             }
 
-            //Store the return value:
+            // Store the return value:
             WeaveStrategyUtilities.StoreReturnValue(visitor, originalCall, jpcVar);
 
-            //Restore arguments:
+            // Restore arguments:
             WeaveStrategyUtilities.RestoreArguments(visitor, originalCall, jpcVar);
         }        
 
