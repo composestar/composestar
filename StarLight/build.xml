@@ -129,7 +129,7 @@
 	</target>
 
 	<target name="fxcop" depends="build_codeanalysis,fxcop_init"  description="Build all the outputs and run fxcop">
-		<fxcop reportfile="${out.fxcop.starlight}/fxcop.txt" failonerror="false"
+		<fxcop reportfile="${out.fxcop.starlight}/fxcop.txt" 
 		       files="${MSBuildTasks.dir}/Bin/Debug/Composestar*.dll"/>
 	</target>
 
