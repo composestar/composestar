@@ -1,4 +1,4 @@
-package Composestar.Ant.Taskdefs;
+package Composestar.Ant.Taskdefs.DotNet;
 
 import java.io.File;
 import java.util.Iterator;
@@ -11,6 +11,8 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline.Argument;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
+
+import Composestar.Ant.Taskdefs.BaseTask;
 
 /**
  * Compiles Compose* projects.

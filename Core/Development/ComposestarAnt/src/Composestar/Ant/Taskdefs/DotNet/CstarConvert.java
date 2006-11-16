@@ -1,4 +1,4 @@
-package Composestar.Ant.Taskdefs;
+package Composestar.Ant.Taskdefs.DotNet;
 
 import java.io.File;
 import java.util.List;
@@ -8,6 +8,8 @@ import javax.xml.transform.Transformer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+
+import Composestar.Ant.Taskdefs.TransformTask;
 
 /**
  * Transform VS2003 project files to VS2005 ones.

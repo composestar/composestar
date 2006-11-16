@@ -19,7 +19,7 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Runs multiple tests
+ * Runs multiple executables and compares the output with the data in the correct.txt file.
  * 
  * @author Michiel Hendriks
  */

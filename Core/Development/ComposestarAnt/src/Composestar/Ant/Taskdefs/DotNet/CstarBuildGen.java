@@ -1,4 +1,4 @@
-package Composestar.Ant.Taskdefs;
+package Composestar.Ant.Taskdefs.DotNet;
 
 import java.io.File;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet.NameEntry;
 
 import Composestar.Ant.XsltUtils;
+import Composestar.Ant.Taskdefs.TransformTask;
 
 /**
  * Generates the BuildConfiguration.xml for Compose* from a VS2003 project file.
