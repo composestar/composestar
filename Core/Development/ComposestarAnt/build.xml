@@ -2,10 +2,10 @@
 
 	<description>Builds the tasks used by AntSystemTest.</description>
 
-	<condition property="build.core" value="${basedir}/../../../../Core">
+	<condition property="build.core" value="${basedir}/../..">
 		<and>
 			<not><isset property="build.core"/></not>
-			<available file="${basedir}/../../../../Core/common.xml"/>
+			<available file="${basedir}/../../common.xml"/>
 		</and>
 	</condition>
 	
