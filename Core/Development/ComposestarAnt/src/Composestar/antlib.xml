@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<antlib>
+	<!-- general -->
+	<taskdef name="extractBuildNumber"	classname="Composestar.Ant.Taskdefs.BuildNumberExtractor" />
+	<taskdef name="test"				classname="Composestar.Ant.Taskdefs.CstarTest"/>
+	
+	<!-- dotnet -->
+	<taskdef name="dn_convert"			classname="Composestar.Ant.Taskdefs.DotNet.CstarConvert"/>
+	<taskdef name="dn_bgen"				classname="Composestar.Ant.Taskdefs.DotNet.CstarBuildGen"/>
+	<taskdef name="dn_comp"				classname="Composestar.Ant.Taskdefs.DotNet.CstarComp"/>	
+	<taskdef name="dn_msbatch"			classname="Composestar.Ant.Taskdefs.DotNet.MSBatchBuild"/>
+</antlib>

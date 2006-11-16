@@ -14,9 +14,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import Composestar.Core.CpsProgramRepository.Concern;
 import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.MatchingPart;
+import Composestar.Core.CpsProgramRepository.CpsConcern.Filtermodules.SignatureMatchingType;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.ConcernReference;
+import Composestar.Core.CpsProgramRepository.CpsConcern.References.DeclaredObjectReference;
+import Composestar.Core.DIGGER.NOBBIN;
 import Composestar.Core.DIGGER.Graph.AbstractConcernNode;
 import Composestar.Core.DIGGER.Graph.CondMatchEdge;
+import Composestar.Core.Exception.ModuleException;
+import Composestar.Core.LAMA.MethodInfo;
+import Composestar.Core.LAMA.Type;
+import Composestar.Core.RepositoryImplementation.TypedDeclaration;
 
 /**
  * Message used during path walking
@@ -71,6 +80,11 @@ public class Message
 		return concernNode;
 	}
 	
+	public Concern getConcern()
+	{
+		return concernNode.getConcern();
+	}
+	
 	public void setConcernNode(AbstractConcernNode innode)
 	{
 		concernNode = innode;		
@@ -121,7 +135,7 @@ public class Message
 	 * @param edge
 	 * @return
 	 */
-	public boolean matches(CondMatchEdge edge)
+	public boolean matches(CondMatchEdge edge) throws ModuleException
 	{
 		boolean res = false;
 		if (!edge.getIsMessageList())
@@ -129,11 +143,17 @@ public class Message
 			Iterator it = edge.getMatchingParts();
 			while (it.hasNext())
 			{
-				// TODO: take into account the type of selector (name vs sign)
-				MatchingPart mp = (MatchingPart) it.next();
-				String mpselector = mp.getSelector().getName();
-				if (mpselector.equals(selector) || mpselector.equals("*"))
+				MatchingPart mp = (MatchingPart) it.next();				
+				
+				if (mp.getMatchType() instanceof SignatureMatchingType)
 				{
+					if (matchesSignature(mp))
+					{
+						res = true;
+						break;
+					}
+				}
+				else if (matchesName(mp)) {
 					res = true;
 					break;
 				}
@@ -151,6 +171,62 @@ public class Message
 		{
 			return !res;
 		}
+	}
+	
+	/**
+	 * Check for a normal name match
+	 * @param mp
+	 * @return
+	 */
+	protected boolean matchesName(MatchingPart mp)
+	{
+		String mpselector = mp.getSelector().getName();
+		return mpselector.equals(selector) || mpselector.equals("*");
+	}
+	
+	/**
+	 * Check for signature matching
+	 * @param mp
+	 * @return
+	 */
+	protected boolean matchesSignature(MatchingPart mp) throws ModuleException
+	{
+		Type type = null;
+		String mpselector = mp.getSelector().getName();
+		// same names, should match (right?)
+		if (mpselector.equals(selector))
+		{
+			return true;
+		}
+		// otherwise look it up
+		if (mp.getTarget().getName().equals("inner") || mp.getTarget().getName().equals("*"))
+		{
+			type = (Type) concernNode.getConcern().getPlatformRepresentation();
+		}
+		else 
+		{
+			DeclaredObjectReference ref = (DeclaredObjectReference) mp.getTarget().getRef();
+			if ((ref != null) && ref.getResolved())
+			{
+				TypedDeclaration typeDecl = ref.getRef();
+				ConcernReference concernRef = typeDecl.getType();
+				type = (Type) concernRef.getRef().getPlatformRepresentation();
+			}
+			else
+			{
+				throw new ModuleException("Unresolved internal/external: " + mp.getTarget().getName(), NOBBIN.MODULE_NAME);
+			}
+		}
+		Iterator it = type.getMethods().iterator();
+		while (it.hasNext())
+		{
+			MethodInfo mi = (MethodInfo) it.next();
+			if (mi.name().equals(selector))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void checkRecursion()
