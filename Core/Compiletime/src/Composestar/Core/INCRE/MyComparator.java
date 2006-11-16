@@ -26,9 +26,9 @@ public class MyComparator
 
 	public static int compare;
 
-	public MyComparator(String module)
+	public MyComparator(String inModule)
 	{
-		this.module = module;
+		module = inModule;
 	}
 
 	public int getCompare()

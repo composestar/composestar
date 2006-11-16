@@ -17,12 +17,12 @@ public class TypeHandler extends DefaultHandler
 
 	private ComparisonsHandler returnhandler;
 
-	public TypeHandler(ConfigManager cfg, Module module, String fullname, ComparisonsHandler returnhandler)
+	public TypeHandler(ConfigManager cfg, Module inModule, String inFullname, ComparisonsHandler inReturnhandler)
 	{
-		this.configmanager = cfg;
-		this.module = module;
-		this.fullname = fullname;
-		this.returnhandler = returnhandler;
+		configmanager = cfg;
+		module = inModule;
+		fullname = inFullname;
+		returnhandler = inReturnhandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

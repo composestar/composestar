@@ -14,10 +14,10 @@ public class PathsHandler extends DefaultHandler implements ContentHandler
 
 	SettingsHandler returnHandler;
 
-	public PathsHandler(XMLReader parser, SettingsHandler returnHandler)
+	public PathsHandler(XMLReader inParser, SettingsHandler inReturnHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = returnHandler;
+		parser = inParser;
+		returnHandler = inReturnHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

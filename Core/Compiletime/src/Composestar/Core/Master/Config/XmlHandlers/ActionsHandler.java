@@ -17,11 +17,11 @@ public class ActionsHandler extends DefaultHandler implements ContentHandler
 
 	Language language;
 
-	public ActionsHandler(Language lang, XMLReader parser, CompilerHandler returnHandler)
+	public ActionsHandler(Language lang, XMLReader inParser, CompilerHandler inReturnHandler)
 	{
-		this.language = lang;
-		this.parser = parser;
-		this.returnHandler = returnHandler;
+		language = lang;
+		parser = inParser;
+		returnHandler = inReturnHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

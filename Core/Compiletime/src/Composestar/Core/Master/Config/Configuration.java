@@ -10,7 +10,7 @@ public class Configuration implements Serializable
 	 */
 	private static final long serialVersionUID = -8812125434498730547L;
 
-	private static Configuration s_instance;
+	private static Configuration cfgInstance;
 
 	private Properties properties;
 
@@ -39,12 +39,12 @@ public class Configuration implements Serializable
 
 	public static Configuration instance()
 	{
-		if (s_instance == null)
+		if (cfgInstance == null)
 		{
-			s_instance = new Configuration();
+			cfgInstance = new Configuration();
 		}
 
-		return s_instance;
+		return cfgInstance;
 	}
 
 	public void setBuildDebugLevel(int level)
@@ -94,19 +94,31 @@ public class Configuration implements Serializable
 	public String getModuleProperty(String module, String key, String def)
 	{
 		ModuleSettings ms = getModuleSettings(module);
-		return ms == null ? def : ms.getProperty(key, def);
+		if (ms != null)
+		{
+			return ms.getProperty(key, def);
+		}
+		return def; 
 	}
 
 	public int getModuleProperty(String module, String key, int def)
 	{
 		ModuleSettings ms = getModuleSettings(module);
-		return ms == null ? def : ms.getProperty(key, def);
+		if (ms != null)
+		{
+			return ms.getProperty(key, def);
+		}
+		return def; 
 	}
 
 	public boolean getModuleProperty(String module, String key, boolean def)
 	{
 		ModuleSettings ms = getModuleSettings(module);
-		return ms == null ? def : ms.getProperty(key, def);
+		if (ms != null)
+		{
+			return ms.getProperty(key, def);
+		}
+		return def; 
 	}
 
 	public PathSettings getPathSettings()

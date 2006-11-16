@@ -17,9 +17,9 @@ public class BuildConfigHandler extends DefaultHandler implements ContentHandler
 {
 	XMLReader parser;
 
-	public BuildConfigHandler(XMLReader parser)
+	public BuildConfigHandler(XMLReader inParser)
 	{
-		this.parser = parser;
+		parser = inParser;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

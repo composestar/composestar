@@ -270,7 +270,7 @@ public abstract class LOLA implements CTCommonModule
 	}
 
 	/**
-	 * @param selectors All predicate selectors
+	 * @param inSelectors All predicate selectors
 	 * @return ArrayList containing selectors to be processed by LOLA Splits the
 	 *         selectors into two groups Group #1: toBeSkipped, selectors that
 	 *         can be skipped These selectors have been processed in an earlier
@@ -278,7 +278,7 @@ public abstract class LOLA implements CTCommonModule
 	 *         exactly the same! Group #2: toBeProcessed, selectors to be
 	 *         processed by LOLA
 	 */
-	public ArrayList splitSelectors(ArrayList selectors) throws ModuleException
+	public ArrayList splitSelectors(ArrayList inSelectors) throws ModuleException
 	{
 
 		INCRE incre = INCRE.instance();
@@ -290,7 +290,7 @@ public abstract class LOLA implements CTCommonModule
 		ArrayList toBeMoved = new ArrayList();
 		INCRETimer step1 = incre.getReporter().openProcess(MODULE_NAME, "Split selectors based on toBeCheckedByINCRE",
 				INCRETimer.TYPE_OVERHEAD);
-		Iterator predicateIterStep1 = selectors.iterator();
+		Iterator predicateIterStep1 = inSelectors.iterator();
 		Debug.out(Debug.MODE_DEBUG, "LOLA [INCRE]", "Splitting selectors based on attribute toBeCheckedByINCRE...");
 		while (predicateIterStep1.hasNext())
 		{

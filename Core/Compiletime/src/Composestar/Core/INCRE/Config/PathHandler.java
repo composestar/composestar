@@ -18,11 +18,11 @@ public class PathHandler extends DefaultHandler
 
 	private DependencyHandler returnhandler;
 
-	public PathHandler(ConfigManager cfg, Dependency dep, DependencyHandler returnhandler)
+	public PathHandler(ConfigManager cfg, Dependency inDep, DependencyHandler inReturnhandler)
 	{
-		this.configmanager = cfg;
-		this.dep = dep;
-		this.returnhandler = returnhandler;
+		configmanager = cfg;
+		dep = inDep;
+		returnhandler = inReturnhandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

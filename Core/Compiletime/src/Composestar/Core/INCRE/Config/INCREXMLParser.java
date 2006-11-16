@@ -6,7 +6,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class INCREXMLParser extends DefaultHandler
 {
-	private ConfigManager configmanager = null;
+	private ConfigManager configmanager;
 
 	public INCREXMLParser(ConfigManager cfg)
 	{

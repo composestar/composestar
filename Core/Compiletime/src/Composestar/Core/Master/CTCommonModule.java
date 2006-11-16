@@ -31,5 +31,5 @@ public interface CTCommonModule
 	 *             is thrown the Master will stop its activity emidiately.
 	 * @roseuid 401B88BB0188
 	 */
-	public void run(CommonResources resources) throws ModuleException;
+	void run(CommonResources resources) throws ModuleException;
 }

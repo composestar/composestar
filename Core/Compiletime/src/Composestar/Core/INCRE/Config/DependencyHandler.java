@@ -16,11 +16,11 @@ public class DependencyHandler extends DefaultHandler
 
 	private ModulesHandler returnhandler;
 
-	public DependencyHandler(ConfigManager cfg, Module module, ModulesHandler returnhandler)
+	public DependencyHandler(ConfigManager cfg, Module inModule, ModulesHandler inReturnhandler)
 	{
-		this.configmanager = cfg;
-		this.module = module;
-		this.returnhandler = returnhandler;
+		configmanager = cfg;
+		module = inModule;
+		returnhandler = inReturnhandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

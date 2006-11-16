@@ -33,9 +33,9 @@ public class Language implements Serializable
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(String inName)
 	{
-		this.name = name;
+		name = inName;
 	}
 
 	public CompilerSettings getCompilerSettings()

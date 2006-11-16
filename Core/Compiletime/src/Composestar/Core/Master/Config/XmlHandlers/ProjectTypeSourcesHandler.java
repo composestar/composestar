@@ -17,11 +17,11 @@ public class ProjectTypeSourcesHandler extends DefaultHandler implements Content
 
 	Project project;
 
-	public ProjectTypeSourcesHandler(Project project, XMLReader parser, ProjectHandler documentHandler)
+	public ProjectTypeSourcesHandler(Project inProject, XMLReader inParser, ProjectHandler documentHandler)
 	{
-		this.project = project;
-		this.parser = parser;
-		this.returnHandler = documentHandler;
+		project = inProject;
+		parser = inParser;
+		returnHandler = documentHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

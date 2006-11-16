@@ -88,8 +88,14 @@ public class INCREConfigurations
 	public String getConfiguration(String key)
 	{
 		INCRE incre = INCRE.instance();
-		Properties props = (incre.searchingHistory ? history : current);
-		return props.getProperty(key);
+		if (incre.searchingHistory)
+		{
+			return history.getProperty(key);
+		}
+		else
+		{
+			return current.getProperty(key);
+		}
 	}
 
 	public Properties getHistory()

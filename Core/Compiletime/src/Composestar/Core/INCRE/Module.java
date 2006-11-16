@@ -35,41 +35,41 @@ public class Module
 	 */
 	private Map comparableObjects = new HashMap();
 
-	public Module(String name)
+	public Module(String inName)
 	{
-		this.name = name;
+		name = inName;
 	}
 
 	public void setFullType(String ftype)
 	{
-		this.fulltype = ftype;
+		fulltype = ftype;
 	}
 
 	public void setInput(String className)
 	{
-		this.input = className;
+		input = className;
 	}
 
 	public void setEnabled(boolean b)
 	{
-		this.enabled = b;
+		enabled = b;
 	}
 
 	public void setSummary(String s)
 	{
-		this.summary = s;
+		summary = s;
 	}
 
 	public void addDep(Dependency d)
 	{
 		String id = d.getName();
-		this.deps.put(id, d);
+		deps.put(id, d);
 	}
 
 	public void addComparableObject(String key, Object obj)
 	{
 		ArrayList list;
-		if (this.comparableObjects.containsKey(key))
+		if (comparableObjects.containsKey(key))
 		{
 			list = (ArrayList) comparableObjects.get(key);
 		}
@@ -79,13 +79,13 @@ public class Module
 		}
 
 		list.add(obj);
-		this.comparableObjects.put(key, list);
+		comparableObjects.put(key, list);
 	}
 
 	public void removeComparableObject(String key, Object obj)
 	{
 		ArrayList list;
-		if (this.comparableObjects.containsKey(key))
+		if (comparableObjects.containsKey(key))
 		{
 			list = (ArrayList) comparableObjects.get(key);
 		}
@@ -95,7 +95,7 @@ public class Module
 		}
 
 		list.remove(obj);
-		this.comparableObjects.put(key, list);
+		comparableObjects.put(key, list);
 	}
 
 	public void addComparableObjects(HashMap map)

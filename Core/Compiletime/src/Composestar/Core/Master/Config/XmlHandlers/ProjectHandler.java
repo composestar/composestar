@@ -18,10 +18,10 @@ public class ProjectHandler extends DefaultHandler implements ContentHandler
 
 	Project project;
 
-	public ProjectHandler(XMLReader parser, ProjectsHandler documentHandler)
+	public ProjectHandler(XMLReader inParser, ProjectsHandler documentHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = documentHandler;
+		parser = inParser;
+		returnHandler = documentHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

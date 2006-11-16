@@ -221,8 +221,8 @@ public class AnnotationSuperImposition
 				// attached that existed already in the program
 				resetAnnotationState(addedAnnots);
 
-				int errorLocation;
-				if ((errorLocation = subsetContents(myState.selectorResults, tempState.selectorResults)) != -1)
+				int errorLocation = subsetContents(myState.selectorResults, tempState.selectorResults);
+				if (errorLocation != -1)
 				{ // Don't we all loooooove descriptive error messages? At
 					// least you should be able to track the problem to a
 					// offending selector.
@@ -416,7 +416,7 @@ public class AnnotationSuperImposition
 
 		for (int i = 0; i < res1.size(); i++)
 		{
-			if (!((Set) res2.elementAt(i)).containsAll(((Set) res1.elementAt(i))))
+			if (!((Set) res2.elementAt(i)).containsAll((Set) res1.elementAt(i)))
 			{
 				return i;
 			}

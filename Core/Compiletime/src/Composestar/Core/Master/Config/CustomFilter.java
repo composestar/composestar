@@ -22,9 +22,9 @@ public class CustomFilter implements Serializable
 		return this.filter;
 	}
 
-	public void setFilter(String filter)
+	public void setFilter(String inFilter)
 	{
-		this.filter = filter;
+		filter = inFilter;
 	}
 
 	public String getLibrary()
@@ -32,8 +32,8 @@ public class CustomFilter implements Serializable
 		return this.library;
 	}
 
-	public void setLibrary(String library)
+	public void setLibrary(String inLibrary)
 	{
-		this.library = library;
+		library = inLibrary;
 	}
 }

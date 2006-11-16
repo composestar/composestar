@@ -19,10 +19,10 @@ public class PlatformHandler extends DefaultHandler implements ContentHandler
 
 	BuildConfigHandler returnHandler;
 
-	public PlatformHandler(XMLReader parser, BuildConfigHandler returnHandler)
+	public PlatformHandler(XMLReader inParser, BuildConfigHandler inReturnHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = returnHandler;
+		parser = inParser;
+		returnHandler = inReturnHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

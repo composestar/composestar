@@ -46,9 +46,9 @@ import Composestar.Utils.StringUtils;
  * run. This decision is based on the history which is being loaded and stored
  * by INCRE. This class is the heart of the incremental compilation process.
  */
-public class INCRE implements CTCommonModule
+public final class INCRE implements CTCommonModule
 {
-	private static INCRE s_instance;
+	private static INCRE increInstance;
 
 	private static final String HISTORY_FILENAME = "history.dat";
 	
@@ -117,12 +117,12 @@ public class INCRE implements CTCommonModule
 
 	public static INCRE instance()
 	{
-		if (s_instance == null)
+		if (increInstance == null)
 		{
-			s_instance = new INCRE();
+			increInstance = new INCRE();
 		}
 
-		return s_instance;
+		return increInstance;
 	}
 
 	public void run(CommonResources resources) throws ModuleException
@@ -131,11 +131,10 @@ public class INCRE implements CTCommonModule
 		historyfile = ps.getPath("Base") + HISTORY_FILENAME;
 		
 		// check whether incremental compilation is enabled
-		String enabled = config.getModuleProperty(MODULE_NAME, "enabled", "false");
-		this.enabled = "true".equalsIgnoreCase(enabled);
+		enabled = config.getModuleProperty(MODULE_NAME, "enabled", false);
 
 		// non-incremental compilation so clean history
-		if (!this.enabled)
+		if (!enabled)
 		{
 			deleteHistory();
 		}
@@ -151,19 +150,19 @@ public class INCRE implements CTCommonModule
 		List sourceFilenames = getSourceFilenames();
 		this.projectSources = StringUtils.join(sourceFilenames, ",");
 
-		if (this.enabled)
+		if (enabled)
 		{
 			// load data of previous compilation run (history)
 			// time the loading process
 			INCRETimer loadhistory = this.getReporter().openProcess(MODULE_NAME, "Loading history",
 					INCRETimer.TYPE_OVERHEAD);
-			this.enabled = loadHistory(); // shut down INCRE
+			enabled = loadHistory(); // shut down INCRE
 			// in case loading
 			// fails
 			loadhistory.stop();
 		}
 
-		if (this.enabled)
+		if (enabled)
 		{
 			// preprocess configurations for fast retrieval
 			configurations.init();

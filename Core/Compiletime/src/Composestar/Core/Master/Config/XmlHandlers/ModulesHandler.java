@@ -15,10 +15,10 @@ public class ModulesHandler extends DefaultHandler implements ContentHandler
 
 	SettingsHandler returnHandler;
 
-	public ModulesHandler(XMLReader parser, SettingsHandler returnHandler)
+	public ModulesHandler(XMLReader inParser, SettingsHandler inReturnHandler)
 	{
-		this.parser = parser;
-		this.returnHandler = returnHandler;
+		parser = inParser;
+		returnHandler = inReturnHandler;
 	}
 
 	public void startElement(String uri, String local_name, String raw_name, Attributes amap) throws SAXException

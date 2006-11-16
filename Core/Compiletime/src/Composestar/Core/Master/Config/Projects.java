@@ -123,7 +123,8 @@ public class Projects implements Serializable
 		List projects = (List) projectsByLanguage.get(language);
 		if (projects == null)
 		{
-			projectsByLanguage.put(language, projects = new ArrayList());
+			projects = new ArrayList();
+			projectsByLanguage.put(language, projects);
 		}
 
 		return projects;

@@ -8,7 +8,7 @@ import Composestar.Core.INCRE.Module;
 
 public class ModulesHandler extends DefaultHandler
 {
-	private ConfigManager configmanager = null;
+	private ConfigManager configmanager;
 
 	public ModulesHandler(ConfigManager cfg, INCREXMLParser returnhandler)
 	{

@@ -23,7 +23,6 @@ import Composestar.Core.Master.Config.XmlHandlers.BuildConfigHandler;
 import Composestar.Core.RepositoryImplementation.DataStore;
 import Composestar.Utils.Debug;
 
-
 /**
  * Main entry point for the CompileTime. The Master class holds coreModules and
  * executes them in the order they are added.
@@ -31,35 +30,35 @@ import Composestar.Utils.Debug;
 public abstract class Master
 {
 	public static final String MODULE_NAME = "Master";
-	
+
 	public static final String RESOURCES_KEY = "Composestar.Core.Master.CommonResources";
-	
+
 	/**
 	 * Compile process failed (e.g. a ModuleException was thrown)
 	 */
 	public static final int ECOMPILE = 1;
-	
+
 	/**
 	 * Return code when no config file was found
 	 */
 	public static final int ECONFIG = 2;
-	
+
 	/**
 	 * General execution failure
 	 */
 	public static final int EFAIL = 3;
-	
+
 	protected String configfile;
-	
+
 	protected int debugOverride = -1;
-	
+
 	protected CommonResources resources;
-	
+
 	public Master(String[] args)
 	{
 		processCmdArgs(args);
 	}
-	
+
 	public void processCmdArgs(String[] args)
 	{
 		for (int i = 0; i < args.length; i++)
@@ -71,19 +70,20 @@ public abstract class Master
 				continue;
 			}
 			// assume it's the last argument
-			else {
+			else
+			{
 				configfile = args[i];
 				break;
 			}
 		}
 	}
-	
+
 	public void loadConfiguration() throws Exception
 	{
 		File cfgFile = new File(configfile);
 		if (!cfgFile.canRead())
 		{
-			throw new Exception("Unable to open configuration file: "+configfile);
+			throw new Exception("Unable to open configuration file: " + configfile);
 		}
 
 		// create the repository
@@ -107,8 +107,8 @@ public abstract class Master
 		}
 		catch (Exception e)
 		{
-			throw new Exception("An error occured while reading the build configuration file: "
-					+ configfile + ", reason: " + e.getMessage());
+			throw new Exception("An error occured while reading the build configuration file: " + configfile
+					+ ", reason: " + e.getMessage());
 		}
 
 		// Set debug level

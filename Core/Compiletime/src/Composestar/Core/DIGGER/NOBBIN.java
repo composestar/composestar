@@ -198,7 +198,10 @@ public class NOBBIN
 				}
 			}
 		}
-		if (msg != null) result.add(msg);
+		if (msg != null) 
+		{
+			result.add(msg);
+		}
 		return result;
 	}
 }
