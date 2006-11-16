@@ -70,14 +70,16 @@ namespace Composestar.StarLight.Weaving.Strategies
                             parentTypeReference, originalCall.ReturnType.ReturnType,
                             originalCall.HasThis, originalCall.ExplicitThis,
                             originalCall.CallingConvention);
+                        methodReference.DeclaringType = parentTypeReference;
 
                         foreach (ParameterDefinition param in originalCall.Parameters)
                         {
                             methodReference.Parameters.Add(param);
                         }
 
-                        // TODO MethodReferences with GenericClasses
-                        /* The problem:
+                        methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(methodReference, parentTypeDefinition);
+                          
+                        /* This piece of code must solve the following problem:
                          *
                          * class<T> Test 
                          * {
@@ -89,9 +91,8 @@ namespace Composestar.StarLight.Weaving.Strategies
                          * }
                          * 
                          * Resolving Test<T> to a GenericInstanceType is no problem
-                         * The methodReference must use the GenericInstanceType as its base type
-                         * Creating a new MethodReference makes this possible, but Cecil does not output the information
-                         * 
+                         * The methodReference must use the GenericInstanceType as its base type                         
+                         * Import the new methodReference before use.
                          */
                     }
                     else
@@ -120,6 +121,7 @@ namespace Composestar.StarLight.Weaving.Strategies
                 methodReference = visitor.TargetAssemblyDefinition.MainModule.Import(md);
             }
 
+            // If there is no method reference, then we cannot dispatch. Raise an exception.
             if(methodReference == null)
             {
                 throw new ILWeaverException(String.Format(CultureInfo.CurrentCulture,
