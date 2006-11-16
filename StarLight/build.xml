@@ -38,7 +38,7 @@
 
 	<!-- build -->
 
-	<target name="build" description="Build the StarLight implementation of Compose*">
+	<target name="build" depends="init" description="Build the StarLight implementation of Compose*">
 		<antcall target="build_compiletime"/>
 		<antcall target="build_msbuild"/>
 		<antcall target="build_vs"/>
@@ -64,7 +64,7 @@
 
 	<!-- deploy -->
 
-	<target name="deploy" description="Deploy the StarLight implementation of Compose*">
+	<target name="deploy" depends="init" description="Deploy the StarLight implementation of Compose*">
 		<antcall target="deploy_compiletime"/>
 		<antcall target="deploy_msbuild"/>
 		<antcall target="deploy_vs"/>
@@ -135,7 +135,7 @@
 
 	<!-- documentation -->
 
-	<target name="documentation.init" unless="available.hhc">
+	<target name="documentation.init" depends="init" unless="available.hhc">
 		<!-- 
 			Output a warning if the hhc executable is not found in the 'C:\Program Files\HTML Help Workshop' folder,
 			it might be found by Sandcastle in an other folder however, so no fail...
@@ -188,7 +188,7 @@
 
 	<!-- Installer -->
 
-	<target name="build_installer" depends="build_compiletime,documentation" description="Create the WIX installer for StarLight">
+	<target name="build_installer" depends="init,build_compiletime,documentation" description="Create the WIX installer for StarLight">
 		<ant target="build" dir="${build.starlight}${file.separator}Setup" />
 	</target>
 
@@ -202,18 +202,18 @@
 
 	<!-- Testing -->
 
-	<target name="test" depends="init_test" description="Execute Tests on the StarLight code other then QA tests">
+	<target name="test" depends="init,init_test" description="Execute Tests on the StarLight code other then QA tests">
 		<antcall target="test_nunit" />
 		<!-- <antcall target="test_ntime" /> 
 		Disabled, because the tests do not work correctly
 		-->
 	</target>
 
-	<target name="init_test">
+	<target name="init_test" >
 		<mkdir dir="${out.nunit}" />
 	</target>
 
-	<target name="init_nunit" description="Build the NUnit projects">
+	<target name="init_nunit" depends="init" description="Build the NUnit projects">
 		<echo>Compiling .NET NUnit projects</echo>
 		<msbuild solution="${path.nunitprojects}TestContextInfo${file.separator}ContextInfo.Tests.NUnit.csproj" target="build" config="debug" />
 		<msbuild solution="${path.nunitprojects}TestCpsFileParser${file.separator}CpsFileParser.Tests.NUnit.csproj" target="build" config="debug" />
@@ -239,7 +239,7 @@
 		</exec>
 	</target>
 
-	<target name="init_ntime" description="Build the NTime projects">
+	<target name="init_ntime" depends="init" description="Build the NTime projects">
 		<echo>Compiling .NET NTime projects</echo>
 		<msbuild solution="${path.ntimeprojects}AllPerformanceTests${file.separator}AllPerformanceTests.csproj" target="build" config="debug" />
 	</target>
